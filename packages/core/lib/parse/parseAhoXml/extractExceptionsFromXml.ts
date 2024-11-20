@@ -2,15 +2,27 @@ import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist
 import { XMLParser } from "fast-xml-parser"
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
+import type { PncException } from "../../../types/Exception"
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../exceptions/errorPaths"
+import type { Br7PncErrorMessageString } from "../../../types/AhoXml"
+import { asnPath } from "../../../characterisation-tests/helpers/errorPaths"
 
-// TODO: Use the existing AHO XML parsing to pull out the errors
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const extractPncExceptions = (aho: any): Exception[] => {
-  const errorMessage = aho.AnnotatedHearingOutcome?.PNCErrorMessage?.["@_classification"]
+const extractPncExceptions = (aho: any): PncException[] => {
+  if (aho.AnnotatedHearingOutcome?.PNCErrorMessage) {
+    const pncErrorMessages = Array.isArray(aho.AnnotatedHearingOutcome.PNCErrorMessage)
+      ? aho.AnnotatedHearingOutcome.PNCErrorMessage
+      : [aho.AnnotatedHearingOutcome.PNCErrorMessage]
 
-  return errorMessage ? [{ code: errorMessage, path: errorPaths.case.asn }] : []
+    return pncErrorMessages.map((errorMessage: Br7PncErrorMessageString) => ({
+      code: errorMessage["@_classification"],
+      path: errorPaths.case.asn,
+      message: errorMessage["#text"]
+    }))
+  }
+
+  return []
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,7 +94,17 @@ export default (xml: string): Exception[] => {
     })
   }
 
-  const mainExceptions = extract(rawParsedObj)
+  let mainExceptions = deduplicateExceptions(extract(rawParsedObj))
   const pncExceptions = extractPncExceptions(rawParsedObj)
-  return deduplicateExceptions(mainExceptions.concat(pncExceptions))
+
+  // Remove the exception on the ASN element if it also appears in the PNC errors
+  const asnException = mainExceptions.find((e) => e.path.join("|") === asnPath.join("|"))
+  if (asnException) {
+    const matchingPncException = pncExceptions.find((e) => e.code == asnException.code)
+    if (matchingPncException) {
+      mainExceptions = mainExceptions.filter((e) => e !== asnException)
+    }
+  }
+
+  return mainExceptions.concat(pncExceptions)
 }
