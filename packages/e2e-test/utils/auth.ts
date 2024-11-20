@@ -126,8 +126,6 @@ const logIn = async function (world: Bichard, username: string, sameWindow: bool
 export const logInAsSameWindow = async function (this: Bichard, username: string) {
   const sameWindow = true
 
-  // await delay(15)
-
   await logIn(this, username, sameWindow)
 }
 
