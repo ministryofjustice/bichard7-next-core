@@ -93,17 +93,6 @@ const addExceptionsToPncUpdateDatasetXml = (
     }
   }
 
-  // Add PNC errors to the PNC error message if it is set
-  if (
-    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"] &&
-    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.length > 0
-  ) {
-    const pncError = exceptions.find((e) => isPncException(e.code))
-    if (pncError) {
-      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"][0]["@_classification"] = pncError.code
-    }
-  }
-
   addAhoErrors(aho, exceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
 }
 
@@ -118,17 +107,6 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
       (isPncAsnException(e) && !hasNonPncAsnExceptions(exceptions) && e.code !== ExceptionCode.HO100315)
     ) {
       addException(aho, e)
-    }
-  }
-
-  // Add PNC errors to the PNC error message if it is set
-  if (
-    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"] &&
-    aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.length > 0
-  ) {
-    const pncError = exceptions.find((e) => isPncException(e.code))
-    if (pncError) {
-      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"][0]["@_classification"] = pncError.code
     }
   }
 
