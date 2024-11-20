@@ -16,7 +16,8 @@ import {
 const enrichAho = async (
   hearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
-  auditLogger: AuditLogger
+  auditLogger: AuditLogger,
+  isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
   const enrichSteps: EnrichAhoFunction[] = [
     enrichCourt,
@@ -28,7 +29,7 @@ const enrichAho = async (
 
   enrichSteps.reduce((aho, fn) => fn(aho), hearingOutcome)
 
-  await enrichWithPncQuery(hearingOutcome, pncGateway, auditLogger)
+  await enrichWithPncQuery(hearingOutcome, pncGateway, auditLogger, isIgnored)
   enrichOffenceResultsPostPncEnrichment(hearingOutcome)
   enrichForceOwner(hearingOutcome)
 
