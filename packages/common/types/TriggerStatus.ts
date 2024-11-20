@@ -1,6 +1,6 @@
 enum TriggerStatus {
-  NoTriggers = "NoTriggers",
   Generated = "Generated",
+  NoTriggers = "NoTriggers",
   Resolved = "Resolved"
 }
 

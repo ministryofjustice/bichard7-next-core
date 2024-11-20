@@ -1,12 +1,11 @@
 import "../../test/setup/setEnvironmentVariables"
 
+import logger from "@moj-bichard7/common/utils/logger"
+import Phase from "@moj-bichard7/core/types/Phase"
 import { type Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
 
-import logger from "@moj-bichard7/common/utils/logger"
-
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue"
-import Phase from "@moj-bichard7/core/types/Phase"
 
 describe("sendToResubmissionQueue", () => {
   const stomp: { publish: jest.Func } = { publish: jest.fn() }
@@ -20,8 +19,8 @@ describe("sendToResubmissionQueue", () => {
 
     expect(stomp.publish).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        destination: "TEST_HEARING_OUTCOME_INPUT_QUEUE",
-        body: "message"
+        body: "message",
+        destination: "TEST_HEARING_OUTCOME_INPUT_QUEUE"
       })
     )
   })
@@ -32,7 +31,7 @@ describe("sendToResubmissionQueue", () => {
     const correlationId = randomUUID()
     sendToResubmissionQueue(stomp as Client, "", correlationId, Phase.HEARING_OUTCOME)
 
-    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:sent-to-mq:phase-1", correlationId })
+    expect(logger.info).toHaveBeenCalledWith({ correlationId, event: "message-forwarder:sent-to-mq:phase-1" })
   })
 
   it("logs event with correlationId for Phase 2", () => {
@@ -41,6 +40,6 @@ describe("sendToResubmissionQueue", () => {
     const correlationId = randomUUID()
     sendToResubmissionQueue(stomp as Client, "", correlationId, Phase.PNC_UPDATE)
 
-    expect(logger.info).toHaveBeenCalledWith({ event: "message-forwarder:sent-to-mq:phase-2", correlationId })
+    expect(logger.info).toHaveBeenCalledWith({ correlationId, event: "message-forwarder:sent-to-mq:phase-2" })
   })
 })

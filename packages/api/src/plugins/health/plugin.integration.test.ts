@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify"
+
 import { OK } from "http-status"
+
 import build from "../../app"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import HealthRoutes from "./routes"

@@ -1,13 +1,14 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "conductor" // has to be done prior to module imports
 
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { randomUUID } from "crypto"
 import fs from "fs"
-import forwardMessage from "./forwardMessage"
+
 import createStompClient from "../createStompClient"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import forwardMessage from "./forwardMessage"
 
 const stompClient = createStompClient()
 const conductorClient = createConductorClient()
@@ -34,7 +35,7 @@ describe("forwardMessage", () => {
 
       const workflows = await waitForWorkflows({
         count: 1,
-        query: { workflowType: conductorWorkflow, status: "COMPLETED", correlationId }
+        query: { correlationId, status: "COMPLETED", workflowType: conductorWorkflow }
       })
       expect(workflows).toHaveLength(1)
     }

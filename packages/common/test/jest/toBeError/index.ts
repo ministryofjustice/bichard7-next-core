@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Result } from "../../../types/Result"
+
 import { isError } from "../../../types/Result"
 
 declare global {

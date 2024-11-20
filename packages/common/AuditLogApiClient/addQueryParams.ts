@@ -1,4 +1,4 @@
-const addQueryParams = (url: string, params?: { [key: string]: string | number | boolean | undefined }): string => {
+const addQueryParams = (url: string, params?: { [key: string]: boolean | number | string | undefined }): string => {
   if (!params) {
     return url
   }

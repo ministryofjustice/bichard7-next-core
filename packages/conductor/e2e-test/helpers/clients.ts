@@ -10,15 +10,15 @@ const secretAccessKey = (process.env.S3_AWS_SECRET_ACCESS_KEY = "FAKE")
 const s3Client = new S3Client(createS3Config())
 
 const dbClient = new DynamoDBClient({
+  credentials: { accessKeyId, secretAccessKey },
   endpoint,
-  region: "eu-west-2",
-  credentials: { accessKeyId, secretAccessKey }
+  region: "eu-west-2"
 })
 
 const sqsClient = new SQSClient({
+  credentials: { accessKeyId, secretAccessKey },
   endpoint,
-  region: "eu-west-2",
-  credentials: { accessKeyId, secretAccessKey }
+  region: "eu-west-2"
 })
 
-export { s3Client, dbClient, sqsClient }
+export { dbClient, s3Client, sqsClient }
