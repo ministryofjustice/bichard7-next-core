@@ -37,11 +37,20 @@ const createUser = async (world: Bichard, name: string) => {
   }
 }
 
-const logInNormallyAs = async function (world: Bichard, name: string) {
+const logInNormallyAs = async function (world: Bichard, name: string, sameWindow: boolean) {
   const username = parallelUserName(world, name)
   const emailAddress = `${username}@example.com`
 
-  const page = await world.browser.newPage(login())
+  let page
+
+  if (sameWindow) {
+    await world.browser.page.waitForSelector('a[data-test="log-back-in"]')
+    await world.browser.page.click('a[data-test="log-back-in"]')
+    page = world.browser.page
+  } else {
+    page = await world.browser.newPage(login())
+  }
+
   await page.waitForSelector("#email")
 
   await page.type("#email", emailAddress)
@@ -97,19 +106,33 @@ const logInDirectToBichardWithJwtAs = async function (world: Bichard, name: stri
   await page.waitForSelector(".wpsToolBarUserName", { timeout: config.timeout })
 }
 
-export const logInAs = async function (this: Bichard, username: string) {
-  if (this.config.noUi) {
+const logIn = async function (world: Bichard, username: string, sameWindow: boolean) {
+  if (world.config.noUi) {
     return
   }
 
-  await createUser(this, username)
+  await createUser(world, username)
 
-  if (this.config.authType === authType.bichardJwt) {
-    await logInDirectToBichardWithJwtAs(this, username)
+  if (world.config.authType === authType.bichardJwt) {
+    await logInDirectToBichardWithJwtAs(world, username)
   } else {
-    await logInNormallyAs(this, username)
+    await logInNormallyAs(world, username, sameWindow)
   }
 
   const match = nextui ? new RegExp(username, "i") : new RegExp(`You are logged in as: ${username}`, "i")
-  expect(await this.browser.pageText()).toMatch(match)
+  expect(await world.browser.pageText()).toMatch(match)
+}
+
+export const logInAsSameWindow = async function (this: Bichard, username: string) {
+  const sameWindow = true
+
+  // await delay(15)
+
+  await logIn(this, username, sameWindow)
+}
+
+export const logInAs = async function (this: Bichard, username: string) {
+  const sameWindow = false
+
+  await logIn(this, username, sameWindow)
 }
