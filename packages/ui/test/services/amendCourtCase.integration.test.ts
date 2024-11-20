@@ -147,15 +147,15 @@ describe("amend court case", () => {
     expect(retrievedCase?.notes).toHaveLength(3)
     expect(retrievedCase?.notes[0].userId).toBe("System")
     expect(retrievedCase?.notes[0].noteText).toBe(
-      `${userName}: Portal Action: Update Applied. Element: forceOwner. New Value: 03`
+      `${userName}: Portal Action: Update Applied. Element: courtOffenceSequenceNumber. New Value: 3333`
     )
     expect(retrievedCase?.notes[1].userId).toBe("System")
     expect(retrievedCase?.notes[1].noteText).toBe(
-      `${userName}: Portal Action: Update Applied. Element: courtOffenceSequenceNumber. New Value: 3333`
+      `${userName}: Portal Action: Update Applied. Element: courtOffenceSequenceNumber. New Value: 1111`
     )
     expect(retrievedCase?.notes[2].userId).toBe("System")
     expect(retrievedCase?.notes[2].noteText).toBe(
-      `${userName}: Portal Action: Update Applied. Element: courtOffenceSequenceNumber. New Value: 1111`
+      `${userName}: Portal Action: Update Applied. Element: forceOwner. New Value: 03`
     )
   })
 
