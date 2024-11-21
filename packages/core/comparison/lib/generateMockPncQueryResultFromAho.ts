@@ -1,10 +1,8 @@
 import { XMLParser } from "fast-xml-parser"
-
-import type { AhoXml } from "../../types/AhoXml"
-import type { PncQueryResult } from "../../types/PncQueryResult"
-
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
 import { mapXmlCxe01ToAho } from "../../lib/parse/parseAhoXml"
+import type { AhoXml } from "../../types/AhoXml"
+import type { PncQueryResult } from "../../types/PncQueryResult"
 
 /*
 Sample CXE element
@@ -27,7 +25,7 @@ Sample CXE element
 </CXE01>
 */
 
-export default (ahoXml: string): Error | PncQueryResult | undefined => {
+export default (ahoXml: string): PncQueryResult | Error | undefined => {
   const options = {
     ignoreAttributes: false,
     parseTagValue: false,

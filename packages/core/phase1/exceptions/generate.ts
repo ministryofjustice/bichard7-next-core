@@ -7,7 +7,6 @@ import type Exception from "../../types/Exception"
 
 import { validatedHearingOutcomeSchema } from "../../schemas/validatedHearingOutcome"
 import * as exceptions from "../exceptions/exceptions"
-import pncExceptions from "../exceptions/pncExceptions"
 
 const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
   if (issue.message in ExceptionCode) {
@@ -42,9 +41,5 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   // Generate HO100323 which depends on HO100322
   const ho100323 = exceptions.HO100323(aho, { exceptions: generatedExceptions })
 
-  const pncGeneratedExceptions = pncExceptions(aho)
-
-  return generatedExceptions
-    .concat(ho100300, ho100323, pncGeneratedExceptions)
-    .sort((a, b) => a.code.localeCompare(b.code))
+  return generatedExceptions.concat(ho100300, ho100323).sort((a, b) => a.code.localeCompare(b.code))
 }

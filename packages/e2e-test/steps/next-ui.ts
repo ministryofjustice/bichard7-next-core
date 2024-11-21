@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber"
 import * as legacy from "../utils/actions.legacy-ui"
 import * as ui from "../utils/actions.next-ui"
 import { checkAuditLogExists } from "../utils/auditLogging"
-import { logInAs } from "../utils/auth"
+import { logInAs, logInAsSameWindow } from "../utils/auth"
 import * as messages from "../utils/message"
 import * as pnc from "../utils/pnc"
 import * as reports from "../utils/reports"
@@ -10,6 +10,7 @@ import type Bichard from "../utils/world"
 
 export const setupNextSteps = () => {
   Given("I am logged in as {string}", logInAs)
+  Given("I am logged in as {string} in the same window", logInAsSameWindow)
 
   // Misc
   When(
@@ -143,4 +144,8 @@ export const setupNextSteps = () => {
   Then("I do not see record for {string}", ui.cannotSeeContentInTable)
   Then("I see exceptions resolution status as {string}", ui.exceptionResolutionStatus)
   Then("I see exceptions resolution status as {string} on case details page", ui.exceptionResolutionStatusOnCaseDetails)
+  Then("I search for exceptions", ui.searchForExceptions)
+  Then("I see applied filters", ui.exceptionReasonChip)
+  Then("I sign out", ui.signOut)
+  Then("I should be on the same case details page with exception {string}", ui.sameException)
 }

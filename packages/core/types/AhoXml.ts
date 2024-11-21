@@ -11,13 +11,12 @@ export interface Br7AnnotatedHearingOutcome {
   "@_xmlns:ds"?: string
   "@_xmlns:xsi"?: string
   "br7:HasError"?: Br7TextString
-  "br7:HearingOutcome": Br7HearingOutcome
-  "br7:PNCErrorMessage"?: {
-    "#text": string
-    "@_classification"?: string
-  }
-  "br7:PNCQueryDate"?: Br7TextString
   CXE01: Cxe01 | undefined
+  "br7:PNCQueryDate"?: Br7TextString
+  "br7:PNCErrorMessage"?: Br7PncErrorMessageString[]
+  "@_xmlns:ds"?: string
+  "@_xmlns:xsi"?: string
+  "@_xmlns:br7": string
 }
 
 export interface Cxe01 {
@@ -346,6 +345,12 @@ export interface Br7TextString {
   "#text": string
   "@_Error"?: string
 }
+
+export interface Br7PncErrorMessageString {
+  "#text": string
+  "@_classification"?: string
+}
+
 export interface Br7LiteralTextString extends Br7TextString {
   "@_Literal"?: string
 }

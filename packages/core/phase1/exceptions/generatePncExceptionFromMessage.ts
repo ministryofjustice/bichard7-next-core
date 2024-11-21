@@ -1,6 +1,6 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
-import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+import errorPaths from "../../lib/exceptions/errorPaths"
+import type { PncException } from "../../types/Exception"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
 
@@ -14,8 +14,8 @@ type ErrorRangeDefinition = {
   ranges: ErrorRange[]
 }
 
-const ho100301 = { code: ExceptionCode.HO100301, path: errorPaths.case.asn }
-const ho100314 = { code: ExceptionCode.HO100314, path: errorPaths.case.asn }
+const ho100301 = (message: string) => ({ code: ExceptionCode.HO100301, path: errorPaths.case.asn, message })
+const ho100314 = (message: string) => ({ code: ExceptionCode.HO100314, path: errorPaths.case.asn, message })
 
 const errorRanges: ErrorRangeDefinition[] = [
   {
@@ -34,8 +34,6 @@ const errorRanges: ErrorRangeDefinition[] = [
     code: ExceptionCode.HO100314,
     ranges: [
       { start: "I0007", end: "I0008" },
-      { start: "I0014", end: "I0015" },
-      { start: "I0021" },
       { start: "I0023" },
       { start: "I0031", end: "I0036" },
       { start: "I1001", end: "I1041" },
@@ -59,24 +57,20 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
 
 export const isNotFoundError = (message: string): boolean => !!message.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)
 
-const pncExceptions: ExceptionGenerator = (hearingOutcome) => {
-  if (typeof hearingOutcome.PncErrorMessage !== "string") {
-    return []
+const generatePncExceptionFromMessage = (message: string): PncException => {
+  if (isNotFoundError(message)) {
+    return ho100301(message)
   }
 
-  if (isNotFoundError(hearingOutcome.PncErrorMessage)) {
-    return [ho100301]
-  }
-
-  const errorCode = hearingOutcome.PncErrorMessage?.substring(0, 5)
+  const errorCode = message.substring(0, 5)
 
   for (const { code, ranges } of errorRanges) {
     if (inErrorRange(errorCode, ranges)) {
-      return [{ code, path: errorPaths.case.asn }]
+      return { code, path: errorPaths.case.asn, message }
     }
   }
 
-  return [ho100314]
+  return ho100314(message)
 }
 
-export default pncExceptions
+export default generatePncExceptionFromMessage

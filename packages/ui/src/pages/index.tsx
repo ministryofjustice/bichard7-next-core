@@ -5,7 +5,8 @@ import Layout from "components/Layout"
 import Pagination from "components/Pagination"
 import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { getCookie, setCookie } from "cookies-next"
+import { deleteCookie, getCookie, setCookie } from "cookies-next"
+import type { OptionsType } from "cookies-next/lib/types"
 import AppliedFilters from "features/CourtCaseFilters/AppliedFilters"
 import CourtCaseFilter from "features/CourtCaseFilters/CourtCaseFilter"
 import CourtCaseWrapper from "features/CourtCaseFilters/CourtCaseFilterWrapper"
@@ -33,6 +34,7 @@ import UnlockReason from "types/UnlockReason"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatFormInputDateString } from "utils/date/formattedDate"
 import removeBlankQueryParams from "utils/deleteQueryParam/removeBlankQueryParams"
+import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import getQueryStringCookieName from "utils/getQueryStringCookieName"
 import { isPost } from "utils/http"
 import { logCaseListRenderTime } from "utils/logging"
@@ -57,6 +59,7 @@ type Props = {
   environment: null | string
   oppositeOrder: QueryOrder
   queryStringCookieName: string
+  caseDetailsCookieName: string
   totalCases: number
   user: DisplayFullUser
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "courtDateRange" | "resolvedByUsername" | "resolvedDateRange">
@@ -69,6 +72,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     const { csrfToken, currentUser, query, req } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
+    const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
 
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 
@@ -166,6 +170,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         environment: process.env.NEXT_PUBLIC_WORKSPACE || null,
         oppositeOrder,
         queryStringCookieName,
+        caseDetailsCookieName,
         totalCases: courtCases.totalCases,
         user: userToDisplayFullUserDto(currentUser),
         ...caseListQueryProps
@@ -179,7 +184,9 @@ const Home: NextPage<Props> = (props) => {
   const {
     build,
     courtCases,
-    csrfToken,
+    totalCases,
+    queryStringCookieName,
+    caseDetailsCookieName,
     displaySwitchingSurveyFeedback,
     environment,
     oppositeOrder,
@@ -191,6 +198,9 @@ const Home: NextPage<Props> = (props) => {
 
   useEffect(() => {
     logUiDetails(environment, build)
+
+    deleteCookie(caseDetailsCookieName)
+
     const nonSavedParams = ["unlockTrigger", "unlockException"]
     const [, queryString] = router.asPath.split("?")
 
@@ -206,7 +216,7 @@ const Home: NextPage<Props> = (props) => {
     if (!isEqual(newQueryParams.toString(), queryParams.toString())) {
       router.push({ pathname, query: newQueryParams.toString() }, undefined, { shallow: true })
     }
-  }, [router, queryStringCookieName, environment, build])
+  }, [router, queryStringCookieName, environment, build, caseDetailsCookieName])
 
   const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })

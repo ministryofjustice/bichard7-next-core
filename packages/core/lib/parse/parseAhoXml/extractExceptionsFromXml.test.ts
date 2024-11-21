@@ -6,6 +6,36 @@ describe("extractExceptionsFromXml", () => {
   it.each([
     {
       messageType: "AnnotatedHearingOutcome",
+      xmlFile: "phase1/tests/fixtures/AnnotatedHO1-with-pnc-errors.xml",
+      expected: [
+        {
+          code: "HO100324",
+          path: [
+            "AnnotatedHearingOutcome",
+            "HearingOutcome",
+            "Case",
+            "HearingDefendant",
+            "Offence",
+            1,
+            "Result",
+            0,
+            "ResultClass"
+          ]
+        },
+        {
+          code: "HO100301",
+          message: "I0001 - Error message 1",
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        },
+        {
+          code: "HO100301",
+          message: "I0001 - Error message 2",
+          path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+        }
+      ]
+    },
+    {
+      messageType: "AnnotatedHearingOutcome",
       xmlFile: "phase1/tests/fixtures/AnnotatedHO1-with-exceptions.xml",
       expected: [
         {
