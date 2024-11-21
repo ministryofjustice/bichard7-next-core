@@ -1,6 +1,7 @@
-import generatePncExceptionFromMessage from "./generatePncExceptionFromMessage"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import errorPaths from "../../lib/exceptions/errorPaths"
+import generatePncExceptionFromMessage from "./generatePncExceptionFromMessage"
 
 describe("generatePncExceptionFromMessage", () => {
   it("returns a HO100301 exception for a 'not found' error", () => {

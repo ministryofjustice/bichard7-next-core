@@ -33,6 +33,8 @@ import type {
   Result,
   Urgent
 } from "../../../types/AnnotatedHearingOutcome"
+import type { PncException } from "../../../types/Exception"
+import type Exception from "../../../types/Exception"
 import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
@@ -53,8 +55,6 @@ import generateXml from "../generateXml"
 import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import addNullElementsForExceptions from "./addNullElementsForExceptions"
-import type { PncException } from "../../../types/Exception"
-import type Exception from "../../../types/Exception"
 
 enum LiteralType {
   ActualOffenceDateCode,
