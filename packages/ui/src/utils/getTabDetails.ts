@@ -2,7 +2,7 @@ import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
 import getNextHearingDateExceptions from "./exceptions/getNextHearingDateExceptions"
 import getNextHearingLocationExceptions from "./exceptions/getNextHearingLocationExceptions"
-import getNumberOfIneditableOffenceExceptions from "./exceptions/getNumberOfIneditableOffenceExceptions"
+import { getNumberOfIneditableOffenceExceptions } from "./exceptions/getNumberOfOffenceExceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
 import hasNextHearingLocationException from "./exceptions/hasNextHearingLocationException"
 import isAsnFormatValid from "./exceptions/isAsnFormatValid"
@@ -99,11 +99,6 @@ const getTabDetails = (
 
   let offencesExceptionsResolved = false
 
-  // Excepeptions
-  // Editable exceptions
-  //  Next Hearing Date, Next hearing location, offence matching
-  // Non-editable exceptions
-  //  Create a method - getNonEditableOffenceExceptions
   const ineditableOffenceExceptions = getNumberOfIneditableOffenceExceptions(exceptions)
 
   if (
