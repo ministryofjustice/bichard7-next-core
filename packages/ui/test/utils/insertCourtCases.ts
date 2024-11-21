@@ -97,13 +97,16 @@ const insertMultipleDummyCourtCases = async (numToInsert: number, orgCode: strin
   )
 }
 
-const insertDummyCourtCasesWithNotes = async (caseNotes: { text: string; user: string }[][], orgCode: string) => {
+const insertDummyCourtCasesWithNotes = async (
+  caseNotes: { createdAt?: Date; text: string; user: string }[][],
+  orgCode: string
+) => {
   return insertCourtCasesWithFields(
     caseNotes.map((notes, index) => ({
       notes: notes.map(
         (note, _) =>
           ({
-            createdAt: new Date(),
+            createdAt: note.createdAt ?? new Date(),
             errorId: index,
             noteText: note.text,
             userId: note.user
@@ -115,7 +118,7 @@ const insertDummyCourtCasesWithNotes = async (caseNotes: { text: string; user: s
 }
 
 const insertDummyCourtCasesWithNotesAndLock = async (
-  caseNotes: { text: string; user: string }[][],
+  caseNotes: { createdAt?: Date; text: string; user: string }[][],
   orgCode: string
 ) => {
   return insertCourtCasesWithFields(
@@ -124,7 +127,7 @@ const insertDummyCourtCasesWithNotesAndLock = async (
       notes: notes.map(
         (note, _) =>
           ({
-            createdAt: new Date(),
+            createdAt: note.createdAt ?? new Date(),
             errorId: index,
             noteText: note.text,
             userId: note.user

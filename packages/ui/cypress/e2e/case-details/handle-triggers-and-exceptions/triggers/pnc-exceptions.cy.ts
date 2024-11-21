@@ -66,7 +66,8 @@ describe("PNC Exceptions", () => {
       exceptions: {
         ho100108: true,
         ho100332: true,
-        pncExceptionCode: ExceptionCode.HO100302
+        pncExceptionCode: ExceptionCode.HO100302,
+        pncExceptionMessage: "I1008 - GWAY - ENQUIRY ERROR MORE THAN 3 DISPOSAL GROUPS 09/0000/00/20004H"
       }
     })
 

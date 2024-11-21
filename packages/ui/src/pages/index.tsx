@@ -5,7 +5,7 @@ import Layout from "components/Layout"
 import Pagination from "components/Pagination"
 import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { getCookie, setCookie } from "cookies-next"
+import { deleteCookie, getCookie, setCookie } from "cookies-next"
 import AppliedFilters from "features/CourtCaseFilters/AppliedFilters"
 import CourtCaseFilter from "features/CourtCaseFilters/CourtCaseFilter"
 import CourtCaseWrapper from "features/CourtCaseFilters/CourtCaseFilterWrapper"
@@ -33,6 +33,7 @@ import UnlockReason from "types/UnlockReason"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatFormInputDateString } from "utils/date/formattedDate"
 import removeBlankQueryParams from "utils/deleteQueryParam/removeBlankQueryParams"
+import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import getQueryStringCookieName from "utils/getQueryStringCookieName"
 import { isPost } from "utils/http"
 import { logCaseListRenderTime } from "utils/logging"
@@ -49,6 +50,7 @@ type Props = {
   build: null | string
   caseAge: string[]
   caseAgeCounts: Record<string, number>
+  caseDetailsCookieName: string
   caseResolvedDateRange: null | SerializedDateRange
   courtCases: DisplayPartialCourtCase[]
   csrfToken: string
@@ -69,6 +71,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     const { csrfToken, currentUser, query, req } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
+    const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
 
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 
@@ -147,6 +150,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         build: process.env.NEXT_PUBLIC_BUILD || null,
         caseAge: caseAges,
         caseAgeCounts: caseAgeCounts,
+        caseDetailsCookieName,
         caseResolvedDateRange: caseListQueryParams.resolvedDateRange
           ? {
               from: formatFormInputDateString(caseListQueryParams.resolvedDateRange.from),
@@ -178,6 +182,7 @@ const Home: NextPage<Props> = (props) => {
   const router = useRouter()
   const {
     build,
+    caseDetailsCookieName,
     courtCases,
     csrfToken,
     displaySwitchingSurveyFeedback,
@@ -191,6 +196,9 @@ const Home: NextPage<Props> = (props) => {
 
   useEffect(() => {
     logUiDetails(environment, build)
+
+    deleteCookie(caseDetailsCookieName)
+
     const nonSavedParams = ["unlockTrigger", "unlockException"]
     const [, queryString] = router.asPath.split("?")
 
@@ -206,7 +214,7 @@ const Home: NextPage<Props> = (props) => {
     if (!isEqual(newQueryParams.toString(), queryParams.toString())) {
       router.push({ pathname, query: newQueryParams.toString() }, undefined, { shallow: true })
     }
-  }, [router, queryStringCookieName, environment, build])
+  }, [router, queryStringCookieName, environment, build, caseDetailsCookieName])
 
   const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })

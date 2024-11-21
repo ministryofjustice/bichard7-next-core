@@ -9,7 +9,7 @@ import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/Pn
 import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 import isDummyAsn from "../../../lib/isDummyAsn"
-import { isNotFoundError } from "../../exceptions/pncExceptions"
+import generatePncExceptionFromMessage, { isNotFoundError } from "../../exceptions/generatePncExceptionFromMessage"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
@@ -48,7 +48,8 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
-  auditLogger: AuditLogger
+  auditLogger: AuditLogger,
+  isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -70,14 +71,16 @@ export default async (
     "PNC Request Type": "enquiry",
     "PNC Request Message":
       annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
-    "PNC Response Message": isError(pncResult) ? pncResult.message : pncResult,
+    "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
 
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
-    if (!isNotFoundError(pncResult.message) || isCaseRecordable(annotatedHearingOutcome)) {
-      annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
+    for (const message of pncResult.messages) {
+      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
+        annotatedHearingOutcome.Exceptions.push(generatePncExceptionFromMessage(message))
+      }
     }
   } else {
     annotatedHearingOutcome.PncQuery = pncResult

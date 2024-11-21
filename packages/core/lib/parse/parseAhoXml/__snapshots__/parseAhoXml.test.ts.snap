@@ -369,8 +369,30 @@ exports[`parseAhoXml converts XML to Aho 1`] = `
       },
     },
   },
-  "Exceptions": [],
-  "PncErrorMessage": undefined,
+  "Exceptions": [
+    {
+      "code": "HO100403",
+      "message": "I5005 - WARNING - REMAND INFORMATION INDICATES THAT THE SUBJECT WAS ON BAIL AT THE TIME OFFENCE 000 ENTERED FOR ARREST/SUMMONS 24/0000/00/0000000G ON RECORD PNCID/CHECKNAME: 24/000000M XXXXXXX WAS COMMITTED - CHECK DETAILS AND AMEND RECORD AS NECESSARY",
+      "path": [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "ArrestSummonsNumber",
+      ],
+    },
+    {
+      "code": "HO100402",
+      "message": "I0190 - THE COMBINATION OF ADJUDICATION AND DISPOSAL CODE FOR CHARGE   1 IN MESSAGE 073RDIS000000S IS INVALID",
+      "path": [
+        "AnnotatedHearingOutcome",
+        "HearingOutcome",
+        "Case",
+        "HearingDefendant",
+        "ArrestSummonsNumber",
+      ],
+    },
+  ],
   "PncQuery": {
     "checkName": "SEXOFFENCE",
     "courtCases": [

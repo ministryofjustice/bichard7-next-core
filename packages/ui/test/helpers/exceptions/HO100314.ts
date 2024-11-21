@@ -20,10 +20,10 @@ const possiblePncErrorMessages = [
 ]
 
 export default function (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome {
-  aho.PncErrorMessage = `${sample(possiblePncErrorMessages)} - THIS IS A PNC ERROR MESSAGE`
   aho.Exceptions.push({
     code: ExceptionCode.HO100314,
-    path: errorPaths.case.asn
+    path: errorPaths.case.asn,
+    message: `${sample(possiblePncErrorMessages)} - THIS IS A PNC ERROR MESSAGE`
   })
 
   return aho

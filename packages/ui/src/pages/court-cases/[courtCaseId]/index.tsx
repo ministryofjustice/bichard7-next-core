@@ -7,13 +7,15 @@ import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseCon
 import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { PreviousPathContext, PreviousPathContextType } from "context/PreviousPathContext"
+import { setCookie } from "cookies-next"
+import { OptionsType } from "cookies-next/lib/types"
 import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
@@ -29,6 +31,7 @@ import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import { isPost } from "utils/http"
 import { logRenderTime } from "utils/logging"
 import notSuccessful from "utils/notSuccessful"
@@ -65,6 +68,8 @@ export const getServerSideProps = withMultipleServerSideProps(
       resolveTrigger: string | string[] | undefined
       resubmitCase: string
     }
+    const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
+
     const dataSource = await getDataSource()
 
     const loadLockedBy = true
@@ -97,7 +102,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (typeof resolveTrigger === "string" && !Number.isNaN(+resolveTrigger)) {
       triggersToResolve.push(+resolveTrigger)
     } else if (Array.isArray(resolveTrigger)) {
-      resolveTrigger.map((triggerId) => {
+      resolveTrigger.forEach((triggerId) => {
         if (!Number.isNaN(+triggerId)) {
           triggersToResolve.push(+triggerId)
         }
@@ -146,7 +151,7 @@ export const getServerSideProps = withMultipleServerSideProps(
           noteText
         )
         if (!isSuccessful) {
-          return notSuccessful(ValidationException || Exception?.message || "")
+          return notSuccessful(ValidationException ?? Exception?.message ?? "")
         }
       }
     }
@@ -176,6 +181,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       props: {
         canReallocate: courtCase.canReallocate(currentUser.username),
         canResolveAndSubmit: courtCase.canResolveOrSubmit(currentUser),
+        caseDetailsCookieName,
         courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
         csrfToken,
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
@@ -190,6 +196,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 interface Props {
   canReallocate: boolean
   canResolveAndSubmit: boolean
+  caseDetailsCookieName: string
   courtCase: DisplayFullCourtCase
   csrfToken: string
   displaySwitchingSurveyFeedback: boolean
@@ -201,6 +208,7 @@ interface Props {
 const CourtCaseDetailsPage: NextPage<Props> = ({
   canReallocate,
   canResolveAndSubmit,
+  caseDetailsCookieName,
   courtCase,
   csrfToken,
   displaySwitchingSurveyFeedback,
@@ -212,6 +220,12 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const [previousPathContext] = useState<PreviousPathContextType>({ previousPath })
+
+  useEffect(() => {
+    setCookie(caseDetailsCookieName, `${courtCase.errorId}?previousPath=${encodeURIComponent(previousPath)}`, {
+      path: "/"
+    } as OptionsType)
+  }, [caseDetailsCookieName, courtCase.errorId, previousPath])
 
   return (
     <>
