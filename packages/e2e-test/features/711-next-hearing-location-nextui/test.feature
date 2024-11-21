@@ -22,7 +22,7 @@ Feature: 711 - Next Hearing location Next UI
 		Then I submit the record on the case details page
 			And I click the "Offences" tab
 			And I view offence with text "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over"
-		Then I see the Correction badge
+		Then I see the "Correction" badge
 
 	@ExcludeOnLegacyUI
 	@NextUI
@@ -38,7 +38,7 @@ Feature: 711 - Next Hearing location Next UI
 		Then I submit the record on the case details page
 			And I click the "Offences" tab
 			And I view offence with text "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over"
-		Then I see the Correction badge
+		Then I see the "Correction" badge
 
 	@ExcludeOnLegacyUI
 	@NextUI
@@ -54,7 +54,7 @@ Feature: 711 - Next Hearing location Next UI
 		Then I submit the record on the case details page
 			And I click the "Offences" tab
 			And I view offence with text "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over"
-		Then I see the Correction badge
+		Then I see the "Correction" badge
 
 	@ExcludeOnLegacyUI
 	@NextUI

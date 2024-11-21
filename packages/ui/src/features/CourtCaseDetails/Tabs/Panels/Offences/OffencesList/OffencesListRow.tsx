@@ -60,7 +60,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
             onClick(offence)
           }}
         >
-          {offence.OffenceTitle}
+          {offence.OffenceTitle ?? "Offence code not found"}
         </a>
       </Table.Cell>
     </Table.Row>
