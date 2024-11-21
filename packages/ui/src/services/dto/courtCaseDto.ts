@@ -1,8 +1,8 @@
+import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { sortBy } from "lodash"
 import type CourtCase from "services/entities/CourtCase"
 import type { DisplayFullCourtCase, DisplayPartialCourtCase } from "types/display/CourtCases"
 import parseHearingOutcome from "utils/parseHearingOutcome"
-import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import type User from "../entities/User"
 import { noteToDisplayNoteDto } from "./noteDto"
 import { triggerToDisplayTriggerDto } from "./triggerDto"
@@ -24,7 +24,7 @@ export const courtCaseToDisplayPartialCourtCaseDto = (
       hasAccessToExceptions(currentUser) &&
       courtCase.errorStatus === "Unresolved",
     isUrgent: courtCase.isUrgent,
-    notes: sortBy(courtCase.notes.map(noteToDisplayNoteDto), "createdAt"),
+    notes: sortBy(courtCase.notes.map(noteToDisplayNoteDto), "createdAt").reverse(),
     ptiurn: courtCase.ptiurn,
     resolutionTimestamp: courtCase.resolutionTimestamp ? courtCase.resolutionTimestamp.toISOString() : null,
     triggerLockedByUsername: courtCase.triggerLockedByUsername,
