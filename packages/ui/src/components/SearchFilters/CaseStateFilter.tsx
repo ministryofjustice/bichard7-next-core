@@ -2,7 +2,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import ConditionalRender from "components/ConditionalRender"
 import RadioButton from "components/RadioButton/RadioButton"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { ChangeEvent, Dispatch } from "react"
+import { Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
 
 interface CaseStateFilterProps {
@@ -24,10 +24,9 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
           dataAriaControls={"conditional-case-state"}
           defaultChecked={caseState === "Resolved" && !resolvedByUsername}
           label={"All resolved cases"}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
-            console.log(event.target.checked)
+          onChange={() => {
             dispatch({
-              method: event.target.checked ? "add" : "remove",
+              method: "add",
               type: "caseState",
               value: "Resolved"
             })
@@ -51,7 +50,7 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
         </ConditionalRender>
         <RadioButton
           name={"state"}
-          id={"unresolvedCases"}
+          id={"unresolved"}
           dataAriaControls={"conditional-case-state"}
           defaultChecked={caseState === "Unresolved"}
           label={"Unresolved cases"}
