@@ -36,9 +36,7 @@ const phase1 = async (
     }
   }
 
-  const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
-
-  const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger, isIgnored)
+  const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
 
   auditLogger.info(
     EventCode.HearingOutcomeDetails,
@@ -58,6 +56,7 @@ const phase1 = async (
     )
   }
 
+  const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
   let resultType: Phase1ResultType
   if (isIgnored) {
     auditLogger.info(EventCode.IgnoredReopened)

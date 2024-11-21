@@ -383,6 +383,7 @@ exports[`amend court case Should amend the court case 2`] = `
       ],
     },
   ],
+  "PncErrorMessage": undefined,
   "PncQuery": {
     "checkName": "SEXOFFENCE",
     "courtCases": [
@@ -830,6 +831,7 @@ exports[`amend court case Should amend the court case when the lock is held by t
       ],
     },
   ],
+  "PncErrorMessage": undefined,
   "PncQuery": {
     "checkName": "SEXOFFENCE",
     "courtCases": [
@@ -1254,6 +1256,7 @@ exports[`amend court case Should create a force owner if the force owner is not 
     },
   },
   "Exceptions": [],
+  "PncErrorMessage": undefined,
   "PncQuery": {
     "checkName": "SEXOFFENCE",
     "courtCases": [

@@ -93,20 +93,18 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
   }
 }
 
-export class PncApiError extends Error {
-  constructor(private _messages: string[]) {
-    super(_messages[0])
-  }
-
-  get messages() {
-    return this._messages
+class PncApiError extends Error {
+  constructor(public errors: string[]) {
+    super(errors[0])
   }
 }
 
 export default class PncGateway implements PncGatewayInterface {
   queryTime: Date | undefined
 
-  query(asn: string, correlationId: string): Promise<PncQueryResult | PncApiError> {
+  constructor(private config: PncApiConfig) {}
+
+  query(asn: string, correlationId: string): Promise<Error | PncQueryResult | undefined> {
     this.queryTime = new Date()
     return axios
       .get(`${this.config.url}/records/${asn}`, {
@@ -128,7 +126,7 @@ export default class PncGateway implements PncGatewayInterface {
           return new PncApiError(e.response?.data?.errors)
         }
 
-        return new PncApiError([e.message])
+        return e as Error
       })
   }
 

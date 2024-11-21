@@ -5,10 +5,13 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type AuditLogger from "../../../types/AuditLogger"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
-import { isNotFoundError } from "../../exceptions/generatePncExceptionFromMessage"
+
+import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
+import isCaseRecordable from "../../../lib/isCaseRecordable"
+import isDummyAsn from "../../../lib/isDummyAsn"
+import { isNotFoundError } from "../../exceptions/pncExceptions"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
-import generatePncExceptionFromMessage from "../../exceptions/generatePncExceptionFromMessage"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -45,8 +48,7 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
-  auditLogger: AuditLogger,
-  isIgnored: boolean
+  auditLogger: AuditLogger
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -68,16 +70,14 @@ export default async (
     "PNC Request Type": "enquiry",
     "PNC Request Message":
       annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
-    "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
+    "PNC Response Message": isError(pncResult) ? pncResult.message : pncResult,
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
 
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
-    for (const message of pncResult.messages) {
-      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
-        annotatedHearingOutcome.Exceptions.push(generatePncExceptionFromMessage(message))
-      }
+    if (!isNotFoundError(pncResult.message) || isCaseRecordable(annotatedHearingOutcome)) {
+      annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
     }
   } else {
     annotatedHearingOutcome.PncQuery = pncResult

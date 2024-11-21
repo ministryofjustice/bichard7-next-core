@@ -102,17 +102,11 @@ export default defineConfig({
           return deleteFeedback()
         },
 
-        insertCourtCasesWithNotes(params: {
-          caseNotes: { user: string; text: string; createdAt?: Date }[][] 
-          force: string
-        }) {
+        insertCourtCasesWithNotes(params: { caseNotes: { user: string; text: string }[][]; force: string }) {
           return insertDummyCourtCasesWithNotes(params.caseNotes, params.force)
         },
 
-        insertCourtCasesWithNotesAndLock(params: {
-          caseNotes: { user: string; text: string; createdAt?: Date }[][]
-          force: string
-        }) {
+        insertCourtCasesWithNotesAndLock(params: { caseNotes: { user: string; text: string }[][]; force: string }) {
           return insertDummyCourtCasesWithNotesAndLock(params.caseNotes, params.force)
         },
 

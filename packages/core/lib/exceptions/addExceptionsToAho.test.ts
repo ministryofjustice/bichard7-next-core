@@ -41,40 +41,4 @@ describe("addExceptionsToAho", () => {
     expect(aho.Exceptions).toHaveLength(1)
     expect(aho.Exceptions[0]).toStrictEqual(exceptionTwo)
   })
-
-  it("doesn't remove an existing PNC exception when the new exception is not a PNC exception", () => {
-    const pncException = {
-      code: ExceptionCode.HO100301,
-      path: ["path", "to", "exception"]
-    }
-    const aho = { Exceptions: [pncException] } as unknown as AnnotatedHearingOutcome
-    const nonPncException = {
-      code: ExceptionCode.HO100100,
-      path: ["path", "to", "exception"]
-    }
-    const exceptions = [nonPncException]
-
-    addExceptionsToAho(aho, exceptions)
-
-    expect(aho.Exceptions).toHaveLength(2)
-    expect(aho.Exceptions).toStrictEqual([pncException, nonPncException])
-  })
-
-  it("doesn't remove an existing non-PNC exception when the new exception is a PNC exception", () => {
-    const nonPncException = {
-      code: ExceptionCode.HO100100,
-      path: ["path", "to", "exception"]
-    }
-    const aho = { Exceptions: [nonPncException] } as unknown as AnnotatedHearingOutcome
-    const pncException = {
-      code: ExceptionCode.HO100301,
-      path: ["path", "to", "exception"]
-    }
-    const exceptions = [pncException]
-
-    addExceptionsToAho(aho, exceptions)
-
-    expect(aho.Exceptions).toHaveLength(2)
-    expect(aho.Exceptions).toStrictEqual([nonPncException, pncException])
-  })
 })

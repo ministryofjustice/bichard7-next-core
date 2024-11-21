@@ -1,3 +1,6 @@
+import type NavigationHandler from "types/NavigationHandler"
+
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import ConditionalRender from "components/ConditionalRender"
 import LinkButton from "components/LinkButton"
 import { useCourtCase } from "context/CourtCaseContext"
@@ -17,16 +20,19 @@ import { gdsLightGrey, gdsMidGrey, textPrimary } from "../../../utils/colours"
 import LockStatusTag from "../LockStatusTag"
 import { ButtonContainer, SeparatorLine } from "./ExceptionsList.styles"
 
+const isPncException = (code: ExceptionCode) =>
+  [ExceptionCode.HO100302, ExceptionCode.HO100314, ExceptionCode.HO100402, ExceptionCode.HO100404].includes(code)
+
 interface Props {
   canResolveAndSubmit: boolean
   onNavigate: NavigationHandler
   stopLeavingFn: (newValue: boolean) => void
 }
 
-const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
-  const { courtCase, amendments, savedAmendments } = useCourtCase()
-  const pncExceptions = courtCase.aho.Exceptions.filter((exception) => "message" in exception)
-  const otherExceptions = courtCase.aho.Exceptions.filter((exception) => !("message" in exception))
+const ExceptionsList = ({ canResolveAndSubmit, onNavigate, stopLeavingFn }: Props) => {
+  const { amendments, courtCase, savedAmendments } = useCourtCase()
+  const pncExceptions = courtCase.aho.Exceptions.filter(({ code }) => isPncException(code))
+  const otherExceptions = courtCase.aho.Exceptions.filter(({ code }) => !isPncException(code))
   const csrfToken = useCsrfToken()
   const previousPath = usePreviousPath()
   const router = useRouter()
@@ -54,8 +60,8 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
     <>
       {courtCase.aho.Exceptions.length === 0 && "There are no exceptions for this case."}
 
-      {pncExceptions.map(({ code, message }, index) => (
-        <PncException key={`exception_${index}`} code={code} message={message} />
+      {pncExceptions.map(({ code }, index) => (
+        <PncException code={code} key={`exception_${index}`} message={courtCase.aho.PncErrorMessage} />
       ))}
 
       {pncExceptions.length > 0 && otherExceptions.length > 0 && <SeparatorLine />}

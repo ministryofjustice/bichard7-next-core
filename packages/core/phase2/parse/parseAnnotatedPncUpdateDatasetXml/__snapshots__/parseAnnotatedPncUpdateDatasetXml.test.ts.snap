@@ -283,6 +283,7 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
         },
       ],
       "HasError": false,
+      "PncErrorMessage": undefined,
       "PncOperations": [
         {
           "code": "DISARR",

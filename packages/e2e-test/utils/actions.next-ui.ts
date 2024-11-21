@@ -721,32 +721,3 @@ export const addCheckMark = async function (this: Bichard, fieldName: string) {
 
   await page.click(fieldNameId)
 }
-
-export const searchForExceptions = async function (this: Bichard) {
-  await this.browser.page.waitForSelector("#exceptions-reason")
-  await this.browser.page.click("#exceptions-reason")
-
-  await Promise.all([this.browser.page.click("button#search"), this.browser.page.waitForNavigation()])
-}
-
-export const exceptionReasonChip = async function (this: Bichard) {
-  await this.browser.page.waitForSelector(".applied-filters button.moj-filter__tag")
-}
-
-export const signOut = async function (this: Bichard) {
-  const [signOutLink] = await this.browser.page.$$(
-    'xpath/.//a[contains(@class, "moj-header__navigation-link") and text() = "Sign out"]'
-  )
-
-  signOutLink.click()
-}
-
-export const sameException = async function (this: Bichard, exception: string) {
-  await this.browser.page.waitForSelector("#exceptions")
-
-  const [element] = await this.browser.page.$$(
-    `xpath/.//section[@id = "exceptions"]//*[contains(text(), "${exception}")]`
-  )
-
-  expect(element).not.toBeUndefined()
-}

@@ -37,20 +37,11 @@ const createUser = async (world: Bichard, name: string) => {
   }
 }
 
-const logInNormallyAs = async function (world: Bichard, name: string, sameWindow: boolean) {
+const logInNormallyAs = async function (world: Bichard, name: string) {
   const username = parallelUserName(world, name)
   const emailAddress = `${username}@example.com`
 
-  let page
-
-  if (sameWindow) {
-    await world.browser.page.waitForSelector('a[data-test="log-back-in"]')
-    await world.browser.page.click('a[data-test="log-back-in"]')
-    page = world.browser.page
-  } else {
-    page = await world.browser.newPage(login())
-  }
-
+  const page = await world.browser.newPage(login())
   await page.waitForSelector("#email")
 
   await page.type("#email", emailAddress)
@@ -106,31 +97,19 @@ const logInDirectToBichardWithJwtAs = async function (world: Bichard, name: stri
   await page.waitForSelector(".wpsToolBarUserName", { timeout: config.timeout })
 }
 
-const logIn = async function (world: Bichard, username: string, sameWindow: boolean) {
-  if (world.config.noUi) {
+export const logInAs = async function (this: Bichard, username: string) {
+  if (this.config.noUi) {
     return
   }
 
-  await createUser(world, username)
+  await createUser(this, username)
 
-  if (world.config.authType === authType.bichardJwt) {
-    await logInDirectToBichardWithJwtAs(world, username)
+  if (this.config.authType === authType.bichardJwt) {
+    await logInDirectToBichardWithJwtAs(this, username)
   } else {
-    await logInNormallyAs(world, username, sameWindow)
+    await logInNormallyAs(this, username)
   }
 
   const match = nextui ? new RegExp(username, "i") : new RegExp(`You are logged in as: ${username}`, "i")
-  expect(await world.browser.pageText()).toMatch(match)
-}
-
-export const logInAsSameWindow = async function (this: Bichard, username: string) {
-  const sameWindow = true
-
-  await logIn(this, username, sameWindow)
-}
-
-export const logInAs = async function (this: Bichard, username: string) {
-  const sameWindow = false
-
-  await logIn(this, username, sameWindow)
+  expect(await this.browser.pageText()).toMatch(match)
 }

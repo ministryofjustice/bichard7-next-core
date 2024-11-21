@@ -1,3 +1,5 @@
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+
 import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import Layout from "components/Layout"
@@ -5,43 +7,40 @@ import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseCon
 import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { PreviousPathContext, PreviousPathContextType } from "context/PreviousPathContext"
-import { setCookie } from "cookies-next"
-import { OptionsType } from "cookies-next/lib/types"
 import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
-import withCsrf from "middleware/withCsrf/withCsrf"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import addNote from "services/addNote"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
-import CourtCase from "services/entities/CourtCase"
-import User from "services/entities/User"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
-import getLastSwitchingFormSubmission from "services/getLastSwitchingFormSubmission"
 import lockCourtCase from "services/lockCourtCase"
 import resolveTriggers from "services/resolveTriggers"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
-import { AttentionBanner, AttentionContainer } from "styles/index.styles"
 import { UpdateResult } from "typeorm"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
-import { isError } from "types/Result"
-import UnlockReason from "types/UnlockReason"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
+import { isError } from "types/Result"
+import UnlockReason from "types/UnlockReason"
 import { isPost } from "utils/http"
 import { logRenderTime } from "utils/logging"
 import notSuccessful from "utils/notSuccessful"
 import redirectTo from "utils/redirectTo"
-import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
+
+import withCsrf from "../../../middleware/withCsrf/withCsrf"
+import CourtCase from "../../../services/entities/CourtCase"
+import User from "../../../services/entities/User"
+import getLastSwitchingFormSubmission from "../../../services/getLastSwitchingFormSubmission"
+import { AttentionBanner, AttentionContainer } from "../../../styles/index.styles"
+import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
+import shouldShowSwitchingFeedbackForm from "../../../utils/shouldShowSwitchingFeedbackForm"
 
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
@@ -66,8 +65,6 @@ export const getServerSideProps = withMultipleServerSideProps(
       resolveTrigger: string | string[] | undefined
       resubmitCase: string
     }
-    const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
-
     const dataSource = await getDataSource()
 
     const loadLockedBy = true
@@ -100,7 +97,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (typeof resolveTrigger === "string" && !Number.isNaN(+resolveTrigger)) {
       triggersToResolve.push(+resolveTrigger)
     } else if (Array.isArray(resolveTrigger)) {
-      resolveTrigger.forEach((triggerId) => {
+      resolveTrigger.map((triggerId) => {
         if (!Number.isNaN(+triggerId)) {
           triggersToResolve.push(+triggerId)
         }
@@ -149,7 +146,7 @@ export const getServerSideProps = withMultipleServerSideProps(
           noteText
         )
         if (!isSuccessful) {
-          return notSuccessful(ValidationException ?? Exception?.message ?? "")
+          return notSuccessful(ValidationException || Exception?.message || "")
         }
       }
     }
@@ -177,12 +174,6 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     return {
       props: {
-        csrfToken,
-        caseDetailsCookieName,
-        previousPath: previousPath ?? null,
-        user: userToDisplayFullUserDto(currentUser),
-        courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-        isLockedByCurrentUser: courtCase.isLockedByCurrentUser(currentUser.username),
         canReallocate: courtCase.canReallocate(currentUser.username),
         canResolveAndSubmit: courtCase.canResolveOrSubmit(currentUser),
         courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
@@ -204,7 +195,7 @@ interface Props {
   displaySwitchingSurveyFeedback: boolean
   isLockedByCurrentUser: boolean
   previousPath: string
-  caseDetailsCookieName: string
+  user: DisplayFullUser
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({
@@ -212,19 +203,15 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   canResolveAndSubmit,
   courtCase,
   csrfToken,
+  displaySwitchingSurveyFeedback,
+  isLockedByCurrentUser,
   previousPath,
-  caseDetailsCookieName
+  user
 }: Props) => {
   const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const [previousPathContext] = useState<PreviousPathContextType>({ previousPath })
-
-  useEffect(() => {
-    setCookie(caseDetailsCookieName, `${courtCase.errorId}?previousPath=${encodeURIComponent(previousPath)}`, {
-      path: "/"
-    } as OptionsType)
-  }, [caseDetailsCookieName, courtCase.errorId, previousPath])
 
   return (
     <>

@@ -363,6 +363,7 @@ exports[`resubmit court case Should resubmit a court case with no updates 1`] = 
     },
   },
   "Exceptions": [],
+  "PncErrorMessage": undefined,
   "PncQuery": undefined,
   "PncQueryDate": undefined,
 }
@@ -735,6 +736,7 @@ exports[`resubmit court case Should resubmit a court case with updates to Court 
     },
   },
   "Exceptions": [],
+  "PncErrorMessage": undefined,
   "PncQuery": undefined,
   "PncQueryDate": undefined,
 }
@@ -1107,6 +1109,7 @@ exports[`resubmit court case Should resubmit a court case with updates to multip
     },
   },
   "Exceptions": [],
+  "PncErrorMessage": undefined,
   "PncQuery": undefined,
   "PncQueryDate": undefined,
 }
