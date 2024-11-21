@@ -154,6 +154,15 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     groups: [UserGroup.NewUI, UserGroup.Supervisor],
     excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0021, TriggerCode.TRPR0030]
   },
+  Bichard18: {
+    username: "GeneralHandler",
+    visibleForces: ["18"],
+    forenames: "General Handler",
+    surname: "User",
+    email: "generalhandler@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
+  },
   ...numberedUsers()
 }
 
