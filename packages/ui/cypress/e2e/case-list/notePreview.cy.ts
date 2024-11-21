@@ -9,8 +9,8 @@ describe("Note preview", () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [
         [
-          { user: "GeneralHandler", text: "Test note 1", createdAt: new Date("2024-11-18") },
-          { user: "System", text: "Test note 2" }
+          { createdAt: new Date("2024-11-18"), text: "Test note 1", user: "GeneralHandler" },
+          { text: "Test note 2", user: "System" }
         ]
       ],
       force: "01"
@@ -26,9 +26,9 @@ describe("Note preview", () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [
         [
-          { user: "GeneralHandler", text: "Test note 1", createdAt: new Date("2024-11-18") },
-          { user: "Supervisor", text: "Test note 2", createdAt: new Date("2024-11-19") },
-          { user: "Bichard01", text: "Test note 3", createdAt: new Date("2024-11-20") }
+          { createdAt: new Date("2024-11-18"), text: "Test note 1", user: "GeneralHandler" },
+          { createdAt: new Date("2024-11-19"), text: "Test note 2", user: "Supervisor" },
+          { createdAt: new Date("2024-11-20"), text: "Test note 3", user: "Bichard01" }
         ]
       ],
       force: "01"
