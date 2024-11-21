@@ -1,5 +1,6 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import ConditionalRender from "components/ConditionalRender"
+import RadioButton from "components/RadioButton/RadioButton"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { ChangeEvent, Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
@@ -16,51 +17,52 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
   return (
     <fieldset className="govuk-fieldset">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Case state"}</legend>
-      <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-        <div className="govuk-checkboxes__item">
-          <input
-            className="govuk-checkboxes__input"
-            id="resolved"
-            name="state"
-            type="checkbox"
-            value="Resolved"
-            checked={caseState === "Resolved"}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
+      <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
+        <RadioButton
+          name={"state"}
+          id={"resolved"}
+          dataAriaControls={"conditional-case-state"}
+          defaultChecked={caseState === "Resolved" && !resolvedByUsername}
+          label={"All resolved cases"}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            console.log(event.target.checked)
+            dispatch({
+              method: event.target.checked ? "add" : "remove",
+              type: "caseState",
+              value: "Resolved"
+            })
+          }}
+        />
+        <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
+          <RadioButton
+            name={"state"}
+            id={"myResolvedCases"}
+            dataAriaControls={"conditional-case-state"}
+            defaultChecked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
+            label={"My resolved cases"}
+            onChange={() => {
               dispatch({
-                method: event.currentTarget.checked ? "add" : "remove",
-                type: "caseState",
-                value: "Resolved"
+                method: "add",
+                type: "resolvedByUsernameFilter",
+                value: currentUser.username
               })
             }}
           />
-          <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
-            {"Resolved cases"}
-          </label>
-        </div>
-        <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
-          <div className="govuk-checkboxes__item">
-            <input
-              className="govuk-checkboxes__input"
-              id="myResolvedCases"
-              name="resolvedByUsername"
-              type="checkbox"
-              value={currentUser.username}
-              checked={resolvedByUsername === currentUser.username && caseState === "Resolved"}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                const isChecked = event.currentTarget.checked
-
-                dispatch({
-                  method: isChecked ? "add" : "remove",
-                  type: "resolvedByUsernameFilter",
-                  value: currentUser.username
-                })
-              }}
-            />
-            <label className="govuk-label govuk-checkboxes__label" htmlFor="myResolvedCases">
-              {"My resolved cases"}
-            </label>
-          </div>
         </ConditionalRender>
+        <RadioButton
+          name={"state"}
+          id={"unresolvedCases"}
+          dataAriaControls={"conditional-case-state"}
+          defaultChecked={caseState === "Unresolved"}
+          label={"Unresolved cases"}
+          onChange={() => {
+            dispatch({
+              method: "remove",
+              type: "caseState",
+              value: "Resolved"
+            })
+          }}
+        />
       </div>
     </fieldset>
   )
