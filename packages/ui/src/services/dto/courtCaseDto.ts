@@ -24,7 +24,7 @@ export const courtCaseToDisplayPartialCourtCaseDto = (
       hasAccessToExceptions(currentUser) &&
       courtCase.errorStatus === "Unresolved",
     isUrgent: courtCase.isUrgent,
-    notes: sortBy(courtCase.notes.map(noteToDisplayNoteDto), "createdAt").reverse(),
+    notes: sortBy(courtCase.notes.map(noteToDisplayNoteDto), "createdAt"),
     ptiurn: courtCase.ptiurn,
     resolutionTimestamp: courtCase.resolutionTimestamp ? courtCase.resolutionTimestamp.toISOString() : null,
     triggerLockedByUsername: courtCase.triggerLockedByUsername,
