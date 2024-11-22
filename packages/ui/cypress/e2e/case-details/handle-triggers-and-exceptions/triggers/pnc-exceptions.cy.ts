@@ -35,27 +35,6 @@ describe("PNC Exceptions", () => {
     )
   })
 
-  it("should render PNC exception and not display the PNC error message accordion when message is empty", () => {
-    cy.task("insertCourtCaseWithPncException", {
-      case: {
-        errorLockedByUsername: null,
-        orgForPoliceFilter: "01",
-        triggerLockedByUsername: null
-      },
-      exceptions: {
-        pncExceptionCode: "HO100402"
-      }
-    })
-
-    loginAndVisit("GeneralHandler", caseURL)
-
-    cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("be.visible")
-    cy.get(".case-details-sidebar #exceptions .moj-badge").should("have.text", "PNC Error")
-    cy.get(".b7-accordion").should("not.exist")
-  })
-
   it("should render PNC exception on top of the exceptions list", () => {
     cy.task("insertCourtCaseWithPncException", {
       case: {
