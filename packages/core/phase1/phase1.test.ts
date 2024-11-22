@@ -13,13 +13,14 @@ import generateMockPncQueryResult from "./tests/helpers/generateMockPncQueryResu
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("phase1/tests/fixtures/input-message-001.xml").toString()
   const inputSpi = parseSpiResult(inputMessage)
+  let mockPncGateway: MockPncGateway
   const inputAho = transformSpiToAho(inputSpi)
-  const mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
   let auditLogger: CoreAuditLogger
   const mockedDate = new Date()
 
   beforeEach(() => {
     auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+    mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
     MockDate.set(mockedDate)
   })
 
