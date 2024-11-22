@@ -2,22 +2,22 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
-import { PncApiError } from "../../lib/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import phase3Handler from "../../phase3/phase3"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { Phase3Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
-import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+import phase3Handler from "../../phase3/phase3"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
+import MockPncGateway from "./MockPncGateway"
+import { PncApiError } from "../../lib/PncGateway"
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined =>
@@ -125,7 +125,10 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       auditLogEventsMatch,
       triggersMatch: true || isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      pncOperationsMatch: isEqual(pncGateway.updates, pncOperations),
+      pncOperationsMatch: isEqual(
+        pncErrorMessages && pncErrorMessages.length > 0 ? pncGateway.updates.slice(0, -1) : pncGateway.updates,
+        pncOperations
+      ),
       xmlOutputMatches:
         !normalisedOutgoingMessage || xmlOutputMatches(serialisedPhase3OutgoingMessage, normalisedOutgoingMessage),
       xmlParsingMatches: true,
