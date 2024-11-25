@@ -164,9 +164,11 @@ const MIDNIGHT_TIME_STRING = "0000"
 const ONE_MINUTE_PAST_MIDNIGHT_TIME_STRING = "0001"
 const preProcessTimeString = (timeString?: string) =>
   timeString
-    ?.replace(/:/g, "")
-    .padStart(OFFENCE_START_TIME_FIELD_LENGTH, "0")
-    .replace(MIDNIGHT_TIME_STRING, ONE_MINUTE_PAST_MIDNIGHT_TIME_STRING) || ""
+    ? timeString
+        ?.replace(/:/g, "")
+        .padStart(OFFENCE_START_TIME_FIELD_LENGTH, "0")
+        .replace(MIDNIGHT_TIME_STRING, ONE_MINUTE_PAST_MIDNIGHT_TIME_STRING)
+    : ""
 
 type Cch = {
   offenceCode: string
@@ -214,9 +216,9 @@ const convertAdj = (adjudication: PncAdjudication): HearingAdjudicationAndDispos
   disposalText: null,
   committedOnBail: null,
   courtOffenceSequenceNumber: null,
-  hearingDate: adjudication.sentenceDate ? formatDateSpecifiedInResult(adjudication.sentenceDate, true) : null,
+  hearingDate: adjudication.sentenceDate ? formatDateSpecifiedInResult(adjudication.sentenceDate, true) : "",
   locationOfOffence: null,
-  numberOffencesTakenIntoAccount: "0000",
+  numberOffencesTakenIntoAccount: adjudication.offenceTICNumber?.toString().padStart(4, "0") ?? "",
   offenceEndDate: null,
   offenceEndTime: null,
   offenceLocationFSCode: null,
@@ -257,7 +259,7 @@ const convertAch = (ach: AddedByCourtHearing): HearingAdjudicationAndDisposal =>
   disposalQualifiers: null,
   disposalText: null,
   committedOnBail: ach.committedOnBail ?? null,
-  courtOffenceSequenceNumber: ach.offenceReasonSequence ?? null,
+  courtOffenceSequenceNumber: ach.offenceReasonSequence || null,
   hearingDate: null,
   locationOfOffence: ach.locationOfOffence,
   numberOffencesTakenIntoAccount: null,
@@ -265,46 +267,44 @@ const convertAch = (ach: AddedByCourtHearing): HearingAdjudicationAndDisposal =>
   offenceEndTime: ach.offenceEndTime,
   offenceLocationFSCode: ach.offenceLocationFsCode,
   offenceReason: ach.offenceCode,
-  offenceReasonSequence: ach.offenceReasonSequence || null,
+  offenceReasonSequence: ach.offenceReasonSequence || "",
   offenceStartDate: ach.offenceStartDate,
   offenceStartTime: ach.offenceStartTime,
   pleaStatus: null,
-  type: HearingDetailsType.ORDINARY,
+  type: HearingDetailsType.ARREST,
   verdict: null
 })
 
-const generateHearingsAdjudicationsAndDisposals = (pncUpdateDataset: PncUpdateDataset) =>
-  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
-    (offence) => !offence.AddedByTheCourt
-  ).reduce((acc: HearingAdjudicationAndDisposal[], offence) => {
-    acc.push(
-      convertCch({
-        offenceCode: convertHoOffenceCodeToPncFormat(offence.CriminalProsecutionReference.OffenceReason),
-        offenceReasonSequence: preProcessOffenceReasonSequence(offence)
-      })
-    )
+const generateHearingsAdjudicationsAndDisposals = (pncUpdateDataset: PncUpdateDataset, offences: Offence[]) =>
+  offences
+    .filter((offence) => !offence.AddedByTheCourt)
+    .reduce((acc: HearingAdjudicationAndDisposal[], offence) => {
+      acc.push(
+        convertCch({
+          offenceCode: convertHoOffenceCodeToPncFormat(offence.CriminalProsecutionReference.OffenceReason),
+          offenceReasonSequence: preProcessOffenceReasonSequence(offence)
+        })
+      )
 
-    const adj = createPncAdjudicationFromAho(
-      offence.Result,
-      pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
-    )
-    if (adj) {
-      acc.push(convertAdj(adj))
-    }
+      const adj = createPncAdjudicationFromAho(
+        offence.Result,
+        pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing
+      )
+      if (adj) {
+        acc.push(convertAdj(adj))
+      }
 
-    const disposalsList = createPncDisposalFromOffence(pncUpdateDataset, offence)
-    acc.push(...disposalsList.map(convertDis))
+      const disposalsList = createPncDisposalFromOffence(pncUpdateDataset, offence)
+      acc.push(...disposalsList.map(convertDis))
 
-    return acc
-  }, [])
+      return acc
+    }, [])
 
-const getOffencesAddedByTheCourt = (pncUpdateDataset: PncUpdateDataset) =>
-  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
-    (offence) => offence.AddedByTheCourt && isResultCompatibleWithDisposal(offence)
-  )
+const getOffencesAddedByTheCourt = (offences: Offence[]) =>
+  offences.filter((offence) => offence.AddedByTheCourt && isResultCompatibleWithDisposal(offence))
 
-const generateArrestsAdjudicationsAndDisposals = (pncUpdateDataset: PncUpdateDataset) =>
-  getOffencesAddedByTheCourt(pncUpdateDataset).reduce((acc: HearingAdjudicationAndDisposal[], offence) => {
+const generateArrestsAdjudicationsAndDisposals = (pncUpdateDataset: PncUpdateDataset, offences: Offence[]) =>
+  getOffencesAddedByTheCourt(offences).reduce((acc: HearingAdjudicationAndDisposal[], offence) => {
     const offenceStartDate = formatDateSpecifiedInResult(offence.ActualOffenceStartDate.StartDate, true)
     const offenceEndDate = offence.ActualOffenceEndDate?.EndDate
       ? formatDateSpecifiedInResult(offence.ActualOffenceEndDate.EndDate, true)
@@ -383,21 +383,21 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   }
 
   const nextResultSourceOrganisation = getCourtCodeFromOffences(offences)
-  const psaCourtCodeCrt = getPncCourtCode(nextResultSourceOrganisation, hearing.CourtHouseCode)
-  if (isError(psaCourtCodeCrt)) {
-    return psaCourtCodeCrt
+  const crtPsaCourtCode = getPncCourtCode(nextResultSourceOrganisation, hearing.CourtHouseCode)
+  if (isError(crtPsaCourtCode)) {
+    return crtPsaCourtCode
   }
 
-  const courtDate = psaCourtCodeCrt ? getCourtDateFromOffencesList(offences) : undefined
+  const courtDate = crtPsaCourtCode ? getCourtDateFromOffencesList(offences) : undefined
   const pendingCourtHouseName =
-    psaCourtCodeCrt === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : null
+    crtPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : ""
 
   const offencesAddedByTheCourt = offences.filter(
     (offence) => offence.AddedByTheCourt && isResultCompatibleWithDisposal(offence)
   )
 
-  const hearingsAdjudicationsAndDisposals = generateHearingsAdjudicationsAndDisposals(pncUpdateDataset)
-  const forceStationCode = getForceStationCode(pncUpdateDataset, offencesAddedByTheCourt.length === 0)
+  const hearingsAdjudicationsAndDisposals = generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, offences)
+  const forceStationCode = getForceStationCode(pncUpdateDataset, true)
   let arrestSummonsNumber: string | null | Error = null
   let arrestsAdjudicationsAndDisposals: HearingAdjudicationAndDisposal[] = []
   if (offencesAddedByTheCourt.length > 0) {
@@ -406,7 +406,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       return arrestSummonsNumber
     }
 
-    arrestsAdjudicationsAndDisposals = generateArrestsAdjudicationsAndDisposals(pncUpdateDataset)
+    arrestsAdjudicationsAndDisposals = generateArrestsAdjudicationsAndDisposals(pncUpdateDataset, offences)
   }
 
   return {
@@ -422,8 +422,8 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       generatedPNCFilename: generatedPNCFilename,
       hearingsAdjudicationsAndDisposals,
       pendingCourtDate: courtDate ? formatDateSpecifiedInResult(courtDate, true) : null,
-      pendingCourtHouseName,
-      pendingPsaCourtCode: psaCourtCodeCrt ? preProcessCourtCode(psaCourtCodeCrt) : null,
+      pendingCourtHouseName: crtPsaCourtCode ? pendingCourtHouseName : null,
+      pendingPsaCourtCode: crtPsaCourtCode ? preProcessCourtCode(crtPsaCourtCode) : null,
       pncCheckName: getPncCheckname(pncUpdateDataset),
       pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
       preTrialIssuesUniqueReferenceNumber,
@@ -433,6 +433,3 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
 }
 
 export default normalDisposalGenerator
-
-// pending = crt
-// normal = cou
