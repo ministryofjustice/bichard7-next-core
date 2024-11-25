@@ -166,10 +166,11 @@ export default (xml: string): PncUpdateDataset | Error => {
     return pncUpdateDataset
   }
 
-  pncUpdateDataset.Exceptions = extractExceptionsFromXml(xml).map((e) => {
-    e.path.shift()
-    return e
-  })
+  // Remove the PNCUpdateDateset element from the exception path for consistency
+  pncUpdateDataset.Exceptions = extractExceptionsFromXml(xml).map((e) => ({
+    ...e,
+    path: e.path.slice(1)
+  }))
 
   return pncUpdateDataset
 }
