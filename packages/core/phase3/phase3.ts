@@ -22,11 +22,6 @@ const phase3 = async (
     const operationResult = await performOperation(inputMessage, operation, pncGateway).catch((error) => error)
     if (isError(operationResult)) {
       break
-      // if (pncAsnUpdateFacadeBusinessExceptionSchema.safeParse(operationResult).success) {
-      //   // handleBusinessException(inputMessage, operation, operationResult)
-      // } else {
-      //   // throw operationResult // TODO: Implement PNCUpdateProcessor.java:124
-      // }
     }
   }
 
