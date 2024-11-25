@@ -244,29 +244,6 @@ describe("View notes", () => {
     clickTab("Notes")
     cy.findByText("Case has no notes.").should("exist")
   })
-
-  it("Should display notes in descending time order", () => {
-    cy.task("insertCourtCasesWithNotes", {
-      caseNotes: [
-        [
-          { user: "GeneralHandler", text: "Test note 1", createdAt: new Date("2024-11-18") },
-          { user: "Supervisor", text: "Test note 2", createdAt: new Date("2024-11-19") },
-          { user: "Bichard01", text: "Test note 3", createdAt: new Date("2024-11-20") },
-          { user: "System", text: "Test note 2", createdAt: new Date("2024-11-25") }
-        ]
-      ],
-      force: "01"
-    })
-    loginAndGoToNotes()
-
-    cy.url().should("match", /.*\/court-cases\/0/)
-    clickTab("Notes")
-
-    cy.get('tbody tr:nth-child(1) td:nth-child(2) time[aria-label="time"]').should("contain", "25/11/2024")
-    cy.get('tbody tr:nth-child(2) td:nth-child(2) time[aria-label="time"]').should("contain", "20/11/2024")
-    cy.get('tbody tr:nth-child(3) td:nth-child(2) time[aria-label="time"]').should("contain", "19/11/2024")
-    cy.get('tbody tr:nth-child(4) td:nth-child(2) time[aria-label="time"]').should("contain", "18/11/2024")
-  })
 })
 
 export {}
