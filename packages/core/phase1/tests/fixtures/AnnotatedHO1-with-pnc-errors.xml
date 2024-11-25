@@ -46,7 +46,7 @@
 				<ds:OrganisationUnitCode>01ZD00</ds:OrganisationUnitCode>
 			</br7:ForceOwner>
 			<br7:HearingDefendant hasError="false">
-				<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>
+				<br7:ArrestSummonsNumber Error="HO100301">1101ZD0100000448754K</br7:ArrestSummonsNumber>
 				<br7:PNCIdentifier>2000/0448754K</br7:PNCIdentifier>
 				<br7:PNCCheckname>SEXOFFENCE</br7:PNCCheckname>
 				<br7:DefendantDetail>
@@ -124,14 +124,6 @@
 						<br7:PNCDisposalType>3078</br7:PNCDisposalType>
 						<br7:ResultClass>Judgement with final result</br7:ResultClass>
 						<br7:PNCAdjudicationExists Literal="No">N</br7:PNCAdjudicationExists>
-						<br7:ResultQualifierVariable SchemaVersion="3.0">
-							<ds:Code>GB</ds:Code>
-							<ds:Duration>
-								<ds:DurationType>Custodial</ds:DurationType>
-								<ds:DurationUnit>D</ds:DurationUnit>
-								<ds:DurationLength>30</ds:DurationLength>
-							</ds:Duration>
-						</br7:ResultQualifierVariable>
 					</br7:Result>
 				</br7:Offence>
 				<br7:Offence hasError="false" SchemaVersion="4.0">
@@ -190,7 +182,7 @@
 						<ds:ResultVariableText>defendant must never be allowed out</ds:ResultVariableText>
 						<ds:ResultHalfLifeHours>24</ds:ResultHalfLifeHours>
 						<br7:PNCDisposalType>3052</br7:PNCDisposalType>
-						<br7:ResultClass>Judgement with final result</br7:ResultClass>
+						<br7:ResultClass Error="HO100324">Judgement with final result</br7:ResultClass>
 						<br7:Urgent>
 							<br7:urgent Literal="Yes">Y</br7:urgent>
 							<br7:urgency>24</br7:urgency>
@@ -284,6 +276,6 @@
 		</CourtCases>
 	</CXE01>
 	<br7:PNCQueryDate>2022-03-22</br7:PNCQueryDate>
-	<br7:PNCErrorMessage classification="HO100403">I5005 - WARNING - REMAND INFORMATION INDICATES THAT THE SUBJECT WAS ON BAIL AT THE TIME OFFENCE 000 ENTERED FOR ARREST/SUMMONS 24/0000/00/0000000G ON RECORD PNCID/CHECKNAME: 24/000000M XXXXXXX WAS COMMITTED - CHECK DETAILS AND AMEND RECORD AS NECESSARY</br7:PNCErrorMessage>
-	<br7:PNCErrorMessage classification="HO100402">I0190 - THE COMBINATION OF ADJUDICATION AND DISPOSAL CODE FOR CHARGE   1 IN MESSAGE 073RDIS000000S IS INVALID</br7:PNCErrorMessage>
+	<br7:PNCErrorMessage classification="HO100301">I0001 - Error message 1</br7:PNCErrorMessage>
+	<br7:PNCErrorMessage classification="HO100301">I0001 - Error message 2</br7:PNCErrorMessage>
 </br7:AnnotatedHearingOutcome>

@@ -10,6 +10,7 @@ import type {
   Br7Offence,
   Br7OffenceReason,
   Br7OrganisationUnit,
+  Br7PncErrorMessageString,
   Br7Result,
   Br7SequenceTextString,
   Br7TextString,
@@ -51,6 +52,8 @@ import generateXml from "../generateXml"
 import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import addNullElementsForExceptions from "./addNullElementsForExceptions"
+import type { PncException } from "../../../types/Exception"
+import type Exception from "../../../types/Exception"
 
 enum LiteralType {
   ActualOffenceDateCode,
@@ -495,6 +498,14 @@ const xmlnsTags = {
   "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
 }
 
+const mapPncExceptionsToXml = (exceptions: Exception[]): Br7PncErrorMessageString[] | undefined => {
+  const pncExceptions = exceptions.filter((exception) => "message" in exception) as PncException[]
+
+  return pncExceptions.length > 0
+    ? pncExceptions.map(({ code, message }) => ({ "#text": message, "@_classification": code }))
+    : undefined
+}
+
 const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   const hearingOutcome = {
     "br7:HearingOutcome": {
@@ -514,7 +525,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
             ...hearingOutcome,
             CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
             "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,
-            "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
+            "br7:PNCErrorMessage": mapPncExceptionsToXml(aho.Exceptions),
             ...xmlnsTags
           }
         }
@@ -539,7 +550,7 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
       ...hearingOutcome,
       CXE01: pud.PncQuery ? mapAhoCXE01ToXml(pud.PncQuery) : undefined,
       "br7:PNCQueryDate": pud.PncQueryDate ? optionalFormatText(pud.PncQueryDate) : undefined,
-      "br7:PNCErrorMessage": optionalText(pud.PncErrorMessage),
+      "br7:PNCErrorMessage": mapPncExceptionsToXml(pud.Exceptions),
       ...xmlnsTags
     }
   }

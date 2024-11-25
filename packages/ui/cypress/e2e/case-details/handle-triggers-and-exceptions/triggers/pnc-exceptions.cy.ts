@@ -34,31 +34,11 @@ describe("PNC Exceptions", () => {
     )
   })
 
-  it("should render PNC exception and not display the PNC error message accordion when message is empty", () => {
-    cy.task("insertCourtCaseWithPncException", {
-      exceptions: {
-        pncExceptionCode: "HO100402"
-      },
-      case: {
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        orgForPoliceFilter: "01"
-      }
-    })
-
-    loginAndVisit("GeneralHandler", caseURL)
-
-    cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("be.visible")
-    cy.get(".case-details-sidebar #exceptions .moj-badge").should("have.text", "PNC Error")
-    cy.get(".b7-accordion").should("not.exist")
-  })
-
   it("should render PNC exception on top of the exceptions list", () => {
     cy.task("insertCourtCaseWithPncException", {
       exceptions: {
         pncExceptionCode: ExceptionCode.HO100302,
+        pncExceptionMessage: "I1008 - GWAY - ENQUIRY ERROR MORE THAN 3 DISPOSAL GROUPS 09/0000/00/20004H",
         ho100108: true,
         ho100332: true
       },
