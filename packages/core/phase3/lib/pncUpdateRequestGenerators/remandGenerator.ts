@@ -1,21 +1,21 @@
-import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import type { Operation } from "../../../types/PncUpdateDataset"
-import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import isRecordableResult from "../../../phase2/lib/isRecordableResult"
-import type { PncOperation } from "../../../types/PncOperation"
-import ResultClass from "../../../types/ResultClass"
-import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
-import { lookupRemandStatusByCjsCode } from "../../../lib/dataLookup"
-import addPaddingToBailCondition from "../addPaddingToBailCondition"
-import getPncCourtCode, { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../getPncCourtCode"
-import isWarrantIssued from "../../../phase1/lib/result/isWarrantIssued"
 import { isError } from "@moj-bichard7/common/types/Result"
-import preProcessAsn from "../preProcessAsn"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
 import areOrganisationUnitsEqual from "../../../lib/areOrganisationUnitsEqual"
+import { lookupRemandStatusByCjsCode } from "../../../lib/dataLookup"
+import isWarrantIssued from "../../../phase1/lib/result/isWarrantIssued"
+import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
+import isRecordableResult from "../../../phase2/lib/isRecordableResult"
+import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
+import type { PncOperation } from "../../../types/PncOperation"
+import type { Operation } from "../../../types/PncUpdateDataset"
+import ResultClass from "../../../types/ResultClass"
+import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
+import addPaddingToBailCondition from "../addPaddingToBailCondition"
 import getForceStationCode from "../getForceStationCode"
 import getPncCheckname from "../getPncCheckname"
+import getPncCourtCode, { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../getPncCourtCode"
+import preProcessAsn from "../preProcessAsn"
+import preProcessPncIdentifier from "../preProcessPncIdentifier"
 
 const firstInstanceQualifier = "LE"
 const FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE = "*****1ST INSTANCE WARRANT ISSUED*****"
@@ -118,7 +118,8 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   }
 
   const pncRemandStatus = lookupRemandStatusByCjsCode(hearingDefendant.RemandStatus)?.pncCode
-  const bailConditions = pncRemandStatus === "C" ? [] : hearingDefendant.BailConditions.map(addPaddingToBailCondition)
+  const bailConditions =
+    pncRemandStatus === "C" ? [] : hearingDefendant.BailConditions.flatMap(addPaddingToBailCondition)
   const hasFirstInstanceQualifier = results.some((result) =>
     result.ResultQualifierVariable.some((qualifier) => qualifier.Code === firstInstanceQualifier)
   )
