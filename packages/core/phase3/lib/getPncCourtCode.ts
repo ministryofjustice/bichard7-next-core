@@ -21,7 +21,7 @@ const convertToYouthCourtIfRequired = (
   }
 
   return courtHouseCode > ADULT_YOUTH_COURT_CODE_DIVIDER && thirdLevelPsaCodeNumber < ADULT_YOUTH_COURT_CODE_DIVIDER
-    ? thirdLevelPsaCode + ADULT_YOUTH_COURT_CODE_DIVIDER
+    ? String(thirdLevelPsaCodeNumber + ADULT_YOUTH_COURT_CODE_DIVIDER)
     : thirdLevelPsaCode
 }
 
