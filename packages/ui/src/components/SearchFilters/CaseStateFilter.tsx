@@ -22,7 +22,7 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
           name={"state"}
           id={"resolved"}
           dataAriaControls={"conditional-case-state"}
-          defaultChecked={caseState === "Resolved" && !resolvedByUsername}
+          checked={caseState === "Resolved" && !resolvedByUsername}
           label={"All resolved cases"}
           onChange={() => {
             dispatch({
@@ -37,7 +37,7 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
             name={"state"}
             id={"myResolvedCases"}
             dataAriaControls={"conditional-case-state"}
-            defaultChecked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
+            checked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
             label={"My resolved cases"}
             onChange={() => {
               dispatch({
@@ -52,7 +52,8 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
           name={"state"}
           id={"unresolved"}
           dataAriaControls={"conditional-case-state"}
-          defaultChecked={caseState === "Unresolved"}
+          checked={caseState !== "Resolved"}
+          defaultChecked={true}
           label={"Unresolved cases"}
           onChange={() => {
             dispatch({
