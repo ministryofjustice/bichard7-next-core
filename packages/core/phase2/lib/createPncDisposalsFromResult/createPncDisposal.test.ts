@@ -96,7 +96,7 @@ describe("createPncDisposal", () => {
       )
 
       expect(qtyUnitsFined).toHaveLength(24)
-      expect(qtyUnitsFined).toBe("            0000000.0000")
+      expect(qtyUnitsFined).toBe("                      00")
     })
 
     it("uses PNC representation of life sentence", () => {
@@ -119,7 +119,7 @@ describe("createPncDisposal", () => {
       )
 
       expect(qtyUnitsFined).toHaveLength(24)
-      expect(qtyUnitsFined).toBe("Y999100520240000000.0000")
+      expect(qtyUnitsFined).toBe("Y99910052024          00")
     })
 
     it("leaves disposalQuantity blank if unit is session", () => {
@@ -142,7 +142,7 @@ describe("createPncDisposal", () => {
       )
 
       expect(qtyUnitsFined).toHaveLength(24)
-      expect(qtyUnitsFined).toBe("    100520240000000.0000")
+      expect(qtyUnitsFined).toBe("    10052024          00")
     })
 
     it("leaves disposalQuantity blank if unit is empty string", () => {
@@ -165,7 +165,7 @@ describe("createPncDisposal", () => {
       )
 
       expect(qtyUnitsFined).toHaveLength(24)
-      expect(qtyUnitsFined).toBe("    100520240000000.0000")
+      expect(qtyUnitsFined).toBe("    10052024          00")
     })
 
     it("leaves date blank if disposal type is on no disposal date list", () => {
@@ -188,7 +188,7 @@ describe("createPncDisposal", () => {
       )
 
       expect(qtyUnitsFined).toHaveLength(24)
-      expect(qtyUnitsFined).toBe("D123        0000000.0000")
+      expect(qtyUnitsFined).toBe("D123                  00")
     })
   })
 
@@ -298,7 +298,7 @@ describe("createPncDisposal", () => {
         undefined
       )
 
-      expect(qualifiers).toBe("F")
+      expect(qualifiers).toBe("F ")
     })
 
     it("adds S qualifier when there's a secondary duration and qualifier is less than or equal to 6", () => {
