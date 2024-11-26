@@ -61,6 +61,7 @@ describe("Resolve triggers", () => {
     cy.visit(caseURL)
 
     cy.get(".trigger-header input[type='checkbox']").first().check()
+    cy.screenshot()
     cy.get("#mark-triggers-complete-button").click()
 
     clickTab("Notes")
