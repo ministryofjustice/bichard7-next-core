@@ -42,7 +42,6 @@ const normalisePncOperations = (operations: PncUpdateRequest[]) => {
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<ComparisonResultDetail> => {
   const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison
-  normalisePncOperations(pncOperations)
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
 
   try {
@@ -79,6 +78,9 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     if (isError(coreResult)) {
       throw new Error("Unexpected exception while handling phase 3 message")
     }
+
+    normalisePncOperations(pncOperations)
+    normalisePncOperations(pncGateway.updates)
 
     const serialisedPhase3OutgoingMessage = normaliseXml(serialiseToXml(coreResult.outputMessage))
 
