@@ -2,6 +2,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import ConditionalRender from "components/ConditionalRender"
 import RadioButton from "components/RadioButton/RadioButton"
 import { useCurrentUser } from "context/CurrentUserContext"
+import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
 import { Dispatch } from "react"
 import { CaseState } from "types/CaseListQueryParams"
 import { FilterAction } from "types/CourtCaseFilter"
@@ -17,7 +18,9 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
 
   return (
     <fieldset className="govuk-fieldset">
-      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Case state"}</legend>
+      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+        <Legend>{"Case state"}</Legend>
+      </legend>
       <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
         <RadioButton
           name={"state"}
