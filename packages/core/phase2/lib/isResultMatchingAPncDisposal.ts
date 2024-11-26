@@ -13,7 +13,7 @@ const arePncDisposalsMatching = (firstDisposal: PncDisposal, secondDisposal: Pnc
   areStringsEqual(firstDisposal.qtyDate, secondDisposal.qtyDate) &&
   ((!firstDisposal.qtyMonetaryValue && !secondDisposal.qtyMonetaryValue) ||
     Number(firstDisposal.qtyMonetaryValue) === Number(secondDisposal.qtyMonetaryValue)) &&
-  areStringsEqual(firstDisposal.qualifiers, secondDisposal.qualifiers) &&
+  areStringsEqual(firstDisposal.qualifiers?.trim(), secondDisposal.qualifiers?.trim()) &&
   areStringsEqual(firstDisposal.text?.toUpperCase(), secondDisposal.text?.toUpperCase())
 
 const areStringsEqual = (firstObject: string | undefined, secondObject: string | undefined) =>
