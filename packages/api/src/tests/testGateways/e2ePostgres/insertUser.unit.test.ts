@@ -1,6 +1,8 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import { randomUUID } from "crypto"
 import type postgres from "postgres"
+
+import { randomUUID } from "crypto"
+
 import insertUser from "./insertUser"
 
 describe("insertUser", () => {
@@ -20,21 +22,21 @@ describe("insertUser", () => {
 
   it("user could not be inserted", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
-    const user: Partial<User> = { username: "User1", email: "user1@example.com" }
+    const user: Partial<User> = { email: "user1@example.com", username: "User1" }
 
     await expect(insertUser(sql, user)).rejects.toThrow("Could not insert User into the DB")
   })
 
   it("user could be inserted", async () => {
     const expectedUser = {
-      id: 1,
-      username: "User1",
       email: "user1@example.com",
+      id: 1,
       jwt_id: null,
+      username: "User1",
       visible_forces: null
     } satisfies User
     const sql = jest.fn(() => [expectedUser]) as unknown as postgres.Sql
-    const userInserted: Partial<User> = { username: "User1", email: "user1@example.com" }
+    const userInserted: Partial<User> = { email: "user1@example.com", username: "User1" }
 
     const user = await insertUser(sql, userInserted)
 
@@ -44,14 +46,14 @@ describe("insertUser", () => {
   it("user could be inserted with JWT ID", async () => {
     const jwtId = randomUUID()
     const expectedUser = {
-      id: 1,
-      username: "User1",
       email: "user1@example.com",
+      id: 1,
       jwt_id: jwtId,
+      username: "User1",
       visible_forces: null
     } satisfies User
     const sql = jest.fn(() => [expectedUser]) as unknown as postgres.Sql
-    const userInserted: Partial<User> = { username: "User1", email: "user1@example.com", jwt_id: jwtId }
+    const userInserted: Partial<User> = { email: "user1@example.com", jwt_id: jwtId, username: "User1" }
 
     const user = await insertUser(sql, userInserted)
 
