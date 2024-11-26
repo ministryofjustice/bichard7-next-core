@@ -18,7 +18,6 @@
     "build-message-forwarder:phase-1": "docker compose --project-name bichard -f environment/docker-compose.yml build phase-1-message-forwarder",
     "build-message-forwarder:phase-2": "docker compose --project-name bichard -f environment/docker-compose.yml build phase-2-message-forwarder",
     "build-worker": "docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml build worker",
-    "build:package": "./scripts/build-package.sh",
     "clean": "npm run clean --ws",
     "conductor": "./environment/boot.sh conductor audit-log-api",
     "conductor-no-worker": "NOWORKER=true ./environment/boot.sh conductor audit-log-api pnc",
