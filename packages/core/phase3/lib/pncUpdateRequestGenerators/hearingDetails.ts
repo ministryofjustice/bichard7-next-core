@@ -9,7 +9,6 @@ import type {
 import { type CourtHearingAndDisposal, type Disposal, HearingDetailsType } from "../../types/HearingDetails"
 import createPncDisposalFromOffence from "../createPncDisposalFromOffence"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
 import createPncAdjudicationFromAho from "../../../phase2/lib/createPncAdjudicationFromAho"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatibleWithDisposal"
@@ -108,8 +107,11 @@ const createAdjudicationFromOffence = (offence: Offence, dateOfHearing: Date): A
   }
 }
 
-export const generateHearingsAndDisposals = (pncUpdateDataset: PncUpdateDataset): CourtHearingAndDisposal[] =>
-  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(isRecordableOffence)
+export const generateHearingsAndDisposals = (
+  pncUpdateDataset: PncUpdateDataset,
+  courtCaseReference?: string
+): CourtHearingAndDisposal[] =>
+  getRecordableOffencesForCourtCase(pncUpdateDataset, courtCaseReference)
     .filter((offence) => !offence.AddedByTheCourt)
     .reduce((courtHearingsAndDisposals: CourtHearingAndDisposal[], offence) => {
       courtHearingsAndDisposals.push(createCourtHearingFromOffence(offence))

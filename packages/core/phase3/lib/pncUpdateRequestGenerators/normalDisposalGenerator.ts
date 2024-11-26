@@ -45,7 +45,7 @@ const adjust2060ResultIfNecessary = (offences: Offence[]) => {
   )
 }
 
-const preProcessCourtCaseReferenceNumber = (ccr?: string): Result<string> => {
+export const preProcessCourtCaseReferenceNumber = (ccr?: string): Result<string> => {
   if (!ccr) {
     return ""
   }
