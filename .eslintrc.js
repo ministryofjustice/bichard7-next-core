@@ -74,9 +74,8 @@ module.exports = {
       }
     },
     {
-      excludedFiles: "packages/**/!(api)/*",
       extends: ["plugin:perfectionist/recommended-natural-legacy"],
-      files: "packages/**/*",
+      files: "packages/{api}/**/*",
       plugins: ["perfectionist"]
     }
   ],
