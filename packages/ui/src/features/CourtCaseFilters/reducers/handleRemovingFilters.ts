@@ -35,6 +35,13 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
+    case "resolvedByUsername": {
+      newState.resolvedByUsernameFilter.value = undefined
+      newState.resolvedByUsernameFilter.label = undefined
+      newState.resolvedByUsernameFilter.state = undefined
+      break
+    }
+
     case "lockedState": {
       newState.lockedStateFilter.value = undefined
       newState.lockedStateFilter.label = undefined

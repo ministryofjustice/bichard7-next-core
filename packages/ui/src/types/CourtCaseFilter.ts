@@ -14,7 +14,7 @@ export type FilterAction =
   | { method: FilterMethod; type: "caseState"; value: CaseState }
   | { method: FilterMethodCheckbox; type: "triggerIndeterminate"; value: string | string[] }
   | { method: FilterMethodReasonCheckbox; type: "reasonCodesCheckbox"; value: string }
-  | { method: "add"; type: "resolvedByUsername"; value: string }
+  | { method: FilterMethod; type: "resolvedByUsername"; value: string }
   | { method: "add"; type: "caseResolvedFrom"; value: string }
   | { method: "add"; type: "caseResolvedTo"; value: string }
   | { method: "remove"; type: "caseResolvedDateRange"; value: string }
