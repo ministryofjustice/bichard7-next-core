@@ -81,16 +81,10 @@ commands:
     steps:
       - run:
           name: Compress the artifacts for easier downloading
-          when: always
-          command: for file in packages/e2e-test/screenshots/*; do tar -czf ${file}.tar.gz $file; done
-      - run:
-          name: Create the saved_artifacts directory
-          when: always
-          command: mkdir ./saved_artifacts
+          command: bash .circleci/scripts/screenshots-compress.sh
       - run:
           name: Move the gzipped files across
-          when: always
-          command: mv packages/e2e-test/screenshots/*.tar.gz ./saved_artifacts/
+          command: bash .circleci/scripts/screenshots-move.sh
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
       - store_test_results:
