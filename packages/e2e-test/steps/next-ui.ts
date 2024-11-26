@@ -132,7 +132,7 @@ export const setupNextSteps = () => {
   Then("I correct {string} and type {string}", ui.correctOffenceExceptionByTypeahead)
   Then("I select the first option", ui.selectTheFirstOption)
   Then("I correct {string} and press {string}", ui.inputFieldToKeyboardPress)
-  Then("I see the Correction badge", ui.seeCorrectionBadge)
+  Then("I see the {string} badge", ui.seeBadge)
   When("I go to the Case Details for this exception {string}", ui.goToExceptionPage)
   Then("I reload the page", ui.reload)
   Then("I remove the year from {string}", ui.removeYear)

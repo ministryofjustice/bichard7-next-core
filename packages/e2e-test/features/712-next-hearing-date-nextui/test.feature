@@ -23,7 +23,7 @@ Feature: 712 - Next Hearing Date Not Found Next UI
     Then I submit the record on the case details page
       And I click the "Offences" tab
       And I view offence with text "Theft - other - including theft by finding"
-    Then I see the Correction badge
+    Then I see the "Correction" badge
 
   @NextUI
   @ExcludeOnLegacyUI
@@ -41,7 +41,7 @@ Feature: 712 - Next Hearing Date Not Found Next UI
     Then I submit the record on the case details page
       And I click the "Offences" tab
       And I view offence with text "Theft - other - including theft by finding"
-    Then I see the Correction badge
+    Then I see the "Correction" badge
 
   @NextUI
   @ExcludeOnLegacyUI
