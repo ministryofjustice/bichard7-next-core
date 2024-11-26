@@ -9,9 +9,16 @@ export const REALLOCATE_CASE_TRIGGER_CODE = TriggerCode.TRPR0028
 export const OUT_OF_AREA_TRIGGER_CODE = TriggerCode.TRPR0027
 export const SWITCHING_FEEDBACK_FORM_FREQUENCY_IN_HOURS = 3
 export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === "true"
+const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
+const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
+
+if (isProduction && formSecret === "OliverTwist2") {
+  throw new Error("ENV is production and CSRF is set to default value")
+}
+
 export const CSRF = {
   tokenName: "CSRFToken",
-  formSecret: process.env.CSRF_FORM_SECRET ?? "OliverTwist2",
+  formSecret,
   maximumTokenAgeInSeconds: Number(process.env.CSRF_TOKEN_MAX_AGE ?? "600")
 }
 export const EXCEPTION_PATH_PROPERTY_INDEXES = {
