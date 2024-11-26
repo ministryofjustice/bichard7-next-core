@@ -81,9 +81,11 @@ commands:
     steps:
       - run:
           name: Compress the artifacts for easier downloading
+          when: always
           command: bash .circleci/scripts/screenshots-compress.sh
       - run:
           name: Move the gzipped files across
+          when: always
           command: bash .circleci/scripts/screenshots-move.sh
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
