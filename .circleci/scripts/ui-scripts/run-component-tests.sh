@@ -7,4 +7,4 @@ if [[ $MS_EDGE == "true" ]]; then
   options+=" --browser edge"
 fi
 
-circleci tests glob "cypress/component/**/*.cy.tsx" | circleci tests run --command="xargs npx cypress run ${options} --spec" --verbose
+circleci tests glob "cypress/component/**/*.cy.tsx" | circleci tests run --command="xargs npx cypress run ${options} --spec"

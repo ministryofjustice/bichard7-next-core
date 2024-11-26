@@ -24,7 +24,7 @@ CMD="../../node_modules/.bin/cucumber-js --require steps/index.ts --require-modu
 
 which circleci > /dev/null
 if [ $? -eq 0 ]; then
-  circleci tests glob "features/**/*.feature" | circleci tests run --command="xargs ${CMD}" --verbose --split-by=timings
+  circleci tests glob "features/**/*.feature" | circleci tests run --command="xargs ${CMD}" --split-by=timings
 else
   CHUNK=${CHUNK:-$(find features -iname '*.feature' | sort | awk "(NR % $TOTAL_CHUNKS == $CHUNK_NUMBER)" | paste -d ' ' -s -)}
 
