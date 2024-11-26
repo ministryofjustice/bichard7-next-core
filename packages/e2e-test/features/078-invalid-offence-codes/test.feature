@@ -33,3 +33,16 @@ Feature: {078} R4.0_BR7_Offence Code Schema Relaxation - schema Breaking  Offenc
 			| messageId       |
 			| input-message-1 |
 			| input-message-2 |
+
+	@NextUI
+	@ExcludeOnLegacyUI
+	Scenario: Testing invalid offence codes clickable
+		Given the data for this test is not in the PNC
+			And "input-message-2" is received
+			And I am logged in as "generalhandler"
+			And I view the list of exceptions
+		Then I see exception "HO100306" in the exception list table
+		When I open the record for "THESCHEMATWO BREAK"
+			And I click the "Offences" tab
+			And I view offence with text "Offence code not found"
+			And I see the "System Error" badge
