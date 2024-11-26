@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["bichard", "fastify", "openapi", "govuk", "ptiurn", "typeorm"],
+  "cSpell.words": ["bichard", "Colour", "colours", "fastify", "govuk", "openapi", "ptiurn", "typeorm"],
 
   "cucumberautocomplete.steps": ["packages/e2e-test/steps/*.ts"],
   "cucumberautocomplete.strictGherkinCompletion": true,
