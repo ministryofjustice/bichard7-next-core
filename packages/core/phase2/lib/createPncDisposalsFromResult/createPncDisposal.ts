@@ -73,7 +73,7 @@ const preProcessDisposalQuantity = (
 
   const amount = amountSpecifiedInResult
     ? amountSpecifiedInResult.toFixed(2).toString().padStart(10, "0")
-    : "0".repeat(7) + ".00"
+    : " ".repeat(10)
 
   return durationAndLength + date + amount + "00"
 }
@@ -115,7 +115,9 @@ const preProcessDisposalQualifiers = (
       secondaryDurationQualifier
   }
 
-  return disposalQualifier.trim()
+  const qualifiers = disposalQualifier.trim()
+
+  return qualifiers ? qualifiers.padEnd(2, " ") : ""
 }
 
 export default createPncDisposal
