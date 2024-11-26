@@ -55,6 +55,7 @@ describe("Filtering cases by case state", () => {
 
       // Switch back to unresolved cases
       cy.get(`label[for="unresolved"]`).click()
+      cy.get("button[id=search]").click()
       cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
       cy.contains("Case00000")
 

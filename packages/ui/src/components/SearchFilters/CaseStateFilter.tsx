@@ -36,11 +36,12 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
         />
         <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
           <RadioButton
-            name={"state"}
+            name={"resolvedByUsername"}
             id={"myResolvedCases"}
             dataAriaControls={"conditional-case-state"}
             checked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
             label={"My resolved cases"}
+            value={currentUser.username}
             onChange={() => {
               dispatch({
                 method: "add",
@@ -55,6 +56,7 @@ const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateF
           id={"unresolved"}
           dataAriaControls={"conditional-case-state"}
           checked={caseState !== "Resolved"}
+          value="Unresolved"
           label={"Unresolved cases"}
           onChange={() => {
             dispatch({
