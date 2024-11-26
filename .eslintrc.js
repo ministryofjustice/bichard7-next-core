@@ -1,6 +1,8 @@
 module.exports = {
   root: true,
   env: { es6: true },
+  plugins: ["perfectionist"],
+  extends: ["plugin:perfectionist/recommended-natural-legacy"],
   parserOptions: {
     project: ["./tsconfig.json", "./packages/*/tsconfig.json"]
   },
