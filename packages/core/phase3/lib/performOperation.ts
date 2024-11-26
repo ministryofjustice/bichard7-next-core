@@ -2,7 +2,6 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import dispatch from "./dispatch"
-import handleError from "./handleError"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 
 const performOperation = async (
@@ -13,9 +12,11 @@ const performOperation = async (
   const dispatchResult = await dispatch(pncUpdateDataset, operation, pncGateway).catch((error) => error)
 
   if (isError(dispatchResult)) {
-    handleError(pncUpdateDataset, operation, dispatchResult)
-    return
+    operation.status = "Failed"
+    return dispatchResult
   }
+
+  operation.status = "Completed"
 
   // TODO: Implement PNCUpdateProcessor.java:99-106
 }

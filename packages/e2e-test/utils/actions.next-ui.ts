@@ -677,10 +677,10 @@ export const inputFieldToKeyboardPress = async function (this: Bichard, field: s
   await page.keyboard.press(keyboardButton)
 }
 
-export const seeCorrectionBadge = async function (this: Bichard) {
+export const seeBadge = async function (this: Bichard, badge: string) {
   const { page } = this.browser
 
-  await page.$$('xpath/.//span[contains(@class, "moj-badge") and text() = "Correction"]')
+  await page.$$(`xpath/.//span[contains(@class, "moj-badge") and text() = "${badge}"]`)
 }
 
 export const goToExceptionPage = async function (this: Bichard, exception: string) {

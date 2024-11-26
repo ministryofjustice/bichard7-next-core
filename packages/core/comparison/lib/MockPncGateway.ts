@@ -1,4 +1,3 @@
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncQueryResult } from "../../types/PncQueryResult"
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
@@ -6,23 +5,35 @@ import { PncApiError } from "../../lib/PncGateway"
 
 export default class MockPncGateway implements PncGatewayInterface {
   updates: PncUpdateRequest[] = []
+  result: (PncQueryResult | PncApiError | undefined)[] = []
 
   constructor(
-    private result: PncQueryResult | PncApiError | undefined,
+    result: PncQueryResult | (PncQueryResult | PncApiError)[] | PncApiError | undefined,
     public queryTime: Date | undefined = undefined
-  ) {}
-
-  query(_: string): Promise<PncQueryResult | PncApiError | undefined> {
-    return Promise.resolve(this.result)
+  ) {
+    if (Array.isArray(result)) {
+      this.result = result
+    } else {
+      this.result.push(result)
+    }
   }
 
-  update(request: PncUpdateRequest, _correlationId: string): PromiseResult<void> {
+  private getNextResult() {
+    return this.result.shift()
+  }
+
+  query(_: string): Promise<PncQueryResult | PncApiError | undefined> {
+    return Promise.resolve(this.getNextResult())
+  }
+
+  update(request: PncUpdateRequest, _correlationId: string): Promise<void | PncApiError> {
     this.updates.push(request)
 
-    if (this.result instanceof PncApiError) {
-      return Promise.resolve(this.result)
-    } else {
-      return Promise.resolve()
+    const nextResult = this.getNextResult()
+    if (nextResult instanceof PncApiError) {
+      return Promise.resolve(nextResult)
     }
+
+    return Promise.resolve()
   }
 }

@@ -5,12 +5,12 @@ import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import getComparisonResultStatistics from "./getComparisonStatistics"
 import printList from "./printList"
 import type { SkippedFile } from "./processRange"
-import type { Phase3ComparisonResultDetail } from "../types/ComparisonResultDetail"
 import { diffJson } from "diff"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch &&
   result.triggersMatch &&
+  (result.pncOperationsMatch === undefined || result.pncOperationsMatch) &&
   result.xmlOutputMatches &&
   result.xmlParsingMatches &&
   result.auditLogEventsMatch
@@ -62,12 +62,12 @@ const formatTest = (name: string, success: boolean): string => {
   return `${chalk.red("✗")} ${name} failed`
 }
 
-export const printSingleSummary = (result: ComparisonResultDetail | Phase3ComparisonResultDetail): void => {
+export const printSingleSummary = (result: ComparisonResultDetail): void => {
   console.log(formatTest("Audit log events", result.auditLogEventsMatch))
   console.log(formatTest("Triggers", result.triggersMatch))
   console.log(formatTest("Exceptions", result.exceptionsMatch))
   if ("pncOperationsMatch" in result) {
-    console.log(formatTest("PNC operation requests", result.pncOperationsMatch))
+    console.log(formatTest("PNC operation requests", !!result.pncOperationsMatch))
   }
 
   console.log(formatTest("XML Output", result.xmlOutputMatches))
@@ -75,9 +75,7 @@ export const printSingleSummary = (result: ComparisonResultDetail | Phase3Compar
 }
 
 const printResult = (
-  result?:
-    | (ComparisonResultDetail | Phase3ComparisonResultDetail | SkippedFile)
-    | (ComparisonResultDetail | Phase3ComparisonResultDetail | SkippedFile)[],
+  result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[],
   truncate = false,
   list = false
 ): boolean => {
@@ -128,7 +126,12 @@ const printResult = (
       console.log("Bichard exceptions: ", result.debugOutput.exceptions.comparisonResult)
     }
 
-    if ("pncOperationsMatch" in result && !result.pncOperationsMatch) {
+    if (
+      "pncOperationsMatch" in result &&
+      !result.pncOperationsMatch &&
+      "pncOperations" in result.debugOutput &&
+      result.debugOutput.pncOperations
+    ) {
       console.log("PNC operation requests do not match")
       const pncOperationDiffs = diffJson(
         result.debugOutput.pncOperations.coreResult,
