@@ -15,18 +15,12 @@ Feature: {040} 04 MIS - User Performance Summary
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message-1" is received
+			And "input-message-2" is received
 
 	@Could
 	@ExcludeOnPreProd
 	Scenario: Generating the user performance report
-		Given I am logged in as "generalhandler"
-			And I view the list of exceptions
-		When I open the record for "SEXOFFENCE TRPRFOUR"
-			And I click the "Triggers" tab
-			And I resolve all of the triggers
-		Given "input-message-2" is received
-			And I am logged in as "exceptionhandler"
+		Given I am logged in as "exceptionhandler"
 			And I view the list of exceptions
 		When I open the record for "Bass Barry"
 			And I click the "Offences" tab
@@ -37,7 +31,14 @@ Feature: {040} 04 MIS - User Performance Summary
 			And I correct "Sequence Number" to "2"
 			And I click the "Offences" tab
 			And I submit the record
-			And the PNC updates the record
+			And I reload until I don't see "(Submitted)"
+		When I am logged in as "generalhandler"
+			And I view the list of exceptions
+			And I open the record for "SEXOFFENCE TRPRFOUR"
+			And I click the "Triggers" tab
+			And I resolve all of the triggers
+		When "input-message-1" is received
+		Then the PNC updates the record
 		When I am logged in as "triggerhandler"
 			And I view the list of exceptions
 			And I open the record for "Bass Barry"
