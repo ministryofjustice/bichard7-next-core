@@ -1,5 +1,7 @@
+import type { PncOperation } from "../../types/PncOperation"
+
 type RemandPncUpdateRequest = {
-  operation: "NEWREM"
+  operation: PncOperation.REMAND
   request: {
     pncIdentifier: string | null
     pncCheckName: string | null

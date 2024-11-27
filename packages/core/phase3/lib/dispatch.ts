@@ -39,9 +39,6 @@ const dispatch = async <T extends PncOperation>(
 
     return pncUpdateResult
   }
-
-  // TODO: Determine if we need this!
-  // mapWarnings(pncUpdateDataset)
 }
 
 export default dispatch
