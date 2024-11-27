@@ -5,7 +5,7 @@ const getRecordableOffencesForCourtCase = (aho: AnnotatedHearingOutcome, courtCa
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
     (offence) =>
       isRecordableOffence(offence) &&
-      (!courtCaseReferenceNumber || offence.CourtCaseReferenceNumber === courtCaseReferenceNumber)
+      (!offence.CourtCaseReferenceNumber || offence.CourtCaseReferenceNumber === courtCaseReferenceNumber)
   )
 
 export default getRecordableOffencesForCourtCase
