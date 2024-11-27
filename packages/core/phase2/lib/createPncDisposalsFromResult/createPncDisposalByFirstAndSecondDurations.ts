@@ -5,7 +5,6 @@ import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
-import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
 export const maxDisposalTextLength = 64
 
@@ -24,7 +23,7 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal
     firstDuration?.DurationLength &&
     !disposalText
   ) {
-    disposalText = `from ${formatDateSpecifiedInResult(dateSpecifiedInResult)}`
+    disposalText = `from ${dateSpecifiedInResult.toLocaleDateString("en-GB", { year: "2-digit", month: "2-digit", day: "2-digit" })}`
     dateSpecifiedInResult = undefined
   }
 
