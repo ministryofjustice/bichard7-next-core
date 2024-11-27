@@ -1,5 +1,6 @@
-import { type User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
+
+import { type User } from "@moj-bichard7/common/types/User"
 
 export default async (sql: postgres.Sql, username: string): Promise<User> => {
   const [user]: [User?] = await sql`

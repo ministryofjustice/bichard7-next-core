@@ -1,6 +1,8 @@
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance } from "fastify"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
+
 import build from "../app"
 import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../tests/helpers/userHelper"
@@ -28,17 +30,17 @@ describe("/me", () => {
     spy.mockResolvedValue(user)
 
     const response = await app.inject({
-      method: "GET",
-      url: "/me",
       headers: {
         authorization: `Bearer ${encodedJwt}`
-      }
+      },
+      method: "GET",
+      url: "/me"
     })
 
     const responseUser = {
-      username: user.username,
       email: user.email,
-      groups: user.groups
+      groups: user.groups,
+      username: user.username
     }
 
     expect(response.statusCode).toBe(OK)
