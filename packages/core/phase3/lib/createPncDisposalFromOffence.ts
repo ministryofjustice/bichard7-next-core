@@ -3,14 +3,23 @@ import createPncDisposal from "../../phase2/lib/createPncDisposalsFromResult/cre
 import isRecordableResult from "../../phase2/lib/isRecordableResult"
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../types/PncQueryResult"
+import ResultClass from "../../types/ResultClass"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "./getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
+const adjournmentResultClasses = [
+  ResultClass.ADJOURNMENT,
+  ResultClass.ADJOURNMENT_POST_JUDGEMENT,
+  ResultClass.ADJOURNMENT_PRE_JUDGEMENT,
+  ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+]
 const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): PncDisposal[] => {
   const results = offence.Result
   let pncDisposals: PncDisposal[] = []
 
   let found3027 = false
-  const adjournmentExists = results.some((result) => result.ResultClass?.includes("Adjournment"))
+  const adjournmentExists = results.some(
+    (result) => result.ResultClass && adjournmentResultClasses.includes(result.ResultClass)
+  )
   let disposalFor2060Result: PncDisposal[] | null = null
   let found2050Result = false
   let found2063Result = false
