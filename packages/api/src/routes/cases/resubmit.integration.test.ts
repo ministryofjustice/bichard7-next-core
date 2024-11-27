@@ -1,20 +1,22 @@
 /* eslint-disable jest/expect-expect */
 import type { User } from "@moj-bichard7/common/types/User"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance, InjectOptions } from "fastify"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+
 import build from "../../app"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
-    method: "POST",
-    url: "/cases/0/resubmit",
+    body: { phase: 1 },
     headers: {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
-    body: { phase: 1 }
+    method: "POST",
+    url: "/cases/0/resubmit"
   }
 }
 

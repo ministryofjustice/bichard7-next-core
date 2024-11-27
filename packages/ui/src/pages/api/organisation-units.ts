@@ -1,10 +1,13 @@
-import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import type { NextApiRequest, NextApiResponse } from "next"
+
+import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
+
+import type OrganisationUnitApiResponse from "../../types/OrganisationUnitApiResponse"
+
 import searchCourtOrganisationUnits, {
   getFullOrganisationCode,
   getFullOrganisationName
 } from "../../services/searchCourtOrganisationUnits"
-import type OrganisationUnitApiResponse from "../../types/OrganisationUnitApiResponse"
 
 export default async (request: NextApiRequest, response: NextApiResponse<OrganisationUnitApiResponse>) => {
   const allowedMethods = ["GET"]

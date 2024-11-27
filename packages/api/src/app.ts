@@ -1,26 +1,29 @@
-import AutoLoad from "@fastify/autoload"
 import type { User } from "@moj-bichard7/common/types/User"
+
+import AutoLoad from "@fastify/autoload"
 import path from "path"
-import authenticate from "./server/auth/authenticate"
-import createFastify from "./server/createFastify"
-import setupSwagger from "./server/openapi/setupSwagger"
-import setupZod from "./server/openapi/setupZod"
+
 import type AuditLogGateway from "./services/gateways/interfaces/auditLogGateway"
 import type AwsS3Gateway from "./services/gateways/interfaces/awsS3Gateway"
 import type DataStoreGateway from "./services/gateways/interfaces/dataStoreGateway"
 
+import authenticate from "./server/auth/authenticate"
+import createFastify from "./server/createFastify"
+import setupSwagger from "./server/openapi/setupSwagger"
+import setupZod from "./server/openapi/setupZod"
+
 declare module "fastify" {
   interface FastifyRequest {
-    user: User
-    db: DataStoreGateway
     auditLog: AuditLogGateway
+    db: DataStoreGateway
     s3: AwsS3Gateway
+    user: User
   }
 }
 
 type Gateways = {
-  db: DataStoreGateway
   auditLog?: AuditLogGateway
+  db: DataStoreGateway
   s3?: AwsS3Gateway
 }
 
@@ -35,8 +38,8 @@ export default async function ({ db }: Gateways) {
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "plugins"),
       dirNameRoutePrefix: false,
-      matchFilter: (path: string) => path.includes("plugin"),
-      ignoreFilter: (path: string) => path.endsWith(".test.ts")
+      ignoreFilter: (path: string) => path.endsWith(".test.ts"),
+      matchFilter: (path: string) => path.includes("plugin")
     })
   })
 
