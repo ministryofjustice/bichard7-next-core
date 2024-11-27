@@ -18,8 +18,12 @@ const editableOffenceExceptions = [
   ExceptionCode.HO100320,
   ExceptionCode.HO100332
 ]
-
 const getNumberOfIneditableOffenceExceptions = (exceptions: Exception[]): number =>
-  exceptions.filter(({ code }) => !editableOffenceExceptions.includes(code)).length
+  exceptions.filter(
+    ({ code, path }) =>
+      !editableOffenceExceptions.includes(code) &&
+      path.slice(0, 5).join("|") ===
+        ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence"].join("|")
+  ).length
 
 export default getNumberOfIneditableOffenceExceptions
