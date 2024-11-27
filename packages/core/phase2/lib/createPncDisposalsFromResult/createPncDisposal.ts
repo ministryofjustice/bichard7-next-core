@@ -95,7 +95,7 @@ const preProcessDisposalQualifiers = (
   if (pncDisposalType && !NO_QUALIFIERS_LIST.includes(pncDisposalType)) {
     resultQualifiers?.forEach((qualifier) => {
       if (INCLUDE_QUALIFIERS_LIST.includes(qualifier)) {
-        disposalQualifier += `${qualifier} `
+        disposalQualifier += qualifier.padEnd(2, " ")
       }
     })
 
