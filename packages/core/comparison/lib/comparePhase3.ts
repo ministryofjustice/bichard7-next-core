@@ -18,10 +18,27 @@ import phase3Handler from "../../phase3/phase3"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import MockPncGateway from "./MockPncGateway"
 import { PncApiError } from "../../lib/PncGateway"
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined =>
   xml?.replace(/ WeedFlag="[^"]*"/g, "").replace(/ hasError="false"/g, "")
+
+const normalisePncOperations = (operations: PncUpdateRequest[]) => {
+  for (const operation of operations) {
+    for (const value of Object.values(operation.request)) {
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          for (const [subfield, subvalue] of Object.entries(item)) {
+            if (subvalue === null) {
+              delete (item as unknown as Record<string, unknown>)[subfield]
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<ComparisonResultDetail> => {
   const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison
@@ -61,6 +78,9 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     if (isError(coreResult)) {
       throw new Error("Unexpected exception while handling phase 3 message")
     }
+
+    normalisePncOperations(pncOperations)
+    normalisePncOperations(pncGateway.updates)
 
     const serialisedPhase3OutgoingMessage = normaliseXml(serialiseToXml(coreResult.outputMessage))
 
