@@ -8,6 +8,8 @@ import penaltyNoticeChargeGenerator from "./pncUpdateRequestGenerators/penaltyNo
 import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
+import type { PncApiError } from "../../lib/PncGateway"
+import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
 
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
   [PncOperation.DISPOSAL_UPDATED]: disposalUpdateGenerator,
@@ -24,20 +26,19 @@ const dispatch = async <T extends PncOperation>(
 ): PromiseResult<void> => {
   const pncUpdateRequest = pncUpdateRequestGenerator[operation.code as T](pncUpdateDataset, operation)
   if (isError(pncUpdateRequest)) {
-    // handleException(pncUpdateDataset, pncUpdateRequest)
     return pncUpdateRequest
   }
 
   const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-  const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId).catch((error: Error) => error)
+  const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId).catch((error: PncApiError) => error)
 
   if (isError(pncUpdateResult)) {
-    // handleException(pncUpdateDataset, pncUpdateRequest)
+    for (const message of pncUpdateResult.messages) {
+      pncUpdateDataset.Exceptions.push(generatePncUpdateExceptionFromMessage(message))
+    }
+
     return pncUpdateResult
   }
-
-  // TODO: Determine if we need this!
-  // mapWarnings(pncUpdateDataset)
 }
 
 export default dispatch

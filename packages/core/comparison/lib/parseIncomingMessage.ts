@@ -21,7 +21,7 @@ type PncUpdateDatasetResult = {
   message: PncUpdateDataset
 }
 
-type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult
+export type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult
 
 const parseIncomingMessage = (message: string): ParseIncomingMessageResult => {
   const messageType = getMessageType(message)

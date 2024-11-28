@@ -55,7 +55,7 @@ const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
 
 export const isNotFoundError = (message: string): boolean => !!message.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)
 
-const generatePncExceptionFromMessage = (message: string): PncException => {
+const generatePncEnquiryExceptionFromMessage = (message: string): PncException => {
   if (isNotFoundError(message)) {
     return ho100301(message)
   }
@@ -71,4 +71,4 @@ const generatePncExceptionFromMessage = (message: string): PncException => {
   return ho100314(message)
 }
 
-export default generatePncExceptionFromMessage
+export default generatePncEnquiryExceptionFromMessage

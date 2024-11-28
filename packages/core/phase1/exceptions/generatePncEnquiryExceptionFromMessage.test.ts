@@ -1,12 +1,12 @@
-import generatePncExceptionFromMessage from "./generatePncExceptionFromMessage"
+import generatePncEnquiryExceptionFromMessage from "./generatePncEnquiryExceptionFromMessage"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "../../lib/exceptions/errorPaths"
 
-describe("generatePncExceptionFromMessage", () => {
+describe("generatePncEnquiryExceptionFromMessage", () => {
   it("returns a HO100301 exception for a 'not found' error", () => {
     const message = "I1008 ARREST/SUMMONS REF ABC123 NOT FOUND"
 
-    const exception = generatePncExceptionFromMessage(message)
+    const exception = generatePncEnquiryExceptionFromMessage(message)
 
     expect(exception).toStrictEqual({
       code: ExceptionCode.HO100301,
@@ -44,7 +44,7 @@ describe("generatePncExceptionFromMessage", () => {
   ])("with code: %s should generate exception: %s", (errorCode: string, code: ExceptionCode) => {
     const message = `${errorCode} - a message`
 
-    const exception = generatePncExceptionFromMessage(message)
+    const exception = generatePncEnquiryExceptionFromMessage(message)
 
     expect(exception).toStrictEqual({
       code,

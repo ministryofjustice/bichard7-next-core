@@ -1,10 +1,10 @@
 import type postgres from "postgres"
 
 export interface CanCaseBeResubmittedResult {
-  locked_by_user: boolean
   case_in_force: boolean
-  case_is_unresolved: boolean
   case_is_submitted: boolean
+  case_is_unresolved: boolean
+  locked_by_user: boolean
 }
 
 export default async (sql: postgres.Sql, username: string, caseId: number, forceIds: number[]): Promise<boolean> => {

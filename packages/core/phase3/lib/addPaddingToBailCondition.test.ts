@@ -6,7 +6,7 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe(bailCondition)
+    expect(paddedBailCondition).toStrictEqual([bailCondition])
   })
 
   it("doesn't add padding when 50 characters long", () => {
@@ -14,7 +14,7 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe(bailCondition)
+    expect(paddedBailCondition).toStrictEqual([bailCondition])
   })
 
   it("adds padding when 51 characters long", () => {
@@ -22,7 +22,7 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe("1111 2222 3333 4444 5555 6666 7777 8888 9999      00000.")
+    expect(paddedBailCondition).toStrictEqual(["1111 2222 3333 4444 5555 6666 7777 8888 9999      00000."])
   })
 
   it("removes spacing between lines", () => {
@@ -32,9 +32,9 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe(
+    expect(paddedBailCondition).toStrictEqual([
       "1111 2222 3333 4444 5555 6666 7777 8888 9999 00000" + "1111 2222 3333 4444 5555 6666 7777 8888 9999 0000"
-    )
+    ])
   })
 
   it("preserves space when one space between lines", () => {
@@ -44,7 +44,7 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe(bailCondition)
+    expect(paddedBailCondition).toStrictEqual([bailCondition])
   })
 
   it("adds padding when line is more than 50 characters long", () => {
@@ -53,11 +53,11 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe(
+    expect(paddedBailCondition).toStrictEqual([
       "1111 2222 3333 4444 5555 6666 7777 8888 9999      " +
         "111111 2222 3333 4444 5555 6666 7777 8888 9999 00 " +
         "1111"
-    )
+    ])
   })
 
   it("adds padding when line contains newlines", () => {
@@ -69,13 +69,12 @@ describe("addPaddingToBailCondition", () => {
 
     const paddedBailCondition = addPaddingToBailCondition(bailCondition)
 
-    expect(paddedBailCondition).toBe(
+    expect(paddedBailCondition).toStrictEqual([
       "1111 2222 3333 4444                               " +
         "5555 6666 7777 8888 999999                        " +
         "1111 2222 3333 4444 5555 6666 7777 8888 999999    " +
-        "1111 2222 3333 4444 5555 6666 7777 8888 999999    " +
-        "1111 2222 3333 4444 5555 6666 7777 8888 9999      " +
-        "000000"
-    )
+        "1111 2222 3333 4444 5555 6666 7777 8888 999999    ",
+      "1111 2222 3333 4444 5555 6666 7777 8888 9999      " + "000000"
+    ])
   })
 })

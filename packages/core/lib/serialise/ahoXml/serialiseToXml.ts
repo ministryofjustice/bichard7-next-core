@@ -501,9 +501,11 @@ const xmlnsTags = {
 const mapPncExceptionsToXml = (exceptions: Exception[]): Br7PncErrorMessageString[] | undefined => {
   const pncExceptions = exceptions.filter((exception) => "message" in exception) as PncException[]
 
-  return pncExceptions.length > 0
-    ? pncExceptions.map(({ code, message }) => ({ "#text": message, "@_classification": code }))
-    : undefined
+  if (pncExceptions.length > 0) {
+    return pncExceptions.map(({ code, message }) => ({ "#text": message, "@_classification": code }))
+  }
+
+  return undefined
 }
 
 const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
