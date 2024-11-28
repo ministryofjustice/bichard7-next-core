@@ -1,15 +1,16 @@
 import type { LoggerOptions } from "pino"
+
 import logger from "./logger"
 
 const loggerOpts: LoggerOptions = {
   transport: {
-    target: "pino-pretty",
     options: {
-      destination: 1,
       colorize: true,
-      translateTime: "HH:MM:ss.l",
-      ignore: "pid,hostname"
-    }
+      destination: 1,
+      ignore: "pid,hostname",
+      translateTime: "HH:MM:ss.l"
+    },
+    target: "pino-pretty"
   }
 }
 

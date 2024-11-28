@@ -20,6 +20,29 @@ const featuresThatDoNotHaveFileNumbers = [
 const featuresThatDoNotHaveFileNumbersRegex = new RegExp(`${featuresThatDoNotHaveFileNumbers.join("|")}`, "i")
 const featuresThatDoHaveFileNumbersRegex = /\d{3}[a-e]?/
 
+function addFilename(featuresFiles, element) {
+  if (element["@file"]) {
+    return
+  }
+
+  const className = element["@classname"]
+  let featureName
+
+  try {
+    if (className.match(featuresThatDoNotHaveFileNumbersRegex)) {
+      featureName = className.match(featuresThatDoNotHaveFileNumbersRegex)[0]
+      featureName = `${featureName.toLowerCase().replaceAll(" ", "-")}.feature`
+    } else {
+      featureName = className.match(featuresThatDoHaveFileNumbersRegex)[0]
+    }
+  } catch (err) {
+    console.error(`Error happened in: "${className}"`)
+    throw err
+  }
+
+  element["@file"] = featuresFiles.find((featureFile) => featureFile.includes(featureName))
+}
+
 async function addFilenameToTestResultsReport() {
   const featuresFiles = await glob("features/**/*.feature")
 
@@ -31,32 +54,13 @@ async function addFilenameToTestResultsReport() {
 
   const jsonXMLOject = new XMLParser(options).parse(data)
 
-  if (jsonXMLOject.testsuite.testcase === undefined) {
+  if (Array.isArray(jsonXMLOject.testsuite.testcase)) {
+    jsonXMLOject.testsuite.testcase.forEach((element) => addFilename(featuresFiles, element))
+  } else if (jsonXMLOject.testsuite.testcase !== undefined) {
+    addFilename(featuresFiles, jsonXMLOject.testsuite.testcase)
+  } else {
     return
   }
-
-  jsonXMLOject.testsuite.testcase.forEach((element) => {
-    if (element["@file"]) {
-      return
-    }
-
-    const className = element["@classname"]
-    let featureName
-
-    try {
-      if (className.match(featuresThatDoNotHaveFileNumbersRegex)) {
-        featureName = className.match(featuresThatDoNotHaveFileNumbersRegex)[0]
-        featureName = `${featureName.toLowerCase().replaceAll(" ", "-")}.feature`
-      } else {
-        featureName = className.match(featuresThatDoHaveFileNumbersRegex)[0]
-      }
-    } catch (err) {
-      console.error(`Error happened in: "${className}"`)
-      throw err
-    }
-
-    element["@file"] = featuresFiles.find((featureFile) => featureFile.includes(featureName))
-  })
 
   const xmlContent = new XMLBuilder(options).build(jsonXMLOject)
 
