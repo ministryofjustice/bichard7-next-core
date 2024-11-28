@@ -66,8 +66,28 @@ for i in $(seq 1 $ATTEMPTS); do
 done;
 
 if [ "$LEGACY" == "false" ] && [ $SUCCESS ]; then
+    SUCCESS_CONDUCTOR="false"
+
     for i in $(seq 1 $ATTEMPTS); do
-        echo "Setting up conductor"
-        npm run -w packages/conductor setup && break || sleep 5
+        if [ "$SUCCESS_CONDUCTOR" == "false" ]; then
+            echo ""
+            echo "Setting up conductor"
+
+            npm run -w packages/conductor setup
+
+            if [ $? -eq 0 ]; then
+                echo ""
+                echo "Success"
+                SUCCESS_CONDUCTOR="true"
+            fi
+
+            sleep 5
+        fi
     done;
+
+    if [ "$SUCCESS_CONDUCTOR" == "false" ]; then
+        echo ""
+        echo "Failed to setup Conductor"
+        exit 1
+    fi
 fi
