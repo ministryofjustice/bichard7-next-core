@@ -74,6 +74,14 @@ const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
 const isPncAsnException = (exception: Exception): boolean =>
   isPncException(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
 
+// TODO: This reverse function is only needed because the order of the PNC exceptions affects which exception gets put on to the ASN
+// It is only there to make sure the comparisons pass. Once we have gone live it can be removed since we don't really mind which exception is used
+const sortAsnExceptions = (exceptions: Exception[]): Exception[] => {
+  const pncAsnExceptions = exceptions.filter(isPncAsnException)
+  const otherExceptions = exceptions.filter((exception) => !isPncAsnException(exception))
+  return [...otherExceptions, ...pncAsnExceptions.reverse()]
+}
+
 // TODO: Refactor to remove duplication from this function and below
 const addExceptionsToPncUpdateDatasetXml = (
   aho: AhoXml,
@@ -84,16 +92,21 @@ const addExceptionsToPncUpdateDatasetXml = (
     return
   }
 
-  for (const e of exceptions) {
+  const sortedExceptions = sortAsnExceptions(exceptions)
+
+  for (const e of sortedExceptions) {
     if (
       !isPncAsnException(e) ||
-      (isPncAsnException(e) && !hasNonPncAsnExceptions(exceptions) && e.code !== ExceptionCode.HO100315)
+      (isPncAsnException(e) &&
+        !hasNonPncAsnExceptions(sortedExceptions) &&
+        e.code !== ExceptionCode.HO100315 &&
+        e.code !== ExceptionCode.HO100403)
     ) {
       addException(aho, e)
     }
   }
 
-  addAhoErrors(aho, exceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
+  addAhoErrors(aho, sortedExceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
 }
 
 const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {

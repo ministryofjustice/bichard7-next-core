@@ -12,6 +12,10 @@ export type ComparisonResultDebugOutput = {
     coreResult: Exception[]
     comparisonResult: Exception[]
   }
+  pncOperations?: {
+    coreResult: PncUpdateRequest[]
+    comparisonResult: PncUpdateRequest[]
+  }
   auditLogEvents: {
     coreResult: string[]
     comparisonResult: string[]
@@ -20,17 +24,11 @@ export type ComparisonResultDebugOutput = {
   xmlParsingDiff: Change[]
 }
 
-export type Phase3ComparisonResultDebugOutput = ComparisonResultDebugOutput & {
-  pncOperations: {
-    coreResult: PncUpdateRequest[]
-    comparisonResult: PncUpdateRequest[]
-  }
-}
-
 type ComparisonResultDetail = {
   auditLogEventsMatch: boolean
   triggersMatch: boolean
   exceptionsMatch: boolean
+  pncOperationsMatch?: boolean
   xmlOutputMatches: boolean
   xmlParsingMatches: boolean
   error?: unknown
@@ -40,11 +38,6 @@ type ComparisonResultDetail = {
   correlationId?: string
   intentionalDifference?: boolean
   incomingMessageType?: string
-}
-
-export type Phase3ComparisonResultDetail = ComparisonResultDetail & {
-  pncOperationsMatch: boolean
-  debugOutput?: Phase3ComparisonResultDebugOutput
 }
 
 export default ComparisonResultDetail

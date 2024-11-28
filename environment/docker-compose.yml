@@ -356,7 +356,7 @@ services:
     ports:
       - 4543:443
     healthcheck:
-      test: curl --insecure --fail -v https://localhost/elb-status
+      test: curl -f -L --insecure https://localhost/bichard/api/health
       interval: 2s
       timeout: 2s
       retries: 10

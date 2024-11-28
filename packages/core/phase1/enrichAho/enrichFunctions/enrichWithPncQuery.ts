@@ -7,10 +7,10 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type AuditLogger from "../../../types/AuditLogger"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
-import { isNotFoundError } from "../../exceptions/generatePncExceptionFromMessage"
+import { isNotFoundError } from "../../exceptions/generatePncEnquiryExceptionFromMessage"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
-import generatePncExceptionFromMessage from "../../exceptions/generatePncExceptionFromMessage"
+import generatePncEnquiryExceptionFromMessage from "../../exceptions/generatePncEnquiryExceptionFromMessage"
 
 const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -78,7 +78,7 @@ export default async (
   if (isError(pncResult)) {
     for (const message of pncResult.messages) {
       if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
-        annotatedHearingOutcome.Exceptions.push(generatePncExceptionFromMessage(message))
+        annotatedHearingOutcome.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
       }
     }
   } else {

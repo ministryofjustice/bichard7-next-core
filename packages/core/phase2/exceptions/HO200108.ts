@@ -6,8 +6,10 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
-import checkCaseRequiresRccButHasNoReportableOffences from "./checkCaseRequiresRccButHasNoReportableOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
+import checkRccSegmentApplicability, {
+  RccSegmentApplicability
+} from "../lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
 
 const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
@@ -32,7 +34,8 @@ const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
       result.ResultClass &&
       [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
       result.PNCDisposalType === 2060 &&
-      checkCaseRequiresRccButHasNoReportableOffences(aho, courtCaseReference)
+      checkRccSegmentApplicability(aho, courtCaseReference) ===
+        RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
     ) {
       const exception = {
         code: ExceptionCode.HO200108,

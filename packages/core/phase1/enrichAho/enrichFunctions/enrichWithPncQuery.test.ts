@@ -202,7 +202,7 @@ describe("enrichWithQuery()", () => {
       "PNC Response Time": 0,
       "PNC Request Type": "enquiry",
       "PNC Attempts Made": 1,
-      "PNC Response Message": await pncGateway.query("1101ZD0100000448754K", "Mock correlation ID"),
+      "PNC Response Message": response,
       sensitiveAttributes: "PNC Request Message,PNC Response Message"
     })
   })

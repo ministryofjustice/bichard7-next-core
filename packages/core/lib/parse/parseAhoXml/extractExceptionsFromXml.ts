@@ -10,16 +10,24 @@ import { asnPath } from "../../../characterisation-tests/helpers/errorPaths"
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extractPncExceptions = (aho: any): PncException[] => {
-  if (aho.AnnotatedHearingOutcome?.PNCErrorMessage) {
-    const pncErrorMessages = Array.isArray(aho.AnnotatedHearingOutcome.PNCErrorMessage)
-      ? aho.AnnotatedHearingOutcome.PNCErrorMessage
-      : [aho.AnnotatedHearingOutcome.PNCErrorMessage]
+  const pncErrorMessagesFromAho =
+    aho.AnnotatedHearingOutcome?.PNCErrorMessage ??
+    aho.PNCUpdateDataset?.AnnotatedHearingOutcome?.PNCErrorMessage ??
+    aho.AnnotatedPNCUpdateDataset?.PNCUpdateDataset?.AnnotatedHearingOutcome?.PNCErrorMessage
 
-    return pncErrorMessages.map((errorMessage: Br7PncErrorMessageString) => ({
-      code: errorMessage["@_classification"],
-      path: errorPaths.case.asn,
-      message: errorMessage["#text"]
-    }))
+  if (pncErrorMessagesFromAho) {
+    const pncErrorMessages: Br7PncErrorMessageString[] = Array.isArray(pncErrorMessagesFromAho)
+      ? pncErrorMessagesFromAho
+      : [pncErrorMessagesFromAho]
+
+    return pncErrorMessages.map(
+      (errorMessage: Br7PncErrorMessageString) =>
+        ({
+          code: errorMessage["@_classification"],
+          path: errorPaths.case.asn,
+          message: errorMessage["#text"]
+        }) as PncException
+    )
   }
 
   return []
@@ -55,11 +63,15 @@ export default (xml: string): Exception[] => {
   const rawParsedObj = parser.parse(xml)
 
   let aho
+  let isAnnotatedPncUpdateDataset = false
+  let isPncUpdateDataset = false
 
   if ("AnnotatedPNCUpdateDataset" in rawParsedObj) {
     aho = rawParsedObj.AnnotatedPNCUpdateDataset.PNCUpdateDataset.AnnotatedHearingOutcome
+    isAnnotatedPncUpdateDataset = true
   } else if ("PNCUpdateDataset" in rawParsedObj) {
     aho = rawParsedObj.PNCUpdateDataset.AnnotatedHearingOutcome
+    isPncUpdateDataset = true
   } else if ("AnnotatedHearingOutcome" in rawParsedObj) {
     aho = rawParsedObj.AnnotatedHearingOutcome
   }
@@ -95,10 +107,24 @@ export default (xml: string): Exception[] => {
   }
 
   let mainExceptions = deduplicateExceptions(extract(rawParsedObj))
-  const pncExceptions = extractPncExceptions(rawParsedObj)
+  let pncExceptions = extractPncExceptions(rawParsedObj)
+
+  if (isPncUpdateDataset) {
+    pncExceptions = pncExceptions.map((pncException) => ({
+      ...pncException,
+      path: ["PNCUpdateDataset", ...pncException.path]
+    }))
+  }
+
+  if (isAnnotatedPncUpdateDataset) {
+    pncExceptions = pncExceptions.map((pncException) => ({
+      ...pncException,
+      path: ["AnnotatedPNCUpdateDataset", "PNCUpdateDataset", ...pncException.path]
+    }))
+  }
 
   // Remove the exception on the ASN element if it also appears in the PNC errors
-  const asnException = mainExceptions.find((e) => e.path.join("|") === asnPath.join("|"))
+  const asnException = mainExceptions.find((e) => e.path.join("|").endsWith(asnPath.join("|")))
   if (asnException) {
     const matchingPncException = pncExceptions.find((e) => e.code == asnException.code)
     if (matchingPncException) {
