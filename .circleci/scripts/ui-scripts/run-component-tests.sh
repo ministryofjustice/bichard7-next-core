@@ -1,10 +1,10 @@
 #!/bin/sh
 cd ~/project/packages/ui
 
-options="--reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
+options="--component --reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
 
 if [[ $MS_EDGE == "true" ]]; then
-  npx cypress run --component --browser edge ${options}
-else
-  npx cypress run --component ${options}
+  options+=" --browser edge"
 fi
+
+circleci tests glob "cypress/component/**/*.cy.tsx" | circleci tests run --command="xargs npx cypress run ${options} --spec"
