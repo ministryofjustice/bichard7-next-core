@@ -6,7 +6,7 @@ import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsF
 import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
 import isRecordableResult from "../../../phase2/lib/isRecordableResult"
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../../types/PncOperation"
+import { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
@@ -165,7 +165,7 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   }
 
   return {
-    operation: "NEWREM",
+    operation: PncOperation.REMAND,
     request: {
       pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
       pncCheckName: getPncCheckname(pncUpdateDataset),

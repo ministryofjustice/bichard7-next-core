@@ -1,7 +1,7 @@
 import type jwt from "jsonwebtoken"
 
 export type JWTConfigType = {
-  tokenExpiresIn: string | number
+  tokenExpiresIn: number | string
   tokenIssuer: string
   tokenSecret: string
 }

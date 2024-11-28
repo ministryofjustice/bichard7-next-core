@@ -1,6 +1,8 @@
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { FastifyInstance } from "fastify"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
+
 import { SetupAppEnd2EndHelper } from "../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../tests/helpers/userHelper"
 
@@ -27,16 +29,16 @@ describe("/me e2e", () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.db)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
-      method: "GET",
       headers: {
         Authorization: `Bearer ${encodedJwt}`
-      }
+      },
+      method: "GET"
     })
 
     const responseUser = {
-      username: user.username,
       email: user.email,
-      groups: [UserGroup.GeneralHandler]
+      groups: [UserGroup.GeneralHandler],
+      username: user.username
     }
 
     expect(response.status).toBe(OK)
@@ -48,10 +50,10 @@ describe("/me e2e", () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.db, expectedGroups)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
-      method: "GET",
       headers: {
         Authorization: `Bearer ${encodedJwt}`
-      }
+      },
+      method: "GET"
     })
 
     expect(response.status).toBe(OK)
