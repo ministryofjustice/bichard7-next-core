@@ -1,6 +1,8 @@
 import type { GetObjectCommandOutput, S3ClientConfig } from "@aws-sdk/client-s3"
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import type { Readable } from "stream"
+
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
+
 import { isError } from "../types/Result"
 import logger from "../utils/logger"
 
@@ -17,7 +19,7 @@ const getFileFromS3 = async (
   bucket: string,
   config: S3ClientConfig,
   retries = 5
-): Promise<string | Error> => {
+): Promise<Error | string> => {
   const client = new S3Client(config)
   const command = new GetObjectCommand({ Bucket: bucket, Key: fileName })
   let lastResponse: Error | GetObjectCommandOutput | undefined = undefined

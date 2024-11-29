@@ -1,3 +1,5 @@
+export class AlreadyExistsError extends Error {}
+
 export default class ApplicationError extends Error {
   constructor(
     message: string,
@@ -8,5 +10,3 @@ export default class ApplicationError extends Error {
 }
 
 export class NotFoundError extends Error {}
-
-export class AlreadyExistsError extends Error {}

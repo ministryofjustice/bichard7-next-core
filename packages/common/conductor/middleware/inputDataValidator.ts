@@ -1,11 +1,14 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
 import type { z } from "zod"
+
 import { ZodIssueCode } from "zod"
-import { failedTerminal } from "../helpers"
+
 import type Task from "../types/Task"
 
+import { failedTerminal } from "../helpers"
+
+type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "taskId" | "workflowInstanceId">>
 type OriginalHandler = ConductorWorker["execute"]
-type Handler<T> = (task: Task<T>) => Promise<Omit<TaskResult, "workflowInstanceId" | "taskId">>
 
 const inputDataValidator = <T>(schema: z.ZodSchema, handler: Handler<T>): OriginalHandler => {
   return (task: ConductorTask) => {

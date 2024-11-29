@@ -1,5 +1,7 @@
 import type { DeleteObjectCommandOutput, S3ClientConfig } from "@aws-sdk/client-s3"
+
 import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3"
+
 import { isError, type PromiseResult } from "../types/Result"
 import logger from "../utils/logger"
 
@@ -9,7 +11,7 @@ const deleteFileFromS3 = async (fileName: string, bucket: string, config: S3Clie
     Bucket: bucket,
     Key: fileName
   })
-  let lastResponse: Error | DeleteObjectCommandOutput | undefined = undefined
+  let lastResponse: DeleteObjectCommandOutput | Error | undefined = undefined
 
   for (let retries = 0; retries < 5; retries++) {
     lastResponse = await client.send(command).catch((err: Error) => err)
