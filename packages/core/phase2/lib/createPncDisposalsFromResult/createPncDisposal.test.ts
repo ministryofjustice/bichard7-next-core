@@ -342,5 +342,26 @@ describe("createPncDisposal", () => {
 
       expect(qualifiers).toBe("C S     A123")
     })
+
+    it("doesn't add padding for when multiple double character qualifiers", () => {
+      const pncDisposalType = 1234
+      const secondaryDurationUnit = "A"
+      const secondaryDurationLength = 123
+      const resultQualifiers = ["YW", "YV", "YU"]
+
+      const { qualifiers } = createPncDisposal(
+        pncDisposalType,
+        undefined,
+        undefined,
+        secondaryDurationUnit,
+        secondaryDurationLength,
+        undefined,
+        undefined,
+        resultQualifiers,
+        undefined
+      )
+
+      expect(qualifiers).toBe("YWYVYUS A123")
+    })
   })
 })

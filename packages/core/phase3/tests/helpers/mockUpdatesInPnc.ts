@@ -73,7 +73,7 @@ const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml: 
   const beforeOperations = getOperations(parsedIncomingMessage)
   const beforeUnattemptedOperations = beforeOperations.filter((operation) => operation.status !== "Completed")
   const afterOperations = getOperations(parsedOutgoingMessage)
-  const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status !== "Completed")
+  const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status === "NotAttempted")
   const afterFailedOperations = afterOperations.filter((operation) => operation.status === "Failed")
   const errorMessages = getPncErrorMessages(parsedOutgoingMessage)
 

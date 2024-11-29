@@ -34,8 +34,10 @@ const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
       result.ResultClass &&
       [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
       result.PNCDisposalType === 2060 &&
-      checkRccSegmentApplicability(aho, courtCaseReference) ===
-        RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
+      checkRccSegmentApplicability(
+        aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence,
+        courtCaseReference
+      ) === RccSegmentApplicability.CaseRequiresRccButHasNoReportableOffences
     ) {
       const exception = {
         code: ExceptionCode.HO200108,
