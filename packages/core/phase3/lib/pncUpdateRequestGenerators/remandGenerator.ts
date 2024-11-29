@@ -1,7 +1,6 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import areOrganisationUnitsEqual from "../../../lib/areOrganisationUnitsEqual"
 import { lookupRemandStatusByCjsCode } from "../../../lib/dataLookup"
-import isWarrantIssued from "../../../phase1/lib/result/isWarrantIssued"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import isRecordableOffence from "../../../phase2/lib/isRecordableOffence"
 import isRecordableResult from "../../../phase2/lib/isRecordableResult"
@@ -16,11 +15,14 @@ import getPncCheckname from "../getPncCheckname"
 import getPncCourtCode, { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../getPncCourtCode"
 import preProcessAsn from "../preProcessAsn"
 import preProcessPncIdentifier from "../preProcessPncIdentifier"
+import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
+import isDatedWarrantIssued from "../../../lib/isDatedWarrantIssued"
 
 const firstInstanceQualifier = "LE"
 const FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE = "*****1ST INSTANCE WARRANT ISSUED*****"
 const FAILED_TO_APPEAR_TEXT = "*****FAILED TO APPEAR*****"
-const DEFENDANT_DATED_WARRANT_ISSUED = 4575
+const FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE = "*****1ST INSTANCE DATED WARRANT ISSUED*****"
+const FAILED_TO_APPEAR_DATED_TEXT = "***** FTA DATED WARRANT *****"
 const LOCAL_AUTHORITY_CODE = "0000"
 
 const noAdjudicationResultClasses = [
@@ -77,7 +79,7 @@ const generateCourtNameType1 = (
   }
 
   if (remandLocationCourt === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR) {
-    return [FAILED_TO_APPEAR_TEXT, FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE].includes(courtHouseName)
+    return [FAILED_TO_APPEAR_DATED_TEXT, FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE].includes(courtHouseName)
       ? courtHouseName
       : `${courtHouseName} ${courtType}`
   }
@@ -99,7 +101,7 @@ const generateCourtNameType2 = (
 
   if (
     remandLocationCourt === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR &&
-    ![FAILED_TO_APPEAR_TEXT, FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE].includes(courtHouseName)
+    ![FAILED_TO_APPEAR_DATED_TEXT, FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE].includes(courtHouseName)
   ) {
     return `${courtHouseName} ${courtType}`
   }
@@ -135,14 +137,16 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   }
 
   let courtHouseName = hearing.CourtHouseName
-  if (isWarrantIssued(results[0].CJSresultCode)) {
+  if (isUndatedWarrantIssued(results[0].CJSresultCode)) {
     psaCourtCode = PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
     courtHouseName = hasFirstInstanceQualifier ? FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE : FAILED_TO_APPEAR_TEXT
   }
 
-  if (results[0].CJSresultCode === DEFENDANT_DATED_WARRANT_ISSUED) {
+  if (isDatedWarrantIssued(results[0].CJSresultCode)) {
     remandLocationCourt = PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
-    courtHouseName = hasFirstInstanceQualifier ? FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE : FAILED_TO_APPEAR_TEXT
+    courtHouseName = hasFirstInstanceQualifier
+      ? FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE
+      : FAILED_TO_APPEAR_DATED_TEXT
   }
 
   const courtNameType1 = generateCourtNameType1(
