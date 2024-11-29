@@ -1,5 +1,5 @@
 import getRecordableOffencesForCourtCase from "../../../../lib/getRecordableOffencesForCourtCase"
-import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 import isResultCompatibleWithDisposal from "../../isResultCompatibleWithDisposal"
 
 export enum RccSegmentApplicability {
@@ -9,14 +9,14 @@ export enum RccSegmentApplicability {
 }
 
 const checkRccSegmentApplicability = (
-  aho: AnnotatedHearingOutcome,
+  offences: Offence[],
   courtCaseReferenceNumber?: string
 ): RccSegmentApplicability => {
   let caseHasReportableOffencesAddedByCourt = false
   let caseRequiresRcc = false
-  const offences = getRecordableOffencesForCourtCase(aho, courtCaseReferenceNumber)
+  const recordableOffences = getRecordableOffencesForCourtCase(offences, courtCaseReferenceNumber)
 
-  for (const offence of offences) {
+  for (const offence of recordableOffences) {
     const offenceRequiresRcc = offence.Result.some((result) => result.PNCDisposalType === 2060)
     caseRequiresRcc ||= offenceRequiresRcc && (!offence.AddedByTheCourt || isResultCompatibleWithDisposal(offence))
     caseHasReportableOffencesAddedByCourt ||= !!offence.AddedByTheCourt && isResultCompatibleWithDisposal(offence)

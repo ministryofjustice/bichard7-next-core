@@ -28,6 +28,14 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
     case "caseState": {
       newState.caseStateFilter.value = undefined
       newState.caseStateFilter.label = undefined
+      newState.caseStateFilter.label = undefined
+      newState.resolvedByUsernameFilter.value = undefined
+      newState.resolvedByUsernameFilter.label = undefined
+      newState.resolvedByUsernameFilter.state = undefined
+      break
+    }
+
+    case "resolvedByUsername": {
       newState.resolvedByUsernameFilter.value = undefined
       newState.resolvedByUsernameFilter.label = undefined
       newState.resolvedByUsernameFilter.state = undefined
@@ -60,14 +68,6 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
 
     case "reasonCodes": {
       newState.reasonCodes = newState.reasonCodes.filter((reasonCode) => reasonCode.value !== action.value)
-      break
-    }
-
-    case "resolvedByUsernameFilter": {
-      newState.resolvedByUsernameFilter.value = undefined
-      newState.resolvedByUsernameFilter.label = undefined
-      newState.resolvedByUsernameFilter.state = undefined
-
       break
     }
 

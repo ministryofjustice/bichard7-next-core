@@ -1,9 +1,9 @@
 enum PncStatus {
-  Processing = "Processing",
-  Ignored = "Ignored",
-  Updated = "Updated",
   Exceptions = "Exceptions",
-  ManuallyResolved = "ManuallyResolved"
+  Ignored = "Ignored",
+  ManuallyResolved = "ManuallyResolved",
+  Processing = "Processing",
+  Updated = "Updated"
 }
 
 export default PncStatus

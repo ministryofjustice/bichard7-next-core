@@ -1711,7 +1711,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
           ],
           "OrganisationName": undefined,
           "PNCCheckname": "COLE",
-          "PNCIdentifier": "2000/0000000X",
+          "PNCIdentifier": "2024/1234567X",
           "ReasonForBailConditions": undefined,
           "RemandStatus": "NA",
         },
@@ -1848,7 +1848,7 @@ exports[`parsePncUpdateDataSetXml converts XML from file phase2/tests/fixtures/P
     ],
     "forceStationCode": "01XM",
     "penaltyCases": undefined,
-    "pncId": "2000/0000000X",
+    "pncId": "2024/1234567X",
   },
   "PncQueryDate": 2023-12-19T00:00:00.000Z,
 }
