@@ -437,7 +437,7 @@ jobs:
       - checkout
       - run:
           name: Check for tests
-          command: bash ./.circleci/scripts/check-e2e-tests.sh
+          command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - set_locale
       - when:
           condition:
@@ -682,7 +682,7 @@ jobs:
       - checkout
       - run:
           name: Check for tests
-          command: bash .circleci/scripts/ui-scripts/check-cypress-e2e-tests.sh
+          command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
       - attach_workspace:
           at: .
       - run:
@@ -756,7 +756,7 @@ jobs:
       - checkout
       - run:
           name: Check for tests
-          command: bash .circleci/scripts/check-e2e-tests.sh
+          command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - attach_workspace:
           at: .
       - run:
