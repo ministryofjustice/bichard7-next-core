@@ -3,7 +3,7 @@ import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import { PncOperation } from "../../types/PncOperation"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
-import disposalUpdateGenerator from "./pncUpdateRequestGenerators/disposalUpdateGenerator"
+import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
 import penaltyNoticeChargeGenerator from "./pncUpdateRequestGenerators/penaltyNoticeChargeGenerator"
 import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
@@ -12,7 +12,7 @@ import type { PncApiError } from "../../lib/PncGateway"
 import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
 
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
-  [PncOperation.DISPOSAL_UPDATED]: disposalUpdateGenerator,
+  [PncOperation.DISPOSAL_UPDATED]: disposalUpdatedGenerator,
   [PncOperation.NORMAL_DISPOSAL]: normalDisposalGenerator,
   [PncOperation.PENALTY_HEARING]: penaltyNoticeChargeGenerator,
   [PncOperation.REMAND]: remandGenerator,

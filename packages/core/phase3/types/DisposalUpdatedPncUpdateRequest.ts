@@ -1,19 +1,19 @@
 import type { PncOperation } from "../../types/PncOperation"
-import type { CourtHearingAndDisposal } from "./HearingDetails"
+import type { CourtHearingAdjudicationAndDisposal } from "./HearingDetails"
 
-type SentenceDeferredPncUpdateRequest = {
-  operation: PncOperation.SENTENCE_DEFERRED
+type DisposalUpdatedPncUpdateRequest = {
+  operation: PncOperation.DISPOSAL_UPDATED
   request: {
     courtCaseReferenceNumber: string
     courtCode: string
     croNumber: string | null
     forceStationCode: string
     hearingDate: string
-    hearingDetails: CourtHearingAndDisposal[]
+    hearingDetails: CourtHearingAdjudicationAndDisposal[]
     hearingType: string
     pncCheckName: string | null
     pncIdentifier: string | null
   }
 }
 
-export default SentenceDeferredPncUpdateRequest
+export default DisposalUpdatedPncUpdateRequest
