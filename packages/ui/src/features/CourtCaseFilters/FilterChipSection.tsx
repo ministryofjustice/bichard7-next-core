@@ -204,7 +204,7 @@ const FilterChipSection: React.FC<Props> = ({
               removeAction={() => {
                 return {
                   method: "remove",
-                  type: "resolvedByUsernameFilter",
+                  type: "resolvedByUsername",
                   value: state.resolvedByUsernameFilter.value!
                 } as FilterAction
               }}

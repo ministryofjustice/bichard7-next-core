@@ -53,48 +53,15 @@ describe("Filtering cases by case state", () => {
       cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
       cy.contains("Case00002")
 
-      // Removing case state filter tag unresolved cases should be shown with the filter disabled
-      cy.get(".moj-filter__tag").contains("My resolved cases").click()
-      cy.get("button[id=search]").click()
-      cy.get(".moj-scrollable-pane tbody tr").should("have.length", 2)
-      cy.contains("Case00001")
-      cy.contains("Case00002")
-
-      // Removing case state filter tag unresolved cases should be shown with the filter disabled
-      cy.get(".moj-filter__tag").contains("Resolved").click()
+      // Switch back to unresolved cases
+      cy.get(`label[for="unresolved"]`).click()
       cy.get("button[id=search]").click()
       cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
       cy.contains("Case00000")
-    })
 
-    it("Should automatically check 'Resolved', if 'My resolved cases' is checked", () => {
-      visitBasePath()
-
-      // Filter for "My resolved cases"
-      cy.get(`label[for="myResolvedCases"]`).click()
-      cy.get("#resolved").should("be.checked")
-      cy.get("#myResolvedCases").should("be.checked")
-
-      // Remove "Resolved" filter
-      cy.get(`label[for="resolved"]`).click()
-      cy.get("#resolved").should("not.be.checked")
-      cy.get("#myResolvedCases").should("not.be.checked")
-
-      // Reapply "Resolved" filter
-      cy.get(`label[for="resolved"]`).click()
-      cy.get("#resolved").should("be.checked")
-      cy.get("#myResolvedCases").should("not.be.checked")
-
-      // Reapply "My resolved cases"
-      cy.get(`label[for="myResolvedCases"]`).click()
-      cy.get("#myResolvedCases").should("be.checked")
-
-      // Remove "My resolved cases"
-      cy.get(`label[for="myResolvedCases"]`).click()
-      cy.get("#resolved").should("be.checked")
-      cy.get("#myResolvedCases").should("not.be.checked")
     })
   })
+
   describe("without ListAllCases permission", () => {
     beforeEach(() => {
       cy.loginAs("GeneralHandler")

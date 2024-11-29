@@ -41,6 +41,10 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       newState.caseStateFilter.value = action.value
       newState.caseStateFilter.label = caseStateLabels[action.value ?? ""]
       newState.caseStateFilter.state = "Selected"
+
+      newState.resolvedByUsernameFilter.value = undefined
+      newState.resolvedByUsernameFilter.label = undefined
+      newState.resolvedByUsernameFilter.state = undefined
       break
     }
 
@@ -51,9 +55,8 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       break
     }
 
-    case "resolvedByUsernameFilter": {
+    case "resolvedByUsername": {
       newState.caseStateFilter.value = "Resolved"
-      newState.caseStateFilter.label = caseStateLabels[action.value ?? ""]
       newState.caseStateFilter.state = "Selected"
 
       newState.resolvedByUsernameFilter.value = action.value
