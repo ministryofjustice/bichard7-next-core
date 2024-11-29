@@ -680,7 +680,7 @@ jobs:
             - run: circleci-agent step halt
       - run:
           name: Check for tests
-          command: bash ./.circleci/scripts/ui-scripts/check-cypress-e2e-tests.sh
+          command: bash .circleci/scripts/ui-scripts/check-cypress-e2e-tests.sh
       - attach_workspace:
           at: .
       - run:
@@ -753,7 +753,7 @@ jobs:
             - run: circleci-agent step halt
       - run:
           name: Check for tests
-          command: bash ./.circleci/scripts/check-e2e-tests.sh
+          command: bash .circleci/scripts/check-e2e-tests.sh
       - attach_workspace:
           at: .
       - run:
