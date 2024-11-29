@@ -8,7 +8,7 @@ export default class MockPncGateway implements PncGatewayInterface {
   result: (PncQueryResult | PncApiError | undefined)[] = []
 
   constructor(
-    result: PncQueryResult | (PncQueryResult | PncApiError)[] | PncApiError | undefined,
+    result: PncQueryResult | (PncQueryResult | PncApiError | undefined)[] | PncApiError | undefined,
     public queryTime: Date | undefined = undefined
   ) {
     if (Array.isArray(result)) {

@@ -31,7 +31,9 @@ const inputFileName = localFileName.replace(".json", `.${inputType}-input.xml`)
 const ahoFileName = localFileName.replace(".json", `.${outputType}-output.xml`)
 
 fs.writeFileSync(inputFileName, fileJson.incomingMessage)
-fs.writeFileSync(ahoFileName, fileJson.annotatedHearingOutcome || fileJson.outgoingMessage)
-
 exec(`code ${inputFileName}`)
-exec(`code ${ahoFileName}`)
+
+if (fileJson.annotatedHearingOutcome || fileJson.outgoingMessage) {
+  fs.writeFileSync(ahoFileName, fileJson.annotatedHearingOutcome || fileJson.outgoingMessage)
+  exec(`code ${ahoFileName}`)
+}

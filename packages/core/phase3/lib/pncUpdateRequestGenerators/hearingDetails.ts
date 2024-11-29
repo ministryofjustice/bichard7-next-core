@@ -13,7 +13,7 @@ import createPncAdjudicationFromAho from "../../../phase2/lib/createPncAdjudicat
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatibleWithDisposal"
 import getForceStationCode from "../getForceStationCode"
-import getRecordableOffencesForCourtCase from "../../../lib/getRecordableOffencesForCourtCase"
+import { getAdjustedRecordableOffencesForCourtCase } from "../../../lib/getRecordableOffencesForCourtCase"
 
 const DEFAULT_OFFENCE_LOCATION = "Not provided by Court"
 const OFFENCE_START_TIME_FIELD_LENGTH = 4
@@ -111,7 +111,10 @@ export const generateHearingsAndDisposals = (
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReference?: string
 ): CourtHearingAndDisposal[] =>
-  getRecordableOffencesForCourtCase(pncUpdateDataset, courtCaseReference)
+  getAdjustedRecordableOffencesForCourtCase(
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence,
+    courtCaseReference
+  )
     .filter((offence) => !offence.AddedByTheCourt)
     .reduce((courtHearingsAndDisposals: CourtHearingAndDisposal[], offence) => {
       courtHearingsAndDisposals.push(createCourtHearingFromOffence(offence))
@@ -124,7 +127,10 @@ export const generateHearingsAdjudicationsAndDisposals = (
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReference?: string
 ): CourtHearingAdjudicationAndDisposal[] =>
-  getRecordableOffencesForCourtCase(pncUpdateDataset, courtCaseReference)
+  getAdjustedRecordableOffencesForCourtCase(
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence,
+    courtCaseReference
+  )
     .filter((offence) => !offence.AddedByTheCourt)
     .reduce((courtHearingsAndDisposals: CourtHearingAdjudicationAndDisposal[], offence) => {
       courtHearingsAndDisposals.push(createCourtHearingFromOffence(offence))
@@ -147,7 +153,10 @@ export const generateArrestHearingsAdjudicationsAndDisposals = (
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReference?: string
 ): ArrestHearingAdjudicationAndDisposal[] =>
-  getRecordableOffencesForCourtCase(pncUpdateDataset, courtCaseReference)
+  getAdjustedRecordableOffencesForCourtCase(
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence,
+    courtCaseReference
+  )
     .filter((offence) => offence.AddedByTheCourt && isResultCompatibleWithDisposal(offence))
     .reduce((arrestHearingsAdjudicationsAndDisposals: ArrestHearingAdjudicationAndDisposal[], offenceAddedInCourt) => {
       arrestHearingsAdjudicationsAndDisposals.push(

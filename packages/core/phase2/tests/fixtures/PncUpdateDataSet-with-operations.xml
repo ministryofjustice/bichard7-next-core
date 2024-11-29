@@ -44,7 +44,7 @@
                 </br7:ForceOwner>
                 <br7:HearingDefendant>
                     <br7:ArrestSummonsNumber>2100000000000100019T</br7:ArrestSummonsNumber>
-                    <br7:PNCIdentifier>2000/0000000X</br7:PNCIdentifier>
+                    <br7:PNCIdentifier>2024/1234567X</br7:PNCIdentifier>
                     <br7:PNCCheckname>COLE</br7:PNCCheckname>
                     <br7:DefendantDetail>
                         <br7:PersonName>
@@ -283,7 +283,7 @@
         <br7:HasError>false</br7:HasError>
         <CXE01 xmlns="">
             <FSC FSCode="01XM" IntfcUpdateType="K"/>
-            <IDS CRONumber="" Checkname="COLE" IntfcUpdateType="K" PNCID="2000/0000000X"/>
+            <IDS CRONumber="" Checkname="COLE" IntfcUpdateType="K" PNCID="2024/1234567X"/>
             <CourtCases>
                 <CourtCase>
                     <CCR CourtCaseRefNo="23/1234/012345P" CrimeOffenceRefNo="" IntfcUpdateType="K"/>

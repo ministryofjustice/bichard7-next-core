@@ -1,6 +1,6 @@
 import type { Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
-import getRecordableOffencesForCourtCase from "../../../lib/getRecordableOffencesForCourtCase"
+import { getAdjustedRecordableOffencesForCourtCase } from "../../../lib/getRecordableOffencesForCourtCase"
 import { GENERATED_PNC_FILENAME_MAX_LENGTH } from "../../../phase1/enrichAho/enrichFunctions/enrichDefendant/enrichDefendant"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import checkRccSegmentApplicability, {
@@ -24,26 +24,6 @@ import type { ArrestHearingAdjudicationAndDisposal } from "../../types/HearingDe
 const COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const ILLEGAL_FILENAME_PATTERN = new RegExp("[^a-zA-Z0-9\\- /]", "g")
 const COURT_TYPE_NOT_AVAILABLE = "Not available from Court"
-
-const has2059Or2060Result = (offence: Offence) =>
-  offence.Result.some((result) => [2059, 2060].includes(result.PNCDisposalType ?? 0))
-
-const adjust2060ResultIfNecessary = (offences: Offence[]) => {
-  const found2059Or2060Result = offences.some((offence) => has2059Or2060Result(offence))
-  const foundNon2059Or2060Offence = offences.some(
-    (offence) => (!offence.AddedByTheCourt || isResultCompatibleWithDisposal(offence)) && !has2059Or2060Result(offence)
-  )
-
-  if (!found2059Or2060Result || foundNon2059Or2060Offence) {
-    return
-  }
-
-  offences.forEach((offence) =>
-    offence.Result.forEach(
-      (result) => (result.PNCDisposalType = result.PNCDisposalType === 2060 ? 2063 : result.PNCDisposalType)
-    )
-  )
-}
 
 export const preProcessCourtCaseReferenceNumber = (ccr?: string): Result<string> => {
   if (!ccr) {
@@ -131,11 +111,10 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
 ) => {
   const hearing = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
-  // TODO: Implement NormalDisposalMessageDispatcher.java:113
-  const offences = getRecordableOffencesForCourtCase(pncUpdateDataset, operation.data?.courtCaseReference)
-
-  // TODO: Refactor to avoid mutation
-  adjust2060ResultIfNecessary(offences)
+  const offences = getAdjustedRecordableOffencesForCourtCase(
+    hearingDefendant.Offence,
+    operation.data?.courtCaseReference
+  )
 
   const courtCaseReference =
     operation.data?.courtCaseReference ??
@@ -158,7 +137,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
 
   let preTrialIssuesUniqueReferenceNumber: string | null = null
   if (
-    checkRccSegmentApplicability(pncUpdateDataset, operation.data?.courtCaseReference) ===
+    checkRccSegmentApplicability(offences, operation.data?.courtCaseReference) ===
     RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences
   ) {
     const forceOwner =

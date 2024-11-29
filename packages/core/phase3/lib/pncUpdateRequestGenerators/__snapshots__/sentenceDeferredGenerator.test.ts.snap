@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sentenceDeferredGenerator generates the operation request 1`] = `
+{
+  "operation": "SENDEF",
+  "request": {
+    "courtCaseReferenceNumber": "07/1577/20154M",
+    "courtCode": "2575",
+    "croNumber": null,
+    "forceStationCode": "01YZ",
+    "hearingDate": "19122023",
+    "hearingDetails": [
+      {
+        "courtOffenceSequenceNumber": "001",
+        "offenceReason": "FA06001",
+        "type": "ORDINARY",
+      },
+      {
+        "disposalQualifiers": "",
+        "disposalQuantity": "                      00",
+        "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+        "disposalType": "4004",
+        "type": "DISPOSAL",
+      },
+      {
+        "courtOffenceSequenceNumber": "002",
+        "offenceReason": "FA06001",
+        "type": "ORDINARY",
+      },
+      {
+        "disposalQualifiers": "",
+        "disposalQuantity": "                      00",
+        "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+        "disposalType": "4004",
+        "type": "DISPOSAL",
+      },
+    ],
+    "hearingType": "D",
+    "pncCheckName": "COLE",
+    "pncIdentifier": "24/1234567X",
+  },
+}
+`;
