@@ -114,7 +114,6 @@ commands:
 
   setup_ui:
     steps:
-      - checkout
       - node_install
       - set_locale
 
@@ -436,6 +435,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - set_locale
       - when:
           condition:
@@ -588,6 +590,7 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
@@ -620,6 +623,7 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
       - setup_ui
       - install_dependencies:
           install-cypress: true
@@ -675,6 +679,10 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
       - attach_workspace:
           at: .
       - run:
@@ -745,6 +753,10 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - attach_workspace:
           at: .
       - run:
@@ -797,6 +809,7 @@ jobs:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
+      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
