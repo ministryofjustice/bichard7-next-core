@@ -1,6 +1,8 @@
 import type { TaskDef } from "@io-orkes/conductor-javascript"
+
 import fs from "fs"
 import { isMatch } from "lodash"
+
 import type ConductorGateway from "./ConductorGateway"
 
 class Task {
