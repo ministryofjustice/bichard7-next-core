@@ -1,8 +1,11 @@
 import type { AxiosError } from "axios"
+
 import axios from "axios"
-import { mockApiAuditLogEvent, mockAuditLogApiRecordOutput } from "../test/auditLogMocks"
-import "../test/jest"
+
 import type { AuditLogApiRecordOutput } from "../types/AuditLogRecord"
+
+import "../test/jest"
+import { mockApiAuditLogEvent, mockAuditLogApiRecordOutput } from "../test/auditLogMocks"
 import AuditLogApiClient from "./AuditLogApiClient"
 
 const apiClient = new AuditLogApiClient("http://localhost", "dummy")
@@ -19,7 +22,7 @@ const event = mockApiAuditLogEvent()
 const createErrorResponse = (errorCode: number, errorMessage: string): AxiosError =>
   ({
     message: `Axios error: ${errorMessage}`,
-    response: { status: errorCode, data: errorMessage }
+    response: { data: errorMessage, status: errorCode }
   }) as unknown as AxiosError
 
 describe("getMessages()", () => {
@@ -28,7 +31,7 @@ describe("getMessages()", () => {
   })
 
   it("should return the messages if successful", async () => {
-    jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [message, message2] })
+    jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
     const result = await apiClient.getMessages()
 
@@ -46,7 +49,7 @@ describe("getMessages()", () => {
   })
 
   it("should filter by status", async () => {
-    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [message, message2] })
+    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
     const result = await apiClient.getMessages({ status: "Error" })
 
@@ -56,7 +59,7 @@ describe("getMessages()", () => {
   })
 
   it("should filter by lastMessageId", async () => {
-    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [message, message2] })
+    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
     const result = await apiClient.getMessages({ lastMessageId: "12345" })
 
@@ -66,29 +69,29 @@ describe("getMessages()", () => {
   })
 
   it("should filter by status and lastMessageId", async () => {
-    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [message, message2] })
+    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages({ status: "Error", lastMessageId: "12345" })
+    const result = await apiClient.getMessages({ lastMessageId: "12345", status: "Error" })
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
-    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?status=Error&lastMessageId=12345")
+    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?lastMessageId=12345&status=Error")
   })
 
   it("should pass through largeObjects and limit", async () => {
-    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [message, message2] })
+    const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages({ limit: 99, largeObjects: false })
+    const result = await apiClient.getMessages({ largeObjects: false, limit: 99 })
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
-    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?limit=99&largeObjects=false")
+    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?largeObjects=false&limit=99")
   })
 })
 
 describe("getMessage()", () => {
   it("should return the message when message exists", async () => {
-    jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [message] })
+    jest.spyOn(axios, "get").mockResolvedValue({ data: [message], status: 200 })
 
     const result = await apiClient.getMessage(message.messageId)
 
@@ -110,7 +113,7 @@ describe("getMessage()", () => {
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockGet = jest.spyOn(axios, "get").mockResolvedValue({ status: 200, data: [] })
+    const mockGet = jest.spyOn(axios, "get").mockResolvedValue({ data: [], status: 200 })
 
     const result = await apiClient.getMessage(message.messageId)
 
@@ -123,7 +126,7 @@ describe("getMessage()", () => {
 
 describe("createAuditLog()", () => {
   it("should return Created http status code when message successfully created", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 201, data: '{ "messageId": "fake" }' })
+    jest.spyOn(axios, "post").mockResolvedValue({ data: '{ "messageId": "fake" }', status: 201 })
 
     const result = await apiClient.createAuditLog(message)
 
@@ -149,7 +152,7 @@ describe("createAuditLog()", () => {
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 201, data: '{ "messageId": "fake" }' })
+    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ data: '{ "messageId": "fake" }', status: 201 })
 
     const result = await apiClient.createAuditLog(message)
 
@@ -304,7 +307,7 @@ describe("sanitiseMessage()", () => {
   })
 
   it("should fail when the api errors", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 500, data: "api has gone bang" })
+    jest.spyOn(axios, "post").mockResolvedValue({ data: "api has gone bang", status: 500 })
 
     const result = await apiClient.sanitiseMessage(message.messageId)
 

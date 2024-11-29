@@ -1,7 +1,9 @@
 import type { IDatabase } from "pg-promise"
-import pgpLib from "pg-promise"
-import { baseConfig } from "./baseConfig"
 import type { IClient, IConnectionParameters } from "pg-promise/typescript/pg-subset"
+
+import pgpLib from "pg-promise"
+
+import { baseConfig } from "./baseConfig"
 const pgp = pgpLib()
 
 pgp.pg.types.setTypeParser(1082, (stringValue) => stringValue)

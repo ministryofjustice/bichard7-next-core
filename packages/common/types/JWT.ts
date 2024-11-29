@@ -1,11 +1,11 @@
 export type JWT = {
-  username: string
-  exclusionList: string[]
-  inclusionList: string[]
   emailAddress: string
-  groups: string[]
-  id: string
-  iat: number // Epoch
+  exclusionList: string[]
   exp: number // Epoch
+  groups: string[]
+  iat: number // Epoch
+  id: string
+  inclusionList: string[]
   iss: string
+  username: string
 }
