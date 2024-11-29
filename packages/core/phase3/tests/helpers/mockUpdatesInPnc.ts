@@ -57,44 +57,58 @@ const mockErrorResponse = (errorMessages: string[]) => `<?XML VERSION="1.0" STAN
       <GMT>000003073GENL000001S</GMT>
     </CXU01>`
 
-const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml: string): Promise<void> => {
+const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml?: string): Promise<void> => {
   const parsedIncomingMessage = parsePncUpdateDataSetXml(incomingMessageXml)
-
-  const outgoingMessageType = getMessageType(outgoingMessageXml)
-  const parsedOutgoingMessage =
-    outgoingMessageType === "PncUpdateDataset"
-      ? parsePncUpdateDataSetXml(outgoingMessageXml)
-      : parseAnnotatedPncUpdateDatasetXml(outgoingMessageXml)
-
-  if (isError(parsedIncomingMessage) || isError(parsedOutgoingMessage)) {
+  if (isError(parsedIncomingMessage)) {
     throw new Error("Unable to parse incoming or outgoing message")
   }
 
-  const beforeOperations = getOperations(parsedIncomingMessage)
-  const beforeUnattemptedOperations = beforeOperations.filter((operation) => operation.status !== "Completed")
-  const afterOperations = getOperations(parsedOutgoingMessage)
-  const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status === "NotAttempted")
-  const afterFailedOperations = afterOperations.filter((operation) => operation.status === "Failed")
-  const errorMessages = getPncErrorMessages(parsedOutgoingMessage)
-
-  const completedOperationCount =
-    beforeUnattemptedOperations.length - afterUnattemptedOperations.length - afterFailedOperations.length
-
   const mockOperationResults = []
-  for (let i = 0; i < completedOperationCount; ++i) {
-    mockOperationResults.push({
-      matchRegex: "CXU",
-      response: mockSuccessResponse,
-      count: 1
-    })
-  }
+  const beforeOperations = getOperations(parsedIncomingMessage)
 
-  if (errorMessages.length > 0) {
-    mockOperationResults.push({
-      matchRegex: "CXU",
-      response: mockErrorResponse(errorMessages),
-      count: 1
-    })
+  if (outgoingMessageXml) {
+    const outgoingMessageType = getMessageType(outgoingMessageXml)
+    const parsedOutgoingMessage =
+      outgoingMessageType === "PncUpdateDataset"
+        ? parsePncUpdateDataSetXml(outgoingMessageXml)
+        : parseAnnotatedPncUpdateDatasetXml(outgoingMessageXml)
+
+    if (isError(parsedOutgoingMessage)) {
+      throw new Error("Unable to parse incoming or outgoing message")
+    }
+
+    const beforeUnattemptedOperations = beforeOperations.filter((operation) => operation.status !== "Completed")
+    const afterOperations = getOperations(parsedOutgoingMessage)
+    const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status === "NotAttempted")
+    const afterFailedOperations = afterOperations.filter((operation) => operation.status === "Failed")
+    const errorMessages = getPncErrorMessages(parsedOutgoingMessage)
+
+    const completedOperationCount =
+      beforeUnattemptedOperations.length - afterUnattemptedOperations.length - afterFailedOperations.length
+
+    for (let i = 0; i < completedOperationCount; ++i) {
+      mockOperationResults.push({
+        matchRegex: "CXU",
+        response: mockSuccessResponse,
+        count: 1
+      })
+    }
+
+    if (errorMessages.length > 0) {
+      mockOperationResults.push({
+        matchRegex: "CXU",
+        response: mockErrorResponse(errorMessages),
+        count: 1
+      })
+    }
+  } else {
+    for (let i = 0; i < beforeOperations.length; ++i) {
+      mockOperationResults.push({
+        matchRegex: "CXU",
+        response: mockSuccessResponse,
+        count: 1
+      })
+    }
   }
 
   await clearMocks()
