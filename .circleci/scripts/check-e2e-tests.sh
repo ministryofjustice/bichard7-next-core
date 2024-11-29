@@ -1,5 +1,5 @@
 #!/bin/bash
-cd ~/project/packages/e2e-tests
+cd ~/project/packages/e2e-test
 
 mkdir -p ./tmp && \
 >./tmp/tests.txt && \
