@@ -675,6 +675,9 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - run:
+          name: Check for tests
+          command: bash ./.circleci/scripts/ui-scripts/check-cypress-e2e-tests.sh
       - attach_workspace:
           at: .
       - run:
