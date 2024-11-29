@@ -4,7 +4,7 @@ import { PncOperation } from "../../types/PncOperation"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
-import penaltyNoticeChargeGenerator from "./pncUpdateRequestGenerators/penaltyNoticeChargeGenerator"
+import penaltyHearingGenerator from "./pncUpdateRequestGenerators/penaltyHearingGenerator"
 import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
@@ -14,7 +14,7 @@ import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpda
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
   [PncOperation.DISPOSAL_UPDATED]: disposalUpdatedGenerator,
   [PncOperation.NORMAL_DISPOSAL]: normalDisposalGenerator,
-  [PncOperation.PENALTY_HEARING]: penaltyNoticeChargeGenerator,
+  [PncOperation.PENALTY_HEARING]: penaltyHearingGenerator,
   [PncOperation.REMAND]: remandGenerator,
   [PncOperation.SENTENCE_DEFERRED]: sentenceDeferredGenerator
 }
