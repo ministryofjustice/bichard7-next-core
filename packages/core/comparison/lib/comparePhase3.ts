@@ -86,7 +86,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     }
 
     const ignorePncOperationComparison =
-      outgoingMessageMissing && outgoingPncUpdateDataset?.PncOperations.length !== pncOperations.length
+      outgoingMessageMissing && parsedIncomingMessageResult.message?.PncOperations.length !== pncOperations.length
 
     const pncErrorMessages = outgoingPncUpdateDataset?.Exceptions.filter((exception) => "message" in exception).map(
       (exception) => exception.message
