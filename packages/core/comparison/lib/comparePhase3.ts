@@ -9,7 +9,6 @@ import type { Phase3Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
-import isIntentionalDifference from "./isIntentionalDifference"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
@@ -21,6 +20,8 @@ import MockPncGateway from "./MockPncGateway"
 import { PncApiError } from "../../lib/PncGateway"
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
+import { diffJson } from "diff"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined =>
@@ -57,6 +58,26 @@ const getPncErrorMessages = (message: PncUpdateDataset | AnnotatedPncUpdateDatas
     "PncOperations" in message ? message.Exceptions : message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions
 
   return exceptions.filter((exception) => "message" in exception).map((exception) => exception.message)
+}
+
+const isValidDisposalTextDifference = (
+  corePncOperations: PncUpdateRequest[],
+  legacyPncOperations: PncUpdateRequest[],
+  offences: Offence[]
+) => {
+  const onlyDifferenceIsDisposalText = diffJson(corePncOperations, legacyPncOperations)
+    .filter((change) => change.added || change.removed)
+    .every((change) => change.value.includes("disposalText"))
+
+  const disposalTextIsExclusion = diffJson(corePncOperations, legacyPncOperations)
+    .filter((change) => change.removed)
+    .every((change) => change.value.includes("EXCLUDED FROM"))
+
+  const disposalTextIsMultiline = offences.some((offence) =>
+    offence.Result.some((result) => !!result.ResultVariableText?.includes("\n"))
+  )
+
+  return onlyDifferenceIsDisposalText && disposalTextIsExclusion && disposalTextIsMultiline
 }
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<ComparisonResultDetail> => {
@@ -132,15 +153,20 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       throw new Error("Failed to serialise Core output message")
     }
 
-    if (
-      outgoingPncUpdateDataset &&
-      isIntentionalDifference(
-        outgoingPncUpdateDataset,
-        coreResult.outputMessage,
-        parsedIncomingMessageResult.message,
-        3
+    const pncOperationsMatch = isEqual(
+      pncErrorMessages && pncErrorMessages.length > 0 ? pncGateway.updates.slice(0, -1) : pncGateway.updates,
+      pncOperations
+    )
+
+    const isIntentionalDifference =
+      !pncOperationsMatch &&
+      isValidDisposalTextDifference(
+        pncGateway.updates,
+        pncOperations,
+        parsedIncomingMessageResult.message.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
       )
-    ) {
+
+    if (outgoingPncUpdateDataset && isIntentionalDifference) {
       return {
         auditLogEventsMatch: true,
         triggersMatch: true,
@@ -189,12 +215,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       auditLogEventsMatch,
       triggersMatch: true || isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
-      pncOperationsMatch:
-        ignorePncOperationComparison ||
-        isEqual(
-          pncErrorMessages && pncErrorMessages.length > 0 ? pncGateway.updates.slice(0, -1) : pncGateway.updates,
-          pncOperations
-        ),
+      pncOperationsMatch: ignorePncOperationComparison || pncOperationsMatch,
       xmlOutputMatches:
         !normalisedOutgoingMessage || xmlOutputMatches(serialisedPhase3OutgoingMessage, normalisedOutgoingMessage),
       xmlParsingMatches: true,

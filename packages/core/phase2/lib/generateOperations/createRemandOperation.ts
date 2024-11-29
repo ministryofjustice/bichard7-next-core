@@ -3,11 +3,10 @@ import { PncOperation } from "../../../types/PncOperation"
 import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"
 import createOperation from "./createOperation"
-
-const DEFENDANT_WARRANT_ISSUED_RESULT_CODES = [4576, 4577]
+import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
 
 const generateOperationData = (result: Result): OperationData<PncOperation.REMAND> | undefined => {
-  if (DEFENDANT_WARRANT_ISSUED_RESULT_CODES.includes(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
+  if (isUndatedWarrantIssued(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
     return undefined
   }
 

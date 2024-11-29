@@ -39,10 +39,6 @@ const runFileOnBichardPhase2 = async (comparison: Phase2Comparison): Promise<voi
 }
 
 const runFileOnBichardPhase3 = async (comparison: Phase3Comparison): Promise<void> => {
-  if (!comparison.outgoingMessage) {
-    throw new Error("Outgoing message doesn't exist")
-  }
-
   await mockUpdatesInPnc(comparison.incomingMessage, comparison.outgoingMessage)
 
   // Push the message to MQ
