@@ -1,8 +1,8 @@
 enum EventCategory {
-  information = "information",
+  debug = "debug",
   error = "error",
-  warning = "warning",
-  debug = "debug"
+  information = "information",
+  warning = "warning"
 }
 
 export default EventCategory

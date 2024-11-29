@@ -6,7 +6,7 @@ const createApiConfig = () => {
     throw new Error("AUDIT_LOG_API_URL and AUDIT_LOG_API_KEY environment variables must be set")
   }
 
-  return { apiUrl, apiKey }
+  return { apiKey, apiUrl }
 }
 
 export default createApiConfig

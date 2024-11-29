@@ -1,12 +1,14 @@
 import type { z } from "zod"
+
 import type { auditLogEventSchema } from "../schemas/auditLogEvent"
+
 import EventCode from "./EventCode"
 
-export type AuditLogEvent = z.infer<typeof auditLogEventSchema>
 export enum AuditLogEventSource {
   CorePhase1 = "CorePhase1",
   CorePhase2 = "CorePhase2"
 }
+export type AuditLogEvent = z.infer<typeof auditLogEventSchema>
 
 export const auditLogEventLookup: Record<EventCode, string> = {
   [EventCode.AllTriggersResolved]: "All triggers marked as resolved",
