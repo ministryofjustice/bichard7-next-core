@@ -75,7 +75,7 @@ describe("getMessages()", () => {
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
-    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?status=Error&lastMessageId=12345")
+    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?lastMessageId=12345&status=Error")
   })
 
   it("should pass through largeObjects and limit", async () => {
@@ -85,7 +85,7 @@ describe("getMessages()", () => {
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
-    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?limit=99&largeObjects=false")
+    expect(getRequest.mock.calls[0][0]).toBe("http://localhost/messages?largeObjects=false&limit=99")
   })
 })
 
