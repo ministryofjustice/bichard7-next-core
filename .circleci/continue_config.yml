@@ -435,6 +435,9 @@ jobs:
               - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
+      - run:
+          name: Check for tests
+          command: bash ./.circleci/scripts/check-e2e-tests.sh
       - checkout
       - set_locale
       - when:
@@ -748,6 +751,9 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - run:
+          name: Check for tests
+          command: bash ./.circleci/scripts/check-e2e-tests.sh
       - attach_workspace:
           at: .
       - run:
