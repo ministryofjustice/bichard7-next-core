@@ -117,6 +117,8 @@ const fetchMocks = async (world: Bichard) => {
   for (let i = 0; i < world.mocks.length; i += 1) {
     const mock = mockResponses[i]
     if (isError(mock)) {
+      console.log(`Failed to fetch mock requests for mock ${i}`)
+      console.log(JSON.stringify(world.mocks[i], null, 2))
       throw mock
     }
 
