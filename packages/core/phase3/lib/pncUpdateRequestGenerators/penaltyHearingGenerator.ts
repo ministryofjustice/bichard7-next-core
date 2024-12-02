@@ -1,16 +1,15 @@
 import { PncOperation } from "../../../types/PncOperation"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
-import { generateHearingsAndDisposals } from "./hearingDetails"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
-import getForceStationCode from "../getForceStationCode"
 import getPncCourtCode from "../getPncCourtCode"
+import getForceStationCode from "../getForceStationCode"
+import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import { generateHearingsAdjudicationsAndDisposals } from "./hearingDetails"
+import preProcessPncIdentifier from "../preProcessPncIdentifier"
 
-const SENTENCE_DEFERRED_HEARING_TYPE = "D"
+const PENALTY_HEARING_TYPE = "P"
 
-const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE_DEFERRED> = (
+const penaltyHearingGenerator: PncUpdateRequestGenerator<PncOperation.PENALTY_HEARING> = (
   pncUpdateDataset,
   operation
 ) => {
@@ -18,12 +17,12 @@ const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE
   const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
   const pncCheckName = hearingDefendant.PNCCheckname?.split("/")[0].substring(0, 12) ?? null
 
-  const courtCaseReference =
+  const penaltyNoticeCaseRef =
     operation.data?.courtCaseReference ??
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
-  const formattedCourtCaseReference = preProcessCourtCaseReferenceNumber(courtCaseReference)
-  if (isError(formattedCourtCaseReference)) {
-    return formattedCourtCaseReference
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
+
+  if (!penaltyNoticeCaseRef) {
+    return new Error("Penalty notice case ref is missing")
   }
 
   const courtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
@@ -32,19 +31,19 @@ const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE
   }
 
   return {
-    operation: PncOperation.SENTENCE_DEFERRED,
+    operation: PncOperation.PENALTY_HEARING,
     request: {
-      courtCaseReferenceNumber: formattedCourtCaseReference,
       courtCode,
       croNumber: hearingDefendant.CRONumber ?? null,
       forceStationCode: getForceStationCode(pncUpdateDataset, true),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
-      hearingDetails: generateHearingsAndDisposals(pncUpdateDataset, courtCaseReference),
-      hearingType: SENTENCE_DEFERRED_HEARING_TYPE,
+      hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, penaltyNoticeCaseRef),
+      hearingType: PENALTY_HEARING_TYPE,
+      penaltyNoticeCaseRef: penaltyNoticeCaseRef,
       pncCheckName,
       pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier)
     }
   }
 }
 
-export default sentenceDeferredGenerator
+export default penaltyHearingGenerator
