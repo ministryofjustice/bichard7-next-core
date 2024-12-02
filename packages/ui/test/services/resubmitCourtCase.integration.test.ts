@@ -1,5 +1,7 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
@@ -7,10 +9,12 @@ import insertNotes from "services/insertNotes"
 import sendToQueue from "services/mq/sendToQueue"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import type { DataSource } from "typeorm"
+import fetchAuditLogEvents from "../helpers/fetchAuditLogEvents"
 import { hasAccessToAll } from "../helpers/hasAccessTo"
 import offenceSequenceException from "../test-data/HO100302_1.json"
+import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
-import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
+import { getDummyCourtCase, insertCourtCasesWithFields } from "../utils/insertCourtCases"
 
 jest.mock("services/mq/sendToQueue")
 jest.mock("services/insertNotes")
@@ -21,12 +25,38 @@ describe("resubmit court case", () => {
   const userName = "GeneralHandler"
   let dataSource: DataSource
 
+  const resubmissionEvent = (eventCode: string, eventType: string, userName = "ExceptionHandler") => {
+    return {
+      attributes: {
+        auditLogVersion: 2
+      },
+      category: "information",
+      eventCode,
+      eventSource: AUDIT_LOG_EVENT_SOURCE,
+      eventType,
+      timestamp: expect.anything(),
+      user: userName
+    }
+  }
+
+  const exceptionUnlockedEvent = {
+    attributes: { auditLogVersion: 2 },
+    category: "information",
+    eventCode: "exceptions.unlocked",
+    eventSource: AUDIT_LOG_EVENT_SOURCE,
+    eventType: "Exception unlocked",
+    timestamp: expect.anything(),
+    user: "GeneralHandler"
+  }
+
   beforeAll(async () => {
     dataSource = await getDataSource()
   })
 
   beforeEach(async () => {
     await deleteFromEntity(CourtCase)
+    await deleteFromDynamoTable("auditLogTable", "messageId")
+    await deleteFromDynamoTable("auditLogEventsTable", "_id")
     jest.resetAllMocks()
     jest.clearAllMocks()
   })
@@ -50,7 +80,7 @@ describe("resubmit court case", () => {
     })
 
     // insert the record to the db
-    await insertCourtCases(inputCourtCase)
+    await insertCourtCasesWithFields([inputCourtCase])
 
     // check the queue hasn't been called
     expect(sendToQueue).toHaveBeenCalledTimes(0)
@@ -101,7 +131,7 @@ describe("resubmit court case", () => {
     })
 
     // insert the record to the db
-    await insertCourtCases(inputCourtCase)
+    await insertCourtCasesWithFields([inputCourtCase])
 
     // check the queue hasn't been called
     expect(sendToQueue).toHaveBeenCalledTimes(0)
@@ -182,7 +212,7 @@ describe("resubmit court case", () => {
     })
 
     // insert the record to the db
-    await insertCourtCases(inputCourtCase)
+    await insertCourtCasesWithFields([inputCourtCase])
 
     // check the queue hasn't been called
     expect(sendToQueue).toHaveBeenCalledTimes(0)
@@ -254,5 +284,81 @@ describe("resubmit court case", () => {
     expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.errorStatus).toBe("Submitted")
+  })
+
+  it("Should log Hearing outcome resubmission to phase 1", async () => {
+    // set up court case in the right format to insert into the db
+    const inputCourtCase = await getDummyCourtCase({
+      errorLockedByUsername: userName,
+      triggerLockedByUsername: null,
+      errorCount: 1,
+      errorStatus: "Unresolved",
+      triggerCount: 1,
+      phase: 1,
+      hearingOutcome: offenceSequenceException.hearingOutcomeXml,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
+      orgForPoliceFilter: "1111"
+    })
+
+    // insert the record to the db
+    await insertCourtCasesWithFields([inputCourtCase])
+
+    const result = await resubmitCourtCase(
+      dataSource,
+      { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
+      inputCourtCase.errorId,
+      {
+        username: userName,
+        visibleForces: ["11"],
+        visibleCourts: [],
+        hasAccessTo: hasAccessToAll
+      } as Partial<User> as User
+    )
+    const events = await fetchAuditLogEvents(inputCourtCase.messageId)
+
+    expect(result).not.toBeInstanceOf(Error)
+    expect(events).toHaveLength(2)
+    expect(events).toContainEqual(
+      resubmissionEvent(EventCode.HearingOutcomeResubmittedPhase1, "Hearing outcome resubmitted to phase 1", userName)
+    )
+    expect(events).toContainEqual(exceptionUnlockedEvent)
+  })
+
+  it("Should log Hearing outcome resubmission to phase 2", async () => {
+    // set up court case in the right format to insert into the db
+    const inputCourtCase = await getDummyCourtCase({
+      errorLockedByUsername: userName,
+      triggerLockedByUsername: null,
+      errorCount: 1,
+      errorStatus: "Unresolved",
+      triggerCount: 1,
+      phase: 2,
+      hearingOutcome: offenceSequenceException.hearingOutcomeXml,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
+      orgForPoliceFilter: "1111"
+    })
+
+    // insert the record to the db
+    await insertCourtCasesWithFields([inputCourtCase])
+
+    const result = await resubmitCourtCase(
+      dataSource,
+      { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
+      inputCourtCase.errorId,
+      {
+        username: userName,
+        visibleForces: ["11"],
+        visibleCourts: [],
+        hasAccessTo: hasAccessToAll
+      } as Partial<User> as User
+    )
+    const events = await fetchAuditLogEvents(inputCourtCase.messageId)
+
+    expect(result).not.toBeInstanceOf(Error)
+    expect(events).toHaveLength(2)
+    expect(events).toContainEqual(
+      resubmissionEvent(EventCode.HearingOutcomeResubmittedPhase2, "Hearing outcome resubmitted to phase 2", userName)
+    )
+    expect(events).toContainEqual(exceptionUnlockedEvent)
   })
 })
