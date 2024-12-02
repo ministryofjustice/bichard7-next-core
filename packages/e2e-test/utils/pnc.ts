@@ -113,9 +113,14 @@ export const createValidRecordInPNC = async function (this: Bichard, record: str
 const fetchMocks = async (world: Bichard) => {
   const mockResponsePromises = world.mocks.map(({ id }) => world.pnc.awaitMockRequest(id))
   const mockResponses = await Promise.all(mockResponsePromises)
+
   for (let i = 0; i < world.mocks.length; i += 1) {
-    // eslint-disable-next-line no-param-reassign
-    world.mocks[i].requests = mockResponses[i].requests || []
+    const mock = mockResponses[i]
+    if (isError(mock)) {
+      throw mock
+    }
+
+    world.mocks[i].requests = mock.requests || []
   }
 }
 
