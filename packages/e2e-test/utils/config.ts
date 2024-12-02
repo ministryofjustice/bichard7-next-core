@@ -1,6 +1,6 @@
 import defaults from "./defaults"
 
-const defaultTimeout = process.env.MESSAGE_ENTRY_POINT === "s3" ? 100000 : 30000
+const defaultTimeout = process.env.MESSAGE_ENTRY_POINT === "mq" ? 30_000 : 100_000
 const uiScheme = process.env.UI_SCHEME || defaults.uiScheme
 const uiHost = process.env.UI_HOST || defaults.uiHost
 const uiPort = process.env.UI_PORT || defaults.uiPort
