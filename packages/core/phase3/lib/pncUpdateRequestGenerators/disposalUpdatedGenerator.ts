@@ -1,16 +1,16 @@
 import { PncOperation } from "../../../types/PncOperation"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
-import { generateHearingsAndDisposals } from "./hearingDetails"
-import { isError } from "@moj-bichard7/common/types/Result"
 import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
-import getForceStationCode from "../getForceStationCode"
+import { isError } from "@moj-bichard7/common/types/Result"
 import getPncCourtCode from "../getPncCourtCode"
+import getForceStationCode from "../getForceStationCode"
+import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import { generateHearingsAdjudicationsAndDisposals } from "./hearingDetails"
+import preProcessPncIdentifier from "../preProcessPncIdentifier"
 
-const SENTENCE_DEFERRED_HEARING_TYPE = "D"
+const DISPOSAL_UPDATED_HEARING_TYPE = "V"
 
-const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE_DEFERRED> = (
+const disposalUpdatedGenerator: PncUpdateRequestGenerator<PncOperation.DISPOSAL_UPDATED> = (
   pncUpdateDataset,
   operation
 ) => {
@@ -32,19 +32,19 @@ const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE
   }
 
   return {
-    operation: PncOperation.SENTENCE_DEFERRED,
+    operation: PncOperation.DISPOSAL_UPDATED,
     request: {
       courtCaseReferenceNumber: formattedCourtCaseReference,
       courtCode,
       croNumber: hearingDefendant.CRONumber ?? null,
       forceStationCode: getForceStationCode(pncUpdateDataset, true),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
-      hearingDetails: generateHearingsAndDisposals(pncUpdateDataset, courtCaseReference),
-      hearingType: SENTENCE_DEFERRED_HEARING_TYPE,
+      hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, courtCaseReference),
+      hearingType: DISPOSAL_UPDATED_HEARING_TYPE,
       pncCheckName,
       pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier)
     }
   }
 }
 
-export default sentenceDeferredGenerator
+export default disposalUpdatedGenerator
