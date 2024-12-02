@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`penaltyHearingGenerator generates the operation request 1`] = `
+{
+  "operation": "PENHRG",
+  "request": {
+    "courtCode": "2575",
+    "croNumber": null,
+    "forceStationCode": "01YZ",
+    "hearingDate": "19122023",
+    "hearingDetails": [
+      {
+        "courtOffenceSequenceNumber": "001",
+        "offenceReason": "FA06001",
+        "type": "ORDINARY",
+      },
+      {
+        "hearingDate": "19122023",
+        "numberOffencesTakenIntoAccount": "0000",
+        "pleaStatus": "GUILTY",
+        "type": "ADJUDICATION",
+        "verdict": "GUILTY",
+      },
+      {
+        "disposalQualifiers": "",
+        "disposalQuantity": "                      00",
+        "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+        "disposalType": "4004",
+        "type": "DISPOSAL",
+      },
+      {
+        "courtOffenceSequenceNumber": "002",
+        "offenceReason": "FA06001",
+        "type": "ORDINARY",
+      },
+      {
+        "hearingDate": "19122023",
+        "numberOffencesTakenIntoAccount": "0000",
+        "pleaStatus": "GUILTY",
+        "type": "ADJUDICATION",
+        "verdict": "GUILTY",
+      },
+      {
+        "disposalQualifiers": "",
+        "disposalQuantity": "                      00",
+        "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+        "disposalType": "4004",
+        "type": "DISPOSAL",
+      },
+    ],
+    "hearingType": "P",
+    "penaltyNoticeCaseRef": "07/1577/020154M",
+    "pncCheckName": "COLE",
+    "pncIdentifier": "24/1234567X",
+  },
+}
+`;
