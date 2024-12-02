@@ -4,10 +4,11 @@ import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 const triggerCode = TriggerCode.TRPS0008
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
 const triggerResultCode = 3105
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
-  if (options?.phase !== Phase.PNC_UPDATE) {
+  if (!phases.includes(options?.phase)) {
     return []
   }
 
