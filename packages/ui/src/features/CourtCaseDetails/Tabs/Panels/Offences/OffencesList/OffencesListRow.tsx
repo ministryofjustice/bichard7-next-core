@@ -22,7 +22,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
   const exceptions = courtCase.aho.Exceptions
 
   const offenceAlerts = getOffenceAlertsDetails(exceptions, amendments)
-  console.log(offenceAlerts)
+
   const checkmarkIcon = (
     <IconContainer className={`icon checkmark-icon`} key={offence.CourtOffenceSequenceNumber}>
       <Image src={CHECKMARK_ICON_URL} width={30} height={30} alt="Checkmark icon" />
