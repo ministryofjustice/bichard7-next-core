@@ -111,6 +111,23 @@ describe("Offence matching HO100310", () => {
       .should("deep.equal", {})
   })
 
+  it("displays a checkmark when an offence is matched", () => {
+    cy.get("select.offence-matcher").select("001 - TH68006")
+    cy.get(".offence-matcher + .success-message").contains("Input saved").should("exist")
+
+    cy.get("a").contains("Back to all offences").click()
+    cy.get("tbody tr:first-child td:first-child .checkmark-icon").should("exist")
+    cy.get("tbody tr:nth-child(4) td:first-child .warning-icon").should("exist")
+
+    cy.get("a:contains('Theft of pedal cycle')").eq(1).click()
+    cy.get("select.offence-matcher").select("Added in court")
+    cy.get(".offence-matcher + .success-message").contains("Input saved").should("exist")
+
+    cy.get("a").contains("Back to all offences").click()
+    cy.get("tbody tr:first-child td:first-child .checkmark-icon").should("exist")
+    cy.get("tbody tr:nth-child(4) td:first-child .checkmark-icon").should("exist")
+  })
+
   describe("when using the exception panel to navigate between exceptions", () => {
     it("has the correct values for the select dropdowns", () => {
       cy.get("select.offence-matcher").should("have.value", null)
