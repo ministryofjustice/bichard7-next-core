@@ -3,7 +3,7 @@ import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
 import hasNextHearingDateExceptions from "./exceptions/hasNextHearingDateExceptions"
 import hasNextHearingLocationException from "./exceptions/hasNextHearingLocationException"
-import hasPNCMatchingExceptions from "./exceptions/hasPNCException"
+import hasOffenceMatchingExceptions from "./exceptions/hasOffenceMatchingExceptions"
 
 export type OffenceAlert = {
   offenceIndex: string | number
@@ -20,7 +20,7 @@ const hasException = (
     case "nextSourceOrganisation":
       return hasNextHearingLocationException([exception])
     case "offenceReasonSequence":
-      return hasPNCMatchingExceptions([exception])
+      return hasOffenceMatchingExceptions([exception])
     default:
       return false
   }
@@ -33,7 +33,7 @@ const exceptionsResolvedFn = (
   offenceIndex: number,
   resultIndex: number
 ): boolean => {
-  if (field != "offenceReasonSequence" && hasException(field, exception)) {
+  if (field !== "offenceReasonSequence" && hasException(field, exception)) {
     return Boolean(
       updatedFields?.[field]?.some(
         (f) => "resultIndex" in f && f.offenceIndex === offenceIndex && f.resultIndex === resultIndex

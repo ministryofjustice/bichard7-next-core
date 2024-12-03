@@ -1,7 +1,7 @@
-import type { Exception } from "types/exceptions"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type { Exception } from "types/exceptions"
 import createException from "../../helpers/createException"
-import hasPNCMatchingExceptions, { filterPNCMatchingExceptions } from "./hasPNCException"
+import hasOffenceMatchingExceptions, { filterOffenceMatchingExceptions } from "./hasOffenceMatchingExceptions"
 
 describe("hasPNCException", () => {
   it("should return true if any PNC exceptions are raised", () => {
@@ -15,7 +15,7 @@ describe("hasPNCException", () => {
         "OffenceReasonSequence"
       ])
     ]
-    expect(hasPNCMatchingExceptions(exceptions)).toBeTruthy()
+    expect(hasOffenceMatchingExceptions(exceptions)).toBeTruthy()
   })
 
   it("should return true if HO100332 PNC exceptions are raised", () => {
@@ -29,7 +29,7 @@ describe("hasPNCException", () => {
         "OffenceReasonSequence"
       ])
     ]
-    expect(hasPNCMatchingExceptions(exceptions)).toBeTruthy()
+    expect(hasOffenceMatchingExceptions(exceptions)).toBeTruthy()
   })
 
   it("should return false if no PNC exceptions are raised", () => {
@@ -43,16 +43,16 @@ describe("hasPNCException", () => {
         "Result"
       ])
     ]
-    expect(hasPNCMatchingExceptions(exceptions)).toBeFalsy()
+    expect(hasOffenceMatchingExceptions(exceptions)).toBeFalsy()
   })
 
   it("should return false if no exceptions are raised", () => {
     const exceptions: Exception[] = []
-    expect(hasPNCMatchingExceptions(exceptions)).toBeFalsy()
+    expect(hasOffenceMatchingExceptions(exceptions)).toBeFalsy()
   })
 })
 
-describe("filterPNCMatchingExceptions", () => {
+describe("filterOffenceMatchingExceptions", () => {
   it("should return PNC exceptions", () => {
     const exceptions: Exception[] = [
       createException(ExceptionCode.HO100310, [
@@ -64,7 +64,7 @@ describe("filterPNCMatchingExceptions", () => {
         "OffenceReasonSequence"
       ])
     ]
-    expect(filterPNCMatchingExceptions(exceptions)).toEqual(exceptions)
+    expect(filterOffenceMatchingExceptions(exceptions)).toEqual(exceptions)
   })
 
   it("should not return non PNC exceptions", () => {
@@ -78,11 +78,11 @@ describe("filterPNCMatchingExceptions", () => {
         "Result"
       ])
     ]
-    expect(filterPNCMatchingExceptions(exceptions)).toEqual([])
+    expect(filterOffenceMatchingExceptions(exceptions)).toEqual([])
   })
 
   it("should return an empty array if no exceptions are raised", () => {
     const exceptions: Exception[] = []
-    expect(filterPNCMatchingExceptions(exceptions)).toEqual([])
+    expect(filterOffenceMatchingExceptions(exceptions)).toEqual([])
   })
 })
