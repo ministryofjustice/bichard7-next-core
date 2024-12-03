@@ -17,7 +17,8 @@ const getDateSpecifiedInResult = (result: Result) => {
 
 const createPncDisposalByThirdDuration = (
   result: Result,
-  validatedDisposalText: string | undefined
+  validatedDisposalText: string | undefined,
+  truncatedText?: boolean
 ): PncDisposal | undefined => {
   const thirdDuration = result.Duration?.[2]
   if (!thirdDuration) {
@@ -38,7 +39,8 @@ const createPncDisposalByThirdDuration = (
     getDateSpecifiedInResult(result),
     validatedThirdAmountInResult,
     result.ResultQualifierVariable.map((res) => res.Code),
-    validatedDisposalText
+    validatedDisposalText,
+    truncatedText
   )
 
   return disposal

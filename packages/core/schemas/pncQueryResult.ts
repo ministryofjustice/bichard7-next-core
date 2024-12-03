@@ -8,6 +8,7 @@ export const pncDisposalSchema = z.object({
   qtyUnitsFined: z.string().optional(),
   qualifiers: z.string().optional(),
   text: z.string().optional(),
+  truncatedText: z.boolean().optional(),
   type: z.number().optional()
 })
 

@@ -22,7 +22,8 @@ const createPncDisposal = (
   dateSpecifiedInResult: Date | undefined,
   amountSpecifiedInResult: number | undefined,
   resultQualifiers: string[] | undefined,
-  disposalText: string | undefined
+  disposalText: string | undefined,
+  truncatedText: boolean | undefined
 ): PncDisposal => {
   const qtyDuration = durationUnit ? durationUnit + durationLength?.toString() : ""
   return {
@@ -43,6 +44,7 @@ const createPncDisposal = (
       pncDisposalType
     ),
     text: disposalText,
+    truncatedText,
     type: pncDisposalType
   }
 }

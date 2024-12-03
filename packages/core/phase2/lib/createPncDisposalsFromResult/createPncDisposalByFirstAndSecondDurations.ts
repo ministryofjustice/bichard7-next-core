@@ -1,7 +1,7 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../types/PncQueryResult"
-import createPncDisposal from "./createPncDisposal"
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import createPncDisposal from "./createPncDisposal"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
@@ -27,10 +27,8 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal
     dateSpecifiedInResult = undefined
   }
 
-  const validatedDisposalText =
-    result.ResultVariableText && disposalText.length > maxDisposalTextLength
-      ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+`
-      : disposalText
+  const truncatedText = !!result.ResultVariableText && disposalText.length > maxDisposalTextLength
+  const validatedDisposalText = truncatedText ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+` : disposalText
 
   const disposal = createPncDisposal(
     result.PNCDisposalType,
@@ -41,7 +39,8 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal
     dateSpecifiedInResult,
     validatedAmountInResult,
     result.ResultQualifierVariable?.map((res) => res.Code),
-    validatedDisposalText
+    validatedDisposalText,
+    truncatedText
   )
 
   return disposal

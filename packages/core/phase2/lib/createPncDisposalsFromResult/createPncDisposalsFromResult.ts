@@ -5,7 +5,11 @@ import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration
 
 const createPncDisposalsFromResult = (result: Result): PncDisposal[] => {
   const pncDisposalByFirstAndSecondDurations = createPncDisposalByFirstAndSecondDurations(result)
-  const pncDisposalByThirdDuration = createPncDisposalByThirdDuration(result, pncDisposalByFirstAndSecondDurations.text)
+  const pncDisposalByThirdDuration = createPncDisposalByThirdDuration(
+    result,
+    pncDisposalByFirstAndSecondDurations.text,
+    pncDisposalByFirstAndSecondDurations.truncatedText
+  )
 
   return [pncDisposalByFirstAndSecondDurations, ...(pncDisposalByThirdDuration ? [pncDisposalByThirdDuration] : [])]
 }
