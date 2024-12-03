@@ -56,7 +56,7 @@ class MockPNCHelper {
     return resp.data
   }
 
-  awaitMockRequest(id: string, timeout = 40000) {
+  awaitMockRequest = (id: string, timeout = 40000): Promise<PncMock | Error> => {
     const action = () => this.getMock(id)
 
     const condition = (mock: PncMock) => mock && mock.requests && mock.requests.length > 0
@@ -67,10 +67,8 @@ class MockPNCHelper {
       delay: 250,
       name: "Mock PNC request poller"
     }
-    return new Poller<PncMock>(action)
-      .poll(options)
-      .then((mock) => mock)
-      .catch((error) => error)
+
+    return new Poller(action).poll(options).catch((error: Error) => error)
   }
 
   async clearMocks() {
