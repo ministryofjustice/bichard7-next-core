@@ -3,8 +3,8 @@ import type { Exception } from "types/exceptions"
 import createException from "../../helpers/createException"
 import hasOffenceMatchingExceptions, { filterOffenceMatchingExceptions } from "./hasOffenceMatchingExceptions"
 
-describe("hasPNCException", () => {
-  it("should return true if any PNC exceptions are raised", () => {
+describe("hasOffenceMatchingExceptions", () => {
+  it("should return true if any offence matching exceptions are raised", () => {
     const exceptions: Exception[] = [
       createException(ExceptionCode.HO100310, [
         "AnnotatedHearingOutcome",
@@ -18,7 +18,7 @@ describe("hasPNCException", () => {
     expect(hasOffenceMatchingExceptions(exceptions)).toBeTruthy()
   })
 
-  it("should return true if HO100332 PNC exceptions are raised", () => {
+  it("should return true if HO100332 offence matching exceptions are raised", () => {
     const exceptions: Exception[] = [
       createException(ExceptionCode.HO100332, [
         "AnnotatedHearingOutcome",
@@ -32,7 +32,7 @@ describe("hasPNCException", () => {
     expect(hasOffenceMatchingExceptions(exceptions)).toBeTruthy()
   })
 
-  it("should return false if no PNC exceptions are raised", () => {
+  it("should return false if no offence matching exceptions are raised", () => {
     const exceptions: Exception[] = [
       createException(ExceptionCode.HO100100, [
         "AnnotatedHearingOutcome",
@@ -53,7 +53,7 @@ describe("hasPNCException", () => {
 })
 
 describe("filterOffenceMatchingExceptions", () => {
-  it("should return PNC exceptions", () => {
+  it("should return offence matching exceptions", () => {
     const exceptions: Exception[] = [
       createException(ExceptionCode.HO100310, [
         "AnnotatedHearingOutcome",
@@ -67,7 +67,7 @@ describe("filterOffenceMatchingExceptions", () => {
     expect(filterOffenceMatchingExceptions(exceptions)).toEqual(exceptions)
   })
 
-  it("should not return non PNC exceptions", () => {
+  it("should not return non offence matching exceptions", () => {
     const exceptions: Exception[] = [
       createException(ExceptionCode.HO100100, [
         "AnnotatedHearingOutcome",
