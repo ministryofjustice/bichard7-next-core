@@ -18,7 +18,7 @@ export const logRenderTime = (
 
 export const logCaseListRenderTime = (startTime: number, user: User, params: CaseListQueryParams) => {
   logRenderTime(startTime, "caseList", {
-    forces: user.visibleForces.sort().join("-"),
+    forces: user.visibleForces.sort().join("-"), // NOSONAR
     caseState: params.caseState ?? "Unresolved",
     reason: params.reason ?? "All",
     maxPageItems: params.maxPageItems ?? 50,

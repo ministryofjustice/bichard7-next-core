@@ -28,7 +28,7 @@ const checkClashingCourtCaseOperationsException = (
         getCourtCaseReferenceFromOperation(operationWithCourtCase) == getCourtCaseReferenceFromOperation(operation)
     )
 
-    return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations)
+    return isEqual([operation.code, clashingCourtCaseOperation?.code].sort(), clashingCourtCaseOperations) // NOSONAR
   })
 
   if (hasClashingCourtCaseOperations) {
