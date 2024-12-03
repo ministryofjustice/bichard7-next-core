@@ -1,6 +1,6 @@
 const updateQueryString = (params: Record<string, unknown>) => {
   const searchParams = new URLSearchParams(window.location.search)
-  Object.entries(params).map(([key, value]) => {
+  Object.entries(params).forEach(([key, value]) => {
     if (value === null) {
       searchParams.delete(key)
     } else {
