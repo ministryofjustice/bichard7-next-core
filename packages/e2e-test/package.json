@@ -48,7 +48,7 @@
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.236",
     "@types/jest": "^29.5.14",
     "aws-sdk": "^2.1692.0",
-    "axios": "^1.7.7",
+    "axios": "^1.7.8",
     "csv-parse": "^5.6.0",
     "date-fns": "^4.1.0",
     "expect": "^29.7.0",
@@ -75,7 +75,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^22.9.3",
+    "@types/node": "^22.10.1",
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
@@ -89,7 +89,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "npm-check-updates": "^17.1.11",
-    "prettier": "^3.3.3"
+    "prettier": "^3.4.1"
   },
   "lint-staged": {
     "*.js": [

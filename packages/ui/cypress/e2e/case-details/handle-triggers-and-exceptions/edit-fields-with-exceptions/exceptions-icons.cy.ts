@@ -1,18 +1,18 @@
 import AsnExceptionHO100206 from "../../../../../test/test-data/AsnExceptionHo100206.json"
 import AsnExceptionHO100301 from "../../../../../test/test-data/AsnExceptionHo100301.json"
 import AsnExceptionHO100321 from "../../../../../test/test-data/AsnExceptionHo100321.json"
+import multipleEditableFieldsExceptions from "../../../../../test/test-data/multipleEditableFieldsExceptions.json"
+import multipleHearingResultsOnOffence from "../../../../../test/test-data/multipleHearingResultsOnOffence.json"
 import nextHearingDateAndLocationExceptions from "../../../../../test/test-data/NextHearingDateAndLocationExceptions.json"
 import nextHearingDateExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
 import nextHearingLocationExceptions from "../../../../../test/test-data/NextHearingLocationExceptions.json"
-import offenceMatchingException from "../../offence-matching/fixtures/HO100310.json"
 import {
   clickTab,
   loginAndVisit,
   resolveExceptionsManually,
   submitAndConfirmExceptions
 } from "../../../../support/helpers"
-import multipleHearingResultsOnOffence from "../../../../../test/test-data/multipleHearingResultsOnOffence.json"
-import multipleEditableFieldsExceptions from "../../../../../test/test-data/multipleEditableFieldsExceptions.json"
+import offenceMatchingException from "../../offence-matching/fixtures/HO100310.json"
 
 describe("Tabs exceptions icons", () => {
   beforeEach(() => {

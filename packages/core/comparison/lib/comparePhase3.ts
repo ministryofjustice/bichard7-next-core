@@ -1,27 +1,27 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { diffJson } from "diff"
 import isEqual from "lodash.isequal"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import { PncApiError } from "../../lib/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
+import phase3Handler from "../../phase3/phase3"
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { Phase3Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
+import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
-import phase3Handler from "../../phase3/phase3"
-import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import MockPncGateway from "./MockPncGateway"
-import { PncApiError } from "../../lib/PncGateway"
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
-import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
-import { diffJson } from "diff"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined =>
@@ -213,7 +213,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
 
     return {
       auditLogEventsMatch,
-      triggersMatch: true || isEqual(sortedCoreTriggers, sortedTriggers),
+      triggersMatch: isEqual(sortedCoreTriggers, sortedTriggers),
       exceptionsMatch: isEqual(sortedCoreExceptions, sortedExceptions),
       pncOperationsMatch: ignorePncOperationComparison || pncOperationsMatch,
       xmlOutputMatches:

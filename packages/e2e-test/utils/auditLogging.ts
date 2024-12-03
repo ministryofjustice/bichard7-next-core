@@ -15,7 +15,7 @@ export const checkEventByExternalCorrelationId = async (
 
   const events: AuditLogEvent[] = []
   const options = {
-    timeout: 90000,
+    timeout: 20000,
     delay: 1000,
     name: eventType,
     condition: (message: AuditLog | undefined) => {
@@ -61,7 +61,7 @@ export const checkAuditLogRecordExists = async (context: Bichard, correlationId:
   const getMessages = (): Promise<AuditLog | undefined> => auditLogApi.getMessageByExternalCorrelationId(correlationId)
 
   const options = {
-    timeout: 90000,
+    timeout: 20000,
     delay: 1000,
     name: "checkForRecord",
     condition: (message: AuditLog | undefined) => !!message
