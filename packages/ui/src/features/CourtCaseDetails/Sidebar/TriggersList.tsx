@@ -81,16 +81,18 @@ const TriggersList = ({ onNavigate }: Props) => {
           </GridCol>
         </SelectAllTriggersGridRow>
       </ConditionalRender>
-      {triggers.map((trigger, index) => (
-        <Trigger
-          key={index}
-          trigger={trigger}
-          disabled={triggersLockedByAnotherUser}
-          onClick={() => handleClick(trigger.triggerItemIdentity)}
-          selectedTriggerIds={selectedTriggerIds}
-          setTriggerSelection={setTriggerSelection}
-        />
-      ))}
+      <div className={"trigger-rows"}>
+        {triggers.map((trigger) => (
+          <Trigger
+            key={trigger.triggerId}
+            trigger={trigger}
+            disabled={triggersLockedByAnotherUser}
+            onClick={() => handleClick(trigger.triggerItemIdentity)}
+            selectedTriggerIds={selectedTriggerIds}
+            setTriggerSelection={setTriggerSelection}
+          />
+        ))}
+      </div>
 
       <ConditionalRender isRendered={hasTriggers && !triggersLockedByAnotherUser}>
         <GridRow>

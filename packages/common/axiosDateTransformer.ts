@@ -2,7 +2,7 @@ import type { AxiosResponseTransformer } from "axios"
 
 const dateFormat = /\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?Z)?/
 
-export function dateReviver(_: string, value: unknown): Date | unknown {
+export function dateReviver(_: string, value: unknown): Date | typeof value {
   if (typeof value === "string" && dateFormat.test(value)) {
     const potentialDate = new Date(value)
     if (isValidDate(potentialDate)) {

@@ -8,6 +8,7 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 import errorPaths from "../exceptions/errorPaths"
 
 const triggerCode = TriggerCode.TRPS0003
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
 
 const hasException200200 = (hearingOutcome: AnnotatedHearingOutcome, offenceIndex: number, resultIndex: number) => {
   const errorPath = errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
@@ -15,7 +16,7 @@ const hasException200200 = (hearingOutcome: AnnotatedHearingOutcome, offenceInde
 }
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
-  if (options?.phase !== Phase.PNC_UPDATE) {
+  if (!phases.includes(options?.phase)) {
     return []
   }
 
