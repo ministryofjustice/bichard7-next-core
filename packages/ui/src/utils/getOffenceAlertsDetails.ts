@@ -26,9 +26,6 @@ const hasException = (
   }
 }
 
-console.log(
-  `has exception: ${exceptionsResolvedFn("offenceReasonSequence", updatedFields, exception, +offenceIndex, +resultIndex)}`
-)
 const exceptionsResolvedFn = (
   field: "nextHearingDate" | "nextSourceOrganisation" | "offenceReasonSequence",
   updatedFields: Amendments,
@@ -36,12 +33,14 @@ const exceptionsResolvedFn = (
   offenceIndex: number,
   resultIndex: number
 ): boolean => {
-  if (hasException(field, exception)) {
+  if (field != "offenceReasonSequence" && hasException(field, exception)) {
     return Boolean(
       updatedFields?.[field]?.some(
         (f) => "resultIndex" in f && f.offenceIndex === offenceIndex && f.resultIndex === resultIndex
       )
     )
+  } else if (field == "offenceReasonSequence" && hasException(field, exception)) {
+    return Boolean(updatedFields?.[field]?.some((f) => f.offenceIndex === offenceIndex))
   } else {
     return false
   }
