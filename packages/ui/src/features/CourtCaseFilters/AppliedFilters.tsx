@@ -1,12 +1,12 @@
 import ConditionalRender from "components/ConditionalRender"
 import FilterTag from "components/FilterTag/FilterTag"
+import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { encode } from "querystring"
 import { LockedState, Reason, SerializedDateRange } from "types/CaseListQueryParams"
 import { caseStateLabels } from "utils/caseStateFilters"
-import { deleteQueryParam, deleteQueryParamsByName } from "utils/deleteQueryParam"
 import { formatStringDateAsDisplayedDate } from "utils/date/formattedDate"
-import { useCurrentUser } from "context/CurrentUserContext"
+import { deleteQueryParam, deleteQueryParamsByName } from "utils/deleteQueryParam"
 
 interface Props {
   filters: {
@@ -76,6 +76,17 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
         <ul key={"applied-filters"} className="moj-filter-tags">
           <li>
             <p className="govuk-heading-s govuk-!-margin-bottom-0">{"Filters applied:"}</p>
+          </li>
+
+          <li>
+            <p
+              className="moj-filter__heading-action govuk-!-margin-bottom-2 govuk-!-margin-top-0"
+              id="clear-filters-applied"
+            >
+              <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
+                {"Clear filters"}
+              </a>
+            </p>
           </li>
 
           <ConditionalRender isRendered={!!filters.reason && filters.reason !== Reason.All}>
@@ -170,14 +181,6 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
               <FilterTag tag={"My resolved cases"} href={removeQueryParamsByName(["resolvedByUsername"])} />
             </li>
           </ConditionalRender>
-
-          <li>
-            <p className="moj-filter__heading-action" id="clear-filters-applied">
-              <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
-                {"Clear filters"}
-              </a>
-            </p>
-          </li>
         </ul>
       </ConditionalRender>
     </div>

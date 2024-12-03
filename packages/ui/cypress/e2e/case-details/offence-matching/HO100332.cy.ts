@@ -38,6 +38,23 @@ describe("Offence matching HO100332", () => {
     cy.get("select.offence-matcher").should("not.exist")
   })
 
+  it("displays a checkmark when an offence is matched", () => {
+    cy.get("select.offence-matcher").select("001 - OF61016")
+    cy.get(".offence-matcher + .success-message").contains("Input saved").should("exist")
+
+    cy.get("a").contains("Back to all offences").click()
+    cy.get("tbody tr:first-child td:first-child .checkmark-icon").should("exist")
+    cy.get("tbody tr:nth-child(2) td:first-child .warning-icon").should("exist")
+
+    cy.get("a:contains('Section 18 - wounding with intent')").eq(1).click()
+    cy.get("select.offence-matcher").select("002 - OF61016")
+    cy.get(".offence-matcher + .success-message").contains("Input saved").should("exist")
+
+    cy.get("a").contains("Back to all offences").click()
+    cy.get("tbody tr:first-child td:first-child .checkmark-icon").should("exist")
+    cy.get("tbody tr:nth-child(2) td:first-child .checkmark-icon").should("exist")
+  })
+
   it("loads offence matching information from the AHO PNC query", () => {
     cy.get("select.offence-matcher").children("optgroup").eq(0).should("have.attr", "label", "12/2732/000015R")
     cy.get("select.offence-matcher").children("optgroup").eq(0).contains("option", "001 - OF61016")

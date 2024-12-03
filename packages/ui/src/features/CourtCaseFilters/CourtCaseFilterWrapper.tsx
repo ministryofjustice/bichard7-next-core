@@ -1,6 +1,7 @@
 import { useCurrentUser } from "context/CurrentUserContext"
-import { useEffect, useState } from "react"
 import { Heading } from "govuk-react"
+import { useEffect, useState } from "react"
+import { StyledAppliedFilters } from "./CourtCaseFilterWrapper.styles"
 
 interface Props {
   filter: React.ReactNode
@@ -65,7 +66,9 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
             >
               {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
             </button>
-            {!isSearchPanelShown && <div className="moj-button-menu__wrapper">{appliedFilters}</div>}
+            {!isSearchPanelShown && (
+              <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
+            )}
           </div>
         </div>
 
