@@ -75,8 +75,14 @@ module.exports = {
     },
     {
       extends: ["plugin:perfectionist/recommended-natural-legacy"],
-      files: "packages/+(api|common|conductor)/**/*",
+      files: "packages/+(api|common|conductor|core)/**/*",
       plugins: ["perfectionist"]
+    },
+    {
+      files: "packages/core/**/*",
+      rules: {
+        "perfectionist/sort-objects": "off"
+      }
     }
   ],
   parserOptions: {
