@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ATTEMPTS=2
-WORKSPACES=($(grep "\"packages/" package.json | sed -E 's/[",]//g' | tr -s ' ' '\n' | awk '{print $1}'))
+WORKSPACES=($(cat package.json | jq -r ".workspaces[]"))
 
 for package in "${WORKSPACES[@]}"; do
   for i in $(seq 1 $ATTEMPTS); do
