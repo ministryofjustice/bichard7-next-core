@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
+
 import { PncOperation } from "../../types/PncOperation"
 import HO200200 from "./HO200200"
 

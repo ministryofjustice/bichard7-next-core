@@ -1,5 +1,11 @@
 import type { Result } from "@moj-bichard7/common/types/Result"
+
 import { isError } from "@moj-bichard7/common/types/Result"
+
+import type { HearingDefendant, Offence, OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
+import type { ArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
+import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
+
 import { getAdjustedRecordableOffencesForCourtCase } from "../../../lib/getRecordableOffencesForCourtCase"
 import { GENERATED_PNC_FILENAME_MAX_LENGTH } from "../../../phase1/enrichAho/enrichFunctions/enrichDefendant/enrichDefendant"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
@@ -7,9 +13,7 @@ import checkRccSegmentApplicability, {
   RccSegmentApplicability
 } from "../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
 import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatibleWithDisposal"
-import type { HearingDefendant, Offence, OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
 import { PncOperation } from "../../../types/PncOperation"
-import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
 import getForceStationCode from "../getForceStationCode"
 import getPncCheckname from "../getPncCheckname"
 import getPncCourtCode from "../getPncCourtCode"
@@ -19,7 +23,6 @@ import {
   generateArrestHearingsAdjudicationsAndDisposals,
   generateHearingsAdjudicationsAndDisposals
 } from "./hearingDetails"
-import type { ArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
 
 const COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const ILLEGAL_FILENAME_PATTERN = new RegExp("[^a-zA-Z0-9\\- /]", "g")
@@ -135,7 +138,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       : ""
   const generatedPNCFilename = deriveGeneratedPNCFilename(hearingDefendant)
 
-  let preTrialIssuesUniqueReferenceNumber: string | null = null
+  let preTrialIssuesUniqueReferenceNumber: null | string = null
   if (
     checkRccSegmentApplicability(offences, operation.data?.courtCaseReference) ===
     RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences
@@ -167,7 +170,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     operation.data?.courtCaseReference
   )
   const forceStationCode = getForceStationCode(pncUpdateDataset, true)
-  let arrestSummonsNumber: string | null | Error = null
+  let arrestSummonsNumber: Error | null | string = null
   let arrestsAdjudicationsAndDisposals: ArrestHearingAdjudicationAndDisposal[] = []
   if (offencesAddedByTheCourt.length > 0) {
     arrestSummonsNumber = preProcessAsn(hearingDefendant.ArrestSummonsNumber)

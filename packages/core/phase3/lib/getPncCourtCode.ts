@@ -1,6 +1,8 @@
 import { type Result } from "@moj-bichard7/common/types/Result"
-import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
+
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+
+import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
 
 export const PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const CJS_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "B0000"
@@ -26,7 +28,7 @@ const convertToYouthCourtIfRequired = (
 }
 
 const getPncCourtCode = (
-  organisationUnitCode: OrganisationUnitCodes | undefined | null,
+  organisationUnitCode: null | OrganisationUnitCodes | undefined,
   courtHouseCode: number
 ): Result<string> => {
   if (!organisationUnitCode) {
