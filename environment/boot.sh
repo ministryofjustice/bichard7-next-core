@@ -6,6 +6,7 @@ NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
 SKIP_DOWNLOADS=${SKIP_DOWNLOADS:-"false"}
 ENABLE_CORE_PHASE1=${ENABLE_CORE_PHASE1:-"false"}
+BUILD_WORKER=${BUILD_WORKER:-"false"}
 
 IMAGES=(beanconnect pncemulator)
 SERVICES=$@
@@ -48,7 +49,10 @@ fi
 # should run by default
 if [ "$LEGACY" == "false" ] && [ "$NOWORKER" == "false" ]; then
     DOCKER_COMPOSE="ENABLE_CORE_PHASE1=$ENABLE_CORE_PHASE1 ${DOCKER_COMPOSE} -f environment/docker-compose-worker.yml"
-    eval "$DOCKER_COMPOSE build worker"
+    
+    if [ "$BUILD_WORKER" == "true" ]; then
+        eval "$DOCKER_COMPOSE build worker"
+    fi
 fi
 
 
