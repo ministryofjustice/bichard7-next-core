@@ -1,20 +1,22 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
+
+import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
+import type Phase1Result from "../../types/Phase1Result"
+
 import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../../lib/CoreAuditLogger"
 import extractExceptionsFromAho from "../../../lib/parse/parseAhoXml/extractExceptionsFromXml"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import phase1Handler from "../../phase1"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
-import PostgresHelper from "../../tests/helpers/PostgresHelper"
 import defaults from "../../tests/helpers/defaults"
 import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQueryResult"
 import { mockEnquiryErrorInPnc, mockRecordInPnc } from "../../tests/helpers/mockRecordInPnc"
-import type Phase1Result from "../../types/Phase1Result"
+import PostgresHelper from "../../tests/helpers/PostgresHelper"
 import { Phase1ResultType } from "../../types/Phase1Result"
 
 const pgHelper = new PostgresHelper({
@@ -51,11 +53,11 @@ const processMessageCore = (
 type ProcessMessageOptions = {
   expectRecord?: boolean
   expectTriggers?: boolean
-  recordable?: boolean
-  pncCaseType?: string
-  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
-  pncMessage?: string
   pncAdjudication?: boolean
+  pncCaseType?: string
+  pncMessage?: string
+  pncOverrides?: Partial<ResultedCaseMessageParsedXml>
+  recordable?: boolean
 }
 
 const processMessageBichard = async (

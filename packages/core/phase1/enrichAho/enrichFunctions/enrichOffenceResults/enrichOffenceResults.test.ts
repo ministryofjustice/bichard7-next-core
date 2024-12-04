@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
+
 import generateMockAho from "../../../tests/helpers/generateMockAho"
 import enrichOffenceResults from "./enrichOffenceResults"
 

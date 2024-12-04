@@ -1,4 +1,5 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+
 import getOffenceCode from "./getOffenceCode"
 
 const ignoredOffenceCodes = ["05MC001"]

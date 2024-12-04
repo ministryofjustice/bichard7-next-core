@@ -1,32 +1,33 @@
-import matchOffencesToPnc from "."
-import summariseMatching from "../../../../comparison/lib/summariseMatching"
 import type { CourtResultMatchingSummary } from "../../../../comparison/types/MatchingComparisonOutput"
-import errorPaths from "../../../../lib/exceptions/errorPaths"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 
+import matchOffencesToPnc from "."
+import summariseMatching from "../../../../comparison/lib/summariseMatching"
+import errorPaths from "../../../../lib/exceptions/errorPaths"
+
 type Adjudication = {
-  verdict: string
   sentenceDate?: Date
+  verdict: string
 }
 
 type OffenceData = {
-  code?: string
-  start?: Date
-  end?: Date | null
-  sequence?: number
-  resultCodes?: number[]
-  disposals?: number[]
   adjudications?: Adjudication[]
-  manualSequence?: number | string
-  manualCourtCase?: string
   category?: string
+  code?: string
   convictionDate?: Date
+  disposals?: number[]
+  end?: Date | null
+  manualCourtCase?: string
+  manualSequence?: number | string
+  resultCodes?: number[]
+  sequence?: number
+  start?: Date
 }
 
 type PncCourtCaseData = {
   courtCaseReference?: string
-  penaltyCaseReference?: string
   offences: OffenceData[]
+  penaltyCaseReference?: string
 }
 
 const finalDisposal = 2063

@@ -1,11 +1,13 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 import merge from "lodash.merge"
+
+import type { PncCourtCase, PncQueryResult } from "../../../types/PncQueryResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
+
 import { toPNCDate } from "../../../lib/dates"
 import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
-import type { PncCourtCase, PncQueryResult } from "../../../types/PncQueryResult"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import defaults from "../../tests/helpers/defaults"
 import reformatDate from "../../tests/helpers/reformatDate"
 
@@ -95,7 +97,7 @@ const mockEnquiryError = (): string => {
   return '<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>'
 }
 
-const addMock = async (matchRegex: string, response: string, count: number | null = null): Promise<string> => {
+const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
   const data = { matchRegex, response, count }
   const resp = await axios.post(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`, data)
   if (resp.status < 200 || resp.status >= 300) {

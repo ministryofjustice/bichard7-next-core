@@ -1,5 +1,6 @@
-import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
 import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+
+import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
 import ResultClass from "../../../../types/ResultClass"
 
 const victimSurchargeCrestCodes = [
