@@ -16,17 +16,17 @@ const getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie = (
   }
 
   const courtCase = findPncCourtCase(aho, offence)
-  const matchingOffence = courtCase?.offences.find(
+  const matchingPncOffence = courtCase?.offences.find(
     (pncOffence) =>
       pncOffence.offence.sequenceNumber === Number(offence.CriminalProsecutionReference.OffenceReasonSequence)
   )
 
   const areAllDisposals2007 =
-    matchingOffence?.disposals &&
-    matchingOffence.disposals.length > 0 &&
-    matchingOffence.disposals.every((disposal) => disposal.type === ADJOURNED_SINE_DIE_DISPOSAL_CODE)
+    matchingPncOffence?.disposals &&
+    matchingPncOffence.disposals.length > 0 &&
+    matchingPncOffence.disposals.every((disposal) => disposal.type === ADJOURNED_SINE_DIE_DISPOSAL_CODE)
 
-  return areAllDisposals2007 ? matchingOffence.adjudication?.sentenceDate : undefined
+  return areAllDisposals2007 ? matchingPncOffence.adjudication?.sentenceDate : undefined
 }
 
 export default getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie
