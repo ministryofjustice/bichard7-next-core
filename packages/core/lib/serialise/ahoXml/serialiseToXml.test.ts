@@ -1,9 +1,11 @@
-import MockDate from "mockdate"
-import serialiseToXml from "./serialiseToXml"
-import path from "path"
 import fs from "fs"
-import { parseAhoXml } from "../../parse/parseAhoXml"
+import MockDate from "mockdate"
+import path from "path"
+
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+
+import { parseAhoXml } from "../../parse/parseAhoXml"
+import serialiseToXml from "./serialiseToXml"
 
 const getAho = (filePath: string): AnnotatedHearingOutcome => {
   const inputAho = fs.readFileSync(path.resolve(__dirname, `../../../${filePath}`), "utf8")

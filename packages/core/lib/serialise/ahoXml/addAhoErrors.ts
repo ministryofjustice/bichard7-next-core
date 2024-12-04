@@ -1,6 +1,7 @@
 import type { AhoXml } from "../../../types/AhoXml"
 import type Exception from "../../../types/Exception"
 import type { ExceptionPath } from "../../../types/Exception"
+
 import Phase from "../../../types/Phase"
 import hasError from "./hasError"
 

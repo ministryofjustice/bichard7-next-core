@@ -1,4 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "../../types/PncQueryResult"
 import type { Trigger } from "../../types/Trigger"

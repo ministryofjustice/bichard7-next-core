@@ -1,5 +1,7 @@
 import { isError } from "@moj-bichard7/common/types/Result"
+
 import type MqConfig from "./MqConfig"
+
 import MqGateway from "./MqGateway"
 import TestMqGateway from "./TestMqGateway"
 

@@ -1,4 +1,5 @@
 import { XMLBuilder, type XmlBuilderOptions } from "fast-xml-parser"
+
 import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../encoding"
 
 const defaultOptions: Partial<XmlBuilderOptions> = {

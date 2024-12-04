@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+
 import TRPR0010 from "./TRPR0010"
 const generateMockAho = (hearingDefendent: {
-  remandStatus: string
   bailConditions?: string[]
   offences: {
     results: {
@@ -9,6 +9,7 @@ const generateMockAho = (hearingDefendent: {
       resultQualifierVariable: string
     }[]
   }[]
+  remandStatus: string
 }): AnnotatedHearingOutcome => {
   const offences: Offence[] = hearingDefendent.offences.map(
     (offence) =>

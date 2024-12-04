@@ -1,7 +1,9 @@
 import fs from "fs"
 import "jest-xml-matcher"
-import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
+
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+
+import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
 import serialiseToXml from "./serialiseToXml"
 
 describe("serialiseToXml", () => {

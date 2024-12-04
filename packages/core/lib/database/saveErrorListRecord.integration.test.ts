@@ -2,9 +2,11 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
-import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+
+import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import errorPaths from "../exceptions/errorPaths"
 import saveErrorListRecord from "./saveErrorListRecord"
 

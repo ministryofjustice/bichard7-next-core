@@ -1,4 +1,5 @@
 import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
+
 import areOrganisationUnitsEqual from "./areOrganisationUnitsEqual"
 
 const emptyOrganisationUnit: OrganisationUnitCodes = {
