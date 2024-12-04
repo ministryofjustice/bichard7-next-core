@@ -1,5 +1,46 @@
 import type { XML } from "@moj-bichard7/common/types/Xml"
+
 import type { AhoXml, Br7OrganisationUnit } from "./AhoXml"
+
+export type OperationStatusXml = "C" | "F" | "N"
+
+export type PncOperationXml = {
+  operationCode:
+    | DisarrOperationCode
+    | NewremOperationCode
+    | PenhrgOperationCode
+    | SendefOperationCode
+    | SubvarOperationCode
+  operationStatus: OperationStatusXml
+}
+
+export type PncUpdateDatasetXml = {
+  "?xml"?: XML
+  PNCUpdateDataset: {
+    "@_xmlns"?: string
+    "@_xmlns:ds"?: string
+    "@_xmlns:xsi"?: string
+    "br7:AnnotatedHearingOutcome"?: AhoXml
+    Operation: PncOperationXml[]
+  }
+}
+
+type DisarrOperationCode = {
+  DISARR:
+    | {
+        courtCaseReference: string
+      }
+    | {}
+}
+
+type NewremOperationCode = {
+  NEWREM:
+    | {
+        nextHearingDate: string
+        nextHearingLocation: Br7OrganisationUnit
+      }
+    | {}
+}
 
 type PenhrgOperationCode = {
   PENHRG:
@@ -23,44 +64,4 @@ type SubvarOperationCode = {
         courtCaseReference: string
       }
     | {}
-}
-
-type DisarrOperationCode = {
-  DISARR:
-    | {
-        courtCaseReference: string
-      }
-    | {}
-}
-
-type NewremOperationCode = {
-  NEWREM:
-    | {
-        nextHearingDate: string
-        nextHearingLocation: Br7OrganisationUnit
-      }
-    | {}
-}
-
-export type OperationStatusXml = "F" | "N" | "C"
-
-export type PncOperationXml = {
-  operationCode:
-    | SendefOperationCode
-    | DisarrOperationCode
-    | NewremOperationCode
-    | SubvarOperationCode
-    | PenhrgOperationCode
-  operationStatus: OperationStatusXml
-}
-
-export type PncUpdateDatasetXml = {
-  "?xml"?: XML
-  PNCUpdateDataset: {
-    "br7:AnnotatedHearingOutcome"?: AhoXml
-    Operation: PncOperationXml[]
-    "@_xmlns:ds"?: string
-    "@_xmlns:xsi"?: string
-    "@_xmlns"?: string
-  }
 }
