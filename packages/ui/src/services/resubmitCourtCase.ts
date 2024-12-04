@@ -1,10 +1,13 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import amendCourtCase from "services/amendCourtCase"
 import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
-import sendToQueue from "services/mq/sendToQueue"
 import updateCourtCaseStatus from "services/updateCourtCaseStatus"
 import updateLockStatusToLocked from "services/updateLockStatusToLocked"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
@@ -14,17 +17,15 @@ import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
+import type MqGateway from "./mq/types/MqGateway"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
-import EventCategory from "@moj-bichard7/common/types/EventCategory"
-import EventCode from "@moj-bichard7/common/types/EventCode"
-import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
-import { AUDIT_LOG_EVENT_SOURCE } from "config"
 
 const phase1ResubmissionQueue = process.env.PHASE_1_RESUBMIT_QUEUE_NAME ?? "PHASE_1_RESUBMIT_QUEUE"
 const phase2ResubmissionQueue = process.env.PHASE_2_RESUBMIT_QUEUE_NAME ?? "PHASE_2_RESUBMIT_QUEUE"
 
 const resubmitCourtCase = async (
   dataSource: DataSource,
+  mqGateway: MqGateway,
   form: Partial<Amendments>,
   courtCaseId: number,
   user: User
@@ -120,7 +121,7 @@ const resubmitCourtCase = async (
     // TODO: this doesn't look right - should it be in transaction??
     const destinationQueue = phase === 1 ? phase1ResubmissionQueue : phase2ResubmissionQueue
     const generatedXml = serialiseToXml(resultAho, false)
-    const queueResult = await sendToQueue({ messageXml: generatedXml, queueName: destinationQueue })
+    const queueResult = await mqGateway.execute(generatedXml, destinationQueue)
 
     if (isError(queueResult)) {
       return queueResult

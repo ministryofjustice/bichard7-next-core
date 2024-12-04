@@ -25,6 +25,7 @@ import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationU
 import getDataSource from "services/getDataSource"
 import getLastSwitchingFormSubmission from "services/getLastSwitchingFormSubmission"
 import lockCourtCase from "services/lockCourtCase"
+import { createMqConfig, StompitMqGateway } from "services/mq"
 import resolveTriggers from "services/resolveTriggers"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
@@ -42,6 +43,9 @@ import { logRenderTime } from "utils/logging"
 import notSuccessful from "utils/notSuccessful"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
+
+const mqGatewayConfig = createMqConfig()
+const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
@@ -132,7 +136,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       const updatedAmendments =
         Object.keys(parsedAmendments).length > 0 ? parsedAmendments : { noUpdatesResubmit: true }
 
-      const amendedCase = await resubmitCourtCase(dataSource, updatedAmendments, +courtCaseId, currentUser)
+      const amendedCase = await resubmitCourtCase(dataSource, mqGateway, updatedAmendments, +courtCaseId, currentUser)
 
       if (isError(amendedCase)) {
         throw amendedCase
