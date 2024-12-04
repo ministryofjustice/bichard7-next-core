@@ -1,9 +1,10 @@
 import type { PutObjectCommandOutput } from "@aws-sdk/client-s3"
+import type { DynamoDB } from "aws-sdk"
+
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import { isError } from "@moj-bichard7/common/types/Result"
-import type { DynamoDB } from "aws-sdk"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 const s3Config = createS3Config()
@@ -13,7 +14,7 @@ const config: DynamoDB.ClientConfiguration = {
 }
 const client = new DocumentClient(config)
 
-const writeFileToS3 = (path: string, bucket: string, contents: string): Promise<PutObjectCommandOutput | Error> => {
+const writeFileToS3 = (path: string, bucket: string, contents: string): Promise<Error | PutObjectCommandOutput> => {
   const s3Client = new S3Client(s3Config)
   const command = new PutObjectCommand({ Bucket: bucket, Key: path, Body: contents })
   return s3Client.send(command).catch((err: Error) => err)
