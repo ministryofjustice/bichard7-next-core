@@ -8,7 +8,7 @@ const getNextHearingDateExceptionsDetails = (
   savedAmendments: Amendments
 ): ExceptionDetails => {
   const nextHearingDateExceptionsCount = getNextHearingDateExceptions(exceptions).length
-  const nextHearingDateExceptionsCountFromUpdatedFields = savedAmendments?.nextHearingDate?.length || 0
+  const nextHearingDateExceptionsCountFromUpdatedFields = savedAmendments?.nextHearingDate?.length ?? 0
 
   return {
     ExceptionsCount: nextHearingDateExceptionsCount - nextHearingDateExceptionsCountFromUpdatedFields,

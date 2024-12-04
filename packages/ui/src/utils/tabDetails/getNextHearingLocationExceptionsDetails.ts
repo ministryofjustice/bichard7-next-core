@@ -8,7 +8,7 @@ const getNextHearingLocationExceptionsDetails = (
   savedAmendments: Amendments
 ): ExceptionDetails => {
   const nextHearingLocationExceptionsCount = getNextHearingLocationExceptions(exceptions).length
-  const nextHearingLocationExceptionsCountFromUpdatedFields = savedAmendments?.nextSourceOrganisation?.length || 0
+  const nextHearingLocationExceptionsCountFromUpdatedFields = savedAmendments?.nextSourceOrganisation?.length ?? 0
   return {
     ExceptionsCount: nextHearingLocationExceptionsCount - nextHearingLocationExceptionsCountFromUpdatedFields,
     ExceptionsResolved:
