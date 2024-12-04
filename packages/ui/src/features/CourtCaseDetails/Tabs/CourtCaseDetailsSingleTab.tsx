@@ -1,8 +1,8 @@
-import CaseDetailsTab from "types/CaseDetailsTab"
-import { TabDetails } from "utils/getTabDetails"
-import { CHECKMARK_ICON_URL } from "utils/icons"
-import { CheckmarkIcon } from "./CourtCaseDetailsSingleTab.styles"
 import { useCourtCase } from "context/CourtCaseContext"
+import CaseDetailsTab from "types/CaseDetailsTab"
+import { CHECKMARK_ICON_URL } from "utils/icons"
+import type { TabDetails } from "utils/tabDetails/getTabDetails"
+import { CheckmarkIcon } from "./CourtCaseDetailsSingleTab.styles"
 
 interface CourtCaseDetailsSingleTabProps {
   tab: TabDetails
