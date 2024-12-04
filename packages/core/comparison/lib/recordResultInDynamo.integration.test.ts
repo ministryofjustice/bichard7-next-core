@@ -1,12 +1,15 @@
-import { isError } from "@moj-bichard7/common/types/Result"
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
+
+import { isError } from "@moj-bichard7/common/types/Result"
 import MockDate from "mockdate"
 import "phase1/tests/helpers/setEnvironmentVariables"
+
+import type { ComparisonLog } from "../types"
+
 import MockDynamo from "../../phase1/tests/helpers/MockDynamo"
 import dynamoDbTableConfig from "../../phase1/tests/helpers/testDynamoDbTableConfig"
-import type { ComparisonLog } from "../types"
-import DynamoGateway from "./DynamoGateway"
 import createDynamoDbConfig from "./createDynamoDbConfig"
+import DynamoGateway from "./DynamoGateway"
 import recordResultInDynamo from "./recordResultInDynamo"
 
 const config = createDynamoDbConfig(1)

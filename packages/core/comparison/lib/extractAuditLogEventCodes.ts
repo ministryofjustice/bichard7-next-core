@@ -1,5 +1,14 @@
 import { XMLParser } from "fast-xml-parser"
+
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../lib/encoding"
+
+type AuditLogEventXml = {
+  logEvent?: {
+    nameValuePairs?: {
+      nameValuePair?: NameValuePair[]
+    }
+  }
+}
 
 type NameValuePair = {
   name: {
@@ -7,14 +16,6 @@ type NameValuePair = {
   }
   value: {
     "#text": string
-  }
-}
-
-type AuditLogEventXml = {
-  logEvent?: {
-    nameValuePairs?: {
-      nameValuePair?: NameValuePair[]
-    }
   }
 }
 

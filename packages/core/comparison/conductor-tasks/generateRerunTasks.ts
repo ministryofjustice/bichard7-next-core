@@ -1,14 +1,15 @@
 import type { ConductorWorker, Task } from "@io-orkes/conductor-javascript"
+
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failedTerminal from "@moj-bichard7/common/conductor/helpers/failedTerminal"
 
 export type GenerateDayTasksOutput = {
-  start: string
   end: string
+  newMatcher: boolean
   onlyFailures: boolean
   persistResults: boolean
-  newMatcher: boolean
   phase: number
+  start: string
 }
 
 const generateRerunTasks: ConductorWorker = {

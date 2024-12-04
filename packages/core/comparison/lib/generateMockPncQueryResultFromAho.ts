@@ -1,8 +1,10 @@
-import { parseAhoXml } from "../../lib/parse/parseAhoXml"
-import type { PncQueryResult } from "../../types/PncQueryResult"
 import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
-import { PncApiError } from "../../lib/PncGateway"
+
 import type { PncException } from "../../types/Exception"
+import type { PncQueryResult } from "../../types/PncQueryResult"
+
+import { parseAhoXml } from "../../lib/parse/parseAhoXml"
+import { PncApiError } from "../../lib/PncGateway"
 
 /*
 Sample CXE element
@@ -25,7 +27,7 @@ Sample CXE element
 </CXE01>
 */
 
-export default (ahoXml: string): PncQueryResult | PncApiError => {
+export default (ahoXml: string): PncApiError | PncQueryResult => {
   const parsedAho = parseAhoXml(ahoXml)
 
   if (isError(parsedAho)) {

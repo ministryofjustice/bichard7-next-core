@@ -1,4 +1,5 @@
 import type { ComparisonData } from "../../types/ComparisonData"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core normalises CCRs when checking for matching CCRs on the PNC, so it can handle extra leading 0s
