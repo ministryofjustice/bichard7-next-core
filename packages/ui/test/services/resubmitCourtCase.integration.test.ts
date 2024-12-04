@@ -6,7 +6,7 @@ import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import insertNotes from "services/insertNotes"
-import sendToQueue from "services/mq/sendToQueue"
+import type MqGateway from "services/mq/types/MqGateway"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import type { DataSource } from "typeorm"
 import fetchAuditLogEvents from "../helpers/fetchAuditLogEvents"
@@ -16,12 +16,12 @@ import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCasesWithFields } from "../utils/insertCourtCases"
 
-jest.mock("services/mq/sendToQueue")
 jest.mock("services/insertNotes")
 
 jest.setTimeout(60 * 60 * 1000)
 
 describe("resubmit court case", () => {
+  const mockMqGateway = { execute: jest.fn() } as unknown as MqGateway
   const userName = "GeneralHandler"
   let dataSource: DataSource
 
@@ -83,14 +83,20 @@ describe("resubmit court case", () => {
     await insertCourtCasesWithFields([inputCourtCase])
 
     // check the queue hasn't been called
-    expect(sendToQueue).toHaveBeenCalledTimes(0)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
 
-    const result = await resubmitCourtCase(dataSource, { noUpdatesResubmit: true }, inputCourtCase.errorId, {
-      username: userName,
-      visibleForces: ["01"],
-      visibleCourts: [],
-      hasAccessTo: hasAccessToAll
-    } as Partial<User> as User)
+    const result = await resubmitCourtCase(
+      dataSource,
+      mockMqGateway,
+      { noUpdatesResubmit: true },
+      inputCourtCase.errorId,
+      {
+        username: userName,
+        visibleForces: ["01"],
+        visibleCourts: [],
+        hasAccessTo: hasAccessToAll
+      } as Partial<User> as User
+    )
 
     expect(result).not.toBeInstanceOf(Error)
     expect(result).toMatchSnapshot()
@@ -100,7 +106,7 @@ describe("resubmit court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(sendToQueue).toHaveBeenCalledTimes(1)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(1)
     expect(insertNotes).toHaveBeenCalledTimes(2)
     expect(insertNotes).toHaveBeenCalledWith(expect.anything(), [
       {
@@ -134,7 +140,7 @@ describe("resubmit court case", () => {
     await insertCourtCasesWithFields([inputCourtCase])
 
     // check the queue hasn't been called
-    expect(sendToQueue).toHaveBeenCalledTimes(0)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
 
     // parse the xml so we can assert on the values before they change
     const input = parseAhoXml(inputCourtCase.updatedHearingOutcome as string)
@@ -148,6 +154,7 @@ describe("resubmit court case", () => {
 
     const result = await resubmitCourtCase(
       dataSource,
+      mockMqGateway,
       { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
       inputCourtCase.errorId,
       {
@@ -166,7 +173,7 @@ describe("resubmit court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(sendToQueue).toHaveBeenCalledTimes(1)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(1)
     expect(insertNotes).toHaveBeenCalledTimes(2)
     expect(insertNotes).toHaveBeenCalledWith(expect.anything(), [
       {
@@ -215,7 +222,7 @@ describe("resubmit court case", () => {
     await insertCourtCasesWithFields([inputCourtCase])
 
     // check the queue hasn't been called
-    expect(sendToQueue).toHaveBeenCalledTimes(0)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
 
     // parse the xml so we can assert on the values before they change
     const input = parseAhoXml(inputCourtCase.updatedHearingOutcome as string)
@@ -232,6 +239,7 @@ describe("resubmit court case", () => {
 
     const result = await resubmitCourtCase(
       dataSource,
+      mockMqGateway,
       {
         courtOffenceSequenceNumber: amendments
       },
@@ -252,7 +260,7 @@ describe("resubmit court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(sendToQueue).toHaveBeenCalledTimes(1)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(1)
     expect(insertNotes).toHaveBeenCalledTimes(2)
     expect(insertNotes).toHaveBeenCalledWith(expect.anything(), [
       {
@@ -305,6 +313,7 @@ describe("resubmit court case", () => {
 
     const result = await resubmitCourtCase(
       dataSource,
+      mockMqGateway,
       { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
       inputCourtCase.errorId,
       {
@@ -324,7 +333,46 @@ describe("resubmit court case", () => {
     expect(events).toContainEqual(exceptionUnlockedEvent)
   })
 
-  it("Should log Hearing outcome resubmission to phase 2", async () => {
+  it("should send generatedXml to phase 1 queue", async () => {
+    // set up court case in the right format to insert into the db
+    const inputCourtCase = await getDummyCourtCase({
+      errorLockedByUsername: userName,
+      triggerLockedByUsername: null,
+      errorCount: 1,
+      errorStatus: "Unresolved",
+      triggerCount: 1,
+      phase: 1,
+      hearingOutcome: offenceSequenceException.hearingOutcomeXml,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
+      orgForPoliceFilter: "1111"
+    })
+
+    // insert the record to the db
+    await insertCourtCasesWithFields([inputCourtCase])
+    // const mockMqGateway = { execute: jest.fn() } as unknown as MqGateway
+
+    const result = await resubmitCourtCase(
+      dataSource,
+      mockMqGateway,
+      { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
+      inputCourtCase.errorId,
+      {
+        username: userName,
+        visibleForces: ["11"],
+        visibleCourts: [],
+        hasAccessTo: hasAccessToAll
+      } as Partial<User> as User
+    )
+
+    expect(result).not.toBeInstanceOf(Error)
+
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(1)
+    const [messageXml, queueName] = (mockMqGateway.execute as jest.Mock).mock.calls[0]
+    expect(queueName).toBe("PHASE_1_RESUBMIT_QUEUE")
+    expect(messageXml).toMatchSnapshot()
+  })
+
+  it("should not send generatedXml to phase 2 queue", async () => {
     // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
@@ -340,9 +388,11 @@ describe("resubmit court case", () => {
 
     // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
+    // const mockMqGateway = { execute: jest.fn() } as unknown as MqGateway
 
     const result = await resubmitCourtCase(
       dataSource,
+      mockMqGateway,
       { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
       inputCourtCase.errorId,
       {
@@ -352,13 +402,10 @@ describe("resubmit court case", () => {
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
-    const events = await fetchAuditLogEvents(inputCourtCase.messageId)
 
-    expect(result).not.toBeInstanceOf(Error)
-    expect(events).toHaveLength(2)
-    expect(events).toContainEqual(
-      resubmissionEvent(EventCode.HearingOutcomeResubmittedPhase2, "Hearing outcome resubmitted to phase 2", userName)
-    )
-    expect(events).toContainEqual(exceptionUnlockedEvent)
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Resubmission to Phase 2 is not implemented yet")
+
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
   })
 })
