@@ -5,7 +5,7 @@ import type AuditLogger from "../types/AuditLogger"
 import Phase from "../types/Phase"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
-import exceptionsForOperation from "./exceptions/exceptionsForOperation"
+import generateExceptionsForOperation from "./exceptions/generateExceptionsForOperation"
 import performOperation from "./lib/performOperation"
 import type Phase3Result from "./types/Phase3Result"
 import { Phase3ResultType } from "./types/Phase3Result"
@@ -24,7 +24,7 @@ const phase3 = async (
       continue
     }
 
-    const exceptions = exceptionsForOperation(operation.code, inputMessage)
+    const exceptions = generateExceptionsForOperation(operation.code, inputMessage)
 
     const operationResult = await performOperation(inputMessage, operation, pncGateway).catch((error) => error)
     if (isError(operationResult)) {
