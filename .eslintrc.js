@@ -75,7 +75,7 @@ module.exports = {
     },
     {
       extends: ["plugin:perfectionist/recommended-natural-legacy"],
-      files: "packages/+(api|common)/**/*",
+      files: "packages/+(api|common|conductor)/**/*",
       plugins: ["perfectionist"]
     }
   ],
