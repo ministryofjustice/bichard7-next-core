@@ -1,6 +1,8 @@
 import type EventHandlerDef from "@moj-bichard7/common/conductor/types/EventHandlerDef"
+
 import fs from "fs"
 import isMatch from "lodash.ismatch"
+
 import type ConductorGateway from "./ConductorGateway"
 
 class EventHandler {
