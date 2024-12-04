@@ -2,9 +2,11 @@ jest.setTimeout(9999999)
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import type Email from "@moj-bichard7/common/email/Email"
+
 import * as getEmailer from "@moj-bichard7/common/email/getEmailer"
 import { randomUUID } from "crypto"
 import mailhogClient from "mailhog"
+
 import { type ErrorReportData } from "../types/errorReportData"
 import alertCommonPlatform from "./alertCommonPlatform"
 

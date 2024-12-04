@@ -1,20 +1,21 @@
 jest.setTimeout(30_000)
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import createS3Config from "@moj-bichard7/common/s3/createS3Config"
-import "jest-xml-matcher"
-import postgres from "postgres"
-
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import "jest-xml-matcher"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
+import postgres from "postgres"
+
+import type Phase2Result from "../../phase2/types/Phase2Result"
+
 import insertErrorListRecord from "../../lib/database/insertErrorListRecord"
 import insertErrorListTriggers from "../../lib/database/insertErrorListTriggers"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
-import type Phase2Result from "../../phase2/types/Phase2Result"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import persistPhase2 from "./persistPhase2"
