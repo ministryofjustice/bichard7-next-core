@@ -1,6 +1,6 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import type { DisplayFullUser } from "types/display/Users"
 import allExcludedTriggers from "./allExcludedTriggers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("allExcludedTriggers", () => {
   const testUser = {
@@ -19,7 +19,7 @@ describe("allExcludedTriggers", () => {
     expect(excludedTriggers).toContain(TriggerCode.TRPR0003)
   })
 
-  it("Returns array with only user excluded triggers when non of the triggers are excluded on force level", () => {
+  it("Returns array with only user excluded triggers when no triggers are excluded on force level", () => {
     const forceExcludedTriggers = { "01": [] }
 
     const excludedTriggers = allExcludedTriggers(testUser, forceExcludedTriggers)
@@ -28,7 +28,7 @@ describe("allExcludedTriggers", () => {
     expect(excludedTriggers).toContain(TriggerCode.TRPR0001)
   })
 
-  it("Returns array with only force excluded triggers when non of the triggers are excluded on user level", () => {
+  it("Returns array with only force excluded triggers when no triggers are excluded on user level", () => {
     const testUserWihoutExcludedTriggers = {
       excludedTriggers: [],
       visibleForces: ["001"]
@@ -40,6 +40,21 @@ describe("allExcludedTriggers", () => {
     expect(excludedTriggers).toHaveLength(2)
     expect(excludedTriggers).toContain(TriggerCode.TRPR0001)
     expect(excludedTriggers).toContain(TriggerCode.TRPR0002)
+  })
+
+  it("Returns an array with only user excluded triggers when user has access to multiple forces", () => {
+    const testUserWithAccessToMultipleForces = {
+      excludedTriggers: [TriggerCode.TRPR0001],
+      visibleForces: ["001", "002"]
+    } as unknown as DisplayFullUser
+    const forceExcludedTriggers = { "01": [TriggerCode.TRPR0002, TriggerCode.TRPR0003] }
+
+    const excludedTriggers = allExcludedTriggers(testUserWithAccessToMultipleForces, forceExcludedTriggers)
+
+    expect(excludedTriggers).toHaveLength(1)
+    expect(excludedTriggers).toContain(TriggerCode.TRPR0001)
+    expect(excludedTriggers).not.toContain(TriggerCode.TRPR0002)
+    expect(excludedTriggers).not.toContain(TriggerCode.TRPR0003)
   })
 
   it("Returns an array without duplicate triggers when user and force excluded triggers are common", () => {
