@@ -30,6 +30,7 @@
     "generate-schema-doc": "./scripts/generate-schema-doc.sh",
     "lint": "npm run lint --ws",
     "lint:fix": "npm run lint:fix --ws",
+    "lint:ci": "bash ./scripts/lint-ci.sh",
     "postgres": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed",
     "localstack": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait localstack",
     "mailserver": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait mail",
