@@ -349,7 +349,6 @@ describe("resubmit court case", () => {
 
     // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
-    // const mockMqGateway = { execute: jest.fn() } as unknown as MqGateway
 
     const result = await resubmitCourtCase(
       dataSource,
@@ -388,7 +387,6 @@ describe("resubmit court case", () => {
 
     // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
-    // const mockMqGateway = { execute: jest.fn() } as unknown as MqGateway
 
     const result = await resubmitCourtCase(
       dataSource,
