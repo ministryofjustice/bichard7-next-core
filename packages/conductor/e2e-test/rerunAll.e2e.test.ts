@@ -1,10 +1,11 @@
 jest.setTimeout(30_000)
 jest.retryTimes(10)
 
-import waitForExpect from "wait-for-expect"
-import { getPhaseTableName, sendFileToS3, getDynamoRecord, startWorkflow } from "./helpers/e2eHelpers"
-import { dbClient, s3Client } from "./helpers/clients"
 import { randomUUID } from "crypto"
+import waitForExpect from "wait-for-expect"
+
+import { dbClient, s3Client } from "./helpers/clients"
+import { getDynamoRecord, getPhaseTableName, sendFileToS3, startWorkflow } from "./helpers/e2eHelpers"
 
 describe("Rerun all workflow", () => {
   it("should rerun phase 2 comparisons and update dynamo record", async () => {
