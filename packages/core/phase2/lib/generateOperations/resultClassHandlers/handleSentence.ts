@@ -1,8 +1,9 @@
-import areAnyPncDisposalsWithType from "../../areAnyPncDisposalsWithType"
-import createOperation from "../createOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
+
 import { PncOperation } from "../../../../types/PncOperation"
 import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
+import areAnyPncDisposalsWithType from "../../areAnyPncDisposalsWithType"
+import createOperation from "../createOperation"
 
 export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, result }) => {
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber

@@ -1,9 +1,10 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import { PncOperation } from "../../../types/PncOperation"
 import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
+
+import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
+import { PncOperation } from "../../../types/PncOperation"
 import ResultClass from "../../../types/ResultClass"
 import createOperation from "./createOperation"
-import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
 
 const generateOperationData = (result: Result): OperationData<PncOperation.REMAND> | undefined => {
   if (isUndatedWarrantIssued(result.CJSresultCode) || !result.NextResultSourceOrganisation) {
@@ -18,7 +19,7 @@ const generateOperationData = (result: Result): OperationData<PncOperation.REMAN
 
 const createRemandOperation = (
   result: Result,
-  courtCaseReference: string | undefined | null
+  courtCaseReference: null | string | undefined
 ): Operation<PncOperation.REMAND> => ({
   ...createOperation(PncOperation.REMAND, generateOperationData(result)),
   courtCaseReference: courtCaseReference ?? undefined,

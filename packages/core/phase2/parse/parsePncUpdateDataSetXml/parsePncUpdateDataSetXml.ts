@@ -1,11 +1,13 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
-import { extractExceptionsFromXml, mapXmlToAho } from "../../../lib/parse/parseAhoXml"
-import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/parseAhoXml"
+
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
+
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
+import { extractExceptionsFromXml, mapXmlToAho } from "../../../lib/parse/parseAhoXml"
+import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/parseAhoXml"
 import { PncOperation } from "../../../types/PncOperation"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
@@ -18,7 +20,7 @@ const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   return statuses[statusXml] || statusXml
 }
 
-const isEmptyElement = <T>(result: T | Br7TextString): result is Br7TextString => {
+const isEmptyElement = <T>(result: Br7TextString | T): result is Br7TextString => {
   return (result as Br7TextString)["#text"] === ""
 }
 
@@ -125,7 +127,7 @@ const getOperationsAsArray = (operations?: Br7Operation | Br7Operation[]): Br7Op
   return [operations]
 }
 
-export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParsedXml): PncUpdateDataset | Error => {
+export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParsedXml): Error | PncUpdateDataset => {
   const rootElement = pncUpdateDataSet["PNCUpdateDataset"]
   if (!rootElement?.["br7:AnnotatedHearingOutcome"]) {
     return Error("Could not parse PNC update dataset XML")
@@ -147,7 +149,7 @@ export const mapXmlToPncUpdateDataSet = (pncUpdateDataSet: PncUpdateDatasetParse
   return pncUpdateDataset
 }
 
-export default (xml: string): PncUpdateDataset | Error => {
+export default (xml: string): Error | PncUpdateDataset => {
   const options = {
     ignoreAttributes: false,
     parseTagValue: false,

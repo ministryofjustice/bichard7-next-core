@@ -1,7 +1,7 @@
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import generator from "./HO200110"
 
-const generateAho = (options: { isRecordable: boolean; isDummyAsn: boolean }) =>
+const generateAho = (options: { isDummyAsn: boolean; isRecordable: boolean }) =>
   generateFakeAho({
     AnnotatedHearingOutcome: {
       HearingOutcome: {

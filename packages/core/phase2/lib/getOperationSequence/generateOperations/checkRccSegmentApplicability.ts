@@ -1,5 +1,6 @@
-import getRecordableOffencesForCourtCase from "../../../../lib/getRecordableOffencesForCourtCase"
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+
+import getRecordableOffencesForCourtCase from "../../../../lib/getRecordableOffencesForCourtCase"
 import isResultCompatibleWithDisposal from "../../isResultCompatibleWithDisposal"
 
 export enum RccSegmentApplicability {

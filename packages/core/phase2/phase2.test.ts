@@ -1,17 +1,19 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
+
+import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
+import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
+import type { PncUpdateDataset } from "../types/PncUpdateDataset"
+
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
-import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../types/PncUpdateDataset"
+import ResultClass from "../types/ResultClass"
+import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
-import ResultClass from "../types/ResultClass"
-import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 
 jest.mock("./lib/areAllResultsOnPnc")
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock

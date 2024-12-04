@@ -3,12 +3,12 @@ import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/gen
 import HO200104 from "./HO200104"
 
 type GenerateAhoInput = {
-  resultClass: ResultClass
-  resubmitted: boolean
+  areAllResultsOnPnc: boolean
+  arePncResults2007: "All" | "None" | "One"
   fixedPenalty: boolean
   pncAdjudicationExists: boolean
-  areAllResultsOnPnc: boolean
-  arePncResults2007: "All" | "One" | "None"
+  resubmitted: boolean
+  resultClass: ResultClass
 }
 
 const generateAho = ({
