@@ -60,14 +60,14 @@ describe("Resolve triggers", () => {
 
     cy.visit(caseURL)
 
-    cy.get(".trigger-header input[type='checkbox']").first().check()
+    cy.get(".trigger-rows .moj-trigger-row").contains("PR01").click()
     cy.get("#mark-triggers-complete-button").click()
 
     clickTab("Notes")
 
     cy.get("td").contains(`GeneralHandler: Portal Action: Resolved Trigger. Code: PR01`)
 
-    cy.get(".trigger-header input[type='checkbox']").check()
+    cy.get(".trigger-rows .moj-trigger-row").contains("PR02").click()
     cy.get("#mark-triggers-complete-button").click()
 
     cy.url().should("match", /\/bichard$/)

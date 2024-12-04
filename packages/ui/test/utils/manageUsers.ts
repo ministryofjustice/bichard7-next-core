@@ -25,9 +25,9 @@ const insertUserIntoGroup = async (emailAddress: string, groupName: string): Pro
   const dataSource = await getDataSource()
   return dataSource.manager.query(
     `
-    INSERT INTO 
+    INSERT INTO
       br7own.users_groups(
-      group_id, 
+      group_id,
       user_id
     )
     SELECT G.id, U.id FROM br7own.users AS U, br7own."groups" AS G

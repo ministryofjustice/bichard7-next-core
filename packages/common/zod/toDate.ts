@@ -1,6 +1,6 @@
 const dateFormat = /\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?Z)?/
 
-export default function toDate(element: unknown): Date | unknown {
+export default function toDate(element: unknown): Date | typeof element {
   if (typeof element === "string" && dateFormat.test(element)) {
     const potentialDate = new Date(element)
     if (isValidDate(potentialDate)) {

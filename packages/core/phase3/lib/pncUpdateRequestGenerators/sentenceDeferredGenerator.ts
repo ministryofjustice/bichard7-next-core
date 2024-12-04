@@ -1,5 +1,4 @@
 import { PncOperation } from "../../../types/PncOperation"
-import type PncUpdateRequest from "../../types/PncUpdateRequest"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import preProcessPncIdentifier from "../preProcessPncIdentifier"
@@ -27,11 +26,16 @@ const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE
     return formattedCourtCaseReference
   }
 
+  const courtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
+  if (isError(courtCode)) {
+    return courtCode
+  }
+
   return {
     operation: PncOperation.SENTENCE_DEFERRED,
     request: {
       courtCaseReferenceNumber: formattedCourtCaseReference,
-      courtCode: getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode),
+      courtCode,
       croNumber: hearingDefendant.CRONumber ?? null,
       forceStationCode: getForceStationCode(pncUpdateDataset, true),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
@@ -40,7 +44,7 @@ const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE
       pncCheckName,
       pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier)
     }
-  } as PncUpdateRequest
+  }
 }
 
 export default sentenceDeferredGenerator

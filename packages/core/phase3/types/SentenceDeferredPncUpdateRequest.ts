@@ -6,13 +6,13 @@ type SentenceDeferredPncUpdateRequest = {
   request: {
     courtCaseReferenceNumber: string
     courtCode: string
-    croNumber: string
+    croNumber: string | null
     forceStationCode: string
     hearingDate: string
     hearingDetails: CourtHearingAndDisposal[]
     hearingType: string
-    pncCheckName: string
-    pncIdentifier: string
+    pncCheckName: string | null
+    pncIdentifier: string | null
   }
 }
 
