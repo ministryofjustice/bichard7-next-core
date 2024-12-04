@@ -95,7 +95,6 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
         convictionDate,
         undefined,
         undefined,
-        undefined,
         undefined
       )
     )
