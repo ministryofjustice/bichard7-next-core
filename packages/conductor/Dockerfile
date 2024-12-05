@@ -12,7 +12,7 @@ COPY package-lock.json .
 COPY packages ./packages
 COPY tsconfig*.json ./
 
-RUN npm ci \
+RUN npm ci --ignore-scripts \
   && npm run build:core \
   && npm run esbuild -w packages/conductor
 
