@@ -5,6 +5,8 @@ import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../types/AuditLogger"
 import type Phase2Result from "./types/Phase2Result"
 
+import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
+import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
 import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
@@ -27,12 +29,16 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
 
   if (!isResubmitted && isAncillaryInterimCase(hearingOutcome)) {
     auditLogger.info(EventCode.IgnoredAncillary)
+    const triggers = generateTriggers(outputMessage, Phase.PNC_UPDATE)
+    if (triggers.length > 0) {
+      auditLogger.info(EventCode.TriggersGenerated, generateTriggersLogAttributes(triggers, false))
+    }
 
     return {
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
       outputMessage,
-      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE),
+      triggers,
       triggerGenerationAttempted: true,
       resultType: Phase2ResultType.ignored
     }
@@ -54,6 +60,10 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
 
   const exceptions = generateExceptions(inputMessage)
   addExceptionsToAho(outputMessage, exceptions)
+  if (exceptions.length > 0) {
+    auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(outputMessage))
+  }
+
   if (exceptions.some(({ code }) => code !== ExceptionCode.HO200200)) {
     return {
       auditLogEvents: auditLogger.getEvents(),
@@ -76,11 +86,19 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
       auditLogger.info(EventCode.IgnoredNonrecordable)
     }
 
+    const triggers = generateTriggers(outputMessage, Phase.PNC_UPDATE)
+    if (triggers.length > 0) {
+      auditLogger.info(
+        EventCode.TriggersGenerated,
+        generateTriggersLogAttributes(triggers, outputMessage.Exceptions.length > 0)
+      )
+    }
+
     return {
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
       outputMessage,
-      triggers: generateTriggers(outputMessage, Phase.PNC_UPDATE),
+      triggers,
       triggerGenerationAttempted: true,
       resultType: isResubmitted ? Phase2ResultType.success : Phase2ResultType.ignored
     }

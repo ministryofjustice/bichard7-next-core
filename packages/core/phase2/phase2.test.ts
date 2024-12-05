@@ -228,6 +228,82 @@ describe("Bichard Core Phase 2 processing logic", () => {
     }
   )
 
+  it("adds an event for generated exceptions", () => {
+    const inputMessage = structuredClone(pncUpdateDataSetTestCase.inputMessage)
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        Result: []
+      }
+    ] as unknown as Offence[]
+
+    const { auditLogEvents } = phase2Handler(inputMessage, auditLogger)
+
+    expect(auditLogEvents).toContainEqual({
+      attributes: {
+        "Error 1 Details": "HO200212||OffenceCode",
+        "Exception Type": "HO200212",
+        "Number Of Errors": 1
+      },
+      category: "information",
+      eventCode: "exceptions.generated",
+      eventSource: "CorePhase2",
+      eventType: "Exceptions generated",
+      timestamp: expect.anything()
+    })
+  })
+
+  it("adds an event for generated triggers when no operations are generated (non-recordable case)", () => {
+    const { auditLogEvents } = phase2Handler(ahoTestCase.inputMessage, auditLogger)
+
+    expect(auditLogEvents).toContainEqual(
+      expect.objectContaining({ eventCode: "hearing-outcome.ignored.nonrecordable" })
+    )
+    expect(auditLogEvents).toContainEqual({
+      attributes: {
+        "Number of Triggers": 3,
+        "Trigger 1 Details": "TRPR0003",
+        "Trigger 2 Details": "TRPR0004",
+        "Trigger 3 Details": "TRPR0004",
+        "Trigger and Exception Flag": false
+      },
+      category: "information",
+      eventCode: "triggers.generated",
+      eventSource: "CorePhase2",
+      eventType: "Triggers generated",
+      timestamp: expect.anything()
+    })
+  })
+
+  it("adds an event for generated triggers when hearing outcome has ancillary interim case", () => {
+    const { inputMessage } = structuredClone(ahoTestCase)
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
+      (offence) => !offence.AddedByTheCourt
+    ).forEach((offence) => {
+      offence.Result.forEach((result) => {
+        result.PNCDisposalType = 1000
+        result.ResultVariableText = "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text."
+      })
+    })
+
+    const { auditLogEvents } = phase2Handler(inputMessage, auditLogger)
+
+    expect(auditLogEvents).toContainEqual(expect.objectContaining({ eventCode: "hearing-outcome.ignored.ancillary" }))
+    expect(auditLogEvents).toContainEqual({
+      attributes: {
+        "Number of Triggers": 3,
+        "Trigger 1 Details": "TRPR0003",
+        "Trigger 2 Details": "TRPR0004",
+        "Trigger 3 Details": "TRPR0004",
+        "Trigger and Exception Flag": false
+      },
+      category: "information",
+      eventCode: "triggers.generated",
+      eventSource: "CorePhase2",
+      eventType: "Triggers generated",
+      timestamp: expect.anything()
+    })
+  })
+
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
     "doesn't add ignored event when all results are not on the PNC for $messageType",
     ({ inputMessage }) => {
