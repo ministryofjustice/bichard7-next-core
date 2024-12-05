@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 const generateExceptionLogAttributes = (hearingOutcome: AnnotatedHearingOutcome): Record<string, unknown> => ({
   "Exception Type": hearingOutcome.Exceptions[0].code,
