@@ -1,3 +1,5 @@
+import type { CjsCodeAndDescription } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+
 import type {
   Adj,
   AhoXml,
@@ -33,8 +35,8 @@ import type {
   Result,
   Urgent
 } from "../../../types/AnnotatedHearingOutcome"
-import type { PncException } from "../../../types/Exception"
 import type Exception from "../../../types/Exception"
+import type { PncException } from "../../../types/Exception"
 import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
@@ -70,6 +72,47 @@ enum LiteralType {
   YesNo
 }
 
+const findLiteralAttribute = (type: LiteralType, literalText: string): string | undefined => {
+  let offence: CjsCodeAndDescription | undefined
+
+  switch (type) {
+    case LiteralType.ActualOffenceDateCode:
+      offence = lookupOffenceDateCodeByCjsCode(literalText)
+      break
+    case LiteralType.AlcoholLevelMethod:
+      offence = lookupAlcoholLevelMethodByCjsCode(literalText)
+      break
+    case LiteralType.CourtType:
+      offence = lookupCourtTypeByCjsCode(literalText)
+      break
+    case LiteralType.DefendantPresentAtHearing:
+      offence = lookupDefendantPresentAtHearingByCjsCode(literalText)
+      break
+    case LiteralType.Gender:
+      offence = lookupGenderByCjsCode(literalText)
+      break
+    case LiteralType.ModeOfTrialReason:
+      offence = lookupModeOfTrialReasonByCjsCode(literalText)
+      break
+    case LiteralType.OffenceCategory:
+      offence = lookupOffenceCategoryByCjsCode(literalText)
+      break
+    case LiteralType.OffenceRemandStatus:
+      offence = lookupRemandStatusByCjsCode(literalText)
+      break
+    case LiteralType.PleaStatus:
+      offence = lookupPleaStatusByCjsCode(literalText)
+      break
+    case LiteralType.Verdict:
+      offence = lookupVerdictByCjsCode(literalText)
+      break
+    default:
+      throw new Error("Invalid literal type specified")
+  }
+
+  return offence?.description
+}
+
 const literal = (value: boolean | string, type: LiteralType): Br7LiteralTextString => {
   let literalText: string | undefined
   let literalAttribute: string | undefined
@@ -84,29 +127,7 @@ const literal = (value: boolean | string, type: LiteralType): Br7LiteralTextStri
     }
   } else {
     literalText = value
-    if (type === LiteralType.OffenceRemandStatus) {
-      literalAttribute = lookupRemandStatusByCjsCode(value)?.description
-    } else if (type === LiteralType.PleaStatus) {
-      literalAttribute = lookupPleaStatusByCjsCode(value)?.description
-    } else if (type === LiteralType.AlcoholLevelMethod) {
-      literalAttribute = lookupAlcoholLevelMethodByCjsCode(value)?.description
-    } else if (type === LiteralType.Gender) {
-      literalAttribute = lookupGenderByCjsCode(value)?.description
-    } else if (type === LiteralType.CourtType) {
-      literalAttribute = lookupCourtTypeByCjsCode(value)?.description
-    } else if (type === LiteralType.Verdict) {
-      literalAttribute = lookupVerdictByCjsCode(value)?.description
-    } else if (type === LiteralType.ModeOfTrialReason) {
-      literalAttribute = lookupModeOfTrialReasonByCjsCode(value)?.description
-    } else if (type === LiteralType.OffenceCategory) {
-      literalAttribute = lookupOffenceCategoryByCjsCode(value)?.description
-    } else if (type === LiteralType.ActualOffenceDateCode) {
-      literalAttribute = lookupOffenceDateCodeByCjsCode(value)?.description
-    } else if (type === LiteralType.DefendantPresentAtHearing) {
-      literalAttribute = lookupDefendantPresentAtHearingByCjsCode(value)?.description
-    } else {
-      throw new Error("Invalid literal type specified")
-    }
+    literalAttribute = findLiteralAttribute(type, literalText)
   }
 
   if (!literalAttribute || literalText === undefined) {
@@ -500,7 +521,7 @@ const xmlnsTags = {
 }
 
 const mapPncExceptionsToXml = (exceptions: Exception[]): Br7PncErrorMessageString[] | undefined => {
-  const pncExceptions = exceptions.filter((exception) => "message" in exception) as PncException[]
+  const pncExceptions = exceptions.filter((exception) => "message" in exception) satisfies PncException[]
 
   if (pncExceptions.length > 0) {
     return pncExceptions.map(({ code, message }) => ({ "#text": message, "@_classification": code }))
