@@ -1,6 +1,7 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import { PncOperation } from "../../types/PncOperation"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+
+import { PncOperation } from "../../types/PncOperation"
 
 const hasCompletedDisposal = (pncUpdateDataset: PncUpdateDataset, offence: Offence) =>
   pncUpdateDataset.PncOperations.some(

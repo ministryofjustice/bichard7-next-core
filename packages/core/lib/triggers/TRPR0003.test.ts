@@ -1,6 +1,7 @@
-import generator from "./TRPR0003"
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+import generator from "./TRPR0003"
 
 const generateMockAho = (offenceResults: number[][]): AnnotatedHearingOutcome =>
   generateAhoFromOffenceList(

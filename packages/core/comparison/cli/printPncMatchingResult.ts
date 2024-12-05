@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
+
 import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
 import type { SkippedFile } from "./processRange"
 
@@ -42,7 +43,7 @@ export const printSingleSummary = (result: PncComparisonResultDetail): void => {
 }
 
 const printPncMatchingResult = (
-  result?: (PncComparisonResultDetail | SkippedFile) | (PncComparisonResultDetail | SkippedFile)[],
+  result?: (PncComparisonResultDetail | SkippedFile)[] | (PncComparisonResultDetail | SkippedFile),
   truncate = false
 ): boolean => {
   if (!result) {

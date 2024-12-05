@@ -1,6 +1,6 @@
 import type Exception from "../../types/Exception"
 
-const generateExceptionsNoteText = (exceptions: Exception[]): string | null => {
+const generateExceptionsNoteText = (exceptions: Exception[]): null | string => {
   if (exceptions.length === 0) {
     return null
   }

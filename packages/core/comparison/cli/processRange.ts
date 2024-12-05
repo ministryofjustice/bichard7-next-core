@@ -13,13 +13,13 @@ process.env.DYNAMO_URL = process.env.DYNAMO_URL ?? "https://dynamodb.eu-west-2.a
 process.env.DYNAMO_REGION = process.env.DYNAMO_REGION ?? "eu-west-2"
 process.env.COMPARISON_S3_BUCKET = process.env.COMPARISON_S3_BUCKET ?? "bichard-7-production-processing-validation"
 
-type ProcessFunction<T> = (contents: string, fileName: string, date: Date) => Promise<T | undefined>
-
 export type SkippedFile = {
   file: string
-  skipped: true
   intentionalDifference?: boolean
+  skipped: true
 }
+
+type ProcessFunction<T> = (contents: string, fileName: string, date: Date) => Promise<T | undefined>
 
 const processRange = async <T>(
   phase: number,
@@ -29,11 +29,11 @@ const processRange = async <T>(
   cache: boolean,
   list: boolean,
   processFunction: ProcessFunction<T>
-): Promise<(T | SkippedFile)[]> => {
+): Promise<(SkippedFile | T)[]> => {
   const dynamoConfig = createDynamoDbConfig(phase)
   const dynamo = new DynamoGateway(dynamoConfig)
   const filterValue = filter === "failure" ? false : filter == "success" ? true : undefined
-  const results: (T | SkippedFile)[] = []
+  const results: (SkippedFile | T)[] = []
   let count = 0
 
   for await (const batch of dynamo.getRange(start, end, filterValue, 1000, true)) {

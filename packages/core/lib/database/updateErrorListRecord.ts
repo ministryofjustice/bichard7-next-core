@@ -1,6 +1,8 @@
 import type { PostgresError, Sql } from "postgres"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type PhaseResult from "../../types/PhaseResult"
+
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"

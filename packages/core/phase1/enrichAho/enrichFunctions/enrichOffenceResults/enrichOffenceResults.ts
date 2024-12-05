@@ -1,5 +1,6 @@
-import { lookupResultCodeByCjsCode } from "../../../../lib/dataLookup"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
+
+import { lookupResultCodeByCjsCode } from "../../../../lib/dataLookup"
 import populateBailConditions from "./populateBailConditions"
 
 const urgencyThresholdInHours = 48

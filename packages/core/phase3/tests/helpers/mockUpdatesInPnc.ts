@@ -1,13 +1,15 @@
-import axios from "axios"
-import defaults from "../../../phase1/tests/helpers/defaults"
 import { isError } from "@moj-bichard7/common/types/Result"
-import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
-import getMessageType from "../../../phase1/lib/getMessageType"
-import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
-import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
+import axios from "axios"
 
-const addMock = async (matchRegex: string, response: string, count: number | null = null): Promise<string> => {
+import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+
+import getMessageType from "../../../phase1/lib/getMessageType"
+import defaults from "../../../phase1/tests/helpers/defaults"
+import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
+
+const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
   const data = { matchRegex, response, count }
   const resp = await axios.post(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`, data)
   if (resp.status < 200 || resp.status >= 300) {
@@ -24,7 +26,7 @@ const clearMocks = async (): Promise<void> => {
   }
 }
 
-const getOperations = (message: PncUpdateDataset | AnnotatedPncUpdateDataset): Operation[] => {
+const getOperations = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): Operation[] => {
   if ("PncOperations" in message) {
     return message.PncOperations
   }
@@ -32,7 +34,7 @@ const getOperations = (message: PncUpdateDataset | AnnotatedPncUpdateDataset): O
   return message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.PncOperations
 }
 
-const getPncErrorMessages = (message: PncUpdateDataset | AnnotatedPncUpdateDataset): string[] => {
+const getPncErrorMessages = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): string[] => {
   const exceptions =
     "PncOperations" in message ? message.Exceptions : message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions
 

@@ -1,14 +1,15 @@
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncQueryResult } from "../../types/PncQueryResult"
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+
 import { PncApiError } from "../../lib/PncGateway"
 
 export default class MockPncGateway implements PncGatewayInterface {
+  result: (PncApiError | PncQueryResult | undefined)[] = []
   updates: PncUpdateRequest[] = []
-  result: (PncQueryResult | PncApiError | undefined)[] = []
 
   constructor(
-    result: PncQueryResult | (PncQueryResult | PncApiError | undefined)[] | PncApiError | undefined,
+    result: (PncApiError | PncQueryResult | undefined)[] | PncApiError | PncQueryResult | undefined,
     public queryTime: Date | undefined = undefined
   ) {
     if (Array.isArray(result)) {
@@ -18,15 +19,11 @@ export default class MockPncGateway implements PncGatewayInterface {
     }
   }
 
-  private getNextResult() {
-    return this.result.shift()
-  }
-
-  query(_: string): Promise<PncQueryResult | PncApiError | undefined> {
+  query(_: string): Promise<PncApiError | PncQueryResult | undefined> {
     return Promise.resolve(this.getNextResult())
   }
 
-  update(request: PncUpdateRequest, _correlationId: string): Promise<void | PncApiError> {
+  update(request: PncUpdateRequest, _correlationId: string): Promise<PncApiError | void> {
     this.updates.push(request)
 
     const nextResult = this.getNextResult()
@@ -35,5 +32,9 @@ export default class MockPncGateway implements PncGatewayInterface {
     }
 
     return Promise.resolve()
+  }
+
+  private getNextResult() {
+    return this.result.shift()
   }
 }

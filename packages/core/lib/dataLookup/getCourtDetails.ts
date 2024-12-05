@@ -1,5 +1,6 @@
-import { lookupOrganisationUnitByCode } from "."
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+
+import { lookupOrganisationUnitByCode } from "."
 
 const topLevelMagistratesCourtCode = "B"
 const youthCourt = "YOUTH"
@@ -8,8 +9,8 @@ const mcAdult = "MCA"
 const crownCourt = "CC"
 
 type CourtDetailsResult = {
-  courtType: string
   courtName: string
+  courtType: string
 }
 
 const getCourtName = (ouData: OrganisationUnitCodes): string => {

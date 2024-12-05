@@ -2,14 +2,14 @@ import "../../phase1/tests/helpers/setEnvironmentVariables"
 
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import fs from "fs"
 import { MockServer } from "jest-mock-server"
 import "jest-xml-matcher"
 import postgres from "postgres"
+
 import { test1PncResponse, test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
 import persistPhase1 from "./persistPhase1"
-
-import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -119,7 +119,7 @@ describe("persistPhase1", () => {
 
     const [generalError] = result.logs!
     expect(generalError.log).toBe(
-      "S3 data schema parse error: Expected 'success' | 'exceptions' | 'ignored' for resultType"
+      "S3 data schema parse error: Expected 'exceptions' | 'ignored' | 'success' for resultType"
     )
   })
 })

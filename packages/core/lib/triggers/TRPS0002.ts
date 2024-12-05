@@ -1,6 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import Phase from "../../types/Phase"
+
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
+
+import Phase from "../../types/Phase"
 
 const triggerCode = TriggerCode.TRPS0002
 const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]

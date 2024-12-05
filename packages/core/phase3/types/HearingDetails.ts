@@ -1,13 +1,21 @@
 export enum HearingDetailsType {
-  ORDINARY = "ORDINARY",
   ADJUDICATION = "ADJUDICATION",
+  ARREST = "ARREST",
   DISPOSAL = "DISPOSAL",
-  ARREST = "ARREST"
+  ORDINARY = "ORDINARY"
+}
+
+export type Adjudication = {
+  hearingDate: string
+  numberOffencesTakenIntoAccount: string
+  pleaStatus: string
+  type: HearingDetailsType.ADJUDICATION
+  verdict: string
 }
 
 export type ArrestHearing = {
   committedOnBail: string
-  courtOffenceSequenceNumber: string | null
+  courtOffenceSequenceNumber: null | string
   locationOfOffence: string
   offenceEndDate: string
   offenceEndTime: string
@@ -19,20 +27,16 @@ export type ArrestHearing = {
   type: HearingDetailsType.ARREST
 }
 
+export type ArrestHearingAdjudicationAndDisposal = Adjudication | ArrestHearing | Disposal
+
 export type CourtHearing = {
   courtOffenceSequenceNumber: string
   offenceReason: string
   type: HearingDetailsType.ORDINARY
 }
 
-export type Adjudication = {
-  hearingDate: string
-  numberOffencesTakenIntoAccount: string
-  pleaStatus: string
-  type: HearingDetailsType.ADJUDICATION
-  verdict: string
-}
-
+export type CourtHearingAdjudicationAndDisposal = Adjudication | CourtHearing | Disposal
+export type CourtHearingAndDisposal = CourtHearing | Disposal
 export type Disposal = {
   disposalQualifiers: string
   disposalQuantity: string
@@ -40,7 +44,3 @@ export type Disposal = {
   disposalType: string
   type: HearingDetailsType.DISPOSAL
 }
-
-export type ArrestHearingAdjudicationAndDisposal = ArrestHearing | Adjudication | Disposal
-export type CourtHearingAdjudicationAndDisposal = CourtHearing | Adjudication | Disposal
-export type CourtHearingAndDisposal = CourtHearing | Disposal

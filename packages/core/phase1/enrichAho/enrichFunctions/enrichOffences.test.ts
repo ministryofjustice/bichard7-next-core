@@ -1,5 +1,6 @@
-import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+
+import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
 import enrichOffences from "../../enrichAho/enrichFunctions/enrichOffences"
 import generateMockAho from "../../tests/helpers/generateMockAho"
 

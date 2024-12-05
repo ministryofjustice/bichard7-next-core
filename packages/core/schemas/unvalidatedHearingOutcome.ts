@@ -1,4 +1,5 @@
 import { z } from "zod"
+
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
 import { exceptionSchema } from "./exception"

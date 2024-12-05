@@ -1,6 +1,7 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
+
 import isPncException from "./isPncException"
 
 const pathsMatch = (path1: ExceptionPath, path2: ExceptionPath): boolean =>

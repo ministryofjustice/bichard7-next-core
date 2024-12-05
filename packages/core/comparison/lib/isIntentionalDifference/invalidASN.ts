@@ -1,5 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Previously Bichard would not raise a HO100206 exception for an invalid ASN

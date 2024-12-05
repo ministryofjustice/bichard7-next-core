@@ -1,19 +1,20 @@
-import parsePncDate from "../../../lib/parsePncDate"
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../../types/PncQueryResult"
 
+import parsePncDate from "../../../lib/parsePncDate"
+
 export type CreateHoOffenceOptions = {
   actOrSource?: string
-  year?: string
-  reason?: string
-  startDate: string
-  endDate?: string
-  resultCodes?: string[]
-  offenceCategory?: string
-  sequenceNumber?: number
   courtCaseReferenceNumber?: string
+  endDate?: string
   manualSequenceNumber?: number
+  offenceCategory?: string
   offenceDateCode?: string
+  reason?: string
+  resultCodes?: string[]
+  sequenceNumber?: number
+  startDate: string
+  year?: string
 }
 
 export const createHOOffence = ({
@@ -91,11 +92,11 @@ export const createHOOffence = ({
 }
 
 export type CreatePNCCourtCaseOffenceOptions = {
-  offenceCode?: string
-  startDate: string
-  endDate?: string
   disposalCodes?: number[]
+  endDate?: string
+  offenceCode?: string
   sequenceNumber?: number
+  startDate: string
 }
 
 export const createPNCCourtCaseOffence = ({

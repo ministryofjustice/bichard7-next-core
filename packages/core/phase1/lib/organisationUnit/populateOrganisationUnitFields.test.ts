@@ -1,4 +1,5 @@
 import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
+
 import populateOrganisationUnitFields from "./populateOrganisationUnitFields"
 
 describe("populateOrganisationUnitFields", () => {

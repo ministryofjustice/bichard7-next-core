@@ -1,6 +1,8 @@
 import { excludedTriggerConfig as excludedTriggers } from "@moj-bichard7-developers/bichard7-next-data"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import TRPR0027 from "./TRPR0027"
 
 const generateMockAho = (forceCode: string, courtCode: string) =>

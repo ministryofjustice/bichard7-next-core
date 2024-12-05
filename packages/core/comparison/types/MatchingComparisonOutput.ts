@@ -1,42 +1,54 @@
 import type { OffenceReason } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 
-export type ResultSummary = {
-  CJSresultCode: number
-}
-
-export type OffenceSummary = {
-  CourtOffenceSequenceNumber: number
-  CriminalProsecutionReference: {
-    OffenceReason?: OffenceReason
-  }
-  Result: ResultSummary[]
-  ActualOffenceStartDate: { StartDate: Date }
-  ActualOffenceEndDate?: { EndDate: Date }
-}
+export type CourtResultMatchingSummary =
+  | {
+      caseReference?: null | string
+      offences: OffenceMatchingSummary[]
+    }
+  | {
+      exceptions: Exception[]
+    }
 
 export type CourtResultSummary = {
   AnnotatedHearingOutcome: {
     HearingOutcome: {
-      Hearing: {
-        DateOfHearing: Date
-      }
       Case: {
         HearingDefendant: {
           Offence: OffenceSummary[]
         }
       }
+      Hearing: {
+        DateOfHearing: Date
+      }
     }
   }
 }
 
-export type PncOffenceSummary = {
-  offence: {
-    sequenceNumber: number
-    cjsOffenceCode: string
-    startDate: Date
-    endDate?: Date
+export type MatchingComparisonOutput = {
+  courtResult: CourtResultSummary
+  exceptions: Exception[]
+  file: string
+  matching: CourtResultMatchingSummary | null
+  pnc?: PncSummary
+}
+
+export type OffenceMatchingSummary = {
+  addedByCourt?: boolean
+  courtCaseReference?: null | string
+  hoSequenceNumber: number
+  offenceCode?: string
+  pncSequenceNumber?: number
+}
+
+export type OffenceSummary = {
+  ActualOffenceEndDate?: { EndDate: Date }
+  ActualOffenceStartDate: { StartDate: Date }
+  CourtOffenceSequenceNumber: number
+  CriminalProsecutionReference: {
+    OffenceReason?: OffenceReason
   }
+  Result: ResultSummary[]
 }
 
 export type PncCourtCaseSummary = {
@@ -44,9 +56,18 @@ export type PncCourtCaseSummary = {
   offences: PncOffenceSummary[]
 }
 
+export type PncOffenceSummary = {
+  offence: {
+    cjsOffenceCode: string
+    endDate?: Date
+    sequenceNumber: number
+    startDate: Date
+  }
+}
+
 export type PncPenaltyCaseSummary = {
-  penaltyCaseReference: string
   offences: PncOffenceSummary[]
+  penaltyCaseReference: string
 }
 
 export type PncSummary = {
@@ -54,27 +75,6 @@ export type PncSummary = {
   penaltyCases?: PncPenaltyCaseSummary[]
 }
 
-export type OffenceMatchingSummary = {
-  hoSequenceNumber: number
-  offenceCode?: string
-  courtCaseReference?: string | null
-  addedByCourt?: boolean
-  pncSequenceNumber?: number
-}
-
-export type CourtResultMatchingSummary =
-  | {
-      caseReference?: string | null
-      offences: OffenceMatchingSummary[]
-    }
-  | {
-      exceptions: Exception[]
-    }
-
-export type MatchingComparisonOutput = {
-  courtResult: CourtResultSummary
-  pnc?: PncSummary
-  matching: CourtResultMatchingSummary | null
-  exceptions: Exception[]
-  file: string
+export type ResultSummary = {
+  CJSresultCode: number
 }

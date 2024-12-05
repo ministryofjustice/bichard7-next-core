@@ -1,4 +1,3 @@
-import { toISODate, toPNCDate } from "../../../lib/dates"
 import type {
   Adj,
   AhoXml,
@@ -34,8 +33,12 @@ import type {
   Result,
   Urgent
 } from "../../../types/AnnotatedHearingOutcome"
+import type Exception from "../../../types/Exception"
+import type { PncException } from "../../../types/Exception"
 import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+
+import { toISODate, toPNCDate } from "../../../lib/dates"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -52,8 +55,6 @@ import generateXml from "../generateXml"
 import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"
 import addNullElementsForExceptions from "./addNullElementsForExceptions"
-import type { PncException } from "../../../types/Exception"
-import type Exception from "../../../types/Exception"
 
 enum LiteralType {
   ActualOffenceDateCode,
@@ -71,32 +72,32 @@ enum LiteralType {
 
 const findLiteralType = (type: LiteralType, literalText: string): string | undefined => {
   switch (type) {
-    case LiteralType.OffenceRemandStatus:
-      return lookupRemandStatusByCjsCode(literalText)?.description
-    case LiteralType.PleaStatus:
-      return lookupPleaStatusByCjsCode(literalText)?.description
+    case LiteralType.ActualOffenceDateCode:
+      return lookupOffenceDateCodeByCjsCode(literalText)?.description
     case LiteralType.AlcoholLevelMethod:
       return lookupAlcoholLevelMethodByCjsCode(literalText)?.description
-    case LiteralType.Gender:
-      return lookupGenderByCjsCode(literalText)?.description
     case LiteralType.CourtType:
       return lookupCourtTypeByCjsCode(literalText)?.description
-    case LiteralType.Verdict:
-      return lookupVerdictByCjsCode(literalText)?.description
+    case LiteralType.DefendantPresentAtHearing:
+      return lookupDefendantPresentAtHearingByCjsCode(literalText)?.description
+    case LiteralType.Gender:
+      return lookupGenderByCjsCode(literalText)?.description
     case LiteralType.ModeOfTrialReason:
       return lookupModeOfTrialReasonByCjsCode(literalText)?.description
     case LiteralType.OffenceCategory:
       return lookupOffenceCategoryByCjsCode(literalText)?.description
-    case LiteralType.ActualOffenceDateCode:
-      return lookupOffenceDateCodeByCjsCode(literalText)?.description
-    case LiteralType.DefendantPresentAtHearing:
-      return lookupDefendantPresentAtHearingByCjsCode(literalText)?.description
+    case LiteralType.OffenceRemandStatus:
+      return lookupRemandStatusByCjsCode(literalText)?.description
+    case LiteralType.PleaStatus:
+      return lookupPleaStatusByCjsCode(literalText)?.description
+    case LiteralType.Verdict:
+      return lookupVerdictByCjsCode(literalText)?.description
     default:
       throw new Error("Invalid literal type specified")
   }
 }
 
-const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
+const literal = (value: boolean | string, type: LiteralType): Br7LiteralTextString => {
   let literalText: string | undefined
   let literalAttribute: string | undefined
   if (value === undefined) {
@@ -120,7 +121,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   return { "#text": literalText, "@_Literal": literalAttribute }
 }
 
-const optionalLiteral = (value: string | boolean | undefined, type: LiteralType): Br7LiteralTextString | undefined => {
+const optionalLiteral = (value: boolean | string | undefined, type: LiteralType): Br7LiteralTextString | undefined => {
   if (value === undefined) {
     return undefined
   }
@@ -129,7 +130,7 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 }
 
 const text = (t: string): Br7TextString => ({ "#text": t })
-const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
+const nullText = (t: null | string): Br7TextString => ({ "#text": t ?? "" })
 const optionalText = (t: string | undefined): Br7TextString | undefined =>
   t !== undefined ? { "#text": t } : undefined
 const optionalFormatText = (t: Date | string | undefined): Br7TextString | undefined => {
@@ -184,7 +185,7 @@ const mapNumberSpecifiedInResult = (
 }
 
 const mapNextResultSourceOrganisation = (
-  ou: OrganisationUnitCodes | undefined | null
+  ou: null | OrganisationUnitCodes | undefined
 ): Br7OrganisationUnit | undefined => {
   if (ou === null) {
     return mapAhoOrgUnitToXml({
@@ -259,15 +260,6 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
 
   if (offenceReason.__type === "NationalOffenceReason") {
     switch (offenceReason.OffenceCode.__type) {
-      case "NonMatchingOffenceCode":
-        return {
-          "ds:OffenceCode": {
-            "ds:ActOrSource": text(offenceReason.OffenceCode.ActOrSource),
-            "ds:Year": optionalText(offenceReason.OffenceCode.Year),
-            "ds:Reason": text(offenceReason.OffenceCode.Reason),
-            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
-          }
-        }
       case "CommonLawOffenceCode":
         return {
           "ds:OffenceCode": {
@@ -279,6 +271,15 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
       case "IndictmentOffenceCode":
         return {
           "ds:OffenceCode": {
+            "ds:Reason": text(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
+          }
+        }
+      case "NonMatchingOffenceCode":
+        return {
+          "ds:OffenceCode": {
+            "ds:ActOrSource": text(offenceReason.OffenceCode.ActOrSource),
+            "ds:Year": optionalText(offenceReason.OffenceCode.Year),
             "ds:Reason": text(offenceReason.OffenceCode.Reason),
             "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
           }

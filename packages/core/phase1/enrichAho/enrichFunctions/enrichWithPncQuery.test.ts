@@ -1,20 +1,22 @@
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import MockDate from "mockdate"
-import MockPncGateway from "../../../comparison/lib/MockPncGateway"
-import CoreAuditLogger from "../../../lib/CoreAuditLogger"
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
-import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
+
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../../../types/AuditLogger"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
+import type { PncQueryResult } from "../../../types/PncQueryResult"
+
+import MockPncGateway from "../../../comparison/lib/MockPncGateway"
+import CoreAuditLogger from "../../../lib/CoreAuditLogger"
+import errorPaths from "../../../lib/exceptions/errorPaths"
+import parseSpiResult from "../../../lib/parse/parseSpiResult"
+import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
+import { PncApiError } from "../../../lib/PncGateway"
 import generateMessage from "../../tests/helpers/generateMessage"
 import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQueryResult"
 import enrichWithPncQuery from "./enrichWithPncQuery"
-import { PncApiError } from "../../../lib/PncGateway"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "../../../lib/exceptions/errorPaths"
-import type { PncQueryResult } from "../../../types/PncQueryResult"
 
 describe("enrichWithQuery()", () => {
   let incomingMessage: string

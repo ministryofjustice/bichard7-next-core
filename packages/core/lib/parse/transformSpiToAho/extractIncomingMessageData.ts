@@ -2,8 +2,10 @@ import { type Result } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { XMLParser } from "fast-xml-parser"
 import { fromZodError } from "zod-validation-error"
-import { incomingMessageSchema } from "../../../schemas/incomingMessage"
+
 import type IncomingMessage from "../../../types/IncomingMessage"
+
+import { incomingMessageSchema } from "../../../schemas/incomingMessage"
 
 const parserDefaults = {
   ignoreAttributes: true,

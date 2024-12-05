@@ -1,5 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 const ho100310AndHo100332Equivalent = ({ expected, actual, phase }: ComparisonData) =>

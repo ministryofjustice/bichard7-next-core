@@ -1,24 +1,26 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/types/TriggerCode"
+
 import fs from "fs"
 import orderBy from "lodash.orderby"
 import path from "path"
+
 import type { Trigger } from "../../types/Trigger"
+
+type ComparisonFile = {
+  annotatedHearingOutcome: string
+  incomingMessage: string
+  triggers: ComparisonTrigger[]
+}
 
 type ComparisonTrigger = {
   code: TriggerCode
   identifier: string
 }
 
-type ComparisonFile = {
-  incomingMessage: string
-  annotatedHearingOutcome: string
-  triggers: ComparisonTrigger[]
-}
-
 type ImportedComparison = {
+  annotatedHearingOutcome: string
   file: string
   incomingMessage: string
-  annotatedHearingOutcome: string
   triggers: Trigger[]
 }
 

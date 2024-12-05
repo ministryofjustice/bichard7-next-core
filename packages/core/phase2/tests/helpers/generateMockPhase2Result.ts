@@ -1,7 +1,9 @@
 import { randomUUID } from "crypto"
 import merge from "lodash.merge"
+
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type Phase2Result from "../../types/Phase2Result"
+
 import { Phase2ResultType } from "../../types/Phase2Result"
 import generateFakePncUpdateDataset from "../fixtures/helpers/generateFakePncUpdateDataset"
 
