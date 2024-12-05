@@ -504,7 +504,7 @@ const xmlnsTags = {
 }
 
 const mapPncExceptionsToXml = (exceptions: Exception[]): Br7PncErrorMessageString[] | undefined => {
-  const pncExceptions = exceptions.filter((exception) => "message" in exception) as PncException[]
+  const pncExceptions = exceptions.filter((exception) => "message" in exception) satisfies PncException[]
 
   if (pncExceptions.length > 0) {
     return pncExceptions.map(({ code, message }) => ({ "#text": message, "@_classification": code }))
