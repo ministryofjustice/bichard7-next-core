@@ -20,7 +20,7 @@
     "test:chunk": "bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC' and @ExcludedOnNextUI",
     "test:file": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --no-strict --exit --format @cucumber/pretty-formatter",
     "test:must": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@Must' features",
-    "test:nextUI:file": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --no-strict --exit --tags '@NextUI'",
+    "test:nextUI:file": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --no-strict --exit --format @cucumber/pretty-formatter --tags '@NextUI'",
     "test:nextUI:must": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@Must and @NextUI' features",
     "test:nextUI:preprod": "SKIP_PNC_VALIDATION=true NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@PreProdTest and @NextUI and not @Excluded' features",
     "test:nextUI": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@NextUI'",
