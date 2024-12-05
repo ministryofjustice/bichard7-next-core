@@ -1,15 +1,16 @@
-import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import ResultClass from "../../../types/ResultClass"
 import type { ResultClassHandlerParams } from "../../lib/generateOperations/resultClassHandlers/ResultClassHandler"
 
+import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
+import ResultClass from "../../../types/ResultClass"
+
 type Params = {
-  fixedPenalty: boolean
-  resubmitted: boolean
   areAllResultsOnPnc: boolean
+  fixedPenalty: boolean
   offence: Offence
-  result: Result
   offenceIndex: number
+  resubmitted: boolean
+  result: Result
   resultIndex: number
 }
 

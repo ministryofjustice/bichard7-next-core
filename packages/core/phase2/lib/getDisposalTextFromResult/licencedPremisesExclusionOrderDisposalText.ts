@@ -2,7 +2,7 @@
 const regex = /DEFENDANT\s+EXCLUDED\s+FROM(?<location1>[\s\S]*?)FOR\s+A\s+PERIOD\s+OF/g
 
 const licencedPremisesExclusionOrderDisposalText = (resultVariableText: string): string => {
-  let match: RegExpExecArray | null
+  let match: null | RegExpExecArray
   const locations: string[] = []
 
   while ((match = regex.exec(resultVariableText)) !== null) {

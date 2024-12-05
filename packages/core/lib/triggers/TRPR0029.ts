@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
+
 import getOffenceFullCode from "../getOffenceFullCode"
 import isCaseRecordable from "../isCaseRecordable"
 

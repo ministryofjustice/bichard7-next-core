@@ -1,6 +1,7 @@
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
 import TRPS0004 from "./TRPS0004"
@@ -67,7 +68,7 @@ describe("TRPS0004", () => {
     expect(result).toEqual([])
   })
 
-  it("should return a trigger if NEWREM operation is present", () => {
+  it("should not return a trigger if one NEWREM operation is present", () => {
     const options = { phase: Phase.PNC_UPDATE }
     const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
       {
@@ -84,6 +85,36 @@ describe("TRPS0004", () => {
       }
     ] as Offence[])
     generatedHearingOutcome.PncOperations = [
+      {
+        status: "Completed",
+        code: PncOperation.REMAND
+      }
+    ]
+    const result = TRPS0004(generatedHearingOutcome, options)
+    expect(result).toEqual([])
+  })
+
+  it("should return a trigger more than one NEWREM operation is present", () => {
+    const options = { phase: Phase.PNC_UPDATE }
+    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
+      {
+        Result: [
+          {
+            CJSresultCode: 9999
+          }
+        ],
+        CriminalProsecutionReference: {
+          OffenceReason: {
+            __type: "NationalOffenceReason"
+          }
+        }
+      }
+    ] as Offence[])
+    generatedHearingOutcome.PncOperations = [
+      {
+        status: "Completed",
+        code: PncOperation.REMAND
+      },
       {
         status: "Completed",
         code: PncOperation.REMAND

@@ -1,7 +1,9 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import { isError } from "@moj-bichard7/common/types/Result"
 import type { Client } from "stompit"
 import type Subscription from "stompit/lib/client/Subscription"
+
+import { isError } from "@moj-bichard7/common/types/Result"
+
 import MqGateway from "./MqGateway"
 
 const readMessage = (message: Client.Message): Promise<string> => {
@@ -18,7 +20,7 @@ const readMessage = (message: Client.Message): Promise<string> => {
   })
 }
 
-const getMessage = (client: Client, queueName: string, timeoutMs: number): Promise<string | null> =>
+const getMessage = (client: Client, queueName: string, timeoutMs: number): Promise<null | string> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line prefer-const
     let subscription: Subscription
@@ -52,7 +54,7 @@ const getMessage = (client: Client, queueName: string, timeoutMs: number): Promi
   })
 
 export default class TestMqGateway extends MqGateway {
-  async getMessage(queueName: string, timeout = 500): PromiseResult<string | null> {
+  async getMessage(queueName: string, timeout = 500): PromiseResult<null | string> {
     const client = await this.connectIfRequired()
 
     if (isError(client)) {

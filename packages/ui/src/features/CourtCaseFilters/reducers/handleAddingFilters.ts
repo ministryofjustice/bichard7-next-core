@@ -41,6 +41,10 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       newState.caseStateFilter.value = action.value
       newState.caseStateFilter.label = caseStateLabels[action.value ?? ""]
       newState.caseStateFilter.state = "Selected"
+
+      newState.resolvedByUsernameFilter.value = undefined
+      newState.resolvedByUsernameFilter.label = undefined
+      newState.resolvedByUsernameFilter.state = undefined
       break
     }
 
@@ -48,6 +52,15 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       newState.lockedStateFilter.value = action.value
       newState.lockedStateFilter.label = lockedStateShortLabels[action.value]
       newState.lockedStateFilter.state = "Selected"
+      break
+    }
+
+    case "resolvedByUsername": {
+      newState.caseStateFilter.value = "Resolved"
+      newState.caseStateFilter.state = "Selected"
+
+      newState.resolvedByUsernameFilter.value = action.value
+      newState.resolvedByUsernameFilter.state = "Selected"
       break
     }
 
@@ -108,7 +121,7 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
 
     case "triggerIndeterminate": {
       const values = Array.isArray(action.value) ? action.value : [action.value]
-      values.map((reason: string) => {
+      values.forEach((reason: string) => {
         newState.reasonCodes.push({
           value: reason,
           label: reason,

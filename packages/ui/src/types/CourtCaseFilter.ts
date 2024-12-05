@@ -14,6 +14,7 @@ export type FilterAction =
   | { method: FilterMethod; type: "caseState"; value: CaseState }
   | { method: FilterMethodCheckbox; type: "triggerIndeterminate"; value: string | string[] }
   | { method: FilterMethodReasonCheckbox; type: "reasonCodesCheckbox"; value: string }
+  | { method: FilterMethod; type: "resolvedByUsername"; value: string }
   | { method: "add"; type: "caseResolvedFrom"; value: string }
   | { method: "add"; type: "caseResolvedTo"; value: string }
   | { method: "remove"; type: "caseResolvedDateRange"; value: string }
@@ -30,6 +31,7 @@ export type FilterType =
   | "lockedState"
   | "reason"
   | "caseState"
+  | "resolvedByUsername"
   | "caseResolvedDateRange"
 
 export type FilterMethod = "add" | "remove"
@@ -83,6 +85,11 @@ export type Filter = {
   reasonFilter: {
     value?: Reason
     state?: FilterState
+  }
+  resolvedByUsernameFilter: {
+    value?: string
+    state?: FilterState
+    label?: string
   }
   resolvedFrom: {
     value?: string

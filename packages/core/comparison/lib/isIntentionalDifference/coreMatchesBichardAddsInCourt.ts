@@ -1,5 +1,6 @@
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 const coreMatchesBichardAddsInCourt = ({ expected, actual, incomingMessage, phase }: ComparisonData) =>

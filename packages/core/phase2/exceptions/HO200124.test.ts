@@ -1,12 +1,14 @@
-import HO200124 from "./HO200124"
-import errorPaths from "../../lib/exceptions/errorPaths"
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import ResultClass from "../../types/ResultClass"
+
+import errorPaths from "../../lib/exceptions/errorPaths"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
+import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import HO200124 from "./HO200124"
 
 jest.mock("../lib/hasUnmatchedPncOffences")
 jest.mock("../lib/areAllResultsOnPnc")

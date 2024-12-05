@@ -15,6 +15,7 @@ const exclusionRequirementsDisposalText = (resultVariableText: string): string =
       const nestedMatches = match.groups.location.matchAll(nestedREGEX)
       for (const nestedMatch of nestedMatches) {
         if (nestedMatch?.groups?.nestedLocation) {
+          // TODO: Once we've stopped doing comparisons, we can revert back to remove multiple spaces (see PR https://github.com/ministryofjustice/bichard7-next-core/pull/842).
           locations.push(nestedMatch.groups.nestedLocation.replace(/[\r\n\t\f]+/g, " ").trim())
           nestedMatchFound = true
         }

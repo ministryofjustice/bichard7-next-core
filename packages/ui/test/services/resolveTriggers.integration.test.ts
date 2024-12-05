@@ -1,5 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { differenceInMinutes } from "date-fns"
+import Note from "services/entities/Note"
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
@@ -73,6 +74,7 @@ describe("resolveTriggers", () => {
   })
 
   beforeEach(async () => {
+    await deleteFromEntity(Note)
     await deleteFromEntity(CourtCase)
     await deleteFromDynamoTable("auditLogTable", "messageId")
     await deleteFromDynamoTable("auditLogEventsTable", "_id")
@@ -626,6 +628,40 @@ describe("resolveTriggers", () => {
       expect(courtCaseAfterResolvingTrigger.triggerResolvedTimestamp).not.toBeNull()
       expect(courtCaseAfterResolvingTrigger.triggerCount).toBe(1)
       expect(courtCaseAfterResolvingTrigger.errorCount).toBe(2)
+    })
+
+    it("Should create a note", async () => {
+      const [courtCase] = await insertCourtCasesWithFields([
+        {
+          errorLockedByUsername: resolverUsername,
+          triggerLockedByUsername: resolverUsername,
+          orgForPoliceFilter: visibleForce
+        }
+      ])
+
+      const trigger: TestTrigger = {
+        triggerId: 0,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-12T10:22:34.000Z")
+      }
+      await insertTriggers(0, [trigger])
+
+      await insertException(courtCase.errorId, "HO100300", "HO100300", "Resolved", user.username)
+
+      const resolveTriggersResult = await resolveTriggers(
+        dataSource,
+        [trigger.triggerId],
+        courtCase.errorId,
+        user
+      ).catch((error) => error)
+      expect(isError(resolveTriggersResult)).toBeFalsy()
+
+      const courtCaseAfterResolvingTrigger = (await getCourtCaseByOrganisationUnit(dataSource, 0, user)) as CourtCase
+      expect(courtCaseAfterResolvingTrigger.notes).not.toBeNull()
+
+      const note = courtCaseAfterResolvingTrigger.notes[0]
+      expect(note.noteText).toBe("TriggerHandler: Portal Action: Resolved Trigger. Code: PR01")
     })
   })
 })

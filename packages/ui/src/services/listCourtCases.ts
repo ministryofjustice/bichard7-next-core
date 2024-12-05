@@ -1,12 +1,12 @@
-import type { DataSource } from "typeorm"
-import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThan, MoreThanOrEqual, Not } from "typeorm"
-import type { CaseListQueryParams } from "types/CaseListQueryParams"
+import Permission from "@moj-bichard7/common/types/Permission"
+import type { DataSource, SelectQueryBuilder } from "typeorm"
+import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from "typeorm"
+import type { CaseListQueryParams, CaseState, DateRange, QueryOrder } from "types/CaseListQueryParams"
 import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import Permission from "@moj-bichard7/common/types/Permission"
-
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
+import { formatName } from "../helpers/formatName"
 import CourtCase from "./entities/CourtCase"
 import getLongTriggerCode from "./entities/transformers/getLongTriggerCode"
 import type User from "./entities/User"
@@ -14,38 +14,26 @@ import filterByReasonAndResolutionStatus from "./filters/filterByReasonAndResolu
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
 import QueryColumns from "./QueryColumns"
-import { formatName } from "../helpers/formatName"
 
-const listCourtCases = async (
+const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
+  excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]
+
+const baseQuery = (
   connection: DataSource,
-  {
-    page,
-    maxPageItems,
-    orderBy,
-    order,
-    defendantName,
-    courtName,
-    ptiurn,
-    reason,
-    courtDateRange,
-    lockedState,
-    caseState,
-    allocatedToUserName,
-    reasonCodes,
-    resolvedByUsername,
-    resolvedDateRange,
-    asn
-  }: CaseListQueryParams,
+  selectColumns: string[],
   user: User,
-  selectColumns: string[] = QueryColumns.CaseListQuery
-): PromiseResult<ListCourtCaseResult> => {
-  const pageNumValidated = (page ? page : 1) - 1 // -1 because the db index starts at 0
-  const maxPageItemsValidated = maxPageItems ? maxPageItems : 25
+  caseState: CaseState,
+  page: number,
+  maxPageItems: number
+): SelectQueryBuilder<CourtCase> => {
+  const pageNumValidated = page
+  const maxPageItemsValidated = maxPageItems
   const repository = connection.getRepository(CourtCase)
+
   let query = repository.createQueryBuilder("courtCase").select(selectColumns)
   query = courtCasesByOrganisationUnitQuery(query, user)
 
-  leftJoinAndSelectTriggersQuery(query, user.excludedTriggers, caseState ?? "Unresolved")
+  leftJoinAndSelectTriggersQuery(query, user.excludedTriggers, caseState)
     .leftJoinAndSelect("courtCase.notes", "note")
     .leftJoin("courtCase.errorLockedByUser", "errorLockedByUser")
     .addSelect(["errorLockedByUser.forenames", "errorLockedByUser.surname"])
@@ -54,6 +42,14 @@ const listCourtCases = async (
     .skip(pageNumValidated * maxPageItemsValidated)
     .take(maxPageItemsValidated)
 
+  return query
+}
+
+const caseSortOrder = (
+  query: SelectQueryBuilder<CourtCase>,
+  order?: QueryOrder,
+  orderBy?: string
+): SelectQueryBuilder<CourtCase> => {
   const sortOrder = order === "desc" ? "DESC" : "ASC"
 
   // Primary sorts
@@ -69,6 +65,23 @@ const listCourtCases = async (
     query.addOrderBy("courtCase.ptiurn")
   }
 
+  return query
+}
+
+interface Filters {
+  defendantName?: string
+  courtName?: string
+  ptiurn?: string
+  asn?: string
+  reasonCodes?: string[]
+  courtDateRange?: DateRange | DateRange[]
+  resolvedByUsername?: string
+}
+
+const filters = (
+  query: SelectQueryBuilder<CourtCase>,
+  { defendantName, courtName, ptiurn, asn, reasonCodes, courtDateRange, resolvedByUsername }: Filters
+): SelectQueryBuilder<CourtCase> => {
   // Filters
   if (defendantName) {
     const splitDefendantName = formatName(defendantName)
@@ -160,9 +173,14 @@ const listCourtCases = async (
     )
   }
 
-  // Existing filters
-  filterByReasonAndResolutionStatus(query, user, reason, reasonCodes, caseState, resolvedByUsername)
+  return query
+}
 
+const resolvedCasesDateRange = (
+  query: SelectQueryBuilder<CourtCase>,
+  caseState: CaseState,
+  resolvedDateRange?: DateRange
+): SelectQueryBuilder<CourtCase> => {
   if (caseState === "Resolved" && resolvedDateRange?.from) {
     query.andWhere({ resolutionTimestamp: MoreThanOrEqual(resolvedDateRange?.from) })
   }
@@ -170,6 +188,79 @@ const listCourtCases = async (
   if (caseState === "Resolved" && resolvedDateRange?.to) {
     query.andWhere({ resolutionTimestamp: LessThanOrEqual(resolvedDateRange?.to) })
   }
+
+  return query
+}
+
+const exceptionsAndTriggers = (
+  query: SelectQueryBuilder<CourtCase>,
+  caseState: CaseState,
+  user: User
+): SelectQueryBuilder<CourtCase> => {
+  const exceptionsAndTriggerHandlersQuery = []
+  const exceptionsAndTriggerHandlersParams: Record<string, string | string[]> = {
+    caseStatus: caseState === "Resolved" ? ["2"] : ["1", "3"]
+  }
+  if (user.hasAccessTo[Permission.Exceptions]) {
+    exceptionsAndTriggerHandlersQuery.push("(courtCase.errorCount > 0 and courtCase.errorStatus IN (:...caseStatus))")
+  }
+
+  if (user.hasAccessTo[Permission.Triggers]) {
+    exceptionsAndTriggerHandlersQuery.push(
+      "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status IN (:...caseStatus) AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0"
+    )
+    exceptionsAndTriggerHandlersParams["excludedTriggers"] = getExcludedTriggers(user.excludedTriggers)
+  }
+
+  if (exceptionsAndTriggerHandlersQuery.length > 0) {
+    query.andWhere(`(${exceptionsAndTriggerHandlersQuery.join(" OR ")})`, exceptionsAndTriggerHandlersParams)
+  } else {
+    query.andWhere("false")
+  }
+
+  return query
+}
+
+const listCourtCases = async (
+  connection: DataSource,
+  {
+    page,
+    maxPageItems,
+    orderBy,
+    order,
+    defendantName,
+    courtName,
+    ptiurn,
+    reason,
+    courtDateRange,
+    lockedState,
+    caseState,
+    allocatedToUserName,
+    reasonCodes,
+    resolvedByUsername,
+    resolvedDateRange,
+    asn
+  }: CaseListQueryParams,
+  user: User,
+  selectColumns: string[] = QueryColumns.CaseListQuery
+): PromiseResult<ListCourtCaseResult> => {
+  let query: SelectQueryBuilder<CourtCase> = baseQuery(
+    connection,
+    selectColumns,
+    user,
+    caseState ?? "Unresolved",
+    (page ?? 1) - 1,
+    maxPageItems ?? 25
+  )
+
+  query = caseSortOrder(query, order, orderBy)
+
+  query = filters(query, { defendantName, courtName, ptiurn, asn, reasonCodes, courtDateRange, resolvedByUsername })
+
+  // Existing filters
+  query = filterByReasonAndResolutionStatus(query, user, reason, reasonCodes, caseState, resolvedByUsername)
+
+  query = resolvedCasesDateRange(query, caseState ?? "Unresolved", resolvedDateRange)
 
   if (allocatedToUserName) {
     query.andWhere(
@@ -207,21 +298,7 @@ const listCourtCases = async (
     }
   }
 
-  if (!user.hasAccessTo[Permission.Triggers] && !user.hasAccessTo[Permission.Exceptions]) {
-    query.andWhere("false")
-  }
-
-  if (!user.hasAccessTo[Permission.Triggers]) {
-    query.andWhere({
-      errorCount: MoreThan(0)
-    })
-  }
-
-  if (!user.hasAccessTo[Permission.Exceptions]) {
-    query.andWhere({
-      triggerCount: MoreThan(0)
-    })
-  }
+  query = exceptionsAndTriggers(query, caseState, user)
 
   const result = await query.getManyAndCount().catch((error: Error) => error)
   return isError(result)

@@ -6,6 +6,7 @@ NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
 SKIP_DOWNLOADS=${SKIP_DOWNLOADS:-"false"}
 ENABLE_CORE_PHASE1=${ENABLE_CORE_PHASE1:-"false"}
+BUILD_WORKER=${BUILD_WORKER:-"false"}
 
 IMAGES=(beanconnect pncemulator)
 SERVICES=$@
@@ -48,7 +49,10 @@ fi
 # should run by default
 if [ "$LEGACY" == "false" ] && [ "$NOWORKER" == "false" ]; then
     DOCKER_COMPOSE="ENABLE_CORE_PHASE1=$ENABLE_CORE_PHASE1 ${DOCKER_COMPOSE} -f environment/docker-compose-worker.yml"
-    eval "$DOCKER_COMPOSE build worker"
+    
+    if [ "$BUILD_WORKER" == "true" ]; then
+        eval "$DOCKER_COMPOSE build worker"
+    fi
 fi
 
 
@@ -66,8 +70,28 @@ for i in $(seq 1 $ATTEMPTS); do
 done;
 
 if [ "$LEGACY" == "false" ] && [ $SUCCESS ]; then
+    SUCCESS_CONDUCTOR="false"
+
     for i in $(seq 1 $ATTEMPTS); do
-        echo "Setting up conductor"
-        npm run -w packages/conductor setup && break || sleep 5
+        if [ "$SUCCESS_CONDUCTOR" == "false" ]; then
+            echo ""
+            echo "Setting up conductor"
+
+            npm run -w packages/conductor setup
+
+            if [ $? -eq 0 ]; then
+                echo ""
+                echo "Success"
+                SUCCESS_CONDUCTOR="true"
+            fi
+
+            sleep 5
+        fi
     done;
+
+    if [ "$SUCCESS_CONDUCTOR" == "false" ]; then
+        echo ""
+        echo "Failed to setup Conductor"
+        exit 1
+    fi
 fi

@@ -59,7 +59,11 @@ const filterIfUnresolved = (
     )
   } else if (canSeeTriggersAndException(user, reason)) {
     if (reasonCodes && reasonCodesAreExceptionsOnly(reasonCodes)) {
-      query.andWhere({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.where({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
+        })
+      )
     } else if (reasonCodes && reasonCodesAreTriggersOnly(reasonCodes)) {
       query.andWhere({ triggerStatus: "Unresolved" })
     } else {

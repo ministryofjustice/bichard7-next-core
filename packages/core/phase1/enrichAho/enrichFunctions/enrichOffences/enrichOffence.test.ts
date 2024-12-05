@@ -1,5 +1,7 @@
-import type { OffenceCode } from "bichard7-next-data-latest/types/types"
+import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+
 import lookupOffenceCode from "../../../lib/offence/lookupOffenceCode"
 import enrichOffence from "./enrichOffence"
 

@@ -1,15 +1,17 @@
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import ResultClass from "../../types/ResultClass"
-import checkResultClassExceptions from "./checkResultClassExceptions"
-import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+import errorPaths from "../../lib/exceptions/errorPaths"
+import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
+import ResultClass from "../../types/ResultClass"
+import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
+import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import checkResultClassExceptions from "./checkResultClassExceptions"
+
+const HO200101: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const resubmitted = isPncUpdateDataset(aho)
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
@@ -33,4 +35,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200101

@@ -1,6 +1,7 @@
-import HO200117 from "./HO200117"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import HO200117 from "./HO200117"
 
 describe("HO200117", () => {
   describe("when national offence with more than 10 recordable results", () => {

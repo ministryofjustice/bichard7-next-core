@@ -1,13 +1,16 @@
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import Phase from "../../types/Phase"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
+import Phase from "../../types/Phase"
+
 const triggerCode = TriggerCode.TRPS0008
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
 const triggerResultCode = 3105
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
-  if (options?.phase !== Phase.PNC_UPDATE) {
+  if (!phases.includes(options?.phase)) {
     return []
   }
 

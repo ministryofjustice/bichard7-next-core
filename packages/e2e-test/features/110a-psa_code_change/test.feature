@@ -1,4 +1,4 @@
-Feature: {110} BR7 R5.0-RCD385-PSA Code Change - part 2
+Feature: {110b} BR7 R5.0-RCD385-PSA Code Change - part 2
 
 			"""
 			{110} BR7 R5.0-RCD385-PSA Code Change

@@ -1,8 +1,10 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type Exception from "../../types/Exception"
-import ResultClass from "../../types/ResultClass"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+
+import errorPaths from "../../lib/exceptions/errorPaths"
+import ResultClass from "../../types/ResultClass"
 
 const HO100324: ExceptionGenerator = (hearingOutcome) => {
   const generatedExceptions: Exception[] = []

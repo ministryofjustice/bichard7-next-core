@@ -1,43 +1,44 @@
 import type { XML } from "@moj-bichard7/common/types/Xml"
+
 import type { Br7AnnotatedHearingOutcome, Br7OrganisationUnit, Br7TextString } from "../../types/AhoXml"
 
 export interface Br7Operation {
   operationCode:
     | {
-        SENDEF:
-          | {
-              courtCaseReference: Br7TextString
-            }
-          | Br7TextString
-      }
-    | {
-        SUBVAR:
-          | {
-              courtCaseReference: Br7TextString
-            }
-          | Br7TextString
-      }
-    | {
-        PENHRG:
-          | {
-              courtCaseReference: Br7TextString
-            }
-          | Br7TextString
-      }
-    | {
         DISARR:
+          | Br7TextString
           | {
               courtCaseReference: Br7TextString
             }
-          | Br7TextString
       }
     | {
         NEWREM:
+          | Br7TextString
           | {
               nextHearingDate: Br7TextString
               nextHearingLocation: Br7OrganisationUnit
             }
+      }
+    | {
+        PENHRG:
           | Br7TextString
+          | {
+              courtCaseReference: Br7TextString
+            }
+      }
+    | {
+        SENDEF:
+          | Br7TextString
+          | {
+              courtCaseReference: Br7TextString
+            }
+      }
+    | {
+        SUBVAR:
+          | Br7TextString
+          | {
+              courtCaseReference: Br7TextString
+            }
       }
   operationStatus: Br7TextString
 }

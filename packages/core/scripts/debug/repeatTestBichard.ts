@@ -2,7 +2,9 @@
 import chalk from "chalk"
 import crypto from "crypto"
 import fs from "fs"
+
 import type { ImportedComparison } from "../../comparison/types/ImportedComparison"
+
 import ActiveMqHelper from "../../phase1/tests/helpers/ActiveMqHelper"
 import defaults from "../../phase1/tests/helpers/defaults"
 import runFileOnBichard from "../../scripts/runFileOnBichard"

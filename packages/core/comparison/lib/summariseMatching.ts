@@ -1,7 +1,9 @@
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 import type { CourtResultMatchingSummary } from "../types/MatchingComparisonOutput"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+
+import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
 
 export const matchingExceptions: ExceptionCode[] = [
   ExceptionCode.HO100203,
@@ -29,7 +31,7 @@ const hasMatch = (aho: AnnotatedHearingOutcome): boolean => {
   return hasCaseRef || hasPenaltyCaseRef || hasOffenceRef
 }
 
-const parseOffenceReasonSequence = (input: string | null | undefined): number | undefined => {
+const parseOffenceReasonSequence = (input: null | string | undefined): number | undefined => {
   if (!input) {
     return undefined
   }

@@ -1,6 +1,7 @@
-import { auditLogEventLookup, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type EventCategory from "@moj-bichard7/common/types/EventCategory"
 import type EventCode from "@moj-bichard7/common/types/EventCode"
+
+import { type AuditLogEvent, auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 
 const getAuditLogEvent = (
   eventCode: EventCode,

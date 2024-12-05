@@ -5,8 +5,8 @@ import { Link } from "govuk-react"
 import { Dispatch } from "react"
 import { LockedState, Reason } from "types/CaseListQueryParams"
 import { Filter, FilterAction, FilterState } from "types/CourtCaseFilter"
-import { anyFilterChips } from "utils/filterChips"
 import { formatStringDateAsDisplayedDate } from "utils/date/formattedDate"
+import { anyFilterChips } from "utils/filterChips"
 import FilterChipContainer from "./FilterChipContainer"
 import FilterChipRow from "./FilterChipRow"
 import { HeaderRow } from "./FilterChipSection.styles"
@@ -33,9 +33,8 @@ const FilterChipSection: React.FC<Props> = ({
   const resolvedDateRangeLabel = `${formatStringDateAsDisplayedDate(state.resolvedFrom.value)} - ${formatStringDateAsDisplayedDate(
     state.resolvedTo.value
   )}`
-
   return (
-    <>
+    <div className={`${sectionState.toLowerCase()}-filters`}>
       <ConditionalRender isRendered={anyFilterChips(state, sectionState)}>
         <HeaderRow className={`header-row`}>
           <div>
@@ -60,7 +59,7 @@ const FilterChipSection: React.FC<Props> = ({
           dispatch={dispatch}
           type="defendantName"
           label="Defendant name"
-          state={state.defendantNameSearch.state || sectionState}
+          state={state.defendantNameSearch.state ?? sectionState}
           value={state.defendantNameSearch.value!}
         />
 
@@ -74,7 +73,7 @@ const FilterChipSection: React.FC<Props> = ({
           dispatch={dispatch}
           type="ptiurn"
           label="PTIURN"
-          state={state.ptiurnSearch.state || sectionState}
+          state={state.ptiurnSearch.state ?? sectionState}
           value={state.ptiurnSearch.value!}
         />
 
@@ -88,21 +87,27 @@ const FilterChipSection: React.FC<Props> = ({
           dispatch={dispatch}
           type="courtName"
           label="Court name"
-          state={state.courtNameSearch.state || sectionState}
+          state={state.courtNameSearch.state ?? sectionState}
           value={state.courtNameSearch.value!}
         />
 
-        <FilterChipContainer label="Reason codes" condition={state.reasonCodes.length > 0}>
+        <FilterChipContainer
+          label="Reason codes"
+          condition={
+            state.reasonCodes.length > 0 && state.reasonCodes.some((reasonCode) => reasonCode.state === sectionState)
+          }
+        >
           {state.reasonCodes.map((reasonCode) => (
-            <FilterChip
-              key={`filter-chip${reasonCode.value}`}
-              chipLabel={reasonCode.label!}
-              dispatch={dispatch}
-              removeAction={() => {
-                return { method: "remove", type: "reasonCodes", value: reasonCode.value } as FilterAction
-              }}
-              state={reasonCode.state || sectionState}
-            />
+            <ConditionalRender isRendered={reasonCode.state === sectionState} key={`filter-chip${reasonCode.value}`}>
+              <FilterChip
+                chipLabel={reasonCode.label!}
+                dispatch={dispatch}
+                removeAction={() => {
+                  return { method: "remove", type: "reasonCodes", value: reasonCode.value } as FilterAction
+                }}
+                state={reasonCode.state ?? sectionState}
+              />
+            </ConditionalRender>
           ))}
         </FilterChipContainer>
 
@@ -138,7 +143,7 @@ const FilterChipSection: React.FC<Props> = ({
           dispatch={dispatch}
           type="dateRange"
           label="Date range"
-          state={state.dateFrom.state || sectionState}
+          state={state.dateFrom.state ?? sectionState}
           value={dateRangeLabel}
         />
 
@@ -174,23 +179,39 @@ const FilterChipSection: React.FC<Props> = ({
           dispatch={dispatch}
           type="caseResolvedDateRange"
           label="Case resolved date range"
-          state={state.resolvedFrom.state || sectionState}
+          state={state.resolvedFrom.state ?? sectionState}
           value={resolvedDateRangeLabel}
         />
 
-        <FilterChipRow
-          chipLabel={state.caseStateFilter.label!}
-          condition={
-            state.caseStateFilter.value !== undefined &&
-            state.caseStateFilter.label !== undefined &&
-            state.caseStateFilter.state === sectionState
-          }
-          dispatch={dispatch}
-          type="caseState"
+        <FilterChipContainer
           label="Case state"
-          state={state.caseStateFilter.state || sectionState}
-          value={state.caseStateFilter.value!}
-        />
+          condition={!!state.resolvedByUsernameFilter.value || !!state.caseStateFilter.value}
+        >
+          <ConditionalRender isRendered={!!state.caseStateFilter.value}>
+            <FilterChip
+              chipLabel={"Resolved cases"}
+              dispatch={dispatch}
+              removeAction={() => {
+                return { method: "remove", type: "caseState", value: state.caseStateFilter.value! } as FilterAction
+              }}
+              state={state.caseStateFilter.state || sectionState}
+            />
+          </ConditionalRender>
+          <ConditionalRender isRendered={!!state.resolvedByUsernameFilter.value}>
+            <FilterChip
+              chipLabel={"My resolved cases"}
+              dispatch={dispatch}
+              removeAction={() => {
+                return {
+                  method: "remove",
+                  type: "resolvedByUsername",
+                  value: state.resolvedByUsernameFilter.value!
+                } as FilterAction
+              }}
+              state={state.resolvedByUsernameFilter.state || sectionState}
+            />
+          </ConditionalRender>
+        </FilterChipContainer>
 
         <FilterChipRow
           chipLabel={state.lockedStateFilter.label!}
@@ -203,17 +224,18 @@ const FilterChipSection: React.FC<Props> = ({
           dispatch={dispatch}
           type="lockedState"
           label="Locked state"
-          state={state.lockedStateFilter.state || sectionState}
+          state={state.lockedStateFilter.state ?? sectionState}
           value={state.lockedStateFilter.value!}
         />
       </ConditionalRender>
+
       <ConditionalRender isRendered={!anyFilterChips(state, sectionState) && placeholderMessage !== undefined}>
         <h2
           className={"govuk-heading-m govuk-!-margin-bottom-0" + (marginTop ? " govuk-!-margin-top-2" : "")}
         >{`${sectionState} filters`}</h2>
         <p>{placeholderMessage}</p>
       </ConditionalRender>
-    </>
+    </div>
   )
 }
 

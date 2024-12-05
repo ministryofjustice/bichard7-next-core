@@ -1,8 +1,9 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { S3 } from "aws-sdk"
+
+import createDynamoDbConfig from "./createDynamoDbConfig"
 import DynamoGateway from "./DynamoGateway"
 import InvokeCompareLambda from "./InvokeCompareLambda"
-import createDynamoDbConfig from "./createDynamoDbConfig"
 
 const workspace = process.env.WORKSPACE || "production"
 const region = "eu-west-2"

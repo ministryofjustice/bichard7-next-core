@@ -10,5 +10,5 @@ export const eventSchema = z.object({
 
 export const batchEventSchema = z.array(eventSchema)
 
-export type CompareSingleLambdaEvent = z.infer<typeof eventSchema>
 export type CompareBatchLambdaEvent = z.infer<typeof batchEventSchema>
+export type CompareSingleLambdaEvent = z.infer<typeof eventSchema>

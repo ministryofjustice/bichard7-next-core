@@ -1,6 +1,8 @@
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // When sequence numbers don't match exactly e.g. "2" and "002", and there are disposals with a 2007 result code, the

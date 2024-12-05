@@ -1,12 +1,13 @@
-import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
 import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+
+import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
 import { isCommonLaw, isIndictment } from "./isOffenceType"
 
 const createReasonProp = (offenceCode: string): { Reason: string } => ({
   Reason: offenceCode.length > 4 ? offenceCode.substring(4, Math.min(7, offenceCode.length)) : ""
 })
 
-const createQualifierProp = (offenceCode: string): { Qualifier: string } | undefined =>
+const createQualifierProp = (offenceCode: string): undefined | { Qualifier: string } =>
   offenceCode.length > 7 ? { Qualifier: offenceCode[7] } : undefined
 
 export const getNationalOffenceReason = (offenceCode: string): OffenceReason | undefined => {

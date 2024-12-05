@@ -1,13 +1,20 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionPath } from "../../types/Exception"
+
 import isPncException from "./isPncException"
 
+const pathsMatch = (path1: ExceptionPath, path2: ExceptionPath): boolean =>
+  JSON.stringify(path1) === JSON.stringify(path2)
+
 const hasExceptionWithPath = (path: ExceptionPath, existingExceptions: Exception[]): boolean =>
-  existingExceptions.some((e) => JSON.stringify(e.path) === JSON.stringify(path))
+  existingExceptions.some((existingException) => pathsMatch(existingException.path, path))
 
 const removeExceptionWithPath = (path: ExceptionPath, existingExceptions: Exception[]): void => {
-  const element = existingExceptions.find((e) => JSON.stringify(e.path) === JSON.stringify(path))
+  const element = existingExceptions.find(
+    (existingException) => pathsMatch(existingException.path, path) && !isPncException(existingException.code)
+  )
+
   if (element) {
     const elementId = existingExceptions.indexOf(element)
     if (elementId >= 0) {

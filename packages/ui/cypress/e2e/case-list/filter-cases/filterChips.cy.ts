@@ -164,7 +164,7 @@ describe("Case list", () => {
         // Removes the resolved cases filter chips
         cy.get("li button.moj-filter__tag").contains("Resolved cases").trigger("click")
         cy.get(".moj-filter__tag").should("not.exist")
-        cy.get(".govuk-checkboxes__item").contains("Resolved").should("not.be.checked")
+        cy.get(".govuk-radios__item").contains("All resolved cases").should("not.be.checked")
       })
     })
 

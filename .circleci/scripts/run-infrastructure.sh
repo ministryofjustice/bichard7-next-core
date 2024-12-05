@@ -22,6 +22,8 @@ while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
         sleep 10
         echo "Removing Beanconnect and PNC..."
         docker rm -f bichard-beanconnect-1 bichard-pnc-1
+        echo "Also removing Conductor"
+        docker rm -f bichard-conductor-1
         sleep 1
         ((attempt_num++))
         echo "Retrying, attempt $attempt_num ..."
@@ -30,6 +32,6 @@ done
 
 if [ $attempt_num -eq 4 ]; then
   echo ""
-  echo "Failed to start infrastructre"
+  echo "Failed to start infrastructure"
   exit 1
 fi

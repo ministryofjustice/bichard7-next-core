@@ -1,5 +1,6 @@
-import getComparisonStatistics from "./getComparisonStatistics"
 import type { SkippedFile } from "./processRange"
+
+import getComparisonStatistics from "./getComparisonStatistics"
 
 const passingAhoResult = {
   auditLogEventsMatch: true,

@@ -1,5 +1,6 @@
-import createRemandOperation from "../createRemandOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
+
+import createRemandOperation from "../createRemandOperation"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
 export const handleAdjournmentWithJudgement: ResultClassHandler = (params) =>

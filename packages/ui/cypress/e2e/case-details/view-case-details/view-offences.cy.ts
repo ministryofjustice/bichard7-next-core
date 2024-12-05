@@ -1,7 +1,8 @@
+import HO100306 from "../../../../test/test-data/HO100306.json"
 import dummyMultipleHearingResultsAho from "../../../../test/test-data/multipleHearingResultsOnOffence.json"
-import { clickTab, loginAndVisit } from "../../../support/helpers"
 import nextHearingDateExceptions from "../../../../test/test-data/NextHearingDateExceptions.json"
 import a11yConfig from "../../../support/a11yConfig"
+import { clickTab, loginAndVisit } from "../../../support/helpers"
 import logAccessibilityViolations from "../../../support/logAccessibilityViolations"
 
 describe("when scanning page for accessibility", () => {
@@ -33,7 +34,7 @@ describe("when scanning page for accessibility", () => {
   })
 })
 
-describe("“next offence” and “previous offence” buttons", () => {
+describe("'next offence' and 'previous offence' buttons", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
     cy.task("clearTriggers")
@@ -82,23 +83,40 @@ describe("“next offence” and “previous offence” buttons", () => {
   })
 })
 
-it("Should show line breaks in hearing result text", () => {
-  cy.task("insertCourtCasesWithFields", [
-    {
-      orgForPoliceFilter: "01",
-      hearingOutcome: dummyMultipleHearingResultsAho.hearingOutcomeXml,
-      errorCount: 1
-    }
-  ])
+describe("offences tab", () => {
+  it("Should show line breaks in hearing result text", () => {
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: dummyMultipleHearingResultsAho.hearingOutcomeXml,
+        errorCount: 1
+      }
+    ])
 
-  loginAndVisit("/bichard/court-cases/0")
-  clickTab("Offences")
+    loginAndVisit("/bichard/court-cases/0")
+    clickTab("Offences")
 
-  cy.get("tbody tr:first-child a.govuk-link").click()
-  cy.get(".result-text .row-value")
-    .eq(3)
-    .should(
-      "have.text",
-      "Disqualified for holding or obtaining a driving licence for 12 month(s).\n\nDisqualification obligatory for the offence.\n\n Driving record endorsed.\n\n Section 34(1) Road Traffic Offenders Act 1988."
-    )
+    cy.get("tbody tr:first-child a.govuk-link").click()
+    cy.get(".result-text .row-value")
+      .eq(3)
+      .should(
+        "have.text",
+        "Disqualified for holding or obtaining a driving licence for 12 month(s).\n\nDisqualification obligatory for the offence.\n\n Driving record endorsed.\n\n Section 34(1) Road Traffic Offenders Act 1988."
+      )
+  })
+
+  it("Should show 'Offence code not found' if the offence title is undefined", () => {
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: HO100306.hearingOutcomeXml,
+        errorCount: 1
+      }
+    ])
+
+    loginAndVisit("/bichard/court-cases/0")
+    clickTab("Offences")
+
+    cy.get("tbody tr:first-child a.govuk-link").contains("Offence code not found")
+  })
 })

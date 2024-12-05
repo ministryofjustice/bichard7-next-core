@@ -1,4 +1,5 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
+
 import { PncOperation } from "../../../types/PncOperation"
 import createRemandOperation from "./createRemandOperation"
 

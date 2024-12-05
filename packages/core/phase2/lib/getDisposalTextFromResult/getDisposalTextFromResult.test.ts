@@ -1,4 +1,5 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
+
 import getDisposalTextFromResult from "./getDisposalTextFromResult"
 
 describe("check getDisposalTextFromResult", () => {

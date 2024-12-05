@@ -7,11 +7,6 @@ const dynalite = require("dynalite") as any
 export default class MockDynamo {
   server: any // eslint-disable-line @typescript-eslint/no-explicit-any
 
-  start(port: number): Promise<void> {
-    this.server = dynalite({ createTableMs: 0, deleteTableMs: 0, updateTableMs: 0 })
-    return new Promise<void>((resolve) => this.server.listen(port, () => resolve()))
-  }
-
   async setupTable(tableConfig: dynamodb.CreateTableCommandInput): Promise<void> {
     const db = new dynamodb.DynamoDB({
       endpoint: `http://localhost:${this.server.address().port}`,
@@ -23,6 +18,11 @@ export default class MockDynamo {
     if (isError(createTableResult)) {
       console.log(createTableResult)
     }
+  }
+
+  start(port: number): Promise<void> {
+    this.server = dynalite({ createTableMs: 0, deleteTableMs: 0, updateTableMs: 0 })
+    return new Promise<void>((resolve) => this.server.listen(port, () => resolve()))
   }
 
   stop(): Promise<void> {

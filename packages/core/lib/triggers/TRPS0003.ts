@@ -1,13 +1,16 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import isEqual from "lodash.isequal"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import Phase from "../../types/Phase"
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
+
+import Phase from "../../types/Phase"
 import errorPaths from "../exceptions/errorPaths"
 
 const triggerCode = TriggerCode.TRPS0003
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
 
 const hasException200200 = (hearingOutcome: AnnotatedHearingOutcome, offenceIndex: number, resultIndex: number) => {
   const errorPath = errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
@@ -15,7 +18,7 @@ const hasException200200 = (hearingOutcome: AnnotatedHearingOutcome, offenceInde
 }
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
-  if (options?.phase !== Phase.PNC_UPDATE) {
+  if (!phases.includes(options?.phase)) {
     return []
   }
 

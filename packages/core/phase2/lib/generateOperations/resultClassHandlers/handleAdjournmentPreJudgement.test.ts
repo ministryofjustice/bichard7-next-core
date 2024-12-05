@@ -1,4 +1,5 @@
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
@@ -13,7 +14,7 @@ const organisationUnit = {
 }
 
 describe("handleAdjournmentPreJudgement", () => {
-  it("should return remand operations with isAdjournmentPreJudgement in operation data when adjudication does not exist and ccrId has value", () => {
+  it("returns remand operations with isAdjournmentPreJudgement in operation data when PNC adjudication doesn't exist and court case reference exists", () => {
     const params = generateResultClassHandlerParams({
       result: {
         PNCAdjudicationExists: false,

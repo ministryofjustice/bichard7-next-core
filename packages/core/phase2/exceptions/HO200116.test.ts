@@ -1,8 +1,10 @@
-import HO200116 from "./HO200116"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
 import errorPaths from "../../lib/exceptions/errorPaths"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import HO200116 from "./HO200116"
 
 describe("HO200116", () => {
   it("returns HO200116 exception when there are more than 100 offences", () => {

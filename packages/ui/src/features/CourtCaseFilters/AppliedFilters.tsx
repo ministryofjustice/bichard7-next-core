@@ -1,11 +1,12 @@
 import ConditionalRender from "components/ConditionalRender"
 import FilterTag from "components/FilterTag/FilterTag"
+import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { encode } from "querystring"
 import { LockedState, Reason, SerializedDateRange } from "types/CaseListQueryParams"
 import { caseStateLabels } from "utils/caseStateFilters"
-import { deleteQueryParam, deleteQueryParamsByName } from "utils/deleteQueryParam"
 import { formatStringDateAsDisplayedDate } from "utils/date/formattedDate"
+import { deleteQueryParam, deleteQueryParamsByName } from "utils/deleteQueryParam"
 
 interface Props {
   filters: {
@@ -19,12 +20,13 @@ interface Props {
     lockedState?: string | null
     caseState?: string | null
     caseResolvedDateRange?: SerializedDateRange | null
+    resolvedByUsername?: string | null
   }
 }
 
 const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
   const { basePath, query } = useRouter()
-
+  const currentUser = useCurrentUser()
   const hasAnyAppliedFilters = (): boolean =>
     (!!filters.reason && filters.reason !== Reason.All) ||
     !!filters.defendantName ||
@@ -37,7 +39,8 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
     (!!filters.lockedState && filters.lockedState !== LockedState.All) ||
     !!filters.caseState ||
     !!filters.caseResolvedDateRange?.from ||
-    !!filters.caseResolvedDateRange?.to
+    !!filters.caseResolvedDateRange?.to ||
+    !!filters.resolvedByUsername
 
   const removeFilterFromPath = (paramToRemove: { [key: string]: string }): string => {
     let searchParams = deleteQueryParam(paramToRemove, query)
@@ -73,6 +76,17 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
         <ul key={"applied-filters"} className="moj-filter-tags">
           <li>
             <p className="govuk-heading-s govuk-!-margin-bottom-0">{"Filters applied:"}</p>
+          </li>
+
+          <li>
+            <p
+              className="moj-filter__heading-action govuk-!-margin-bottom-2 govuk-!-margin-top-0"
+              id="clear-filters-applied"
+            >
+              <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
+                {"Clear filters"}
+              </a>
+            </p>
           </li>
 
           <ConditionalRender isRendered={!!filters.reason && filters.reason !== Reason.All}>
@@ -162,13 +176,11 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
             </li>
           </ConditionalRender>
 
-          <li>
-            <p className="moj-filter__heading-action" id="clear-filters-applied">
-              <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
-                {"Clear filters"}
-              </a>
-            </p>
-          </li>
+          <ConditionalRender isRendered={filters.resolvedByUsername === currentUser.username}>
+            <li>
+              <FilterTag tag={"My resolved cases"} href={removeQueryParamsByName(["resolvedByUsername"])} />
+            </li>
+          </ConditionalRender>
         </ul>
       </ConditionalRender>
     </div>

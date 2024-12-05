@@ -1,9 +1,11 @@
-import TriggerCode from "bichard7-next-data-latest//dist/types/TriggerCode"
-import * as triggers from "."
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data//dist/types/TriggerCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import Phase from "../../types/Phase"
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator, TriggerGeneratorOptions } from "../../types/TriggerGenerator"
+
+import * as triggers from "."
+import Phase from "../../types/Phase"
 import deduplicateTriggers from "./deduplicateTriggers"
 import filterExcludedTriggers from "./filterExcludedTriggers"
 

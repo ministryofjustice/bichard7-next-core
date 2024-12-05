@@ -1,6 +1,6 @@
 type PncApiConfig = {
-  url: string
   key: string
+  url: string
 }
 
 export default PncApiConfig

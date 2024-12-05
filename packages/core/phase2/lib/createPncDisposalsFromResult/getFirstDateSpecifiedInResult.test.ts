@@ -1,4 +1,5 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
+
 import ResultClass from "../../../types/ResultClass"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 

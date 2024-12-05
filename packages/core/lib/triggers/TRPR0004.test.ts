@@ -1,6 +1,8 @@
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import { CjsVerdict } from "../../types/Verdict"
 import TRPR0004 from "./TRPR0004"
 

@@ -1,8 +1,9 @@
 import type { Offence, OffenceCode } from "../../../types/AnnotatedHearingOutcome"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../../types/SpiResult"
+
 import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
+import nonRecordableResultCodes from "../../nonRecordableResultCodes"
 import { COMMON_LAWS, INDICTMENT } from "../../offenceTypes"
-import resultCodeIsOnStopList from "../../resultCodeIsOnStopList"
 import populateOffenceResults from "./populateOffenceResults"
 import removeSeconds from "./removeSeconds"
 
@@ -20,8 +21,8 @@ const timeRange = {
 }
 
 export interface OffencesResult {
-  offences: Offence[]
   bailConditions: string[]
+  offences: Offence[]
 }
 
 const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
@@ -32,7 +33,7 @@ const adjournmentSineDieConditionMet = (spiResults: SpiResult[]) => {
     const resultCode = result.ResultCode !== undefined ? Number(result.ResultCode) : undefined
     if (resultCode === adjournmentSineDieResultCode) {
       a2007ResultFound = true
-    } else if (!resultCodeIsOnStopList(resultCode ?? 1000)) {
+    } else if (!nonRecordableResultCodes.includes(resultCode ?? 1000)) {
       aFailConditionResultFound = true
     }
   })
@@ -47,7 +48,7 @@ const hasEnteredInErrorResult = (spiOffence: OffenceParsedXml): boolean =>
 
 const getOffenceReason = (spiOffenceCode: string): OffenceCode => {
   const spiOffenceCodeLength = spiOffenceCode.length
-  const offenceCode: Pick<OffenceCode, "Reason" | "FullCode"> = {
+  const offenceCode: Pick<OffenceCode, "FullCode" | "Reason"> = {
     Reason: spiOffenceCodeLength > 4 ? spiOffenceCode.substring(4, Math.min(7, spiOffenceCodeLength)) : "",
     ...(spiOffenceCodeLength > 7 ? { Qualifier: spiOffenceCode.substring(7) } : {}),
     FullCode: spiOffenceCode
@@ -148,7 +149,7 @@ const populateOffence = (
 
     const offenceDateCode = Number(spiOffenceDateCode)
     const { ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE, BETWEEN } = timeRange
-    if ([ON_OR_IN, BEFORE, AFTER, ON_OR_ABOUT, ON_OR_BEFORE].includes(offenceDateCode)) {
+    if ([AFTER, BEFORE, ON_OR_ABOUT, ON_OR_BEFORE, ON_OR_IN].includes(offenceDateCode)) {
       offence.OffenceTime = spiOffenceStartTime
     } else if (offenceDateCode === BETWEEN) {
       offence.StartTime = spiOffenceStartTime

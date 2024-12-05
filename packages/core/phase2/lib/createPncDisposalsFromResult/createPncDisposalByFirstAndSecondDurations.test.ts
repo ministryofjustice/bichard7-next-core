@@ -3,8 +3,9 @@ jest.mock("../getDisposalTextFromResult")
 jest.mock("./isDriverDisqualificationResult")
 
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
+
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 
@@ -28,7 +29,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
-    mockedIsDriverDisqualificationResult.mockReturnValue(true)
+    mockedIsDriverDisqualificationResult.mockReturnValue(false)
     mockedGetDisposalTextFromResult.mockReturnValue("Dummy disposal text")
 
     const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult)
@@ -56,7 +57,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
-    mockedIsDriverDisqualificationResult.mockReturnValue(true)
+    mockedIsDriverDisqualificationResult.mockReturnValue(false)
     mockedGetDisposalTextFromResult.mockReturnValue("A".repeat(65))
 
     const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult)
@@ -83,7 +84,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     } as Result
 
     mockedGetFirstDateSpecifiedInResult.mockReturnValue(new Date("2024-05-10"))
-    mockedIsDriverDisqualificationResult.mockReturnValue(true)
+    mockedIsDriverDisqualificationResult.mockReturnValue(false)
     mockedGetDisposalTextFromResult.mockReturnValue("Dummy disposal text")
 
     const pncDisposal = createPncDisposalByFirstAndSecondDurations(hoResult)
@@ -99,7 +100,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
     })
   })
 
-  it("should return PNC disposal and use DateSpecifiedInResult for disposal text when disposal text does not have value", () => {
+  it("should return PNC disposal and use DateSpecifiedInResult for disposal text when there's no disposal text and is driver disqualification", () => {
     const hoResult = {
       ResultQualifierVariable: [] as unknown,
       AmountSpecifiedInResult: [{ Amount: 11 }],
@@ -121,7 +122,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
       qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
       qualifiers: "H5",
-      text: "from 10/05/2024",
+      text: "from 10/05/24",
       type: undefined
     })
   })

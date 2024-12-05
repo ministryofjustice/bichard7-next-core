@@ -1,20 +1,43 @@
-import type ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import { XMLParser } from "fast-xml-parser"
+
+import type { Br7PncErrorMessageString } from "../../../types/AhoXml"
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
+import type { PncException } from "../../../types/Exception"
+
+import { asnPath } from "../../../characterisation-tests/helpers/errorPaths"
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../exceptions/errorPaths"
 
-// TODO: Use the existing AHO XML parsing to pull out the errors
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const extractPncExceptions = (aho: any): Exception[] => {
-  const errorMessage = aho.AnnotatedHearingOutcome?.PNCErrorMessage?.["@_classification"]
+const extractPncExceptions = (aho: any): PncException[] => {
+  const pncErrorMessagesFromAho =
+    aho.AnnotatedHearingOutcome?.PNCErrorMessage ??
+    aho.PNCUpdateDataset?.AnnotatedHearingOutcome?.PNCErrorMessage ??
+    aho.AnnotatedPNCUpdateDataset?.PNCUpdateDataset?.AnnotatedHearingOutcome?.PNCErrorMessage
 
-  return errorMessage ? [{ code: errorMessage, path: errorPaths.case.asn }] : []
+  if (pncErrorMessagesFromAho) {
+    const pncErrorMessages: Br7PncErrorMessageString[] = Array.isArray(pncErrorMessagesFromAho)
+      ? pncErrorMessagesFromAho
+      : [pncErrorMessagesFromAho]
+
+    return pncErrorMessages.map(
+      (errorMessage: Br7PncErrorMessageString) =>
+        ({
+          code: errorMessage["@_classification"],
+          path: errorPaths.case.asn,
+          message: errorMessage["#text"]
+        }) as PncException
+    )
+  }
+
+  return []
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const extract = (el: any, path: (string | number)[] = []): Exception[] => {
+const extract = (el: any, path: (number | string)[] = []): Exception[] => {
   const exceptions: Exception[] = []
   for (const key in el) {
     if (key === "@_Error") {
@@ -43,11 +66,15 @@ export default (xml: string): Exception[] => {
   const rawParsedObj = parser.parse(xml)
 
   let aho
+  let isAnnotatedPncUpdateDataset = false
+  let isPncUpdateDataset = false
 
   if ("AnnotatedPNCUpdateDataset" in rawParsedObj) {
     aho = rawParsedObj.AnnotatedPNCUpdateDataset.PNCUpdateDataset.AnnotatedHearingOutcome
+    isAnnotatedPncUpdateDataset = true
   } else if ("PNCUpdateDataset" in rawParsedObj) {
     aho = rawParsedObj.PNCUpdateDataset.AnnotatedHearingOutcome
+    isPncUpdateDataset = true
   } else if ("AnnotatedHearingOutcome" in rawParsedObj) {
     aho = rawParsedObj.AnnotatedHearingOutcome
   }
@@ -82,7 +109,31 @@ export default (xml: string): Exception[] => {
     })
   }
 
-  const mainExceptions = extract(rawParsedObj)
-  const pncExceptions = extractPncExceptions(rawParsedObj)
-  return deduplicateExceptions(mainExceptions.concat(pncExceptions))
+  let mainExceptions = deduplicateExceptions(extract(rawParsedObj))
+  let pncExceptions = extractPncExceptions(rawParsedObj)
+
+  if (isPncUpdateDataset) {
+    pncExceptions = pncExceptions.map((pncException) => ({
+      ...pncException,
+      path: ["PNCUpdateDataset", ...pncException.path]
+    }))
+  }
+
+  if (isAnnotatedPncUpdateDataset) {
+    pncExceptions = pncExceptions.map((pncException) => ({
+      ...pncException,
+      path: ["AnnotatedPNCUpdateDataset", "PNCUpdateDataset", ...pncException.path]
+    }))
+  }
+
+  // Remove the exception on the ASN element if it also appears in the PNC errors
+  const asnException = mainExceptions.find((e) => e.path.join("|").endsWith(asnPath.join("|")))
+  if (asnException) {
+    const matchingPncException = pncExceptions.find((e) => e.code == asnException.code)
+    if (matchingPncException) {
+      mainExceptions = mainExceptions.filter((e) => e !== asnException)
+    }
+  }
+
+  return mainExceptions.concat(pncExceptions)
 }

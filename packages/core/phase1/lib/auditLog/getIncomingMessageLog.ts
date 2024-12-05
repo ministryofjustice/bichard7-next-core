@@ -1,4 +1,5 @@
 import type { HearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+
 import getOffenceCode from "../offence/getOffenceCode"
 
 const getOffenceDetails = (offences: Offence[]): Record<string, string> =>

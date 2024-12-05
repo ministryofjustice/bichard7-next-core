@@ -40,9 +40,18 @@ export const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser:
     ? (query.lockedState as LockedState)
     : LockedState.All
   const allocatedToUserName = lockedState === LockedState.LockedToMe ? currentUser.username : null
-  const caseState = caseStateFilters.includes(String(query.state)) ? (query.state as CaseState) : null
+
   const resolvedByUsername =
-    caseState === "Resolved" && !currentUser.hasAccessTo[Permission.ListAllCases] ? currentUser.username : null
+    query.resolvedByUsername && !currentUser.hasAccessTo[Permission.ListAllCases]
+      ? currentUser.username
+      : (query.resolvedByUsername as string) || null
+
+  let caseState = caseStateFilters.includes(String(query.state)) ? (query.state as CaseState) : null
+
+  if (query.resolvedByUsername) {
+    caseState = "Resolved"
+  }
+
   const courtDateRange = caseAges || dateRange
   const resolvedDateRange = validateDateRange({ from: query.resolvedFrom, to: query.resolvedTo })
   const asn = validateQueryParams(query.asn) ? sanitise(query.asn) : null

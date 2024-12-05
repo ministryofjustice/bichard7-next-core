@@ -1,4 +1,5 @@
-import { toISODate, toPNCDate } from "../../../lib/dates"
+import type { CjsCodeAndDescription } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+
 import type {
   Adj,
   AhoXml,
@@ -10,6 +11,7 @@ import type {
   Br7Offence,
   Br7OffenceReason,
   Br7OrganisationUnit,
+  Br7PncErrorMessageString,
   Br7Result,
   Br7SequenceTextString,
   Br7TextString,
@@ -33,8 +35,12 @@ import type {
   Result,
   Urgent
 } from "../../../types/AnnotatedHearingOutcome"
+import type Exception from "../../../types/Exception"
+import type { PncException } from "../../../types/Exception"
 import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+
+import { toISODate, toPNCDate } from "../../../lib/dates"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -66,7 +72,48 @@ enum LiteralType {
   YesNo
 }
 
-const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
+const findLiteralAttribute = (type: LiteralType, literalText: string): string | undefined => {
+  let offence: CjsCodeAndDescription | undefined
+
+  switch (type) {
+    case LiteralType.ActualOffenceDateCode:
+      offence = lookupOffenceDateCodeByCjsCode(literalText)
+      break
+    case LiteralType.AlcoholLevelMethod:
+      offence = lookupAlcoholLevelMethodByCjsCode(literalText)
+      break
+    case LiteralType.CourtType:
+      offence = lookupCourtTypeByCjsCode(literalText)
+      break
+    case LiteralType.DefendantPresentAtHearing:
+      offence = lookupDefendantPresentAtHearingByCjsCode(literalText)
+      break
+    case LiteralType.Gender:
+      offence = lookupGenderByCjsCode(literalText)
+      break
+    case LiteralType.ModeOfTrialReason:
+      offence = lookupModeOfTrialReasonByCjsCode(literalText)
+      break
+    case LiteralType.OffenceCategory:
+      offence = lookupOffenceCategoryByCjsCode(literalText)
+      break
+    case LiteralType.OffenceRemandStatus:
+      offence = lookupRemandStatusByCjsCode(literalText)
+      break
+    case LiteralType.PleaStatus:
+      offence = lookupPleaStatusByCjsCode(literalText)
+      break
+    case LiteralType.Verdict:
+      offence = lookupVerdictByCjsCode(literalText)
+      break
+    default:
+      throw new Error("Invalid literal type specified")
+  }
+
+  return offence?.description
+}
+
+const literal = (value: boolean | string, type: LiteralType): Br7LiteralTextString => {
   let literalText: string | undefined
   let literalAttribute: string | undefined
   if (value === undefined) {
@@ -80,29 +127,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
     }
   } else {
     literalText = value
-    if (type === LiteralType.OffenceRemandStatus) {
-      literalAttribute = lookupRemandStatusByCjsCode(value)?.description
-    } else if (type === LiteralType.PleaStatus) {
-      literalAttribute = lookupPleaStatusByCjsCode(value)?.description
-    } else if (type === LiteralType.AlcoholLevelMethod) {
-      literalAttribute = lookupAlcoholLevelMethodByCjsCode(value)?.description
-    } else if (type === LiteralType.Gender) {
-      literalAttribute = lookupGenderByCjsCode(value)?.description
-    } else if (type === LiteralType.CourtType) {
-      literalAttribute = lookupCourtTypeByCjsCode(value)?.description
-    } else if (type === LiteralType.Verdict) {
-      literalAttribute = lookupVerdictByCjsCode(value)?.description
-    } else if (type === LiteralType.ModeOfTrialReason) {
-      literalAttribute = lookupModeOfTrialReasonByCjsCode(value)?.description
-    } else if (type === LiteralType.OffenceCategory) {
-      literalAttribute = lookupOffenceCategoryByCjsCode(value)?.description
-    } else if (type === LiteralType.ActualOffenceDateCode) {
-      literalAttribute = lookupOffenceDateCodeByCjsCode(value)?.description
-    } else if (type === LiteralType.DefendantPresentAtHearing) {
-      literalAttribute = lookupDefendantPresentAtHearingByCjsCode(value)?.description
-    } else {
-      throw new Error("Invalid literal type specified")
-    }
+    literalAttribute = findLiteralAttribute(type, literalText)
   }
 
   if (!literalAttribute || literalText === undefined) {
@@ -112,7 +137,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
   return { "#text": literalText, "@_Literal": literalAttribute }
 }
 
-const optionalLiteral = (value: string | boolean | undefined, type: LiteralType): Br7LiteralTextString | undefined => {
+const optionalLiteral = (value: boolean | string | undefined, type: LiteralType): Br7LiteralTextString | undefined => {
   if (value === undefined) {
     return undefined
   }
@@ -121,7 +146,7 @@ const optionalLiteral = (value: string | boolean | undefined, type: LiteralType)
 }
 
 const text = (t: string): Br7TextString => ({ "#text": t })
-const nullText = (t: string | null): Br7TextString => ({ "#text": t ?? "" })
+const nullText = (t: null | string): Br7TextString => ({ "#text": t ?? "" })
 const optionalText = (t: string | undefined): Br7TextString | undefined =>
   t !== undefined ? { "#text": t } : undefined
 const optionalFormatText = (t: Date | string | undefined): Br7TextString | undefined => {
@@ -176,7 +201,7 @@ const mapNumberSpecifiedInResult = (
 }
 
 const mapNextResultSourceOrganisation = (
-  ou: OrganisationUnitCodes | undefined | null
+  ou: null | OrganisationUnitCodes | undefined
 ): Br7OrganisationUnit | undefined => {
   if (ou === null) {
     return mapAhoOrgUnitToXml({
@@ -251,15 +276,6 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
 
   if (offenceReason.__type === "NationalOffenceReason") {
     switch (offenceReason.OffenceCode.__type) {
-      case "NonMatchingOffenceCode":
-        return {
-          "ds:OffenceCode": {
-            "ds:ActOrSource": text(offenceReason.OffenceCode.ActOrSource),
-            "ds:Year": optionalText(offenceReason.OffenceCode.Year),
-            "ds:Reason": text(offenceReason.OffenceCode.Reason),
-            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
-          }
-        }
       case "CommonLawOffenceCode":
         return {
           "ds:OffenceCode": {
@@ -271,6 +287,15 @@ const mapAhoOffenceReasonToXml = (offenceReason: OffenceReason): Br7OffenceReaso
       case "IndictmentOffenceCode":
         return {
           "ds:OffenceCode": {
+            "ds:Reason": text(offenceReason.OffenceCode.Reason),
+            "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
+          }
+        }
+      case "NonMatchingOffenceCode":
+        return {
+          "ds:OffenceCode": {
+            "ds:ActOrSource": text(offenceReason.OffenceCode.ActOrSource),
+            "ds:Year": optionalText(offenceReason.OffenceCode.Year),
             "ds:Reason": text(offenceReason.OffenceCode.Reason),
             "ds:Qualifier": optionalText(offenceReason.OffenceCode.Qualifier)
           }
@@ -495,6 +520,16 @@ const xmlnsTags = {
   "@_xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance"
 }
 
+const mapPncExceptionsToXml = (exceptions: Exception[]): Br7PncErrorMessageString[] | undefined => {
+  const pncExceptions = exceptions.filter((exception) => "message" in exception) satisfies PncException[]
+
+  if (pncExceptions.length > 0) {
+    return pncExceptions.map(({ code, message }) => ({ "#text": message, "@_classification": code }))
+  }
+
+  return undefined
+}
+
 const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   const hearingOutcome = {
     "br7:HearingOutcome": {
@@ -514,7 +549,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
             ...hearingOutcome,
             CXE01: aho.PncQuery ? mapAhoCXE01ToXml(aho.PncQuery) : undefined,
             "br7:PNCQueryDate": aho.PncQueryDate ? optionalFormatText(aho.PncQueryDate) : undefined,
-            "br7:PNCErrorMessage": optionalText(aho.PncErrorMessage),
+            "br7:PNCErrorMessage": mapPncExceptionsToXml(aho.Exceptions),
             ...xmlnsTags
           }
         }
@@ -539,7 +574,7 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
       ...hearingOutcome,
       CXE01: pud.PncQuery ? mapAhoCXE01ToXml(pud.PncQuery) : undefined,
       "br7:PNCQueryDate": pud.PncQueryDate ? optionalFormatText(pud.PncQueryDate) : undefined,
-      "br7:PNCErrorMessage": optionalText(pud.PncErrorMessage),
+      "br7:PNCErrorMessage": mapPncExceptionsToXml(pud.Exceptions),
       ...xmlnsTags
     }
   }

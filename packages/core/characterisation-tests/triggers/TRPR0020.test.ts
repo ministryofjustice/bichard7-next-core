@@ -1,5 +1,6 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+
 import { SpiVerdict } from "../../types/Verdict"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"

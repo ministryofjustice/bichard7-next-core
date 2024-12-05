@@ -1,6 +1,8 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+
+import errorPaths from "../../lib/exceptions/errorPaths"
 
 const HO100331: ExceptionGenerator = (hearingOutcome) => {
   const offenceCount = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length

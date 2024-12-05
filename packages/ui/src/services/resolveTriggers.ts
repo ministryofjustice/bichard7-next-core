@@ -5,12 +5,14 @@ import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
 import type { DataSource, UpdateResult } from "typeorm"
 import { In, IsNull } from "typeorm"
 import { isError } from "types/Result"
+import getSystemNotesForTriggers from "utils/getSystemNotesForTriggers"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
 import UnlockReason from "../types/UnlockReason"
 import CourtCase from "./entities/CourtCase"
 import Trigger from "./entities/Trigger"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
+import insertNotes from "./insertNotes"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
@@ -70,6 +72,19 @@ const resolveTriggers = async (
 
     if (updateTriggersResult.affected && updateTriggersResult.affected !== triggerIds.length) {
       throw Error("Failed to resolve triggers")
+    }
+
+    const addNoteResult = await insertNotes(
+      entityManager,
+      getSystemNotesForTriggers(
+        courtCase.triggers.filter((trigger) => triggerIds.includes(trigger.triggerId)),
+        resolver,
+        courtCase.errorId
+      )
+    )
+
+    if (isError(addNoteResult)) {
+      throw addNoteResult
     }
 
     const events: AuditLogEvent[] = []

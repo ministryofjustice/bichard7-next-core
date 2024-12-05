@@ -1,10 +1,12 @@
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import ResultClass from "../../types/ResultClass"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseOperationsException"
+
 import { PncOperation } from "../../types/PncOperation"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseOperationsException"
 
 jest.mock("../lib/areAllResultsOnPnc")
 

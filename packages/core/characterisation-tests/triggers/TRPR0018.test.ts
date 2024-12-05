@@ -1,15 +1,17 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+
+import type { ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
+
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
-import type { ResultedCaseMessageParsedXml } from "../types/IncomingMessage"
 
 const code = TriggerCode.TRPR0018
 const resultCode = 1015
 
 type PncOffenceDateOverride = {
-  startDate: string
   endDate?: string
+  startDate: string
 }
 
 const pncOffenceDateOverrides = (dates: PncOffenceDateOverride[]) => ({

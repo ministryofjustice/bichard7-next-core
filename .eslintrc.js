@@ -1,9 +1,5 @@
 module.exports = {
-  root: true,
   env: { es6: true },
-  parserOptions: {
-    project: ["./tsconfig.json", "./packages/*/tsconfig.json"]
-  },
   ignorePatterns: [
     "dist/*",
     "docs/*",
@@ -15,28 +11,20 @@ module.exports = {
   ],
   overrides: [
     {
+      extends: ["airbnb-base", "prettier", "plugin:prettier/recommended"],
       // Plain JavaScript files
       files: ["**/*.js"],
-      extends: ["airbnb-base", "prettier", "plugin:prettier/recommended"],
       rules: {
         curly: ["error", "all"],
-        quotes: ["error", "double", { avoidEscape: true }],
-        semi: ["error", "never"],
         "no-plusplus": "off",
+        "prettier/prettier": ["error"],
+        quotes: ["error", "double", { avoidEscape: true }],
         "require-await": "error",
-        "prettier/prettier": ["error"]
+        semi: ["error", "never"]
       }
     },
     {
-      // All TypeScript files
-      // These settings will also affect test and script files
-      files: ["**/*.ts"],
       excludedFiles: ["**/*.cy.ts", "packages/ui/scripts/utility/**/*.ts"],
-      parser: "@typescript-eslint/parser",
-      parserOptions: {
-        ecmaVersion: 2020
-      },
-      plugins: ["@typescript-eslint", "jest", "import"],
       extends: [
         "plugin:@typescript-eslint/recommended",
         "plugin:jest/recommended",
@@ -44,27 +32,35 @@ module.exports = {
         "prettier",
         "plugin:prettier/recommended"
       ],
+      // All TypeScript files
+      // These settings will also affect test and script files
+      files: ["**/*.ts"],
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        ecmaVersion: 2020
+      },
+      plugins: ["@typescript-eslint", "jest", "import"],
       rules: {
-        curly: ["error", "all"],
-        quotes: ["error", "double", { avoidEscape: true }],
-        semi: ["error", "never"],
-        "no-plusplus": "off",
-        "require-await": "error",
-        "prettier/prettier": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
+        // TODO: Merge UI into Core
+        "@typescript-eslint/no-empty-object-type": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_+$", varsIgnorePattern: "^_+$" }],
+        "@typescript-eslint/no-require-imports": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_+.*$", varsIgnorePattern: "^_+.*$" }],
+        curly: ["error", "all"],
         "import/no-extraneous-dependencies": ["off", { devDependencies: ["**/*.test.js"] }],
+        "no-plusplus": "off",
         // "@typescript-eslint/no-empty-object-type": "error",
         // "@typescript-eslint/consistent-type-imports": "error",
         "padding-line-between-statements": [
           "error",
-          { blankLine: "always", prev: "block", next: "*" },
-          { blankLine: "always", prev: "block-like", next: "*" }
+          { blankLine: "always", next: "*", prev: "block" },
+          { blankLine: "always", next: "*", prev: "block-like" }
         ],
-        // TODO: Merge UI into Core
-        "@typescript-eslint/no-empty-object-type": "off",
-        "@typescript-eslint/no-require-imports": "off"
+        "prettier/prettier": ["error"],
+        quotes: ["error", "double", { avoidEscape: true }],
+        "require-await": "error",
+        semi: ["error", "never"]
       }
     },
     {
@@ -76,6 +72,21 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "off",
         "jest/no-standalone-expect": "off"
       }
+    },
+    {
+      extends: ["plugin:perfectionist/recommended-natural-legacy"],
+      files: "packages/+(api|common|conductor|core)/**/*",
+      plugins: ["perfectionist"]
+    },
+    {
+      files: "packages/core/**/*",
+      rules: {
+        "perfectionist/sort-objects": "off"
+      }
     }
-  ]
+  ],
+  parserOptions: {
+    project: ["./tsconfig.json", "./packages/*/tsconfig.json"]
+  },
+  root: true
 }

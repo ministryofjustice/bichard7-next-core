@@ -1,4 +1,5 @@
 import { z } from "zod"
+
 import { SpiPlea } from "../types/Plea"
 import toArray from "./toArray"
 

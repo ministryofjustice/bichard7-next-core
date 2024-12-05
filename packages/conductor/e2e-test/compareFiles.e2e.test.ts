@@ -15,17 +15,17 @@ const s3Config = createS3Config()
 const sendFileToS3 = async (srcFilename: string, destFilename: string, bucket: string) => {
   const client = new S3Client(s3Config)
   const Body = await fs.promises.readFile(srcFilename)
-  const command = new PutObjectCommand({ Bucket: bucket, Key: destFilename, Body })
+  const command = new PutObjectCommand({ Body, Bucket: bucket, Key: destFilename })
   return client.send(command)
 }
 
-const getDynamoRecord = async (s3Path: string, tableName: string): Promise<undefined | Record<string, any>> => {
+const getDynamoRecord = async (s3Path: string, tableName: string): Promise<Record<string, any> | undefined> => {
   const db = new DynamoDBClient({
+    credentials: { accessKeyId, secretAccessKey },
     endpoint,
-    region: "eu-west-2",
-    credentials: { accessKeyId, secretAccessKey }
+    region: "eu-west-2"
   })
-  const getCommand = new GetCommand({ TableName: tableName, Key: { s3Path } })
+  const getCommand = new GetCommand({ Key: { s3Path }, TableName: tableName })
   const docClient = DynamoDBDocumentClient.from(db)
   const result = await docClient.send(getCommand)
   return result.Item
@@ -45,7 +45,7 @@ const getPhaseTableName = (phase: number): string => {
 }
 
 describe("Compare files workflow", () => {
-  const phases = [1, 2]
+  const phases = [1, 2, 3]
   it.each(phases)("should compare the phase %i file and write results to dynamo", async (phase) => {
     const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
     const tableName = getPhaseTableName(phase)

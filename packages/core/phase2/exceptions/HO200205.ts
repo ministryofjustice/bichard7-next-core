@@ -1,10 +1,12 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AnnotatedHearingOutcome, Result } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
-import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
+
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isAmountSpecifiedInResultValid from "../lib/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
+import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2
@@ -29,7 +31,7 @@ const generateException = (
   return []
 }
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200205: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
   checkResultsMatchingPncDisposalsExceptions(aho, (result, offenceIndex, resultIndex) => {
@@ -42,4 +44,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200205

@@ -1,14 +1,16 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+
+import errorPaths from "../../lib/exceptions/errorPaths"
 import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
-import errorPaths from "../../lib/exceptions/errorPaths"
 
-const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
   const allResultsOnPnc = areAllResultsOnPnc(aho)
@@ -18,7 +20,7 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   }
 
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
-    const ccrId = offence?.CourtCaseReferenceNumber || undefined
+    const courtCaseReference = offence?.CourtCaseReferenceNumber || undefined
 
     if (result.PNCAdjudicationExists) {
       return
@@ -26,8 +28,8 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
 
     if (
       result.ResultClass &&
-      [ResultClass.JUDGEMENT_WITH_FINAL_RESULT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT].includes(result.ResultClass) &&
-      hasUnmatchedPncOffences(aho, ccrId) &&
+      [ResultClass.ADJOURNMENT_WITH_JUDGEMENT, ResultClass.JUDGEMENT_WITH_FINAL_RESULT].includes(result.ResultClass) &&
+      hasUnmatchedPncOffences(aho, courtCaseReference) &&
       !offence.AddedByTheCourt
     ) {
       const exception = {
@@ -41,4 +43,4 @@ const generator: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[
   return exceptions
 }
 
-export default generator
+export default HO200124

@@ -1,19 +1,13 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../types/PncQueryResult"
-import createPncDisposal from "./createPncDisposal"
+
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import createPncDisposal from "./createPncDisposal"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 
 export const maxDisposalTextLength = 64
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("en-GB", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit"
-  })
 
 const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal => {
   const durations = result.Duration ?? []
@@ -30,7 +24,7 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal
     firstDuration?.DurationLength &&
     !disposalText
   ) {
-    disposalText = `from ${formatDate(dateSpecifiedInResult)}`
+    disposalText = `from ${dateSpecifiedInResult.toLocaleDateString("en-GB", { year: "2-digit", month: "2-digit", day: "2-digit" })}`
     dateSpecifiedInResult = undefined
   }
 

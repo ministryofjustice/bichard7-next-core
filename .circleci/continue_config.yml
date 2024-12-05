@@ -82,19 +82,15 @@ commands:
       - run:
           name: Compress the artifacts for easier downloading
           when: always
-          command: for file in packages/e2e-test/screenshots/*; do tar -czf ${file}.tar.gz $file; done
-      - run:
-          name: Create the saved_artifacts directory
-          when: always
-          command: mkdir ./saved_artifacts
+          command: bash .circleci/scripts/screenshots-compress.sh
       - run:
           name: Move the gzipped files across
           when: always
-          command: mv packages/e2e-test/screenshots/*.tar.gz ./saved_artifacts/
+          command: bash .circleci/scripts/screenshots-move.sh
       - store_artifacts:
           path: /home/circleci/project/saved_artifacts
       - store_test_results:
-          path: packages/e2e-test/test-results.xml
+          path: packages/e2e-test/test-results/results/report.xml
 
   set_locale:
     steps:
@@ -118,7 +114,6 @@ commands:
 
   setup_ui:
     steps:
-      - checkout
       - node_install
       - set_locale
 
@@ -137,20 +132,6 @@ commands:
           name: Build audit logging images
           working_directory: ~/bichard7-next-audit-logging
           command: make build-api-server build-event-handler-server
-
-  run_test_chunk:
-    parameters:
-      ARGS:
-        default: ""
-        type: "string"
-    steps:
-      - run:
-          name: Run test chunk
-          working_directory: ~/project/packages/e2e-test
-          command: |
-            CHUNK=$(circleci tests glob "features/**/*.feature" | circleci tests split --split-by=timings) \
-            <<parameters.ARGS>> \
-            npm run test:chunk:nextUI
 
   start_services:
     parameters:
@@ -178,6 +159,9 @@ commands:
       ENABLE_PHASE_3:
         default: "true"
         type: string
+      SKIP_IMAGES:
+        default: ""
+        type: string
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -186,7 +170,7 @@ commands:
           name: Start bichard7 legacy
           command: |
             ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
-            .circleci/scripts/run-infrastructure.sh '' all-legacy
+            .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
   lint_and_build:
@@ -199,14 +183,14 @@ jobs:
       - install_dependencies
       - run:
           name: Check the code for linting errors
-          command: npm run lint
+          command: npm run lint:ci
       - build_core
 
   test_core:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: medium
     steps:
       - unless:
           condition:
@@ -281,7 +265,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
-    resource_class: large
+    resource_class: medium
     steps:
       - unless:
           condition:
@@ -451,6 +435,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - set_locale
       - when:
           condition:
@@ -484,9 +471,7 @@ jobs:
           environment:
             AWS_URL: http://localhost:4566
             RECORD: "true"
-          command: |
-            TOTAL_CHUNKS=$CIRCLE_NODE_TOTAL CHUNK_NUMBER=$CIRCLE_NODE_INDEX \
-            bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
+          command: bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnConductor and not @OnlyRunsOnPNC'
       - save_artifacts
 
   test_api:
@@ -565,7 +550,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: medium
     steps:
       - unless:
           condition:
@@ -594,7 +579,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: large
     steps:
       - unless:
           condition:
@@ -605,6 +590,7 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
@@ -620,37 +606,10 @@ jobs:
           name: Run integration tests
           command: npm run -w packages/ui test:integration
 
-  seed_data:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - setup_ui
-      - install_dependencies
-      - fetch_images:
-          images: nodejs-20-2023
-      - build_audit_logging_images
-      - start_services:
-          SERVICES: db-seed audit-log-api localstack
-      - build_core
-      - run:
-          name: Run the seed-data script
-          command: DEPLOY_NAME=e2e-test npm run -w packages/ui seed-data
-
   cypress_component_test:
     machine:
       image: ubuntu-2204:current
-    resource_class: xlarge
+    resource_class: medium
     parameters:
       ms-edge:
         type: boolean
@@ -665,21 +624,22 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_ui
+      - install_dependencies:
+          install-cypress: true
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run -w packages/ui install:assets
+      - build_core
       - when:
           condition:
             equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
-      - node_install
-      - install_dependencies:
-          install-cypress: true
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
           background: true
-      - run:
-          name: Install GOV.UK Assets
-          command: npm run -w packages/ui install:assets
       - run:
           name: Wait for cypress install to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
@@ -687,24 +647,24 @@ jobs:
       - run:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
-      - build_core
       - run:
           name: Run UI component tests
-          command: sh ./.circleci/scripts/ui-scripts/run-component-tests.sh
+          command: MS_EDGE="<< parameters.ms-edge >>" bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
-            MS_EDGE: << parameters.ms-edge >>
+      - store_test_results:
+          path: ~/project/packages/ui/cypress/results
       - store_artifacts:
-          path: ./cypress/videos
+          path: ~/project/packages/ui/cypress/videos
       - store_artifacts:
-          path: ./cypress/screenshots
+          path: ~/project/packages/ui/cypress/screenshots
 
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: true
-    resource_class: xlarge
+    resource_class: large
     parallelism: 10
     parameters:
       ms-edge:
@@ -719,6 +679,10 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
       - attach_workspace:
           at: .
       - run:
@@ -737,9 +701,8 @@ jobs:
       - run:
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
           background: true
-      - run: npm run -w packages/ui install:assets
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 user-service nginx-auth-proxy
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -748,29 +711,26 @@ jobs:
       - run:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
-      - fetch_images:
-          images: user-service nginx-auth-proxy
       - run:
           command: bash .circleci/scripts/run-infrastructure.sh ui ui
       - run:
           name: Run UI tests
-          command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
+          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
-            MS_EDGE: << parameters.ms-edge >>
       - store_test_results:
-          path: ./cypress/results
+          path: ~/project/packages/ui/cypress/results
       - store_artifacts:
-          path: ./cypress/videos
+          path: ~/project/packages/ui/cypress/videos
       - store_artifacts:
-          path: ./cypress/screenshots
+          path: ~/project/packages/ui/cypress/screenshots
 
   cucumber_e2e_tests:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: xlarge
+    resource_class: large
     parallelism: 10
     parameters:
       ms-edge:
@@ -793,6 +753,10 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - attach_workspace:
           at: .
       - run:
@@ -811,21 +775,24 @@ jobs:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
           command: "npm run install-browsers"
-      - start_bichard7_legacy
-      - run_test_chunk:
-          ARGS: >-
-            NEXTUI="true"
-            MESSAGE_ENTRY_POINT="mq"
-            MS_EDGE=<< parameters.ms-edge >>
+      - start_bichard7_legacy:
+          SKIP_IMAGES: "ui"
+      - run:
+          name: Run e2e tests against UI code
+          working_directory: packages/e2e-test
+          environment:
+            RECORD: "true"
+            NEXTUI: "true"
+            MESSAGE_ENTRY_POINT: "mq"
+            MS_EDGE: "<< parameters.ms-edge >>"
+          command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
-      - store_test_results:
-          working_directory: ~/project/packages/e2e-test
-          path: ./cucumber/results
 
   zap_scanner:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: large
     steps:
       - unless:
           condition:
@@ -842,6 +809,7 @@ jobs:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
+      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
@@ -910,25 +878,21 @@ workflows:
       - characterisation_test_legacy_phase2
       - comparison_test
 
-      - seed_data:
-          name: seed_data
-          requires:
-            - test_ui
       - build-ui:
           name: build-ui
           requires:
             - test_ui
-
       - cypress_component_test:
           name: cypress_component_test
           ms-edge: false
           requires:
-            - build-ui
+            - test_ui
       - cypress_component_test:
           name: cypress_component_test_ms_edge
           ms-edge: true
           requires:
-            - build-ui
+            - test_ui
+
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           ms-edge: false

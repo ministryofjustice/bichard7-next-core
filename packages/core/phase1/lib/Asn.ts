@@ -1,15 +1,15 @@
 const intOrString = (input: string): string => (input.match(/^\d*$/) ? input : "")
 
 class Asn {
-  public year: string
-
   public force: string
 
-  public unit: string
+  public sequence: number
 
   public system: string
 
-  public sequence: number
+  public unit: string
+
+  public year: string
 
   constructor(asn: string) {
     this.year = asn.slice(0, 2)
@@ -25,7 +25,7 @@ class Asn {
       const number = `${intOrString(this.force)}${intOrString(this.system)}${this.year}${sequence}`
       const modulus = Number(BigInt(number) % BigInt(23))
       return "ZABCDEFGHJKLMNPQRTUVWXY"[modulus]
-    } catch (e) {
+    } catch {
       return undefined
     }
   }

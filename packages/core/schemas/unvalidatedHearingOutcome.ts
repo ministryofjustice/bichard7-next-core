@@ -1,4 +1,5 @@
 import { z } from "zod"
+
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
 import { exceptionSchema } from "./exception"
@@ -350,7 +351,6 @@ export const unvalidatedHearingOutcomeSchema = z.object({
   }),
   PncQuery: pncQueryResultSchema.optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.$description),
   PncQueryDate: z.coerce.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
-  PncErrorMessage: z.string().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncErrorMessage.$description),
   Ignored: z.boolean().optional(),
   HasError: z.boolean().optional()
 })

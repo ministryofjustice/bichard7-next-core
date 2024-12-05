@@ -1,9 +1,11 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
+import type Exception from "../../types/Exception"
+import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isDummyAsn from "../../lib/isDummyAsn"
-import type Exception from "../../types/Exception"
 import { isAsnFormatValid } from "../lib/isAsnValid"
-import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 const HO100321: ExceptionGenerator = (hearingOutcome) => {
   const recordableOnPNCindicator = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator

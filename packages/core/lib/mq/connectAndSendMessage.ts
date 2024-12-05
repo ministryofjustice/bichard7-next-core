@@ -1,6 +1,8 @@
-import logger from "@moj-bichard7/common/utils/logger"
 import type { Client } from "stompit"
+
+import logger from "@moj-bichard7/common/utils/logger"
 import { ConnectFailover } from "stompit"
+
 import createMqConfig from "./createMqConfig"
 import deconstructServers from "./deconstructServers"
 

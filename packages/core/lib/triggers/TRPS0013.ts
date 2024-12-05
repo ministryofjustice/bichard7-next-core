@@ -1,14 +1,17 @@
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
+import type { TriggerGenerator } from "../../types/TriggerGenerator"
+
 import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import type { TriggerGenerator } from "../../types/TriggerGenerator"
 import hasCompletedDisposal from "./hasCompletedDisposal"
 
 const triggerCode = TriggerCode.TRPS0013
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
-  if (options?.phase !== Phase.PNC_UPDATE || !isPncUpdateDataset(hearingOutcome)) {
+  if (!phases.includes(options?.phase) || !isPncUpdateDataset(hearingOutcome)) {
     return []
   }
 

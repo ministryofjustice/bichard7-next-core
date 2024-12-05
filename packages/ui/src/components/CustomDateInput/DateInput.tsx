@@ -19,6 +19,18 @@ const dateActions = {
   resolvedTo: "caseResolvedTo"
 }
 
+const formatLabelText = (dateType: DateType): string => {
+  if (dateType.toLowerCase().includes("from")) {
+    return "Date from"
+  }
+
+  if (dateType.toLowerCase().includes("to")) {
+    return "Date to"
+  }
+
+  return "Date"
+}
+
 const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Props) => {
   const actionType = dateActions[dateType] as ActionType
   const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
@@ -44,7 +56,7 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
     <div className="govuk-form-group">
       <>
         <label className="govuk-body" htmlFor={`date-${dateType}`}>
-          {`Date ${dateType}:`}
+          {formatLabelText(dateType)}
           {renderSameDateButton && SameDateButton}
         </label>
       </>

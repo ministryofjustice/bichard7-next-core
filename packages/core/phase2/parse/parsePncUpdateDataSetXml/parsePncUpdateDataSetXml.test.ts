@@ -1,8 +1,9 @@
-import fs from "fs"
-import path from "path"
-import "jest-xml-matcher"
-import parsePncUpdateDataSetXml from "./parsePncUpdateDataSetXml"
 import { isError } from "@moj-bichard7/common/types/Result"
+import fs from "fs"
+import "jest-xml-matcher"
+import path from "path"
+
+import parsePncUpdateDataSetXml from "./parsePncUpdateDataSetXml"
 
 describe("parsePncUpdateDataSetXml", () => {
   const inputDirectory = "phase2/tests/fixtures/"

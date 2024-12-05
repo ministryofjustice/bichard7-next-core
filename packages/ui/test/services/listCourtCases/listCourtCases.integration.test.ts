@@ -2,7 +2,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import "reflect-metadata"
 import Note from "services/entities/Note"
-import type User from "services/entities/User"
+import User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
 import type { DataSource } from "typeorm"
@@ -24,6 +24,10 @@ import {
 import insertException from "../../utils/manageExceptions"
 import type { TestTrigger } from "../../utils/manageTriggers"
 import { insertTriggers } from "../../utils/manageTriggers"
+import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import postgres from "postgres"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -33,11 +37,7 @@ describe("listCourtCases", () => {
   let dataSource: DataSource
   const orgCode = "36FPA1"
   const forceCode = "036"
-  const testUser = {
-    visibleForces: [forceCode],
-    visibleCourts: [],
-    hasAccessTo: hasAccessToAll
-  } as Partial<User> as User
+  let testUser: User
 
   beforeAll(async () => {
     dataSource = await getDataSource()
@@ -55,6 +55,11 @@ describe("listCourtCases", () => {
     ;(leftJoinAndSelectTriggersQuery as jest.Mock).mockImplementation(
       jest.requireActual("services/queries/leftJoinAndSelectTriggersQuery").default
     )
+    testUser = {
+      visibleForces: [forceCode],
+      visibleCourts: [],
+      hasAccessTo: hasAccessToAll
+    } as Partial<User> as User
   })
 
   afterAll(async () => {
@@ -131,6 +136,148 @@ describe("listCourtCases", () => {
     expect(cases[0].notes).toHaveLength(1)
     expect(cases[1].notes).toHaveLength(3)
     expect(cases[2].notes).toHaveLength(3)
+  })
+
+  describe("Trigger exclusion", () => {
+    async function removeExceptions(caseCount: number) {
+      const db = postgres({ ...createDbConfig() })
+
+      for (let i = 0; i < caseCount; i++) {
+        await db<
+          ErrorListRecord[]
+        >`UPDATE br7own.error_list set error_count = 0, error_reason = null, error_report = '', error_status = null, error_insert_ts = null WHERE error_id = ${i}`
+      }
+
+      db.end()
+    }
+
+    async function resolveException() {
+      const db = postgres({ ...createDbConfig() })
+
+      await db<
+        ErrorListRecord[]
+      >`UPDATE br7own.error_list set error_status = 2, error_resolved_by = 'Dummy User', error_resolved_ts = ${new Date()} WHERE error_id = 0`
+
+      db.end()
+    }
+
+    const caseTriggerTRPR0001: { code: string; status: ResolutionStatus }[] = [
+      {
+        code: TriggerCode.TRPR0001,
+        status: "Unresolved"
+      }
+    ]
+
+    const createUserWithExcludedTrigger = (userGroups: UserGroup[], triggerCode: TriggerCode): User => {
+      const user = new User()
+      user.groups = userGroups
+      user.visibleForces = ["001"]
+      user.visibleCourts = []
+      user.excludedTriggers = [triggerCode]
+      return user
+    }
+
+    it("Should not display cases with user excluded triggers", async () => {
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTriggerTRPR0001)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await removeExceptions(3)
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(0)
+    })
+
+    it("Should not display user excluded triggers but display those cases when they have exceptions", async () => {
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTriggerTRPR0001)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(3)
+    })
+
+    it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user has access to all", async () => {
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: TriggerCode.TRPR0001,
+          status: "Unresolved"
+        },
+        {
+          code: TriggerCode.TRPR0002,
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await removeExceptions(3)
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(3)
+    })
+
+    it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user is a trigger handler", async () => {
+      const triggerHandler = createUserWithExcludedTrigger([UserGroup.TriggerHandler], TriggerCode.TRPR0001)
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: TriggerCode.TRPR0001,
+          status: "Unresolved"
+        },
+        {
+          code: TriggerCode.TRPR0002,
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await removeExceptions(3)
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, triggerHandler)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(3)
+    })
+
+    it("Should not display any case when there is an exception and a trigger, user is the supervisor, exception is resolved and a trigger is excluded for user", async () => {
+      const supervisor = createUserWithExcludedTrigger([UserGroup.Supervisor], TriggerCode.TRPR0001)
+      const caseTrigger: { code: string; status: ResolutionStatus }[] = [
+        {
+          code: TriggerCode.TRPR0001,
+          status: "Unresolved"
+        }
+      ]
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(1).fill(caseTrigger)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await resolveException()
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, supervisor)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(0)
+    })
+
+    it("Should not display any case when there is an exception and a trigger, user is the triggerHandler, and a trigger is excluded for user", async () => {
+      const triggerHandler = createUserWithExcludedTrigger([UserGroup.TriggerHandler], TriggerCode.TRPR0001)
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = new Array(3).fill(caseTriggerTRPR0001)
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+
+      const result = await listCourtCases(dataSource, { maxPageItems: 100 }, triggerHandler)
+      expect(isError(result)).toBe(false)
+      const { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(0)
+    })
   })
 
   describe("Pagination", () => {

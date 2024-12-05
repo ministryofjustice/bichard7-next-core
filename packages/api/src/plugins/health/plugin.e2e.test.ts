@@ -1,5 +1,7 @@
 import type { FastifyInstance } from "fastify"
+
 import { OK } from "http-status"
+
 import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
 import HealthRoutes from "./routes"
 

@@ -1,21 +1,23 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import errorPaths from "../../../../lib/exceptions/errorPaths"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncCourtCase, PncOffence, PncPenaltyCase, PncQueryResult } from "../../../../types/PncQueryResult"
-import OffenceMatcher from "./OffenceMatcher"
+
+import errorPaths from "../../../../lib/exceptions/errorPaths"
 import annotatePncMatch, { CaseType } from "./annotatePncMatch"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
 import offenceHasFinalResult from "./offenceHasFinalResult"
+import OffenceMatcher from "./OffenceMatcher"
+
+export type OffenceMatch = {
+  hoOffence: Offence
+  pncOffence: PncOffenceWithCaseRef
+}
 
 export type PncOffenceWithCaseRef = {
   caseReference: string
   caseType: CaseType
   pncOffence: PncOffence
-}
-
-export type OffenceMatch = {
-  hoOffence: Offence
-  pncOffence: PncOffenceWithCaseRef
 }
 
 const matchingCourtCases = (cases: PncCourtCase[], pncOffences: PncOffenceWithCaseRef[]): PncCourtCase[] =>

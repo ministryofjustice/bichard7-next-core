@@ -1,6 +1,8 @@
 import type { ConnectionOptions as TlsConnectionOptions } from "tls"
-import deconstructServers from "./deconstructServers"
+
 import type MqConfig from "./MqConfig"
+
+import deconstructServers from "./deconstructServers"
 
 const config: MqConfig = {
   url: "failover:(stomp://localhost:51613)",

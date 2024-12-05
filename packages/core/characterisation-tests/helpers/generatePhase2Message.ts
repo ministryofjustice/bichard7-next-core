@@ -2,33 +2,33 @@ import ResultClass from "../../types/ResultClass"
 import MessageType from "../types/MessageType"
 import generateMessage from "./generateMessage"
 
-type PncDisposal = {
-  type: number
-}
-
-type PncAdjudication = {}
-
 export type Duration = {
+  length: number
   type: string
   unit: string
-  length: number
 }
 
-type ResultQualifierVariable = {
-  code: number
-  duration?: Duration
+export type GeneratePhase2MessageOptions = {
+  arrestSummonsNumber?: string
+  hasCompletedDisarrOperation?: boolean
+  hoTemplate?: "AintCase" | "NoOperationsAndExceptions"
+  messageType: MessageType
+  offences?: Offence[]
+  penaltyNoticeCaseReference?: boolean
+  penaltyNoticeCaseReferenceNumber?: string
+  pncAdjudication?: PncAdjudication
+  pncDisposals?: PncDisposal[]
+  pncId?: string
+  recordableOnPncIndicator?: boolean
 }
 
-type Result = {
-  cjsResultCode?: number
-  resultVariableText?: string
-  pncDisposalType?: number
-  resultClass?: ResultClass
-  pncAdjudicationExists?: boolean
-  durations?: Duration[]
-  resultQualifierVariables?: ResultQualifierVariable[]
-  amountSpecifiedInResults?: number[]
-  numberOfOffencesTic?: boolean
+type Offence = {
+  addedByTheCourt?: boolean
+  courtCaseReferenceNumber?: boolean
+  offenceCategory?: OffenceCategory
+  offenceReasonSequence?: boolean
+  recordableOnPncIndicator?: boolean
+  results?: Result[]
 }
 
 type OffenceCategory = {
@@ -36,27 +36,27 @@ type OffenceCategory = {
   description: string
 }
 
-type Offence = {
-  offenceReasonSequence?: boolean
-  offenceCategory?: OffenceCategory
-  recordableOnPncIndicator?: boolean
-  addedByTheCourt?: boolean
-  results?: Result[]
-  courtCaseReferenceNumber?: boolean
+type PncAdjudication = {}
+
+type PncDisposal = {
+  type: number
 }
 
-export type GeneratePhase2MessageOptions = {
-  messageType: MessageType
-  hoTemplate?: "NoOperationsAndExceptions" | "AintCase"
-  penaltyNoticeCaseReference?: boolean
-  recordableOnPncIndicator?: boolean
-  arrestSummonsNumber?: string
-  penaltyNoticeCaseReferenceNumber?: string
-  offences?: Offence[]
-  pncId?: string
-  pncAdjudication?: PncAdjudication
-  pncDisposals?: PncDisposal[]
-  hasCompletedDisarrOperation?: boolean
+type Result = {
+  amountSpecifiedInResults?: number[]
+  cjsResultCode?: number
+  durations?: Duration[]
+  numberOfOffencesTic?: boolean
+  pncAdjudicationExists?: boolean
+  pncDisposalType?: number
+  resultClass?: ResultClass
+  resultQualifierVariables?: ResultQualifierVariable[]
+  resultVariableText?: string
+}
+
+type ResultQualifierVariable = {
+  code: number
+  duration?: Duration
 }
 
 const updateOptionsForNoOperationsAndExceptions = (

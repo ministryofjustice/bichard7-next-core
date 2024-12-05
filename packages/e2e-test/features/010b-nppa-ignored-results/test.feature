@@ -1,4 +1,4 @@
-Feature: {010} R2_Regression_NPPA_NPP_001 - part 2
+Feature: {010b} R2_Regression_NPPA_NPP_001 - part 2
 
 			"""
 			{010} R2_Regression_NPPA_NPP_001

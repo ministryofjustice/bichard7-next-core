@@ -1,11 +1,13 @@
-import type ExceptionCode from "bichard7-next-data-latest/types/ExceptionCode"
+import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/types/ExceptionCode"
+
 import { XMLParser } from "fast-xml-parser"
+
 import type { AnnotatedHearingOutcome, Result } from "../../types/AnnotatedHearingOutcome"
 import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
 import type Exception from "../../types/Exception"
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const extract = (el: any, path: (string | number)[] = []): Exception[] => {
+const extract = (el: any, path: (number | string)[] = []): Exception[] => {
   const exceptions = []
   for (const key in el) {
     if (key === "@_Error") {

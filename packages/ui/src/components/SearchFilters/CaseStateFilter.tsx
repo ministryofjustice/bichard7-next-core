@@ -1,40 +1,76 @@
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import ConditionalRender from "components/ConditionalRender"
+import RadioButton from "components/RadioButton/RadioButton"
+import { useCurrentUser } from "context/CurrentUserContext"
 import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
-import { ChangeEvent, Dispatch } from "react"
+import { Dispatch } from "react"
+import { CaseState } from "types/CaseListQueryParams"
 import { FilterAction } from "types/CourtCaseFilter"
 
 interface CaseStateFilterProps {
   dispatch: Dispatch<FilterAction>
-  value?: string
+  caseState?: string
+  resolvedByUsername?: string
 }
 
-const CaseStateFilter = ({ dispatch, value }: CaseStateFilterProps) => (
-  <fieldset className="govuk-fieldset">
-    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-      <Legend>{"Case state"}</Legend>
-    </legend>
-    <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-      <div className="govuk-checkboxes__item">
-        <input
-          className="govuk-checkboxes__input"
-          id="resolved"
-          name="state"
-          type="checkbox"
-          value={value}
-          checked={value === "Resolved"}
-          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+const CaseStateFilter = ({ dispatch, caseState, resolvedByUsername }: CaseStateFilterProps) => {
+  const currentUser = useCurrentUser()
+
+  return (
+    <fieldset className="govuk-fieldset">
+      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+        <Legend>{"Case state"}</Legend>
+      </legend>
+      <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
+        <RadioButton
+          name={"state"}
+          id={"resolved"}
+          dataAriaControls={"conditional-case-state"}
+          checked={caseState === "Resolved" && !resolvedByUsername}
+          value="Resolved"
+          label={"All resolved cases"}
+          onChange={(event) => {
             dispatch({
-              method: event.currentTarget.checked ? "add" : "remove",
+              method: "add",
+              type: "caseState",
+              value: event.currentTarget.value as CaseState
+            })
+          }}
+        />
+        <ConditionalRender isRendered={currentUser.groups.includes(UserGroup.Supervisor)}>
+          <RadioButton
+            name={"resolvedByUsername"}
+            id={"myResolvedCases"}
+            dataAriaControls={"conditional-case-state"}
+            checked={caseState === "Resolved" && resolvedByUsername === currentUser.username}
+            label={"My resolved cases"}
+            value={currentUser.username}
+            onChange={() => {
+              dispatch({
+                method: "add",
+                type: "resolvedByUsername",
+                value: currentUser.username
+              })
+            }}
+          />
+        </ConditionalRender>
+        <RadioButton
+          name={"state"}
+          id={"unresolved"}
+          dataAriaControls={"conditional-case-state"}
+          checked={caseState !== "Resolved"}
+          label={"Unresolved cases"}
+          onChange={() => {
+            dispatch({
+              method: "remove",
               type: "caseState",
               value: "Resolved"
             })
           }}
-        ></input>
-        <label className="govuk-label govuk-checkboxes__label" htmlFor="resolved">
-          {"Resolved"}
-        </label>
+        />
       </div>
-    </div>
-  </fieldset>
-)
+    </fieldset>
+  )
+}
 
 export default CaseStateFilter

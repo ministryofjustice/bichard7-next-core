@@ -3,22 +3,24 @@ import logger from "@moj-bichard7/common/utils/logger"
 import differenceWith from "lodash.differencewith"
 import isEqual from "lodash.isequal"
 import stompit from "stompit"
+
+import type Exception from "../../types/Exception"
+import type { Trigger } from "../../types/Trigger"
+import type Phase1Result from "../types/Phase1Result"
+
 import MockPncGateway from "../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import parseSpiResult from "../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../lib/parse/transformSpiToAho"
-import type Exception from "../../types/Exception"
-import type { Trigger } from "../../types/Trigger"
 import CorePhase1 from "../phase1"
 import generateMockPncQueryResult from "../tests/helpers/generateMockPncQueryResult"
-import type Phase1Result from "../types/Phase1Result"
 import { Phase1ResultType } from "../types/Phase1Result"
 
 interface BichardResult {
-  incomingMessage: string
   annotatedHearingOutcome: string
-  triggers?: Trigger[]
   exceptions?: Exception[]
+  incomingMessage: string
+  triggers?: Trigger[]
 }
 
 const CONNECTION_CONFIG = {
@@ -67,12 +69,12 @@ const parseBichardResult = (message: string): BichardResult | undefined => {
   }
 }
 
-const getTriggerOrExceptionCodes = (a: Trigger[] | Exception[]): string[] =>
-  a.map((obj: Trigger | Exception) => obj.code)
+const getTriggerOrExceptionCodes = (a: Exception[] | Trigger[]): string[] =>
+  a.map((obj: Exception | Trigger) => obj.code)
 
 const areTriggerOrExceptionArraysEqual = (
-  received: Trigger[] | Exception[],
-  expected: Trigger[] | Exception[]
+  received: Exception[] | Trigger[],
+  expected: Exception[] | Trigger[]
 ): boolean => {
   const receivedCodes = getTriggerOrExceptionCodes(received)
   const expectedCodes = getTriggerOrExceptionCodes(expected)

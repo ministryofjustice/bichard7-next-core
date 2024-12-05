@@ -1,8 +1,9 @@
 import type { HearingDefendant } from "../../../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
+
 import convertAsnToLongFormat from "./convertAsnToLongFormat"
 
-const GENERATED_PNC_FILENAME_MAX_LENGTH = 54
+export const GENERATED_PNC_FILENAME_MAX_LENGTH = 54
 
 const deduplicate = (input: string[]): string[] =>
   input

@@ -1,17 +1,19 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
-import generateTriggers from "../lib/triggers/generateTriggers"
+
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../types/AuditLogger"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
+import type Phase1Result from "./types/Phase1Result"
+
+import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
+import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
+import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
+import generateTriggers from "../lib/triggers/generateTriggers"
 import enrichAho from "./enrichAho"
 import generateExceptions from "./exceptions/generate"
-import generateExceptionLogAttributes from "./lib/auditLog/generateExceptionLogAttributes"
-import generateTriggersLogAttributes from "./lib/auditLog/generateTriggersLogAttributes"
 import getIncomingMessageLogAttributes from "./lib/auditLog/getIncomingMessageLog"
 import isReopenedOrStatutoryDeclarationCase from "./lib/isReopenedOrStatutoryDeclarationCase"
-import type Phase1Result from "./types/Phase1Result"
 import { Phase1ResultType } from "./types/Phase1Result"
 
 const phase1 = async (
@@ -34,7 +36,9 @@ const phase1 = async (
     }
   }
 
-  const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger)
+  const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
+
+  const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger, isIgnored)
 
   auditLogger.info(
     EventCode.HearingOutcomeDetails,
@@ -54,7 +58,6 @@ const phase1 = async (
     )
   }
 
-  const isIgnored = isReopenedOrStatutoryDeclarationCase(enrichedHearingOutcome)
   let resultType: Phase1ResultType
   if (isIgnored) {
     auditLogger.info(EventCode.IgnoredReopened)

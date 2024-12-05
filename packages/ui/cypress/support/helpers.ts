@@ -3,6 +3,10 @@ import type CaseDetailsTab from "types/CaseDetailsTab"
 import type CourtCase from "../../src/services/entities/CourtCase"
 import users from "../fixtures/users"
 
+export function visitBasePath() {
+  cy.visit("/bichard")
+}
+
 export function confirmFiltersAppliedContains(filterTag: string) {
   cy.get(".moj-filter-tags").contains(filterTag)
 }

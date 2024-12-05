@@ -1,6 +1,8 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../../types/AhoXml"
 import type Exception from "../../../types/Exception"
+
 import Phase from "../../../types/Phase"
 import errorPaths from "../../exceptions/errorPaths"
 import isPncException from "../../exceptions/isPncException"
@@ -8,7 +10,7 @@ import addAhoErrors from "./addAhoErrors"
 
 const isBr7TextString = (element: GenericAhoXmlValue): boolean => typeof element === "object"
 
-const findNamespacedKey = (element: GenericAhoXmlValue, key: string | number): GenericAhoXmlValue | Error => {
+const findNamespacedKey = (element: GenericAhoXmlValue, key: number | string): Error | GenericAhoXmlValue => {
   if (Array.isArray(element) && typeof key === "number") {
     return element[key]
   }
@@ -56,7 +58,7 @@ const reorderAttributesToPutErrorFirst = (element: Partial<Br7TypeTextString>): 
   }
 }
 
-const addException = (aho: AhoXml, exception: Exception): void | Error => {
+const addException = (aho: AhoXml, exception: Exception): Error | void => {
   const element = findElement(aho as unknown as GenericAhoXml, exception.path)
   if (element instanceof Error) {
     return element
@@ -74,36 +76,42 @@ const hasNonPncAsnExceptions = (exceptions: Exception[]): boolean =>
 const isPncAsnException = (exception: Exception): boolean =>
   isPncException(exception.code) && exception.path.join("/") === errorPaths.case.asn.join("/")
 
+// TODO: This reverse function is only needed because the order of the PNC exceptions affects which exception gets put on to the ASN
+// It is only there to make sure the comparisons pass. Once we have gone live it can be removed since we don't really mind which exception is used
+const sortAsnExceptions = (exceptions: Exception[]): Exception[] => {
+  const pncAsnExceptions = exceptions.filter(isPncAsnException)
+  const otherExceptions = exceptions.filter((exception) => !isPncAsnException(exception))
+  return [...otherExceptions, ...pncAsnExceptions.reverse()]
+}
+
+// TODO: Refactor to remove duplication from this function and below
 const addExceptionsToPncUpdateDatasetXml = (
   aho: AhoXml,
   exceptions: Exception[] | undefined,
   addFalseHasErrorAttributes = true
-): void | Error => {
+): Error | void => {
   if (!exceptions) {
     return
   }
 
-  for (const e of exceptions) {
+  const sortedExceptions = sortAsnExceptions(exceptions)
+
+  for (const e of sortedExceptions) {
     if (
       !isPncAsnException(e) ||
-      (isPncAsnException(e) && !hasNonPncAsnExceptions(exceptions) && e.code !== ExceptionCode.HO100315)
+      (isPncAsnException(e) &&
+        !hasNonPncAsnExceptions(sortedExceptions) &&
+        e.code !== ExceptionCode.HO100315 &&
+        e.code !== ExceptionCode.HO100403)
     ) {
       addException(aho, e)
     }
   }
 
-  // Add PNC errors to the PNC error message if it is set
-  if (aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]) {
-    const pncError = exceptions.find((e) => isPncException(e.code))
-    if (pncError) {
-      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
-    }
-  }
-
-  addAhoErrors(aho, exceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
+  addAhoErrors(aho, sortedExceptions, addFalseHasErrorAttributes, Phase.PNC_UPDATE)
 }
 
-const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): void | Error => {
+const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined): Error | void => {
   if (!exceptions) {
     return
   }
@@ -114,14 +122,6 @@ const addExceptionsToAhoXml = (aho: AhoXml, exceptions: Exception[] | undefined)
       (isPncAsnException(e) && !hasNonPncAsnExceptions(exceptions) && e.code !== ExceptionCode.HO100315)
     ) {
       addException(aho, e)
-    }
-  }
-
-  // Add PNC errors to the PNC error message if it is set
-  if (aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]) {
-    const pncError = exceptions.find((e) => isPncException(e.code))
-    if (pncError) {
-      aho["br7:AnnotatedHearingOutcome"]["br7:PNCErrorMessage"]["@_classification"] = pncError.code
     }
   }
 

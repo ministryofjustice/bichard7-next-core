@@ -1,5 +1,6 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
+
 import type {
   AhoXml,
   Br7Case,
@@ -39,6 +40,7 @@ import type {
 } from "../../../types/AnnotatedHearingOutcome"
 import type { CjsPlea } from "../../../types/Plea"
 import type ResultClass from "../../../types/ResultClass"
+
 import countDecimalPlaces from "../../countDecimalPlaces"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../encoding"
 import extractExceptionsFromAho from "./extractExceptionsFromXml"
@@ -138,7 +140,7 @@ const mapBailCondition = (bailCondition: Br7TextString | Br7TextString[] | undef
   return allBailConditions.map((bc) => bc["#text"])
 }
 
-const parseDateOrFallbackToString = (input?: Br7ErrorString): Date | string | null | undefined => {
+const parseDateOrFallbackToString = (input?: Br7ErrorString): Date | null | string | undefined => {
   if (input && input["@_Error"] && !input["#text"]) {
     return null
   }
@@ -210,13 +212,13 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   ResultApplicableQualifierCode: []
 })
 
-const mapXmlResultsToAho = (xmlResults: Br7Result[] | Br7Result): Result[] =>
+const mapXmlResultsToAho = (xmlResults: Br7Result | Br7Result[]): Result[] =>
   Array.isArray(xmlResults)
     ? xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
     : [mapXmlResultToAho(xmlResults)]
 
 const buildFullOffenceCode = (
-  offenceCode: NonMatchingOffenceCode | CommonLawOffenceCode | IndictmentOffenceCode
+  offenceCode: CommonLawOffenceCode | IndictmentOffenceCode | NonMatchingOffenceCode
 ): string => {
   const actOrSource = "ds:ActOrSource" in offenceCode ? offenceCode["ds:ActOrSource"]?.["#text"] : ""
   const coml = "ds:CommonLawOffence" in offenceCode ? offenceCode["ds:CommonLawOffence"]["#text"] : ""
@@ -279,7 +281,7 @@ const mapOffenceReasonToAho = (xmlOffenceReason: Br7OffenceReason): OffenceReaso
   throw new Error("Offence Reason Missing from XML")
 }
 
-const mapErrorString = (node: Br7ErrorString | undefined): string | null | undefined => {
+const mapErrorString = (node: Br7ErrorString | undefined): null | string | undefined => {
   if (node?.["#text"]) {
     return node["#text"]
   }
@@ -328,7 +330,7 @@ const caseRecordableOnPnc = (xmlCase: Br7Case): boolean | undefined => {
   return undefined
 }
 
-const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string | undefined | null => {
+const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): null | string | undefined => {
   if (element === undefined) {
     return undefined
   }
@@ -341,7 +343,7 @@ const mapCourtCaseReferenceNumber = (element: Br7TextString | undefined): string
   return value
 }
 
-const mapXmlOffencesToAho = (xmlOffences: Br7Offence[] | Br7Offence): Offence[] => {
+const mapXmlOffencesToAho = (xmlOffences: Br7Offence | Br7Offence[]): Offence[] => {
   if (!xmlOffences) {
     return []
   }
@@ -512,8 +514,7 @@ export const mapXmlToAho = (aho: AhoXml): AnnotatedHearingOutcome | Error => {
     PncQuery: mapXmlCxe01ToAho(aho["br7:AnnotatedHearingOutcome"]?.CXE01),
     PncQueryDate: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]
       ? new Date(aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCQueryDate"]["#text"])
-      : undefined,
-    PncErrorMessage: aho["br7:AnnotatedHearingOutcome"]?.["br7:PNCErrorMessage"]?.["#text"]
+      : undefined
   }
 }
 

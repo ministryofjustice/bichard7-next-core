@@ -2,7 +2,7 @@ import { Given, Then, When } from "@cucumber/cucumber"
 import * as legacy from "../utils/actions.legacy-ui"
 import * as ui from "../utils/actions.next-ui"
 import { checkAuditLogExists } from "../utils/auditLogging"
-import { logInAs } from "../utils/auth"
+import { logInAs, logInAsSameWindow } from "../utils/auth"
 import * as messages from "../utils/message"
 import * as pnc from "../utils/pnc"
 import * as reports from "../utils/reports"
@@ -10,6 +10,7 @@ import type Bichard from "../utils/world"
 
 export const setupNextSteps = () => {
   Given("I am logged in as {string}", logInAs)
+  Given("I am logged in as {string} in the same window", logInAsSameWindow)
 
   // Misc
   When(
@@ -131,7 +132,7 @@ export const setupNextSteps = () => {
   Then("I correct {string} and type {string}", ui.correctOffenceExceptionByTypeahead)
   Then("I select the first option", ui.selectTheFirstOption)
   Then("I correct {string} and press {string}", ui.inputFieldToKeyboardPress)
-  Then("I see the Correction badge", ui.seeCorrectionBadge)
+  Then("I see the {string} badge", ui.seeBadge)
   When("I go to the Case Details for this exception {string}", ui.goToExceptionPage)
   Then("I reload the page", ui.reload)
   Then("I remove the year from {string}", ui.removeYear)
@@ -143,4 +144,8 @@ export const setupNextSteps = () => {
   Then("I do not see record for {string}", ui.cannotSeeContentInTable)
   Then("I see exceptions resolution status as {string}", ui.exceptionResolutionStatus)
   Then("I see exceptions resolution status as {string} on case details page", ui.exceptionResolutionStatusOnCaseDetails)
+  Then("I search for exceptions", ui.searchForExceptions)
+  Then("I see applied filters", ui.exceptionReasonChip)
+  Then("I sign out", ui.signOut)
+  Then("I should be on the same case details page with exception {string}", ui.sameException)
 }

@@ -1,15 +1,16 @@
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type Exception from "../../../types/Exception"
 
 const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]
 const warningOnlyCodes = [ExceptionCode.HO200200]
 
-const mostSpecificErrorElement = (path: (string | number)[]) => {
+const mostSpecificErrorElement = (path: (number | string)[]) => {
   const matchingElements = errorElementHierarchy.filter((value) => path.includes(value))
   return matchingElements.pop()
 }
 
-const shouldIgnoreHasError = (exception: Exception, elementPath: (string | number)[]): boolean => {
+const shouldIgnoreHasError = (exception: Exception, elementPath: (number | string)[]): boolean => {
   const omitHasErrorFlagCodes = [ExceptionCode.HO200104, ExceptionCode.HO200101, ExceptionCode.HO200108]
   const element = elementPath[elementPath.length - 2]
 
@@ -19,7 +20,7 @@ const shouldIgnoreHasError = (exception: Exception, elementPath: (string | numbe
   )
 }
 
-const exceptionMatchesElement = (exception: Exception, elementPath: (string | number)[]) => {
+const exceptionMatchesElement = (exception: Exception, elementPath: (number | string)[]) => {
   const exceptionElement = mostSpecificErrorElement(exception.path)
   const pathElement = mostSpecificErrorElement(elementPath)
   const exceptionPath = exception.path.join("/") + "/"
@@ -35,7 +36,7 @@ const exceptionMatchesElement = (exception: Exception, elementPath: (string | nu
   )
 }
 
-const hasError = (exceptions: Exception[] | undefined, path: (string | number)[] = []): boolean => {
+const hasError = (exceptions: Exception[] | undefined, path: (number | string)[] = []): boolean => {
   if (!exceptions || exceptions.length === 0) {
     return false
   }

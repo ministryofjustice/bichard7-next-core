@@ -1,4 +1,5 @@
 import type { ComparisonData } from "../../types/ComparisonData"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // We added force 91 to Bichard and core, but there was an overlap where we were handling

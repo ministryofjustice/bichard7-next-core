@@ -1,32 +1,35 @@
+import type { FastifyInstance } from "fastify"
+import type { ZodOpenApiVersion } from "zod-openapi"
+
 import swagger from "@fastify/swagger"
 import swaggerUi from "@fastify/swagger-ui"
-import type { FastifyInstance } from "fastify"
 import { fastifyZodOpenApiTransform } from "fastify-zod-openapi"
 import path from "path"
 
 export default async function (fastify: FastifyInstance) {
   await fastify.register(swagger, {
     openapi: {
-      info: {
-        title: "Bichard API",
-        description: "API documentation about Bichard",
-        version: "0.0.1"
-      },
       components: {
         securitySchemes: {
           bearerAuth: {
             description: 'Authorization header token, sample: "Bearer #JWT#"',
-            type: "apiKey",
+            in: "header",
             name: "Authorization",
-            in: "header"
+            type: "apiKey"
           }
         }
       },
+      info: {
+        description: "API documentation about Bichard",
+        title: "Bichard API",
+        version: "0.0.1"
+      },
+      openapi: "3.1.0" satisfies ZodOpenApiVersion,
       servers: [],
       tags: [
-        { name: "Cases", description: "Cases endpoints" },
-        { name: "Health", description: "Health endpoint" },
-        { name: "Root", description: "Root endpoints" }
+        { description: "Cases endpoints", name: "Cases" },
+        { description: "Health endpoint", name: "Health" },
+        { description: "Root endpoints", name: "Root" }
       ]
     },
     transform: fastifyZodOpenApiTransform

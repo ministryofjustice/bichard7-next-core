@@ -1,7 +1,9 @@
-import { normaliseCCR } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
-import ExceptionCode from "bichard7-next-data-latest/dist/types/ExceptionCode"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
+import { normaliseCCR } from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/normaliseCCR"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 const ho100333AndCCRHasLeadingZero = ({ expected, actual, phase }: ComparisonData) =>

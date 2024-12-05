@@ -4,6 +4,12 @@ import canReallocateTestData from "../../fixtures/canReallocateTestData.json"
 import { clickTab, loginAndVisit } from "../../support/helpers"
 
 describe("Case details", () => {
+  before(() => {
+    // Create sessions
+    loginAndVisit("BichardForce03")
+    loginAndVisit()
+  })
+
   beforeEach(() => {
     cy.task("clearCourtCases")
   })
@@ -233,11 +239,13 @@ describe("Case details", () => {
         [
           {
             user: "another.user1",
-            text: "Test note 1"
+            text: "Test note 1",
+            createdAt: new Date("2024-11-18")
           },
           {
             user: "another.user2",
-            text: "Test note 2"
+            text: "Test note 2",
+            createdAt: new Date("2024-11-20")
           }
         ]
       ],
@@ -308,11 +316,13 @@ describe("Case details", () => {
         [
           {
             user: "another.user1",
-            text: "Test note 1"
+            text: "Test note 1",
+            createdAt: new Date("2024-11-18")
           },
           {
             user: "another.user2",
-            text: "Test note 2"
+            text: "Test note 2",
+            createdAt: new Date("2024-11-20")
           }
         ]
       ],

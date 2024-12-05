@@ -1,6 +1,7 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import hashedPassword from "./hashedPassword"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 const numberedUsers = () => {
   const newUsers: Record<string, Partial<User> & { groups: UserGroup[] }> = {}
@@ -24,7 +25,7 @@ const numberedUsers = () => {
 const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
   GeneralHandler: {
     username: "GeneralHandler",
-    visibleForces: ["01"],
+    visibleForces: ["001"],
     forenames: "General Handler",
     surname: "User",
     email: "generalhandler@example.com",
@@ -132,6 +133,35 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     email: "court02user@example.com",
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+  },
+  userExcludedTriggers: {
+    username: "userExcludedTriggers",
+    visibleForces: ["007"],
+    forenames: "Supervisor1",
+    surname: "User",
+    email: "userExcludedTriggers@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003, TriggerCode.TRPR0008]
+  },
+  userExcludedTriggersMultiForces: {
+    username: "userExcludedTriggersMultiForces",
+    visibleForces: ["001", "002", "003"],
+    forenames: "Supervisor2",
+    surname: "User",
+    email: "userExclTriggsMultiForces@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0021, TriggerCode.TRPR0030]
+  },
+  userWithoutExcludedTriggers: {
+    username: "Bichard18",
+    visibleForces: ["18"],
+    forenames: "Bichard18",
+    surname: "User",
+    email: "bichard18@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
   },
   ...numberedUsers()
 }

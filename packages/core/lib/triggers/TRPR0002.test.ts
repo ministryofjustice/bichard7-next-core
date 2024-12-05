@@ -1,6 +1,8 @@
-import TriggerCode from "bichard7-next-data-latest/dist/types/TriggerCode"
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import TRPR0002 from "./TRPR0002"
 
 describe("TRPR0002", () => {

@@ -1,13 +1,16 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
-import isCaseRecordable from "../../../lib/isCaseRecordable"
-import isDummyAsn from "../../../lib/isDummyAsn"
+
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../../../types/AuditLogger"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
-import { isNotFoundError } from "../../exceptions/pncExceptions"
+
+import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
+import isCaseRecordable from "../../../lib/isCaseRecordable"
+import isDummyAsn from "../../../lib/isDummyAsn"
+import { isNotFoundError } from "../../exceptions/generatePncEnquiryExceptionFromMessage"
+import generatePncEnquiryExceptionFromMessage from "../../exceptions/generatePncEnquiryExceptionFromMessage"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
@@ -15,7 +18,7 @@ const addTitle = (offence: PncOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
 }
 
-const addTitleToCaseOffences = (cases: PncPenaltyCase[] | PncCourtCase[] | undefined) =>
+const addTitleToCaseOffences = (cases: PncCourtCase[] | PncPenaltyCase[] | undefined) =>
   cases && cases.forEach((c) => c.offences.forEach(addTitle))
 
 const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
@@ -46,7 +49,8 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
-  auditLogger: AuditLogger
+  auditLogger: AuditLogger,
+  isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
   const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
@@ -68,14 +72,16 @@ export default async (
     "PNC Request Type": "enquiry",
     "PNC Request Message":
       annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
-    "PNC Response Message": isError(pncResult) ? pncResult.message : pncResult,
+    "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
 
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
-    if (!isNotFoundError(pncResult.message) || isCaseRecordable(annotatedHearingOutcome)) {
-      annotatedHearingOutcome.PncErrorMessage = pncResult.message || "Unknown communication error"
+    for (const message of pncResult.messages) {
+      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
+        annotatedHearingOutcome.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
+      }
     }
   } else {
     annotatedHearingOutcome.PncQuery = pncResult
