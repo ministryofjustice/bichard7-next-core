@@ -24,9 +24,9 @@ const rerunPeriod: ConductorWorker = {
   execute: async (task: Task) => {
     const start = task.inputData?.start
     const end = task.inputData?.end
-    const onlyFailures = task.inputData?.onlyFailures ?? false
-    const persistResults = task.inputData?.persistResults ?? true
-    const phase = task.inputData?.phase ?? 2
+    const onlyFailures = task.inputData?.onlyFailures === "true"
+    const persistResults = task.inputData?.persistResults !== "false"
+    const phase = Number(task.inputData?.phase ?? 2)
 
     if (!start || !end) {
       return failedTerminal("start and end must be specified")
