@@ -183,7 +183,7 @@ jobs:
       - install_dependencies
       - run:
           name: Check the code for linting errors
-          command: npm run lint
+          command: npm run lint:ci
       - build_core
 
   test_core:

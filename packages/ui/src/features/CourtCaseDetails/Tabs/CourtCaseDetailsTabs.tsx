@@ -1,9 +1,9 @@
 import { useCourtCase } from "context/CourtCaseContext"
+import { useCurrentUser } from "context/CurrentUserContext"
 import type CaseDetailsTab from "types/CaseDetailsTab"
-import { getTabDetails } from "utils/getTabDetails"
+import getTabDetails from "utils/tabDetails/getTabDetails"
 import { CourtCaseDetailsSingleTab } from "./CourtCaseDetailsSingleTab"
 import { StyledNav } from "./CourtCaseDetailsTabs.styles"
-import { useCurrentUser } from "context/CurrentUserContext"
 
 interface CourtCaseDetailsTabsProps {
   activeTab: CaseDetailsTab

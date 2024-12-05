@@ -1,17 +1,17 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
 import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
+import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
+import ResultClass from "../types/ResultClass"
+import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
-import ResultClass from "../types/ResultClass"
-import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 
 jest.mock("./lib/areAllResultsOnPnc")
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
@@ -225,6 +225,82 @@ describe("Bichard Core Phase 2 processing logic", () => {
       expect(auditLogEvents).toContainEqual(expect.objectContaining({ eventCode: EventCode.IgnoredAlreadyOnPNC }))
     }
   )
+
+  it("adds an event for generated exceptions", () => {
+    const inputMessage = structuredClone(pncUpdateDataSetTestCase.inputMessage)
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      {
+        Result: []
+      }
+    ] as unknown as Offence[]
+
+    const { auditLogEvents } = phase2Handler(inputMessage, auditLogger)
+
+    expect(auditLogEvents).toContainEqual({
+      attributes: {
+        "Error 1 Details": "HO200212||OffenceCode",
+        "Exception Type": "HO200212",
+        "Number Of Errors": 1
+      },
+      category: "information",
+      eventCode: "exceptions.generated",
+      eventSource: "CorePhase2",
+      eventType: "Exceptions generated",
+      timestamp: expect.anything()
+    })
+  })
+
+  it("adds an event for generated triggers when no operations are generated (non-recordable case)", () => {
+    const { auditLogEvents } = phase2Handler(ahoTestCase.inputMessage, auditLogger)
+
+    expect(auditLogEvents).toContainEqual(
+      expect.objectContaining({ eventCode: "hearing-outcome.ignored.nonrecordable" })
+    )
+    expect(auditLogEvents).toContainEqual({
+      attributes: {
+        "Number of Triggers": 3,
+        "Trigger 1 Details": "TRPR0003",
+        "Trigger 2 Details": "TRPR0004",
+        "Trigger 3 Details": "TRPR0004",
+        "Trigger and Exception Flag": false
+      },
+      category: "information",
+      eventCode: "triggers.generated",
+      eventSource: "CorePhase2",
+      eventType: "Triggers generated",
+      timestamp: expect.anything()
+    })
+  })
+
+  it("adds an event for generated triggers when hearing outcome has ancillary interim case", () => {
+    const { inputMessage } = structuredClone(ahoTestCase)
+    inputMessage.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
+      (offence) => !offence.AddedByTheCourt
+    ).forEach((offence) => {
+      offence.Result.forEach((result) => {
+        result.PNCDisposalType = 1000
+        result.ResultVariableText = "Dummy text. Hearing on 2024-01-01\n confirmed. Dummy text."
+      })
+    })
+
+    const { auditLogEvents } = phase2Handler(inputMessage, auditLogger)
+
+    expect(auditLogEvents).toContainEqual(expect.objectContaining({ eventCode: "hearing-outcome.ignored.ancillary" }))
+    expect(auditLogEvents).toContainEqual({
+      attributes: {
+        "Number of Triggers": 3,
+        "Trigger 1 Details": "TRPR0003",
+        "Trigger 2 Details": "TRPR0004",
+        "Trigger 3 Details": "TRPR0004",
+        "Trigger and Exception Flag": false
+      },
+      category: "information",
+      eventCode: "triggers.generated",
+      eventSource: "CorePhase2",
+      eventType: "Triggers generated",
+      timestamp: expect.anything()
+    })
+  })
 
   it.each([ahoTestCase, pncUpdateDataSetTestCase])(
     "doesn't add ignored event when all results are not on the PNC for $messageType",

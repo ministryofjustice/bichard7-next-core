@@ -41,8 +41,8 @@ describe("Incoming message handler", () => {
     const workflows = await waitForWorkflows({
       freeText: s3Path,
       query: {
-        workflowType: "incoming_message_handler",
-        status: "COMPLETED"
+        status: "COMPLETED",
+        workflowType: "incoming_message_handler"
       }
     })
     expect(workflows).toHaveLength(1)
@@ -87,8 +87,8 @@ describe("Incoming message handler", () => {
     const workflows = await waitForWorkflows({
       freeText: s3Path,
       query: {
-        workflowType: "incoming_message_handler",
-        status: "COMPLETED"
+        status: "COMPLETED",
+        workflowType: "incoming_message_handler"
       }
     })
     expect(workflows).toHaveLength(1)
@@ -103,8 +103,8 @@ describe("Incoming message handler", () => {
     const duplicateWorkflows = await waitForWorkflows({
       freeText: duplicateMessageS3Path,
       query: {
-        workflowType: "incoming_message_handler",
-        status: "COMPLETED"
+        status: "COMPLETED",
+        workflowType: "incoming_message_handler"
       }
     })
     expect(duplicateWorkflows).toHaveLength(1)
@@ -141,8 +141,8 @@ describe("Incoming message handler", () => {
     const workflows = await waitForWorkflows({
       freeText: s3Path,
       query: {
-        workflowType: "incoming_message_handler",
-        status: "COMPLETED"
+        status: "COMPLETED",
+        workflowType: "incoming_message_handler"
       }
     })
     expect(workflows).toHaveLength(1)
@@ -151,18 +151,18 @@ describe("Incoming message handler", () => {
     // Start workflow again with the same correlation ID
     const conductorClient = createConductorClient()
     const newWorkflowId = await conductorClient.workflowResource.startWorkflow({
-      name: "incoming_message_handler",
+      correlationId,
       input: { s3Path },
-      correlationId
+      name: "incoming_message_handler"
     })
 
     // search for the incoming_message_handler workflows
     const allIncomingWorkflows = await waitForWorkflows({
       count: 2,
       query: {
-        workflowType: "incoming_message_handler",
+        correlationId,
         status: "COMPLETED",
-        correlationId
+        workflowType: "incoming_message_handler"
       }
     })
     expect(allIncomingWorkflows).toHaveLength(2)
@@ -174,8 +174,8 @@ describe("Incoming message handler", () => {
     const allBichardWorkflows = await waitForWorkflows({
       count: 1,
       query: {
-        workflowType: "bichard_phase_1",
-        correlationId
+        correlationId,
+        workflowType: "bichard_phase_1"
       }
     })
     expect(allBichardWorkflows).toHaveLength(1)
@@ -197,8 +197,8 @@ describe("Incoming message handler", () => {
     const workflows = await waitForWorkflows({
       freeText: s3Path,
       query: {
-        workflowType: "incoming_message_handler",
-        status: "COMPLETED"
+        status: "COMPLETED",
+        workflowType: "incoming_message_handler"
       }
     })
     expect(workflows).toHaveLength(1)
@@ -220,8 +220,8 @@ describe("Incoming message handler", () => {
 
     const bichardProcessWorkflows = await waitForWorkflows({
       query: {
-        workflowType: "bichard_phase_1",
-        correlationId: message.messageId
+        correlationId: message.messageId,
+        workflowType: "bichard_phase_1"
       }
     })
     expect(bichardProcessWorkflows).toHaveLength(1)
