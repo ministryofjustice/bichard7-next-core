@@ -1,5 +1,6 @@
-import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import Phase from "../../types/Phase"
 import TRPS0008 from "./TRPS0008"
 

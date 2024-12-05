@@ -1,4 +1,5 @@
 import type { HearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+
 import isAncillaryInterimCase from "./isAncillaryInterimCase"
 
 const createHearingOutcome = (offences: Offence[]) =>

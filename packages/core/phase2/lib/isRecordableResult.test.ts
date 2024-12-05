@@ -1,4 +1,5 @@
 import type { Result } from "../../types/AnnotatedHearingOutcome"
+
 import isRecordableResult from "./isRecordableResult"
 
 describe("isRecodableResult", () => {

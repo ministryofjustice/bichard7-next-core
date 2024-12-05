@@ -1,4 +1,5 @@
 import { readFileSync } from "fs"
+
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
 import enrichCourt from "./enrichCourt"

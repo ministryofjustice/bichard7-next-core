@@ -1,7 +1,8 @@
+import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
+
 import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../../../lib/dataLookup"
 import getCourtDetails from "../../../lib/dataLookup/getCourtDetails"
 import populateOrganisationUnitFields from "../../lib/organisationUnit/populateOrganisationUnitFields"
-import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
 const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {
   let { CourtHearingLocation } = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing

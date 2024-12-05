@@ -3,9 +3,9 @@ import type { ParsedAsn } from "../../types/ParsedAsn"
 
 const formatOuCode = (
   topLevelCode: string | undefined,
-  secondLevelCode: string | null,
-  thirdLevelCode: string | null,
-  bottomLevelCode: string | null
+  secondLevelCode: null | string,
+  thirdLevelCode: null | string,
+  bottomLevelCode: null | string
 ) => {
   if (secondLevelCode && thirdLevelCode && bottomLevelCode) {
     return `${topLevelCode ? topLevelCode : ""}${secondLevelCode}${thirdLevelCode}${bottomLevelCode}`

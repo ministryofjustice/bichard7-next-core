@@ -7,15 +7,16 @@ import type {
   PncPenaltyCase,
   PncQueryResult
 } from "../../../types/PncQueryResult"
+
 import parsePncDate from "../../parsePncDate"
 
 type OffenceDates = {
-  startDate: Date
   endDate?: Date
+  startDate: Date
 }
 type OffenceTimes = {
-  startTime?: string
   endTime?: string
+  startTime?: string
 }
 
 const extractDates = (offence: AhoXmlPncOffence): OffenceDates => {

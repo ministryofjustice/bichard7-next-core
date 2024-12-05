@@ -1,9 +1,12 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
+
 import type { ComparisonLog } from "../types"
 import type ComparisonResult from "../types/ComparisonResult"
 import type DynamoGateway from "./DynamoGateway"
+
 import createDynamoDbConfig from "./createDynamoDbConfig"
 import getDateFromComparisonFilePath from "./getDateFromComparisonFilePath"
 import isPass from "./isPass"

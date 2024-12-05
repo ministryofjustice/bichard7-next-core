@@ -1,15 +1,17 @@
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+
+import type { PncApiError } from "../../lib/PncGateway"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
-import { PncOperation } from "../../types/PncOperation"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
-import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
+
+import { PncOperation } from "../../types/PncOperation"
+import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
+import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
 import penaltyHearingGenerator from "./pncUpdateRequestGenerators/penaltyHearingGenerator"
 import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
-import type { PncApiError } from "../../lib/PncGateway"
-import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
 
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
   [PncOperation.DISPOSAL_UPDATED]: disposalUpdatedGenerator,

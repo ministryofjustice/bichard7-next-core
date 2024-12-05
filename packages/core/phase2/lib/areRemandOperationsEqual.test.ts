@@ -1,7 +1,8 @@
-import type { Operation } from "../../types/PncUpdateDataset"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import areRemandOperationsEqual from "./areRemandOperationsEqual"
 import type { PncOperation } from "../../types/PncOperation"
+import type { Operation } from "../../types/PncUpdateDataset"
+
+import areRemandOperationsEqual from "./areRemandOperationsEqual"
 
 const emptyOrganisationUnit: OrganisationUnitCodes = {
   TopLevelCode: "",

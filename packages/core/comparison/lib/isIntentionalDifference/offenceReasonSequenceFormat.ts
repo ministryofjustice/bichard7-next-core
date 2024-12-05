@@ -1,9 +1,10 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
-const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (string | undefined | null)[] =>
+const extractSequenceNumbers = (aho: AnnotatedHearingOutcome): (null | string | undefined)[] =>
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.map(
     (o) => o.CriminalProsecutionReference.OffenceReasonSequence
   )

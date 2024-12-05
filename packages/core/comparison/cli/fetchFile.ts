@@ -1,9 +1,10 @@
-import getFile from "../lib/getFile"
 import type { ComparisonLog } from "../types"
 
+import getFile from "../lib/getFile"
+
 export type FileLookup = {
-  fileName: string
   contents?: string
+  fileName: string
 }
 
 const fetchFile = async (record: ComparisonLog, cache: boolean): Promise<FileLookup> => {

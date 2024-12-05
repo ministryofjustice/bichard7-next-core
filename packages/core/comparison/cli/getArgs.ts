@@ -6,15 +6,15 @@ export interface IArguments {
   directory?: string
   end?: string
   file?: string
+  filelist?: string
   filter?: string
   help?: boolean
   list?: boolean
   matching?: boolean
   noTruncate?: boolean
+  phase?: number
   runMissing?: string
   start?: string
-  filelist?: string
-  phase?: number
 }
 
 export const getArgs = () =>

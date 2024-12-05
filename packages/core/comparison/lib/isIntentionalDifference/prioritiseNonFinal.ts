@@ -1,8 +1,9 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence } from "../../../types/PncQueryResult"
-import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 import type { ComparisonData } from "../../types/ComparisonData"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
+
+import offenceHasFinalResult from "../../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 type PncOffenceRef = {

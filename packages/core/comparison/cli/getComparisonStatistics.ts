@@ -1,19 +1,20 @@
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import { resultMatches } from "./printResult"
 import type { SkippedFile } from "./processRange"
 
+import { resultMatches } from "./printResult"
+
 type ComparisonResultStatistics = {
-  total: number
-  passed: number
-  expectedPassed: number
-  skipped: number
-  intentional: number
   errored: number
-  passedAho: number
+  expectedPassed: number
   expectedPassedAho: number
-  passedPncUpdateDataset: number
   expectedPassedPncUpdateDataset: number
   failed: number
+  intentional: number
+  passed: number
+  passedAho: number
+  passedPncUpdateDataset: number
+  skipped: number
+  total: number
 }
 
 const isIncomingMessageAho = (result: ComparisonResultDetail): boolean => {

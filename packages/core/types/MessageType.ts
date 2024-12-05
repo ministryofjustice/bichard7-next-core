@@ -1,3 +1,3 @@
-type MessageType = "SPIResults" | "AnnotatedHearingOutcome" | "PncUpdateDataset" | "AnnotatedPNCUpdateDataset"
+type MessageType = "AnnotatedHearingOutcome" | "AnnotatedPNCUpdateDataset" | "PncUpdateDataset" | "SPIResults"
 
 export default MessageType

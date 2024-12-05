@@ -1,8 +1,9 @@
 import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 import type ErrorListRecord from "../../types/ErrorListRecord"
+import type PhaseResult from "../../types/PhaseResult"
+
 import { QualityCheckStatus } from "../../types/ErrorListRecord"
 import Phase from "../../types/Phase"
-import type PhaseResult from "../../types/PhaseResult"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import ResolutionStatus from "../../types/ResolutionStatus"

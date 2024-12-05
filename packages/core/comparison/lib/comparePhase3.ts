@@ -2,20 +2,22 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { diffJson } from "diff"
 import isEqual from "lodash.isequal"
+
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { Phase3Comparison } from "../types/ComparisonFile"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { PncApiError } from "../../lib/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import phase3Handler from "../../phase3/phase3"
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
-import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import type { Phase3Comparison } from "../types/ComparisonFile"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
-import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
@@ -45,7 +47,7 @@ const normalisePncOperations = (operations: PncUpdateRequest[]) => {
   }
 }
 
-const getOperations = (message: PncUpdateDataset | AnnotatedPncUpdateDataset): Operation[] => {
+const getOperations = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): Operation[] => {
   if ("PncOperations" in message) {
     return message.PncOperations
   }
@@ -53,7 +55,7 @@ const getOperations = (message: PncUpdateDataset | AnnotatedPncUpdateDataset): O
   return message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.PncOperations
 }
 
-const getPncErrorMessages = (message: PncUpdateDataset | AnnotatedPncUpdateDataset): string[] => {
+const getPncErrorMessages = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): string[] => {
   const exceptions =
     "PncOperations" in message ? message.Exceptions : message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions
 

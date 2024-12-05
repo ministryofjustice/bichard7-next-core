@@ -1,6 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { PncQueryResult } from "../../types/PncQueryResult"
+
 import TRPR0018 from "./TRPR0018"
 
 const generateMockAho = (hasOffenceReasonSequence: boolean, startDate: Date, endDate: Date) =>

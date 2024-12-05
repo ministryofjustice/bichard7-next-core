@@ -1,11 +1,12 @@
 import type { Hearing } from "../../../types/AnnotatedHearingOutcome"
 import type { ResultedCaseMessageParsedXml, SpiDefendant } from "../../../types/SpiResult"
+
 import getOrganisationUnit from "../../getOrganisationUnit"
 import removeSeconds from "./removeSeconds"
 
 type DefendantDetailsData = {
-  presentAtHearing: string
   name: string
+  presentAtHearing: string
 }
 
 const getDefendantDetails = (spiDefendant: SpiDefendant): DefendantDetailsData => {

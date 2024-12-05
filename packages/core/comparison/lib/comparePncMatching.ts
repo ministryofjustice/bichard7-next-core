@@ -1,14 +1,16 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isMatch from "lodash.ismatch"
+
+import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
+import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
+
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import CorePhase1 from "../../phase1/phase1"
-import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
-import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
-import MockPncGateway from "./MockPncGateway"
 import generateMockPncQueryResultFromAho from "./generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./getPncQueryTimeFromAho"
+import MockPncGateway from "./MockPncGateway"
 import parseIncomingMessage from "./parseIncomingMessage"
 import summariseMatching from "./summariseMatching"
 

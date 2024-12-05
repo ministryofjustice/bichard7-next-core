@@ -1,5 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import Phase from "../../types/Phase"
 import TRPR0015 from "./TRPR0015"
 

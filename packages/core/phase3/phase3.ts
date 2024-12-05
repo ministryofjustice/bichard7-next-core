@@ -1,13 +1,15 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-import generateTriggers from "../lib/triggers/generateTriggers"
+
 import type AuditLogger from "../types/AuditLogger"
-import Phase from "../types/Phase"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
+import type Phase3Result from "./types/Phase3Result"
+
+import generateTriggers from "../lib/triggers/generateTriggers"
+import Phase from "../types/Phase"
 import generateExceptionsForOperation from "./exceptions/generateExceptionsForOperation"
 import performOperation from "./lib/performOperation"
-import type Phase3Result from "./types/Phase3Result"
 import { Phase3ResultType } from "./types/Phase3Result"
 
 const phase3 = async (

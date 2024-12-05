@@ -1,8 +1,9 @@
-import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
-import ResultClass from "../../types/ResultClass"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import HO200112 from "./HO200112"
+
+import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
+import HO200112 from "./HO200112"
 
 jest.mock("../lib/areAllResultsOnPnc")
 

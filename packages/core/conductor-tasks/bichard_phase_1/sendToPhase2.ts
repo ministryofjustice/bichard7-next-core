@@ -1,20 +1,23 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
-import { AuditLogEventSource, auditLogEventLookup, type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import { type AuditLogEvent, auditLogEventLookup, AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import path from "path"
+
+import type Phase1Result from "../../phase1/types/Phase1Result"
+
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
-import type Phase1Result from "../../phase1/types/Phase1Result"
 
 const s3Config = createS3Config()
 const conductorClient = createConductorClient()

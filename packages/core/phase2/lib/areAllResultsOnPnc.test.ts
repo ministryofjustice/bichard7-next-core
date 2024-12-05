@@ -1,5 +1,5 @@
-import areAllResultsOnPnc from "./areAllResultsOnPnc"
 import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
+import areAllResultsOnPnc from "./areAllResultsOnPnc"
 
 describe("areAllResultsOnPnc", () => {
   it("returns true when all offences match to the PNC adjudication and disposals", () => {

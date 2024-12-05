@@ -1,10 +1,12 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
+
 import type { PncException } from "../../types/Exception"
 
+import errorPaths from "../../lib/exceptions/errorPaths"
+
 type ErrorRange = {
-  start: string
   end?: string
+  start: string
 }
 
 type ErrorRangeDefinition = {

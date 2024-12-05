@@ -1,15 +1,18 @@
 import type { Trigger } from "aws-sdk/clients/elasticbeanstalk"
+
 import readline from "readline"
-import getFile from "../../comparison/lib/getFile"
-import { parseAhoXml } from "../../lib/parse/parseAhoXml"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 
+import getFile from "../../comparison/lib/getFile"
+import { parseAhoXml } from "../../lib/parse/parseAhoXml"
+
 interface ComparisonFile {
-  incomingMessage: string
   annotatedHearingOutcome: string
-  triggers?: Trigger[]
   exceptions?: Exception[]
+  incomingMessage: string
+  triggers?: Trigger[]
 }
 
 const rl = readline.createInterface({

@@ -1,27 +1,28 @@
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import parseSpiResult from "../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../lib/parse/transformSpiToAho"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+
+export type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult
 
 type HearingOutcomeResult = {
+  message: AnnotatedHearingOutcome
   type: "AnnotatedHearingOutcome"
-  message: AnnotatedHearingOutcome
-}
-
-type SPIResultsResult = {
-  type: "SPIResults"
-  message: AnnotatedHearingOutcome
 }
 
 type PncUpdateDatasetResult = {
-  type: "PncUpdateDataset"
   message: PncUpdateDataset
+  type: "PncUpdateDataset"
 }
 
-export type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult
+type SPIResultsResult = {
+  message: AnnotatedHearingOutcome
+  type: "SPIResults"
+}
 
 const parseIncomingMessage = (message: string): ParseIncomingMessageResult => {
   const messageType = getMessageType(message)

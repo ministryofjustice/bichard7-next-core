@@ -1,7 +1,5 @@
 import "../../phase1/tests/helpers/setEnvironmentVariables"
 
-import { WorkflowResourceService } from "../../../../node_modules/@io-orkes/conductor-javascript"
-
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -9,11 +7,14 @@ import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/cr
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import { randomUUID } from "crypto"
 import fs from "fs"
-import TestMqGateway from "../../lib/mq/TestMqGateway"
+
+import type Phase1Result from "../../phase1/types/Phase1Result"
+
+import { WorkflowResourceService } from "../../../../node_modules/@io-orkes/conductor-javascript"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import createMqConfig from "../../lib/mq/createMqConfig"
+import TestMqGateway from "../../lib/mq/TestMqGateway"
 import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
-import type Phase1Result from "../../phase1/types/Phase1Result"
 import { default as sendToPhase2Fn } from "./sendToPhase2"
 
 jest.mock("../../lib/mq/connectAndSendMessage")
