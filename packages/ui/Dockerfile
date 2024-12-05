@@ -15,7 +15,7 @@ COPY package-lock.json .
 COPY tsconfig*.json ./
 COPY packages/ ./packages/
 
-RUN npm ci && npm run build:core
+RUN npm ci --ignore-scripts && npm run build:core
 
 WORKDIR /core/packages/ui
 
