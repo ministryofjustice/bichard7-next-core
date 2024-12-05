@@ -69,6 +69,33 @@ enum LiteralType {
   YesNo
 }
 
+const findLiteralType = (type: LiteralType, literalText: string): string | undefined => {
+  switch (type) {
+    case LiteralType.OffenceRemandStatus:
+      return lookupRemandStatusByCjsCode(literalText)?.description
+    case LiteralType.PleaStatus:
+      return lookupPleaStatusByCjsCode(literalText)?.description
+    case LiteralType.AlcoholLevelMethod:
+      return lookupAlcoholLevelMethodByCjsCode(literalText)?.description
+    case LiteralType.Gender:
+      return lookupGenderByCjsCode(literalText)?.description
+    case LiteralType.CourtType:
+      return lookupCourtTypeByCjsCode(literalText)?.description
+    case LiteralType.Verdict:
+      return lookupVerdictByCjsCode(literalText)?.description
+    case LiteralType.ModeOfTrialReason:
+      return lookupModeOfTrialReasonByCjsCode(literalText)?.description
+    case LiteralType.OffenceCategory:
+      return lookupOffenceCategoryByCjsCode(literalText)?.description
+    case LiteralType.ActualOffenceDateCode:
+      return lookupOffenceDateCodeByCjsCode(literalText)?.description
+    case LiteralType.DefendantPresentAtHearing:
+      return lookupDefendantPresentAtHearingByCjsCode(literalText)?.description
+    default:
+      throw new Error("Invalid literal type specified")
+  }
+}
+
 const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextString => {
   let literalText: string | undefined
   let literalAttribute: string | undefined
@@ -83,29 +110,7 @@ const literal = (value: string | boolean, type: LiteralType): Br7LiteralTextStri
     }
   } else {
     literalText = value
-    if (type === LiteralType.OffenceRemandStatus) {
-      literalAttribute = lookupRemandStatusByCjsCode(value)?.description
-    } else if (type === LiteralType.PleaStatus) {
-      literalAttribute = lookupPleaStatusByCjsCode(value)?.description
-    } else if (type === LiteralType.AlcoholLevelMethod) {
-      literalAttribute = lookupAlcoholLevelMethodByCjsCode(value)?.description
-    } else if (type === LiteralType.Gender) {
-      literalAttribute = lookupGenderByCjsCode(value)?.description
-    } else if (type === LiteralType.CourtType) {
-      literalAttribute = lookupCourtTypeByCjsCode(value)?.description
-    } else if (type === LiteralType.Verdict) {
-      literalAttribute = lookupVerdictByCjsCode(value)?.description
-    } else if (type === LiteralType.ModeOfTrialReason) {
-      literalAttribute = lookupModeOfTrialReasonByCjsCode(value)?.description
-    } else if (type === LiteralType.OffenceCategory) {
-      literalAttribute = lookupOffenceCategoryByCjsCode(value)?.description
-    } else if (type === LiteralType.ActualOffenceDateCode) {
-      literalAttribute = lookupOffenceDateCodeByCjsCode(value)?.description
-    } else if (type === LiteralType.DefendantPresentAtHearing) {
-      literalAttribute = lookupDefendantPresentAtHearingByCjsCode(value)?.description
-    } else {
-      throw new Error("Invalid literal type specified")
-    }
+    literalAttribute = findLiteralType(type, literalText)
   }
 
   if (!literalAttribute || literalText === undefined) {
