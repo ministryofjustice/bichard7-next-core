@@ -4,6 +4,7 @@ import amendCourtCase from "services/amendCourtCase/amendCourtCase"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
+import type { Amendments } from "types/Amendments"
 import { isError } from "types/Result"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
@@ -18,7 +19,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const { req, res, currentUser } = auth
 
   const dataSource = await getDataSource()
-  const amendments = req.body
+  const amendments: Partial<Amendments> = req.body
 
   const { courtCaseId } = req.query
 
