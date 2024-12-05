@@ -1,12 +1,15 @@
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import { XMLParser } from "fast-xml-parser"
+
+import type { Br7PncErrorMessageString } from "../../../types/AhoXml"
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type Exception from "../../../types/Exception"
 import type { PncException } from "../../../types/Exception"
+
+import { asnPath } from "../../../characterisation-tests/helpers/errorPaths"
 import deduplicateExceptions from "../../exceptions/deduplicateExceptions"
 import errorPaths from "../../exceptions/errorPaths"
-import type { Br7PncErrorMessageString } from "../../../types/AhoXml"
-import { asnPath } from "../../../characterisation-tests/helpers/errorPaths"
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
 const extractPncExceptions = (aho: any): PncException[] => {
@@ -34,7 +37,7 @@ const extractPncExceptions = (aho: any): PncException[] => {
 }
 
 //eslint-disable-next-line @typescript-eslint/no-explicit-any
-const extract = (el: any, path: (string | number)[] = []): Exception[] => {
+const extract = (el: any, path: (number | string)[] = []): Exception[] => {
   const exceptions: Exception[] = []
   for (const key in el) {
     if (key === "@_Error") {

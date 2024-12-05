@@ -1,9 +1,11 @@
-import path from "path"
-import fs from "fs"
-import parsePncUpdateDataSetXml from "../../../phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
+import fs from "fs"
+import path from "path"
+
 import type { PncOperation } from "../../../types/PncOperation"
 import type { Operation } from "../../../types/PncUpdateDataset"
+
+import parsePncUpdateDataSetXml from "../../../phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import penaltyHearingGenerator from "./penaltyHearingGenerator"
 
 describe("penaltyHearingGenerator", () => {

@@ -1,11 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
-import { formatXmlDiff } from "../lib/xmlOutputComparison"
+import { diffJson } from "diff"
+
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+import type { SkippedFile } from "./processRange"
+
+import { formatXmlDiff } from "../lib/xmlOutputComparison"
 import getComparisonResultStatistics from "./getComparisonStatistics"
 import printList from "./printList"
-import type { SkippedFile } from "./processRange"
-import { diffJson } from "diff"
 
 export const resultMatches = (result: ComparisonResultDetail): boolean =>
   result.exceptionsMatch &&
@@ -75,7 +77,7 @@ export const printSingleSummary = (result: ComparisonResultDetail): void => {
 }
 
 const printResult = (
-  result?: (ComparisonResultDetail | SkippedFile) | (ComparisonResultDetail | SkippedFile)[],
+  result?: (ComparisonResultDetail | SkippedFile)[] | (ComparisonResultDetail | SkippedFile),
   truncate = false,
   list = false
 ): boolean => {

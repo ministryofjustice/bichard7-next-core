@@ -1,7 +1,8 @@
-import generateXml from "../../../lib/serialise/generateXml"
 import type AnnotatedPncUpdateDatasetXml from "../../../types/AnnotatedPncUpdateDatasetXml"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
+
+import generateXml from "../../../lib/serialise/generateXml"
 import { mapToPncUpdateDatasetXml } from "../pncUpdateDatasetXml/serialiseToXml"
 
 const xmlnsTags = {

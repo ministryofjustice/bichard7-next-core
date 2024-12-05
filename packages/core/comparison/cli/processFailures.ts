@@ -1,7 +1,8 @@
-import DynamoGateway from "../lib/DynamoGateway"
-import createDynamoDbConfig from "../lib/createDynamoDbConfig"
-import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
+
+import createDynamoDbConfig from "../lib/createDynamoDbConfig"
+import DynamoGateway from "../lib/DynamoGateway"
+import getDateFromComparisonFilePath from "../lib/getDateFromComparisonFilePath"
 import fetchFile from "./fetchFile"
 import processFile from "./processFile"
 import skippedFile from "./skippedFile"

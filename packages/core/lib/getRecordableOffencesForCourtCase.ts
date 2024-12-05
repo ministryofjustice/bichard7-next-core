@@ -1,5 +1,6 @@
-import isRecordableOffence from "../phase2/lib/isRecordableOffence"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
+
+import isRecordableOffence from "../phase2/lib/isRecordableOffence"
 import isResultCompatibleWithDisposal from "../phase2/lib/isResultCompatibleWithDisposal"
 
 const has2059Or2060Result = (offence: Offence) =>

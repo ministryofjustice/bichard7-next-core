@@ -1,4 +1,5 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+
 import isOffenceIgnored from "./isOffenceIgnored"
 
 describe("isOffenceIgnored()", () => {

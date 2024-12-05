@@ -1,9 +1,10 @@
-import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
-import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
-import ResultClass from "../../../../types/ResultClass"
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
-import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
+
 import { PncOperation } from "../../../../types/PncOperation"
+import ResultClass from "../../../../types/ResultClass"
+import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
+import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
+import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
 jest.mock("./handleJudgementWithFinalResult")
 const mockedHandleJudgementWithFinalResult = handleJudgementWithFinalResult as jest.Mock

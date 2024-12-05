@@ -4,23 +4,17 @@ const schemaRelations = rawSchemaRelations as Record<string, string[]>
 type AhoKey = keyof typeof rawSchemaRelations | (string & {})
 
 class Describer {
-  private _content: string
+  static get $() {
+    return new Describer()
+  }
 
-  private _value: string[] = []
+  private _content: string
 
   private _example: string
 
   private _path: AhoKey
 
-  private generateLinkQuery = (path: string) =>
-    path
-      .split(">")
-      .map((p) => p.trim())
-      .join("_")
-
-  static get $() {
-    return new Describer()
-  }
+  private _value: string[] = []
 
   static getText = (description: string) => ({
     $description: description
@@ -31,18 +25,8 @@ class Describer {
     return this
   }
 
-  value = (...valueParam: string[]) => {
-    this._value = valueParam
-    return this
-  }
-
   example = (exampleParam: string) => {
     this._example = exampleParam
-    return this
-  }
-
-  path = (pathParam: AhoKey) => {
-    this._path = pathParam
     return this
   }
 
@@ -126,6 +110,22 @@ class Describer {
 
     return { $description: description }
   }
+
+  path = (pathParam: AhoKey) => {
+    this._path = pathParam
+    return this
+  }
+
+  value = (...valueParam: string[]) => {
+    this._value = valueParam
+    return this
+  }
+
+  private generateLinkQuery = (path: string) =>
+    path
+      .split(">")
+      .map((p) => p.trim())
+      .join("_")
 }
 
 export const organisationUnitDescription = {

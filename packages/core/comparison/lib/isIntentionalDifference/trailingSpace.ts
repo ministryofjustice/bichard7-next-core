@@ -1,5 +1,6 @@
-import serialiseToXml from "../../../lib/serialise/ahoXml/serialiseToXml"
 import type { ComparisonData } from "../../types/ComparisonData"
+
+import serialiseToXml from "../../../lib/serialise/ahoXml/serialiseToXml"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core will remove a trailing space in the bail conditions

@@ -4,6 +4,7 @@ import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogAp
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import { type AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
 import { randomUUID } from "crypto"
+
 import createAuditLogRecord from "./createAuditLogRecord"
 
 const { apiKey, apiUrl } = createApiConfig()

@@ -1,5 +1,6 @@
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200200 from "./HO200200"
 
 const generateAho = (ResultVariableText?: string) =>

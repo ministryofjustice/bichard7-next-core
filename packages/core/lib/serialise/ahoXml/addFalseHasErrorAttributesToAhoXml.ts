@@ -1,7 +1,7 @@
 import type { AhoXml } from "../../../types/AhoXml"
 
 // Sometimes, when generating the "updated XML" for the database, we include hasError elements
-const addFalseHasErrorAttributesToAhoXml = (aho: AhoXml): void | Error => {
+const addFalseHasErrorAttributesToAhoXml = (aho: AhoXml): Error | void => {
   if (aho["br7:HearingOutcome"]) {
     aho["br7:HearingOutcome"]["br7:Hearing"]["@_hasError"] = false
     delete aho["br7:HearingOutcome"]["br7:Hearing"]["@_SchemaVersion"]

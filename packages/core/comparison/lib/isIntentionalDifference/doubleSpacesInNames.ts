@@ -1,5 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { ComparisonData } from "../../types/ComparisonData"
+
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Core will remove double spaces in the names

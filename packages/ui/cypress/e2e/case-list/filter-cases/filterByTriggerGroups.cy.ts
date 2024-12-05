@@ -7,7 +7,7 @@ import logAccessibilityViolations from "../../../support/logAccessibilityViolati
 
 describe("Filtering cases by trigger groups", () => {
   beforeEach(() => {
-    cy.loginAs("GeneralHandler")
+    cy.loginAs("userWithoutExcludedTriggers")
   })
 
   it("Should be accessible with trigger group is unchecked", () => {
@@ -101,32 +101,32 @@ describe("Filtering cases by trigger groups", () => {
     cy.get(".moj-filter__tag").contains("PR12")
   })
 
-  describe("when using the using the group checkboxes", () => {
+  describe("when using the group checkboxes", () => {
     before(() => {
       cy.task("clearCourtCases")
 
       // Add 20 cases
       cy.task("insertCourtCasesWithFields", [
-        { defendantName: "WAYNE Bruce", orgForPoliceFilter: "01" },
-        { defendantName: "GORDON Barbara", orgForPoliceFilter: "01" },
-        { defendantName: "PENNYWORTH Alfred", orgForPoliceFilter: "01" },
-        { defendantName: "GRAYSON Richard", orgForPoliceFilter: "01" },
-        { defendantName: "SAVAGE Pete", orgForPoliceFilter: "01" },
-        { defendantName: "FALCONE Carmine", orgForPoliceFilter: "01" },
-        { defendantName: "GORDON James", orgForPoliceFilter: "01" },
-        { defendantName: "COLSON Gil", orgForPoliceFilter: "01" },
-        { defendantName: "KYKLE Selina", orgForPoliceFilter: "01" },
-        { defendantName: "COOPER Harriet", orgForPoliceFilter: "01" },
-        { defendantName: "REID Britt", orgForPoliceFilter: "01" },
-        { defendantName: "BENNETT Ethan", orgForPoliceFilter: "01" },
-        { defendantName: "ROJAS Angel", orgForPoliceFilter: "01" },
-        { defendantName: "YIN Ellen", orgForPoliceFilter: "01" },
-        { defendantName: "KARLO Basil", orgForPoliceFilter: "01" },
-        { defendantName: "GRAVES Mercy", orgForPoliceFilter: "01" },
-        { defendantName: "GREY Francis", orgForPoliceFilter: "01" },
-        { defendantName: "QUINN Harley", orgForPoliceFilter: "01" },
-        { defendantName: "KATSU Hideto", orgForPoliceFilter: "01" },
-        { defendantName: "LUTHOR Lex", orgForPoliceFilter: "01" }
+        { defendantName: "WAYNE Bruce", orgForPoliceFilter: "18" },
+        { defendantName: "GORDON Barbara", orgForPoliceFilter: "18" },
+        { defendantName: "PENNYWORTH Alfred", orgForPoliceFilter: "18" },
+        { defendantName: "GRAYSON Richard", orgForPoliceFilter: "18" },
+        { defendantName: "SAVAGE Pete", orgForPoliceFilter: "18" },
+        { defendantName: "FALCONE Carmine", orgForPoliceFilter: "18" },
+        { defendantName: "GORDON James", orgForPoliceFilter: "18" },
+        { defendantName: "COLSON Gil", orgForPoliceFilter: "18" },
+        { defendantName: "KYKLE Selina", orgForPoliceFilter: "18" },
+        { defendantName: "COOPER Harriet", orgForPoliceFilter: "18" },
+        { defendantName: "REID Britt", orgForPoliceFilter: "18" },
+        { defendantName: "BENNETT Ethan", orgForPoliceFilter: "18" },
+        { defendantName: "ROJAS Angel", orgForPoliceFilter: "18" },
+        { defendantName: "YIN Ellen", orgForPoliceFilter: "18" },
+        { defendantName: "KARLO Basil", orgForPoliceFilter: "18" },
+        { defendantName: "GRAVES Mercy", orgForPoliceFilter: "18" },
+        { defendantName: "GREY Francis", orgForPoliceFilter: "18" },
+        { defendantName: "QUINN Harley", orgForPoliceFilter: "18" },
+        { defendantName: "KATSU Hideto", orgForPoliceFilter: "18" },
+        { defendantName: "LUTHOR Lex", orgForPoliceFilter: "18" }
       ])
 
       // Assign 17 cases with the group trigger code (Bails, Custody, Orders, Warrants)

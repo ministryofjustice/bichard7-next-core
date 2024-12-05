@@ -3,22 +3,22 @@ import type { ArrestHearingAdjudicationAndDisposal, CourtHearingAdjudicationAndD
 type NormalDisposalPncUpdateRequest = {
   operation: "DISARR"
   request: {
-    arrestSummonsNumber: string | null
     arrestsAdjudicationsAndDisposals: ArrestHearingAdjudicationAndDisposal[]
+    arrestSummonsNumber: null | string
     courtCaseReferenceNumber: string
     courtHouseName: string
-    croNumber: string | null
+    croNumber: null | string
     dateOfHearing: string
     forceStationCode: string
     generatedPNCFilename: string
     hearingsAdjudicationsAndDisposals: CourtHearingAdjudicationAndDisposal[]
-    pendingCourtDate: string | null
-    pendingCourtHouseName: string | null
-    pendingPsaCourtCode: string | null
-    pncCheckName: string | null
-    pncIdentifier: string | null
-    preTrialIssuesUniqueReferenceNumber: string | null
-    psaCourtCode: string | null
+    pendingCourtDate: null | string
+    pendingCourtHouseName: null | string
+    pendingPsaCourtCode: null | string
+    pncCheckName: null | string
+    pncIdentifier: null | string
+    preTrialIssuesUniqueReferenceNumber: null | string
+    psaCourtCode: null | string
   }
 }
 

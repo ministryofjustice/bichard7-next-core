@@ -1,18 +1,19 @@
 import type { PncCourtCaseSummary } from "../../../comparison/types/MatchingComparisonOutput"
 import type { Hearing, Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
+
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 
 export type GenerateAhoMatchingPncAdjudicationAndDisposalsOptions = {
+  firstPncDisposalType?: number
+  firstResultDisposalType?: number
+  hasAdditionalMatchingOffence?: boolean
+  hasMatchingPncAdjudication?: boolean
+  hasOffenceReasonSequence?: boolean
+  hasOffences?: boolean
   hasPncId?: boolean
   hasPncOffences?: boolean
-  hasOffences?: boolean
-  hasOffenceReasonSequence?: boolean
   hasResults?: boolean
-  hasMatchingPncAdjudication?: boolean
-  hasAdditionalMatchingOffence?: boolean
-  firstResultDisposalType?: number
-  firstPncDisposalType?: number
 }
 
 const generateResult = (pncDisposalType: number): Result => ({

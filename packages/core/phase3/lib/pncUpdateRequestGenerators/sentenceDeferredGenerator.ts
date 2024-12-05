@@ -1,12 +1,14 @@
-import { PncOperation } from "../../../types/PncOperation"
-import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
-import { generateHearingsAndDisposals } from "./hearingDetails"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
+
+import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
+
+import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import { PncOperation } from "../../../types/PncOperation"
 import getForceStationCode from "../getForceStationCode"
 import getPncCourtCode from "../getPncCourtCode"
+import preProcessPncIdentifier from "../preProcessPncIdentifier"
+import { generateHearingsAndDisposals } from "./hearingDetails"
+import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
 
 const SENTENCE_DEFERRED_HEARING_TYPE = "D"
 

@@ -1,6 +1,7 @@
 import type { AWSError } from "aws-sdk"
-import { Lambda } from "aws-sdk"
 import type { PromiseResult } from "aws-sdk/lib/request"
+
+import { Lambda } from "aws-sdk"
 
 export default class InvokeCompareBatchLambda {
   constructor(

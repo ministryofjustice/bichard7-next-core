@@ -1,9 +1,10 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import hasUnmatchedPncOffences from "./hasUnmatchedPncOffences"
 
 const createAho = (params: {
-  hoOffences: { reasonSequence?: string | null; ccr?: string }[]
   hoCourtCaseReference: string
+  hoOffences: { ccr?: string; reasonSequence?: null | string }[]
   pncCourtCases?: [{ courtCaseReference: string; offenceSequenceNumbers: number[] }]
   pncQueryExists: boolean
 }) =>

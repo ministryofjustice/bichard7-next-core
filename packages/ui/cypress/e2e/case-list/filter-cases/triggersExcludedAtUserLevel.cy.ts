@@ -1,6 +1,6 @@
 describe("Triggers excluded at user level", () => {
   beforeEach(() => {
-    cy.loginAs("SupervisorWithExcludedTriggers")
+    cy.loginAs("userExcludedTriggers")
     cy.visit("/bichard")
   })
 

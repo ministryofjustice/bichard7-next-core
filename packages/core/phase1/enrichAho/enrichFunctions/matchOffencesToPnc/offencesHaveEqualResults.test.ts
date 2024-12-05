@@ -1,10 +1,11 @@
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import offencesHaveEqualResults from "./offencesHaveEqualResults"
 
 const createOffenceWithResults = (
   results: Pick<
     Result,
-    "CJSresultCode" | "ResultHearingDate" | "PNCAdjudicationExists" | "ResultVariableText" | "NextHearingDate"
+    "CJSresultCode" | "NextHearingDate" | "PNCAdjudicationExists" | "ResultHearingDate" | "ResultVariableText"
   >[]
 ): Offence =>
   ({

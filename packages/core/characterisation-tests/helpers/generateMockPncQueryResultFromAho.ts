@@ -1,26 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
+
 import type { PncOffence, PncQueryResult } from "../../types/PncQueryResult"
-
-type OffenceDates = {
-  startDate: Date
-  endDate?: Date
-}
-
-type AhoPncOffence = {
-  COF: {
-    "@_ACPOOffenceCode": string
-    "@_CJSOffenceCode": string
-    "@_IntfcUpdateType": string
-    "@_OffEndDate": string
-    "@_OffEndTime": string
-    "@_OffStartDate": string
-    "@_OffStartTime": string
-    "@_OffenceQualifier1": string
-    "@_OffenceQualifier2": string
-    "@_OffenceTitle": string
-    "@_ReferenceNumber": string
-  }
-}
 
 type AhoPncCourtCase = {
   CCR: {
@@ -33,21 +13,42 @@ type AhoPncCourtCase = {
   }
 }
 
+type AhoPncOffence = {
+  COF: {
+    "@_ACPOOffenceCode": string
+    "@_CJSOffenceCode": string
+    "@_IntfcUpdateType": string
+    "@_OffenceQualifier1": string
+    "@_OffenceQualifier2": string
+    "@_OffenceTitle": string
+    "@_OffEndDate": string
+    "@_OffEndTime": string
+    "@_OffStartDate": string
+    "@_OffStartTime": string
+    "@_ReferenceNumber": string
+  }
+}
+
+type OffenceDates = {
+  endDate?: Date
+  startDate: Date
+}
+
 type ParsedAHO = {
   AnnotatedHearingOutcome: {
     CXE01: {
+      CourtCases: {
+        CourtCase: AhoPncCourtCase | AhoPncCourtCase[]
+      }
       FSC: {
         "@_FSCode": string
         "@_IntfcUpdateType": string
       }
       IDS: {
-        "@_CRONumber": string
         "@_Checkname": string
+        "@_CRONumber": string
         "@_IntfcUpdateType": string
         "@_PNCID": string
-      }
-      CourtCases: {
-        CourtCase: AhoPncCourtCase | AhoPncCourtCase[]
       }
     }
   }
