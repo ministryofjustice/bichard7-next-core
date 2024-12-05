@@ -154,7 +154,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     groups: [UserGroup.NewUI, UserGroup.Supervisor],
     excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0021, TriggerCode.TRPR0030]
   },
-  Bichard18: {
+  userWithoutExcludedTriggers: {
     username: "Bichard18",
     visibleForces: ["18"],
     forenames: "Bichard18",

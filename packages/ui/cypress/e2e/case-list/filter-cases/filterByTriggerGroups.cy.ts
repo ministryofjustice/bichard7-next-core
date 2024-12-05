@@ -7,7 +7,7 @@ import logAccessibilityViolations from "../../../support/logAccessibilityViolati
 
 describe("Filtering cases by trigger groups", () => {
   beforeEach(() => {
-    cy.loginAs("Bichard18")
+    cy.loginAs("userWithoutExcludedTriggers")
   })
 
   it("Should be accessible with trigger group is unchecked", () => {
