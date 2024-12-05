@@ -6,7 +6,7 @@ WORKDIR /message-forwarder
 COPY ./package.json ./package.json
 COPY ./package-lock.json ./package-lock.json
 COPY ./packages ./packages
-RUN npm ci
+RUN npm ci --ignore-scripts
 
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./tsconfig.base.json ./tsconfig.base.json
