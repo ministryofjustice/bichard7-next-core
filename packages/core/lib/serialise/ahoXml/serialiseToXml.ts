@@ -1,3 +1,5 @@
+import type { CjsCodeAndDescription } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+
 import type {
   Adj,
   AhoXml,
@@ -70,31 +72,45 @@ enum LiteralType {
   YesNo
 }
 
-const findLiteralType = (type: LiteralType, literalText: string): string | undefined => {
+const findLiteralAttribute = (type: LiteralType, literalText: string): string | undefined => {
+  let offence: CjsCodeAndDescription | undefined
+
   switch (type) {
     case LiteralType.ActualOffenceDateCode:
-      return lookupOffenceDateCodeByCjsCode(literalText)?.description
+      offence = lookupOffenceDateCodeByCjsCode(literalText)
+      break
     case LiteralType.AlcoholLevelMethod:
-      return lookupAlcoholLevelMethodByCjsCode(literalText)?.description
+      offence = lookupAlcoholLevelMethodByCjsCode(literalText)
+      break
     case LiteralType.CourtType:
-      return lookupCourtTypeByCjsCode(literalText)?.description
+      offence = lookupCourtTypeByCjsCode(literalText)
+      break
     case LiteralType.DefendantPresentAtHearing:
-      return lookupDefendantPresentAtHearingByCjsCode(literalText)?.description
+      offence = lookupDefendantPresentAtHearingByCjsCode(literalText)
+      break
     case LiteralType.Gender:
-      return lookupGenderByCjsCode(literalText)?.description
+      offence = lookupGenderByCjsCode(literalText)
+      break
     case LiteralType.ModeOfTrialReason:
-      return lookupModeOfTrialReasonByCjsCode(literalText)?.description
+      offence = lookupModeOfTrialReasonByCjsCode(literalText)
+      break
     case LiteralType.OffenceCategory:
-      return lookupOffenceCategoryByCjsCode(literalText)?.description
+      offence = lookupOffenceCategoryByCjsCode(literalText)
+      break
     case LiteralType.OffenceRemandStatus:
-      return lookupRemandStatusByCjsCode(literalText)?.description
+      offence = lookupRemandStatusByCjsCode(literalText)
+      break
     case LiteralType.PleaStatus:
-      return lookupPleaStatusByCjsCode(literalText)?.description
+      offence = lookupPleaStatusByCjsCode(literalText)
+      break
     case LiteralType.Verdict:
-      return lookupVerdictByCjsCode(literalText)?.description
+      offence = lookupVerdictByCjsCode(literalText)
+      break
     default:
       throw new Error("Invalid literal type specified")
   }
+
+  return offence?.description
 }
 
 const literal = (value: boolean | string, type: LiteralType): Br7LiteralTextString => {
@@ -111,7 +127,7 @@ const literal = (value: boolean | string, type: LiteralType): Br7LiteralTextStri
     }
   } else {
     literalText = value
-    literalAttribute = findLiteralType(type, literalText)
+    literalAttribute = findLiteralAttribute(type, literalText)
   }
 
   if (!literalAttribute || literalText === undefined) {
