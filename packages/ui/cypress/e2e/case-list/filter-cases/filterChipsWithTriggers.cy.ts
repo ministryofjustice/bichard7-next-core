@@ -1,6 +1,6 @@
 describe("Filters with triggers", () => {
   beforeEach(() => {
-    cy.loginAs("GeneralHandler")
+    cy.loginAs("Bichard011111")
   })
 
   it("will show selected filters", () => {
