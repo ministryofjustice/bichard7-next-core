@@ -10,7 +10,7 @@ import isRecordableResult from "../../phase2/lib/isRecordableResult"
 import Phase from "../../types/Phase"
 
 const triggerCode = TriggerCode.TRPS0003
-const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE]
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
   const triggers: Trigger[] = []
