@@ -1,39 +1,45 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import isEqual from "lodash.isequal"
 
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
+import { maxDisposalTextLength } from "../../phase2/lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
+import { getDisposalTextFromResult } from "../../phase2/lib/getDisposalTextFromResult"
+import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
+import isRecordableResult from "../../phase2/lib/isRecordableResult"
 import Phase from "../../types/Phase"
-import errorPaths from "../exceptions/errorPaths"
 
 const triggerCode = TriggerCode.TRPS0003
-const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
+const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE]
 
-const hasException200200 = (hearingOutcome: AnnotatedHearingOutcome, offenceIndex: number, resultIndex: number) => {
-  const errorPath = errorPaths.offence(offenceIndex).result(resultIndex).resultVariableText
-  return hearingOutcome.Exceptions.some(({ code, path }) => code === ExceptionCode.HO200200 && isEqual(path, errorPath))
-}
 
 const generator: TriggerGenerator = (hearingOutcome, options) => {
+  const triggers: Trigger[] = []
+
   if (!phases.includes(options?.phase)) {
     return []
   }
 
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-
-  return offences.reduce((triggers: Trigger[], offence, offenceIndex) => {
-    const shouldGenerateTrigger = offence.Result.some((_, resultIndex) =>
-      hasException200200(hearingOutcome, offenceIndex, resultIndex)
-    )
-    if (shouldGenerateTrigger) {
-      triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
+  for (const offence of offences){
+    if(!isRecordableOffence(offence)){
+      continue
     }
+    for (const result of offence.Result){
+      if(!isRecordableResult(result)){
+        continue
+      }
+      
+      const disposalText = getDisposalTextFromResult(result)
 
-    return triggers
-  }, [])
+        if (disposalText.length > maxDisposalTextLength) {
+          triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
+        }
+
+    }
+  }
+
+  return triggers
 }
 
 export default generator

@@ -8,7 +8,6 @@ import type Phase3Result from "./types/Phase3Result"
 
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
-import generateExceptionsForOperation from "./exceptions/generateExceptionsForOperation"
 import performOperation from "./lib/performOperation"
 import { Phase3ResultType } from "./types/Phase3Result"
 
@@ -26,16 +25,10 @@ const phase3 = async (
       continue
     }
 
-    const exceptions = generateExceptionsForOperation(operation.code, inputMessage)
-
     const operationResult = await performOperation(inputMessage, operation, pncGateway).catch((error) => error)
     if (isError(operationResult)) {
       shouldGenerateTriggers = false
       break
-    }
-
-    if (exceptions.length > 0) {
-      inputMessage.Exceptions.push(...exceptions)
     }
   }
 
