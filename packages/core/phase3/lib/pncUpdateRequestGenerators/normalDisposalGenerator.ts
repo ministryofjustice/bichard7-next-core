@@ -16,11 +16,11 @@ import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatib
 import { PncOperation } from "../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
-import preProcessAsn from "../preProcessAsn"
 import {
   generateArrestHearingsAdjudicationsAndDisposals,
   generateHearingsAdjudicationsAndDisposals
-} from "./hearingDetails"
+} from "../hearingDetails"
+import preProcessAsn from "../preProcessAsn"
 
 const COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const ILLEGAL_FILENAME_PATTERN = new RegExp("[^a-zA-Z0-9\\- /]", "g")

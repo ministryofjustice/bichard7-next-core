@@ -1,20 +1,22 @@
-import type { AnnotatedHearingOutcome, Offence, OffenceReason } from "../../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { AnnotatedHearingOutcome, Offence, OffenceReason } from "../../types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type {
   Adjudication,
   ArrestHearing,
   ArrestHearingAdjudicationAndDisposal,
   CourtHearing,
-  CourtHearingAdjudicationAndDisposal
-} from "../../types/HearingDetails"
+  CourtHearingAdjudicationAndDisposal,
+  CourtHearingAndDisposal,
+  Disposal
+} from "../types/HearingDetails"
 
-import { getAdjustedRecordableOffencesForCourtCase } from "../../../lib/getRecordableOffencesForCourtCase"
-import createPncAdjudicationFromAho from "../../../phase2/lib/createPncAdjudicationFromAho"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatibleWithDisposal"
-import { type CourtHearingAndDisposal, type Disposal, HearingDetailsType } from "../../types/HearingDetails"
-import createPncDisposalFromOffence from "../createPncDisposalFromOffence"
-import getForceStationCode from "../getForceStationCode"
+import { getAdjustedRecordableOffencesForCourtCase } from "../../lib/getRecordableOffencesForCourtCase"
+import createPncAdjudicationFromAho from "../../phase2/lib/createPncAdjudicationFromAho"
+import formatDateSpecifiedInResult from "../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import isResultCompatibleWithDisposal from "../../phase2/lib/isResultCompatibleWithDisposal"
+import { HearingDetailsType } from "../types/HearingDetails"
+import createPncDisposalFromOffence from "./createPncDisposalFromOffence"
+import getForceStationCode from "./getForceStationCode"
 
 const DEFAULT_OFFENCE_LOCATION = "Not provided by Court"
 const OFFENCE_START_TIME_FIELD_LENGTH = 4

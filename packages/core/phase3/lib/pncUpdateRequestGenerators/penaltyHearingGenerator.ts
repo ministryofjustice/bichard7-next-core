@@ -6,7 +6,7 @@ import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsF
 import { PncOperation } from "../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
-import { generateHearingsAdjudicationsAndDisposals } from "./hearingDetails"
+import { generateHearingsAdjudicationsAndDisposals } from "../hearingDetails"
 
 const PENALTY_HEARING_TYPE = "P"
 
