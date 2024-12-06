@@ -5,9 +5,8 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
+import forEachRecordableResult from "../../lib/forEachRecordableResult"
 import isAmountSpecifiedInResultValid from "../lib/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
-import isRecordableOffence from "../lib/isRecordableOffence"
-import isRecordableResult from "../lib/isRecordableResult"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2
@@ -32,29 +31,15 @@ const generateException = (
   return []
 }
 
-const HO200205: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200205: ExceptionGenerator = (hearingOutcome: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-  // TODO: Turn this loop into a reusable function
-  for (const [
-    offenceIndex,
-    offence
-  ] of aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.entries()) {
-    if (!isRecordableOffence(offence)) {
-      continue
+  forEachRecordableResult(hearingOutcome, (_, offenceIndex, result, resultIndex) => {
+    exceptions.push(...generateException(result, offenceIndex, resultIndex, firstAmountIndex))
+    if (result.Duration?.[thirdDurationIndex]) {
+      exceptions.push(...generateException(result, offenceIndex, resultIndex, thirdAmountIndex))
     }
-
-    for (const [resultIndex, result] of offence.Result.entries()) {
-      if (!isRecordableResult(result)) {
-        continue
-      }
-
-      exceptions.push(...generateException(result, offenceIndex, resultIndex, firstAmountIndex))
-      if (result.Duration?.[thirdDurationIndex]) {
-        exceptions.push(...generateException(result, offenceIndex, resultIndex, thirdAmountIndex))
-      }
-    }
-  }
+  })
 
   return exceptions
 }

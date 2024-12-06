@@ -5,9 +5,8 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import { maxDisposalTextLength } from "../../phase2/lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 import { getDisposalTextFromResult } from "../../phase2/lib/getDisposalTextFromResult"
-import isRecordableOffence from "../../phase2/lib/isRecordableOffence"
-import isRecordableResult from "../../phase2/lib/isRecordableResult"
 import Phase from "../../types/Phase"
+import forEachRecordableResult from "../forEachRecordableResult"
 
 const triggerCode = TriggerCode.TRPS0003
 const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
@@ -19,24 +18,13 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
     return []
   }
 
-  const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  for (const offence of offences) {
-    if (!isRecordableOffence(offence)) {
-      continue
-    }
-
-    for (const result of offence.Result) {
-      if (!isRecordableResult(result)) {
-        continue
-      }
-
-      const disposalText = getDisposalTextFromResult(result)
+  forEachRecordableResult(hearingOutcome, (offence, _, result, __) => {
+    const disposalText = getDisposalTextFromResult(result)
 
       if (disposalText.length > maxDisposalTextLength) {
         triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
       }
-    }
-  }
+  })
 
   return triggers
 }
