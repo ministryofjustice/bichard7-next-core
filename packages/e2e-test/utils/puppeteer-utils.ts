@@ -14,7 +14,6 @@ export const retryDelay = async (
       setTimeout(resolve, ms)
     })
 
-  /* eslint-disable no-await-in-loop */
   while (!conditionMet && attemptsRemaining > 0) {
     conditionMet = await condition()
     if (!conditionMet) {
@@ -25,7 +24,6 @@ export const retryDelay = async (
   }
 
   return conditionMet
-  /* eslint-enable no-await-in-loop */
 }
 
 export const reloadUntilSelector = (page: Page, selector: string, attempts?: number) => {

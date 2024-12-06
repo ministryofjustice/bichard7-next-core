@@ -344,9 +344,9 @@ const filterRecords = async function (world: Bichard, resolvedType: string, reco
 
 export const checkRecordForThisTestResolved = async function (
   this: Bichard,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _recordType: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _resolvedType: string
 ) {
   // TODO: Currently there is no way of filtering for resolved cases, we need to update next UI and update this test
@@ -359,9 +359,9 @@ export const checkRecordForThisTestResolved = async function (
 
 export const checkRecordForThisTestNotResolved = async function (
   this: Bichard,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _recordType: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   _resolvedType: string
 ) {
   // TODO: Currently there is no way of filtering for resolved cases, we need to update next UI and update this test
@@ -607,7 +607,6 @@ export const reloadUntilStringNotPresent = async function (this: Bichard, conten
   expect(result).toBeTruthy()
 }
 
-// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 export const checkOffenceDataError = async function (this: Bichard, value: string, _key: string) {
   const found = await reloadUntilContentInSelector(this.browser.page, value, "#exceptions")
   expect(found).toBeTruthy()
@@ -644,7 +643,6 @@ export const checkRecordNotStatus = async function (
   expect(noCasesMessageMatch.length).toEqual(1)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const invalidFieldCanBeSubmitted = async function (this: Bichard, _fieldName: string) {
   const { page } = this.browser
 

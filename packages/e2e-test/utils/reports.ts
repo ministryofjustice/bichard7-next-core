@@ -1,7 +1,6 @@
 import { expect } from "expect"
 import fs from "fs"
 
-// eslint-disable-next-line import/no-unresolved
 import { parse } from "csv-parse/sync"
 import { getRawTableData, getTableData } from "./actions.legacy-ui"
 import type Bichard from "./world"

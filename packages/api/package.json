@@ -39,8 +39,7 @@
     "@jest/globals": "^29.7.0",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
-    "eslint": "^8.57.1",
-    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint": "^9.16.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.9.0",
@@ -60,7 +59,7 @@
   "dependencies": {
     "@fastify/autoload": "6.0.2",
     "@fastify/swagger": "^9.4.0",
-    "@fastify/swagger-ui": "^5.1.0",
+    "@fastify/swagger-ui": "^5.2.0",
     "fastify": "^5.1.0",
     "fastify-zod-openapi": "^3.0.4",
     "http-status": "^1.8.1",
