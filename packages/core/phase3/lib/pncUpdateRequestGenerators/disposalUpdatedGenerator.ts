@@ -4,9 +4,8 @@ import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerato
 
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import { PncOperation } from "../../../types/PncOperation"
-import getForceStationCode from "../getForceStationCode"
+import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
 import { generateHearingsAdjudicationsAndDisposals } from "./hearingDetails"
 import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
 
@@ -17,8 +16,6 @@ const disposalUpdatedGenerator: PncUpdateRequestGenerator<PncOperation.DISPOSAL_
   operation
 ) => {
   const hearing = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing
-  const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
-  const pncCheckName = hearingDefendant.PNCCheckname?.split("/")[0].substring(0, 12) ?? null
 
   const courtCaseReference =
     operation.data?.courtCaseReference ??
@@ -36,15 +33,12 @@ const disposalUpdatedGenerator: PncUpdateRequestGenerator<PncOperation.DISPOSAL_
   return {
     operation: PncOperation.DISPOSAL_UPDATED,
     request: {
+      ...generateBasePncUpdateRequest(pncUpdateDataset),
       courtCaseReferenceNumber: formattedCourtCaseReference,
       courtCode,
-      croNumber: hearingDefendant.CRONumber ?? null,
-      forceStationCode: getForceStationCode(pncUpdateDataset, true),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, courtCaseReference),
-      hearingType: DISPOSAL_UPDATED_HEARING_TYPE,
-      pncCheckName,
-      pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier)
+      hearingType: DISPOSAL_UPDATED_HEARING_TYPE
     }
   }
 }
