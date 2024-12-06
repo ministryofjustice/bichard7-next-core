@@ -14,11 +14,9 @@ import isRecordableResult from "../../../phase2/lib/isRecordableResult"
 import { PncOperation } from "../../../types/PncOperation"
 import ResultClass from "../../../types/ResultClass"
 import addPaddingToBailCondition from "../addPaddingToBailCondition"
-import getForceStationCode from "../getForceStationCode"
-import getPncCheckname from "../getPncCheckname"
+import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode, { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../getPncCourtCode"
 import preProcessAsn from "../preProcessAsn"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
 
 const firstInstanceQualifier = "LE"
 const FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE = "*****1ST INSTANCE WARRANT ISSUED*****"
@@ -173,11 +171,8 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   return {
     operation: PncOperation.REMAND,
     request: {
-      pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
-      pncCheckName: getPncCheckname(pncUpdateDataset),
-      croNumber: hearingDefendant.CRONumber ?? null,
+      ...generateBasePncUpdateRequest(pncUpdateDataset),
       arrestSummonsNumber,
-      forceStationCode: getForceStationCode(pncUpdateDataset, true),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       nextHearingDate: results[0].NextHearingDate
         ? formatDateSpecifiedInResult(new Date(results[0].NextHearingDate), true)
