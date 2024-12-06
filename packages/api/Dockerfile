@@ -56,4 +56,5 @@ WORKDIR /core/packages/api
 
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
 
+USER node
 CMD [ "node", "dist/src/index.js" ]
