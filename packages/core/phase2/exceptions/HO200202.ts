@@ -12,7 +12,6 @@ export const maxResultQualifierVariable = 4
 const HO200202: ExceptionGenerator = (hearingOutcome: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-
   forEachRecordableResult(hearingOutcome, (_, offenceIndex, result, resultIndex) => {
     if (result.ResultQualifierVariable.length <= maxResultQualifierVariable) {
       return
@@ -21,8 +20,7 @@ const HO200202: ExceptionGenerator = (hearingOutcome: AnnotatedHearingOutcome): 
     exceptions.push(
       ...result.ResultQualifierVariable.map((_, qualifierVariableIndex) => ({
         code: ExceptionCode.HO200202,
-        path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex)
-          .Code
+        path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex).Code
       }))
     )
   })

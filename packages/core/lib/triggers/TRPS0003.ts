@@ -21,9 +21,9 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   forEachRecordableResult(hearingOutcome, (offence, _, result, __) => {
     const disposalText = getDisposalTextFromResult(result)
 
-      if (disposalText.length > maxDisposalTextLength) {
-        triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
-      }
+    if (disposalText.length > maxDisposalTextLength) {
+      triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
+    }
   })
 
   return triggers
