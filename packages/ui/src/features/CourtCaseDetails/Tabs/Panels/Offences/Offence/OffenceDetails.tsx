@@ -19,6 +19,7 @@ import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"
 import { OffenceDetailsContainer } from "./OffenceDetails.styles"
 import { OffenceNavigation } from "./OffenceNavigation"
+import ResultQualifier from "./ResultQualifier"
 import { StartDate } from "./StartDate"
 
 interface OffenceDetailsProps {
@@ -164,6 +165,8 @@ export const OffenceDetails = ({
                 resultIndex={index}
                 errorStatus={courtCase.errorStatus}
               />
+
+              <ResultQualifier result={result} />
             </div>
           )
         })}
