@@ -6,7 +6,8 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isAmountSpecifiedInResultValid from "../lib/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
-import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
+import isRecordableOffence from "../lib/isRecordableOffence"
+import isRecordableResult from "../lib/isRecordableResult"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2
@@ -34,12 +35,24 @@ const generateException = (
 const HO200205: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-  checkResultsMatchingPncDisposalsExceptions(aho, (result, offenceIndex, resultIndex) => {
-    exceptions.push(...generateException(result, offenceIndex, resultIndex, firstAmountIndex))
-    if (result.Duration?.[thirdDurationIndex]) {
-      exceptions.push(...generateException(result, offenceIndex, resultIndex, thirdAmountIndex))
+  // TODO: Turn this loop into a reusable function
+  for (const [
+    offenceIndex,
+    offence
+  ] of aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.entries()) {
+    if (!isRecordableOffence(offence)) {
+      continue
     }
-  })
+    for (const [resultIndex, result] of offence.Result.entries()) {
+      if (!isRecordableResult(result)) {
+        continue
+      }
+      exceptions.push(...generateException(result, offenceIndex, resultIndex, firstAmountIndex))
+      if (result.Duration?.[thirdDurationIndex]) {
+        exceptions.push(...generateException(result, offenceIndex, resultIndex, thirdAmountIndex))
+      }
+    }
+  }
 
   return exceptions
 }
