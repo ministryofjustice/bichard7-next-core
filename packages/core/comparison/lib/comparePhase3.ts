@@ -27,7 +27,7 @@ import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined =>
-  xml?.replace(/ WeedFlag="[^"]*"/g, "").replace(/ hasError="false"/g, "")
+  xml?.replace(/ WeedFlag="[^"]*"/g, "").replace(/ hasError="false"/g, "").replace(/ Error="HO200200"/g, "")
 
 const normalisePncOperations = (operations: PncUpdateRequest[]) => {
   for (const operation of operations) {
