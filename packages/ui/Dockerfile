@@ -40,10 +40,10 @@ ENV TZ="Europe/London"
 WORKDIR /app
 
 # Set up a non-root user for supervisor and its child processes - nextjs, nginx
-RUN useradd supervisor 
-RUN npm config set cache /tmp/npm --global 
-RUN chown supervisor -R /app /var/log /var/lib/nginx /run
-RUN chown supervisor /certs/server.key
+RUN useradd supervisor && \
+    npm config set cache /tmp/npm --global  && \
+    chown supervisor -R /app /var/log /var/lib/nginx /run  && \
+    chown supervisor /certs/server.key
 
 # Extract standalone build to working directory
 COPY --from=builder /core/packages/ui/.next/standalone .
