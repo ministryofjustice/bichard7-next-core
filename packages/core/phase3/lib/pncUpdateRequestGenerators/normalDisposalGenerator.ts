@@ -20,7 +20,7 @@ import preProcessAsn from "../preProcessAsn"
 import {
   generateArrestHearingsAdjudicationsAndDisposals,
   generateHearingsAdjudicationsAndDisposals
-} from "./hearingDetails"
+} from "../hearingDetails"
 
 const COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const ILLEGAL_FILENAME_PATTERN = new RegExp("[^a-zA-Z0-9\\- /]", "g")
