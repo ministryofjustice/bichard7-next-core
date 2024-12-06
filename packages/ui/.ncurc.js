@@ -16,7 +16,7 @@
   - next
     - 13.4.13 causes failures with fetch
 */
-const pinned = ["styled-components", "eslint", "@typescript-eslint/parser", "eslint-plugin-cypress", "cookies-next"]
+const pinned = ["styled-components", "@typescript-eslint/parser", "cookies-next"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 

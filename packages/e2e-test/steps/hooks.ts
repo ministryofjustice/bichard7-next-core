@@ -16,16 +16,14 @@ export const setupHooks = () => {
       try {
         fs.rmSync("./screenshots", { recursive: true })
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.log("Screenshots directory did not exist")
       }
     }
   })
 
-  // eslint-disable-next-line consistent-return
   Before(async function (context) {
     this.featureUri = context.gherkinDocument.uri
-    // eslint-disable-next-line prefer-destructuring
+
     this.testId = extractTestId(this.featureUri)
     if (recordComparisons) {
       if (

@@ -113,7 +113,7 @@ const updatePncEmulator = async () => {
 
   for (let i = 0; i < Number(REPEAT_SCENARIOS); i += 1) {
     console.log(`seeding batch ${i + 1}`)
-    // eslint-disable-next-line no-await-in-loop
+
     await Promise.all(scenarios.map(seedScenario))
   }
 })()
