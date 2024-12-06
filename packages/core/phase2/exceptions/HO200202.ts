@@ -5,14 +5,14 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
-import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
+import forEachRecordableResult from "../../lib/forEachRecordableResult"
 
 export const maxResultQualifierVariable = 4
 
-const HO200202: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200202: ExceptionGenerator = (hearingOutcome: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-  checkResultsMatchingPncDisposalsExceptions(aho, (result, offenceIndex, resultIndex) => {
+  forEachRecordableResult(hearingOutcome, (_, offenceIndex, result, resultIndex) => {
     if (result.ResultQualifierVariable.length <= maxResultQualifierVariable) {
       return
     }

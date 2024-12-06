@@ -5,8 +5,8 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
+import forEachRecordableResult from "../../lib/forEachRecordableResult"
 import isAmountSpecifiedInResultValid from "../lib/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
-import checkResultsMatchingPncDisposalsExceptions from "./checkResultsMatchingPncDisposalsExceptions"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2
@@ -31,10 +31,10 @@ const generateException = (
   return []
 }
 
-const HO200205: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
+const HO200205: ExceptionGenerator = (hearingOutcome: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-  checkResultsMatchingPncDisposalsExceptions(aho, (result, offenceIndex, resultIndex) => {
+  forEachRecordableResult(hearingOutcome, (_, offenceIndex, result, resultIndex) => {
     exceptions.push(...generateException(result, offenceIndex, resultIndex, firstAmountIndex))
     if (result.Duration?.[thirdDurationIndex]) {
       exceptions.push(...generateException(result, offenceIndex, resultIndex, thirdAmountIndex))
