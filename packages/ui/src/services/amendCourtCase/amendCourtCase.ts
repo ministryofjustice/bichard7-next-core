@@ -71,6 +71,7 @@ const amendCourtCase = async (
     }
   } else {
     // TODO: Cover PNC update phase
+    return Error("Resubmission to Phase 2 is not implemented yet")
   }
 
   return updatedAho

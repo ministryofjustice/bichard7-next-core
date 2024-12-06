@@ -1,10 +1,13 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import amendCourtCase from "services/amendCourtCase"
 import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
-import sendToQueue from "services/mq/sendToQueue"
 import updateCourtCaseStatus from "services/updateCourtCaseStatus"
 import updateLockStatusToLocked from "services/updateLockStatusToLocked"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
@@ -14,16 +17,21 @@ import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
+import type MqGateway from "./mq/types/MqGateway"
+import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 
 const phase1ResubmissionQueue = process.env.PHASE_1_RESUBMIT_QUEUE_NAME ?? "PHASE_1_RESUBMIT_QUEUE"
+const phase2ResubmissionQueue = process.env.PHASE_2_RESUBMIT_QUEUE_NAME ?? "PHASE_2_RESUBMIT_QUEUE"
 
 const resubmitCourtCase = async (
   dataSource: DataSource,
+  mqGateway: MqGateway,
   form: Partial<Amendments>,
   courtCaseId: number,
   user: User
 ): PromiseResult<AnnotatedHearingOutcome | Error> => {
   try {
+    let phase
     const resultAho = await dataSource.transaction(
       "SERIALIZABLE",
       async (entityManager): Promise<AnnotatedHearingOutcome | Error> => {
@@ -38,6 +46,8 @@ const resubmitCourtCase = async (
         if (!courtCase) {
           throw new Error("Failed to resubmit: Case not found")
         }
+
+        phase = courtCase.phase
 
         const lockResult = await updateLockStatusToLocked(entityManager, +courtCaseId, user, events)
         if (isError(lockResult)) {
@@ -73,11 +83,31 @@ const resubmitCourtCase = async (
           courtCase,
           user,
           UnlockReason.TriggerAndException,
-          [] //TODO pass an actual audit log events array
+          events
         )
 
         if (isError(unlockResult)) {
           throw unlockResult
+        }
+
+        events.push(
+          getAuditLogEvent(
+            phase === 1 ? EventCode.HearingOutcomeResubmittedPhase1 : EventCode.HearingOutcomeResubmittedPhase2,
+            EventCategory.information,
+            AUDIT_LOG_EVENT_SOURCE,
+            {
+              user: user.username,
+              auditLogVersion: 2
+            }
+          )
+        )
+
+        const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch(
+          (error) => error
+        )
+
+        if (isError(storeAuditLogResponse)) {
+          throw storeAuditLogResponse
         }
 
         return amendedCourtCase
@@ -89,8 +119,9 @@ const resubmitCourtCase = async (
     }
 
     // TODO: this doesn't look right - should it be in transaction??
+    const destinationQueue = phase === 1 ? phase1ResubmissionQueue : phase2ResubmissionQueue
     const generatedXml = serialiseToXml(resultAho, false)
-    const queueResult = await sendToQueue({ messageXml: generatedXml, queueName: phase1ResubmissionQueue })
+    const queueResult = await mqGateway.execute(generatedXml, destinationQueue)
 
     if (isError(queueResult)) {
       return queueResult

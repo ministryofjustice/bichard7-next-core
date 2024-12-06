@@ -28,6 +28,10 @@ import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
 import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
+import { createMqConfig, StompitMqGateway } from "services/mq"
+
+const mqGatewayConfig = createMqConfig()
+const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
 const hasAmendments = (amendments: string | undefined): boolean =>
   !!amendments && Object.keys(JSON.parse(amendments ?? "{}")).length > 0
@@ -84,7 +88,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
       const updatedAmendments = hasAmendments(amendments) ? JSON.parse(amendments) : { noUpdatesResubmit: true }
 
-      const amendedCase = await resubmitCourtCase(dataSource, updatedAmendments, +courtCaseId, currentUser)
+      const amendedCase = await resubmitCourtCase(dataSource, mqGateway, updatedAmendments, +courtCaseId, currentUser)
 
       if (isError(amendedCase)) {
         throw amendedCase
