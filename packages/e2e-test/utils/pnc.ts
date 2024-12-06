@@ -44,7 +44,6 @@ export const mockMissingPncDataForTest = async function (this: Bichard) {
   }
 }
 
-/* eslint-disable consistent-return */
 export const mockPNCDataForTest = async function (this: Bichard) {
   const specFolder = path.dirname(this.featureUri)
   if (this.config.realPNC) {
@@ -196,7 +195,7 @@ export const checkMocks = async function (this: Bichard) {
 
 export const pncNotUpdated = async function (this: Bichard) {
   // Wait 3 seconds to give the backend time to process
-  // eslint-disable-next-line no-promise-executor-return
+
   await new Promise((resolve) => setTimeout(resolve, 3000))
   if (this.config.realPNC) {
     if (skipPNCValidation) {
