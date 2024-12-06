@@ -13,19 +13,24 @@ export const maxResultQualifierVariable = 4
 const HO200202: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-
-  for (const [offenceIndex, offence] of aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.entries()){
-    if(!isRecordableOffence(offence)){
+  for (const [
+    offenceIndex,
+    offence
+  ] of aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.entries()) {
+    if (!isRecordableOffence(offence)) {
       continue
     }
-    for (const [resultIndex, result] of offence.Result.entries()){
-      if(!isRecordableResult(result) || result.ResultQualifierVariable.length <= maxResultQualifierVariable){
+
+    for (const [resultIndex, result] of offence.Result.entries()) {
+      if (!isRecordableResult(result) || result.ResultQualifierVariable.length <= maxResultQualifierVariable) {
         continue
       }
+
       exceptions.push(
         ...result.ResultQualifierVariable.map((_, qualifierVariableIndex) => ({
           code: ExceptionCode.HO200202,
-          path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex).Code
+          path: errorPaths.offence(offenceIndex).result(resultIndex).resultQualifierVariable(qualifierVariableIndex)
+            .Code
         }))
       )
     }

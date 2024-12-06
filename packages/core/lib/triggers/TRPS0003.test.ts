@@ -1,7 +1,7 @@
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
-import { Offence } from "../../types/AnnotatedHearingOutcome"
 import Phase from "../../types/Phase"
 import TRPS0003 from "./TRPS0003"
 

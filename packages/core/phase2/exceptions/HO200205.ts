@@ -43,10 +43,12 @@ const HO200205: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
     if (!isRecordableOffence(offence)) {
       continue
     }
+
     for (const [resultIndex, result] of offence.Result.entries()) {
       if (!isRecordableResult(result)) {
         continue
       }
+
       exceptions.push(...generateException(result, offenceIndex, resultIndex, firstAmountIndex))
       if (result.Duration?.[thirdDurationIndex]) {
         exceptions.push(...generateException(result, offenceIndex, resultIndex, thirdAmountIndex))

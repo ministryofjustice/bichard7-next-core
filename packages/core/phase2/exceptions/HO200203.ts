@@ -1,9 +1,11 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "../../lib/exceptions/errorPaths"
-import addPaddingToBailCondition from "../../phase3/lib/addPaddingToBailCondition"
+
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
+
+import errorPaths from "../../lib/exceptions/errorPaths"
+import addPaddingToBailCondition from "../../phase3/lib/addPaddingToBailCondition"
 
 export const maxResultQualifierVariable = 4
 
@@ -12,12 +14,9 @@ const HO200203: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
 
   const pncBailConditionLines: string[] = []
 
-  const {BailConditions: bailConditions} = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  const { BailConditions: bailConditions } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
 
-  for (const [
-    bailConditionIndex,
-    bailCondition
-  ] of bailConditions.entries()) {
+  for (const [bailConditionIndex, bailCondition] of bailConditions.entries()) {
     const pncBailConditions = addPaddingToBailCondition(bailCondition)
 
     for (const pncBailCondition of pncBailConditions) {

@@ -12,7 +12,6 @@ import Phase from "../../types/Phase"
 const triggerCode = TriggerCode.TRPS0003
 const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE]
 
-
 const generator: TriggerGenerator = (hearingOutcome, options) => {
   const triggers: Trigger[] = []
 
@@ -21,21 +20,21 @@ const generator: TriggerGenerator = (hearingOutcome, options) => {
   }
 
   const offences = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-  for (const offence of offences){
-    if(!isRecordableOffence(offence)){
+  for (const offence of offences) {
+    if (!isRecordableOffence(offence)) {
       continue
     }
-    for (const result of offence.Result){
-      if(!isRecordableResult(result)){
+
+    for (const result of offence.Result) {
+      if (!isRecordableResult(result)) {
         continue
       }
-      
+
       const disposalText = getDisposalTextFromResult(result)
 
-        if (disposalText.length > maxDisposalTextLength) {
-          triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
-        }
-
+      if (disposalText.length > maxDisposalTextLength) {
+        triggers.push({ code: triggerCode, offenceSequenceNumber: offence?.CourtOffenceSequenceNumber })
+      }
     }
   }
 

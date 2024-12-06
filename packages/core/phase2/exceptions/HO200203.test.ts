@@ -34,25 +34,11 @@ describe("HO200203", () => {
     expect(exceptions).toEqual([
       {
         code: "HO200203",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "BailConditions",
-          18
-        ]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 18]
       },
       {
         code: "HO200203",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "BailConditions",
-          19
-        ]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "BailConditions", 19]
       }
     ])
   })
@@ -79,7 +65,7 @@ describe("HO200203", () => {
       extraLongString300,
       string200,
       string200,
-      string200,
+      string200
     ]
 
     const exceptions = HO200203(aho)
