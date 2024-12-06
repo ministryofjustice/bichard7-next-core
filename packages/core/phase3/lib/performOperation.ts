@@ -2,26 +2,53 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
+import type { PncApiError } from "../../lib/PncGateway"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 
-import dispatch from "./dispatch"
+import { PncOperation } from "../../types/PncOperation"
+import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
+import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
+import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
+import penaltyHearingGenerator from "./pncUpdateRequestGenerators/penaltyHearingGenerator"
+import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
+import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
 
-const performOperation = async (
+const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
+  [PncOperation.DISPOSAL_UPDATED]: disposalUpdatedGenerator,
+  [PncOperation.NORMAL_DISPOSAL]: normalDisposalGenerator,
+  [PncOperation.PENALTY_HEARING]: penaltyHearingGenerator,
+  [PncOperation.REMAND]: remandGenerator,
+  [PncOperation.SENTENCE_DEFERRED]: sentenceDeferredGenerator
+}
+
+const performOperation = async <T extends PncOperation>(
   pncUpdateDataset: PncUpdateDataset,
-  operation: Operation,
+  operation: Operation<T>,
   pncGateway: PncGatewayInterface
 ): PromiseResult<void> => {
-  const dispatchResult = await dispatch(pncUpdateDataset, operation, pncGateway).catch((error) => error)
-
-  if (isError(dispatchResult)) {
+  const pncUpdateRequest = pncUpdateRequestGenerator[operation.code as T](pncUpdateDataset, operation)
+  if (isError(pncUpdateRequest)) {
     operation.status = "Failed"
-    return dispatchResult
+
+    return pncUpdateRequest
+  }
+
+  const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId).catch((error: PncApiError) => error)
+
+  if (isError(pncUpdateResult)) {
+    for (const message of pncUpdateResult.messages) {
+      pncUpdateDataset.Exceptions.push(generatePncUpdateExceptionFromMessage(message))
+    }
+
+    operation.status = "Failed"
+
+    return pncUpdateResult
   }
 
   operation.status = "Completed"
-
-  // TODO: Implement PNCUpdateProcessor.java:99-106
 }
 
 export default performOperation
