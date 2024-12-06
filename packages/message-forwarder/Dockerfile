@@ -18,4 +18,5 @@ FROM ${BUILD_IMAGE}
 WORKDIR /message-forwarder
 COPY --from=builder /message-forwarder/packages/message-forwarder/build/server.js ./server.js
 
+USER node
 CMD [ "node", "server.js" ]
