@@ -17,8 +17,7 @@ file:
     contains: []
   /certs/server.key:
     exists: true
-    owner: root
-    group: root
+    owner: supervisor
     filetype: file
     size:
       and:
