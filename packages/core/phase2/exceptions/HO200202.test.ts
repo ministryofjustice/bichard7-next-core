@@ -1,9 +1,18 @@
-import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200202 from "./HO200202"
+
+const offence = {
+  CriminalProsecutionReference: {
+    OffenceReasonSequence: "1"
+  },
+  Result: [{ PNCDisposalType: 1001 }]
+} as any as Offence
 
 describe("HO200202", () => {
   it("should return exceptions when there are more than 4 result qualifier variables", () => {
-    const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
+    const aho = generateAhoFromOffenceList([offence])
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable = [
       { Code: "1" },
       { Code: "2" },
@@ -99,7 +108,7 @@ describe("HO200202", () => {
   })
 
   it("should not return exceptions when there are 4 result qualifier variables", () => {
-    const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
+    const aho = generateAhoFromOffenceList([offence])
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable = [
       { Code: "1" },
       { Code: "2" },
@@ -113,7 +122,7 @@ describe("HO200202", () => {
   })
 
   it("should not return exceptions when there are no result qualifier variables", () => {
-    const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
+    const aho = generateAhoFromOffenceList([offence])
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable = []
 
     const exceptions = HO200202(aho)

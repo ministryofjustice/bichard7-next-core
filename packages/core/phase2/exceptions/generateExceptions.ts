@@ -18,16 +18,15 @@ import HO200117 from "./HO200117"
 import HO200118 from "./HO200118"
 import HO200121 from "./HO200121"
 import HO200124 from "./HO200124"
-import HO200200 from "./HO200200"
-import HO200201 from "./HO200201"
 import HO200202 from "./HO200202"
+import HO200203 from "./HO200203"
 import HO200205 from "./HO200205"
 import HO200212 from "./HO200212"
 
 // prettier-ignore
 const generators: ExceptionGenerator[] = [
   HO200100, HO200101, HO200103, HO200104, HO200106, HO200108, HO200112, HO200113, HO200114,
-  HO200115, HO200118, HO200121, HO200124, HO200200, HO200201, HO200202, HO200205
+  HO200115, HO200118, HO200121, HO200124, HO200202, HO200203, HO200205
 ]
 
 const generateExceptions = (aho: AnnotatedHearingOutcome): Exception[] => {

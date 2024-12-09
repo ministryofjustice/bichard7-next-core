@@ -1,4 +1,3 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 
 import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
@@ -64,7 +63,7 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
     auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(outputMessage))
   }
 
-  if (exceptions.some(({ code }) => code !== ExceptionCode.HO200200)) {
+  if (exceptions.length > 0) {
     return {
       auditLogEvents: auditLogger.getEvents(),
       correlationId,

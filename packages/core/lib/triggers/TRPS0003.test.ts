@@ -1,68 +1,43 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 
-import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import Phase from "../../types/Phase"
 import TRPS0003 from "./TRPS0003"
+
+const recordableOffence = {
+  CriminalProsecutionReference: {
+    OffenceReasonSequence: "1"
+  }
+} as any as Offence
+
+const generateAho = (ResultVariableText?: string[]) =>
+  generateAhoFromOffenceList(
+    (ResultVariableText?.map((text, index) => ({
+      ...recordableOffence,
+      CourtOffenceSequenceNumber: index + 1,
+      Result: [{ ResultVariableText: text, ResultQualifierVariable: [], CJSresultCode: 3041, PNCDisposalType: 1001 }]
+    })) as any as Offence[]) ?? []
+  )
 
 describe("TRPS0003", () => {
   it("should not return a trigger if phase is not PNC_UPDATE", () => {
     const options = { phase: Phase.HEARING_OUTCOME }
-    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        }
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateAho([`DEFENDANT EXCLUDED FROM ${"a".repeat(65)} FOR A PERIOD OF`])
     const result = TRPS0003(generatedHearingOutcome, options)
     expect(result).toEqual([])
   })
 
-  it("should not return a trigger if there are no offences with the specific exceptions code HO200200", () => {
+  it("should not return a trigger if there are no offences with too long disposal text", () => {
     const options = { phase: Phase.PNC_UPDATE }
-    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        }
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateAho([`DEFENDANT EXCLUDED FROM ${"a".repeat(50)} FOR A PERIOD OF`])
     const result = TRPS0003(generatedHearingOutcome, options)
     expect(result).toEqual([])
   })
 
-  it("should return trigger and offence sequence number if offence has the specific exceptions code HO200200", () => {
+  it("should return trigger and offence sequence number if offence has too long disposal text", () => {
     const options = { phase: Phase.PNC_UPDATE }
-    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
-        CourtOffenceSequenceNumber: 1
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateAho([`DEFENDANT EXCLUDED FROM ${"a".repeat(65)} FOR A PERIOD OF`])
     generatedHearingOutcome.Exceptions = [
       {
         code: "HO200200",
@@ -88,49 +63,13 @@ describe("TRPS0003", () => {
     ])
   })
 
-  it("should return trigger and offence sequence number if multiple offences have the specific exceptions code HO200200", () => {
+  it("should return trigger and offence sequence number if multiple offences have too long disposal text", () => {
     const options = { phase: Phase.PNC_UPDATE }
-    const generatedHearingOutcome = generatePncUpdateDatasetFromOffenceList([
-      {
-        Result: [
-          {
-            CJSresultCode: 9999
-          }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
-        CourtOffenceSequenceNumber: 1
-      },
-      {
-        Result: [
-          {
-            CJSresultCode: 9991
-          }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
-        CourtOffenceSequenceNumber: 2
-      },
-      {
-        Result: [
-          {
-            CJSresultCode: 9992
-          }
-        ],
-        CriminalProsecutionReference: {
-          OffenceReason: {
-            __type: "NationalOffenceReason"
-          }
-        },
-        CourtOffenceSequenceNumber: 3
-      }
-    ] as Offence[])
+    const generatedHearingOutcome = generateAho([
+      `DEFENDANT EXCLUDED FROM ${"a".repeat(65)} FOR A PERIOD OF`,
+      `DEFENDANT EXCLUDED FROM ${"a".repeat(65)} FOR A PERIOD OF`,
+      `DEFENDANT EXCLUDED FROM ${"a".repeat(65)} FOR A PERIOD OF`
+    ])
     generatedHearingOutcome.Exceptions = [
       {
         code: "HO200200",

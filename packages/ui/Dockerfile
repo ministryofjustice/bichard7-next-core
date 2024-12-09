@@ -15,7 +15,7 @@ COPY package-lock.json .
 COPY tsconfig*.json ./
 COPY packages/ ./packages/
 
-RUN npm ci && npm run build:core
+RUN npm ci --ignore-scripts && npm run build:core
 
 WORKDIR /core/packages/ui
 
@@ -33,17 +33,17 @@ WORKDIR /core
 
 #########################################################
 FROM ${BUILD_IMAGE} AS runner
-
-RUN useradd nextjs && \
-    groupadd nodejs && \
-    usermod -a -G nodejs nextjs && \
-    npm config set cache /tmp/npm --global
-
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV TZ="Europe/London"
 
 WORKDIR /app
+
+# Set up a non-root user for supervisor and its child processes - nextjs, nginx
+RUN useradd supervisor && \
+    npm config set cache /tmp/npm --global  && \
+    chown supervisor -R /app /var/log /var/lib/nginx /run  && \
+    chown supervisor /certs/server.key
 
 # Extract standalone build to working directory
 COPY --from=builder /core/packages/ui/.next/standalone .
@@ -60,4 +60,5 @@ COPY packages/ui/docker/conf/supervisord.conf /etc/supervisord.conf
 EXPOSE 80
 EXPOSE 443
 
+USER supervisor
 CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]

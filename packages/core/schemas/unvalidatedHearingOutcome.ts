@@ -122,10 +122,7 @@ export const amountSpecifiedInResultSchema = z.object({
 })
 
 export const resultQualifierVariableSchema = z.object({
-  Code: z.string().describe(resultDescription.ResultQualifierVariable.Code.$description),
-  Duration: durationSchema.optional(),
-  DateSpecifiedInResult: dateSpecifiedInResultSchema.array().optional(),
-  Text: z.string().optional()
+  Code: z.string().describe(resultDescription.ResultQualifierVariable.Code.$description)
 })
 
 export const addressLine = z.string()

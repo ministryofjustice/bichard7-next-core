@@ -65,9 +65,17 @@ const $case = {
   magistratesCourtReference: casePath.concat("CourtReference", "MagistratesCourtReference")
 }
 
+const bailConditions = (bailConditionIndex: number): ExceptionPath => [
+  ...casePath,
+  "HearingDefendant",
+  "BailConditions",
+  bailConditionIndex
+]
+
 const errorPaths = {
   offence,
-  case: $case
+  case: $case,
+  bailConditions
 }
 
 export default errorPaths
