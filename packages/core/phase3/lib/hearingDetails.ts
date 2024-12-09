@@ -10,7 +10,7 @@ import type {
   Disposal
 } from "../types/HearingDetails"
 
-import { getAdjustedRecordableOffencesForCourtCase } from "../../lib/getRecordableOffencesForCourtCase"
+import getAdjustedRecordableOffencesForCourtCase from "../../lib/getAdjustedRecordableOffencesForCourtCase"
 import createPncAdjudicationFromAho from "../../phase2/lib/createPncAdjudicationFromAho"
 import formatDateSpecifiedInResult from "../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import isResultCompatibleWithDisposal from "../../phase2/lib/isResultCompatibleWithDisposal"
