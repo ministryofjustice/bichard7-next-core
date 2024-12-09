@@ -10,6 +10,8 @@ import sendToPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/sen
 import persistPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/persistPhase2"
 import processPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/processPhase2"
 import sendToPhase3 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/sendToPhase3"
+import persistPhase3 from "@moj-bichard7/core/conductor-tasks/bichard_phase_3/persistPhase3"
+import processPhase3 from "@moj-bichard7/core/conductor-tasks/bichard_phase_3/processPhase3"
 import deleteS3File from "@moj-bichard7/core/conductor-tasks/common/deleteS3File"
 import lockS3File from "@moj-bichard7/core/conductor-tasks/common/lockS3File"
 import storeAuditLogEvents from "@moj-bichard7/core/conductor-tasks/common/storeAuditLogEvents"
@@ -31,8 +33,10 @@ const tasks = [
   lockS3File,
   persistPhase1,
   persistPhase2,
+  persistPhase3,
   processPhase1,
   processPhase2,
+  processPhase3,
   rerunPeriod,
   sendToPhase2,
   sendToPhase3,
