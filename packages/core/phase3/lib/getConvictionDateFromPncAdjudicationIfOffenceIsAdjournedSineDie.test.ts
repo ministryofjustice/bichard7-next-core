@@ -104,6 +104,6 @@ describe("getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie", () =
 
     const result = getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie(aho, hoOffence)
 
-    expect(result?.toISOString()).toBe("2024-05-21T23:00:00.000Z")
+    expect(result?.toISOString()).toBe("2024-05-22T00:00:00.000Z")
   })
 })
