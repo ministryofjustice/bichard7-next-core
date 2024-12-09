@@ -1,5 +1,6 @@
-import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+
+import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
 import getPncCourtCode from "./getPncCourtCode"
 
 jest.mock("../../lib/dataLookup/lookupOrganisationUnitByCode")
@@ -135,7 +136,6 @@ describe("getPncCourtCode", () => {
   })
 
   it("Should return the thirdLevelPsaCode if the courtHouse code is less than 4000 and third level code is greater than 4000", () => {
-
     const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.Mock
 
     mockedLookupOrganisationUnitByCode.mockReturnValue({
@@ -164,5 +164,4 @@ describe("getPncCourtCode", () => {
 
     expect(pncCourtCodes).toBe("4001")
   })
-
 })

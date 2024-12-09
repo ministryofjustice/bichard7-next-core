@@ -1,6 +1,7 @@
+import type { Offence } from "../../types/AnnotatedHearingOutcome"
+
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generateAhoMatchingPncAdjudicationAndDisposals from "../../phase2/tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "./getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
 describe("getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie", () => {

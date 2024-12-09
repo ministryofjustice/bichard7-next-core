@@ -1,4 +1,5 @@
-import { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+
 import getForceStationCode from "./getForceStationCode"
 
 const getForceOwner = (secondLevelCode: string, thirdLevelCode: string): AnnotatedHearingOutcome => {

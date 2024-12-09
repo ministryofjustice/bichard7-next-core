@@ -1,6 +1,7 @@
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
-import { PncQueryResult } from "../../types/PncQueryResult"
+import type { PncQueryResult } from "../../types/PncQueryResult"
+
+import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import ResultClass from "../../types/ResultClass"
 import createPncDisposalFromOffence from "./createPncDisposalFromOffence"
 
@@ -60,10 +61,10 @@ const generateResult = (
 
 const generateAho = (
   results: {
-    pncDisposal: number
-    resultCode?: number
-    resultClass?: ResultClass
     numberOfExpectedDisposals?: 1 | 2
+    pncDisposal: number
+    resultClass?: ResultClass
+    resultCode?: number
   }[],
   convictionDateFromPncAdjudication = false
 ) => {

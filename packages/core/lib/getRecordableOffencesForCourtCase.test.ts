@@ -1,5 +1,6 @@
-import generateAhoFromOffenceList from "../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import type { Offence } from "../types/AnnotatedHearingOutcome"
+
+import generateAhoFromOffenceList from "../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import getRecordableOffencesForCourtCase from "./getRecordableOffencesForCourtCase"
 
 const offences = [
