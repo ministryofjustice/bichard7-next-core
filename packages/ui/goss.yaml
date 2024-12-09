@@ -2,13 +2,13 @@ file:
   /certs:
     exists: true
     owner: root
-    group: root
+    group: supervisor
     filetype: directory
     contains: []
   /certs/server.crt:
     exists: true
     owner: root
-    group: root
+    group: supervisor
     size:
       and:
         - gt: 2377
@@ -17,7 +17,8 @@ file:
     contains: []
   /certs/server.key:
     exists: true
-    owner: supervisor
+    owner: root
+    group: supervisor
     filetype: file
     size:
       and:
@@ -33,7 +34,7 @@ file:
   /etc/passwd:
     exists: true
     mode: "0644"
-    size: 983
+    size: 993
     owner: root
     group: root
     filetype: file
@@ -100,6 +101,14 @@ user:
       - node
     home: /home/node
     shell: /bin/bash
+  supervisor:
+    exists: true
+    uid: 996
+    gid: 996
+    groups:
+      - supervisor
+    home: /home/supervisor
+    shell: /sbin/nologin
   systemd-network:
     exists: true
     uid: 192
