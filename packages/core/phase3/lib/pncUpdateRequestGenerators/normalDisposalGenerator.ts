@@ -14,15 +14,13 @@ import checkRccSegmentApplicability, {
 } from "../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
 import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatibleWithDisposal"
 import { PncOperation } from "../../../types/PncOperation"
-import getForceStationCode from "../getForceStationCode"
-import getPncCheckname from "../getPncCheckname"
+import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
-import preProcessAsn from "../preProcessAsn"
-import preProcessPncIdentifier from "../preProcessPncIdentifier"
 import {
   generateArrestHearingsAdjudicationsAndDisposals,
   generateHearingsAdjudicationsAndDisposals
-} from "./hearingDetails"
+} from "../hearingDetails"
+import preProcessAsn from "../preProcessAsn"
 
 const COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
 const ILLEGAL_FILENAME_PATTERN = new RegExp("[^a-zA-Z0-9\\- /]", "g")
@@ -169,7 +167,6 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     pncUpdateDataset,
     operation.data?.courtCaseReference
   )
-  const forceStationCode = getForceStationCode(pncUpdateDataset, true)
   let arrestSummonsNumber: Error | null | string = null
   let arrestsAdjudicationsAndDisposals: ArrestHearingAdjudicationAndDisposal[] = []
   if (offencesAddedByTheCourt.length > 0) {
@@ -187,20 +184,17 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   return {
     operation: PncOperation.NORMAL_DISPOSAL,
     request: {
+      ...generateBasePncUpdateRequest(pncUpdateDataset),
       arrestSummonsNumber,
       arrestsAdjudicationsAndDisposals,
       courtCaseReferenceNumber: formattedCourtCaseReference,
       courtHouseName,
-      croNumber: hearingDefendant.CRONumber ?? null,
       dateOfHearing: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
-      forceStationCode,
       generatedPNCFilename: generatedPNCFilename,
       hearingsAdjudicationsAndDisposals,
       pendingCourtDate: courtDate ? formatDateSpecifiedInResult(courtDate, true) : null,
       pendingCourtHouseName: crtPsaCourtCode ? pendingCourtHouseName : null,
       pendingPsaCourtCode: crtPsaCourtCode ? preProcessCourtCode(crtPsaCourtCode) : null,
-      pncCheckName: getPncCheckname(pncUpdateDataset),
-      pncIdentifier: preProcessPncIdentifier(hearingDefendant.PNCIdentifier),
       preTrialIssuesUniqueReferenceNumber,
       psaCourtCode: couPsaCourtCode ? preProcessCourtCode(couPsaCourtCode) : null
     }

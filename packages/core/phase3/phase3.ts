@@ -38,7 +38,6 @@ const phase3 = async (
     auditLogEvents: auditLogger.getEvents(),
     correlationId,
     outputMessage: inputMessage,
-    pncOperations: [],
     triggers,
     triggerGenerationAttempted: false,
     resultType: Phase3ResultType.success
