@@ -20,7 +20,7 @@ const generateResult = (pncDisposalType: number): Result => ({
   PNCDisposalType: pncDisposalType,
   DateSpecifiedInResult: [
     {
-      Date: new Date("05/22/2024"),
+      Date: new Date("2024-05-22"),
       Sequence: 1
     }
   ],
@@ -93,10 +93,10 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
               offence: {
                 sequenceNumber: options.hasMatchingPncAdjudication === false ? 0 : 1,
                 cjsOffenceCode: "offence-code",
-                startDate: new Date("05/22/2024")
+                startDate: new Date("2024-05-22")
               },
               adjudication: {
-                sentenceDate: new Date("05/22/2024"),
+                sentenceDate: new Date("2024-05-22"),
                 verdict: "NON-CONVICTION",
                 offenceTICNumber: 0,
                 plea: ""
@@ -140,10 +140,10 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
           offence: {
             sequenceNumber: 1,
             cjsOffenceCode: "offence-code",
-            startDate: new Date("05/22/2024")
+            startDate: new Date("2024-05-22")
           },
           adjudication: {
-            sentenceDate: new Date("05/22/2024"),
+            sentenceDate: new Date("2024-05-22"),
             verdict: "NON-CONVICTION",
             offenceTICNumber: 0,
             plea: ""
@@ -166,7 +166,7 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
 
   aho.PncQuery = pncQuery
   aho.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
-    DateOfHearing: new Date("05/22/2024")
+    DateOfHearing: new Date("2024-05-22")
   } as Hearing
 
   return aho
