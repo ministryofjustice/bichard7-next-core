@@ -41,9 +41,9 @@ WORKDIR /app
 
 # Set up a non-root user for supervisor and its child processes - nextjs, nginx
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
-    usermod -a -G supervisor supervisor  && \
-    chgrp supervisor -R /app /certs /run /var/log /var/lib/nginx&& \
-    chmod g+r -R /certs /var/lib/nginx&& \
+    usermod -a -G supervisor supervisor && \
+    chgrp supervisor -R /app /certs /run /var/log /var/lib/nginx && \
+    chmod g+r -R /certs /var/lib/nginx && \
     chmod g+rw -R /app /run /var/log && \
     npm config set cache /tmp/npm --global
 
