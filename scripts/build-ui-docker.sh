@@ -10,6 +10,27 @@ function has_local_image() {
   echo "${IMAGES}"
 }
 
+function install_goss() {
+  which dgoss > /dev/null
+  if [ $? -eq 0 ]; then
+    echo "Goss is installed"
+  else
+    ## Install goss
+    curl -L https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
+    chmod +rx /usr/local/bin/goss
+    curl -L https://github.com/goss-org/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
+    chmod +rx /usr/local/bin/dgoss
+
+    export GOSS_PATH="/usr/local/bin/goss"
+  fi
+}
+
+function test_with_goss() {
+  if [ $SKIP_GOSS != "true" ]; then 
+    GOSS_SLEEP=15 GOSS_FILE=packages/ui/goss.yaml dgoss run "${DOCKER_OUTPUT_TAG}:latest"
+  fi
+}
+
 function pull_and_build_from_aws() {
   FETCHED_AWS_ACCOUNT_ID=$(aws sts get-caller-identity \
       --query 'Account' \
@@ -41,29 +62,23 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_REFERENCE}@${IMAGE_HASH}"
 
-
-if [ $(arch) = "arm64" ]
-then
-    echo "Building for ARM"
-    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
-else
-    echo "Building regular image"
-    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
-fi
+  if [ $(arch) = "arm64" ]
+  then
+      echo "Building for ARM"
+      docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
+  else
+      echo "Building regular image"
+      docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
+  fi
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
-    ## Install goss
-    curl -L https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-    chmod +rx /usr/local/bin/goss
-    curl -L https://github.com/goss-org/goss/releases/latest/download/dgoss -o /usr/local/bin/dgoss
-    chmod +rx /usr/local/bin/dgoss
-
-    export GOSS_PATH="/usr/local/bin/goss"
+    install_goss
 
     ## Run goss tests
     # DB_CONTAINER=docker ps -aqf "name=bichard7-next_pg"
     # DB_HOST=docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $DB_CONTAINER
-    GOSS_SLEEP=15 GOSS_FILE=packages/ui/goss.yaml dgoss run "${DOCKER_OUTPUT_TAG}:latest"
+    # GOSS_SLEEP=15 GOSS_FILE=packages/ui/goss.yaml dgoss run "${DOCKER_OUTPUT_TAG}:latest"
+    test_with_goss
 
     docker tag \
         ${DOCKER_OUTPUT_TAG}:latest \
@@ -87,6 +102,7 @@ EOF
     fi
   fi
 }
+
 if [[ "$(has_local_image)" -gt 0 ]]; then
   if [ $(arch) = "arm64" ]
   then
@@ -96,6 +112,8 @@ if [[ "$(has_local_image)" -gt 0 ]]; then
       echo "Building regular image"
       docker build -f packages/ui/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
   fi
+
+  test_with_goss
 else
   pull_and_build_from_aws
 fi

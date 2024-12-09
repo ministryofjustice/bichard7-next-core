@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.2.0
+  docker: circleci/docker@2.8.1
 
 commands:
   fetch_images:
@@ -563,7 +563,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - run: ./scripts/build-ui-docker.sh
+      - run: docker/install-goss
+      - run: RUN_GOSS=true ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
           command: |
