@@ -6,6 +6,7 @@
     "audit-log": "docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait audit-log-api",
     "all": "./environment/boot.sh",
     "all-phase2-core": "PHASE2_CORE_CANARY_RATIO=1 ./environment/boot.sh",
+    "all-phase3-core": "PHASE2_CORE_CANARY_RATIO=1 PHASE3_CORE_CANARY_RATIO=1 ./environment/boot.sh",
     "all-legacy": "LEGACY=true ./environment/boot.sh nginx-auth-proxy",
     "all-no-worker": "NOWORKER=true ./environment/boot.sh",
     "all-build-worker": "BUILD_WORKER=true ./environment/boot.sh",
