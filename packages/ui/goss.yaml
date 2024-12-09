@@ -5,6 +5,7 @@ file:
     group: supervisor
     filetype: directory
     contains: []
+    mode: "0755" # u=rwx,go=rx
   /certs/server.crt:
     exists: true
     owner: root
@@ -15,6 +16,7 @@ file:
         - lt: 2395
     filetype: file
     contains: []
+    mode: "0644" # u=rw,go=r
   /certs/server.key:
     exists: true
     owner: root
@@ -25,6 +27,7 @@ file:
         - lt: 3300
         - gt: 3267
     contains: []
+    mode: "0640" # u=rw,g=r
   /etc/nginx/nginx.conf:
     exists: true
     owner: root
