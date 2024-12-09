@@ -2,7 +2,6 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { PncApiError } from "../../lib/PncGateway"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
@@ -36,7 +35,7 @@ const performOperation = async <T extends PncOperation>(
   }
 
   const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-  const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId).catch((error: PncApiError) => error)
+  const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId)
 
   if (isError(pncUpdateResult)) {
     for (const message of pncUpdateResult.messages) {
