@@ -147,18 +147,19 @@ export default class PncGateway implements PncGatewayInterface {
     const path = lookupPathFromOperation(request.operation)
 
     return axios
-      .post(`${this.config.url}/records/${path}`, {
+      .post(`${this.config.url}/records/${path}`, request.request, {
         headers: {
           "X-Api-Key": this.config.key,
           correlationId
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
-        }),
-        body: request.request
+        })
       })
-      .then(() => {
-        return
+      .then((result) => {
+        if (result.status !== 204) {
+          return new PncApiError(["Error updating PNC"])
+        }
       })
       .catch((e) => {
         if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
