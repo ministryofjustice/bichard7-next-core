@@ -415,11 +415,15 @@ jobs:
       phase2-core-canary-ratio:
         type: enum
         enum: ["1.0", "0.0"]
+      phase3-core-canary-ratio:
+        type: enum
+        enum: ["1.0", "0.0"]
       ms-edge:
         type: boolean
     environment:
       NEXTUI: << parameters.next-ui >>
       PHASE2_CORE_CANARY_RATIO: << parameters.phase2-core-canary-ratio >>
+      PHASE3_CORE_CANARY_RATIO: << parameters.phase3-core-canary-ratio >>
       MS_EDGE: << parameters.ms-edge >>
     steps:
       - unless:
@@ -921,6 +925,7 @@ workflows:
           name: e2e_test_phase1
           next-ui: false
           phase2-core-canary-ratio: "0.0"
+          phase3-core-canary-ratio: "0.0"
           ms-edge: false
           requires:
             - lint_and_build
@@ -928,6 +933,15 @@ workflows:
           name: e2e_test_phase2
           next-ui: false
           phase2-core-canary-ratio: "1.0"
+          phase3-core-canary-ratio: "0.0"
+          ms-edge: false
+          requires:
+            - lint_and_build
+      - e2e_test:
+          name: e2e_test_phase3
+          next-ui: false
+          phase2-core-canary-ratio: "1.0"
+          phase3-core-canary-ratio: "1.0"
           ms-edge: false
           requires:
             - lint_and_build

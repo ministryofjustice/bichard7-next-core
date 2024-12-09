@@ -35,11 +35,19 @@ enum Destination {
   MQ = "MQ"
 }
 
+const getCanaryRatio = (phase3CanaryRatio?: number) => {
+  if (phase3CanaryRatio !== undefined && phase3CanaryRatio !== -1) {
+    return phase3CanaryRatio
+  }
+
+  const canaryRatio = Number(process.env.PHASE3_CORE_CANARY_RATIO)
+  return isNaN(canaryRatio) ? 0.0 : canaryRatio
+}
+
 const getDestination = (phase3CanaryRatio?: number): Destination => {
   const random = Math.random()
-  const canaryRatio = phase3CanaryRatio !== undefined ? phase3CanaryRatio : 0.0
 
-  if (canaryRatio > random) {
+  if (getCanaryRatio(phase3CanaryRatio) > random) {
     return Destination.CONDUCTOR
   }
 
