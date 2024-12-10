@@ -5,7 +5,7 @@ import ResolutionStatusBadge from "features/CourtCaseList/tags/ResolutionStatusB
 import { Link, Table } from "govuk-react"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { JSX, useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
 import { LOCKED_ICON_URL } from "utils/icons"

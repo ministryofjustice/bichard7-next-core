@@ -1,5 +1,6 @@
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
+import { JSX } from "react"
 import type { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
 
 interface LegacySequencingMessageTableRowProps {

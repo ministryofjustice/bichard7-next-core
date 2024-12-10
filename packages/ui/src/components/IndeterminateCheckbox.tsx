@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, useEffect, useRef } from "react"
+import { ChangeEvent, Dispatch, JSX, useEffect, useRef } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
 import { IndeterminateCheckboxWrapper } from "./IndeterminateCheckbox.styles"
 
