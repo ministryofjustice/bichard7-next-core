@@ -1,7 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { loginAndVisit } from "../../../support/helpers"
 
-describe("View PNC Error Message", () => {
+describe("Render PNC exception and View PNC Error Message", () => {
   const exceptionCodeMap: { [key in ExceptionCode]?: string } = {
     [ExceptionCode.HO100301]: "I0013 - TEST ERROR MESSAGE",
     [ExceptionCode.HO100302]: "PNCAM - TEST ERROR MESSAGE",
@@ -35,6 +35,7 @@ describe("View PNC Error Message", () => {
       cy.visit("/bichard/court-cases/0")
 
       cy.get("#exceptions-tab").click()
+      cy.contains(exceptionCode)
       cy.contains("PNC error message").click()
 
       cy.contains(expectedMessage).should("be.visible")

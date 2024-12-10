@@ -12,9 +12,12 @@ type Props = {
 
 const PncException = ({ code, message }: Props) => {
   const isPncQueryExceptionCode = [
-    ExceptionCode.HO100301,
     ExceptionCode.HO100302,
+    ExceptionCode.HO100313,
     ExceptionCode.HO100314,
+    ExceptionCode.HO100315
+  ].includes(code)
+  const isPncUpdateExceptionCode = [
     ExceptionCode.HO100401,
     ExceptionCode.HO100403,
     ExceptionCode.HO100402,
@@ -31,7 +34,7 @@ const PncException = ({ code, message }: Props) => {
       <GridRow className="exception-row exception-row__details">
         <GridCol>
           {code}
-          {` - PNC ${isPncQueryExceptionCode ? "Query" : "Update"} Error`}
+          {` - ${isPncQueryExceptionCode ? "PNC Query" : isPncUpdateExceptionCode ? "PNC Update" : "ASN Not Found on PNC"} Error`}
         </GridCol>
       </GridRow>
 

@@ -9,21 +9,22 @@ describe("PncException", () => {
       message:
         "I1008 - GWAY - ENQUIRY ERROR INVALID ADJUDICATION: PNCID: 1996/513346V TAC= 1320991 FN= 73 MN= 698745 SY= LIVE3 IN= 0",
       expectedHeading: "HO100402 - PNC Update Error",
-      expectedMessage: "Check the offence matching"
+      expectedMessage:
+        "I1008 - GWAY - ENQUIRY ERROR INVALID ADJUDICATION: PNCID: 1996/513346V TAC= 1320991 FN= 73 MN= 698745 SY= LIVE3 IN= 0"
     },
     {
       title: "No suitable disposal groups",
       code: ExceptionCode.HO100402,
       message: "I1008 - GWAY - ENQUIRY ERROR NO SUITABLE DISPOSAL GROUPS 20/01JP/01/5151Y",
       expectedHeading: "HO100402 - PNC Update Error",
-      expectedMessage: "Create DH page on PNC, then Submit the case on Bichard 7"
+      expectedMessage: "I1008 - GWAY - ENQUIRY ERROR NO SUITABLE DISPOSAL GROUPS 20/01JP/01/5151Y"
     },
     {
       title: "More than 3 disposal groups",
       code: ExceptionCode.HO100402,
       message: "I1008 - GWAY - ENQUIRY ERROR MORE THAN 3 DISPOSAL GROUPS 20/0000/00/544160F",
       expectedHeading: "HO100402 - PNC Update Error",
-      expectedMessage: "Enquiry error more than 3 disposal groups"
+      expectedMessage: "I1008 - GWAY - ENQUIRY ERROR MORE THAN 3 DISPOSAL GROUPS 20/0000/00/544160F"
     },
     {
       title: "Incorrect charge count on court case",
@@ -31,7 +32,8 @@ describe("PncException", () => {
       message:
         "I1008 - GWAY - ENQUIRY ERROR RECORD CORRUPTION: INCORRECT CHARGE COUNT ON COURT CASE: 21/1013/14991Q PNCID: 2012/245249G TAC= 1338133 FN= 73 MN= 709257 SY= LIVE3 IN= 0",
       expectedHeading: "HO100402 - PNC Update Error",
-      expectedMessage: "Check PNC record and re-submit"
+      expectedMessage:
+        "I1008 - GWAY - ENQUIRY ERROR RECORD CORRUPTION: INCORRECT CHARGE COUNT ON COURT CASE: 21/1013/14991Q PNCID: 2012/245249G TAC= 1338133 FN= 73 MN= 709257 SY= LIVE3 IN= 0"
     },
     {
       title: "Too many disposals",
@@ -39,7 +41,8 @@ describe("PncException", () => {
       message:
         "I1008 - GWAY - ENQUIRY ERROR TOO MANY DISPOSALS ( 11 ) CHARGE ISN: 80499810 PNCID: 2016/436145N TAC= 1387491 FN= 73 MN= 738536 SY= LIVE3 IN= 0",
       expectedHeading: "HO100402 - PNC Update Error",
-      expectedMessage: "Check PNC record and re-submit"
+      expectedMessage:
+        "I1008 - GWAY - ENQUIRY ERROR TOO MANY DISPOSALS ( 11 ) CHARGE ISN: 80499810 PNCID: 2016/436145N TAC= 1387491 FN= 73 MN= 738536 SY= LIVE3 IN= 0"
     },
     {
       title: "Error encountered processing enquiry",
@@ -47,7 +50,8 @@ describe("PncException", () => {
       message:
         "I1036 - Error encountered processing enquiry - Please contact PNC service desk Ref:Date/Time=20210421/173236 Job=24462130 Program=NATSIGN User=73000001 Terminal=A7300001",
       expectedHeading: "HO100402 - PNC Update Error",
-      expectedMessage: "Re-submit case to the PNC"
+      expectedMessage:
+        "I1036 - Error encountered processing enquiry - Please contact PNC service desk Ref:Date/Time=20210421/173236 Job=24462130 Program=NATSIGN User=73000001 Terminal=A7300001"
     },
     {
       title: "Without message",
@@ -64,7 +68,12 @@ describe("PncException", () => {
       code: ExceptionCode.HO100404,
       message: "Unexpected PNC communication error",
       expectedHeading: "HO100404 - PNC Update Error",
-      expectedMessage: "Re-submit case to the PNC"
+      expectedMessage: "Unexpected PNC communication error"
+    },
+    {
+      title: "Without message",
+      code: ExceptionCode.HO100301,
+      expectedHeading: "HO100301 - ASN Not Found on PNC Error"
     },
     {
       title: "Without message",
