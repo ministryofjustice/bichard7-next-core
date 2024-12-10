@@ -2,6 +2,7 @@ import ResultQualifierCodes from "@moj-bichard7-developers/bichard7-next-data/di
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { Heading, Table } from "govuk-react"
 import { TableRow } from "../../TableRow"
+import { JSX } from "react"
 
 interface QualifierProps {
   result: Result
