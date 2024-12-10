@@ -2,7 +2,7 @@ import type { Relation } from "typeorm"
 import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
 import type { ResolutionStatus } from "types/ResolutionStatus"
 import getTriggerWithDescription from "../../utils/formatReasons/getTriggerWithDescription"
-// eslint-disable-next-line import/no-cycle
+
 import CourtCase from "./CourtCase"
 import dateTransformer from "./transformers/dateTransformer"
 import getShortTriggerCode from "./transformers/getShortTriggerCode"

@@ -10,7 +10,6 @@ export interface ParseFormTokenResult {
 export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> => {
   const { tokenName, formSecret } = CSRF
 
-  // eslint-disable-next-line no-prototype-builtins
   if (!formData.hasOwnProperty(tokenName)) {
     return Error("Token not found in the form data.")
   }

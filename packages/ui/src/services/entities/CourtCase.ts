@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import Permission from "@moj-bichard7/common/types/Permission"
 import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm"
