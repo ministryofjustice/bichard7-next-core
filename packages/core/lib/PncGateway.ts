@@ -113,6 +113,7 @@ export default class PncGateway implements PncGatewayInterface {
         headers: {
           "X-Api-Key": this.config.key,
           correlationId,
+          "x-correlation-id": correlationId,
           accept: "application/json"
         },
         httpsAgent: new https.Agent({
