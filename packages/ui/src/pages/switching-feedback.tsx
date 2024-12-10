@@ -154,8 +154,9 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
   }, [])
 
   const emailSubject = "Feedback: <Subject here>"
-  const emailBody = "Please describe the issues you have experienced - the more detail the better"
-  const emailHref = `mailto:bichard@zendesk.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+  const emailBody =
+    "Include Username and Force. Please describe the issues you have experienced - the more detail the better"
+  const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
