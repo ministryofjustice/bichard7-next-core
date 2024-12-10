@@ -52,6 +52,11 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
           WHEN ${exceptionsCount}::integer > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
           WHEN error_status IS NULL THEN NULL
           ELSE ${ResolutionStatus.RESOLVED}::integer
+        END,
+        error_resolved_ts = CASE
+          WHEN ${exceptionsCount}::integer > 0 THEN NULL
+          WHEN error_status IS NULL THEN NULL
+          ELSE ${new Date()}::TIMESTAMP WITHOUT TIME ZONE
         END
       WHERE error_id = ${recordId}`
 
