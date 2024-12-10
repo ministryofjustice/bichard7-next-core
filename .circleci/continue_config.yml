@@ -55,6 +55,12 @@ commands:
             - run:
                 name: Install npm dependencies
                 command: CYPRESS_INSTALL_BINARY=0 npm i --workspaces --include-workspace-root
+      - when:
+          condition: <<parameters.install-cypress>>
+          steps:
+            - run:
+                name: Remove React and React-dom from ui node_modules as they conflixt with root node_moduled
+                command: rm -rf node_modules/react node_modules/react-dom
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
