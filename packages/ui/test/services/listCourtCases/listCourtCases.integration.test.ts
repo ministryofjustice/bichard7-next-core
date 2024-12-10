@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import "reflect-metadata"
 import Note from "services/entities/Note"

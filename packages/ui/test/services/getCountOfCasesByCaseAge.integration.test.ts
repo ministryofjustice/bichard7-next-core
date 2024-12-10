@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 import "reflect-metadata"

@@ -1,5 +1,6 @@
 import Badge, { BadgeColours } from "components/Badge"
 import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
+import { JSX } from "react"
 
 interface LegacySequencingBadgeTableRowProps {
   offenceReasonSequence?: string | null

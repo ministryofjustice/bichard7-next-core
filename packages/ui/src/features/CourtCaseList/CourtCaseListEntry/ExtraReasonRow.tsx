@@ -3,6 +3,7 @@ import { Table } from "govuk-react"
 import Image from "next/image"
 import { LOCKED_ICON_URL } from "utils/icons"
 import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"
+import { JSX } from "react"
 
 interface ExtraReasonRowProps {
   isLocked: boolean

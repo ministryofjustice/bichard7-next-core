@@ -88,12 +88,10 @@ class MockPNCHelper {
     await fs.writeFile(`${this.options.world?.outputDir}/mocks.json`, JSON.stringify(mocks))
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setupRecord(_specFolder: string) {
     throw new Error("setupRecord on MockPNCHelper should not be called")
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   checkRecord(_specFolder: string): Promise<boolean> {
     throw new Error("checkRecord on MockPNCHelper should not be called")
   }

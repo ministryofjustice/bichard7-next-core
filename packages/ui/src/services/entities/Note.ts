@@ -1,4 +1,3 @@
-/* eslint-disable import/no-cycle */
 import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
 import CourtCase from "./CourtCase"

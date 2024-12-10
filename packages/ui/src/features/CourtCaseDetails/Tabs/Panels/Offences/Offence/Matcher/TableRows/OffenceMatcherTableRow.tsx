@@ -4,6 +4,7 @@ import { useCourtCase } from "context/CourtCaseContext"
 import findCandidates from "utils/offenceMatcher/findCandidates"
 import getExceptionMessage from "utils/offenceMatcher/getExceptionMessage"
 import OffenceMatcher from "../OffenceMatcher"
+import { JSX } from "react"
 
 interface OffenceMatcherTableRowProps {
   offenceIndex: number

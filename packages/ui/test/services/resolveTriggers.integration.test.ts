@@ -126,7 +126,7 @@ describe("resolveTriggers", () => {
       const updatedTrigger = retrievedTrigger!
 
       expect(updatedTrigger.resolvedAt).not.toBeNull()
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       const minsSinceResolved = differenceInMinutes(new Date(), updatedTrigger.resolvedAt!)
       expect(minsSinceResolved).toBeGreaterThanOrEqual(0)
       expect(minsSinceResolved).toBeLessThanOrEqual(5)
@@ -142,7 +142,7 @@ describe("resolveTriggers", () => {
 
       expect(afterCourtCase.triggerResolvedBy).toStrictEqual(resolverUsername)
       expect(afterCourtCase.triggerResolvedTimestamp).not.toBeNull()
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       const minsSinceCaseTriggersResolved = differenceInMinutes(new Date(), afterCourtCase.triggerResolvedTimestamp!)
       expect(minsSinceCaseTriggersResolved).toBeGreaterThanOrEqual(0)
       expect(minsSinceCaseTriggersResolved).toBeLessThanOrEqual(5)

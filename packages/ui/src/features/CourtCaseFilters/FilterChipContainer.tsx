@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import ConditionalRender from "components/ConditionalRender"
+import { JSX } from "react"
 
 interface Props {
   condition: boolean

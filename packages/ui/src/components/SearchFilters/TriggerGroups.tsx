@@ -1,7 +1,7 @@
 import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
 import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
-import { Dispatch } from "react"
+import { Dispatch, JSX } from "react"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
 import allGroupedTriggers from "utils/triggerGroups/allGroupedTriggers"
 import allExcludedTriggers from "utils/triggerGroups/allExcludedTriggers"

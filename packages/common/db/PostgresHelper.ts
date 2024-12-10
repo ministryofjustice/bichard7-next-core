@@ -21,7 +21,6 @@ class PostgresHelper {
     this.db = postgresConnection
   }
 
-  // eslint-disable-next-line class-methods-use-this
   closeConnection() {
     pgp.end()
   }
