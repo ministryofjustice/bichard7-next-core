@@ -51,7 +51,7 @@ commands:
                 command: npm i --workspaces --include-workspace-root
             - run:
                 name: Remove React and React-dom from ui node_modules as they conflixt with root node_moduled
-                command: rm -rf node_modules/react node_modules/react-dom
+                command: rm -rf packages/ui/node_modules/react packages/ui/node_modules/react-dom
       - unless:
           condition: <<parameters.install-cypress>>
           steps:
