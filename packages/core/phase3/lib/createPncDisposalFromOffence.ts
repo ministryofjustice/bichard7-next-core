@@ -71,14 +71,14 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
         }
       }
 
-      if (disposalFor2060Result && (found2050Result || found2063Result) && pncDisposals.length == 2) {
-        pncDisposals = disposalFor2060Result
-      }
-
       if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
         pncDisposals.push(...generatedDisposals)
       }
     })
+
+  if (disposalFor2060Result && (found2050Result || found2063Result) && pncDisposals.length == 2) {
+    pncDisposals = disposalFor2060Result
+  }
 
   if (found3027 || adjournmentExists) {
     return pncDisposals

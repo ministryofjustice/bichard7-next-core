@@ -135,26 +135,7 @@ describe("createPncDisposalFromOffence", () => {
 
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y   220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2007
-      },
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y1  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2007
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found and 2 disposals are generated already", () => {
@@ -166,71 +147,7 @@ describe("createPncDisposalFromOffence", () => {
     ])
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y1  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: undefined,
-        qtyDate: "",
-        qtyUnitsFined: "Y1                    00",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y1  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: undefined,
-        qtyDate: "",
-        qtyUnitsFined: "Y1                    00",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y3",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y3  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y2",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y2  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2066
-      },
-      {
-        qtyDuration: "Y2",
-        qtyMonetaryValue: undefined,
-        qtyDate: "",
-        qtyUnitsFined: "Y2                    00",
-        qualifiers: "A ",
-        text: "",
-        type: 2066
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should not ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found but 3 disposals are generated already", () => {
@@ -241,53 +158,7 @@ describe("createPncDisposalFromOffence", () => {
     ])
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y   220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2050
-      },
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: undefined,
-        qtyDate: "",
-        qtyUnitsFined: "Y                     00",
-        qualifiers: "A ",
-        text: "",
-        type: 2050
-      },
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y1  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2050
-      },
-      {
-        qtyDuration: "Y2",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y2  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y2",
-        qtyMonetaryValue: undefined,
-        qtyDate: "",
-        qtyUnitsFined: "Y2                    00",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 has been found and 2 disposals are generated already", () => {
@@ -299,35 +170,7 @@ describe("createPncDisposalFromOffence", () => {
     ])
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y1  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2060
-      },
-      {
-        qtyDuration: "Y2",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y2  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2063
-      },
-      {
-        qtyDuration: "Y3",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y3  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2068
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 with result 2060 has been found and 2 disposals are generated already", () => {
@@ -339,26 +182,7 @@ describe("createPncDisposalFromOffence", () => {
     ])
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y1",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y1  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2063
-      },
-      {
-        qtyDuration: "Y3",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y3  220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2068
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should ignore disposal 2063 when there was a disposal 2063 with result code 2060", () => {
@@ -366,17 +190,7 @@ describe("createPncDisposalFromOffence", () => {
 
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y   220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2063
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should not add any disposal when disposal codes are 3052 and adjournment does not exist", () => {
@@ -395,26 +209,7 @@ describe("createPncDisposalFromOffence", () => {
 
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y   220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2050
-      },
-      {
-        qtyDuration: "",
-        qtyMonetaryValue: undefined,
-        qtyDate: "05122024",
-        qtyUnitsFined: "    05122024          00",
-        qualifiers: "",
-        text: undefined,
-        type: 3027
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should generate a PNC disposal using the sentence date from the matching offence when adjournment exists", () => {
@@ -422,17 +217,7 @@ describe("createPncDisposalFromOffence", () => {
 
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y   220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 2050
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 
   it("should generate a PNC disposal using the sentence date from the matching offence when disposal 3027 exists", () => {
@@ -440,16 +225,6 @@ describe("createPncDisposalFromOffence", () => {
 
     const disposals = createPncDisposalFromOffence(aho, offence)
 
-    expect(disposals).toStrictEqual([
-      {
-        qtyDuration: "Y0",
-        qtyMonetaryValue: "25",
-        qtyDate: "22052024",
-        qtyUnitsFined: "Y   220520240000025.0000",
-        qualifiers: "A ",
-        text: "",
-        type: 3027
-      }
-    ])
+    expect(disposals).toMatchSnapshot()
   })
 })
