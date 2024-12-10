@@ -14,7 +14,7 @@ import getDataSource from "services/getDataSource"
 import insertSurveyFeedback from "services/insertSurveyFeedback"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import { isError } from "types/Result"
-import { Page, SurveyFeedbackType, SwitchingFeedbackResponse, SwitchingReason } from "types/SurveyFeedback"
+import { SurveyFeedbackType, SwitchingFeedbackResponse } from "types/SurveyFeedback"
 import { DisplayFullUser } from "types/display/Users"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
@@ -22,48 +22,17 @@ import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 
-interface SwitchingFeedbackFormState {
-  switchingReason?: SwitchingReason
-  pageWithIssue?: Page
-  feedback?: string
-}
-
 interface Props {
   user: DisplayFullUser
   csrfToken: string
   previousPath: string
-  fields?: {
-    switchingReason: {
-      hasError: boolean
-      value?: SwitchingReason | null
-    }
-    pageWithIssue: {
-      hasError: boolean
-      value?: Page | null
-    }
-    feedback: {
-      hasError: boolean
-      value?: string | null
-    }
-  }
-}
-
-function validateForm(form: SwitchingFeedbackFormState): boolean {
-  const isIssueOrPreferenceValid =
-    !!form.switchingReason && Object.values(SwitchingReason).includes(form.switchingReason as SwitchingReason)
-  const isCaseListOrDetailValid =
-    form.switchingReason !== SwitchingReason.issue ||
-    (!!form.pageWithIssue && Object.values(Page).includes(form.pageWithIssue as Page))
-  const isFeedbackValid = !!form.feedback
-
-  return isIssueOrPreferenceValid && isCaseListOrDetailValid && isFeedbackValid
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, csrfToken, formData } = context as CsrfServerSidePropsContext &
+    const { currentUser, query, req, csrfToken } = context as CsrfServerSidePropsContext &
       AuthenticationServerSidePropsContext
     const {
       previousPath,
@@ -84,8 +53,6 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req)) {
       const dataSource = await getDataSource()
 
-      const form = formData as SwitchingFeedbackFormState
-
       if (isSkipped === "true") {
         const result = await insertSurveyFeedback(dataSource, {
           feedbackType: SurveyFeedbackType.Switching,
@@ -97,43 +64,6 @@ export const getServerSideProps = withMultipleServerSideProps(
           return redirectTo(redirectToUrl)
         } else {
           throw result
-        }
-      }
-
-      if (validateForm(form)) {
-        const response: SwitchingFeedbackResponse = {
-          ...(form.switchingReason ? { switchingReason: form.switchingReason as SwitchingReason } : {}),
-          ...(form.pageWithIssue ? { pageWithIssue: form.pageWithIssue as Page } : {}),
-          ...(form.feedback ? { comment: form.feedback } : {})
-        }
-
-        const result = await insertSurveyFeedback(dataSource, {
-          feedbackType: SurveyFeedbackType.Switching,
-          userId: currentUser.id,
-          response
-        } as SurveyFeedback)
-
-        if (!isError(result)) {
-          return redirectTo(redirectToUrl)
-        } else {
-          throw result
-        }
-      } else {
-        return {
-          props: {
-            ...props,
-            fields: {
-              switchingReason: {
-                hasError: !form.switchingReason ? true : false,
-                value: form.switchingReason ?? null
-              },
-              pageWithIssue: {
-                hasError: !form.pageWithIssue ? true : false,
-                value: form.pageWithIssue ?? null
-              },
-              feedback: { hasError: !form.feedback ? true : false, value: form.feedback ?? null }
-            }
-          }
         }
       }
     }
