@@ -45,7 +45,7 @@
 				<DC:Case>
 					<DC:PTIURN>01VK0300108</DC:PTIURN>
 					<DC:Defendant>
-						<DC:ProsecutorReference>1101ZD0100000410836A</DC:ProsecutorReference>
+						<DC:ProsecutorReference>1101ZD010000410836V</DC:ProsecutorReference>
 						<DC:CourtIndividualDefendant>
 							<DC:PersonDefendant>
 								<DC:BasePersonDetails>
@@ -90,10 +90,13 @@
 							<DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
 							<DC:Finding>G</DC:Finding>
 							<DC:Result>
-								<DC:ResultCode>1015</DC:ResultCode>
-								<DC:ResultText>£,Á,À,Â,Ä,È,É,Ê,Ë,Ì,Í,Î,Ï,Ò,Ó,Ô,Ö,Ù,Ú,Û,Ü,à,á,â,ä,è,é,ê,ë,ì,í,î,ï,ò,ó,ô,ö,ù,ú,û,ü,Ŵ,ŵ,Ŷ,ŷ,Ÿ,ÿ,Ẅ,ẅ,Ẁ,ẁ,Ẃ,ẃ,Ỳ,ỳ,Ý,ý</DC:ResultText>
+								<DC:ResultCode>3025</DC:ResultCode>
+								<DC:ResultText>Disqualified from keeping £,Á,À,Â,Ä,È,É,Ê,Ë,Ì,Í,Î,Ï,Ò,Ó,Ô,Ö,Ù,Ú,Û,Ü,à,á,â,ä,è,é,ê,ë,ì,í,î,ï,ò,ó,ô,ö,ù,ú,û,ü,Ŵ,ŵ,Ŷ,ŷ,Ÿ,ÿ,Ẅ,ẅ,Ẁ,ẁ,Ẃ,ẃ,Ỳ,ỳ,Ý,ý for life</DC:ResultText>
 								<DC:Outcome>
-									<DC:ResultAmountSterling>200.00</DC:ResultAmountSterling>
+									<DC:Duration>
+										<DC:DurationValue>1</DC:DurationValue>
+										<DC:DurationUnit>L</DC:DurationUnit>
+									</DC:Duration>
 								</DC:Outcome>
 							</DC:Result>
 						</DC:Offence>
@@ -177,10 +180,13 @@
 							<DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
 							<DC:Finding>G</DC:Finding>
 							<DC:Result>
-								<DC:ResultCode>1015</DC:ResultCode>
-								<DC:ResultText>£,Á,À,Â,Ä,È,É,Ê,Ë,Ì,Í,Î,Ï,Ò,Ó,Ô,Ö,Ù,Ú,Û,Ü,à,á,â,ä,è,é,ê,ë,ì,í,î,ï,ò,ó,ô,ö,ù,ú,û,ü,Ŵ,ŵ,Ŷ,ŷ,Ÿ,ÿ,Ẅ,ẅ,Ẁ,ẁ,Ẃ,ẃ,Ỳ,ỳ,Ý,ý</DC:ResultText>
+								<DC:ResultCode>3025</DC:ResultCode>
+								<DC:ResultText>Disqualified from keeping £,Á,À,Â,Ä,È,É,Ê,Ë,Ì,Í,Î,Ï,Ò,Ó,Ô,Ö,Ù,Ú,Û,Ü,à,á,â,ä,è,é,ê,ë,ì,í,î,ï,ò,ó,ô,ö,ù,ú,û,ü,Ŵ,ŵ,Ŷ,ŷ,Ÿ,ÿ,Ẅ,ẅ,Ẁ,ẁ,Ẃ,ẃ,Ỳ,ỳ,Ý,ý for life</DC:ResultText>
 								<DC:Outcome>
-									<DC:ResultAmountSterling>400.00</DC:ResultAmountSterling>
+									<DC:Duration>
+										<DC:DurationValue>1</DC:DurationValue>
+										<DC:DurationUnit>L</DC:DurationUnit>
+									</DC:Duration>
 								</DC:Outcome>
 							</DC:Result>
 						</DC:Offence>

@@ -51,8 +51,8 @@
 								<DC:BasePersonDetails>
 									<DC:PersonName>
 										<DC:PersonTitle>Mr</DC:PersonTitle>
-										<DC:PersonGivenName1>DUPLICATEOFFENCES</DC:PersonGivenName1>
-										<DC:PersonFamilyName>RESULTTEXTFORCED</DC:PersonFamilyName>
+										<DC:PersonGivenName1>OFFENCES</DC:PersonGivenName1>
+										<DC:PersonFamilyName>DUPLICATE</DC:PersonFamilyName>
 									</DC:PersonName>
 									<DC:Birthdate>1948-11-11</DC:Birthdate>
 									<DC:Gender>1</DC:Gender>
@@ -95,7 +95,7 @@
 							</DC:Result>
 							<DC:Result>
 								<DC:ResultCode>1015</DC:ResultCode>
-								<DC:ResultText>Forced Result Text from Portal Off1.</DC:ResultText>
+								<DC:ResultText>Ignored Result Text.</DC:ResultText>
 								<DC:Outcome>
 									<DC:ResultAmountSterling>300.00</DC:ResultAmountSterling>
 								</DC:Outcome>
@@ -128,7 +128,7 @@
 							</DC:Result>
 							<DC:Result>
 								<DC:ResultCode>1015</DC:ResultCode>
-								<DC:ResultText>Forced Result Text from Portal Off2</DC:ResultText>
+								<DC:ResultText>Ignored Result Text.</DC:ResultText>
 								<DC:Outcome>
 									<DC:ResultAmountSterling>3000.00</DC:ResultAmountSterling>
 								</DC:Outcome>
