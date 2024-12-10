@@ -31,7 +31,8 @@ export default [
       "packages/*/scripts/utility*",
       "packages/e2e-test/scripts",
       "packages/ui/cypress.config.ts",
-      "packages/ui/next.config.js"
+      "packages/ui/next.config.js",
+      "packages/ui/.next/*"
     ]
   },
   {
