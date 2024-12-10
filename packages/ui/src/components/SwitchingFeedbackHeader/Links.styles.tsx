@@ -1,15 +1,6 @@
 import styled from "styled-components"
 import { gdsBlack } from "utils/colours"
-import { nta, arial, sansSerif } from "utils/typography"
-
-const LinksRow = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const BackLinkWrapper = styled.div`
-  flex: 1;
-`
+import { arial, nta, sansSerif } from "utils/typography"
 
 const SkipLink = styled.button`
   flex: 1;
@@ -52,4 +43,4 @@ const SkipLink = styled.button`
   }
 `
 
-export { BackLinkWrapper, LinksRow, SkipLink }
+export { SkipLink }
