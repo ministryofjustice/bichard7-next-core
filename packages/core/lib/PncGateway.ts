@@ -150,7 +150,8 @@ export default class PncGateway implements PncGatewayInterface {
       .post(`${this.config.url}/records/${path}`, request.request, {
         headers: {
           "X-Api-Key": this.config.key,
-          correlationId
+          "correlation-id": correlationId,
+          "x-correlation-id": correlationId
         },
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
