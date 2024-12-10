@@ -1,7 +1,8 @@
 import FeedbackHeaderLinks from "components/FeedbackHeaderLinks"
+import { SkipLink } from "components/FeedbackHeaderLinks.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, Heading } from "govuk-react"
+import { Button, Heading } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -155,7 +156,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
 
   const emailSubject = "Feedback: <Subject here>"
   const emailBody = "Please describe the issues you have experienced - the more detail the better"
-  const emailHref = `mailto:zendesk@example.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+  const emailHref = `mailto:bichard@zendesk.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
@@ -168,27 +169,29 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
         <FeedbackHeaderLinks
           csrfToken={csrfToken}
           backLinkUrl={`${router.basePath}` + previousPath}
-          skipLinkUrl={skipUrl?.search}
+          showSkipLink={false}
         />
 
         <Heading as="h1">{"Share your feedback"}</Heading>
 
-        <Form className="b7-switching-feedback-form" method="POST" action={"#"} csrfToken={csrfToken}>
-          <Fieldset>
-            <p className="govuk-body">
-              {
-                "You have chosen to switch back to old Bichard. Could you share why? Please email us and outline the details of any issues you have experienced. It is helpful for us to receive feedback so that we can make improvements."
-              }
-            </p>
-            <p className="govuk-body">{"Some examples of feedback are:"}</p>
-          </Fieldset>
-          <Fieldset>
-            <FormGroup>
-              <Button as="a" href={emailHref}>
-                {"Send feedback email"}
-              </Button>
-            </FormGroup>
-          </Fieldset>
+        <p className="govuk-body">
+          {
+            "You have chosen to switch back to old Bichard. Could you share why? Please email us and outline the details of any issues you have experienced. It is helpful for us to receive feedback so that we can make improvements."
+          }
+        </p>
+        <p className="govuk-body">{"Some examples of feedback are:"}</p>
+        <ul className="govuk-list govuk-list--bullet">
+          <li>{"finding issues or bugs in the new version of Bichard (please be specific)"}</li>
+          <li>{"having a preference for the old version of Bichard"}</li>
+          <li>{"any other reason"}</li>
+        </ul>
+        <Button as="a" href={emailHref}>
+          {"Send feedback email"}
+        </Button>
+        <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
+          <SkipLink id="skip-feedback" type="submit">
+            {"Skip feedback"}
+          </SkipLink>
         </Form>
       </Layout>
     </CurrentUserContext.Provider>
