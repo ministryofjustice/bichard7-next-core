@@ -17,6 +17,7 @@ echo "Tags: ${TAGS}"
 echo "Message entry point: $MESSAGE_ENTRY_POINT"
 echo "Next UI: $NEXTUI"
 echo "Phase 2 canary ratio: $PHASE2_CORE_CANARY_RATIO"
+echo "Phase 3 canary ratio: $PHASE3_CORE_CANARY_RATIO"
 echo "MS EDGE: $MS_EDGE"
 echo "---------------------------------------------"
 
