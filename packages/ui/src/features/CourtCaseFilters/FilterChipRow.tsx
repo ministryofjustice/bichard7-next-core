@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import FilterChip from "components/FilterChip"
 import ConditionalRender from "components/ConditionalRender"
 import { Dispatch } from "react"

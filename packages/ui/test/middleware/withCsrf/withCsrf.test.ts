@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 jest.mock("middleware/withCsrf/verifyCsrfToken")
 jest.mock("middleware/withCsrf/generateCsrfToken")
 

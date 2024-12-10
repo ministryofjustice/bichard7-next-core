@@ -108,7 +108,6 @@ class ActiveMqHelper {
     let waiting = true
 
     while (waiting) {
-      // eslint-disable-next-line no-await-in-loop
       const message = await getMessage(client, queueName, timeout)
       if (message) {
         messages.push(message)

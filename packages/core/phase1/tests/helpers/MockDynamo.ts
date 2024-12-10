@@ -1,7 +1,7 @@
 import * as dynamodb from "@aws-sdk/client-dynamodb"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const dynalite = require("dynalite") as any
 
 export default class MockDynamo {

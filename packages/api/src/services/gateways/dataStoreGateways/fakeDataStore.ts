@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"

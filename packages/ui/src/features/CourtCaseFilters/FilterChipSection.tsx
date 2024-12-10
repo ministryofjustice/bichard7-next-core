@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import ConditionalRender from "components/ConditionalRender"
 import FilterChip from "components/FilterChip"
 import { Link } from "govuk-react"
