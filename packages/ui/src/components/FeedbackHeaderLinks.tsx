@@ -6,8 +6,10 @@ type Props = {
   csrfToken: string
   backLinkUrl: string
   skipLinkUrl?: string
+  showSkipLink: boolean
 }
-const FeedbackHeaderLinks = ({ csrfToken, backLinkUrl, skipLinkUrl }: Props) => {
+
+const FeedbackHeaderLinks = ({ csrfToken, backLinkUrl, skipLinkUrl, showSkipLink = true }: Props) => {
   return (
     <LinksRow>
       <BackLinkWrapper>
@@ -15,11 +17,13 @@ const FeedbackHeaderLinks = ({ csrfToken, backLinkUrl, skipLinkUrl }: Props) => 
           {"Back"}
         </BackLink>
       </BackLinkWrapper>
-      <Form method="POST" action={skipLinkUrl} csrfToken={csrfToken}>
-        <SkipLink id="skip-feedback" type="submit">
-          {"Skip feedback"}
-        </SkipLink>
-      </Form>
+      {showSkipLink ? (
+        <Form method="POST" action={skipLinkUrl} csrfToken={csrfToken}>
+          <SkipLink id="skip-feedback" type="submit">
+            {"Skip feedback"}
+          </SkipLink>
+        </Form>
+      ) : null}
     </LinksRow>
   )
 }
