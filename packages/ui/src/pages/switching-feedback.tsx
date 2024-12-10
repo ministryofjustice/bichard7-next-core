@@ -1,5 +1,5 @@
 import Layout from "components/Layout"
-import { SkipLink } from "components/SwitchingFeedbackHeader/Links.styles"
+import { SkipLink, SwitchingFeedbackButtonContainer } from "components/SwitchingFeedbackHeader/Links.styles"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { BackLink, Button, Heading } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
@@ -182,14 +182,16 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
           <li>{"having a preference for the old version of Bichard"}</li>
           <li>{"any other reason"}</li>
         </ul>
-        <Button as="a" href={emailHref}>
-          {"Send feedback email"}
-        </Button>
-        <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
-          <SkipLink id="skip-feedback" type="submit">
-            {"Skip feedback"}
-          </SkipLink>
-        </Form>
+        <SwitchingFeedbackButtonContainer>
+          <Button as="a" href={emailHref}>
+            {"Send feedback email"}
+          </Button>
+          <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
+            <SkipLink id="skip-feedback" type="submit">
+              {"Skip feedback"}
+            </SkipLink>
+          </Form>
+        </SwitchingFeedbackButtonContainer>
       </Layout>
     </CurrentUserContext.Provider>
   )

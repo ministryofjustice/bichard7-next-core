@@ -2,6 +2,16 @@ import styled from "styled-components"
 import { gdsBlack } from "utils/colours"
 import { arial, nta, sansSerif } from "utils/typography"
 
+const SwitchingFeedbackButtonContainer = styled.div`
+  display: flex;
+  padding-top: 15px;
+
+  form {
+    margin-top: 7px;
+    margin-left: 20px;
+  }
+`
+
 const SkipLink = styled.button`
   flex: 1;
   cursor: pointer;
@@ -43,4 +53,4 @@ const SkipLink = styled.button`
   }
 `
 
-export { SkipLink }
+export { SkipLink, SwitchingFeedbackButtonContainer }
