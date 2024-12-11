@@ -125,7 +125,6 @@ describe("Switching Bichard Version Feedback Form", () => {
   it("Should redirect to case list in old Bichard", () => {
     navigateAndClickSwitchToOldBichard()
     expectFeedbackForm()
-    // clickSendFeedbackButton()
 
     const expectedSubject = "Feedback: <Subject here>"
     const expectedBody =
@@ -133,7 +132,6 @@ describe("Switching Bichard Version Feedback Form", () => {
     const encodedSubject = encodeURIComponent(expectedSubject)
     const encodedBody = encodeURIComponent(expectedBody)
 
-    // Check the href attribute of the link
     cy.get("a")
       .contains("Send feedback email")
       .should("have.attr", "href")
