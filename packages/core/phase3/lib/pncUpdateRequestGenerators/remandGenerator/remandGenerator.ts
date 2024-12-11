@@ -24,6 +24,8 @@ const LOCAL_AUTHORITY_CODE = "0000"
 const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpdateDataset, operation) => {
   const hearing = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing
   const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  // TODO: When generating the remand operation in Phase 2, retain the offence and result indexes within the operation.
+  //       This avoids the need for this function to find matching results.
   const results = getResultsForRemand(hearingDefendant.Offence, operation)
 
   // TODO: Check if this actually necessary as Phase 2 must have found a result to generate a remand operation
