@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useCsrfToken } from "context/CsrfTokenContext"
 import { isEmpty } from "lodash"
 import { useCallback, useEffect, useState } from "react"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
@@ -20,6 +21,7 @@ interface AutoSaveProps {
 
 const AutoSave = ({ setSaved, setChanged, isValid, isSaved, isChanged, amendmentFields, children }: AutoSaveProps) => {
   const { courtCase, amendments, savedAmend, savedAmendments, updateCourtCase } = useCourtCase()
+  const { updateCsrfToken } = useCsrfToken()
   const [saving, setSaving] = useState<boolean>(false)
   const [httpResponseStatus, setHttpResponseStatus] = useState<number | undefined>(undefined)
   const [httpResponseError, setHttpResponseError] = useState<Error | undefined>(undefined)
@@ -53,7 +55,8 @@ const AutoSave = ({ setSaved, setChanged, isValid, isSaved, isChanged, amendment
           }
         })
 
-        updateCourtCase(response.data.courtCase as DisplayFullCourtCase)
+        updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
+        updateCsrfToken(response.data.csrfToken as string)
       })
     } catch (error) {
       setHttpResponseError(error as Error)
@@ -72,7 +75,8 @@ const AutoSave = ({ setSaved, setChanged, isValid, isSaved, isChanged, amendment
     saving,
     setChanged,
     setSaved,
-    updateCourtCase
+    updateCourtCase,
+    updateCsrfToken
   ])
 
   useEffect(() => {
