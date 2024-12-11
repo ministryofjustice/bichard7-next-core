@@ -9,35 +9,34 @@ export const generateCourtNameType = (
   courtCode: string,
   courtType: string,
   courtHouseName: string,
-  remandLocationCourt: string,
-  type: 1 | 2
-): string => {
+  remandLocationCourt: string
+): [string, string] => {
   const hasFailedToAppearText = [FAILED_TO_APPEAR_TEXT, FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE].includes(courtHouseName)
   const hasFailedToAppearDatedText = [FAILED_TO_APPEAR_DATED_TEXT, FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE].includes(
     courtHouseName
   )
 
+  let courtNameType1 = ""
+  let courtNameType2 = ""
+
   if (courtCode === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR) {
     if (!hasFailedToAppearText) {
-      return `${courtHouseName} ${courtType}`
-    }
-
-    if (type === 2 && hasFailedToAppearText) {
-      return courtHouseName
+      courtNameType1 = courtNameType2 = `${courtHouseName} ${courtType}`
+    } else {
+      courtNameType2 = courtHouseName
     }
   }
 
   if (remandLocationCourt === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR) {
     if (!hasFailedToAppearDatedText) {
-      return `${courtHouseName} ${courtType}`
-    }
-
-    if (type === 1 && hasFailedToAppearDatedText) {
-      return courtHouseName
+      courtNameType1 ||= `${courtHouseName} ${courtType}`
+      courtNameType2 ||= `${courtHouseName} ${courtType}`
+    } else {
+      courtNameType1 = courtHouseName
     }
   }
 
-  return ""
+  return [courtNameType1, courtNameType2] as const
 }
 
 export default generateCourtNameType

@@ -63,20 +63,11 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
       : FAILED_TO_APPEAR_DATED_TEXT
   }
 
-  const courtNameType1 = generateCourtNameType(
+  const [courtNameType1, courtNameType2] = generateCourtNameType(
     psaCourtCode,
     hearing.CourtType ?? "",
     courtHouseName ?? "",
-    remandLocationCourt,
-    1
-  )
-
-  const courtNameType2 = generateCourtNameType(
-    psaCourtCode,
-    hearing.CourtType ?? "",
-    courtHouseName ?? "",
-    remandLocationCourt,
-    2
+    remandLocationCourt
   )
 
   const arrestSummonsNumber = preProcessAsn(hearingDefendant.ArrestSummonsNumber)

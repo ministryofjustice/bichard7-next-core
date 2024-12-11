@@ -1,45 +1,217 @@
-import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
-import fs from "fs"
-import path from "path"
+import { isError } from "@moj-bichard7/common/types/Result"
 
+import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 
-import parsePncUpdateDataSetXml from "../../../../phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
+import generatePncUpdateDatasetFromOffenceList from "../../../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
+import ResultClass from "../../../../types/ResultClass"
 import remandGenerator from "./remandGenerator"
 
-describe("remandGenerator", () => {
-  it("generates the operation request", () => {
-    const filePath = path.join(__dirname, "../../../phase2/tests/fixtures/PncUpdateDataSet-with-single-NEWREM.xml")
-    const inputXml = fs.readFileSync(filePath).toString()
-    const pncUpdateDataset = parsePncUpdateDataSetXml(inputXml)
-    if (isError(pncUpdateDataset)) {
-      throw pncUpdateDataset
-    }
+const createPncUpdateDataset = () => {
+  const offence = {
+    OffenceCategory: "ZZ",
+    Result: [
+      {
+        NextHearingDate: "2024-12-11T10:11:12.000Z",
+        NextResultSourceOrganisation: {
+          TopLevelCode: "B",
+          SecondLevelCode: "00",
+          ThirdLevelCode: "00",
+          BottomLevelCode: "00",
+          OrganisationUnitCode: "B000000"
+        },
+        PNCDisposalType: 2051,
+        PNCAdjudicationExists: true,
+        ResultClass: ResultClass.ADJOURNMENT_POST_JUDGEMENT,
+        ResultQualifierVariable: [{ Code: "LE" }]
+      }
+    ] as Result[]
+  } as Offence
 
-    const result = remandGenerator(
-      pncUpdateDataset,
-      pncUpdateDataset.PncOperations[0] as Operation<PncOperation.REMAND>
-    )
+  const pncUpdateDataset = generatePncUpdateDatasetFromOffenceList([offence])
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
+    "1101ZD0100000410780J"
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing = new Date("2024-12-05")
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.RemandStatus = "CB"
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.BailConditions = [
+    "This is a dummy bail condition."
+  ]
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = {
+    TopLevelCode: "A",
+    SecondLevelCode: "02",
+    ThirdLevelCode: "BJ",
+    BottomLevelCode: "01",
+    OrganisationUnitCode: "A02BJ01"
+  }
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtType = "MCA"
+  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseName = "Magistrates' Courts London Croydon"
+
+  return pncUpdateDataset
+}
+
+const operation = {
+  code: "NEWREM",
+  data: {
+    nextHearingDate: new Date("2024-12-11T10:11:12.000Z"),
+    nextHearingLocation: {
+      TopLevelCode: "B",
+      SecondLevelCode: "00",
+      ThirdLevelCode: "00",
+      BottomLevelCode: "00",
+      OrganisationUnitCode: "B000000"
+    }
+  }
+} as Operation<PncOperation.REMAND>
+
+describe("remandGenerator", () => {
+  it("should generate remand request with all fields", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+
+    const result = remandGenerator(pncUpdateDataset, operation)
 
     expect(result).toStrictEqual({
       operation: "NEWREM",
       request: {
-        arrestSummonsNumber: "21/0000/00/100019T",
-        bailConditions: [],
-        courtNameType1: "",
-        courtNameType2: "*****FAILED TO APPEAR*****",
         croNumber: null,
-        forceStationCode: "01YZ",
-        hearingDate: "19122023",
-        localAuthorityCode: "0000",
-        nextHearingDate: "12022024",
-        pncCheckName: "COLE",
-        pncIdentifier: "00/X",
-        pncRemandStatus: "A",
+        forceStationCode: "02YZ",
+        pncCheckName: null,
+        pncIdentifier: null,
+        arrestSummonsNumber: "11/01ZD/01/410780J",
+        hearingDate: "05122024",
+        nextHearingDate: "11122024",
+        pncRemandStatus: "B",
+        remandLocationCourt: "",
         psaCourtCode: "9998",
-        remandLocationCourt: "2575"
+        courtNameType1: "Magistrates' Courts London Croydon MCA",
+        courtNameType2: "Magistrates' Courts London Croydon MCA",
+        localAuthorityCode: "0000",
+        bailConditions: ["This is a dummy bail condition."]
       }
     })
+  })
+
+  it("should set bail conditions to empty array when PNC remand status is 'C'", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.RemandStatus = "PB"
+
+    const result = remandGenerator(pncUpdateDataset, operation)
+
+    expect(result).toStrictEqual({
+      operation: "NEWREM",
+      request: {
+        croNumber: null,
+        forceStationCode: "02YZ",
+        pncCheckName: null,
+        pncIdentifier: null,
+        arrestSummonsNumber: "11/01ZD/01/410780J",
+        hearingDate: "05122024",
+        nextHearingDate: "11122024",
+        pncRemandStatus: "C",
+        remandLocationCourt: "",
+        psaCourtCode: "9998",
+        courtNameType1: "Magistrates' Courts London Croydon MCA",
+        courtNameType2: "Magistrates' Courts London Croydon MCA",
+        localAuthorityCode: "0000",
+        bailConditions: []
+      }
+    })
+  })
+
+  it("should set court house code to 1st instance warrant issued when there is a result qualifier 'LE' and result code is undated warrant", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable =
+      [{ Code: "LE" }]
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].CJSresultCode = 4577
+
+    const result = remandGenerator(pncUpdateDataset, operation)
+
+    expect(result).toStrictEqual({
+      operation: "NEWREM",
+      request: {
+        croNumber: null,
+        forceStationCode: "02YZ",
+        pncCheckName: null,
+        pncIdentifier: null,
+        arrestSummonsNumber: "11/01ZD/01/410780J",
+        hearingDate: "05122024",
+        nextHearingDate: "11122024",
+        pncRemandStatus: "B",
+        remandLocationCourt: "",
+        psaCourtCode: "9998",
+        courtNameType1: "",
+        courtNameType2: "*****1ST INSTANCE WARRANT ISSUED*****",
+        localAuthorityCode: "0000",
+        bailConditions: ["This is a dummy bail condition."]
+      }
+    })
+  })
+
+  it("should set court house code to 1st instance dated warrant issued when there is a result qualifier 'LE' and result code is dated warrant", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable =
+      [{ Code: "LE" }]
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].CJSresultCode = 4575
+
+    const result = remandGenerator(pncUpdateDataset, operation)
+
+    expect(result).toStrictEqual({
+      operation: "NEWREM",
+      request: {
+        croNumber: null,
+        forceStationCode: "02YZ",
+        pncCheckName: null,
+        pncIdentifier: null,
+        arrestSummonsNumber: "11/01ZD/01/410780J",
+        hearingDate: "05122024",
+        nextHearingDate: "11122024",
+        pncRemandStatus: "B",
+        remandLocationCourt: "9998",
+        psaCourtCode: "9998",
+        courtNameType1: "*****1ST INSTANCE DATED WARRANT ISSUED*****",
+        courtNameType2: "*****1ST INSTANCE DATED WARRANT ISSUED***** MCA",
+        localAuthorityCode: "0000",
+        bailConditions: ["This is a dummy bail condition."]
+      }
+    })
+  })
+
+  it("should set court house code to FTA dated warrant when there is no result qualifier 'LE' and result code is dated warrant", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable =
+      []
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].CJSresultCode = 4575
+
+    const result = remandGenerator(pncUpdateDataset, operation)
+
+    expect(result).toStrictEqual({
+      operation: "NEWREM",
+      request: {
+        croNumber: null,
+        forceStationCode: "02YZ",
+        pncCheckName: null,
+        pncIdentifier: null,
+        arrestSummonsNumber: "11/01ZD/01/410780J",
+        hearingDate: "05122024",
+        nextHearingDate: "11122024",
+        pncRemandStatus: "B",
+        remandLocationCourt: "9998",
+        psaCourtCode: "9998",
+        courtNameType1: "***** FTA DATED WARRANT *****",
+        courtNameType2: "***** FTA DATED WARRANT ***** MCA",
+        localAuthorityCode: "0000",
+        bailConditions: ["This is a dummy bail condition."]
+      }
+    })
+  })
+
+  it("should throw error when there are no matching results", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].PNCDisposalType = 1000
+
+    const result = remandGenerator(pncUpdateDataset, operation)
+
+    expect(isError(result)).toBe(true)
+    expect((result as Error).message).toBe("Could not find results to use for remand operation.")
   })
 })
