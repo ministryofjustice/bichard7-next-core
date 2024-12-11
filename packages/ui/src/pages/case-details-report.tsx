@@ -1,4 +1,4 @@
-import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
+import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { isError } from "lodash"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
@@ -73,7 +73,7 @@ interface Props {
 const CaseDetailReportPage: NextPage<Props> = (props) => {
   const { csrfToken, user, courtCasesForCaseDetailsReport } = props
 
-  const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
+  const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   return (
