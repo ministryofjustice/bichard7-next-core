@@ -1,5 +1,6 @@
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
+import useFirstLoad from "hooks/useFirstLoad"
 import { useCallback, useEffect, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import type CaseDetailsTab from "types/CaseDetailsTab"
@@ -29,6 +30,7 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
   const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
   const [selectedOffenceSequenceNumber, setSelectedOffenceSequenceNumber] = useState<number | undefined>(undefined)
   const [useBeforeUnload, setUseBeforeUnload] = useState<boolean>(false)
+  const firstLoad = useFirstLoad()
 
   const stopLeavingFn = useCallback((newValue: boolean) => {
     setUseBeforeUnload(newValue)
@@ -51,8 +53,12 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
   }
 
   useEffect(() => {
+    if (firstLoad) {
+      return
+    }
+
     refreshCsrfToken(updateCsrfToken)
-  }, [activeTab, updateCsrfToken])
+  }, [activeTab, firstLoad, updateCsrfToken])
 
   return (
     <>
