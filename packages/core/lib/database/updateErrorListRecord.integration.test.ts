@@ -1,5 +1,6 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import MockDate from "mockdate"
 import postgres from "postgres"
 
 import type ErrorListRecord from "../../types/ErrorListRecord"
@@ -40,7 +41,12 @@ const snapshotExclusions = {
 
 describe("updateErrorListRecord", () => {
   beforeEach(async () => {
+    MockDate.set(new Date("2024-12-11T14:57:32.000Z").getTime())
     await db`DELETE FROM br7own.error_list`
+  })
+
+  afterEach(() => {
+    MockDate.reset()
   })
 
   const testInputs = [
