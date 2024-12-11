@@ -136,11 +136,8 @@ describe("Switching Bichard Version Feedback Form", () => {
       .contains("Send feedback email")
       .should("have.attr", "href")
       .and("include", `mailto:moj-bichard7@madetech.com?subject=${encodedSubject}&body=${encodedBody}`)
-    // cy.url().should(
-    //   "match",
-    //   /^http:\/\/[^\/]+\/bichard\/switching-feedback\?previousPath=%2F&redirectTo=\.\.\/bichard-ui\/RefreshListNoRedirec$ /
-    // )
-    // cy.url().should("match", /\/bichard-ui\/RefreshListNoRedirect$/)
+    cy.get("button").contains("Send feedback email").click()
+    cy.url().should("match", /\/bichard-ui\/RefreshListNoRedirect$/)
   })
 
   it("Should redirect to the same case detail page in old Bichard", () => {

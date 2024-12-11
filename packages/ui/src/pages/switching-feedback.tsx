@@ -88,6 +88,16 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
     "Please describe the issues you have experienced, including Username and Force - the more detail the better. If you have any screenshots, please attach them to the email."
   const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
+  const handleSendEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "development") {
+      e.preventDefault()
+      window.location.assign(emailHref)
+      window.location.assign("/bichard-ui/RefreshListNoRedirect")
+    }
+    e.preventDefault()
+    window.location.assign("/bichard-ui/RefreshListNoRedirect")
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
       <Layout>
@@ -114,7 +124,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
           <li>{"any other reason"}</li>
         </ul>
         <SwitchingFeedbackButtonContainer>
-          <Button as="a" href={emailHref}>
+          <Button as="a" href={emailHref} onClick={handleSendEmailClick}>
             {"Send feedback email"}
           </Button>
           <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
