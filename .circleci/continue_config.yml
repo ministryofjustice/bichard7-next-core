@@ -460,7 +460,7 @@ jobs:
           command: make build-api-server build-event-handler-server
       - run:
           name: Run the infrastructure
-          command: .circleci/scripts/run-infrastructure.sh '' all
+          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
