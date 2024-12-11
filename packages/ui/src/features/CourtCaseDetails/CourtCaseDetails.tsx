@@ -1,8 +1,10 @@
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCallback, useState } from "react"
+import { useCsrfToken } from "context/CsrfTokenContext"
+import { useCallback, useEffect, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import type CaseDetailsTab from "types/CaseDetailsTab"
 import type NavigationHandler from "types/NavigationHandler"
+import refreshCsrfToken from "utils/csrf/refreshCsrfToken"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
 import TriggersAndExceptions from "./Sidebar/Sidebar"
 import { CourtCaseDetailsPanel } from "./Tabs/CourtCaseDetailsPanels"
@@ -22,6 +24,7 @@ const sideBarWidth = "33%"
 const contentWidth = "67%"
 
 const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAndSubmit }) => {
+  const { updateCsrfToken } = useCsrfToken()
   const { courtCase } = useCourtCase()
   const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
   const [selectedOffenceSequenceNumber, setSelectedOffenceSequenceNumber] = useState<number | undefined>(undefined)
@@ -46,6 +49,10 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
         break
     }
   }
+
+  useEffect(() => {
+    refreshCsrfToken(updateCsrfToken)
+  }, [activeTab, updateCsrfToken])
 
   return (
     <>
