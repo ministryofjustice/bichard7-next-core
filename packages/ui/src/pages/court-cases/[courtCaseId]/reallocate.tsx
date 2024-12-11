@@ -5,7 +5,7 @@ import Layout from "components/Layout"
 import { NotesTable } from "components/NotesTable"
 import ReallocationNotesForm from "components/ReallocationNotesForm"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
-import { CsrfTokenContext } from "context/CsrfTokenContext"
+import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { PreviousPathContext } from "context/PreviousPathContext"
 import type { Property } from "csstype"
@@ -117,6 +117,7 @@ const ReallocateCasePage: NextPage<Props> = ({
   const [userNotesWidth, setUserNotesWidth] = useState<string>("one-third")
   const [flexDirection, setFlexDirection] = useState<Property.FlexDirection>("row")
   const courtCaseContext = useCourtCaseContextState(courtCase)
+  const csrfTokenContext = useCsrfTokenContextState(csrfToken)
 
   const notes: DisplayNote[] = courtCase.notes
 
@@ -165,7 +166,7 @@ const ReallocateCasePage: NextPage<Props> = ({
       </Head>
       <CurrentUserContext.Provider value={{ currentUser: user }}>
         <CourtCaseContext.Provider value={courtCaseContext}>
-          <CsrfTokenContext.Provider value={{ csrfToken }}>
+          <CsrfTokenContext.Provider value={csrfTokenContext}>
             <PreviousPathContext.Provider value={{ previousPath }}>
               <Layout>
                 <HeaderContainer id="header-container">

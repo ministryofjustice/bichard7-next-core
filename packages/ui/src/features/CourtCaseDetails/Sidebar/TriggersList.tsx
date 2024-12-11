@@ -31,7 +31,7 @@ const TriggersList = ({ onNavigate }: Props) => {
   const hasTriggers = triggers.length > 0
   const hasUnresolvedTriggers = triggers.filter((t) => t.status === "Unresolved").length > 0
   const triggersLockedByAnotherUser = triggersAreLockedByAnotherUser(courtCase, currentUser.username)
-  const csrfToken = useCsrfToken()
+  const { csrfToken } = useCsrfToken()
 
   const setTriggerSelection = ({ target: checkbox }: ChangeEvent<HTMLInputElement>) => {
     const triggerId = parseInt(checkbox.value, 10)

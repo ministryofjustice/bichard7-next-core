@@ -22,7 +22,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
 
-  const csrfToken = useCsrfToken()
+  const { csrfToken } = useCsrfToken()
 
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""}>

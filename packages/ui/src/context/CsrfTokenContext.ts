@@ -1,22 +1,46 @@
-import { createContext, useContext } from "react"
+import type { Dispatch, SetStateAction } from "react"
+import { createContext, useCallback, useContext, useState } from "react"
 
 interface CsrfTokenContextType {
   csrfToken: string
 }
 
-const CsrfTokenContext = createContext<CsrfTokenContextType | null>(null)
+interface CsrfTokenContextResult {
+  csrfToken: string
+  updateCsrfToken: (csrfToken: string) => void
+}
 
-const useCsrfToken = (): string => {
+type CsrfTokenContextInput = [CsrfTokenContextType, Dispatch<SetStateAction<CsrfTokenContextType>>]
+
+const CsrfTokenContext = createContext<CsrfTokenContextInput | null>(null)
+
+const useCsrfToken = (): CsrfTokenContextResult => {
   const csrfTokenContext = useContext(CsrfTokenContext)
 
   if (!csrfTokenContext) {
     throw new Error("csrfToken has to be used within <CsrfTokenContext.Provider>")
   }
 
-  return csrfTokenContext.csrfToken
+  const [context, setContext] = csrfTokenContext
+
+  const updateCsrfToken = useCallback(
+    (newCsrfToken: string) => {
+      setContext((previousContext) => {
+        return { ...previousContext, csrfToken: newCsrfToken }
+      })
+    },
+    [setContext]
+  )
+
+  return {
+    csrfToken: context.csrfToken,
+    updateCsrfToken
+  }
 }
+
+const useCsrfTokenContextState = (csrfToken: string) => useState<CsrfTokenContextType>({ csrfToken })
 
 CsrfTokenContext.displayName = "CsrfTokenContext"
 
-export { CsrfTokenContext, useCsrfToken }
-export type { CsrfTokenContextType }
+export { CsrfTokenContext, useCsrfToken, useCsrfTokenContextState }
+export type { CsrfTokenContextResult, CsrfTokenContextType }

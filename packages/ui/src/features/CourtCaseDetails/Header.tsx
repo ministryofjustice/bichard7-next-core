@@ -37,7 +37,7 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const { basePath } = useRouter()
-  const csrfToken = useCsrfToken()
+  const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
   const previousPath = usePreviousPath()

@@ -27,7 +27,7 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
   const { courtCase, amendments, savedAmendments } = useCourtCase()
   const pncExceptions = courtCase.aho.Exceptions.filter((exception) => "message" in exception)
   const otherExceptions = courtCase.aho.Exceptions.filter((exception) => !("message" in exception))
-  const csrfToken = useCsrfToken()
+  const { csrfToken } = useCsrfToken()
   const previousPath = usePreviousPath()
   const router = useRouter()
   const enableSubmitExceptions = amendmentsHaveChanged(courtCase, amendments)
