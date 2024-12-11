@@ -16,7 +16,7 @@ import path from "path"
 import type Phase2Result from "../../phase2/types/Phase2Result"
 
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
-import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
+import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import { phase2ResultSchema } from "../../phase2/schemas/phase2Result"
 
 const s3Config = createS3Config()
