@@ -62,5 +62,8 @@ COPY packages/ui/docker/conf/supervisord.conf /etc/supervisord.conf
 EXPOSE 80
 EXPOSE 443
 
-USER supervisor
+# Non-root users can't bind things on the default HTTP/S ports
+# so we need to keep this running as root until we sort out
+# port mappings in Terraform.
+# USER supervisor
 CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]
