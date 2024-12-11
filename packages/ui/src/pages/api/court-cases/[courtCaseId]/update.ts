@@ -1,4 +1,5 @@
 import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
+import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
 import type { NextApiRequest, NextApiResponse } from "next"
 import amendCourtCase from "services/amendCourtCase/amendCourtCase"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
@@ -54,6 +55,6 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const updatedCourtCase = courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser)
 
   res.status(200)
-  res.json({ courtCase: updatedCourtCase })
+  res.json({ courtCase: updatedCourtCase, csrfToken: generateCsrfToken(request) })
   res.end()
 }
