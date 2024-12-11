@@ -1,5 +1,6 @@
 import AutoSave from "components/EditableFields/AutoSave"
 import { CourtCaseContext } from "context/CourtCaseContext"
+import { CsrfTokenContext } from "context/CsrfTokenContext"
 import React, { useState } from "react"
 import { AmendmentKeys } from "types/Amendments"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
@@ -49,61 +50,81 @@ describe("AutoSave", () => {
 
     it("doesn't display children", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+            <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
     it("displays children", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]}>
-            {"This is a message"}
-          </Helper>
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+            <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]}>
+              {"This is a message"}
+            </Helper>
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
     it("doesn't have any amendments to save", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+            <Helper isValid={false} hasBeenSaved={true} hasChanged={false} amendmentFields={[]} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
     it("displays no message when it has been saved and has changed", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={true} hasChanged={true} amendmentFields={["asn"]} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider
+            value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}
+          >
+            <Helper isValid={false} hasBeenSaved={true} hasChanged={true} amendmentFields={["asn"]} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
     it("displays no message when it hasn't been saved and has not been changed", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={false} hasChanged={false} amendmentFields={["asn"]} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider
+            value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}
+          >
+            <Helper isValid={false} hasBeenSaved={false} hasChanged={false} amendmentFields={["asn"]} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
     it("displays no message when it has the same amendments and savedAmendments", () => {
       cy.mount(
-        <CourtCaseContext.Provider
-          value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: { asn: "1234" } }, () => {}]}
-        >
-          <Helper isValid={false} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider
+            value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: { asn: "1234" } }, () => {}]}
+          >
+            <Helper isValid={false} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
     it("displays no message when the value is invalid", () => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-          <Helper isValid={false} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider
+            value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}
+          >
+            <Helper isValid={false} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
   })
@@ -114,9 +135,11 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
-      </CourtCaseContext.Provider>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
+          <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+        </CourtCaseContext.Provider>
+      </CsrfTokenContext.Provider>
     )
 
     cy.get(".success-message")
@@ -132,11 +155,13 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider
-        value={[{ courtCase, amendments: { asn: "5678" }, savedAmendments: { asn: "1234" } }, () => {}]}
-      >
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
-      </CourtCaseContext.Provider>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <CourtCaseContext.Provider
+          value={[{ courtCase, amendments: { asn: "5678" }, savedAmendments: { asn: "1234" } }, () => {}]}
+        >
+          <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+        </CourtCaseContext.Provider>
+      </CsrfTokenContext.Provider>
     )
 
     cy.get(".success-message")
@@ -152,9 +177,11 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
-      </CourtCaseContext.Provider>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
+          <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+        </CourtCaseContext.Provider>
+      </CsrfTokenContext.Provider>
     )
 
     cy.get(".error-message")
@@ -170,9 +197,11 @@ describe("AutoSave", () => {
     })
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
-        <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
-      </CourtCaseContext.Provider>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
+          <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
+        </CourtCaseContext.Provider>
+      </CsrfTokenContext.Provider>
     )
 
     cy.get(".error-message")
