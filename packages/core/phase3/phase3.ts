@@ -6,6 +6,7 @@ import type PncGatewayInterface from "../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import type Phase3Result from "./types/Phase3Result"
 
+import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
 import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
@@ -27,6 +28,8 @@ const phase3 = async (
 
     const operationResult = await performOperation(inputMessage, operation, pncGateway).catch((error) => error)
     if (isError(operationResult)) {
+      auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
+
       return {
         auditLogEvents: auditLogger.getEvents(),
         correlationId,
