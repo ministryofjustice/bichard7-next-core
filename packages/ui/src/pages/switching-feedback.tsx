@@ -17,12 +17,12 @@ import AuthenticationServerSidePropsContext from "types/AuthenticationServerSide
 import { isError } from "types/Result"
 import { SurveyFeedbackType, SwitchingFeedbackResponse } from "types/SurveyFeedback"
 import { DisplayFullUser } from "types/display/Users"
+import { gdsBlack, gdsGreen, gdsWhite } from "utils/colours"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
-import { gdsBlack, gdsGreen, gdsWhite } from "utils/colours"
 
 interface Props {
   user: DisplayFullUser
@@ -91,12 +91,12 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
   const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
   const handleSendEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (process.env.NODE_ENV === "production") {
-      e.preventDefault()
-      window.location.assign(emailHref)
+    e.preventDefault()
+    if (process.env.WORKSPACE !== "production") {
       window.location.assign("/bichard-ui/RefreshListNoRedirect")
     }
-    e.preventDefault()
+
+    window.location.assign(emailHref)
     window.location.assign("/bichard-ui/RefreshListNoRedirect")
   }
 
