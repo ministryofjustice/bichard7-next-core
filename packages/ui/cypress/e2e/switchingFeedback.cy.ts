@@ -28,10 +28,8 @@ const navigateAndClickSwitchToOldBichard = (url = "/bichard") => {
   cy.contains("button", "Switch to old Bichard").click()
 }
 
-const expectFeedbackForm = () => {
-  cy.get("#pageWithIssue").should("not.exist")
-  cy.get("#comment").should("not.exist")
-  cy.get(".b7-switching-feedback-button").contains("Send feedback email").should("not.exist")
+const expectFeedbackPage = () => {
+  cy.get(".b7-switching-feedback-button").contains("Send feedback email").should("exist")
 }
 
 const clickSkipFeedbackButton = () => {
@@ -119,12 +117,12 @@ describe("Switching Bichard Version Feedback Form", () => {
   it("Should redirect user to switching survey after 3 hours of a click on 'Switch to old Bichard'", () => {
     insertFeedback(getDate({ hours: -3, minutes: -5 })) // 3 hours and 05 minutes ago
     navigateAndClickSwitchToOldBichard()
-    expectFeedbackForm()
+    expectFeedbackPage()
   })
 
   it("Should redirect to case list in old Bichard", () => {
     navigateAndClickSwitchToOldBichard()
-    expectFeedbackForm()
+    expectFeedbackPage()
 
     const expectedSubject = "Feedback: <Subject here>"
     const expectedBody =
@@ -132,8 +130,7 @@ describe("Switching Bichard Version Feedback Form", () => {
     const encodedSubject = encodeURIComponent(expectedSubject)
     const encodedBody = encodeURIComponent(expectedBody)
 
-    cy.get("a")
-      .contains("Send feedback email")
+    cy.get("#main-content > div:nth-of-type(2) > a")
       .should("have.attr", "href")
       .and("include", `mailto:moj-bichard7@madetech.com?subject=${encodedSubject}&body=${encodedBody}`)
     cy.get("a").contains("Send feedback email").click()
@@ -142,7 +139,7 @@ describe("Switching Bichard Version Feedback Form", () => {
 
   it("Should redirect to the same case detail page in old Bichard", () => {
     navigateAndClickSwitchToOldBichard("/bichard/court-cases/0")
-    expectFeedbackForm()
+    expectFeedbackPage()
     clickSkipFeedbackButton()
     cy.url().should("match", /\/bichard-ui\/SelectRecord\?unstick=true&error_id=0$/)
   })

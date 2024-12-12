@@ -91,7 +91,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
   const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
   const handleSendEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === "production") {
       e.preventDefault()
       window.location.assign(emailHref)
       window.location.assign("/bichard-ui/RefreshListNoRedirect")
