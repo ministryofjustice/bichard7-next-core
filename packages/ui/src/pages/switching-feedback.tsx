@@ -1,7 +1,8 @@
 import Layout from "components/Layout"
+import LinkButton from "components/LinkButton"
 import { SkipLink, SwitchingFeedbackButtonContainer } from "components/SwitchingFeedbackHeader/Links.styles"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Heading } from "govuk-react"
+import { BackLink, Heading } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -21,6 +22,7 @@ import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
+import { gdsBlack, gdsGreen, gdsWhite } from "utils/colours"
 
 interface Props {
   user: DisplayFullUser
@@ -89,7 +91,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
   const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
 
   const handleSendEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === "production" || process.env.NODE_ENV === "development") {
       e.preventDefault()
       window.location.assign(emailHref)
       window.location.assign("/bichard-ui/RefreshListNoRedirect")
@@ -124,9 +126,16 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
           <li>{"any other reason"}</li>
         </ul>
         <SwitchingFeedbackButtonContainer>
-          <Button as="a" href={emailHref} onClick={handleSendEmailClick}>
+          <LinkButton
+            href={emailHref}
+            className="b7-switching-feedback-button"
+            buttonColour={gdsGreen}
+            buttonTextColour={gdsWhite}
+            buttonShadowColour={gdsBlack}
+            onClick={handleSendEmailClick}
+          >
             {"Send feedback email"}
-          </Button>
+          </LinkButton>
           <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
             <SkipLink id="skip-feedback" type="submit">
               {"Skip feedback"}

@@ -31,7 +31,7 @@ const navigateAndClickSwitchToOldBichard = (url = "/bichard") => {
 const expectFeedbackForm = () => {
   cy.get("#pageWithIssue").should("not.exist")
   cy.get("#comment").should("not.exist")
-  cy.get("button").contains("Send feedback email").should("not.exist")
+  cy.get(".b7-switching-feedback-button").contains("Send feedback email").should("not.exist")
 }
 
 const clickSkipFeedbackButton = () => {
