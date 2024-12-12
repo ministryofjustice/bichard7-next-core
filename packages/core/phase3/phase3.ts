@@ -18,7 +18,6 @@ const phase3 = async (
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
 ): Promise<Phase3Result> => {
-  auditLogger.info(EventCode.HearingOutcomeReceivedPhase3)
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   for (const operation of inputMessage.PncOperations) {
