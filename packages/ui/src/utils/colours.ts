@@ -13,6 +13,7 @@ const gdsBlack = "#0b0c0c"
 const grey = "#b0b4b6"
 const gdsGreen = "#00703c"
 const gdsRed = "#d4351c"
+const gdsWhite = "#ffffff"
 
 export {
   blue,
@@ -29,5 +30,6 @@ export {
   textSecondary,
   yellow,
   gdsGreen,
-  gdsRed
+  gdsRed,
+  gdsWhite
 }
