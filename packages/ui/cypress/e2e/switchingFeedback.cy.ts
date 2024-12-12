@@ -136,7 +136,7 @@ describe("Switching Bichard Version Feedback Form", () => {
       .contains("Send feedback email")
       .should("have.attr", "href")
       .and("include", `mailto:moj-bichard7@madetech.com?subject=${encodedSubject}&body=${encodedBody}`)
-    cy.get("button").contains("Send feedback email").click()
+    cy.get("a").contains("Send feedback email").click()
     cy.url().should("match", /\/bichard-ui\/RefreshListNoRedirect$/)
   })
 
