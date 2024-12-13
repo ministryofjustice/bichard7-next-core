@@ -37,9 +37,7 @@
             "DefendantDetail": {
               "PersonName": {
                 "Title": "Mr",
-                "GivenName": [
-                  "TRPRFOUR"
-                ],
+                "GivenName": ["TRPRFOUR"],
                 "FamilyName": "SEXOFFENCE"
               },
               "BirthDate": "1948-11-11T00:00:00.000Z",
@@ -294,13 +292,7 @@
     "Exceptions": [
       {
         "code": "HO100206",
-        "path": [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "ArrestSummonsNumber"
-        ]
+        "path": ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
       }
     ],
     "PncQuery": {
