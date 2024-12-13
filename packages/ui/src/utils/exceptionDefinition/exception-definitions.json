@@ -48,6 +48,14 @@
     "avoidingThisError": "There is nothing the user can do to avoid this error."
   },
   {
+    "code": "HO100234",
+    "shortDescription": "Bad Wording (Lookup failed)",
+    "cause": "The offence wording has to be a valid length, between 1 and 2500 characters.",
+    "description": "The offence wording is either too long or short.",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "There is nothing the user can do to avoid this error."
+  },
+  {
     "code": "HO100239",
     "shortDescription": "Bad Court Offence Sequence Number",
     "description": "There is no sequence number or the sequence number is a zero.",
