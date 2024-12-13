@@ -3,7 +3,6 @@ import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCurrentUser } from "context/CurrentUserContext"
 import { ChangeEvent, ClipboardEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 import Asn from "services/Asn"
 import { disabledKeys, handleAsnForwardSlashes, type Selection } from "utils/exceptions/handleAsnForwardSlashes"
@@ -13,7 +12,6 @@ import { AsnInput } from "./AsnField.styles"
 
 export const AsnField = () => {
   const { courtCase, amendments, amend } = useCourtCase()
-  const currentUser = useCurrentUser()
   const defendant = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
   const amendedAsn = amendments.asn ?? ""
   const updatedAhoAsn =
@@ -76,8 +74,7 @@ export const AsnField = () => {
   const isAsnEditable =
     courtCase.canUserEditExceptions &&
     courtCase.phase === Phase.HEARING_OUTCOME &&
-    isAsnException(courtCase.aho.Exceptions) &&
-    currentUser.featureFlags?.exceptionsEnabled
+    isAsnException(courtCase.aho.Exceptions)
 
   return (
     <EditableFieldTableRow

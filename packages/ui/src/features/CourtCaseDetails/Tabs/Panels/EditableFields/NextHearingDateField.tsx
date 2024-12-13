@@ -3,7 +3,6 @@ import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCurrentUser } from "context/CurrentUserContext"
 import { useState } from "react"
 import { Exception } from "types/exceptions"
 import getNextHearingDateValue from "utils/amendments/getAmendmentValues/getNextHearingDateValue"
@@ -27,15 +26,13 @@ export const NextHearingDateField = ({
   isCaseEditable
 }: NextHearingDateFieldProps) => {
   const { amendments, amend } = useCourtCase()
-  const currentUser = useCurrentUser()
   const amendedNextHearingDate = getNextHearingDateValue(amendments, offenceIndex, resultIndex)
   const updatedNextHearingDate = getNextHearingDateValue(amendments, offenceIndex, resultIndex)
 
   const [isNhdSaved, setIsNhdSaved] = useState<boolean>(false)
   const [nextHearingDateChanged, setNextHearingDateChanged] = useState<boolean>(false)
 
-  const isEditable =
-    isCaseEditable && hasNextHearingDateExceptions(exceptions) && currentUser.featureFlags?.exceptionsEnabled
+  const isEditable = isCaseEditable && hasNextHearingDateExceptions(exceptions)
 
   return (
     <EditableFieldTableRow
