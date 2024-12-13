@@ -16,15 +16,6 @@ describe("renders based on feature flag value for user", () => {
     cy.task("insertCourtCasesWithFields", [fields])
   })
 
-  it("is disabled if the feature flag is non-existent", () => {
-    loginAndVisit("NoExceptionsFeatureFlag", "/bichard/court-cases/0")
-
-    cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
-
-    cy.get("a:contains('Theft of pedal cycle')").eq(0).click()
-    cy.get("select.offence-matcher").should("not.exist")
-  })
-
   it("is disabled if the feature flag is disabled", () => {
     loginAndVisit("OffenceMatchingDisabled", "/bichard/court-cases/0")
 

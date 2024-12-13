@@ -47,12 +47,5 @@
     "exceptionStatus": "Unresolved",
     "loggedInAs": "TriggerHandler",
     "exceptionsFeatureFlagEnabled": true
-  },
-  {
-    "canManuallyResolveAndSubmit": false,
-    "exceptionLockedByAnotherUser": false,
-    "exceptionStatus": "Unresolved",
-    "loggedInAs": "NoExceptionsFeatureFlag",
-    "exceptionsFeatureFlagEnabled": false
   }
 ]

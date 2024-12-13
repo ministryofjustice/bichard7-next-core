@@ -90,22 +90,6 @@ describe("ASN exception", () => {
     cy.get("ul.moj-sub-navigation__list>li").eq(0).find(".checkmark-icon").should("exist")
   })
 
-  it("Should not display any icon numbers when exceptionsEnabled is false for user", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        orgForPoliceFilter: "01",
-        hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
-        updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
-        errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
-      }
-    ])
-
-    loginAndVisit("NoExceptionsFeatureFlag", "/bichard/court-cases/0")
-
-    cy.get("ul.moj-sub-navigation__list>li").eq(0).contains("Defendant").contains("1").should("not.exist")
-  })
-
   it("Should not display exceptions count icon when exception is resolved manually", () => {
     cy.task("insertCourtCasesWithFields", [
       {
