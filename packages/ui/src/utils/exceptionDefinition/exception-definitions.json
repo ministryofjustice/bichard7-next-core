@@ -127,7 +127,7 @@
     "correctingThisError": "The user has to result the case manually on PNC if the offence is recordable, but can simply dismiss it from the portal if the offence is non-recordable.",
     "avoidingThisError": "Inform the helpdesk of any missing local offences so that they can be added to the system. Processes have now been put in place to manage 'local' offence codes nationally; and this ensures that Bichard 7 is updated with all new codes."
   },
-    {
+  {
     "code": "HO100307",
     "shortDescription": "Result Code not found (Lookup failed)",
     "description": "The result code is not found.",
