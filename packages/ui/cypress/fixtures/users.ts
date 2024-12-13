@@ -111,7 +111,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "offencematchingdisabled@example.com",
     password: hashedPassword,
-    featureFlags: { exceptionsEnabled: true, offenceMatchingEnabled: false },
+    featureFlags: { offenceMatchingEnabled: false },
     groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
   },
   Court02User: {

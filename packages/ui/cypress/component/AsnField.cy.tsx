@@ -5,15 +5,14 @@ import { AsnField } from "features/CourtCaseDetails/Tabs/Panels/EditableFields/A
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
 import HO100206 from "../fixtures/HO100206.json"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 describe("AsnField", () => {
   const courtCase = HO100206 as unknown as DisplayFullCourtCase
   courtCase.canUserEditExceptions = true
   courtCase.phase = Phase.HEARING_OUTCOME
 
-  const currentUser = {
-    featureFlags: { exceptionsEnabled: true }
-  } as unknown as DisplayFullUser
+  const currentUser = { hasAccessTo: { [Permission.Exceptions]: true } } as unknown as DisplayFullUser
 
   it("formats the full Asn with forward slashes", () => {
     cy.mount(

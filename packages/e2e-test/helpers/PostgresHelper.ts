@@ -57,7 +57,7 @@ class PostgresHelper {
         "",
         name,
         defaultPasswordHash,
-        { exceptionsEnabled: true, offenceMatchingEnabled: true }
+        { offenceMatchingEnabled: true }
       ]
     )
 

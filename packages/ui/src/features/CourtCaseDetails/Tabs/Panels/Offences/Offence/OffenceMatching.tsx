@@ -17,8 +17,8 @@ import OffenceMatcher from "./OffenceMatcher"
 
 const enabled = (user: DisplayFullUser) => {
   const enabledInProduction = true // change this if we need to disable in production for everyone
-  const { exceptionsEnabled, offenceMatchingEnabled } = user.featureFlags
-  const featureFlagsEnabled = exceptionsEnabled && offenceMatchingEnabled
+  const { offenceMatchingEnabled } = user.featureFlags
+  const featureFlagsEnabled = offenceMatchingEnabled
 
   const isProduction = process.env.WORKSPACE === "production"
   if (!isProduction) {

@@ -6,7 +6,6 @@ import User from "@moj-bichard7/ui/src/services/entities/User"
 const createUser = (...groups: UserGroup[]) => {
   const user = new User()
   user.groups = [...groups]
-  user.featureFlags = { exceptionsEnabled: true }
 
   return user
 }
