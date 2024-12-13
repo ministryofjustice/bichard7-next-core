@@ -1,0 +1,390 @@
+[
+  {
+    "code": "HO100102",
+    "shortDescription": "Bad Date",
+    "description": "A date entered in the hearing is incorrectly formatted. Bichard 7 expects to receive dates in the format: DD/MM/YY.",
+    "cause": "This is a general error but the usual cause is that the user has manually entered the \"Next Hearing Date\" for a Remand in an incorrect format.",
+    "correctingThisError": "Correct the value and resubmit.",
+    "avoidingThisError": "Ensure dates are entered in the Portal in DD/MM/YY format."
+  },
+  {
+    "code": "HO100200",
+    "shortDescription": "Invalid Organisation Unit Code",
+    "description": "A court house code or a force/station code has not been recognised by Bichard 7.",
+    "cause": "The usual cause is that the user has manually entered the \"Next Hearing Location\" for a Remand in an incorrect format. This error can also occur in conjunction with HO100206 Bad ArrestSummonsNumber - if the Force/Station code parsed from the ASN is not valid - refer to HO100206 for the resolution.",
+    "correctingThisError": "Enter the seven character code for the court (e.g. B01AF00) and resubmit.",
+    "avoidingThisError": "Ensure court codes are entered in the correct format."
+  },
+  {
+    "code": "HO100201",
+    "shortDescription": "Bad PTI-URN format",
+    "description": "This error means that the PTI-URN provided by the court (or entered by the user in the Portal) is badly formatted with either too many characters, too few characters or letters where numbers are expected.",
+    "cause": "The correct format for a PTI-URN is 11 characters long. The correct format is FFSSnnnnnyy. Where FF is the two digit force code (e.g. 01 for the MPS), SS is the station code (two letters), nnnnn is a five digit sequence number with leading zeroes and yy is the year.",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "Generally this error should be avoided by the use of the link between the Police Case Preparation system and Libra. Staff entering PTI-URNs need to be trained in the correct format."
+  },
+  {
+    "code": "HO100206",
+    "shortDescription": "Bad Arrest Summons Number",
+    "description": "This error means that the Arrest Summons Number (ASN) provided by the court is badly formatted with either too many characters, too few characters or with the final character being inconsistent with the rest of the ASN.",
+    "cause": "The correct format for an ASN is 20 characters long. The last digit is a check character used to ensure that the previous 19 characters have been entered correctly and thus its correct value depends on the rest of the characters in the ASN. Currently Libra does not accept the shortened format and will replace short format ASNs with dummy ASNs. Bichard 7 can accept long format ASNs (i.e. the full 20 characters), short format ASNs (which contain the first eight digits/characters followed by a number and a check digit) and short format with slashes (like the short format but allowing the '/' character between various sections of the number). This error will occur if the ASN is:<ul><li>Not exactly 20 characters long and cannot be expanded from a valid short format to 20 characters (e.g. if there is no final check character).</li><li>The check character is inconsistent with the rest of the number.</li></ul>{:/}A malformed ASN can only occur when it has been entered manually onto Libra as Libra does not check the format of the ASN. This could occur at the courts or through Third Party Access to Libra. This error should not occur for ASNs for cases passed over the Police Case Prep to Libra link. By correcting the ASN, this error will be fixed. This exception can also occur when a force updates the ASN in the portal by entering an incorrectly formatted ASN.",
+    "correctingThisError": "Best practice for correcting this error is by entering the correct ASN into the space provided on the portal and resubmitting the case. Alternatively the error can be marked as manually resolved and the result entered manually onto PNC. In addition, as a matter of best practice, forces are advised to update Libra with the correct ASN when this first occurs (using Third Party Access or by advising the court). This means that any subsequent results for this case will come with the corrected ASN.",
+    "avoidingThisError": "Generally this error should be avoided by the use of the link between the Police Case Preparation system and Libra."
+  },
+  {
+    "code": "HO100209",
+    "shortDescription": "Bad PNC Identifier format",
+    "description": "The PNC ID has been entered incorrectly (possibly manually within the Portal).",
+    "cause": "The PNC ID must follow this format: 4 digits 0-9, normally the year of creation, 7 digits 0-9, Checksum letter",
+    "correctingThisError": "Correct the value and resubmit.",
+    "avoidingThisError": "The error should be investigated and the cause explored."
+  },
+  {
+    "code": "HO100232",
+    "shortDescription": "Bad Location Of Offence",
+    "cause": "The offence location has to be a valid length, between 1 and 80 characters",
+    "description": "The Location code is either too long or short",
+    "correctingThisError": "The issue should be raised with the Bichard 7 support team",
+    "avoidingThisError": "There is nothing the user can do to avoid this error."
+  },
+  {
+    "code": "HO100239",
+    "shortDescription": "Bad Court Offence Sequence Number",
+    "description": "There is no sequence number or the sequence number is a zero.",
+    "cause": "The court has entered no sequence number or a zero into Libra.",
+    "correctingThisError": "If using the portal to correct the error, the user can amend the sequence numbers and the case resubmitted from the Bichard 7 portal.",
+    "avoidingThisError": "The situation should then be raised with the Magistrates' court so that the user who made this error can be informed and avoid making this mistake in the future."
+  },
+  {
+    "code": "HO100243",
+    "shortDescription": "Bad Amount Specified In Result amount",
+    "description": "The sentence amount is incorrectly formatted. Bichard 7 is expecting a number between 0.01 and 999999999999.99.",
+    "cause": "A court user may have typed in the amount incorrectly (e.g. including a '£') or it maybe a technical fault.",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "The error should be investigated and the cause explored."
+  },
+  {
+    "code": "HO100244",
+    "shortDescription": "Bad Number Specified In Result amount",
+    "description": "The sentence number is incorrectly formatted. Bichard 7 is expecting a number between 1 and 9999.",
+    "cause": "A court user may have typed in the number incorrectly or it maybe a technical fault.",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "The error should be investigated and the cause explored."
+  },
+  {
+    "code": "HO100251",
+    "shortDescription": "Bad Offence Code (Part of Local Offence Code)",
+    "description": "The 8 character offence code is not recognised.",
+    "cause": "The offence code is not setup on the Bichard 7 code list correctly.",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "Report the offence code to the Helpdesk so that it can be corrected."
+  },
+  {
+    "code": "HO100300",
+    "shortDescription": "Organisation not recognised",
+    "description": "This error occurs when the Bichard 7 solution receives an ASN or a PTI- URN where the station code element is not recognised. For an ASN this is characters 5 and 6, for a PTI-URN it is characters 3 and 4. They are the two characters that follow the force code. This error can also occur when the Bichard 7 solution receives an unknown court code.",
+    "cause": "For force code errors either the value has been entered manually with an error in the two characters or the force may have reorganised or changed its organisation so that certain two character combinations are now recognised on PNC. If there are several such errors it is most likely due to the latter situation. For court code errors a new court has opened, or an old court has reopened, without the relevant code standard being updated.",
+    "correctingThisError": "If the error is due to a typographic mistake, then the ASN can be corrected on the portal and resubmitted. Otherwise, the result needs to be put onto PNC manually.",
+    "avoidingThisError": "Inform the helpdesk of any new valid combinations so that they can be added to the system."
+  },
+  {
+    "code": "HO100301",
+    "shortDescription": "ASN not found on PNC",
+    "description": "This error occurs if the result from the court contains an ASN which appears to be in a valid format, for an offence that is recordable but where the ASN does not exist on the PNC.",
+    "cause": "This error occurs when the ASN has passed all formatting checks and therefore looks like a valid ASN. This could occur through a typographic mistake but this is highly unlikely due to the fact that the ASN incorporates a check character at the end to avoid precisely this situation from occurring. Possible causes are:<ul><li>The case has been created on the Police Case Preparation system but transmission to the PNC has failed (this is a known problem in NSPIS).</li><li>For some reason (usually bailed to returns) a new ASN is created on the police system which is sent to Libra but not to PNC.</li><li>Police business process whereby the ASN is not sent to PNC until after the result is received.</li></ul>{:/} A report exists that enables NSPIS forces to identify such situations and the use of this report should minimise such occurrences. However, we have also been informed that for a small proportion of cases the report states that PNC has been updated when in fact it has not. This means that for NSPIS areas there remains a residual number of cases that will arrive at Bichard 7 but for which there is no case actually on PNC.",
+    "correctingThisError": "There is no alternative but for a PNC user to create the case on PNC. The result can then either be resubmitted from the portal or directly resulted on PNC. The latter may be easier as the user will already be on PNC to create the case.",
+    "avoidingThisError": "Police staff in Case Prep teams should ensure that the case is entered onto PNC as well as passing it on to Libra."
+  },
+  {
+    "code": "HO100302",
+    "shortDescription": "PNC Query failed (e.g. communications failure, timeout)",
+    "description": "There has been a technical problem when Bichard 7 tried to query the PNC.",
+    "cause": "This is a technical problem. If there is a short term loss of communications with PNC this error can occur.",
+    "correctingThisError": "Generally this problem will resolve itself. If the error is ignored then the exception should be resubmitted automatically and clear itself. If the link with PNC is down for a while then this could take up to a day.",
+    "avoidingThisError": "There is nothing the user can do to avoid this error."
+  },
+  {
+    "code": "HO100304",
+    "shortDescription": "Court offences do not match with what is on PNC",
+    "description": "Both the offence code and the start and end dates must match to constitute an offence match*. It is therefore worth noting that 'court Offences do not match' can refer to the start and/or end dates and not only to the offence. *This is generally true but there are specific rules to deal with breach offences which do not have an offence date at court, and offence date ranges where the court range is more precise than that held on the PNC.",
+    "cause": "This can occur due to:<ul><li>Police not ensuring that the offences on PNC are the offences with which the defendant has been charged (as opposed to the arrest offences). The Police have to ensure that the offences passed to the court match with the offences on PNC.</li><li>Changes in offences at court (e.g. offences replaced) not being resulted correctly on Libra by court staff.</li><li>Differences between the offence dates on Libra and PNC (e.g. the date is changed in court).</li>{:/}",
+    "correctingThisError": "If the offences do appear to match then check the offence dates. The most effective way of dealing with this error is to manually result on PNC.",
+    "avoidingThisError": "Depending on the underlying cause:<ul><li>Police to ensure that offences passed to the court match those on PNC for the hearing.</li><li>court staff to result 'offences replaced' correctly.</li></ul>{:/}"
+  },
+  {
+    "code": "HO100305",
+    "shortDescription": "Conviction/Hearing dates and/or Verdict do not make sense",
+    "description": "This error occurs when there is a verdict but no conviction date, a conviction date but no verdict, the conviction date is after the hearing date, or similar.",
+    "cause": "This tends to be due to a court error.",
+    "correctingThisError": "The resolution is for the user to enter the result manually on PNC.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes be put in place."
+  },
+  {
+    "code": "HO100306",
+    "shortDescription": "Offence Code not found (lookup failed)",
+    "description": "If Bichard 7 receives an offence code from Libra that it does not recognise then this error will occur.",
+    "cause": "In most cases this will be because a local offence code has been set up and Bichard 7 is unaware of the code. In particular, Bichard 7 will not be aware whether this is a recordable or non-recordable offence. As a consequence the result has to become an exception. This can lead to the perception that non-recordable offences are being put into the portal whereas the problem is that Bichard 7 does not know if the offence is non-recordable or not.",
+    "correctingThisError": "The user has to result the case manually on PNC if the offence is recordable, but can simply dismiss it from the portal if the offence is non-recordable.",
+    "avoidingThisError": "Inform the helpdesk of any missing local offences so that they can be added to the system. Processes have now been put in place to manage 'local' offence codes nationally; and this ensures that Bichard 7 is updated with all new codes."
+  },
+    {
+    "code": "HO100307",
+    "shortDescription": "Result Code not found (Lookup failed)",
+    "description": "The result code is not found.",
+    "cause": "Bichard fails to look up the result by CJS code",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "There is nothing the user can do to avoid this error."
+  },
+  {
+    "code": "HO100309",
+    "shortDescription": "Result Code Qualifier not found (Lookup failed)",
+    "description": "The qualifier is not recognised.",
+    "cause": "The qualifier listing in Libra and PNC are different, therefore the Bichard 7 code list needs to be updated.",
+    "correctingThisError": "Enter the result onto PNC manually.",
+    "avoidingThisError": "Report the qualifier code to the helpdesk so that it can be updated on Bichard 7."
+  },
+  {
+    "code": "HO100310",
+    "shortDescription": "Multiple court Offences with different Results match a PNC offence",
+    "description": "Bichard 7 is unable to determine which result to match to which offence.",
+    "cause": "If Bichard 7 encounters the situation where the defendant is charged with more than one offence with the same offence code and same date of offence but where different results are provided by the court for the offences it is not possible to distinguish which offence should be updated with which result. This is therefore a legitimate error which requires further investigation by the user.",
+    "correctingThisError": "If the number of offences involved is small then it is possible to correct this on the portal but often it is easier to result manually on PNC. If using the portal to correct the error, the user can use the portal to determine which offence hearing outcome belongs to which offence on the PNC via the Offence Sequence Number field in the portal. The sequence numbers should then be amended and the case resubmitted from the Bichard 7 portal.",
+    "avoidingThisError": "This is a legitimate error and cannot be avoided."
+  },
+  {
+    "code": "HO100311",
+    "shortDescription": "Duplicate court Offence Sequence Number",
+    "description": "The result cannot be matched with the PNC as there are two offences with the same sequence number.",
+    "cause": "This only occurs when users are correcting a result on PNC using the sequence number facility (see error HO100310). If more than one offence has the same sequence number then this error will occur.",
+    "correctingThisError": "Best practice is to correct the sequence number and resubmit. Alternatively the user can manually result on PNC.",
+    "avoidingThisError": "This is caused by Bichard 7 user error when correcting an HO100310 error. It can be avoided by correcting that error manually and this is usually the easier option if there are more than two offences involved."
+  },
+  {
+    "code": "HO100314",
+    "shortDescription": "PNC Query returned a system fault (e.g. returned an unexpected error code)",
+    "description": "This is a general error message that can cover a number of more specific errors. To determine the more specific error you need to look at the PNC Errors tab.",
+    "cause": "The most common cause of this error is where no disposal group is set up on PNC. If this is not done then there will be \"unlinked offences\" on PNC and Bichard 7 cannot put the result onto PNC. If the PNC error tab refers to \"NO SUITABLE COURT DISPOSAL GROUPS ARE ASSOCIATED WITH ARREST SUMMONS\" then this is a 'disposal groups' error. A less frequent cause of this error is when PNC has more than three court cases for this ASN (due to split cases). When PNC is queried for the ASNs associated with the result it fails to provide any ASNs and we get this error. This error can also be associated with a Penalty Notice Hearing as a PENHRG can only be updated when there is a judgement with a final result.",
+    "correctingThisError": "Go onto PNC and create the disposal by entering the hearing location. The user can then resubmit the result from the portal or, probably more efficiently, result manually on PNC. If the cause is down to more than three court cases then the result will have to be put on PNC manually.",
+    "avoidingThisError": "Look at the business processes within the Case Preparation team and ensure that they understand that they must create disposal groups by creating a hearing location and date for the case. There is nothing the user can do to avoid this error when there are more than three court cases."
+  },
+  {
+    "code": "HO100321",
+    "shortDescription": "Dummy ASN not allowed when Offences/Results are recordable",
+    "description": "A dummy ASN is provided to Bichard 7 by Libra when either no ASN is provided or an incorrectly formatted ASN is entered. There are two formats depending on whether the case is a Police prosecution or a non-Police prosecution. In order to update PNC a valid ASN is required. Dummy ASNs can be recognised as starting with the characters 0800NP00 or 0800PP00.",
+    "cause": "The error can occur because:<ul><li>A non-Police prosecutor has failed to obtain an ASN.</li><li>A paper MG4 has been used to pass the case from the Police to the courts. This can happen for certain types of offence or if the electronic link between the Police Case Prep system and Libra has failed. The error then occurs if the ASN is absent on the MG4 or incorrectly entered so the court staff cannot enter a correctly formatted one or if the court staff make a typing mistake.</li><li>Police staff have entered the case via Libra 3PA and have made a typing mistake on entering the ASN.</li><li>court staff have cut/pasted the ASN from an email and included non- standard characters (e.g.' /') or spaces at the end of the ASN.</li></ul>{:/}A common cause of this error is when the Police use a shorthand form of the ASN (which often includes slashes). As this is less than 20 digits Libra treats this as invalid and replaces it with the dummy ASN. It is also important to ensure that the ASN is being entered on Libra in the correct place at case level and not at offence level. If it is input at case level it copies to offence level. If it is entered or amended at offence level it DOES NOT copy to case level. Libra and the courts do not use the ASN other than to be able to export the result to Police Case Prep or to PNC via Bichard 7. It only takes the ASN from the CASE LEVEL and ignores offence level ASNs. The only place Bichard 7 has asked courts to check if there is an ASN is at CASE LEVEL. Libra substitutes dummy ASNs based on whether the ASN is missing (case level ASN field is blank) or present but incorrect (the field is filled with an incorrect value). Furthermore, it also uses the classification of the prosecutor (the Libra 'prosecutor type') to determine whether to use the 'PP' or 'NP' dummy ASN.",
+    "correctingThisError": "If the cause is that a recordable offence has not been notified to the Police by a non-Police prosecutor this requires the Police to set the case up on PNC. The resulting ASN can either be entered onto the portal and the result resubmitted or, probably less work, the police enter the result directly onto PNC after setting up the case. If the cause is an incorrect or mistyped ASN, the Police need to identify the correct ASN and this can be typed into the portal and the result resubmitted.",
+    "avoidingThisError": "Ensuring that Non-Police prosecutors obtain ASNs will dramatically reduce the occurrence of this error."
+  },
+  {
+    "code": "HO100322",
+    "shortDescription": "Next Result Source Organisation is absent for a remand",
+    "description": "This error means that the court has provided an adjournment with no location for the next hearing that the Bichard 7 solution can identify.",
+    "cause": "Bichard 7 has not received a location within the structured result and has been unable to extract one from the unstructured result text. This error typically comes with a matching HO100323 error.",
+    "correctingThisError": "This exception can be successfully resubmitted to PNC by inserting the next hearing location only and no date and/or time is required for the resubmission to be successful.",
+    "avoidingThisError": "Receipt of this error should be reported to the Helpdesk. There is currently a known problem generating this exception when breach offences are referred back to a Scottish Court. A change to fix this issue (Ref. RCD622) has been raised."
+  },
+  {
+    "code": "HO100323",
+    "shortDescription": "Next Hearing Date is absent for a remand",
+    "description": "This error means that the court has provided an adjournment with no date for the next hearing that the Bichard 7 solution can identify.",
+    "cause": "Bichard 7 has not received a date within the structured result and has been unable to extract one from the unstructured result text. This error always comes with a matching HO100322 error. Strictly speaking it is a warning since a next hearing date is not mandatory to update the PNC. It is provided as a convenience to allow the user to enter a date, if one is available.",
+    "correctingThisError": "See error HO100322 for details.",
+    "avoidingThisError": "See error HO100322 for details."
+  },
+  {
+    "code": "HO100324",
+    "shortDescription": "Inconsistent result: Adjournment pre Judgement but PNC has an adjudication",
+    "description": "This error occurs when Bichard 7 receives an adjournment prior to an adjudication (guilty/not guilty verdict) but PNC already has the verdict on it.",
+    "cause": "This can occur if Police have already manually resulted the adjudication, or can occur due to a court error.",
+    "correctingThisError": "The resolution is for the user to enter the result manually on PNC.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes be put in place."
+  },
+  {
+    "code": "HO100325",
+    "shortDescription": "Inconsistent result: Adjournment post Judgement but PNC does not have an adjudication",
+    "description": "This error occurs when Bichard 7 receives an adjournment which has occurred at a separate hearing from the guilty verdict and yet, on PNC, the interim result (the guilty verdict) is not present. Thus Bichard 7 gets an adjournment following an adjournment for sentence and yet the hearing at which the defendant was found guilty is missing.",
+    "cause": "This occurs when the interim result has not been put on PNC. This could occur if the interim result is in the portal and has not been processed. However, the most likely cause is the historical practice in some forces of not putting interim results on PNC.",
+    "correctingThisError": "Add the missing adjudication to the PNC and then resubmit.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes put in place."
+  },
+  {
+    "code": "HO100326",
+    "shortDescription": "Inconsistent result: Sentence but PNC does not have an adjudication",
+    "description": "This error occurs when Bichard 7 receives a sentence which has occurred at a separate hearing from the guilty verdict and yet, on PNC, the interim result (the guilty verdict) is not present. In other words, Bichard 7 gets a sentence following an adjournment for sentence and yet the hearing at which the defendant was found guilty is missing from PNC.",
+    "cause": "This occurs when the interim result has not been put on PNC. This could occur if the interim result is in the portal and has not been processed. However, the most likely cause is the historical practice in some forces of not putting interim results on PNC.",
+    "correctingThisError": "Add the missing adjudication to the PNC and then resubmit.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes put in place."
+  },
+  {
+    "code": "HO100328",
+    "shortDescription": "Unable to determine whether fixed penalty or court case should be resulted",
+    "description": "The PNC contains more than one court case against the ASN which includes a combination of fixed penalties and court cases.",
+    "cause": "Bichard 7 is unable to determine which case or penalty to put the result against on PNC.",
+    "correctingThisError": "The resolution is for the user to enter the result manually on PNC.",
+    "avoidingThisError": "This is a legitimate error and can not be avoided."
+  },
+  {
+    "code": "HO100331",
+    "shortDescription": "Case has 100+ offences - refer to court register",
+    "description": "The case contains over 100 offences.",
+    "cause": "Due to technical limitations of the interface used these cases cannot be automated. To avoid potential errors with storing excessively large cases the case will be truncated to a single offence within the portal.",
+    "correctingThisError": "The resolution is for the user to consult the court register for the full list of offences and enter the result manually on PNC.",
+    "avoidingThisError": "This is a legitimate error and can not be avoided."
+  },
+  {
+    "code": "HO100332",
+    "shortDescription": "Offences match more than one CCR",
+    "description": "Bichard 7 is unable to determine which offence to match.",
+    "cause": "Bichard 7 has found multiple disposal groups (CCRs) on the PNC; each containing offences which match those coming from the court.",
+    "correctingThisError": "The resolution is for the user to consult the offence details on the PNC to determine the correct match and then update the CCR reference and offence sequence number on the Bichard 7 Portal and re-submit the case.",
+    "avoidingThisError": "This is a legitimate error and cannot be avoided."
+  },
+  {
+    "code": "HO100333",
+    "shortDescription": "Manual match detected but no case matches upon resubmission, suggesting ASN updated or PNC data updated manually before resubmission",
+    "description": "User has specified a manual sequence number for an offence but on re- submission no court offences match with any offences returned by the PNC for the case.",
+    "cause": "Either the user also modified the ASN before resubmitting the case from the portal or the case has been modified on the PNC after the message was originally processed such that there are no longer any offence matches.",
+    "correctingThisError": "The user will have to result manually but note that the error implies a complete mismatch between the offences in the court result and those on the PNC against the ASN.",
+    "avoidingThisError": "When specifying manual offence matches on the portal make sure that the ASN is not also manually updated."
+  },
+  {
+    "code": "HO100401",
+    "shortDescription": "PNC Error",
+    "description": "This is a general error message that can cover a number of more specific errors. To determine the more specific error you need to look at the PNC Errors tab. The most common error is I0023 COURT CASE REFERENCE NUMBER … DOES NOT EXIST ON THE PHOENIX DATABASE meaning the case details which were present on the PNC when Bichard 7 queried it are no longer present when Bichard 7 attempts the update.",
+    "cause": "The case has been resulted (and closed) on the PNC since the hearing was received by Bichard 7, but the Bichard 7 exception has not been marked as resolved. The case hearing is then resubmitted through Bichard 7 and it finds that the court case no longer exists. Alternatively there has been a technical issue with the PNC.",
+    "correctingThisError": "The result should be looked up on PNC and manually resulted if appropriate.",
+    "avoidingThisError": "If the error appears to be a PNC issue, inform the PNC helpdesk."
+  },
+  {
+    "code": "HO100402",
+    "shortDescription": "PNC Update Error",
+    "description": "This is a general error message that can cover a number of more specific errors. To determine the more specific error you need to look at the PNC Errors tab. Please look at the specific message to determine which error to use. This is not an exhaustive list:<ol><li>Invalid Adjudication/Disposal combination</li><li>Invalid disposal combination</li><li>Invalid disposal Quantity/Amount/Date</li><li>Missing Next Hearing Location</li><li>Invalid Adjudication/Disposal combination</li><li>Error processing update</li><li>Enquiry error no suitable Disposal Groups</li></ol>{:/}",
+    "cause": "This is caused by a mismatch between Libra and the PNC.",
+    "correctingThisError": "This result has to be put onto PNC manually.",
+    "avoidingThisError": "Please contact the helpdesk with details of the result and verdict so that the correct treatment can be ascertained with the PNC Names Working Group.",
+    "details": [
+      {
+        "shortDescription": "PNC Update Error I0197 - THE COMBINATION OF DISPOSALS IS NOT ALLOWED",
+        "description": "The disposals for an offence contain an incompatible mixture of results.",
+        "cause": "The disposal results are considered incompatible by the PNC, e.g.<ul><li>4027 Remand on conditional bail, and</li><li>3089 Interim notification order</li></ul>{:/}",
+        "correctingThisError": "This result has to be put onto PNC manually.",
+        "avoidingThisError": "The matter of interim results has been referred to PNC Names Working Group. Any other combination should be reported to the Helpdesk for investigation."
+      },
+      {
+        "shortDescription": "PNC Update Error I0001 - DIS CONTAINS INVALID DISPOSAL QUANTITY/AMOUNT/DATE",
+        "description": "There is a date/duration/amount in the result which PNC is not expecting.",
+        "cause": "There is an incompatibility between Libra and the PNC, e.g. for disposal 3131 Education Requirement the PNC only allows a date but Libra sends a duration.",
+        "correctingThisError": "The user will have to result manually",
+        "avoidingThisError": "If there has been a typing error then inform the courts of the case details so that it can be investigated. Otherwise the user should inform the helpdesk so that the cause can be investigated."
+      },
+      {
+        "shortDescription": "PNC Update Error I0006 - REM ELEMENT AT BYTE 98 IS WRONG",
+        "description": "There is no next hearing location data available for the remand.",
+        "cause": "One or more offences on the case do not contain a next hearing location. Typically this involves offences Adjourned Sine Die.",
+        "correctingThisError": "The user will have to result manually.",
+        "avoidingThisError": "A mechanism for handling cases adjourned sine die has been implemented and should no longer generate this error."
+      },
+      {
+        "shortDescription": "PNC Update Error I0191 - COMBINATION OF ELEMENTS IN ADJ AND DIS IS INVALID",
+        "description": "The combination of elements is inconsistent according to the PNC.",
+        "cause": "One example is a plea of \"indicated guilty\" - leading Bichard 7 to try and update the PNC with a guilty plea and verdict - together with a result of remanded to Crown Court for trial (implying there is no verdict yet).",
+        "correctingThisError": "The user will have to result manually.",
+        "avoidingThisError": "The issue of how to capture \"indicated guilty\" pleas is being investigated."
+      },
+      {
+        "shortDescription": "PNC Update Error I1036 - Error encountered processing update",
+        "description": "PNC technical error when processing the result.",
+        "cause": "Network failures, PNC downtime and other technical events will cause PNC to be unable to process the result.",
+        "correctingThisError": "The result can be resubmitted but if unsuccessful after one attempt, should be resulted manually.",
+        "avoidingThisError": "There is no way of avoiding this error."
+      },
+      {
+        "shortDescription": "PNC Update Error I1008 - Gway - Enquiry Error no Suitable Disposal Groups",
+        "description": "PNC technical error when processing the result.",
+        "cause": "This error can be caused when there is a Penalty Notice Hearing on PNC but there is a subsequent court appearance for this offence and an adjournment post judgement or a sentence result is received. This error can also be seen where a conditional caution is already present on PNC.",
+        "correctingThisError": "Where a PENHRG hearing is present on PNC, adjournments post judgement and a subsequent sentence result cannot be handled by PNC, only adjournments with judgement can be automated. The case has to be updated manually.",
+        "avoidingThisError": "There is no way of avoiding this error."
+      }
+    ]
+  },
+  {
+    "code": "HO100403",
+    "shortDescription": "PNC Update returned a warning",
+    "description": "The PNC has returned a warning message. Look at the PNC Errors tab for details (warnings are displayed on this tab alongside the errors).",
+    "cause": "If the PNC only returns warnings then the update has been successful and no exception is raised. This exception only occurs when a warning has been returned in conjunction with an error - the user should refer to the error on the PNC Errors tab and see HO100401/HO100402 for further details.",
+    "correctingThisError": "See HO100401/HO100402.",
+    "avoidingThisError": "See HO100401/HO100402. This exception will be removed in a future release of Bichard 7 as it provides no additional information and the \"warning\" masks the underlying \"PNC error\" (Ref. RCD587)."
+  },
+  {
+    "code": "HO100404",
+    "shortDescription": "PNC Update failed (e.g. communications failure, timeout)",
+    "description": "There has been a technical problem when Bichard 7 tried to update the PNC.",
+    "cause": "If there is a short term loss of communications with PNC this error can occur, however the most common cause is an attempt has been made to update a record on PNC which is currently locked by a user (i.e. a user already has the record open). This occurs when the user has investigated an exception by opening the case on PNC and identified the resolution to an exception. The user has then fixed the result on Bichard 7 and resubmitted the result without exiting the record on PNC. Therefore Bichard 7 tries to update the record and finds it is locked by the user.",
+    "correctingThisError": "Exit PNC and resubmit. If the error is ignored then the exception should be resubmitted automatically and clear itself. If the link with PNC is down for a while then this could take up to a day.",
+    "avoidingThisError": "Always exit any record on PNC before resubmitting a correction via the Bichard 7 portal."
+  },
+  {
+    "code": "HO100507",
+    "shortDescription": "Offences added by court at Penalty Hearing",
+    "description": "The result came from a penalty hearing where additional offences were added.",
+    "cause": "Bichard 7 is unable to result cases with additional offences from penalty hearings.",
+    "correctingThisError": "The case must be resulted manually on PNC.",
+    "avoidingThisError": "There is no way of avoiding this error."
+  },
+  {
+    "code": "HO200101",
+    "shortDescription": "Inconsistent result: Adjournment with Judgement but PNC has an adjudication",
+    "description": "This error occurs when Bichard 7 receives an adjournment with an adjudication (guilty/not guilty verdict) but the PNC already has the verdict on it.",
+    "cause": "This can occur if Police have already resulted the case manually or can occur due to an unusual court circumstance (e.g. a verdict from an earlier hearing being set aside).",
+    "correctingThisError": "The case must be resulted manually on PNC.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes put in place."
+  },
+  {
+    "code": "HO200104",
+    "shortDescription": "Inconsistent result: Judgement with final result but PNC has an adjudication",
+    "description": "This error occurs when Bichard 7 receives a judgement (e.g. guilty/not guilty verdict) along with a sentence but PNC already has a verdict on it.",
+    "cause": "This can occur if Police have already resulted the case manually or can occur due to an unusual court circumstance (e.g. a verdict from an earlier hearing being set aside).",
+    "correctingThisError": "The case must be resulted manually on PNC.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes put in place."
+  },
+  {
+    "code": "HO200108",
+    "shortDescription": "Insufficient information to create reference for 'Refer to court Case'.",
+    "description": "A replacement offence is missing.",
+    "cause": "When adding an offence, Bichard 7 must refer to a court case. A result of (2060) 'Replaced with another offence' is received but there is not a replacement offence in the result.",
+    "correctingThisError": "The resolution is for the user to enter the result manually on PNC.",
+    "avoidingThisError": "The underlying cause should be investigated and if necessary business process changes be put in place."
+  },
+  {
+    "code": "HO200113",
+    "shortDescription": "The PNC cannot be updated automatically because there are new remands together with sentencing. It will have to be done manually.",
+    "description": "An adjournment and a final disposal are present in the same result.",
+    "cause": "When an adjournment and a final disposal are present in the same result, an exception is created. This is often caused by an adjournment together with an interim result; or it could indicate that an error was made in court",
+    "correctingThisError": "The result must be put on manually.",
+    "avoidingThisError": "Please contact the helpdesk with details of the result so that the combination of results can be reviewed and, if required, referred to the PNC Names Working Group."
+  },
+  {
+    "code": "HO200114",
+    "shortDescription": "The PNC cannot be updated automatically because there are changes to existing disposals together with sentencing. It will have to be done manually.",
+    "description": "A result is received which is both updating an existing result and adding a sentence at same time.",
+    "cause": "PNC has already been updated with a result. A result is received which is both updating the existing result and adding a sentence at the same time. This could indicate a court error; or some legitimate (but unusual) circumstances, such as the dismissal of an earlier guilty offence.",
+    "correctingThisError": "The result must be put on manually.",
+    "avoidingThisError": "The result should be investigated and if necessary business process changes put in place."
+  },
+  {
+    "code": "HO200117",
+    "shortDescription": "Too many results present - review on PNC",
+    "description": "The result record from Libra has too many results for Bichard 7 to update PNC.",
+    "cause": "For any one offence there is a technical limit of 10 results at any one time that can be updated on PNC. This error means that more than 10 results have been received for that offence. One example is where the courts have imposed multiple compensation results - effectively itemising the damage/loss.",
+    "correctingThisError": "The results must be put on manually.",
+    "avoidingThisError": "The question of whether Bichard 7 should consolidate multiple fine/cost results into a single entry is being raised with PNC Names Working Group."
+  },
+  {
+    "code": "HO200212",
+    "shortDescription": "Offence has no valid PNC results",
+    "description": "None of the offence results can be used to update the Disposal History page on the PNC.",
+    "cause": "After removing the text-only results (shown in Bichard 7 with result code 1000) and the results in the stop list which the PNC cannot handle there are no results left with which to perform the update. The most common example is where the result is 3501 (Dealt with for the original offence).",
+    "correctingThisError": "Examine the result text to determine the correct result and enter it onto PNC manually.",
+    "avoidingThisError": "3501 is a legitimate result so the error cannot be avoided. Other results may indicate a court error and should be investigated."
+  }
+]
