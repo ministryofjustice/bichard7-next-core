@@ -36,7 +36,7 @@ export const createArrestHearingFromOffence = (pncUpdateDataset: PncUpdateDatase
     offenceEndTime: preProcessTimeString(offence.OffenceEndTime),
     offenceLocationFSCode: getForceStationCode(pncUpdateDataset, false),
     offenceReason: convertHoOffenceCodeToPncFormat(offence.CriminalProsecutionReference.OffenceReason),
-    offenceReasonSequence: preProcessOffenceReasonSequence(offence) || "",
+    offenceReasonSequence: preProcessOffenceReasonSequence(offence),
     offenceStartDate,
     offenceStartTime: preProcessTimeString(offenceTimeStartTime),
     type: HearingDetailsType.ARREST
