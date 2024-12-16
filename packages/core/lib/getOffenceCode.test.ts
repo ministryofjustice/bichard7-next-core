@@ -1,4 +1,4 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
 
 import getOffenceCode from "./getOffenceCode"
 

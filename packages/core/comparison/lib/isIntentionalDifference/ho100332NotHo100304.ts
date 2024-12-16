@@ -3,7 +3,7 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import type { ComparisonData } from "../../types/ComparisonData"
 import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
-import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
+import getOffenceCode from "../../../lib/getOffenceCode"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 const ho100332NotHo100304 = ({ expected, actual, phase }: ComparisonData) =>

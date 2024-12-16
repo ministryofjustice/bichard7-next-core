@@ -2,7 +2,7 @@ import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { ArrestHearing } from "../../types/HearingDetails"
 
-import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
+import getOffenceCode from "../../../lib/getOffenceCode"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import { HearingDetailsType } from "../../types/HearingDetails"
 import getForceStationCode from "../getForceStationCode"
