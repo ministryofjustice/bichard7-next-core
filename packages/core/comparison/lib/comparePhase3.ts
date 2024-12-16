@@ -1,4 +1,5 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { diffJson } from "diff"
 import isEqual from "lodash.isequal"
@@ -24,6 +25,12 @@ import parseIncomingMessage from "./parseIncomingMessage"
 import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
+
+const excludeEventForBichard = (eventCode: string) =>
+  ![EventCode.HearingOutcomeReceivedPhase3].includes(eventCode as EventCode)
+
+const excludeEventForCore = (eventCode: string) =>
+  ![EventCode.ExceptionsGenerated, EventCode.TriggersGenerated].includes(eventCode as EventCode)
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined =>
@@ -189,8 +196,8 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const sortedCoreTriggers = sortTriggers(coreResult.triggers)
     const sortedTriggers = sortTriggers(triggers ?? [])
 
-    const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode)
-    const bichardAuditLogEvents = extractAuditLogEventCodes(auditLogEvents)
+    const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode).filter(excludeEventForCore)
+    const bichardAuditLogEvents = extractAuditLogEventCodes(auditLogEvents).filter(excludeEventForBichard)
     const auditLogEventsMatch = isEqual(coreAuditLogEvents, bichardAuditLogEvents)
 
     const debugOutput: ComparisonResultDebugOutput = {

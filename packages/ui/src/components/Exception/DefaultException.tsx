@@ -2,7 +2,7 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import { GridCol, GridRow, Link } from "govuk-react"
 import ErrorMessages from "types/ErrorMessages"
 import NavigationHandler from "../../types/NavigationHandler"
-import getExceptionDefinition from "../../utils/getExceptionDefinition"
+import getExceptionDefinition from "../../utils/exceptionDefinition/getExceptionDefinition"
 import getExceptionPathDetails from "../../utils/getExceptionPathDetails"
 import ActionLink from "../ActionLink"
 import { ExceptionRow, ExceptionRowHelp } from "./Exception.styles"

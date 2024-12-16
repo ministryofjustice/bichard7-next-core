@@ -1,7 +1,8 @@
+import type { PncOperation } from "../../types/PncOperation"
 import type { ArrestHearingAdjudicationAndDisposal, CourtHearingAdjudicationAndDisposal } from "./HearingDetails"
 
 type NormalDisposalPncUpdateRequest = {
-  operation: "DISARR"
+  operation: PncOperation.NORMAL_DISPOSAL
   request: {
     arrestsAdjudicationsAndDisposals: ArrestHearingAdjudicationAndDisposal[]
     arrestSummonsNumber: null | string

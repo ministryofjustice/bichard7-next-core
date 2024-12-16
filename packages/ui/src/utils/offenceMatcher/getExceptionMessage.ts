@@ -1,7 +1,7 @@
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { findExceptions } from "types/ErrorMessages"
-import getExceptionDefinition from "utils/getExceptionDefinition"
+import getExceptionDefinition from "utils/exceptionDefinition/getExceptionDefinition"
 import offenceMatchingExceptions from "./offenceMatchingExceptions"
 
 type ExceptionCodeAndPath = {

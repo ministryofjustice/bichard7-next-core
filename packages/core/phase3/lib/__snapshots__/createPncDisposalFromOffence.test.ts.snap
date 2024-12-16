@@ -1,0 +1,280 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createPncDisposalFromOffence should generate a PNC disposal using the sentence date from the matching offence when adjournment does not exist and disposal 3027 does not exist 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+  {
+    "qtyDate": "05122024",
+    "qtyDuration": "",
+    "qtyMonetaryValue": undefined,
+    "qtyUnitsFined": "    05122024          00",
+    "qualifiers": "",
+    "text": undefined,
+    "type": 3027,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should generate a PNC disposal using the sentence date from the matching offence when adjournment exists 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should generate a PNC disposal using the sentence date from the matching offence when disposal 3027 exists 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 3027,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should ignore disposal 2063 when there was a disposal 2063 with result code 2060 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2063,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found and 2 disposals are generated already 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+  {
+    "qtyDate": "",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": undefined,
+    "qtyUnitsFined": "Y                     00",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y1",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y1  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2060,
+  },
+  {
+    "qtyDate": "",
+    "qtyDuration": "Y1",
+    "qtyMonetaryValue": undefined,
+    "qtyUnitsFined": "Y1                    00",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2060,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y3",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y3  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2060,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y2",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y2  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2066,
+  },
+  {
+    "qtyDate": "",
+    "qtyDuration": "Y2",
+    "qtyMonetaryValue": undefined,
+    "qtyUnitsFined": "Y2                    00",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2066,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 has been found and 2 disposals are generated already 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2051,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y1",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y1  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2060,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y2",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y2  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2063,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y3",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y3  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2068,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 with result 2060 has been found and 2 disposals are generated already 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2051,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y1",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y1  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2063,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y3",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y3  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2068,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should not ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found but 3 disposals are generated already 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+  {
+    "qtyDate": "",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": undefined,
+    "qtyUnitsFined": "Y                     00",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y1",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y1  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2050,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y2",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y2  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2060,
+  },
+  {
+    "qtyDate": "",
+    "qtyDuration": "Y2",
+    "qtyMonetaryValue": undefined,
+    "qtyUnitsFined": "Y2                    00",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2060,
+  },
+]
+`;
+
+exports[`createPncDisposalFromOffence should return disposals when all PNC disposals are 2007 1`] = `
+[
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y0",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y   220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2007,
+  },
+  {
+    "qtyDate": "22052024",
+    "qtyDuration": "Y1",
+    "qtyMonetaryValue": "25",
+    "qtyUnitsFined": "Y1  220520240000025.0000",
+    "qualifiers": "A ",
+    "text": "",
+    "type": 2007,
+  },
+]
+`;
