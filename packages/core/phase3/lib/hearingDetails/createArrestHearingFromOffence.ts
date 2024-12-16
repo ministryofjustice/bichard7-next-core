@@ -2,10 +2,10 @@ import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { ArrestHearing } from "../../types/HearingDetails"
 
+import getOffenceCode from "../../../phase1/lib/offence/getOffenceCode"
 import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import { HearingDetailsType } from "../../types/HearingDetails"
 import getForceStationCode from "../getForceStationCode"
-import { convertHoOffenceCodeToPncFormat } from "./convertHoOffenceCodeToPncFormat"
 import { preProcessOffenceReasonSequence } from "./preProcessOffenceReasonSequence"
 
 const DEFAULT_OFFENCE_LOCATION = "Not provided by Court"
@@ -35,7 +35,7 @@ export const createArrestHearingFromOffence = (pncUpdateDataset: PncUpdateDatase
     offenceEndDate,
     offenceEndTime: preProcessTimeString(offence.OffenceEndTime),
     offenceLocationFSCode: getForceStationCode(pncUpdateDataset, false),
-    offenceReason: convertHoOffenceCodeToPncFormat(offence.CriminalProsecutionReference.OffenceReason),
+    offenceReason: getOffenceCode(offence) ?? "",
     offenceReasonSequence: preProcessOffenceReasonSequence(offence),
     offenceStartDate,
     offenceStartTime: preProcessTimeString(offenceTimeStartTime),
