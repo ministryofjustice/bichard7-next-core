@@ -1,0 +1,112 @@
+{
+  "accessPolicy": {},
+  "name": "bichard_phase_3",
+  "description": "The third and final phase of the processing workflow for Bichard",
+  "tasks": [
+    {
+      "name": "lock_s3_file",
+      "taskReferenceName": "lock_s3_file",
+      "inputParameters": {
+        "bucketId": "task-data",
+        "fileName": "${workflow.input.s3TaskDataPath}",
+        "lockId": "${workflow.workflowId}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false,
+      "permissive": false
+    },
+    {
+      "name": "check_lock",
+      "taskReferenceName": "check_lock",
+      "inputParameters": {
+        "lockState": "${lock_s3_file.output.lockState}"
+      },
+      "type": "SWITCH",
+      "decisionCases": {
+        "failure": [
+          {
+            "name": "terminate",
+            "taskReferenceName": "terminate",
+            "inputParameters": {
+              "terminationStatus": "COMPLETED",
+              "workflowOutput": ""
+            },
+            "type": "TERMINATE",
+            "startDelay": 0,
+            "optional": false
+          }
+        ]
+      },
+      "defaultCase": [
+        {
+          "name": "process_phase3",
+          "taskReferenceName": "process_phase3",
+          "inputParameters": {
+            "lockId": "${workflow.workflowId}",
+            "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "permissive": false
+        },
+        {
+          "name": "persist_phase3",
+          "taskReferenceName": "persist_phase3",
+          "inputParameters": {
+            "s3TaskDataPath": "${workflow.input.s3TaskDataPath}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "permissive": false
+        },
+        {
+          "name": "store_audit_log_events",
+          "taskReferenceName": "store_audit_log_events",
+          "inputParameters": {
+            "correlationId": "${workflow.correlationId}",
+            "auditLogEvents": "${process_phase3.output.auditLogEvents}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "permissive": false
+        },
+        {
+          "name": "delete_s3_file",
+          "taskReferenceName": "delete_task_temp_data",
+          "inputParameters": {
+            "bucketId": "task-data",
+            "fileName": "${workflow.input.s3TaskDataPath}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "permissive": false
+        }
+      ],
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false,
+      "evaluatorType": "value-param",
+      "expression": "lockState",
+      "permissive": false
+    }
+  ],
+  "inputParameters": ["s3TaskDataPath"],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {}
+}

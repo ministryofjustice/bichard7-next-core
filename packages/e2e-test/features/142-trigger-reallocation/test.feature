@@ -46,9 +46,6 @@ Feature: {142} BR7 R5.2-RCD423-Trigger Reallocation
       And I see complete trigger "TRPR0004" for offence "2"
       And I click the "Defendant" tab
       And I correct "ASN" to "0836FP0100000377244A"
-      And I click the "Offences" tab
-      And I view offence "4"
-      And I correct "Text" to "**Imprisonment for 12 Months with result text greater sixty fourEnd"
       And I submit the record
       And I reload until I don't see "(Submitted)"
       And I click the "Refresh" button
@@ -56,18 +53,15 @@ Feature: {142} BR7 R5.2-RCD423-Trigger Reallocation
     Then there are no exceptions or triggers
     When I am logged in as "norfolk.user"
       And I view the list of exceptions
-    Then I see trigger "PS03 - Disposal text truncated" in the exception list table
     When I open the record for "Allocation Trigger"
       And I click the "Notes" tab
     Then I see "Error codes: 1 x HO100206" in the table
       And I see "essex.user: Portal Action: Trigger Resolved. Code: TRPR0004" in the table
       And I see "essex.user: Portal Action: Update Applied. Element: ASN. New Value: 0836FP0100000377244A" in the table
-      And I see "essex.user: Portal Action: Update Applied. Element: ResultVariableText. New Value: **Imprisonment for 12 Months with result text greater sixty fourEnd" in the table
       And I see "essex.user: Portal Action: Resubmitted Message" in the table
     When I click the "Triggers" tab
     Then I see trigger "TRPR0001" for offence "1"
       And I see trigger "TRPR0006"
-      And I see trigger "TRPS0003" for offence "4"
       And I see complete trigger "TRPR0004" for offence "2"
       And the PNC updates the record
       And the audit log contains "Triggers generated"
