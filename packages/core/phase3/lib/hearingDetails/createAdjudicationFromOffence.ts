@@ -11,7 +11,7 @@ export const createAdjudicationFromOffence = (offence: Offence, dateOfHearing: D
   if (adjudication) {
     return {
       hearingDate: adjudication.sentenceDate ? formatDateSpecifiedInResult(adjudication.sentenceDate, true) : "",
-      numberOffencesTakenIntoAccount: adjudication.offenceTICNumber?.toString().padStart(4, "0") ?? "",
+      numberOffencesTakenIntoAccount: adjudication.offenceTICNumber.toString().padStart(4, "0"),
       pleaStatus: adjudication.plea,
       type: HearingDetailsType.ADJUDICATION,
       verdict: adjudication.verdict
