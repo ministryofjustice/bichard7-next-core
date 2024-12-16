@@ -72,7 +72,7 @@ export default [
   },
   ...compat
     .extends(
-      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/strict",
       "plugin:jest/recommended",
       "plugin:jest/style",
       "prettier",
@@ -100,6 +100,9 @@ export default [
     },
 
     rules: {
+      "@typescript-eslint/no-invalid-void-type": "off",
+      "@typescript-eslint/no-dynamic-delete": "off",
+
       "@typescript-eslint/consistent-type-imports": ["error"],
       "@typescript-eslint/no-empty-object-type": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
@@ -222,12 +225,7 @@ export default [
     }
   },
   ...compat
-    .extends(
-      "next",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:jsx-a11y/recommended",
-      "plugin:prettier/recommended"
-    )
+    .extends("next", "plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
     .map((config) => ({
       ...config,
       files: ["packages/ui/**/*.tsx"]
