@@ -1,6 +1,5 @@
 import type { Change } from "diff"
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chalk from "chalk"
 import { diffLines } from "diff"
 import { pd } from "pretty-data"

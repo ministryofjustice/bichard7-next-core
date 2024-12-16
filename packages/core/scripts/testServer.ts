@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import type { Request, Response } from "express"
 
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"

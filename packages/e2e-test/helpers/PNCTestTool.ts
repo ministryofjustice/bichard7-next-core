@@ -205,17 +205,14 @@ class PNCTestTool {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this, no-unused-vars, @typescript-eslint/no-unused-vars
   addMock(_matchRegex: string, _response: string, _count?: number) {
     throw new Error("addMock incorrectly called for PNCTestTool")
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   awaitMockRequest = (_id: string, _timeout = 40000) => {
     throw new Error("awaitMockRequest incorrectly called for PNCTestTool")
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getMock(_id: string): Promise<PncMock> {
     throw new Error("getMock incorrectly called for PNCTestTool")
   }

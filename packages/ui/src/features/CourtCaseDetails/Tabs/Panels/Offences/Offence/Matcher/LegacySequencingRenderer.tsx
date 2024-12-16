@@ -1,6 +1,7 @@
 import { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
 import LegacySequencingBadgeTableRow from "./TableRows/LegacySequencingBadgeTableRow"
 import LegacySequencingMessageTableRow from "./TableRows/LegacySequencingMessageTableRow"
+import { JSX } from "react"
 
 interface LegacySequencingRenderProps {
   offenceMatchingException?: OffenceMatchingException | boolean

@@ -36,7 +36,7 @@ export const handleAsnForwardSlashes = (
   selection: Selection | undefined,
   amendedAsn: string,
   key: string,
-  asnInputRef: RefObject<HTMLInputElement>
+  asnInputRef: RefObject<HTMLInputElement | null>
 ): boolean => {
   if (!selection) {
     return false
