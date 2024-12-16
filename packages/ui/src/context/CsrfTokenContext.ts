@@ -38,7 +38,9 @@ const useCsrfToken = (): CsrfTokenContextResult => {
   }
 }
 
-const useCsrfTokenContextState = (csrfToken: string) => useState<CsrfTokenContextType>({ csrfToken })
+const useCsrfTokenContextState = (csrfToken: string) => {
+  return useState<CsrfTokenContextType>({ csrfToken })
+}
 
 CsrfTokenContext.displayName = "CsrfTokenContext"
 
