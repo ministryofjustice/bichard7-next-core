@@ -3,7 +3,7 @@ import type { CourtHearingAndDisposal } from "../../types/HearingDetails"
 
 import getAdjustedRecordableOffencesForCourtCase from "../../../lib/getAdjustedRecordableOffencesForCourtCase"
 import { createCourtHearingFromOffence } from "./createCourtHearingFromOffence"
-import { createDisposalsFromOffence } from "./createDisposalsFromOffence"
+import createDisposalsFromOffence from "./createDisposalsFromOffence"
 
 export const generateHearingsAndDisposals = (
   pncUpdateDataset: PncUpdateDataset,

@@ -5,7 +5,7 @@ import getAdjustedRecordableOffencesForCourtCase from "../../../lib/getAdjustedR
 import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatibleWithDisposal"
 import { createAdjudicationFromOffence } from "./createAdjudicationFromOffence"
 import { createArrestHearingFromOffence } from "./createArrestHearingFromOffence"
-import { createDisposalsFromOffence } from "./createDisposalsFromOffence"
+import createDisposalsFromOffence from "./createDisposalsFromOffence"
 
 export const generateArrestHearingsAdjudicationsAndDisposals = (
   pncUpdateDataset: PncUpdateDataset,
