@@ -3,7 +3,7 @@ import { FilterAction, FilterState } from "types/CourtCaseFilter"
 import { Button, ButtonAlt } from "./FilterChip.styles"
 
 interface Props {
-  chipLabel: string
+  chipLabel?: string
   dispatch: Dispatch<FilterAction>
   removeAction: () => FilterAction
   state: FilterState

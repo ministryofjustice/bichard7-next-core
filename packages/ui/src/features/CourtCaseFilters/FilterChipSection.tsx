@@ -49,7 +49,7 @@ const FilterChipSection: React.FC<Props> = ({
         </HeaderRow>
 
         <FilterChipRow
-          chipLabel={state.defendantNameSearch.label!}
+          chipLabel={state.defendantNameSearch.label}
           condition={
             state.defendantNameSearch.value !== undefined &&
             state.defendantNameSearch.label !== undefined &&
@@ -59,11 +59,11 @@ const FilterChipSection: React.FC<Props> = ({
           type="defendantName"
           label="Defendant name"
           state={state.defendantNameSearch.state ?? sectionState}
-          value={state.defendantNameSearch.value!}
+          value={state.defendantNameSearch.value}
         />
 
         <FilterChipRow
-          chipLabel={state.ptiurnSearch.label!}
+          chipLabel={state.ptiurnSearch.label}
           condition={
             state.ptiurnSearch.value !== undefined &&
             state.ptiurnSearch.label !== undefined &&
@@ -73,11 +73,11 @@ const FilterChipSection: React.FC<Props> = ({
           type="ptiurn"
           label="PTIURN"
           state={state.ptiurnSearch.state ?? sectionState}
-          value={state.ptiurnSearch.value!}
+          value={state.ptiurnSearch.value}
         />
 
         <FilterChipRow
-          chipLabel={state.courtNameSearch.label!}
+          chipLabel={state.courtNameSearch.label}
           condition={
             state.courtNameSearch.value !== undefined &&
             state.courtNameSearch.label !== undefined &&
@@ -87,7 +87,7 @@ const FilterChipSection: React.FC<Props> = ({
           type="courtName"
           label="Court name"
           state={state.courtNameSearch.state ?? sectionState}
-          value={state.courtNameSearch.value!}
+          value={state.courtNameSearch.value}
         />
 
         <FilterChipContainer
@@ -99,7 +99,7 @@ const FilterChipSection: React.FC<Props> = ({
           {state.reasonCodes.map((reasonCode) => (
             <ConditionalRender isRendered={reasonCode.state === sectionState} key={`filter-chip${reasonCode.value}`}>
               <FilterChip
-                chipLabel={reasonCode.label!}
+                chipLabel={reasonCode.label}
                 dispatch={dispatch}
                 removeAction={() => {
                   return { method: "remove", type: "reasonCodes", value: reasonCode.value } as FilterAction
@@ -191,9 +191,9 @@ const FilterChipSection: React.FC<Props> = ({
               chipLabel={"Resolved cases"}
               dispatch={dispatch}
               removeAction={() => {
-                return { method: "remove", type: "caseState", value: state.caseStateFilter.value! } as FilterAction
+                return { method: "remove", type: "caseState", value: state.caseStateFilter.value } as FilterAction
               }}
-              state={state.caseStateFilter.state || sectionState}
+              state={state.caseStateFilter.state ?? sectionState}
             />
           </ConditionalRender>
           <ConditionalRender isRendered={!!state.resolvedByUsernameFilter.value}>
@@ -204,16 +204,16 @@ const FilterChipSection: React.FC<Props> = ({
                 return {
                   method: "remove",
                   type: "resolvedByUsername",
-                  value: state.resolvedByUsernameFilter.value!
+                  value: state.resolvedByUsernameFilter.value
                 } as FilterAction
               }}
-              state={state.resolvedByUsernameFilter.state || sectionState}
+              state={state.resolvedByUsernameFilter.state ?? sectionState}
             />
           </ConditionalRender>
         </FilterChipContainer>
 
         <FilterChipRow
-          chipLabel={state.lockedStateFilter.label!}
+          chipLabel={state.lockedStateFilter.label}
           condition={
             state.lockedStateFilter.value !== undefined &&
             state.lockedStateFilter.label !== undefined &&
@@ -224,7 +224,7 @@ const FilterChipSection: React.FC<Props> = ({
           type="lockedState"
           label="Locked state"
           state={state.lockedStateFilter.state ?? sectionState}
-          value={state.lockedStateFilter.value!}
+          value={state.lockedStateFilter.value}
         />
       </ConditionalRender>
 
