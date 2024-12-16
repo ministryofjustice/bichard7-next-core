@@ -6,9 +6,9 @@ import { Table } from "govuk-react"
 import Image from "next/image"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
-import getOffenceCode from "utils/getOffenceCode"
 import { CHECKMARK_ICON_URL } from "utils/icons"
 import { IconContainer } from "./OffencesListRow.styles"
+import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 
 interface OffencesListRowProps {
   offence: Offence
@@ -49,7 +49,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
       </Table.Cell>
       <Table.Cell>{offence.CourtOffenceSequenceNumber}</Table.Cell>
       <Table.Cell>{formatDisplayedDate(offence.ActualOffenceStartDate.StartDate).toString()}</Table.Cell>
-      <Table.Cell>{getOffenceCode(offence)}</Table.Cell>
+      <Table.Cell>{getOffenceCode(offence) || ""}</Table.Cell>
       <Table.Cell>
         <a
           id={`offence-${offence.CourtOffenceSequenceNumber}`}
