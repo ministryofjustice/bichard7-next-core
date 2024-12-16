@@ -1,26 +1,13 @@
 import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
 
-export const convertHoOffenceCodeToPncFormat = (offCode?: OffenceReason): string => {
-  if (!offCode) {
+export const convertHoOffenceCodeToPncFormat = (offenceReason?: OffenceReason): string => {
+  if (!offenceReason) {
     return ""
   }
 
-  if (offCode.__type !== "NationalOffenceReason") {
-    return offCode.LocalOffenceCode.OffenceCode
+  if (offenceReason.__type == "LocalOffenceReason") {
+    return offenceReason.LocalOffenceCode.OffenceCode
   }
 
-  const offenceReason: (string | undefined)[] = []
-  if (offCode.OffenceCode.__type === "NonMatchingOffenceCode" && offCode.OffenceCode.ActOrSource) {
-    offenceReason.push(offCode.OffenceCode.ActOrSource)
-    offenceReason.push(offCode.OffenceCode.Year)
-  } else if (offCode.OffenceCode.__type === "IndictmentOffenceCode" && offCode.OffenceCode.Indictment) {
-    offenceReason.push(offCode.OffenceCode.Indictment)
-  } else if (offCode.OffenceCode.__type === "CommonLawOffenceCode" && offCode.OffenceCode.CommonLawOffence) {
-    offenceReason.push(offCode.OffenceCode.CommonLawOffence)
-  }
-
-  offenceReason.push(offCode.OffenceCode.Reason)
-  offenceReason.push(offCode.OffenceCode.Qualifier)
-
-  return offenceReason.join("")
+  return offenceReason.OffenceCode.FullCode
 }
