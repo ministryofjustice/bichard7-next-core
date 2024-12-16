@@ -1,4 +1,10 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["dist", "node_modules", "scripts", "phase1/scripts", "**/tests", "**/*.test.*"]
+  "exclude": ["dist", "node_modules", "scripts", "phase1/scripts", "**/tests", "**/*.test.*"],
+  "files": [
+    "phase1/tests/fixtures/exampleAho.json",
+    "phase2/tests/helpers/generateMockPhase2Result.ts",
+    "phase2/tests/helpers/PartialPncUpdateDataset.ts",
+    "phase2/tests/fixtures/helpers/generateFakePncUpdateDataset.ts"
+  ]
 }

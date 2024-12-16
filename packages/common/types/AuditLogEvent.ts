@@ -6,7 +6,8 @@ import EventCode from "./EventCode"
 
 export enum AuditLogEventSource {
   CorePhase1 = "CorePhase1",
-  CorePhase2 = "CorePhase2"
+  CorePhase2 = "CorePhase2",
+  CorePhase3 = "CorePhase3"
 }
 export type AuditLogEvent = z.infer<typeof auditLogEventSchema>
 
