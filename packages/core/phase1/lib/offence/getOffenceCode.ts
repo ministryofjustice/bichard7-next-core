@@ -1,6 +1,17 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 
-export default (offence: Offence): string | undefined => {
-  const reason = offence.CriminalProsecutionReference.OffenceReason
-  return reason?.__type === "NationalOffenceReason" ? reason.OffenceCode.FullCode : reason?.LocalOffenceCode.OffenceCode
+const getOffenceCode = (offence: Offence): string | undefined => {
+  const offenceReason = offence.CriminalProsecutionReference.OffenceReason
+
+  if (!offenceReason) {
+    return undefined
+  }
+
+  if (offenceReason.__type == "LocalOffenceReason") {
+    return offenceReason.LocalOffenceCode.OffenceCode
+  }
+
+  return offenceReason.OffenceCode.FullCode
 }
+
+export default getOffenceCode
