@@ -56,8 +56,7 @@ class PostgresHelper {
         excludedTriggers.join(","),
         "",
         name,
-        defaultPasswordHash,
-        { offenceMatchingEnabled: true }
+        defaultPasswordHash
       ]
     )
 
