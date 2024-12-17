@@ -12,7 +12,6 @@ import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
-import getOffenceCode from "utils/getOffenceCode"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
 import { TableRow } from "../../TableRow"
 import { HearingResult } from "./HearingResult"
@@ -21,6 +20,7 @@ import { OffenceDetailsContainer } from "./OffenceDetails.styles"
 import { OffenceNavigation } from "./OffenceNavigation"
 import ResultQualifier from "./ResultQualifier"
 import { StartDate } from "./StartDate"
+import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 
 interface OffenceDetailsProps {
   offence: Offence
@@ -44,7 +44,7 @@ export const OffenceDetails = ({
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
 
-  const offenceCode = getOffenceCode(offence)
+  const offenceCode = getOffenceCode(offence) || ""
   const qualifierCode =
     offence.CriminalProsecutionReference.OffenceReason?.__type === "NationalOffenceReason" &&
     offence.CriminalProsecutionReference.OffenceReason.OffenceCode.Qualifier

@@ -10,11 +10,11 @@ import getFile from "../comparison/lib/getFile"
 import hoOffencesAreEqual from "../comparison/lib/hoOffencesAreEqual"
 import summariseMatching from "../comparison/lib/summariseMatching"
 import { lookupOffenceByCjsCode } from "../lib/dataLookup"
+import getOffenceCode from "../lib/getOffenceCode"
 import { parseAhoXml } from "../lib/parse/parseAhoXml"
 import parseSpiResult from "../lib/parse/parseSpiResult"
 import transformSpiToAho from "../lib/parse/transformSpiToAho"
 import offenceHasFinalResult from "../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
-import getOffenceCode from "../phase1/lib/offence/getOffenceCode"
 
 interface ComparisonFile {
   annotatedHearingOutcome: string

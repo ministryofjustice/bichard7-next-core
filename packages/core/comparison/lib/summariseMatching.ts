@@ -3,7 +3,7 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { CourtResultMatchingSummary } from "../types/MatchingComparisonOutput"
 
-import getOffenceCode from "../../phase1/lib/offence/getOffenceCode"
+import getOffenceCode from "../../lib/getOffenceCode"
 
 export const matchingExceptions: ExceptionCode[] = [
   ExceptionCode.HO100203,

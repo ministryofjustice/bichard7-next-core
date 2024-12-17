@@ -1,6 +1,6 @@
 import type { HearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 
-import getOffenceCode from "../offence/getOffenceCode"
+import getOffenceCode from "../../../lib/getOffenceCode"
 
 const getOffenceDetails = (offences: Offence[]): Record<string, string> =>
   offences.reduce((acc: Record<string, string>, offence, i) => {
