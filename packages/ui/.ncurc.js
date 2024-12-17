@@ -4,7 +4,7 @@
     - Conflict with GDS9
   - cookies-next
     - v5 contains breaking changes
-  - react, react-dom
+  - react, react-dom, @types/react, @types/react-dom
     - Contains breaking changes
     - govuk-react only on react 18
 
