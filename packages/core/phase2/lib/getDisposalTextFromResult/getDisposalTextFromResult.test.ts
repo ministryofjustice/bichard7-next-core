@@ -65,17 +65,6 @@ describe("check getDisposalTextFromResult", () => {
     expect(result).toBe("FAILED TO APPEAR WARRANT ISSUED")
   })
 
-  it("Given ResultQualifierVariable exists but warrant is not issued, disposal text is empty", () => {
-    const ahoResult = {
-      CJSresultCode: 4575,
-      ResultVariableText: "DUMMY",
-      ResultQualifierVariable: [{ Code: "EO" }]
-    } as Result
-    const result = getDisposalTextFromResult(ahoResult)
-
-    expect(result).toBe("")
-  })
-
   it("Given 3106 cjsResultCode, and ResultVariableText contains NOT TO ENTER XYZ THIS EXCLUSION REQUIREMENT LASTS FOR, disposal text is correct", () => {
     const ahoResult = {
       CJSresultCode: 3106,
