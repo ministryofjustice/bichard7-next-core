@@ -2,7 +2,7 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
-import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
+import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { PreviousPathContext, PreviousPathContextType } from "context/PreviousPathContext"
 import { setCookie } from "cookies-next"
@@ -218,7 +218,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   previousPath,
   caseDetailsCookieName
 }: Props) => {
-  const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
+  const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const [previousPathContext] = useState<PreviousPathContextType>({ previousPath })

@@ -107,12 +107,13 @@ const useCourtCase = (): CourtCaseContextResult => {
   }
 }
 
-const useCourtCaseContextState = (courtCase: DisplayFullCourtCase) =>
-  useState<CourtCaseContextType>({
+const useCourtCaseContextState = (courtCase: DisplayFullCourtCase) => {
+  return useState<CourtCaseContextType>({
     courtCase,
     amendments: getAmendmentsByComparison(courtCase.aho, courtCase.updatedHearingOutcome),
     savedAmendments: getAmendmentsByComparison(courtCase.aho, courtCase.updatedHearingOutcome)
   })
+}
 
 CourtCaseContext.displayName = "CourtCaseContext"
 

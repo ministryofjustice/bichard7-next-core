@@ -1,6 +1,6 @@
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
-import { CsrfTokenContext, CsrfTokenContextType } from "context/CsrfTokenContext"
+import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { deleteCookie, getCookie, setCookie } from "cookies-next"
 import type { OptionsType } from "cookies-next/lib/types"
@@ -214,7 +214,7 @@ const Home: NextPage<Props> = (props) => {
     }
   }, [router, queryStringCookieName, environment, build, caseDetailsCookieName])
 
-  const [csrfTokenContext] = useState<CsrfTokenContextType>({ csrfToken })
+  const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   return (

@@ -1,5 +1,6 @@
 import { PncOffence } from "@moj-bichard7/core/types/PncQueryResult"
 import { CourtCaseContext } from "context/CourtCaseContext"
+import { CsrfTokenContext } from "context/CsrfTokenContext"
 import OffenceMatcher from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/Matcher/OffenceMatcher"
 import { Amendments } from "types/Amendments"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
@@ -35,9 +36,11 @@ describe("Offence matcher with single court case", () => {
   describe("Without existing amendments", () => {
     beforeEach(() => {
       cy.mount(
-        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
-          <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
-        </CourtCaseContext.Provider>
+        <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+          <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+            <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
+          </CourtCaseContext.Provider>
+        </CsrfTokenContext.Provider>
       )
     })
 
@@ -92,9 +95,11 @@ describe("With existing amendments", () => {
     }
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments, savedAmendments: {} }, () => {}]}>
-        <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
-      </CourtCaseContext.Provider>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments, savedAmendments: {} }, () => {}]}>
+          <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
+        </CourtCaseContext.Provider>
+      </CsrfTokenContext.Provider>
     )
 
     cy.get("select").should("have.value", "1-12/2732/000015R")
@@ -117,9 +122,11 @@ describe("With existing amendments", () => {
     }
 
     cy.mount(
-      <CourtCaseContext.Provider value={[{ courtCase, amendments, savedAmendments: {} }, () => {}]}>
-        <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
-      </CourtCaseContext.Provider>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments, savedAmendments: {} }, () => {}]}>
+          <OffenceMatcher offenceIndex={0} candidates={candidates} isCaseLockedToCurrentUser={true} />
+        </CourtCaseContext.Provider>
+      </CsrfTokenContext.Provider>
     )
 
     cy.get("select").should("have.value", null)

@@ -1,5 +1,6 @@
 import AutoSave from "components/EditableFields/AutoSave"
 import { CourtCaseContext } from "context/CourtCaseContext"
+import { CsrfTokenContext } from "context/CsrfTokenContext"
 import React, { useState } from "react"
 import { AmendmentKeys } from "types/Amendments"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
@@ -21,18 +22,20 @@ describe("AutoSave", () => {
     const [isChanged, setIsChanged] = useState<boolean>(hasChanged)
 
     return (
-      <div>
-        <AutoSave
-          setSaved={setIsSaved}
-          setChanged={setIsChanged}
-          isValid={isValid}
-          isSaved={isSaved}
-          isChanged={isChanged}
-          amendmentFields={amendmentFields}
-        >
-          {children}
-        </AutoSave>
-      </div>
+      <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+        <div>
+          <AutoSave
+            setSaved={setIsSaved}
+            setChanged={setIsChanged}
+            isValid={isValid}
+            isSaved={isSaved}
+            isChanged={isChanged}
+            amendmentFields={amendmentFields}
+          >
+            {children}
+          </AutoSave>
+        </div>
+      </CsrfTokenContext.Provider>
     )
   }
 

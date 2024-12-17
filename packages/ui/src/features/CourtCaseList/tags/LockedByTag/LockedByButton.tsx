@@ -9,7 +9,7 @@ interface UnlockConfirmationProps {
 }
 
 const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) => {
-  const csrfToken = useCsrfToken()
+  const { csrfToken } = useCsrfToken()
 
   return (
     <>

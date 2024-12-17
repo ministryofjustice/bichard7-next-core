@@ -15,7 +15,7 @@ const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
   const [submitted, setSubmitted] = useState(false)
   const [isFormValid, setIsFormValid] = useState(true)
   const showError = !isFormValid && noteRemainingLength === MAX_NOTE_LENGTH
-  const csrfToken = useCsrfToken()
+  const { csrfToken } = useCsrfToken()
 
   useBeforeunload(
     !submitted && noteRemainingLength !== MAX_NOTE_LENGTH
