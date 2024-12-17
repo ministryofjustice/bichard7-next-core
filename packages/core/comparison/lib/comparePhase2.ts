@@ -25,7 +25,10 @@ const excludeEventForBichard = (eventCode: string) =>
     EventCode.HearingOutcomeSubmittedPhase3,
     EventCode.ReceivedResubmittedHearingOutcome
   ].includes(eventCode as EventCode)
-const excludeEventForCore = (eventCode: string) => eventCode !== EventCode.IgnoredAlreadyOnPNC
+const excludeEventForCore = (eventCode: string) =>
+  ![EventCode.ExceptionsGenerated, EventCode.IgnoredAlreadyOnPNC, EventCode.TriggersGenerated].includes(
+    eventCode as EventCode
+  )
 
 const getCorrelationId = (comparison: NewComparison | OldPhase1Comparison): string | undefined => {
   if ("correlationId" in comparison) {
