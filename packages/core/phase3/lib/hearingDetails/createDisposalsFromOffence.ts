@@ -1,10 +1,12 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../types/PncQueryResult"
+import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { Disposal } from "../../types/HearingDetails"
 
-import { createPncDisposalsFromResult } from "../../phase2/lib/createPncDisposalsFromResult"
-import createPncDisposal from "../../phase2/lib/createPncDisposalsFromResult/createPncDisposal"
-import findPncCourtCase from "../../phase2/lib/findPncCourtCase"
-import isRecordableResult from "../../phase2/lib/isRecordableResult"
+import { createPncDisposalsFromResult } from "../../../phase2/lib/createPncDisposalsFromResult"
+import createPncDisposal from "../../../phase2/lib/createPncDisposalsFromResult/createPncDisposal"
+import findPncCourtCase from "../../../phase2/lib/findPncCourtCase"
+import isRecordableResult from "../../../phase2/lib/isRecordableResult"
+import { HearingDetailsType } from "../../types/HearingDetails"
 
 const ADJOURNED_SINE_DIE_DISPOSAL_CODE = 2007
 const getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie = (
@@ -71,14 +73,14 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
         }
       }
 
-      if (disposalFor2060Result && (found2050Result || found2063Result) && pncDisposals.length == 2) {
-        pncDisposals = disposalFor2060Result
-      }
-
       if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
         pncDisposals.push(...generatedDisposals)
       }
     })
+
+  if (disposalFor2060Result && (found2050Result || found2063Result) && pncDisposals.length == 2) {
+    pncDisposals = disposalFor2060Result
+  }
 
   if (found3027 || adjournmentExists) {
     return pncDisposals
@@ -104,4 +106,13 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   return pncDisposals
 }
 
-export default createPncDisposalFromOffence
+const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): Disposal[] =>
+  createPncDisposalFromOffence(aho, offence).map((disposal) => ({
+    disposalType: disposal.type?.toString() ?? "",
+    disposalQuantity: disposal.qtyUnitsFined ?? "",
+    disposalQualifiers: disposal.qualifiers ?? "",
+    disposalText: disposal.text ?? "",
+    type: HearingDetailsType.DISPOSAL
+  }))
+
+export default createDisposalsFromOffence

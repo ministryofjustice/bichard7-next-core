@@ -5,9 +5,9 @@ import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import delimitedString from "./transformers/delimitedString"
 import jsonTransformer from "./transformers/jsonTransformer"
-// eslint-disable-next-line import/no-cycle
+
 import Note from "./Note"
-// eslint-disable-next-line import/no-cycle
+
 import SurveyFeedback from "./SurveyFeedback"
 
 @Entity({ name: "users" })

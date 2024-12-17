@@ -1,22 +1,19 @@
 /*
   Pinned:
   - styled-components
-    - Conflict with GDS
-  - @typescript-eslint/eslint-plugin
-    - Another package does not yet support the latest version
-  - @typescript-eslint/parser
-    - Another package does not yet support the latest version
-  - eslint-plugin-cypress
-    - v4 requires eslint v9
+    - Conflict with GDS9
   - cookies-next
     - v5 contains breaking changes
+  - react, react-dom
+    - Contains breaking changes
+    - govuk-react only on react 18
 
 
   Skipped:
   - next
     - 13.4.13 causes failures with fetch
 */
-const pinned = ["styled-components", "eslint", "@typescript-eslint/parser", "eslint-plugin-cypress", "cookies-next"]
+const pinned = ["styled-components", "cookies-next", "react", "react-dom"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 

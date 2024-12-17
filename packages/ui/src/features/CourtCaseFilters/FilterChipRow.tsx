@@ -1,17 +1,16 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import FilterChip from "components/FilterChip"
 import ConditionalRender from "components/ConditionalRender"
+import FilterChip from "components/FilterChip"
 import { Dispatch } from "react"
 import { FilterAction, FilterState, FilterType } from "types/CourtCaseFilter"
 
 interface Props {
-  chipLabel: string
+  chipLabel?: string
   condition: boolean
   dispatch: Dispatch<FilterAction>
   type: FilterType
   label: string
   state: FilterState
-  value: string | boolean
+  value?: string | boolean
 }
 
 const FilterChipRow: React.FC<Props> = ({ chipLabel, condition, dispatch, type, label, state, value }: Props) => {

@@ -1,5 +1,5 @@
-import { exceptionDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
-import type { ExceptionDefinition } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { ExceptionDefinition } from "types/ExceptionDefinition"
+import exceptionDefinitions from "./exception-definitions.json"
 
 const getExceptionDefinition = (exceptionCode: string): ExceptionDefinition | undefined =>
   exceptionDefinitions.find(({ code }) => code === exceptionCode)

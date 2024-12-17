@@ -4,8 +4,8 @@ import type { OffenceReason } from "../../types/AnnotatedHearingOutcome"
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
+import getOffenceCode from "../../lib/getOffenceCode"
 import getAreaCode from "../lib/offence/getAreaCode"
-import getOffenceCode from "../lib/offence/getOffenceCode"
 import isOffenceIgnored from "../lib/offence/isOffenceIgnored"
 import lookupOffenceCode from "../lib/offence/lookupOffenceCode"
 

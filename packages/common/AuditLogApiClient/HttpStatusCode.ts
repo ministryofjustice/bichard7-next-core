@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 export default class HttpStatusCode {
   public static readonly badRequest = 400
 

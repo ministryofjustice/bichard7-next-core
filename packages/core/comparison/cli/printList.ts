@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { SkippedFile } from "./processRange"
 

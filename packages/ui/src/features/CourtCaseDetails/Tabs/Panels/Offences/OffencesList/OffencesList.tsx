@@ -1,7 +1,7 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { Heading, Table } from "govuk-react"
 
-import getOffenceCode from "utils/getOffenceCode"
+import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 import { OffencesListRow } from "./OffencesListRow"
 
 interface OffencesListProps {
@@ -29,7 +29,7 @@ export const OffencesList = ({ offences, setDetailedOffenceIndex }: OffencesList
         {offences.length > 0 &&
           offences.map((offence, index) => (
             <OffencesListRow
-              key={`${getOffenceCode(offence)}-${index}`}
+              key={`${getOffenceCode(offence) || ""}-${index}`}
               offence={offence}
               offenceIndex={index}
               onClick={() => setDetailedOffenceIndex(index + 1)}

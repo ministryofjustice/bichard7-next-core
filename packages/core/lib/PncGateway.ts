@@ -16,6 +16,7 @@ import type {
 } from "../types/PncQueryResult"
 
 import { pncApiResultSchema } from "../schemas/pncApiResult"
+import { PncOperation } from "../types/PncOperation"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 
@@ -91,6 +92,15 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
   }
 }
 
+const lookupPathFromOperation = (operation: PncOperation): string =>
+  ({
+    [PncOperation.DISPOSAL_UPDATED]: "disposal-update",
+    [PncOperation.NORMAL_DISPOSAL]: "normal-disposal",
+    [PncOperation.PENALTY_HEARING]: "penalty-notice-charge",
+    [PncOperation.REMAND]: "remand",
+    [PncOperation.SENTENCE_DEFERRED]: "sentence-deferred"
+  })[operation]
+
 export class PncApiError extends Error {
   get messages() {
     return this._messages
@@ -113,6 +123,7 @@ export default class PncGateway implements PncGatewayInterface {
         headers: {
           "X-Api-Key": this.config.key,
           correlationId,
+          "x-correlation-id": correlationId,
           accept: "application/json"
         },
         httpsAgent: new https.Agent({
@@ -132,7 +143,31 @@ export default class PncGateway implements PncGatewayInterface {
       })
   }
 
-  update(_request: PncUpdateRequest, _correlationId: string): Promise<PncApiError | void> {
-    return Promise.resolve()
+  update(request: PncUpdateRequest, correlationId: string): Promise<PncApiError | void> {
+    const path = lookupPathFromOperation(request.operation)
+
+    return axios
+      .post(`${this.config.url}/records/${path}`, request.request, {
+        headers: {
+          "X-Api-Key": this.config.key,
+          "correlation-id": correlationId,
+          "x-correlation-id": correlationId
+        },
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
+      })
+      .then((result) => {
+        if (result.status !== 204) {
+          return new PncApiError(["Error updating PNC"])
+        }
+      })
+      .catch((e) => {
+        if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
+          return new PncApiError(e.response?.data?.errors)
+        }
+
+        return new PncApiError([e.message])
+      })
   }
 }
