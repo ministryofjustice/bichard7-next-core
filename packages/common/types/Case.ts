@@ -3,7 +3,7 @@ import { z } from "zod"
 export const CaseSchema = z.object({
   annotated_msg: z.string(),
   court_reference: z.string().max(11),
-  create_ts: z.string().datetime(),
+  create_ts: z.date(),
   error_count: z.number(),
   error_id: z.number(),
   error_locked_by_id: z.string().nullable(),
@@ -11,7 +11,7 @@ export const CaseSchema = z.object({
   error_status: z.number().nullable(),
   is_urgent: z.number(),
   message_id: z.string(),
-  msg_received_ts: z.string().datetime(),
+  msg_received_ts: z.date(),
   org_for_police_filter: z.string(),
   phase: z.number().gt(0).lte(3),
   resolution_ts: z.string().datetime().nullable(),

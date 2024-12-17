@@ -1,3 +1,4 @@
+import type { Case } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
@@ -5,6 +6,10 @@ import type DataStoreGateway from "../interfaces/dataStoreGateway"
 class FakeDataStore implements DataStoreGateway {
   async canCaseBeResubmitted(_username: string, _caseId: number, _forceIds: number[]): Promise<boolean> {
     return Promise.resolve(true)
+  }
+
+  async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<Case> {
+    return Promise.resolve({} as Case)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {
