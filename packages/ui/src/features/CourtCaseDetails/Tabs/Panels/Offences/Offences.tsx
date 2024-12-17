@@ -1,4 +1,5 @@
 import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import { Exception } from "types/exceptions"
 import { OffenceDetails } from "./Offence/OffenceDetails"
 import { OffencesList } from "./OffencesList/OffencesList"
@@ -18,6 +19,8 @@ export const Offences = ({
   selectedOffenceSequenceNumber,
   exceptions
 }: OffencesProps) => {
+  useRefreshCsrfToken({ dependency: selectedOffenceSequenceNumber })
+
   return (
     <div hidden={!visible}>
       {selectedOffenceSequenceNumber !== undefined && offences[selectedOffenceSequenceNumber - 1] !== undefined ? (
