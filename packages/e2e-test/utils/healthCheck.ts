@@ -31,10 +31,8 @@ export default () => {
       .filter((system) => !system.healthy)
       .map((system) => system.name)
     if (failedSystems.length > 0) {
-      // eslint-disable-next-line no-console
       console.log(`Healthcheck failed. Unhealthy systems: ${failedSystems.join(", ")}`)
     } else {
-      // eslint-disable-next-line no-console
       console.log("Healthcheck passed")
     }
 

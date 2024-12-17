@@ -19,7 +19,6 @@ class PostgresHelper {
     this.pg = postgresConnection
   }
 
-  // eslint-disable-next-line class-methods-use-this
   clearExceptions() {
     return this.pg.none("delete from BR7OWN.ERROR_LIST")
   }
@@ -68,19 +67,16 @@ class PostgresHelper {
     await Promise.all(groupPromises)
   }
 
-  // eslint-disable-next-line class-methods-use-this
   closeConnection() {
     pgp.end()
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async dumpData() {
     const errorList = await this.pg.any("select * from BR7OWN.ERROR_LIST")
     const errorListTriggers = await this.pg.any("select * from BR7OWN.ERROR_LIST_TRIGGERS")
     return { errorList, errorListTriggers }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async resetEmailVerificationCode(emailAddress: string) {
     const query = `
       UPDATE br7own.users
@@ -90,7 +86,6 @@ class PostgresHelper {
     await this.pg.any(query, [process.env.VERIFICATION_CODE, emailAddress])
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async getEmailVerificationCode(emailAddress: string) {
     const query = `
       SELECT email_verification_code

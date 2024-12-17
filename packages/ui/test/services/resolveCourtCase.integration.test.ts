@@ -151,7 +151,6 @@ describe("resolveCourtCase", () => {
       // When there are no unresolved triggers the resolution time stamp also set
       expect(afterCourtCase.errorResolvedTimestamp).toEqual(afterCourtCase.resolutionTimestamp)
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const timeSinceCaseTriggersResolved = differenceInMilliseconds(new Date(), afterCourtCase.errorResolvedTimestamp!)
       expect(timeSinceCaseTriggersResolved).toBeGreaterThanOrEqual(0)
 

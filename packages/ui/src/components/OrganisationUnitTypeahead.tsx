@@ -53,7 +53,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
     items: inputItems,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
+
     onInputValueChange: ({ inputValue }) => {
       amend("nextSourceOrganisation")({
         resultIndex: resultIndex,

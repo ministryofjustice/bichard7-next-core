@@ -1,6 +1,7 @@
 import Badge, { BadgeColours } from "components/Badge"
 import { useCourtCase } from "context/CourtCaseContext"
 import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
+import { JSX } from "react"
 
 interface OffenceMatchingBadgeTableRowProps {
   offenceIndex: number

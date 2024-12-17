@@ -10,10 +10,6 @@ import insertUser from "./e2ePostgres/insertUser"
 import insertUserIntoGroup from "./e2ePostgres/insertUserIntoGroup"
 
 class End2EndPostgres extends Postgres implements DataStoreGateway {
-  constructor() {
-    super()
-  }
-
   async clearDb(): Promise<boolean> {
     return await clearAllTables(this.db)
   }

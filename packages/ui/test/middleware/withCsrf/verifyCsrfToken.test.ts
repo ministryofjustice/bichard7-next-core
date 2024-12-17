@@ -1,4 +1,3 @@
-/* eslint-disable import/first */
 jest.mock("utils/parseFormData")
 
 import type { IncomingMessage } from "http"
