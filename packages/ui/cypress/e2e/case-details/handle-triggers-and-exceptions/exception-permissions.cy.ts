@@ -11,15 +11,12 @@ describe("Exception permissions", () => {
       canManuallyResolveAndSubmit,
       exceptionStatus,
       exceptionLockedByAnotherUser,
-      loggedInAs,
-      exceptionsFeatureFlagEnabled
+      loggedInAs
     }) => {
       it(`Should ${
         canManuallyResolveAndSubmit ? "be able to resolve or submit" : "NOT be able to resolve or submit"
       } when exceptions are ${exceptionStatus}, ${
         exceptionLockedByAnotherUser ? "locked by another user" : "locked by current user"
-      } and user is a ${loggedInAs} ${
-        !exceptionsFeatureFlagEnabled ? "and exceptions feature flag is disabled" : ""
       }`, () => {
         cy.task("insertCourtCasesWithFields", [
           {
