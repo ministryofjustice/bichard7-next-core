@@ -6,7 +6,7 @@ import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsF
 import { PncOperation } from "../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
-import { generateHearingsAndDisposals } from "../hearingDetails"
+import { generateHearingsAndDisposals } from "../hearingDetails/generateHearingsAndDisposals"
 import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
 
 const SENTENCE_DEFERRED_HEARING_TYPE = "D"

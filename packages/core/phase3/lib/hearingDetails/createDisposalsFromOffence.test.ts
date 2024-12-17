@@ -1,9 +1,9 @@
-import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "../../types/PncQueryResult"
+import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
+import type { PncQueryResult } from "../../../types/PncQueryResult"
 
-import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
-import ResultClass from "../../types/ResultClass"
-import createPncDisposalFromOffence from "./createPncDisposalFromOffence"
+import generateAhoFromOffenceList from "../../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
+import ResultClass from "../../../types/ResultClass"
+import createDisposalsFromOffence from "./createDisposalsFromOffence"
 
 const generateResult = (
   pncDisposalType: number,
@@ -113,11 +113,11 @@ const generateAho = (
   return [aho, aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]] as const
 }
 
-describe("createPncDisposalFromOffence", () => {
+describe("createDisposalsFromOffence", () => {
   it("should return empty array if there are no results", () => {
     const [aho, offence] = generateAho([])
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toHaveLength(0)
   })
@@ -125,7 +125,7 @@ describe("createPncDisposalFromOffence", () => {
   it("should return empty array if there are no recordable results", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 1000 }, { pncDisposal: 1000 }])
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toHaveLength(0)
   })
@@ -133,7 +133,7 @@ describe("createPncDisposalFromOffence", () => {
   it("should return disposals when all PNC disposals are 2007", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2007 }, { pncDisposal: 2007 }])
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -145,7 +145,7 @@ describe("createPncDisposalFromOffence", () => {
       { pncDisposal: 2066, numberOfExpectedDisposals: 2 },
       { pncDisposal: 2060, numberOfExpectedDisposals: 1 }
     ])
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -156,7 +156,7 @@ describe("createPncDisposalFromOffence", () => {
       { pncDisposal: 2050, numberOfExpectedDisposals: 1 },
       { pncDisposal: 2060, numberOfExpectedDisposals: 2 }
     ])
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -168,7 +168,7 @@ describe("createPncDisposalFromOffence", () => {
       { pncDisposal: 2063, numberOfExpectedDisposals: 1 },
       { pncDisposal: 2068, numberOfExpectedDisposals: 1 }
     ])
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -180,7 +180,7 @@ describe("createPncDisposalFromOffence", () => {
       { pncDisposal: 2063, numberOfExpectedDisposals: 1 },
       { pncDisposal: 2068, numberOfExpectedDisposals: 1 }
     ])
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -188,7 +188,7 @@ describe("createPncDisposalFromOffence", () => {
   it("should ignore disposal 2063 when there was a disposal 2063 with result code 2060", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2063, resultCode: 2060 }, { pncDisposal: 2063 }])
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -199,7 +199,7 @@ describe("createPncDisposalFromOffence", () => {
       { pncDisposal: 3052, resultClass: ResultClass.ADJOURNMENT }
     ])
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toHaveLength(0)
   })
@@ -207,7 +207,7 @@ describe("createPncDisposalFromOffence", () => {
   it("should generate a PNC disposal using the sentence date from the matching offence when adjournment does not exist and disposal 3027 does not exist", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2050, resultClass: ResultClass.SENTENCE }], true)
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -215,7 +215,7 @@ describe("createPncDisposalFromOffence", () => {
   it("should generate a PNC disposal using the sentence date from the matching offence when adjournment exists", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2050, resultClass: ResultClass.ADJOURNMENT }], true)
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
@@ -223,7 +223,7 @@ describe("createPncDisposalFromOffence", () => {
   it("should generate a PNC disposal using the sentence date from the matching offence when disposal 3027 exists", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 3027, resultClass: ResultClass.SENTENCE }], true)
 
-    const disposals = createPncDisposalFromOffence(aho, offence)
+    const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })

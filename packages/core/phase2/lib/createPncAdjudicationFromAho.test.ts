@@ -21,7 +21,7 @@ describe("createPncAdjudicationFromAho", () => {
     expect(mockedCreatePncAdjudication).toHaveBeenCalledWith(1000, "", "", new Date("2024-05-10"), 0)
   })
 
-  it("should use the first recordable offence to create PNC ajdudication and count number of offences TIC correctly", () => {
+  it("should use the first recordable offence to create PNC adjudication and count number of offences TIC correctly", () => {
     const result = createPncAdjudicationFromAho(
       [
         { PNCDisposalType: 1000, NumberOfOffencesTIC: 2, Verdict: "NC", PleaStatus: "DEN" } as Result,

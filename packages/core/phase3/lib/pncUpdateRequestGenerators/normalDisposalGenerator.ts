@@ -16,10 +16,8 @@ import isResultCompatibleWithDisposal from "../../../phase2/lib/isResultCompatib
 import { PncOperation } from "../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
-import {
-  generateArrestHearingsAdjudicationsAndDisposals,
-  generateHearingsAdjudicationsAndDisposals
-} from "../hearingDetails"
+import { generateArrestHearingsAdjudicationsAndDisposals } from "../hearingDetails/generateArrestHearingsAdjudicationsAndDisposals"
+import { generateHearingsAdjudicationsAndDisposals } from "../hearingDetails/generateHearingsAdjudicationsAndDisposals"
 import preProcessAsn from "../preProcessAsn"
 
 const COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
