@@ -86,4 +86,29 @@ describe("Triggers and exceptions tabs", () => {
     cy.get(".case-details-sidebar #exceptions").should("exist")
     cy.get(".case-details-sidebar #exceptions").should("be.visible")
   })
+
+  it("will refresh CSRF token when clicking Trigger tab", () => {
+    cy.task("clearTriggers")
+    cy.task("clearCourtCases")
+    cy.task("insertCourtCasesWithFields", [
+      {
+        errorLockedByUsername: null,
+        triggerLockedByUsername: null,
+        orgForPoliceFilter: "01"
+      }
+    ])
+
+    loginAndVisit("GeneralHandler", caseURL)
+
+    cy.get(".case-details-sidebar #triggers-tab").should("exist")
+
+    cy.intercept("GET", `/bichard/api/refresh-csrf-token`).as("csrfToken")
+
+    cy.get(".case-details-sidebar #triggers-tab").click()
+
+    cy.wait("@csrfToken")
+
+    const regex = new RegExp("CSRFToken%2Fapi%2Frefresh-csrf-token=")
+    cy.get("@csrfToken").its("response.body.csrfToken").should("match", regex)
+  })
 })

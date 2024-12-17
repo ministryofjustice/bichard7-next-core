@@ -1,11 +1,9 @@
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCsrfToken } from "context/CsrfTokenContext"
-import useFirstLoad from "hooks/useFirstLoad"
-import { useCallback, useEffect, useState } from "react"
+import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
+import { useCallback, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import type CaseDetailsTab from "types/CaseDetailsTab"
 import type NavigationHandler from "types/NavigationHandler"
-import refreshCsrfToken from "utils/csrf/refreshCsrfToken"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
 import TriggersAndExceptions from "./Sidebar/Sidebar"
 import { CourtCaseDetailsPanel } from "./Tabs/CourtCaseDetailsPanels"
@@ -25,12 +23,12 @@ const sideBarWidth = "33%"
 const contentWidth = "67%"
 
 const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAndSubmit }) => {
-  const { updateCsrfToken } = useCsrfToken()
   const { courtCase } = useCourtCase()
   const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
   const [selectedOffenceSequenceNumber, setSelectedOffenceSequenceNumber] = useState<number | undefined>(undefined)
   const [useBeforeUnload, setUseBeforeUnload] = useState<boolean>(false)
-  const firstLoad = useFirstLoad()
+
+  useRefreshCsrfToken({ dependency: activeTab })
 
   const stopLeavingFn = useCallback((newValue: boolean) => {
     setUseBeforeUnload(newValue)
@@ -51,14 +49,6 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
         break
     }
   }
-
-  useEffect(() => {
-    if (firstLoad) {
-      return
-    }
-
-    refreshCsrfToken(updateCsrfToken)
-  }, [activeTab, firstLoad, updateCsrfToken])
 
   return (
     <>

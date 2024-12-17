@@ -3,12 +3,10 @@ import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Tabs } from "govuk-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import type NavigationHandler from "types/NavigationHandler"
 
-import { useCsrfToken } from "context/CsrfTokenContext"
-import useFirstLoad from "hooks/useFirstLoad"
-import refreshCsrfToken from "utils/csrf/refreshCsrfToken"
+import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import ExceptionsList from "./ExceptionsList"
 import PncDetails from "./PncDetails/PncDetails"
 import { SidebarContainer, UnpaddedPanel } from "./Sidebar.styles"
@@ -29,7 +27,6 @@ interface Props {
 const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
-  const { updateCsrfToken } = useCsrfToken()
 
   const permissions: { [tabId: number]: boolean } = {
     [SidebarTab.Exceptions]: currentUser.hasAccessTo[Permission.Exceptions],
@@ -48,17 +45,8 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
   }
 
   const [selectedTab, setSelectedTab] = useState(defaultTab)
-  const firstLoad = useFirstLoad()
 
-  useEffect(() => {
-    if (firstLoad) {
-      return
-    }
-
-    if (selectedTab === SidebarTab.Triggers) {
-      refreshCsrfToken(updateCsrfToken)
-    }
-  }, [firstLoad, selectedTab, updateCsrfToken])
+  useRefreshCsrfToken({ dependency: selectedTab })
 
   return (
     <SidebarContainer className={`side-bar case-details-sidebar`}>
