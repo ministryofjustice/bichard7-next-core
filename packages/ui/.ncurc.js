@@ -4,7 +4,7 @@
     - Conflict with GDS9
   - cookies-next
     - v5 contains breaking changes
-  - react, react-dom
+  - react, react-dom, @types/react, @types/react-dom
     - Contains breaking changes
     - govuk-react only on react 18
 
@@ -13,7 +13,7 @@
   - next
     - 13.4.13 causes failures with fetch
 */
-const pinned = ["styled-components", "cookies-next", "react", "react-dom"]
+const pinned = ["styled-components", "cookies-next", "react", "react-dom", "@types/react", "@types/react-dom"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 
