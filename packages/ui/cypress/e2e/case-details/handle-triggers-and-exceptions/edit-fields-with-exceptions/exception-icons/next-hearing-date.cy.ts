@@ -105,22 +105,6 @@ describe("Next hearing date", () => {
     cy.get("ul.moj-sub-navigation__list>li").eq(3).find(".checkmark-icon").should("exist")
   })
 
-  it("Should not display any icon numbers when exceptionsEnabled is false for user", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
-        errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
-      }
-    ])
-
-    loginAndVisit("NoExceptionsFeatureFlag", "/bichard/court-cases/0")
-
-    cy.get("ul.moj-sub-navigation__list>li").eq(3).contains("Offences").contains("3").should("not.exist")
-  })
-
   it("Should not display exceptions count icon when exception is resolved manually", () => {
     cy.task("insertCourtCasesWithFields", [
       {

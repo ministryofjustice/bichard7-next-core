@@ -23,8 +23,7 @@ export type ExceptionDetails = {
 const getTabDetails = (
   exceptions: Exception[],
   updatedFields: Amendments,
-  savedAmendments: Amendments,
-  exceptionsEnabled: boolean
+  savedAmendments: Amendments
 ): TabDetails[] => {
   const nextHearingDateExceptionsDetails = getNextHearingDateExceptionsDetails(exceptions, savedAmendments)
   const nextHearingLocationExceptionsDetails = getNextHearingLocationExceptionsDetails(exceptions, savedAmendments)
@@ -54,13 +53,12 @@ const getTabDetails = (
 
   offencesExceptionsResolved &&= ineditableOffenceExceptions === 0
 
-  const defendantExceptionsCount = exceptionsEnabled ? asnExceptionDetails.ExceptionsCount : 0
-  const offencesExceptionsCount = exceptionsEnabled
-    ? nextHearingDateExceptionsDetails.ExceptionsCount +
-      nextHearingLocationExceptionsDetails.ExceptionsCount +
-      offencesMatchedExceptionsDetails.ExceptionsCount +
-      ineditableOffenceExceptions
-    : 0
+  const defendantExceptionsCount = asnExceptionDetails.ExceptionsCount
+  const offencesExceptionsCount =
+    nextHearingDateExceptionsDetails.ExceptionsCount +
+    nextHearingLocationExceptionsDetails.ExceptionsCount +
+    offencesMatchedExceptionsDetails.ExceptionsCount +
+    ineditableOffenceExceptions
 
   return [
     {

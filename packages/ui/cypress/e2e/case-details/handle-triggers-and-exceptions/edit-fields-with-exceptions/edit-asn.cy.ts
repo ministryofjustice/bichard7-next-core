@@ -499,12 +499,6 @@ describe("ASN", () => {
     cy.get("input#asn").should("not.exist")
   })
 
-  it("Should not display an editable field for ASN when exceptionsEnabled is false for user", () => {
-    loginAndVisit("NoExceptionsFeatureFlag", "/bichard/court-cases/0")
-
-    cy.get("input#asn").should("not.exist")
-  })
-
   describe("when I submit resolved exceptions I should not see the same value in the notes", () => {
     it("Should validate and auto-save the ASN correction and only update notes once", () => {
       const errorId = 0

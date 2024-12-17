@@ -280,23 +280,6 @@ describe("Offences exceptions icons", () => {
     cy.get("#offences tbody tr:nth-child(2)").find(".checkmark-icon").should("exist")
   })
 
-  it("Should not display exceptions warning icons when exeptionsEnabled is false for a user", () => {
-    cy.task("insertCourtCasesWithFields", [
-      {
-        orgForPoliceFilter: "01",
-        hearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100102,
-        updatedHearingOutcome: nextHearingDateExceptions.hearingOutcomeXmlHO100102,
-        errorCount: 1,
-        errorLockedByUsername: "GeneralHandler"
-      }
-    ])
-
-    loginAndVisit("NoExceptionsFeatureFlag", "/bichard/court-cases/0")
-
-    clickTab("Offences")
-    cy.get("#offences tbody tr:nth-child(1)").find(".warning-icon").should("not.exist")
-  })
-
   it("Should display 2 next to the Offences tab text when HO100310 is raised", () => {
     cy.task("insertCourtCasesWithFields", [
       {

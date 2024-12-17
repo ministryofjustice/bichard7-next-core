@@ -12,7 +12,7 @@ const TemplateUser: Partial<User> = {
   password: "",
   surname: "01",
   email: "bichard01@example.com",
-  featureFlags: { test_flag: true, exceptionsEnabled: true, offenceMatchingEnabled: true, pncDetailsTabEnabled: true }
+  featureFlags: { test_flag: true, pncDetailsTabEnabled: true }
 }
 
 const getDummyUser = async (overrides?: Partial<User>): Promise<User> =>

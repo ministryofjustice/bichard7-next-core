@@ -7,25 +7,12 @@ import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { findExceptions } from "types/ErrorMessages"
-import { DisplayFullUser } from "types/display/Users"
 import { Exception } from "types/exceptions"
 import getExceptionDefinition from "utils/exceptionDefinition/getExceptionDefinition"
 import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
 import findCandidates from "../../../../../../utils/offenceMatcher/findCandidates"
 import { TableRow } from "../../TableRow"
 import OffenceMatcher from "./OffenceMatcher"
-
-const enabled = (user: DisplayFullUser) => {
-  const enabledInProduction = true // change this if we need to disable in production for everyone
-  const { exceptionsEnabled, offenceMatchingEnabled } = user.featureFlags
-  const featureFlagsEnabled = exceptionsEnabled && offenceMatchingEnabled
-
-  const isProduction = process.env.WORKSPACE === "production"
-  if (!isProduction) {
-    return featureFlagsEnabled
-  }
-  return enabledInProduction && featureFlagsEnabled
-}
 
 type Props = {
   offenceIndex: number
@@ -70,8 +57,7 @@ export const OffenceMatching = ({
       ...noneOffenceMatchingExceptions
     ) || getExceptionDefinition(findExceptionByOffenceNumber[0]?.code)?.shortDescription
 
-  const displayOffenceMatcher =
-    enabled(currentUser) && exceptions.some((e) => offenceMatchingExceptions.includes(e.code))
+  const displayOffenceMatcher = exceptions.some((e) => offenceMatchingExceptions.includes(e.code))
   const userCanMatchOffence =
     courtCase.errorLockedByUsername === currentUser?.username && courtCase.errorStatus === "Unresolved"
 

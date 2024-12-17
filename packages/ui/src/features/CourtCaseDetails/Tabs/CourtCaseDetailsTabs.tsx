@@ -1,5 +1,4 @@
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCurrentUser } from "context/CurrentUserContext"
 import type CaseDetailsTab from "types/CaseDetailsTab"
 import getTabDetails from "utils/tabDetails/getTabDetails"
 import { CourtCaseDetailsSingleTab } from "./CourtCaseDetailsSingleTab"
@@ -13,10 +12,8 @@ interface CourtCaseDetailsTabsProps {
 
 export const CourtCaseDetailsTabs = ({ activeTab, onTabClick, width }: CourtCaseDetailsTabsProps) => {
   const { courtCase, amendments, savedAmendments } = useCourtCase()
-  const currentUser = useCurrentUser()
-  const exceptionsEnabled = currentUser.featureFlags?.exceptionsEnabled
 
-  const tabDetails = getTabDetails(courtCase.aho.Exceptions, amendments, savedAmendments, exceptionsEnabled)
+  const tabDetails = getTabDetails(courtCase.aho.Exceptions, amendments, savedAmendments)
 
   return (
     <StyledNav width={width} className={`moj-sub-navigation nav`} aria-label="Sub navigation">

@@ -1,7 +1,6 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import WarningIcon from "components/WarningIcon"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCurrentUser } from "context/CurrentUserContext"
 import { Table } from "govuk-react"
 import Image from "next/image"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -18,7 +17,6 @@ interface OffencesListRowProps {
 
 export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesListRowProps) => {
   const { courtCase, amendments } = useCourtCase()
-  const currentUser = useCurrentUser()
   const exceptions = courtCase.aho.Exceptions
 
   const offenceAlerts = getOffenceAlertsDetails(exceptions, amendments)
@@ -44,9 +42,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
 
   return (
     <Table.Row>
-      <Table.Cell>
-        {currentUser.featureFlags?.exceptionsEnabled && courtCase.errorStatus !== "Resolved" && offenceAlertIcon}
-      </Table.Cell>
+      <Table.Cell>{courtCase.errorStatus !== "Resolved" && offenceAlertIcon}</Table.Cell>
       <Table.Cell>{offence.CourtOffenceSequenceNumber}</Table.Cell>
       <Table.Cell>{formatDisplayedDate(offence.ActualOffenceStartDate.StartDate).toString()}</Table.Cell>
       <Table.Cell>{getOffenceCode(offence) || ""}</Table.Cell>

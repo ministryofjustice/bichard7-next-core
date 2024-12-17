@@ -4,7 +4,6 @@ import EditableFieldTableRow from "components/EditableFields/EditableFieldTableR
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import OrganisationUnitTypeahead from "components/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCurrentUser } from "context/CurrentUserContext"
 import { useState } from "react"
 import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import { Exception } from "types/exceptions"
@@ -28,7 +27,6 @@ export const NextHearingLocationField = ({
   isCaseEditable
 }: NextHearingLocationFieldProps) => {
   const { amendments } = useCourtCase()
-  const currentUser = useCurrentUser()
   const amendedNextHearingLocation = getNextHearingLocationValue(amendments, offenceIndex, resultIndex) ?? ""
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
   const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>([])
@@ -36,8 +34,7 @@ export const NextHearingLocationField = ({
 
   const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
 
-  const isEditable =
-    isCaseEditable && hasNextHearingLocationException(exceptions) && currentUser.featureFlags?.exceptionsEnabled
+  const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
 
   return (
     <EditableFieldTableRow
