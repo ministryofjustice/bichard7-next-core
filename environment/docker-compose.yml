@@ -377,7 +377,7 @@ services:
       CJSE_NGINX_PORT_HTTPS: 4443
       CJSE_NGINX_PROXYSSLVERIFY: "off"
       CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
-      CJSE_NGINX_UI_DOMAIN: ui:9443
+      CJSE_NGINX_UI_DOMAIN: ui
       CJSE_NGINX_USERSERVICE_DOMAIN: user-service
     healthcheck:
       test: curl --insecure --fail https://localhost:4443/elb-status
