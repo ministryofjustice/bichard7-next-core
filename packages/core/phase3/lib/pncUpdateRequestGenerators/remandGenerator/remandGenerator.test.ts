@@ -112,7 +112,7 @@ describe("remandGenerator", () => {
     }
   )
 
-  it("should use the correct court house code when first instance warrant (LE) result qualifier exists and result code is undated warrant (4577)", () => {
+  it("should use the correct court house name types when first instance warrant (LE) result qualifier exists and result code is undated warrant (4577)", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable =
       [{ Code: "LE" }]
@@ -130,7 +130,7 @@ describe("remandGenerator", () => {
     })
   })
 
-  it("should use the correct court house code when first instance warrant (LE) result qualifier exists and result code is dated warrant (4575)", () => {
+  it("should use the correct court house names when first instance warrant (LE) result qualifier exists and result code is dated warrant (4575)", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].ResultQualifierVariable =
       [{ Code: "LE" }]

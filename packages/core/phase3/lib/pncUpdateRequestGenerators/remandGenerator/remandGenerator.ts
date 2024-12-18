@@ -8,10 +8,10 @@ import { PncOperation } from "../../../../types/PncOperation"
 import addPaddingToBailCondition from "../../addPaddingToBailCondition"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
 import preProcessAsn from "../../preProcessAsn"
-import generateCourtNameType from "./generateCourtNameType"
+import generateCourtNameTypes from "./generateCourtNameTypes"
 import getCourtHouseName from "./getCourtHouseName"
 import getPsaCourtCode from "./getPsaCourtCode"
-import getRemandLocationCourt from "./getRemandLocationCourtCode"
+import getRemandCourtCode from "./getRemandCourtCode"
 import getResultsForRemand from "./getResultsForRemand"
 
 const LOCAL_AUTHORITY_CODE = "0000"
@@ -32,9 +32,9 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   const bailConditions =
     pncRemandStatus === "C" ? [] : hearingDefendant.BailConditions.flatMap(addPaddingToBailCondition)
 
-  const remandLocationCourt = getRemandLocationCourt(hearing, results)
-  if (isError(remandLocationCourt)) {
-    return remandLocationCourt
+  const remandCourtCode = getRemandCourtCode(hearing, results)
+  if (isError(remandCourtCode)) {
+    return remandCourtCode
   }
 
   const psaCourtCode = getPsaCourtCode(hearing, results)
@@ -43,12 +43,12 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
   }
 
   const courtHouseName = getCourtHouseName(hearing, results)
-
-  const [courtNameType1, courtNameType2] = generateCourtNameType(
+  const [courtNameType1, courtNameType2] = generateCourtNameTypes(
     psaCourtCode,
-    hearing.CourtType ?? "",
-    courtHouseName ?? "",
-    remandLocationCourt
+    remandCourtCode,
+    hearing.CourtType,
+    courtHouseName,
+    results
   )
 
   const arrestSummonsNumber = preProcessAsn(hearingDefendant.ArrestSummonsNumber)
@@ -66,7 +66,7 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
         ? formatDateSpecifiedInResult(new Date(results[0].NextHearingDate), true)
         : "",
       pncRemandStatus: pncRemandStatus ?? "",
-      remandLocationCourt,
+      remandLocationCourt: remandCourtCode,
       psaCourtCode,
       courtNameType1,
       courtNameType2,

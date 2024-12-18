@@ -15,7 +15,7 @@ const noAdjudicationResultClasses = [
 
 const adjudicationResultClasses = [ResultClass.ADJOURNMENT_POST_JUDGEMENT, ResultClass.ADJOURNMENT_WITH_JUDGEMENT]
 
-const IsRemandOperationMatchingResult = (result: Result, operation: Operation<PncOperation.REMAND>) => {
+const isRemandOperationMatchingResult = (result: Result, operation: Operation<PncOperation.REMAND>) => {
   const nextHearingDateMatches =
     (!result.NextHearingDate && !operation.data?.nextHearingDate) ||
     (result.NextHearingDate &&
@@ -38,7 +38,7 @@ const getResultsForRemand = (offences: Offence[], operation: Operation<PncOperat
     .flatMap((offence) =>
       offence.Result.filter(
         (result) =>
-          isRecordableResult(result) && IsRemandOperationMatchingResult(result, operation) && isRemandRequired(result)
+          isRecordableResult(result) && isRemandOperationMatchingResult(result, operation) && isRemandRequired(result)
       )
     )
 

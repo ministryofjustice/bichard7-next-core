@@ -109,104 +109,65 @@ describe("getResultsForRemand", () => {
   )
 
   it("should return the matching result", () => {
+    const offence1Result1 = {
+      NextHearingDate: "2024-12-11T10:11:12.000Z",
+      NextResultSourceOrganisation: {
+        TopLevelCode: "A",
+        SecondLevelCode: "01",
+        ThirdLevelCode: "CJ",
+        BottomLevelCode: "00",
+        OrganisationUnitCode: "A01CJ00"
+      },
+      PNCDisposalType: 2051,
+      PNCAdjudicationExists: true,
+      ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+    } as Result
+    const offence2Result1 = {
+      NextHearingDate: "2024-12-11T10:11:12.000Z",
+      NextResultSourceOrganisation: {
+        TopLevelCode: "A",
+        SecondLevelCode: "02",
+        ThirdLevelCode: "CJ",
+        BottomLevelCode: "00",
+        OrganisationUnitCode: "A01CJ00"
+      },
+      PNCDisposalType: 2060,
+      PNCAdjudicationExists: false,
+      ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
+    } as Result
+    const offence2Result2 = {
+      NextHearingDate: "2024-12-11T10:11:12.000Z",
+      NextResultSourceOrganisation: {
+        TopLevelCode: "A",
+        SecondLevelCode: "01",
+        ThirdLevelCode: "CJ",
+        BottomLevelCode: "00",
+        OrganisationUnitCode: "A01CJ00"
+      },
+      PNCDisposalType: 2063,
+      PNCAdjudicationExists: false,
+      ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT
+    } as Result
+
     const offences = [
       {
         CriminalProsecutionReference: {
           OffenceReasonSequence: "001"
         },
-        Result: [
-          {
-            NextHearingDate: "2024-12-11T10:11:12.000Z",
-            NextResultSourceOrganisation: {
-              TopLevelCode: "A",
-              SecondLevelCode: "01",
-              ThirdLevelCode: "CJ",
-              BottomLevelCode: "00",
-              OrganisationUnitCode: "A01CJ00"
-            },
-            PNCDisposalType: 2051,
-            PNCAdjudicationExists: true,
-            ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
-          }
-        ] as Result[]
+        Result: [offence1Result1]
       },
       {
         CriminalProsecutionReference: {
           OffenceReasonSequence: "001"
         },
-        Result: [
-          {
-            NextHearingDate: "2024-12-11T10:11:12.000Z",
-            NextResultSourceOrganisation: {
-              TopLevelCode: "A",
-              SecondLevelCode: "01",
-              ThirdLevelCode: "CJ",
-              BottomLevelCode: "00",
-              OrganisationUnitCode: "A01CJ00"
-            },
-            PNCDisposalType: 2060,
-            PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
-          },
-          {
-            NextHearingDate: "2024-12-11T10:11:12.000Z",
-            NextResultSourceOrganisation: {
-              TopLevelCode: "A",
-              SecondLevelCode: "01",
-              ThirdLevelCode: "CJ",
-              BottomLevelCode: "00",
-              OrganisationUnitCode: "A01CJ00"
-            },
-            PNCDisposalType: 2063,
-            PNCAdjudicationExists: false,
-            ResultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT
-          }
-        ] as Result[]
+        Result: [offence2Result1, offence2Result2]
       }
     ] as Offence[]
 
     const results = getResultsForRemand(offences, operation)
 
-    expect(results).toStrictEqual([
-      {
-        NextHearingDate: "2024-12-11T10:11:12.000Z",
-        NextResultSourceOrganisation: {
-          TopLevelCode: "A",
-          SecondLevelCode: "01",
-          ThirdLevelCode: "CJ",
-          BottomLevelCode: "00",
-          OrganisationUnitCode: "A01CJ00"
-        },
-        PNCDisposalType: 2051,
-        PNCAdjudicationExists: true,
-        ResultClass: "Adjournment with Judgement"
-      },
-      {
-        NextHearingDate: "2024-12-11T10:11:12.000Z",
-        NextResultSourceOrganisation: {
-          TopLevelCode: "A",
-          SecondLevelCode: "01",
-          ThirdLevelCode: "CJ",
-          BottomLevelCode: "00",
-          OrganisationUnitCode: "A01CJ00"
-        },
-        PNCDisposalType: 2060,
-        PNCAdjudicationExists: false,
-        ResultClass: "Adjournment with Judgement"
-      },
-      {
-        NextHearingDate: "2024-12-11T10:11:12.000Z",
-        NextResultSourceOrganisation: {
-          TopLevelCode: "A",
-          SecondLevelCode: "01",
-          ThirdLevelCode: "CJ",
-          BottomLevelCode: "00",
-          OrganisationUnitCode: "A01CJ00"
-        },
-        PNCDisposalType: 2063,
-        PNCAdjudicationExists: false,
-        ResultClass: "Adjournment pre Judgement"
-      }
-    ])
+    expect(results).toHaveLength(2)
+    expect(results[0]).toBe(offence1Result1)
+    expect(results[1]).toBe(offence2Result2)
   })
 })

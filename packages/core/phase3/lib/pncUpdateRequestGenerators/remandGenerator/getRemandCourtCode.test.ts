@@ -1,7 +1,9 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-import { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+
+import type { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import getPncCourtCode from "../../getPncCourtCode"
-import getRemandLocationCourtCode from "./getRemandLocationCourtCode"
+import getRemandCourtCode from "./getRemandCourtCode"
 
 jest.mock("../../getPncCourtCode")
 
@@ -28,7 +30,7 @@ describe("getRemandLocationCourtCode", () => {
     it("should return the PNC court code", () => {
       mockedGetPncCourtCode.mockReturnValue("0413")
 
-      const remandLocationCourtCode = getRemandLocationCourtCode(hearing, results)
+      const remandLocationCourtCode = getRemandCourtCode(hearing, results)
 
       expect(isError(remandLocationCourtCode)).toBe(false)
       expect(remandLocationCourtCode).toBe("0413")
@@ -37,7 +39,7 @@ describe("getRemandLocationCourtCode", () => {
     it("should return error when it fails to get the PNC court code", () => {
       mockedGetPncCourtCode.mockReturnValue(Error("Dummy error"))
 
-      const remandLocationCourtCode = getRemandLocationCourtCode(hearing, results)
+      const remandLocationCourtCode = getRemandCourtCode(hearing, results)
 
       expect(isError(remandLocationCourtCode)).toBe(true)
       expect((remandLocationCourtCode as Error).message).toBe("Dummy error")
@@ -51,7 +53,7 @@ describe("getRemandLocationCourtCode", () => {
       }
     ] as Result[]
 
-    const remandLocationCourtCode = getRemandLocationCourtCode(hearing, results)
+    const remandLocationCourtCode = getRemandCourtCode(hearing, results)
 
     expect(isError(remandLocationCourtCode)).toBe(false)
     expect(remandLocationCourtCode).toBe("9998")

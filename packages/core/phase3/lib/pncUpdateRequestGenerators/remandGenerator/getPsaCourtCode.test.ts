@@ -1,5 +1,7 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-import { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+
+import type { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import getPncCourtCode from "../../getPncCourtCode"
 import getPsaCourtCode from "./getPsaCourtCode"
 

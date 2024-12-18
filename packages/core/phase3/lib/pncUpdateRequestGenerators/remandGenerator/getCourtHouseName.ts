@@ -1,12 +1,13 @@
+import type { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import isDatedWarrantIssued from "../../../../lib/isDatedWarrantIssued"
 import isUndatedWarrantIssued from "../../../../lib/isUndatedWarrantIssued"
-import { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
 
 const FIRST_INSTANCE_QUALIFIER = "LE"
-const FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE = "*****1ST INSTANCE WARRANT ISSUED*****"
-const FAILED_TO_APPEAR_TEXT = "*****FAILED TO APPEAR*****"
-const FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE = "*****1ST INSTANCE DATED WARRANT ISSUED*****"
-const FAILED_TO_APPEAR_DATED_TEXT = "***** FTA DATED WARRANT *****"
+const FAILED_TO_APPEAR = "*****FAILED TO APPEAR*****"
+const FIRST_INSTANCE_UNDATED_WARRANT_ISSUED = "*****1ST INSTANCE WARRANT ISSUED*****"
+const FIRST_INSTANCE_DATED_WARRANT_ISSUED = "*****1ST INSTANCE DATED WARRANT ISSUED*****"
+const FAILED_TO_APPEAR_DATED_WARRANT_ISSUED = "***** FTA DATED WARRANT *****"
 
 const getCourtHouseName = (hearing: Hearing, results: Result[]): string | undefined => {
   const hasFirstInstanceQualifier = results.some((result) =>
@@ -14,11 +15,11 @@ const getCourtHouseName = (hearing: Hearing, results: Result[]): string | undefi
   )
 
   if (isUndatedWarrantIssued(results[0].CJSresultCode)) {
-    return hasFirstInstanceQualifier ? FAILED_TO_APPEAR_TEXT_FIRST_INSTANCE : FAILED_TO_APPEAR_TEXT
+    return hasFirstInstanceQualifier ? FIRST_INSTANCE_UNDATED_WARRANT_ISSUED : FAILED_TO_APPEAR
   }
 
   if (isDatedWarrantIssued(results[0].CJSresultCode)) {
-    return hasFirstInstanceQualifier ? FAILED_TO_APPEAR_DATED_TEXT_FIRST_INSTANCE : FAILED_TO_APPEAR_DATED_TEXT
+    return hasFirstInstanceQualifier ? FIRST_INSTANCE_DATED_WARRANT_ISSUED : FAILED_TO_APPEAR_DATED_WARRANT_ISSUED
   }
 
   return hearing.CourtHouseName

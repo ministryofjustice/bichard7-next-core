@@ -1,4 +1,5 @@
-import { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+
 import getCourtHouseName from "./getCourtHouseName"
 
 const datedWarrantIssuedResultCode = 4575
