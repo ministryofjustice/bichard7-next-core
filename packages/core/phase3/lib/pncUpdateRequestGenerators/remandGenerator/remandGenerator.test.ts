@@ -94,7 +94,7 @@ describe("remandGenerator", () => {
   })
 
   it.each(["PB", "PR"])(
-    "should not retuen any bail conditions when PNC remand status is custody (%s)",
+    "should not return any bail conditions when PNC remand status is custody (%s)",
     (remandCjsCode) => {
       const pncUpdateDataset = createPncUpdateDataset()
       pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.RemandStatus = remandCjsCode
