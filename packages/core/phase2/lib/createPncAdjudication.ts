@@ -3,7 +3,7 @@ import type { PncAdjudication } from "../../types/PncQueryResult"
 const GUILTY_DISPOSALS = [1029, 1030]
 const NOT_GUILTY_DISPOSALS = [2006, 2050, 2051]
 const EMPTY_VERDICT_DISPOSALS = [2058, 2059, 2060]
-const NON_DATE_DISPOSALS = [2059, 2060, 2058]
+const NON_DATE_DISPOSALS = [2058, 2059, 2060]
 const BLANK_PLEA_STATUS_CODES = [2060]
 
 const preProcessVerdict = (disposalType: number | undefined, verdict: string): string => {
