@@ -355,7 +355,7 @@ services:
     ports:
       - 4543:443
     healthcheck:
-      test: curl -f -L --insecure https://localhost:9443/bichard/api/health
+      test: curl -f -L --insecure https://localhost:443/bichard/api/health
       interval: 2s
       timeout: 2s
       retries: 10
