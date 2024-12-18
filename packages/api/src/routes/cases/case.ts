@@ -11,7 +11,7 @@ import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreG
 import auth from "../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
-import formatForceNumbers from "../../services/formatForceNumbers"
+import fetchFullCase from "../../useCases/fetchFullCase"
 
 type HandlerProps = {
   caseId: number
@@ -28,7 +28,7 @@ const schema = {
     })
   }),
   response: {
-    [OK]: CaseSchema.openapi({ description: "Worked" }),
+    [OK]: CaseSchema.openapi({ description: "A Case" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
@@ -36,19 +36,27 @@ const schema = {
   tags: ["Cases"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, db, reply, user }: HandlerProps) => {
-  const forceIds = formatForceNumbers(user.visible_forces)
+const handler = async ({ caseId, db, reply, user }: HandlerProps) =>
+  fetchFullCase(user, db, caseId)
+    .then((foundCase) => {
+      reply.code(OK).send(foundCase)
+    })
+    .catch((err) => {
+      reply.log.error(err)
+      reply.code(FORBIDDEN).send()
+    })
 
-  try {
-    const foundCase = await db.fetchFullCase(caseId, forceIds)
+// {
+//  try {
+//   const foundCase = await fetchFullCase(user, db, caseId)
 
-    reply.code(OK).send(foundCase)
-  } catch (err) {
-    reply.log.error(err)
+//    reply.code(OK).send(foundCase)
+//  } catch (err) {
+//    reply.log.error(err)
 
-    reply.code(FORBIDDEN).send()
-  }
-}
+//    reply.code(FORBIDDEN).send()
+//   }
+// }
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get("/cases/:caseId", { schema }, async (req, reply) => {
