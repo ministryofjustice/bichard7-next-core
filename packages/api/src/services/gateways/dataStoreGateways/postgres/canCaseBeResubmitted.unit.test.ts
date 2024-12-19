@@ -8,15 +8,7 @@ describe("canCaseBeResubmitted", () => {
   it("throws an error if the case isn't found", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
 
-    let err: Error | undefined
-    try {
-      await filter(sql, "username", 0, [])
-    } catch (error) {
-      err = error as Error
-    }
-
-    expect(err).toBeDefined()
-    expect(err?.message).toBe("Case not found")
+    await expect(filter(sql, "username", 0, [])).rejects.toThrow("Case not found")
   })
 
   it("returns false if case isn't locked by given user", async () => {
