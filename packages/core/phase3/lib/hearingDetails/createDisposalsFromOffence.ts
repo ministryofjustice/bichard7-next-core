@@ -26,16 +26,16 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
     const resultCode = recordableResult.CJSresultCode
     let ignore2063Disposal = false
     found3027 ||= disposalCode === 3027
-    const generatedDisposals = createPncDisposalsFromResult(recordableResult)
+    const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
 
     if (disposalCode === 2060 && disposalFor2060Result == null) {
-      disposalFor2060Result = generatedDisposals
+      disposalFor2060Result = pncDisposalsFromResult
     } else if (disposalCode === 2050) {
       found2050Result = true
     } else if (disposalCode === 2063) {
       if (resultCode === 2060) {
         converted2060Result = true
-        disposalFor2060Result = generatedDisposals
+        disposalFor2060Result = pncDisposalsFromResult
       } else {
         found2063Result = true
       }
@@ -46,7 +46,7 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
     }
 
     if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
-      pncDisposals.push(...generatedDisposals)
+      pncDisposals.push(...pncDisposalsFromResult)
     }
   }
 
