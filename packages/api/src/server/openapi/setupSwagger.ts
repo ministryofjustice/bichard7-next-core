@@ -29,8 +29,7 @@ export default async function (fastify: FastifyInstance) {
       tags: [
         { description: "Cases endpoints", name: "Cases V1" },
         { description: "Health endpoint", name: "Health V1" },
-        { description: "Demo endpoints", name: "Demo V1" },
-        { description: "Demo endpoints", name: "Demo V2" }
+        { description: "Demo endpoints", name: "Demo V1" }
       ]
     },
     transform: fastifyZodOpenApiTransform
