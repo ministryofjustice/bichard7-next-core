@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>API Design | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../style.css" rel="stylesheet">
+    <link href="./../../style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../../../modal.js"></script>
+    <script type="text/javascript" src="../../../svg-modal.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, '../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="">Home</a><a href="../" class="is-active">Decisions</a><a href="../../software-systems/" class="">Software Systems</a><a href="../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../bichard/" class="">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../libra/" class="">Libra</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../police-national-computer/" class="">Police National Computer</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid">
+        <div class="content p-3">
+          <div><h1>8. API Design</h1>
+<p>Date: 2024-12-18</p>
+<h2>Status</h2>
+<p>Accepted</p>
+<h2>Context</h2>
+<p>We want the API to be well-designed and consistent. To achieve this we are proposing the following approach which lays out some of the key design decisions when building an API:</p>
+<h3>RESTful API First</h3>
+<p>We will aim to use a RESTful approach as our primary design for the API. This means:</p>
+<ul>
+ <li>Using HTTP verbs to represent actions</li>
+ <li>Modelling our domain objects in the API, e.g. <code>/cases</code></li>
+</ul>
+<p>There may be times when an RPC approach is more suited to particular operations, expecially if they involve transactional constraints or coordinate a number of separate operations. In this case we will allow a hybrid ReST / RPC approach, e.g. <code>/cases/:caseId/resubmit</code></p>
+<h3>Versioning</h3>
+<p>It's always easier to add versioning into the API in the beginning, therefore we will include a version in the URL, e.g. <code>/v1/cases</code></p>
+<h3>Representation of data</h3>
+<p>We are using JSON to serialise our data and should apply the following conventions:</p>
+<ul>
+ <li>Use camelCase for attributes in the JSON data, e.g. <code>courtHouse</code></li>
+ <li>Where the endpoint returns more than one record, we should have a root object which also contains pagination data</li>
+</ul>
+<h3>URL Design</h3>
+<p>We will apply the following rules to designing URLs in the API:</p>
+<ul>
+ <li>Use lowercase separate words with hyphens for path segments, e.g. <code>/court-cases</code></li>
+ <li>Use snake_case words for query parameters, e.g. <code>/cases?per_page=20</code></li>
+ <li>Pluralise resource names, e.g. <code>/cases</code></li>
+ <li>Avoid trailing slashes</li>
+ <li>Use nesting if the resource should only be available via its parent, e.g. <code>/cases/:caseId/triggers</code></li>
+</ul>
+<h2>Consequences</h2>
+<ul>
+ <li>Setting out these design guidelines in advance means we will be more likely to end up with a consistent API design</li>
+</ul></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.3.0/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
