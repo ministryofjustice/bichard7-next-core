@@ -5,9 +5,10 @@ import type { FastifyInstance, InjectOptions } from "fastify"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
-import build from "../../app"
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
-import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
+import build from "../../../app"
+import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
+import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
@@ -16,7 +17,7 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     method: "POST",
-    url: "/cases/0/resubmit"
+    url: VersionedEndpoints.V1.CaseResubmit.replace(":caseId", "0")
   }
 }
 
