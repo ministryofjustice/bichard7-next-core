@@ -22,7 +22,7 @@ describe("health plugin", () => {
   it("GET /v1/health should return Ok using the HealthRoutes enum", async () => {
     const response = await app.inject({
       method: "GET",
-      url: VersionedEndpoints.V1Health
+      url: VersionedEndpoints.V1.Health
     })
 
     expect(response.statusCode).toBe(OK)

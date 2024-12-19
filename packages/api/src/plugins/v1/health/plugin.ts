@@ -20,7 +20,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const plugin = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(VersionedEndpoints.V1Health, { logLevel: "silent", schema }, healthHandler)
+  useZod(fastify).get(VersionedEndpoints.V1.Health, { logLevel: "silent", schema }, healthHandler)
 }
 
 export default plugin

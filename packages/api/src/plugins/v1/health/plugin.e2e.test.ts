@@ -19,7 +19,7 @@ describe("health plugin", () => {
   })
 
   it("GET /health should return Ok using the HealthRoutes enum", async () => {
-    const response = await fetch(`${helper.address}${VersionedEndpoints.V1Health}`)
+    const response = await fetch(`${helper.address}${VersionedEndpoints.V1.Health}`)
 
     expect(response.status).toBe(OK)
     expect(await response.text()).toBe("Ok")

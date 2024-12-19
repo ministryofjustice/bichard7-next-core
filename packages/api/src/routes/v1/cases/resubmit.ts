@@ -94,7 +94,7 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post(VersionedEndpoints.V1CaseResubmit, { schema }, async (req, reply) => {
+  useZod(fastify).post(VersionedEndpoints.V1.CaseResubmit, { schema }, async (req, reply) => {
     await handler({
       body: req.body,
       caseId: Number(req.params.caseId),

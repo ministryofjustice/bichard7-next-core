@@ -21,7 +21,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(VersionedEndpoints.V1Me, { schema }, async (request, res) => {
+  useZod(fastify).get(VersionedEndpoints.V1.Me, { schema }, async (request, res) => {
     res.code(OK).send(request.user)
   })
 }

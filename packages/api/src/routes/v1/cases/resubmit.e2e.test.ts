@@ -22,7 +22,7 @@ const defaultRequest = (jwt: string) => {
 }
 
 describe("/v1/cases/:caseId/resubmit e2e", () => {
-  const endpoint = VersionedEndpoints.V1CaseResubmit
+  const endpoint = VersionedEndpoints.V1.CaseResubmit
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 

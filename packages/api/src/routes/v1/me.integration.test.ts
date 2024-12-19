@@ -35,7 +35,7 @@ describe("/v1/me", () => {
         authorization: `Bearer ${encodedJwt}`
       },
       method: "GET",
-      url: VersionedEndpoints.V1Me
+      url: VersionedEndpoints.V1.Me
     })
 
     const responseUser = {

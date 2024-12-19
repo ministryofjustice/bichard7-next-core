@@ -17,7 +17,7 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     method: "POST",
-    url: VersionedEndpoints.V1CaseResubmit.replace(":caseId", "0")
+    url: VersionedEndpoints.V1.CaseResubmit.replace(":caseId", "0")
   }
 }
 

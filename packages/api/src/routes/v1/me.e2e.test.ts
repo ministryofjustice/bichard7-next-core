@@ -8,7 +8,7 @@ import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper
 import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
 
 describe("/v1/me e2e", () => {
-  const endpoint = VersionedEndpoints.V1Me
+  const endpoint = VersionedEndpoints.V1.Me
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 

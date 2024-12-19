@@ -11,7 +11,7 @@ const defaults = {
   headers: {
     Authorization: "Bearer "
   },
-  url: VersionedEndpoints.V1Me
+  url: VersionedEndpoints.V1.Me
 }
 
 describe("authenticate", () => {
