@@ -8,6 +8,7 @@ import z from "zod"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
+import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
@@ -33,7 +34,7 @@ const schema = {
     ...forbiddenError,
     ...internalServerError
   },
-  tags: ["Cases"]
+  tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ caseId, db, reply, user }: HandlerProps) =>
@@ -47,7 +48,7 @@ const handler = async ({ caseId, db, reply, user }: HandlerProps) =>
     })
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get("/cases/:caseId", { schema }, async (req, reply) => {
+  useZod(fastify).get(VersionedEndpoints.V1.Case, { schema }, async (req, reply) => {
     await handler({
       caseId: Number(req.params.caseId),
       db: req.db,
