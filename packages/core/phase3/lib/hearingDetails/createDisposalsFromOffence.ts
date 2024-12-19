@@ -19,37 +19,36 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   let found2063Result = false
   let converted2060Result = false
 
-  results
-    .filter(isRecordableResult)
-    .sort((a, b) => a.CJSresultCode - b.CJSresultCode)
-    .forEach((result) => {
-      const disposalCode = result.PNCDisposalType
-      const resultCode = result.CJSresultCode
-      let ignore2063Disposal = false
-      found3027 ||= disposalCode === 3027
-      const generatedDisposals = createPncDisposalsFromResult(result)
+  const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
 
-      if (disposalCode === 2060 && disposalFor2060Result == null) {
+  for (const recordableResult of recordableResults) {
+    const disposalCode = recordableResult.PNCDisposalType
+    const resultCode = recordableResult.CJSresultCode
+    let ignore2063Disposal = false
+    found3027 ||= disposalCode === 3027
+    const generatedDisposals = createPncDisposalsFromResult(recordableResult)
+
+    if (disposalCode === 2060 && disposalFor2060Result == null) {
+      disposalFor2060Result = generatedDisposals
+    } else if (disposalCode === 2050) {
+      found2050Result = true
+    } else if (disposalCode === 2063) {
+      if (resultCode === 2060) {
+        converted2060Result = true
         disposalFor2060Result = generatedDisposals
-      } else if (disposalCode === 2050) {
-        found2050Result = true
-      } else if (disposalCode === 2063) {
-        if (resultCode === 2060) {
-          converted2060Result = true
-          disposalFor2060Result = generatedDisposals
-        } else {
-          found2063Result = true
-        }
-
-        if (converted2060Result && found2063Result) {
-          ignore2063Disposal = true
-        }
+      } else {
+        found2063Result = true
       }
 
-      if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
-        pncDisposals.push(...generatedDisposals)
+      if (converted2060Result && found2063Result) {
+        ignore2063Disposal = true
       }
-    })
+    }
+
+    if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
+      pncDisposals.push(...generatedDisposals)
+    }
+  }
 
   if (disposalFor2060Result && (found2050Result || found2063Result) && pncDisposals.length == 2) {
     pncDisposals = disposalFor2060Result
