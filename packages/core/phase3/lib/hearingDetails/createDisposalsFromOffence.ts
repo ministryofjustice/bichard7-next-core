@@ -38,9 +38,7 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
         found2063Result = true
       }
 
-      if (converted2060Result && found2063Result) {
-        ignore2063Disposal = true
-      }
+      ignore2063Disposal = converted2060Result && found2063Result
     }
 
     if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
