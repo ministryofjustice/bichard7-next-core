@@ -6,13 +6,14 @@ import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import auth from "../../server/schemas/auth"
-import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
-import useZod from "../../server/useZod"
-import handleDisconnectedError from "../../services/db/handleDisconnectedError"
-import canUserResubmitCase from "../../useCases/canUserResubmitCase"
+import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import auth from "../../../server/schemas/auth"
+import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
+import useZod from "../../../server/useZod"
+import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
+import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
 
 const bodySchema = z.object({
   phase: z.number().gt(0).lte(3)
@@ -44,7 +45,7 @@ const schema = {
     ...forbiddenError,
     ...internalServerError
   },
-  tags: ["Cases"]
+  tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
@@ -93,7 +94,7 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post("/cases/:caseId/resubmit", { schema }, async (req, reply) => {
+  useZod(fastify).post(VersionedEndpoints.V1.CaseResubmit, { schema }, async (req, reply) => {
     await handler({
       body: req.body,
       caseId: Number(req.params.caseId),

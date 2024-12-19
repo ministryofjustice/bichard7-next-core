@@ -13,9 +13,9 @@ const OFFENCE_START_TIME_FIELD_LENGTH = 4
 const MIDNIGHT_TIME_STRING = "0000"
 const ONE_MINUTE_PAST_MIDNIGHT_TIME_STRING = "0001"
 
-const preProcessTimeString = (timeString?: string) =>
-  timeString
-    ? timeString
+const preProcessOffenceTime = (offenceTime?: string) =>
+  offenceTime
+    ? offenceTime
         ?.replace(/:/g, "")
         .padStart(OFFENCE_START_TIME_FIELD_LENGTH, "0")
         .replace(MIDNIGHT_TIME_STRING, ONE_MINUTE_PAST_MIDNIGHT_TIME_STRING)
@@ -26,19 +26,19 @@ export const createArrestHearingFromOffence = (pncUpdateDataset: PncUpdateDatase
   const offenceEndDate = offence.ActualOffenceEndDate?.EndDate
     ? formatDateSpecifiedInResult(offence.ActualOffenceEndDate.EndDate, true)
     : ""
-  const offenceTimeStartTime = offence.OffenceTime ?? offence.StartTime ?? ""
+  const offenceStartTime = offence.OffenceTime ?? offence.StartTime
 
   return {
     committedOnBail: offence.CommittedOnBail?.toUpperCase() === "Y" ? "Y" : "N",
     courtOffenceSequenceNumber: preProcessOffenceReasonSequence(offence) || null,
     locationOfOffence: offence.LocationOfOffence ?? DEFAULT_OFFENCE_LOCATION,
     offenceEndDate,
-    offenceEndTime: preProcessTimeString(offence.OffenceEndTime),
+    offenceEndTime: preProcessOffenceTime(offence.OffenceEndTime),
     offenceLocationFSCode: getForceStationCode(pncUpdateDataset, false),
     offenceReason: getOffenceCode(offence) ?? "",
     offenceReasonSequence: preProcessOffenceReasonSequence(offence),
     offenceStartDate,
-    offenceStartTime: preProcessTimeString(offenceTimeStartTime),
+    offenceStartTime: preProcessOffenceTime(offenceStartTime),
     type: HearingDetailsType.ARREST
   }
 }

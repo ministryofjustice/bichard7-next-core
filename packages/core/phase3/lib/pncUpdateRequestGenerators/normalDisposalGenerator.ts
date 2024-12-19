@@ -52,7 +52,7 @@ const deriveGeneratedPNCFilename = (defendant: HearingDefendant) => {
   }
 
   let generatedPNCFilename = defendant.OrganisationName?.replace(ILLEGAL_FILENAME_PATTERN, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .trim()
 
   if (!generatedPNCFilename) {

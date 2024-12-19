@@ -3,9 +3,10 @@ import type { FastifyInstance } from "fastify"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
-import { createCase } from "../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
-import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
+import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
 
 const defaultRequest = (jwt: string) => {
   return {
@@ -20,8 +21,8 @@ const defaultRequest = (jwt: string) => {
   }
 }
 
-describe("/cases/:caseId/resubmit e2e", () => {
-  const endpoint = "/cases/:caseId/resubmit"
+describe("/v1/cases/:caseId/resubmit e2e", () => {
+  const endpoint = VersionedEndpoints.V1.CaseResubmit
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 

@@ -66,7 +66,7 @@ describe("getAdjustedRecordableOffencesForCourtCase", () => {
     ])
   })
 
-  it("should return the offence when the result diposal is 2059", () => {
+  it("should return the offence when the result disposal is 2059", () => {
     const offences = [
       {
         CriminalProsecutionReference: {
@@ -92,7 +92,7 @@ describe("getAdjustedRecordableOffencesForCourtCase", () => {
     ])
   })
 
-  it("should convert disposal to 2063 when the result diposal is 2060", () => {
+  it("should convert disposal to 2063 when the result disposal is 2060", () => {
     const offences = [
       {
         CriminalProsecutionReference: {
@@ -118,7 +118,7 @@ describe("getAdjustedRecordableOffencesForCourtCase", () => {
     ])
   })
 
-  it("should not convert disposal to 2063 when there is a 2060 disposal but there is also a non 2060/2059 diposal that is not added by the court", () => {
+  it("should not convert disposal to 2063 when there is a 2060 disposal but there is also a non 2060/2059 disposal that is not added by the court", () => {
     const offences = [
       {
         CriminalProsecutionReference: {
@@ -163,7 +163,7 @@ describe("getAdjustedRecordableOffencesForCourtCase", () => {
     ])
   })
 
-  it("should not convert disposal to 2063 when there is a 2060 disposal but there is a non 2060/2059 diposal that the result class is compatible with disposal", () => {
+  it("should not convert disposal to 2063 when there is a 2060 disposal but there is a non 2060/2059 disposal that the result class is compatible with disposal", () => {
     const offences = [
       {
         CriminalProsecutionReference: {

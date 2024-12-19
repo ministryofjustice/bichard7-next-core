@@ -30,16 +30,30 @@ describe("createAdjudicationFromOffence", () => {
     })
   })
 
-  it("returns an empty string for hearing date when non-date PNC disposal", () => {
+  it("returns an empty string for hearing date and verdict when non-date and empty verdict PNC disposal", () => {
     const dateOfHearing = new Date("2024-12-16")
+    const nonDateAndEmptyVerdictPncDisposal = 2059
 
     const adjudication = createAdjudicationFromOffence(
       {
-        Result: [{ PNCDisposalType: 2059, NumberOfOffencesTIC: 3, Verdict: "G", PleaStatus: "CON" } as Result]
+        Result: [
+          {
+            PNCDisposalType: nonDateAndEmptyVerdictPncDisposal,
+            NumberOfOffencesTIC: 3,
+            Verdict: "G",
+            PleaStatus: "CON"
+          } as Result
+        ]
       } as unknown as Offence,
       dateOfHearing
     )
 
-    expect(adjudication?.hearingDate).toBe("")
+    expect(adjudication).toStrictEqual({
+      hearingDate: "",
+      numberOffencesTakenIntoAccount: "0003",
+      pleaStatus: "CONSENTED",
+      type: "ADJUDICATION",
+      verdict: ""
+    })
   })
 })

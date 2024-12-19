@@ -11,7 +11,7 @@ import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpda
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
 import normalDisposalGenerator from "./pncUpdateRequestGenerators/normalDisposalGenerator"
 import penaltyHearingGenerator from "./pncUpdateRequestGenerators/penaltyHearingGenerator"
-import remandGenerator from "./pncUpdateRequestGenerators/remandGenerator"
+import { remandGenerator } from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
 
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {

@@ -61,6 +61,7 @@ COPY packages/ui/docker/conf/supervisord.conf /etc/supervisord.conf
 
 EXPOSE 80
 EXPOSE 443
+EXPOSE 9443
 
 # Non-root users can't bind things on the default HTTP/S ports
 # so we need to keep this running as root until we sort out

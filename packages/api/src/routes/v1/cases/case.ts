@@ -6,12 +6,12 @@ import { CaseSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import auth from "../../server/schemas/auth"
-import { forbiddenError, internalServerError, unauthorizedError } from "../../server/schemas/errorReasons"
-import useZod from "../../server/useZod"
-import fetchFullCase from "../../useCases/fetchFullCase"
+import auth from "../../../server/schemas/auth"
+import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
+import useZod from "../../../server/useZod"
+import fetchFullCase from "../../../useCases/fetchFullCase"
 
 type HandlerProps = {
   caseId: number
@@ -45,18 +45,6 @@ const handler = async ({ caseId, db, reply, user }: HandlerProps) =>
       reply.log.error(err)
       reply.code(FORBIDDEN).send()
     })
-
-// {
-//  try {
-//   const foundCase = await fetchFullCase(user, db, caseId)
-
-//    reply.code(OK).send(foundCase)
-//  } catch (err) {
-//    reply.log.error(err)
-
-//    reply.code(FORBIDDEN).send()
-//   }
-// }
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get("/cases/:caseId", { schema }, async (req, reply) => {

@@ -26,8 +26,7 @@ const getDisposalTextFromResult = (result: Result): string => {
     disposalText = penaltyPointsDisposalText(result)
   }
 
-  const qualifiers = result.ResultQualifierVariable.map((qualifier) => qualifier.Code)
-  if (isFailedToAppearWarrantIssued(cjsResultCode, qualifiers)) {
+  if (isFailedToAppearWarrantIssued(cjsResultCode)) {
     disposalText = "FAILED TO APPEAR WARRANT ISSUED"
   }
 
