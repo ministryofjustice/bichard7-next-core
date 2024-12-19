@@ -15,7 +15,7 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   let found3027 = false
   const adjournmentExists = results.some((result) => result.ResultClass?.includes("Adjournment"))
   let disposalFor2060Result: null | PncDisposal[] = null
-  let found2050Result = false
+  const found2050Result = results.some((result) => result.PNCDisposalType === 2050)
   let found2063Result = false
   let converted2060Result = false
 
@@ -30,8 +30,6 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
 
     if (disposalCode === 2060 && disposalFor2060Result == null) {
       disposalFor2060Result = pncDisposalsFromResult
-    } else if (disposalCode === 2050) {
-      found2050Result = true
     } else if (disposalCode === 2063) {
       if (resultCode === 2060) {
         converted2060Result = true
