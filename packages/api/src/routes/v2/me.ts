@@ -4,23 +4,24 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { UserSchema } from "@moj-bichard7/common/types/User"
 import { OK } from "http-status"
 
-import auth from "../server/schemas/auth"
-import { unauthorizedError } from "../server/schemas/errorReasons"
-import useZod from "../server/useZod"
+import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
+import auth from "../../server/schemas/auth"
+import { unauthorizedError } from "../../server/schemas/errorReasons"
+import useZod from "../../server/useZod"
 
 const schema = {
   ...auth,
   response: {
-    [OK]: UserSchema.omit({ id: true, jwt_id: true, visible_forces: true }).openapi({
+    [OK]: UserSchema.omit({ id: true, jwt_id: true }).openapi({
       description: "Returns details of authorised user"
     }),
     ...unauthorizedError
   },
-  tags: ["Root"]
+  tags: ["Demo V2"]
 } satisfies FastifyZodOpenApiSchema
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get("/me", { schema }, async (request, res) => {
+  useZod(fastify).get(VersionedEndpoints.V2Me, { schema }, async (request, res) => {
     res.code(OK).send(request.user)
   })
 }

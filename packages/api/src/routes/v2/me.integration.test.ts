@@ -3,11 +3,12 @@ import type { FastifyInstance } from "fastify"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
-import build from "../app"
-import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
-import { generateJwtForStaticUser } from "../tests/helpers/userHelper"
+import build from "../../app"
+import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
+import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
-describe("/me", () => {
+describe("/v2/me", () => {
   const db = new FakeDataStore()
   let app: FastifyInstance
 
@@ -34,13 +35,14 @@ describe("/me", () => {
         authorization: `Bearer ${encodedJwt}`
       },
       method: "GET",
-      url: "/me"
+      url: VersionedEndpoints.V2Me
     })
 
     const responseUser = {
       email: user.email,
       groups: user.groups,
-      username: user.username
+      username: user.username,
+      visible_forces: user.visible_forces
     }
 
     expect(response.statusCode).toBe(OK)

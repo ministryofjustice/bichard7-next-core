@@ -3,11 +3,12 @@ import type { FastifyInstance } from "fastify"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
-import { SetupAppEnd2EndHelper } from "../tests/helpers/setupAppEnd2EndHelper"
-import { createUserAndJwtToken } from "../tests/helpers/userHelper"
+import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
+import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
+import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
 
-describe("/me e2e", () => {
-  const endpoint = "/me"
+describe("/v2/me e2e", () => {
+  const endpoint = VersionedEndpoints.V2Me
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
@@ -38,7 +39,8 @@ describe("/me e2e", () => {
     const responseUser = {
       email: user.email,
       groups: [UserGroup.GeneralHandler],
-      username: user.username
+      username: user.username,
+      visible_forces: user.visible_forces
     }
 
     expect(response.status).toBe(OK)
@@ -62,6 +64,7 @@ describe("/me e2e", () => {
     expect(responseUser.username).toEqual(user.username)
     expect(responseUser.email).toEqual(user.email)
     expect(responseUser.groups).toEqual(expect.arrayContaining(expectedGroups))
+    expect(responseUser.visible_forces).toEqual(user.visible_forces)
   })
 
   it("will throw an error with a user that has no groups", async () => {

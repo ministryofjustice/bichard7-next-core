@@ -4,9 +4,9 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { OK } from "http-status"
 import { z } from "zod"
 
-import useZod from "../../server/useZod"
+import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import useZod from "../../../server/useZod"
 import { healthHandler } from "./handlers"
-import HealthRoutes from "./routes"
 
 const schema = {
   description: "Health endpoint",
@@ -16,11 +16,11 @@ const schema = {
     })
   },
   security: [],
-  tags: ["Health"]
+  tags: ["Health V1"]
 } satisfies FastifyZodOpenApiSchema
 
 const plugin = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(HealthRoutes.HEALTH, { logLevel: "silent", schema }, healthHandler)
+  useZod(fastify).get(VersionedEndpoints.V1Health, { logLevel: "silent", schema }, healthHandler)
 }
 
 export default plugin
