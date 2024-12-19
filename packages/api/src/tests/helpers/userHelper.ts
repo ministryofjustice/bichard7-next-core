@@ -7,7 +7,7 @@ import type End2EndPostgres from "../testGateways/e2ePostgres"
 
 import { generateTestJwtToken } from "./jwtHelper"
 
-export const generateJwtForStaticUser = (userGroups: UserGroup[] = []): [string, User] => {
+export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.GeneralHandler]): [string, User] => {
   const jwtId = randomUUID()
   const user = {
     email: "user1@example.com",
