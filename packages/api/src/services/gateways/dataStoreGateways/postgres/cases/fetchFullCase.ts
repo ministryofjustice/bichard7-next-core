@@ -1,8 +1,8 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { CaseDB } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<Case> => {
-  const [result]: [Case?] = await sql`
+export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<CaseDB> => {
+  const [result]: [CaseDB?] = await sql`
       SELECT *
       FROM br7own.error_list el
       WHERE

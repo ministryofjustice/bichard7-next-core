@@ -1,4 +1,4 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { CaseDB } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
@@ -8,9 +8,11 @@ class FakeDataStore implements DataStoreGateway {
     return Promise.resolve(true)
   }
 
-  async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<Case> {
+  // TODO: Remove the `as unknown as CaseDB` replace it with `satisfies CaseDB`
+  async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<CaseDB> {
     return Promise.resolve({
       annotated_msg: "",
+      asn: "",
       court_reference: "",
       create_ts: new Date("2022-06-30T08:44:03.930Z"),
       error_count: 1,
@@ -26,8 +28,9 @@ class FakeDataStore implements DataStoreGateway {
       resolution_ts: null,
       total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
+      updated_msg: null,
       user_updated_flag: 0
-    } satisfies Case)
+    } as unknown as CaseDB)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {

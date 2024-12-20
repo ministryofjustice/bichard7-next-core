@@ -1,4 +1,4 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { CaseDB } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
 import filter from "./fetchFullCase"
@@ -16,6 +16,7 @@ describe("fetchFullCase", () => {
     await expect(filter(sql, 0, [2])).rejects.toThrow("Case not found")
   })
 
+  // TODO: Replace the `as` with `satisfies`
   it("fetches the Case", async () => {
     const expectedCase = {
       annotated_msg: "",
@@ -35,7 +36,7 @@ describe("fetchFullCase", () => {
       total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
       user_updated_flag: 0
-    } satisfies Case
+    } as CaseDB
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
 
     const returnedCase = await filter(sql, 0, [1])

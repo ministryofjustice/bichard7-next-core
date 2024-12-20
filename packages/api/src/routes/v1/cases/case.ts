@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
-import { CaseSchema } from "@moj-bichard7/common/types/Case"
+import { FullCaseDTOSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 
@@ -29,7 +29,7 @@ const schema = {
     })
   }),
   response: {
-    [OK]: CaseSchema.openapi({ description: "A Case" }),
+    [OK]: FullCaseDTOSchema.openapi({ description: "Case DTO" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
