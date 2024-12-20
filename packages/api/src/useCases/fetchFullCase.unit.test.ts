@@ -13,7 +13,7 @@ describe("fetchFullCase", () => {
     expect(result).toEqual({
       annotated_msg: "",
       court_reference: "",
-      create_ts: "2022-06-30T08:44:03.930Z",
+      create_ts: new Date("2022-06-30T08:44:03.930Z"),
       error_count: 1,
       error_id: 0,
       error_locked_by_id: null,
@@ -21,7 +21,7 @@ describe("fetchFullCase", () => {
       error_status: 1,
       is_urgent: 0,
       message_id: "",
-      msg_received_ts: "2022-06-30T08:44:03.930Z",
+      msg_received_ts: new Date("2022-06-30T08:44:03.930Z"),
       org_for_police_filter: "",
       phase: 1,
       resolution_ts: null,
