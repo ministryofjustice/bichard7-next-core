@@ -11,10 +11,6 @@ import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "../
 const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): PncDisposal[] => {
   const results = offence.Result
   const hasAdjournmentResult = results.some((result) => result.ResultClass?.includes("Adjournment"))
-  const has2050Result = results.some((result) => result.PNCDisposalType === 2050)
-  const hasConverted2060Result = results.some(
-    (result) => result.PNCDisposalType === 2063 && result.CJSresultCode === 2060
-  )
 
   let pncDisposals: PncDisposal[] = []
   let disposalsFor2060Result: PncDisposal[] = []
@@ -22,6 +18,10 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   let has2063Result = false
 
   const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
+  const has2050Result = recordableResults.some((result) => result.PNCDisposalType === 2050)
+  const hasConverted2060Result = recordableResults.some(
+    (result) => result.PNCDisposalType === 2063 && result.CJSresultCode === 2060
+  )
 
   for (const recordableResult of recordableResults) {
     const disposalCode = recordableResult.PNCDisposalType
