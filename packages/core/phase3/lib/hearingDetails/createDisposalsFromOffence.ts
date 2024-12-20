@@ -26,7 +26,6 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   for (const recordableResult of recordableResults) {
     const disposalCode = recordableResult.PNCDisposalType
     const resultCode = recordableResult.CJSresultCode
-    let shouldIgnore2063Disposal = false
     const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
 
     if (disposalCode === 2060 && disposalsFor2060Result.length === 0) {
@@ -37,9 +36,9 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
       } else {
         has2063Result = true
       }
-
-      shouldIgnore2063Disposal = hasConverted2060Result && has2063Result
     }
+
+    const shouldIgnore2063Disposal = hasConverted2060Result && has2063Result
 
     if ((disposalCode !== 3052 || !hasAdjournmentResult) && !shouldIgnore2063Disposal) {
       pncDisposals.push(...pncDisposalsFromResult)
