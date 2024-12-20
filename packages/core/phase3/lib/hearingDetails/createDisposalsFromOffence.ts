@@ -14,20 +14,19 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
 
   const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
   const has2050Result = recordableResults.some((result) => result.PNCDisposalType === 2050)
+  const has3027Disposal = recordableResults.some((result) => result.PNCDisposalType === 3027)
   const hasConverted2060Result = recordableResults.some(
     (result) => result.PNCDisposalType === 2063 && result.CJSresultCode === 2060
   )
 
   let pncDisposals: PncDisposal[] = []
   let disposalsFor2060Result: PncDisposal[] = []
-  let has3027Disposal = false
   let has2063Result = false
 
   for (const recordableResult of recordableResults) {
     const disposalCode = recordableResult.PNCDisposalType
     const resultCode = recordableResult.CJSresultCode
     let shouldIgnore2063Disposal = false
-    has3027Disposal ||= disposalCode === 3027
     const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
 
     if (disposalCode === 2060 && disposalsFor2060Result.length === 0) {
