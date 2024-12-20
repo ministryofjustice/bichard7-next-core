@@ -1,6 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`createDisposalsFromOffence should generate a PNC disposal using the sentence date from the matching offence when adjournment does not exist and disposal 3027 does not exist 1`] = `
+exports[`createDisposalsFromOffence ignores disposal 2063 when there was a disposal 2063 with result code 2060 1`] = `
+[
+  {
+    "disposalQualifiers": "A ",
+    "disposalQuantity": "Y   220520240000025.0000",
+    "disposalText": "",
+    "disposalType": "2063",
+    "type": "DISPOSAL",
+  },
+]
+`;
+
+exports[`createDisposalsFromOffence returns a PNC disposal using the sentence date from the matching offence when adjournment does not exist and disposal 3027 does not exist 1`] = `
 [
   {
     "disposalQualifiers": "A ",
@@ -19,7 +31,7 @@ exports[`createDisposalsFromOffence should generate a PNC disposal using the sen
 ]
 `;
 
-exports[`createDisposalsFromOffence should generate a PNC disposal using the sentence date from the matching offence when adjournment exists 1`] = `
+exports[`createDisposalsFromOffence returns a PNC disposal using the sentence date from the matching offence when adjournment exists 1`] = `
 [
   {
     "disposalQualifiers": "A ",
@@ -31,7 +43,7 @@ exports[`createDisposalsFromOffence should generate a PNC disposal using the sen
 ]
 `;
 
-exports[`createDisposalsFromOffence should generate a PNC disposal using the sentence date from the matching offence when disposal 3027 exists 1`] = `
+exports[`createDisposalsFromOffence returns a PNC disposal using the sentence date from the matching offence when disposal 3027 exists 1`] = `
 [
   {
     "disposalQualifiers": "A ",
@@ -43,19 +55,7 @@ exports[`createDisposalsFromOffence should generate a PNC disposal using the sen
 ]
 `;
 
-exports[`createDisposalsFromOffence should ignore disposal 2063 when there was a disposal 2063 with result code 2060 1`] = `
-[
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y   220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2063",
-    "type": "DISPOSAL",
-  },
-]
-`;
-
-exports[`createDisposalsFromOffence should ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found and 2 disposals are generated already 1`] = `
+exports[`createDisposalsFromOffence returns all PNC disposals for results when 2060 and 2050 results and more than 2 disposals generated 1`] = `
 [
   {
     "disposalQualifiers": "A ",
@@ -78,46 +78,11 @@ exports[`createDisposalsFromOffence should ignore disposals before the first res
     "disposalType": "2060",
     "type": "DISPOSAL",
   },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y1                    00",
-    "disposalText": "",
-    "disposalType": "2060",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y3  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2060",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y2  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2066",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y2                    00",
-    "disposalText": "",
-    "disposalType": "2066",
-    "type": "DISPOSAL",
-  },
 ]
 `;
 
-exports[`createDisposalsFromOffence should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 has been found and 2 disposals are generated already 1`] = `
+exports[`createDisposalsFromOffence returns all PNC disposals for results when 2060 and 2063 results and more than 2 disposals generated 1`] = `
 [
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y   220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2051",
-    "type": "DISPOSAL",
-  },
   {
     "disposalQualifiers": "A ",
     "disposalQuantity": "Y1  220520240000025.0000",
@@ -127,88 +92,22 @@ exports[`createDisposalsFromOffence should ignore disposals before the first res
   },
   {
     "disposalQualifiers": "A ",
-    "disposalQuantity": "Y2  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2063",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y3  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2068",
-    "type": "DISPOSAL",
-  },
-]
-`;
-
-exports[`createDisposalsFromOffence should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 with result 2060 has been found and 2 disposals are generated already 1`] = `
-[
-  {
-    "disposalQualifiers": "A ",
     "disposalQuantity": "Y   220520240000025.0000",
     "disposalText": "",
-    "disposalType": "2051",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y1  220520240000025.0000",
-    "disposalText": "",
     "disposalType": "2063",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y3  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2068",
-    "type": "DISPOSAL",
-  },
-]
-`;
-
-exports[`createDisposalsFromOffence should not ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found but 3 disposals are generated already 1`] = `
-[
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y   220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2050",
     "type": "DISPOSAL",
   },
   {
     "disposalQualifiers": "A ",
     "disposalQuantity": "Y                     00",
     "disposalText": "",
-    "disposalType": "2050",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y1  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2050",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y2  220520240000025.0000",
-    "disposalText": "",
-    "disposalType": "2060",
-    "type": "DISPOSAL",
-  },
-  {
-    "disposalQualifiers": "A ",
-    "disposalQuantity": "Y2                    00",
-    "disposalText": "",
-    "disposalType": "2060",
+    "disposalType": "2063",
     "type": "DISPOSAL",
   },
 ]
 `;
 
-exports[`createDisposalsFromOffence should return disposals when all PNC disposals are 2007 1`] = `
+exports[`createDisposalsFromOffence returns disposals when all PNC disposals are 2007 1`] = `
 [
   {
     "disposalQualifiers": "A ",
@@ -222,6 +121,30 @@ exports[`createDisposalsFromOffence should return disposals when all PNC disposa
     "disposalQuantity": "Y1  220520240000025.0000",
     "disposalText": "",
     "disposalType": "2007",
+    "type": "DISPOSAL",
+  },
+]
+`;
+
+exports[`createDisposalsFromOffence returns only PNC disposals for a 2060 result when a disposal 2050 has been found and only 2 disposals generated 1`] = `
+[
+  {
+    "disposalQualifiers": "A ",
+    "disposalQuantity": "Y1  220520240000025.0000",
+    "disposalText": "",
+    "disposalType": "2060",
+    "type": "DISPOSAL",
+  },
+]
+`;
+
+exports[`createDisposalsFromOffence returns only PNC disposals for a 2060 result when a disposal 2063 has been found and only 2 disposals generated 1`] = `
+[
+  {
+    "disposalQualifiers": "A ",
+    "disposalQuantity": "Y1  220520240000025.0000",
+    "disposalText": "",
+    "disposalType": "2060",
     "type": "DISPOSAL",
   },
 ]
