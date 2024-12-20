@@ -9,10 +9,10 @@ import { HearingDetailsType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "../getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
 const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): PncDisposal[] => {
-  const results = offence.Result
-  const hasAdjournmentResult = results.some((result) => result.ResultClass?.includes("Adjournment"))
-  const has2050Result = results.some((result) => result.PNCDisposalType === 2050)
-  const hasConverted2060Result = results.some(
+  const recordableResults = offence.Result.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
+  const hasAdjournmentResult = recordableResults.some((result) => result.ResultClass?.includes("Adjournment"))
+  const has2050Result = recordableResults.some((result) => result.PNCDisposalType === 2050)
+  const hasConverted2060Result = recordableResults.some(
     (result) => result.PNCDisposalType === 2063 && result.CJSresultCode === 2060
   )
 
@@ -20,8 +20,6 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   let disposalFor2060Result: null | PncDisposal[] = null
   let has3027Disposal = false
   let has2063Result = false
-
-  const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
 
   for (const recordableResult of recordableResults) {
     const disposalCode = recordableResult.PNCDisposalType
