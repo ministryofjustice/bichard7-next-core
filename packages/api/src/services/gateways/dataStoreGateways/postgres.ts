@@ -4,9 +4,9 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
 import postgresFactory from "../../db/postgresFactory"
-import caseCanBeResubmitted from "./postgres/canCaseBeResubmitted"
-import fetchFullCase from "./postgres/fetchFullCase"
-import fetchUserByUsername from "./postgres/fetchUserByUsername"
+import caseCanBeResubmitted from "./postgres/cases/canCaseBeResubmitted"
+import fetchFullCase from "./postgres/cases/fetchFullCase"
+import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
 class Postgres implements DataStoreGateway {
   protected readonly db = postgresFactory()
