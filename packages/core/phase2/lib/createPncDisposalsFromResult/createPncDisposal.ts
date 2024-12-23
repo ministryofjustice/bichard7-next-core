@@ -14,17 +14,29 @@ const INCLUDE_QUALIFIERS_LIST = [
 const NO_DISPOSAL_DATE_LIST = [2059, 3050, 3105]
 const DISPOSAL_QUALIFIERS_FIELD_LENGTH = 12
 
-const createPncDisposal = (
-  pncDisposalType: number | undefined,
-  durationUnit: string | undefined,
-  durationLength: number | undefined,
-  secondaryDurationUnit: string | undefined,
-  secondaryDurationLength: number | undefined,
-  dateSpecifiedInResult: Date | undefined,
-  amountSpecifiedInResult: number | undefined,
-  resultQualifiers: string[] | undefined,
-  disposalText: string | undefined
-): PncDisposal => {
+type CreatePncDisposalRequest = {
+  amountSpecifiedInResult?: number
+  dateSpecifiedInResult?: Date
+  disposalText?: string
+  durationLength?: number
+  durationUnit?: string
+  pncDisposalType?: number
+  resultQualifiers?: string[]
+  secondaryDurationLength?: number
+  secondaryDurationUnit?: string
+}
+
+const createPncDisposal = ({
+  amountSpecifiedInResult,
+  dateSpecifiedInResult,
+  disposalText,
+  durationLength,
+  durationUnit,
+  pncDisposalType,
+  resultQualifiers,
+  secondaryDurationLength,
+  secondaryDurationUnit
+}: CreatePncDisposalRequest): PncDisposal => {
   const qtyDuration = durationUnit ? durationUnit + durationLength?.toString() : ""
   return {
     qtyDuration: qtyDuration,

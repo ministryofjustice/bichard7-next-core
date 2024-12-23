@@ -56,19 +56,7 @@ const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offen
 
   const convictionDate = getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie(aho, offence)
   if (convictionDate) {
-    pncDisposals.push(
-      createPncDisposal(
-        3027,
-        undefined,
-        undefined,
-        undefined,
-        undefined,
-        convictionDate,
-        undefined,
-        undefined,
-        undefined
-      )
-    )
+    pncDisposals.push(createPncDisposal({ pncDisposalType: 3027, dateSpecifiedInResult: convictionDate }))
   }
 
   return pncDisposals.map(toDisposal)
