@@ -40,9 +40,8 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
       }
     }
 
-    const shouldIgnore2063Disposal = hasConverted2060Result && has2063Result
-
-    if ((disposalCode !== 3052 || !hasAdjournmentResult) && !shouldIgnore2063Disposal) {
+    const shouldAdd2063Disposal = !hasConverted2060Result || !has2063Result
+    if ((disposalCode !== 3052 || !hasAdjournmentResult) && shouldAdd2063Disposal) {
       pncDisposals.push(...pncDisposalsFromResult)
     }
   }
