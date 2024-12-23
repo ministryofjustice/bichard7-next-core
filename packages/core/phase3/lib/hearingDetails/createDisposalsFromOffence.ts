@@ -15,9 +15,6 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
   const has2050Result = recordableResults.some((result) => result.PNCDisposalType === 2050)
   const has3027Disposal = recordableResults.some((result) => result.PNCDisposalType === 3027)
-  const hasConverted2060Result = recordableResults.some(
-    (result) => result.PNCDisposalType === 2063 && result.CJSresultCode === 2060
-  )
 
   let pncDisposals: PncDisposal[] = []
   let disposalsFor2060Result: PncDisposal[] = []
@@ -32,12 +29,13 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
       disposalsFor2060Result = pncDisposalsFromResult
     }
 
-    if (disposalCode === 2063) {
-      if (resultCode === 2060) {
-        disposalsFor2060Result = pncDisposalsFromResult
-      } else {
-        has2063Result = true
-      }
+    const hasConverted2060Result = disposalCode === 2063 && resultCode === 2060
+    if (hasConverted2060Result) {
+      disposalsFor2060Result = pncDisposalsFromResult
+    }
+
+    if (disposalCode === 2063 && resultCode !== 2060) {
+      has2063Result = true
     }
 
     const shouldAdd2063Disposal = !hasConverted2060Result || !has2063Result
