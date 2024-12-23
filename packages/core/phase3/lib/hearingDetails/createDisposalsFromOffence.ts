@@ -22,12 +22,8 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
     const resultCode = recordableResult.CJSresultCode
     const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
 
-    if (disposalCode === 2060 && disposalsFor2060Result.length === 0) {
-      disposalsFor2060Result = pncDisposalsFromResult
-    }
-
     const hasConverted2060Result = disposalCode === 2063 && resultCode === 2060
-    if (hasConverted2060Result) {
+    if ((disposalCode === 2060 && disposalsFor2060Result.length === 0) || hasConverted2060Result) {
       disposalsFor2060Result = pncDisposalsFromResult
     }
 
