@@ -12,7 +12,7 @@ const toDisposal = (pncDisposal: PncDisposal): Disposal => ({
   disposalType: pncDisposal.type?.toString() ?? "",
   disposalQuantity: pncDisposal.qtyUnitsFined ?? "",
   disposalQualifiers: pncDisposal.qualifiers ?? "",
-  disposalText: pncDisposal.text ?? "",
+  disposalText: pncDisposal.type === 3027 ? null : (pncDisposal.text ?? ""),
   type: HearingDetailsType.DISPOSAL
 })
 

@@ -24,7 +24,7 @@ exports[`createDisposalsFromOffence returns a PNC disposal using the sentence da
   {
     "disposalQualifiers": "",
     "disposalQuantity": "    05122024          00",
-    "disposalText": "",
+    "disposalText": null,
     "disposalType": "3027",
     "type": "DISPOSAL",
   },
@@ -48,7 +48,7 @@ exports[`createDisposalsFromOffence returns a PNC disposal using the sentence da
   {
     "disposalQualifiers": "A ",
     "disposalQuantity": "Y   220520240000025.0000",
-    "disposalText": "",
+    "disposalText": null,
     "disposalType": "3027",
     "type": "DISPOSAL",
   },
