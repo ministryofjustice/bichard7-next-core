@@ -29,8 +29,8 @@ const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offen
     const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
     const { PNCDisposalType: disposalCode, CJSresultCode: resultCode } = recordableResult
 
-    const isConverted2060Result = disposalCode === 2063 && resultCode === 2060
-    if ((disposalCode === 2060 && pncDisposalsFor2060Result.length === 0) || isConverted2060Result) {
+    const isConverted2060To2063Result = disposalCode === 2063 && resultCode === 2060
+    if ((disposalCode === 2060 && pncDisposalsFor2060Result.length === 0) || isConverted2060To2063Result) {
       pncDisposalsFor2060Result = pncDisposalsFromResult
     }
 
@@ -38,7 +38,7 @@ const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offen
       has2063Result = true
     }
 
-    const shouldAdd2063Disposal = !isConverted2060Result || !has2063Result
+    const shouldAdd2063Disposal = !isConverted2060To2063Result || !has2063Result
     if ((disposalCode !== 3052 || !hasAdjournmentResult) && shouldAdd2063Disposal) {
       pncDisposals.push(...pncDisposalsFromResult)
     }
