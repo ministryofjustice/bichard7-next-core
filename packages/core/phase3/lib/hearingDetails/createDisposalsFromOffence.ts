@@ -8,55 +8,50 @@ import isRecordableResult from "../../../phase2/lib/isRecordableResult"
 import { HearingDetailsType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "../getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
-const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): PncDisposal[] => {
+const toDisposal = (pncDisposal: PncDisposal): Disposal => ({
+  disposalType: pncDisposal.type?.toString() ?? "",
+  disposalQuantity: pncDisposal.qtyUnitsFined ?? "",
+  disposalQualifiers: pncDisposal.qualifiers ?? "",
+  disposalText: pncDisposal.type === 3027 ? null : (pncDisposal.text ?? ""),
+  type: HearingDetailsType.DISPOSAL
+})
+
+const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): Disposal[] => {
   const results = offence.Result
+  const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
+  const hasAdjournmentResult = results.some((result) => result.ResultClass?.includes("Adjournment"))
+
   let pncDisposals: PncDisposal[] = []
+  let pncDisposalsFor2060Result: PncDisposal[] = []
+  let has2063Result = false
 
-  let found3027 = false
-  const adjournmentExists = results.some((result) => result.ResultClass?.includes("Adjournment"))
-  let disposalFor2060Result: null | PncDisposal[] = null
-  let found2050Result = false
-  let found2063Result = false
-  let converted2060Result = false
+  for (const recordableResult of recordableResults) {
+    const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
+    const { PNCDisposalType: disposalCode, CJSresultCode: resultCode } = recordableResult
 
-  results
-    .filter(isRecordableResult)
-    .sort((a, b) => a.CJSresultCode - b.CJSresultCode)
-    .forEach((result) => {
-      const disposalCode = result.PNCDisposalType
-      const resultCode = result.CJSresultCode
-      let ignore2063Disposal = false
-      found3027 ||= disposalCode === 3027
-      const generatedDisposals = createPncDisposalsFromResult(result)
+    const isConverted2060To2063Result = disposalCode === 2063 && resultCode === 2060
+    if ((disposalCode === 2060 && pncDisposalsFor2060Result.length === 0) || isConverted2060To2063Result) {
+      pncDisposalsFor2060Result = pncDisposalsFromResult
+    }
 
-      if (disposalCode === 2060 && disposalFor2060Result == null) {
-        disposalFor2060Result = generatedDisposals
-      } else if (disposalCode === 2050) {
-        found2050Result = true
-      } else if (disposalCode === 2063) {
-        if (resultCode === 2060) {
-          converted2060Result = true
-          disposalFor2060Result = generatedDisposals
-        } else {
-          found2063Result = true
-        }
+    if (disposalCode === 2063 && resultCode !== 2060) {
+      has2063Result = true
+    }
 
-        if (converted2060Result && found2063Result) {
-          ignore2063Disposal = true
-        }
-      }
-
-      if ((disposalCode !== 3052 || !adjournmentExists) && !ignore2063Disposal) {
-        pncDisposals.push(...generatedDisposals)
-      }
-    })
-
-  if (disposalFor2060Result && (found2050Result || found2063Result) && pncDisposals.length == 2) {
-    pncDisposals = disposalFor2060Result
+    const shouldAdd2063Disposal = !isConverted2060To2063Result || !has2063Result
+    if ((disposalCode !== 3052 || !hasAdjournmentResult) && shouldAdd2063Disposal) {
+      pncDisposals.push(...pncDisposalsFromResult)
+    }
   }
 
-  if (found3027 || adjournmentExists) {
-    return pncDisposals
+  const has2050Result = recordableResults.some((result) => result.PNCDisposalType === 2050)
+  if (pncDisposalsFor2060Result.length > 0 && (has2050Result || has2063Result) && pncDisposals.length == 2) {
+    pncDisposals = pncDisposalsFor2060Result
+  }
+
+  const has3027Result = recordableResults.some((result) => result.PNCDisposalType === 3027)
+  if (has3027Result || hasAdjournmentResult) {
+    return pncDisposals.map(toDisposal)
   }
 
   const convictionDate = getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie(aho, offence)
@@ -76,16 +71,7 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
     )
   }
 
-  return pncDisposals
+  return pncDisposals.map(toDisposal)
 }
-
-const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): Disposal[] =>
-  createPncDisposalFromOffence(aho, offence).map((disposal) => ({
-    disposalType: disposal.type?.toString() ?? "",
-    disposalQuantity: disposal.qtyUnitsFined ?? "",
-    disposalQualifiers: disposal.qualifiers ?? "",
-    disposalText: disposal.text ?? "",
-    type: HearingDetailsType.DISPOSAL
-  }))
 
 export default createDisposalsFromOffence

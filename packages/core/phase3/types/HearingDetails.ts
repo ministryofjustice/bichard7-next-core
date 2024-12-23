@@ -40,7 +40,7 @@ export type CourtHearingAndDisposal = CourtHearing | Disposal
 export type Disposal = {
   disposalQualifiers: string
   disposalQuantity: string
-  disposalText: string
+  disposalText: null | string
   disposalType: string
   type: HearingDetailsType.DISPOSAL
 }

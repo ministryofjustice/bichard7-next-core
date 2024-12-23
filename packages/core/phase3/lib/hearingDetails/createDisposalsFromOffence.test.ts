@@ -114,7 +114,7 @@ const generateAho = (
 }
 
 describe("createDisposalsFromOffence", () => {
-  it("should return empty array if there are no results", () => {
+  it("returns an empty array if there are no results", () => {
     const [aho, offence] = generateAho([])
 
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -122,7 +122,7 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toHaveLength(0)
   })
 
-  it("should return empty array if there are no recordable results", () => {
+  it("returns an empty array if there are no recordable results", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 1000 }, { pncDisposal: 1000 }])
 
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -130,7 +130,7 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toHaveLength(0)
   })
 
-  it("should return disposals when all PNC disposals are 2007", () => {
+  it("returns disposals when all PNC disposals are 2007", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2007 }, { pncDisposal: 2007 }])
 
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -138,11 +138,9 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found and 2 disposals are generated already", () => {
+  it("returns only PNC disposals for a 2060 result when a disposal 2050 has been found and only 2 disposals generated", () => {
     const [aho, offence] = generateAho([
-      { pncDisposal: 2050, numberOfExpectedDisposals: 2 },
-      { pncDisposal: 2060, numberOfExpectedDisposals: 2 },
-      { pncDisposal: 2066, numberOfExpectedDisposals: 2 },
+      { pncDisposal: 2050, numberOfExpectedDisposals: 1 },
       { pncDisposal: 2060, numberOfExpectedDisposals: 1 }
     ])
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -150,42 +148,37 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should not ignore disposals before the first result with PNC disposal 2060 when a disposal 2050 has been found but 3 disposals are generated already", () => {
+  it("returns only PNC disposals for a 2060 result when a disposal 2063 has been found and only 2 disposals generated", () => {
+    const [aho, offence] = generateAho([
+      { pncDisposal: 2063, numberOfExpectedDisposals: 1 },
+      { pncDisposal: 2060, numberOfExpectedDisposals: 1 }
+    ])
+    const disposals = createDisposalsFromOffence(aho, offence)
+
+    expect(disposals).toMatchSnapshot()
+  })
+
+  it("returns all PNC disposals for results when 2060 and 2050 results and more than 2 disposals generated", () => {
     const [aho, offence] = generateAho([
       { pncDisposal: 2050, numberOfExpectedDisposals: 2 },
-      { pncDisposal: 2050, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2060, numberOfExpectedDisposals: 2 }
+      { pncDisposal: 2060, numberOfExpectedDisposals: 1 }
     ])
     const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 has been found and 2 disposals are generated already", () => {
+  it("returns all PNC disposals for results when 2060 and 2063 results and more than 2 disposals generated", () => {
     const [aho, offence] = generateAho([
-      { pncDisposal: 2051, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2060, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2063, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2068, numberOfExpectedDisposals: 1 }
+      { pncDisposal: 2063, numberOfExpectedDisposals: 2 },
+      { pncDisposal: 2060, numberOfExpectedDisposals: 1 }
     ])
     const disposals = createDisposalsFromOffence(aho, offence)
 
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should ignore disposals before the first result with PNC disposal 2060 when a disposal 2063 with result 2060 has been found and 2 disposals are generated already", () => {
-    const [aho, offence] = generateAho([
-      { pncDisposal: 2051, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2063, resultCode: 2060, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2063, numberOfExpectedDisposals: 1 },
-      { pncDisposal: 2068, numberOfExpectedDisposals: 1 }
-    ])
-    const disposals = createDisposalsFromOffence(aho, offence)
-
-    expect(disposals).toMatchSnapshot()
-  })
-
-  it("should ignore disposal 2063 when there was a disposal 2063 with result code 2060", () => {
+  it("ignores disposal 2063 when there was a disposal 2063 with result code 2060", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2063, resultCode: 2060 }, { pncDisposal: 2063 }])
 
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -193,7 +186,7 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should not add any disposal when disposal codes are 3052 and adjournment does not exist", () => {
+  it("returns no disposals when disposal codes are 3052 and adjournment exists", () => {
     const [aho, offence] = generateAho([
       { pncDisposal: 3052, resultClass: ResultClass.ADJOURNMENT },
       { pncDisposal: 3052, resultClass: ResultClass.ADJOURNMENT }
@@ -204,7 +197,7 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toHaveLength(0)
   })
 
-  it("should generate a PNC disposal using the sentence date from the matching offence when adjournment does not exist and disposal 3027 does not exist", () => {
+  it("returns a PNC disposal using the sentence date from the matching offence when adjournment does not exist and disposal 3027 does not exist", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2050, resultClass: ResultClass.SENTENCE }], true)
 
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -212,7 +205,7 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should generate a PNC disposal using the sentence date from the matching offence when adjournment exists", () => {
+  it("returns a PNC disposal using the sentence date from the matching offence when adjournment exists", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 2050, resultClass: ResultClass.ADJOURNMENT }], true)
 
     const disposals = createDisposalsFromOffence(aho, offence)
@@ -220,7 +213,7 @@ describe("createDisposalsFromOffence", () => {
     expect(disposals).toMatchSnapshot()
   })
 
-  it("should generate a PNC disposal using the sentence date from the matching offence when disposal 3027 exists", () => {
+  it("returns a PNC disposal using the sentence date from the matching offence when disposal 3027 exists", () => {
     const [aho, offence] = generateAho([{ pncDisposal: 3027, resultClass: ResultClass.SENTENCE }], true)
 
     const disposals = createDisposalsFromOffence(aho, offence)
