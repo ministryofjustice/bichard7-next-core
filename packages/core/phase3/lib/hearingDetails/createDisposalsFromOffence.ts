@@ -30,7 +30,9 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
 
     if (disposalCode === 2060 && disposalsFor2060Result.length === 0) {
       disposalsFor2060Result = pncDisposalsFromResult
-    } else if (disposalCode === 2063) {
+    }
+
+    if (disposalCode === 2063) {
       if (resultCode === 2060) {
         disposalsFor2060Result = pncDisposalsFromResult
       } else {
