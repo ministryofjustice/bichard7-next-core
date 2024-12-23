@@ -49,8 +49,8 @@ const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offen
     pncDisposals = pncDisposalsFor2060Result
   }
 
-  const has3027Disposal = recordableResults.some((result) => result.PNCDisposalType === 3027)
-  if (has3027Disposal || hasAdjournmentResult) {
+  const has3027Result = recordableResults.some((result) => result.PNCDisposalType === 3027)
+  if (has3027Result || hasAdjournmentResult) {
     return pncDisposals.map(toDisposal)
   }
 
