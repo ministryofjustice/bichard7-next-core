@@ -8,7 +8,15 @@ import isRecordableResult from "../../../phase2/lib/isRecordableResult"
 import { HearingDetailsType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "../getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
-const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): PncDisposal[] => {
+const toDisposal = (pncDisposal: PncDisposal): Disposal => ({
+  disposalType: pncDisposal.type?.toString() ?? "",
+  disposalQuantity: pncDisposal.qtyUnitsFined ?? "",
+  disposalQualifiers: pncDisposal.qualifiers ?? "",
+  disposalText: pncDisposal.text ?? "",
+  type: HearingDetailsType.DISPOSAL
+})
+
+const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): Disposal[] => {
   const results = offence.Result
   const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
   const hasAdjournmentResult = results.some((result) => result.ResultClass?.includes("Adjournment"))
@@ -43,7 +51,7 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
 
   const has3027Disposal = recordableResults.some((result) => result.PNCDisposalType === 3027)
   if (has3027Disposal || hasAdjournmentResult) {
-    return pncDisposals
+    return pncDisposals.map(toDisposal)
   }
 
   const convictionDate = getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie(aho, offence)
@@ -63,16 +71,7 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
     )
   }
 
-  return pncDisposals
+  return pncDisposals.map(toDisposal)
 }
-
-const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): Disposal[] =>
-  createPncDisposalFromOffence(aho, offence).map((disposal) => ({
-    disposalType: disposal.type?.toString() ?? "",
-    disposalQuantity: disposal.qtyUnitsFined ?? "",
-    disposalQualifiers: disposal.qualifiers ?? "",
-    disposalText: disposal.text ?? "",
-    type: HearingDetailsType.DISPOSAL
-  }))
 
 export default createDisposalsFromOffence
