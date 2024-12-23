@@ -43,7 +43,7 @@
     "@govuk-react/select": "^0.10.7",
     "@govuk-react/table": "^0.10.7",
     "@ministryofjustice/frontend": "^3.3.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.239",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.240",
     "@types/lodash.clonedeep": "^4.5.9",
     "axios": "^1.7.9",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",
