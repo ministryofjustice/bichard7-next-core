@@ -37,9 +37,8 @@ const createPncDisposal = ({
   secondaryDurationLength,
   secondaryDurationUnit
 }: CreatePncDisposalRequest): PncDisposal => {
-  const qtyDuration = durationUnit ? durationUnit + durationLength?.toString() : ""
   return {
-    qtyDuration: qtyDuration,
+    qtyDuration: durationUnit ? durationUnit + durationLength?.toString() : "",
     qtyMonetaryValue: amountSpecifiedInResult?.toString(),
     qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
     qtyUnitsFined: preProcessDisposalQuantity(
