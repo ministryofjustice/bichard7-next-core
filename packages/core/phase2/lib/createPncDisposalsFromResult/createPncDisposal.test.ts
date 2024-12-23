@@ -125,6 +125,24 @@ describe("createPncDisposal", () => {
       expect(qualifiers).toBe("C E C F A123")
     })
 
+    it("returns an empty string when no qualifiers", () => {
+      const { qualifiers } = createPncDisposal({
+        pncDisposalType: 1234,
+        resultQualifiers: []
+      })
+
+      expect(qualifiers).toBe("")
+    })
+
+    it("returns an empty string when only qualifier is not in allowed list", () => {
+      const { qualifiers } = createPncDisposal({
+        pncDisposalType: 1234,
+        resultQualifiers: ["CV"]
+      })
+
+      expect(qualifiers).toBe("")
+    })
+
     it("omits qualifiers not in allowed list and appends S", () => {
       const { qualifiers } = createPncDisposal({
         pncDisposalType: 1234,
