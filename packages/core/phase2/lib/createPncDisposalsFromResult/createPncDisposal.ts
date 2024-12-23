@@ -36,28 +36,26 @@ const createPncDisposal = ({
   resultQualifiers,
   secondaryDurationLength,
   secondaryDurationUnit
-}: CreatePncDisposalRequest): PncDisposal => {
-  return {
-    qtyDuration: durationUnit ? durationUnit + durationLength?.toString() : "",
-    qtyMonetaryValue: amountSpecifiedInResult?.toString(),
-    qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
-    qtyUnitsFined: preProcessDisposalQuantity(
-      durationUnit,
-      durationLength,
-      pncDisposalType,
-      dateSpecifiedInResult,
-      amountSpecifiedInResult
-    ),
-    qualifiers: preProcessDisposalQualifiers(
-      secondaryDurationUnit,
-      secondaryDurationLength,
-      resultQualifiers,
-      pncDisposalType
-    ),
-    text: disposalText,
-    type: pncDisposalType
-  }
-}
+}: CreatePncDisposalRequest): PncDisposal => ({
+  qtyDuration: durationUnit ? durationUnit + durationLength?.toString() : "",
+  qtyMonetaryValue: amountSpecifiedInResult?.toString(),
+  qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
+  qtyUnitsFined: preProcessDisposalQuantity(
+    durationUnit,
+    durationLength,
+    pncDisposalType,
+    dateSpecifiedInResult,
+    amountSpecifiedInResult
+  ),
+  qualifiers: preProcessDisposalQualifiers(
+    secondaryDurationUnit,
+    secondaryDurationLength,
+    resultQualifiers,
+    pncDisposalType
+  ),
+  text: disposalText,
+  type: pncDisposalType
+})
 
 const preProcessDisposalQuantity = (
   durationUnit: string | undefined,
