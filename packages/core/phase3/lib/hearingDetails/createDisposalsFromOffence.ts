@@ -18,9 +18,8 @@ const createPncDisposalFromOffence = (aho: AnnotatedHearingOutcome, offence: Off
   let has2063Result = false
 
   for (const recordableResult of recordableResults) {
-    const disposalCode = recordableResult.PNCDisposalType
-    const resultCode = recordableResult.CJSresultCode
     const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
+    const { PNCDisposalType: disposalCode, CJSresultCode: resultCode } = recordableResult
 
     const hasConverted2060Result = disposalCode === 2063 && resultCode === 2060
     if ((disposalCode === 2060 && disposalsFor2060Result.length === 0) || hasConverted2060Result) {
