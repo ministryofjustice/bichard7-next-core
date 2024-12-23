@@ -105,11 +105,11 @@ const preProcessDisposalQualifiers = (
 
   let disposalQualifier = ""
   if (pncDisposalType && !NO_QUALIFIERS_LIST.includes(pncDisposalType)) {
-    resultQualifiers?.forEach((qualifier) => {
-      if (INCLUDE_QUALIFIERS_LIST.includes(qualifier)) {
-        disposalQualifier += qualifier.padEnd(2, " ")
-      }
-    })
+    const includedQualifiers = resultQualifiers
+      ?.filter((qualifier) => INCLUDE_QUALIFIERS_LIST.includes(qualifier))
+      .reduce((includedQualifiers, qualifier) => includedQualifiers + qualifier.padEnd(2, " "), "")
+
+    disposalQualifier += includedQualifiers ?? ""
 
     const hasSQualifier = resultQualifiers?.some((qualifier) => "S" == qualifier)
     if (hasSQualifier) {
