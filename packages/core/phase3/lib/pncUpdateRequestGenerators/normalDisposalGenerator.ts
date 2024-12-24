@@ -6,9 +6,9 @@ import type { HearingDefendant, Offence, OrganisationUnitCodes } from "../../../
 import type { ArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
 
+import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import getAdjustedRecordableOffencesForCourtCase from "../../../lib/getAdjustedRecordableOffencesForCourtCase"
 import { GENERATED_PNC_FILENAME_MAX_LENGTH } from "../../../phase1/enrichAho/enrichFunctions/enrichDefendant/enrichDefendant"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import checkRccSegmentApplicability, {
   RccSegmentApplicability
 } from "../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"

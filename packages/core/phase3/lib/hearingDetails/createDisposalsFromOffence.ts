@@ -2,8 +2,8 @@ import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedH
 import type { PncDisposal } from "../../../types/PncQueryResult"
 import type { Disposal } from "../../types/HearingDetails"
 
-import { createPncDisposalsFromResult } from "../../../phase2/lib/createPncDisposalsFromResult"
-import createPncDisposal from "../../../phase2/lib/createPncDisposalsFromResult/createPncDisposal"
+import { createPncDisposalsFromResult } from "../../../lib/createPncDisposalsFromResult"
+import createPncDisposal from "../../../lib/createPncDisposalsFromResult/createPncDisposal"
 import isRecordableResult from "../../../phase2/lib/isRecordableResult"
 import { HearingDetailsType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "../getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"

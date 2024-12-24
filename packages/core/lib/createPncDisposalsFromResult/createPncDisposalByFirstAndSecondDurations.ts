@@ -1,7 +1,7 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../types/PncQueryResult"
 
-import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import { getDisposalTextFromResult } from "../../phase2/lib/getDisposalTextFromResult"
 import createPncDisposal from "./createPncDisposal"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"

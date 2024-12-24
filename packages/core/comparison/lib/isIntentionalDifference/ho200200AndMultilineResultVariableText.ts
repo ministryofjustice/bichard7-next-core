@@ -2,7 +2,7 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 
 import type { ComparisonData, ComparisonOutput } from "../../types/ComparisonData"
 
-import { maxDisposalTextLength } from "../../../phase2/lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
+import { maxDisposalTextLength } from "../../../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 import licencedPremisesExclusionOrderDisposalText from "../../../phase2/lib/getDisposalTextFromResult/licencedPremisesExclusionOrderDisposalText"
 import { checkIntentionalDifferenceForPhases } from "./index"
 

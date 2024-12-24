@@ -1,4 +1,4 @@
-import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { PncDisposal } from "../../types/PncQueryResult"
 
 import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
