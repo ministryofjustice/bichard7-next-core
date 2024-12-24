@@ -1,5 +1,5 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../types/PncQueryResult"
 
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
 import createPncDisposal from "./createPncDisposal"
@@ -33,17 +33,17 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal
       ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+`
       : disposalText
 
-  const disposal = createPncDisposal(
-    result.PNCDisposalType,
-    firstDuration?.DurationUnit,
-    firstDuration?.DurationLength,
-    secondDuration?.DurationUnit,
-    secondDuration?.DurationLength,
+  const disposal = createPncDisposal({
+    amountSpecifiedInResult: validatedAmountInResult,
     dateSpecifiedInResult,
-    validatedAmountInResult,
-    result.ResultQualifierVariable?.map((res) => res.Code),
-    validatedDisposalText
-  )
+    disposalText: validatedDisposalText,
+    durationLength: firstDuration?.DurationLength,
+    durationUnit: firstDuration?.DurationUnit,
+    pncDisposalType: result.PNCDisposalType,
+    resultQualifiers: result.ResultQualifierVariable?.map((result) => result.Code),
+    secondaryDurationLength: secondDuration?.DurationLength,
+    secondaryDurationUnit: secondDuration?.DurationUnit
+  })
 
   return disposal
 }

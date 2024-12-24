@@ -3,10 +3,10 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
-import { maxDisposalTextLength } from "../../phase2/lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
-import { getDisposalTextFromResult } from "../../phase2/lib/getDisposalTextFromResult"
 import Phase from "../../types/Phase"
+import { maxDisposalTextLength } from "../createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
 import forEachRecordableResult from "../forEachRecordableResult"
+import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
 
 const triggerCode = TriggerCode.TRPS0003
 const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]
