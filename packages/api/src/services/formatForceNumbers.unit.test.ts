@@ -19,6 +19,12 @@ describe("formatForceNumbers", () => {
     expect(result).toEqual([])
   })
 
+  it("handles white space", () => {
+    const result = formatForceNumbers("  ")
+
+    expect(result).toEqual([])
+  })
+
   it("handles a zero padded", () => {
     const result = formatForceNumbers("001")
 
