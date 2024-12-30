@@ -44,7 +44,7 @@
     "axios": "^1.7.9",
     "nodemailer": "^6.9.16",
     "pg-promise": "^11.10.2",
-    "pino": "^9.5.0",
+    "pino": "^9.6.0",
     "postgres": "^3.4.5",
     "promise-poller": "^1.9.1",
     "stompit": "^1.0.0",

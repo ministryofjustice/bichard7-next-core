@@ -70,7 +70,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@swc/core": "^1.10.1",
+    "@swc/core": "^1.10.4",
     "@swc/jest": "^0.2.37",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash.merge": "^4.6.9",
@@ -86,8 +86,8 @@
     "eslint-plugin-prettier": "^5.2.1",
     "gherkin-lint": "^4.2.4",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.11",
-    "npm-check-updates": "^17.1.12",
+    "lint-staged": "^15.3.0",
+    "npm-check-updates": "^17.1.13",
     "prettier": "^3.4.2"
   },
   "lint-staged": {
