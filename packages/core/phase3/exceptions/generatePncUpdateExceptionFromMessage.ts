@@ -1,9 +1,9 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
-import type { PncErrorRangesForException } from "../../lib/exceptions/getPncExceptionFromMessage"
+import type { PncErrorRangesForException } from "../../lib/exceptions/generatePncExceptionFromMessage"
 import type { PncException } from "../../types/Exception"
 
-import getPncExceptionFromMessage from "../../lib/exceptions/getPncExceptionFromMessage"
+import generatePncExceptionFromMessage from "../../lib/exceptions/generatePncExceptionFromMessage"
 
 const defaultPncUpdateException = ExceptionCode.HO100402
 const pncUpdateErrorRanges: PncErrorRangesForException[] = [
@@ -40,6 +40,6 @@ const pncUpdateErrorRanges: PncErrorRangesForException[] = [
 ]
 
 const generatePncUpdateExceptionFromMessage = (message: string): PncException =>
-  getPncExceptionFromMessage(message, pncUpdateErrorRanges, defaultPncUpdateException)
+  generatePncExceptionFromMessage(message, pncUpdateErrorRanges, defaultPncUpdateException)
 
 export default generatePncUpdateExceptionFromMessage

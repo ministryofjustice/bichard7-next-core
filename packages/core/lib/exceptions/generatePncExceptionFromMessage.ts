@@ -23,7 +23,7 @@ const inPncErrorRange = (pncErrorCode: string, pncErrorRanges: PncErrorRange[]):
     return pncErrorCode === start
   })
 
-const getPncExceptionFromMessage = (
+const generatePncExceptionFromMessage = (
   pncErrorMessage: string,
   pncErrorRanges: PncErrorRangesForException[],
   defaultException: ExceptionCode
@@ -39,4 +39,4 @@ const getPncExceptionFromMessage = (
   return { code: defaultException, path: errorPaths.case.asn, message: pncErrorMessage }
 }
 
-export default getPncExceptionFromMessage
+export default generatePncExceptionFromMessage

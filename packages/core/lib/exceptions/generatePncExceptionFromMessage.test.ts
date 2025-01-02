@@ -1,10 +1,10 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
-import type { PncErrorRangesForException } from "./getPncExceptionFromMessage"
+import type { PncErrorRangesForException } from "./generatePncExceptionFromMessage"
 
-import getPncExceptionFromMessage from "./getPncExceptionFromMessage"
+import generatePncExceptionFromMessage from "./generatePncExceptionFromMessage"
 
-describe("getPncExceptionFromMessage", () => {
+describe("generatePncExceptionFromMessage", () => {
   const defaultPncException = ExceptionCode.HO100315
   const pncErrorRanges: PncErrorRangesForException[] = [
     {
@@ -26,11 +26,11 @@ describe("getPncExceptionFromMessage", () => {
     { errorAtStartOfRange: "PNCUE", pncExceptionCode: ExceptionCode.HO100302 },
     { errorAtStartOfRange: "I0256", pncExceptionCode: ExceptionCode.HO100313 }
   ])(
-    "returns the exception for a PNC message at the start of an error range e.g. $errorAtStartOfRange",
+    "generates the exception for a PNC message at the start of an error range e.g. $errorAtStartOfRange",
     ({ errorAtStartOfRange, pncExceptionCode }) => {
       const pncErrorMessage = `${errorAtStartOfRange} Some PNC message`
 
-      const exception = getPncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
+      const exception = generatePncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
 
       expect(exception).toStrictEqual({
         code: pncExceptionCode,
@@ -40,11 +40,11 @@ describe("getPncExceptionFromMessage", () => {
     }
   )
 
-  it("returns the exception for a PNC message in between an error range", () => {
+  it("generates the exception for a PNC message in between an error range", () => {
     const errorInBetweenRange = "I0019"
     const pncErrorMessage = `${errorInBetweenRange} Some PNC message`
 
-    const exception = getPncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
+    const exception = generatePncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
 
     expect(exception).toStrictEqual({
       code: ExceptionCode.HO100301,
@@ -53,11 +53,11 @@ describe("getPncExceptionFromMessage", () => {
     })
   })
 
-  it("returns the exception for a PNC message at the end of an error range", () => {
+  it("generates the exception for a PNC message at the end of an error range", () => {
     const errorAtEndOfRange = "I0022"
     const pncErrorMessage = `${errorAtEndOfRange} Some PNC message`
 
-    const exception = getPncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
+    const exception = generatePncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
 
     expect(exception).toStrictEqual({
       code: ExceptionCode.HO100301,
@@ -66,11 +66,11 @@ describe("getPncExceptionFromMessage", () => {
     })
   })
 
-  it("returns the default exception for a PNC message not within any error ranges", () => {
+  it("generates the default exception for a PNC message not within any error ranges", () => {
     const errorOutsideAllRanges = "I9999"
     const pncErrorMessage = `${errorOutsideAllRanges} Some PNC message`
 
-    const exception = getPncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
+    const exception = generatePncExceptionFromMessage(pncErrorMessage, pncErrorRanges, defaultPncException)
 
     expect(exception).toStrictEqual({
       code: defaultPncException,
