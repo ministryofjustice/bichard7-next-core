@@ -1,13 +1,13 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
-import type { ErrorRangeDefinition } from "../../lib/exceptions/getPncExceptionFromMessage"
+import type { PncErrorRangesForException } from "../../lib/exceptions/getPncExceptionFromMessage"
 import type { PncException } from "../../types/Exception"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
 import getPncExceptionFromMessage from "../../lib/exceptions/getPncExceptionFromMessage"
 
 const defaultPncUpdateException = ExceptionCode.HO100314
-const pncEnquiryErrorRanges: ErrorRangeDefinition[] = [
+const pncEnquiryErrorRanges: PncErrorRangesForException[] = [
   {
     code: ExceptionCode.HO100301,
     ranges: [{ start: "I0013", end: "I0022" }]

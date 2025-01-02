@@ -4,39 +4,39 @@ import type { PncException } from "../../types/Exception"
 
 import errorPaths from "./errorPaths"
 
-export type ErrorRangeDefinition = {
+export type PncErrorRangesForException = {
   code: ExceptionCode
-  ranges: ErrorRange[]
+  ranges: PncErrorRange[]
 }
 
-type ErrorRange = {
+type PncErrorRange = {
   end?: string
   start: string
 }
 
-const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
-  ranges.some(({ start, end }) => {
+const inPncErrorRange = (pncErrorCode: string, pncErrorRanges: PncErrorRange[]): boolean =>
+  pncErrorRanges.some(({ start, end }) => {
     if (end) {
-      return code >= start && code <= end
+      return pncErrorCode >= start && pncErrorCode <= end
     }
 
-    return code === start
+    return pncErrorCode === start
   })
 
 const getPncExceptionFromMessage = (
-  message: string,
-  errorRanges: ErrorRangeDefinition[],
+  pncErrorMessage: string,
+  pncErrorRanges: PncErrorRangesForException[],
   defaultException: ExceptionCode
 ): PncException => {
-  const errorCode = message.substring(0, 5)
+  const pncErrorCode = pncErrorMessage.substring(0, 5)
 
-  for (const { code, ranges } of errorRanges) {
-    if (inErrorRange(errorCode, ranges)) {
-      return { code, path: errorPaths.case.asn, message }
+  for (const { code, ranges } of pncErrorRanges) {
+    if (inPncErrorRange(pncErrorCode, ranges)) {
+      return { code, path: errorPaths.case.asn, message: pncErrorMessage }
     }
   }
 
-  return { code: defaultException, path: errorPaths.case.asn, message }
+  return { code: defaultException, path: errorPaths.case.asn, message: pncErrorMessage }
 }
 
 export default getPncExceptionFromMessage
