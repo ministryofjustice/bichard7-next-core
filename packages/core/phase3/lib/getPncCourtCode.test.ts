@@ -102,7 +102,7 @@ describe("getPncCourtCode", () => {
     const error = getPncCourtCode(ouCodes, courtHouseCode)
 
     expect(error).toBeInstanceOf(Error)
-    expect(error.message).toBe("PSA code is not a number")
+    expect((error as Error).message).toBe("PSA code 'I'm not a number' is not a number")
   })
 
   it("Should return a youth court code if the courtHouse code is greater than 4000 and third level code is less than 4000", () => {
