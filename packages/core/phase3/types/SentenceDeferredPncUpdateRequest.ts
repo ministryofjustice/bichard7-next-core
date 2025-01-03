@@ -1,5 +1,5 @@
 import type { PncOperation } from "../../types/PncOperation"
-import type { CourtHearingAndDisposal } from "./HearingDetails"
+import type { PncUpdateCourtHearingAndDisposal } from "./HearingDetails"
 
 type SentenceDeferredPncUpdateRequest = {
   operation: PncOperation.SENTENCE_DEFERRED
@@ -9,7 +9,7 @@ type SentenceDeferredPncUpdateRequest = {
     croNumber: null | string
     forceStationCode: string
     hearingDate: string
-    hearingDetails: CourtHearingAndDisposal[]
+    hearingDetails: PncUpdateCourtHearingAndDisposal[]
     hearingType: string
     pncCheckName: null | string
     pncIdentifier: null | string
