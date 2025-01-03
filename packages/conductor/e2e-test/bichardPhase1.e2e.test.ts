@@ -14,7 +14,6 @@ import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
-import fs from "fs"
 import postgres from "postgres"
 
 import ignoredTriggersPncMock from "./fixtures/ignored-aho-triggers.pnc.json"
@@ -23,6 +22,7 @@ import successExceptionsPncMock from "./fixtures/success-exceptions-aho.pnc.json
 import successNoTriggersPncMock from "./fixtures/success-no-triggers-aho.pnc.json"
 import { startWorkflow } from "./helpers/e2eHelpers"
 import getAuditLogs from "./helpers/getAuditLogs"
+import getFixture from "./helpers/getFixture"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
@@ -30,9 +30,6 @@ const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const mqConfig = createMqConfig()
-
-const getFixture = (path: string, correlationId: string): string =>
-  String(fs.readFileSync(path)).replace("CORRELATION_ID", correlationId)
 
 describe("bichard_phase_1 workflow", () => {
   let mqListener: MqListener

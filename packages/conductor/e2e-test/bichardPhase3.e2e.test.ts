@@ -16,22 +16,18 @@ import insertErrorListRecord from "@moj-bichard7/core/lib/database/insertErrorLi
 import errorPaths from "@moj-bichard7/core/lib/exceptions/errorPaths"
 import generateMockPhase2Result from "@moj-bichard7/core/phase2/tests/helpers/generateMockPhase2Result"
 import { randomUUID } from "crypto"
-import fs from "fs"
 import postgres from "postgres"
 
 import successNoTriggersPncMock from "./fixtures/phase3/success-no-triggers-aho.pnc.json"
 import { startWorkflow } from "./helpers/e2eHelpers"
 import getAuditLogs from "./helpers/getAuditLogs"
+import getFixture from "./helpers/getFixture"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
-
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
-
-const getFixture = (path: string, correlationId: string): string =>
-  String(fs.readFileSync(path)).replace("CORRELATION_ID", correlationId)
 
 describe("bichard_phase_3 workflow", () => {
   let correlationId: string
