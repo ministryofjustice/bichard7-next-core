@@ -1,45 +1,12 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-import axios from "axios"
-
-import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
-import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
 import getMessageType from "../../../phase1/lib/getMessageType"
-import defaults from "../../../phase1/tests/helpers/defaults"
+import addMockToPnc from "../../../phase1/tests/helpers/addMockToPnc"
+import clearMocksInPnc from "../../../phase1/tests/helpers/clearMocksInPnc"
 import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
-
-const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
-  const data = { matchRegex, response, count }
-  const resp = await axios.post(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`, data)
-  if (resp.status < 200 || resp.status >= 300) {
-    throw new Error("Error setting mock in PNC Emulator")
-  }
-
-  return resp.headers.location!.replace("/mocks/", "")
-}
-
-const clearMocks = async (): Promise<void> => {
-  const response = await axios.delete(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`)
-  if (response.status !== 204) {
-    throw new Error("Error clearing mocks in PNC Emulator")
-  }
-}
-
-const getOperations = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): Operation[] => {
-  if ("PncOperations" in message) {
-    return message.PncOperations
-  }
-
-  return message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.PncOperations
-}
-
-const getPncErrorMessages = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): string[] => {
-  const exceptions =
-    "PncOperations" in message ? message.Exceptions : message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions
-
-  return exceptions.filter((exception) => "message" in exception).map((exception) => exception.message)
-}
+import getPncErrorMessages from "./getPncErrorMessages"
+import getPncOperationsFromPncUpdateDataset from "./getPncOperationsFromPncUpdateDataset"
 
 const mockSuccessResponse = `<?XML VERSION="1.0" STANDALONE="YES"?>
     <CXU01>
@@ -66,7 +33,7 @@ const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml?:
   }
 
   const mockOperationResults = []
-  const beforeOperations = getOperations(parsedIncomingMessage)
+  const beforeOperations = getPncOperationsFromPncUpdateDataset(parsedIncomingMessage)
 
   if (outgoingMessageXml) {
     const outgoingMessageType = getMessageType(outgoingMessageXml)
@@ -80,7 +47,7 @@ const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml?:
     }
 
     const beforeUnattemptedOperations = beforeOperations.filter((operation) => operation.status !== "Completed")
-    const afterOperations = getOperations(parsedOutgoingMessage)
+    const afterOperations = getPncOperationsFromPncUpdateDataset(parsedOutgoingMessage)
     const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status === "NotAttempted")
     const afterFailedOperations = afterOperations.filter((operation) => operation.status === "Failed")
     const errorMessages = getPncErrorMessages(parsedOutgoingMessage)
@@ -113,9 +80,9 @@ const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml?:
     }
   }
 
-  await clearMocks()
+  await clearMocksInPnc()
   for (const mock of mockOperationResults) {
-    await addMock(mock.matchRegex, mock.response, mock.count)
+    await addMockToPnc(mock.matchRegex, mock.response, mock.count)
   }
 }
 
