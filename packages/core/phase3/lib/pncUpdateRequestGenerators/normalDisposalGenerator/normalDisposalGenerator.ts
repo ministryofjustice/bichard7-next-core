@@ -5,8 +5,8 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import type { ArrestHearingAdjudicationAndDisposal } from "../../../types/HearingDetails"
 import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGenerator"
 
+import formatDateSpecifiedInResult from "../../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import getAdjustedRecordableOffencesForCourtCase from "../../../../lib/getAdjustedRecordableOffencesForCourtCase"
-import formatDateSpecifiedInResult from "../../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import checkRccSegmentApplicability, {
   RccSegmentApplicability
 } from "../../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"

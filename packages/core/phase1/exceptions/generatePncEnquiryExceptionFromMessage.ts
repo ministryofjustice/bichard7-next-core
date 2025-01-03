@@ -1,23 +1,13 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
+import type { PncErrorRangesForException } from "../../lib/exceptions/generatePncExceptionFromMessage"
 import type { PncException } from "../../types/Exception"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
+import generatePncExceptionFromMessage from "../../lib/exceptions/generatePncExceptionFromMessage"
 
-type ErrorRange = {
-  end?: string
-  start: string
-}
-
-type ErrorRangeDefinition = {
-  code: ExceptionCode
-  ranges: ErrorRange[]
-}
-
-const ho100301 = (message: string) => ({ code: ExceptionCode.HO100301, path: errorPaths.case.asn, message })
-const ho100314 = (message: string) => ({ code: ExceptionCode.HO100314, path: errorPaths.case.asn, message })
-
-const errorRanges: ErrorRangeDefinition[] = [
+const defaultPncUpdateException = ExceptionCode.HO100314
+const pncEnquiryErrorRanges: PncErrorRangesForException[] = [
   {
     code: ExceptionCode.HO100301,
     ranges: [{ start: "I0013", end: "I0022" }]
@@ -46,31 +36,14 @@ const errorRanges: ErrorRangeDefinition[] = [
   }
 ]
 
-const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
-  ranges.some(({ start, end }) => {
-    if (end) {
-      return code >= start && code <= end
-    }
-
-    return code === start
-  })
-
 export const isNotFoundError = (message: string): boolean => !!message.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)
 
 const generatePncEnquiryExceptionFromMessage = (message: string): PncException => {
   if (isNotFoundError(message)) {
-    return ho100301(message)
+    return { code: ExceptionCode.HO100301, path: errorPaths.case.asn, message }
   }
 
-  const errorCode = message.substring(0, 5)
-
-  for (const { code, ranges } of errorRanges) {
-    if (inErrorRange(errorCode, ranges)) {
-      return { code, path: errorPaths.case.asn, message }
-    }
-  }
-
-  return ho100314(message)
+  return generatePncExceptionFromMessage(message, pncEnquiryErrorRanges, defaultPncUpdateException)
 }
 
 export default generatePncEnquiryExceptionFromMessage

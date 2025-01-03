@@ -27,9 +27,9 @@ export default async function (fastify: FastifyInstance) {
       openapi: "3.1.0" satisfies ZodOpenApiVersion,
       servers: [],
       tags: [
-        { description: "Cases endpoints", name: "Cases" },
-        { description: "Health endpoint", name: "Health" },
-        { description: "Root endpoints", name: "Root" }
+        { description: "Cases endpoints", name: "Cases V1" },
+        { description: "Health endpoint", name: "Health V1" },
+        { description: "Demo endpoints", name: "Demo V1" }
       ]
     },
     transform: fastifyZodOpenApiTransform
