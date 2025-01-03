@@ -7,7 +7,7 @@ import { PncOperation } from "../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
 import { generateHearingsAndDisposals } from "../hearingDetails/generateHearingsAndDisposals"
-import preProcessCourtCaseReferenceNumber from "./normalDisposalGenerator/preProcessCourtCaseReferenceNumber"
+import preProcessCourtCaseReferenceNumber from "../preProcessCourtCaseReferenceNumber"
 
 const SENTENCE_DEFERRED_HEARING_TYPE = "D"
 
