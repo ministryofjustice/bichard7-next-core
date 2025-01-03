@@ -5,6 +5,8 @@
     "phase1/tests/fixtures/exampleAho.json",
     "phase2/tests/helpers/generateMockPhase2Result.ts",
     "phase2/tests/helpers/PartialPncUpdateDataset.ts",
-    "phase2/tests/fixtures/helpers/generateFakePncUpdateDataset.ts"
+    "phase2/tests/fixtures/helpers/generateFakePncUpdateDataset.ts",
+    "phase3/tests/helpers/getPncErrorMessages.ts",
+    "phase3/tests/helpers/getPncOperationsFromPncUpdateDataset.ts"
   ]
 }
