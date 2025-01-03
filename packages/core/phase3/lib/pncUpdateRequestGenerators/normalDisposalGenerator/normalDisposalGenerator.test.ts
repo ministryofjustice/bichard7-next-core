@@ -6,7 +6,6 @@ import type { Operation } from "../../../../types/PncUpdateDataset"
 import type NormalDisposalPncUpdateRequest from "../../../types/NormalDisposalPncUpdateRequest"
 
 import lookupOrganisationUnitByCode from "../../../../lib/dataLookup/lookupOrganisationUnitByCode"
-import generatePncUpdateDatasetFromOffenceList from "../../../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import ResultClass from "../../../../types/ResultClass"
 import normalDisposalGenerator from "./normalDisposalGenerator"
 
@@ -50,37 +49,42 @@ const createPncUpdateDataset = () => {
     ] as Result[]
   } as Offence
 
-  const pncUpdateDataset = generatePncUpdateDatasetFromOffenceList([offence])
-  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant = {
-    ...pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant,
-    ArrestSummonsNumber: "1101ZD0100000410780J",
-    RemandStatus: "CB",
-    BailConditions: ["This is a dummy bail condition."]
-  }
-  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case = {
-    ...pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case,
-    ForceOwner: {
-      TopLevelCode: "A",
-      SecondLevelCode: "02",
-      ThirdLevelCode: "BJ",
-      BottomLevelCode: "01",
-      OrganisationUnitCode: "A02BJ01"
+  const pncUpdateDataset = {
+    AnnotatedHearingOutcome: {
+      HearingOutcome: {
+        Hearing: {
+          DateOfHearing: new Date("2024-12-05"),
+          CourtHearingLocation: {
+            TopLevelCode: "B",
+            SecondLevelCode: "01",
+            ThirdLevelCode: "00",
+            BottomLevelCode: "00",
+            OrganisationUnitCode: "B000000"
+          },
+          CourtHouseName: "Magistrates' Courts London Croydon",
+          CourtType: "MCA"
+        },
+        Case: {
+          CourtCaseReferenceNumber: "97/1626/008395Q",
+          ForceOwner: {
+            TopLevelCode: "A",
+            SecondLevelCode: "02",
+            ThirdLevelCode: "BJ",
+            BottomLevelCode: "01",
+            OrganisationUnitCode: "A02BJ01"
+          },
+          HearingDefendant: {
+            ArrestSummonsNumber: "1101ZD0100000410780J",
+            BailConditions: ["This is a dummy bail condition."],
+            Offence: [offence],
+            RemandStatus: "CB"
+          },
+          PTIURN: "01ZD0303208"
+        }
+      }
     },
-    PTIURN: "01ZD0303208",
-    CourtCaseReferenceNumber: "97/1626/008395Q"
-  }
-  pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing = {
-    ...pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing,
-    DateOfHearing: new Date("2024-12-05"),
-    CourtHearingLocation: {
-      TopLevelCode: "B",
-      SecondLevelCode: "01",
-      ThirdLevelCode: "00",
-      BottomLevelCode: "00",
-      OrganisationUnitCode: "B000000"
-    },
-    CourtType: "MCA",
-    CourtHouseName: "Magistrates' Courts London Croydon"
+    Exceptions: [],
+    PncOperations: []
   }
 
   return pncUpdateDataset
@@ -112,7 +116,7 @@ describe("normalDisposalGenerator", () => {
   it("should return error when court case reference in operation is invalid", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithInvalidCourtCaseReference = {
-      ...structuredClone(operation),
+      code: "DISARR",
       data: {
         courtCaseReference: "97/1626/008395"
       }
@@ -127,7 +131,7 @@ describe("normalDisposalGenerator", () => {
   it("should return error when court case reference in operation does not exist and court case reference in hearing outcome is invalid", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithoutCourtCaseReference = {
-      ...structuredClone(operation),
+      code: "DISARR",
       data: undefined
     }
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "97/1626/00839"
@@ -193,7 +197,7 @@ describe("normalDisposalGenerator", () => {
 
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithoutCourtCaseReference = {
-      ...structuredClone(operation),
+      code: "DISARR",
       data: undefined
     }
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode = 4001

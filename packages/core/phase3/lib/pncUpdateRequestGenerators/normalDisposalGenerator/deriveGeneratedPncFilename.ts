@@ -22,7 +22,6 @@ const deriveGeneratedPncFilename = (defendant: HearingDefendant) => {
     generatedPNCFilename = generatedPNCFilename.substring(0, GENERATED_PNC_FILENAME_MAX_LENGTH - 1) + "+"
   }
 
-  // if there is no / in the name, add one
   if (!generatedPNCFilename.includes("/")) {
     if (generatedPNCFilename.length == GENERATED_PNC_FILENAME_MAX_LENGTH) {
       generatedPNCFilename = generatedPNCFilename.substring(0, GENERATED_PNC_FILENAME_MAX_LENGTH - 2) + "/+"

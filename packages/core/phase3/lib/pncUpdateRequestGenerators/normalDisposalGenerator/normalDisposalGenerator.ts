@@ -19,7 +19,7 @@ import { generateHearingsAdjudicationsAndDisposals } from "../../hearingDetails/
 import preProcessAsn from "../../preProcessAsn"
 import preProcessCourtCaseReferenceNumber from "../../preProcessCourtCaseReferenceNumber"
 import deriveGeneratedPncFilename from "./deriveGeneratedPncFilename"
-import getNextHearingDateFromOffencesList from "./getNextHearingDateFromOffencesList"
+import getNextHearingDateFromOffences from "./getNextHearingDateFromOffences"
 import getNextResultSourceOrganisationFromOffences from "./getNextResultSourceOrganisationFromOffences"
 import preProcessPreTrialIssuesUniqueReferenceNumber from "./preProcessPreTrialIssuesUniqueReferenceNumber"
 
@@ -77,7 +77,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     return crtPsaCourtCode
   }
 
-  const courtDate = crtPsaCourtCode ? getNextHearingDateFromOffencesList(offences) : undefined
+  const courtDate = crtPsaCourtCode ? getNextHearingDateFromOffences(offences) : undefined
   const pendingCourtHouseName =
     crtPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : ""
   const hearingsAdjudicationsAndDisposals = generateHearingsAdjudicationsAndDisposals(

@@ -1,6 +1,6 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 
-const getNextHearingDateFromOffencesList = (offences: Offence[]): Date | undefined => {
+const getNextHearingDateFromOffences = (offences: Offence[]): Date | undefined => {
   const nextHearingDate =
     offences.flatMap((offence) => offence.Result).find((result) => result.PNCDisposalType === 2059)?.NextHearingDate ??
     undefined
@@ -8,4 +8,4 @@ const getNextHearingDateFromOffencesList = (offences: Offence[]): Date | undefin
   return nextHearingDate ? new Date(nextHearingDate) : undefined
 }
 
-export default getNextHearingDateFromOffencesList
+export default getNextHearingDateFromOffences

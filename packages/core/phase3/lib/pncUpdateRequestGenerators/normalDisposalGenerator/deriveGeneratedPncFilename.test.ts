@@ -16,12 +16,12 @@ describe("deriveGeneratedPncFilename", () => {
         expected: "/"
       },
       {
-        test: "should not add '/' to the output string when hearing outcome's generated PNC filename already has a '/'",
+        test: "not add '/' to the output string when hearing outcome's generated PNC filename already has a '/'",
         pncFilename: "SMITH/JOHN",
         expected: "SMITH/JOHN"
       },
       {
-        test: "should add '/' to the output string when hearing outcome's generated PNC filename does not have a '/'",
+        test: "add '/' to the output string when hearing outcome's generated PNC filename does not have a '/'",
         pncFilename: "SMITHJOHN",
         expected: "SMITHJOHN/"
       }
