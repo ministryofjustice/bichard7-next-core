@@ -1,5 +1,5 @@
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { CourtHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
+import type { PncUpdateCourtHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
 
 import getAdjustedRecordableOffencesForCourtCase from "../../../lib/getAdjustedRecordableOffencesForCourtCase"
 import { createAdjudicationFromOffence } from "./createAdjudicationFromOffence"
@@ -9,13 +9,13 @@ import createDisposalsFromOffence from "./createDisposalsFromOffence"
 export const generateHearingsAdjudicationsAndDisposals = (
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReference?: string
-): CourtHearingAdjudicationAndDisposal[] =>
+): PncUpdateCourtHearingAdjudicationAndDisposal[] =>
   getAdjustedRecordableOffencesForCourtCase(
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence,
     courtCaseReference
   )
     .filter((offence) => !offence.AddedByTheCourt)
-    .reduce((courtHearingsAndDisposals: CourtHearingAdjudicationAndDisposal[], offence) => {
+    .reduce((courtHearingsAndDisposals: PncUpdateCourtHearingAdjudicationAndDisposal[], offence) => {
       courtHearingsAndDisposals.push(createCourtHearingFromOffence(offence))
 
       const adjudication = createAdjudicationFromOffence(

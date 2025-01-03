@@ -1,22 +1,22 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncDisposal } from "../../../types/PncQueryResult"
-import type { Disposal } from "../../types/HearingDetails"
+import type { PncUpdateDisposal } from "../../types/HearingDetails"
 
 import { createPncDisposalsFromResult } from "../../../lib/createPncDisposalsFromResult"
 import createPncDisposal from "../../../lib/createPncDisposalsFromResult/createPncDisposal"
 import isRecordableResult from "../../../phase2/lib/isRecordableResult"
-import { HearingDetailsType } from "../../types/HearingDetails"
+import { PncUpdateType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "./getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
-const toDisposal = (pncDisposal: PncDisposal): Disposal => ({
+const toDisposal = (pncDisposal: PncDisposal): PncUpdateDisposal => ({
   disposalType: pncDisposal.type?.toString() ?? "",
   disposalQuantity: pncDisposal.qtyUnitsFined ?? "",
   disposalQualifiers: pncDisposal.qualifiers ?? "",
   disposalText: pncDisposal.type === 3027 ? null : (pncDisposal.text ?? ""),
-  type: HearingDetailsType.DISPOSAL
+  type: PncUpdateType.DISPOSAL
 })
 
-const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): Disposal[] => {
+const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offence): PncUpdateDisposal[] => {
   const results = offence.Result
   const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
   const hasAdjournmentResult = results.some((result) => result.ResultClass?.includes("Adjournment"))

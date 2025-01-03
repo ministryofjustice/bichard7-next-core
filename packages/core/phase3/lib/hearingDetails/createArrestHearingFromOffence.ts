@@ -1,10 +1,10 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { ArrestHearing } from "../../types/HearingDetails"
+import type { PncUpdateArrestHearing } from "../../types/HearingDetails"
 
 import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import getOffenceCode from "../../../lib/getOffenceCode"
-import { HearingDetailsType } from "../../types/HearingDetails"
+import { PncUpdateType } from "../../types/HearingDetails"
 import getForceStationCode from "../getForceStationCode"
 import { preProcessOffenceReasonSequence } from "./preProcessOffenceReasonSequence"
 
@@ -21,7 +21,10 @@ const preProcessOffenceTime = (offenceTime?: string) =>
         .replace(MIDNIGHT_TIME_STRING, ONE_MINUTE_PAST_MIDNIGHT_TIME_STRING)
     : ""
 
-export const createArrestHearingFromOffence = (pncUpdateDataset: PncUpdateDataset, offence: Offence): ArrestHearing => {
+export const createArrestHearingFromOffence = (
+  pncUpdateDataset: PncUpdateDataset,
+  offence: Offence
+): PncUpdateArrestHearing => {
   const offenceStartDate = formatDateSpecifiedInResult(offence.ActualOffenceStartDate.StartDate, true)
   const offenceEndDate = offence.ActualOffenceEndDate?.EndDate
     ? formatDateSpecifiedInResult(offence.ActualOffenceEndDate.EndDate, true)
@@ -39,6 +42,6 @@ export const createArrestHearingFromOffence = (pncUpdateDataset: PncUpdateDatase
     offenceReasonSequence: preProcessOffenceReasonSequence(offence),
     offenceStartDate,
     offenceStartTime: preProcessOffenceTime(offenceStartTime),
-    type: HearingDetailsType.ARREST
+    type: PncUpdateType.ARREST
   }
 }

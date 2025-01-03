@@ -3,7 +3,7 @@ import type { Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { HearingDefendant, Offence, OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
-import type { ArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
+import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
 
 import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
@@ -166,7 +166,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     operation.data?.courtCaseReference
   )
   let arrestSummonsNumber: Error | null | string = null
-  let arrestsAdjudicationsAndDisposals: ArrestHearingAdjudicationAndDisposal[] = []
+  let arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = []
   if (offencesAddedByTheCourt.length > 0) {
     arrestSummonsNumber = preProcessAsn(hearingDefendant.ArrestSummonsNumber)
     if (isError(arrestSummonsNumber)) {
