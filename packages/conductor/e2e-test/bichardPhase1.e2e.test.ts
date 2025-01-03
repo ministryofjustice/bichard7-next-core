@@ -22,23 +22,14 @@ import onlyTriggersPncMock from "./fixtures/only-triggers-aho.pnc.json"
 import successExceptionsPncMock from "./fixtures/success-exceptions-aho.pnc.json"
 import successNoTriggersPncMock from "./fixtures/success-no-triggers-aho.pnc.json"
 import { startWorkflow } from "./helpers/e2eHelpers"
+import getAuditLogs from "./helpers/getAuditLogs"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
-
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const mqConfig = createMqConfig()
-
-const getAuditLogs = async (correlationId: string) => {
-  const auditLog = await auditLogClient.getMessage(correlationId)
-  if (isError(auditLog)) {
-    throw new Error("Error retrieving audit log")
-  }
-
-  return auditLog.events.map((e) => e.eventCode)
-}
 
 const getFixture = (path: string, correlationId: string): string =>
   String(fs.readFileSync(path)).replace("CORRELATION_ID", correlationId)
@@ -80,7 +71,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "0")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-2")
 
@@ -108,7 +99,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-2")
 
@@ -133,7 +124,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "0")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
 
     // Check the temp file has been cleaned up
@@ -156,7 +147,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.ignored.reopened")
     expect(auditLogEventCodes).toContain("triggers.generated")
 
@@ -180,7 +171,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
 
     // Check the message was not sent to the message queue

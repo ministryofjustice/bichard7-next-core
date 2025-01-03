@@ -16,23 +16,14 @@ import fs from "fs"
 import postgres from "postgres"
 
 import { startWorkflow } from "./helpers/e2eHelpers"
+import getAuditLogs from "./helpers/getAuditLogs"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
-
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const mqConfig = createMqConfig()
-
-const getAuditLogs = async (correlationId: string) => {
-  const auditLog = await auditLogClient.getMessage(correlationId)
-  if (isError(auditLog)) {
-    throw new Error("Error retrieving audit log")
-  }
-
-  return auditLog.events.map((e) => e.eventCode)
-}
 
 const getFixture = (path: string, correlationId: string): string =>
   String(fs.readFileSync(path)).replace("CORRELATION_ID", correlationId)
@@ -72,7 +63,7 @@ describe("bichard_phase_2 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "0")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-2")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-3")
 
@@ -99,7 +90,7 @@ describe("bichard_phase_2 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.ignored.nonrecordable")
     expect(auditLogEventCodes).toContain("triggers.generated")
 
@@ -122,7 +113,7 @@ describe("bichard_phase_2 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-2")
 
     // Check the message was not sent to the message queue
