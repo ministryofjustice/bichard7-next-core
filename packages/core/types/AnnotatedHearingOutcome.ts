@@ -20,9 +20,9 @@ import type {
   organisationUnitSchema,
   resultQualifierVariableSchema,
   resultSchema,
+  unvalidatedHearingOutcomeSchema,
   urgentSchema
 } from "../schemas/unvalidatedHearingOutcome"
-import type { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
 
 export type Address = z.infer<typeof addressSchema>
 export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>
