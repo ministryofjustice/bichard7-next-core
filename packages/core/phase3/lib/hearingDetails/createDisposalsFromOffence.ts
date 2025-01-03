@@ -6,7 +6,7 @@ import { createPncDisposalsFromResult } from "../../../lib/createPncDisposalsFro
 import createPncDisposal from "../../../lib/createPncDisposalsFromResult/createPncDisposal"
 import isRecordableResult from "../../../phase2/lib/isRecordableResult"
 import { HearingDetailsType } from "../../types/HearingDetails"
-import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "../getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
+import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "./getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
 const toDisposal = (pncDisposal: PncDisposal): Disposal => ({
   disposalType: pncDisposal.type?.toString() ?? "",
