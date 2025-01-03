@@ -46,7 +46,7 @@ describe.ifPhase2("HO200202", () => {
     }
   )
 
-  it.skip.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
+  it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "doesn't create a HO200202 exception for %s when within limit for qualifier variables for results",
     async (messageType) => {
       const inputMessage = generatePhase2Message({

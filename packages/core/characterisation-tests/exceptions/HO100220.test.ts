@@ -24,7 +24,7 @@ describe.ifPhase1("HO100220", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the reasonForOffenceBailConditions is too long", async () => {
+  it.ifNewBichard("should create an exception if the reasonForOffenceBailConditions is too short", async () => {
     const inputMessage = generateSpiMessage({
       reasonForBailConditionsOrCustody: "",
       offences: [{ results: [{}] }]

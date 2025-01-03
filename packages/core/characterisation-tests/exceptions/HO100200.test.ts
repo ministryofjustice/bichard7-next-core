@@ -37,20 +37,5 @@ describe.ifPhase1("HO100200", () => {
         "OrganisationUnitCode"
       ]
     })
-    // TODO: Core doesn't generate the HO100300 yet
-    // expect(exceptions).toContainEqual({
-    //   code: "HO100300",
-    //   path: [
-    //     "AnnotatedHearingOutcome",
-    //     "HearingOutcome",
-    //     "Case",
-    //     "HearingDefendant",
-    //     "Offence",
-    //     0,
-    //     "Result",
-    //     0,
-    //     "CourtType"
-    //   ]
-    // });
   })
 })

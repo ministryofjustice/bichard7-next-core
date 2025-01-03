@@ -8,8 +8,7 @@ describe.ifPhase1("HO100211", () => {
     await new PostgresHelper().closeConnection()
   })
 
-  // TODO: We haven't implemented organisations yet
-  it.skip("should create an exception if the Organisation Name is too many characters", async () => {
+  it.ifNewBichard("should create an exception if the Organisation Name is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       organisation: { name: "X".repeat(256) },
       offences: [{ results: [] }]
@@ -22,20 +21,12 @@ describe.ifPhase1("HO100211", () => {
     expect(exceptions).toStrictEqual([
       {
         code: "HO100211",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "DefendantDetail",
-          "PersonName",
-          "Title"
-        ]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "OrganisationName"]
       }
     ])
   })
 
-  it.skip("should create an exception if the Organisation Name is too few characters", async () => {
+  it.ifNewBichard("should create an exception if the Organisation Name is too few characters", async () => {
     const inputMessage = generateSpiMessage({
       organisation: { name: "" },
       offences: [{ results: [] }]
@@ -48,15 +39,7 @@ describe.ifPhase1("HO100211", () => {
     expect(exceptions).toStrictEqual([
       {
         code: "HO100211",
-        path: [
-          "AnnotatedHearingOutcome",
-          "HearingOutcome",
-          "Case",
-          "HearingDefendant",
-          "DefendantDetail",
-          "PersonName",
-          "Title"
-        ]
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "OrganisationName"]
       }
     ])
   })

@@ -94,8 +94,7 @@ describe.ifPhase1("HO100103", () => {
     })
   })
 
-  //TODO: Needs implementing once we've implemented in core
-  it.skip("should create an exception if the time specified in the result is invalid", async () => {
+  it.ifNewBichard("should create an exception if the time specified in the result is invalid", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ endDate: new Date(), endTime: "XXXX", results: [{}] }]
     })
@@ -106,17 +105,7 @@ describe.ifPhase1("HO100103", () => {
 
     expect(exceptions).toContainEqual({
       code: "HO100103",
-      path: [
-        "AnnotatedHearingOutcome",
-        "HearingOutcome",
-        "Case",
-        "HearingDefendant",
-        "Offence",
-        0,
-        "Result",
-        0,
-        "TimeSpecifiedInResult"
-      ]
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "Offence", 0, "OffenceEndTime"]
     })
   })
 })
