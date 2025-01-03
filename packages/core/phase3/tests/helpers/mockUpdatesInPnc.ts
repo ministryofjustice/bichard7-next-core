@@ -2,21 +2,12 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 
 import getMessageType from "../../../phase1/lib/getMessageType"
+import addMockToPnc from "../../../phase1/tests/helpers/addMockToPnc"
 import defaults from "../../../phase1/tests/helpers/defaults"
 import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
 import getPncErrorMessages from "./getPncErrorMessages"
 import getPncOperationsFromPncUpdateDataset from "./getPncOperationsFromPncUpdateDataset"
-
-const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
-  const data = { matchRegex, response, count }
-  const resp = await axios.post(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`, data)
-  if (resp.status < 200 || resp.status >= 300) {
-    throw new Error("Error setting mock in PNC Emulator")
-  }
-
-  return resp.headers.location!.replace("/mocks/", "")
-}
 
 const clearMocks = async (): Promise<void> => {
   const response = await axios.delete(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`)
@@ -99,7 +90,7 @@ const mockUpdatesInPnc = async (incomingMessageXml: string, outgoingMessageXml?:
 
   await clearMocks()
   for (const mock of mockOperationResults) {
-    await addMock(mock.matchRegex, mock.response, mock.count)
+    await addMockToPnc(mock.matchRegex, mock.response, mock.count)
   }
 }
 

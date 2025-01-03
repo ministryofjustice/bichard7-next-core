@@ -10,6 +10,7 @@ import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import defaults from "../../tests/helpers/defaults"
 import reformatDate from "../../tests/helpers/reformatDate"
+import addMockToPnc from "./addMockToPnc"
 
 type PncMock = {
   matchRegex: string
@@ -97,16 +98,6 @@ const mockEnquiryError = (): string => {
   return '<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>'
 }
 
-const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
-  const data = { matchRegex, response, count }
-  const resp = await axios.post(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`, data)
-  if (resp.status < 200 || resp.status >= 300) {
-    throw new Error("Error setting mock in PNC Emulator")
-  }
-
-  return resp.headers.location!.replace("/mocks/", "")
-}
-
 const clearMocks = async (): Promise<void> => {
   const response = await axios.delete(`http://${defaults.pncHost}:${defaults.pncPort}/mocks`)
   if (response.status !== 204) {
@@ -122,7 +113,7 @@ const mockRecordInPnc = async (
 ): Promise<void> => {
   const enquiry = mockEnquiry(messageXml, pncOverrides, pncCaseType, pncAdjudication)
   await clearMocks()
-  await addMock(enquiry.matchRegex, enquiry.response)
+  await addMockToPnc(enquiry.matchRegex, enquiry.response)
 }
 
 const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
@@ -233,7 +224,7 @@ const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult): PncMock => {
 const mockEnquiryErrorInPnc = async (): Promise<void> => {
   const enquiryError = mockEnquiryError()
   await clearMocks()
-  await addMock("CXE01", enquiryError)
+  await addMockToPnc("CXE01", enquiryError)
 }
 
 const mockAhoRecordInPnc = async (messageXml: string): Promise<void> => {
@@ -245,7 +236,7 @@ const mockAhoRecordInPnc = async (messageXml: string): Promise<void> => {
   if (parsedAho.PncQuery) {
     const mock = mockEnquiryFromPncResult(parsedAho.PncQuery)
     await clearMocks()
-    await addMock(mock.matchRegex, mock.response)
+    await addMockToPnc(mock.matchRegex, mock.response)
   } else {
     mockEnquiryErrorInPnc()
   }
