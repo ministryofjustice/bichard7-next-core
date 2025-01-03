@@ -1,8 +1,8 @@
 import type { HearingDefendant } from "../../../../types/AnnotatedHearingOutcome"
 
-import deriveGeneratedPNCFilename from "./deriveGeneratedPNCFilename"
+import deriveGeneratedPncFilename from "./deriveGeneratedPncFilename"
 
-describe("deriveGeneratedPNCFilename", () => {
+describe("deriveGeneratedPncFilename", () => {
   describe("when defendant is a person", () => {
     it.each([
       {
@@ -35,7 +35,7 @@ describe("deriveGeneratedPNCFilename", () => {
         }
       } as HearingDefendant
 
-      const result = deriveGeneratedPNCFilename(hearingDefendant)
+      const result = deriveGeneratedPncFilename(hearingDefendant)
 
       expect(result).toBe(expected)
     })
@@ -50,7 +50,7 @@ describe("deriveGeneratedPNCFilename", () => {
         OrganisationName: name
       } as HearingDefendant
 
-      const result = deriveGeneratedPNCFilename(hearingDefendant)
+      const result = deriveGeneratedPncFilename(hearingDefendant)
 
       expect(result).toBe("")
     })
@@ -60,7 +60,7 @@ describe("deriveGeneratedPNCFilename", () => {
         OrganisationName: " COMPANY_/+A    !@£$%^&*()_+=/`~?.,<>;'][{}|\":B "
       } as HearingDefendant
 
-      const result = deriveGeneratedPNCFilename(hearingDefendant)
+      const result = deriveGeneratedPncFilename(hearingDefendant)
 
       expect(result).toBe("COMPANY / A / B")
     })
@@ -70,7 +70,7 @@ describe("deriveGeneratedPNCFilename", () => {
         OrganisationName: "A".repeat(53)
       } as HearingDefendant
 
-      const result = deriveGeneratedPNCFilename(hearingDefendant)
+      const result = deriveGeneratedPncFilename(hearingDefendant)
 
       expect(result).toBe(`${"A".repeat(53)}/`)
     })
@@ -80,7 +80,7 @@ describe("deriveGeneratedPNCFilename", () => {
         OrganisationName: `A/${"B".repeat(53)}`
       } as HearingDefendant
 
-      const result = deriveGeneratedPNCFilename(hearingDefendant)
+      const result = deriveGeneratedPncFilename(hearingDefendant)
 
       expect(result).toBe(`A/${"B".repeat(51)}+`)
     })
@@ -90,7 +90,7 @@ describe("deriveGeneratedPNCFilename", () => {
         OrganisationName: "A".repeat(55)
       } as HearingDefendant
 
-      const result = deriveGeneratedPNCFilename(hearingDefendant)
+      const result = deriveGeneratedPncFilename(hearingDefendant)
 
       expect(result).toBe(`${"A".repeat(52)}/+`)
     })
