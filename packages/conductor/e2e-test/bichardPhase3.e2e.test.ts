@@ -7,6 +7,7 @@ import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
+import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { clearPncMocks } from "@moj-bichard7/common/test/pnc/clearPncMocks"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
@@ -99,5 +100,20 @@ describe("bichard_phase_3 workflow", () => {
     const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
     expect(isError(s3File)).toBeTruthy()
     expect((s3File as Error).message).toBe("The specified key does not exist.")
+  })
+
+  it("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
+    const fixture = getFixture("e2e-test/fixtures/phase3/success-aho.json", correlationId)
+    await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
+    await uploadPncMock(successNoTriggersPncMock)
+    await startWorkflow("bichard_phase_3", { s3TaskDataPath }, correlationId)
+    await waitForCompletedWorkflow(s3TaskDataPath, "COMPLETED", 60000, "bichard_phase_3")
+    const secondWorkflowId = await startWorkflow("bichard_phase_3", { s3TaskDataPath }, correlationId)
+    const workflows = await waitForWorkflows({
+      count: 2,
+      query: { correlationId, status: "COMPLETED", workflowType: "bichard_phase_3" }
+    })
+    const secondWorkflow = workflows.find((wf) => wf.workflowId === secondWorkflowId)
+    expect(secondWorkflow?.reasonForIncompletion).toMatch(/Workflow is COMPLETED by TERMINATE task/)
   })
 })
