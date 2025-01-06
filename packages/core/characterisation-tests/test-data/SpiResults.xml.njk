@@ -57,7 +57,7 @@
               <DC:PresentAtHearing>A</DC:PresentAtHearing>
               <DC:BailStatus>U</DC:BailStatus>
               <DC:OrganisationName>
-                <DC:OrganisationName>{{ organisation.name if organisation.name else "ORGANISATION"}}</DC:OrganisationName>
+                <DC:OrganisationName>{{ organisation.name if organisation.name or organisation.name === "" else "ORGANISATION"}}</DC:OrganisationName>
               </DC:OrganisationName>
               <DC:Address>
                 <DC:SimpleAddress>

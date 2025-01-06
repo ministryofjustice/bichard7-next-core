@@ -68,8 +68,7 @@ describe("lockS3File", () => {
     expect(result.logs?.map((l) => l.log)).toContain("S3 File already deleted")
   })
 
-  // Skipped because localstack doesn't behave quite the same as AWS in this edge case
-  it.skip("should return COMPLETE with failure when the file has been deleted", async () => {
+  it("should return COMPLETE with failure when the file has been deleted", async () => {
     const fileName = `${randomUUID()}.xml`
     const lockId = randomUUID()
     await putFileToS3("Hello World", fileName, bucketName, s3Config, { lockedByWorkstream: lockId })
