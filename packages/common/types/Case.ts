@@ -57,7 +57,7 @@ export const PartialCaseDTOSchema = z.object({
   errorLockedByUserFullName: z.string().optional(),
   errorLockedByUsername: z.string().nullable(),
   errorReport: z.string().optional(),
-  errorStatus: z.number().nullable(),
+  errorStatus: z.string(),
   isUrgent: z.number().optional(),
   ptiurn: z.string().nullable(),
   resolutionTimestamp: z.date().nullable(),

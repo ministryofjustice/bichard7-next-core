@@ -54,7 +54,7 @@ describe("retrieve a case", () => {
       errorLockedByUserFullName: undefined,
       errorLockedByUsername: null,
       errorReport: "",
-      errorStatus: null,
+      errorStatus: "Unresolved",
       isUrgent: 0,
       orgForPoliceFilter: "",
       phase: 1,
