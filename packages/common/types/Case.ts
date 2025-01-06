@@ -45,31 +45,33 @@ export const CaseDBSchema = z.object({
 })
 
 // TODO: Fill in missing attributes
+// TODO: Add notes
+// TODO: Add triggers
 export const PartialCaseDTOSchema = z.object({
   asn: z.string().nullable(),
-  courtDate: z.string().optional(),
-  courtName: z.string().optional(),
-  defendantName: z.string().optional(),
-  errorId: z.string().optional(),
+  canUserEditExceptions: z.string().optional(),
+  courtDate: z.date().nullable(),
+  courtName: z.string().nullable(),
+  defendantName: z.string().nullable(),
+  errorId: z.number(),
   errorLockedByUserFullName: z.string().optional(),
-  errorLockedByUsername: z.string().optional(),
+  errorLockedByUsername: z.string().nullable(),
   errorReport: z.string().optional(),
-  errorStatus: z.string().optional(),
-  isUrgent: z.string().optional(),
-  ptiurn: z.string().optional(),
-  resolutionTimestamp: z.string().optional(),
-  triggerCount: z.string().optional(),
+  errorStatus: z.number().nullable(),
+  isUrgent: z.number().optional(),
+  ptiurn: z.string().nullable(),
+  resolutionTimestamp: z.date().nullable(),
+  triggerCount: z.number().optional(),
   triggerLockedByUserFullName: z.string().optional(),
-  triggerLockedByUsername: z.string().optional(),
-  triggerStatus: z.string().optional()
+  triggerLockedByUsername: z.string().nullable(),
+  triggerStatus: z.number().nullable()
 })
 
 // TODO: Fill in missing attributes
 export const FullCaseDTOSchema = PartialCaseDTOSchema.and(
   z.object({
     aho: z.string(),
-    canUserEditExceptions: z.string().optional(),
-    courtCode: z.string().optional(),
+    courtCode: z.string().nullable(),
     courtReference: z.string().optional(),
     orgForPoliceFilter: z.string().optional(),
     phase: z.number().optional(),
@@ -79,4 +81,4 @@ export const FullCaseDTOSchema = PartialCaseDTOSchema.and(
 
 export type CaseDB = z.infer<typeof CaseDBSchema>
 export type CaseDTO = z.infer<typeof FullCaseDTOSchema>
-export type CasePartialDTO = z.output<typeof PartialCaseDTOSchema>
+export type CasePartialDTO = z.infer<typeof PartialCaseDTOSchema>

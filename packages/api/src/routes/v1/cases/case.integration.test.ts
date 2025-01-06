@@ -44,7 +44,27 @@ describe("retrieve a case", () => {
     expect(response.json()).toEqual({
       aho: "",
       asn: "",
-      updatedHearingOutcome: null
+      canUserEditExceptions: undefined,
+      courtCode: "",
+      courtDate: new Date("2022-06-30").toISOString(),
+      courtName: "",
+      courtReference: "",
+      defendantName: "",
+      errorId: 0,
+      errorLockedByUserFullName: undefined,
+      errorLockedByUsername: null,
+      errorReport: "",
+      errorStatus: null,
+      isUrgent: 0,
+      orgForPoliceFilter: "",
+      phase: 1,
+      ptiurn: null,
+      resolutionTimestamp: null,
+      triggerCount: 0,
+      triggerLockedByUserFullName: undefined,
+      triggerLockedByUsername: null,
+      triggerStatus: null,
+      updatedHearingOutcome: ""
     })
   })
 
