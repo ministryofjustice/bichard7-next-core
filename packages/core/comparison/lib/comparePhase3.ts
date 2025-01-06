@@ -163,7 +163,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
         parsedIncomingMessageResult.message.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
       )
 
-    if (outgoingPncUpdateDataset && isIntentionalDifference) {
+    if (isIntentionalDifference) {
       return {
         auditLogEventsMatch: true,
         triggersMatch: true,
