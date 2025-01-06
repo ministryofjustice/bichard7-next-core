@@ -25,17 +25,19 @@ const printSummary = (results: (ComparisonResultDetail | SkippedFile)[]): void =
   console.log(`${stats.total} comparisons`)
 
   if (stats.passed > 0) {
-    console.log(
-      chalk.green(
-        `✓ ${stats.passed} passed (${toPercent(stats.passed, stats.expectedPassed)}) (of which AHOs: ${toPercent(
-          stats.passedAho,
-          stats.expectedPassedAho
-        )} of ${stats.expectedPassedAho} and PncUpdateDatasets: ${toPercent(
+    const passedPercentage = `✓ ${stats.passed} passed (${toPercent(stats.passed, stats.expectedPassed)})`
+    const passedAhoPercentage =
+      stats.expectedPassedAho > 0
+        ? ` (AHOs: ${toPercent(stats.passedAho, stats.expectedPassedAho)} of ${stats.expectedPassedAho})`
+        : ""
+    const passedPncUpdateDatasetPercentage = stats.expectedPassedPncUpdateDataset
+      ? ` (PncUpdateDatasets: ${toPercent(
           stats.passedPncUpdateDataset,
           stats.expectedPassedPncUpdateDataset
         )} of ${stats.expectedPassedPncUpdateDataset})`
-      )
-    )
+      : ""
+
+    console.log(chalk.green(passedPercentage + passedAhoPercentage + passedPncUpdateDatasetPercentage))
   }
 
   if (stats.failed > 0) {
