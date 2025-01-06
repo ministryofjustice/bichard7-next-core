@@ -1,7 +1,7 @@
 import type { CaseDTO } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
+import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import fetchFullCaseDTO from "./fetchFullCaseDTO"
 
 describe("fetchFullCaseDTO", () => {
@@ -24,7 +24,7 @@ describe("fetchFullCaseDTO", () => {
       errorLockedByUserFullName: undefined,
       errorLockedByUsername: null,
       errorReport: "",
-      errorStatus: null,
+      errorStatus: "Unresolved",
       isUrgent: 0,
       orgForPoliceFilter: "",
       phase: 1,

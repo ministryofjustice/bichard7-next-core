@@ -1,5 +1,7 @@
 import type { CaseDB, CaseDTO, CasePartialDTO } from "@moj-bichard7/common/types/Case"
 
+import errorStatusFromCaseDB from "./errorStatusFromCaseDB"
+
 // TODO: Add current user to both functions to see if they have access to exceptions & checks the locked by
 
 export const convertCaseDBToCaseDTO = (caseDB: CaseDB): CaseDTO => {
@@ -29,7 +31,7 @@ export const convertCaseDBToCasePartialDTO = (caseDB: CaseDB): CasePartialDTO =>
     errorLockedByUserFullName: undefined,
     errorLockedByUsername: caseDB.error_locked_by_id,
     errorReport: caseDB.error_report,
-    errorStatus: caseDB.error_status,
+    errorStatus: errorStatusFromCaseDB(caseDB),
     isUrgent: caseDB.is_urgent,
     ptiurn: caseDB.ptiurn,
     resolutionTimestamp: caseDB.resolution_ts,

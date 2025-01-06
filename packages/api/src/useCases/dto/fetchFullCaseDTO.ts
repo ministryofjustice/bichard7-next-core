@@ -1,9 +1,9 @@
 import type { CaseDTO } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 
-import formatForceNumbers from "../services/formatForceNumbers"
+import formatForceNumbers from "../../services/formatForceNumbers"
 import { convertCaseDBToCaseDTO } from "./convertCaseDBToDTO"
 
 const fetchFullCaseDTO = async (user: User, db: DataStoreGateway, caseId: number): Promise<CaseDTO> => {

@@ -12,7 +12,7 @@ import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchFullCaseDTO from "../../../useCases/fetchFullCaseDTO"
+import fetchFullCaseDTO from "../../../useCases/dto/fetchFullCaseDTO"
 
 type HandlerProps = {
   caseId: number
