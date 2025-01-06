@@ -24,7 +24,7 @@ describe("fetchFullCaseDTO", () => {
       errorLockedByUserFullName: undefined,
       errorLockedByUsername: null,
       errorReport: "",
-      errorStatus: "Unresolved",
+      errorStatus: null,
       isUrgent: 0,
       orgForPoliceFilter: "",
       phase: 1,

@@ -57,14 +57,14 @@ export const PartialCaseDTOSchema = z.object({
   errorLockedByUserFullName: z.string().optional(),
   errorLockedByUsername: z.string().nullable(),
   errorReport: z.string().optional(),
-  errorStatus: z.string(),
+  errorStatus: z.string().nullable(),
   isUrgent: z.number().optional(),
   ptiurn: z.string().nullable(),
   resolutionTimestamp: z.date().nullable(),
   triggerCount: z.number().optional(),
   triggerLockedByUserFullName: z.string().optional(),
   triggerLockedByUsername: z.string().nullable(),
-  triggerStatus: z.number().nullable()
+  triggerStatus: z.string().nullable()
 })
 
 // TODO: Fill in missing attributes

@@ -1,6 +1,6 @@
 import type { CaseDB, CaseDTO, CasePartialDTO } from "@moj-bichard7/common/types/Case"
 
-import errorStatusFromCaseDB from "./errorStatusFromCaseDB"
+import { errorStatusFromCaseDB, triggerStatusFromCaseDB } from "./resolutionStatusFromCaseDB"
 
 // TODO: Add current user to both functions to see if they have access to exceptions & checks the locked by
 
@@ -38,6 +38,6 @@ export const convertCaseDBToCasePartialDTO = (caseDB: CaseDB): CasePartialDTO =>
     triggerCount: caseDB.trigger_count,
     triggerLockedByUserFullName: undefined,
     triggerLockedByUsername: caseDB.trigger_locked_by_id,
-    triggerStatus: caseDB.trigger_status
+    triggerStatus: triggerStatusFromCaseDB(caseDB)
   } satisfies CasePartialDTO
 }
