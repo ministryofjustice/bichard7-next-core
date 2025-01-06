@@ -53,7 +53,7 @@ const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user
     : true
   const exceptionsResolved = user.hasAccessTo[Permission.Exceptions] ? courtCase.errorStatus !== "Unresolved" : true
 
-  return triggersResolved && exceptionsResolved
+  return triggersResolved || exceptionsResolved
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
