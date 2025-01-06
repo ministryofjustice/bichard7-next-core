@@ -6,8 +6,6 @@ import isEqual from "lodash.isequal"
 
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type AnnotatedPncUpdateDataset from "../../types/AnnotatedPncUpdateDataset"
-import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { Phase3Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
@@ -18,6 +16,8 @@ import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToX
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import phase3Handler from "../../phase3/phase3"
+import getPncErrorMessages from "../../phase3/tests/helpers/getPncErrorMessages"
+import getPncOperationsFromPncUpdateDataset from "../../phase3/tests/helpers/getPncOperationsFromPncUpdateDataset"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import MockPncGateway from "./MockPncGateway"
@@ -55,21 +55,6 @@ const normalisePncOperations = (operations: PncUpdateRequest[]) => {
       }
     }
   }
-}
-
-const getOperations = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): Operation[] => {
-  if ("PncOperations" in message) {
-    return message.PncOperations
-  }
-
-  return message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.PncOperations
-}
-
-const getPncErrorMessages = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): string[] => {
-  const exceptions =
-    "PncOperations" in message ? message.Exceptions : message.AnnotatedPNCUpdateDataset.PNCUpdateDataset.Exceptions
-
-  return exceptions.filter((exception) => "message" in exception).map((exception) => exception.message)
 }
 
 const isValidDisposalTextDifference = (
@@ -128,9 +113,9 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const mockPncResponses: (PncApiError | undefined)[] = []
 
     if (!outgoingMessageMissing && outgoingPncUpdateDataset) {
-      const beforeOperations = getOperations(parsedIncomingMessageResult.message)
+      const beforeOperations = getPncOperationsFromPncUpdateDataset(parsedIncomingMessageResult.message)
       const beforeUnattemptedOperations = beforeOperations.filter((operation) => operation.status !== "Completed")
-      const afterOperations = getOperations(outgoingPncUpdateDataset)
+      const afterOperations = getPncOperationsFromPncUpdateDataset(outgoingPncUpdateDataset)
       const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status === "NotAttempted")
       const afterFailedOperations = afterOperations.filter((operation) => operation.status === "Failed")
       const errorMessages = getPncErrorMessages(outgoingPncUpdateDataset)

@@ -1,20 +1,12 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
+import type { PncErrorRangesForException } from "../../lib/exceptions/generatePncExceptionFromMessage"
 import type { PncException } from "../../types/Exception"
 
-import errorPaths from "../../lib/exceptions/errorPaths"
+import generatePncExceptionFromMessage from "../../lib/exceptions/generatePncExceptionFromMessage"
 
-type ErrorRange = {
-  end?: string
-  start: string
-}
-
-type ErrorRangeDefinition = {
-  code: ExceptionCode
-  ranges: ErrorRange[]
-}
-
-const errorRanges: ErrorRangeDefinition[] = [
+const defaultPncUpdateException = ExceptionCode.HO100402
+const pncUpdateErrorRanges: PncErrorRangesForException[] = [
   {
     code: ExceptionCode.HO100401,
     ranges: [
@@ -47,25 +39,7 @@ const errorRanges: ErrorRangeDefinition[] = [
   }
 ]
 
-const inErrorRange = (code: string, ranges: ErrorRange[]): boolean =>
-  ranges.some(({ start, end }) => {
-    if (end) {
-      return code >= start && code <= end
-    }
-
-    return code === start
-  })
-
-const generatePncUpdateExceptionFromMessage = (message: string): PncException => {
-  const errorCode = message.substring(0, 5)
-
-  for (const { code, ranges } of errorRanges) {
-    if (inErrorRange(errorCode, ranges)) {
-      return { code, path: errorPaths.case.asn, message }
-    }
-  }
-
-  return { code: ExceptionCode.HO100402, path: errorPaths.case.asn, message }
-}
+const generatePncUpdateExceptionFromMessage = (message: string): PncException =>
+  generatePncExceptionFromMessage(message, pncUpdateErrorRanges, defaultPncUpdateException)
 
 export default generatePncUpdateExceptionFromMessage

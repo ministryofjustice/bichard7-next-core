@@ -1,19 +1,19 @@
-export enum HearingDetailsType {
+export enum PncUpdateType {
   ADJUDICATION = "ADJUDICATION",
   ARREST = "ARREST",
   DISPOSAL = "DISPOSAL",
   ORDINARY = "ORDINARY"
 }
 
-export type Adjudication = {
+export type PncUpdateAdjudication = {
   hearingDate: string
   numberOffencesTakenIntoAccount: string
   pleaStatus: string
-  type: HearingDetailsType.ADJUDICATION
+  type: PncUpdateType.ADJUDICATION
   verdict: string
 }
 
-export type ArrestHearing = {
+export type PncUpdateArrestHearing = {
   committedOnBail: string
   courtOffenceSequenceNumber: null | string
   locationOfOffence: string
@@ -24,23 +24,31 @@ export type ArrestHearing = {
   offenceReasonSequence: string
   offenceStartDate: string
   offenceStartTime: string
-  type: HearingDetailsType.ARREST
+  type: PncUpdateType.ARREST
 }
 
-export type ArrestHearingAdjudicationAndDisposal = Adjudication | ArrestHearing | Disposal
+export type PncUpdateArrestHearingAdjudicationAndDisposal =
+  | PncUpdateAdjudication
+  | PncUpdateArrestHearing
+  | PncUpdateDisposal
 
-export type CourtHearing = {
+export type PncUpdateCourtHearing = {
   courtOffenceSequenceNumber: string
   offenceReason: string
-  type: HearingDetailsType.ORDINARY
+  type: PncUpdateType.ORDINARY
 }
 
-export type CourtHearingAdjudicationAndDisposal = Adjudication | CourtHearing | Disposal
-export type CourtHearingAndDisposal = CourtHearing | Disposal
-export type Disposal = {
+export type PncUpdateCourtHearingAdjudicationAndDisposal =
+  | PncUpdateAdjudication
+  | PncUpdateCourtHearing
+  | PncUpdateDisposal
+
+export type PncUpdateCourtHearingAndDisposal = PncUpdateCourtHearing | PncUpdateDisposal
+
+export type PncUpdateDisposal = {
   disposalQualifiers: string
   disposalQuantity: string
-  disposalText: string
+  disposalText: null | string
   disposalType: string
-  type: HearingDetailsType.DISPOSAL
+  type: PncUpdateType.DISPOSAL
 }

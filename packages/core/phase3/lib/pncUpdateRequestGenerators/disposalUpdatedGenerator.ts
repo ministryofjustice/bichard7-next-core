@@ -2,12 +2,12 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
 
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import { PncOperation } from "../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../generateBasePncUpdateRequest"
 import getPncCourtCode from "../getPncCourtCode"
 import { generateHearingsAdjudicationsAndDisposals } from "../hearingDetails/generateHearingsAdjudicationsAndDisposals"
-import { preProcessCourtCaseReferenceNumber } from "./normalDisposalGenerator"
+import preProcessCourtCaseReferenceNumber from "../preProcessCourtCaseReferenceNumber"
 
 const DISPOSAL_UPDATED_HEARING_TYPE = "V"
 

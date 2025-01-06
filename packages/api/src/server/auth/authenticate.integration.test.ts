@@ -3,6 +3,7 @@ import type { FastifyInstance } from "fastify"
 import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
 
 import build from "../../app"
+import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
@@ -10,7 +11,7 @@ const defaults = {
   headers: {
     Authorization: "Bearer "
   },
-  url: "/me"
+  url: VersionedEndpoints.V1.Me
 }
 
 describe("authenticate", () => {

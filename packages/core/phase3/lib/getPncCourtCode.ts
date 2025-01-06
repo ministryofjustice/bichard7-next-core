@@ -19,7 +19,7 @@ const convertToYouthCourtIfRequired = (
 
   const thirdLevelPsaCodeNumber = parseInt(thirdLevelPsaCode, 10)
   if (isNaN(thirdLevelPsaCodeNumber)) {
-    return new Error("PSA code is not a number")
+    return new Error(`PSA code '${thirdLevelPsaCode}' is not a number`)
   }
 
   return courtHouseCode > ADULT_YOUTH_COURT_CODE_DIVIDER && thirdLevelPsaCodeNumber < ADULT_YOUTH_COURT_CODE_DIVIDER

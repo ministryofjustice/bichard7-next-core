@@ -14,7 +14,6 @@ import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
-import fs from "fs"
 import postgres from "postgres"
 
 import ignoredTriggersPncMock from "./fixtures/ignored-aho-triggers.pnc.json"
@@ -22,26 +21,15 @@ import onlyTriggersPncMock from "./fixtures/only-triggers-aho.pnc.json"
 import successExceptionsPncMock from "./fixtures/success-exceptions-aho.pnc.json"
 import successNoTriggersPncMock from "./fixtures/success-no-triggers-aho.pnc.json"
 import { startWorkflow } from "./helpers/e2eHelpers"
+import getAuditLogs from "./helpers/getAuditLogs"
+import getFixture from "./helpers/getFixture"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
-
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const mqConfig = createMqConfig()
-
-const getAuditLogs = async (correlationId: string) => {
-  const auditLog = await auditLogClient.getMessage(correlationId)
-  if (isError(auditLog)) {
-    throw new Error("Error retrieving audit log")
-  }
-
-  return auditLog.events.map((e) => e.eventCode)
-}
-
-const getFixture = (path: string, correlationId: string): string =>
-  String(fs.readFileSync(path)).replace("CORRELATION_ID", correlationId)
 
 describe("bichard_phase_1 workflow", () => {
   let mqListener: MqListener
@@ -80,7 +68,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "0")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-2")
 
@@ -108,7 +96,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-2")
 
@@ -133,7 +121,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "0")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
 
     // Check the temp file has been cleaned up
@@ -156,7 +144,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.ignored.reopened")
     expect(auditLogEventCodes).toContain("triggers.generated")
 
@@ -180,7 +168,7 @@ describe("bichard_phase_1 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-1")
 
     // Check the message was not sent to the message queue
@@ -192,9 +180,7 @@ describe("bichard_phase_1 workflow", () => {
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
 
-  // TODO: Enable test and update LocalStack image version when LocalStack releases a version that includes this fix:
-  // https://github.com/localstack/localstack/pull/11185
-  it.skip("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
+  it("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
     const fixture = getFixture("e2e-test/fixtures/success-exceptions-aho.json", correlationId)
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPncMock)
