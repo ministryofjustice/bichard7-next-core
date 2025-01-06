@@ -13,6 +13,8 @@ const fetchFullCaseDTO = async (user: User, db: DataStoreGateway, caseId: number
     throw new Error("No force associated to User")
   }
 
+  // TODO: Lock case if user can edit exceptions and audit log
+  // TODO: Lock case if user can edit triggers and audit log
   const dbCase = await db.fetchFullCase(caseId, forceIds)
 
   return convertCaseDBToCaseDTO(dbCase)
