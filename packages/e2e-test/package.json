@@ -75,7 +75,7 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.5",
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
