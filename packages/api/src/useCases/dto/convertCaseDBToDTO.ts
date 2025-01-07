@@ -1,8 +1,10 @@
 import type { CaseDB, CaseDTO, CasePartialDTO } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 
+import parseHearingOutcome from "../../services/parseHearingOutcome"
 import {
   errorStatusFromCaseDB,
   resolutionStatusCodeByText,
@@ -11,14 +13,17 @@ import {
 
 export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User): CaseDTO => {
   // TODO: Parse Hearing outcome for AHO and UpdatedHO
+  const annotatedHearingOutcome = parseHearingOutcome(caseDB.annotated_msg)
+  const updatedHearingOutcome = caseDB.updated_msg && parseHearingOutcome(caseDB.updated_msg)
+
   return {
     ...convertCaseDBToCasePartialDTO(caseDB, user),
-    aho: caseDB.annotated_msg,
+    aho: annotatedHearingOutcome as AnnotatedHearingOutcome,
     courtCode: caseDB.court_code,
     courtReference: caseDB.court_reference,
     orgForPoliceFilter: caseDB.org_for_police_filter,
     phase: caseDB.phase,
-    updatedHearingOutcome: caseDB.updated_msg
+    updatedHearingOutcome: (updatedHearingOutcome as AnnotatedHearingOutcome) ?? caseDB.updated_msg
   } satisfies CaseDTO
 }
 

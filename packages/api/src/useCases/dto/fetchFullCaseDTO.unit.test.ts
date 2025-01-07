@@ -4,6 +4,8 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import dummyAho from "../../tests/fixtures/AnnotatedHO1.json"
+import testAho from "../../tests/helpers/ahoHelper"
 import fetchFullCaseDTO from "./fetchFullCaseDTO"
 
 describe("fetchFullCaseDTO", () => {
@@ -14,7 +16,7 @@ describe("fetchFullCaseDTO", () => {
     const result = await fetchFullCaseDTO(user, db, 0)
 
     expect(result).toEqual({
-      aho: "",
+      aho: testAho,
       asn: "",
       canUserEditExceptions: false,
       courtCode: "",
@@ -36,7 +38,7 @@ describe("fetchFullCaseDTO", () => {
       triggerLockedByUserFullName: undefined,
       triggerLockedByUsername: null,
       triggerStatus: null,
-      updatedHearingOutcome: ""
+      updatedHearingOutcome: null
     } satisfies CaseDTO)
   })
 
@@ -52,7 +54,11 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as CaseDB
+    const caseObj = {
+      annotated_msg: dummyAho.hearingOutcomeXml,
+      error_locked_by_id: "user1",
+      error_status: 1
+    } as CaseDB
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -67,7 +73,11 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user2", error_status: 1 } as CaseDB
+    const caseObj = {
+      annotated_msg: dummyAho.hearingOutcomeXml,
+      error_locked_by_id: "user2",
+      error_status: 1
+    } as CaseDB
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -82,7 +92,11 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as CaseDB
+    const caseObj = {
+      annotated_msg: dummyAho.hearingOutcomeXml,
+      error_locked_by_id: "user1",
+      error_status: 1
+    } as CaseDB
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -97,7 +111,11 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user1", error_status: 2 } as CaseDB
+    const caseObj = {
+      annotated_msg: dummyAho.hearingOutcomeXml,
+      error_locked_by_id: "user1",
+      error_status: 2
+    } as CaseDB
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
