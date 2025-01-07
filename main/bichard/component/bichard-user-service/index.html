@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bichard | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.3/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../../style.css" rel="stylesheet">
+    <link href="./../../../style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../../../../modal.js"></script>
+    <script type="text/javascript" src="../../../../svg-modal.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, '../../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../../" class="">Home</a><a href="../../../decisions/" class="">Decisions</a><a href="../../../software-systems/" class="">Software Systems</a><a href="../../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="is-active">Bichard</a><a href="../../../cjsm/" class="">CJSM</a><a href="../../../common-platform/" class="">Common Platform</a><a href="../../../exiss/" class="">ExISS</a><a href="../../../libra/" class="">Libra</a><a href="../../../pagerduty/" class="">PagerDuty</a><a href="../../../police-national-computer/" class="">Police National Computer</a><a href="../../../psn-proxy/" class="">PSN Proxy</a><a href="../../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid">
+        <h1 class="title mt-3">Bichard</h1>
+        <h2 class="subtitle"></h2>
+        <div class="tabs mt-3">
+          <ul class="is-flex-wrap-wrap is-flex-shrink-1 is-flex-grow-0">
+            <li><a href="../../" class="">Info</a></li>
+            <li><a href="../../context/" class="">Context views</a></li>
+            <li><a href="../../container/" class="">Container views</a></li>
+            <li class="is-active"><a href="../audit-log/" class="is-active">Component views</a></li>
+            <li><a href="../../dependencies/" class="">Dependencies</a></li>
+          </ul>
+        </div>
+        <div class="content p-3">
+          <div class="tabs">
+            <ul class="m-0 is-flex-wrap-wrap is-flex-shrink-1 is-flex-grow-0">
+              <li><a href="../audit-log/" class="">Audit Log</a></li>
+              <li><a href="../bichard-ui/" class="">Bichard UI</a></li>
+              <li class="is-active"><a href="./" class="is-active">Bichard User Service</a></li>
+              <li><a href="../conductor/" class="">Conductor</a></li>
+              <li><a href="../email-system/" class="">Email System</a></li>
+              <li><a href="../event-handler-step-function/" class="">Event Handler Step Function</a></li>
+              <li><a href="../incoming-message-handler-step-function/" class="">Incoming Message Handler Step Function</a></li>
+              <li><a href="../message-transfer-lambda/" class="">Message Transfer Lambda</a></li>
+              <li><a href="../monitoring/" class="">Monitoring</a></li>
+              <li><a href="../nginx-auth-proxy/" class="">Nginx Auth Proxy</a></li>
+              <li><a href="../reporting/" class="">Reporting</a></li>
+            </ul>
+          </div>
+          <h3>Properties</h3>
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th class="is-one-fourth"><span class="">Name</span></th>
+                <th><span class="">Value</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="">Url</span></td>
+                <td><a href="https://github.com/ministryofjustice/bichard7-next-user-service">https://github.com/ministryofjustice/bichard7-next-user-service</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
