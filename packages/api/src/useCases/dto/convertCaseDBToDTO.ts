@@ -1,13 +1,18 @@
 import type { CaseDB, CaseDTO, CasePartialDTO } from "@moj-bichard7/common/types/Case"
+import type { User } from "@moj-bichard7/common/types/User"
 
-import { errorStatusFromCaseDB, triggerStatusFromCaseDB } from "./resolutionStatusFromCaseDB"
+import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 
-// TODO: Add current user to both functions to see if they have access to exceptions & checks the locked by
+import {
+  errorStatusFromCaseDB,
+  resolutionStatusCodeByText,
+  triggerStatusFromCaseDB
+} from "./resolutionStatusFromCaseDB"
 
-export const convertCaseDBToCaseDTO = (caseDB: CaseDB): CaseDTO => {
+export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User): CaseDTO => {
   // TODO: Parse Hearing outcome for AHO and UpdatedHO
   return {
-    ...convertCaseDBToCasePartialDTO(caseDB),
+    ...convertCaseDBToCasePartialDTO(caseDB, user),
     aho: caseDB.annotated_msg,
     courtCode: caseDB.court_code,
     courtReference: caseDB.court_reference,
@@ -17,13 +22,15 @@ export const convertCaseDBToCaseDTO = (caseDB: CaseDB): CaseDTO => {
   } satisfies CaseDTO
 }
 
-export const convertCaseDBToCasePartialDTO = (caseDB: CaseDB): CasePartialDTO => {
+export const convertCaseDBToCasePartialDTO = (caseDB: CaseDB, user: User): CasePartialDTO => {
   // TODO: Load errorLockedBy user to generate the errorLockedByUserFullName
   // TODO: Load triggerLockedBy user to generate the triggerLockedByUserFullName
-  // TODO: Add logic to identify canUserEditExceptions
   return {
     asn: caseDB.asn,
-    canUserEditExceptions: undefined,
+    canUserEditExceptions:
+      caseDB.error_locked_by_id === user?.username &&
+      hasAccessToExceptions(user) &&
+      caseDB.error_status === resolutionStatusCodeByText("Unresolved"),
     courtDate: caseDB.court_date,
     courtName: caseDB.court_name,
     defendantName: caseDB.defendant_name,

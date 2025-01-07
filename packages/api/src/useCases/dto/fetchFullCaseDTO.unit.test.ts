@@ -1,5 +1,7 @@
-import type { CaseDTO } from "@moj-bichard7/common/types/Case"
+import type { CaseDB, CaseDTO } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import fetchFullCaseDTO from "./fetchFullCaseDTO"
@@ -14,7 +16,7 @@ describe("fetchFullCaseDTO", () => {
     expect(result).toEqual({
       aho: "",
       asn: "",
-      canUserEditExceptions: undefined,
+      canUserEditExceptions: false,
       courtCode: "",
       courtDate: new Date("2022-06-30"),
       courtName: "",
@@ -42,5 +44,65 @@ describe("fetchFullCaseDTO", () => {
     const user = { visible_forces: "" } as User
 
     await expect(fetchFullCaseDTO(user, db, 0)).rejects.toThrow("No force associated to User")
+  })
+
+  it("returns canUserEditExceptions true when case is locked to currentUser, user has access to exceptions and errorStatus is unresolved", async () => {
+    const user = {
+      groups: [UserGroup.ExceptionHandler],
+      username: "user1",
+      visible_forces: "001"
+    } as unknown as User
+    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as CaseDB
+
+    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+
+    const result = await fetchFullCaseDTO(user, db, 0)
+
+    expect(result.canUserEditExceptions).toBe(true)
+  })
+
+  it("returns canUserEditExceptions false when case is not locked to currentUser", async () => {
+    const user = {
+      groups: [UserGroup.ExceptionHandler],
+      username: "user1",
+      visible_forces: "001"
+    } as unknown as User
+    const caseObj = { error_locked_by_id: "user2", error_status: 1 } as CaseDB
+
+    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+
+    const result = await fetchFullCaseDTO(user, db, 0)
+
+    expect(result.canUserEditExceptions).toBe(false)
+  })
+
+  it("returns canUserEditExceptions false when user does not have access to exceptions", async () => {
+    const user = {
+      groups: [UserGroup.Audit],
+      username: "user1",
+      visible_forces: "001"
+    } as unknown as User
+    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as CaseDB
+
+    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+
+    const result = await fetchFullCaseDTO(user, db, 0)
+
+    expect(result.canUserEditExceptions).toBe(false)
+  })
+
+  it("returns canUserEditExceptions false errorStatus is not unresolved", async () => {
+    const user = {
+      groups: [UserGroup.ExceptionHandler],
+      username: "user1",
+      visible_forces: "001"
+    } as unknown as User
+    const caseObj = { error_locked_by_id: "user1", error_status: 2 } as CaseDB
+
+    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+
+    const result = await fetchFullCaseDTO(user, db, 0)
+
+    expect(result.canUserEditExceptions).toBe(false)
   })
 })

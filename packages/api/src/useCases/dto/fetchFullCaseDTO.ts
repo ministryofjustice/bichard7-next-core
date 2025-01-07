@@ -17,7 +17,7 @@ const fetchFullCaseDTO = async (user: User, db: DataStoreGateway, caseId: number
   // TODO: Lock case if user can edit triggers and audit log
   const dbCase = await db.fetchFullCase(caseId, forceIds)
 
-  return convertCaseDBToCaseDTO(dbCase)
+  return convertCaseDBToCaseDTO(dbCase, user)
 }
 
 export default fetchFullCaseDTO

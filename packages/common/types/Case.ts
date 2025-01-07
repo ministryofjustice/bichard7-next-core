@@ -49,7 +49,7 @@ export const CaseDBSchema = z.object({
 // TODO: Add triggers
 export const PartialCaseDTOSchema = z.object({
   asn: z.string().nullable(),
-  canUserEditExceptions: z.string().optional(),
+  canUserEditExceptions: z.boolean().optional(),
   courtDate: z.date().nullable(),
   courtName: z.string().nullable(),
   defendantName: z.string().nullable(),

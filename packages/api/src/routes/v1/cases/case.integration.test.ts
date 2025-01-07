@@ -44,7 +44,7 @@ describe("retrieve a case", () => {
     expect(response.json()).toEqual({
       aho: "",
       asn: "",
-      canUserEditExceptions: undefined,
+      canUserEditExceptions: false,
       courtCode: "",
       courtDate: new Date("2022-06-30").toISOString(),
       courtName: "",
