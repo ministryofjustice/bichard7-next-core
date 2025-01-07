@@ -13,13 +13,8 @@ type TriggerUpdates = {
   deleted: Trigger[]
 }
 
-const sanitiseTriggerItemIdentity = (value: null | string | undefined): number | undefined => {
-  if (!value) {
-    return undefined
-  }
-
-  return Number(value)
-}
+const sanitiseTriggerItemIdentity = (value: null | string | undefined): number | undefined =>
+  value ? Number(value) : undefined
 
 const triggerMatches = (trigger: Trigger, dbTrigger: ErrorListTriggerRecord): boolean =>
   trigger.code === dbTrigger.trigger_code &&

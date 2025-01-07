@@ -11,10 +11,8 @@ const insertErrorListTriggers = async (db: Sql, recordId: number, triggers: Trig
       error_id: recordId,
       trigger_code: trigger.code,
       status: ResolutionStatus.UNRESOLVED,
-      create_ts: new Date()
-    }
-    if (trigger.offenceSequenceNumber) {
-      triggerRecord.trigger_item_identity = String(trigger.offenceSequenceNumber)
+      create_ts: new Date(),
+      trigger_item_identity: trigger.offenceSequenceNumber?.toString() ?? null
     }
 
     await db`INSERT INTO br7own.error_list_triggers ${db(triggerRecord)}`
