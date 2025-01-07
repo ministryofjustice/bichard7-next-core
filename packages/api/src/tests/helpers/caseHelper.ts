@@ -1,8 +1,8 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { CaseDB } from "@moj-bichard7/common/types/Case"
 
 import type End2EndPostgres from "../testGateways/e2ePostgres"
 
-export const createCase = async (db: End2EndPostgres, overrides: object = {}): Promise<Case> => {
+export const createCase = async (db: End2EndPostgres, overrides: object = {}): Promise<CaseDB> => {
   const dbCase = await db.createTestCase({
     annotated_msg: "AHO",
     court_reference: "ABC",

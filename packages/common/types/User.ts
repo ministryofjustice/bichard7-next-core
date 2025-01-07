@@ -4,7 +4,7 @@ import { UserGroup } from "./UserGroup"
 
 export const UserSchema = z.object({
   email: z.string(),
-  groups: z.array(z.nativeEnum(UserGroup)).optional(),
+  groups: z.array(z.nativeEnum(UserGroup)),
   id: z.number(),
   jwt_id: z.string().nullable(),
   username: z.string(),
