@@ -1,7 +1,7 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "../../types/PncQueryResult"
 
-import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
+import DateSpecifiedInResultSequence from "../../types/DateSpecifiedInResultSequence"
 import createPncDisposal from "./createPncDisposal"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 
@@ -30,17 +30,15 @@ const createPncDisposalByThirdDuration = (
     ? thirdAmountInResult
     : undefined
 
-  const disposal = createPncDisposal(
-    result.PNCDisposalType,
-    thirdDuration.DurationUnit,
-    thirdDuration.DurationLength,
-    undefined,
-    undefined,
-    getDateSpecifiedInResult(result),
-    validatedThirdAmountInResult,
-    result.ResultQualifierVariable.map((res) => res.Code),
-    validatedDisposalText
-  )
+  const disposal = createPncDisposal({
+    amountSpecifiedInResult: validatedThirdAmountInResult,
+    dateSpecifiedInResult: getDateSpecifiedInResult(result),
+    disposalText: validatedDisposalText,
+    durationLength: thirdDuration?.DurationLength,
+    durationUnit: thirdDuration?.DurationUnit,
+    pncDisposalType: result.PNCDisposalType,
+    resultQualifiers: result.ResultQualifierVariable?.map((result) => result.Code)
+  })
 
   return disposal
 }

@@ -1,11 +1,14 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { Adjudication } from "../../types/HearingDetails"
+import type { PncUpdateAdjudication } from "../../types/HearingDetails"
 
+import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import createPncAdjudicationFromAho from "../../../phase2/lib/createPncAdjudicationFromAho"
-import formatDateSpecifiedInResult from "../../../phase2/lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import { HearingDetailsType } from "../../types/HearingDetails"
+import { PncUpdateType } from "../../types/HearingDetails"
 
-export const createAdjudicationFromOffence = (offence: Offence, dateOfHearing: Date): Adjudication | undefined => {
+export const createAdjudicationFromOffence = (
+  offence: Offence,
+  dateOfHearing: Date
+): PncUpdateAdjudication | undefined => {
   const adjudication = createPncAdjudicationFromAho(offence.Result, dateOfHearing)
 
   if (adjudication) {
@@ -13,7 +16,7 @@ export const createAdjudicationFromOffence = (offence: Offence, dateOfHearing: D
       hearingDate: adjudication.sentenceDate ? formatDateSpecifiedInResult(adjudication.sentenceDate, true) : "",
       numberOffencesTakenIntoAccount: adjudication.offenceTICNumber.toString().padStart(4, "0"),
       pleaStatus: adjudication.plea,
-      type: HearingDetailsType.ADJUDICATION,
+      type: PncUpdateType.ADJUDICATION,
       verdict: adjudication.verdict
     }
   }

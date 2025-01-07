@@ -12,30 +12,18 @@ import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
-import fs from "fs"
 import postgres from "postgres"
 
 import { startWorkflow } from "./helpers/e2eHelpers"
+import getAuditLogs from "./helpers/getAuditLogs"
+import getFixture from "./helpers/getFixture"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
-
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const mqConfig = createMqConfig()
-
-const getAuditLogs = async (correlationId: string) => {
-  const auditLog = await auditLogClient.getMessage(correlationId)
-  if (isError(auditLog)) {
-    throw new Error("Error retrieving audit log")
-  }
-
-  return auditLog.events.map((e) => e.eventCode)
-}
-
-const getFixture = (path: string, correlationId: string): string =>
-  String(fs.readFileSync(path)).replace("CORRELATION_ID", correlationId)
 
 describe("bichard_phase_2 workflow", () => {
   let mqListener: MqListener
@@ -72,7 +60,7 @@ describe("bichard_phase_2 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "0")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-2")
     expect(auditLogEventCodes).toContain("hearing-outcome.submitted-phase-3")
 
@@ -99,7 +87,7 @@ describe("bichard_phase_2 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.ignored.nonrecordable")
     expect(auditLogEventCodes).toContain("triggers.generated")
 
@@ -122,7 +110,7 @@ describe("bichard_phase_2 workflow", () => {
     expect(dbResult[0]).toHaveProperty("count", "1")
 
     // Check the correct audit logs are in place
-    const auditLogEventCodes = await getAuditLogs(correlationId)
+    const auditLogEventCodes = await getAuditLogs(correlationId, auditLogClient)
     expect(auditLogEventCodes).toContain("hearing-outcome.received-phase-2")
 
     // Check the message was not sent to the message queue
@@ -134,13 +122,11 @@ describe("bichard_phase_2 workflow", () => {
     expect((s3File as Error).message).toBe("The specified key does not exist.")
   })
 
-  // TODO: Enable test and update LocalStack image version when LocalStack releases a version that includes this fix:
-  // https://github.com/localstack/localstack/pull/11185
-  it.skip("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
-    const fixture = getFixture("e2e-test/fixtures/success-exceptions-aho.json", correlationId)
+  it("should terminate the workflow gracefully if the S3 file has already been processed", async () => {
+    const fixture = getFixture("e2e-test/fixtures/phase2/success-aho.json", correlationId)
     await putIncomingMessageToS3(fixture, s3TaskDataPath, correlationId)
     await startWorkflow("bichard_phase_2", { s3TaskDataPath }, correlationId)
-    await waitForCompletedWorkflow(s3TaskDataPath)
+    await waitForCompletedWorkflow(s3TaskDataPath, "COMPLETED", 60000, "bichard_phase_2")
     const secondWorkflowId = await startWorkflow("bichard_phase_2", { s3TaskDataPath }, correlationId)
     const workflows = await waitForWorkflows({
       count: 2,
