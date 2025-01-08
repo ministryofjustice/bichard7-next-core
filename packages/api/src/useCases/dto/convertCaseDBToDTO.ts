@@ -13,7 +13,6 @@ import {
 } from "./resolutionStatusFromCaseDB"
 
 export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User, logger?: FastifyBaseLogger): CaseDTO => {
-  // TODO: Parse Hearing outcome for AHO and UpdatedHO
   const annotatedHearingOutcome = parseHearingOutcome(caseDB.annotated_msg, logger)
   const updatedHearingOutcome = caseDB.updated_msg && parseHearingOutcome(caseDB.updated_msg, logger)
 
