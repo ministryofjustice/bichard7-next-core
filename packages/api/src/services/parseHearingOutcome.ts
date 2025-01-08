@@ -1,19 +1,10 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
+import { isError } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 
-export const isPncUpdateDataset = (message: string) => message.match(/<AnnotatedPNCUpdateDataset/)
-
-export type Result<T> = Error | T
-
-export function isError<T>(result: Result<T>): result is Error {
-  return result instanceof Error
-}
-
-export function isSuccess<T>(result: Result<T>): result is T {
-  return !isError(result)
-}
+const isPncUpdateDataset = (message: string) => message.match(/<AnnotatedPNCUpdateDataset/)
 
 const parseHearingOutcome = (hearingOutcome: string): AnnotatedHearingOutcome | Error => {
   let aho: AnnotatedHearingOutcome | Error
