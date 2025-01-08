@@ -103,7 +103,10 @@ const resolveTriggers = async (
       throw allTriggers
     }
 
-    const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolvedAt).length === allTriggers.length
+    const triggersVisibleToUser = allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
+
+    const areAllTriggersResolved =
+      triggersVisibleToUser.filter((trigger) => trigger.resolvedAt).length === triggersVisibleToUser.length
 
     if (areAllTriggersResolved) {
       const hasUnresolvedExceptions = courtCase.errorCount > 0 && courtCase.errorResolvedTimestamp === null
