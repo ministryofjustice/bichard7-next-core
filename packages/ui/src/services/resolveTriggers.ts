@@ -103,7 +103,9 @@ const resolveTriggers = async (
       throw allTriggers
     }
 
-    const triggersVisibleToUser = allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
+    const triggersVisibleToUser = user.excludedTriggers
+      ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
+      : allTriggers
 
     const areAllTriggersResolved =
       triggersVisibleToUser.filter((trigger) => trigger.resolvedAt).length === triggersVisibleToUser.length
