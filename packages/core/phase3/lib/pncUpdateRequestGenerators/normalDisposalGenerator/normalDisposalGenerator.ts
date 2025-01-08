@@ -48,10 +48,6 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     return couPsaCourtCode
   }
 
-  const courtHouseName =
-    couPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
-      ? `${hearing.CourtHouseName} ${hearing.CourtType}`
-      : ""
   const nextResultSourceOrganisation = getNextResultSourceOrganisationFromOffences(offences)
   const crtPsaCourtCode = getPncCourtCode(nextResultSourceOrganisation, hearing.CourtHouseCode)
   if (isError(crtPsaCourtCode)) {
@@ -89,7 +85,10 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       arrestSummonsNumber,
       arrestsAdjudicationsAndDisposals,
       courtCaseReferenceNumber: formattedCourtCaseReference,
-      courtHouseName,
+      courtHouseName:
+        couPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
+          ? `${hearing.CourtHouseName} ${hearing.CourtType}`
+          : "",
       dateOfHearing: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       generatedPNCFilename: deriveGeneratedPncFilename(hearingDefendant),
       hearingsAdjudicationsAndDisposals,
