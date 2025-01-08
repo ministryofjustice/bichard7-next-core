@@ -91,7 +91,8 @@ describe("resolveTriggers", () => {
       visibleCourts: [],
       visibleForces: [visibleForce],
       username: resolverUsername,
-      hasAccessTo: hasAccessToAll
+      hasAccessTo: hasAccessToAll,
+      excludedTriggers: [TriggerCode.TRPR0015]
     } as Partial<User> as User
 
     it("Should set the relevant columns when resolving a trigger", async () => {
@@ -446,6 +447,40 @@ describe("resolveTriggers", () => {
           auditLogVersion: 2
         }
       })
+    })
+
+    it("Should set the case trigger columns and unlock the case when the last trigger visible to the user is resolved", async () => {
+      const [courtCase] = await insertCourtCasesWithFields([
+        {
+          triggerLockedByUsername: resolverUsername,
+          orgForPoliceFilter: visibleForce
+        }
+      ])
+      const triggers: TestTrigger[] = [0, 1, 2].map((triggerId, index) => {
+        return {
+          triggerId,
+          triggerCode: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0015][index],
+          status: "Unresolved",
+          createdAt: new Date("2022-07-15T10:22:34.000Z")
+        }
+      })
+      await insertTriggers(courtCase.errorId, triggers)
+
+      const triggerResolveResult = await resolveTriggers(
+        dataSource,
+        [triggers[0].triggerId, triggers[1].triggerId],
+        courtCase.errorId,
+        user
+      )
+      expect(isError(triggerResolveResult)).toBeFalsy()
+
+      const updatedCourtCase = (await getCourtCaseByOrganisationUnit(dataSource, courtCase.errorId, user)) as CourtCase
+      expect(updatedCourtCase).not.toBeNull()
+      expect(updatedCourtCase.triggerStatus).not.toBeNull()
+      expect(updatedCourtCase.triggerStatus).toBe("Unresolved")
+      expect(updatedCourtCase.triggerResolvedBy).toBeNull()
+      expect(updatedCourtCase.triggerResolvedTimestamp).toBeNull()
+      expect(updatedCourtCase.triggerLockedByUsername).toBeNull()
     })
 
     it("Should be able to resolve all triggers on a case at once", async () => {
