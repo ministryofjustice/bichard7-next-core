@@ -30,15 +30,14 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   operation
 ) => {
   const hearing = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing
-  const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  const hearingCase = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case
+  const hearingDefendant = hearingCase.HearingDefendant
   const offences = getAdjustedRecordableOffencesForCourtCase(
     hearingDefendant.Offence,
     operation.data?.courtCaseReference
   )
 
-  const courtCaseReference =
-    operation.data?.courtCaseReference ??
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
+  const courtCaseReference = operation.data?.courtCaseReference ?? hearingCase.CourtCaseReferenceNumber
   const formattedCourtCaseReference = preProcessCourtCaseReferenceNumber(courtCaseReference)
   if (isError(formattedCourtCaseReference)) {
     return formattedCourtCaseReference
@@ -102,8 +101,8 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       preTrialIssuesUniqueReferenceNumber: preProcessPreTrialIssuesUniqueReferenceNumber(
         offences,
         courtCaseReference,
-        pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
-        pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode ?? undefined
+        hearingCase.PTIURN,
+        hearingCase.ForceOwner?.OrganisationUnitCode ?? undefined
       ),
       psaCourtCode: couPsaCourtCode ? preProcessCourtCode(couPsaCourtCode) : null
     }
