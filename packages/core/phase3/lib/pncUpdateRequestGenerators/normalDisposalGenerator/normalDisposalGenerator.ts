@@ -57,10 +57,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   const courtDate = crtPsaCourtCode ? getNextHearingDateFromOffences(offences) : undefined
   const pendingCourtHouseName =
     crtPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : ""
-  const hearingsAdjudicationsAndDisposals = generateHearingsAdjudicationsAndDisposals(
-    pncUpdateDataset,
-    operation.data?.courtCaseReference
-  )
+
   let arrestSummonsNumber: Result<null | string> = null
   let arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = []
   const hasOffencesAddedByTheCourt = offences.some(
@@ -91,7 +88,10 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
           : "",
       dateOfHearing: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       generatedPNCFilename: deriveGeneratedPncFilename(hearingDefendant),
-      hearingsAdjudicationsAndDisposals,
+      hearingsAdjudicationsAndDisposals: generateHearingsAdjudicationsAndDisposals(
+        pncUpdateDataset,
+        operation.data?.courtCaseReference
+      ),
       pendingCourtDate: courtDate ? formatDateSpecifiedInResult(courtDate, true) : null,
       pendingCourtHouseName: crtPsaCourtCode ? pendingCourtHouseName : null,
       pendingPsaCourtCode: crtPsaCourtCode ? preProcessCourtCode(crtPsaCourtCode) : null,
