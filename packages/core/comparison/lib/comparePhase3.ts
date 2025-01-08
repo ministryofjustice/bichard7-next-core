@@ -33,11 +33,20 @@ const excludeEventForCore = (eventCode: string) =>
   ![EventCode.ExceptionsGenerated, EventCode.TriggersGenerated].includes(eventCode as EventCode)
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
-const normaliseXml = (xml?: string): string | undefined =>
-  xml
+const normaliseXml = (xml?: string): string | undefined => {
+  const normalisedXml = xml
     ?.replace(/ WeedFlag="[^"]*"/g, "")
     .replace(/ hasError="false"/g, "")
     .replace(/ Error="HO200200"/g, "")
+
+  if (normalisedXml && /HO200101|HO200104/.test(normalisedXml)) {
+    return normalisedXml
+      .replace(/ hasError="true"/g, "")
+      .replace(/<br7:HasError>true<\/br7:HasError>/g, "<br7:HasError>false</br7:HasError>")
+  }
+
+  return normalisedXml
+}
 
 const normalisePncOperations = (operations: PncUpdateRequest[]) => {
   for (const operation of operations) {
