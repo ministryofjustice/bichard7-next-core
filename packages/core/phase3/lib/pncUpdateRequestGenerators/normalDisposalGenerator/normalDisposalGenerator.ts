@@ -7,9 +7,6 @@ import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGener
 
 import formatDateSpecifiedInResult from "../../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import getAdjustedRecordableOffencesForCourtCase from "../../../../lib/getAdjustedRecordableOffencesForCourtCase"
-import checkRccSegmentApplicability, {
-  RccSegmentApplicability
-} from "../../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
 import isResultCompatibleWithDisposal from "../../../../phase2/lib/isResultCompatibleWithDisposal"
 import { PncOperation } from "../../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
@@ -58,19 +55,6 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       : ""
   const generatedPncFilename = deriveGeneratedPncFilename(hearingDefendant)
 
-  let preTrialIssuesUniqueReferenceNumber: null | string = null
-  if (
-    checkRccSegmentApplicability(offences, operation.data?.courtCaseReference) ===
-    RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences
-  ) {
-    const forceOwner =
-      pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode ?? undefined
-    preTrialIssuesUniqueReferenceNumber = preProcessPreTrialIssuesUniqueReferenceNumber(
-      pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
-      forceOwner
-    )
-  }
-
   const nextResultSourceOrganisation = getNextResultSourceOrganisationFromOffences(offences)
   const crtPsaCourtCode = getPncCourtCode(nextResultSourceOrganisation, hearing.CourtHouseCode)
   if (isError(crtPsaCourtCode)) {
@@ -115,7 +99,12 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       pendingCourtDate: courtDate ? formatDateSpecifiedInResult(courtDate, true) : null,
       pendingCourtHouseName: crtPsaCourtCode ? pendingCourtHouseName : null,
       pendingPsaCourtCode: crtPsaCourtCode ? preProcessCourtCode(crtPsaCourtCode) : null,
-      preTrialIssuesUniqueReferenceNumber,
+      preTrialIssuesUniqueReferenceNumber: preProcessPreTrialIssuesUniqueReferenceNumber(
+        offences,
+        courtCaseReference,
+        pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
+        pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode ?? undefined
+      ),
       psaCourtCode: couPsaCourtCode ? preProcessCourtCode(couPsaCourtCode) : null
     }
   }
