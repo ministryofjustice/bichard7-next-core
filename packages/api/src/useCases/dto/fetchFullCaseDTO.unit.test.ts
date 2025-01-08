@@ -4,8 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
-import dummyAho from "../../tests/fixtures/AnnotatedHO1.json"
-import testAho from "../../tests/helpers/ahoHelper"
+import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
 import fetchFullCaseDTO from "./fetchFullCaseDTO"
 
 describe("fetchFullCaseDTO", () => {
@@ -16,7 +15,7 @@ describe("fetchFullCaseDTO", () => {
     const result = await fetchFullCaseDTO(user, db, 0)
 
     expect(result).toEqual({
-      aho: testAho,
+      aho: testAhoJsonObj,
       asn: "",
       canUserEditExceptions: false,
       courtCode: "",
@@ -55,7 +54,7 @@ describe("fetchFullCaseDTO", () => {
       visible_forces: "001"
     } as unknown as User
     const caseObj = {
-      annotated_msg: dummyAho.hearingOutcomeXml,
+      annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
     } as CaseDB
@@ -74,7 +73,7 @@ describe("fetchFullCaseDTO", () => {
       visible_forces: "001"
     } as unknown as User
     const caseObj = {
-      annotated_msg: dummyAho.hearingOutcomeXml,
+      annotated_msg: testAhoXml,
       error_locked_by_id: "user2",
       error_status: 1
     } as CaseDB
@@ -93,7 +92,7 @@ describe("fetchFullCaseDTO", () => {
       visible_forces: "001"
     } as unknown as User
     const caseObj = {
-      annotated_msg: dummyAho.hearingOutcomeXml,
+      annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
     } as CaseDB
@@ -112,7 +111,7 @@ describe("fetchFullCaseDTO", () => {
       visible_forces: "001"
     } as unknown as User
     const caseObj = {
-      annotated_msg: dummyAho.hearingOutcomeXml,
+      annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 2
     } as CaseDB

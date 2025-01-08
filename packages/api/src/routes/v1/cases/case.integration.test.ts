@@ -5,7 +5,7 @@ import { FORBIDDEN, OK } from "http-status"
 import build from "../../../app"
 import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
-import testAho from "../../../tests/helpers/ahoHelper"
+import { testAhoJsonStr } from "../../../tests/helpers/ahoHelper"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 
 const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
@@ -43,7 +43,7 @@ describe("retrieve a case", () => {
 
     expect(response.statusCode).toBe(OK)
     expect(response.json()).toEqual({
-      aho: JSON.parse(JSON.stringify(testAho)),
+      aho: testAhoJsonStr,
       asn: "",
       canUserEditExceptions: false,
       courtCode: "",
