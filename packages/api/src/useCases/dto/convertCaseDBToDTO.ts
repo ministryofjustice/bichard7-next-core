@@ -1,6 +1,7 @@
 import type { CaseDB, CaseDTO, CasePartialDTO } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { FastifyBaseLogger } from "fastify"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 
@@ -11,10 +12,10 @@ import {
   triggerStatusFromCaseDB
 } from "./resolutionStatusFromCaseDB"
 
-export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User): CaseDTO => {
+export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User, logger?: FastifyBaseLogger): CaseDTO => {
   // TODO: Parse Hearing outcome for AHO and UpdatedHO
-  const annotatedHearingOutcome = parseHearingOutcome(caseDB.annotated_msg)
-  const updatedHearingOutcome = caseDB.updated_msg && parseHearingOutcome(caseDB.updated_msg)
+  const annotatedHearingOutcome = parseHearingOutcome(caseDB.annotated_msg, logger)
+  const updatedHearingOutcome = caseDB.updated_msg && parseHearingOutcome(caseDB.updated_msg, logger)
 
   return {
     ...convertCaseDBToCasePartialDTO(caseDB, user),
