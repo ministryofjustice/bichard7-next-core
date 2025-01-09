@@ -7,16 +7,14 @@ import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/p
 
 const isPncUpdateDatasetFromXml = (message: string) => /<AnnotatedPNCUpdateDataset/.exec(message)
 
-const parseHearingOutcome = (hearingOutcome: string, logger?: FastifyBaseLogger): AnnotatedHearingOutcome | Error => {
+const parseHearingOutcome = (hearingOutcome: string, logger: FastifyBaseLogger): AnnotatedHearingOutcome | Error => {
   let aho: AnnotatedHearingOutcome | Error
 
   if (isPncUpdateDatasetFromXml(hearingOutcome)) {
     const pncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)
 
     if (isError(pncUpdateDataset)) {
-      if (logger) {
-        logger.error(`Failed to parse AnnotatedPNCUpdateDatasetXml: ${pncUpdateDataset}`)
-      }
+      logger.error(`Failed to parse AnnotatedPNCUpdateDatasetXml: ${pncUpdateDataset}`)
 
       aho = pncUpdateDataset
     } else {
@@ -25,7 +23,7 @@ const parseHearingOutcome = (hearingOutcome: string, logger?: FastifyBaseLogger)
   } else {
     aho = parseAhoXml(hearingOutcome)
 
-    if (isError(aho) && logger) {
+    if (isError(aho)) {
       logger.error(`Failed to parse aho: ${aho}`)
     }
   }

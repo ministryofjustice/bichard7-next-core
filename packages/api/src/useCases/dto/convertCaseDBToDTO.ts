@@ -12,7 +12,7 @@ import {
   triggerStatusFromCaseDB
 } from "./resolutionStatusFromCaseDB"
 
-export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User, logger?: FastifyBaseLogger): CaseDTO => {
+export const convertCaseDBToCaseDTO = (caseDB: CaseDB, user: User, logger: FastifyBaseLogger): CaseDTO => {
   const annotatedHearingOutcome = parseHearingOutcome(caseDB.annotated_msg, logger)
   const updatedHearingOutcome = caseDB.updated_msg && parseHearingOutcome(caseDB.updated_msg, logger)
 

@@ -11,7 +11,7 @@ const fetchFullCaseDTO = async (
   user: User,
   db: DataStoreGateway,
   caseId: number,
-  logger?: FastifyBaseLogger
+  logger: FastifyBaseLogger
 ): Promise<CaseDTO> => {
   const forceIds = formatForceNumbers(user.visible_forces)
 
