@@ -45,7 +45,8 @@ const phase3 = async (
 
   const incompleteOperations = inputMessage.PncOperations.filter((operation) => operation.status !== "Completed")
 
-  const hasErrors = incompleteOperations.some((operation) => isError(generatePncUpdateRequest(inputMessage, operation)))
+  const pncUpdateRequests = incompleteOperations.map((operation) => generatePncUpdateRequest(inputMessage, operation))
+  const hasErrors = pncUpdateRequests.some((pncUpdateRequest) => isError(pncUpdateRequest))
   if (hasErrors) {
     return {
       auditLogEvents: auditLogger.getEvents(),
@@ -57,8 +58,13 @@ const phase3 = async (
     }
   }
 
-  for (const operation of incompleteOperations) {
-    const operationResult = await performOperation(inputMessage, operation, pncGateway).catch((error) => error)
+  for (const [index, pncUpdateRequest] of (pncUpdateRequests as PncUpdateRequest[]).entries()) {
+    const operationResult = await performOperation(
+      inputMessage,
+      incompleteOperations[index],
+      pncUpdateRequest,
+      pncGateway
+    ).catch((error) => error)
     if (isError(operationResult)) {
       auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
 
