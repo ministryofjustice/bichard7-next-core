@@ -44,6 +44,31 @@ export const CaseDBSchema = z.object({
   user_updated_flag: z.number()
 })
 
+export const RawCaseDataSchema = z.object({
+  annotated_msg: z.string().describe("Annotated Hearing Outcome"),
+  asn: z.string().max(21).nullable(),
+  court_code: z.string().max(7).nullable(),
+  court_date: z.date().nullable(),
+  court_name: z.string().max(500).nullable(),
+  court_reference: z.string().max(11),
+  defendant_name: z.string().max(500).nullable(),
+  error_id: z.number().describe("The primary key"),
+  error_locked_by_fullname: z.string().nullable(),
+  error_locked_by_id: z.string().max(32).nullable(),
+  error_report: z.string().max(1000),
+  error_status: z.number().nullable(),
+  is_urgent: z.number(),
+  org_for_police_filter: z.string(),
+  phase: z.number().gt(0).lte(3),
+  ptiurn: z.string().max(11).nullable(),
+  resolution_ts: z.date().nullable(),
+  trigger_count: z.number(),
+  trigger_locked_by_fullname: z.string().nullable(),
+  trigger_locked_by_id: z.string().nullable(),
+  trigger_status: z.number().nullable(),
+  updated_msg: z.string().nullable()
+})
+
 // TODO: Fill in missing attributes
 // TODO: Add notes
 // TODO: Add triggers
@@ -82,3 +107,4 @@ export const FullCaseDTOSchema = PartialCaseDTOSchema.and(
 export type CaseDB = z.infer<typeof CaseDBSchema>
 export type CaseDTO = z.infer<typeof FullCaseDTOSchema>
 export type CasePartialDTO = z.infer<typeof PartialCaseDTOSchema>
+export type RawCaseData = z.infer<typeof RawCaseDataSchema>

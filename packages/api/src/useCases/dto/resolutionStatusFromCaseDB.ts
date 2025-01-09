@@ -1,4 +1,4 @@
-import type { CaseDB } from "@moj-bichard7/common/types/Case"
+import type { RawCaseData } from "@moj-bichard7/common/types/Case"
 
 export type ResolutionStatus = "Resolved" | "Submitted" | "Unresolved"
 
@@ -8,10 +8,10 @@ export const resolutionStatusByCode: Record<number, ResolutionStatus> = {
   3: "Submitted"
 }
 
-export const errorStatusFromCaseDB = (caseDB: CaseDB): null | ResolutionStatus =>
+export const errorStatusFromCaseDB = (caseDB: RawCaseData): null | ResolutionStatus =>
   caseDB.error_status ? resolutionStatusByCode[caseDB.error_status] : null
 
-export const triggerStatusFromCaseDB = (caseDB: CaseDB): null | ResolutionStatus =>
+export const triggerStatusFromCaseDB = (caseDB: RawCaseData): null | ResolutionStatus =>
   caseDB.trigger_status ? resolutionStatusByCode[caseDB.trigger_status] : null
 
 export const resolutionStatusCodeByText = (text: string): number | undefined =>
