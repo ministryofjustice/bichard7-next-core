@@ -1,7 +1,7 @@
-import type { CaseDB } from "@moj-bichard7/common/types/Case"
+import type { RawCaseFullData } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-export default async function (sql: postgres.Sql, partialCase: Partial<CaseDB>): Promise<CaseDB> {
+export default async function (sql: postgres.Sql, partialCase: Partial<RawCaseFullData>): Promise<RawCaseFullData> {
   if (
     !(
       partialCase.annotated_msg ||
@@ -22,9 +22,9 @@ export default async function (sql: postgres.Sql, partialCase: Partial<CaseDB>):
     throw new Error("Missing required attributes")
   }
 
-  const caseToInsert = partialCase as unknown as CaseDB
+  const caseToInsert = partialCase as unknown as RawCaseFullData
 
-  const [result]: [CaseDB?] = await sql`
+  const [result]: [RawCaseFullData?] = await sql`
     INSERT INTO br7own.error_list
       (annotated_msg, court_reference, create_ts, error_count, error_report, is_urgent, message_id, msg_received_ts,
         org_for_police_filter, phase, total_pnc_failure_resubmissions, trigger_count, user_updated_flag,

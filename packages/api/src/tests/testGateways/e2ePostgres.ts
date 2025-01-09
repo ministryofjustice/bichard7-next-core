@@ -1,4 +1,4 @@
-import type { CaseDB } from "@moj-bichard7/common/types/Case"
+import type { RawCaseFullData } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
@@ -18,7 +18,7 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     await this.db.end()
   }
 
-  async createTestCase(partialCase: Partial<CaseDB>): Promise<CaseDB> {
+  async createTestCase(partialCase: Partial<RawCaseFullData>): Promise<RawCaseFullData> {
     return await insertCase(this.db, partialCase)
   }
 
