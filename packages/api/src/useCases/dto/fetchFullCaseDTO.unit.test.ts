@@ -1,4 +1,4 @@
-import type { CaseDB, CaseDTO } from "@moj-bichard7/common/types/Case"
+import type { CaseDTO, RawCaseData } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -52,7 +52,7 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as CaseDB
+    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as RawCaseData
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -67,7 +67,7 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user2", error_status: 1 } as CaseDB
+    const caseObj = { error_locked_by_id: "user2", error_status: 1 } as RawCaseData
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -82,7 +82,7 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as CaseDB
+    const caseObj = { error_locked_by_id: "user1", error_status: 1 } as RawCaseData
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -97,7 +97,7 @@ describe("fetchFullCaseDTO", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
-    const caseObj = { error_locked_by_id: "user1", error_status: 2 } as CaseDB
+    const caseObj = { error_locked_by_id: "user1", error_status: 2 } as RawCaseData
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
