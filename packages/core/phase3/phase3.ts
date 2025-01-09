@@ -1,3 +1,5 @@
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
@@ -8,6 +10,7 @@ import type Phase3Result from "./types/Phase3Result"
 
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
 import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
+import { PncApiError } from "../lib/PncGateway"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
 import performOperations from "./lib/performOperations"
@@ -17,11 +20,11 @@ const phase3 = async (
   inputMessage: PncUpdateDataset,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
-): Promise<Phase3Result> => {
+): PromiseResult<Phase3Result> => {
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   const operationResult = await performOperations(inputMessage, pncGateway).catch((error) => error)
-  if (isError(operationResult)) {
+  if (operationResult instanceof PncApiError) {
     auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
 
     return {
@@ -32,6 +35,8 @@ const phase3 = async (
       triggerGenerationAttempted: false,
       resultType: Phase3ResultType.exceptions
     }
+  } else if (isError(operationResult)) {
+    return operationResult
   }
 
   const triggers = generateTriggers(inputMessage, Phase.PHASE_3)
