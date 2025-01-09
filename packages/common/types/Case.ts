@@ -93,7 +93,7 @@ export const PartialCaseDTOSchema = z.object({
 })
 
 // TODO: Fill in missing attributes
-export const FullCaseDTOSchema = PartialCaseDTOSchema.and(
+export const FullCaseDtoSchema = PartialCaseDTOSchema.and(
   z.object({
     aho: z.string(),
     courtCode: z.string().nullable(),
@@ -105,6 +105,6 @@ export const FullCaseDTOSchema = PartialCaseDTOSchema.and(
 )
 
 export type CaseDB = z.infer<typeof CaseDBSchema>
-export type CaseDTO = z.infer<typeof FullCaseDTOSchema>
+export type CaseDto = z.infer<typeof FullCaseDtoSchema>
 export type CasePartialDTO = z.infer<typeof PartialCaseDTOSchema>
 export type RawCaseData = z.infer<typeof RawCaseDataSchema>

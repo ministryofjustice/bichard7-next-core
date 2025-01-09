@@ -1,4 +1,4 @@
-import type { CaseDTO, CasePartialDTO, RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { CaseDto, CasePartialDTO, RawCaseData } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
@@ -9,7 +9,7 @@ import {
   triggerStatusFromCaseDB
 } from "./resolutionStatusFromCaseDB"
 
-export const convertCaseDBToCaseDTO = (caseDb: RawCaseData, user: User): CaseDTO => {
+export const convertCaseDBToCaseDTO = (caseDb: RawCaseData, user: User): CaseDto => {
   // TODO: Parse Hearing outcome for AHO and UpdatedHO
   return {
     ...convertCaseDBToCasePartialDTO(caseDb, user),
@@ -19,7 +19,7 @@ export const convertCaseDBToCaseDTO = (caseDb: RawCaseData, user: User): CaseDTO
     orgForPoliceFilter: caseDb.org_for_police_filter,
     phase: caseDb.phase,
     updatedHearingOutcome: caseDb.updated_msg
-  } satisfies CaseDTO
+  } satisfies CaseDto
 }
 
 export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): CasePartialDTO => {

@@ -1,4 +1,4 @@
-import type { CaseDTO, RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { CaseDto, RawCaseData } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -37,7 +37,7 @@ describe("fetchFullCaseDTO", () => {
       triggerLockedByUsername: null,
       triggerStatus: null,
       updatedHearingOutcome: ""
-    } satisfies CaseDTO)
+    } satisfies CaseDto)
   })
 
   it("returns error when no force associated to a user", async () => {
