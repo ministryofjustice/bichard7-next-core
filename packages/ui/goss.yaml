@@ -76,14 +76,6 @@ user:
       - dbus
     home: /
     shell: /sbin/nologin
-  nginx:
-    exists: true
-    uid: 997
-    gid: 997
-    groups:
-      - nginx
-    home: /var/lib/nginx
-    shell: /sbin/nologin
   nobody:
     exists: true
     uid: 65534
