@@ -1,40 +1,17 @@
-import type { Result } from "@moj-bichard7/common/types/Result"
-
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogger from "../types/AuditLogger"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
-import type { Operation, PncUpdateDataset } from "../types/PncUpdateDataset"
+import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import type Phase3Result from "./types/Phase3Result"
-import type PncUpdateRequest from "./types/PncUpdateRequest"
-import type PncUpdateRequestGenerator from "./types/PncUpdateRequestGenerator"
 
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
 import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
-import { PncOperation } from "../types/PncOperation"
-import performOperation from "./lib/performOperation"
-import disposalUpdatedGenerator from "./lib/pncUpdateRequestGenerators/disposalUpdatedGenerator"
-import { normalDisposalGenerator } from "./lib/pncUpdateRequestGenerators/normalDisposalGenerator"
-import penaltyHearingGenerator from "./lib/pncUpdateRequestGenerators/penaltyHearingGenerator"
-import { remandGenerator } from "./lib/pncUpdateRequestGenerators/remandGenerator"
-import sentenceDeferredGenerator from "./lib/pncUpdateRequestGenerators/sentenceDeferredGenerator"
+import performOperations from "./lib/performOperations"
 import { Phase3ResultType } from "./types/Phase3Result"
-
-const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
-  [PncOperation.DISPOSAL_UPDATED]: disposalUpdatedGenerator,
-  [PncOperation.NORMAL_DISPOSAL]: normalDisposalGenerator,
-  [PncOperation.PENALTY_HEARING]: penaltyHearingGenerator,
-  [PncOperation.REMAND]: remandGenerator,
-  [PncOperation.SENTENCE_DEFERRED]: sentenceDeferredGenerator
-}
-
-const generatePncUpdateRequest = <T extends PncOperation>(
-  pncUpdateDataset: PncUpdateDataset,
-  operation: Operation<T>
-): Result<PncUpdateRequest> => pncUpdateRequestGenerator[operation.code as T](pncUpdateDataset, operation)
 
 const phase3 = async (
   inputMessage: PncUpdateDataset,
@@ -43,11 +20,10 @@ const phase3 = async (
 ): Promise<Phase3Result> => {
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
-  const incompleteOperations = inputMessage.PncOperations.filter((operation) => operation.status !== "Completed")
+  const operationResult = await performOperations(inputMessage, pncGateway).catch((error) => error)
+  if (isError(operationResult)) {
+    auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
 
-  const pncUpdateRequests = incompleteOperations.map((operation) => generatePncUpdateRequest(inputMessage, operation))
-  const hasErrors = pncUpdateRequests.some((pncUpdateRequest) => isError(pncUpdateRequest))
-  if (hasErrors) {
     return {
       auditLogEvents: auditLogger.getEvents(),
       correlationId,
@@ -55,27 +31,6 @@ const phase3 = async (
       triggers: [],
       triggerGenerationAttempted: false,
       resultType: Phase3ResultType.exceptions
-    }
-  }
-
-  for (const [index, pncUpdateRequest] of (pncUpdateRequests as PncUpdateRequest[]).entries()) {
-    const operationResult = await performOperation(
-      inputMessage,
-      incompleteOperations[index],
-      pncUpdateRequest,
-      pncGateway
-    ).catch((error) => error)
-    if (isError(operationResult)) {
-      auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
-
-      return {
-        auditLogEvents: auditLogger.getEvents(),
-        correlationId,
-        outputMessage: inputMessage,
-        triggers: [],
-        triggerGenerationAttempted: false,
-        resultType: Phase3ResultType.exceptions
-      }
     }
   }
 
