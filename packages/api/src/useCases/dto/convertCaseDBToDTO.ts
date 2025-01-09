@@ -1,4 +1,4 @@
-import type { CaseDto, CasePartialDTO, RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { CaseDto, CasePartialDto, RawCaseData } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
@@ -22,7 +22,7 @@ export const convertCaseDBToCaseDTO = (caseDb: RawCaseData, user: User): CaseDto
   } satisfies CaseDto
 }
 
-export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): CasePartialDTO => {
+export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): CasePartialDto => {
   // TODO: Load errorLockedBy user to generate the errorLockedByUserFullName
   // TODO: Load triggerLockedBy user to generate the triggerLockedByUserFullName
   return {
@@ -46,5 +46,5 @@ export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): 
     triggerLockedByUserFullName: undefined,
     triggerLockedByUsername: caseDb.trigger_locked_by_id,
     triggerStatus: triggerStatusFromCaseDB(caseDb)
-  } satisfies CasePartialDTO
+  } satisfies CasePartialDto
 }

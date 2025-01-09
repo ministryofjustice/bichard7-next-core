@@ -72,7 +72,7 @@ export const RawCaseDataSchema = z.object({
 // TODO: Fill in missing attributes
 // TODO: Add notes
 // TODO: Add triggers
-export const PartialCaseDTOSchema = z.object({
+export const PartialCaseDtoSchema = z.object({
   asn: z.string().nullable(),
   canUserEditExceptions: z.boolean().optional(),
   courtDate: z.date().nullable(),
@@ -93,7 +93,7 @@ export const PartialCaseDTOSchema = z.object({
 })
 
 // TODO: Fill in missing attributes
-export const FullCaseDtoSchema = PartialCaseDTOSchema.and(
+export const FullCaseDtoSchema = PartialCaseDtoSchema.and(
   z.object({
     aho: z.string(),
     courtCode: z.string().nullable(),
@@ -106,5 +106,5 @@ export const FullCaseDtoSchema = PartialCaseDTOSchema.and(
 
 export type CaseDB = z.infer<typeof CaseDBSchema>
 export type CaseDto = z.infer<typeof FullCaseDtoSchema>
-export type CasePartialDTO = z.infer<typeof PartialCaseDTOSchema>
+export type CasePartialDto = z.infer<typeof PartialCaseDtoSchema>
 export type RawCaseData = z.infer<typeof RawCaseDataSchema>
