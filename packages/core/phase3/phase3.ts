@@ -39,10 +39,7 @@ const phase3 = async (
 
   const triggers = generateTriggers(inputMessage, Phase.PHASE_3)
   if (triggers.length > 0) {
-    auditLogger.info(
-      EventCode.TriggersGenerated,
-      generateTriggersLogAttributes(triggers, inputMessage.Exceptions.length > 0)
-    )
+    auditLogger.info(EventCode.TriggersGenerated, generateTriggersLogAttributes(triggers, false))
   }
 
   return {

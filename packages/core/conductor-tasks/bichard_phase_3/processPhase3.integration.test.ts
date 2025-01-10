@@ -148,7 +148,9 @@ describe("processPhase3", () => {
     expect(result).toHaveProperty("status", "FAILED")
     expect(result.logs).toContainEqual(expect.objectContaining({ log: "Unexpected failure processing phase 3" }))
     expect(result.logs).toContainEqual(
-      expect.objectContaining({ log: "Court Case Reference Number length must be 15, but the length is 23" })
+      expect.objectContaining({
+        log: "Operation 0: Court Case Reference Number length must be 15, but the length is 23"
+      })
     )
   })
 })
