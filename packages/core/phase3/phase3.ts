@@ -1,7 +1,4 @@
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { isError } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogger from "../types/AuditLogger"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
@@ -15,12 +12,13 @@ import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
 import performOperations from "./lib/performOperations"
 import { Phase3ResultType } from "./types/Phase3Result"
+import PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 const phase3 = async (
   inputMessage: PncUpdateDataset,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger
-): PromiseResult<Phase3Result> => {
+): Promise<Phase3Result | PncUpdateRequestError> => {
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   const operationResult = await performOperations(inputMessage, pncGateway).catch((error) => error)
@@ -35,7 +33,7 @@ const phase3 = async (
       triggerGenerationAttempted: false,
       resultType: Phase3ResultType.exceptions
     }
-  } else if (isError(operationResult)) {
+  } else if (operationResult instanceof PncUpdateRequestError) {
     return operationResult
   }
 

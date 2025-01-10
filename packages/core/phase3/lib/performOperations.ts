@@ -9,6 +9,7 @@ import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 
 import { PncOperation } from "../../types/PncOperation"
 import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
+import PncUpdateRequestError from "../types/PncUpdateRequestError"
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
 import { normalDisposalGenerator } from "./pncUpdateRequestGenerators/normalDisposalGenerator"
 import penaltyHearingGenerator from "./pncUpdateRequestGenerators/penaltyHearingGenerator"
@@ -26,7 +27,15 @@ const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerato
 const generatePncUpdateRequest = <T extends PncOperation>(
   pncUpdateDataset: PncUpdateDataset,
   operation: Operation<T>
-): Result<PncUpdateRequest> => pncUpdateRequestGenerator[operation.code as T](pncUpdateDataset, operation)
+): Result<PncUpdateRequest> => {
+  const pncUpdateRequest = pncUpdateRequestGenerator[operation.code as T](pncUpdateDataset, operation)
+  if (isError(pncUpdateRequest)) {
+    const index = pncUpdateDataset.PncOperations.indexOf(operation)
+    return new Error(`Operation ${index}: ${pncUpdateRequest.message}`)
+  }
+
+  return pncUpdateRequest
+}
 
 const performOperations = async (
   pncUpdateDataset: PncUpdateDataset,
@@ -39,7 +48,7 @@ const performOperations = async (
   )
   const pncUpdateRequestErrors = pncUpdateRequests.filter((pncUpdateRequest) => isError(pncUpdateRequest))
   if (pncUpdateRequestErrors.length > 0) {
-    return pncUpdateRequestErrors[0]
+    return new PncUpdateRequestError(pncUpdateRequestErrors.map((error) => error.message))
   }
 
   for (const [index, pncUpdateRequest] of (pncUpdateRequests as PncUpdateRequest[]).entries()) {

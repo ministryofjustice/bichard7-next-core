@@ -34,7 +34,7 @@ const processPhase3: ConductorWorker = {
 
     const result = await phase3(s3TaskData, pncGateway, auditLogger)
     if (isError(result)) {
-      return failed("Unexpected failure processing phase 3", result.message)
+      return failed("Unexpected failure processing phase 3", ...result.messages)
     }
 
     const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
