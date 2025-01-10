@@ -9,9 +9,9 @@ export default async (sql: postgres.Sql, partialUser: Partial<User>) => {
   const user = partialUser as unknown as User
 
   const [result]: [User?] = await sql`
-    INSERT INTO br7own.users (username, email, jwt_id, visible_forces)
-    VALUES (${user.username}, ${user.email}, ${user.jwt_id}, '001')
-    RETURNING id, username, email, jwt_id, visible_forces;
+    INSERT INTO br7own.users (username, email, jwt_id, visible_forces, forenames, surname)
+    VALUES (${user.username}, ${user.email}, ${user.jwt_id}, '001', ${user.forenames}, ${user.surname})
+    RETURNING id, username, email, jwt_id, visible_forces, forenames, surname;
   `
 
   if (!result) {

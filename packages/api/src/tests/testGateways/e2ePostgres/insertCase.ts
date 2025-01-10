@@ -28,7 +28,7 @@ export default async function (sql: postgres.Sql, partialCase: Partial<RawCaseFu
     INSERT INTO br7own.error_list
       (annotated_msg, court_reference, create_ts, error_count, error_report, is_urgent, message_id, msg_received_ts,
         org_for_police_filter, phase, total_pnc_failure_resubmissions, trigger_count, user_updated_flag,
-        error_locked_by_id, resolution_ts, error_status)
+        error_locked_by_id, resolution_ts, error_status, trigger_locked_by_id)
     VALUES
       (
         ${caseToInsert.annotated_msg},
@@ -46,7 +46,8 @@ export default async function (sql: postgres.Sql, partialCase: Partial<RawCaseFu
         ${caseToInsert.user_updated_flag},
         ${caseToInsert.error_locked_by_id},
         ${caseToInsert.resolution_ts},
-        ${caseToInsert.error_status}
+        ${caseToInsert.error_status},
+        ${caseToInsert.trigger_locked_by_id}
       )
     RETURNING *;
   `
