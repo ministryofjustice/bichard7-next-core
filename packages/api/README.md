@@ -22,10 +22,12 @@ Then from this directory run `npm run server:dev`
 
 ## Building
 
-You shouldn't need to manually build this package the dev server takes care of building, server and auto-building after
-a change.
+Go to the top level and run `npm run build:api`. This will build all the dependencies and the API.
 
-However, if you need to build `packages/common` [see how build core and common here.](https://github.com/ministryofjustice/bichard7-next-core#running-packages-locally)
+If you make changes in `packages/common` you need to stop the running server and rebuild `common`. The easiest way of
+doing this is to `cd packages/common` and run `npm run watch`. This will rebuild on any change. If you're running the
+dev server it's easy not to remember to restart the dev server. Your changes in `common` will not be related until to
+you restart the dev server.
 
 ## Docker
 
@@ -33,8 +35,6 @@ To build a Docker image:
 
 - Go to the top level of this repo
 - Run this command `./scripts/build-api-docker.sh`
-
-Docker uses esbuild to compile and transform TypeScript into JavaScript.
 
 ## Endpoints
 

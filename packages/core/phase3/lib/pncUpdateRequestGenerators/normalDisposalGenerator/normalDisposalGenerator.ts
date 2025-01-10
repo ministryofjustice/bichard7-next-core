@@ -7,9 +7,6 @@ import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGener
 
 import formatDateSpecifiedInResult from "../../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import getAdjustedRecordableOffencesForCourtCase from "../../../../lib/getAdjustedRecordableOffencesForCourtCase"
-import checkRccSegmentApplicability, {
-  RccSegmentApplicability
-} from "../../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
 import isResultCompatibleWithDisposal from "../../../../phase2/lib/isResultCompatibleWithDisposal"
 import { PncOperation } from "../../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
@@ -33,15 +30,14 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   operation
 ) => {
   const hearing = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing
-  const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  const hearingCase = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case
+  const hearingDefendant = hearingCase.HearingDefendant
   const offences = getAdjustedRecordableOffencesForCourtCase(
     hearingDefendant.Offence,
     operation.data?.courtCaseReference
   )
 
-  const courtCaseReference =
-    operation.data?.courtCaseReference ??
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber
+  const courtCaseReference = operation.data?.courtCaseReference ?? hearingCase.CourtCaseReferenceNumber
   const formattedCourtCaseReference = preProcessCourtCaseReferenceNumber(courtCaseReference)
   if (isError(formattedCourtCaseReference)) {
     return formattedCourtCaseReference
@@ -50,25 +46,6 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   const couPsaCourtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
   if (isError(couPsaCourtCode)) {
     return couPsaCourtCode
-  }
-
-  const courtHouseName =
-    couPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
-      ? `${hearing.CourtHouseName} ${hearing.CourtType}`
-      : ""
-  const generatedPncFilename = deriveGeneratedPncFilename(hearingDefendant)
-
-  let preTrialIssuesUniqueReferenceNumber: null | string = null
-  if (
-    checkRccSegmentApplicability(offences, operation.data?.courtCaseReference) ===
-    RccSegmentApplicability.CaseRequiresRccAndHasReportableOffences
-  ) {
-    const forceOwner =
-      pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode ?? undefined
-    preTrialIssuesUniqueReferenceNumber = preProcessPreTrialIssuesUniqueReferenceNumber(
-      pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN,
-      forceOwner
-    )
   }
 
   const nextResultSourceOrganisation = getNextResultSourceOrganisationFromOffences(offences)
@@ -80,10 +57,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   const courtDate = crtPsaCourtCode ? getNextHearingDateFromOffences(offences) : undefined
   const pendingCourtHouseName =
     crtPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : ""
-  const hearingsAdjudicationsAndDisposals = generateHearingsAdjudicationsAndDisposals(
-    pncUpdateDataset,
-    operation.data?.courtCaseReference
-  )
+
   let arrestSummonsNumber: Result<null | string> = null
   let arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = []
   const hasOffencesAddedByTheCourt = offences.some(
@@ -108,14 +82,25 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
       arrestSummonsNumber,
       arrestsAdjudicationsAndDisposals,
       courtCaseReferenceNumber: formattedCourtCaseReference,
-      courtHouseName,
+      courtHouseName:
+        couPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
+          ? `${hearing.CourtHouseName} ${hearing.CourtType}`
+          : "",
       dateOfHearing: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
-      generatedPNCFilename: generatedPncFilename,
-      hearingsAdjudicationsAndDisposals,
+      generatedPNCFilename: deriveGeneratedPncFilename(hearingDefendant),
+      hearingsAdjudicationsAndDisposals: generateHearingsAdjudicationsAndDisposals(
+        pncUpdateDataset,
+        operation.data?.courtCaseReference
+      ),
       pendingCourtDate: courtDate ? formatDateSpecifiedInResult(courtDate, true) : null,
       pendingCourtHouseName: crtPsaCourtCode ? pendingCourtHouseName : null,
       pendingPsaCourtCode: crtPsaCourtCode ? preProcessCourtCode(crtPsaCourtCode) : null,
-      preTrialIssuesUniqueReferenceNumber,
+      preTrialIssuesUniqueReferenceNumber: preProcessPreTrialIssuesUniqueReferenceNumber(
+        offences,
+        courtCaseReference,
+        hearingCase.PTIURN,
+        hearingCase.ForceOwner?.OrganisationUnitCode ?? undefined
+      ),
       psaCourtCode: couPsaCourtCode ? preProcessCourtCode(couPsaCourtCode) : null
     }
   }

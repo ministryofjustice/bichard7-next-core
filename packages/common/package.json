@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "build:api": "tsc --project tsconfig.build.api.json",
     "clean": "rm -rf ./dist",
     "watch": "tsc --project tsconfig.build.json --watch",
+    "watch:api": "tsc --project tsconfig.build.api.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "jest --maxWorkers=80% --testNamePattern=",
