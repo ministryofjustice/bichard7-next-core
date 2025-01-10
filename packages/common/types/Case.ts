@@ -79,7 +79,7 @@ export const PartialCaseDtoSchema = z.object({
   courtName: z.string().nullable(),
   defendantName: z.string().nullable(),
   errorId: z.number(),
-  errorLockedByUserFullName: z.string().optional(),
+  errorLockedByUserFullName: z.string().nullable().optional(),
   errorLockedByUsername: z.string().nullable(),
   errorReport: z.string().optional(),
   errorStatus: z.string().nullable(),
@@ -87,7 +87,7 @@ export const PartialCaseDtoSchema = z.object({
   ptiurn: z.string().nullable(),
   resolutionTimestamp: z.date().nullable(),
   triggerCount: z.number().optional(),
-  triggerLockedByUserFullName: z.string().optional(),
+  triggerLockedByUserFullName: z.string().nullable().optional(),
   triggerLockedByUsername: z.string().nullable(),
   triggerStatus: z.string().nullable()
 })

@@ -26,7 +26,6 @@ describe("fetchFullCase", () => {
       court_name: "",
       court_reference: "",
       defendant_name: "",
-      error_count: 1,
       error_id: 0,
       error_locked_by_fullname: "",
       error_locked_by_id: null,
@@ -42,7 +41,7 @@ describe("fetchFullCase", () => {
       trigger_locked_by_id: null,
       trigger_status: 1,
       updated_msg: ""
-    } as RawCaseData
+    } satisfies RawCaseData
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
 
     const returnedCase = await filter(sql, 0, [1])

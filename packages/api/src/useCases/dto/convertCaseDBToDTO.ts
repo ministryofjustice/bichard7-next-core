@@ -40,7 +40,7 @@ export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): 
     courtName: caseDb.court_name,
     defendantName: caseDb.defendant_name,
     errorId: caseDb.error_id,
-    errorLockedByUserFullName: undefined,
+    errorLockedByUserFullName: caseDb.error_locked_by_fullname,
     errorLockedByUsername: caseDb.error_locked_by_id,
     errorReport: caseDb.error_report,
     errorStatus: errorStatusFromCaseDB(caseDb),
@@ -48,7 +48,7 @@ export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): 
     ptiurn: caseDb.ptiurn,
     resolutionTimestamp: caseDb.resolution_ts,
     triggerCount: caseDb.trigger_count,
-    triggerLockedByUserFullName: undefined,
+    triggerLockedByUserFullName: caseDb.trigger_locked_by_fullname,
     triggerLockedByUsername: caseDb.trigger_locked_by_id,
     triggerStatus: triggerStatusFromCaseDB(caseDb)
   } satisfies CasePartialDto
