@@ -41,7 +41,7 @@ const processPhase3: ConductorWorker = {
     const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
     if (isError(s3PutResult)) {
       logger.error({
-        message: "Debug PNC Operations",
+        message: `Could not put file to S3: ${s3TaskDataPath}. Message: ${s3PutResult.message}`,
         correlationId: result.correlationId,
         operations: result.outputMessage.PncOperations
       })
