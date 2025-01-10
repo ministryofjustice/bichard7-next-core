@@ -28,8 +28,8 @@ export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Pr
         CONCAT(triggerLockU.forenames, ' ', triggerLockU.surname) AS trigger_locked_by_fullname
       FROM
         br7own.error_list AS el
-        INNER JOIN br7own.users AS errorLockU ON errorLockU.username = el.error_locked_by_id
-        INNER JOIN br7own.users AS triggerLockU ON triggerLockU.username = el.trigger_locked_by_id
+        LEFT JOIN br7own.users AS errorLockU ON errorLockU.username = el.error_locked_by_id
+        LEFT JOIN br7own.users AS triggerLockU ON triggerLockU.username = el.trigger_locked_by_id
       WHERE
         el.error_id = ${caseId} AND
         br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
