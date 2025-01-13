@@ -4,6 +4,7 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/Annotated
 import type { FastifyBaseLogger } from "fastify"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
+import { isEmpty } from "lodash"
 
 import parseHearingOutcome from "../../services/parseHearingOutcome"
 import {
@@ -28,8 +29,6 @@ export const convertCaseDBToCaseDTO = (caseDB: RawCaseData, user: User, logger: 
 }
 
 export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): CasePartialDto => {
-  // TODO: Load errorLockedBy user to generate the errorLockedByUserFullName
-  // TODO: Load triggerLockedBy user to generate the triggerLockedByUserFullName
   return {
     asn: caseDb.asn,
     canUserEditExceptions:
@@ -40,7 +39,7 @@ export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): 
     courtName: caseDb.court_name,
     defendantName: caseDb.defendant_name,
     errorId: caseDb.error_id,
-    errorLockedByUserFullName: caseDb.error_locked_by_fullname,
+    errorLockedByUserFullName: isEmpty(caseDb.error_locked_by_fullname) ? null : caseDb.error_locked_by_fullname,
     errorLockedByUsername: caseDb.error_locked_by_id,
     errorReport: caseDb.error_report,
     errorStatus: errorStatusFromCaseDB(caseDb),
@@ -48,7 +47,7 @@ export const convertCaseDBToCasePartialDTO = (caseDb: RawCaseData, user: User): 
     ptiurn: caseDb.ptiurn,
     resolutionTimestamp: caseDb.resolution_ts,
     triggerCount: caseDb.trigger_count,
-    triggerLockedByUserFullName: caseDb.trigger_locked_by_fullname,
+    triggerLockedByUserFullName: isEmpty(caseDb.trigger_locked_by_fullname) ? null : caseDb.trigger_locked_by_fullname,
     triggerLockedByUsername: caseDb.trigger_locked_by_id,
     triggerStatus: triggerStatusFromCaseDB(caseDb)
   } satisfies CasePartialDto

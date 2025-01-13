@@ -52,7 +52,7 @@ describe("retrieve a case", () => {
       courtReference: "",
       defendantName: "",
       errorId: 0,
-      errorLockedByUserFullName: undefined,
+      errorLockedByUserFullName: null,
       errorLockedByUsername: null,
       errorReport: "",
       errorStatus: null,
@@ -62,7 +62,7 @@ describe("retrieve a case", () => {
       ptiurn: null,
       resolutionTimestamp: null,
       triggerCount: 0,
-      triggerLockedByUserFullName: undefined,
+      triggerLockedByUserFullName: null,
       triggerLockedByUsername: null,
       triggerStatus: null,
       updatedHearingOutcome: null

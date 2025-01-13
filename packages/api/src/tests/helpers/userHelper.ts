@@ -11,11 +11,11 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.Ge
   const jwtId = randomUUID()
   const user = {
     email: "user1@example.com",
-    forenames: null,
+    forenames: "Forename",
     groups: userGroups,
     id: 1,
     jwt_id: jwtId,
-    surname: null,
+    surname: "Surname",
     username: "User 1",
     visible_forces: "001"
   } satisfies User
