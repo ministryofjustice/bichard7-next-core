@@ -488,7 +488,7 @@ const mapAhoCXE01ToXml = (pncQuery: PncQueryResult): Cxe01 => ({
     "@_CRONumber": pncQuery.croNumber ?? "",
     "@_Checkname": pncQuery.checkName,
     "@_IntfcUpdateType": "K",
-    "@_PNCID": pncQuery.pncId
+    "@_PNCID": pncQuery.pncId ?? ""
   },
   CourtCases:
     pncQuery.courtCases && pncQuery.courtCases.length > 0
