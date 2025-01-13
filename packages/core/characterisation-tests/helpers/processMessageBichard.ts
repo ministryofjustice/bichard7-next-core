@@ -31,6 +31,7 @@ const processMessageBichard = async <BichardResultType>(
     recordable = true,
     pncOverrides = {},
     pncCaseType = "court",
+    pncErrorMessage,
     pncMessage,
     pncAdjudication = false,
     phase = Phase.HEARING_OUTCOME
@@ -41,8 +42,12 @@ const processMessageBichard = async <BichardResultType>(
 
   if (phase === Phase.HEARING_OUTCOME && !realPnc) {
     if (recordable) {
-      // Insert matching record in PNC
-      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
+      if (pncErrorMessage) {
+        await mockEnquiryErrorInPnc(pncErrorMessage)
+      } else {
+        // Insert matching record in PNC
+        await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
+      }
     } else {
       await mockEnquiryErrorInPnc()
     }

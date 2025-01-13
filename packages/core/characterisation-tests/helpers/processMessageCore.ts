@@ -7,6 +7,7 @@ import type { ProcessMessageOptions } from "./processMessage"
 import MockPncGateway from "../../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import { PncApiError } from "../../lib/PncGateway"
 import CorePhase1 from "../../phase1/phase1"
 import CorePhase2 from "../../phase2/phase2"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
@@ -17,12 +18,15 @@ export const processMessageCorePhase1 = async (
     recordable = true,
     pncOverrides = {},
     pncCaseType = "court",
+    pncErrorMessage,
     pncMessage,
     pncAdjudication = false
   }: ProcessMessageOptions
 ): Promise<Phase1Result> => {
   const pncQueryResult = recordable
-    ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
+    ? pncErrorMessage
+      ? new PncApiError([pncErrorMessage])
+      : generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
   const pncGateway = new MockPncGateway(pncQueryResult)
 

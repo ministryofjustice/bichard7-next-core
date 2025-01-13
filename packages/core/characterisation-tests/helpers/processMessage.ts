@@ -11,6 +11,7 @@ export type ProcessMessageOptions = {
   phase?: Phase
   pncAdjudication?: boolean
   pncCaseType?: string
+  pncErrorMessage?: string
   pncMessage?: string
   pncOverrides?: Partial<ResultedCaseMessageParsedXml>
   recordable?: boolean

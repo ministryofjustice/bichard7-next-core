@@ -86,8 +86,14 @@ const mockEnquiry = (
   }
 }
 
-const mockEnquiryError = (): string => {
-  return '<?xml version="1.0" standalone="yes"?><CXE01><GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH><TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT><GMT>000003073ENQR000018E</GMT></CXE01>'
+const mockEnquiryError = (
+  pncErrorMessage: string = "I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND"
+): string => {
+  return `<?xml version="1.0" standalone="yes"?>
+  <CXE01>
+  <GMH>073ENQR000018EERRASIPNCA05A73000017300000120210915101073000001                                             050001777</GMH>
+  <TXT>${pncErrorMessage}</TXT>
+  <GMT>000003073ENQR000018E</GMT></CXE01>`
 }
 
 const addMock = async (matchRegex: string, response: string, count: null | number = null): Promise<string> => {
@@ -128,8 +134,8 @@ const mockRecordInPnc = async (
   await addMock(enquiry.matchRegex, enquiry.response)
 }
 
-const mockEnquiryErrorInPnc = async (): Promise<void> => {
-  const enquiryError = mockEnquiryError()
+const mockEnquiryErrorInPnc = async (pncErrorMessage?: string): Promise<void> => {
+  const enquiryError = mockEnquiryError(pncErrorMessage)
   await clearMocks()
   await addMock("CXE01", enquiryError)
 }
