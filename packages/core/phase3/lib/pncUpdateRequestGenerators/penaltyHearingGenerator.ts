@@ -39,7 +39,7 @@ const penaltyHearingGenerator: PncUpdateRequestGenerator<PncOperation.PENALTY_HE
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, penaltyNoticeCaseRef),
       hearingType: PENALTY_HEARING_TYPE,
-      penaltyNoticeCaseRef: penaltyNoticeCaseRef
+      penaltyNoticeCaseRef
     }
   }
 }
