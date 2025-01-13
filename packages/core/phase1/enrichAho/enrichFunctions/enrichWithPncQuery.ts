@@ -9,8 +9,9 @@ import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/Pn
 import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 import isDummyAsn from "../../../lib/isDummyAsn"
-import { isNotFoundError } from "../../exceptions/generatePncEnquiryExceptionFromMessage"
-import generatePncEnquiryExceptionFromMessage from "../../exceptions/generatePncEnquiryExceptionFromMessage"
+import generatePncEnquiryExceptionFromMessage, {
+  isNotFoundError
+} from "../../exceptions/generatePncEnquiryExceptionFromMessage"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
@@ -29,7 +30,6 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
   const hoDefendant = hoCase.HearingDefendant
   hoDefendant.PNCCheckname = undefined
   hoDefendant.CRONumber = undefined
-  hoDefendant.PNCIdentifier = undefined
 
   hoDefendant.Offence.forEach((offence) => {
     offence.AddedByTheCourt = undefined
@@ -47,19 +47,18 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 }
 
 export default async (
-  annotatedHearingOutcome: AnnotatedHearingOutcome,
+  aho: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger,
   isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
-  clearPNCPopulatedElements(annotatedHearingOutcome)
-  const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  const correlationId = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-  const offenceCount =
-    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
+  clearPNCPopulatedElements(aho)
+  const asn = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const offenceCount = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
   // TODO: Bichard currently only checks the format, but we should use 'isAsnValid' here instead
   if (isDummyAsn(asn) || !isAsnFormatValid(asn) || offenceCount > 100) {
-    return annotatedHearingOutcome
+    return aho
   }
 
   const requestStartTime = new Date()
@@ -70,8 +69,7 @@ export default async (
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
     "PNC Attempts Made": 1, // Retry is not implemented
     "PNC Request Type": "enquiry",
-    "PNC Request Message":
-      annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
+    "PNC Request Message": aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
     "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
@@ -79,24 +77,29 @@ export default async (
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
     for (const message of pncResult.messages) {
-      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
-        annotatedHearingOutcome.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
+      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(aho))) {
+        aho.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
       }
     }
   } else {
-    annotatedHearingOutcome.PncQuery = pncResult
+    aho.PncQuery = pncResult
   }
 
-  annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
+  aho.PncQueryDate = pncGateway.queryTime
 
-  addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
-  addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)
+  addTitleToCaseOffences(aho.PncQuery?.courtCases)
+  addTitleToCaseOffences(aho.PncQuery?.penaltyCases)
 
-  if (annotatedHearingOutcome.PncQuery !== undefined) {
-    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
+  if (aho.PncQuery !== undefined) {
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
   }
 
-  annotatedHearingOutcome = matchOffencesToPnc(annotatedHearingOutcome)
+  aho = matchOffencesToPnc(aho)
 
-  return annotatedHearingOutcome
+  const { PNCIdentifier, CourtPNCIdentifier } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier =
+    aho.PncQuery?.pncId ?? PNCIdentifier ?? CourtPNCIdentifier
+  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = aho.PncQuery?.checkName
+
+  return aho
 }
