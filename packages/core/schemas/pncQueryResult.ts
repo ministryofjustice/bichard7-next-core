@@ -52,7 +52,7 @@ export const pncQueryResultSchema = z.object({
   forceStationCode: z.string().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.forceStationCode.$description),
   croNumber: z.string().optional(),
   checkName: z.string(),
-  pncId: z.string().optional(),
+  pncId: z.string(),
   courtCases: z.array(pncCourtCaseSchema).optional(),
   penaltyCases: z.array(pncPenaltyCaseSchema).optional()
 })

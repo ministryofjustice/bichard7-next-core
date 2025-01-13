@@ -234,38 +234,10 @@ describe("enrichWithQuery()", () => {
       ...generateMockPncQueryResult(incomingMessage),
       pncId
     })
-
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = "aho_pncid"
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.CourtPNCIdentifier = "court_pncid"
 
     const resultAho = await enrichWithPncQuery(aho, gateway, auditLogger, isIgnored)
 
     expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier).toBe(pncId)
-  })
-
-  it("should set the PNCIdentifier from AHO if not in PNC response and exists", async () => {
-    const pncId = "aho_pncid"
-    const pncQueryResult = { ...generateMockPncQueryResult(incomingMessage) }
-    delete pncQueryResult.pncId
-
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = pncId
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.CourtPNCIdentifier = "court_pncid"
-
-    const resultAho = await enrichWithPncQuery(aho, new MockPncGateway(pncQueryResult), auditLogger, isIgnored)
-
-    expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier).toBe(pncId)
-  })
-
-  it("should set the PNCIdentifier from CourtPNCIdentifier if not in PNC response and doesn't exist", async () => {
-    const courtPncId = "court_pncid"
-    const pncQueryResult = { ...generateMockPncQueryResult(incomingMessage) }
-    delete pncQueryResult.pncId
-
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.CourtPNCIdentifier = courtPncId
-    delete aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
-
-    const resultAho = await enrichWithPncQuery(aho, new MockPncGateway(pncQueryResult), auditLogger, isIgnored)
-
-    expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier).toBe(courtPncId)
   })
 })

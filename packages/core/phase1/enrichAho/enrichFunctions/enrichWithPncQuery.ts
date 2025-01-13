@@ -47,18 +47,19 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 }
 
 export default async (
-  aho: AnnotatedHearingOutcome,
+  annotatedHearingOutcome: AnnotatedHearingOutcome,
   pncGateway: PncGatewayInterface,
   auditLogger: AuditLogger,
   isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
-  clearPNCPopulatedElements(aho)
-  const asn = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  const correlationId = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-  const offenceCount = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
+  clearPNCPopulatedElements(annotatedHearingOutcome)
+  const asn = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+  const correlationId = annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+  const offenceCount =
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.length
   // TODO: Bichard currently only checks the format, but we should use 'isAsnValid' here instead
   if (isDummyAsn(asn) || !isAsnFormatValid(asn) || offenceCount > 100) {
-    return aho
+    return annotatedHearingOutcome
   }
 
   const requestStartTime = new Date()
@@ -69,7 +70,8 @@ export default async (
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
     "PNC Attempts Made": 1, // Retry is not implemented
     "PNC Request Type": "enquiry",
-    "PNC Request Message": aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
+    "PNC Request Message":
+      annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
     "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
     sensitiveAttributes: "PNC Request Message,PNC Response Message"
   }
@@ -77,29 +79,27 @@ export default async (
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
     for (const message of pncResult.messages) {
-      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(aho))) {
-        aho.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
+      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
+        annotatedHearingOutcome.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
       }
     }
   } else {
-    aho.PncQuery = pncResult
+    annotatedHearingOutcome.PncQuery = pncResult
   }
 
-  aho.PncQueryDate = pncGateway.queryTime
+  annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
 
-  addTitleToCaseOffences(aho.PncQuery?.courtCases)
-  addTitleToCaseOffences(aho.PncQuery?.penaltyCases)
+  addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
+  addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)
 
-  if (aho.PncQuery !== undefined) {
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
+  if (annotatedHearingOutcome.PncQuery !== undefined) {
+    const { pncId, checkName } = annotatedHearingOutcome.PncQuery
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = pncId
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = checkName
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
   }
 
-  aho = matchOffencesToPnc(aho)
+  annotatedHearingOutcome = matchOffencesToPnc(annotatedHearingOutcome)
 
-  const { PNCIdentifier, CourtPNCIdentifier } = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
-  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier =
-    aho.PncQuery?.pncId ?? PNCIdentifier ?? CourtPNCIdentifier
-  aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = aho.PncQuery?.checkName
-
-  return aho
+  return annotatedHearingOutcome
 }
