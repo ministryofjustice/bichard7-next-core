@@ -2,7 +2,6 @@ import type { Result } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../types/HearingDetails"
 import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGenerator"
 
 import formatDateSpecifiedInResult from "../../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
@@ -59,7 +58,6 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     crtPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : ""
 
   let arrestSummonsNumber: Result<null | string> = null
-  let arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = []
   const hasOffencesAddedByTheCourt = offences.some(
     (offence) => offence.AddedByTheCourt && isResultCompatibleWithDisposal(offence)
   )
@@ -68,11 +66,6 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     if (isError(arrestSummonsNumber)) {
       return arrestSummonsNumber
     }
-
-    arrestsAdjudicationsAndDisposals = generateArrestHearingsAdjudicationsAndDisposals(
-      pncUpdateDataset,
-      operation.data?.courtCaseReference
-    )
   }
 
   return {
@@ -80,7 +73,10 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
     request: {
       ...generateBasePncUpdateRequest(pncUpdateDataset),
       arrestSummonsNumber,
-      arrestsAdjudicationsAndDisposals,
+      arrestsAdjudicationsAndDisposals: generateArrestHearingsAdjudicationsAndDisposals(
+        pncUpdateDataset,
+        operation.data?.courtCaseReference
+      ),
       courtCaseReferenceNumber: formattedCourtCaseReference,
       courtHouseName:
         couPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR

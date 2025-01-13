@@ -21,6 +21,8 @@ const penaltyHearingGenerator: PncUpdateRequestGenerator<PncOperation.PENALTY_HE
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
 
   if (!penaltyNoticeCaseRef) {
+    // We generate penalty hearing operation only if PenaltyNoticeCaseReferenceNumber has value in Phase 2.
+    // If we get this error something is very wrong.
     return new Error("Penalty notice case ref is missing")
   }
 
@@ -37,7 +39,7 @@ const penaltyHearingGenerator: PncUpdateRequestGenerator<PncOperation.PENALTY_HE
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, penaltyNoticeCaseRef),
       hearingType: PENALTY_HEARING_TYPE,
-      penaltyNoticeCaseRef: penaltyNoticeCaseRef
+      penaltyNoticeCaseRef
     }
   }
 }
