@@ -57,9 +57,9 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "devDependencies": {
-    "@eslint/compat": "^1.2.4",
+    "@eslint/compat": "^1.2.5",
     "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^9.18.0",
     "@types/diff": "^5.2.3",
     "@types/jest": "^29.5.14",
     "@types/lodash.differencewith": "^4.5.9",
@@ -74,7 +74,7 @@
     "chalk": "^4.1.2",
     "esbuild": "~0.23.0",
     "esbuild-plugin-ignore": "^1.1.1",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.10.0",
@@ -94,13 +94,13 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.721.0",
-    "@aws-sdk/client-s3": "^3.722.0",
+    "@aws-sdk/client-dynamodb": "^3.726.1",
+    "@aws-sdk/client-s3": "^3.726.1",
     "@io-orkes/conductor-javascript": "^2.1.3",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.242",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.243",
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.7.9",

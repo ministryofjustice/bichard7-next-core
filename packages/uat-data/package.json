@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
