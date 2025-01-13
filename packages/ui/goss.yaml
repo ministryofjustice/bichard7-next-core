@@ -59,11 +59,7 @@ package:
   shadow-utils:
     installed: true
 port:
-  tcp:80:
-    listening: true
-    ip:
-      - 0.0.0.0
-  tcp:443:
+  tcp:9443:
     listening: true
     ip:
       - 0.0.0.0
@@ -79,14 +75,6 @@ user:
     groups:
       - dbus
     home: /
-    shell: /sbin/nologin
-  nginx:
-    exists: true
-    uid: 997
-    gid: 997
-    groups:
-      - nginx
-    home: /var/lib/nginx
     shell: /sbin/nologin
   nobody:
     exists: true
@@ -106,8 +94,8 @@ user:
     shell: /bin/bash
   supervisor:
     exists: true
-    uid: 996
-    gid: 996
+    uid: 997
+    gid: 997
     groups:
       - supervisor
     home: /home/supervisor

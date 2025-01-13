@@ -103,7 +103,14 @@ const resolveTriggers = async (
       throw allTriggers
     }
 
+    const triggersVisibleToUser = user.excludedTriggers
+      ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
+      : allTriggers
+
     const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolvedAt).length === allTriggers.length
+
+    const allTriggersVisibleToUserResolved =
+      triggersVisibleToUser.filter((trigger) => trigger.resolvedAt).length === triggersVisibleToUser.length
 
     if (areAllTriggersResolved) {
       const hasUnresolvedExceptions = courtCase.errorCount > 0 && courtCase.errorResolvedTimestamp === null
@@ -140,7 +147,9 @@ const resolveTriggers = async (
           ...generateTriggersAttributes(allTriggers)
         })
       )
+    }
 
+    if (allTriggersVisibleToUserResolved) {
       const unlockResult = await updateLockStatusToUnlocked(
         entityManager,
         courtCase,

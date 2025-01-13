@@ -19,6 +19,9 @@ const convertToYouthCourtIfRequired = (
 
   const thirdLevelPsaCodeNumber = parseInt(thirdLevelPsaCode, 10)
   if (isNaN(thirdLevelPsaCodeNumber)) {
+    // This comes from our standing data and every court has a four-digit PSA code
+    // We've already checked against empty strings, so if we get an error here
+    // there is something very wrong and we should handle it
     return new Error(`PSA code '${thirdLevelPsaCode}' is not a number`)
   }
 

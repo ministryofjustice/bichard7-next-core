@@ -8,6 +8,8 @@ const preProcessCourtCaseReferenceNumber = (ccr?: string): Result<string> => {
   }
 
   if (ccr.length !== COURT_CASE_REFERENCE_NUMBER_LENGTH) {
+    // We return an error because this data comes from the PNC and is always 15 characters.
+    // If it's not 15 characters then something is very wrong and we'll see this error
     return new Error(
       `Court Case Reference Number length must be ${COURT_CASE_REFERENCE_NUMBER_LENGTH}, but the length is ${ccr.length}`
     )

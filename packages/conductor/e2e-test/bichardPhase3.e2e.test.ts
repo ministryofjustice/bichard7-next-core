@@ -2,6 +2,7 @@ import "./helpers/setEnvironmentVariables"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
@@ -28,6 +29,7 @@ const s3Config = createS3Config()
 const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
+const conductorClient = createConductorClient()
 
 describe("bichard_phase_3 workflow", () => {
   let correlationId: string
@@ -103,5 +105,24 @@ describe("bichard_phase_3 workflow", () => {
     })
     const secondWorkflow = workflows.find((wf) => wf.workflowId === secondWorkflowId)
     expect(secondWorkflow?.reasonForIncompletion).toMatch(/Workflow is COMPLETED by TERMINATE task/)
+  })
+
+  it("should not retry processing Phase 3", async () => {
+    const aho = JSON.parse(getFixture("e2e-test/fixtures/phase3/success-aho.json", correlationId))
+    aho.PncOperations[0].data = { courtCaseReference: "invalid-ccr" }
+
+    await putIncomingMessageToS3(JSON.stringify(aho), s3TaskDataPath, correlationId)
+    await uploadPncMock(successNoTriggersPncMock)
+    await startWorkflow("bichard_phase_3", { s3TaskDataPath }, correlationId)
+    await waitForCompletedWorkflow(s3TaskDataPath, "FAILED", 60000, "bichard_phase_3")
+
+    const { results: tasks } = await conductorClient.taskResource.search(
+      undefined,
+      undefined,
+      undefined,
+      correlationId,
+      undefined
+    )
+    expect(tasks?.filter((task) => task.taskType === "process_phase3")).toHaveLength(1)
   })
 })

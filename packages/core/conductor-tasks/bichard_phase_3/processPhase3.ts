@@ -8,6 +8,7 @@ import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
@@ -32,11 +33,23 @@ const processPhase3: ConductorWorker = {
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase3)
 
     const result = await phase3(s3TaskData, pncGateway, auditLogger)
+    if (isError(result)) {
+      return failed("Unexpected failure processing phase 3", ...result.messages)
+    }
 
     const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
     const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
     if (isError(s3PutResult)) {
-      return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
+      logger.error({
+        message: `Could not put file to S3: ${s3TaskDataPath}. Message: ${s3PutResult.message}`,
+        correlationId: result.correlationId,
+        operations: result.outputMessage.PncOperations
+      })
+      return failed(
+        `Could not put file to S3: ${s3TaskDataPath}`,
+        s3PutResult.message,
+        JSON.stringify(result.outputMessage.PncOperations)
+      )
     }
 
     return completed(

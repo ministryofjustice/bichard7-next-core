@@ -3,6 +3,8 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
+import dummyAho from "../../../tests/fixtures/AnnotatedHO1.json"
+
 class FakeDataStore implements DataStoreGateway {
   async canCaseBeResubmitted(_username: string, _caseId: number, _forceIds: number[]): Promise<boolean> {
     return Promise.resolve(true)
@@ -10,7 +12,7 @@ class FakeDataStore implements DataStoreGateway {
 
   async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<CaseDB> {
     return Promise.resolve({
-      annotated_msg: "",
+      annotated_msg: dummyAho.hearingOutcomeXml,
       asn: "",
       court_code: "",
       court_date: new Date("2022-06-30"),
@@ -49,7 +51,7 @@ class FakeDataStore implements DataStoreGateway {
       trigger_resolved_by: null,
       trigger_resolved_ts: null,
       trigger_status: null,
-      updated_msg: "",
+      updated_msg: null,
       user_updated_flag: 1
     } satisfies CaseDB)
   }

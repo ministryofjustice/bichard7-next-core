@@ -1,3 +1,4 @@
+import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
 export const CaseDBSchema = z.object({
@@ -44,7 +45,6 @@ export const CaseDBSchema = z.object({
   user_updated_flag: z.number()
 })
 
-// TODO: Fill in missing attributes
 // TODO: Add notes
 // TODO: Add triggers
 export const PartialCaseDTOSchema = z.object({
@@ -67,15 +67,14 @@ export const PartialCaseDTOSchema = z.object({
   triggerStatus: z.string().nullable()
 })
 
-// TODO: Fill in missing attributes
 export const FullCaseDTOSchema = PartialCaseDTOSchema.and(
   z.object({
-    aho: z.string(),
+    aho: unvalidatedHearingOutcomeSchema,
     courtCode: z.string().nullable(),
     courtReference: z.string().optional(),
     orgForPoliceFilter: z.string().optional(),
     phase: z.number().optional(),
-    updatedHearingOutcome: z.string().nullable()
+    updatedHearingOutcome: unvalidatedHearingOutcomeSchema.or(z.null())
   })
 )
 

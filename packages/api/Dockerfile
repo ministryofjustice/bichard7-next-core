@@ -12,21 +12,25 @@ RUN dnf update -y \
 
 WORKDIR /core
 
-COPY package.json .
-COPY package-lock.json .
+COPY package*.json ./
+COPY tsconfig*.json ./
 COPY packages/api ./packages/api
 COPY packages/common ./packages/common
-COPY tsconfig*.json ./
+COPY packages/core ./packages/core
+
+RUN npm ci --ignore-scripts && npm run build:api
 
 WORKDIR /core/packages/common
 
-RUN npm i --ignore-scripts && npm run build \
-  && ls | grep -v package.json | grep -v dist | xargs rm -rf
+RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
+
+WORKDIR /core/packages/core
+
+RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
 
 WORKDIR /core/packages/api
 
-RUN npm i --ignore-scripts && npm run build \
-  && ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
+RUN ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
 
 COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
 RUN mkdir -p /certs && \

@@ -7,6 +7,7 @@ import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
 import { MockServer } from "jest-mock-server"
 import postgres from "postgres"
@@ -72,6 +73,7 @@ describe("processPhase3", () => {
   })
 
   it("should fail if it can't put the file to S3", async () => {
+    const loggerSpy = jest.spyOn(logger, "error")
     mockPutFileToS3.default = () => {
       return Promise.resolve(new Error("Mock error"))
     }
@@ -85,6 +87,11 @@ describe("processPhase3", () => {
     expect(result).toHaveProperty("status", "FAILED")
     expect(result.logs?.map((l) => l.log)).toContain(`Could not put file to S3: ${s3TaskDataPath}`)
     expect(result.logs?.map((l) => l.log)).toContain("Mock error")
+    expect(loggerSpy).toHaveBeenCalledWith({
+      correlationId: "CID-332cc4c7-f0cd-44c8-9b05-c460bdfd2184",
+      message: `Could not put file to S3: ${s3TaskDataPath}. Message: Mock error`,
+      operations: []
+    })
   })
 
   it("should put the result into S3 and complete correctly", async () => {
@@ -117,5 +124,33 @@ describe("processPhase3", () => {
     const parsedUpdatedFile = JSON.parse(updatedFile, dateReviver) as Phase3Result
     expect(parsedUpdatedFile.outputMessage.PncOperations[0].status).toBe("Completed")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing outcome received by phase 3")
+  })
+
+  it("should fail when Phase 3 returns an error", async () => {
+    pncApi.post("/pnc/records/sentence-deferred").mockImplementationOnce((ctx) => {
+      ctx.status = 204
+    })
+    const invalidCourtCaseReference = "abcdefg12345678aasdfsdf"
+    const inputJson = generateFakePncUpdateDataset({
+      PncOperations: [
+        {
+          code: PncOperation.SENTENCE_DEFERRED,
+          data: { courtCaseReference: invalidCourtCaseReference },
+          status: "NotAttempted"
+        }
+      ]
+    })
+    const s3TaskDataPath = `${randomUUID()}.json`
+    await putFileToS3(JSON.stringify(inputJson), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processPhase3.execute({ inputData: { s3TaskDataPath } })
+
+    expect(result).toHaveProperty("status", "FAILED")
+    expect(result.logs).toContainEqual(expect.objectContaining({ log: "Unexpected failure processing phase 3" }))
+    expect(result.logs).toContainEqual(
+      expect.objectContaining({
+        log: "Operation 0: Court Case Reference Number length must be 15, but the length is 23"
+      })
+    )
   })
 })
