@@ -3,7 +3,12 @@ import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDatase
 
 import ResultClass from "../../../types/ResultClass"
 
-const generatePncUpdateDatasetWithOperations = (operations: Operation[] = []): PncUpdateDataset => {
+type AhoOptions = { croNumber?: string; penaltyNoticeCaseReferenceNumber?: string }
+
+const generatePncUpdateDatasetWithOperations = (
+  operations: Operation[] = [],
+  options: AhoOptions = {}
+): PncUpdateDataset => {
   const offence = {
     OffenceCategory: "ZZ",
     CriminalProsecutionReference: {
@@ -69,9 +74,11 @@ const generatePncUpdateDatasetWithOperations = (operations: Operation[] = []): P
             ArrestSummonsNumber: "1101ZD0100000410780J",
             BailConditions: ["This is a dummy bail condition."],
             Offence: [offence],
-            RemandStatus: "CB"
+            RemandStatus: "CB",
+            CRONumber: options.croNumber
           },
-          PTIURN: "01ZD0303208"
+          PTIURN: "01ZD0303208",
+          PenaltyNoticeCaseReferenceNumber: options.penaltyNoticeCaseReferenceNumber
         }
       }
     },
