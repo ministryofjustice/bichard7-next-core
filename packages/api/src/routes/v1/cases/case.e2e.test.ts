@@ -1,5 +1,4 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
-import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { OK } from "http-status"
@@ -8,7 +7,7 @@ import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
 import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUserAndJwtToken, createUsers } from "../../../tests/helpers/userHelper"
+import { createUserAndJwtToken, createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
 
 describe("/v1/case e2e", () => {
   const endpoint = VersionedEndpoints.V1.Case
@@ -91,40 +90,40 @@ describe("/v1/case e2e", () => {
   })
 
   it("returns errorLockedByUsername and errorLockedByUserFullName", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.db)
-    const users: User[] = await createUsers(helper.db, 2)
+    const [user] = await createUsers(helper.db, 3)
+    const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, { error_locked_by_id: users[0].username })
+    const testCase = await createCase(helper.db, { error_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
-        Authorization: `Bearer ${encodedJwt}`
+        Authorization: `Bearer ${jwtToken}`
       },
       method: "GET"
     })
 
     expect(response.status).toBe(OK)
     const responseJson: CaseDto = (await response.json()) satisfies CaseDto
-    expect(responseJson.errorLockedByUsername).toBe(users[0].username)
-    expect(responseJson.errorLockedByUserFullName).toBe("Forename2 Surname2")
+    expect(responseJson.errorLockedByUsername).toBe(user.username)
+    expect(responseJson.errorLockedByUserFullName).toBe("Forename1 Surname1")
   })
 
   it("returns triggerLockedByUsername and triggerLockedByUserFullName", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.db)
-    const users: User[] = await createUsers(helper.db, 2)
+    const [user] = await createUsers(helper.db, 3)
+    const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, { trigger_locked_by_id: users[0].username })
+    const testCase = await createCase(helper.db, { trigger_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
-        Authorization: `Bearer ${encodedJwt}`
+        Authorization: `Bearer ${jwtToken}`
       },
       method: "GET"
     })
 
     expect(response.status).toBe(OK)
     const responseJson: CaseDto = (await response.json()) satisfies CaseDto
-    expect(responseJson.triggerLockedByUsername).toBe(users[0].username)
-    expect(responseJson.triggerLockedByUserFullName).toBe("Forename2 Surname2")
+    expect(responseJson.triggerLockedByUsername).toBe(user.username)
+    expect(responseJson.triggerLockedByUserFullName).toBe("Forename1 Surname1")
   })
 })

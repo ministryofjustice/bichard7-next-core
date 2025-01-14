@@ -23,52 +23,44 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.Ge
   return [generateTestJwtToken(user, jwtId), user]
 }
 
-export const createUserAndJwtToken = async (
-  db: End2EndPostgres,
-  groups: UserGroup[] = [UserGroup.GeneralHandler]
-): Promise<[string, User]> => {
-  const jwtId = randomUUID()
-  const user = await db.createTestUser({
-    email: "user1@example.com",
-    forenames: "Forename1",
-    groups,
-    id: 1,
-    jwt_id: jwtId,
-    surname: "Surname1",
-    username: "User1",
-    visible_forces: "001"
-  } satisfies User)
-
-  return [generateTestJwtToken(user, jwtId), user]
-}
-
 export const createUsers = async (
   db: End2EndPostgres,
   numberOfUsers: number,
   groups: UserGroup[] = [UserGroup.GeneralHandler]
 ): Promise<User[]> => {
-  const offset = 2
-
-  const users: User[] = await Promise.all(
+  return Promise.all(
     Array(numberOfUsers)
       .fill(null)
       .map(async (_, i) => {
-        const num = i + offset
-
+        const id = i + 1 // +1 to avoid user id 0
         const user = (await db.createTestUser({
-          email: `user${num}@example.com`,
-          forenames: `Forename${num}`,
+          email: `user${id}@example.com`,
+          forenames: `Forename${id}`,
           groups,
-          id: num,
-          jwt_id: null,
-          surname: `Surname${num}`,
-          username: `User${num}`,
+          id,
+          jwt_id: randomUUID(),
+          surname: `Surname${id}`,
+          username: `User${id}`,
           visible_forces: "001"
         })) satisfies User
 
         return user
       })
   )
+}
 
-  return users
+export const createUserAndJwtToken = async (
+  db: End2EndPostgres,
+  groups: UserGroup[] = [UserGroup.GeneralHandler]
+): Promise<[string, User]> => {
+  const [user] = await createUsers(db, 1, groups)
+  return [generateTestJwtToken(user, user.jwt_id ?? ""), user]
+}
+
+export const generateJwtForUser = async (user: User) => {
+  if (!user.jwt_id) {
+    throw new Error("JWT ID is not defined.")
+  }
+
+  return generateTestJwtToken(user, user.jwt_id)
 }
