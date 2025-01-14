@@ -39,12 +39,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   const dataSource = await getDataSource()
 
-  const courtCases = await listCourtCases(
-    dataSource,
-    caseListQueryParams,
-    currentUser,
-    QueryColumns.ResolvedExceptionsReport
-  )
+  const courtCases = await listCourtCases(dataSource, caseListQueryParams, currentUser, QueryColumns.CaseListQuery)
 
   if (isError(courtCases)) {
     const { message } = courtCases
