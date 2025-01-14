@@ -8,12 +8,16 @@ const DownloadButton = () => {
     try {
       const queryString = new URLSearchParams(query as Record<string, string>).toString()
       const response = await fetch(`/bichard/api/reports/case-list?${queryString}`)
-      const blob = await response.blob()
+      const payload = await response.json()
+      const { report } = payload
+
+      const blob = new Blob([report], { type: "text/csv" })
+
       const url = window.URL.createObjectURL(blob)
 
       const a = document.createElement("a")
       a.href = url
-      a.download = "data.csv"
+      a.download = `bichard-case-list-report-${new Date().toISOString()}.csv`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
