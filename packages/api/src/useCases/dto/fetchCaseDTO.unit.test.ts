@@ -61,7 +61,7 @@ describe("fetchCaseDTO", () => {
       error_status: 1
     } as Case
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
     const result = await fetchCaseDTO(user, db, 0, logger)
 
@@ -80,7 +80,7 @@ describe("fetchCaseDTO", () => {
       error_status: 1
     } as Case
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
     const result = await fetchCaseDTO(user, db, 0, logger)
 
@@ -99,7 +99,7 @@ describe("fetchCaseDTO", () => {
       error_status: 1
     } as Case
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
     const result = await fetchCaseDTO(user, db, 0, logger)
 
@@ -118,7 +118,7 @@ describe("fetchCaseDTO", () => {
       error_status: 2
     } as Case
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
     const result = await fetchCaseDTO(user, db, 0, logger)
 

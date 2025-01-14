@@ -10,7 +10,7 @@ class FakeDataStore implements DataStoreGateway {
     return Promise.resolve(true)
   }
 
-  async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<Case> {
+  async fetchCase(_caseId: number, _forceIds: number[]): Promise<Case> {
     return Promise.resolve({
       annotated_msg: dummyAho.hearingOutcomeXml,
       asn: "",

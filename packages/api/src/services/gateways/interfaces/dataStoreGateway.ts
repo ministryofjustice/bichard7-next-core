@@ -3,7 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 interface DataStoreGateway {
   canCaseBeResubmitted: (username: string, caseId: number, forceIds: number[]) => Promise<boolean>
-  fetchFullCase: (caseId: number, forceIds: number[]) => Promise<Case>
+  fetchCase: (caseId: number, forceIds: number[]) => Promise<Case>
   fetchUserByUsername: (username: string) => Promise<User>
 }
 

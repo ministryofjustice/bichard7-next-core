@@ -21,7 +21,7 @@ const fetchCaseDTO = async (
 
   // TODO: Lock case if user can edit exceptions and audit log
   // TODO: Lock case if user can edit triggers and audit log
-  const dbCase = await db.fetchFullCase(caseId, forceIds)
+  const dbCase = await db.fetchCase(caseId, forceIds)
 
   return convertCaseDBToCaseDTO(dbCase, user, logger)
 }

@@ -1,9 +1,9 @@
 import type { Case } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-import filter from "./fetchFullCase"
+import filter from "./fetchCase"
 
-describe("fetchFullCase", () => {
+describe("fetchCase", () => {
   it("throws an error if the case isn't found", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
 

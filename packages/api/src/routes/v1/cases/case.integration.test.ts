@@ -72,7 +72,7 @@ describe("retrieve a case", () => {
   it("returns response code FORBIDDEN when case doesn't exist", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
     jest.spyOn(db, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(db, "fetchFullCase").mockRejectedValue(new Error("Case not found"))
+    jest.spyOn(db, "fetchCase").mockRejectedValue(new Error("Case not found"))
 
     const response = await app.inject(defaultInjectParams(encodedJwt, "1"))
 
