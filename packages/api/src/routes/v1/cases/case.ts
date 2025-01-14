@@ -12,7 +12,7 @@ import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchFullCaseDTO from "../../../useCases/dto/fetchFullCaseDTO"
+import fetchCaseDTO from "../../../useCases/dto/fetchCaseDTO"
 
 type HandlerProps = {
   caseId: number
@@ -39,7 +39,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
-  fetchFullCaseDTO(user, db, caseId, logger)
+  fetchCaseDTO(user, db, caseId, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })

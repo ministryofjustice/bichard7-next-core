@@ -6,15 +6,15 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
 import FakeLogger from "../../tests/helpers/fakeLogger"
-import fetchFullCaseDTO from "./fetchFullCaseDTO"
+import fetchCaseDTO from "./fetchCaseDTO"
 
-describe("fetchFullCaseDTO", () => {
+describe("fetchCaseDTO", () => {
   const logger = new FakeLogger()
   const db = new FakeDataStore()
 
   it("returns a case", async () => {
     const user = { visible_forces: "001" } as User
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result).toEqual({
       aho: testAhoJsonObj,
@@ -46,7 +46,7 @@ describe("fetchFullCaseDTO", () => {
   it("returns error when no force associated to a user", async () => {
     const user = { visible_forces: "" } as User
 
-    await expect(fetchFullCaseDTO(user, db, 0, logger)).rejects.toThrow("No force associated to User")
+    await expect(fetchCaseDTO(user, db, 0, logger)).rejects.toThrow("No force associated to User")
   })
 
   it("returns canUserEditExceptions true when case is locked to currentUser, user has access to exceptions and errorStatus is unresolved", async () => {
@@ -63,7 +63,7 @@ describe("fetchFullCaseDTO", () => {
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(true)
   })
@@ -82,7 +82,7 @@ describe("fetchFullCaseDTO", () => {
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -101,7 +101,7 @@ describe("fetchFullCaseDTO", () => {
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -120,7 +120,7 @@ describe("fetchFullCaseDTO", () => {
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })

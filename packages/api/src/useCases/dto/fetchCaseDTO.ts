@@ -7,7 +7,7 @@ import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreG
 import formatForceNumbers from "../../services/formatForceNumbers"
 import { convertCaseDBToCaseDTO } from "./convertCaseDBToDTO"
 
-const fetchFullCaseDTO = async (
+const fetchCaseDTO = async (
   user: User,
   db: DataStoreGateway,
   caseId: number,
@@ -26,4 +26,4 @@ const fetchFullCaseDTO = async (
   return convertCaseDBToCaseDTO(dbCase, user, logger)
 }
 
-export default fetchFullCaseDTO
+export default fetchCaseDTO
