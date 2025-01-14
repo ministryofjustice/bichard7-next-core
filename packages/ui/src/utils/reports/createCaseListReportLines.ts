@@ -7,19 +7,22 @@ export const createCaseListReportLines = (courtCases: CourtCase[]): Report<CaseL
   const report = courtCases.map((courtCase) => {
     const aho = parseAhoXml(courtCase.hearingOutcome)
 
-    const reportLine = {
-      ASN: courtCase.asn,
+    const errorCodes = courtCase.errorReport.split(", ").map((reason) => reason.split("||")[0])
+    const triggerCodes = courtCase.triggers.map((trigger) => trigger.triggerCode)
+
+    const reportLine: CaseList = {
       PTIURN: courtCase.ptiurn,
       defendantName: courtCase.defendantName,
       courtName: courtCase.courtName,
-      hearingDate: "",
-      caseReference: "",
-      notes: courtCase.notes.map((note) => `${note.user}: ${note.noteText}`)
+      courtDate: "",
+      notes: courtCase.notes.map((note) => `${note.userId}: ${note.noteText}`).join("\n"),
+      reason: errorCodes.concat(triggerCodes).join("\n"),
+      errorsLockedBy: courtCase.errorLockedByUsername || "",
+      triggersLockedBy: courtCase.triggerLockedByUsername || ""
     }
 
     if (!isError(aho)) {
-      reportLine.hearingDate = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing.toISOString() || ""
-      reportLine.caseReference = aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber || ""
+      reportLine.courtDate = aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing.toISOString() || ""
     }
 
     return reportLine

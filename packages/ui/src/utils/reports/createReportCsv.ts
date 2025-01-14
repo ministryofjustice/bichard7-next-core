@@ -19,13 +19,14 @@ const config: Record<string, object> = {
   },
   [ReportType.CASE_LIST]: {
     keys: [
-      { field: "ASN" },
-      { field: "PTIURN" },
       { field: "defendantName", title: "Defendant Name" },
+      { field: "courtDate", title: "Court Date" },
       { field: "courtName", title: "Court Name" },
-      { field: "hearingDate", title: "Hearing Date" },
-      { field: "caseReference", title: "Case Reference" },
-      { field: "notes", title: "Notes" }
+      { field: "PTIURN" },
+      { field: "notes", title: "Notes" },
+      { field: "reason", title: "Reason" },
+      { field: "errorsLockedBy", title: "Errors Locked By" },
+      { field: "triggersLockedBy", title: "Triggers Locked By" }
     ]
   }
 }

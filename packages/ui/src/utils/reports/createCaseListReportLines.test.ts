@@ -16,10 +16,13 @@ describe("caseliatReport", () => {
         courtCode: "court-code",
         courtName: "court-name",
         errorId: 1,
-        errorReport: "error-report",
+        errorReason: "error-reason",
+        errorReport: "HO100322||ds:OrganisationUnitCode, HO100323||ds:NextHearingDate, HO100325||br7:ResultClass",
         errorStatus: "Resolved",
         errorLockedByUserFullName: "error-locked-by-user-full-name",
         errorLockedByUsername: "error-locked-by-user-name",
+        triggerLockedByFullName: "trigger-locked-by-user-full-name",
+        triggerLockedByUsername: "trigger-locked-by-user-name",
         isUrgent: false,
         defendantName: "defendant-name",
         resolutionTimestamp: date,
@@ -31,15 +34,24 @@ describe("caseliatReport", () => {
           ptiurn: "ptirun",
           courtName: "court-name"
         }),
+        triggers: [
+          {
+            triggerCode: "TRPR0001",
+            status: "Resolved",
+            createdAt: date,
+            resolvedBy: "resolved-by",
+            resolvedAt: date
+          }
+        ],
         notes: [
           {
             noteText: "note text",
-            user: "user",
+            userId: "user",
             createdAt: new Date("21-2-2024")
           },
           {
             noteText: "resolved text",
-            user: "user2",
+            userId: "user2",
             createdAt: new Date("21-3-2024")
           }
         ]
@@ -51,13 +63,14 @@ describe("caseliatReport", () => {
     expect(result).toEqual({
       report: [
         {
-          ASN: "asn",
           PTIURN: "ptiurn",
           defendantName: "defendant-name",
           courtName: "court-name",
-          hearingDate: "2011-09-26T00:00:00.000Z",
-          caseReference: "97/1626/008395Q",
-          notes: ["user: note text", "user2: resolved text"]
+          courtDate: "2011-09-26T00:00:00.000Z",
+          notes: "user: note text\nuser2: resolved text",
+          reason: "HO100322\nHO100323\nHO100325\nTRPR0001",
+          errorsLockedBy: "error-locked-by-user-name",
+          triggersLockedBy: "trigger-locked-by-user-name"
         }
       ]
     } as Report<CaseList>)

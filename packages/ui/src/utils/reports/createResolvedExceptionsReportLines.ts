@@ -16,7 +16,7 @@ export const createResolvedExceptionsReportLines = (courtCases: CourtCase[]): Re
       caseReference: "",
       dateTimeRecievedByCJSE: courtCase.messageReceivedTimestamp?.toISOString() || "",
       dateTimeResolved: courtCase.resolutionTimestamp?.toISOString() || "",
-      notes: courtCase.notes.map((note) => `${note.user}: ${note.noteText}`),
+      notes: courtCase.notes.map((note) => `${note.userId}: ${note.noteText}`),
       resolutionAction:
         courtCase.notes.sort((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()).pop()?.noteText || ""
     }

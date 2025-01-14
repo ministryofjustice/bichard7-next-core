@@ -2,14 +2,25 @@ export interface Report<T> {
   report: T[]
 }
 
+// export interface CaseList {
+//   ASN: string | null
+//   PTIURN: string
+//   defendantName: string | null
+//   courtName: string
+//   hearingDate: string
+//   caseReference: string
+//   notes: string[]
+// }
+
 export interface CaseList {
-  ASN: string | null
-  PTIURN: string
   defendantName: string | null
+  courtDate: string
   courtName: string
-  hearingDate: string
-  caseReference: string
-  notes: string[]
+  PTIURN: string
+  notes: string
+  reason: string
+  errorsLockedBy: string
+  triggersLockedBy: string
 }
 
 export interface ResolvedException {
