@@ -11,9 +11,9 @@ import CourtCase from "./entities/CourtCase"
 import getLongTriggerCode from "./entities/transformers/getLongTriggerCode"
 import type User from "./entities/User"
 import filterByReasonAndResolutionStatus from "./filters/filterByReasonAndResolutionStatus"
+import config from "./listCourtCasesConfig"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
-import QueryColumns from "./QueryColumns"
 
 const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
   excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]
@@ -40,7 +40,7 @@ const baseQuery = (
     .leftJoin("courtCase.triggerLockedByUser", "triggerLockedByUser")
     .addSelect(["triggerLockedByUser.forenames", "triggerLockedByUser.surname"])
 
-  if (pageNumValidated !== -1 && maxPageItemsValidated !== -1) {
+  if (pageNumValidated !== config.BYPASS_PAGE_LIMIT && maxPageItemsValidated !== config.BYPASS_PAGE_LIMIT) {
     query.skip(pageNumValidated * maxPageItemsValidated).take(maxPageItemsValidated)
   }
 
@@ -244,7 +244,7 @@ const listCourtCases = async (
     asn
   }: CaseListQueryParams,
   user: User,
-  selectColumns: string[] = QueryColumns.CaseListQuery
+  selectColumns: string[] = config.CaseListQuery
 ): PromiseResult<ListCourtCaseResult> => {
   let query: SelectQueryBuilder<CourtCase> = baseQuery(
     connection,

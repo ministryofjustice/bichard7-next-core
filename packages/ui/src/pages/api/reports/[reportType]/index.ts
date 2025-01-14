@@ -2,13 +2,14 @@ import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthe
 import type { NextApiRequest, NextApiResponse } from "next"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
-import QueryColumns from "services/QueryColumns"
+import QueryColumns from "services/listCourtCasesConfig"
 import { Reason } from "types/CaseListQueryParams"
 import { isError } from "types/Result"
 import { createReport } from "utils/reports/createReport"
 import { createReportCsv } from "utils/reports/createReportCsv"
 import { ReportType } from "utils/reports/ReportTypes"
 import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
+import config from "services/listCourtCasesConfig"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const allowedMethods = ["GET"]
@@ -21,6 +22,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const { req, res, currentUser } = auth
   const { reportType } = req.query
   const caseListQueryParams = extractSearchParamsFromQuery(req.query, currentUser)
+
+  caseListQueryParams.maxPageItems = config.BYPASS_PAGE_LIMIT
+  caseListQueryParams.page = config.BYPASS_PAGE_LIMIT
 
   switch (reportType) {
     case ReportType.RESOLVED_EXCEPTIONS:

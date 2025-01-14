@@ -22,7 +22,10 @@ const CaseListQuery = [
 
 const ResolvedExceptionsReport = [...CaseListQuery, "courtCase.messageReceivedTimestamp", "courtCase.hearingOutcome"]
 
+const BYPASS_PAGE_LIMIT = -1
+
 export default {
   CaseListQuery,
-  ResolvedExceptionsReport
+  ResolvedExceptionsReport,
+  BYPASS_PAGE_LIMIT
 }
