@@ -16,6 +16,17 @@ const config: Record<string, object> = {
       { field: "notes", title: "Notes" },
       { field: "resolutionAction", title: "Resolution Action" }
     ]
+  },
+  [ReportType.CASE_LIST]: {
+    keys: [
+      { field: "ASN" },
+      { field: "PTIURN" },
+      { field: "defendantName", title: "Defendant Name" },
+      { field: "courtName", title: "Court Name" },
+      { field: "hearingDate", title: "Hearing Date" },
+      { field: "caseReference", title: "Case Reference" },
+      { field: "notes", title: "Notes" }
+    ]
   }
 }
 

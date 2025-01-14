@@ -31,6 +31,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
       caseListQueryParams.caseState = "Resolved"
       caseListQueryParams.reason = Reason.Exceptions
       break
+    case ReportType.CASE_LIST:
+      break
     default:
       res.status(404).end()
   }
@@ -48,6 +50,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     const { message } = courtCases
     return res.status(500).json({ error: message })
   }
+
+  console.log(`Creating ${reportType} report`)
+  console.log(`Found ${courtCases.result.length} court cases`)
 
   const reportLines = createReport(courtCases.result, reportType as ReportType)
   const report = createReportCsv(reportLines, reportType as ReportType)
