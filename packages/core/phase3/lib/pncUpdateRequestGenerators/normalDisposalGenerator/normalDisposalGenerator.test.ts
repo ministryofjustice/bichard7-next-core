@@ -1,11 +1,11 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { Offence, OffenceReason, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../../../types/PncOperation"
-import type { Operation } from "../../../../types/PncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "../../../../types/PncUpdateDataset"
 import type NormalDisposalPncUpdateRequest from "../../../types/NormalDisposalPncUpdateRequest"
 
 import lookupOrganisationUnitByCode from "../../../../lib/dataLookup/lookupOrganisationUnitByCode"
+import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import normalDisposalGenerator from "./normalDisposalGenerator"
 
@@ -85,7 +85,7 @@ const createPncUpdateDataset = () => {
     },
     Exceptions: [],
     PncOperations: []
-  }
+  } as unknown as PncUpdateDataset
 
   return pncUpdateDataset
 }
@@ -116,11 +116,11 @@ describe("normalDisposalGenerator", () => {
   it("should return error when court case reference in operation is invalid", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithInvalidCourtCaseReference = {
-      code: "DISARR",
+      code: PncOperation.NORMAL_DISPOSAL,
       data: {
         courtCaseReference: "97/1626/008395"
       }
-    }
+    } as Operation<PncOperation.NORMAL_DISPOSAL>
 
     const result = normalDisposalGenerator(pncUpdateDataset, operationWithInvalidCourtCaseReference)
 
@@ -131,9 +131,9 @@ describe("normalDisposalGenerator", () => {
   it("should return error when court case reference in operation does not exist and court case reference in hearing outcome is invalid", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithoutCourtCaseReference = {
-      code: "DISARR",
+      code: PncOperation.NORMAL_DISPOSAL,
       data: undefined
-    }
+    } as Operation<PncOperation.NORMAL_DISPOSAL>
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "97/1626/00839"
 
     const result = normalDisposalGenerator(pncUpdateDataset, operationWithoutCourtCaseReference)
@@ -159,9 +159,9 @@ describe("normalDisposalGenerator", () => {
 
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithoutCourtCaseReference = {
-      ...structuredClone(operation),
+      code: PncOperation.NORMAL_DISPOSAL,
       data: undefined
-    }
+    } as Operation<PncOperation.NORMAL_DISPOSAL>
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode = 4001
 
     const result = normalDisposalGenerator(pncUpdateDataset, operationWithoutCourtCaseReference)
@@ -197,9 +197,9 @@ describe("normalDisposalGenerator", () => {
 
     const pncUpdateDataset = createPncUpdateDataset()
     const operationWithoutCourtCaseReference = {
-      code: "DISARR",
+      code: PncOperation.NORMAL_DISPOSAL,
       data: undefined
-    }
+    } as Operation<PncOperation.NORMAL_DISPOSAL>
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode = 4001
 
     const result = normalDisposalGenerator(pncUpdateDataset, operationWithoutCourtCaseReference)
