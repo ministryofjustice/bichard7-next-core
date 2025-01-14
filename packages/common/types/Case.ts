@@ -45,7 +45,7 @@ export const RawCaseFullDataSchema = z.object({
   user_updated_flag: z.number()
 })
 
-export const RawCaseDataSchema = z.object({
+export const CaseSchema = z.object({
   annotated_msg: z.string().describe("Annotated Hearing Outcome"),
   asn: z.string().max(21).nullable(),
   court_code: z.string().max(7).nullable(),
@@ -103,7 +103,7 @@ export const FullCaseDtoSchema = PartialCaseDtoSchema.and(
   })
 )
 
+export type Case = z.infer<typeof CaseSchema>
 export type CaseDto = z.infer<typeof FullCaseDtoSchema>
 export type CasePartialDto = z.infer<typeof PartialCaseDtoSchema>
-export type RawCaseData = z.infer<typeof RawCaseDataSchema>
 export type RawCaseFullData = z.infer<typeof RawCaseFullDataSchema>

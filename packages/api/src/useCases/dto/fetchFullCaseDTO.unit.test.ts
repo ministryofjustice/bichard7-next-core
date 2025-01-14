@@ -1,4 +1,4 @@
-import type { CaseDto, RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { Case, CaseDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -59,7 +59,7 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
-    } as RawCaseData
+    } as Case
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -78,7 +78,7 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user2",
       error_status: 1
-    } as RawCaseData
+    } as Case
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -97,7 +97,7 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
-    } as RawCaseData
+    } as Case
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 
@@ -116,7 +116,7 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 2
-    } as RawCaseData
+    } as Case
 
     jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
 

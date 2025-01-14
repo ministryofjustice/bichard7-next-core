@@ -1,4 +1,4 @@
-import type { RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { Case } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
@@ -15,7 +15,7 @@ class Postgres implements DataStoreGateway {
     return await caseCanBeResubmitted(this.db, username, caseId, forceIds)
   }
 
-  async fetchFullCase(caseId: number, forceIds: number[]): Promise<RawCaseData> {
+  async fetchFullCase(caseId: number, forceIds: number[]): Promise<Case> {
     return await fetchFullCase(this.db, caseId, forceIds)
   }
 

@@ -1,8 +1,8 @@
-import type { RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { Case } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<RawCaseData> => {
-  const [result]: [RawCaseData?] = await sql`
+export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<Case> => {
+  const [result]: [Case?] = await sql`
       SELECT
         el.annotated_msg,
         el.asn,

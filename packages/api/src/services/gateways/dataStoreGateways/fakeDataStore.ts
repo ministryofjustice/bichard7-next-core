@@ -1,4 +1,4 @@
-import type { RawCaseData } from "@moj-bichard7/common/types/Case"
+import type { Case } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
@@ -10,7 +10,7 @@ class FakeDataStore implements DataStoreGateway {
     return Promise.resolve(true)
   }
 
-  async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<RawCaseData> {
+  async fetchFullCase(_caseId: number, _forceIds: number[]): Promise<Case> {
     return Promise.resolve({
       annotated_msg: dummyAho.hearingOutcomeXml,
       asn: "",
@@ -34,15 +34,17 @@ class FakeDataStore implements DataStoreGateway {
       trigger_locked_by_id: null,
       trigger_status: null,
       updated_msg: null
-    } satisfies RawCaseData)
+    } satisfies Case)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {
     return Promise.resolve({
       email: "user1@example.com",
+      forenames: null,
       groups: [],
       id: 1,
       jwt_id: "123",
+      surname: null,
       username,
       visible_forces: ""
     } satisfies User)
