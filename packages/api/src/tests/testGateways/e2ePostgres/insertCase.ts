@@ -1,8 +1,8 @@
 import type postgres from "postgres"
 
-import { type RawCaseFullData } from "@moj-bichard7/common/types/Case"
+import { type CaseRow } from "@moj-bichard7/common/types/Case"
 
-export default async function (sql: postgres.Sql, partialCase: Partial<RawCaseFullData>): Promise<RawCaseFullData> {
+export default async function (sql: postgres.Sql, partialCase: Partial<CaseRow>): Promise<CaseRow> {
   if (
     !(
       partialCase.annotated_msg ||
@@ -25,7 +25,7 @@ export default async function (sql: postgres.Sql, partialCase: Partial<RawCaseFu
 
   const caseColumns = Object.keys(partialCase).sort()
 
-  const [result]: [RawCaseFullData?] = await sql`
+  const [result]: [CaseRow?] = await sql`
     INSERT INTO br7own.error_list
       ${sql(partialCase as never, caseColumns)}
     RETURNING *;

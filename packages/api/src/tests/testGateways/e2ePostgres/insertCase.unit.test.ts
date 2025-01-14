@@ -1,4 +1,4 @@
-import type { RawCaseFullData } from "@moj-bichard7/common/types/Case"
+import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
 import insertCase from "./insertCase"
@@ -6,7 +6,7 @@ import insertCase from "./insertCase"
 describe("insertCase", () => {
   it("will throw an error if it's missing a needed attribute", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
-    const partialCase: Partial<RawCaseFullData> = {}
+    const partialCase: Partial<CaseRow> = {}
 
     await expect(insertCase(sql, partialCase)).rejects.toThrow("Missing required attributes")
   })
@@ -30,9 +30,9 @@ describe("insertCase", () => {
       total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
       user_updated_flag: 1
-    } satisfies Partial<RawCaseFullData>
+    } satisfies Partial<CaseRow>
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
-    const caseInserted: Partial<RawCaseFullData> = {
+    const caseInserted: Partial<CaseRow> = {
       annotated_msg: "AHO",
       court_reference: "ABC",
       create_ts: new Date(),
@@ -58,7 +58,7 @@ describe("insertCase", () => {
 
   it("will throw an error if a Case doesn't get inserted", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
-    const partialCase: Partial<RawCaseFullData> = {
+    const partialCase: Partial<CaseRow> = {
       annotated_msg: "AHO",
       court_reference: "ABC",
       create_ts: new Date(),

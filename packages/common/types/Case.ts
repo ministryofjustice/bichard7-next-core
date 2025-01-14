@@ -1,7 +1,6 @@
 import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
-// CaseRowSchema
 export const CaseRowSchema = z.object({
   annotated_msg: z.string().describe("Annotated Hearing Outcome"),
   asn: z.string().max(21).nullable(),
