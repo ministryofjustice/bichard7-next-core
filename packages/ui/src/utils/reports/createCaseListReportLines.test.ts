@@ -4,7 +4,7 @@ import type CourtCase from "services/entities/CourtCase"
 import type { CaseList, Report } from "./Report"
 import { createCaseListReportLines } from "./createCaseListReportLines"
 
-describe("caseliatReport", () => {
+describe("caseListReport", () => {
   it("returns a list of cases", () => {
     const ahoXml = fs.readFileSync("test/test-data/AnnotatedHOTemplate.xml").toString()
     const date = new Date()
