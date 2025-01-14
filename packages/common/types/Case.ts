@@ -1,7 +1,8 @@
 import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
-export const RawCaseFullDataSchema = z.object({
+// CaseRowSchema
+export const CaseRowSchema = z.object({
   annotated_msg: z.string().describe("Annotated Hearing Outcome"),
   asn: z.string().max(21).nullable(),
   court_code: z.string().max(7).nullable(),
@@ -106,4 +107,4 @@ export const FullCaseDtoSchema = PartialCaseDtoSchema.and(
 export type Case = z.infer<typeof CaseSchema>
 export type CaseDto = z.infer<typeof FullCaseDtoSchema>
 export type CasePartialDto = z.infer<typeof PartialCaseDtoSchema>
-export type RawCaseFullData = z.infer<typeof RawCaseFullDataSchema>
+export type CaseRow = z.infer<typeof CaseRowSchema>
