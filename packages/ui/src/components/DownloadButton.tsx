@@ -1,11 +1,16 @@
 import { useRouter } from "next/router"
 
+const BYPASS = "-1"
+
 const DownloadButton = () => {
   const router = useRouter()
   const { query } = router
 
   const handleClick = async () => {
     try {
+      query.maxPageItems = BYPASS
+      query.page = BYPASS
+
       const queryString = new URLSearchParams(query as Record<string, string>).toString()
       const response = await fetch(`/bichard/api/reports/case-list?${queryString}`)
       const payload = await response.json()

@@ -39,8 +39,10 @@ const baseQuery = (
     .addSelect(["errorLockedByUser.forenames", "errorLockedByUser.surname"])
     .leftJoin("courtCase.triggerLockedByUser", "triggerLockedByUser")
     .addSelect(["triggerLockedByUser.forenames", "triggerLockedByUser.surname"])
-    .skip(pageNumValidated * maxPageItemsValidated)
-    .take(maxPageItemsValidated)
+
+  if (pageNumValidated !== -1 && maxPageItemsValidated !== -1) {
+    query.skip(pageNumValidated * maxPageItemsValidated).take(maxPageItemsValidated)
+  }
 
   return query
 }
