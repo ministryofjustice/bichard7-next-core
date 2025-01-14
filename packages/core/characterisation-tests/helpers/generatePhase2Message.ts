@@ -1,3 +1,6 @@
+import type { PncOperation } from "../../types/PncOperation"
+import type { Operation } from "../../types/PncUpdateDataset"
+
 import ResultClass from "../../types/ResultClass"
 import MessageType from "../types/MessageType"
 import generateMessage from "./generateMessage"
@@ -10,9 +13,9 @@ export type Duration = {
 
 export type GeneratePhase2MessageOptions = {
   arrestSummonsNumber?: string
-  hasCompletedDisarrOperation?: boolean
   hoTemplate?: "AintCase" | "NoOperationsAndExceptions"
   messageType: MessageType
+  normalDisposalOperation?: Operation<PncOperation.NORMAL_DISPOSAL>
   offences?: Offence[]
   penaltyNoticeCaseReference?: boolean
   penaltyNoticeCaseReferenceNumber?: string

@@ -12,7 +12,7 @@ import type { ProcessMessageOptions } from "./processMessage"
 
 import Phase from "../../types/Phase"
 import extractExceptionsFromAho from "./extractExceptionsFromAho"
-import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
+import { mockEnquiryErrorInPnc, mockRecordInPnc, mockUpdateErrorInPnc } from "./mockRecordInPnc"
 
 type TriggerEntity = { trigger_code: TriggerCode; trigger_item_identity?: string }
 
@@ -40,10 +40,14 @@ const processMessageBichard = async <BichardResultType>(
   const correlationId = randomUUID()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
 
-  if (phase === Phase.HEARING_OUTCOME && !realPnc) {
+  if ([Phase.HEARING_OUTCOME, Phase.PHASE_3].includes(phase) && !realPnc) {
     if (recordable) {
       if (pncErrorMessage) {
-        await mockEnquiryErrorInPnc(pncErrorMessage)
+        if (phase === Phase.HEARING_OUTCOME) {
+          await mockEnquiryErrorInPnc(pncErrorMessage)
+        } else {
+          await mockUpdateErrorInPnc(pncErrorMessage)
+        }
       } else {
         // Insert matching record in PNC
         await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
@@ -57,9 +61,11 @@ const processMessageBichard = async <BichardResultType>(
   const queue =
     phase === Phase.HEARING_OUTCOME
       ? "COURT_RESULT_INPUT_QUEUE"
-      : messageXml.includes("PNCUpdateDataset")
-        ? "DATA_SET_PNC_UPDATE_QUEUE"
-        : "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
+      : phase === Phase.PNC_UPDATE
+        ? messageXml.includes("PNCUpdateDataset")
+          ? "DATA_SET_PNC_UPDATE_QUEUE"
+          : "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
+        : "PNC_UPDATE_REQUEST_QUEUE"
   await mq.sendMessage(queue, messageXmlWithUuid)
 
   // Wait for the record to appear in Postgres
