@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useRouter } from "next/router"
 
 const BYPASS = "-1"
@@ -5,8 +6,10 @@ const BYPASS = "-1"
 const DownloadButton = () => {
   const router = useRouter()
   const { query } = router
+  const [working, setWorking] = useState(false)
 
   const handleClick = async () => {
+    setWorking(true)
     try {
       query.maxPageItems = BYPASS
       query.page = BYPASS
@@ -29,6 +32,7 @@ const DownloadButton = () => {
     } catch (error) {
       console.error("Error downloading the file:", error)
     }
+    setWorking(false)
   }
 
   return (
@@ -38,6 +42,7 @@ const DownloadButton = () => {
       className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
       type="button"
       onClick={handleClick}
+      disabled={working}
     >
       {"Download Report"}
     </button>
