@@ -48,37 +48,39 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
         {"Case list"}
       </Heading>
       <div className="moj-filter-layout__content">
-        <CaseListButtons className="moj-button-menu">
+        <div className="moj-button-menu">
           <div className="moj-action-bar">
-            <button
-              data-module="govuk-button"
-              id="filter-button"
-              className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-              type="button"
-              aria-haspopup="true"
-              aria-expanded={isSearchPanelShown === true}
-              onClick={() => {
-                const showSearchPanel = !isSearchPanelShown
-                if (!showSearchPanel) {
-                  localStorage.setItem(filterPanelKey, new Date().toISOString())
-                } else {
-                  localStorage.removeItem(filterPanelKey)
-                }
-                setIsSearchPanelShown(showSearchPanel)
-              }}
-            >
-              {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
-            </button>
+            <CaseListButtons>
+              <button
+                data-module="govuk-button"
+                id="filter-button"
+                className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                type="button"
+                aria-haspopup="true"
+                aria-expanded={isSearchPanelShown === true}
+                onClick={() => {
+                  const showSearchPanel = !isSearchPanelShown
+                  if (!showSearchPanel) {
+                    localStorage.setItem(filterPanelKey, new Date().toISOString())
+                  } else {
+                    localStorage.removeItem(filterPanelKey)
+                  }
+                  setIsSearchPanelShown(showSearchPanel)
+                }}
+              >
+                {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
+              </button>
+
+              <ConditionalRender isRendered={user.hasAccessTo[Permission.ViewReports]}>
+                <DownloadButton />
+              </ConditionalRender>
+            </CaseListButtons>
+
+            <ConditionalRender isRendered={!isSearchPanelShown}>
+              <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
+            </ConditionalRender>
           </div>
-          <ConditionalRender isRendered={user.hasAccessTo[Permission.ViewReports]}>
-            <div className="moj-action-bar">
-              <DownloadButton />
-            </div>
-          </ConditionalRender>
-          {!isSearchPanelShown && (
-            <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
-          )}
-        </CaseListButtons>
+        </div>
 
         {paginationTop}
 
