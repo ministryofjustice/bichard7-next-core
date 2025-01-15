@@ -1,18 +1,18 @@
-import type { CaseDTO } from "@moj-bichard7/common/types/Case"
+import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 
 import formatForceNumbers from "../../services/formatForceNumbers"
-import { convertCaseDBToCaseDTO } from "./convertCaseDBToDTO"
+import { convertCaseRowToCaseDto } from "./convertCaseRowToDto"
 
-const fetchFullCaseDTO = async (
+const fetchCaseDTO = async (
   user: User,
   db: DataStoreGateway,
   caseId: number,
   logger: FastifyBaseLogger
-): Promise<CaseDTO> => {
+): Promise<CaseDto> => {
   const forceIds = formatForceNumbers(user.visible_forces)
 
   if (forceIds.length === 0) {
@@ -21,9 +21,9 @@ const fetchFullCaseDTO = async (
 
   // TODO: Lock case if user can edit exceptions and audit log
   // TODO: Lock case if user can edit triggers and audit log
-  const dbCase = await db.fetchFullCase(caseId, forceIds)
+  const dbCase = await db.fetchCase(caseId, forceIds)
 
-  return convertCaseDBToCaseDTO(dbCase, user, logger)
+  return convertCaseRowToCaseDto(dbCase, user, logger)
 }
 
-export default fetchFullCaseDTO
+export default fetchCaseDTO

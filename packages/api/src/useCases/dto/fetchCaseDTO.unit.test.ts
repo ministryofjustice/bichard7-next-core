@@ -1,4 +1,4 @@
-import type { CaseDB, CaseDTO } from "@moj-bichard7/common/types/Case"
+import type { CaseDto, PartialCaseRow } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -6,15 +6,15 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
 import FakeLogger from "../../tests/helpers/fakeLogger"
-import fetchFullCaseDTO from "./fetchFullCaseDTO"
+import fetchCaseDTO from "./fetchCaseDTO"
 
-describe("fetchFullCaseDTO", () => {
+describe("fetchCaseDTO", () => {
   const logger = new FakeLogger()
   const db = new FakeDataStore()
 
   it("returns a case", async () => {
     const user = { visible_forces: "001" } as User
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result).toEqual({
       aho: testAhoJsonObj,
@@ -26,7 +26,7 @@ describe("fetchFullCaseDTO", () => {
       courtReference: "",
       defendantName: "",
       errorId: 0,
-      errorLockedByUserFullName: undefined,
+      errorLockedByUserFullName: null,
       errorLockedByUsername: null,
       errorReport: "",
       errorStatus: null,
@@ -36,17 +36,17 @@ describe("fetchFullCaseDTO", () => {
       ptiurn: null,
       resolutionTimestamp: null,
       triggerCount: 0,
-      triggerLockedByUserFullName: undefined,
+      triggerLockedByUserFullName: null,
       triggerLockedByUsername: null,
       triggerStatus: null,
       updatedHearingOutcome: null
-    } satisfies CaseDTO)
+    } satisfies CaseDto)
   })
 
   it("returns error when no force associated to a user", async () => {
     const user = { visible_forces: "" } as User
 
-    await expect(fetchFullCaseDTO(user, db, 0, logger)).rejects.toThrow("No force associated to User")
+    await expect(fetchCaseDTO(user, db, 0, logger)).rejects.toThrow("No force associated to User")
   })
 
   it("returns canUserEditExceptions true when case is locked to currentUser, user has access to exceptions and errorStatus is unresolved", async () => {
@@ -59,11 +59,11 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
-    } as CaseDB
+    } as PartialCaseRow
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(true)
   })
@@ -78,11 +78,11 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user2",
       error_status: 1
-    } as CaseDB
+    } as PartialCaseRow
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -97,11 +97,11 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
-    } as CaseDB
+    } as PartialCaseRow
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -116,11 +116,11 @@ describe("fetchFullCaseDTO", () => {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 2
-    } as CaseDB
+    } as PartialCaseRow
 
-    jest.spyOn(db, "fetchFullCase").mockResolvedValue(caseObj)
+    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchFullCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })

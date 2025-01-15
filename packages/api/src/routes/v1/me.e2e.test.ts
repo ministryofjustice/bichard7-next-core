@@ -38,7 +38,9 @@ describe("/v1/me e2e", () => {
 
     const responseUser = {
       email: user.email,
+      forenames: user.forenames,
       groups: [UserGroup.GeneralHandler],
+      surname: user.surname,
       username: user.username
     }
 

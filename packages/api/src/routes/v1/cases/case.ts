@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
-import { FullCaseDTOSchema } from "@moj-bichard7/common/types/Case"
+import { FullCaseDtoSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 
@@ -12,7 +12,7 @@ import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchFullCaseDTO from "../../../useCases/dto/fetchFullCaseDTO"
+import fetchCaseDTO from "../../../useCases/dto/fetchCaseDTO"
 
 type HandlerProps = {
   caseId: number
@@ -30,7 +30,7 @@ const schema = {
     })
   }),
   response: {
-    [OK]: FullCaseDTOSchema.openapi({ description: "Case DTO" }),
+    [OK]: FullCaseDtoSchema.openapi({ description: "Case DTO" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
@@ -39,7 +39,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
-  fetchFullCaseDTO(user, db, caseId, logger)
+  fetchCaseDTO(user, db, caseId, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })
