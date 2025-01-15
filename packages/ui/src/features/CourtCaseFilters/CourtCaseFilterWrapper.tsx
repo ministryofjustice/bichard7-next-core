@@ -1,8 +1,10 @@
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Heading } from "govuk-react"
 import { useEffect, useState } from "react"
-import { StyledAppliedFilters } from "./CourtCaseFilterWrapper.styles"
+import { StyledAppliedFilters, CaseListButtons } from "./CourtCaseFilterWrapper.styles"
 import DownloadButton from "components/DownloadButton"
+import ConditionalRender from "components/ConditionalRender"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 interface Props {
   filter: React.ReactNode
@@ -46,7 +48,7 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
         {"Case list"}
       </Heading>
       <div className="moj-filter-layout__content">
-        <div className="moj-button-menu">
+        <CaseListButtons className="moj-button-menu">
           <div className="moj-action-bar">
             <button
               data-module="govuk-button"
@@ -67,12 +69,16 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
             >
               {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
             </button>
-            <DownloadButton />
-            {!isSearchPanelShown && (
-              <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
-            )}
           </div>
-        </div>
+          <ConditionalRender isRendered={user.hasAccessTo[Permission.ViewReports]}>
+            <div className="moj-action-bar">
+              <DownloadButton />
+            </div>
+          </ConditionalRender>
+          {!isSearchPanelShown && (
+            <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
+          )}
+        </CaseListButtons>
 
         {paginationTop}
 

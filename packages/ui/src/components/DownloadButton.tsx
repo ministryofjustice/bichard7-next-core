@@ -25,7 +25,8 @@ const DownloadButton = () => {
       a.click()
       document.body.removeChild(a)
     } catch (error) {
-      console.error("Error downloading the file:", error)
+      console.error("Error downloading report:", error)
+      window.alert("Error downloading report")
     }
     setWorking(false)
   }
