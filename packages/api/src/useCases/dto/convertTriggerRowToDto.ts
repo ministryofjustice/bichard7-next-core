@@ -1,4 +1,4 @@
-import type { Trigger, TriggerDto } from "@moj-bichard7/common/types/trigger"
+import type { Trigger, TriggerDto } from "@moj-bichard7/common/types/Trigger"
 
 import { ResolutionStatus, resolutionStatusFromDb } from "./resolutionStatusFromCaseDB"
 
