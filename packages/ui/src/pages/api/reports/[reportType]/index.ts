@@ -26,6 +26,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   caseListQueryParams.maxPageItems = config.BYPASS_PAGE_LIMIT
   caseListQueryParams.page = config.BYPASS_PAGE_LIMIT
 
+  let selectColumns: string[] = []
+
   switch (reportType) {
     case ReportType.RESOLVED_EXCEPTIONS:
       if (!caseListQueryParams.resolvedDateRange) {
@@ -34,16 +36,18 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
       caseListQueryParams.caseState = "Resolved"
       caseListQueryParams.reason = Reason.Exceptions
+
+      selectColumns = QueryColumns.ResolvedExceptionsReport
       break
     case ReportType.CASE_LIST:
-      break
+      selectColumns = QueryColumns.CaseListQuery
     default:
       res.status(404).end()
   }
 
   const dataSource = await getDataSource()
 
-  const courtCases = await listCourtCases(dataSource, caseListQueryParams, currentUser, QueryColumns.CaseListQuery)
+  const courtCases = await listCourtCases(dataSource, caseListQueryParams, currentUser, selectColumns)
 
   if (isError(courtCases)) {
     const { message } = courtCases
