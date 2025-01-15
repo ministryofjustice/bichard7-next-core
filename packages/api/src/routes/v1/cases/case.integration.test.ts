@@ -3,7 +3,7 @@ import type { FastifyInstance, InjectOptions } from "fastify"
 import { FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import { testAhoJsonStr } from "../../../tests/helpers/ahoHelper"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
@@ -14,7 +14,7 @@ const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     method: "GET",
-    url: VersionedEndpoints.V1.Case.replace(":caseId", caseId)
+    url: V1.Case.replace(":caseId", caseId)
   }
 }
 
@@ -52,7 +52,7 @@ describe("retrieve a case", () => {
       courtReference: "",
       defendantName: "",
       errorId: 0,
-      errorLockedByUserFullName: undefined,
+      errorLockedByUserFullName: null,
       errorLockedByUsername: null,
       errorReport: "",
       errorStatus: null,
@@ -62,7 +62,7 @@ describe("retrieve a case", () => {
       ptiurn: null,
       resolutionTimestamp: null,
       triggerCount: 0,
-      triggerLockedByUserFullName: undefined,
+      triggerLockedByUserFullName: null,
       triggerLockedByUsername: null,
       triggerStatus: null,
       updatedHearingOutcome: null
@@ -72,7 +72,7 @@ describe("retrieve a case", () => {
   it("returns response code FORBIDDEN when case doesn't exist", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
     jest.spyOn(db, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(db, "fetchFullCase").mockRejectedValue(new Error("Case not found"))
+    jest.spyOn(db, "fetchCase").mockRejectedValue(new Error("Case not found"))
 
     const response = await app.inject(defaultInjectParams(encodedJwt, "1"))
 

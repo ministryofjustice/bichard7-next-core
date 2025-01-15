@@ -1,7 +1,8 @@
-import type { CaseDB } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-export default async function (sql: postgres.Sql, partialCase: Partial<CaseDB>): Promise<CaseDB> {
+import { type FullCaseRow } from "@moj-bichard7/common/types/Case"
+
+export default async function (sql: postgres.Sql, partialCase: Partial<FullCaseRow>): Promise<FullCaseRow> {
   if (
     !(
       partialCase.annotated_msg ||
@@ -22,32 +23,11 @@ export default async function (sql: postgres.Sql, partialCase: Partial<CaseDB>):
     throw new Error("Missing required attributes")
   }
 
-  const caseToInsert = partialCase as unknown as CaseDB
+  const caseColumns = Object.keys(partialCase).sort()
 
-  const [result]: [CaseDB?] = await sql`
+  const [result]: [FullCaseRow?] = await sql`
     INSERT INTO br7own.error_list
-      (annotated_msg, court_reference, create_ts, error_count, error_report, is_urgent, message_id, msg_received_ts,
-        org_for_police_filter, phase, total_pnc_failure_resubmissions, trigger_count, user_updated_flag,
-        error_locked_by_id, resolution_ts, error_status)
-    VALUES
-      (
-        ${caseToInsert.annotated_msg},
-        ${caseToInsert.court_reference},
-        ${caseToInsert.create_ts},
-        ${caseToInsert.error_count},
-        ${caseToInsert.error_report},
-        ${caseToInsert.is_urgent},
-        ${caseToInsert.message_id},
-        ${caseToInsert.msg_received_ts},
-        ${caseToInsert.org_for_police_filter},
-        ${caseToInsert.phase},
-        ${caseToInsert.total_pnc_failure_resubmissions},
-        ${caseToInsert.trigger_count},
-        ${caseToInsert.user_updated_flag},
-        ${caseToInsert.error_locked_by_id},
-        ${caseToInsert.resolution_ts},
-        ${caseToInsert.error_status}
-      )
+      ${sql(partialCase as never, caseColumns)}
     RETURNING *;
   `
 

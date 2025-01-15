@@ -1,9 +1,9 @@
-import type { CaseDB } from "@moj-bichard7/common/types/Case"
+import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-import filter from "./fetchFullCase"
+import filter from "./fetchCase"
 
-describe("fetchFullCase", () => {
+describe("fetchCase", () => {
   it("throws an error if the case isn't found", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
 
@@ -20,23 +20,28 @@ describe("fetchFullCase", () => {
   it("fetches the Case", async () => {
     const expectedCase = {
       annotated_msg: "",
+      asn: "",
+      court_code: "",
+      court_date: null,
+      court_name: "",
       court_reference: "",
-      create_ts: new Date("2022-06-30T08:44:03.930Z"),
-      error_count: 1,
+      defendant_name: "",
       error_id: 0,
+      error_locked_by_fullname: "",
       error_locked_by_id: null,
       error_report: "",
       error_status: 1,
       is_urgent: 0,
-      message_id: "",
-      msg_received_ts: new Date("2022-06-30T08:44:03.930Z"),
       org_for_police_filter: "",
       phase: 1,
+      ptiurn: "",
       resolution_ts: null,
-      total_pnc_failure_resubmissions: 0,
       trigger_count: 0,
-      user_updated_flag: 0
-    } as CaseDB
+      trigger_locked_by_fullname: "",
+      trigger_locked_by_id: null,
+      trigger_status: 1,
+      updated_msg: ""
+    } satisfies PartialCaseRow
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
 
     const returnedCase = await filter(sql, 0, [1])

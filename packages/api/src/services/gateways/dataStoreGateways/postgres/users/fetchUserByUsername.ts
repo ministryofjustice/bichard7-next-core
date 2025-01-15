@@ -10,7 +10,9 @@ export default async (sql: postgres.Sql, username: string): Promise<User> => {
         u.jwt_id,
         ARRAY_AGG(g.friendly_name) AS groups,
         u.visible_forces,
-        u.email
+        u.email,
+        u.forenames,
+        u.surname
       FROM
         br7own.users u
         JOIN br7own.users_groups ug ON u.id = ug.user_id

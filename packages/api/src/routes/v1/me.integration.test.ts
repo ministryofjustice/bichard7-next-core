@@ -4,7 +4,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
 import build from "../../app"
-import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
+import { V1 } from "../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
@@ -35,12 +35,14 @@ describe("/v1/me", () => {
         authorization: `Bearer ${encodedJwt}`
       },
       method: "GET",
-      url: VersionedEndpoints.V1.Me
+      url: V1.Me
     })
 
     const responseUser = {
       email: user.email,
+      forenames: "Forename",
       groups: user.groups,
+      surname: "Surname",
       username: user.username
     }
 
