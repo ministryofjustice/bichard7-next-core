@@ -1,10 +1,10 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 
 import { errorStatusFromCaseDB, triggerStatusFromCaseDB } from "./resolutionStatusFromCaseDB"
 
 describe("errorStatusFromCaseDB", () => {
   it("returns Unresolved when errorStatus is null", () => {
-    const caseDb = { error_status: null } as unknown as Case
+    const caseDb = { error_status: null } as unknown as PartialCaseRow
 
     const result = errorStatusFromCaseDB(caseDb)
 
@@ -12,7 +12,7 @@ describe("errorStatusFromCaseDB", () => {
   })
 
   it("returns Unresolved when errorStatus is 1", () => {
-    const caseDb = { error_status: 1 } as unknown as Case
+    const caseDb = { error_status: 1 } as unknown as PartialCaseRow
 
     const result = errorStatusFromCaseDB(caseDb)
 
@@ -20,7 +20,7 @@ describe("errorStatusFromCaseDB", () => {
   })
 
   it("returns Resolved when errorStatus is 2", () => {
-    const caseDb = { error_status: 2 } as unknown as Case
+    const caseDb = { error_status: 2 } as unknown as PartialCaseRow
 
     const result = errorStatusFromCaseDB(caseDb)
 
@@ -28,7 +28,7 @@ describe("errorStatusFromCaseDB", () => {
   })
 
   it("returns Submitted when errorStatus is 3", () => {
-    const caseDb = { error_status: 3 } as unknown as Case
+    const caseDb = { error_status: 3 } as unknown as PartialCaseRow
 
     const result = errorStatusFromCaseDB(caseDb)
 
@@ -38,7 +38,7 @@ describe("errorStatusFromCaseDB", () => {
 
 describe("triggerStatusFromCaseDB", () => {
   it("returns Unresolved when errorStatus is null", () => {
-    const caseDb = { trigger_status: null } as unknown as Case
+    const caseDb = { trigger_status: null } as unknown as PartialCaseRow
 
     const result = triggerStatusFromCaseDB(caseDb)
 
@@ -46,7 +46,7 @@ describe("triggerStatusFromCaseDB", () => {
   })
 
   it("returns Unresolved when errorStatus is 1", () => {
-    const caseDb = { trigger_status: 1 } as unknown as Case
+    const caseDb = { trigger_status: 1 } as unknown as PartialCaseRow
 
     const result = triggerStatusFromCaseDB(caseDb)
 
@@ -54,7 +54,7 @@ describe("triggerStatusFromCaseDB", () => {
   })
 
   it("returns Resolved when errorStatus is 2", () => {
-    const caseDb = { trigger_status: 2 } as unknown as Case
+    const caseDb = { trigger_status: 2 } as unknown as PartialCaseRow
 
     const result = triggerStatusFromCaseDB(caseDb)
 
@@ -62,7 +62,7 @@ describe("triggerStatusFromCaseDB", () => {
   })
 
   it("returns Submitted when errorStatus is 3", () => {
-    const caseDb = { trigger_status: 3 } as unknown as Case
+    const caseDb = { trigger_status: 3 } as unknown as PartialCaseRow
 
     const result = triggerStatusFromCaseDB(caseDb)
 

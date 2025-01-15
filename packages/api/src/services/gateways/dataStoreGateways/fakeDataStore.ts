@@ -1,4 +1,4 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
@@ -10,7 +10,7 @@ class FakeDataStore implements DataStoreGateway {
     return Promise.resolve(true)
   }
 
-  async fetchCase(_caseId: number, _forceIds: number[]): Promise<Case> {
+  async fetchCase(_caseId: number, _forceIds: number[]): Promise<PartialCaseRow> {
     return Promise.resolve({
       annotated_msg: dummyAho.hearingOutcomeXml,
       asn: "",
@@ -34,7 +34,7 @@ class FakeDataStore implements DataStoreGateway {
       trigger_locked_by_id: null,
       trigger_status: null,
       updated_msg: null
-    } satisfies Case)
+    } satisfies PartialCaseRow)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {

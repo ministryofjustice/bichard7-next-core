@@ -1,4 +1,4 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
 import filter from "./fetchCase"
@@ -41,7 +41,7 @@ describe("fetchCase", () => {
       trigger_locked_by_id: null,
       trigger_status: 1,
       updated_msg: ""
-    } satisfies Case
+    } satisfies PartialCaseRow
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
 
     const returnedCase = await filter(sql, 0, [1])
