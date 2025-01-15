@@ -1,5 +1,5 @@
 /* eslint-disable jest/expect-expect */
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -70,7 +70,7 @@ describe("resubmit", () => {
 
   describe("fails if", () => {
     let encodedJwt: string
-    let user: User
+    let user: FullUserRow
 
     beforeEach(() => {
       ;[encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
