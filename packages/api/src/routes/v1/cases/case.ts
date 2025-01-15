@@ -8,7 +8,7 @@ import z from "zod"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
@@ -49,7 +49,7 @@ const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
     })
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(VersionedEndpoints.V1.Case, { schema }, async (req, reply) => {
+  useZod(fastify).get(V1.Case, { schema }, async (req, reply) => {
     await handler({
       caseId: Number(req.params.caseId),
       db: req.db,
