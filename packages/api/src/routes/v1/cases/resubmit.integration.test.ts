@@ -6,7 +6,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 
@@ -17,7 +17,7 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     method: "POST",
-    url: VersionedEndpoints.V1.CaseResubmit.replace(":caseId", "0")
+    url: V1.CaseResubmit.replace(":caseId", "0")
   }
 }
 

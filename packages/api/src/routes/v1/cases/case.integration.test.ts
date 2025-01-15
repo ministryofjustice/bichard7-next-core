@@ -3,7 +3,7 @@ import type { FastifyInstance, InjectOptions } from "fastify"
 import { FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import { testAhoJsonStr } from "../../../tests/helpers/ahoHelper"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
@@ -14,7 +14,7 @@ const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     method: "GET",
-    url: VersionedEndpoints.V1.Case.replace(":caseId", caseId)
+    url: V1.Case.replace(":caseId", caseId)
   }
 }
 

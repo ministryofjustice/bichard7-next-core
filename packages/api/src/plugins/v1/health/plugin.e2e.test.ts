@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import { OK } from "http-status"
 
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 
 describe("health plugin", () => {
@@ -19,7 +19,7 @@ describe("health plugin", () => {
   })
 
   it("GET /health should return Ok using the HealthRoutes enum", async () => {
-    const response = await fetch(`${helper.address}${VersionedEndpoints.V1.Health}`)
+    const response = await fetch(`${helper.address}${V1.Health}`)
 
     expect(response.status).toBe(OK)
     expect(await response.text()).toBe("Ok")

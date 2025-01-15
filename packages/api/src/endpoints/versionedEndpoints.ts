@@ -9,3 +9,5 @@ export const VersionedEndpoints: Record<string, Record<string, string>> = {
     Me: Versions.V1 + Endpoints.Me
   }
 }
+
+export const V1 = VersionedEndpoints.V1
