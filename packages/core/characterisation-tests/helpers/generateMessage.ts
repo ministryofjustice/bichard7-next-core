@@ -1,6 +1,8 @@
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
 
+import { mapOperationStatus } from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
+
 const padStart = function (str: string, maxLength: number, fillString?: string): string {
   return str.padStart(maxLength, fillString)
 }
@@ -15,6 +17,7 @@ const generateMessage = (templateFile: string, options: Record<string, unknown>)
   return new nunjucks.Environment()
     .addFilter("padStart", padStart)
     .addFilter("formatDate", formatDate)
+    .addFilter("mapOperationStatus", mapOperationStatus)
     .renderString(template, options)
 }
 

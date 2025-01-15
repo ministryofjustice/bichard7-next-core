@@ -7,7 +7,7 @@ import { toISODate } from "../../dates"
 import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../ahoXml/serialiseToXml"
 import generateXml from "../generateXml"
 
-const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
+export const mapOperationStatus = (status: OperationStatus): OperationStatusXml => {
   const statuses: Record<OperationStatus, OperationStatusXml> = {
     Failed: "F",
     NotAttempted: "N",

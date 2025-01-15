@@ -239,7 +239,7 @@
       <DISARR/>
       {% endif %}
     </operationCode>
-    <operationStatus>{{ "C" if normalDisposalOperation.status == "Completed" else "N" }}</operationStatus>
+    <operationStatus>{{ normalDisposalOperation.status | mapOperationStatus() }}</operationStatus>
   </Operation>
   {% endif %}
 </PNCUpdateDataset>

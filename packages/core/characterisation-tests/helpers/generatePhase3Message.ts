@@ -5,13 +5,7 @@ import generateMessage from "./generateMessage"
 const generatePhase3Message = (): string => {
   return generateMessage("test-data/Phase2Message.xml.njk", {
     messageType: MessageType.PNC_UPDATE_DATASET,
-    offences: [
-      {
-        offenceReasonSequence: true,
-        courtCaseReferenceNumber: true,
-        results: [{}]
-      }
-    ],
+    offences: [{ offenceReasonSequence: true, courtCaseReferenceNumber: true, results: [{}] }],
     normalDisposalOperation: {
       code: PncOperation.NORMAL_DISPOSAL,
       data: { courtCaseReference: true },

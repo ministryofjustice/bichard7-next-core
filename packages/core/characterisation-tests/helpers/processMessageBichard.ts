@@ -40,21 +40,16 @@ const processMessageBichard = async <BichardResultType>(
   const correlationId = randomUUID()
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
 
-  if ([Phase.HEARING_OUTCOME, Phase.PHASE_3].includes(phase) && !realPnc) {
-    if (recordable) {
-      if (pncErrorMessage) {
-        if (phase === Phase.HEARING_OUTCOME) {
-          await mockEnquiryErrorInPnc(pncErrorMessage)
-        } else {
-          await mockUpdateErrorInPnc(pncErrorMessage)
-        }
-      } else {
-        // Insert matching record in PNC
-        await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
-      }
+  if (phase === Phase.HEARING_OUTCOME && !realPnc) {
+    if (!recordable || pncErrorMessage) {
+      await mockEnquiryErrorInPnc(pncErrorMessage)
     } else {
-      await mockEnquiryErrorInPnc()
+      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     }
+  }
+
+  if (phase === Phase.PHASE_3 && pncErrorMessage && !realPnc) {
+    await mockUpdateErrorInPnc(pncErrorMessage)
   }
 
   // Push the message to MQ
