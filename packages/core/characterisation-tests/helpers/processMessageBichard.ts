@@ -12,7 +12,7 @@ import type { ProcessMessageOptions } from "./processMessage"
 
 import Phase from "../../types/Phase"
 import extractExceptionsFromAho from "./extractExceptionsFromAho"
-import { mockEnquiryErrorInPnc, mockRecordInPnc } from "./mockRecordInPnc"
+import { mockEnquiryErrorInPnc, mockRecordInPnc, mockUpdateErrorInPnc } from "./mockRecordInPnc"
 
 type TriggerEntity = { trigger_code: TriggerCode; trigger_item_identity?: string }
 
@@ -31,6 +31,7 @@ const processMessageBichard = async <BichardResultType>(
     recordable = true,
     pncOverrides = {},
     pncCaseType = "court",
+    pncErrorMessage,
     pncMessage,
     pncAdjudication = false,
     phase = Phase.HEARING_OUTCOME
@@ -40,21 +41,26 @@ const processMessageBichard = async <BichardResultType>(
   const messageXmlWithUuid = messageXml.replace("EXTERNAL_CORRELATION_ID", correlationId)
 
   if (phase === Phase.HEARING_OUTCOME && !realPnc) {
-    if (recordable) {
-      // Insert matching record in PNC
-      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
+    if (!recordable || pncErrorMessage) {
+      await mockEnquiryErrorInPnc(pncErrorMessage)
     } else {
-      await mockEnquiryErrorInPnc()
+      await mockRecordInPnc(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     }
+  }
+
+  if (phase === Phase.PHASE_3 && pncErrorMessage && !realPnc) {
+    await mockUpdateErrorInPnc(pncErrorMessage)
   }
 
   // Push the message to MQ
   const queue =
     phase === Phase.HEARING_OUTCOME
       ? "COURT_RESULT_INPUT_QUEUE"
-      : messageXml.includes("PNCUpdateDataset")
-        ? "DATA_SET_PNC_UPDATE_QUEUE"
-        : "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
+      : phase === Phase.PNC_UPDATE
+        ? messageXml.includes("PNCUpdateDataset")
+          ? "DATA_SET_PNC_UPDATE_QUEUE"
+          : "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
+        : "PNC_UPDATE_REQUEST_QUEUE"
   await mq.sendMessage(queue, messageXmlWithUuid)
 
   // Wait for the record to appear in Postgres
