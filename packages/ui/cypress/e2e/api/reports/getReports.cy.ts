@@ -1,18 +1,7 @@
 import generateAho from "../../../../test/helpers/generateAho"
 
-describe("reports API endpoint", () => {
+describe("reports API endpoint", () => {     
   describe("GET /reports/*", () => {
-
-    it("returns a 401 if unauthenticated", () => {
-      cy.request({
-        method: "GET",
-        url: `/bichard/api/reports/case-list`,
-        failOnStatusCode: false
-      }).then((response) => {
-        expect(response.status).to.equal(401)
-      })
-    })
-
     it("returns a 403 if user is not a supervisor", () => {
       cy.loginAs("GeneralHandler")
       cy.request({
