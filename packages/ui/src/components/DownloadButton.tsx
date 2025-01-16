@@ -1,7 +1,11 @@
 import { useState } from "react"
 import { useRouter } from "next/router"
 
-const DownloadButton = () => {
+type Props = {
+  reportType: string
+}
+
+const DownloadButton = ({ reportType }: Props) => {
   const router = useRouter()
   const { query } = router
   const [working, setWorking] = useState(false)
@@ -10,7 +14,7 @@ const DownloadButton = () => {
     setWorking(true)
     try {
       const queryString = new URLSearchParams(query as Record<string, string>).toString()
-      const response = await fetch(`/bichard/api/reports/case-list?${queryString}`)
+      const response = await fetch(`/bichard/api/reports/${reportType}?${queryString}`)
 
       if (response.ok) {
         const payload = await response.json()

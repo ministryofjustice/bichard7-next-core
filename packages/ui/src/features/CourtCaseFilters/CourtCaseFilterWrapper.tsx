@@ -72,7 +72,7 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
               </button>
 
               <ConditionalRender isRendered={user.hasAccessTo[Permission.ViewReports]}>
-                <DownloadButton />
+                <DownloadButton reportType={"case-list"} />
               </ConditionalRender>
             </CaseListButtons>
 
