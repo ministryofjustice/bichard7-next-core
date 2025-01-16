@@ -26,7 +26,7 @@ const DownloadButton = ({ reportType }: Props) => {
 
         const a = document.createElement("a")
         a.href = url
-        a.download = `bichard-case-list-report-${new Date().toISOString()}.csv`
+        a.download = `bichard-${reportType}-report-${new Date().toISOString()}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
