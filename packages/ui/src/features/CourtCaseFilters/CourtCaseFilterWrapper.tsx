@@ -1,7 +1,7 @@
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Heading } from "govuk-react"
 import { useEffect, useState } from "react"
-import { StyledAppliedFilters, CaseListButtons } from "./CourtCaseFilterWrapper.styles"
+import { StyledAppliedFilters, CaseListButtons, ButtonMenu } from "./CourtCaseFilterWrapper.styles"
 import DownloadButton from "components/DownloadButton"
 import ConditionalRender from "components/ConditionalRender"
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -48,7 +48,7 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
         {"Case list"}
       </Heading>
       <div className="moj-filter-layout__content">
-        <div className="moj-button-menu">
+        <ButtonMenu className="moj-button-menu">
           <div className="moj-action-bar">
             <CaseListButtons>
               <button
@@ -80,7 +80,7 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
               <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
             </ConditionalRender>
           </div>
-        </div>
+        </ButtonMenu>
 
         {paginationTop}
 
