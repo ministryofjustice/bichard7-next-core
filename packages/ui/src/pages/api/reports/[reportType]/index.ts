@@ -10,6 +10,7 @@ import { createReportCsv } from "utils/reports/createReportCsv"
 import { ReportType } from "utils/reports/ReportTypes"
 import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
 import config from "services/listCourtCasesConfig"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const allowedMethods = ["GET"]
@@ -20,6 +21,11 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   }
 
   const { req, res, currentUser } = auth
+
+  if (!currentUser.hasAccessTo[Permission.ViewReports]) {
+    res.status(403).end()
+  }
+
   const { reportType } = req.query
   const caseListQueryParams = extractSearchParamsFromQuery(req.query, currentUser)
 
