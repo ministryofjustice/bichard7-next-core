@@ -11,19 +11,24 @@ const DownloadButton = () => {
     try {
       const queryString = new URLSearchParams(query as Record<string, string>).toString()
       const response = await fetch(`/bichard/api/reports/case-list?${queryString}`)
-      const payload = await response.json()
-      const { report } = payload
 
-      const blob = new Blob([report], { type: "text/csv" })
+      if (response.ok) {
+        const payload = await response.json()
+        const { report } = payload
 
-      const url = window.URL.createObjectURL(blob)
+        const blob = new Blob([report], { type: "text/csv" })
 
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `bichard-case-list-report-${new Date().toISOString()}.csv`
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
+        const url = window.URL.createObjectURL(blob)
+
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `bichard-case-list-report-${new Date().toISOString()}.csv`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+      } else {
+        window.alert(`Error downloading report: ${response.statusText}`)
+      }
     } catch (error) {
       console.error("Error downloading report:", error)
       window.alert("Error downloading report")
