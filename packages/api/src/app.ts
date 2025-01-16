@@ -1,4 +1,4 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 
 import AutoLoad from "@fastify/autoload"
 import path from "path"
@@ -17,7 +17,7 @@ declare module "fastify" {
     auditLog: AuditLogGateway
     db: DataStoreGateway
     s3: AwsS3Gateway
-    user: User
+    user: FullUserRow
   }
 }
 

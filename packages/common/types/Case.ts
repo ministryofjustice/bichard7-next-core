@@ -1,6 +1,9 @@
 import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
+import { NoteDtoSchema, NoteRowSchema } from "./Note"
+import { TriggerDtoSchema, TriggerRowSchema } from "./Trigger"
+
 export const FullCaseRowSchema = z.object({
   annotated_msg: z.string().describe("Annotated Hearing Outcome"),
   asn: z.string().max(21).nullable(),
@@ -27,6 +30,7 @@ export const FullCaseRowSchema = z.object({
   last_pnc_failure_resubmission_ts: z.date().nullable(),
   message_id: z.string(),
   msg_received_ts: z.date(),
+  notes: z.array(NoteRowSchema).optional(),
   org_for_police_filter: z.string(),
   phase: z.number().gt(0).lte(3),
   pnc_update_enabled: z.string().nullable(),
@@ -41,6 +45,7 @@ export const FullCaseRowSchema = z.object({
   trigger_resolved_by: z.string().max(32).nullable(),
   trigger_resolved_ts: z.date().nullable(),
   trigger_status: z.number().nullable(),
+  triggers: z.array(TriggerRowSchema).optional(),
   updated_msg: z.string().nullable(),
   user_updated_flag: z.number()
 })
@@ -59,6 +64,7 @@ export const PartialCaseRowSchema = z.object({
   error_report: z.string().max(1000),
   error_status: z.number().nullable(),
   is_urgent: z.number(),
+  notes: z.array(NoteRowSchema),
   org_for_police_filter: z.string(),
   phase: z.number().gt(0).lte(3),
   ptiurn: z.string().max(11).nullable(),
@@ -67,11 +73,10 @@ export const PartialCaseRowSchema = z.object({
   trigger_locked_by_fullname: z.string().nullable(),
   trigger_locked_by_id: z.string().nullable(),
   trigger_status: z.number().nullable(),
+  triggers: z.array(TriggerRowSchema),
   updated_msg: z.string().nullable()
 })
 
-// TODO: Add notes
-// TODO: Add triggers
 export const PartialCaseDtoSchema = z.object({
   asn: z.string().nullable(),
   canUserEditExceptions: z.boolean().optional(),
@@ -84,11 +89,13 @@ export const PartialCaseDtoSchema = z.object({
   errorReport: z.string().optional(),
   errorStatus: z.string().nullable(),
   isUrgent: z.number().optional(),
+  notes: z.array(NoteDtoSchema),
   ptiurn: z.string().nullable(),
   resolutionTimestamp: z.date().nullable(),
   triggerCount: z.number().optional(),
   triggerLockedByUserFullName: z.string().nullable().optional(),
   triggerLockedByUsername: z.string().nullable(),
+  triggers: z.array(TriggerDtoSchema),
   triggerStatus: z.string().nullable()
 })
 

@@ -1,4 +1,4 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -10,7 +10,7 @@ describe("insertUserIntoGroup", () => {
   it("insert user into a group", async () => {
     const sql = jest.fn(() => [UserGroup.TriggerHandler]) as unknown as postgres.Sql
 
-    const user: User = {
+    const user: FullUserRow = {
       email: "user1@example.com",
       groups: [],
       id: 1,
@@ -28,7 +28,7 @@ describe("insertUserIntoGroup", () => {
     const expectedGroups = [UserGroup.TriggerHandler, UserGroup.NewUI, UserGroup.ExceptionHandler]
     const sql = jest.fn(() => [expectedGroups]) as unknown as postgres.Sql
 
-    const user: User = {
+    const user: FullUserRow = {
       email: "user1@example.com",
       groups: [],
       id: 1,

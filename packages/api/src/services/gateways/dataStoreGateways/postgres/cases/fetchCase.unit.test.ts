@@ -32,6 +32,7 @@ describe("fetchCase", () => {
       error_report: "",
       error_status: 1,
       is_urgent: 0,
+      notes: [],
       org_for_police_filter: "",
       phase: 1,
       ptiurn: "",
@@ -40,6 +41,7 @@ describe("fetchCase", () => {
       trigger_locked_by_fullname: "",
       trigger_locked_by_id: null,
       trigger_status: 1,
+      triggers: [],
       updated_msg: ""
     } satisfies PartialCaseRow
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql

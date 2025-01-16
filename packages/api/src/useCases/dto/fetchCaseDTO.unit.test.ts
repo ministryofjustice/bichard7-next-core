@@ -1,5 +1,5 @@
 import type { CaseDto, PartialCaseRow } from "@moj-bichard7/common/types/Case"
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
@@ -13,7 +13,7 @@ describe("fetchCaseDTO", () => {
   const db = new FakeDataStore()
 
   it("returns a case", async () => {
-    const user = { visible_forces: "001" } as User
+    const user = { visible_forces: "001" } as FullUserRow
     const result = await fetchCaseDTO(user, db, 0, logger)
 
     expect(result).toEqual({
@@ -31,6 +31,7 @@ describe("fetchCaseDTO", () => {
       errorReport: "",
       errorStatus: null,
       isUrgent: 0,
+      notes: [],
       orgForPoliceFilter: "",
       phase: 1,
       ptiurn: null,
@@ -38,13 +39,14 @@ describe("fetchCaseDTO", () => {
       triggerCount: 0,
       triggerLockedByUserFullName: null,
       triggerLockedByUsername: null,
+      triggers: [],
       triggerStatus: null,
       updatedHearingOutcome: null
     } satisfies CaseDto)
   })
 
   it("returns error when no force associated to a user", async () => {
-    const user = { visible_forces: "" } as User
+    const user = { visible_forces: "" } as FullUserRow
 
     await expect(fetchCaseDTO(user, db, 0, logger)).rejects.toThrow("No force associated to User")
   })
@@ -54,7 +56,7 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
       visible_forces: "001"
-    } as unknown as User
+    } as unknown as FullUserRow
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
@@ -73,7 +75,7 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
       visible_forces: "001"
-    } as unknown as User
+    } as unknown as FullUserRow
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user2",
@@ -92,7 +94,7 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.Audit],
       username: "user1",
       visible_forces: "001"
-    } as unknown as User
+    } as unknown as FullUserRow
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
@@ -111,7 +113,7 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
       visible_forces: "001"
-    } as unknown as User
+    } as unknown as FullUserRow
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
