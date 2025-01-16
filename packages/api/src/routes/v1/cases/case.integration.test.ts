@@ -57,6 +57,7 @@ describe("retrieve a case", () => {
       errorReport: "",
       errorStatus: null,
       isUrgent: 0,
+      notes: [],
       orgForPoliceFilter: "",
       phase: 1,
       ptiurn: null,
@@ -64,6 +65,7 @@ describe("retrieve a case", () => {
       triggerCount: 0,
       triggerLockedByUserFullName: null,
       triggerLockedByUsername: null,
+      triggers: [],
       triggerStatus: null,
       updatedHearingOutcome: null
     })

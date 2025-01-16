@@ -1,5 +1,5 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
@@ -8,7 +8,7 @@ import formatForceNumbers from "../../services/formatForceNumbers"
 import { convertCaseRowToCaseDto } from "./convertCaseRowToDto"
 
 const fetchCaseDTO = async (
-  user: User,
+  user: FullUserRow,
   db: DataStoreGateway,
   caseId: number,
   logger: FastifyBaseLogger

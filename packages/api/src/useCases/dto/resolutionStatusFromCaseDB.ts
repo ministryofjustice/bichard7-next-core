@@ -1,18 +1,17 @@
-import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
-
-export type ResolutionStatus = "Resolved" | "Submitted" | "Unresolved"
-
-export const resolutionStatusByCode: Record<number, ResolutionStatus> = {
-  1: "Unresolved",
-  2: "Resolved",
-  3: "Submitted"
+export enum ResolutionStatus {
+  Resolved = "Resolved",
+  Submitted = "Submitted",
+  Unresolved = "Unresolved"
 }
 
-export const errorStatusFromCaseDB = (caseDB: PartialCaseRow): null | ResolutionStatus =>
-  caseDB.error_status ? resolutionStatusByCode[caseDB.error_status] : null
+export const resolutionStatusByCode: Record<number, ResolutionStatus> = {
+  1: ResolutionStatus.Unresolved,
+  2: ResolutionStatus.Resolved,
+  3: ResolutionStatus.Submitted
+}
 
-export const triggerStatusFromCaseDB = (caseDB: PartialCaseRow): null | ResolutionStatus =>
-  caseDB.trigger_status ? resolutionStatusByCode[caseDB.trigger_status] : null
+export const resolutionStatusFromDb = (status: null | number): null | ResolutionStatus =>
+  status ? resolutionStatusByCode[status] : null
 
 export const resolutionStatusCodeByText = (text: string): number | undefined =>
   Object.keys(resolutionStatusByCode)
