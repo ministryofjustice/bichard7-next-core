@@ -22,7 +22,7 @@ not to be used outside the use case. The type should be clearly named for the us
 For example:
 
 - Case (database representation) -> CaseDataForDto (picked fields for database query) -> CaseDto (data transform object
-to send to the external services e.g. UI)
+  to send to the external services e.g. UI)
 - Trigger -> TriggerDto
 
 The following guidelines should help in creating a good name structure as well looking at the API package code.
