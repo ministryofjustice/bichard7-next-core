@@ -1,20 +1,22 @@
-import type { CaseDto, PartialCaseRow } from "@moj-bichard7/common/types/Case"
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { CaseDto } from "@moj-bichard7/common/types/Case"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
-import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
-import FakeLogger from "../../tests/helpers/fakeLogger"
-import fetchCaseDTO from "./fetchCaseDTO"
+import type { CaseDataForDto } from "../types/CaseDataForDto"
 
-describe("fetchCaseDTO", () => {
+import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
+import { testAhoJsonObj, testAhoXml } from "../tests/helpers/ahoHelper"
+import FakeLogger from "../tests/helpers/fakeLogger"
+import fetchCaseDto from "./fetchCaseDto"
+
+describe("fetchCaseDto", () => {
   const logger = new FakeLogger()
   const db = new FakeDataStore()
 
   it("returns a case", async () => {
-    const user = { visible_forces: "001" } as FullUserRow
-    const result = await fetchCaseDTO(user, db, 0, logger)
+    const user = { visible_forces: "001" } as User
+    const result = await fetchCaseDto(user, db, 0, logger)
 
     expect(result).toEqual({
       aho: testAhoJsonObj,
@@ -46,9 +48,9 @@ describe("fetchCaseDTO", () => {
   })
 
   it("returns error when no force associated to a user", async () => {
-    const user = { visible_forces: "" } as FullUserRow
+    const user = { visible_forces: "" } as User
 
-    await expect(fetchCaseDTO(user, db, 0, logger)).rejects.toThrow("No force associated to User")
+    await expect(fetchCaseDto(user, db, 0, logger)).rejects.toThrow("No force associated to User")
   })
 
   it("returns canUserEditExceptions true when case is locked to currentUser, user has access to exceptions and errorStatus is unresolved", async () => {
@@ -56,16 +58,16 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
       visible_forces: "001"
-    } as unknown as FullUserRow
+    } as unknown as User
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
-    } as PartialCaseRow
+    } as CaseDataForDto
 
     jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDto(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(true)
   })
@@ -75,16 +77,16 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
       visible_forces: "001"
-    } as unknown as FullUserRow
+    } as unknown as User
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user2",
       error_status: 1
-    } as PartialCaseRow
+    } as CaseDataForDto
 
     jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDto(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -94,16 +96,16 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.Audit],
       username: "user1",
       visible_forces: "001"
-    } as unknown as FullUserRow
+    } as unknown as User
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 1
-    } as PartialCaseRow
+    } as CaseDataForDto
 
     jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDto(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -113,16 +115,16 @@ describe("fetchCaseDTO", () => {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
       visible_forces: "001"
-    } as unknown as FullUserRow
+    } as unknown as User
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
       error_status: 2
-    } as PartialCaseRow
+    } as CaseDataForDto
 
     jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDTO(user, db, 0, logger)
+    const result = await fetchCaseDto(user, db, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })

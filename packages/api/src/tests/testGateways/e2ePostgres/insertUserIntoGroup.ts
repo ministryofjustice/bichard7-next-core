@@ -1,8 +1,8 @@
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, user: FullUserRow, groups: UserGroup[]): Promise<UserGroup[]> => {
+export default async (sql: postgres.Sql, user: User, groups: UserGroup[]): Promise<UserGroup[]> => {
   await sql`
     INSERT INTO br7own.users_groups (
       SELECT

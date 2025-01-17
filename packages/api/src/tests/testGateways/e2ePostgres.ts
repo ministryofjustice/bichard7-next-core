@@ -1,5 +1,5 @@
 import type { FullCaseRow } from "@moj-bichard7/common/types/Case"
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 
@@ -22,7 +22,7 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     return await insertCase(this.db, partialCase)
   }
 
-  async createTestUser(user: Partial<FullUserRow>): Promise<FullUserRow> {
+  async createTestUser(user: Partial<User>): Promise<User> {
     if (!user.groups || user.groups.length === 0) {
       throw new Error("User has no Groups")
     }

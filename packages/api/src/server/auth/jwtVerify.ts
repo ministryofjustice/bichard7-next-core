@@ -1,5 +1,5 @@
 import type { JWT } from "@moj-bichard7/common/types/JWT"
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import jwt from "jsonwebtoken"
 
@@ -7,7 +7,7 @@ import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreG
 
 import { jwtConfig, jwtSignOptions } from "./jwtConfig"
 
-export default async (db: DataStoreGateway, token: string): Promise<FullUserRow | undefined> => {
+export default async (db: DataStoreGateway, token: string): Promise<undefined | User> => {
   const decodedJwt = jwt.verify(token, jwtConfig.tokenSecret, jwtSignOptions) as JWT
   const user = await db.fetchUserByUsername(decodedJwt.username)
 
