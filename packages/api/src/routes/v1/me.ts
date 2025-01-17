@@ -1,18 +1,19 @@
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
-import { UserSchema } from "@moj-bichard7/common/types/User"
+import { UserDtoSchema } from "@moj-bichard7/common/types/User"
 import { OK } from "http-status"
 
-import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
+import { V1 } from "../../endpoints/versionedEndpoints"
 import auth from "../../server/schemas/auth"
 import { unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
+import { convertUserRowToDto } from "../../useCases/dto/convertUserRowToDto"
 
 const schema = {
   ...auth,
   response: {
-    [OK]: UserSchema.omit({ id: true, jwt_id: true, visible_forces: true }).openapi({
+    [OK]: UserDtoSchema.openapi({
       description: "Returns details of authorised user"
     }),
     ...unauthorizedError
@@ -21,8 +22,9 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(VersionedEndpoints.V1.Me, { schema }, async (request, res) => {
-    res.code(OK).send(request.user)
+  useZod(fastify).get(V1.Me, { schema }, async (request, res) => {
+    const userDto = convertUserRowToDto(request.user)
+    res.code(OK).send(userDto)
   })
 }
 

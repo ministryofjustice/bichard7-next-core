@@ -1,25 +1,25 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
-import { FullCaseDTOSchema } from "@moj-bichard7/common/types/Case"
+import { FullCaseDtoSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchFullCaseDTO from "../../../useCases/dto/fetchFullCaseDTO"
+import fetchCaseDTO from "../../../useCases/dto/fetchCaseDTO"
 
 type HandlerProps = {
   caseId: number
   db: DataStoreGateway
   logger: FastifyBaseLogger
   reply: FastifyReply
-  user: User
+  user: FullUserRow
 }
 
 const schema = {
@@ -30,7 +30,7 @@ const schema = {
     })
   }),
   response: {
-    [OK]: FullCaseDTOSchema.openapi({ description: "Case DTO" }),
+    [OK]: FullCaseDtoSchema.openapi({ description: "Case DTO" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
@@ -39,7 +39,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
-  fetchFullCaseDTO(user, db, caseId, logger)
+  fetchCaseDTO(user, db, caseId, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })
@@ -49,7 +49,7 @@ const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
     })
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(VersionedEndpoints.V1.Case, { schema }, async (req, reply) => {
+  useZod(fastify).get(V1.Case, { schema }, async (req, reply) => {
     await handler({
       caseId: Number(req.params.caseId),
       db: req.db,

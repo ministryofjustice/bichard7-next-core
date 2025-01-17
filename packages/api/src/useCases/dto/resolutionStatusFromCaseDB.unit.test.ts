@@ -1,71 +1,71 @@
-import type { CaseDB } from "@moj-bichard7/common/types/Case"
+import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 
-import { errorStatusFromCaseDB, triggerStatusFromCaseDB } from "./resolutionStatusFromCaseDB"
+import { ResolutionStatus, resolutionStatusFromDb } from "./resolutionStatusFromCaseDB"
 
-describe("errorStatusFromCaseDB", () => {
+describe("resolutionStatusFromDb", () => {
   it("returns Unresolved when errorStatus is null", () => {
-    const caseDb = { error_status: null } as unknown as CaseDB
+    const caseDb = { error_status: null } as unknown as PartialCaseRow
 
-    const result = errorStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.error_status)
 
     expect(result).toBeNull()
   })
 
   it("returns Unresolved when errorStatus is 1", () => {
-    const caseDb = { error_status: 1 } as unknown as CaseDB
+    const caseDb = { error_status: 1 } as unknown as PartialCaseRow
 
-    const result = errorStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.error_status)
 
-    expect(result).toBe("Unresolved")
+    expect(result).toBe(ResolutionStatus.Unresolved)
   })
 
   it("returns Resolved when errorStatus is 2", () => {
-    const caseDb = { error_status: 2 } as unknown as CaseDB
+    const caseDb = { error_status: 2 } as unknown as PartialCaseRow
 
-    const result = errorStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.error_status)
 
-    expect(result).toBe("Resolved")
+    expect(result).toBe(ResolutionStatus.Resolved)
   })
 
   it("returns Submitted when errorStatus is 3", () => {
-    const caseDb = { error_status: 3 } as unknown as CaseDB
+    const caseDb = { error_status: 3 } as unknown as PartialCaseRow
 
-    const result = errorStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.error_status)
 
-    expect(result).toBe("Submitted")
+    expect(result).toBe(ResolutionStatus.Submitted)
   })
 })
 
 describe("triggerStatusFromCaseDB", () => {
   it("returns Unresolved when errorStatus is null", () => {
-    const caseDb = { trigger_status: null } as unknown as CaseDB
+    const caseDb = { trigger_status: null } as unknown as PartialCaseRow
 
-    const result = triggerStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.trigger_status)
 
     expect(result).toBeNull()
   })
 
   it("returns Unresolved when errorStatus is 1", () => {
-    const caseDb = { trigger_status: 1 } as unknown as CaseDB
+    const caseDb = { trigger_status: 1 } as unknown as PartialCaseRow
 
-    const result = triggerStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.trigger_status)
 
-    expect(result).toBe("Unresolved")
+    expect(result).toBe(ResolutionStatus.Unresolved)
   })
 
   it("returns Resolved when errorStatus is 2", () => {
-    const caseDb = { trigger_status: 2 } as unknown as CaseDB
+    const caseDb = { trigger_status: 2 } as unknown as PartialCaseRow
 
-    const result = triggerStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.trigger_status)
 
-    expect(result).toBe("Resolved")
+    expect(result).toBe(ResolutionStatus.Resolved)
   })
 
   it("returns Submitted when errorStatus is 3", () => {
-    const caseDb = { trigger_status: 3 } as unknown as CaseDB
+    const caseDb = { trigger_status: 3 } as unknown as PartialCaseRow
 
-    const result = triggerStatusFromCaseDB(caseDb)
+    const result = resolutionStatusFromDb(caseDb.trigger_status)
 
-    expect(result).toBe("Submitted")
+    expect(result).toBe(ResolutionStatus.Submitted)
   })
 })

@@ -1,12 +1,12 @@
 /* eslint-disable jest/expect-expect */
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 
@@ -17,7 +17,7 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
       authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
     },
     method: "POST",
-    url: VersionedEndpoints.V1.CaseResubmit.replace(":caseId", "0")
+    url: V1.CaseResubmit.replace(":caseId", "0")
   }
 }
 
@@ -70,7 +70,7 @@ describe("resubmit", () => {
 
   describe("fails if", () => {
     let encodedJwt: string
-    let user: User
+    let user: FullUserRow
 
     beforeEach(() => {
       ;[encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])

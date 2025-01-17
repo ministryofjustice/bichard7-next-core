@@ -3,7 +3,7 @@ import type { FastifyInstance } from "fastify"
 import { OK } from "http-status"
 
 import build from "../../../app"
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 
 describe("health plugin", () => {
@@ -22,7 +22,7 @@ describe("health plugin", () => {
   it("GET /v1/health should return Ok using the HealthRoutes enum", async () => {
     const response = await app.inject({
       method: "GET",
-      url: VersionedEndpoints.V1.Health
+      url: V1.Health
     })
 
     expect(response.statusCode).toBe(OK)

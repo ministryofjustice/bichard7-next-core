@@ -1,4 +1,4 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
@@ -8,7 +8,7 @@ import "zod-openapi/extend"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
@@ -26,7 +26,7 @@ type HandlerProps = {
   caseId: number
   db: DataStoreGateway
   reply: FastifyReply
-  user: User
+  user: FullUserRow
 }
 
 const schema = {
@@ -94,7 +94,7 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post(VersionedEndpoints.V1.CaseResubmit, { schema }, async (req, reply) => {
+  useZod(fastify).post(V1.CaseResubmit, { schema }, async (req, reply) => {
     await handler({
       body: req.body,
       caseId: Number(req.params.caseId),

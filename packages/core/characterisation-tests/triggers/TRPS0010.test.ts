@@ -1,6 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 
+import { PncOperation } from "../../types/PncOperation"
 import ResultClass from "../../types/ResultClass"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
@@ -30,7 +31,10 @@ describe.ifPhase2("TRPS0010", () => {
             ]
           }
         ],
-        hasCompletedDisarrOperation: true
+        normalDisposalOperation: {
+          code: PncOperation.NORMAL_DISPOSAL,
+          status: "Completed"
+        }
       })
 
       const { triggers } = await processPhase2Message(inputMessage)

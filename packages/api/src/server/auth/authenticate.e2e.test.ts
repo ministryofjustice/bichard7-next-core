@@ -1,9 +1,9 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { OK, UNAUTHORIZED } from "http-status"
 
-import { VersionedEndpoints } from "../../endpoints/versionedEndpoints"
+import { V1 } from "../../endpoints/versionedEndpoints"
 import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
 import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
@@ -13,7 +13,7 @@ const defaultsHeaders = {
 }
 
 describe("authentication e2e", () => {
-  const endpoint = VersionedEndpoints.V1.Me
+  const endpoint = V1.Me
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
@@ -55,7 +55,7 @@ describe("authentication e2e", () => {
     const [encodedJwt] = generateTestJwtToken({
       email: "unknownuser@exmaple.com",
       username: "UnknownUser"
-    } as User)
+    } as FullUserRow)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {

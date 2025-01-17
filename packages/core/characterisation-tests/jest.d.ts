@@ -9,5 +9,6 @@ declare namespace jest {
   interface Describe {
     ifPhase1: (...args: any[]) => void
     ifPhase2: (...args: any[]) => void
+    ifPhase3: (...args: any[]) => void
   }
 }

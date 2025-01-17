@@ -1,4 +1,4 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 
 import Permission from "@moj-bichard7/common/types/Permission"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
@@ -10,7 +10,7 @@ import formatForceNumbers from "../services/formatForceNumbers"
 type ResubmitProps = {
   caseId: number
   db: DataStoreGateway
-  user: User
+  user: FullUserRow
 }
 
 const canUserResubmitCase = async ({ caseId, db, user }: ResubmitProps): Promise<boolean> => {
