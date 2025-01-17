@@ -28,13 +28,13 @@ describe("insertUser", () => {
   })
 
   it("user could be inserted", async () => {
-    const expectedUser = {
+    const expectedUser: Partial<User> = {
       email: "user1@example.com",
       id: 1,
       jwt_id: null,
       username: "User1",
       visible_forces: null
-    } satisfies User
+    }
     const sql = jest.fn(() => [expectedUser]) as unknown as postgres.Sql
     const userInserted: Partial<User> = { email: "user1@example.com", username: "User1" }
 
@@ -45,13 +45,13 @@ describe("insertUser", () => {
 
   it("user could be inserted with JWT ID", async () => {
     const jwtId = randomUUID()
-    const expectedUser = {
+    const expectedUser: Partial<User> = {
       email: "user1@example.com",
       id: 1,
       jwt_id: jwtId,
       username: "User1",
       visible_forces: null
-    } satisfies User
+    }
     const sql = jest.fn(() => [expectedUser]) as unknown as postgres.Sql
     const userInserted: Partial<User> = { email: "user1@example.com", jwt_id: jwtId, username: "User1" }
 

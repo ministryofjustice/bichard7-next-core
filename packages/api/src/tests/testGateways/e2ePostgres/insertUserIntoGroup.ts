@@ -2,7 +2,11 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, user: User, groups: UserGroup[]): Promise<UserGroup[]> => {
+export default async (sql: postgres.Sql, user: Partial<User>, groups: UserGroup[]): Promise<UserGroup[]> => {
+  if (!user.username) {
+    throw new Error("Username is required")
+  }
+
   await sql`
     INSERT INTO br7own.users_groups (
       SELECT

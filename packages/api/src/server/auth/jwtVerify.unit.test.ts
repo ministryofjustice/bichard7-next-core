@@ -27,14 +27,19 @@ describe("jwtVerify", () => {
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
     spy.mockImplementation((username: string): Promise<User> => {
-      const fakeUser = {
+      const fakeUser: User = {
         email: `${username}@example.com`,
+        excluded_triggers: null,
+        feature_flags: {},
+        forenames: "Forename",
         groups: [],
         id: 1,
         jwt_id: validJwtId,
+        surname: "Surname",
         username: user.username,
-        visible_forces: ""
-      } satisfies User
+        visible_courts: null,
+        visible_forces: "001"
+      }
       return Promise.resolve(fakeUser)
     })
 
@@ -59,14 +64,19 @@ describe("jwtVerify", () => {
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
     spy.mockImplementation((username: string): Promise<User> => {
-      const fakeUser = {
+      const fakeUser: User = {
         email: `${username}@example.com`,
+        excluded_triggers: null,
+        feature_flags: {},
+        forenames: "Forename",
         groups: [],
         id: 1,
         jwt_id: null,
+        surname: "Surname",
         username: user.username,
-        visible_forces: ""
-      } satisfies User
+        visible_courts: null,
+        visible_forces: "001"
+      }
       return Promise.resolve(fakeUser)
     })
 

@@ -10,7 +10,7 @@ describe("insertUserIntoGroup", () => {
   it("insert user into a group", async () => {
     const sql = jest.fn(() => [UserGroup.TriggerHandler]) as unknown as postgres.Sql
 
-    const user: User = {
+    const user: Partial<User> = {
       email: "user1@example.com",
       groups: [],
       id: 1,
@@ -28,7 +28,7 @@ describe("insertUserIntoGroup", () => {
     const expectedGroups = [UserGroup.TriggerHandler, UserGroup.NewUI, UserGroup.ExceptionHandler]
     const sql = jest.fn(() => [expectedGroups]) as unknown as postgres.Sql
 
-    const user: User = {
+    const user: Partial<User> = {
       email: "user1@example.com",
       groups: [],
       id: 1,
