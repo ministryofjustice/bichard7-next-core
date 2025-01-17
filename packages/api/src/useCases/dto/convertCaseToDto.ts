@@ -10,8 +10,8 @@ import type { CaseDataForDto } from "../../types/CaseDataForDto"
 
 import parseHearingOutcome from "../../services/parseHearingOutcome"
 import { convertNoteToDto } from "./convertNoteToDto"
+import { ResolutionStatus, resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
 import { convertTriggerToDto } from "./convertTriggerToDto"
-import { ResolutionStatus, resolutionStatusCodeByText, resolutionStatusFromDb } from "./resolutionStatusFromCaseDB"
 
 export const convertCaseToCaseDto = (
   caseDataForDto: CaseDataForDto,

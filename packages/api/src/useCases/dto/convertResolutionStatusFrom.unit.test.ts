@@ -1,6 +1,6 @@
 import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 
-import { ResolutionStatus, resolutionStatusFromDb } from "./resolutionStatusFromCaseDB"
+import { ResolutionStatus, resolutionStatusFromDb } from "./convertResolutionStatus"
 
 describe("resolutionStatusFromDb", () => {
   it("returns Unresolved when errorStatus is null", () => {

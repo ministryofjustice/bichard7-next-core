@@ -1,6 +1,6 @@
 import type { Trigger, TriggerDto } from "@moj-bichard7/common/types/Trigger"
 
-import { ResolutionStatus, resolutionStatusFromDb } from "./resolutionStatusFromCaseDB"
+import { ResolutionStatus, resolutionStatusFromDb } from "./convertResolutionStatus"
 
 export const convertTriggerToDto = (triggerRow: Trigger): TriggerDto => {
   return {
