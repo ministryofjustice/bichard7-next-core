@@ -1,3 +1,4 @@
+import type { UserDto } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -36,12 +37,25 @@ describe("/v1/me e2e", () => {
       method: "GET"
     })
 
-    const responseUser = {
+    const responseUser: UserDto = {
       email: user.email,
+      featureFlags: {},
       forenames: user.forenames,
+      fullname: `${user.forenames} ${user.surname}`,
       groups: [UserGroup.GeneralHandler],
+      hasAccessTo: {
+        "0": true,
+        "1": true,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true
+      },
       surname: user.surname,
-      username: user.username
+      username: user.username,
+      visibleForces: "001"
     }
 
     expect(response.status).toBe(OK)

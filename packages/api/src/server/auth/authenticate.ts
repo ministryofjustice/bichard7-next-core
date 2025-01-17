@@ -1,4 +1,4 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyReply, FastifyRequest } from "fastify"
 
 import { BAD_GATEWAY, UNAUTHORIZED } from "http-status"
@@ -18,7 +18,7 @@ export default async function (db: DataStoreGateway, request: FastifyRequest, re
 
   try {
     const jwtString = token.replace("Bearer ", "")
-    const verificationResult: undefined | User = await jwtVerify(db, jwtString)
+    const verificationResult: FullUserRow | undefined = await jwtVerify(db, jwtString)
 
     if (!verificationResult) {
       reply.code(UNAUTHORIZED).send()

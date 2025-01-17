@@ -1,5 +1,5 @@
 import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
@@ -19,7 +19,7 @@ class Postgres implements DataStoreGateway {
     return await fetchCase(this.db, caseId, forceIds)
   }
 
-  async fetchUserByUsername(username: string): Promise<User> {
+  async fetchUserByUsername(username: string): Promise<FullUserRow> {
     return await fetchUserByUsername(this.db, username)
   }
 }

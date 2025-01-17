@@ -1,4 +1,4 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { FullUserRow } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
@@ -19,7 +19,7 @@ type HandlerProps = {
   db: DataStoreGateway
   logger: FastifyBaseLogger
   reply: FastifyReply
-  user: User
+  user: FullUserRow
 }
 
 const schema = {
