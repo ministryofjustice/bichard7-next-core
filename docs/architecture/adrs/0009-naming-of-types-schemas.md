@@ -15,9 +15,15 @@ requests and responses).
 We also want to have a clear and concise naming convention for the Schemas and Types that the Zod schemas will create.
 
 Types should be context and use case based, using `Pick<Case, CaseData>`, for example. It leads to not having to define
-the Type in the Common package. This should considered as a "temporary" type, only to be used in this context and not to
-be used outside the use case. The type should be clearly named for the use case to involved with e.g. `CaseDataForDto`
-which contains only the attributes needed for that conversion (from the database to DTO).
+the Type in the Common package. This should be considered as an intermediate type, only to be used in this context and
+not to be used outside the use case. The type should be clearly named for the use case to be involved with e.g.
+`CaseDataForDto` which contains only the attributes needed for that conversion (from the database to DTO).
+
+For example:
+
+- Case (database representation) -> CaseDataForDto (picked fields for database query) -> CaseDto (data transform object
+to send to the external services e.g. UI)
+- Trigger -> TriggerDto
 
 The following guidelines should help in creating a good name structure as well looking at the API package code.
 
