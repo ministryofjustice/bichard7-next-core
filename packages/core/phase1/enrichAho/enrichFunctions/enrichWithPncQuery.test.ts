@@ -227,4 +227,17 @@ describe("enrichWithQuery()", () => {
       sensitiveAttributes: "PNC Request Message,PNC Response Message"
     })
   })
+
+  it("should set the PNCIdentifier from PNC response if returned", async () => {
+    const pncId = "pnc_response_pncid"
+    const gateway = new MockPncGateway({
+      ...generateMockPncQueryResult(incomingMessage),
+      pncId
+    })
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = "aho_pncid"
+
+    const resultAho = await enrichWithPncQuery(aho, gateway, auditLogger, isIgnored)
+
+    expect(resultAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier).toBe(pncId)
+  })
 })

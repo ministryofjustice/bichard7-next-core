@@ -1,12 +1,12 @@
 import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { HearingDefendant } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { format } from "date-fns"
+import { DisplayFullUser } from "types/display/Users"
 import { CourtCaseContext } from "../../src/context/CourtCaseContext"
 import { DefendantDetails } from "../../src/features/CourtCaseDetails/Tabs/Panels/DefendantDetails"
 import { DisplayFullCourtCase } from "../../src/types/display/CourtCases"
-import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
 
 describe("Defendant Details", () => {
   const currentUser = {
@@ -33,6 +33,7 @@ describe("Defendant Details", () => {
     const dob = new Date()
     const data: Partial<HearingDefendant> = {
       ArrestSummonsNumber: "1101ZD01000004487545",
+      CourtPNCIdentifier: "CourtPNCIdentifier",
       PNCCheckname: "PNCCheckName",
       Address: {
         AddressLine1: "AddressLine1",
@@ -76,6 +77,7 @@ describe("Defendant Details", () => {
     )
 
     cy.contains("td", "ASN").siblings().should("include.text", data.ArrestSummonsNumber)
+    cy.contains("td", "Court PNCID").siblings().should("include.text", data.CourtPNCIdentifier)
     cy.contains("td", "PNC Check name").siblings().should("include.text", data.PNCCheckname)
     cy.contains("td", "Given name").siblings().should("include.text", data.DefendantDetail?.PersonName.GivenName)
     cy.contains("td", "Family name").siblings().should("include.text", data.DefendantDetail?.PersonName.FamilyName)
