@@ -3,9 +3,11 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { CaseDataForDto } from "../../../types/CaseDataForDto"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
+import { LockReason } from "../../../types/LockReason"
 import postgresFactory from "../../db/postgresFactory"
 import caseCanBeResubmitted from "./postgres/cases/canCaseBeResubmitted"
 import fetchCase from "./postgres/cases/fetchCase"
+import lockException from "./postgres/cases/lockException"
 import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
 class Postgres implements DataStoreGateway {
@@ -21,6 +23,12 @@ class Postgres implements DataStoreGateway {
 
   async fetchUserByUsername(username: string): Promise<User> {
     return await fetchUserByUsername(this.db, username)
+  }
+
+  async lockCase(lockReason: LockReason, caseId: number, username: string, forceIds: number[]): Promise<void> {
+    if (lockReason === LockReason.Exception) {
+      return await lockException(this.db, caseId, username, forceIds)
+    }
   }
 }
 

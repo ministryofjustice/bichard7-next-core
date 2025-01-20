@@ -5,6 +5,7 @@ import type { FastifyBaseLogger } from "fastify"
 import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
 
 import formatForceNumbers from "../services/formatForceNumbers"
+import { LockReason } from "../types/LockReason"
 import { convertCaseToCaseDto } from "./dto/convertCaseToDto"
 
 const fetchCaseDTO = async (
@@ -22,6 +23,7 @@ const fetchCaseDTO = async (
   // TODO: Lock case if user can edit exceptions and audit log
   // TODO: Lock case if user can edit triggers and audit log
   const caseDataForDto = await db.fetchCase(caseId, forceIds)
+  await db.lockCase(LockReason.Exception, caseDataForDto.error_id, user.username, forceIds)
 
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }
