@@ -8,7 +8,7 @@ import { V1 } from "../../endpoints/versionedEndpoints"
 import auth from "../../server/schemas/auth"
 import { unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
-import { convertUserRowToDto } from "../../useCases/dto/convertUserRowToDto"
+import { convertUserToDto } from "../../useCases/dto/convertUserToDto"
 
 const schema = {
   ...auth,
@@ -23,7 +23,7 @@ const schema = {
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.Me, { schema }, async (request, res) => {
-    const userDto = convertUserRowToDto(request.user)
+    const userDto = convertUserToDto(request.user)
     res.code(OK).send(userDto)
   })
 }

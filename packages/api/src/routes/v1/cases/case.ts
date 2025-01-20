@@ -1,8 +1,8 @@
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
-import { FullCaseDtoSchema } from "@moj-bichard7/common/types/Case"
+import { CaseDtoSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 
@@ -12,14 +12,14 @@ import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchCaseDTO from "../../../useCases/dto/fetchCaseDTO"
+import fetchCaseDto from "../../../useCases/fetchCaseDto"
 
 type HandlerProps = {
   caseId: number
   db: DataStoreGateway
   logger: FastifyBaseLogger
   reply: FastifyReply
-  user: FullUserRow
+  user: User
 }
 
 const schema = {
@@ -30,7 +30,7 @@ const schema = {
     })
   }),
   response: {
-    [OK]: FullCaseDtoSchema.openapi({ description: "Case DTO" }),
+    [OK]: CaseDtoSchema.openapi({ description: "Case DTO" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
@@ -39,7 +39,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
-  fetchCaseDTO(user, db, caseId, logger)
+  fetchCaseDto(user, db, caseId, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })

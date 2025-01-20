@@ -1,4 +1,4 @@
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
@@ -7,11 +7,9 @@ import type End2EndPostgres from "../testGateways/e2ePostgres"
 
 import { generateTestJwtToken } from "./jwtHelper"
 
-export const generateJwtForStaticUser = (
-  userGroups: UserGroup[] = [UserGroup.GeneralHandler]
-): [string, FullUserRow] => {
+export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.GeneralHandler]): [string, User] => {
   const jwtId = randomUUID()
-  const user: FullUserRow = {
+  const user: User = {
     email: "user1@example.com",
     excluded_triggers: null,
     feature_flags: {},
@@ -32,13 +30,13 @@ export const createUsers = async (
   db: End2EndPostgres,
   numberOfUsers: number,
   groups: UserGroup[] = [UserGroup.GeneralHandler]
-): Promise<FullUserRow[]> => {
+): Promise<User[]> => {
   return Promise.all(
     Array(numberOfUsers)
       .fill(null)
       .map(async (_, i) => {
         const id = i + 1 // +1 to avoid user id 0
-        const user: FullUserRow = await db.createTestUser({
+        const user: User = await db.createTestUser({
           email: `user${id}@example.com`,
           forenames: `Forename${id}`,
           groups,
@@ -57,12 +55,12 @@ export const createUsers = async (
 export const createUserAndJwtToken = async (
   db: End2EndPostgres,
   groups: UserGroup[] = [UserGroup.GeneralHandler]
-): Promise<[string, FullUserRow]> => {
+): Promise<[string, User]> => {
   const [user] = await createUsers(db, 1, groups)
   return [generateTestJwtToken(user, user.jwt_id ?? ""), user]
 }
 
-export const generateJwtForUser = async (user: FullUserRow) => {
+export const generateJwtForUser = async (user: User) => {
   if (!user.jwt_id) {
     throw new Error("JWT ID is not defined.")
   }

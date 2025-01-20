@@ -1,8 +1,8 @@
 import type { Trigger, TriggerDto } from "@moj-bichard7/common/types/Trigger"
 
-import { ResolutionStatus, resolutionStatusFromDb } from "./resolutionStatusFromCaseDB"
+import { ResolutionStatus, resolutionStatusFromDb } from "./convertResolutionStatus"
 
-export const convertTriggerRowToDto = (triggerRow: Trigger): TriggerDto => {
+export const convertTriggerToDto = (triggerRow: Trigger): TriggerDto => {
   return {
     createAt: triggerRow.create_ts,
     resolvedAt: triggerRow.resolved_ts ? triggerRow.resolved_ts : undefined,

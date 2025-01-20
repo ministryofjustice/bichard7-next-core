@@ -1,11 +1,11 @@
-import type { FullCaseRow } from "@moj-bichard7/common/types/Case"
+import type { Case } from "@moj-bichard7/common/types/Case"
 
 import type End2EndPostgres from "../testGateways/e2ePostgres"
 
 import { testAhoXml } from "./ahoHelper"
 
-export const createCase = async (db: End2EndPostgres, overrides: object = {}): Promise<FullCaseRow> => {
-  const dbCase = await db.createTestCase({
+export const createCase = async (db: End2EndPostgres, overrides: object = {}): Promise<Case> => {
+  const caseData = await db.createTestCase({
     annotated_msg: testAhoXml,
     court_reference: "ABC",
     create_ts: new Date(),
@@ -26,5 +26,5 @@ export const createCase = async (db: End2EndPostgres, overrides: object = {}): P
     ...overrides
   })
 
-  return dbCase
+  return caseData
 }
