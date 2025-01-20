@@ -58,6 +58,13 @@
       "id" : "8",
       "status" : "Accepted",
       "title" : "API Design"
+    }, {
+      "content" : "# 9. Naming of Types and Schemas\n\nDate: 2025-01-16\n\n## Status\n\nAccepted\n\n## Context\n\nWe want to leverage [Zod's](https://zod.dev/) ability to validate schemas and turn the schemas into objects. This is\nespecially helpful whilst build the API as we can auto generate Swagger documentation for API calls (parameters,\nrequests and responses).\n\nWe also want to have a clear and concise naming convention for the Schemas and Types that the Zod schemas will create.\n\nTypes should be context and use case based, using `Pick<Case, CaseData>`, for example. It leads to not having to define\nthe Type in the Common package. This should be considered as an intermediate type, only to be used in this context and\nnot to be used outside the use case. The type should be clearly named for the use case to be involved with e.g.\n`CaseDataForDto` which contains only the attributes needed for that conversion (from the database to DTO).\n\nFor example:\n\n- Case (database representation) -> CaseDataForDto (picked fields for database query) -> CaseDto (data transform object\n  to send to the external services e.g. UI)\n- Trigger -> TriggerDto\n\nThe following guidelines should help in creating a good name structure as well looking at the API package code.\n\n### Names we will expect\n\n- `Schema` as a suffix to Zod Schema\n- `Dto` as a suffix to a Type which has been convert from a database object to a domain object\n- Strict camel case, for files and functions\n\n### Names we find acceptable\n\n- Try to avoid unnecessary suffixes\n- If you can't define an object using what it represents try either these suffixes:\n  - Object as aggregate `Data` e.g. has relations as part of the dataset\n  - Object is a pure database row `Row` e.g. no relations is part of the dataset\n- Try to create Types that are close to domain, context and use case\n\n### Names we want to avoid using\n\n- Lots of adjectives in a name\n- `Full`, `Partial`, `Raw`, `DB`\n\n## Decision\n\nPending\n\n## Consequences\n\nWe will have to carefully choose names that are meaningful. That may slow down our velocity. But this will be good trade\noff for the readability and maintainability for Bichard.\n",
+      "date" : "2025-01-16T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "9",
+      "status" : "Accepted",
+      "title" : "Naming of Types and Schemas"
     } ],
     "sections" : [ {
       "content" : "## Bichard\n\nWelcome to the microsite for the Bichard architecture and documentation.\n\nThe following diagram shows how Bichard fits in with high level view of MoJ.\n\n![System Landscape Diagram](embed:SystemLandscape)\n",
