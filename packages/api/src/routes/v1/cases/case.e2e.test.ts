@@ -126,4 +126,74 @@ describe("/v1/case e2e", () => {
     expect(responseJson.triggerLockedByUsername).toBe(user.username)
     expect(responseJson.triggerLockedByUserFullName).toBe("Forename1 Surname1")
   })
+
+  it("locks exception to the user when the case is unlocked, has exceptions, and has error status unresolved", async () => {
+    const [user] = await createUsers(helper.db, 3)
+    const jwtToken = await generateJwtForUser(user)
+
+    const testCase = await createCase(helper.db, {
+      error_count: 1,
+      error_locked_by_id: null,
+      error_status: 1,
+      org_for_police_filter: "01"
+    })
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    expect(responseJson.errorLockedByUsername).toBe(user.username)
+  })
+
+  const testCases = [
+    {
+      caseData: {
+        error_count: 1,
+        error_locked_by_id: "another_user",
+        error_status: 1
+      },
+      description: "doesn't lock exception to the user when the case is locked to another user",
+      expectedLockedByUsername: "another_user"
+    },
+    {
+      caseData: { error_count: 0, error_locked_by_id: null, error_status: null },
+      description: "doesn't lock exception when case does not have any exception",
+      expectedLockedByUsername: null
+    },
+    {
+      caseData: { error_count: 1, error_locked_by_id: null, error_status: 2 },
+      description: "doesn't lock exception when error status is resolved",
+      expectedLockedByUsername: null
+    },
+    {
+      caseData: { error_count: 1, error_locked_by_id: null, error_status: 3 },
+      description: "doesn't lock exception when error status is submitted",
+      expectedLockedByUsername: null
+    }
+  ]
+
+  testCases.forEach(({ caseData, description, expectedLockedByUsername }) => {
+    it(`${description}`, async () => {
+      const [user] = await createUsers(helper.db, 1)
+      const jwtToken = await generateJwtForUser(user)
+
+      const testCase = await createCase(helper.db, caseData)
+
+      const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        },
+        method: "GET"
+      })
+
+      expect(response.status).toBe(OK)
+      const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+      expect(responseJson.errorLockedByUsername).toBe(expectedLockedByUsername)
+    })
+  })
 })

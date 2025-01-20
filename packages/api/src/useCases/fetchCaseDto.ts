@@ -20,10 +20,8 @@ const fetchCaseDTO = async (
     throw new Error("No force associated to User")
   }
 
-  // TODO: Lock case if user can edit exceptions and audit log
-  // TODO: Lock case if user can edit triggers and audit log
+  await db.lockCase(LockReason.Exception, caseId, user.username, forceIds)
   const caseDataForDto = await db.fetchCase(caseId, forceIds)
-  await db.lockCase(LockReason.Exception, caseDataForDto.error_id, user.username, forceIds)
 
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }
