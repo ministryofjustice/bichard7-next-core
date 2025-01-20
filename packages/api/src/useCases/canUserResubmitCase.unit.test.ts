@@ -1,4 +1,4 @@
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
@@ -13,7 +13,7 @@ describe("canUseResubmitCase", () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
         db,
-        user: {} as FullUserRow
+        user: {} as User
       })
 
       expect(result).toBe(false)
@@ -23,7 +23,7 @@ describe("canUseResubmitCase", () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
         db,
-        user: { groups: [UserGroup.AuditLoggingManager] } as FullUserRow
+        user: { groups: [UserGroup.AuditLoggingManager] } as User
       })
 
       expect(result).toBe(false)
@@ -33,7 +33,7 @@ describe("canUseResubmitCase", () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
         db,
-        user: { groups: [UserGroup.ExceptionHandler] } as FullUserRow
+        user: { groups: [UserGroup.ExceptionHandler] } as User
       })
 
       expect(result).toBe(true)
@@ -45,7 +45,7 @@ describe("canUseResubmitCase", () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
         db,
-        user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as FullUserRow
+        user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as User
       })
 
       expect(result).toBe(false)
@@ -57,7 +57,7 @@ describe("canUseResubmitCase", () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
         db,
-        user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as FullUserRow
+        user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as User
       })
 
       expect(result).toBe(false)
@@ -69,7 +69,7 @@ describe("canUseResubmitCase", () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
         db,
-        user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as FullUserRow
+        user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as User
       })
 
       expect(result).toBe(true)

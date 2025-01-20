@@ -1,6 +1,6 @@
-import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
+import type { CaseDataForDto } from "../../../types/CaseDataForDto"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
 import postgresFactory from "../../db/postgresFactory"
@@ -15,11 +15,11 @@ class Postgres implements DataStoreGateway {
     return await caseCanBeResubmitted(this.db, username, caseId, forceIds)
   }
 
-  async fetchCase(caseId: number, forceIds: number[]): Promise<PartialCaseRow> {
+  async fetchCase(caseId: number, forceIds: number[]): Promise<CaseDataForDto> {
     return await fetchCase(this.db, caseId, forceIds)
   }
 
-  async fetchUserByUsername(username: string): Promise<FullUserRow> {
+  async fetchUserByUsername(username: string): Promise<User> {
     return await fetchUserByUsername(this.db, username)
   }
 }

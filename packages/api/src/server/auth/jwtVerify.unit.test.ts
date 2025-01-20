@@ -1,4 +1,4 @@
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import { generateTestJwtToken } from "../../tests/helpers/jwtHelper"
@@ -14,7 +14,7 @@ describe("jwtVerify", () => {
   })
 
   it("will return an error if the username does not exists in the db", async () => {
-    const jwtString = generateTestJwtToken({ username: "UserNotFound" } as FullUserRow)
+    const jwtString = generateTestJwtToken({ username: "UserNotFound" } as User)
     const spy = jest.spyOn(db, "fetchUserByUsername")
     spy.mockRejectedValue(new Error("User UserNotFound does not exist"))
 
@@ -22,23 +22,28 @@ describe("jwtVerify", () => {
   })
 
   it("will return a User if the username exists in the db and the JWT ID matches", async () => {
-    const user = { jwt_id: validJwtId, username: "UserFound" } as FullUserRow
+    const user = { jwt_id: validJwtId, username: "UserFound" } as User
     const jwtString = generateTestJwtToken(user, validJwtId)
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
-    spy.mockImplementation((username: string): Promise<FullUserRow> => {
-      const fakeUser = {
+    spy.mockImplementation((username: string): Promise<User> => {
+      const fakeUser: User = {
         email: `${username}@example.com`,
+        excluded_triggers: null,
+        feature_flags: {},
+        forenames: "Forename",
         groups: [],
         id: 1,
         jwt_id: validJwtId,
+        surname: "Surname",
         username: user.username,
-        visible_forces: ""
-      } satisfies FullUserRow
+        visible_courts: null,
+        visible_forces: "001"
+      }
       return Promise.resolve(fakeUser)
     })
 
-    const result: FullUserRow | undefined = await jwtVerify(db, jwtString)
+    const result: undefined | User = await jwtVerify(db, jwtString)
 
     if (result === undefined) {
       throw new Error("Test is wrong")
@@ -54,23 +59,28 @@ describe("jwtVerify", () => {
   })
 
   it("will return undefined if the username exists in the db and the JWT ID doesn't match", async () => {
-    const user = { jwt_id: null, username: "UserFound" } as FullUserRow
+    const user = { jwt_id: null, username: "UserFound" } as User
     const jwtString = generateTestJwtToken(user, validJwtId)
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
-    spy.mockImplementation((username: string): Promise<FullUserRow> => {
-      const fakeUser = {
+    spy.mockImplementation((username: string): Promise<User> => {
+      const fakeUser: User = {
         email: `${username}@example.com`,
+        excluded_triggers: null,
+        feature_flags: {},
+        forenames: "Forename",
         groups: [],
         id: 1,
         jwt_id: null,
+        surname: "Surname",
         username: user.username,
-        visible_forces: ""
-      } satisfies FullUserRow
+        visible_courts: null,
+        visible_forces: "001"
+      }
       return Promise.resolve(fakeUser)
     })
 
-    const result: FullUserRow | undefined = await jwtVerify(db, jwtString)
+    const result: undefined | User = await jwtVerify(db, jwtString)
 
     expect(result).toBeUndefined()
   })
