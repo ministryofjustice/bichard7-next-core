@@ -25,10 +25,12 @@ class Postgres implements DataStoreGateway {
     return await fetchUserByUsername(this.db, username)
   }
 
-  async lockCase(lockReason: LockReason, caseId: number, username: string, forceIds: number[]): Promise<void> {
+  async lockCase(lockReason: LockReason, caseId: number, username: string, forceIds: number[]): Promise<boolean> {
     if (lockReason === LockReason.Exception) {
       return await lockException(this.db, caseId, username, forceIds)
     }
+
+    return false
   }
 }
 

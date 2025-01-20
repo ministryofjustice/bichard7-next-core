@@ -2,7 +2,7 @@ import type postgres from "postgres"
 
 import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
 
-export default async (sql: postgres.Sql, caseId: number, username: string, forceIds: number[]): Promise<void> => {
+export default async (sql: postgres.Sql, caseId: number, username: string, forceIds: number[]): Promise<boolean> => {
   const status = resolutionStatusCodeByText(ResolutionStatus.Unresolved) as number
 
   const result = await sql`
@@ -18,9 +18,9 @@ export default async (sql: postgres.Sql, caseId: number, username: string, force
       RETURNING 1
     `
 
-  if (result.length < 1) {
+  if (!result) {
     throw new Error("No rows were updated.")
   }
 
-  return
+  return result.length > 0
 }
