@@ -15,8 +15,9 @@ import { PncApiError } from "../../lib/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
+import { isPncLockError } from "../../phase3/exceptions/generatePncUpdateExceptionFromMessage"
+import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "../../phase3/lib/performOperations"
 import phase3Handler from "../../phase3/phase3"
-import getPncErrorMessages from "../../phase3/tests/helpers/getPncErrorMessages"
 import getPncOperationsFromPncUpdateDataset from "../../phase3/tests/helpers/getPncOperationsFromPncUpdateDataset"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
@@ -115,9 +116,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const ignorePncOperationComparison =
       outgoingMessageMissing && parsedIncomingMessageResult.message?.PncOperations.length !== pncOperations.length
 
-    const pncErrorMessages = outgoingPncUpdateDataset?.Exceptions.filter((exception) => "message" in exception).map(
-      (exception) => exception.message
-    )
+    const pncExceptions = outgoingPncUpdateDataset?.Exceptions.filter((exception) => "message" in exception) ?? []
 
     const mockPncResponses: (PncApiError | undefined)[] = []
 
@@ -127,18 +126,19 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       const afterOperations = getPncOperationsFromPncUpdateDataset(outgoingPncUpdateDataset)
       const afterUnattemptedOperations = afterOperations.filter((operation) => operation.status === "NotAttempted")
       const afterFailedOperations = afterOperations.filter((operation) => operation.status === "Failed")
-      const errorMessages = getPncErrorMessages(outgoingPncUpdateDataset)
 
       const completedOperationCount =
         beforeUnattemptedOperations.length - afterUnattemptedOperations.length - afterFailedOperations.length
 
-      for (let i = 0; i < completedOperationCount; ++i) {
-        mockPncResponses.push(undefined)
-      }
+      mockPncResponses.push(...Array.from({ length: completedOperationCount }, () => undefined))
 
-      if (errorMessages.length > 0) {
-        if (pncErrorMessages && pncErrorMessages.length > 0) {
-          mockPncResponses.push(new PncApiError(pncErrorMessages))
+      if (pncExceptions.length > 0) {
+        const pncApiError = new PncApiError(pncExceptions.map((exception) => exception.message))
+
+        mockPncResponses.push(pncApiError)
+
+        if (pncExceptions?.some(isPncLockError)) {
+          mockPncResponses.push(...Array.from({ length: MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1 }, () => pncApiError))
         }
       }
     }
@@ -160,7 +160,9 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     }
 
     const pncOperationsMatch = isEqual(
-      pncErrorMessages && pncErrorMessages.length > 0 ? pncGateway.updates.slice(0, -1) : pncGateway.updates,
+      pncExceptions && pncExceptions.length > 0
+        ? pncGateway.updates.slice(0, pncExceptions?.some(isPncLockError) ? -MAXIMUM_PNC_LOCK_ERROR_RETRIES : -1)
+        : pncGateway.updates,
       pncOperations
     )
 
