@@ -1,9 +1,9 @@
-import { HintText } from "components/HintText"
 import Layout from "components/Layout"
+import { NoteTextArea } from "components/NoteTextArea"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, MultiChoice, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, MultiChoice } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -208,29 +208,18 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                 </MultiChoice>
               </FormGroup>
 
-              <FormGroup id="feedback">
-                <h3 className="govuk-heading-s">{"Tell us why you gave this rating"}</h3>
-
-                <TextArea
-                  input={{
-                    name: "feedback",
-                    defaultValue: fields?.feedback.value,
-                    rows: 5,
-                    maxLength: MAX_FEEDBACK_LENGTH,
-                    onInput: handleFeedbackOnChange
-                  }}
-                  meta={{
-                    error: "Input message into the text box",
-                    touched: fields?.feedback.hasError
-                  }}
-                >
-                  {""}
-                </TextArea>
-
-                <HintText className={"govuk-body-s"}>
-                  {`You have ${remainingFeedbackLength} characters remaining`}
-                </HintText>
-              </FormGroup>
+              <NoteTextArea
+                handleOnNoteChange={handleFeedbackOnChange}
+                noteRemainingLength={remainingFeedbackLength}
+                labelText={"Tell us why you gave this rating"}
+                labelSize={"govuk-label--s"}
+                id={"feedback"}
+                defaultValue={fields?.feedback.value}
+                showError={fields?.feedback.hasError}
+                name={"feedback"}
+                maxLength={MAX_FEEDBACK_LENGTH}
+                errorMessage={"Input message into the text box"}
+              />
 
               <FormGroup>
                 <Button type="submit">{"Send feedback and continue"}</Button>

@@ -141,7 +141,7 @@ describe("View notes", () => {
 
     loginAndGoToNotes()
     cy.contains("Case has no notes.")
-    cy.get("#note-text").should("not.exist")
+    cy.get("textarea[name=noteText]").should("not.exist")
     cy.get("#add-note-button").should("not.exist")
   })
 
@@ -155,7 +155,7 @@ describe("View notes", () => {
     loginAndGoToNotes()
     cy.get("label").contains("Add a new note")
     cy.get("textarea").should("be.visible")
-    cy.get("span").contains("You have 2000 characters remaining")
+    cy.get("div.govuk-hint").contains("You have 2000 characters remaining")
   })
 
   it("Should be able to add a note when case is visible to the user and not locked by another user", () => {
@@ -228,9 +228,9 @@ describe("View notes", () => {
 
     cy.get("H3").contains("Notes")
     cy.get("button").contains("Add note").click()
-    cy.get("form span").contains("The note cannot be empty")
+    cy.get("form p.govuk-error-message").contains("The note cannot be empty")
     cy.get("textarea[name=noteText]").type("dummy note")
-    cy.get("form span").should("not.contain", "The note cannot be empty")
+    cy.get("form").should("not.contain", "The note cannot be empty")
     cy.get("button").contains("Add note").click()
 
     cy.contains("dummy note")

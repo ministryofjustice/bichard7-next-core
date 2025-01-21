@@ -3,8 +3,9 @@ import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
+import { NoteTextArea } from "components/NoteTextArea"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, Label, Select, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, Label, Select } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -176,20 +177,13 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                     })}
                   </Select>
                 </FormGroup>
-                <FormGroup>
-                  <Label>{"Resolution Details"}</Label>
-                  <TextArea
-                    input={{
-                      name: "reasonText"
-                    }}
-                    meta={{
-                      error: reasonTextError,
-                      touched: !!reasonTextError
-                    }}
-                  >
-                    {""}
-                  </TextArea>
-                </FormGroup>
+
+                <NoteTextArea
+                  labelText={"Resolution Details"}
+                  name={"reasonText"}
+                  errorMessage={reasonTextError}
+                  showError={!!reasonTextError}
+                />
 
                 <ButtonsGroup>
                   <Button id="Resolve" type="submit">

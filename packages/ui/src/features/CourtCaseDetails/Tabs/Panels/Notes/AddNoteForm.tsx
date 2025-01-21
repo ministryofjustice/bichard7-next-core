@@ -1,8 +1,8 @@
 import ConditionalRender from "components/ConditionalRender"
-import { HintText } from "components/HintText"
+import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, FormGroup, Label, TextArea } from "govuk-react"
+import { Button } from "govuk-react"
 import { FormEvent, FormEventHandler, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import Form from "../../../../../components/Form"
@@ -47,27 +47,13 @@ const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
   return (
     <ConditionalRender isRendered={isLockedByCurrentUser}>
       <Form method="POST" action="" onSubmit={handleSubmit} csrfToken={csrfToken}>
-        <FormGroup>
-          <Label className="govuk-heading-m b7-form-label-lg" htmlFor="note-text">
-            {"Add a new note"}
-          </Label>
-          <TextArea
-            input={{
-              id: "note-text",
-              name: "noteText",
-              rows: 5,
-              maxLength: MAX_NOTE_LENGTH,
-              onInput: handleOnNoteChange
-            }}
-            meta={{
-              error: "The note cannot be empty",
-              touched: showError
-            }}
-          >
-            {""}
-          </TextArea>
-          <HintText className={"govuk-body-s"}>{`You have ${noteRemainingLength} characters remaining`}</HintText>
-        </FormGroup>
+        <NoteTextArea
+          showError={showError}
+          handleOnNoteChange={handleOnNoteChange}
+          noteRemainingLength={noteRemainingLength}
+          labelText={"Add a new note"}
+          name="noteText"
+        />
 
         <Button id="add-note-button" type="submit">
           {"Add note"}
