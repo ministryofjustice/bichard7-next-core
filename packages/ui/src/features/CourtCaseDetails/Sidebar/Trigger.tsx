@@ -4,7 +4,7 @@ import Checkbox from "components/Checkbox"
 import ConditionalRender from "components/ConditionalRender"
 import { Preview } from "components/Preview"
 import PreviewButton from "components/PreviewButton"
-import { GridCol, GridRow, Heading, Paragraph } from "govuk-react"
+import { GridCol, GridRow, Heading } from "govuk-react"
 import { ChangeEvent, SyntheticEvent, useState } from "react"
 import { DisplayTrigger } from "types/display/Triggers"
 import getTriggerDefinition from "utils/getTriggerDefinition"
@@ -89,7 +89,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
               <Heading as="h3" size="SMALL">
                 {"PNC screen to update"}
               </Heading>
-              <Paragraph supportingText={true}>{triggerDefinition?.pncScreenToUpdate ?? "Trigger not found"}</Paragraph>
+              <p className="govuk-body-s">{triggerDefinition?.pncScreenToUpdate ?? "Trigger not found"}</p>
               <Heading as="h3" size="SMALL">
                 {"CJS result code"}
               </Heading>

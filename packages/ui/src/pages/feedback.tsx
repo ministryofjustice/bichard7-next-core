@@ -2,7 +2,7 @@ import Layout from "components/Layout"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Heading, HintText, MultiChoice, Paragraph, TextArea } from "govuk-react"
+import { BackLink, Button, Fieldset, FormGroup, Heading, HintText, MultiChoice, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -158,11 +158,11 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
           </Heading>
 
           <Form method="POST" action={"#"} csrfToken={csrfToken}>
-            <Paragraph>
+            <p className="govuk-body">
               {
                 "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
               }
-            </Paragraph>
+            </p>
             <Fieldset>
               <FormGroup id="isAnonymous">
                 <MultiChoice

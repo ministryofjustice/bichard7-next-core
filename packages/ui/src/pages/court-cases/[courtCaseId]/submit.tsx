@@ -1,3 +1,4 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import Banner from "components/Banner"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
@@ -5,7 +6,7 @@ import Form from "components/Form"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Heading, Link, Paragraph } from "govuk-react"
+import { BackLink, Button, Heading, Link } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -16,6 +17,7 @@ import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
+import { createMqConfig, StompitMqGateway } from "services/mq"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import { isError } from "types/Result"
@@ -26,9 +28,7 @@ import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
-import { createMqConfig, StompitMqGateway } from "services/mq"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
@@ -144,16 +144,16 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
         </HeaderContainer>
 
         <ConditionalRender isRendered={hasAmendments(amendments) || validAmendments}>
-          <Paragraph>
+          <p className="govuk-body">
             {"Are you sure you want to submit the amended details to the PNC and mark the exception(s) as resolved?"}
-          </Paragraph>
+          </p>
         </ConditionalRender>
 
         <ConditionalRender isRendered={!hasAmendments(amendments) && !validAmendments}>
           <Banner message="The case exception(s) have not been updated within Bichard." />
-          <Paragraph data-testid="example-test-id">
+          <p className="govuk-body" data-testid="example-test-id">
             {"Do you want to submit case details to the PNC and mark the exception(s) as resolved?"}
-          </Paragraph>
+          </p>
         </ConditionalRender>
         <Form action={resubmitCasePath} method="post" csrfToken={csrfToken}>
           <input type="hidden" name="amendments" value={amendments} />

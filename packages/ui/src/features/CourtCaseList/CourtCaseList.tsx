@@ -1,4 +1,3 @@
-import { Paragraph } from "govuk-react"
 import { useRouter } from "next/router"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
@@ -29,7 +28,7 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
     .join("&")
 
   return courtCases.length === 0 ? (
-    <Paragraph>{"There are no court cases to show"}</Paragraph>
+    <p className="govuk-body">{"There are no court cases to show"}</p>
   ) : (
     <table className="cases-list">
       <thead>
