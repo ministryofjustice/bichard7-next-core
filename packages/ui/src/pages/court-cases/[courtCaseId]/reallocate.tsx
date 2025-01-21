@@ -11,7 +11,7 @@ import { PreviousPathContext } from "context/PreviousPathContext"
 import type { Property } from "csstype"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
-import { GridCol, GridRow, Heading } from "govuk-react"
+import { GridCol, GridRow } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -173,9 +173,9 @@ const ReallocateCasePage: NextPage<Props> = ({
                   <Header canReallocate={canReallocate} />
                   <CourtCaseDetailsSummaryBox />
                   <HeaderRow>
-                    <Heading as="h2" size="MEDIUM" aria-label="Reallocate Case">
+                    <h2 className="govuk-heading-m" aria-label="Reallocate Case">
                       {"Case reallocation"}
-                    </Heading>
+                    </h2>
                   </HeaderRow>
                 </HeaderContainer>
                 <ConditionalRender isRendered={lockedByAnotherUser}>
@@ -187,9 +187,7 @@ const ReallocateCasePage: NextPage<Props> = ({
                       <ReallocationNotesForm backLink={backLink} />
                     </GridCol>
                     <GridCol setWidth={userNotesWidth}>
-                      <Heading as="h2" size="SMALL">
-                        {"Previous User Notes"}
-                      </Heading>
+                      <h2 className="govuk-heading-s">{"Previous User Notes"}</h2>
                       <NotesTableContainer className={"notes-table-container"}>
                         <NotesTable displayForce notes={showMore ? userNotes : userNotes.slice(0, 1)} />
                       </NotesTableContainer>

@@ -1,9 +1,10 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Heading, Label, Link, Select, TextArea } from "govuk-react"
+import { BackLink, Button, Fieldset, FormGroup, Label, Link, Select, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -26,7 +27,6 @@ import { validateManualResolution } from "utils/validators/validateManualResolut
 import Form from "../../../components/Form"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -149,9 +149,9 @@ const ResolveCourtCasePage: NextPage<Props> = ({
           </BackLink>
           <HeaderContainer id="header-container">
             <HeaderRow>
-              <Heading as="h1" size="LARGE" aria-label="Resolve Case">
+              <h1 className="govuk-heading-l" aria-label="Resolve Case">
                 {"Resolve Case"}
-              </Heading>
+              </h1>
             </HeaderRow>
           </HeaderContainer>
           <ConditionalRender isRendered={lockedByAnotherUser}>{"Case is locked by another user."}</ConditionalRender>

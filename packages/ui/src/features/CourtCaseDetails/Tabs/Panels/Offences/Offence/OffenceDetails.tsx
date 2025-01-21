@@ -1,13 +1,14 @@
 import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/data/offence-category.json"
 import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { Heading, Table } from "govuk-react"
+import { Table } from "govuk-react"
 import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -20,7 +21,6 @@ import { OffenceDetailsContainer } from "./OffenceDetails.styles"
 import { OffenceNavigation } from "./OffenceNavigation"
 import ResultQualifier from "./ResultQualifier"
 import { StartDate } from "./StartDate"
-import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 
 interface OffenceDetailsProps {
   offence: Offence
@@ -97,9 +97,7 @@ export const OffenceDetails = ({
         onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
       />
-      <Heading as="h3" size="MEDIUM">
-        {`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
-      </Heading>
+      <h3 className="govuk-heading-m">{`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}</h3>
       <div className="offences-table">
         <Table>
           {
@@ -173,9 +171,7 @@ export const OffenceDetails = ({
       </div>
       {qualifierCode && (
         <div className="qualifier-code-table">
-          <Heading as="h4" size="MEDIUM">
-            {"Qualifier"}
-          </Heading>
+          <h4 className="govuk-heading-m">{"Qualifier"}</h4>
           <Table>
             {qualifierErrorPrompt ? (
               <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>

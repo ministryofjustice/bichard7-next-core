@@ -2,7 +2,7 @@ import Layout from "components/Layout"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Heading, HintText, MultiChoice, TextArea } from "govuk-react"
+import { BackLink, Button, Fieldset, FormGroup, HintText, MultiChoice, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -137,10 +137,8 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
           <BackLink href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
             {"Back"}
           </BackLink>
-          <Heading as="h1">{"How can we help?"}</Heading>
-          <Heading as="h2" size="MEDIUM">
-            {"Report an issue"}
-          </Heading>
+          <h1 className="govuk-heading-l">{"How can we help?"}</h1>
+          <h2 className="govuk-heading-m">{"Report an issue"}</h2>
           <p className="govuk-body">
             {"If you are encountering specific technical issues, you should either check our "}
             <a className="govuk-link" href="/help">
@@ -153,9 +151,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             {" for support to raise a ticket. Any issues raised via this page will not be handled."}
           </p>
 
-          <Heading as="h2" size="MEDIUM">
-            {"Share your feedback"}
-          </Heading>
+          <h2 className="govuk-heading-m">{"Share your feedback"}</h2>
 
           <Form method="POST" action={"#"} csrfToken={csrfToken}>
             <p className="govuk-body">
@@ -190,9 +186,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
               </FormGroup>
 
               <FormGroup id="experience">
-                <Heading as="h3" size="SMALL">
-                  {"Rate your experience of using the the new version of Bichard"}
-                </Heading>
+                <h3 className="govuk-heading-s">{"Rate your experience of using the the new version of Bichard"}</h3>
                 <MultiChoice
                   label={""}
                   meta={{
@@ -214,9 +208,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
               </FormGroup>
 
               <FormGroup id="feedback">
-                <Heading as="h3" size="SMALL">
-                  {"Tell us why you gave this rating"}
-                </Heading>
+                <h3 className="govuk-heading-s">{"Tell us why you gave this rating"}</h3>
 
                 <TextArea
                   input={{

@@ -5,7 +5,7 @@ import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
-import { Heading, Table } from "govuk-react"
+import { Table } from "govuk-react"
 import { findExceptions } from "types/ErrorMessages"
 import { ResolutionStatus } from "types/ResolutionStatus"
 import { Exception } from "types/exceptions"
@@ -50,9 +50,7 @@ export const HearingResult = ({
 
   return (
     <>
-      <Heading as="h4" size="MEDIUM">
-        {"Hearing result"}
-      </Heading>
+      <h4 className="govuk-heading-m">{"Hearing result"}</h4>
       <Table>
         {cjsErrorMessage ? (
           <ExceptionFieldTableRow

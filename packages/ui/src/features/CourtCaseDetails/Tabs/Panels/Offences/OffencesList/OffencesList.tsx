@@ -1,5 +1,5 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { Heading, Table } from "govuk-react"
+import { Table } from "govuk-react"
 
 import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 import { OffencesListRow } from "./OffencesListRow"
@@ -12,9 +12,7 @@ interface OffencesListProps {
 export const OffencesList = ({ offences, setDetailedOffenceIndex }: OffencesListProps) => {
   return (
     <div id={"offences"}>
-      <Heading as="h3" size="MEDIUM">
-        {"Offences"}
-      </Heading>
+      <h3 className="govuk-heading-m">{"Offences"}</h3>
       <Table
         head={
           <Table.Row>

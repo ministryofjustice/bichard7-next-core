@@ -7,7 +7,6 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { Heading } from "govuk-react"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
@@ -64,10 +63,8 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   return (
     <HeaderContainer id="header-container">
       <HeaderRow>
-        <Heading className="hidden-header" as="h1" size="LARGE">
-          {"Case details"}
-        </Heading>
-        <Heading as="h2" size="MEDIUM">
+        <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
+        <h2 className="govuk-heading-m">
           {courtCase.defendantName}
           {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
           <Badge
@@ -76,7 +73,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             colour={BadgeColours.Blue}
             className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
           />
-        </Heading>
+        </h2>
         <LockedTagContainer>
           <LockStatusTag
             isRendered={currentUser.hasAccessTo[Permission.Exceptions]}

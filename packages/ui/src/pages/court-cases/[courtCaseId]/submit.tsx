@@ -6,7 +6,7 @@ import Form from "components/Form"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Heading, Link } from "govuk-react"
+import { BackLink, Button, Link } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -137,9 +137,9 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
         </BackLink>
         <HeaderContainer id="header-container">
           <HeaderRow>
-            <Heading as="h1" size="LARGE" aria-label="Submit Exception(s)">
+            <h1 className="govuk-heading-l" aria-label="Submit Exception(s)">
               {"Submit Exception(s)"}
-            </Heading>
+            </h1>
           </HeaderRow>
         </HeaderContainer>
 
