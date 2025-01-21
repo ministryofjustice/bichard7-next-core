@@ -2,13 +2,13 @@ import { forces } from "@moj-bichard7-developers/bichard7-next-data"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, Fieldset, FormGroup, HintText, Label, LabelText, Select, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, Label, LabelText, Select, TextArea } from "govuk-react"
 import Link from "next/link"
 import { FormEventHandler, useState } from "react"
 import getForcesForReallocation from "services/getForcesForReallocation"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
-import { StyledHintText } from "./ReallocationNotesForm.styles"
+import { HintText, HintTextNoMargin } from "./HintText"
 
 interface Props {
   backLink: string
@@ -48,11 +48,11 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
         </FormGroup>
         <FormGroup>
           <Label className="govuk-heading-s">{"Add a note (optional)"}</Label>
-          <StyledHintText className={"no-margin-bottom"}>{"Input reason for case reallocation"}</StyledHintText>
+          <HintTextNoMargin className={"govuk-body-s"}>{"Input reason for case reallocation"}</HintTextNoMargin>
           <TextArea input={{ name: "note", rows: 5, maxLength: MAX_NOTE_LENGTH, onInput: handleOnNoteChange }}>
             {""}
           </TextArea>
-          <HintText>{`You have ${noteRemainingLength} characters remaining`}</HintText>
+          <HintText className="govuk-body-s">{`You have ${noteRemainingLength} characters remaining`}</HintText>
         </FormGroup>
 
         <ButtonsGroup>

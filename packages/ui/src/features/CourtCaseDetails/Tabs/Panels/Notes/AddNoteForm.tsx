@@ -1,7 +1,8 @@
 import ConditionalRender from "components/ConditionalRender"
+import { HintText } from "components/HintText"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, FormGroup, HintText, Label, TextArea } from "govuk-react"
+import { Button, FormGroup, Label, TextArea } from "govuk-react"
 import { FormEvent, FormEventHandler, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import Form from "../../../../../components/Form"
@@ -65,7 +66,7 @@ const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
           >
             {""}
           </TextArea>
-          <HintText>{`You have ${noteRemainingLength} characters remaining`}</HintText>
+          <HintText className={"govuk-body-s"}>{`You have ${noteRemainingLength} characters remaining`}</HintText>
         </FormGroup>
 
         <Button id="add-note-button" type="submit">

@@ -1,8 +1,9 @@
+import { HintText } from "components/HintText"
 import Layout from "components/Layout"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, HintText, MultiChoice, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, MultiChoice, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -226,7 +227,9 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                   {""}
                 </TextArea>
 
-                <HintText>{`You have ${remainingFeedbackLength} characters remaining`}</HintText>
+                <HintText className={"govuk-body-s"}>
+                  {`You have ${remainingFeedbackLength} characters remaining`}
+                </HintText>
               </FormGroup>
 
               <FormGroup>
