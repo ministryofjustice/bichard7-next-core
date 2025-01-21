@@ -1,9 +1,9 @@
 import type postgres from "postgres"
 
-import { type FullUserRow } from "@moj-bichard7/common/types/User"
+import { type User } from "@moj-bichard7/common/types/User"
 
-export default async (sql: postgres.Sql, username: string): Promise<FullUserRow> => {
-  const [user]: [FullUserRow?] = await sql`
+export default async (sql: postgres.Sql, username: string): Promise<User> => {
+  const [user]: [User?] = await sql`
       SELECT
         u.id,
         u.username,

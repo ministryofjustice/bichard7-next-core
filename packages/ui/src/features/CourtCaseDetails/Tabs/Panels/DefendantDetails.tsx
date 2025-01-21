@@ -45,6 +45,7 @@ export const DefendantDetails = () => {
         )}
 
         <TableRow label="PNC Check name" value={defendant.PNCCheckname} />
+        <TableRow label="Court PNCID" value={defendant.CourtPNCIdentifier} />
         <TableRow label="Given name" value={defendant.DefendantDetail?.PersonName.GivenName?.join(", ")} />
         <TableRow label="Family name" value={defendant.DefendantDetail?.PersonName.FamilyName} />
         <TableRow label="Title" value={defendant.DefendantDetail?.PersonName.Title} />

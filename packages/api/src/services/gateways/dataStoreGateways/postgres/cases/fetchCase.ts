@@ -1,8 +1,9 @@
-import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<PartialCaseRow> => {
-  const [result]: [PartialCaseRow?] = await sql`
+import type { CaseDataForDto } from "../../../../../types/CaseDataForDto"
+
+export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<CaseDataForDto> => {
+  const [result]: [CaseDataForDto?] = await sql`
       SELECT
         el.annotated_msg,
         el.asn,

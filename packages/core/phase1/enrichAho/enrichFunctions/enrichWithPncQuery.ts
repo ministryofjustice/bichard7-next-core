@@ -9,8 +9,9 @@ import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/Pn
 import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 import isDummyAsn from "../../../lib/isDummyAsn"
-import { isNotFoundError } from "../../exceptions/generatePncEnquiryExceptionFromMessage"
-import generatePncEnquiryExceptionFromMessage from "../../exceptions/generatePncEnquiryExceptionFromMessage"
+import generatePncEnquiryExceptionFromMessage, {
+  isNotFoundError
+} from "../../exceptions/generatePncEnquiryExceptionFromMessage"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
@@ -29,7 +30,6 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
   const hoDefendant = hoCase.HearingDefendant
   hoDefendant.PNCCheckname = undefined
   hoDefendant.CRONumber = undefined
-  hoDefendant.PNCIdentifier = undefined
 
   hoDefendant.Offence.forEach((offence) => {
     offence.AddedByTheCourt = undefined
@@ -93,6 +93,9 @@ export default async (
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)
 
   if (annotatedHearingOutcome.PncQuery !== undefined) {
+    const { pncId, checkName } = annotatedHearingOutcome.PncQuery
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = pncId
+    annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCCheckname = checkName
     annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator = true
   }
 

@@ -1,10 +1,11 @@
-import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
+
+import type { CaseDataForDto } from "../../../types/CaseDataForDto"
 
 interface DataStoreGateway {
   canCaseBeResubmitted: (username: string, caseId: number, forceIds: number[]) => Promise<boolean>
-  fetchCase: (caseId: number, forceIds: number[]) => Promise<PartialCaseRow>
-  fetchUserByUsername: (username: string) => Promise<FullUserRow>
+  fetchCase: (caseId: number, forceIds: number[]) => Promise<CaseDataForDto>
+  fetchUserByUsername: (username: string) => Promise<User>
 }
 
 export default DataStoreGateway

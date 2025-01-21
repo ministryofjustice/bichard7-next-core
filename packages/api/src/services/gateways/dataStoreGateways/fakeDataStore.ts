@@ -1,6 +1,6 @@
-import type { PartialCaseRow } from "@moj-bichard7/common/types/Case"
-import type { FullUserRow } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 
+import type { CaseDataForDto } from "../../../types/CaseDataForDto"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
 import dummyAho from "../../../tests/fixtures/AnnotatedHO1.json"
@@ -10,7 +10,7 @@ class FakeDataStore implements DataStoreGateway {
     return Promise.resolve(true)
   }
 
-  async fetchCase(_caseId: number, _forceIds: number[]): Promise<PartialCaseRow> {
+  async fetchCase(_caseId: number, _forceIds: number[]): Promise<CaseDataForDto> {
     return Promise.resolve({
       annotated_msg: dummyAho.hearingOutcomeXml,
       asn: "",
@@ -36,10 +36,10 @@ class FakeDataStore implements DataStoreGateway {
       trigger_status: null,
       triggers: [],
       updated_msg: null
-    } satisfies PartialCaseRow)
+    } satisfies CaseDataForDto)
   }
 
-  async fetchUserByUsername(username: string): Promise<FullUserRow> {
+  async fetchUserByUsername(username: string): Promise<User> {
     return Promise.resolve({
       email: "user1@example.com",
       excluded_triggers: null,
@@ -52,7 +52,7 @@ class FakeDataStore implements DataStoreGateway {
       username,
       visible_courts: null,
       visible_forces: ""
-    } satisfies FullUserRow)
+    } satisfies User)
   }
 }
 
