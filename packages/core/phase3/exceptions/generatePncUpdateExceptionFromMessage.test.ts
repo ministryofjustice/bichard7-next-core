@@ -1,7 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
-import generatePncUpdateExceptionFromMessage from "./generatePncUpdateExceptionFromMessage"
+import generatePncUpdateExceptionFromMessage, { isPncLockError } from "./generatePncUpdateExceptionFromMessage"
 
 describe("generatePncUpdateExceptionFromMessage", () => {
   it.each([
@@ -45,5 +45,40 @@ describe("generatePncUpdateExceptionFromMessage", () => {
       path: errorPaths.case.asn,
       message
     })
+  })
+})
+
+describe("isPncLockError", () => {
+  it.each(["PNCUE", "I6001", "I6002"])(
+    "returns true when a HO100404 exception and message contains a '%s' PNC lock error code",
+    (pncLockErrorCode: string) => {
+      const pncException = {
+        code: ExceptionCode.HO100404,
+        path: errorPaths.case.asn,
+        message: `${pncLockErrorCode}: Some PNC lock error message`
+      }
+
+      expect(isPncLockError(pncException)).toBe(true)
+    }
+  )
+
+  it("returns false when a HO100404 exception and message contains a 'PNCAM' PNC error code", () => {
+    const pncException = {
+      code: ExceptionCode.HO100404,
+      path: errorPaths.case.asn,
+      message: "PNCAM: Some PNC error message"
+    }
+
+    expect(isPncLockError(pncException)).toBe(false)
+  })
+
+  it("returns false when not a HO100404 exception", () => {
+    const pncException = {
+      code: ExceptionCode.HO100403,
+      path: errorPaths.case.asn,
+      message: "PNCUE: Some PNC error message"
+    }
+
+    expect(isPncLockError(pncException)).toBe(false)
   })
 })
