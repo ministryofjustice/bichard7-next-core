@@ -1,6 +1,6 @@
 import generateAho from "../../../../test/helpers/generateAho"
 
-describe("reports API endpoint", () => {     
+describe("reports API endpoint", () => {
   describe("GET /reports/*", () => {
     it("returns a 403 if user is not a supervisor", () => {
       cy.loginAs("GeneralHandler")
