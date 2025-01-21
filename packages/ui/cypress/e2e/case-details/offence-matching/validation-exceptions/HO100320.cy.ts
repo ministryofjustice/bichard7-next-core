@@ -20,7 +20,7 @@ describe("Offence matching HO100320", () => {
     cy.task("insertCourtCasesWithFields", [fields])
 
     loginAndVisit()
-    cy.get("a[class*='Link']").contains(fields.defendantName).click()
+    cy.get("a.defendant-name").contains(fields.defendantName).click()
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
 
     cy.get("#offences tbody tr:nth-child(5)").contains("Text Text Text").click()
