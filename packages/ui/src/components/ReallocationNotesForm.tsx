@@ -2,7 +2,8 @@ import { forces } from "@moj-bichard7-developers/bichard7-next-data"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, Fieldset, FormGroup, HintText, Label, LabelText, Link, Select, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, HintText, Label, LabelText, Select, TextArea } from "govuk-react"
+import Link from "next/link"
 import { FormEventHandler, useState } from "react"
 import getForcesForReallocation from "services/getForcesForReallocation"
 import ButtonsGroup from "./ButtonsGroup"
@@ -58,7 +59,9 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
           <Button id="Reallocate" type="submit">
             {"Reallocate Case"}
           </Button>
-          <Link href={backLink}>{"Cancel"}</Link>
+          <Link href={backLink} className="govuk-link">
+            {"Cancel"}
+          </Link>
         </ButtonsGroup>
       </Fieldset>
     </Form>

@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { GridCol, GridRow, Link } from "govuk-react"
+import { GridCol, GridRow } from "govuk-react"
 import Accordion from "../Accordion"
 import Badge, { BadgeColours } from "../Badge"
 import { ExceptionRow } from "./Exception.styles"
@@ -48,9 +48,14 @@ const PncException = ({ code, message }: Props) => {
               </InsetText>
             </Accordion>
           )}
-          <Link href={`/help/bichard-functionality/exceptions/resolution.html#${code}`} target="_blank">
+          <a
+            className="govuk-link"
+            rel="noreferrer noopener"
+            href={`/help/bichard-functionality/exceptions/resolution.html#${code}`}
+            target="_blank"
+          >
             {"More information"}
-          </Link>
+          </a>
         </GridCol>
       </GridRow>
     </ExceptionRow>

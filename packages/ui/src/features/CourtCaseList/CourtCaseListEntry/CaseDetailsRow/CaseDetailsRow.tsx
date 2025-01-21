@@ -2,7 +2,7 @@ import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import ResolutionStatusBadge from "features/CourtCaseList/tags/ResolutionStatusBadge"
-import { Link, Table } from "govuk-react"
+import { Table } from "govuk-react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { JSX, useState } from "react"
@@ -10,9 +10,9 @@ import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
 import { LOCKED_ICON_URL } from "utils/icons"
 import { ResolutionStatus } from "../../../../types/ResolutionStatus"
+import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow.styles"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
-import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow.styles"
 
 interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase
@@ -50,13 +50,13 @@ export const CaseDetailsRow = ({
           </ConditionalRender>
         </Table.Cell>
         <Table.Cell>
-          <Link href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name">
+          <a href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name govuk-link">
             {defendantName}
             <br />
             <CaseListResolutionStatusBadgeWrapper>
               <ResolutionStatusBadge resolutionStatus={resolutionStatus} />
             </CaseListResolutionStatusBadgeWrapper>
-          </Link>
+          </a>
         </Table.Cell>
         <Table.Cell>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />

@@ -4,10 +4,11 @@ import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Label, Link, Select, TextArea } from "govuk-react"
+import { BackLink, Button, Fieldset, FormGroup, Label, Select, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
@@ -130,7 +131,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
-  let backLink = `${basePath}/court-cases/${courtCase.errorId}`
+  let backLink = `/court-cases/${courtCase.errorId}`
 
   if (previousPath) {
     backLink += `?previousPath=${encodeURIComponent(previousPath)}`
@@ -144,7 +145,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
             <title>{"Bichard7 | Resolve Case"}</title>
             <meta name="description" content="Bichard7 | Resolve Case" />
           </Head>
-          <BackLink href={backLink} onClick={function noRefCheck() {}}>
+          <BackLink href={`${basePath}${backLink}`} onClick={function noRefCheck() {}}>
             {"Case Details"}
           </BackLink>
           <HeaderContainer id="header-container">
@@ -194,7 +195,9 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                   <Button id="Resolve" type="submit">
                     {"Resolve"}
                   </Button>
-                  <Link href={backLink}>{"Cancel"}</Link>
+                  <Link href={backLink} className="govuk-link">
+                    {"Cancel"}
+                  </Link>
                 </ButtonsGroup>
               </Fieldset>
             </Form>

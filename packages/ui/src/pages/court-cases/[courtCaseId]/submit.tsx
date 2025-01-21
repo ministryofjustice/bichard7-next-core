@@ -6,10 +6,11 @@ import Form from "components/Form"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Link } from "govuk-react"
+import { BackLink, Button } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
@@ -118,7 +119,8 @@ interface Props {
 const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, amendments, csrfToken }: Props) => {
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
-  let backLink = `${basePath}/court-cases/${courtCase.errorId}`
+
+  let backLink = `/court-cases/${courtCase.errorId}`
   if (previousPath) {
     backLink += `?previousPath=${encodeURIComponent(previousPath)}`
   }
@@ -132,7 +134,7 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
           <title>{"Bichard7 | Submit Case Exception(s)"}</title>
           <meta name="description" content="Bichard7 | Submit Case Exception(s)" />
         </Head>
-        <BackLink href={backLink} onClick={function noRefCheck() {}}>
+        <BackLink href={`${basePath}${backLink}`} onClick={function noRefCheck() {}}>
           {"Case Details"}
         </BackLink>
         <HeaderContainer id="header-container">
@@ -161,7 +163,9 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
             <Button id="confirm-submit" type="submit">
               {"Submit exception(s)"}
             </Button>
-            <Link href={backLink}>{"Cancel"}</Link>
+            <Link className="govuk-link" href={backLink}>
+              {"Cancel"}
+            </Link>
           </ButtonsGroup>
         </Form>
       </Layout>

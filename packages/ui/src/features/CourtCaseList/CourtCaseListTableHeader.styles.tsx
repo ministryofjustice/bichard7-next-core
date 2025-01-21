@@ -1,4 +1,4 @@
-import { Link, Table } from "govuk-react"
+import { Table } from "govuk-react"
 import styled from "styled-components"
 import { blue } from "utils/colours"
 
@@ -10,7 +10,7 @@ const HeaderCell = styled(Table.CellHeader)`
   vertical-align: bottom;
   border-color: var(--border-input);
 `
-const HeaderLink = styled(Link)`
+const HeaderLink = styled.a`
   color: ${blue};
   display: flex;
   align-items: center;

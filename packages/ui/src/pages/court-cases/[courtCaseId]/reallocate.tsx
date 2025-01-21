@@ -15,7 +15,6 @@ import { GridCol, GridRow } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
@@ -110,8 +109,6 @@ const ReallocateCasePage: NextPage<Props> = ({
   previousPath,
   canReallocate
 }: Props) => {
-  const { basePath } = useRouter()
-
   const [showMore, setShowMore] = useState<boolean>(false)
   const [reallocateFormWidth, setReallocateFormWidth] = useState<string>("two-thirds")
   const [userNotesWidth, setUserNotesWidth] = useState<string>("one-third")
@@ -121,7 +118,7 @@ const ReallocateCasePage: NextPage<Props> = ({
 
   const notes: DisplayNote[] = courtCase.notes
 
-  let backLink = `${basePath}/court-cases/${courtCase.errorId}`
+  let backLink = `/court-cases/${courtCase.errorId}`
 
   if (previousPath) {
     backLink += `?previousPath=${encodeURIComponent(previousPath)}`
