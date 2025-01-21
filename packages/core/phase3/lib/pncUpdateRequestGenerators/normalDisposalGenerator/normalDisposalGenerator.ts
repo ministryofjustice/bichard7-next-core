@@ -43,16 +43,8 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
   }
 
   const couPsaCourtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
-  if (isError(couPsaCourtCode)) {
-    return couPsaCourtCode
-  }
-
   const nextResultSourceOrganisation = getNextResultSourceOrganisationFromOffences(offences)
   const crtPsaCourtCode = getPncCourtCode(nextResultSourceOrganisation, hearing.CourtHouseCode)
-  if (isError(crtPsaCourtCode)) {
-    return crtPsaCourtCode
-  }
-
   const courtDate = crtPsaCourtCode ? getNextHearingDateFromOffences(offences) : undefined
   const pendingCourtHouseName =
     crtPsaCourtCode === COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR ? COURT_TYPE_NOT_AVAILABLE : ""
