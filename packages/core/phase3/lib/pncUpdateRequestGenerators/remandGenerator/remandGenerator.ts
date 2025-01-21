@@ -33,15 +33,7 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
     pncRemandStatus === "C" ? [] : hearingDefendant.BailConditions.flatMap(addPaddingToBailCondition)
 
   const remandCourtCode = getRemandCourtCode(hearing, results)
-  if (isError(remandCourtCode)) {
-    return remandCourtCode
-  }
-
   const psaCourtCode = getPsaCourtCode(hearing, results)
-  if (isError(psaCourtCode)) {
-    return psaCourtCode
-  }
-
   const courtHouseName = getCourtHouseName(hearing, results)
   const [courtNameType1, courtNameType2] = generateCourtNameTypes(
     psaCourtCode,

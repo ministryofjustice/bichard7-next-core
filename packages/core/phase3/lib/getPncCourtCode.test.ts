@@ -74,37 +74,6 @@ describe("getPncCourtCode", () => {
     expect(pncCourtCodes).toBe("")
   })
 
-  it("Should check that the 'thirdLevelPsaCode' isNaN", () => {
-    const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.Mock
-
-    mockedLookupOrganisationUnitByCode.mockReturnValue({
-      bottomLevelCode: "00",
-      bottomLevelName: "",
-      secondLevelCode: "20",
-      secondLevelName: "West Midlands",
-      thirdLevelCode: "BN",
-      thirdLevelName: "Birmingham Youth Court (Steelehouse Lane)",
-      thirdLevelPsaCode: "I'm not a number",
-      topLevelCode: "B",
-      topLevelName: "Magistrates' Courts"
-    })
-
-    const ouCodes = {
-      TopLevelCode: "B",
-      SecondLevelCode: "20",
-      ThirdLevelCode: "BN",
-      BottomLevelCode: "00",
-      OrganisationUnitCode: "B20BN00"
-    } as unknown as OrganisationUnitCodes
-
-    const courtHouseCode = 4001
-
-    const error = getPncCourtCode(ouCodes, courtHouseCode)
-
-    expect(error).toBeInstanceOf(Error)
-    expect((error as Error).message).toBe("PSA code 'I'm not a number' is not a number")
-  })
-
   it("Should return a youth court code if the courtHouse code is greater than 4000 and third level code is less than 4000", () => {
     const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.Mock
 

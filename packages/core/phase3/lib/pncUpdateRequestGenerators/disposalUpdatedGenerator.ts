@@ -25,17 +25,12 @@ const disposalUpdatedGenerator: PncUpdateRequestGenerator<PncOperation.DISPOSAL_
     return formattedCourtCaseReference
   }
 
-  const courtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
-  if (isError(courtCode)) {
-    return courtCode
-  }
-
   return {
     operation: PncOperation.DISPOSAL_UPDATED,
     request: {
       ...generateBasePncUpdateRequest(pncUpdateDataset),
       courtCaseReferenceNumber: formattedCourtCaseReference,
-      courtCode,
+      courtCode: getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, courtCaseReference),
       hearingType: DISPOSAL_UPDATED_HEARING_TYPE
