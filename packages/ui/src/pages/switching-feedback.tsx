@@ -2,7 +2,6 @@ import Layout from "components/Layout"
 import LinkButton from "components/LinkButton"
 import { SkipLink, SwitchingFeedbackButtonContainer } from "components/SwitchingFeedbackHeader/Links.styles"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -108,9 +107,9 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
           <meta name="description" content="Bichard7 | User switching version feedback" />
         </Head>
 
-        <BackLink href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
+        <a className="govuk-back-link" href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
           {"Back"}
-        </BackLink>
+        </a>
 
         <h1 className="govuk-heading-l">{"Share your feedback"}</h1>
 

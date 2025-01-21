@@ -2,7 +2,7 @@ import Layout from "components/Layout"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, HintText, MultiChoice, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, HintText, MultiChoice, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -134,9 +134,9 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             <title>{"Bichard7 | Report an issue"}</title>
             <meta name="description" content="Bichard7 | User feedback" />
           </Head>
-          <BackLink href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
+          <a className="govuk-back-link" href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
             {"Back"}
-          </BackLink>
+          </a>
           <h1 className="govuk-heading-l">{"How can we help?"}</h1>
           <h2 className="govuk-heading-m">{"Report an issue"}</h2>
           <p className="govuk-body">

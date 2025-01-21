@@ -4,7 +4,7 @@ import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Label, Select, TextArea } from "govuk-react"
+import { Button, Fieldset, FormGroup, Label, Select, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -145,9 +145,9 @@ const ResolveCourtCasePage: NextPage<Props> = ({
             <title>{"Bichard7 | Resolve Case"}</title>
             <meta name="description" content="Bichard7 | Resolve Case" />
           </Head>
-          <BackLink href={`${basePath}${backLink}`} onClick={function noRefCheck() {}}>
+          <a className="govuk-back-link" href={`${basePath}${backLink}`} onClick={function noRefCheck() {}}>
             {"Case Details"}
-          </BackLink>
+          </a>
           <HeaderContainer id="header-container">
             <HeaderRow>
               <h1 className="govuk-heading-l" aria-label="Resolve Case">
