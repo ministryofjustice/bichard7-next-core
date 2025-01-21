@@ -1,0 +1,1 @@
+process.env.DELAY_FOR_PNC_LOCK_ERROR_RETRY = "0"

@@ -73,7 +73,7 @@ export const checkAuditLogRecordExists = async (context: Bichard, correlationId:
     .catch((error) => error)
 
   if (!isError(result)) {
-    return
+    return result
   }
 
   throw new Error(`Could not find audit log with external correlation ID: ${correlationId}`)

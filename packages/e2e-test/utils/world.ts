@@ -35,6 +35,7 @@ class Bichard extends World {
   featureUri: string
   recordId: string
   mocks: PncMock[]
+  correlationIds: string[] = []
 
   constructor() {
     super({} as IWorldOptions)

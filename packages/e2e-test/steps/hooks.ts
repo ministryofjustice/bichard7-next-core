@@ -76,5 +76,10 @@ export const setupHooks = () => {
         await fs.promises.writeFile(outFile, formatted)
       })
     }
+
+    if (status === "FAILED") {
+      console.log("\nCorrelation IDs:")
+      this.correlationIds.forEach((correlationId: string) => console.log(`- ${correlationId}`))
+    }
   })
 }
