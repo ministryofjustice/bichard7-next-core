@@ -25,17 +25,12 @@ const sentenceDeferredGenerator: PncUpdateRequestGenerator<PncOperation.SENTENCE
     return formattedCourtCaseReference
   }
 
-  const courtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
-  if (isError(courtCode)) {
-    return courtCode
-  }
-
   return {
     operation: PncOperation.SENTENCE_DEFERRED,
     request: {
       ...generateBasePncUpdateRequest(pncUpdateDataset),
       courtCaseReferenceNumber: formattedCourtCaseReference,
-      courtCode,
+      courtCode: getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       hearingDetails: generateHearingsAndDisposals(pncUpdateDataset, courtCaseReference),
       hearingType: SENTENCE_DEFERRED_HEARING_TYPE
