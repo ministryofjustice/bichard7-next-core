@@ -8,7 +8,6 @@ import AppliedFilters from "features/CourtCaseFilters/AppliedFilters"
 import CourtCaseFilter from "features/CourtCaseFilters/CourtCaseFilter"
 import CourtCaseWrapper from "features/CourtCaseFilters/CourtCaseFilterWrapper"
 import CourtCaseList from "features/CourtCaseList/CourtCaseList"
-import { Main } from "govuk-react"
 import { isEqual } from "lodash"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -226,7 +225,6 @@ const Home: NextPage<Props> = (props) => {
       <CsrfTokenContext.Provider value={csrfTokenContext}>
         <CurrentUserContext.Provider value={currentUserContext}>
           <Layout bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}>
-            <Main />
             <CourtCaseWrapper
               filter={<CourtCaseFilter {...searchParams} />}
               appliedFilters={<AppliedFilters filters={{ ...searchParams }} />}
