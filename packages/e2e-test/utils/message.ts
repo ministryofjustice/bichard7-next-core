@@ -19,6 +19,7 @@ const uploadToS3 = async (context: Bichard, message: string, correlationId: stri
 const sendMsg = async function (world: Bichard, messagePath: string) {
   const rawMessage = await fs.promises.readFile(messagePath)
   const correlationId = `CID-${randomUUID()}`
+  world.correlationIds.push(correlationId)
   let messageData = rawMessage.toString().replace("EXTERNAL_CORRELATION_ID", correlationId)
   world.setCorrelationId(correlationId)
   if (world.config.parallel) {
