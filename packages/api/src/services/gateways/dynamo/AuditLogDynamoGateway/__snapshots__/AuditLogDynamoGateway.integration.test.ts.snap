@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuditLogDynamoGateway createManyUserEvents should insert multiple user events 1`] = `
+{
+  "_": "_",
+  "_automationReport": 0,
+  "_topExceptionsReport": 0,
+  "attributes": {
+    "Attribute 1": {
+      "_compressedValue": "eJztxzENACAMADArs4AEpIzAwUuGf4TQfu1VZ49bK1rMrOzu7u7u7u7u7u7u7u7u7u4f/gG7Ejmy",
+    },
+    "Attribute 2": "Attribute 2 data",
+  },
+  "category": "information",
+  "eventCode": "dummy.event.code",
+  "eventSource": "Test",
+  "eventSourceQueueName": "Test event source queue name",
+  "eventType": "Test event",
+  "eventXml": {
+    "_compressedValue": "eJztxzENACAMADArEzUL+4CHhSAfA0hov2btjjq1Ou4caWZmZmZmZmZmZmZmZmafPZI4ZrM=",
+  },
+  "timestamp": "2023-01-11T12:51:49.678Z",
+  "user": "User 1",
+}
+`;
+
+exports[`AuditLogDynamoGateway createManyUserEvents should insert multiple user events 2`] = `
+{
+  "_": "_",
+  "_automationReport": 0,
+  "_topExceptionsReport": 0,
+  "attributes": {
+    "Attribute 1": {
+      "_compressedValue": "eJztxzENACAMADArs4AEpIzAwUuGf4TQfu1VZ49bK1rMrOzu7u7u7u7u7u7u7u7u7u4f/gG7Ejmy",
+    },
+    "Attribute 2": "Attribute 2 data",
+  },
+  "category": "information",
+  "eventCode": "dummy.event.code",
+  "eventSource": "Test",
+  "eventSourceQueueName": "Test event source queue name",
+  "eventType": "Test event",
+  "eventXml": {
+    "_compressedValue": "eJztxzENACAMADArEzUL+4CHhSAfA0hov2btjjq1Ou4caWZmZmZmZmZmZmZmZmafPZI4ZrM=",
+  },
+  "timestamp": "2023-01-11T12:51:49.678Z",
+  "user": "User 2",
+}
+`;
