@@ -78,8 +78,8 @@ export const setupHooks = () => {
     }
 
     if (status === "FAILED") {
-      console.log("Correlation IDs:")
-      this.correlationIds.forEach((correlationId: string) => console.log(correlationId))
+      console.log("\nCorrelation IDs:")
+      this.correlationIds.forEach((correlationId: string) => console.log(`- ${correlationId}`))
     }
   })
 }
