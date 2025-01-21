@@ -1,0 +1,7 @@
+export { default as DynamoGateway } from "./DynamoGateway"
+export { default as FetchByIndexOptions } from "./FetchByIndexOptions"
+export { default as GetManyOptions } from "./GetManyOptions"
+export { default as IndexSearcher } from "./IndexSearcher"
+export { default as KeyComparison } from "./KeyComparison"
+export { default as Pagination } from "./Pagination"
+export { default as UpdateOptions } from "./UpdateOptions"
