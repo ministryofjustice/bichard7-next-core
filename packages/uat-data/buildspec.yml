@@ -9,4 +9,4 @@ phases:
       - npm install -g ts-node
   build:
     commands:
-      - S3_INCOMING_MESSAGE_BUCKET=$INCOMING_MESSAGE_BUCKET REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
+      - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
