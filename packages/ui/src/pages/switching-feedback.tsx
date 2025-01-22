@@ -1,5 +1,5 @@
+import { LinkButton } from "components/Buttons"
 import Layout from "components/Layout"
-import LinkButton from "components/LinkButton"
 import { SkipLink, SwitchingFeedbackButtonContainer } from "components/SwitchingFeedbackHeader/Links.styles"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
@@ -16,7 +16,6 @@ import AuthenticationServerSidePropsContext from "types/AuthenticationServerSide
 import { isError } from "types/Result"
 import { SurveyFeedbackType, SwitchingFeedbackResponse } from "types/SurveyFeedback"
 import { DisplayFullUser } from "types/display/Users"
-import { gdsBlack, gdsGreen, gdsWhite } from "utils/colours"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
@@ -125,14 +124,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
           <li>{"any other reason"}</li>
         </ul>
         <SwitchingFeedbackButtonContainer>
-          <LinkButton
-            href={emailHref}
-            className="b7-switching-feedback-button"
-            buttonColour={gdsGreen}
-            buttonTextColour={gdsWhite}
-            buttonShadowColour={gdsBlack}
-            onClick={handleSendEmailClick}
-          >
+          <LinkButton href={emailHref} className="b7-switching-feedback-button" onClick={handleSendEmailClick}>
             {"Send feedback email"}
           </LinkButton>
           <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>

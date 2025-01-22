@@ -2,7 +2,6 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
-import LinkButton from "components/LinkButton"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
@@ -10,9 +9,9 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
+import { LinkButton } from "components/Buttons"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
-import { gdsLightGrey, gdsMidGrey, textPrimary } from "utils/colours"
 import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
@@ -90,13 +89,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
       <ButtonContainer>
         <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-          <LinkButton
-            href={reallocatePath}
-            className="b7-reallocate-button"
-            buttonColour={gdsLightGrey}
-            buttonTextColour={textPrimary}
-            buttonShadowColour={gdsMidGrey}
-          >
+          <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
             {"Reallocate Case"}
           </LinkButton>
         </ConditionalRender>
