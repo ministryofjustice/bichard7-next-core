@@ -5,7 +5,7 @@ import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, Label, Select } from "govuk-react"
+import { Button, Fieldset, FormGroup, Select } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -161,7 +161,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
             <Form method="POST" action="#" csrfToken={csrfToken}>
               <Fieldset>
                 <FormGroup>
-                  <Label>{"Select a reason"}</Label>
+                  <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
                   <Select
                     input={{
                       name: "reason"
