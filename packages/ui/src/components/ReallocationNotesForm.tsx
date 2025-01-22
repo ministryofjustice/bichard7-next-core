@@ -2,7 +2,7 @@ import { forces } from "@moj-bichard7-developers/bichard7-next-data"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, Select } from "govuk-react"
+import { Button } from "govuk-react"
 import Link from "next/link"
 import { FormEventHandler, useState } from "react"
 import getForcesForReallocation from "services/getForcesForReallocation"
@@ -32,15 +32,16 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
           <label className="govuk-label govuk-label--s">{"Current force owner"}</label>
           <span className="govuk-body-m">{`${currentForce?.code} - ${currentForce?.name}`}</span>
         </div>
+
         <div className="govuk-form-group">
           <label className="govuk-label govuk-label--s">{"New force owner"}</label>
-          <Select input={{ name: "force" }} label={""}>
+          <select className="govuk-select" name="force">
             {forcesForReallocation.map(({ code, name }) => (
               <option key={code} value={code}>
                 {`${code} - ${name}`}
               </option>
             ))}
-          </Select>
+          </select>
         </div>
 
         <NoteTextArea

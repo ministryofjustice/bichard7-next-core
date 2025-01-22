@@ -5,7 +5,7 @@ import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Select } from "govuk-react"
+import { Button } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -162,12 +162,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
               <fieldset className="govuk-fieldset">
                 <div className={"govuk-form-group"}>
                   <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
-                  <Select
-                    input={{
-                      name: "reason"
-                    }}
-                    label={""}
-                  >
+                  <select className="govuk-select" name="reason">
                     {Object.keys(ResolutionReasons).map((reason) => {
                       return (
                         <option selected={selectedReason === reason} key={reason} value={reason}>
@@ -175,7 +170,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                         </option>
                       )
                     })}
-                  </Select>
+                  </select>
                 </div>
 
                 <NoteTextArea
