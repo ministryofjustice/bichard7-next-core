@@ -1,34 +1,42 @@
-import type { ApiAuditLogEvent, DynamoAuditLogEvent } from "./AuditLogEvent"
-import type AuditLogStatus from "./AuditLogStatus"
+import z from "zod"
 
-export type DynamoAuditLog = Omit<OutputApiAuditLog, "events"> & {
-  errorRecordArchivalDate?: string
-  events: DynamoAuditLogEvent[]
-  eventsCount: number
-  expiryTime?: string
-  retryCount?: number
-  version: number
-}
+import { ApiAuditLogEventSchema, DynamoAuditLogEventSchema } from "./AuditLogEvent"
+import AuditLogStatus from "./AuditLogStatus"
 
-export type InputApiAuditLog = {
-  caseId: string
-  createdBy: string
-  externalCorrelationId: string
-  externalId?: string
-  isSanitised: number // TODO: Move into the Dynamo type and make the tests use the Gateway instead of the API
-  messageHash: string
-  messageId: string //TODO: Move into the Output type and make the create handler return the ID
-  nextSanitiseCheck?: string // TODO: Move into the Dynamo type and make the tests use the Gateway instead of the API
-  receivedDate: string
-  s3Path?: string
-  status?: AuditLogStatus
-  stepExecutionId?: string
-  systemId?: string
-}
+export const InputApiAuditLogSchema = z.object({
+  caseId: z.string(),
+  createdBy: z.string(),
+  externalCorrelationId: z.string(),
+  externalId: z.string().optional(),
+  messageHash: z.string(),
+  messageId: z.string(),
+  receivedDate: z.string().datetime(),
+  s3Path: z.string().optional(),
+  systemId: z.string().optional()
+})
 
-export type OutputApiAuditLog = InputApiAuditLog & {
-  events: ApiAuditLogEvent[]
-  forceOwner?: number
-  pncStatus: string
-  triggerStatus: string
-}
+export type InputApiAuditLog = z.infer<typeof InputApiAuditLogSchema>
+
+export const OutputApiAuditLogSchema = InputApiAuditLogSchema.extend({
+  events: z.array(ApiAuditLogEventSchema),
+  forceOwner: z.number().optional(),
+  pncStatus: z.string(),
+  status: z.string(),
+  triggerStatus: z.string()
+})
+
+export type OutputApiAuditLog = z.infer<typeof OutputApiAuditLogSchema>
+
+export const DynamoAuditLogSchema = OutputApiAuditLogSchema.omit({ events: true }).extend({
+  errorRecordArchivalDate: z.string().optional(),
+  events: z.array(DynamoAuditLogEventSchema),
+  eventsCount: z.number(),
+  expiryTime: z.string().optional(),
+  isSanitised: z.number(),
+  nextSanitiseCheck: z.string(),
+  retryCount: z.number().optional(),
+  status: z.nativeEnum(AuditLogStatus),
+  version: z.number()
+})
+
+export type DynamoAuditLog = z.infer<typeof DynamoAuditLogSchema>

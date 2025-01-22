@@ -1,8 +1,9 @@
+import type EventCategory from "@moj-bichard7/common/types/EventCategory"
+
 import { randomUUID } from "crypto"
 
 import type { DynamoAuditLog, InputApiAuditLog, OutputApiAuditLog } from "../../types/AuditLog"
 import type { ApiAuditLogEvent, DynamoAuditLogEvent, DynamoAuditLogUserEvent } from "../../types/AuditLogEvent"
-import type EventCategory from "../../types/EventCategory"
 
 import AuditLogStatus from "../../types/AuditLogStatus"
 import PncStatus from "../../types/PncStatus"
@@ -13,13 +14,10 @@ export const mockInputApiAuditLog = (overrides: Partial<InputApiAuditLog> = {}):
   createdBy: "Create audit log test",
   externalCorrelationId: randomUUID(),
   externalId: randomUUID(),
-  isSanitised: 0,
   messageHash: randomUUID(),
   messageId: randomUUID(),
-  nextSanitiseCheck: new Date().toISOString(),
   receivedDate: new Date().toISOString(),
   s3Path: "2022/01/18/09/01/message.xml",
-  stepExecutionId: randomUUID(),
   systemId: "System",
   ...overrides
 })
@@ -28,7 +26,7 @@ export const mockOutputApiAuditLog = (overrides: Partial<OutputApiAuditLog> = {}
   ...mockInputApiAuditLog(overrides),
   events: [],
   pncStatus: PncStatus.Processing,
-  status: AuditLogStatus.processing,
+  status: AuditLogStatus.Processing,
   triggerStatus: TriggerStatus.NoTriggers,
   ...overrides
 })
@@ -38,6 +36,8 @@ export const mockDynamoAuditLog = (overrides: Partial<DynamoAuditLog> = {}): Dyn
   events: [],
   eventsCount: 0,
   isSanitised: 0,
+  nextSanitiseCheck: new Date().toISOString(),
+  status: overrides.status ?? AuditLogStatus.Processing,
   version: 0,
   ...overrides
 })

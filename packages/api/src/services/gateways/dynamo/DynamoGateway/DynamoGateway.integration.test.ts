@@ -2,13 +2,13 @@ import type { DocumentClient, GetItemOutput } from "aws-sdk/clients/dynamodb"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type TransactionFailedError from "../../../../types/TransactionFailedError"
+import type TransactionFailedError from "../../../../types/errors/TransactionFailedError"
 import type FetchByIndexOptions from "./FetchByIndexOptions"
 import type GetManyOptions from "./GetManyOptions"
 import type UpdateOptions from "./UpdateOptions"
 
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
-import TestDynamoGateway from "../TestDynamoGateway/TestDynamoGateway"
+import TestDynamoGateway from "../../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import DynamoGateway from "./DynamoGateway"
 
 auditLogDynamoConfig.auditLogTableName = "DynamoGatewayTesting"

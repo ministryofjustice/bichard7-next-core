@@ -46,7 +46,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
 
   readonly eventsTableKey: string = "_id"
 
-  constructor(private readonly config: DynamoDbConfig) {
+  constructor(readonly config: DynamoDbConfig) {
     super(config)
   }
 

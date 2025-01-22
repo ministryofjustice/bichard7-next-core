@@ -2,7 +2,7 @@ import type { CreateTableOutput, DocumentClient } from "aws-sdk/clients/dynamodb
 
 import type { SecondaryIndex } from "./SecondaryIndex"
 
-import DynamoGateway from "../DynamoGateway/DynamoGateway"
+import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import getTableAttributes from "./getTableAttributes"
 import getTableIndexes from "./getTableIndexes"
 import Poller from "./Poller"
@@ -17,7 +17,12 @@ interface CreateTableOptions {
 
 type KeyValue = boolean | number | string
 
-export default class TestDynamoGateway extends DynamoGateway {
+export default class TestDynamoGateway extends AuditLogDynamoGateway {
+  async clearDynamo(): Promise<void> {
+    await this.deleteAll(this.config.auditLogTableName, this.auditLogTableKey)
+    await this.deleteAll(this.config.eventsTableName, this.eventsTableKey)
+  }
+
   async createTable(tableName: string, options: CreateTableOptions): Promise<CreateTableOutput | undefined> {
     const { keyName, secondaryIndexes, skipIfExists, sortKey } = options
 
