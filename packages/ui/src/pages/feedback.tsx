@@ -188,7 +188,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
               </div>
 
               <div className={"govuk-form-group"} id="experience">
-                <h3 className="govuk-heading-s">{"Rate your experience of using the the new version of Bichard"}</h3>
+                <h3 className="govuk-heading-s">{"Rate your experience of using the new version of Bichard"}</h3>
                 <MultiChoice
                   label={""}
                   meta={{
