@@ -2,7 +2,7 @@ import { forces } from "@moj-bichard7-developers/bichard7-next-data"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, Fieldset, FormGroup, Select } from "govuk-react"
+import { Button, FormGroup, Select } from "govuk-react"
 import Link from "next/link"
 import { FormEventHandler, useState } from "react"
 import getForcesForReallocation from "services/getForcesForReallocation"
@@ -27,7 +27,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
 
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""}>
-      <Fieldset>
+      <fieldset className="govuk-fieldset">
         <FormGroup>
           <label className="govuk-label govuk-label--s">{"Current force owner"}</label>
           <span className="govuk-body-m">{`${currentForce?.code} - ${currentForce?.name}`}</span>
@@ -60,7 +60,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
             {"Cancel"}
           </Link>
         </ButtonsGroup>
-      </Fieldset>
+      </fieldset>
     </Form>
   )
 }

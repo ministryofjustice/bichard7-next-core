@@ -5,7 +5,7 @@ import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, Select } from "govuk-react"
+import { Button, FormGroup, Select } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -159,7 +159,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
           <ConditionalRender isRendered={lockedByAnotherUser}>{"Case is locked by another user."}</ConditionalRender>
           <ConditionalRender isRendered={!lockedByAnotherUser}>
             <Form method="POST" action="#" csrfToken={csrfToken}>
-              <Fieldset>
+              <fieldset className="govuk-fieldset">
                 <FormGroup>
                   <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
                   <Select
@@ -193,7 +193,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                     {"Cancel"}
                   </Link>
                 </ButtonsGroup>
-              </Fieldset>
+              </fieldset>
             </Form>
           </ConditionalRender>
         </Layout>

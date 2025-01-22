@@ -3,7 +3,7 @@ import { NoteTextArea } from "components/NoteTextArea"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, Fieldset, FormGroup, MultiChoice } from "govuk-react"
+import { Button, FormGroup, MultiChoice } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -160,7 +160,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                 "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
               }
             </p>
-            <Fieldset>
+            <fieldset className="govuk-fieldset">
               <FormGroup id="isAnonymous">
                 <MultiChoice
                   label="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
@@ -224,7 +224,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
               <FormGroup>
                 <Button type="submit">{"Send feedback and continue"}</Button>
               </FormGroup>
-            </Fieldset>
+            </fieldset>
           </Form>
         </Layout>
       </CurrentUserContext.Provider>
