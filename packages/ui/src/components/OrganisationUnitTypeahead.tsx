@@ -1,7 +1,6 @@
 import axios from "axios"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
-import { Input } from "govuk-react"
 import { useCallback, useEffect, useState } from "react"
 import OrganisationUnitApiResponse from "../types/OrganisationUnitApiResponse"
 import { isError } from "../types/Result"
@@ -81,7 +80,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
 
   return (
     <div>
-      <Input
+      <input
         {...getInputProps({
           className: "govuk-input",
           id: "next-hearing-location",
