@@ -1,6 +1,12 @@
 version: 0.2
 
 phases:
+  install:
+      runtime-versions:
+        nodejs: 20
+      commands:
+        - npm install
+        - npm install -g ts-node
   build:
     commands:
-      - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat npx ts-node ./packages/uat-data/scripts/insert-uat-data.ts
+      - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
