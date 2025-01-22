@@ -4,4 +4,3 @@ phases:
   build:
     commands:
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat npx ts-node ./packages/uat-data/scripts/insert-uat-data.ts
-
