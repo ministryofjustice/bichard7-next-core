@@ -49,7 +49,7 @@ export const NoteTextArea = ({
         id={`id-${name}`}
         rows={5}
         maxLength={maxLength}
-        onInput={handleOnNoteChange ? handleOnNoteChange : undefined}
+        onInput={handleOnNoteChange}
         defaultValue={defaultValue}
       />
 

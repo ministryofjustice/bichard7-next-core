@@ -19,9 +19,9 @@ const InputField: React.FC<EditableInputFieldProps> = ({ value, inputLabel, hint
       <Label className="govuk-label">
         {inputLabel}
         {hintText &&
-          hintText.split("\\n").map((hint, key) => {
+          hintText.split("\\n").map((hint) => {
             return (
-              <HintText className={"govuk-body-s"} key={key}>
+              <HintText className={"govuk-body-s"} key={hint}>
                 {hint}
               </HintText>
             )
