@@ -1,17 +1,12 @@
 #!/usr/bin/env node
-import { Command } from "commander";
-import { helloCommand } from "./commands/hello";
-import { devSgs } from "./commands/dev-sgs";
+import { Command } from "commander"
+import { devSgs } from "./commands/dev-sgs"
+import { version } from "./package.json"
 
-const program = new Command();
+const program = new Command()
 
-program
-  .name("Bichard CLI tool")
-  .description("CLI tool for Bichard 7")
-  .version("1.0.0");
+program.name("Bichard CLI tool").description("CLI tool for Bichard 7").version(version)
 
-program.addCommand(helloCommand());
 program.addCommand(devSgs())
 
-program.parse(process.argv);
-
+program.parse(process.argv)
