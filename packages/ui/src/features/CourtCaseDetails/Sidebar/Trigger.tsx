@@ -1,6 +1,5 @@
 import ActionLink from "components/ActionLink"
 import Badge, { BadgeColours } from "components/Badge"
-import Checkbox from "components/Checkbox"
 import ConditionalRender from "components/ConditionalRender"
 import { Preview } from "components/Preview"
 import PreviewButton from "components/PreviewButton"
@@ -61,12 +60,21 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
               <TriggerCompleteBadge />
             </ConditionalRender>
             <ConditionalRender isRendered={!disabled && !isResolved}>
-              <Checkbox
-                id={checkBoxId}
-                value={trigger.triggerId}
-                checked={selectedTriggerIds.includes(trigger.triggerId)}
-                onChange={setTriggerSelection}
-              />
+              <div className="govuk-checkboxes" data-module="govuk-checkboxes">
+                <div className="govuk-checkboxes__item">
+                  <input
+                    className="govuk-checkboxes__input"
+                    id={checkBoxId}
+                    type="checkbox"
+                    value={trigger.triggerId}
+                    checked={selectedTriggerIds.includes(trigger.triggerId)}
+                    onChange={setTriggerSelection}
+                  ></input>
+                  <label className="govuk-label govuk-checkboxes__label" htmlFor={checkBoxId}>
+                    {}
+                  </label>
+                </div>
+              </div>
             </ConditionalRender>
           </TriggerStatus>
         </GridCol>
