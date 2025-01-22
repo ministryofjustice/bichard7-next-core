@@ -86,14 +86,14 @@ export default class CalculateMessageStatusUseCase {
       (!this.hasTriggers || this.triggersAreResolved) &&
       (this.exceptionsAreManuallyResolved || this.pncIsUpdated || this.recordIsIgnored)
     ) {
-      return AuditLogStatus.completed
+      return AuditLogStatus.Completed
     } else if (this.isRetrying) {
-      return AuditLogStatus.retrying
+      return AuditLogStatus.Retrying
     } else if (this.hasErrorEvent) {
-      return AuditLogStatus.error
+      return AuditLogStatus.Error
     }
 
-    return AuditLogStatus.processing
+    return AuditLogStatus.Processing
   }
 
   private get triggersAreResolved(): boolean {
@@ -150,10 +150,10 @@ export default class CalculateMessageStatusUseCase {
   }
 
   call(): MessageStatus {
-    if (this.currentAuditLogStatus === AuditLogStatus.duplicate) {
+    if (this.currentAuditLogStatus === AuditLogStatus.Duplicate) {
       return {
         pncStatus: PncStatus.Duplicate,
-        status: AuditLogStatus.duplicate,
+        status: AuditLogStatus.Duplicate,
         triggerStatus: TriggerStatus.Duplicate
       }
     }

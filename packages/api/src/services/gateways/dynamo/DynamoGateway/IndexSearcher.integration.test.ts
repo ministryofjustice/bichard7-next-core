@@ -1,7 +1,7 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
-import TestDynamoGateway from "../TestDynamoGateway/TestDynamoGateway"
+import TestDynamoGateway from "../../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import IndexSearcher from "./IndexSearcher"
 
 interface TestRecord {
