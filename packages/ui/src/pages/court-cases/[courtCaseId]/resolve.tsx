@@ -5,7 +5,7 @@ import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, FormGroup, Select } from "govuk-react"
+import { Button, Select } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -160,7 +160,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
           <ConditionalRender isRendered={!lockedByAnotherUser}>
             <Form method="POST" action="#" csrfToken={csrfToken}>
               <fieldset className="govuk-fieldset">
-                <FormGroup>
+                <div className={"govuk-form-group"}>
                   <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
                   <Select
                     input={{
@@ -176,7 +176,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                       )
                     })}
                   </Select>
-                </FormGroup>
+                </div>
 
                 <NoteTextArea
                   labelText={"Resolution Details"}

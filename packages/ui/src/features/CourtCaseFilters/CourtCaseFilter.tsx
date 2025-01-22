@@ -7,7 +7,6 @@ import ReasonFilter from "components/SearchFilters/ReasonFilterOptions/ReasonFil
 import TextFilter from "components/SearchFilters/TextFilter"
 import TriggerGroups from "components/SearchFilters/TriggerGroups"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { FormGroup } from "govuk-react"
 import { useReducer } from "react"
 import { CaseListQueryParams, LockedState, SerializedDateRange } from "types/CaseListQueryParams"
 import type { Filter } from "types/CourtCaseFilter"
@@ -103,7 +102,7 @@ const CourtCaseFilter: React.FC<Props> = ({
           <input type="hidden" id="order" name="order" value={order || ""} />
           <input type="hidden" id="orderBy" name="orderBy" value={orderBy || ""} />
 
-          <FormGroup className={"govuk-form-group"}>
+          <div className={"govuk-form-group"}>
             <h2 className="govuk-heading-m">{"Search"}</h2>
             <div>
               <ReasonCodeFilter value={state.reasonCodes} dispatch={dispatch} />
@@ -116,7 +115,7 @@ const CourtCaseFilter: React.FC<Props> = ({
               <TextFilter label="Court name" id="courtName" value={state.courtNameSearch.value} dispatch={dispatch} />
               <TextFilter label="PTIURN" id="ptiurn" value={state.ptiurnSearch.value} dispatch={dispatch} />
             </div>
-          </FormGroup>
+          </div>
 
           <CaseStateFilter
             dispatch={dispatch}

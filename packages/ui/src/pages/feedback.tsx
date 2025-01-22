@@ -3,7 +3,7 @@ import { NoteTextArea } from "components/NoteTextArea"
 import RadioButton from "components/RadioButton/RadioButton"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { Button, FormGroup, MultiChoice } from "govuk-react"
+import { Button, MultiChoice } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -161,7 +161,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
               }
             </p>
             <fieldset className="govuk-fieldset">
-              <FormGroup id="isAnonymous">
+              <div className={"govuk-form-group"} id="isAnonymous">
                 <MultiChoice
                   label="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
                   meta={{
@@ -184,9 +184,9 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                     label={"No, I would like to opt-out, which will mean my feedback will be anonymous."}
                   />
                 </MultiChoice>
-              </FormGroup>
+              </div>
 
-              <FormGroup id="experience">
+              <div className={"govuk-form-group"} id="experience">
                 <h3 className="govuk-heading-s">{"Rate your experience of using the the new version of Bichard"}</h3>
                 <MultiChoice
                   label={""}
@@ -206,7 +206,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                     />
                   ))}
                 </MultiChoice>
-              </FormGroup>
+              </div>
 
               <NoteTextArea
                 handleOnNoteChange={handleFeedbackOnChange}
@@ -221,9 +221,9 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
                 errorMessage={"Input message into the text box"}
               />
 
-              <FormGroup>
+              <div className={"govuk-form-group"}>
                 <Button type="submit">{"Send feedback and continue"}</Button>
-              </FormGroup>
+              </div>
             </fieldset>
           </Form>
         </Layout>
