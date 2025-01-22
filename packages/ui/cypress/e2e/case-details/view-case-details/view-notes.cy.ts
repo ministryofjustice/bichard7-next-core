@@ -226,7 +226,7 @@ describe("View notes", () => {
     insertCaseWithTriggerAndException()
     loginAndGoToNotes()
 
-    cy.get("H3").contains("Notes")
+    cy.get("h3").contains("Notes")
     cy.get("button").contains("Add note").click()
     cy.get("form p.govuk-error-message").contains("The note cannot be empty")
     cy.get("textarea[name=noteText]").type("dummy note")

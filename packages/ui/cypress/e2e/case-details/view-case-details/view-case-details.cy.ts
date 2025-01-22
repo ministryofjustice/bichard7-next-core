@@ -106,15 +106,15 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Defendant")
-    cy.get("H3").contains("Defendant details")
+    cy.get("h3").contains("Defendant details")
     clickTab("Hearing")
-    cy.get("H3").contains("Hearing details")
+    cy.get("h3").contains("Hearing details")
     clickTab("Case")
-    cy.get("H3").contains("Case")
+    cy.get("h3").contains("Case")
     clickTab("Offences")
-    cy.get("H3").contains("Offences")
+    cy.get("h3").contains("Offences")
     clickTab("Notes")
-    cy.get("H3").contains("Notes")
+    cy.get("h3").contains("Notes")
   })
 
   it("Should display the content of the Defendant tab", () => {
@@ -146,7 +146,7 @@ describe("View case details", () => {
 
     cy.contains("td", "PNC file name").siblings().contains("SEXOFFENCE/TRPRFOUR")
     cy.contains("td", "Remand status").siblings().contains("Unconditional bail")
-    cy.get("H3").contains("Notes")
+    cy.get("h3").contains("Notes")
     cy.contains("td", "Exclusion").siblings().contains("Exclusion: text describing exclusion")
     cy.contains("td", "Other")
       .siblings()

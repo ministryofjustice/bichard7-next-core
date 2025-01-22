@@ -1,5 +1,5 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { H3, Table } from "govuk-react"
+import { Table } from "govuk-react"
 import ConditionalRender from "../../../../components/ConditionalRender"
 import { TableRow } from "./TableRow"
 
@@ -28,7 +28,7 @@ export const BailConditions = ({ bailConditions, bailReason, offences }: BailCon
   return (
     <ConditionalRender isRendered={conditions.length > 0}>
       <p />
-      <H3>{"Bail conditions"}</H3>
+      <h3 className="govuk-heading-s">{"Bail conditions"}</h3>
       <Table>
         {conditions.map((condition, i) => (
           <TableRow
