@@ -3,7 +3,7 @@
   "ignore": [".git", "node_modules/", "dist/", "coverage/", "*.test.*", "src/tests/"],
   "watch": ["src/"],
   "execMap": {
-    "ts": "node -r ts-node/register"
+    "ts": "node -r ts-node/register/transpile-only"
   },
   "env": {
     "NODE_ENV": "development"

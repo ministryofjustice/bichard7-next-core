@@ -9,7 +9,7 @@ import type FetchByIndexOptions from "./FetchByIndexOptions"
 import type GetManyOptions from "./GetManyOptions"
 import type UpdateOptions from "./UpdateOptions"
 
-import TransactionFailedError from "../../../../types/TransactionFailedError"
+import TransactionFailedError from "../../../../types/errors/TransactionFailedError"
 import KeyComparison from "./KeyComparison"
 
 export type Projection = {

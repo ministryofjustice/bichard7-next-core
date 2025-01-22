@@ -1,4 +1,4 @@
-import type FailureReason from "./TransactionFailureReason"
+import type FailureReason from "../TransactionFailureReason"
 
 export default class TransactionFailedError extends Error {
   __proto__: Error

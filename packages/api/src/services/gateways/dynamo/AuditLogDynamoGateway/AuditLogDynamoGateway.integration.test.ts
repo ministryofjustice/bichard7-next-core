@@ -15,9 +15,9 @@ import {
   mockDynamoAuditLogEvent,
   mockDynamoAuditLogUserEvent
 } from "../../../../tests/helpers/mockAuditLogs"
+import TestDynamoGateway from "../../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import AuditLogStatus from "../../../../types/AuditLogStatus"
 import IndexSearcher from "../DynamoGateway/IndexSearcher"
-import TestDynamoGateway from "../TestDynamoGateway/TestDynamoGateway"
 import AuditLogDynamoGateway, { getEventsPageLimit } from "./AuditLogDynamoGateway"
 import { compress, decompress } from "./compression"
 
@@ -697,14 +697,14 @@ describe("AuditLogDynamoGateway", () => {
     it("should return one AuditLog when there is a record with Completed status", async () => {
       const auditLogs = [...Array(3).keys()].map(() => mockDynamoAuditLog())
       await Promise.allSettled(auditLogs.map((auditLog) => gateway.create(auditLog)))
-      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.completed })
+      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.Completed })
       await gateway.create(expectedAuditLog)
 
       await gateway.createManyUserEvents(
         [...auditLogs, expectedAuditLog].map((auditLog) => mockDynamoAuditLogEvent({ _messageId: auditLog.messageId }))
       )
 
-      const result = await gateway.fetchByStatus(AuditLogStatus.completed)
+      const result = await gateway.fetchByStatus(AuditLogStatus.Completed)
 
       expect(isError(result)).toBe(false)
       expect(result).toBeDefined()
@@ -720,14 +720,14 @@ describe("AuditLogDynamoGateway", () => {
     it("should not return events when events column is excluded", async () => {
       const auditLogs = [...Array(3).keys()].map(() => mockDynamoAuditLog())
       await Promise.allSettled(auditLogs.map((auditLog) => gateway.create(auditLog)))
-      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.completed })
+      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.Completed })
       await gateway.create(expectedAuditLog)
 
       await gateway.createManyUserEvents(
         [...auditLogs, expectedAuditLog].map((auditLog) => mockDynamoAuditLogEvent({ _messageId: auditLog.messageId }))
       )
 
-      const result = await gateway.fetchByStatus(AuditLogStatus.completed, { excludeColumns: ["events"] })
+      const result = await gateway.fetchByStatus(AuditLogStatus.Completed, { excludeColumns: ["events"] })
 
       expect(isError(result)).toBe(false)
       expect(result).toBeDefined()
@@ -743,7 +743,7 @@ describe("AuditLogDynamoGateway", () => {
     it("should return error when it fails to get events", async () => {
       const auditLogs = [...Array(3).keys()].map(() => mockDynamoAuditLog())
       await Promise.allSettled(auditLogs.map((auditLog) => gateway.create(auditLog)))
-      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.completed })
+      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.Completed })
       await gateway.create(expectedAuditLog)
 
       await gateway.createManyUserEvents(
@@ -752,7 +752,7 @@ describe("AuditLogDynamoGateway", () => {
 
       const expectedError = new Error("fetch by status dummy error")
       jest.spyOn(gateway, "getEvents").mockResolvedValueOnce(expectedError)
-      const result = await gateway.fetchByStatus(AuditLogStatus.completed)
+      const result = await gateway.fetchByStatus(AuditLogStatus.Completed)
 
       expect(isError(result)).toBe(true)
       expect(isError(result)).toBeTruthy()
@@ -763,7 +763,7 @@ describe("AuditLogDynamoGateway", () => {
     it("should return one AuditLog when there is an unsanitised record to check", async () => {
       const auditLogs = [...Array(3).keys()].map(() => mockDynamoAuditLog({ isSanitised: 1 }))
       await Promise.allSettled(auditLogs.map((auditLog) => gateway.create(auditLog)))
-      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.completed })
+      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.Completed })
       await gateway.create(expectedAuditLog)
       await gateway.createManyUserEvents(
         [...auditLogs, expectedAuditLog].map((auditLog) => mockDynamoAuditLogEvent({ _messageId: auditLog.messageId }))
@@ -790,7 +790,7 @@ describe("AuditLogDynamoGateway", () => {
         auditLogs.map((auditLog) => mockDynamoAuditLogEvent({ _messageId: auditLog.messageId }))
       )
 
-      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.completed })
+      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.Completed })
       await gateway.create(expectedAuditLog)
 
       const expectedError = new Error("fetch unsanitised dummy error")
@@ -808,7 +808,7 @@ describe("AuditLogDynamoGateway", () => {
         auditLogs.map((auditLog) => mockDynamoAuditLogEvent({ _messageId: auditLog.messageId }))
       )
 
-      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.completed })
+      const expectedAuditLog = mockDynamoAuditLog({ status: AuditLogStatus.Completed })
       await gateway.create(expectedAuditLog)
 
       const result = await gateway.fetchUnsanitised({ excludeColumns: ["events"] })
@@ -871,7 +871,7 @@ describe("AuditLogDynamoGateway", () => {
 
     it.each([
       ["forceOwner", { forceOwner: 10 }],
-      ["status", { status: AuditLogStatus.completed }],
+      ["status", { status: AuditLogStatus.Completed }],
       ["pncStatus", { pncStatus: "Processing" }],
       ["triggerStatus", { triggerStatus: "NoTriggers" }],
       ["errorRecordArchivalDate", { errorRecordArchivalDate: "2020-01-01" }],
@@ -903,7 +903,7 @@ describe("AuditLogDynamoGateway", () => {
         isSanitised: 1,
         pncStatus: "Processing",
         retryCount: 55,
-        status: AuditLogStatus.completed,
+        status: AuditLogStatus.Completed,
         triggerStatus: "NoTriggers"
       })
 

@@ -1,9 +1,9 @@
 enum AuditLogStatus {
-  completed = "Completed",
-  duplicate = "Duplicate",
-  error = "Error",
-  processing = "Processing",
-  retrying = "Retrying"
+  Completed = "Completed",
+  Duplicate = "Duplicate",
+  Error = "Error",
+  Processing = "Processing",
+  Retrying = "Retrying"
 }
 
 export default AuditLogStatus
