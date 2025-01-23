@@ -1,6 +1,9 @@
 export type Environment = {
   domain: string
-  awsProfile: string
+  aws: {
+    profile: string
+    name: string
+  }
 }
 
 export const env: {
@@ -11,18 +14,30 @@ export const env: {
 } = {
   E2E: {
     domain: "e2e-test.ptl.bichard7.modernisation-platform.service.justice.gov.uk",
-    awsProfile: "bichard7-shared-e2e-test"
+    aws: {
+      profile: "bichard7-shared-e2e-test",
+      name: "bichard-7-e2e-test"
+    }
   },
   UAT: {
     domain: "uat.ptl.bichard7.modernisation-platform.service.justice.gov.uk",
-    awsProfile: "bichard7-shared-uat"
+    aws: {
+      profile: "bichard7-shared-uat",
+      name: "bichard-7-uat"
+    }
   },
   PREPROD: {
     domain: "preprod.bichard7.service.justice.gov.uk",
-    awsProfile: "qsolution-pre-prod"
+    aws: {
+      profile: "qsolution-pre-prod",
+      name: "bichard-7-preprod"
+    }
   },
   PROD: {
     domain: "bichard7.service.justice.gov.uk",
-    awsProfile: "qsolution-production"
+    aws: {
+      profile: "qsolution-production",
+      name: "bichard-7-production"
+    }
   }
 }
