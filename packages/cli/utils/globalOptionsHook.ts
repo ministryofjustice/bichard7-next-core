@@ -1,18 +1,19 @@
 import { Command } from "commander"
 import { getEnvironment, setEnvironment } from "../env"
 
+const skipCommands = ["wiki"]
 // adds a hook to every command to check and set the environment.
 // once the hook has been invoked once, it doesn't need to run
 // again.
 let globalOptionsHookInvoked = false
 export function configureGlobalOptionsHook(command: Command) {
-  command.hook("preAction", (cmd) => {
+  command.hook("preAction", (subcommand) => {
     if (globalOptionsHookInvoked) return
-    if (command.name() === "wiki") return
+    if (skipCommands.includes(subcommand.name())) return
 
-    setEnvironment(cmd, {
-      ...cmd.opts(),
-      ...cmd.parent?.opts()
+    setEnvironment(subcommand, {
+      ...subcommand.opts(),
+      ...subcommand.parent?.opts()
     })
 
     const {
