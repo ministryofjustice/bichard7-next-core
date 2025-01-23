@@ -1,4 +1,3 @@
-import { GridRow } from "govuk-react"
 import styled from "styled-components"
 
 const TriggerContainer = styled.div`
@@ -10,8 +9,13 @@ const TriggerContainer = styled.div`
   }
 `
 
-const TriggerHeaderRow = styled(GridRow)`
+const TriggerHeaderRow = styled.div`
   max-height: 25px;
+  display: flex;
+`
+
+const TriggerCol = styled.div<{ setWidth: string }>`
+  width: ${(props) => props.setWidth};
 `
 
 const TriggerCodeLabel = styled.label`
@@ -33,4 +37,12 @@ const TriggerStatus = styled.div`
   justify-content: end;
 `
 
-export { CjsResultCode, TriggerCodeLabel, TriggerContainer, TriggerDefinition, TriggerHeaderRow, TriggerStatus }
+export {
+  CjsResultCode,
+  TriggerCodeLabel,
+  TriggerCol,
+  TriggerContainer,
+  TriggerDefinition,
+  TriggerHeaderRow,
+  TriggerStatus
+}

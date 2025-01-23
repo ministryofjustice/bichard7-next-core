@@ -1,5 +1,4 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { GridCol, GridRow } from "govuk-react"
 import Accordion from "../Accordion"
 import Badge, { BadgeColours } from "../Badge"
 import { ExceptionRow } from "./Exception.styles"
@@ -25,21 +24,21 @@ const PncException = ({ code, message }: Props) => {
   ].includes(code)
   return (
     <ExceptionRow className={`moj-exception-row`}>
-      <GridRow className="exception-row exception-row__header">
-        <GridCol>
+      <div className="govuk-grid-row exception-row exception-row__header">
+        <div className="govuk-grid-column-full">
           <Badge isRendered={true} colour={BadgeColours.Red} label={"PNC Error"} className="moj-badge--large" />
-        </GridCol>
-      </GridRow>
+        </div>
+      </div>
 
-      <GridRow className="exception-row exception-row__details">
-        <GridCol>
+      <div className="govuk-grid-row exception-row exception-row__details">
+        <div className="govuk-grid-column-full">
           {code}
           {` - ${isPncQueryExceptionCode ? "PNC Query" : isPncUpdateExceptionCode ? "PNC Update" : "ASN Not Found on PNC"} Error`}
-        </GridCol>
-      </GridRow>
+        </div>
+      </div>
 
-      <GridRow className="exception-row exception-row__help">
-        <GridCol>
+      <div className="govuk-grid-row exception-row exception-row__help">
+        <div className="govuk-grid-column-full">
           {message && (
             <Accordion id={`exception-${code.toLocaleLowerCase()}`} heading="PNC error message">
               <InsetText className="b7-inset-text">
@@ -56,8 +55,8 @@ const PncException = ({ code, message }: Props) => {
           >
             {"More information"}
           </a>
-        </GridCol>
-      </GridRow>
+        </div>
+      </div>
     </ExceptionRow>
   )
 }
