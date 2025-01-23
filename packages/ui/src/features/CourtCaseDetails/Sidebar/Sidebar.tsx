@@ -102,16 +102,16 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
           </ul>
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
-            <div
+            <section
               className={`govuk-tabs__panel moj-tab-panel-triggers tab-panel-triggers ${selectedTab === SidebarTab.Triggers ? "" : "govuk-tabs__panel--hidden"}`}
               id="triggers"
             >
               <TriggersList onNavigate={onNavigate} />
-            </div>
+            </section>
           </ConditionalRender>
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Exceptions)}>
-            <div
+            <section
               className={`govuk-tabs__panel moj-tab-panel-exceptions ${selectedTab === SidebarTab.Exceptions ? "" : "govuk-tabs__panel--hidden"}`}
               id="exceptions"
             >
@@ -120,15 +120,15 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
                 canResolveAndSubmit={canResolveAndSubmit}
                 stopLeavingFn={stopLeavingFn}
               />
-            </div>
+            </section>
           </ConditionalRender>
 
-          <div
+          <section
             className={`govuk-tabs__panel moj-tab-panel-pnc-details ${selectedTab === SidebarTab.Pnc ? "" : "govuk-tabs__panel--hidden"}`}
             id="pnc-details"
           >
             <PncDetails />
-          </div>
+          </section>
         </div>
       </ConditionalRender>
     </SidebarContainer>
