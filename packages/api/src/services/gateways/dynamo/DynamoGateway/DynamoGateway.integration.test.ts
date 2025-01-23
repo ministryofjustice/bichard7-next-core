@@ -343,13 +343,6 @@ describe("DynamoGateway", () => {
       expect(actualRecord?.id).toBe(expectedRecord.id)
       expect(actualRecord?.someOtherValue).toBe(expectedRecord.someOtherValue)
     })
-
-    it("should return null when no item has a matching key", async () => {
-      const result = await testGateway.getOne(auditLogDynamoConfig.auditLogTableName, "id", "InvalidKey")
-
-      expect(isError(result)).toBe(false)
-      expect(result).toBeNull()
-    })
   })
 
   describe("getRecordVersion()", () => {

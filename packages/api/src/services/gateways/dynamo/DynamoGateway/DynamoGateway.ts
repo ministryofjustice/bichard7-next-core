@@ -203,7 +203,7 @@ export default class DynamoGateway {
     keyValue: unknown,
     projection?: Projection,
     stronglyConsistentRead = false
-  ): PromiseResult<DocumentClient.GetItemOutput | Error | null> {
+  ): PromiseResult<DocumentClient.GetItemOutput | Error> {
     const { attributeNames, expression } = projection ?? {}
 
     return this.client

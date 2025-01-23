@@ -110,23 +110,6 @@ export default class TestDynamoGateway extends AuditLogDynamoGateway {
     return <T[]>result.Items
   }
 
-  async getOne<T>(tableName: string, keyName: string, keyValue: KeyValue): Promise<null | T> {
-    const result = await this.client
-      .get({
-        Key: {
-          [keyName]: keyValue
-        },
-        TableName: tableName
-      })
-      .promise()
-
-    if (!result.Item) {
-      return null
-    }
-
-    return <T>result.Item
-  }
-
   pollForMessages(tableName: string, timeout: number): Promise<DocumentClient.ScanOutput | undefined> {
     const poller = new Poller(async () => {
       const response = await this.getAll(tableName)
