@@ -8,6 +8,7 @@ let globalOptionsHookInvoked = false
 export function configureGlobalOptionsHook(command: Command) {
   command.hook("preAction", (cmd) => {
     if (globalOptionsHookInvoked) return
+    if (command.name() === "wiki") return
 
     setEnvironment(cmd, {
       ...cmd.opts(),
