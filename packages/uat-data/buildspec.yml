@@ -7,4 +7,5 @@ phases:
       - npm install -g ts-node
   build:
     commands:
+      - ./packages/uat-data/scripts/connect_vpn.sh
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
