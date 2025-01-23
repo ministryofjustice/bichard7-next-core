@@ -7,5 +7,6 @@ phases:
       - npm install -g ts-node
   build:
     commands:
-      - ./packages/uat-data/scripts/connect-vpn.sh
+      - ./packages/uat-data/scripts/get-vpn-config.sh
+      - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
