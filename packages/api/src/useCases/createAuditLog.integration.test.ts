@@ -15,8 +15,14 @@ const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
 const auditLogDynamoGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 const logger = new FakeLogger()
 
-const getAuditLog = (messageId: string): Promise<DynamoAuditLog | null> =>
-  testDynamoGateway.getOne(auditLogDynamoConfig.auditLogTableName, "messageId", messageId)
+const getAuditLog = async (messageId: string): Promise<DynamoAuditLog | null> => {
+  const result = await testDynamoGateway.getOne(auditLogDynamoConfig.auditLogTableName, "messageId", messageId)
+  if ("Item" in result) {
+    return result.Item as DynamoAuditLog
+  }
+
+  return null
+}
 
 describe("CreateAuditLogUseCase", () => {
   beforeEach(async () => {
