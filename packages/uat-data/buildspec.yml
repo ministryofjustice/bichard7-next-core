@@ -9,9 +9,10 @@ phases:
 
   pre_build:
     commands:
-      - ./packages/uat-data/scripts/get-vpn-config.sh
-      - openvpn --config ~/cjse-uat-config.ovpn --daemon
+      - cd $CODEBUILD_SRC_DIR_bichard7_next_infrastructure
+      - ./scripts/connect_vpn.sh
 
   build:
     commands:
+      - cd $CODEBUILD_SRC_DIR
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
