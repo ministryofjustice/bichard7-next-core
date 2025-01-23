@@ -9,5 +9,5 @@ phases:
   build:
     commands:
       - ./packages/uat-data/scripts/get-vpn-config.sh
-      - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon
+      - openvpn --config ~/cjse-uat-config.ovpn --daemon
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
