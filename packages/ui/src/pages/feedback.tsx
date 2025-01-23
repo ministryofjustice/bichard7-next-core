@@ -1,10 +1,10 @@
 import { Button } from "components/Buttons"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
-import RadioButton from "components/RadioButton/RadioButton"
+import RadioButton from "components/Radios/RadioButton"
+import { RadioGroups } from "components/Radios/RadioGroup"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { MultiChoice } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -162,52 +162,45 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
               }
             </p>
             <fieldset className="govuk-fieldset">
-              <div className={"govuk-form-group"} id="isAnonymous">
-                <MultiChoice
-                  label="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
-                  meta={{
-                    error: "Select one of the below options",
-                    touched: fields?.isAnonymous.hasError
-                  }}
-                >
-                  <RadioButton
-                    name={"isAnonymous"}
-                    id={"isAnonymous-no"}
-                    defaultChecked={fields?.isAnonymous.value === "no"}
-                    value={"no"}
-                    label={"Yes, I am happy to be contacted about this feedback."}
-                  />
-                  <RadioButton
-                    name={"isAnonymous"}
-                    id={"isAnonymous-yes"}
-                    defaultChecked={fields?.isAnonymous.value === "yes"}
-                    value={"yes"}
-                    label={"No, I would like to opt-out, which will mean my feedback will be anonymous."}
-                  />
-                </MultiChoice>
-              </div>
+              <RadioGroups
+                id="isAnonymous"
+                legendText="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
+                errorMessage="Select one of the below options"
+                hasError={fields?.isAnonymous.hasError}
+              >
+                <RadioButton
+                  name={"isAnonymous"}
+                  id={"isAnonymous-no"}
+                  defaultChecked={fields?.isAnonymous.value === "no"}
+                  value={"no"}
+                  label={"Yes, I am happy to be contacted about this feedback."}
+                />
+                <RadioButton
+                  name={"isAnonymous"}
+                  id={"isAnonymous-yes"}
+                  defaultChecked={fields?.isAnonymous.value === "yes"}
+                  value={"yes"}
+                  label={"No, I would like to opt-out, which will mean my feedback will be anonymous"}
+                />
+              </RadioGroups>
 
-              <div className={"govuk-form-group"} id="experience">
-                <h3 className="govuk-heading-s">{"Rate your experience of using the new version of Bichard"}</h3>
-                <MultiChoice
-                  label={""}
-                  meta={{
-                    error: "Select one of the below options",
-                    touched: fields?.experience.hasError
-                  }}
-                >
-                  {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
-                    <RadioButton
-                      id={experienceKey}
-                      defaultChecked={experienceKey === fields?.experience.value}
-                      label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
-                      key={experienceKey}
-                      name={"experience"}
-                      value={experienceKey}
-                    />
-                  ))}
-                </MultiChoice>
-              </div>
+              <RadioGroups
+                id="experience"
+                legendText="Rate your experience of using the new version of Bichard"
+                errorMessage="Select one of the below options"
+                hasError={fields?.experience.hasError}
+              >
+                {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
+                  <RadioButton
+                    id={experienceKey}
+                    defaultChecked={experienceKey === fields?.experience.value}
+                    label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
+                    key={experienceKey}
+                    name={"experience"}
+                    value={experienceKey}
+                  />
+                ))}
+              </RadioGroups>
 
               <NoteTextArea
                 handleOnNoteChange={handleFeedbackOnChange}
