@@ -12,8 +12,8 @@ phases:
       - ./packages/uat-data/scripts/get-vpn-config.sh
       - openvpn --config ~/cjse-uat-config.ovpn --daemon
       - while ! grep -q "Initialization Sequence Completed" openvpn.log; do
-          echo "VPN is still establishing...";
-          sleep 2;
+        echo "VPN is still establishing...";
+        sleep 2;
         done
 
   build:
