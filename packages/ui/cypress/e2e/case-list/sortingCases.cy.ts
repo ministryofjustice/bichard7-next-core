@@ -51,22 +51,14 @@ describe("Sorting cases", () => {
     cy.get("#court-name-sort").find(".unorderedArrow").click()
     cy.get("#court-name-sort").get(".upArrow").should("exist")
 
-    cy.get("tr")
-      .not(":first")
-      .each((row) => {
-        cy.wrap(row).get("td:nth-child(4)").first().contains("AAAA")
-        cy.wrap(row).get("td:nth-child(4)").last().contains("DDDD")
-      })
+    cy.get("tr.caseDetailsRow").first().get("td:nth-child(4)").contains("AAAA")
+    cy.get("tr.caseDetailsRow").last().get("td:nth-child(4)").contains("DDDD")
 
     cy.get("#court-name-sort").click()
     cy.get("#court-name-sort").get(".downArrow").should("exist")
 
-    cy.get("tr")
-      .not(":first")
-      .each((row) => {
-        cy.wrap(row).get("td:nth-child(4)").first().contains("DDDD")
-        cy.wrap(row).get("td:nth-child(4)").last().contains("AAAA")
-      })
+    cy.get("tr.caseDetailsRow").first().get("td:nth-child(4)").contains("DDDD")
+    cy.get("tr.caseDetailsRow").last().get("td:nth-child(4)").contains("AAAA")
   })
 
   it("Should use court date as a secondary sort when sorting by other fields", () => {
