@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { bold } from "cli-color"
 import { Command } from "commander"
 import { devSgs } from "./commands/dev-sgs"
 import { status } from "./commands/status"
@@ -18,8 +19,8 @@ const cli = new Command()
     setEnvironment(cmd, cmd.opts())
   })
   .configureOutput({
-    writeErr: (str) => {
-      console.error(str)
+    outputError: (str) => {
+      console.error(bold(str))
     }
   })
   .addCommand(status())
