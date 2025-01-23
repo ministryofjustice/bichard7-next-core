@@ -1,10 +1,9 @@
 import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
+import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import axios, { HttpStatusCode } from "axios"
-
-import type { DynamoAuditLog } from "../../../types/AuditLog"
 
 import { V1 } from "../../../endpoints/versionedEndpoints"
 import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
@@ -46,14 +45,12 @@ describe("Creating Audit Log", () => {
     const result = await axios.post(`${helper.address}${endpoint}`, auditLog, axiosOptions)
     expect(result.status).toEqual(HttpStatusCode.Created)
 
-    const record = await gateway.getOne<DynamoAuditLog>(
-      auditLogDynamoConfig.auditLogTableName,
-      "messageId",
-      auditLog.messageId
-    )
+    const record = await gateway.getOne(auditLogDynamoConfig.auditLogTableName, "messageId", auditLog.messageId)
+    if (isError(record)) {
+      throw record
+    }
 
-    expect(record).not.toBeNull()
-    expect(record?.messageId).toEqual(auditLog.messageId)
+    expect(record?.Item?.messageId).toEqual(auditLog.messageId)
   })
 
   it("should return a conflict error if the message id already exists", async () => {

@@ -27,9 +27,8 @@ export const OutputApiAuditLogSchema = InputApiAuditLogSchema.extend({
 
 export type OutputApiAuditLog = z.infer<typeof OutputApiAuditLogSchema>
 
-export const DynamoAuditLogSchema = OutputApiAuditLogSchema.omit({ events: true }).extend({
+export const InternalDynamoAuditLogSchema = OutputApiAuditLogSchema.omit({ events: true }).extend({
   errorRecordArchivalDate: z.string().optional(),
-  events: z.array(DynamoAuditLogEventSchema),
   eventsCount: z.number(),
   expiryTime: z.string().optional(),
   isSanitised: z.number(),
@@ -37,6 +36,11 @@ export const DynamoAuditLogSchema = OutputApiAuditLogSchema.omit({ events: true 
   retryCount: z.number().optional(),
   status: z.nativeEnum(AuditLogStatus),
   version: z.number()
+})
+export type InternalDynamoAuditLog = z.infer<typeof InternalDynamoAuditLogSchema>
+
+export const DynamoAuditLogSchema = InternalDynamoAuditLogSchema.extend({
+  events: z.array(DynamoAuditLogEventSchema).optional()
 })
 
 export type DynamoAuditLog = z.infer<typeof DynamoAuditLogSchema>
