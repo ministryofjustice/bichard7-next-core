@@ -9,7 +9,9 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install-local": "npm run build && npm install -g ."
+    "install:build": "npm run build && npm install -g .",
+    "install:global": "npm i -g .",
+    "install:watch": "npm run build && npx tsc-watch -p ./tsconfig.build.json --onSuccess 'npm run install:global'"
   },
   "keywords": [],
   "author": "",
