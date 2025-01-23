@@ -5,7 +5,6 @@ import { GenderCode, RemandStatusCode } from "@moj-bichard7-developers/bichard7-
 import { BadgeColours } from "components/Badge"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
-import { Table } from "govuk-react"
 import { findExceptions } from "types/ErrorMessages"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
@@ -29,40 +28,42 @@ export const DefendantDetails = () => {
 
   return (
     <DefendantDetailTable className={`defendant-details-table`}>
-      <Table>
-        {asnSystemErrorExceptionPrompt ? (
-          <ExceptionFieldTableRow
-            badgeText={ExceptionBadgeType.SystemError}
-            value={defendant.ArrestSummonsNumber}
-            badgeColour={BadgeColours.Purple}
-            label={"ASN"}
-            displayError={!!asnSystemErrorExceptionPrompt}
-          >
-            <ErrorPromptMessage message={asnSystemErrorExceptionPrompt} />
-          </ExceptionFieldTableRow>
-        ) : (
-          <AsnEditableField />
-        )}
+      <table className="govuk-table">
+        <tbody className="govuk-table__body">
+          {asnSystemErrorExceptionPrompt ? (
+            <ExceptionFieldTableRow
+              badgeText={ExceptionBadgeType.SystemError}
+              value={defendant.ArrestSummonsNumber}
+              badgeColour={BadgeColours.Purple}
+              label={"ASN"}
+              displayError={!!asnSystemErrorExceptionPrompt}
+            >
+              <ErrorPromptMessage message={asnSystemErrorExceptionPrompt} />
+            </ExceptionFieldTableRow>
+          ) : (
+            <AsnEditableField />
+          )}
 
-        <TableRow label="PNC Check name" value={defendant.PNCCheckname} />
-        <TableRow label="Court PNCID" value={defendant.CourtPNCIdentifier} />
-        <TableRow label="Given name" value={defendant.DefendantDetail?.PersonName.GivenName?.join(", ")} />
-        <TableRow label="Family name" value={defendant.DefendantDetail?.PersonName.FamilyName} />
-        <TableRow label="Title" value={defendant.DefendantDetail?.PersonName.Title} />
-        <TableRow label="Date of birth" value={formatDisplayedDate(defendant.DefendantDetail?.BirthDate || "")} />
-        <TableRow
-          label="Gender"
-          value={`${defendant.DefendantDetail?.Gender} (${
-            GenderCodes[defendant.DefendantDetail?.Gender as GenderCode]
-          })`}
-        />
-        <TableRow label="Address" value={<AddressCell address={defendant.Address} />} />
-        <TableRow label="PNC file name" value={defendant.DefendantDetail?.GeneratedPNCFilename} />
-        <TableRow
-          label="Remand status"
-          value={capitalizeString(RemandStatuses[defendant.RemandStatus as RemandStatusCode])}
-        />
-      </Table>
+          <TableRow label="PNC Check name" value={defendant.PNCCheckname} />
+          <TableRow label="Court PNCID" value={defendant.CourtPNCIdentifier} />
+          <TableRow label="Given name" value={defendant.DefendantDetail?.PersonName.GivenName?.join(", ")} />
+          <TableRow label="Family name" value={defendant.DefendantDetail?.PersonName.FamilyName} />
+          <TableRow label="Title" value={defendant.DefendantDetail?.PersonName.Title} />
+          <TableRow label="Date of birth" value={formatDisplayedDate(defendant.DefendantDetail?.BirthDate || "")} />
+          <TableRow
+            label="Gender"
+            value={`${defendant.DefendantDetail?.Gender} (${
+              GenderCodes[defendant.DefendantDetail?.Gender as GenderCode]
+            })`}
+          />
+          <TableRow label="Address" value={<AddressCell address={defendant.Address} />} />
+          <TableRow label="PNC file name" value={defendant.DefendantDetail?.GeneratedPNCFilename} />
+          <TableRow
+            label="Remand status"
+            value={capitalizeString(RemandStatuses[defendant.RemandStatus as RemandStatusCode])}
+          />
+        </tbody>
+      </table>
       <BailConditions
         bailConditions={defendant.BailConditions}
         bailReason={defendant.ReasonForBailConditions}

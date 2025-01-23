@@ -1,5 +1,4 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { Table } from "govuk-react"
 import ConditionalRender from "../../../../components/ConditionalRender"
 import { TableRow } from "./TableRow"
 
@@ -29,17 +28,19 @@ export const BailConditions = ({ bailConditions, bailReason, offences }: BailCon
     <ConditionalRender isRendered={conditions.length > 0}>
       <p />
       <h3 className="govuk-heading-s">{"Bail conditions"}</h3>
-      <Table>
-        {conditions.map((condition, i) => (
-          <TableRow
-            key={`bail-condition-${i}`}
-            label={condition.label}
-            hintText={condition.offenceIndex ? `Offence ${condition.offenceIndex}` : ""}
-            value={condition.value}
-          />
-        ))}
-        {bailReason && <TableRow label="Bail reason" value={bailReason} />}
-      </Table>
+      <table className="govuk-table">
+        <tbody className="govuk-table__body">
+          {conditions.map((condition, i) => (
+            <TableRow
+              key={`bail-condition-${i}`}
+              label={condition.label}
+              hintText={condition.offenceIndex ? `Offence ${condition.offenceIndex}` : ""}
+              value={condition.value}
+            />
+          ))}
+          {bailReason && <TableRow label="Bail reason" value={bailReason} />}
+        </tbody>
+      </table>
     </ConditionalRender>
   )
 }

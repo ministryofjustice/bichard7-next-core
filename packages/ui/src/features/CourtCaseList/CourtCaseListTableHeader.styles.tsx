@@ -1,11 +1,10 @@
-import { Table } from "govuk-react"
 import styled from "styled-components"
 import { blue } from "utils/colours"
 
-const HeaderCellAlt = styled(Table.Cell)`
+const HeaderCellAlt = styled.td`
   border-color: var(--border-input);
 `
-const HeaderCell = styled(Table.CellHeader)`
+const HeaderCell = styled.td`
   height: 100%;
   vertical-align: bottom;
   border-color: var(--border-input);

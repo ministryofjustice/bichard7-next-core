@@ -5,7 +5,6 @@ import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
-import { Table } from "govuk-react"
 import { findExceptions } from "types/ErrorMessages"
 import { ResolutionStatus } from "types/ResolutionStatus"
 import { Exception } from "types/exceptions"
@@ -51,64 +50,66 @@ export const HearingResult = ({
   return (
     <>
       <h4 className="govuk-heading-m">{"Hearing result"}</h4>
-      <Table>
-        {cjsErrorMessage ? (
-          <ExceptionFieldTableRow
-            badgeText={ExceptionBadgeType.SystemError}
-            value={result.CJSresultCode}
-            label={"CJS Code"}
-          >
-            <ErrorPromptMessage message={cjsErrorMessage} />
-          </ExceptionFieldTableRow>
-        ) : (
-          <TableRow label="CJS Code" value={result.CJSresultCode} />
-        )}
-        <TableRow
-          label="Result hearing type"
-          value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
-        />
-        <TableRow
-          label="Result hearing date"
-          value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}
-        />
-        <ConditionalRender isRendered={typeof result.Duration !== "undefined" && result.Duration?.length > 0}>
+      <table className="govuk-table">
+        <tbody className="govuk-table__body">
+          {cjsErrorMessage ? (
+            <ExceptionFieldTableRow
+              badgeText={ExceptionBadgeType.SystemError}
+              value={result.CJSresultCode}
+              label={"CJS Code"}
+            >
+              <ErrorPromptMessage message={cjsErrorMessage} />
+            </ExceptionFieldTableRow>
+          ) : (
+            <TableRow label="CJS Code" value={result.CJSresultCode} />
+          )}
           <TableRow
-            label="Duration"
-            value={
-              <>
-                {result.Duration?.map((duration) => (
-                  <div key={`duration-${duration.DurationLength}-${duration.DurationUnit}`}>
-                    {formatDuration(duration.DurationLength, duration.DurationUnit)}
-                  </div>
-                ))}
-              </>
-            }
+            label="Result hearing type"
+            value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
           />
-        </ConditionalRender>
-        <NextHearingLocationField
-          result={result}
-          exceptions={exceptions}
-          offenceIndex={offenceIndex}
-          resultIndex={resultIndex}
-          isCaseEditable={isCaseEditable}
-        />
-        <NextHearingDateField
-          result={result}
-          exceptions={exceptions}
-          offenceIndex={offenceIndex}
-          resultIndex={resultIndex}
-          isCaseEditable={isCaseEditable}
-        />
-        <TableRow label="Mode of trial reason" value={result.ModeOfTrialReason} />
-        <StyledTableRow label="Hearing result text" value={formattedResult} className={`result-text`} />
-        <TableRow label="PNC disposal type" value={result.PNCDisposalType} />
-        <TableRow label="Result class" value={result.ResultClass} />
-        <TableRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
-        <ConditionalRender isRendered={typeof result.Urgent !== "undefined"}>
-          <TableRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />
-          <TableRow label="Urgency" value={getNumberOfHours(result.Urgent?.urgency)} />
-        </ConditionalRender>
-      </Table>
+          <TableRow
+            label="Result hearing date"
+            value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}
+          />
+          <ConditionalRender isRendered={typeof result.Duration !== "undefined" && result.Duration?.length > 0}>
+            <TableRow
+              label="Duration"
+              value={
+                <>
+                  {result.Duration?.map((duration) => (
+                    <div key={`duration-${duration.DurationLength}-${duration.DurationUnit}`}>
+                      {formatDuration(duration.DurationLength, duration.DurationUnit)}
+                    </div>
+                  ))}
+                </>
+              }
+            />
+          </ConditionalRender>
+          <NextHearingLocationField
+            result={result}
+            exceptions={exceptions}
+            offenceIndex={offenceIndex}
+            resultIndex={resultIndex}
+            isCaseEditable={isCaseEditable}
+          />
+          <NextHearingDateField
+            result={result}
+            exceptions={exceptions}
+            offenceIndex={offenceIndex}
+            resultIndex={resultIndex}
+            isCaseEditable={isCaseEditable}
+          />
+          <TableRow label="Mode of trial reason" value={result.ModeOfTrialReason} />
+          <StyledTableRow label="Hearing result text" value={formattedResult} className={`result-text`} />
+          <TableRow label="PNC disposal type" value={result.PNCDisposalType} />
+          <TableRow label="Result class" value={result.ResultClass} />
+          <TableRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
+          <ConditionalRender isRendered={typeof result.Urgent !== "undefined"}>
+            <TableRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />
+            <TableRow label="Urgency" value={getNumberOfHours(result.Urgent?.urgency)} />
+          </ConditionalRender>
+        </tbody>
+      </table>
     </>
   )
 }

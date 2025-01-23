@@ -30,8 +30,8 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
   return courtCases.length === 0 ? (
     <p className="govuk-body">{"There are no court cases to show"}</p>
   ) : (
-    <table className="cases-list">
-      <thead>
+    <table className="govuk-table cases-list">
+      <thead className="govuk-table__head">
         <CourtCaseListTableHeader order={order} />
       </thead>
       {courtCases.map((courtCase) => (

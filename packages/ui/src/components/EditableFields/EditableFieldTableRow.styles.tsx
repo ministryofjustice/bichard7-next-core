@@ -1,7 +1,6 @@
-import { Table } from "govuk-react"
 import styled from "styled-components"
 
-const LabelCell = styled(Table.Cell)`
+const LabelCell = styled.td`
   vertical-align: top;
   & .error-icon {
     padding-top: 0.62rem;

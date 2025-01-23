@@ -100,7 +100,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
   }
 
   return (
-    <tbody>
+    <tbody className="govuk-table__body">
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={exceptionsReasonCell || triggersReasonCell}
