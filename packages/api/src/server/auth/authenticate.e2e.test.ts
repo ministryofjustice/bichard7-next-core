@@ -1,4 +1,3 @@
-import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { OK, UNAUTHORIZED } from "http-status"
@@ -55,7 +54,7 @@ describe("authentication e2e", () => {
     const [encodedJwt] = generateTestJwtToken({
       email: "unknownuser@exmaple.com",
       username: "UnknownUser"
-    } as User)
+    })
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {

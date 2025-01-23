@@ -14,7 +14,7 @@ describe("jwtVerify", () => {
   })
 
   it("will return an error if the username does not exists in the db", async () => {
-    const jwtString = generateTestJwtToken({ username: "UserNotFound" } as User)
+    const jwtString = generateTestJwtToken({ username: "UserNotFound" })
     const spy = jest.spyOn(db, "fetchUserByUsername")
     spy.mockRejectedValue(new Error("User UserNotFound does not exist"))
 
@@ -22,7 +22,7 @@ describe("jwtVerify", () => {
   })
 
   it("will return a User if the username exists in the db and the JWT ID matches", async () => {
-    const user = { jwt_id: validJwtId, username: "UserFound" } as User
+    const user = { jwt_id: validJwtId, username: "UserFound" }
     const jwtString = generateTestJwtToken(user, validJwtId)
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
@@ -59,7 +59,7 @@ describe("jwtVerify", () => {
   })
 
   it("will return undefined if the username exists in the db and the JWT ID doesn't match", async () => {
-    const user = { jwt_id: null, username: "UserFound" } as User
+    const user = { jwt_id: null, username: "UserFound" }
     const jwtString = generateTestJwtToken(user, validJwtId)
     const spy = jest.spyOn(db, "fetchUserByUsername")
 
