@@ -11,6 +11,7 @@ phases:
 
   pre_build:
     commands:
+      - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
       - cd $CODEBUILD_SRC_DIR_bichard7_next_infrastructure
       - ./scripts/connect_vpn.sh
 
