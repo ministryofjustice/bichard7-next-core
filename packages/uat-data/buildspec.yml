@@ -3,6 +3,7 @@ version: 0.2
 phases:
   install:
     commands:
+      - curl http://pnc.uat.ptl.bichard7.modernisation-platform.service.justice.gov.uk:3000/mocks
       - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
       - yum groupinstall -y "Development tools"
       - yum -y install jq gzip tar unzip openssl shadow-utils xz wget gnupg curl openvpn which chromium deltarpm
