@@ -26,7 +26,7 @@ const CasesPerPage: React.FC<Props> = ({ options, selected, pageNum, casesPerPag
           router.push({ query: { ...router.query, maxPageItems: newCasesPerPage, page: newPageNum } })
         }}
         value={selected}
-        className={`cases-per-page cases-per-page-picker`}
+        className={`govuk-select cases-per-page cases-per-page-picker`}
         aria-label="Cases per page"
       >
         {options.map((option) => (
