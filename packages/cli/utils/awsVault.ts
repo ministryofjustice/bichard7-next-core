@@ -3,14 +3,15 @@ import { bold, green } from "cli-color"
 
 export default {
   async exec(profile: string, command: string, log: boolean = false) {
+    const components = ["aws-vault", "exec", profile, "--", ...command.split(" ")]
     const vaultExec = `aws-vault exec ${profile}`
 
     if (log) {
-      console.log(`\nExecuting command:\n${bold(vaultExec + " -- " + command)}\n`)
+      console.log(`\nExecuting command:\n${bold(components.join(" "))}\n`)
     }
 
-    return new Promise((resolve, reject) => {
-      const process = spawn(`${vaultExec} -- ${command}`, [], { stdio: "inherit", shell: true })
+    return new Promise<string>((resolve, reject) => {
+      const process = spawn(`${vaultExec} -- ${command}`, [], { stdio: "pipe", shell: true })
 
       let output = ""
       let error = ""
