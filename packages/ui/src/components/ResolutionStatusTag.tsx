@@ -1,11 +1,10 @@
+import { useCourtCase } from "context/CourtCaseContext"
 import Image from "next/image"
-import { StyledComponentPropsWithRef } from "styled-components"
 import { ResolutionStatus } from "../types/ResolutionStatus"
 import { TICK_ICON_URL } from "../utils/icons"
 import { ResolutionStatusTagContainer } from "./ResolutionStatusTag.styles"
-import { useCourtCase } from "context/CourtCaseContext"
 
-interface StatusTagProps extends StyledComponentPropsWithRef<typeof ResolutionStatusTagContainer> {
+interface StatusTagProps {
   itemName: string
   resolutionStatus: ResolutionStatus
 }

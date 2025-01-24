@@ -36,7 +36,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
   return (
     <TriggerContainer key={trigger.triggerId} className={`moj-trigger-row trigger-container`}>
       <TriggerHeaderRow className={`govuk-grid-row trigger-header trigger-header-row`}>
-        <TriggerCol className="govuk-grid-column-three-quarters trigger-details-column" setWidth="85%">
+        <TriggerCol className="govuk-grid-column-three-quarters trigger-details-column" width="85%">
           <TriggerCodeLabel className={`trigger-code trigger-code`} htmlFor={checkBoxId}>
             {trigger.shortTriggerCode}
           </TriggerCodeLabel>
@@ -54,7 +54,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
             </>
           )}
         </TriggerCol>
-        <TriggerCol className="govuk-grid-column-one-quarter" setWidth="15%">
+        <TriggerCol className="govuk-grid-column-one-quarter" width="15%">
           <TriggerStatus>
             <ConditionalRender isRendered={isResolved}>
               <TriggerCompleteBadge />

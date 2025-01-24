@@ -1,9 +1,8 @@
 import Image from "next/image"
-import { StyledComponentPropsWithRef } from "styled-components"
 import { LOCKED_ICON_URL } from "../utils/icons"
 import { LockedTagContainer, Lockee } from "./LockedTag.styles"
 
-interface LockedTagProps extends StyledComponentPropsWithRef<typeof LockedTagContainer> {
+interface LockedTagProps {
   lockName: string
   lockedBy: string
 }
