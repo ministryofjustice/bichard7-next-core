@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 import { bold } from "cli-color"
 import { Command } from "commander"
+import { conductor } from "./commands/conductor"
 import { devSgs } from "./commands/dev-sgs"
+import { fetchImage } from "./commands/fetch-images"
 import { messageProcessing } from "./commands/message-processing"
 import { status } from "./commands/status"
 import { version } from "./package.json"
-import { configureGlobalOptionsHook } from "./utils/globalOptionsHook"
-import { fetchImage } from "./commands/fetch-images"
-import { setEnvironment } from "./env"
+import { applyEnvironmentOptionHooks } from "./utils/globalOptionsHook"
+
+process.on("unhandledRejection", (reason) => {
+  console.error(reason)
+  process.exit(1)
+})
 
 const cli = new Command()
   .name("b7")
@@ -18,21 +23,20 @@ const cli = new Command()
   .option("--preprod", "Use the preprod environment")
   .option("--prod", "Use the production environment")
   .option("--shared", "Use the shared environment")
-  // Hook to propagate global flags to subcommands
-  .hook("preAction", (cmd) => {
-    setEnvironment(cmd, cmd.opts())
-  })
   .configureOutput({
     outputError: (str) => {
       console.error(bold(str))
     }
   })
+  // individual commands
   .addCommand(status())
   .addCommand(devSgs())
-  .addCommand(messageProcessing())
   .addCommand(fetchImage())
+  // command groups
+  .addCommand(messageProcessing())
+  .addCommand(conductor())
 
-configureGlobalOptionsHook(cli)
+applyEnvironmentOptionHooks(cli)
 cli.parse(process.argv)
 
 export default cli

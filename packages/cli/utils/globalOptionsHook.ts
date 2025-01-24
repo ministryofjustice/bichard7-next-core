@@ -6,7 +6,7 @@ const skipCommands = ["wiki"]
 // once the hook has been invoked once, it doesn't need to run
 // again.
 let globalOptionsHookInvoked = false
-export function configureGlobalOptionsHook(command: Command) {
+export function applyEnvironmentOptionHooks(command: Command) {
   command.hook("preAction", (subcommand) => {
     if (globalOptionsHookInvoked) return
     if (skipCommands.includes(subcommand.name())) return
@@ -24,5 +24,5 @@ export function configureGlobalOptionsHook(command: Command) {
   })
 
   // Recursively apply hooks to subcommands
-  command.commands.forEach(configureGlobalOptionsHook)
+  command.commands.forEach(applyEnvironmentOptionHooks)
 }

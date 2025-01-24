@@ -9,16 +9,32 @@ export default {
       console.log(`\nExecuting command:\n${bold(vaultExec + " -- " + command)}\n`)
     }
 
-    spawn(`${vaultExec} -- ${command}`, [], { stdio: "inherit", shell: true })
-      .on("error", (err) => {
-        console.error(`Failed to start command: ${err.message}`)
+    return new Promise((resolve, reject) => {
+      const process = spawn(`${vaultExec} -- ${command}`, [], { stdio: "inherit", shell: true })
+
+      let output = ""
+      let error = ""
+
+      process.stdout?.on("data", (data: any) => {
+        output += data.toString()
       })
-      .on("exit", (code) => {
+      process.stderr?.on("data", (data: any) => {
+        error += data.toString()
+      })
+      process.on("error", (err) => {
+        reject(err)
+      })
+      process.on("close", (code) => {
         if (code !== 0) {
-          console.error(`Command exited with code: ${code}`)
+          reject(new Error(`Command exited with code: ${code}`))
         } else {
-          console.log(green(`Command completed successfully.`))
+          if (log) {
+            console.log(green(`Command completed successfully.`))
+          }
+
+          resolve(output.trim())
         }
       })
+    })
   }
 }
