@@ -233,6 +233,16 @@ describe("Case details", () => {
     cy.url().should("match", /\/court-cases\/\d+/)
   })
 
+  it("should display there are no user notes when none exist", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+
+    loginAndVisit("/bichard/court-cases/0")
+    cy.get("button").contains("Reallocate Case").click()
+
+    cy.contains("Case has no user notes.")
+    cy.contains("show more").should("not.exist")
+  })
+
   it('should display the most recent user note when "show more" is visible', () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [
