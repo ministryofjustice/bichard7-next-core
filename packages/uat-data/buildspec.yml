@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - curl https://proxy.uat.ptl.bichard7.modernisation-platform.service.justice.gov.uk/users/login?redirect=/users
+      - curl http://pnc.cjse.org:3000/mocks
       - npm install
       - npm install -g ts-node
 
