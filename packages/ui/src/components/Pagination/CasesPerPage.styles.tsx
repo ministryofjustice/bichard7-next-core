@@ -1,8 +1,7 @@
-import { SelectInput } from "@govuk-react/select"
 import styled from "styled-components"
 
-const CasesPerPagePicker = styled(SelectInput)`
-  width: auto;
+const CasesPerPagePicker = styled.select`
+  min-width: 3em;
 `
 
 export { CasesPerPagePicker }
