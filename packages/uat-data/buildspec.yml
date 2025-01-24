@@ -2,15 +2,14 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      nodejs: 20
-      commands:
-        - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
-        - yum groupinstall -y "Development tools"
-        - yum -y install jq gzip tar unzip openssl shadow-utils xz wget gnupg curl openvpn which chromium deltarpm
-        - pip3 install --upgrade pip
-        - pip3 install click botocore requests
+    commands:
+      - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
+      - yum groupinstall -y "Development tools"
+      - yum -y install jq gzip tar unzip openssl shadow-utils xz wget gnupg curl openvpn which chromium deltarpm
+      - pip3 install --upgrade pip
+      - pip3 install click botocore requests
 
+  build:
     commands:
       - set -e
       - TRIGGER=$(aws codepipeline list-pipeline-executions --pipeline-name cjse-bichard7-path-to-live-deploy-pipeline --query "pipelineExecutionSummaries[?pipelineExecutionId=='${CODEPIPELINE_EXECUTION_ID}'] .trigger.triggerDetail" --output text)
