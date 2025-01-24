@@ -8,6 +8,7 @@ phases:
       - yum -y install jq gzip tar unzip openssl shadow-utils xz wget gnupg curl openvpn which chromium deltarpm
       - pip3 install --upgrade pip
       - pip3 install click botocore requests
+      - npm install -g typescript ts-node
 
   build:
     commands:
