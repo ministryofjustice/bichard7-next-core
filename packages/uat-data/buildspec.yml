@@ -7,7 +7,7 @@ phases:
     commands:
       - npm install
       - npm install -g ts-node
-      
+
   build:
     commands:
       - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
