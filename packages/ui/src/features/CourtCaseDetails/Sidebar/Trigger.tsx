@@ -82,7 +82,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
 
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
-          <TriggerDefinition>{triggerDefinition?.description}</TriggerDefinition>
+          <TriggerDefinition width={"90%"}>{triggerDefinition?.description}</TriggerDefinition>
           <PreviewButton
             className="triggers-help-preview"
             showPreview={!showHelpBox}

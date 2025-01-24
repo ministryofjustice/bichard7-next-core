@@ -27,7 +27,8 @@ const CjsResultCode = styled.div`
   line-height: 1.25;
 `
 
-const TriggerDefinition = styled.div`
+const TriggerDefinition = styled.div<{ width: string }>`
+  width: ${(props) => props.width};
   margin-top: 10px;
 `
 
