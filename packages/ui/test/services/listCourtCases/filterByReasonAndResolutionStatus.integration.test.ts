@@ -1,4 +1,4 @@
-import { isError } from "lodash"
+import { isError } from "@moj-bichard7/common/types/Result"
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
 import Trigger from "services/entities/Trigger"

@@ -1,5 +1,6 @@
 import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomInt, randomUUID } from "crypto"
 import { addDays } from "date-fns"
@@ -16,7 +17,8 @@ import {
   mockDynamoAuditLogUserEvent
 } from "../../../../tests/helpers/mockAuditLogs"
 import TestDynamoGateway from "../../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
-import AuditLogStatus from "../../../../types/AuditLogStatus"
+import PncStatus from "../../../../types/PncStatus"
+import TriggerStatus from "../../../../types/TriggerStatus"
 import IndexSearcher from "../DynamoGateway/IndexSearcher"
 import AuditLogDynamoGateway, { getEventsPageLimit } from "./AuditLogDynamoGateway"
 import { compress, decompress } from "./compression"
@@ -539,7 +541,7 @@ describe("AuditLogDynamoGateway", () => {
       const actualAuditLogs = result as DynamoAuditLog[]
       expect(actualAuditLogs).toHaveLength(1)
       expect(actualAuditLogs[0].events).toHaveLength(1)
-      expect(actualAuditLogs[0].events[0].eventType).toBe("Type 2")
+      expect(actualAuditLogs[0].events?.[0].eventType).toBe("Type 2")
     })
   })
 
@@ -901,10 +903,10 @@ describe("AuditLogDynamoGateway", () => {
         errorRecordArchivalDate: "2020-01-02",
         forceOwner: 22,
         isSanitised: 1,
-        pncStatus: "Processing",
+        pncStatus: PncStatus.Processing,
         retryCount: 55,
         status: AuditLogStatus.Completed,
-        triggerStatus: "NoTriggers"
+        triggerStatus: TriggerStatus.NoTriggers
       })
 
       expect(isError(result)).toBeFalsy()
@@ -1039,7 +1041,7 @@ describe("AuditLogDynamoGateway", () => {
       expect(attribute1).toHaveProperty("_compressedValue")
 
       const decompressedValue = (await decompress(
-        (attribute1 as { _compressedValue: string })._compressedValue
+        (attribute1 as unknown as { _compressedValue: string })._compressedValue
       )) as string
       expect(decompressedValue).toBe("Attribute 1 data".repeat(500))
     })
@@ -1049,10 +1051,10 @@ describe("AuditLogDynamoGateway", () => {
         _id: randomUUID(),
         _messageId: auditLog.messageId,
         attributes: {
-          "Attribute 1": { _compressedValue: (await compress("Attribute 1 data".repeat(500))) as string }
+          "Attribute 1": { _compressedValue: await compress("Attribute 1 data".repeat(500)) } as unknown as string
         },
         eventType: "Type 1"
-      })
+      } as unknown as DynamoAuditLogEvent)
 
       await testGateway.insertOne(auditLogDynamoConfig.eventsTableName, externalEvent, gateway.eventsTableKey)
 
@@ -1065,8 +1067,8 @@ describe("AuditLogDynamoGateway", () => {
       expect(actualAuditLogs[0].events).toHaveLength(1)
 
       const actualEvents = actualAuditLogs[0].events
-      expect(actualEvents[0].eventType).toBe("Type 1")
-      expect(actualEvents[0].attributes).toHaveProperty("Attribute 1", "Attribute 1 data".repeat(500))
+      expect(actualEvents?.[0].eventType).toBe("Type 1")
+      expect(actualEvents?.[0].attributes).toHaveProperty("Attribute 1", "Attribute 1 data".repeat(500))
     })
 
     it("should compress event xml", async () => {
@@ -1083,7 +1085,7 @@ describe("AuditLogDynamoGateway", () => {
       expect(allEvents[0].eventXml).toHaveProperty("_compressedValue")
 
       const decompressedValue = (await decompress(
-        (allEvents[0].eventXml as { _compressedValue: string })._compressedValue
+        (allEvents[0].eventXml as unknown as { _compressedValue: string })._compressedValue
       )) as string
       expect(decompressedValue).toBe("really long xml".repeat(500))
     })
@@ -1109,8 +1111,8 @@ describe("AuditLogDynamoGateway", () => {
       expect(actualAuditLogs[0].events).toHaveLength(1)
 
       const actualEvents = actualAuditLogs[0].events
-      expect(actualEvents[0]).not.toHaveProperty("_compressedValue")
-      expect(actualEvents[0].eventXml).toBe("really long xml".repeat(500))
+      expect(actualEvents?.[0]).not.toHaveProperty("_compressedValue")
+      expect(actualEvents?.[0].eventXml).toBe("really long xml".repeat(500))
     })
   })
 })

@@ -1,11 +1,11 @@
 import type EventCategory from "@moj-bichard7/common/types/EventCategory"
 
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { randomUUID } from "crypto"
 
-import type { DynamoAuditLog, InputApiAuditLog, OutputApiAuditLog } from "../../types/AuditLog"
+import type { DynamoAuditLog, InputApiAuditLog, InternalDynamoAuditLog, OutputApiAuditLog } from "../../types/AuditLog"
 import type { ApiAuditLogEvent, DynamoAuditLogEvent, DynamoAuditLogUserEvent } from "../../types/AuditLogEvent"
 
-import AuditLogStatus from "../../types/AuditLogStatus"
 import PncStatus from "../../types/PncStatus"
 import TriggerStatus from "../../types/TriggerStatus"
 
@@ -32,12 +32,18 @@ export const mockOutputApiAuditLog = (overrides: Partial<OutputApiAuditLog> = {}
 })
 
 export const mockDynamoAuditLog = (overrides: Partial<DynamoAuditLog> = {}): DynamoAuditLog => ({
-  ...mockOutputApiAuditLog(overrides),
-  events: [],
+  ...mockInternalDynamoAuditLog(overrides),
+  events: []
+})
+
+export const mockInternalDynamoAuditLog = (overrides: Partial<DynamoAuditLog> = {}): InternalDynamoAuditLog => ({
+  ...mockInputApiAuditLog(overrides),
   eventsCount: 0,
   isSanitised: 0,
   nextSanitiseCheck: new Date().toISOString(),
+  pncStatus: PncStatus.Processing,
   status: overrides.status ?? AuditLogStatus.Processing,
+  triggerStatus: TriggerStatus.NoTriggers,
   version: 0,
   ...overrides
 })
@@ -57,9 +63,7 @@ export const mockApiAuditLogEvent = (overrides: Partial<ApiAuditLogEvent> = {}):
   ...overrides
 })
 
-export const mockDynamoAuditLogEvent = (
-  overrides: Partial<DynamoAuditLogEvent & { _id?: string }> = {}
-): DynamoAuditLogEvent => ({
+export const mockDynamoAuditLogEvent = (overrides: Partial<DynamoAuditLogEvent> = {}): DynamoAuditLogEvent => ({
   ...mockApiAuditLogEvent(overrides),
   _automationReport: 0,
   _messageId: "needs-setting",
