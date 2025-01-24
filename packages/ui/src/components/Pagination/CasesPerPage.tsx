@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import { ChangeEvent } from "react"
 import { CasesPerPagePicker } from "./CasesPerPage.styles"
 
 interface Props {
@@ -15,7 +16,7 @@ const CasesPerPage: React.FC<Props> = ({ options, selected, pageNum, casesPerPag
     <div className="moj-pagination__results">
       {"View "}
       <CasesPerPagePicker
-        onChange={(event) => {
+        onChange={(event: ChangeEvent<HTMLSelectElement>) => {
           const newCasesPerPage = event.target.value
 
           // Ensure that the first case on the page remains after changing number of cases per page
