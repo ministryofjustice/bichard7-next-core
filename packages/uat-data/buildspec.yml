@@ -10,7 +10,7 @@ phases:
 
   build:
     commands:
-      - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
+      # - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
       # - export OLD_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       # - export OLD_AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       # - temp_role=$(aws sts assume-role --role-session-name "next" --duration-seconds 10800 --role-arn "${ASSUME_ROLE_ARN}")
@@ -18,9 +18,5 @@ phases:
       # - export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
       # - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
       # - aws ec2 describe-client-vpn-endpoints | jq -r ".ClientVpnEndpoints[0].DnsServers[0:2][]" | sed 's/^/nameserver /' | cat - /etc/resolv.conf > tmp && cp tmp /etc/resolv.conf
-      - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
+      # - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
-
-  post_build:
-    commands:
-      - cat /var/log/openvpn.log
