@@ -14,8 +14,8 @@ const HeaderRow = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin: 10px;
-  padding: 10px;
+  margin: 10px 10px 10px 0;
+  padding: 10px 10px 10px 0;
 `
 
 export { HeaderContainer, HeaderRow, MojHeaderContainer }

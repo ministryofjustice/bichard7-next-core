@@ -14,8 +14,8 @@ const TriggerHeaderRow = styled.div`
   display: flex;
 `
 
-const TriggerCol = styled.div<{ setWidth: string }>`
-  width: ${(props) => props.setWidth};
+const TriggerCol = styled.div<{ width: string }>`
+  width: ${(props) => props.width};
 `
 
 const TriggerCodeLabel = styled.label`

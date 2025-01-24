@@ -72,7 +72,7 @@
     "reflect-metadata": "^0.2.2",
     "sass-loader": "^16.0.4",
     "stompit": "^1.0.0",
-    "styled-components": "^5.3.11",
+    "styled-components": "^6.1.14",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
