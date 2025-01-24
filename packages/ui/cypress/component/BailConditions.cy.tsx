@@ -5,14 +5,14 @@ describe("BailConditions", () => {
   const reason = "expected reason"
   it("should not render the component if there are no bails", () => {
     cy.mount(<BailConditions bailConditions={[]} offences={[]} />)
-    cy.contains("H3", "Bail conditions").should("not.exist")
+    cy.contains("h3", "Bail conditions").should("not.exist")
     cy.get("td").should("not.exist")
   })
 
   it("should render the list of bail conditions and", () => {
     const conditions = ["first condition", "second condition", "third condition"]
     cy.mount(<BailConditions bailConditions={conditions} bailReason={reason} offences={[]} />)
-    cy.contains("H3", "Bail conditions").should("exist")
+    cy.contains("h3", "Bail conditions").should("exist")
     cy.contains("td", conditions[0]).should("exist")
     cy.contains("td", conditions[1]).should("exist")
     cy.contains("td", conditions[2]).should("exist")
@@ -27,7 +27,7 @@ describe("BailConditions", () => {
         bailReason={reason}
       />
     )
-    cy.contains("H3", "Bail conditions").should("exist")
+    cy.contains("h3", "Bail conditions").should("exist")
     cy.contains("td", "Exclusion").siblings().should("include.text", "Exclusion: first condition")
     cy.contains("td", "Curfew").siblings().should("include.text", "Curfew: second condition")
     cy.contains("td", "Other").siblings().should("include.text", "third condition")
@@ -57,7 +57,7 @@ describe("BailConditions", () => {
         bailReason={reason}
       />
     )
-    cy.contains("H3", "Bail conditions").should("exist")
+    cy.contains("h3", "Bail conditions").should("exist")
     cy.contains("td", "Offence 1").siblings().should("include.text", "Exclusion: first condition")
     cy.contains("td", "Offence 3").siblings().should("include.text", "Curfew: second condition")
     cy.contains("td", "Offence 2").siblings().should("include.text", "third condition")

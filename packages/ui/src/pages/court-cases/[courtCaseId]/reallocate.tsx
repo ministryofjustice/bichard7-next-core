@@ -11,11 +11,9 @@ import { PreviousPathContext } from "context/PreviousPathContext"
 import type { Property } from "csstype"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
-import { GridCol, GridRow, Heading } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
@@ -110,8 +108,6 @@ const ReallocateCasePage: NextPage<Props> = ({
   previousPath,
   canReallocate
 }: Props) => {
-  const { basePath } = useRouter()
-
   const [showMore, setShowMore] = useState<boolean>(false)
   const [reallocateFormWidth, setReallocateFormWidth] = useState<string>("two-thirds")
   const [userNotesWidth, setUserNotesWidth] = useState<string>("one-third")
@@ -121,7 +117,7 @@ const ReallocateCasePage: NextPage<Props> = ({
 
   const notes: DisplayNote[] = courtCase.notes
 
-  let backLink = `${basePath}/court-cases/${courtCase.errorId}`
+  let backLink = `/court-cases/${courtCase.errorId}`
 
   if (previousPath) {
     backLink += `?previousPath=${encodeURIComponent(previousPath)}`
@@ -173,27 +169,25 @@ const ReallocateCasePage: NextPage<Props> = ({
                   <Header canReallocate={canReallocate} />
                   <CourtCaseDetailsSummaryBox />
                   <HeaderRow>
-                    <Heading as="h2" size="MEDIUM" aria-label="Reallocate Case">
+                    <h2 className="govuk-heading-m" aria-label="Reallocate Case">
                       {"Case reallocation"}
-                    </Heading>
+                    </h2>
                   </HeaderRow>
                 </HeaderContainer>
                 <ConditionalRender isRendered={lockedByAnotherUser}>
                   {"Case is locked by another user."}
                 </ConditionalRender>
                 <ConditionalRender isRendered={!lockedByAnotherUser}>
-                  <GridRow style={{ flexDirection: flexDirection }}>
-                    <GridCol setWidth={reallocateFormWidth}>
+                  <div className="govuk-grid-row" style={{ display: "flex", flexDirection }}>
+                    <div className={`govuk-grid-column-${reallocateFormWidth}`}>
                       <ReallocationNotesForm backLink={backLink} />
-                    </GridCol>
-                    <GridCol setWidth={userNotesWidth}>
-                      <Heading as="h2" size="SMALL">
-                        {"Previous User Notes"}
-                      </Heading>
+                    </div>
+                    <div className={`govuk-grid-column-${userNotesWidth}`}>
+                      <h2 className="govuk-heading-s">{"Previous User Notes"}</h2>
                       <NotesTableContainer className={"notes-table-container"}>
                         <NotesTable displayForce notes={showMore ? userNotes : userNotes.slice(0, 1)} />
                       </NotesTableContainer>
-                      <ShowMoreContainer className={"show-more-container"}>
+                      <ShowMoreContainer className={"govuk-grid-row show-more-container"}>
                         <ActionLink
                           onClick={() => setShowMore(!showMore)}
                           id={showMore ? "show-more-action" : "show-less-action"}
@@ -201,8 +195,8 @@ const ReallocateCasePage: NextPage<Props> = ({
                           {showMore ? "show less" : "show more"}
                         </ActionLink>
                       </ShowMoreContainer>
-                    </GridCol>
-                  </GridRow>
+                    </div>
+                  </div>
                 </ConditionalRender>
               </Layout>
             </PreviousPathContext.Provider>

@@ -1,13 +1,13 @@
 import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/data/offence-category.json"
 import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { Heading, Table } from "govuk-react"
 import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -20,7 +20,6 @@ import { OffenceDetailsContainer } from "./OffenceDetails.styles"
 import { OffenceNavigation } from "./OffenceNavigation"
 import ResultQualifier from "./ResultQualifier"
 import { StartDate } from "./StartDate"
-import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 
 interface OffenceDetailsProps {
   offence: Offence
@@ -97,58 +96,54 @@ export const OffenceDetails = ({
         onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
       />
-      <Heading as="h3" size="MEDIUM">
-        {`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
-      </Heading>
+      <h3 className="govuk-heading-m">{`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}</h3>
       <div className="offences-table">
-        <Table>
-          {
-            <>
-              {offenceCodeErrorPrompt ? (
-                <ExceptionFieldTableRow
-                  badgeText={ExceptionBadgeType.SystemError}
-                  value={offenceCode}
-                  label={"Offence code"}
-                >
-                  <ErrorPromptMessage message={offenceCodeErrorPrompt} />
-                </ExceptionFieldTableRow>
-              ) : (
-                <TableRow label="Offence code" value={offenceCode} />
-              )}
-            </>
-          }
-          <TableRow label="Title" value={offence.OffenceTitle} />
-          <TableRow label="Category" value={offenceCategoryWithDescription} />
-          <TableRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
-          <TableRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
-          <TableRow label="Start date" value={<StartDate offence={offence} />} />
-          <TableRow label="Location" value={offence.LocationOfOffence} />
-          <TableRow label="Wording" value={offence.ActualOffenceWording} />
-          <TableRow label="Record on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
-          <TableRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
-          <TableRow label="Home Office classification" value={offence.HomeOfficeClassification} />
-          <TableRow
-            label="Conviction date"
-            value={offence.ConvictionDate && formatDisplayedDate(offence.ConvictionDate)}
-          />
+        <table className="govuk-table">
+          <tbody className="govuk-table__body">
+            {offenceCodeErrorPrompt ? (
+              <ExceptionFieldTableRow
+                badgeText={ExceptionBadgeType.SystemError}
+                value={offenceCode}
+                label={"Offence code"}
+              >
+                <ErrorPromptMessage message={offenceCodeErrorPrompt} />
+              </ExceptionFieldTableRow>
+            ) : (
+              <TableRow label="Offence code" value={offenceCode} />
+            )}
+            <TableRow label="Title" value={offence.OffenceTitle} />
+            <TableRow label="Category" value={offenceCategoryWithDescription} />
+            <TableRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
+            <TableRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
+            <TableRow label="Start date" value={<StartDate offence={offence} />} />
+            <TableRow label="Location" value={offence.LocationOfOffence} />
+            <TableRow label="Wording" value={offence.ActualOffenceWording} />
+            <TableRow label="Record on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
+            <TableRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
+            <TableRow label="Home Office classification" value={offence.HomeOfficeClassification} />
+            <TableRow
+              label="Conviction date"
+              value={offence.ConvictionDate && formatDisplayedDate(offence.ConvictionDate)}
+            />
 
-          <OffenceMatching
-            offenceIndex={selectedOffenceSequenceNumber - 1}
-            offence={offence}
-            isCaseUnresolved={isCaseUnresolved}
-            exceptions={exceptions}
-            isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
-          ></OffenceMatching>
+            <OffenceMatching
+              offenceIndex={selectedOffenceSequenceNumber - 1}
+              offence={offence}
+              isCaseUnresolved={isCaseUnresolved}
+              exceptions={exceptions}
+              isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
+            ></OffenceMatching>
 
-          <TableRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
-          <TableRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
-          <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
-            <TableRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
-          </ConditionalRender>
-          <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
-            <TableRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
-          </ConditionalRender>
-        </Table>
+            <TableRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
+            <TableRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
+            <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
+              <TableRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
+            </ConditionalRender>
+            <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
+              <TableRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
+            </ConditionalRender>
+          </tbody>
+        </table>
       </div>
 
       <div className="offence-results-table">
@@ -173,18 +168,18 @@ export const OffenceDetails = ({
       </div>
       {qualifierCode && (
         <div className="qualifier-code-table">
-          <Heading as="h4" size="MEDIUM">
-            {"Qualifier"}
-          </Heading>
-          <Table>
-            {qualifierErrorPrompt ? (
-              <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
-                <ErrorPromptMessage message={qualifierErrorPrompt} />
-              </ExceptionFieldTableRow>
-            ) : (
-              <TableRow label={"Code"} value={qualifierCode} />
-            )}
-          </Table>
+          <h4 className="govuk-heading-m">{"Qualifier"}</h4>
+          <table className="govuk-table">
+            <tbody className="govuk-table__body">
+              {qualifierErrorPrompt ? (
+                <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
+                  <ErrorPromptMessage message={qualifierErrorPrompt} />
+                </ExceptionFieldTableRow>
+              ) : (
+                <TableRow label={"Code"} value={qualifierCode} />
+              )}
+            </tbody>
+          </table>
         </div>
       )}
       <OffenceNavigation

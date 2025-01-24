@@ -1,5 +1,4 @@
 import { Case } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { Table } from "govuk-react"
 import formatForce from "utils/formatForce"
 import { TableRow } from "./TableRow"
 
@@ -59,10 +58,12 @@ export const CaseInformation = ({ caseInformation }: caseInformationProps) => {
   })
 
   return (
-    <Table>
-      {rows.map((row, idx) => (
-        <TableRow label={row.label} value={row.value} key={idx} />
-      ))}
-    </Table>
+    <table className="govuk-table">
+      <tbody className="govuk-table__body">
+        {rows.map((row, idx) => (
+          <TableRow label={row.label} value={row.value} key={idx} />
+        ))}
+      </tbody>
+    </table>
   )
 }

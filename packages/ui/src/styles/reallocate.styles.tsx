@@ -1,4 +1,3 @@
-import { GridRow } from "govuk-react"
 import styled from "styled-components"
 
 const NotesTableContainer = styled.div`
@@ -6,7 +5,8 @@ const NotesTableContainer = styled.div`
   overflow: auto;
 `
 
-const ShowMoreContainer = styled(GridRow)`
+const ShowMoreContainer = styled.div`
+  display: flex;
   justify-content: flex-end;
   padding-right: 15px;
   margin-top: 15px;

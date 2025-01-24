@@ -1,5 +1,4 @@
 import { useCurrentUser } from "context/CurrentUserContext"
-import { Heading } from "govuk-react"
 import { useEffect, useState } from "react"
 import { StyledAppliedFilters } from "./CourtCaseFilterWrapper.styles"
 
@@ -41,9 +40,7 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
       <div className="moj-filter-layout__filter">
         <div className={isSearchPanelShown ? "moj-filter" : "moj-filter moj-hidden"}>{filter}</div>
       </div>
-      <Heading className="hidden-header" as="h1" size="LARGE">
-        {"Case list"}
-      </Heading>
+      <h1 className="hidden-header govuk-heading-l">{"Case list"}</h1>
       <div className="moj-filter-layout__content">
         <div className="moj-button-menu">
           <div className="moj-action-bar">

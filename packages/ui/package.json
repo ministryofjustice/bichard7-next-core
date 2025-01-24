@@ -56,7 +56,6 @@
     "date-time-format-timezone": "^1.0.22",
     "downshift": "^9.0.8",
     "govuk-frontend": "^5.8.0",
-    "govuk-react": "^0.10.7",
     "json-2-csv": "^5.5.7",
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
