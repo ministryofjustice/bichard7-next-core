@@ -11,6 +11,7 @@ export const env: {
   UAT: Environment
   PREPROD: Environment
   PROD: Environment
+  SHARED: Environment
 } = {
   E2E: {
     domain: "e2e-test.ptl.bichard7.modernisation-platform.service.justice.gov.uk",
@@ -38,6 +39,13 @@ export const env: {
     aws: {
       profile: "qsolution-production",
       account: "bichard-7-production"
+    }
+  },
+  SHARED: {
+    domain: "bichard7.service.justice.gov.uk",
+    aws: {
+      profile: "bichard7-shared",
+      account: "bichard7-shared"
     }
   }
 }
