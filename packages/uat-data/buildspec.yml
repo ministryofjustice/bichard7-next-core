@@ -26,4 +26,5 @@ phases:
       - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
       - bash ./scripts/setup-e2e-tests.sh
       - source ./workspaces/${WORKSPACE}.env
+      - cd ../../packages/e2e-test
       - S3_INCOMING_MESSAGE_BUCKET=bichard-7-uat-incoming-messages PNC_PORT=3000 REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
