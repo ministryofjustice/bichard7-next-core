@@ -11,6 +11,6 @@ export function disable(): Command {
         aws: { profile, account }
       } = getEnvironment()
 
-      awsVault.exec(profile, `aws events disable-rule --name ${account}-trigger-from-external-incoming-messages`)
+      awsVault.exec(profile, `aws events disable-rule --name ${account}-trigger-from-external-incoming-messages`, true)
     })
 }
