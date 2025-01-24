@@ -7,8 +7,8 @@ phases:
     commands:
       - npm install
       - npm install -g ts-node
-
-  pre_build:
+      
+  build:
     commands:
       - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
       - export OLD_AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -19,7 +19,4 @@ phases:
       - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
       - aws ec2 describe-client-vpn-endpoints | jq -r ".ClientVpnEndpoints[0].DnsServers[0:2][]" | sed 's/^/nameserver /' | cat - /etc/resolv.conf > tmp && cp tmp /etc/resolv.conf
       - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
-
-  build:
-    commands:
       - REPEAT_SCENARIOS=10 DEPLOY_NAME=uat ts-node ./packages/uat-data/scripts/insert-uat-data.ts
