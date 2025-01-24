@@ -1,14 +1,13 @@
-import { GridCol, GridRow } from "govuk-react"
 import styled from "styled-components"
 
-const SelectAllTriggersGridRow = styled(GridRow)`
+const SelectAllTriggersGridRow = styled.div`
   text-align: right;
   padding-bottom: 20px;
   cursor: pointer;
   font-size: 1em;
 `
 
-const MarkCompleteGridCol = styled(GridCol)`
+const MarkCompleteGridCol = styled.div`
   display: flex;
   justify-content: end;
   margin-bottom: 0;

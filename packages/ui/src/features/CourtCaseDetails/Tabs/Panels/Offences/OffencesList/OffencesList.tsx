@@ -1,5 +1,4 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { Heading, Table } from "govuk-react"
 
 import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
 import { OffencesListRow } from "./OffencesListRow"
@@ -12,30 +11,38 @@ interface OffencesListProps {
 export const OffencesList = ({ offences, setDetailedOffenceIndex }: OffencesListProps) => {
   return (
     <div id={"offences"}>
-      <Heading as="h3" size="MEDIUM">
-        {"Offences"}
-      </Heading>
-      <Table
-        head={
-          <Table.Row>
-            <Table.CellHeader></Table.CellHeader>
-            <Table.CellHeader>{"Offence number"}</Table.CellHeader>
-            <Table.CellHeader>{"Date"}</Table.CellHeader>
-            <Table.CellHeader>{"Code"}</Table.CellHeader>
-            <Table.CellHeader>{"Title"}</Table.CellHeader>
-          </Table.Row>
-        }
-      >
-        {offences.length > 0 &&
-          offences.map((offence, index) => (
-            <OffencesListRow
-              key={`${getOffenceCode(offence) || ""}-${index}`}
-              offence={offence}
-              offenceIndex={index}
-              onClick={() => setDetailedOffenceIndex(index + 1)}
-            />
-          ))}
-      </Table>
+      <h3 className="govuk-heading-m">{"Offences"}</h3>
+      <table className="govuk-table">
+        <thead className="govuk-table__head">
+          <tr className="govuk-table__row">
+            <th scope="col" className="govuk-table__header" />
+            <th scope="col" className="govuk-table__header">
+              {"Offence number"}
+            </th>
+            <th scope="col" className="govuk-table__header">
+              {"Date"}
+            </th>
+            <th scope="col" className="govuk-table__header">
+              {"Code"}
+            </th>
+            <th scope="col" className="govuk-table__header">
+              {"Title"}
+            </th>
+          </tr>
+        </thead>
+
+        <tbody className="govuk-table__body">
+          {offences.length > 0 &&
+            offences.map((offence, index) => (
+              <OffencesListRow
+                key={`${getOffenceCode(offence) || ""}-${index}`}
+                offence={offence}
+                offenceIndex={index}
+                onClick={() => setDetailedOffenceIndex(index + 1)}
+              />
+            ))}
+        </tbody>
+      </table>
     </div>
   )
 }

@@ -1,7 +1,6 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import WarningIcon from "components/WarningIcon"
 import { useCourtCase } from "context/CourtCaseContext"
-import { Table } from "govuk-react"
 import Image from "next/image"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
@@ -41,12 +40,12 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
   })
 
   return (
-    <Table.Row>
-      <Table.Cell>{courtCase.errorStatus !== "Resolved" && offenceAlertIcon}</Table.Cell>
-      <Table.Cell>{offence.CourtOffenceSequenceNumber}</Table.Cell>
-      <Table.Cell>{formatDisplayedDate(offence.ActualOffenceStartDate.StartDate).toString()}</Table.Cell>
-      <Table.Cell>{getOffenceCode(offence) || ""}</Table.Cell>
-      <Table.Cell>
+    <tr className="govuk-table__row">
+      <td className="govuk-table__cell">{courtCase.errorStatus !== "Resolved" && offenceAlertIcon}</td>
+      <td className="govuk-table__cell">{offence.CourtOffenceSequenceNumber}</td>
+      <td className="govuk-table__cell">{formatDisplayedDate(offence.ActualOffenceStartDate.StartDate).toString()}</td>
+      <td className="govuk-table__cell">{getOffenceCode(offence) || ""}</td>
+      <td className="govuk-table__cell">
         <a
           id={`offence-${offence.CourtOffenceSequenceNumber}`}
           className={`govuk-link`}
@@ -58,7 +57,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
         >
           {offence.OffenceTitle ?? "Offence code not found"}
         </a>
-      </Table.Cell>
-    </Table.Row>
+      </td>
+    </tr>
   )
 }

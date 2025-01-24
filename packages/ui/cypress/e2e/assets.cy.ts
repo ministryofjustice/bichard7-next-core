@@ -13,7 +13,11 @@ describe("GOV.UK Assets", () => {
       "a[href='https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/']"
     )
       .should("be.visible")
-      .should("have.attr", "image", "[object Object]")
+      .should((el) => {
+        expect(el.eq(0)).to.contain("© Crown copyright")
+      })
+
+    cy.get("svg.govuk-footer__licence-logo").should("be.visible")
   })
 
   it("Should provide favicon icon that loads correctly", () => {

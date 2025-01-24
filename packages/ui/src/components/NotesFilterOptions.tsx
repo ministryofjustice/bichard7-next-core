@@ -1,4 +1,4 @@
-import RadioButton from "components/RadioButton/RadioButton"
+import RadioButton from "components/Radios/RadioButton"
 import type { ChangeEvent, Dispatch } from "react"
 import type NotesViewOption from "types/NotesViewOption"
 import { NOTES_VIEW_OPTIONS } from "types/NotesViewOption"

@@ -14,22 +14,24 @@ const grey = "#b0b4b6"
 const gdsGreen = "#00703c"
 const gdsRed = "#d4351c"
 const gdsWhite = "#ffffff"
+const gdsSecondaryTextColour = "#6f777b"
 
 export {
   blue,
   darkGrey,
   gdsBlack,
+  gdsGreen,
   gdsGrey,
   gdsLightGrey,
   gdsMidGrey,
+  gdsRed,
+  gdsSecondaryTextColour,
+  gdsWhite,
   grey,
   lightGrey,
   tagBlue,
   textBlue,
   textPrimary,
   textSecondary,
-  yellow,
-  gdsGreen,
-  gdsRed,
-  gdsWhite
+  yellow
 }

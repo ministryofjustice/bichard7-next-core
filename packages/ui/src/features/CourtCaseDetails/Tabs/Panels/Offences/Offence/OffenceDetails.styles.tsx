@@ -1,4 +1,3 @@
-import { Input } from "govuk-react"
 import styled from "styled-components"
 
 const OffenceDetailsContainer = styled.div`
@@ -7,8 +6,4 @@ const OffenceDetailsContainer = styled.div`
   }
 `
 
-const PncInput = styled(Input)`
-  width: 4.125rem;
-`
-
-export { OffenceDetailsContainer, PncInput }
+export { OffenceDetailsContainer }

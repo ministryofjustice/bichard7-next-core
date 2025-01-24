@@ -1,5 +1,4 @@
 import ConditionalRender from "components/ConditionalRender"
-import { Table } from "govuk-react"
 import Image from "next/image"
 import { LOCKED_ICON_URL } from "utils/icons"
 import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"
@@ -13,19 +12,19 @@ interface ExtraReasonRowProps {
 
 export const ExtraReasonRow = ({ isLocked, reasonCell, lockTag }: ExtraReasonRowProps) => {
   return (
-    <StyledExtraReasonRow>
-      <Table.Cell>
+    <StyledExtraReasonRow className={"govuk-table__row"}>
+      <td className="govuk-table__cell">
         <ConditionalRender isRendered={isLocked}>
           <Image src={LOCKED_ICON_URL} width={20} height={20} alt="Lock icon" />
         </ConditionalRender>
-      </Table.Cell>
-      <Table.Cell />
-      <Table.Cell />
-      <Table.Cell />
-      <Table.Cell />
-      <Table.Cell />
-      <Table.Cell>{reasonCell}</Table.Cell>
-      <Table.Cell>{lockTag}</Table.Cell>
+      </td>
+      <td className="govuk-table__cell" />
+      <td className="govuk-table__cell" />
+      <td className="govuk-table__cell" />
+      <td className="govuk-table__cell" />
+      <td className="govuk-table__cell" />
+      <td className="govuk-table__cell">{reasonCell}</td>
+      <td className="govuk-table__cell">{lockTag}</td>
     </StyledExtraReasonRow>
   )
 }
