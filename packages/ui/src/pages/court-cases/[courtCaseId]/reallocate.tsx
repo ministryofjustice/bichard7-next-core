@@ -184,17 +184,23 @@ const ReallocateCasePage: NextPage<Props> = ({
                     </div>
                     <div className={`govuk-grid-column-${userNotesWidth}`}>
                       <h2 className="govuk-heading-s">{"Previous User Notes"}</h2>
-                      <NotesTableContainer className={"notes-table-container"}>
-                        <NotesTable displayForce notes={showMore ? userNotes : userNotes.slice(0, 1)} />
-                      </NotesTableContainer>
-                      <ShowMoreContainer className={"govuk-grid-row show-more-container"}>
-                        <ActionLink
-                          onClick={() => setShowMore(!showMore)}
-                          id={showMore ? "show-more-action" : "show-less-action"}
-                        >
-                          {showMore ? "show less" : "show more"}
-                        </ActionLink>
-                      </ShowMoreContainer>
+                      {userNotes.length > 0 ? (
+                        <>
+                          <NotesTableContainer className={"notes-table-container"}>
+                            <NotesTable displayForce notes={showMore ? userNotes : userNotes.slice(0, 1)} />
+                          </NotesTableContainer>
+                          <ShowMoreContainer className={"govuk-grid-row show-more-container"}>
+                            <ActionLink
+                              onClick={() => setShowMore(!showMore)}
+                              id={showMore ? "show-more-action" : "show-less-action"}
+                            >
+                              {showMore ? "show less" : "show more"}
+                            </ActionLink>
+                          </ShowMoreContainer>
+                        </>
+                      ) : (
+                        <p className={"govuk-body"}>{"Case has no user notes."}</p>
+                      )}
                     </div>
                   </div>
                 </ConditionalRender>
