@@ -6,7 +6,7 @@ let environment: Environment = env.PROD // default to production
 // uses the options passed to the CLI to set the current environment
 export function setEnvironment(
   cli: Command,
-  options: { e2e?: boolean; uat?: boolean; preprod?: boolean; prod?: boolean }
+  options: { e2e?: boolean; uat?: boolean; preprod?: boolean; prod?: boolean; shared?: boolean }
 ) {
   const environments = Object.entries(options).filter(([_, specified]) => specified)
   if (!environments.length) return
