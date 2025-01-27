@@ -14,8 +14,6 @@ const PanelsGridRow = styled.div`
 `
 
 const PanelsGridCol = styled.div`
-  overflow-x: scroll;
-
   ${repeatedCss}
 `
 
