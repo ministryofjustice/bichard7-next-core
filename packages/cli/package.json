@@ -8,9 +8,8 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "install:build": "npm run build && npm install -g .",
-    "install:global": "npm i -g .",
+    "install:global": "npm i -g . && chmod -v +x dist/index.js",
     "install:watch": "rm -rf dist && npm run build && npx tsc-watch -p ./tsconfig.build.json --onSuccess 'npm run install:global'"
   },
   "keywords": [],

@@ -1,17 +1,24 @@
-import { spawn } from "child_process"
+import { spawn, type StdioPipe, type StdioPipeNamed } from "child_process"
 import { bold, green } from "cli-color"
 
-export default {
-  async exec(profile: string, command: string, log: boolean = false) {
-    const components = ["aws-vault", "exec", profile, "--", ...command.split(" ")]
-    const vaultExec = `aws-vault exec ${profile}`
+interface ExecOptions {
+  awsProfile: string
+  command: string
+  logExecution?: boolean
+  stdio?: StdioPipeNamed | StdioPipe[]
+}
 
-    if (log) {
+export default {
+  async exec({ awsProfile, command, logExecution = false, stdio = undefined }: ExecOptions) {
+    const components = ["aws-vault", "exec", awsProfile, "--", ...command.split(" ")]
+    const vaultExec = `aws-vault exec ${awsProfile}`
+
+    if (logExecution) {
       console.log(`\nExecuting command:\n${bold(components.join(" "))}\n`)
     }
 
     return new Promise<string>((resolve, reject) => {
-      const process = spawn(`${vaultExec} -- ${command}`, [], { stdio: "pipe", shell: true })
+      const process = spawn(`${vaultExec} -- ${command}`, [], { stdio, shell: true })
 
       let output = ""
       let error = ""
@@ -29,7 +36,7 @@ export default {
         if (code !== 0) {
           reject(new Error(`Command exited with code: ${code}`))
         } else {
-          if (log) {
+          if (logExecution) {
             console.log(green(`Command completed successfully.`))
           }
 

@@ -46,8 +46,12 @@ export function open(): Command {
 
       // get conductor password
       console.log("Querying for Conductor password ...")
-      const arn = await awsVault.exec(profile, FETCH_CONDUCTOR_PASSWORD_SECRET_ARN)
-      const password = await awsVault.exec(profile, FETCH_CONDUCTOR_PASSWORD(arn))
+      const arn = await awsVault.exec({ awsProfile: profile, command: FETCH_CONDUCTOR_PASSWORD_SECRET_ARN })
+      const password = await awsVault.exec({
+        awsProfile: profile,
+        command: FETCH_CONDUCTOR_PASSWORD(arn),
+        stdio: "pipe" // hide the output
+      })
 
       // this tomfoolery is required because it won't log in otherwise.
       console.log("Logging in ...")

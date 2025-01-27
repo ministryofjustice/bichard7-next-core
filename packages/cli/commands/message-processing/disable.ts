@@ -7,10 +7,12 @@ export function disable(): Command {
     .description("Disables the EventBridge rule")
 
     .action(async () => {
-      const {
-        aws: { profile, account }
-      } = getEnvironment()
+      const { aws } = getEnvironment()
 
-      awsVault.exec(profile, `aws events disable-rule --name ${account}-trigger-from-external-incoming-messages`, true)
+      awsVault.exec({
+        awsProfile: aws.profile,
+        command: `aws events disable-rule --name ${aws.account}-trigger-from-external-incoming-messages`,
+        logExecution: true
+      })
     })
 }
