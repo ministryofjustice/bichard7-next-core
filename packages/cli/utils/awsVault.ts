@@ -1,15 +1,15 @@
-import { spawn, type StdioPipe, type StdioPipeNamed } from "child_process"
+import { spawn } from "child_process"
 import { bold, green } from "cli-color"
 
 interface ExecOptions {
   awsProfile: string
   command: string
   logExecution?: boolean
-  stdio?: StdioPipeNamed | StdioPipe[]
+  streamOutput?: boolean
 }
 
 export default {
-  async exec({ awsProfile, command, logExecution = false, stdio = undefined }: ExecOptions) {
+  exec({ awsProfile, command, logExecution = false, streamOutput = false }: ExecOptions) {
     const components = ["aws-vault", "exec", awsProfile, "--", ...command.split(" ")]
     const vaultExec = `aws-vault exec ${awsProfile}`
 
@@ -18,15 +18,18 @@ export default {
     }
 
     return new Promise<string>((resolve, reject) => {
-      const process = spawn(`${vaultExec} -- ${command}`, [], { stdio, shell: true })
-
+      const process = spawn(`${vaultExec} -- ${command}`, [], { shell: true })
       let output = ""
       let error = ""
 
-      process.stdout?.on("data", (data: any) => {
+      process.stdout?.on("data", (data) => {
+        if (streamOutput) {
+          console.log(data.toString())
+        }
+
         output += data.toString()
       })
-      process.stderr?.on("data", (data: any) => {
+      process.stderr?.on("data", (data) => {
         error += data.toString()
       })
       process.on("error", (err) => {
@@ -34,10 +37,11 @@ export default {
       })
       process.on("close", (code) => {
         if (code !== 0) {
-          reject(new Error(`Command exited with code: ${code}`))
+          console.error(`Command exited with code: ${code}`)
+          reject(new Error(error))
         } else {
           if (logExecution) {
-            console.log(green(`Command completed successfully.`))
+            console.log(green("Command completed successfully."))
           }
 
           resolve(output.trim())
