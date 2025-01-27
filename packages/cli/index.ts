@@ -3,11 +3,12 @@ import { bold } from "cli-color"
 import { Command } from "commander"
 import { conductor } from "./commands/conductor"
 import { devSgs } from "./commands/dev-sgs"
-import { fetchImage } from "./commands/fetch-images"
+import { fetchImage } from "./commands/fetch-image"
 import { messageProcessing } from "./commands/message-processing"
 import { status } from "./commands/status"
 import { version } from "./package.json"
 import { applyEnvironmentOptionHooks } from "./utils/globalOptionsHook"
+import { cloudwatch } from "./commands/cloudwatch"
 
 process.on("unhandledRejection", (reason) => {
   console.error(reason)
@@ -35,8 +36,13 @@ const cli = new Command()
   // command groups
   .addCommand(messageProcessing())
   .addCommand(conductor())
+  .addCommand(cloudwatch())
 
-applyEnvironmentOptionHooks(cli)
+const skipCommands = ["wiki", "fetch-image", "dev-sgs"]
+if (!skipCommands.some((c) => process.argv.includes(c))) {
+  applyEnvironmentOptionHooks(cli)
+}
+
 cli.parse(process.argv)
 
 export default cli
