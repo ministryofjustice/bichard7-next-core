@@ -22,8 +22,7 @@ const connect = async (url: string) => {
 }
 
 const FETCH_CONDUCTOR_PASSWORD_SECRET_ARN =
-  "\
-    aws secretsmanager list-secrets --query \"SecretList[*].{Name: Name, ARN: ARN}\" \
+  "aws secretsmanager list-secrets --query \"SecretList[*].{Name: Name, ARN: ARN}\" \
       | jq -r '.[] | select(.Name | contains(\"conductor-password\"))' \
       | jq -r '.ARN'"
 
@@ -60,7 +59,7 @@ export function open(): Command {
       exec(`osascript -e 'open location "https://bichard:${encodeURIComponent(password)}@${conductor}"'`)
 
       const browser = await getDefaultBrowserForOSAScript()
-      setTimeout(async () => {
+      setTimeout(() => {
         exec(`osascript -e 'tell application "${browser}" to reload active tab of window 1'`)
         setTimeout(
           () =>

@@ -6,10 +6,10 @@ export function enable(): Command {
   return new Command("enable")
     .description("Enables the EventBridge rule")
 
-    .action(async () => {
+    .action(() => {
       const { aws } = getEnvironment()
 
-      await awsVault.exec({
+      awsVault.exec({
         awsProfile: aws.profile,
         command: `aws events enable-rule --name ${aws.account}-trigger--from-external-incoming-messages`,
         logExecution: true

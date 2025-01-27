@@ -6,7 +6,7 @@ import { getEnvironment } from "../env"
 import { checkConnection } from "../utils/checkConnection"
 import { watch } from "../utils/watch"
 
-async function notify(endpoint: string) {
+function notify(endpoint: string) {
   const until = `
           until curl -s ${endpoint} | jq '.pncConnectionHealth' | grep -q '"healthy": true'; do
             echo -n '.';
@@ -51,7 +51,10 @@ export function status(): Command {
       } catch (err) {
         console.error(`Failed to connect to ${bold(endpoint)}\nAre you connected to the VPN?`)
       }
-      if (!ok) return
+
+      if (!ok) {
+        return
+      }
 
       // check options
       if (cmd.notify && cmd.watch) {

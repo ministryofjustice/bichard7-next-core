@@ -6,7 +6,7 @@ export function disable(): Command {
   return new Command("disable")
     .description("Disables the EventBridge rule")
 
-    .action(async () => {
+    .action(() => {
       const { aws } = getEnvironment()
 
       awsVault.exec({

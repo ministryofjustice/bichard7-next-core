@@ -1,8 +1,8 @@
 import { Command } from "commander"
 import path from "path"
-import awsVault from "../utils/awsVault"
 import type { Environment } from "../config"
 import { env } from "../config"
+import awsVault from "../utils/awsVault"
 
 export function fetchImage(): Command {
   const command = new Command("fetch-image")
