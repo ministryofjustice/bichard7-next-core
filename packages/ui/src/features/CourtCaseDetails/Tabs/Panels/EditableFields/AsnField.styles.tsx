@@ -1,7 +1,6 @@
 import styled from "styled-components"
-import { Input } from "govuk-react"
 
-const AsnInput = styled(Input)`
+const AsnInput = styled.input`
   width: 16rem;
 `
 

@@ -1,4 +1,4 @@
-import { HintText, Label } from "govuk-react"
+import { HintText } from "components/HintText"
 import { InitialInputValueBadge } from "./Badges"
 import { StyledInputField } from "./InputField.styles"
 
@@ -15,14 +15,18 @@ const InputField: React.FC<EditableInputFieldProps> = ({ value, inputLabel, hint
       {value}
       <InitialInputValueBadge />
       <br />
-      <Label className="govuk-label">
+      <label className={`govuk-label`}>
         {inputLabel}
         {hintText &&
-          hintText.split("\\n").map((hint, key) => {
-            return <HintText key={key}>{hint}</HintText>
+          hintText.split("\\n").map((hint) => {
+            return (
+              <HintText className={"govuk-body-s"} key={hint}>
+                {hint}
+              </HintText>
+            )
           })}
         {children}
-      </Label>
+      </label>
     </StyledInputField>
   )
 }

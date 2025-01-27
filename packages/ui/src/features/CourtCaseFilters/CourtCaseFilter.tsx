@@ -1,4 +1,5 @@
-import { PrimaryButton } from "components/Buttons"
+import Permission from "@moj-bichard7/common/types/Permission"
+import { Button } from "components/Buttons"
 import ConditionalRender from "components/ConditionalRender"
 import CaseStateFilter from "components/SearchFilters/CaseStateFilter"
 import LockedFilter, { lockedStateShortLabels } from "components/SearchFilters/LockedFilter"
@@ -7,19 +8,17 @@ import ReasonFilter from "components/SearchFilters/ReasonFilterOptions/ReasonFil
 import TextFilter from "components/SearchFilters/TextFilter"
 import TriggerGroups from "components/SearchFilters/TriggerGroups"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { FormGroup } from "govuk-react"
 import { useReducer } from "react"
 import { CaseListQueryParams, LockedState, SerializedDateRange } from "types/CaseListQueryParams"
 import type { Filter } from "types/CourtCaseFilter"
-import Permission from "@moj-bichard7/common/types/Permission"
 
+import ResolvedDateFilter from "components/SearchFilters/ResolvedDateFilter"
 import { anyFilterChips } from "utils/filterChips"
 import { reasonOptions } from "utils/reasonOptions"
 import CourtDateFilter from "../../components/SearchFilters/CourtDateFilter"
 import { FilterOptionsContainer, SelectedFiltersContainer } from "./CourtCaseFilter.styles"
 import FilterChipSection from "./FilterChipSection"
 import { filtersReducer } from "./reducers/filters"
-import ResolvedDateFilter from "components/SearchFilters/ResolvedDateFilter"
 
 const Divider = () => (
   <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
@@ -96,14 +95,12 @@ const CourtCaseFilter: React.FC<Props> = ({
           </div>
         </div>
         <FilterOptionsContainer className="moj-filter__options">
-          <PrimaryButton className="govuk-button" dataModule="govuk-button" id={"search"}>
-            {"Apply filters"}
-          </PrimaryButton>
+          <Button id={"search"}>{"Apply filters"}</Button>
 
           <input type="hidden" id="order" name="order" value={order || ""} />
           <input type="hidden" id="orderBy" name="orderBy" value={orderBy || ""} />
 
-          <FormGroup className={"govuk-form-group"}>
+          <div className={"govuk-form-group"}>
             <h2 className="govuk-heading-m">{"Search"}</h2>
             <div>
               <ReasonCodeFilter value={state.reasonCodes} dispatch={dispatch} />
@@ -116,7 +113,7 @@ const CourtCaseFilter: React.FC<Props> = ({
               <TextFilter label="Court name" id="courtName" value={state.courtNameSearch.value} dispatch={dispatch} />
               <TextFilter label="PTIURN" id="ptiurn" value={state.ptiurnSearch.value} dispatch={dispatch} />
             </div>
-          </FormGroup>
+          </div>
 
           <CaseStateFilter
             dispatch={dispatch}
@@ -149,9 +146,7 @@ const CourtCaseFilter: React.FC<Props> = ({
           <LockedFilter lockedState={state.lockedStateFilter.value} dispatch={dispatch} />
           <Divider />
 
-          <PrimaryButton className="govuk-button" dataModule="govuk-button" id={"search-bottom"}>
-            {"Apply filters"}
-          </PrimaryButton>
+          <Button id={"search-bottom"}>{"Apply filters"}</Button>
         </FilterOptionsContainer>
       </div>
     </form>

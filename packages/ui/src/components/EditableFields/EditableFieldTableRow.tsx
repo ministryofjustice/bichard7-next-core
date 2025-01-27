@@ -1,4 +1,3 @@
-import { Table } from "govuk-react"
 import { LabelCell } from "./EditableFieldTableRow.styles"
 import InitialValueAndCorrectionField from "./InitialValueAndCorrectionField"
 import InputField from "./InputField"
@@ -49,12 +48,12 @@ const EditableFieldTableRow = ({
   }
 
   return (
-    <Table.Row className={className}>
-      <LabelCell>
+    <tr className={`govuk-table__row ${className}`}>
+      <LabelCell className={"govuk-table__cell"}>
         <LabelField label={label} isEditable={isEditable} />
       </LabelCell>
-      <Table.Cell>{fieldToRender()}</Table.Cell>
-    </Table.Row>
+      <td className="govuk-table__cell">{fieldToRender()}</td>
+    </tr>
   )
 }
 

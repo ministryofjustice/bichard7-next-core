@@ -303,10 +303,10 @@ export const exceptionResolutionStatus = async function (this: Bichard, resoluti
   const resolution = resolutionStatus.split(" ").length > 1 ? resolutionStatus.split(" ")[1] : resolutionStatus
 
   const headerResolutionStatus = await this.browser.page.$$(
-    `xpath/.//div[@id = "header-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag") and text() = "${resolutionStatus}"]`
+    `xpath/.//div[@id = "header-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
   const exceptionsPanelResolutionStatus = await this.browser.page.$$(
-    `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag") and text() = "${resolutionStatus}"]`
+    `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
 
   expect(headerResolutionStatus.length).toEqual(1)
@@ -317,13 +317,13 @@ export const exceptionResolutionStatusOnCaseDetails = async function (this: Bich
   const { page } = this.browser
 
   const headerResolutionStatus = await page.$$(
-    `xpath/.//div[@id = "header-container"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag") and text() = "${resolutionStatus}"]`
+    `xpath/.//div[@id = "header-container"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
   expect(headerResolutionStatus.length).toEqual(1)
 
   await page.click("#exceptions-tab")
   const exceptionsPanelResolutionStatus = await page.$$(
-    `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag") and text() = "${resolutionStatus}"]`
+    `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
   expect(exceptionsPanelResolutionStatus.length).toEqual(0)
 }

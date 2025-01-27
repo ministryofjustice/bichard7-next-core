@@ -91,12 +91,11 @@ export const AsnField = () => {
         <div>
           <AsnInput
             ref={asnInputRef}
-            className={`asn-input`}
+            className={`asn-input govuk-input ${!isValidAsn ? "govuk-input--error" : ""}`}
             id={"asn"}
             name={"asn"}
             onChange={handleAsnChange}
             value={Asn.divideAsn(amendedAsn.toUpperCase())}
-            error={!isValidAsn}
             onKeyDown={handleOnKeyDown}
             onPaste={handleOnPaste}
             onCopy={handleOnCopy}

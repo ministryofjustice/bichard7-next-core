@@ -1,7 +1,6 @@
-import { Table } from "govuk-react"
 import styled from "styled-components"
 
-const Label = styled(Table.Cell)`
+const Label = styled.td`
   vertical-align: top;
 
   & .error-icon {
@@ -9,7 +8,7 @@ const Label = styled(Table.Cell)`
   }
 `
 
-const Content = styled(Table.Cell)`
+const Content = styled.td`
   vertical-align: top;
 
   & .badge-wrapper {

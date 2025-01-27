@@ -1,4 +1,4 @@
-import RadioButton from "components/RadioButton/RadioButton"
+import RadioButton from "components/Radios/RadioButton"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import type { ChangeEvent, Dispatch } from "react"
 import { LockedState } from "types/CaseListQueryParams"

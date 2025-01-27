@@ -3,7 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import AutoLoad from "@fastify/autoload"
 import path from "path"
 
-import type AuditLogGateway from "./services/gateways/interfaces/auditLogGateway"
+import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
 import type AwsS3Gateway from "./services/gateways/interfaces/awsS3Gateway"
 import type DataStoreGateway from "./services/gateways/interfaces/dataStoreGateway"
 
@@ -14,7 +14,7 @@ import setupZod from "./server/openapi/setupZod"
 
 declare module "fastify" {
   interface FastifyRequest {
-    auditLog: AuditLogGateway
+    auditLogGateway: AuditLogDynamoGateway
     db: DataStoreGateway
     s3: AwsS3Gateway
     user: User
@@ -22,12 +22,12 @@ declare module "fastify" {
 }
 
 type Gateways = {
-  auditLog?: AuditLogGateway
+  auditLogGateway: AuditLogDynamoGateway
   db: DataStoreGateway
   s3?: AwsS3Gateway
 }
 
-export default async function ({ db }: Gateways) {
+export default async function ({ auditLogGateway, db }: Gateways) {
   const fastify = createFastify()
 
   await setupZod(fastify)
@@ -47,6 +47,7 @@ export default async function ({ db }: Gateways) {
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
       await authenticate(db, request, reply)
+      request.auditLogGateway = auditLogGateway
     })
 
     await instance.register(AutoLoad, {

@@ -1,9 +1,5 @@
 import styled from "styled-components"
 
-const FormGroup = styled.div`
-  margin-bottom: 0;
-`
-
 const SelectedFiltersContainer = styled.div`
   display: block;
 `
@@ -14,4 +10,4 @@ const FilterOptionsContainer = styled.div`
   }
 `
 
-export { FilterOptionsContainer, FormGroup, SelectedFiltersContainer }
+export { FilterOptionsContainer, SelectedFiltersContainer }

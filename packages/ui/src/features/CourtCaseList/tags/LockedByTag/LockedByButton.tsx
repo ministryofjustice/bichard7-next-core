@@ -51,7 +51,7 @@ const LockedByButton = ({
   return (
     <>
       <StyledLockedByButton
-        className={`locked-by-tag button--tag`}
+        className={`govuk-button locked-by-tag button--tag`}
         onClick={() => {
           setShowUnlockConfirmation(true)
         }}
