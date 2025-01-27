@@ -34,13 +34,13 @@ function notify(endpoint: string) {
 
 export function status(): Command {
   const command = new Command("status")
-  const { domain } = getEnvironment()
 
   command
     .description("Get healthcheck endpoint output from production")
     .option("-n, --notify", "Notify the user when the PNC connection has restored")
     .option("-w, --watch", "Watch the healthcheck endpoint")
     .action(async (cmd) => {
+      const { domain } = getEnvironment()
       const endpoint = `https://proxy.${domain}/bichard-backend/Connectivity`
       const curlCommand = `curl -s ${endpoint} | jq '.pncConnectionHealth'`
 

@@ -1,7 +1,6 @@
 import type { Command } from "commander"
-import { getEnvironment, setEnvironment } from "../env"
+import { setEnvironment } from "../env"
 
-const skipCommands = ["wiki"]
 // adds a hook to every command to check and set the environment.
 // once the hook has been invoked once, it doesn't need to run
 // again.
@@ -12,18 +11,13 @@ export function applyEnvironmentOptionHooks(command: Command) {
       return
     }
 
-    if (skipCommands.includes(subcommand.name())) {
-      return
-    }
-
-    setEnvironment(subcommand, {
+    const {
+      aws: { profile }
+    } = setEnvironment(subcommand, {
       ...subcommand.opts(),
       ...subcommand.parent?.opts()
     })
 
-    const {
-      aws: { profile }
-    } = getEnvironment()
     console.log(`Using ${profile} environment`)
     globalOptionsHookInvoked = true
   })
