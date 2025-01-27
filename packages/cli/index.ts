@@ -3,7 +3,7 @@ import { bold } from "cli-color"
 import { Command } from "commander"
 import { conductor } from "./commands/conductor"
 import { devSgs } from "./commands/dev-sgs"
-import { fetchImage } from "./commands/fetch-images"
+import { fetchImage } from "./commands/fetch-image"
 import { messageProcessing } from "./commands/message-processing"
 import { status } from "./commands/status"
 import { version } from "./package.json"
@@ -36,7 +36,11 @@ const cli = new Command()
   .addCommand(messageProcessing())
   .addCommand(conductor())
 
-applyEnvironmentOptionHooks(cli)
+const skipCommands = ["wiki", "fetch-image", "dev-sgs"]
+if (!skipCommands.some((c) => process.argv.includes(c))) {
+  applyEnvironmentOptionHooks(cli)
+}
+
 cli.parse(process.argv)
 
 export default cli
