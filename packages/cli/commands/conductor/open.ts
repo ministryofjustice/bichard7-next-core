@@ -21,10 +21,11 @@ const connect = async (url: string) => {
   return ok
 }
 
-const FETCH_CONDUCTOR_PASSWORD_SECRET_ARN = `\
-    aws secretsmanager list-secrets --query "SecretList[*].{Name: Name, ARN: ARN}" \
-      | jq -r '.[] | select(.Name | contains("conductor-password"))' \
-      | jq -r '.ARN'`
+const FETCH_CONDUCTOR_PASSWORD_SECRET_ARN =
+  "\
+    aws secretsmanager list-secrets --query \"SecretList[*].{Name: Name, ARN: ARN}\" \
+      | jq -r '.[] | select(.Name | contains(\"conductor-password\"))' \
+      | jq -r '.ARN'"
 
 const FETCH_CONDUCTOR_PASSWORD = (arn: string) => `\
     aws secretsmanager get-secret-value --secret-id "${arn.trim()}" \
@@ -42,15 +43,16 @@ export function open(): Command {
       const conductor = `conductor.${domain}`
 
       const connectionEstablished = await connect(conductor)
-      if (!connectionEstablished) return
+      if (!connectionEstablished) {
+        return
+      }
 
       // get conductor password
       console.log("Querying for Conductor password ...")
       const arn = await awsVault.exec({ awsProfile: profile, command: FETCH_CONDUCTOR_PASSWORD_SECRET_ARN })
       const password = await awsVault.exec({
         awsProfile: profile,
-        command: FETCH_CONDUCTOR_PASSWORD(arn),
-        stdio: "pipe" // hide the output
+        command: FETCH_CONDUCTOR_PASSWORD(arn)
       })
 
       // this tomfoolery is required because it won't log in otherwise.
