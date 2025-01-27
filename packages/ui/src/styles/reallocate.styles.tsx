@@ -12,4 +12,24 @@ const ShowMoreContainer = styled.div`
   margin-top: 15px;
 `
 
-export { NotesTableContainer, ShowMoreContainer }
+const ReallocationContainer = styled.div`
+  @media (min-width: 1024px) {
+    width: 50%;
+  }
+
+  @media (min-width: 1280px) {
+    width: 66.6666666667%;
+  }
+`
+
+const UserNotesContainer = styled.div`
+  @media (min-width: 1024px) {
+    width: 50%;
+  }
+
+  @media (min-width: 1280px) {
+    width: 33.3333333333%;
+  }
+`
+
+export { NotesTableContainer, ShowMoreContainer, ReallocationContainer, UserNotesContainer }
