@@ -1,14 +1,19 @@
 import styled from "styled-components"
 
-const ResolutionStatusTagContainer = styled.div`
+const ResolutionTag = styled.div`
   display: flex;
   align-items: center;
   margin-left: 15px;
 
   & > img {
     margin-right: 5px;
-    margin-left: 15px;
+    margin-bottom: 20px;
   }
 `
 
-export { ResolutionStatusTagContainer }
+const ResolutionStatusTagContainer = styled.div`
+  display: flex;
+  justify-content: end;
+`
+
+export { ResolutionStatusTagContainer, ResolutionTag }
