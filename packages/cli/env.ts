@@ -1,4 +1,4 @@
-import { Command } from "commander"
+import type { Command } from "commander"
 import { env, type Environment } from "./config"
 
 let environment: Environment = env.PROD // default to production
@@ -9,7 +9,9 @@ export function setEnvironment(
   options: { e2e?: boolean; uat?: boolean; preprod?: boolean; prod?: boolean; shared?: boolean }
 ) {
   const environments = Object.entries(options).filter(([_, specified]) => specified)
-  if (!environments.length) return
+  if (!environments.length) {
+    return
+  }
 
   if (environments.length > 1) {
     cli.error("Specify a single environment.")

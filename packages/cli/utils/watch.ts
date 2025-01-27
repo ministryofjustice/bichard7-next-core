@@ -1,7 +1,7 @@
 import { spawn } from "child_process"
 
 export function watch(command: string, n = 5) {
-  const watch = spawn(`watch`, [`-n ${n}`, `"${command}"`], { shell: true })
+  const watch = spawn("watch", [`-n ${n}`, `"${command}"`], { shell: true })
   watch.stdout.on("data", (data) => {
     process.stdout.write(data)
   })

@@ -1,4 +1,4 @@
-import { Command } from "commander"
+import type { Command } from "commander"
 import { getEnvironment, setEnvironment } from "../env"
 
 const skipCommands = ["wiki"]
@@ -8,8 +8,13 @@ const skipCommands = ["wiki"]
 let globalOptionsHookInvoked = false
 export function applyEnvironmentOptionHooks(command: Command) {
   command.hook("preAction", (subcommand) => {
-    if (globalOptionsHookInvoked) return
-    if (skipCommands.includes(subcommand.name())) return
+    if (globalOptionsHookInvoked) {
+      return
+    }
+
+    if (skipCommands.includes(subcommand.name())) {
+      return
+    }
 
     setEnvironment(subcommand, {
       ...subcommand.opts(),

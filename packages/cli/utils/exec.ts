@@ -6,9 +6,11 @@ export function exec(command: string) {
       if (error) {
         reject(error)
       }
+
       if (stderr) {
         reject(new Error(stderr))
       }
+
       resolve(stdout.trim())
     })
   })
