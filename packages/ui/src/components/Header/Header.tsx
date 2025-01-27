@@ -28,10 +28,14 @@ const Header: React.FC<HeaderProps> = ({ organisationName, serviceName, userName
               ></path>
             </svg>
 
-            <a className="moj-header__link moj-header__link--organisation-name" href="/">
+            <a
+              style={{ paddingRight: "55px" }}
+              className="moj-header__link moj-header__link--organisation-name"
+              href="/"
+            >
               {organisationName}
             </a>
-            <a style={{ paddingLeft: "55px" }} className="moj-header__link moj-header__link--service-name" href="/">
+            <a className="moj-header__link moj-header__link--service-name" href="/">
               {serviceName}
             </a>
           </div>
