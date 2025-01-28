@@ -6,7 +6,6 @@ import { v4 as uuid } from "uuid"
 
 import type { DynamoAuditLog, InternalDynamoAuditLog } from "../../../../types/AuditLog"
 import type {
-  ApiAuditLogEvent,
   AuditLogEventAttributes,
   DynamoAuditLogEvent,
   DynamoAuditLogUserEvent,
@@ -36,11 +35,10 @@ const maxAttributeValueLength = 1000
 const getEventsPageLimit = 100
 const eventsFetcherParallelism = 20
 
-const convertDynamoAuditLogToInternal = (
-  input: InternalDynamoAuditLog & { events?: ApiAuditLogEvent[] }
-): InternalDynamoAuditLog => {
-  delete input.events
-  return input
+const convertDynamoAuditLogToInternal = (input: DynamoAuditLog): InternalDynamoAuditLog => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { events, ...output } = input
+  return output
 }
 
 export default class AuditLogDynamoGateway extends DynamoGateway implements AuditLogDynamoGatewayInterface {
@@ -158,7 +156,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       return result
     }
 
-    const items = <DynamoAuditLog[]>result?.Items
+    const items = <DynamoAuditLog[]>result?.Items ?? []
     if (!options.excludeColumns || !options.excludeColumns.includes("events")) {
       return await this.addEventsFromEventsTable(items)
     }
@@ -344,6 +342,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       "#status",
       "pncStatus",
       "triggerStatus",
+      "createdBy",
       "systemId",
       "#dummyKey"
     ]

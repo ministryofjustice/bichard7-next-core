@@ -124,7 +124,7 @@ describe("Incoming message handler", () => {
     const [originalMessage] = originalMessages as AuditLogApiRecordOutput[]
     const [duplicateMessage] = duplicateMessages as AuditLogApiRecordOutput[]
     expect(originalMessage.messageHash).toBe(duplicateMessage.messageHash)
-    expect(duplicateMessage.status).toBe(AuditLogStatus.duplicate)
+    expect(duplicateMessage.status).toBe(AuditLogStatus.Duplicate)
   })
 
   it("terminates the incoming message handler when message has already been processed", async () => {

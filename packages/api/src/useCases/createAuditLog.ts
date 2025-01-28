@@ -1,13 +1,12 @@
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { FastifyBaseLogger } from "fastify"
 
-import { isError } from "lodash"
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
+import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogDynamoGateway from "../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGatewayInterface"
 import type { DynamoAuditLog, InputApiAuditLog } from "../types/AuditLog"
 
 import { isConditionalExpressionViolationError } from "../services/gateways/dynamo"
-import AuditLogStatus from "../types/AuditLogStatus"
 import ConflictError from "../types/errors/ConflictError"
 import PncStatus from "../types/PncStatus"
 import TriggerStatus from "../types/TriggerStatus"
@@ -27,7 +26,7 @@ const convertInputApiAuditLogToDynamoAuditLog = (input: InputApiAuditLog): Dynam
 const createAuditLog = async (
   auditLog: InputApiAuditLog,
   auditLogGateway: AuditLogDynamoGateway,
-  logger: FastifyBaseLogger
+  logger?: FastifyBaseLogger
 ): PromiseResult<void> => {
   const dynamoAuditLog = convertInputApiAuditLogToDynamoAuditLog(auditLog)
 
@@ -35,7 +34,7 @@ const createAuditLog = async (
   const fetchByHashResult = await auditLogGateway.fetchByHash(auditLog.messageHash)
 
   if (isError(fetchByHashResult)) {
-    logger.error("Error validating message hash", fetchByHashResult)
+    logger?.error("Error validating message hash", fetchByHashResult)
     return fetchByHashResult
   } else if (fetchByHashResult.length) {
     dynamoAuditLog.status = AuditLogStatus.Duplicate
@@ -50,7 +49,7 @@ const createAuditLog = async (
       return new ConflictError(`A message with Id ${auditLog.messageId} already exists in the database`)
     }
 
-    logger.error("Error creating audit log", result.message)
+    logger?.error("Error creating audit log", result.message)
     return result
   }
 }

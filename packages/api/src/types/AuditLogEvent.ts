@@ -73,9 +73,12 @@ export const InternalDynamoAuditLogUserEventSchema = ApiAuditLogEventSchema.exte
   attributes: InternalAuditLogEventAttributesSchema.optional()
 })
 
-export type InternalDynamoAuditLogUserEvent = z.infer<typeof DynamoAuditLogUserEventSchema>
+export type InternalDynamoAuditLogUserEvent = z.infer<typeof InternalDynamoAuditLogUserEventSchema>
 
-export const DynamoAuditLogUserEventSchema = InternalDynamoAuditLogUserEventSchema.omit({ attributes: true }).extend({
+export const DynamoAuditLogUserEventSchema = InternalDynamoAuditLogUserEventSchema.omit({
+  _id: true,
+  attributes: true
+}).extend({
   attributes: AuditLogEventAttributesSchema.optional()
 })
 
