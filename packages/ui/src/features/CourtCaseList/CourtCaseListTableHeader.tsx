@@ -14,7 +14,9 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
 
   return (
     <tr className="govuk-table__row">
-      <HeaderCellAlt className={"govuk-table__header table-column-header-cell"} />
+      <HeaderCellAlt className={"govuk-table__header table-column-header-cell"}>
+        <span className="govuk-visually-hidden">{"Lock status"}</span>
+      </HeaderCellAlt>
       <HeaderCell className={"govuk-table__header table-column-header-cell"} style={{ width: "178px" }}>
         <HeaderLink
           className={"table-column-header-link"}
