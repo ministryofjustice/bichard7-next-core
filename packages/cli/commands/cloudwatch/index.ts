@@ -4,7 +4,8 @@ import { postfix } from "./postfix"
 export function cloudwatch(): Command {
   const command = new Command("cloudwatch-user-event")
     .name("cloudwatch-user-event")
-    .description("EventBridge rule that forwards incoming messages through to Conductor")
+    .description("A method for querying cloudwatch for user events")
+    .usage("b7 cloudwatch-user-event postfix -h 3 steve@example.com")
     .addCommand(postfix())
 
   return command
