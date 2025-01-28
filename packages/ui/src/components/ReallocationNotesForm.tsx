@@ -9,6 +9,7 @@ import { Button } from "./Buttons"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
 import { NoteTextArea } from "./NoteTextArea"
+import { NewForceOwner } from "./ReallocationNotesForm.styles"
 
 interface Props {
   backLink: string
@@ -35,13 +36,13 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
 
         <div className="govuk-form-group">
           <label className="govuk-label govuk-label--s">{"New force owner"}</label>
-          <select className="govuk-select" name="force">
+          <NewForceOwner className="govuk-select" name="force">
             {forcesForReallocation.map(({ code, name }) => (
               <option key={code} value={code}>
                 {`${code} - ${name}`}
               </option>
             ))}
-          </select>
+          </NewForceOwner>
         </div>
 
         <NoteTextArea
