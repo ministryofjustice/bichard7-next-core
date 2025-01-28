@@ -2,16 +2,6 @@ export interface Report<T> {
   report: T[]
 }
 
-// export interface CaseList {
-//   ASN: string | null
-//   PTIURN: string
-//   defendantName: string | null
-//   courtName: string
-//   hearingDate: string
-//   caseReference: string
-//   notes: string[]
-// }
-
 export interface CaseList {
   defendantName: string | null
   courtDate: string
