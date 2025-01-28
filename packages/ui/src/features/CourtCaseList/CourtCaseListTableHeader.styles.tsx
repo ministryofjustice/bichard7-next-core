@@ -1,10 +1,10 @@
 import styled from "styled-components"
 import { blue } from "utils/colours"
 
-const HeaderCellAlt = styled.td`
+const HeaderCellAlt = styled.th`
   border-color: var(--border-input);
 `
-const HeaderCell = styled.td`
+const HeaderCell = styled.th`
   height: 100%;
   vertical-align: bottom;
   border-color: var(--border-input);

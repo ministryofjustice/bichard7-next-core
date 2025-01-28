@@ -35,13 +35,13 @@ describe("Check Result Qualifiers", () => {
 
     cy.get(tablePrefix + "tbody tr").should("have.length", 3)
 
-    cy.get(tablePrefix + "tbody tr:nth-child(1) td:nth-child(1)").should("have.text", "Code 1")
+    cy.get(tablePrefix + "tbody tr:nth-child(1) th:nth-child(1)").should("have.text", "Code 1")
     cy.get(tablePrefix + "tbody tr:nth-child(1) td:nth-child(2)").should("have.text", "F (Consecutive)")
 
-    cy.get(tablePrefix + "tbody tr:nth-child(2) td:nth-child(1)").should("have.text", "Code 2")
+    cy.get(tablePrefix + "tbody tr:nth-child(2) th:nth-child(1)").should("have.text", "Code 2")
     cy.get(tablePrefix + "tbody tr:nth-child(2) td:nth-child(2)").should("have.text", "YP (Effective)")
 
-    cy.get(tablePrefix + "tbody tr:nth-child(3) td:nth-child(1)").should("have.text", "Code 3")
+    cy.get(tablePrefix + "tbody tr:nth-child(3) th:nth-child(1)").should("have.text", "Code 3")
     cy.get(tablePrefix + "tbody tr:nth-child(3) td:nth-child(2)").should("have.text", "RA (Condition - Other)")
   })
 
@@ -52,7 +52,7 @@ describe("Check Result Qualifiers", () => {
 
     cy.get(tablePrefix + "tbody tr").should("have.length", 1)
 
-    cy.get(tablePrefix + "tbody tr:nth-child(1) td:nth-child(1)").should("have.text", "Code")
+    cy.get(tablePrefix + "tbody tr:nth-child(1) th:nth-child(1)").should("have.text", "Code")
     cy.get(tablePrefix + "tbody tr:nth-child(1) td:nth-child(2)").should("have.text", "F (Consecutive)")
   })
 })
