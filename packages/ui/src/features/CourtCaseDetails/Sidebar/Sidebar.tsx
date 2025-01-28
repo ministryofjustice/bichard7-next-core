@@ -2,14 +2,13 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { Tabs } from "govuk-react"
-import { useState } from "react"
+import { SyntheticEvent, useState } from "react"
 import type NavigationHandler from "types/NavigationHandler"
 
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import ExceptionsList from "./ExceptionsList"
 import PncDetails from "./PncDetails/PncDetails"
-import { SidebarContainer, UnpaddedPanel } from "./Sidebar.styles"
+import { SidebarContainer } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
 
 enum SidebarTab {
@@ -48,75 +47,89 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
 
   useRefreshCsrfToken({ dependency: selectedTab })
 
+  const handleTabClicked = (event: SyntheticEvent, selectedTab: SidebarTab) => {
+    event.preventDefault()
+    setSelectedTab(selectedTab)
+  }
+
   return (
     <SidebarContainer className={`side-bar case-details-sidebar`}>
       <ConditionalRender isRendered={currentUser.hasAccessTo[Permission.CaseDetailsSidebar]}>
-        <Tabs>
-          <Tabs.List>
+        <div className="govuk-tabs">
+          <ul className="govuk-tabs__list">
             <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
-              <Tabs.Tab
-                id="triggers-tab"
-                className={"tab"}
-                onClick={() => setSelectedTab(SidebarTab.Triggers)}
-                selected={selectedTab === SidebarTab.Triggers}
+              <li
+                id={"triggers-tab"}
+                className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Triggers ? "govuk-tabs__list-item--selected" : ""}`}
               >
-                {`Triggers`}
-              </Tabs.Tab>
+                <a
+                  className="govuk-tabs__tab"
+                  href="#triggers-tab"
+                  onClick={(e) => handleTabClicked(e, SidebarTab.Triggers)}
+                >
+                  {"Triggers"}
+                </a>
+              </li>
             </ConditionalRender>
 
             <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Exceptions)}>
-              <Tabs.Tab
-                id="exceptions-tab"
-                className={"tab"}
-                onClick={() => setSelectedTab(SidebarTab.Exceptions)}
-                selected={selectedTab === SidebarTab.Exceptions}
+              <li
+                id={"exceptions-tab"}
+                className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Exceptions ? "govuk-tabs__list-item--selected" : ""}`}
               >
-                {`Exceptions`}
-              </Tabs.Tab>
+                <a
+                  className="govuk-tabs__tab"
+                  href="#exceptions-tab"
+                  onClick={(e) => handleTabClicked(e, SidebarTab.Exceptions)}
+                >
+                  {"Exceptions"}
+                </a>
+              </li>
             </ConditionalRender>
 
-            <Tabs.Tab
-              id="pnc-details-tab"
-              className={"tab"}
-              onClick={() => setSelectedTab(SidebarTab.Pnc)}
-              selected={selectedTab === SidebarTab.Pnc}
+            <li
+              id={"pnc-details-tab"}
+              className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Pnc ? "govuk-tabs__list-item--selected" : ""}`}
             >
-              {`PNC Details`}
-            </Tabs.Tab>
-          </Tabs.List>
+              <a
+                className="govuk-tabs__tab"
+                href="#pnc-details-tab"
+                onClick={(e) => handleTabClicked(e, SidebarTab.Pnc)}
+              >
+                {"PNC Details"}
+              </a>
+            </li>
+          </ul>
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
-            <Tabs.Panel
+            <section
+              className={`govuk-tabs__panel moj-tab-panel-triggers tab-panel-triggers ${selectedTab === SidebarTab.Triggers ? "" : "govuk-tabs__panel--hidden"}`}
               id="triggers"
-              selected={selectedTab === SidebarTab.Triggers}
-              className={`moj-tab-panel-triggers tab-panel-triggers`}
             >
               <TriggersList onNavigate={onNavigate} />
-            </Tabs.Panel>
+            </section>
           </ConditionalRender>
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Exceptions)}>
-            <Tabs.Panel
+            <section
+              className={`govuk-tabs__panel moj-tab-panel-exceptions ${selectedTab === SidebarTab.Exceptions ? "" : "govuk-tabs__panel--hidden"}`}
               id="exceptions"
-              selected={selectedTab === SidebarTab.Exceptions}
-              className="moj-tab-panel-exceptions"
             >
               <ExceptionsList
                 onNavigate={onNavigate}
                 canResolveAndSubmit={canResolveAndSubmit}
                 stopLeavingFn={stopLeavingFn}
               />
-            </Tabs.Panel>
+            </section>
           </ConditionalRender>
 
-          <UnpaddedPanel
+          <section
+            className={`govuk-tabs__panel moj-tab-panel-pnc-details ${selectedTab === SidebarTab.Pnc ? "" : "govuk-tabs__panel--hidden"}`}
             id="pnc-details"
-            selected={selectedTab === SidebarTab.Pnc}
-            className="moj-tab-panel-pnc-details"
           >
             <PncDetails />
-          </UnpaddedPanel>
-        </Tabs>
+          </section>
+        </div>
       </ConditionalRender>
     </SidebarContainer>
   )

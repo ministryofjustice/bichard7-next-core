@@ -1,7 +1,6 @@
 import ConditionalRender from "components/ConditionalRender"
 import NotesFilterOptions from "components/NotesFilterOptions"
 import { useCourtCase } from "context/CourtCaseContext"
-import { Paragraph } from "govuk-react"
 import { useState } from "react"
 import type NotesViewOption from "types/NotesViewOption"
 import { DisplayNote } from "types/display/Notes"
@@ -50,7 +49,7 @@ export const Notes = ({ visible, isLockedByCurrentUser }: NotesProps) => {
         <NotesTable notes={filteredNotes} />
       </ConditionalRender>
       <ConditionalRender isRendered={!hasFilteredNotes}>
-        <Paragraph>{`Case has no ${noNoteText}.`}</Paragraph>
+        <p className="govuk-body">{`Case has no ${noNoteText}.`}</p>
       </ConditionalRender>
       <AddNoteForm isLockedByCurrentUser={isLockedByCurrentUser} />
     </CourtCaseDetailsPanel>

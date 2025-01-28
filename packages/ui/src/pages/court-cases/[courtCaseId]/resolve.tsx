@@ -1,12 +1,15 @@
+import Permission from "@moj-bichard7/common/types/Permission"
+import { Button } from "components/Buttons"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
+import { NoteTextArea } from "components/NoteTextArea"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Heading, Label, Link, Select, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
@@ -26,7 +29,6 @@ import { validateManualResolution } from "utils/validators/validateManualResolut
 import Form from "../../../components/Form"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
-import Permission from "@moj-bichard7/common/types/Permission"
 import forbidden from "../../../utils/forbidden"
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -130,7 +132,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
-  let backLink = `${basePath}/court-cases/${courtCase.errorId}`
+  let backLink = `/court-cases/${courtCase.errorId}`
 
   if (previousPath) {
     backLink += `?previousPath=${encodeURIComponent(previousPath)}`
@@ -144,28 +146,23 @@ const ResolveCourtCasePage: NextPage<Props> = ({
             <title>{"Bichard7 | Resolve Case"}</title>
             <meta name="description" content="Bichard7 | Resolve Case" />
           </Head>
-          <BackLink href={backLink} onClick={function noRefCheck() {}}>
+          <a className="govuk-back-link" href={`${basePath}${backLink}`} onClick={function noRefCheck() {}}>
             {"Case Details"}
-          </BackLink>
+          </a>
           <HeaderContainer id="header-container">
             <HeaderRow>
-              <Heading as="h1" size="LARGE" aria-label="Resolve Case">
+              <h1 className="govuk-heading-l" aria-label="Resolve Case">
                 {"Resolve Case"}
-              </Heading>
+              </h1>
             </HeaderRow>
           </HeaderContainer>
           <ConditionalRender isRendered={lockedByAnotherUser}>{"Case is locked by another user."}</ConditionalRender>
           <ConditionalRender isRendered={!lockedByAnotherUser}>
             <Form method="POST" action="#" csrfToken={csrfToken}>
-              <Fieldset>
-                <FormGroup>
-                  <Label>{"Select a reason"}</Label>
-                  <Select
-                    input={{
-                      name: "reason"
-                    }}
-                    label={""}
-                  >
+              <fieldset className="govuk-fieldset">
+                <div className={"govuk-form-group"}>
+                  <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
+                  <select className="govuk-select" name="reason">
                     {Object.keys(ResolutionReasons).map((reason) => {
                       return (
                         <option selected={selectedReason === reason} key={reason} value={reason}>
@@ -173,30 +170,25 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                         </option>
                       )
                     })}
-                  </Select>
-                </FormGroup>
-                <FormGroup>
-                  <Label>{"Resolution Details"}</Label>
-                  <TextArea
-                    input={{
-                      name: "reasonText"
-                    }}
-                    meta={{
-                      error: reasonTextError,
-                      touched: !!reasonTextError
-                    }}
-                  >
-                    {""}
-                  </TextArea>
-                </FormGroup>
+                  </select>
+                </div>
+
+                <NoteTextArea
+                  labelText={"Resolution Details"}
+                  name={"reasonText"}
+                  errorMessage={reasonTextError}
+                  showError={!!reasonTextError}
+                />
 
                 <ButtonsGroup>
                   <Button id="Resolve" type="submit">
                     {"Resolve"}
                   </Button>
-                  <Link href={backLink}>{"Cancel"}</Link>
+                  <Link href={backLink} className="govuk-link">
+                    {"Cancel"}
+                  </Link>
                 </ButtonsGroup>
-              </Fieldset>
+              </fieldset>
             </Form>
           </ConditionalRender>
         </Layout>

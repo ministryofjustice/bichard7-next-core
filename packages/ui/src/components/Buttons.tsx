@@ -1,34 +1,53 @@
-import { Button } from "govuk-react"
+import { useRouter } from "next/router"
 import { ReactNode } from "react"
-import { gdsLightGrey, gdsMidGrey, textPrimary } from "utils/colours"
 
-type Props = {
+interface ButtonProps extends React.ComponentProps<"button"> {
   children: ReactNode
-  id?: string
-  className?: string
-  type?: "submit" | "reset" | "button"
-  onClick?: () => void
   dataModule?: string
 }
 
-const PrimaryButton = ({ id, children, className, type, onClick, dataModule }: Props) => (
-  <Button onClick={onClick} id={id} className={className} type={type} data-module={dataModule}>
+interface LinkButtonProps extends ButtonProps {
+  href: string
+  secondary?: boolean
+}
+
+const Button = ({ children, dataModule = "govuk-button", ...buttonProps }: ButtonProps) => {
+  const classNames = buttonProps.className?.split(" ") ?? []
+
+  if (!classNames.includes("govuk-button")) {
+    classNames.push("govuk-button")
+  }
+
+  return (
+    <button {...buttonProps} className={classNames.join(" ")} data-module={dataModule}>
+      {children}
+    </button>
+  )
+}
+
+const SecondaryButton = ({ children, ...buttonProps }: ButtonProps) => (
+  <Button {...buttonProps} className={`govuk-button--secondary ${buttonProps.className}`}>
     {children}
   </Button>
 )
 
-const SecondaryButton = ({ id, children, className, type, onClick }: Props) => (
-  <Button
-    onClick={onClick}
-    id={id}
-    className={className}
-    type={type}
-    buttonColour={gdsLightGrey}
-    buttonTextColour={textPrimary}
-    buttonShadowColour={gdsMidGrey}
-  >
-    {children}
-  </Button>
-)
+const LinkButton: React.FC<LinkButtonProps> = ({
+  children,
+  href,
+  secondary = false,
+  ...buttonProps
+}: LinkButtonProps) => {
+  const { asPath, basePath } = useRouter()
 
-export { PrimaryButton, SecondaryButton }
+  return (
+    <a href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}>
+      {secondary ? (
+        <SecondaryButton {...buttonProps}>{children}</SecondaryButton>
+      ) : (
+        <Button {...buttonProps}>{children}</Button>
+      )}
+    </a>
+  )
+}
+
+export { LinkButton, Button, SecondaryButton }

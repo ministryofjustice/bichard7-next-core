@@ -1,4 +1,3 @@
-import { GridCol, GridRow } from "govuk-react"
 import styled, { css } from "styled-components"
 
 const repeatedCss = css`
@@ -10,17 +9,15 @@ const repeatedCss = css`
   }
 `
 
-const PanelsGridRow = styled(GridRow)`
+const PanelsGridRow = styled.div`
   ${repeatedCss}
 `
 
-const PanelsGridCol = styled(GridCol)`
-  overflow-x: scroll;
-
+const PanelsGridCol = styled.div`
   ${repeatedCss}
 `
 
-const SideBar = styled(GridCol)`
+const SideBar = styled.div`
   min-width: 320px;
   max-width: 100%;
 

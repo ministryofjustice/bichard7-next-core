@@ -2,21 +2,20 @@ import { useCourtCase } from "context/CourtCaseContext"
 import type CaseDetailsTab from "types/CaseDetailsTab"
 import getTabDetails from "utils/tabDetails/getTabDetails"
 import { CourtCaseDetailsSingleTab } from "./CourtCaseDetailsSingleTab"
-import { StyledNav } from "./CourtCaseDetailsTabs.styles"
+import { Tabs } from "./CourtCaseDetailsTabs.styles"
 
 interface CourtCaseDetailsTabsProps {
   activeTab: CaseDetailsTab
   onTabClick: (tab: CaseDetailsTab) => void
-  width: string
 }
 
-export const CourtCaseDetailsTabs = ({ activeTab, onTabClick, width }: CourtCaseDetailsTabsProps) => {
+export const CourtCaseDetailsTabs = ({ activeTab, onTabClick }: CourtCaseDetailsTabsProps) => {
   const { courtCase, amendments, savedAmendments } = useCourtCase()
 
   const tabDetails = getTabDetails(courtCase.aho.Exceptions, amendments, savedAmendments)
 
   return (
-    <StyledNav width={width} className={`moj-sub-navigation nav`} aria-label="Sub navigation">
+    <Tabs className={`govuk-grid-column-two-thirds moj-sub-navigation nav`} aria-label="Sub navigation">
       <ul className="moj-sub-navigation__list">
         {tabDetails.map((tab) => {
           return (
@@ -29,6 +28,6 @@ export const CourtCaseDetailsTabs = ({ activeTab, onTabClick, width }: CourtCase
           )
         })}
       </ul>
-    </StyledNav>
+    </Tabs>
   )
 }

@@ -1,7 +1,5 @@
 /*
   Pinned:
-  - styled-components
-    - Conflict with GDS9
   - cookies-next
     - v5 contains breaking changes
   - react, react-dom, @types/react, @types/react-dom
@@ -13,7 +11,7 @@
   - next
     - 13.4.13 causes failures with fetch
 */
-const pinned = ["styled-components", "cookies-next", "react", "react-dom", "@types/react", "@types/react-dom"]
+const pinned = ["cookies-next", "react", "react-dom", "@types/react", "@types/react-dom"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 

@@ -3,22 +3,14 @@ import { SummaryBoxDetail, SummaryBoxLabel, SummaryBoxValue } from "./CourtCaseD
 interface CourtCaseDetailsSummaryBoxFieldProps {
   label: string
   value: string | null | undefined
-  courtNameClass?: string
+  courtName?: boolean
 }
 
-const CourtCaseDetailsSummaryBoxField = ({
-  label,
-  value,
-  courtNameClass = undefined
-}: CourtCaseDetailsSummaryBoxFieldProps) => {
+const CourtCaseDetailsSummaryBoxField = ({ label, value, courtName = false }: CourtCaseDetailsSummaryBoxFieldProps) => {
   const classNames = ["detail"]
 
-  if (courtNameClass) {
-    if (courtNameClass === "inside") {
-      classNames.push("detail__court-name-inside")
-    } else if (courtNameClass === "outside") {
-      classNames.push("detail__court-name-outside")
-    }
+  if (courtName) {
+    classNames.push("detail__court-name")
   }
 
   return (

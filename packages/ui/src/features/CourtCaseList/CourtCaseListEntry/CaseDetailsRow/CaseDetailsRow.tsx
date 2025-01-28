@@ -2,7 +2,6 @@ import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import ResolutionStatusBadge from "features/CourtCaseList/tags/ResolutionStatusBadge"
-import { Link, Table } from "govuk-react"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { JSX, useState } from "react"
@@ -10,9 +9,9 @@ import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
 import { LOCKED_ICON_URL } from "utils/icons"
 import { ResolutionStatus } from "../../../../types/ResolutionStatus"
+import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow.styles"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
-import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow.styles"
 
 interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase
@@ -43,32 +42,32 @@ export const CaseDetailsRow = ({
 
   return (
     <>
-      <Table.Row className="caseDetailsRow">
-        <Table.Cell>
+      <tr className="govuk-table__row caseDetailsRow">
+        <td className="govuk-table__cell">
           <ConditionalRender isRendered={!!errorLockedByUsername}>
             <Image src={LOCKED_ICON_URL} priority width={20} height={20} alt="Lock icon" />
           </ConditionalRender>
-        </Table.Cell>
-        <Table.Cell>
-          <Link href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name">
+        </td>
+        <td className="govuk-table__cell">
+          <a href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name govuk-link">
             {defendantName}
             <br />
             <CaseListResolutionStatusBadgeWrapper>
               <ResolutionStatusBadge resolutionStatus={resolutionStatus} />
             </CaseListResolutionStatusBadgeWrapper>
-          </Link>
-        </Table.Cell>
-        <Table.Cell>
+          </a>
+        </td>
+        <td className="govuk-table__cell">
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
-        </Table.Cell>
-        <Table.Cell>{courtName}</Table.Cell>
-        <Table.Cell>{ptiurn}</Table.Cell>
-        <Table.Cell>
+        </td>
+        <td className="govuk-table__cell">{courtName}</td>
+        <td className="govuk-table__cell">{ptiurn}</td>
+        <td className="govuk-table__cell">
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
-        </Table.Cell>
-        <Table.Cell>{reasonCell}</Table.Cell>
-        <Table.Cell>{lockTag}</Table.Cell>
-      </Table.Row>
+        </td>
+        <td className="govuk-table__cell">{reasonCell}</td>
+        <td className="govuk-table__cell">{lockTag}</td>
+      </tr>
       {notes.length > 0 && !showPreview && <NotePreviewRow notes={notes} />}
     </>
   )

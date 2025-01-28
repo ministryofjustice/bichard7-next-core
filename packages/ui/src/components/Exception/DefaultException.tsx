@@ -1,5 +1,4 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { GridCol, GridRow, Link } from "govuk-react"
 import ErrorMessages from "types/ErrorMessages"
 import NavigationHandler from "../../types/NavigationHandler"
 import getExceptionDefinition from "../../utils/exceptionDefinition/getExceptionDefinition"
@@ -31,8 +30,8 @@ const DefaultException = ({ path, code, onNavigate }: Props) => {
 
   return (
     <ExceptionRow className={`moj-exception-row`}>
-      <GridRow className="exception-header">
-        <GridCol>
+      <div className="govuk-grid-row exception-header">
+        <div className="govuk-grid-column-full">
           <b>
             {formattedFieldName}
             {" / "}
@@ -40,22 +39,27 @@ const DefaultException = ({ path, code, onNavigate }: Props) => {
           <ActionLink onClick={handleClick} className="exception-location">
             {location}
           </ActionLink>
-        </GridCol>
-      </GridRow>
+        </div>
+      </div>
 
-      <GridRow className="exception-details">
-        <GridCol>
+      <div className="govuk-grid-row exception-details">
+        <div className="govuk-grid-column-full">
           {code}
           {exceptionDefinition ? ` - ${exceptionDefinition}` : ""}
-        </GridCol>
-      </GridRow>
+        </div>
+      </div>
 
-      <ExceptionRowHelp className={`exception-help`}>
-        <GridCol>
-          <Link href={`/help/bichard-functionality/exceptions/resolution.html#${code}`} target="_blank">
+      <ExceptionRowHelp className={`govuk-grid-row exception-help`}>
+        <div className="govuk-grid-column-full">
+          <a
+            className="govuk-link"
+            rel="noreferrer noopener"
+            href={`/help/bichard-functionality/exceptions/resolution.html#${code}`}
+            target="_blank"
+          >
             {"More information"}
-          </Link>
-        </GridCol>
+          </a>
+        </div>
       </ExceptionRowHelp>
     </ExceptionRow>
   )

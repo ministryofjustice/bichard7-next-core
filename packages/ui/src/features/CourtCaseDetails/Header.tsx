@@ -2,18 +2,16 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
-import LinkButton from "components/LinkButton"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { Heading } from "govuk-react"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
+import { LinkButton } from "components/Buttons"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
-import { gdsLightGrey, gdsMidGrey, textPrimary } from "utils/colours"
 import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
@@ -64,10 +62,8 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   return (
     <HeaderContainer id="header-container">
       <HeaderRow>
-        <Heading className="hidden-header" as="h1" size="LARGE">
-          {"Case details"}
-        </Heading>
-        <Heading as="h2" size="MEDIUM">
+        <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
+        <h2 className="govuk-heading-m">
           {courtCase.defendantName}
           {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
           <Badge
@@ -76,7 +72,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             colour={BadgeColours.Blue}
             className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
           />
-        </Heading>
+        </h2>
         <LockedTagContainer>
           <LockStatusTag
             isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
@@ -93,13 +89,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
       <ButtonContainer>
         <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-          <LinkButton
-            href={reallocatePath}
-            className="b7-reallocate-button"
-            buttonColour={gdsLightGrey}
-            buttonTextColour={textPrimary}
-            buttonShadowColour={gdsMidGrey}
-          >
+          <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
             {"Reallocate Case"}
           </LinkButton>
         </ConditionalRender>

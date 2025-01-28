@@ -9,7 +9,7 @@ interface Props extends React.ComponentProps<"a"> {
 
 const ActionLink = ({ children, className, onClick }: Props) => {
   return (
-    <ActionLinkButton onClick={onClick} className={`${className} moj-action-link`}>
+    <ActionLinkButton onClick={onClick} className={`govuk-link ${className} moj-action-link`}>
       {children}
     </ActionLinkButton>
   )

@@ -1,5 +1,5 @@
-import { Table } from "govuk-react"
-import { StyledHintText, StyledTableRow } from "./TableRow.styles"
+import { HintTextNoMargin } from "components/HintText"
+import { StyledTableRow } from "./TableRow.styles"
 
 interface TableRowProps {
   label: string
@@ -11,12 +11,12 @@ interface TableRowProps {
 export const TableRow = ({ label, value, hintText, className }: TableRowProps) => {
   const rowClassName = `table-row__${label.replaceAll(/ /g, "-").toLowerCase()}`
   return (
-    <StyledTableRow className={`table-row ${rowClassName} row ${className}`}>
-      <Table.Cell className="row-label">
+    <StyledTableRow className={`govuk-table__row table-row ${rowClassName} row ${className ?? ""}`}>
+      <td className="govuk-table__cell row-label">
         <b>{label}</b>
-        {hintText && <StyledHintText className={"hint-text"}>{hintText}</StyledHintText>}
-      </Table.Cell>
-      <Table.Cell className="row-value">{value}</Table.Cell>
+        {hintText && <HintTextNoMargin className={"hint-text"}>{hintText}</HintTextNoMargin>}
+      </td>
+      <td className="govuk-table__cell row-value">{value}</td>
     </StyledTableRow>
   )
 }

@@ -4,8 +4,16 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
 import { v4 as uuid } from "uuid"
 
-import type { DynamoAuditLog } from "../../../../types/AuditLog"
-import type { ApiAuditLogEvent, DynamoAuditLogEvent, DynamoAuditLogUserEvent } from "../../../../types/AuditLogEvent"
+import type { DynamoAuditLog, InternalDynamoAuditLog } from "../../../../types/AuditLog"
+import type {
+  ApiAuditLogEvent,
+  AuditLogEventAttributes,
+  DynamoAuditLogEvent,
+  DynamoAuditLogUserEvent,
+  InternalAuditLogEventAttributes,
+  InternalDynamoAuditLogEvent,
+  InternalDynamoAuditLogUserEvent
+} from "../../../../types/AuditLogEvent"
 import type { FetchByIndexOptions, UpdateOptions } from "../DynamoGateway"
 import type DynamoDbConfig from "../DynamoGateway/DynamoDbConfig"
 import type { Projection } from "../DynamoGateway/DynamoGateway"
@@ -27,10 +35,6 @@ import { compress, decompress } from "./compression"
 const maxAttributeValueLength = 1000
 const getEventsPageLimit = 100
 const eventsFetcherParallelism = 20
-
-type InternalDynamoAuditLog = Omit<DynamoAuditLog, "events">
-type InternalDynamoAuditLogEvent = DynamoAuditLogEvent & { _id: string }
-type InternalDynamoAuditLogUserEvent = DynamoAuditLogUserEvent & { _id: string }
 
 const convertDynamoAuditLogToInternal = (
   input: InternalDynamoAuditLog & { events?: ApiAuditLogEvent[] }
@@ -132,6 +136,8 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       if (isError(addEventsResult)) {
         return addEventsResult
       }
+
+      return addEventsResult[0]
     }
 
     return items[0]
@@ -154,10 +160,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
 
     const items = <DynamoAuditLog[]>result?.Items
     if (!options.excludeColumns || !options.excludeColumns.includes("events")) {
-      const addEventsResult = await this.addEventsFromEventsTable(items)
-      if (isError(addEventsResult)) {
-        return addEventsResult
-      }
+      return await this.addEventsFromEventsTable(items)
     }
 
     return items
@@ -176,13 +179,10 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     }
 
     if (!options.excludeColumns || !options.excludeColumns.includes("events")) {
-      const addEventsResult = await this.addEventsFromEventsTable(result as DynamoAuditLog[])
-      if (isError(addEventsResult)) {
-        return addEventsResult
-      }
+      return await this.addEventsFromEventsTable(result as DynamoAuditLog[])
     }
 
-    return <DynamoAuditLog[]>result
+    return result ?? []
   }
 
   async fetchMany(options: FetchManyOptions = {}): PromiseResult<DynamoAuditLog[]> {
@@ -198,13 +198,10 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     }
 
     if (!options.excludeColumns || !options.excludeColumns.includes("events")) {
-      const addEventsResult = await this.addEventsFromEventsTable(result as DynamoAuditLog[])
-      if (isError(addEventsResult)) {
-        return addEventsResult
-      }
+      return await this.addEventsFromEventsTable(result as DynamoAuditLog[])
     }
 
-    return result as DynamoAuditLog[]
+    return result ?? []
   }
 
   async fetchOne(messageId: string, options: FetchOneOptions = {}): PromiseResult<DynamoAuditLog | undefined> {
@@ -216,19 +213,21 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       options?.stronglyConsistentRead
     )
 
-    if (isError(result)) {
+    if (isError(result) || result === undefined) {
       return result
     }
 
-    const item = result?.Item as DynamoAuditLog
+    const item = result?.Item as InternalDynamoAuditLog
     if (item && (!options.excludeColumns || !options.excludeColumns.includes("events"))) {
       const addEventsResult = await this.addEventsFromEventsTable([item])
       if (isError(addEventsResult)) {
         return addEventsResult
       }
+
+      return addEventsResult[0]
     }
 
-    return item
+    return item as DynamoAuditLog
   }
 
   async fetchRange(options: FetchRangeOptions): PromiseResult<DynamoAuditLog[]> {
@@ -245,15 +244,12 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     }
 
     if (!options.excludeColumns || !options.excludeColumns.includes("events")) {
-      const addEventsResult = await this.addEventsFromEventsTable(result as DynamoAuditLog[], {
+      return await this.addEventsFromEventsTable(result as DynamoAuditLog[], {
         eventsFilter: options.eventsFilter
       })
-      if (isError(addEventsResult)) {
-        return addEventsResult
-      }
     }
 
-    return <DynamoAuditLog[]>result
+    return result ?? []
   }
 
   async fetchUnsanitised(options: FetchUnsanitisedOptions = {}): PromiseResult<DynamoAuditLog[]> {
@@ -269,14 +265,11 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       return result
     }
 
-    if (!options.excludeColumns || !options.excludeColumns.includes("events")) {
-      const addEventsResult = await this.addEventsFromEventsTable(result as DynamoAuditLog[])
-      if (isError(addEventsResult)) {
-        return addEventsResult
-      }
+    if (!!result && (!options.excludeColumns || !options.excludeColumns.includes("events"))) {
+      return await this.addEventsFromEventsTable(result)
     }
 
-    return <DynamoAuditLog[]>result
+    return result ?? []
   }
 
   async fetchVersion(messageId: string): PromiseResult<null | number> {
@@ -292,11 +285,11 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
   }
 
   async getEvents(messageId: string, options: EventsFilterOptions = {}): PromiseResult<DynamoAuditLogEvent[]> {
-    let lastMessage: DynamoAuditLogEvent | undefined
+    let lastMessage: InternalDynamoAuditLogEvent | undefined
     let allEvents: DynamoAuditLogEvent[] = []
 
     while (true) {
-      const indexSearcher = new IndexSearcher<DynamoAuditLogEvent[]>(
+      const indexSearcher = new IndexSearcher<InternalDynamoAuditLogEvent[]>(
         this,
         this.config.eventsTableName,
         this.eventsTableKey
@@ -317,16 +310,17 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
         return events
       }
 
+      const decompressedEvents: DynamoAuditLogEvent[] = new Array(events.length)
       for (let i = 0; i < events.length; i++) {
         const decompressedEvent = await this.decompressEventValues(events[i])
         if (isError(decompressedEvent)) {
           return decompressedEvent
         }
 
-        events[i] = decompressedEvent
+        decompressedEvents[i] = decompressedEvent
       }
 
-      allEvents = allEvents.concat(events)
+      allEvents = allEvents.concat(decompressedEvents)
 
       if (events.length < getEventsPageLimit) {
         return allEvents.sort((a, b) => (a.timestamp > b.timestamp ? 1 : b.timestamp > a.timestamp ? -1 : 0))
@@ -499,11 +493,12 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
   }
 
   private async addEventsFromEventsTable(
-    auditLogs: DynamoAuditLog[],
+    auditLogs: InternalDynamoAuditLog[],
     options: EventsFilterOptions = {}
-  ): PromiseResult<void> {
+  ): PromiseResult<DynamoAuditLog[]> {
     const numberOfFetchers = Math.min(auditLogs.length, eventsFetcherParallelism)
     const indexes = [...Array(auditLogs.length).keys()]
+    const output: DynamoAuditLog[] = new Array(auditLogs.length)
 
     const eventsFetcher = async () => {
       while (indexes.length > 0) {
@@ -517,7 +512,11 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
           throw result
         }
 
-        auditLogs[index].events = result
+        const newAuditLog: DynamoAuditLog = {
+          ...auditLogs[index],
+          events: result
+        }
+        output[index] = newAuditLog
       }
     }
 
@@ -527,66 +526,95 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     if (isError(allResult)) {
       return allResult
     }
+
+    return output
   }
 
-  private async compressEventValues<TEvent extends DynamoAuditLogEvent | DynamoAuditLogUserEvent>(
-    event: TEvent
-  ): PromiseResult<TEvent> {
-    if (!event.attributes) {
-      return event
-    }
+  private async compressEventValues<
+    TEvent extends DynamoAuditLogEvent | DynamoAuditLogUserEvent,
+    TOutputEvent extends InternalDynamoAuditLogEvent | InternalDynamoAuditLogUserEvent
+  >(event: TEvent): PromiseResult<TOutputEvent> {
+    const { attributes, ...eventOutput } = event
 
-    for (const attributeKey of Object.keys(event.attributes)) {
-      const attributeValue = event.attributes?.[attributeKey]
-      if (attributeValue && typeof attributeValue === "string" && attributeValue.length > maxAttributeValueLength) {
-        const compressedValue = await compress(attributeValue)
-        if (isError(compressedValue)) {
-          return compressedValue
+    const compressedAttributes: InternalAuditLogEventAttributes = {}
+    if (attributes) {
+      for (const attributeKey of Object.keys(attributes)) {
+        const attributeValue = event.attributes?.[attributeKey]
+        if (attributeValue) {
+          if (typeof attributeValue === "string" && attributeValue.length > maxAttributeValueLength) {
+            const compressedValue = await compress(attributeValue)
+            if (isError(compressedValue)) {
+              return compressedValue
+            }
+
+            compressedAttributes[attributeKey] = { _compressedValue: compressedValue }
+          } else {
+            compressedAttributes[attributeKey] = attributeValue
+          }
         }
-
-        event.attributes[attributeKey] = { _compressedValue: compressedValue }
       }
     }
 
-    if (event.eventXml && typeof event.eventXml === "string" && event.eventXml.length > maxAttributeValueLength) {
+    if (
+      "eventXml" in event &&
+      event.eventXml &&
+      typeof event.eventXml === "string" &&
+      event.eventXml.length > maxAttributeValueLength
+    ) {
       const compressedValue = await compress(event.eventXml)
       if (isError(compressedValue)) {
         return compressedValue
       }
 
-      event.eventXml = { _compressedValue: compressedValue }
+      const compressedEventXml = { _compressedValue: compressedValue }
+      return {
+        ...eventOutput,
+        ...(attributes ? { attributes: compressedAttributes } : {}),
+        eventXml: compressedEventXml
+      } as unknown as TOutputEvent
     }
 
-    return event
+    return { ...eventOutput, ...(attributes ? { attributes: compressedAttributes } : {}) } as unknown as TOutputEvent
   }
 
-  private async decompressEventValues(event: DynamoAuditLogEvent): PromiseResult<DynamoAuditLogEvent> {
-    if (!event.attributes) {
-      return event
-    }
+  private async decompressEventValues(event: InternalDynamoAuditLogEvent): PromiseResult<DynamoAuditLogEvent> {
+    const { attributes, eventXml, ...eventOutput } = event
 
-    for (const [attributeKey, attributeValue] of Object.entries(event.attributes)) {
-      if (attributeValue && typeof attributeValue === "object" && "_compressedValue" in attributeValue) {
-        const compressedValue = (attributeValue as { _compressedValue: string })._compressedValue
-        const decompressedValue = await decompress(compressedValue)
-        if (isError(decompressedValue)) {
-          return decompressedValue
+    const decompressedAttributes: AuditLogEventAttributes = {}
+    if (attributes) {
+      for (const [attributeKey, attributeValue] of Object.entries(attributes)) {
+        if (attributeValue) {
+          if (typeof attributeValue === "object" && "_compressedValue" in attributeValue) {
+            const compressedValue = attributeValue._compressedValue
+
+            const decompressedValue = await decompress(compressedValue)
+            if (isError(decompressedValue)) {
+              return decompressedValue
+            }
+
+            decompressedAttributes[attributeKey] = decompressedValue
+          } else {
+            decompressedAttributes[attributeKey] = attributeValue
+          }
         }
-
-        event.attributes[attributeKey] = decompressedValue
       }
     }
 
-    if (event.eventXml && typeof event.eventXml === "object" && "_compressedValue" in event.eventXml) {
-      const decompressedValue = await decompress(event.eventXml._compressedValue)
+    let decompressedEventXml: string | undefined = undefined
+    if (eventXml && typeof eventXml === "object" && "_compressedValue" in eventXml) {
+      const decompressedValue = await decompress(eventXml._compressedValue)
       if (isError(decompressedValue)) {
         return decompressedValue
       }
 
-      event.eventXml = decompressedValue
+      decompressedEventXml = decompressedValue
     }
 
-    return event
+    return {
+      ...eventOutput,
+      ...(attributes ? { attributes: decompressedAttributes } : {}),
+      ...(eventXml ? { eventXml: decompressedEventXml } : {})
+    }
   }
 
   private async prepareStoreEvents(messageId: string, events: DynamoAuditLogEvent[]): PromiseResult<DynamoUpdate[]> {
@@ -614,7 +642,9 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
   private async prepareStoreUserEvents(events: DynamoAuditLogUserEvent[]): PromiseResult<DynamoUpdate[]> {
     const dynamoUpdates: DynamoUpdate[] = []
     for (const event of events) {
-      const compressedEvent = await this.compressEventValues(event)
+      const compressedEvent = await this.compressEventValues<DynamoAuditLogUserEvent, InternalDynamoAuditLogUserEvent>(
+        event
+      )
       if (isError(compressedEvent)) {
         return compressedEvent
       }

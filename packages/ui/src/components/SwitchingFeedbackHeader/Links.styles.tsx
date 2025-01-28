@@ -1,5 +1,4 @@
 import styled from "styled-components"
-import { arial, nta, sansSerif } from "utils/typography"
 
 const SwitchingFeedbackButtonContainer = styled.div`
   display: flex;
@@ -16,7 +15,6 @@ const SkipLink = styled.button`
   cursor: pointer;
   background: transparent;
   border: none;
-  font-family: ${nta}, ${arial}, ${sansSerif};
   font-size: 1em;
   position: relative;
   line-height: 1.25;

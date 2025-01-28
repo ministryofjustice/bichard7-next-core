@@ -1,8 +1,9 @@
-import { HintText } from "govuk-react"
 import styled from "styled-components"
 
-const StyledHintText = styled(HintText)`
-  margin-bottom: 0;
+const NewForceOwner = styled.select`
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 `
 
-export { StyledHintText }
+export { NewForceOwner }
