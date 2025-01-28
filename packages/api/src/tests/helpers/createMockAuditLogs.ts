@@ -1,22 +1,37 @@
-import type { AxiosError } from "axios"
-
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 
-import type { InputApiAuditLog, OutputApiAuditLog } from "../../types/AuditLog"
+import type { DynamoAuditLog, InputApiAuditLog, OutputApiAuditLog } from "../../types/AuditLog"
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
-import AuditLogStatus from "../../types/AuditLogStatus"
+import { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import PncStatus from "../../types/PncStatus"
 import TriggerStatus from "../../types/TriggerStatus"
-import { mockApiAuditLogEvent, mockInputApiAuditLog } from "./mockAuditLogs"
+import createAuditLogEvents from "../../useCases/createAuditLogEvents"
+import auditLogDynamoConfig from "./dynamoDbConfig"
+import {
+  mockApiAuditLogEvent,
+  mockDynamoAuditLog,
+  mockDynamoAuditLogEvent,
+  mockInputApiAuditLog
+} from "./mockAuditLogs"
 
-export const createMockError = async (overrides: Partial<InputApiAuditLog> = {}): PromiseResult<OutputApiAuditLog> => {
-  const auditLog = mockInputApiAuditLog(overrides)
-  await axios.post("http://localhost:3010/messages", auditLog)
+const dynamoGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
-  const event = mockApiAuditLogEvent({ category: "error", eventType: "Hearing Outcome Input Queue Failure" })
-  const res = await axios.post(`http://localhost:3010/messages/${auditLog.messageId}/events`, event)
+export const createMockError = async (overrides: Partial<DynamoAuditLog> = {}): PromiseResult<DynamoAuditLog> => {
+  const auditLog = mockDynamoAuditLog(overrides)
+  const res1 = await dynamoGateway.create(auditLog)
+  if (isError(res1)) {
+    return res1
+  }
+
+  const event = mockDynamoAuditLogEvent({
+    category: EventCategory.error,
+    eventType: "Hearing Outcome Input Queue Failure"
+  })
+  const res = await createAuditLogEvents([event], auditLog.messageId, dynamoGateway)
   if (isError(res)) {
     return res
   }
@@ -25,7 +40,7 @@ export const createMockError = async (overrides: Partial<InputApiAuditLog> = {})
     ...auditLog,
     events: [event],
     pncStatus: PncStatus.Processing,
-    status: AuditLogStatus.error,
+    status: AuditLogStatus.Error,
     triggerStatus: TriggerStatus.NoTriggers
   }
 }
@@ -47,11 +62,10 @@ export const createMockErrors = async (
   return output
 }
 
-export const createMockAuditLog = async (
-  overrides: Partial<InputApiAuditLog> = {}
-): PromiseResult<OutputApiAuditLog> => {
-  const auditLog = mockInputApiAuditLog(overrides)
-  const res = await axios.post("http://localhost:3010/messages", auditLog).catch((error: AxiosError) => error)
+export const createMockAuditLog = async (overrides: Partial<DynamoAuditLog> = {}): PromiseResult<DynamoAuditLog> => {
+  const auditLog = mockDynamoAuditLog(overrides)
+  const res = await dynamoGateway.create(auditLog)
+
   if (isError(res)) {
     return res
   }
@@ -60,7 +74,7 @@ export const createMockAuditLog = async (
     ...auditLog,
     events: [],
     pncStatus: PncStatus.Processing,
-    status: AuditLogStatus.processing,
+    status: AuditLogStatus.Processing,
     triggerStatus: TriggerStatus.NoTriggers
   }
 }
@@ -87,10 +101,7 @@ export const createMockAuditLogEvent = async (
   overrides: Partial<ApiAuditLogEvent> = {}
 ): PromiseResult<ApiAuditLogEvent> => {
   const auditLogEvent = mockApiAuditLogEvent(overrides)
-
-  const res = await axios
-    .post(`http://localhost:3010/messages/${messageId}/events`, auditLogEvent)
-    .catch((error: AxiosError) => error)
+  const res = await createAuditLogEvents([auditLogEvent], messageId, dynamoGateway)
 
   if (isError(res)) {
     return res
@@ -104,7 +115,10 @@ export const createMockRetriedError = async (): PromiseResult<OutputApiAuditLog>
   const auditLog = mockInputApiAuditLog()
   await axios.post("http://localhost:3010/messages", auditLog)
 
-  const event = mockApiAuditLogEvent({ category: "error", eventType: "Hearing Outcome Input Queue Failure" })
+  const event = mockApiAuditLogEvent({
+    category: EventCategory.error,
+    eventType: "Hearing Outcome Input Queue Failure"
+  })
   const res = await axios.post(`http://localhost:3010/messages/${auditLog.messageId}/events`, event)
   if (isError(res)) {
     return res
@@ -113,7 +127,10 @@ export const createMockRetriedError = async (): PromiseResult<OutputApiAuditLog>
   events.push(event)
 
   for (let i = 0; i < 3; i++) {
-    const retryEvent = mockApiAuditLogEvent({ category: "information", eventType: "Retrying failed message" })
+    const retryEvent = mockApiAuditLogEvent({
+      category: EventCategory.information,
+      eventType: "Retrying failed message"
+    })
     const retryRes = await axios.post(`http://localhost:3010/messages/${auditLog.messageId}/events`, retryEvent)
     if (isError(retryRes)) {
       return retryRes
@@ -126,7 +143,7 @@ export const createMockRetriedError = async (): PromiseResult<OutputApiAuditLog>
     ...auditLog,
     events,
     pncStatus: PncStatus.Processing,
-    status: AuditLogStatus.processing,
+    status: AuditLogStatus.Processing,
     triggerStatus: TriggerStatus.NoTriggers
   }
 }

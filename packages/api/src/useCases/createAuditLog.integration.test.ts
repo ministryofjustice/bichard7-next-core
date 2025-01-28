@@ -1,3 +1,5 @@
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
+
 import type { DynamoAuditLog } from "../types/AuditLog"
 
 import { AuditLogDynamoGateway } from "../services/gateways/dynamo"
@@ -5,7 +7,6 @@ import auditLogDynamoConfig from "../tests/helpers/dynamoDbConfig"
 import FakeLogger from "../tests/helpers/fakeLogger"
 import { mockDynamoAuditLog } from "../tests/helpers/mockAuditLogs"
 import TestDynamoGateway from "../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
-import AuditLogStatus from "../types/AuditLogStatus"
 import ConflictError from "../types/errors/ConflictError"
 import PncStatus from "../types/PncStatus"
 import TriggerStatus from "../types/TriggerStatus"
