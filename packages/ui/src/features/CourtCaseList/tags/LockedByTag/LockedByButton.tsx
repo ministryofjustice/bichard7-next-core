@@ -1,3 +1,4 @@
+import ButtonsGroup from "components/ButtonsGroup"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import Form from "../../../../components/Form"
 import { StyledLockedByButton } from "./LockedByButton.styles"
@@ -14,23 +15,23 @@ const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) =
   return (
     <>
       <p>{"Click the button to unlock the case"}</p>
-      <div className="govuk-button-group">
-        <Form method="post" action={unlockPath} csrfToken={csrfToken}>
+      <Form method="post" action={unlockPath} csrfToken={csrfToken}>
+        <ButtonsGroup noGap={true}>
           <button className="govuk-button" data-module="govuk-button" id="unlock">
             {"Unlock"}
           </button>
-        </Form>
-        <a
-          className="govuk-link"
-          href="/"
-          onClick={(event) => {
-            event.preventDefault()
-            onCancel()
-          }}
-        >
-          {"Cancel"}
-        </a>
-      </div>
+          <a
+            className="govuk-link"
+            href="/"
+            onClick={(event) => {
+              event.preventDefault()
+              onCancel()
+            }}
+          >
+            {"Cancel"}
+          </a>
+        </ButtonsGroup>
+      </Form>
     </>
   )
 }
@@ -51,7 +52,7 @@ const LockedByButton = ({
   return (
     <>
       <StyledLockedByButton
-        className={`locked-by-tag button--tag`}
+        className={`govuk-button locked-by-tag button--tag`}
         onClick={() => {
           setShowUnlockConfirmation(true)
         }}

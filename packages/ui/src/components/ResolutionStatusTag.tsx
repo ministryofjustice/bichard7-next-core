@@ -1,11 +1,10 @@
+import { useCourtCase } from "context/CourtCaseContext"
 import Image from "next/image"
-import { StyledComponentPropsWithRef } from "styled-components"
 import { ResolutionStatus } from "../types/ResolutionStatus"
 import { TICK_ICON_URL } from "../utils/icons"
-import { ResolutionStatusTagContainer } from "./ResolutionStatusTag.styles"
-import { useCourtCase } from "context/CourtCaseContext"
+import { ResolutionStatusTagContainer, ResolutionTag } from "./ResolutionStatusTag.styles"
 
-interface StatusTagProps extends StyledComponentPropsWithRef<typeof ResolutionStatusTagContainer> {
+interface StatusTagProps {
   itemName: string
   resolutionStatus: ResolutionStatus
 }
@@ -28,9 +27,14 @@ const ResolutionStatusTag = ({ itemName, resolutionStatus, ...rest }: StatusTagP
       {...rest}
       className={`${itemName.toLowerCase()}-${resolutionStatus.toLowerCase()}-tag`}
     >
-      {itemName}
-      <Image src={TICK_ICON_URL} width={18} height={18} alt="Check icon" />
-      {resolutionMessage}
+      <span className="govuk-body">
+        <b>{itemName}</b>
+      </span>
+
+      <ResolutionTag>
+        <Image src={TICK_ICON_URL} width={18} height={18} alt="Check icon" />
+        <span className="govuk-body">{resolutionMessage}</span>
+      </ResolutionTag>
     </ResolutionStatusTagContainer>
   )
 }

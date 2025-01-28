@@ -1,4 +1,3 @@
-import { LabelText } from "govuk-react"
 import type { Dispatch } from "react"
 import type { FilterAction } from "types/CourtCaseFilter"
 
@@ -11,8 +10,8 @@ interface Props {
 
 const TextFilter: React.FC<Props> = ({ label, id, value, dispatch }: Props) => {
   return (
-    <label className="govuk-label govuk-label--s" htmlFor={id}>
-      <LabelText>{label}</LabelText>
+    <label className="govuk-label govuk-label--s govuk-!-font-weight-regular" htmlFor={id}>
+      {label}
       <div className="govuk-input__wrapper">
         <div className="govuk-input__prefix" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">

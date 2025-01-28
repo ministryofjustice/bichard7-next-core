@@ -1,6 +1,5 @@
 import ConditionalRender from "components/ConditionalRender"
 import FilterChip from "components/FilterChip"
-import { Link } from "govuk-react"
 import { Dispatch } from "react"
 import { LockedState, Reason } from "types/CaseListQueryParams"
 import { Filter, FilterAction, FilterState } from "types/CourtCaseFilter"
@@ -42,9 +41,9 @@ const FilterChipSection: React.FC<Props> = ({
             >{`${sectionState} filters`}</h2>
           </div>
           <div>
-            <Link id="clear-filters" href="/bichard?keywords=">
+            <a id="clear-filters" className="govuk-link" href="/bichard?keywords=">
               {"Clear filters"}
-            </Link>
+            </a>
           </div>
         </HeaderRow>
 

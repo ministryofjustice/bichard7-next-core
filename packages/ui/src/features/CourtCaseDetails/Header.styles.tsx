@@ -1,4 +1,4 @@
-import { PrimaryButton, SecondaryButton } from "components/Buttons"
+import { Button, SecondaryButton } from "components/Buttons"
 import styled from "styled-components"
 
 const ButtonContainer = styled.div`
@@ -13,7 +13,7 @@ const LockedTagContainer = styled.div`
   gap: 2.5rem;
 `
 
-const StyledButton = styled(PrimaryButton)`
+const StyledButton = styled(Button)`
   margin-bottom: 0;
 `
 

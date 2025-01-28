@@ -1,4 +1,3 @@
-import { GridRow } from "govuk-react"
 import styled from "styled-components"
 
 const ExceptionRow = styled.div`
@@ -7,7 +6,7 @@ const ExceptionRow = styled.div`
   }
 `
 
-const ExceptionRowHelp = styled(GridRow)`
+const ExceptionRowHelp = styled.div`
   margin-top: 0.62rem;
 `
 

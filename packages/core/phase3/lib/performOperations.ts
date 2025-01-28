@@ -8,13 +8,20 @@ import type PncUpdateRequest from "../types/PncUpdateRequest"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 
 import { PncOperation } from "../../types/PncOperation"
-import generatePncUpdateExceptionFromMessage from "../exceptions/generatePncUpdateExceptionFromMessage"
+import generatePncUpdateExceptionFromMessage, {
+  isPncLockError
+} from "../exceptions/generatePncUpdateExceptionFromMessage"
 import PncUpdateRequestError from "../types/PncUpdateRequestError"
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
 import { normalDisposalGenerator } from "./pncUpdateRequestGenerators/normalDisposalGenerator"
 import penaltyHearingGenerator from "./pncUpdateRequestGenerators/penaltyHearingGenerator"
 import { remandGenerator } from "./pncUpdateRequestGenerators/remandGenerator"
 import sentenceDeferredGenerator from "./pncUpdateRequestGenerators/sentenceDeferredGenerator"
+
+export const MAXIMUM_PNC_LOCK_ERROR_RETRIES = 3
+const DELAY_FOR_PNC_LOCK_ERROR_RETRY = parseInt(process.env.DELAY_FOR_PNC_LOCK_ERROR_RETRY ?? "10000")
+
+const delayForPncLockErrorRetry = () => new Promise((resolve) => setTimeout(resolve, DELAY_FOR_PNC_LOCK_ERROR_RETRY))
 
 const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerator<T> } = {
   [PncOperation.DISPOSAL_UPDATED]: disposalUpdatedGenerator,
@@ -37,6 +44,32 @@ const generatePncUpdateRequest = <T extends PncOperation>(
   return pncUpdateRequest
 }
 
+const updatePnc = async (
+  pncUpdateDataset: PncUpdateDataset,
+  pncUpdateRequest: PncUpdateRequest,
+  pncGateway: PncGatewayInterface
+) => {
+  const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
+
+  for (let pncLockErrorRetries = 0; pncLockErrorRetries < MAXIMUM_PNC_LOCK_ERROR_RETRIES; pncLockErrorRetries++) {
+    const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId)
+
+    if (isError(pncUpdateResult)) {
+      const pncExceptions = pncUpdateResult.messages.map(generatePncUpdateExceptionFromMessage)
+
+      if (pncExceptions.some(isPncLockError) && pncLockErrorRetries !== MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1) {
+        await delayForPncLockErrorRetry()
+      } else {
+        pncUpdateDataset.Exceptions.push(...pncExceptions)
+
+        return pncUpdateResult
+      }
+    } else {
+      return pncUpdateResult
+    }
+  }
+}
+
 const performOperations = async (
   pncUpdateDataset: PncUpdateDataset,
   pncGateway: PncGatewayInterface
@@ -53,14 +86,10 @@ const performOperations = async (
 
   for (const [index, pncUpdateRequest] of (pncUpdateRequests as PncUpdateRequest[]).entries()) {
     const operation = incompleteOperations[index]
-    const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
-    const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId)
+
+    const pncUpdateResult = await updatePnc(pncUpdateDataset, pncUpdateRequest, pncGateway)
 
     if (isError(pncUpdateResult)) {
-      for (const message of pncUpdateResult.messages) {
-        pncUpdateDataset.Exceptions.push(generatePncUpdateExceptionFromMessage(message))
-      }
-
       operation.status = "Failed"
 
       return pncUpdateResult

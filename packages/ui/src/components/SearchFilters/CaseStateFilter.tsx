@@ -1,6 +1,6 @@
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import ConditionalRender from "components/ConditionalRender"
-import RadioButton from "components/RadioButton/RadioButton"
+import RadioButton from "components/Radios/RadioButton"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
 import { Dispatch } from "react"

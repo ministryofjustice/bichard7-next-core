@@ -2,12 +2,14 @@ import { forces } from "@moj-bichard7-developers/bichard7-next-data"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { Button, Fieldset, FormGroup, HintText, Label, LabelText, Link, Select, TextArea } from "govuk-react"
+import Link from "next/link"
 import { FormEventHandler, useState } from "react"
 import getForcesForReallocation from "services/getForcesForReallocation"
+import { Button } from "./Buttons"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
-import { StyledHintText } from "./ReallocationNotesForm.styles"
+import { NoteTextArea } from "./NoteTextArea"
+import { NewForceOwner } from "./ReallocationNotesForm.styles"
 
 interface Props {
   backLink: string
@@ -26,41 +28,41 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
 
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""}>
-      <Fieldset>
-        <FormGroup>
-          <Label>
-            <LabelText className="govuk-!-font-weight-bold">{"Current force owner"}</LabelText>
-          </Label>
+      <fieldset className="govuk-fieldset">
+        <div className="govuk-form-group">
+          <label className="govuk-label govuk-label--s">{"Current force owner"}</label>
           <span className="govuk-body-m">{`${currentForce?.code} - ${currentForce?.name}`}</span>
-        </FormGroup>
-        <FormGroup>
-          <Label>
-            <LabelText className="govuk-!-font-weight-bold">{"New force owner"}</LabelText>
-          </Label>
-          <Select input={{ name: "force" }} label={""}>
+        </div>
+
+        <div className="govuk-form-group">
+          <label className="govuk-label govuk-label--s">{"New force owner"}</label>
+          <NewForceOwner className="govuk-select" name="force">
             {forcesForReallocation.map(({ code, name }) => (
               <option key={code} value={code}>
                 {`${code} - ${name}`}
               </option>
             ))}
-          </Select>
-        </FormGroup>
-        <FormGroup>
-          <Label className="govuk-heading-s">{"Add a note (optional)"}</Label>
-          <StyledHintText className={"no-margin-bottom"}>{"Input reason for case reallocation"}</StyledHintText>
-          <TextArea input={{ name: "note", rows: 5, maxLength: MAX_NOTE_LENGTH, onInput: handleOnNoteChange }}>
-            {""}
-          </TextArea>
-          <HintText>{`You have ${noteRemainingLength} characters remaining`}</HintText>
-        </FormGroup>
+          </NewForceOwner>
+        </div>
+
+        <NoteTextArea
+          handleOnNoteChange={handleOnNoteChange}
+          noteRemainingLength={noteRemainingLength}
+          labelText={"Add a note (optional)"}
+          hintText={"Input reason for case reallocation"}
+          labelSize={"govuk-label--s"}
+          name={"note"}
+        />
 
         <ButtonsGroup>
           <Button id="Reallocate" type="submit">
             {"Reallocate Case"}
           </Button>
-          <Link href={backLink}>{"Cancel"}</Link>
+          <Link href={backLink} className="govuk-link">
+            {"Cancel"}
+          </Link>
         </ButtonsGroup>
-      </Fieldset>
+      </fieldset>
     </Form>
   )
 }
