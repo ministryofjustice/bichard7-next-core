@@ -128,7 +128,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
             {"Send feedback email"}
           </LinkButton>
           <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
-            <SkipLink id="skip-feedback" type="submit">
+            <SkipLink id="skip-feedback" type="submit" className="govuk-link">
               {"Skip feedback"}
             </SkipLink>
           </Form>
