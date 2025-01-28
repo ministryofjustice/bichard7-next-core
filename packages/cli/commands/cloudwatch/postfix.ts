@@ -26,7 +26,6 @@ export function postfix(): Command {
        --end-time $(($(date +%s) * 1000)) | jq -r '.events[] | .message | capture("^(?<timestamp>[^ ]+) .*to=<(?<to>[^>]+)>,.*delay=(?<delay>[^,]+),.*status=(?<status>[^ ]+)")'
       `
 
-      console.log(postfixQuery)
       await awsVault.exec({
         awsProfile: aws.profile,
         command: `${postfixQuery}`,
