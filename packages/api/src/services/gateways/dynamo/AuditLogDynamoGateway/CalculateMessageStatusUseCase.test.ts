@@ -1,6 +1,7 @@
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
+
 import type { ApiAuditLogEvent } from "../../../../types/AuditLogEvent"
 
-import AuditLogStatus from "../../../../types/AuditLogStatus"
 import EventCode from "../../../../types/EventCode"
 import PncStatus from "../../../../types/PncStatus"
 import TriggerStatus from "../../../../types/TriggerStatus"
@@ -55,7 +56,7 @@ describe("CalculateMessageStatusUseCase", () => {
         archivedRecordEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.error)
+      expect(status).toBe(AuditLogStatus.Error)
       expect(pncStatus).toBe(PncStatus.Processing)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -67,7 +68,7 @@ describe("CalculateMessageStatusUseCase", () => {
         archivedRecordEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.error)
+      expect(status).toBe(AuditLogStatus.Error)
       expect(pncStatus).toBe(PncStatus.Processing)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -78,7 +79,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -89,7 +90,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -100,7 +101,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -114,7 +115,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -128,7 +129,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -139,7 +140,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -153,7 +154,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -164,7 +165,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -176,7 +177,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -188,7 +189,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.NoTriggers)
     })
@@ -202,7 +203,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -216,7 +217,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -231,7 +232,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -246,7 +247,7 @@ describe("CalculateMessageStatusUseCase", () => {
         pncUpdatedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.completed)
+      expect(status).toBe(AuditLogStatus.Completed)
       expect(pncStatus).toBe(PncStatus.Updated)
       expect(triggerStatus).toBe(TriggerStatus.Resolved)
     })
@@ -261,7 +262,7 @@ describe("CalculateMessageStatusUseCase", () => {
         retryingEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.retrying)
+      expect(status).toBe(AuditLogStatus.Retrying)
       expect(pncStatus).toBe(PncStatus.Processing)
       expect(triggerStatus).toBe(TriggerStatus.Generated)
     })
@@ -275,7 +276,7 @@ describe("CalculateMessageStatusUseCase", () => {
         errorEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.error)
+      expect(status).toBe(AuditLogStatus.Error)
       expect(pncStatus).toBe(PncStatus.Processing)
       expect(triggerStatus).toBe(TriggerStatus.Generated)
     })
@@ -286,7 +287,7 @@ describe("CalculateMessageStatusUseCase", () => {
         prePNCUpdateTriggersGeneratedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.processing)
+      expect(status).toBe(AuditLogStatus.Processing)
       expect(pncStatus).toBe(PncStatus.Processing)
       expect(triggerStatus).toBe(TriggerStatus.Generated)
     })
@@ -300,7 +301,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.processing)
+      expect(status).toBe(AuditLogStatus.Processing)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.Generated)
     })
@@ -313,7 +314,7 @@ describe("CalculateMessageStatusUseCase", () => {
         recordIgnoredNoRecordableOffencesEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.processing)
+      expect(status).toBe(AuditLogStatus.Processing)
       expect(pncStatus).toBe(PncStatus.Ignored)
       expect(triggerStatus).toBe(TriggerStatus.Generated)
     })
@@ -325,7 +326,7 @@ describe("CalculateMessageStatusUseCase", () => {
         triggerInstancesResolvedEvent()
       ).call()
 
-      expect(status).toBe(AuditLogStatus.processing)
+      expect(status).toBe(AuditLogStatus.Processing)
       expect(pncStatus).toBe(PncStatus.Processing)
       expect(triggerStatus).toBe(TriggerStatus.Generated)
     })
@@ -400,14 +401,14 @@ describe("CalculateMessageStatusUseCase", () => {
 
     it("should set all statuses to Duplicate when audit log status is already Duplicate", () => {
       const result = new CalculateMessageStatusUseCase(
-        AuditLogStatus.duplicate,
+        AuditLogStatus.Duplicate,
         prePNCUpdateTriggersGeneratedEvent(),
         postPNCUpdateTriggersGeneratedEvent()
       ).call()
 
       expect(result).toEqual({
         pncStatus: PncStatus.Duplicate,
-        status: AuditLogStatus.duplicate,
+        status: AuditLogStatus.Duplicate,
         triggerStatus: TriggerStatus.Duplicate
       })
     })
