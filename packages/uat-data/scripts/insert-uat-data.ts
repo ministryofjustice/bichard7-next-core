@@ -7,6 +7,7 @@ import defaults from "@moj-bichard7/e2e-tests/utils/defaults"
 import { mockUpdate } from "@moj-bichard7/e2e-tests/utils/pncMocks"
 import { randomUUID } from "crypto"
 import fs from "fs"
+import path from "path"
 
 // Process:
 // - find a record in the DB that matches your criteria (e.g. specific trigger)
@@ -34,7 +35,9 @@ const incomingMessageBucket = new IncomingMessageBucket({
   incomingMessageBucketName: process.env.S3_INCOMING_MESSAGE_BUCKET || defaults.incomingMessageBucket
 })
 
-const SCENARIO_PATH = "./data/"
+const repoRoot = path.resolve(__dirname, "../../")
+
+const SCENARIO_PATH = path.resolve(repoRoot, "uat-data/data")
 
 const scenarios = fs
   .readdirSync(SCENARIO_PATH)
@@ -61,14 +64,14 @@ const seedScenario = async (scenario: string) => {
     `${faker.location.streetAddress()}, ${faker.location.city()}, ${faker.location.zipCode()}`.slice(0, 80)
 
   const pncData = fs
-    .readFileSync(`${SCENARIO_PATH}${scenario}/pnc-data.xml`)
+    .readFileSync(`${SCENARIO_PATH}/${scenario}/pnc-data.xml`)
     .toString()
     .replace(/FAMILY_NAME/g, familyName.padEnd(24, " "))
 
   await pnc.addMock(`CXE01.*${asn.slice(-7)}`, pncData)
 
   const incomingMessage = fs
-    .readFileSync(`${SCENARIO_PATH}${scenario}/incoming-message.xml`)
+    .readFileSync(`${SCENARIO_PATH}/${scenario}/incoming-message.xml`)
     .toString()
     .replace(/EXTERNAL_CORRELATION_ID/g, randomUUID())
     .replace(/COURT_LOCATION/g, courtCode)
