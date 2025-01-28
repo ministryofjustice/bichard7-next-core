@@ -1,6 +1,10 @@
 import styled from "styled-components"
 
 const SummaryBoxDetail = styled.div`
+  &.detail__court-name {
+    grid-column: 1 / span 3;
+  }
+
   @media (min-width: 1680px) {
     display: block;
     padding-right: 35px;
