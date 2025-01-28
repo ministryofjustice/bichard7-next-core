@@ -11,6 +11,7 @@ const ButtonContainer = styled.div`
 const LockedTagContainer = styled.div`
   display: flex;
   gap: 2.5rem;
+  margin-left: auto;
 `
 
 const StyledButton = styled(Button)`

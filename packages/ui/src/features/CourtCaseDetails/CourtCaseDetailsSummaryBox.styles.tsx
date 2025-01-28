@@ -4,6 +4,9 @@ import { gdsLightGrey } from "utils/colours"
 const SummaryBox = styled.div`
   background-color: ${gdsLightGrey};
   padding: 25px;
+  position: sticky;
+  top: 40px;
+  z-index: 10;
 `
 
 const SummaryBoxGrid = styled.div`

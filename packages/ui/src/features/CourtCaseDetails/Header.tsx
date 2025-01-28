@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
 import { LinkButton } from "components/Buttons"
+import { useSticky } from "hooks/useSticky"
+import { useRef, useState } from "react"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
 import Form from "../../components/Form"
@@ -59,11 +61,32 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const caseIsViewOnly = !isLockedByCurrentUser(courtCase, currentUser.username)
   const hasCaseLock = isLockedByCurrentUser(courtCase, currentUser.username)
 
+  const ref = useRef<HTMLHeadingElement>(null)
+  const [isSticky, setIsSticky] = useState(false)
+
+  useSticky({ setIsSticky, ref, magicOffset: 230 })
+
+  let stickyStyle = {}
+
+  if (isSticky) {
+    stickyStyle = {
+      position: "fixed",
+      top: 0,
+      backgroundColor: "white",
+      zIndex: 10,
+      display: "block",
+      width: "100%",
+      paddingBottom: "10px",
+      paddingTop: 5
+    }
+  }
+
   return (
     <HeaderContainer id="header-container">
       <HeaderRow>
         <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
-        <h2 className="govuk-heading-m">
+
+        <h2 ref={ref} className="govuk-heading-m" style={stickyStyle}>
           {courtCase.defendantName}
           {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
           <Badge

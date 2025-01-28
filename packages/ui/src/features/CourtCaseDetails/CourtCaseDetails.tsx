@@ -1,6 +1,7 @@
 import { useCourtCase } from "context/CourtCaseContext"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
-import { useCallback, useState } from "react"
+import { useSticky } from "hooks/useSticky"
+import { useCallback, useRef, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import type CaseDetailsTab from "types/CaseDetailsTab"
 import type NavigationHandler from "types/NavigationHandler"
@@ -47,6 +48,19 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
     }
   }
 
+  const ref = useRef<HTMLDivElement>(null)
+  const [isSticky, setIsSticky] = useState(false)
+
+  useSticky({ setIsSticky, ref, magicOffset: 160 })
+
+  let stickyStyle = {}
+
+  if (isSticky) {
+    stickyStyle = {
+      zIndex: 9
+    }
+  }
+
   return (
     <>
       <CourtCaseDetailsTabs
@@ -83,7 +97,7 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
           <Notes visible={activeTab === "Notes"} isLockedByCurrentUser={isLockedByCurrentUser} />
         </PanelsGridCol>
 
-        <SideBar className="govuk-grid-column-one-third">
+        <SideBar ref={ref} className="govuk-grid-column-one-third" style={stickyStyle}>
           <TriggersAndExceptions
             onNavigate={handleNavigation}
             canResolveAndSubmit={canResolveAndSubmit}

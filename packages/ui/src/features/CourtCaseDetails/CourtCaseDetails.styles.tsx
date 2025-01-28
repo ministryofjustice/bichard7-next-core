@@ -18,6 +18,8 @@ const PanelsGridCol = styled.div`
 `
 
 const SideBar = styled.div`
+  position: sticky;
+  top: 250px;
   min-width: 320px;
   max-width: 100%;
 
