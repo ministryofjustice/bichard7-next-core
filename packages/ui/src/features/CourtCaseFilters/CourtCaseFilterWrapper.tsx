@@ -1,6 +1,6 @@
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useEffect, useState } from "react"
-import { StyledAppliedFilters, CaseListButtons, ButtonMenu } from "./CourtCaseFilterWrapper.styles"
+import { StyledAppliedFilters, CaseListButtons, ButtonMenu, CourtCaseListPane } from "./CourtCaseFilterWrapper.styles"
 import DownloadButton from "components/DownloadButton"
 import ConditionalRender from "components/ConditionalRender"
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -81,9 +81,9 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
 
         {paginationTop}
 
-        <div className="moj-scrollable-pane">
+        <CourtCaseListPane className="moj-scrollable-pane">
           <div className="moj-scrollable-pane__wrapper">{courtCaseList}</div>
-        </div>
+        </CourtCaseListPane>
 
         {paginationBottom}
       </div>
