@@ -14,4 +14,8 @@ const CaseListButtons = styled.div`
   justify-content: space-between;
 `
 
-export { StyledAppliedFilters, CaseListButtons, ButtonMenu }
+const CourtCaseListPane = styled.div`
+  overflow: auto;
+`
+
+export { StyledAppliedFilters, CaseListButtons, ButtonMenu, CourtCaseListPane }
