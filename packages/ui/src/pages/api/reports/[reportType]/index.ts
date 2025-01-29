@@ -1,16 +1,15 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import type { NextApiRequest, NextApiResponse } from "next"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
-import QueryColumns from "services/listCourtCasesConfig"
+import config from "services/listCourtCasesConfig"
 import { Reason } from "types/CaseListQueryParams"
 import { isError } from "types/Result"
 import { createReport } from "utils/reports/createReport"
 import { createReportCsv } from "utils/reports/createReportCsv"
 import { ReportType } from "utils/reports/ReportTypes"
 import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
-import config from "services/listCourtCasesConfig"
-import Permission from "@moj-bichard7/common/types/Permission"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const allowedMethods = ["GET"]
@@ -43,10 +42,10 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
       caseListQueryParams.caseState = "Resolved"
       caseListQueryParams.reason = Reason.Exceptions
 
-      selectColumns = QueryColumns.ResolvedExceptionsReport
+      selectColumns = config.ResolvedExceptionsReport
       break
     case ReportType.CASE_LIST:
-      selectColumns = QueryColumns.CaseListQuery
+      selectColumns = config.CaseListQuery
       break
 
     default:
