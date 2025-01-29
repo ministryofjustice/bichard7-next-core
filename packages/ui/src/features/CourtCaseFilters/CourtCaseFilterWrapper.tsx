@@ -1,6 +1,9 @@
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useEffect, useState } from "react"
-import { StyledAppliedFilters } from "./CourtCaseFilterWrapper.styles"
+import { StyledAppliedFilters, CaseListButtons, ButtonMenu } from "./CourtCaseFilterWrapper.styles"
+import DownloadButton from "components/DownloadButton"
+import ConditionalRender from "components/ConditionalRender"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 interface Props {
   filter: React.ReactNode
@@ -42,32 +45,39 @@ const CourtCaseFilterWrapper: React.FC<Props> = ({
       </div>
       <h1 className="hidden-header govuk-heading-l">{"Case list"}</h1>
       <div className="moj-filter-layout__content">
-        <div className="moj-button-menu">
+        <ButtonMenu className="moj-button-menu">
           <div className="moj-action-bar">
-            <button
-              data-module="govuk-button"
-              id="filter-button"
-              className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
-              type="button"
-              aria-haspopup="true"
-              aria-expanded={isSearchPanelShown === true}
-              onClick={() => {
-                const showSearchPanel = !isSearchPanelShown
-                if (!showSearchPanel) {
-                  localStorage.setItem(filterPanelKey, new Date().toISOString())
-                } else {
-                  localStorage.removeItem(filterPanelKey)
-                }
-                setIsSearchPanelShown(showSearchPanel)
-              }}
-            >
-              {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
-            </button>
-            {!isSearchPanelShown && (
+            <CaseListButtons>
+              <button
+                data-module="govuk-button"
+                id="filter-button"
+                className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                type="button"
+                aria-haspopup="true"
+                aria-expanded={isSearchPanelShown === true}
+                onClick={() => {
+                  const showSearchPanel = !isSearchPanelShown
+                  if (!showSearchPanel) {
+                    localStorage.setItem(filterPanelKey, new Date().toISOString())
+                  } else {
+                    localStorage.removeItem(filterPanelKey)
+                  }
+                  setIsSearchPanelShown(showSearchPanel)
+                }}
+              >
+                {isSearchPanelShown ? "Hide search panel" : "Show search panel"}
+              </button>
+
+              <ConditionalRender isRendered={user.hasAccessTo[Permission.ViewReports]}>
+                <DownloadButton reportType={"case-list"} />
+              </ConditionalRender>
+            </CaseListButtons>
+
+            <ConditionalRender isRendered={!isSearchPanelShown}>
               <StyledAppliedFilters className="moj-button-menu__spaced">{appliedFilters}</StyledAppliedFilters>
-            )}
+            </ConditionalRender>
           </div>
-        </div>
+        </ButtonMenu>
 
         {paginationTop}
 

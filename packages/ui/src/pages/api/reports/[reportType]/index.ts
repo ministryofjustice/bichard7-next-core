@@ -1,8 +1,9 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import type { NextApiRequest, NextApiResponse } from "next"
 import getDataSource from "services/getDataSource"
 import listCourtCases from "services/listCourtCases"
-import QueryColumns from "services/QueryColumns"
+import config from "services/listCourtCasesConfig"
 import { Reason } from "types/CaseListQueryParams"
 import { isError } from "types/Result"
 import { createReport } from "utils/reports/createReport"
@@ -19,8 +20,18 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   }
 
   const { req, res, currentUser } = auth
+
+  if (!currentUser.hasAccessTo[Permission.ViewReports]) {
+    res.status(403).end()
+  }
+
   const { reportType } = req.query
   const caseListQueryParams = extractSearchParamsFromQuery(req.query, currentUser)
+
+  caseListQueryParams.maxPageItems = config.BYPASS_PAGE_LIMIT
+  caseListQueryParams.page = config.BYPASS_PAGE_LIMIT
+
+  let selectColumns: string[] = []
 
   switch (reportType) {
     case ReportType.RESOLVED_EXCEPTIONS:
@@ -30,19 +41,20 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
       caseListQueryParams.caseState = "Resolved"
       caseListQueryParams.reason = Reason.Exceptions
+
+      selectColumns = config.ResolvedExceptionsReport
       break
+    case ReportType.CASE_LIST:
+      selectColumns = config.CaseListQuery
+      break
+
     default:
       res.status(404).end()
   }
 
   const dataSource = await getDataSource()
 
-  const courtCases = await listCourtCases(
-    dataSource,
-    caseListQueryParams,
-    currentUser,
-    QueryColumns.ResolvedExceptionsReport
-  )
+  const courtCases = await listCourtCases(dataSource, caseListQueryParams, currentUser, selectColumns)
 
   if (isError(courtCases)) {
     const { message } = courtCases

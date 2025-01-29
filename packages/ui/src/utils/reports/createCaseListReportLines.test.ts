@@ -1,11 +1,11 @@
 import fs from "fs"
 import generateAho from "../../../test/helpers/generateAho"
 import type CourtCase from "services/entities/CourtCase"
-import { createResolvedExceptionsReportLines } from "./createResolvedExceptionsReportLines"
-import type { ResolvedException, Report } from "./Report"
+import type { CaseList, Report } from "./Report"
+import { createCaseListReportLines } from "./createCaseListReportLines"
 
-describe("resolvedExceptionsReport", () => {
-  it("returns a list of resolved exceptions", () => {
+describe("caseListReport", () => {
+  it("returns a list of cases", () => {
     const ahoXml = fs.readFileSync("test/test-data/AnnotatedHOTemplate.xml").toString()
     const date = new Date()
     const courtCases = [
@@ -15,11 +15,15 @@ describe("resolvedExceptionsReport", () => {
         triggerCount: 1,
         courtCode: "court-code",
         courtName: "court-name",
+        courtDate: date,
         errorId: 1,
-        errorReport: "error-report",
+        errorReason: "error-reason",
+        errorReport: "HO100322||ds:OrganisationUnitCode, HO100323||ds:NextHearingDate, HO100325||br7:ResultClass",
         errorStatus: "Resolved",
         errorLockedByUserFullName: "error-locked-by-user-full-name",
         errorLockedByUsername: "error-locked-by-user-name",
+        triggerLockedByFullName: "trigger-locked-by-user-full-name",
+        triggerLockedByUsername: "trigger-locked-by-user-name",
         isUrgent: false,
         defendantName: "defendant-name",
         resolutionTimestamp: date,
@@ -31,6 +35,15 @@ describe("resolvedExceptionsReport", () => {
           ptiurn: "ptirun",
           courtName: "court-name"
         }),
+        triggers: [
+          {
+            triggerCode: "TRPR0001",
+            status: "Resolved",
+            createdAt: date,
+            resolvedBy: "resolved-by",
+            resolvedAt: date
+          }
+        ],
         notes: [
           {
             noteText: "note text",
@@ -46,23 +59,21 @@ describe("resolvedExceptionsReport", () => {
       }
     ] as unknown as CourtCase[]
 
-    const result = createResolvedExceptionsReportLines(courtCases)
+    const result = createCaseListReportLines(courtCases)
 
     expect(result).toEqual({
       report: [
         {
-          ASN: "asn",
           PTIURN: "ptiurn",
           defendantName: "defendant-name",
           courtName: "court-name",
-          hearingDate: "2011-09-26T00:00:00.000Z",
-          caseReference: "97/1626/008395Q",
-          dateTimeRecievedByCJSE: date.toISOString(),
-          dateTimeResolved: date.toISOString(),
-          notes: ["user: note text", "user2: resolved text"],
-          resolutionAction: "resolved text"
+          courtDate: date.toISOString(),
+          notes: "user: note text\nuser2: resolved text",
+          reason: "HO100322\nHO100323\nHO100325\nTRPR0001",
+          errorsLockedBy: "error-locked-by-user-name",
+          triggersLockedBy: "trigger-locked-by-user-name"
         }
       ]
-    } as Report<ResolvedException>)
+    } as Report<CaseList>)
   })
 })
