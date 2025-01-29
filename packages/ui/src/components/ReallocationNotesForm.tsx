@@ -35,8 +35,10 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
         </div>
 
         <div className="govuk-form-group">
-          <label className="govuk-label govuk-label--s">{"New force owner"}</label>
-          <NewForceOwner className="govuk-select" name="force">
+          <label className="govuk-label govuk-label--s" htmlFor="force">
+            {"New force owner"}
+          </label>
+          <NewForceOwner className="govuk-select" name="force" id="force">
             {forcesForReallocation.map(({ code, name }) => (
               <option key={code} value={code}>
                 {`${code} - ${name}`}
