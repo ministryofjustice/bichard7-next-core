@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useRouter } from "next/router"
+import { SecondaryButton } from "./Buttons"
 
 type Props = {
   reportType: string
@@ -36,21 +37,22 @@ const DownloadButton = ({ reportType }: Props) => {
     } catch (error) {
       console.error("Error downloading report:", error)
       window.alert("Error downloading report")
+    } finally {
+      setWorking(false)
     }
-    setWorking(false)
   }
 
   return (
-    <button
+    <SecondaryButton
       data-module="govuk-button"
       id="download-button"
-      className="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+      className="govuk-!-margin-bottom-0"
       type="button"
       onClick={handleClick}
       disabled={working}
     >
       {"Download Report"}
-    </button>
+    </SecondaryButton>
   )
 }
 
