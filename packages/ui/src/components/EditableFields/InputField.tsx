@@ -7,15 +7,16 @@ interface EditableInputFieldProps {
   children?: React.ReactNode
   inputLabel: string
   hintText: string
+  htmlFor: string
 }
 
-const InputField: React.FC<EditableInputFieldProps> = ({ value, inputLabel, hintText, children }) => {
+const InputField: React.FC<EditableInputFieldProps> = ({ value, inputLabel, hintText, children, htmlFor }) => {
   return (
     <StyledInputField>
       {value}
       <InitialInputValueBadge />
       <br />
-      <label className={`govuk-label`}>
+      <label className={`govuk-label`} htmlFor={htmlFor}>
         {inputLabel}
         {hintText &&
           hintText.split("\\n").map((hint) => {

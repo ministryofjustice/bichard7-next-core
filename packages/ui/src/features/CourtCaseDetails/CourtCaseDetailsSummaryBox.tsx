@@ -13,15 +13,15 @@ const CourtCaseDetailsSummaryBox = () => {
     courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail?.BirthDate?.toString() ??
       ""
   )
-  const pnci = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
+  const pncIdentifier = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
   const asn = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
 
   return (
-    <SummaryBox className={`govuk-body`}>
+    <SummaryBox className={`govuk-body`} aria-label="Court case summary">
       <SummaryBoxGrid>
         <CourtCaseDetailsSummaryBoxField label="PTIURN" value={courtCase.ptiurn} />
         <CourtCaseDetailsSummaryBoxField label="ASN" value={asn} />
-        <CourtCaseDetailsSummaryBoxField label="PNCID" value={pnci} />
+        <CourtCaseDetailsSummaryBoxField label="PNCID" value={pncIdentifier} />
         <CourtCaseDetailsSummaryBoxField label="DOB" value={formattedDobDate} />
         <CourtCaseDetailsSummaryBoxField label="Hearing date" value={formattedHearingDate} />
         <CourtCaseDetailsSummaryBoxField

@@ -8,9 +8,7 @@ interface LabelFieldProps {
 const LabelField: React.FC<LabelFieldProps> = ({ label, isEditable }) => {
   return (
     <>
-      <b>
-        <div>{label}</div>
-      </b>
+      {label}
       {isEditable && (
         <div className="error-icon">
           <ErrorIcon />
