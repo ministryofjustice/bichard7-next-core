@@ -46,6 +46,7 @@ export const NextHearingLocationField = ({
       isEditable={isEditable}
       inputLabel="Enter next hearing location"
       hintText="OU code, 6-7 characters"
+      htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
         value={amendedNextHearingLocation ?? result.NextResultSourceOrganisation?.OrganisationUnitCode}

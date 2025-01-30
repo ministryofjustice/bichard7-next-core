@@ -242,7 +242,7 @@ describe("View Exception Handler Prompts", () => {
         .click()
 
       cy.get(".offence-results-table")
-        .contains("td", "CJS Code")
+        .contains("th", "CJS Code")
         .should(
           "include.text",
           "This code could not be found via look-up, report the issue to Bichard 7 team and the courts for the correct so that they can investigate this issue and advise."
@@ -256,7 +256,7 @@ describe("View Exception Handler Prompts", () => {
         .contains("Use a motor vehicle on a road / public place without third party insurance")
         .click()
       cy.get(".offence-results-table")
-        .contains("td", "CJS Code")
+        .contains("th", "CJS Code")
         .should(
           "not.include.text",
           "This code could not be found via look-up, report the issue to Bichard 7 team and the courts for the correct so that they can investigate this issue and advise."
