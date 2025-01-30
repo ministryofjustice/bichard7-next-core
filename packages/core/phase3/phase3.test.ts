@@ -17,7 +17,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
   let auditLogger: CoreAuditLogger
 
   beforeEach(() => {
-    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
+    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase3)
   })
 
   it("returns exceptions when updating the PNC fails", async () => {
@@ -51,7 +51,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
         },
         category: "information",
         eventCode: "exceptions.generated",
-        eventSource: "CorePhase2",
+        eventSource: "CorePhase3",
         eventType: "Exceptions generated",
         timestamp: expect.any(Date)
       }
@@ -106,7 +106,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
         },
         category: "information",
         eventCode: "triggers.generated",
-        eventSource: "CorePhase2",
+        eventSource: "CorePhase3",
         eventType: "Triggers generated",
         timestamp: expect.any(Date)
       }
