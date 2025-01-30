@@ -12,11 +12,12 @@ import fetchCaseDto from "./fetchCaseDto"
 
 describe("fetchCaseDto", () => {
   const logger = new FakeLogger()
-  const db = new FakeDataStore()
+  const fakeDataStore = new FakeDataStore()
 
   it("returns a case", async () => {
     const user = { visible_forces: "001" } as User
-    const result = await fetchCaseDto(user, db, 0, logger)
+    fakeDataStore.forceIds = [1]
+    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
 
     expect(result).toEqual({
       aho: testAhoJsonObj,
@@ -50,7 +51,7 @@ describe("fetchCaseDto", () => {
   it("returns error when no force associated to a user", async () => {
     const user = { visible_forces: "" } as User
 
-    await expect(fetchCaseDto(user, db, 0, logger)).rejects.toThrow("No force associated to User")
+    await expect(fetchCaseDto(user, fakeDataStore, 0, logger)).rejects.toThrow("No force associated to User")
   })
 
   it("returns canUserEditExceptions true when case is locked to currentUser, user has access to exceptions and errorStatus is unresolved", async () => {
@@ -65,9 +66,9 @@ describe("fetchCaseDto", () => {
       error_status: 1
     } as CaseDataForDto
 
-    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
+    jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, db, 0, logger)
+    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(true)
   })
@@ -84,9 +85,9 @@ describe("fetchCaseDto", () => {
       error_status: 1
     } as CaseDataForDto
 
-    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
+    jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, db, 0, logger)
+    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -103,9 +104,9 @@ describe("fetchCaseDto", () => {
       error_status: 1
     } as CaseDataForDto
 
-    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
+    jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, db, 0, logger)
+    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -122,9 +123,9 @@ describe("fetchCaseDto", () => {
       error_status: 2
     } as CaseDataForDto
 
-    jest.spyOn(db, "fetchCase").mockResolvedValue(caseObj)
+    jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, db, 0, logger)
+    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })

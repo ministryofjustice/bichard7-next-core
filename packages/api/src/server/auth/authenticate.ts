@@ -6,6 +6,7 @@ import { BAD_GATEWAY, UNAUTHORIZED } from "http-status"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
+import formatForceNumbers from "../../services/formatForceNumbers"
 import jwtVerify from "./jwtVerify"
 
 export default async function (dataStore: DataStoreGateway, request: FastifyRequest, reply: FastifyReply) {
@@ -26,6 +27,7 @@ export default async function (dataStore: DataStoreGateway, request: FastifyRequ
     }
 
     request.user = verificationResult
+    dataStore.forceIds = formatForceNumbers(request.user.visible_forces)
     request.dataStore = dataStore
   } catch (error) {
     request.log.error(error)
