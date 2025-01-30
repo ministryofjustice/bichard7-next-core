@@ -1,8 +1,8 @@
 import AnnotatedHO from "../../../../../test/test-data/AnnotatedHO1.json"
-import AsnExceptionHO100206 from "../../../../../test/test-data/AsnExceptionHo100206.json"
-import AsnExceptionHO100301 from "../../../../../test/test-data/AsnExceptionHo100301.json"
-import AsnExceptionHO100321 from "../../../../../test/test-data/AsnExceptionHo100321.json"
+import AsnExceptionHO100206 from "../../../../../test/test-data/HO100206.json"
 import ExceptionHO100239 from "../../../../../test/test-data/HO100239_1.json"
+import AsnExceptionHO100301 from "../../../../../test/test-data/HO100301.json"
+import AsnExceptionHO100321 from "../../../../../test/test-data/HO100321.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions, verifyUpdatedMessage } from "../../../../support/helpers"
 
 describe("ASN", () => {
