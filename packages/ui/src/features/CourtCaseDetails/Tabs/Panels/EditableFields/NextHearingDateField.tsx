@@ -44,6 +44,7 @@ export const NextHearingDateField = ({
       isEditable={isEditable}
       inputLabel="Enter next hearing date"
       hintText="Enter date"
+      htmlFor={"next-hearing-date"}
     >
       <input
         className="govuk-input"
