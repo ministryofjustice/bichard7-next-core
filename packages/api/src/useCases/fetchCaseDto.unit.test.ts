@@ -61,6 +61,7 @@ describe("fetchCaseDto", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
+    fakeDataStore.forceIds = [1]
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
@@ -80,6 +81,7 @@ describe("fetchCaseDto", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
+    fakeDataStore.forceIds = [1]
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user2",
@@ -99,6 +101,7 @@ describe("fetchCaseDto", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
+    fakeDataStore.forceIds = [1]
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
@@ -118,6 +121,7 @@ describe("fetchCaseDto", () => {
       username: "user1",
       visible_forces: "001"
     } as unknown as User
+    fakeDataStore.forceIds = [1]
     const caseObj = {
       annotated_msg: testAhoXml,
       error_locked_by_id: "user1",
