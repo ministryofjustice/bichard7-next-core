@@ -50,6 +50,7 @@ describe("fetchCaseDto", () => {
 
   it("returns error when no force associated to a user", async () => {
     const user = { visible_forces: "" } as User
+    fakeDataStore.forceIds = []
 
     await expect(fetchCaseDto(user, fakeDataStore, 0, logger)).rejects.toThrow("No force associated to User")
   })
