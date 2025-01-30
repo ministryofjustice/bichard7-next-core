@@ -19,7 +19,7 @@ export function userService(): Command {
 
       const { aws }: Environment = env.PROD
 
-      const userServiceQuery = `
+      const userServiceQuery = `\
         aws logs filter-log-events \
         --log-group-name "cjse-bichard7-production-base-infra-user-service" \
         --filter-pattern "%${email}%" \

@@ -19,7 +19,7 @@ export function postfix(): Command {
 
       const { aws }: Environment = env.PROD
 
-      const postfixQuery = `
+      const postfixQuery = `\
       aws logs filter-log-events \
        --log-group-name "cjse-production-bichard-7-postfix-ecs-logs" \
        --filter-pattern "%${email}%" \
