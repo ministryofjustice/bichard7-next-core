@@ -48,7 +48,7 @@ describe("Getting Audit Logs", () => {
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   beforeEach(async () => {

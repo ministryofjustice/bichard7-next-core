@@ -16,7 +16,7 @@ import fetchCaseDto from "../../../useCases/fetchCaseDto"
 
 type HandlerProps = {
   caseId: number
-  db: DataStoreGateway
+  dataStore: DataStoreGateway
   logger: FastifyBaseLogger
   reply: FastifyReply
   user: User
@@ -38,8 +38,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
-  fetchCaseDto(user, db, caseId, logger)
+const handler = async ({ caseId, dataStore, logger, reply, user }: HandlerProps) =>
+  fetchCaseDto(user, dataStore, caseId, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })
@@ -52,7 +52,7 @@ const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.Case, { schema }, async (req, reply) => {
     await handler({
       caseId: Number(req.params.caseId),
-      db: req.db,
+      dataStore: req.dataStore,
       logger: req.log,
       reply,
       user: req.user
