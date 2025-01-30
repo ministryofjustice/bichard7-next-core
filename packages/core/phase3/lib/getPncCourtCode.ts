@@ -1,5 +1,3 @@
-import { type Result } from "@moj-bichard7/common/types/Result"
-
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 
 import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
@@ -12,18 +10,12 @@ const convertToYouthCourtIfRequired = (
   thirdLevelPsaCode: string,
   courtHouseCode: number,
   topLevelCode?: string
-): Result<string> => {
+): string => {
   if (!topLevelCode || topLevelCode !== "B") {
     return thirdLevelPsaCode
   }
 
   const thirdLevelPsaCodeNumber = parseInt(thirdLevelPsaCode, 10)
-  if (isNaN(thirdLevelPsaCodeNumber)) {
-    // This comes from our standing data and every court has a four-digit PSA code
-    // We've already checked against empty strings, so if we get an error here
-    // there is something very wrong and we should handle it
-    return new Error(`PSA code '${thirdLevelPsaCode}' is not a number`)
-  }
 
   return courtHouseCode > ADULT_YOUTH_COURT_CODE_DIVIDER && thirdLevelPsaCodeNumber < ADULT_YOUTH_COURT_CODE_DIVIDER
     ? String(thirdLevelPsaCodeNumber + ADULT_YOUTH_COURT_CODE_DIVIDER)
@@ -33,7 +25,7 @@ const convertToYouthCourtIfRequired = (
 const getPncCourtCode = (
   organisationUnitCode: null | OrganisationUnitCodes | undefined,
   courtHouseCode: number
-): Result<string> => {
+): string => {
   if (!organisationUnitCode) {
     return ""
   }

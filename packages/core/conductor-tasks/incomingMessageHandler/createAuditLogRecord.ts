@@ -36,7 +36,7 @@ const createAuditLogRecord: ConductorWorker = {
       return failed("Could not create audit log", apiResult.message)
     }
 
-    if (apiResult.status === AuditLogStatus.duplicate) {
+    if (apiResult.status === AuditLogStatus.Duplicate) {
       return completed(duplicateOutputData, `Duplicate message hash identified: ${auditLogRecord.messageHash}`)
     }
 

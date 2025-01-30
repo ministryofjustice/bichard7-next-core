@@ -1,5 +1,3 @@
-import { isError } from "@moj-bichard7/common/types/Result"
-
 import type PncUpdateRequestGenerator from "../../types/PncUpdateRequestGenerator"
 
 import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
@@ -26,16 +24,11 @@ const penaltyHearingGenerator: PncUpdateRequestGenerator<PncOperation.PENALTY_HE
     return new Error("Penalty notice case ref is missing")
   }
 
-  const courtCode = getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode)
-  if (isError(courtCode)) {
-    return courtCode
-  }
-
   return {
     operation: PncOperation.PENALTY_HEARING,
     request: {
       ...generateBasePncUpdateRequest(pncUpdateDataset),
-      courtCode,
+      courtCode: getPncCourtCode(hearing.CourtHearingLocation, hearing.CourtHouseCode),
       hearingDate: formatDateSpecifiedInResult(hearing.DateOfHearing, true),
       hearingDetails: generateHearingsAdjudicationsAndDisposals(pncUpdateDataset, penaltyNoticeCaseRef),
       hearingType: PENALTY_HEARING_TYPE,

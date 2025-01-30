@@ -1,8 +1,10 @@
+import { Button } from "components/Buttons"
 import Layout from "components/Layout"
-import RadioButton from "components/RadioButton/RadioButton"
+import { NoteTextArea } from "components/NoteTextArea"
+import RadioButton from "components/Radios/RadioButton"
+import { RadioGroups } from "components/Radios/RadioGroup"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { BackLink, Button, Fieldset, FormGroup, Heading, HintText, MultiChoice, Paragraph, TextArea } from "govuk-react"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -84,9 +86,9 @@ export const getServerSideProps = withMultipleServerSideProps(
         props: {
           ...props,
           fields: {
-            isAnonymous: { hasError: !isAnonymous ? true : false, value: isAnonymous ?? null },
-            experience: { hasError: !experience ? true : false, value: experience ?? null },
-            feedback: { hasError: !feedback ? true : false, value: feedback }
+            isAnonymous: { hasError: !isAnonymous, value: isAnonymous ?? null },
+            experience: { hasError: !experience, value: experience ?? null },
+            feedback: { hasError: !feedback, value: feedback }
           }
         }
       }
@@ -134,13 +136,11 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             <title>{"Bichard7 | Report an issue"}</title>
             <meta name="description" content="Bichard7 | User feedback" />
           </Head>
-          <BackLink href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
+          <a className="govuk-back-link" href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
             {"Back"}
-          </BackLink>
-          <Heading as="h1">{"How can we help?"}</Heading>
-          <Heading as="h2" size="MEDIUM">
-            {"Report an issue"}
-          </Heading>
+          </a>
+          <h1 className="govuk-heading-l">{"How can we help?"}</h1>
+          <h2 className="govuk-heading-m">{"Report an issue"}</h2>
           <p className="govuk-body">
             {"If you are encountering specific technical issues, you should either check our "}
             <a className="govuk-link" href="/help">
@@ -153,94 +153,70 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             {" for support to raise a ticket. Any issues raised via this page will not be handled."}
           </p>
 
-          <Heading as="h2" size="MEDIUM">
-            {"Share your feedback"}
-          </Heading>
+          <h2 className="govuk-heading-m">{"Share your feedback"}</h2>
+          <p className="govuk-body">
+            {
+              "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
+            }
+          </p>
 
           <Form method="POST" action={"#"} csrfToken={csrfToken}>
-            <Paragraph>
-              {
-                "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
-              }
-            </Paragraph>
-            <Fieldset>
-              <FormGroup id="isAnonymous">
-                <MultiChoice
-                  label="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
-                  meta={{
-                    error: "Select one of the below options",
-                    touched: fields?.isAnonymous.hasError
-                  }}
-                >
-                  <RadioButton
-                    name={"isAnonymous"}
-                    id={"isAnonymous-no"}
-                    defaultChecked={fields?.isAnonymous.value === "no"}
-                    value={"no"}
-                    label={"Yes, I am happy to be contacted about this feedback."}
-                  />
-                  <RadioButton
-                    name={"isAnonymous"}
-                    id={"isAnonymous-yes"}
-                    defaultChecked={fields?.isAnonymous.value === "yes"}
-                    value={"yes"}
-                    label={"No, I would like to opt-out, which will mean my feedback will be anonymous."}
-                  />
-                </MultiChoice>
-              </FormGroup>
+            <RadioGroups
+              id="isAnonymous"
+              legendText="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
+              errorMessage="Select one of the below options"
+              hasError={fields?.isAnonymous.hasError}
+            >
+              <RadioButton
+                name={"isAnonymous"}
+                id={"isAnonymous-no"}
+                defaultChecked={fields?.isAnonymous.value === "no"}
+                value={"no"}
+                label={"Yes, I am happy to be contacted about this feedback."}
+              />
+              <RadioButton
+                name={"isAnonymous"}
+                id={"isAnonymous-yes"}
+                defaultChecked={fields?.isAnonymous.value === "yes"}
+                value={"yes"}
+                label={"No, I would like to opt-out, which will mean my feedback will be anonymous"}
+              />
+            </RadioGroups>
 
-              <FormGroup id="experience">
-                <Heading as="h3" size="SMALL">
-                  {"Rate your experience of using the the new version of Bichard"}
-                </Heading>
-                <MultiChoice
-                  label={""}
-                  meta={{
-                    error: "Select one of the below options",
-                    touched: fields?.experience.hasError
-                  }}
-                >
-                  {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
-                    <RadioButton
-                      id={experienceKey}
-                      defaultChecked={experienceKey === fields?.experience.value}
-                      label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
-                      key={experienceKey}
-                      name={"experience"}
-                      value={experienceKey}
-                    />
-                  ))}
-                </MultiChoice>
-              </FormGroup>
+            <RadioGroups
+              id="experience"
+              legendText="Rate your experience of using the new version of Bichard"
+              errorMessage="Select one of the below options"
+              hasError={fields?.experience.hasError}
+            >
+              {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
+                <RadioButton
+                  id={experienceKey}
+                  defaultChecked={experienceKey === fields?.experience.value}
+                  label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
+                  key={experienceKey}
+                  name={"experience"}
+                  value={experienceKey}
+                />
+              ))}
+            </RadioGroups>
 
-              <FormGroup id="feedback">
-                <Heading as="h3" size="SMALL">
-                  {"Tell us why you gave this rating"}
-                </Heading>
+            <NoteTextArea
+              handleOnNoteChange={handleFeedbackOnChange}
+              noteRemainingLength={remainingFeedbackLength}
+              labelText={"Tell us why you gave this rating"}
+              labelSize={"govuk-label--s"}
+              id={"feedback"}
+              defaultValue={fields?.feedback.value}
+              showError={fields?.feedback.hasError}
+              name={"feedback"}
+              maxLength={MAX_FEEDBACK_LENGTH}
+              errorMessage={"Input message into the text box"}
+            />
 
-                <TextArea
-                  input={{
-                    name: "feedback",
-                    defaultValue: fields?.feedback.value,
-                    rows: 5,
-                    maxLength: MAX_FEEDBACK_LENGTH,
-                    onInput: handleFeedbackOnChange
-                  }}
-                  meta={{
-                    error: "Input message into the text box",
-                    touched: fields?.feedback.hasError
-                  }}
-                >
-                  {""}
-                </TextArea>
-
-                <HintText>{`You have ${remainingFeedbackLength} characters remaining`}</HintText>
-              </FormGroup>
-
-              <FormGroup>
-                <Button type="submit">{"Send feedback and continue"}</Button>
-              </FormGroup>
-            </Fieldset>
+            <div className={"govuk-form-group"}>
+              <Button type="submit">{"Send feedback and continue"}</Button>
+            </div>
           </Form>
         </Layout>
       </CurrentUserContext.Provider>

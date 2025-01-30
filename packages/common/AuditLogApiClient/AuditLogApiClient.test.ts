@@ -4,8 +4,9 @@ import axios from "axios"
 
 import type { AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 
-import "../test/jest"
 import { mockApiAuditLogEvent, mockAuditLogApiRecordOutput } from "../test/auditLogMocks"
+import "../test/jest"
+import { isError } from "../types/Result"
 import AuditLogApiClient from "./AuditLogApiClient"
 
 const apiClient = new AuditLogApiClient("http://localhost", "dummy")

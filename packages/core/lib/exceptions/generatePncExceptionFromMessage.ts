@@ -14,6 +14,8 @@ type PncErrorRange = {
   start: string
 }
 
+export const getPncErrorCodeFromMessage = (pncErrorMessage: string) => pncErrorMessage.substring(0, 5)
+
 const inPncErrorRange = (pncErrorCode: string, pncErrorRanges: PncErrorRange[]): boolean =>
   pncErrorRanges.some(({ start, end }) => {
     if (end) {
@@ -28,7 +30,7 @@ const generatePncExceptionFromMessage = (
   pncErrorRanges: PncErrorRangesForException[],
   defaultException: ExceptionCode
 ): PncException => {
-  const pncErrorCode = pncErrorMessage.substring(0, 5)
+  const pncErrorCode = getPncErrorCodeFromMessage(pncErrorMessage)
 
   for (const { code, ranges } of pncErrorRanges) {
     if (inPncErrorRange(pncErrorCode, ranges)) {

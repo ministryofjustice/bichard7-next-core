@@ -30,6 +30,7 @@ const sendMsg = async function (world: Bichard, messagePath: string) {
     const uploadResult = await uploadToS3(world, messageData, correlationId).catch((e) => e)
     expect(isError(uploadResult)).toBeFalsy()
     const checkEventResult = await checkAuditLogRecordExists(world, correlationId)
+    world.correlationIds.push(checkEventResult.messageId)
     expect(isError(checkEventResult)).toBeFalsy()
     return Promise.resolve()
   }

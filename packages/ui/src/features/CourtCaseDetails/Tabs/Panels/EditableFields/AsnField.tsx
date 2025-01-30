@@ -86,17 +86,17 @@ export const AsnField = () => {
       isEditable={isAsnEditable}
       inputLabel="Enter the ASN"
       hintText="ASN format: Last 2 digits of year / 4 divisional ID location characters / 2 digits from owning force / 1 to 11 digits and 1 check letter \n Example: 22/49AB/49/1234C"
+      htmlFor={"asn"}
     >
       <div>
         <div>
           <AsnInput
             ref={asnInputRef}
-            className={`asn-input`}
+            className={`asn-input govuk-input ${!isValidAsn ? "govuk-input--error" : ""}`}
             id={"asn"}
             name={"asn"}
             onChange={handleAsnChange}
             value={Asn.divideAsn(amendedAsn.toUpperCase())}
-            error={!isValidAsn}
             onKeyDown={handleOnKeyDown}
             onPaste={handleOnPaste}
             onCopy={handleOnCopy}

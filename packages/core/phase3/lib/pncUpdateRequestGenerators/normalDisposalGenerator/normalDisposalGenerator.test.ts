@@ -4,13 +4,9 @@ import type { Offence, OffenceReason, Result } from "../../../../types/Annotated
 import type { Operation, PncUpdateDataset } from "../../../../types/PncUpdateDataset"
 import type NormalDisposalPncUpdateRequest from "../../../types/NormalDisposalPncUpdateRequest"
 
-import lookupOrganisationUnitByCode from "../../../../lib/dataLookup/lookupOrganisationUnitByCode"
 import { PncOperation } from "../../../../types/PncOperation"
 import ResultClass from "../../../../types/ResultClass"
 import normalDisposalGenerator from "./normalDisposalGenerator"
-
-jest.mock("../../../../lib/dataLookup/lookupOrganisationUnitByCode")
-const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.Mock
 
 const createPncUpdateDataset = () => {
   const offence = {
@@ -98,10 +94,6 @@ const operation = {
 } as Operation<PncOperation.NORMAL_DISPOSAL>
 
 describe("normalDisposalGenerator", () => {
-  beforeEach(() => {
-    mockedLookupOrganisationUnitByCode.mockRestore()
-  })
-
   it("should return error when ASN is invalid", () => {
     const pncUpdateDataset = createPncUpdateDataset()
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber =
@@ -140,72 +132,6 @@ describe("normalDisposalGenerator", () => {
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Court Case Reference Number length must be 15, but the length is 13")
-  })
-
-  it("should return error when it fails to get PSA court code from the court hearing location", () => {
-    const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.Mock
-
-    mockedLookupOrganisationUnitByCode.mockReturnValue({
-      bottomLevelCode: "00",
-      bottomLevelName: "",
-      secondLevelCode: "20",
-      secondLevelName: "West Midlands",
-      thirdLevelCode: "BN",
-      thirdLevelName: "Birmingham Youth Court (Steelehouse Lane)",
-      thirdLevelPsaCode: "I'm not a number",
-      topLevelCode: "B",
-      topLevelName: "Magistrates' Courts"
-    })
-
-    const pncUpdateDataset = createPncUpdateDataset()
-    const operationWithoutCourtCaseReference = {
-      code: PncOperation.NORMAL_DISPOSAL,
-      data: undefined
-    } as Operation<PncOperation.NORMAL_DISPOSAL>
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode = 4001
-
-    const result = normalDisposalGenerator(pncUpdateDataset, operationWithoutCourtCaseReference)
-
-    expect(isError(result)).toBe(true)
-    expect((result as Error).message).toBe("PSA code 'I'm not a number' is not a number")
-  })
-
-  it("should return error when it fails to get PSA court code from the next result source organisation", () => {
-    mockedLookupOrganisationUnitByCode.mockReturnValueOnce({
-      bottomLevelCode: "00",
-      bottomLevelName: "",
-      secondLevelCode: "20",
-      secondLevelName: "West Midlands",
-      thirdLevelCode: "BN",
-      thirdLevelName: "Birmingham Youth Court (Steelehouse Lane)",
-      thirdLevelPsaCode: "2525",
-      topLevelCode: "B",
-      topLevelName: "Magistrates' Courts"
-    })
-
-    mockedLookupOrganisationUnitByCode.mockReturnValueOnce({
-      bottomLevelCode: "00",
-      bottomLevelName: "",
-      secondLevelCode: "20",
-      secondLevelName: "West Midlands",
-      thirdLevelCode: "BN",
-      thirdLevelName: "Birmingham Youth Court (Steelehouse Lane)",
-      thirdLevelPsaCode: "I'm not a number 2",
-      topLevelCode: "B",
-      topLevelName: "Magistrates' Courts"
-    })
-
-    const pncUpdateDataset = createPncUpdateDataset()
-    const operationWithoutCourtCaseReference = {
-      code: PncOperation.NORMAL_DISPOSAL,
-      data: undefined
-    } as Operation<PncOperation.NORMAL_DISPOSAL>
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.CourtHouseCode = 4001
-
-    const result = normalDisposalGenerator(pncUpdateDataset, operationWithoutCourtCaseReference)
-
-    expect(isError(result)).toBe(true)
-    expect((result as Error).message).toBe("PSA code 'I'm not a number 2' is not a number")
   })
 
   it("should not set ASN and arrests adjudications and disposals when there are no offences added by the court with results compatible with disposals", () => {

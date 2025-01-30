@@ -34,12 +34,12 @@ describe("resolvedExceptionsReport", () => {
         notes: [
           {
             noteText: "note text",
-            user: "user",
+            userId: "user",
             createdAt: new Date("21-2-2024")
           },
           {
             noteText: "resolved text",
-            user: "user2",
+            userId: "user2",
             createdAt: new Date("21-3-2024")
           }
         ]

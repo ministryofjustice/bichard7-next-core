@@ -19,9 +19,6 @@ interface Props {
   canResolveAndSubmit: boolean
 }
 
-const sideBarWidth = "33%"
-const contentWidth = "67%"
-
 const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAndSubmit }) => {
   const { courtCase } = useCourtCase()
   const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
@@ -57,11 +54,10 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
         onTabClick={(tab) => {
           setActiveTab(tab)
         }}
-        width={contentWidth}
       />
 
-      <PanelsGridRow>
-        <PanelsGridCol setWidth={contentWidth}>
+      <PanelsGridRow className="govuk-grid-row">
+        <PanelsGridCol className="govuk-grid-column-two-thirds">
           <CourtCaseDetailsPanel visible={activeTab === "Defendant"} heading={"Defendant details"}>
             <DefendantDetails />
           </CourtCaseDetailsPanel>
@@ -87,7 +83,7 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
           <Notes visible={activeTab === "Notes"} isLockedByCurrentUser={isLockedByCurrentUser} />
         </PanelsGridCol>
 
-        <SideBar setWidth={sideBarWidth}>
+        <SideBar className="govuk-grid-column-one-third">
           <TriggersAndExceptions
             onNavigate={handleNavigation}
             canResolveAndSubmit={canResolveAndSubmit}

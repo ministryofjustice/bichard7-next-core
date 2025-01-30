@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
-const StyledNav = styled.nav<{ width: string }>`
-  width: ${(props) => props.width};
+const Tabs = styled.div`
+  padding: 0;
 `
 
-export { StyledNav }
+export { Tabs }

@@ -37,7 +37,7 @@ describe("Case details", () => {
 
     cy.get('select[name="force"]').select("03 - Cumbria")
     cy.get('textarea[name="note"]').type("This is a dummy note")
-    cy.get("span").should("contain", "You have 1980 characters remaining")
+    cy.get("div.govuk-hint").should("contain", "You have 1980 characters remaining")
     cy.get("button").contains("Reallocate").click()
 
     cy.get("H1").should("have.text", "Case list")
@@ -78,7 +78,7 @@ describe("Case details", () => {
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
     cy.get('select[name="force"]').select("03 - Cumbria")
-    cy.get("span").should("contain", "You have 2000 characters remaining")
+    cy.get("div.govuk-hint").should("contain", "You have 2000 characters remaining")
     cy.get("button").contains("Reallocate").click()
 
     cy.get("H1").should("have.text", "Case list")
@@ -123,7 +123,7 @@ describe("Case details", () => {
     })
     cy.get('textarea[name="note"]').type("a".repeat(20))
 
-    cy.get("span").should("contain", "You have 990 characters remaining")
+    cy.get("div.govuk-hint").should("contain", "You have 990 characters remaining")
     cy.get("button").contains("Reallocate").click()
 
     cy.get("H1").should("have.text", "Case list")
@@ -231,6 +231,16 @@ describe("Case details", () => {
 
     cy.visit("/bichard/court-cases/1/reallocate")
     cy.url().should("match", /\/court-cases\/\d+/)
+  })
+
+  it("should display there are no user notes when none exist", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+
+    loginAndVisit("/bichard/court-cases/0")
+    cy.get("button").contains("Reallocate Case").click()
+
+    cy.contains("Case has no user notes.")
+    cy.contains("show more").should("not.exist")
   })
 
   it('should display the most recent user note when "show more" is visible', () => {

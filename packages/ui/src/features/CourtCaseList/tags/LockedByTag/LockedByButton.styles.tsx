@@ -14,6 +14,9 @@ const StyledLockedByButton = styled.button`
   font-size: 1em;
   text-decoration: underline;
   cursor: pointer;
+  box-shadow: none;
+  margin: 0;
+
   &:hover {
     color: white;
     background: ${blue};

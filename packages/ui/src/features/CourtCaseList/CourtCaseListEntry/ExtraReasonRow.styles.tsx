@@ -1,7 +1,6 @@
-import { Table } from "govuk-react"
 import styled from "styled-components"
 
-const StyledExtraReasonRow = styled(Table.Row)`
+const StyledExtraReasonRow = styled.tr`
   vertical-align: top;
 `
 

@@ -1,8 +1,7 @@
-import { Details } from "govuk-react"
 import styled from "styled-components"
 import { textSecondary } from "utils/colours"
 
-const StyledDetails = styled(Details)`
+const StyledDetails = styled.details`
   margin-bottom: 20px;
 `
 
@@ -25,6 +24,7 @@ const DisposalText = styled.div`
 
   .disposal-text {
     font-size: 16px;
+    margin-bottom: 0;
   }
 
   .disposal-text-absent {

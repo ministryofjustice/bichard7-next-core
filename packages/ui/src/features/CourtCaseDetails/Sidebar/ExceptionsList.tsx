@@ -1,9 +1,8 @@
+import { Button, LinkButton } from "components/Buttons"
 import ConditionalRender from "components/ConditionalRender"
-import LinkButton from "components/LinkButton"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { Button } from "govuk-react"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 import { AmendmentKeys } from "types/Amendments"
@@ -13,7 +12,6 @@ import DefaultException from "../../../components/Exception/DefaultException"
 import PncException from "../../../components/Exception/PncException"
 import Form from "../../../components/Form"
 import amendmentsHaveChanged from "../../../utils/amendmentsHaveChanged"
-import { gdsLightGrey, gdsMidGrey, textPrimary } from "../../../utils/colours"
 import LockStatusTag from "../LockStatusTag"
 import { ButtonContainer, SeparatorLine } from "./ExceptionsList.styles"
 
@@ -74,13 +72,7 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
           </Form>
         </ButtonContainer>
         <ButtonContainer className={"buttonContainer"}>
-          <LinkButton
-            href={resolveLink}
-            className="b7-manually-resolve-button"
-            buttonColour={gdsLightGrey}
-            buttonTextColour={textPrimary}
-            buttonShadowColour={gdsMidGrey}
-          >
+          <LinkButton href={resolveLink} className="b7-manually-resolve-button" secondary={true}>
             {"Mark as manually resolved"}
           </LinkButton>
         </ButtonContainer>

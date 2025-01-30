@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { gdsLightGrey } from "utils/colours"
 
-const SummaryBox = styled.div`
+const SummaryBox = styled.aside`
   background-color: ${gdsLightGrey};
   padding: 25px;
 `
@@ -18,25 +18,4 @@ const SummaryBoxGrid = styled.div`
   }
 `
 
-const StyledSummaryBoxFieldInside = styled.div`
-  display: none;
-  visibility: hidden;
-
-  @media (min-width: 1680px) {
-    display: block;
-    visibility: visible;
-  }
-`
-
-const StyledSummaryBoxFieldOutside = styled.div`
-  display: inline-block;
-  visibility: visible;
-  margin-top: 12px;
-
-  @media (min-width: 1680px) {
-    display: none;
-    visibility: hidden;
-  }
-`
-
-export { StyledSummaryBoxFieldInside, StyledSummaryBoxFieldOutside, SummaryBox, SummaryBoxGrid }
+export { SummaryBox, SummaryBoxGrid }

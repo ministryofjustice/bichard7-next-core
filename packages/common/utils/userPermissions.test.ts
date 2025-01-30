@@ -1,54 +1,50 @@
-import { expect } from "@jest/globals"
-import Permission from "@moj-bichard7/common/types/Permission"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import User from "@moj-bichard7/ui/src/services/entities/User"
+import type { User } from "../types/User"
 
-const createUser = (...groups: UserGroup[]) => {
-  const user = new User()
-  user.groups = [...groups]
+import Permission from "../types/Permission"
+import { UserGroup } from "../types/UserGroup"
+import { userAccess } from "./userPermissions"
 
-  return user
-}
+const userHasAccessTo = (...groups: UserGroup[]) => userAccess({ groups: [...groups] } as User)
 
 describe("user permissions", () => {
-  test("User in only exception handler group", () => {
-    const user = createUser(UserGroup.ExceptionHandler)
+  it("User in only exception handler group", () => {
+    const userAccess = userHasAccessTo(UserGroup.ExceptionHandler)
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(true)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(false)
+    expect(userAccess[Permission.Exceptions]).toBe(true)
+    expect(userAccess[Permission.Triggers]).toBe(false)
   })
 
-  test("User in only trigger handler group", () => {
-    const user = createUser(UserGroup.TriggerHandler)
+  it("User in only trigger handler group", () => {
+    const userAccess = userHasAccessTo(UserGroup.TriggerHandler)
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(false)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(true)
+    expect(userAccess[Permission.Exceptions]).toBe(false)
+    expect(userAccess[Permission.Triggers]).toBe(true)
   })
 
-  test("User in only general handler group", () => {
-    const user = createUser(UserGroup.GeneralHandler)
+  it("User in only general handler group", () => {
+    const userAccess = userHasAccessTo(UserGroup.GeneralHandler)
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(true)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(true)
+    expect(userAccess[Permission.Exceptions]).toBe(true)
+    expect(userAccess[Permission.Triggers]).toBe(true)
   })
 
-  test("User in only allocator group", () => {
-    const user = createUser(UserGroup.Allocator)
+  it("User in only allocator group", () => {
+    const userAccess = userHasAccessTo(UserGroup.Allocator)
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(true)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(true)
+    expect(userAccess[Permission.Exceptions]).toBe(true)
+    expect(userAccess[Permission.Triggers]).toBe(true)
   })
 
-  test("User in only supervisor group", () => {
-    const user = createUser(UserGroup.Supervisor)
+  it("User in only supervisor group", () => {
+    const userAccess = userHasAccessTo(UserGroup.Supervisor)
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(true)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(true)
-    expect(user.hasAccessTo[Permission.ViewReports]).toBe(true)
+    expect(userAccess[Permission.Exceptions]).toBe(true)
+    expect(userAccess[Permission.Triggers]).toBe(true)
+    expect(userAccess[Permission.ViewReports]).toBe(true)
   })
 
-  test("User in all groups except supervisor", () => {
-    const user = createUser(
+  it("User in all groups except supervisor", () => {
+    const userAccess = userHasAccessTo(
       UserGroup.Allocator,
       UserGroup.Audit,
       UserGroup.ExceptionHandler,
@@ -59,11 +55,11 @@ describe("user permissions", () => {
       UserGroup.SuperUserManager,
       UserGroup.NewUI
     )
-    expect(user.hasAccessTo[Permission.ViewReports]).toBe(false)
+    expect(userAccess[Permission.ViewReports]).toBe(false)
   })
 
-  test("User in all non-handler groups", () => {
-    const user = createUser(
+  it("User in all non-handler groups", () => {
+    const userAccess = userHasAccessTo(
       UserGroup.Audit,
       UserGroup.AuditLoggingManager,
       UserGroup.NewUI,
@@ -71,18 +67,18 @@ describe("user permissions", () => {
       UserGroup.UserManager
     )
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(false)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(false)
+    expect(userAccess[Permission.Exceptions]).toBe(false)
+    expect(userAccess[Permission.Triggers]).toBe(false)
   })
 
-  test("User in user manager group", () => {
-    const user = createUser(UserGroup.SuperUserManager, UserGroup.UserManager)
+  it("User in user manager group", () => {
+    const userAccess = userHasAccessTo(UserGroup.SuperUserManager, UserGroup.UserManager)
 
-    expect(user.hasAccessTo[Permission.ViewUserManagement]).toBe(true)
+    expect(userAccess[Permission.ViewUserManagement]).toBe(true)
   })
 
-  test("User in all groups except user manager groups", () => {
-    const user = createUser(
+  it("User in all groups except user manager groups", () => {
+    const userAccess = userHasAccessTo(
       UserGroup.Allocator,
       UserGroup.Audit,
       UserGroup.ExceptionHandler,
@@ -92,13 +88,13 @@ describe("user permissions", () => {
       UserGroup.NewUI,
       UserGroup.Supervisor
     )
-    expect(user.hasAccessTo[Permission.ViewUserManagement]).toBe(false)
+    expect(userAccess[Permission.ViewUserManagement]).toBe(false)
   })
 
-  test("User with no groups", () => {
-    const user = createUser()
+  it("User with no groups", () => {
+    const userAccess = userHasAccessTo()
 
-    expect(user.hasAccessTo[Permission.Exceptions]).toBe(false)
-    expect(user.hasAccessTo[Permission.Triggers]).toBe(false)
+    expect(userAccess[Permission.Exceptions]).toBe(false)
+    expect(userAccess[Permission.Triggers]).toBe(false)
   })
 })
