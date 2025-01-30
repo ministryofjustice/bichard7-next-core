@@ -1,3 +1,9 @@
+type ListCourtCasesConfig = {
+  BYPASS_PAGE_LIMIT: number
+  CaseListQuery: string[]
+  ResolvedExceptionsReport: string[]
+}
+
 const CaseListQuery = [
   "courtCase.errorId",
   "courtCase.triggerCount",
@@ -22,7 +28,10 @@ const CaseListQuery = [
 
 const ResolvedExceptionsReport = [...CaseListQuery, "courtCase.messageReceivedTimestamp", "courtCase.hearingOutcome"]
 
+const BYPASS_PAGE_LIMIT = -1
+
 export default {
   CaseListQuery,
+  BYPASS_PAGE_LIMIT,
   ResolvedExceptionsReport
-}
+} satisfies ListCourtCasesConfig

@@ -1,7 +1,9 @@
+import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import z from "zod"
 
 import { ApiAuditLogEventSchema, DynamoAuditLogEventSchema } from "./AuditLogEvent"
-import AuditLogStatus from "./AuditLogStatus"
+import PncStatus from "./PncStatus"
+import TriggerStatus from "./TriggerStatus"
 
 export const InputApiAuditLogSchema = z.object({
   caseId: z.string(),
@@ -17,24 +19,37 @@ export const InputApiAuditLogSchema = z.object({
 
 export type InputApiAuditLog = z.infer<typeof InputApiAuditLogSchema>
 
-export const OutputApiAuditLogSchema = InputApiAuditLogSchema.extend({
-  events: z.array(ApiAuditLogEventSchema),
+// The fields here are optional because we can exclude them using query parameters
+export const OutputApiAuditLogSchema = z.object({
+  caseId: z.string().optional(),
+  createdBy: z.string().optional(),
+  events: z.array(ApiAuditLogEventSchema).optional(),
+  externalCorrelationId: z.string().optional(),
+  externalId: z.string().optional().optional(),
   forceOwner: z.number().optional(),
-  pncStatus: z.string(),
-  status: z.string(),
-  triggerStatus: z.string()
+  messageHash: z.string().optional(),
+  messageId: z.string().optional(),
+  pncStatus: z.string().optional(),
+  receivedDate: z.string().datetime().optional(),
+  s3Path: z.string().optional().optional(),
+  status: z.string().optional(),
+  systemId: z.string().optional().optional(),
+  triggerStatus: z.string().optional()
 })
 
 export type OutputApiAuditLog = z.infer<typeof OutputApiAuditLogSchema>
 
-export const InternalDynamoAuditLogSchema = OutputApiAuditLogSchema.omit({ events: true }).extend({
+export const InternalDynamoAuditLogSchema = InputApiAuditLogSchema.extend({
   errorRecordArchivalDate: z.string().optional(),
   eventsCount: z.number(),
   expiryTime: z.string().optional(),
+  forceOwner: z.number().optional(),
   isSanitised: z.number(),
   nextSanitiseCheck: z.string(),
+  pncStatus: z.nativeEnum(PncStatus),
   retryCount: z.number().optional(),
   status: z.nativeEnum(AuditLogStatus),
+  triggerStatus: z.nativeEnum(TriggerStatus),
   version: z.number()
 })
 export type InternalDynamoAuditLog = z.infer<typeof InternalDynamoAuditLogSchema>

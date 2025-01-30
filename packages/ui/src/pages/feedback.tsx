@@ -86,9 +86,9 @@ export const getServerSideProps = withMultipleServerSideProps(
         props: {
           ...props,
           fields: {
-            isAnonymous: { hasError: !isAnonymous ? true : false, value: isAnonymous ?? null },
-            experience: { hasError: !experience ? true : false, value: experience ?? null },
-            feedback: { hasError: !feedback ? true : false, value: feedback }
+            isAnonymous: { hasError: !isAnonymous, value: isAnonymous ?? null },
+            experience: { hasError: !experience, value: experience ?? null },
+            feedback: { hasError: !feedback, value: feedback }
           }
         }
       }
@@ -154,71 +154,69 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
           </p>
 
           <h2 className="govuk-heading-m">{"Share your feedback"}</h2>
+          <p className="govuk-body">
+            {
+              "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
+            }
+          </p>
 
           <Form method="POST" action={"#"} csrfToken={csrfToken}>
-            <p className="govuk-body">
-              {
-                "If you would like to tell us about your experience using the new version of Bichard7, please do so below."
-              }
-            </p>
-            <fieldset className="govuk-fieldset">
-              <RadioGroups
-                id="isAnonymous"
-                legendText="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
-                errorMessage="Select one of the below options"
-                hasError={fields?.isAnonymous.hasError}
-              >
-                <RadioButton
-                  name={"isAnonymous"}
-                  id={"isAnonymous-no"}
-                  defaultChecked={fields?.isAnonymous.value === "no"}
-                  value={"no"}
-                  label={"Yes, I am happy to be contacted about this feedback."}
-                />
-                <RadioButton
-                  name={"isAnonymous"}
-                  id={"isAnonymous-yes"}
-                  defaultChecked={fields?.isAnonymous.value === "yes"}
-                  value={"yes"}
-                  label={"No, I would like to opt-out, which will mean my feedback will be anonymous"}
-                />
-              </RadioGroups>
-
-              <RadioGroups
-                id="experience"
-                legendText="Rate your experience of using the new version of Bichard"
-                errorMessage="Select one of the below options"
-                hasError={fields?.experience.hasError}
-              >
-                {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
-                  <RadioButton
-                    id={experienceKey}
-                    defaultChecked={experienceKey === fields?.experience.value}
-                    label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
-                    key={experienceKey}
-                    name={"experience"}
-                    value={experienceKey}
-                  />
-                ))}
-              </RadioGroups>
-
-              <NoteTextArea
-                handleOnNoteChange={handleFeedbackOnChange}
-                noteRemainingLength={remainingFeedbackLength}
-                labelText={"Tell us why you gave this rating"}
-                labelSize={"govuk-label--s"}
-                id={"feedback"}
-                defaultValue={fields?.feedback.value}
-                showError={fields?.feedback.hasError}
-                name={"feedback"}
-                maxLength={MAX_FEEDBACK_LENGTH}
-                errorMessage={"Input message into the text box"}
+            <RadioGroups
+              id="isAnonymous"
+              legendText="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
+              errorMessage="Select one of the below options"
+              hasError={fields?.isAnonymous.hasError}
+            >
+              <RadioButton
+                name={"isAnonymous"}
+                id={"isAnonymous-no"}
+                defaultChecked={fields?.isAnonymous.value === "no"}
+                value={"no"}
+                label={"Yes, I am happy to be contacted about this feedback."}
               />
+              <RadioButton
+                name={"isAnonymous"}
+                id={"isAnonymous-yes"}
+                defaultChecked={fields?.isAnonymous.value === "yes"}
+                value={"yes"}
+                label={"No, I would like to opt-out, which will mean my feedback will be anonymous"}
+              />
+            </RadioGroups>
 
-              <div className={"govuk-form-group"}>
-                <Button type="submit">{"Send feedback and continue"}</Button>
-              </div>
-            </fieldset>
+            <RadioGroups
+              id="experience"
+              legendText="Rate your experience of using the new version of Bichard"
+              errorMessage="Select one of the below options"
+              hasError={fields?.experience.hasError}
+            >
+              {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
+                <RadioButton
+                  id={experienceKey}
+                  defaultChecked={experienceKey === fields?.experience.value}
+                  label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
+                  key={experienceKey}
+                  name={"experience"}
+                  value={experienceKey}
+                />
+              ))}
+            </RadioGroups>
+
+            <NoteTextArea
+              handleOnNoteChange={handleFeedbackOnChange}
+              noteRemainingLength={remainingFeedbackLength}
+              labelText={"Tell us why you gave this rating"}
+              labelSize={"govuk-label--s"}
+              id={"feedback"}
+              defaultValue={fields?.feedback.value}
+              showError={fields?.feedback.hasError}
+              name={"feedback"}
+              maxLength={MAX_FEEDBACK_LENGTH}
+              errorMessage={"Input message into the text box"}
+            />
+
+            <div className={"govuk-form-group"}>
+              <Button type="submit">{"Send feedback and continue"}</Button>
+            </div>
           </Form>
         </Layout>
       </CurrentUserContext.Provider>

@@ -2,11 +2,19 @@ import generateAho from "../../../../test/helpers/generateAho"
 
 describe("reports API endpoint", () => {
   describe("GET /reports/*", () => {
-    beforeEach(() => {
+    it("returns a 403 if user is not a supervisor", () => {
       cy.loginAs("GeneralHandler")
+      cy.request({
+        method: "GET",
+        url: `/bichard/api/reports/case-list`,
+        failOnStatusCode: false
+      }).then((response) => {
+        expect(response.status).to.equal(403)
+      })
     })
 
     it("returns a 404 if unknown report-type", () => {
+      cy.loginAs("Supervisor")
       cy.request({
         method: "GET",
         url: `/bichard/api/reports/not-a-report`,
@@ -28,7 +36,7 @@ describe("GET /reports/resolved-exceptions", () => {
         ptiurn: "ptirun",
         courtName: "court-name"
       })
-      cy.loginAs("GeneralHandler")
+      cy.loginAs("Supervisor")
       cy.task("insertCourtCasesWithFields", [
         {
           orgForPoliceFilter: "01",

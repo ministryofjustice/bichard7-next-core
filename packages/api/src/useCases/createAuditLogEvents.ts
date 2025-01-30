@@ -126,7 +126,7 @@ const createAuditLogEvents = async (
   auditLogEvents: ApiAuditLogEvent[],
   correlationId: string,
   auditLogGateway: AuditLogDynamoGateway,
-  logger: FastifyBaseLogger,
+  logger?: FastifyBaseLogger,
   attempts = retryAttempts
 ): PromiseResult<void> => {
   const auditLog = await auditLogGateway.fetchOne(correlationId, {
@@ -166,7 +166,7 @@ const createAuditLogEvents = async (
   if (isError(transactionResult)) {
     if (isConditionalExpressionViolationError(transactionResult) || isTransactionConflictError(transactionResult)) {
       if (attempts > 1) {
-        logger.info("Retrying ", attempts)
+        logger?.info("Retrying ", attempts)
         // Wait 250 - 750ms and try again
         const delay = Math.floor(250 + Math.random() * 500)
         await new Promise((resolve) => setTimeout(resolve, delay))

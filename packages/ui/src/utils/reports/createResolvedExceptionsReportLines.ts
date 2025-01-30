@@ -1,5 +1,6 @@
+import { isError } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import { isError } from "lodash"
+
 import type CourtCase from "services/entities/CourtCase"
 import type { Report, ResolvedException } from "./Report"
 
@@ -16,7 +17,7 @@ export const createResolvedExceptionsReportLines = (courtCases: CourtCase[]): Re
       caseReference: "",
       dateTimeRecievedByCJSE: courtCase.messageReceivedTimestamp?.toISOString() || "",
       dateTimeResolved: courtCase.resolutionTimestamp?.toISOString() || "",
-      notes: courtCase.notes.map((note) => `${note.user}: ${note.noteText}`),
+      notes: courtCase.notes.map((note) => `${note.userId}: ${note.noteText}`),
       resolutionAction:
         courtCase.notes.sort((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()).pop()?.noteText || ""
     }

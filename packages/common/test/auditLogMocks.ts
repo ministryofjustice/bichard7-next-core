@@ -47,7 +47,7 @@ export const mockAuditLogApiRecordOutput = (
   ...mockAuditLogApiRecordInput(overrides),
   events: [],
   pncStatus: PncStatus.Processing,
-  status: AuditLogStatus.processing,
+  status: AuditLogStatus.Processing,
   triggerStatus: TriggerStatus.NoTriggers,
   ...overrides
 })

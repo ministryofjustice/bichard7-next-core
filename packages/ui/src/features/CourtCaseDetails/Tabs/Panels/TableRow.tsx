@@ -10,12 +10,13 @@ interface TableRowProps {
 
 export const TableRow = ({ label, value, hintText, className }: TableRowProps) => {
   const rowClassName = `table-row__${label.replaceAll(/ /g, "-").toLowerCase()}`
+
   return (
     <StyledTableRow className={`govuk-table__row table-row ${rowClassName} row ${className ?? ""}`}>
-      <td className="govuk-table__cell row-label">
-        <b>{label}</b>
+      <th className="govuk-table__header row-label govuk-body-s">
+        {label}
         {hintText && <HintTextNoMargin className={"hint-text"}>{hintText}</HintTextNoMargin>}
-      </td>
+      </th>
       <td className="govuk-table__cell row-value">{value}</td>
     </StyledTableRow>
   )

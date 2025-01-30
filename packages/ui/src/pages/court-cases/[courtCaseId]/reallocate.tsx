@@ -8,14 +8,13 @@ import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseCon
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { PreviousPathContext } from "context/PreviousPathContext"
-import type { Property } from "csstype"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
@@ -30,7 +29,12 @@ import forbidden from "utils/forbidden"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
-import { NotesTableContainer, ShowMoreContainer } from "../../../styles/reallocate.styles"
+import {
+  NotesTableContainer,
+  ReallocationContainer,
+  ShowMoreContainer,
+  UserNotesContainer
+} from "../../../styles/reallocate.styles"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -109,9 +113,6 @@ const ReallocateCasePage: NextPage<Props> = ({
   canReallocate
 }: Props) => {
   const [showMore, setShowMore] = useState<boolean>(false)
-  const [reallocateFormWidth, setReallocateFormWidth] = useState<string>("two-thirds")
-  const [userNotesWidth, setUserNotesWidth] = useState<string>("one-third")
-  const [flexDirection, setFlexDirection] = useState<Property.FlexDirection>("row")
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
 
@@ -127,32 +128,6 @@ const ReallocateCasePage: NextPage<Props> = ({
     .filter(({ userId }) => userId !== "System")
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
     .reverse()
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1280) {
-        setReallocateFormWidth("two-thirds")
-        setUserNotesWidth("one-third")
-      } else {
-        setReallocateFormWidth("one-half")
-        setUserNotesWidth("one-half")
-      }
-
-      if (window.innerWidth < 768) {
-        setFlexDirection("column")
-        setReallocateFormWidth("full")
-        setUserNotesWidth("full")
-      } else {
-        setFlexDirection("row")
-      }
-    }
-
-    window.addEventListener("resize", handleResize)
-
-    return () => {
-      window.removeEventListener("resize", handleResize)
-    }
-  }, [])
 
   return (
     <>
@@ -178,11 +153,11 @@ const ReallocateCasePage: NextPage<Props> = ({
                   {"Case is locked by another user."}
                 </ConditionalRender>
                 <ConditionalRender isRendered={!lockedByAnotherUser}>
-                  <div className="govuk-grid-row" style={{ display: "flex", flexDirection }}>
-                    <div className={`govuk-grid-column-${reallocateFormWidth}`}>
+                  <div className="govuk-grid-row">
+                    <ReallocationContainer className={`govuk-grid-column-full`}>
                       <ReallocationNotesForm backLink={backLink} />
-                    </div>
-                    <div className={`govuk-grid-column-${userNotesWidth}`}>
+                    </ReallocationContainer>
+                    <UserNotesContainer className={`govuk-grid-column-full`}>
                       <h2 className="govuk-heading-s">{"Previous User Notes"}</h2>
                       {userNotes.length > 0 ? (
                         <>
@@ -201,7 +176,7 @@ const ReallocateCasePage: NextPage<Props> = ({
                       ) : (
                         <p className={"govuk-body"}>{"Case has no user notes."}</p>
                       )}
-                    </div>
+                    </UserNotesContainer>
                   </div>
                 </ConditionalRender>
               </Layout>
