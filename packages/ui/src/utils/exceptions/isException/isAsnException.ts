@@ -6,8 +6,7 @@ const asnExceptions = [
   ExceptionCode.HO100300,
   ExceptionCode.HO100301,
   ExceptionCode.HO100314,
-  ExceptionCode.HO100321,
-  ExceptionCode.HO100333
+  ExceptionCode.HO100321
 ]
 
 const isAsnException = (exceptions: Exception[]): boolean =>
