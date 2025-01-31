@@ -6,9 +6,10 @@ import { BAD_GATEWAY, UNAUTHORIZED } from "http-status"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
+import formatForceNumbers from "../../services/formatForceNumbers"
 import jwtVerify from "./jwtVerify"
 
-export default async function (db: DataStoreGateway, request: FastifyRequest, reply: FastifyReply) {
+export default async function (dataStore: DataStoreGateway, request: FastifyRequest, reply: FastifyReply) {
   const token = request.headers["authorization"]
 
   if (!token?.startsWith("Bearer ")) {
@@ -18,7 +19,7 @@ export default async function (db: DataStoreGateway, request: FastifyRequest, re
 
   try {
     const jwtString = token.replace("Bearer ", "")
-    const verificationResult: undefined | User = await jwtVerify(db, jwtString)
+    const verificationResult: undefined | User = await jwtVerify(dataStore, jwtString)
 
     if (!verificationResult) {
       reply.code(UNAUTHORIZED).send()
@@ -26,7 +27,8 @@ export default async function (db: DataStoreGateway, request: FastifyRequest, re
     }
 
     request.user = verificationResult
-    request.db = db
+    dataStore.forceIds = formatForceNumbers(request.user.visible_forces)
+    request.dataStore = dataStore
   } catch (error) {
     request.log.error(error)
 

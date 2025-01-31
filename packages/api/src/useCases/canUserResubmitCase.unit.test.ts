@@ -6,13 +6,13 @@ import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
 import canUseResubmitCaseExecute from "./canUserResubmitCase"
 
 describe("canUseResubmitCase", () => {
-  const db = new FakeDataStore()
+  const fakeDataStore = new FakeDataStore()
 
   describe("execute", () => {
     it("returns false if the groups attribute is not defined", async () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
-        db,
+        dataStore: fakeDataStore,
         user: {} as User
       })
 
@@ -22,7 +22,7 @@ describe("canUseResubmitCase", () => {
     it("returns false if the user isn't any allowed groups", async () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
-        db,
+        dataStore: fakeDataStore,
         user: { groups: [UserGroup.AuditLoggingManager] } as User
       })
 
@@ -32,7 +32,7 @@ describe("canUseResubmitCase", () => {
     it("returns true if the user is in any allowed groups", async () => {
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
-        db,
+        dataStore: fakeDataStore,
         user: { groups: [UserGroup.ExceptionHandler] } as User
       })
 
@@ -40,11 +40,11 @@ describe("canUseResubmitCase", () => {
     })
 
     it("returns false if the username isn't error_locked_by_id and user force is not the same as case force", async () => {
-      jest.spyOn(db, "canCaseBeResubmitted").mockResolvedValue(false)
+      jest.spyOn(fakeDataStore, "canCaseBeResubmitted").mockResolvedValue(false)
 
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
-        db,
+        dataStore: fakeDataStore,
         user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as User
       })
 
@@ -52,11 +52,11 @@ describe("canUseResubmitCase", () => {
     })
 
     it("returns false if the username is error_locked_by_id, user force is the same as case force and the case is resolved", async () => {
-      jest.spyOn(db, "canCaseBeResubmitted").mockResolvedValue(false)
+      jest.spyOn(fakeDataStore, "canCaseBeResubmitted").mockResolvedValue(false)
 
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
-        db,
+        dataStore: fakeDataStore,
         user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as User
       })
 
@@ -64,11 +64,11 @@ describe("canUseResubmitCase", () => {
     })
 
     it("returns true if the username is error_locked_by_id, user force is the same as case force and the case is unresolved", async () => {
-      jest.spyOn(db, "canCaseBeResubmitted").mockResolvedValue(true)
+      jest.spyOn(fakeDataStore, "canCaseBeResubmitted").mockResolvedValue(true)
 
       const result = await canUseResubmitCaseExecute({
         caseId: 123,
-        db,
+        dataStore: fakeDataStore,
         user: { groups: [UserGroup.ExceptionHandler], visible_forces: "01" } as User
       })
 

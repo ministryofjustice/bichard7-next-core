@@ -9,7 +9,7 @@ async function start() {
   const dynamoConfig = createAuditLogDynamoDbConfig()
   const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
-  const app = await build({ auditLogGateway, db: new Postgres() })
+  const app = await build({ auditLogGateway, dataStore: new Postgres() })
 
   await app.ready()
 

@@ -15,7 +15,7 @@ import setupZod from "./server/openapi/setupZod"
 declare module "fastify" {
   interface FastifyRequest {
     auditLogGateway: AuditLogDynamoGateway
-    db: DataStoreGateway
+    dataStore: DataStoreGateway
     s3: AwsS3Gateway
     user: User
   }
@@ -23,11 +23,11 @@ declare module "fastify" {
 
 type Gateways = {
   auditLogGateway: AuditLogDynamoGateway
-  db: DataStoreGateway
+  dataStore: DataStoreGateway
   s3?: AwsS3Gateway
 }
 
-export default async function ({ auditLogGateway, db }: Gateways) {
+export default async function ({ auditLogGateway, dataStore }: Gateways) {
   const fastify = createFastify()
 
   await setupZod(fastify)
@@ -46,7 +46,7 @@ export default async function ({ auditLogGateway, db }: Gateways) {
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      await authenticate(db, request, reply)
+      await authenticate(dataStore, request, reply)
       request.auditLogGateway = auditLogGateway
     })
 
