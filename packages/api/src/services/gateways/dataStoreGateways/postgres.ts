@@ -11,18 +11,19 @@ import lockException from "./postgres/cases/lockException"
 import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
 class Postgres implements DataStoreGateway {
-  protected readonly db = postgresFactory()
+  forceIds: number[] = []
+  protected readonly postgres = postgresFactory()
 
-  async canCaseBeResubmitted(username: string, caseId: number, forceIds: number[]): Promise<boolean> {
-    return await caseCanBeResubmitted(this.db, username, caseId, forceIds)
+  async canCaseBeResubmitted(username: string, caseId: number): Promise<boolean> {
+    return await caseCanBeResubmitted(this.postgres, username, caseId, this.forceIds)
   }
 
-  async fetchCase(caseId: number, forceIds: number[]): Promise<CaseDataForDto> {
-    return await fetchCase(this.db, caseId, forceIds)
+  async fetchCase(caseId: number): Promise<CaseDataForDto> {
+    return await fetchCase(this.postgres, caseId, this.forceIds)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {
-    return await fetchUserByUsername(this.db, username)
+    return await fetchUserByUsername(this.postgres, username)
   }
 
   async lockCase(lockReason: LockReason, caseId: number, username: string, forceIds: number[]): Promise<boolean> {

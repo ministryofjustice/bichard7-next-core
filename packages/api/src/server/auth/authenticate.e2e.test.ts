@@ -22,12 +22,12 @@ describe("authentication e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.db.clearDb()
+    await helper.postgres.clearDb()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   it("will return with no headers 401 - Unauthorized", async () => {
@@ -50,7 +50,7 @@ describe("authentication e2e", () => {
   })
 
   it("returns 401 Unauthorized with a missing user", async () => {
-    await createUserAndJwtToken(helper.db)
+    await createUserAndJwtToken(helper.postgres)
     const [encodedJwt] = generateTestJwtToken({
       email: "unknownuser@exmaple.com",
       username: "UnknownUser"
@@ -67,7 +67,7 @@ describe("authentication e2e", () => {
   })
 
   it("returns 200 if the verification result is a User", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.db)
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {

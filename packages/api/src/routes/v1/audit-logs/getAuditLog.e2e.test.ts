@@ -43,7 +43,7 @@ describe("Getting a single Audit Log", () => {
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   beforeEach(async () => {

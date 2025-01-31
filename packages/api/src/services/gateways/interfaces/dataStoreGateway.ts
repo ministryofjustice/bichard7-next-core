@@ -4,10 +4,11 @@ import type { CaseDataForDto } from "../../../types/CaseDataForDto"
 import type { LockReason } from "../../../types/LockReason"
 
 interface DataStoreGateway {
-  canCaseBeResubmitted: (username: string, caseId: number, forceIds: number[]) => Promise<boolean>
-  fetchCase: (caseId: number, forceIds: number[]) => Promise<CaseDataForDto>
+  canCaseBeResubmitted: (username: string, caseId: number) => Promise<boolean>
+  fetchCase: (caseId: number) => Promise<CaseDataForDto>
   fetchUserByUsername: (username: string) => Promise<User>
-  lockCase: (lockReason: LockReason, caseId: number, username: string, forceIds: number[]) => Promise<boolean>
+  forceIds: number[]
+  lockCase: (lockReason: LockReason, caseId: number, username: string) => Promise<boolean>
 }
 
 export default DataStoreGateway

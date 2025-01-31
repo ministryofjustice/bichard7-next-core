@@ -11,15 +11,15 @@ import insertUserIntoGroup from "./e2ePostgres/insertUserIntoGroup"
 
 class End2EndPostgres extends Postgres implements DataStoreGateway {
   async clearDb(): Promise<boolean> {
-    return await clearAllTables(this.db)
+    return await clearAllTables(this.postgres)
   }
 
   async close() {
-    await this.db.end()
+    await this.postgres.end()
   }
 
   async createTestCase(partialCase: Partial<Case>): Promise<Case> {
-    return await insertCase(this.db, partialCase)
+    return await insertCase(this.postgres, partialCase)
   }
 
   async createTestUser(user: Partial<User>): Promise<User> {
@@ -27,8 +27,8 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
       throw new Error("User has no Groups")
     }
 
-    const dbUser = await insertUser(this.db, user)
-    await insertUserIntoGroup(this.db, dbUser, user.groups)
+    const dbUser = await insertUser(this.postgres, user)
+    await insertUserIntoGroup(this.postgres, dbUser, user.groups)
 
     dbUser.groups = user.groups
 

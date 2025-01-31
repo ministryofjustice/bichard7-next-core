@@ -46,7 +46,7 @@ describe("createAuditLogEvents", () => {
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   describe("Creating multiple Audit Log events", () => {

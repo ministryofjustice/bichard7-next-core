@@ -5,6 +5,8 @@ import { FORBIDDEN, OK } from "http-status"
 import build from "../../../app"
 import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
+import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
+import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 import { testAhoJsonStr } from "../../../tests/helpers/ahoHelper"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 
@@ -19,11 +21,13 @@ const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
 }
 
 describe("retrieve a case", () => {
-  const db = new FakeDataStore()
+  const fakeDataStore = new FakeDataStore()
   let app: FastifyInstance
+  const dynamoConfig = createAuditLogDynamoDbConfig()
+  const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ db })
+    app = await build({ auditLogGateway, dataStore: fakeDataStore })
     await app.ready()
   })
 
@@ -37,7 +41,7 @@ describe("retrieve a case", () => {
 
   it("returns a case with response code OK when case exists", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    jest.spyOn(db, "fetchUserByUsername").mockResolvedValue(user)
+    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
 
     const response = await app.inject(defaultInjectParams(encodedJwt, "0"))
 
@@ -73,8 +77,8 @@ describe("retrieve a case", () => {
 
   it("returns response code FORBIDDEN when case doesn't exist", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    jest.spyOn(db, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(db, "fetchCase").mockRejectedValue(new Error("Case not found"))
+    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
+    jest.spyOn(fakeDataStore, "fetchCase").mockRejectedValue(new Error("Case not found"))
 
     const response = await app.inject(defaultInjectParams(encodedJwt, "1"))
 
