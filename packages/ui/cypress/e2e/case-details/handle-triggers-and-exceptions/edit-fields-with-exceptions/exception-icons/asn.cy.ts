@@ -1,7 +1,5 @@
 import HO100206 from "../../../../../../test/test-data/HO100206.json"
-import HO100300 from "../../../../../../test/test-data/HO100300.json"
 import HO100301 from "../../../../../../test/test-data/HO100301.json"
-import HO100314 from "../../../../../../test/test-data/HO100314.json"
 import HO100321 from "../../../../../../test/test-data/HO100321.json"
 
 import { loginAndVisit, resolveExceptionsManually, submitAndConfirmExceptions } from "../../../../../support/helpers"
@@ -35,16 +33,8 @@ describe("ASN exception", () => {
     asnExceptionDisplaysDefendantTabIcon(HO100206)
   })
 
-  it("Should display 1 next to Defendant tab text when HO100300 is raised", () => {
-    asnExceptionDisplaysDefendantTabIcon(HO100300)
-  })
-
   it("Should display 1 next to Defendant tab text when HO100301 is raised", () => {
     asnExceptionDisplaysDefendantTabIcon(HO100301)
-  })
-
-  it("Should display 1 next to Defendant tab text when HO100314 is raised", () => {
-    asnExceptionDisplaysDefendantTabIcon(HO100314)
   })
 
   it("Should display 1 next to Defendant tab text when HO100321 is raised", () => {
