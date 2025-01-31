@@ -8,6 +8,7 @@ import Asn from "services/Asn"
 import { disabledKeys, handleAsnForwardSlashes, type Selection } from "utils/exceptions/handleAsnForwardSlashes"
 import isAsnFormatValid from "utils/exceptions/isAsnFormatValid"
 import isAsnException from "utils/exceptions/isException/isAsnException"
+import { isEditableAsnException } from "utils/exceptions/isException/isEditableAsnException"
 import { AsnInput } from "./AsnField.styles"
 
 export const AsnField = () => {
@@ -71,10 +72,13 @@ export const AsnField = () => {
     navigator.clipboard.writeText(copiedAsn ?? "")
   }
 
-  const isAsnEditable =
+  const hasExceptions =
     courtCase.canUserEditExceptions &&
     courtCase.phase === Phase.HEARING_OUTCOME &&
     isAsnException(courtCase.aho.Exceptions)
+
+  const isAsnEditable =
+    hasExceptions || (courtCase.canUserEditExceptions && isEditableAsnException(courtCase.aho.Exceptions))
 
   return (
     <EditableFieldTableRow
@@ -82,7 +86,7 @@ export const AsnField = () => {
       value={defendant.ArrestSummonsNumber}
       updatedValue={updatedAhoAsn}
       label="ASN"
-      hasExceptions={isAsnEditable}
+      hasExceptions={hasExceptions}
       isEditable={isAsnEditable}
       inputLabel="Enter the ASN"
       hintText="ASN format: Last 2 digits of year / 4 divisional ID location characters / 2 digits from owning force / 1 to 11 digits and 1 check letter \n Example: 22/49AB/49/1234C"
