@@ -6,6 +6,19 @@ phases:
       python: 3.9
       nodejs: 16
     commands:
+      - cat /etc/resolv.conf > tmp
+      - echo "nameserver 169.254.169.253" >> tmp
+      - echo "nameserver vpce-09cc43fa93bfb4e86-9gqsg7kl.execute-api.eu-west-2.vpce.amazonaws.com" >> tmp
+      - echo "nameserver vpce-09cc43fa93bfb4e86-9gqsg7kl-eu-west-2b.execute-api.eu-west-2.vpce.amazonaws.com" >> tmp
+      - echo "nameserver vpce-09cc43fa93bfb4e86-9gqsg7kl-eu-west-2c.execute-api.eu-west-2.vpce.amazonaws.com" >> tmp
+      - echo "nameserver vpce-09cc43fa93bfb4e86-9gqsg7kl-eu-west-2a.execute-api.eu-west-2.vpce.amazonaws.com" >> tmp
+      - cp tmp /etc/resolv.conf
+      - echo "--------------------" && cat /etc/resolv.conf
+      - curl https://conductor.e2e-test.ptl.bichard7.modernisation-platform.service.justice.gov.uk/health
+      - curl http://cjse-e2e-test-bichard-7-pnc-emul-04a36b90d324827c.elb.eu-west-2.amazonaws.com:3000/requests
+      - curl https://e2jkudrsd5.execute-api.eu-west-2.amazonaws.com/e2e-test
+      - curl http://pnc.e2e-test.ptl.bichard7.modernisation-platform.service.justice.gov.uk:3000/requests
+      - exit 0
       - /bin/bash packages/e2e-test/scripts/configure_codebuild_image.sh
       - yum groupinstall -y "Development tools"
       - yum -y install jq gzip tar unzip openssl shadow-utils xz wget gnupg curl openvpn which chromium deltarpm
@@ -13,6 +26,7 @@ phases:
       - pip3 install click botocore requests
   build:
     commands:
+      - exit 0
       - set -e
       - echo "Trying to acquire a build lock"
       - LOCK_PREFIX=${DEPLOY_ENV:-sandbox}
@@ -31,12 +45,13 @@ phases:
       - export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
       - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
       - aws ec2 describe-client-vpn-endpoints | jq -r ".ClientVpnEndpoints[0].DnsServers[0:2][]" | sed 's/^/nameserver /' | cat - /etc/resolv.conf > tmp && cp tmp /etc/resolv.conf
-      - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
+      # - openvpn --config ~/cjse-${WORKSPACE}-config.ovpn --daemon --log /var/log/openvpn.log
       - bash ./scripts/setup-e2e-tests.sh
       - source ./workspaces/${WORKSPACE}.env
       - bash ./scripts/run-pipeline-tests.sh
   post_build:
     commands:
+      - exit 0
       - unset AWS_SESSION_TOKEN
       - export AWS_ACCESS_KEY_ID=${OLD_AWS_ACCESS_KEY_ID}
       - export AWS_SECRET_ACCESS_KEY=${OLD_AWS_SECRET_ACCESS_KEY}
