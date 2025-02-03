@@ -13,7 +13,6 @@ import TestDynamoGateway from "../../tests/testGateways/TestDynamoGateway/TestDy
 import lockAndFetchCaseDto from "./lockAndFetchCaseDto"
 
 const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
-// const auditLogDynamoGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
 describe("lockAndFetchCaseDto", () => {
   const logger = new FakeLogger()
@@ -140,5 +139,17 @@ describe("lockAndFetchCaseDto", () => {
     const result = await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
+  })
+
+  it("calls transaction on the dataStore", async () => {
+    const user = { visible_forces: "001" } as User
+    fakeDataStore.forceIds = [1]
+
+    jest.spyOn(fakeDataStore, "transaction")
+    jest.spyOn(fakeDataStore, "fetchCase")
+    await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
+
+    expect(fakeDataStore.transaction).toHaveBeenCalledTimes(1)
+    expect(fakeDataStore.fetchCase).toHaveBeenCalledTimes(1)
   })
 })
