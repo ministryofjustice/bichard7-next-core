@@ -3,14 +3,14 @@ import type { FastifyInstance } from "fastify"
 
 import { OK } from "http-status"
 
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken, createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
 
 describe("/v1/case e2e", () => {
-  const endpoint = VersionedEndpoints.V1.Case
+  const endpoint = V1.Case
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
