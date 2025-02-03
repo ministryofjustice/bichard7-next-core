@@ -20,16 +20,16 @@ describe("/v1/case e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.db.clearDb()
+    await helper.postgres.clearDb()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   it("returns case data", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.db)
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres)
     const dummyCase = {
       annotated_msg: testAhoXml,
       asn: "1901ID0100000006148H",
@@ -57,7 +57,7 @@ describe("/v1/case e2e", () => {
       updated_msg: testAhoXml
     }
 
-    const testCase = await createCase(helper.db, dummyCase)
+    const testCase = await createCase(helper.postgres, dummyCase)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
@@ -90,10 +90,10 @@ describe("/v1/case e2e", () => {
   })
 
   it("returns errorLockedByUsername and errorLockedByUserFullName", async () => {
-    const [user] = await createUsers(helper.db, 3)
+    const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, { error_locked_by_id: user.username })
+    const testCase = await createCase(helper.postgres, { error_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
@@ -109,10 +109,10 @@ describe("/v1/case e2e", () => {
   })
 
   it("returns triggerLockedByUsername and triggerLockedByUserFullName", async () => {
-    const [user] = await createUsers(helper.db, 3)
+    const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, { trigger_locked_by_id: user.username })
+    const testCase = await createCase(helper.postgres, { trigger_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {

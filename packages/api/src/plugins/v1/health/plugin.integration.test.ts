@@ -5,13 +5,17 @@ import { OK } from "http-status"
 import build from "../../../app"
 import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
+import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
+import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 
 describe("health plugin", () => {
-  const db = new FakeDataStore()
+  const fakeDataStore = new FakeDataStore()
   let app: FastifyInstance
+  const dynamoConfig = createAuditLogDynamoDbConfig()
+  const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ db })
+    app = await build({ auditLogGateway, dataStore: fakeDataStore })
     await app.ready()
   })
 

@@ -34,7 +34,7 @@ describe("Creating Audit Log", () => {
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   it("should create a new audit log record", async () => {

@@ -24,7 +24,7 @@ export type ResubmitBody = z.infer<typeof bodySchema>
 type HandlerProps = {
   body: ResubmitBody
   caseId: number
-  db: DataStoreGateway
+  dataStore: DataStoreGateway
   reply: FastifyReply
   user: User
 }
@@ -48,7 +48,7 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
+const handler = async ({ body, caseId, dataStore, reply, user }: HandlerProps) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -72,7 +72,7 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
   // - in theory this should either be 502 or 504
 
   try {
-    const result = await canUserResubmitCase({ caseId, db, user })
+    const result = await canUserResubmitCase({ caseId, dataStore, user })
 
     if (!result) {
       reply.code(FORBIDDEN).send()
@@ -98,7 +98,7 @@ const route = async (fastify: FastifyInstance) => {
     await handler({
       body: req.body,
       caseId: Number(req.params.caseId),
-      db: req.db,
+      dataStore: req.dataStore,
       reply,
       user: req.user
     })

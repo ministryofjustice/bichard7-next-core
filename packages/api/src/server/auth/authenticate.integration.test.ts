@@ -5,6 +5,8 @@ import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
 import build from "../../app"
 import { V1 } from "../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import AuditLogDynamoGateway from "../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
+import createAuditLogDynamoDbConfig from "../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
 const defaults = {
@@ -15,11 +17,13 @@ const defaults = {
 }
 
 describe("authenticate", () => {
-  const db = new FakeDataStore()
+  const fakeDataStore = new FakeDataStore()
   let app: FastifyInstance
+  const dynamoConfig = createAuditLogDynamoDbConfig()
+  const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ db })
+    app = await build({ auditLogGateway, dataStore: fakeDataStore })
     await app.ready()
   })
 
@@ -75,7 +79,7 @@ describe("authenticate", () => {
   })
 
   it("will return 401 - Unauthorized with a missing user", async () => {
-    const spy = jest.spyOn(db, "fetchUserByUsername")
+    const spy = jest.spyOn(fakeDataStore, "fetchUserByUsername")
     spy.mockRejectedValue(new Error('User "User 1" does not exist'))
 
     const [encodedJwt] = generateJwtForStaticUser()
@@ -93,7 +97,7 @@ describe("authenticate", () => {
 
   it("returns 200 if the verification result is a User", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    const spy = jest.spyOn(db, "fetchUserByUsername")
+    const spy = jest.spyOn(fakeDataStore, "fetchUserByUsername")
     spy.mockResolvedValue(user)
 
     const { statusCode } = await app.inject({
@@ -112,7 +116,7 @@ describe("authenticate", () => {
     const error = new Error("AggregateError")
     error.name = "AggregateError"
     error.stack = "Something Sql or pOstGreS"
-    jest.spyOn(db, "fetchUserByUsername").mockRejectedValue(error)
+    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockRejectedValue(error)
 
     const { statusCode } = await app.inject({
       ...defaults,
