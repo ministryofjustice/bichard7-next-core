@@ -136,7 +136,7 @@ export const checkOffenceData = async function (this: Bichard, value: string, ke
   // case-sensitivity hack because old bichard capitalises every word and new bichard does not
 
   const [cellContent] = await this.browser.page.$$eval(
-    `xpath/.//table//td[contains(
+    `xpath/.//table//th[contains(
         translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),
         "${key.toLowerCase()}"
       )]/following-sibling::td`,
