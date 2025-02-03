@@ -16,7 +16,7 @@ import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToX
 import getMessageType from "../../phase1/lib/getMessageType"
 import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import { isPncLockError } from "../../phase3/exceptions/generatePncUpdateExceptionFromMessage"
-import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "../../phase3/lib/performOperations"
+import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "../../phase3/lib/updatePnc"
 import phase3Handler from "../../phase3/phase3"
 import getPncOperationsFromPncUpdateDataset from "../../phase3/tests/helpers/getPncOperationsFromPncUpdateDataset"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
