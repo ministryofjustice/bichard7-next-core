@@ -140,9 +140,8 @@ describe("Case list", () => {
       cy.get("#search").contains("Apply filters").click()
 
       cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).contains(`Resolved`).should("exist")
-      cy.get("tr").not(":first").eq(1).should("not.exist")
-      cy.get("tr").not(":first").eq(2).should("not.exist")
+      cy.get("tr").not(":first").eq(1).contains("Resolved").should("exist")
+      cy.get("tr").not(":first").should("have.length", 2)
     })
 
     it("Should display the resolved badge on cases marked as resolved using the bottom search button", () => {
@@ -164,9 +163,8 @@ describe("Case list", () => {
       cy.get("#search-bottom").contains("Apply filters").click()
 
       cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).contains(`Resolved`).should("exist")
-      cy.get("tr").not(":first").eq(1).should("not.exist")
-      cy.get("tr").not(":first").eq(2).should("not.exist")
+      cy.get("tr").not(":first").eq(1).contains("Resolved").should("exist")
+      cy.get("tr").not(":first").should("have.length", 2)
     })
 
     it("Should display the submitted badge on cases marked as submitted", () => {
@@ -180,12 +178,14 @@ describe("Case list", () => {
 
       cy.get("#search").contains("Apply filters").click()
 
-      cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).contains(`Submitted`).should("exist")
-      cy.get("tr").not(":first").eq(1).get("td:nth-child(5)").contains(`Case00001`)
-      cy.get("tr").not(":first").eq(1).contains(`Submitted`).should("not.exist")
-      cy.get("tr").not(":first").eq(2).get("td:nth-child(5)").contains(`Case00002`)
-      cy.get("tr").not(":first").eq(2).contains(`Submitted`).should("exist")
+      cy.get("tr").not(":first").eq(0).find("td:nth-child(5)").contains(`Case00000`)
+      cy.get("tr").not(":first").eq(1).contains(`Submitted`).should("exist")
+
+      cy.get("tr").not(":first").eq(2).find("td:nth-child(5)").contains(`Case00001`)
+      cy.get("tr").not(":first").eq(3).contains(`Submitted`).should("not.exist")
+
+      cy.get("tr").not(":first").eq(4).find("td:nth-child(5)").contains(`Case00002`)
+      cy.get("tr").not(":first").eq(5).contains(`Submitted`).should("exist")
     })
 
     it("Should display the correct number of user-created notes on cases", () => {
@@ -338,8 +338,8 @@ describe("Case list", () => {
 
       cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100310 (2)")
       cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100322")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR10 - Conditional bail")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR15 - Personal details changed")
+      cy.get("tr").not(":first").eq(1).find("td:nth-of-type(3)").contains("PR10 - Conditional bail");
+      cy.get("tr").not(":first").eq(1).find("td:nth-of-type(3)").contains("PR15 - Personal details changed")
     })
 
     it("Should only display error reason when the exceptions are not resolved (showing unresolved cases by default)", () => {
@@ -516,8 +516,8 @@ describe("Case list", () => {
 
       cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100310 (2)")
       cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100322")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR01")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR02")
+      cy.get("tr").not(":first").eq(1).get("td:nth-child(3)").contains("PR01")
+      cy.get("tr").not(":first").eq(1).get("td:nth-child(3)").contains("PR02")
     })
   })
 
