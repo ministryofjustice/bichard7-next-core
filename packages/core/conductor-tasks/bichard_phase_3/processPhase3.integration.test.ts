@@ -73,12 +73,24 @@ describe("processPhase3", () => {
   })
 
   it("should fail if it can't put the file to S3", async () => {
+    pncApi.post("/pnc/records/sentence-deferred").mockImplementationOnce((ctx) => {
+      ctx.status = 204
+    })
+
     const loggerSpy = jest.spyOn(logger, "error")
     mockPutFileToS3.default = () => {
       return Promise.resolve(new Error("Mock error"))
     }
 
-    const inputJson = generateFakePncUpdateDataset()
+    const inputJson = generateFakePncUpdateDataset({
+      PncOperations: [
+        {
+          code: PncOperation.SENTENCE_DEFERRED,
+          data: { courtCaseReference: "abcdefg12345678" },
+          status: "NotAttempted"
+        }
+      ]
+    })
     const s3TaskDataPath = `${randomUUID()}.json`
     await putFileToS3(JSON.stringify(inputJson), s3TaskDataPath, bucket, s3Config)
 
@@ -90,7 +102,13 @@ describe("processPhase3", () => {
     expect(loggerSpy).toHaveBeenCalledWith({
       correlationId: "CID-332cc4c7-f0cd-44c8-9b05-c460bdfd2184",
       message: `Could not put file to S3: ${s3TaskDataPath}. Message: Mock error`,
-      operations: []
+      operations: [
+        {
+          code: PncOperation.SENTENCE_DEFERRED,
+          data: { courtCaseReference: "abcdefg12345678" },
+          status: "Completed"
+        }
+      ]
     })
   })
 
