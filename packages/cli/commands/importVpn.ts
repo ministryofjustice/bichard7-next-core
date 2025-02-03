@@ -3,7 +3,7 @@ import { Command } from "commander"
 import path from "path"
 
 export function importVpn(): Command {
-  const command = new Command("import-vpn")
+  const command = new Command("import-vpn-profiles")
 
   command.description("Import VPN profiles into OpenVPN").action(() => {
     const scriptPath = path.resolve(__dirname, "../../../../scripts/import-openvpn-profiles.sh")
