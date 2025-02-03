@@ -12,7 +12,7 @@ import { LockReason } from "../../types/LockReason"
 import buildAuditLogEvent from "../auditLog/buildAuditLogEvent"
 import createAuditLogEvents from "../createAuditLogEvents"
 
-export const lockCase = async (
+export const lockAndFetchCase = async (
   dataStore: DataStoreGateway,
   auditLogGateway: AuditLogDynamoGateway,
   caseId: number,

@@ -5,7 +5,7 @@ import type { FastifyBaseLogger } from "fastify"
 import type { AuditLogDynamoGateway } from "../services/gateways/dynamo"
 import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
 
-import { lockCase } from "./cases/lock"
+import { lockAndFetchCase } from "./cases/lockAndFetchCase"
 import { convertCaseToCaseDto } from "./dto/convertCaseToDto"
 
 const fetchCaseDTO = async (
@@ -19,7 +19,7 @@ const fetchCaseDTO = async (
     throw new Error("No force associated to User")
   }
 
-  const caseDataForDto = await lockCase(dataStore, auditLogGateway, caseId, user.username, logger)
+  const caseDataForDto = await lockAndFetchCase(dataStore, auditLogGateway, caseId, user.username, logger)
 
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }
