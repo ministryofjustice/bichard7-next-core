@@ -57,7 +57,9 @@ If you want to do some development work on this tool, you can run the watch comm
 A user query that comes up time and time again is that a user can log into Bichard. We would previously have to log into AWS and check container logs for user activity. On most occasions the user would of provided the incorrect email that we have stored in Postgres.
 Now we can easily query our User service and postfix logs with a users email.
 
-`$ b7 cloudwatch user-service --start-time <hours> <email address>`
+```bash
+b7 cloudwatch user-service --start-time <hours> <email address>
+```
 
 If you do not proide the `--start-time or -s` flag it defaults to an hour.
 The email address uses a wildcard so you can specify a partial email if we want to check for all user login for a specific time frame if users are reporting Bichard is down.
