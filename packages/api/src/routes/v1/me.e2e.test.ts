@@ -19,16 +19,16 @@ describe("/v1/me e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.db.clearDb()
+    await helper.postgres.clearDb()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   it("will return the current user with a correct JWT", async () => {
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.db)
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {
@@ -64,7 +64,7 @@ describe("/v1/me e2e", () => {
 
   it("will return the current user that has user groups, with a correct JWT", async () => {
     const expectedGroups = [UserGroup.TriggerHandler, UserGroup.NewUI, UserGroup.ExceptionHandler]
-    const [encodedJwt, user] = await createUserAndJwtToken(helper.db, expectedGroups)
+    const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, expectedGroups)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {
@@ -84,6 +84,6 @@ describe("/v1/me e2e", () => {
   it("will throw an error with a user that has no groups", async () => {
     const noGroups: UserGroup[] = []
 
-    await expect(createUserAndJwtToken(helper.db, noGroups)).rejects.toThrow("User has no Groups")
+    await expect(createUserAndJwtToken(helper.postgres, noGroups)).rejects.toThrow("User has no Groups")
   })
 })

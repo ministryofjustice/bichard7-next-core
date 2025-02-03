@@ -31,7 +31,7 @@ const excludeEventForBichard = (eventCode: string) =>
   ![EventCode.HearingOutcomeReceivedPhase3].includes(eventCode as EventCode)
 
 const excludeEventForCore = (eventCode: string) =>
-  ![EventCode.ExceptionsGenerated, EventCode.TriggersGenerated].includes(eventCode as EventCode)
+  ![EventCode.ExceptionsGenerated, EventCode.PncUpdated, EventCode.TriggersGenerated].includes(eventCode as EventCode)
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined => {

@@ -4,24 +4,21 @@ import type { FastifyBaseLogger } from "fastify"
 
 import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
 
-import formatForceNumbers from "../services/formatForceNumbers"
 import { convertCaseToCaseDto } from "./dto/convertCaseToDto"
 
 const fetchCaseDTO = async (
   user: User,
-  db: DataStoreGateway,
+  dataStore: DataStoreGateway,
   caseId: number,
   logger: FastifyBaseLogger
 ): Promise<CaseDto> => {
-  const forceIds = formatForceNumbers(user.visible_forces)
-
-  if (forceIds.length === 0) {
+  if (dataStore.forceIds.length === 0) {
     throw new Error("No force associated to User")
   }
 
   // TODO: Lock case if user can edit exceptions and audit log
   // TODO: Lock case if user can edit triggers and audit log
-  const caseDataForDto = await db.fetchCase(caseId, forceIds)
+  const caseDataForDto = await dataStore.fetchCase(caseId)
 
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }
