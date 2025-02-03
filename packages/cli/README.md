@@ -52,7 +52,7 @@ Options:
 
 If you want to do some development work on this tool, you can run the watch command `npm run install:watch`.
 
-## Querying cloudwatch
+## Querying CloudWatch
 
 A user query that comes up time and time again is that a user can log into Bichard. We would previously have to log into AWS and check container logs for user activity. On most occasions the user would of provided the incorrect email that we have stored in Postgres.
 Now we can easily query our User service and postfix logs with a users email.
