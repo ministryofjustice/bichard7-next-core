@@ -9,26 +9,26 @@ const mainResultCodes = [
   3284, 3285, 3288, 4590, 3324, 3326
 ]
 const yroResultCodes = [1141, 1142, 1143]
-const yroSpeceficRequirementResultCodes = [3104, 3105, 3107]
+const yroSpecificRequirementResultCodes = [3104, 3105, 3107]
 
 const generator: TriggerGenerator = (hearingOutcome) =>
   hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.reduce(
-    (acc: Trigger[], offence) => {
+    (triggers: Trigger[], offence) => {
       const containsMainResultCode = offence.Result.some(
         (result) => result.CJSresultCode && mainResultCodes.includes(result.CJSresultCode)
       )
       const containsYroResultCode = offence.Result.some(
         (result) => result.CJSresultCode && yroResultCodes.includes(result.CJSresultCode)
       )
-      const containsYroSpeceficRequirementResultCode = offence.Result.some(
-        (result) => result.CJSresultCode && yroSpeceficRequirementResultCodes.includes(result.CJSresultCode)
+      const containsYroSpecificRequirementResultCode = offence.Result.some(
+        (result) => result.CJSresultCode && yroSpecificRequirementResultCodes.includes(result.CJSresultCode)
       )
 
-      if (containsMainResultCode || (containsYroResultCode && containsYroSpeceficRequirementResultCode)) {
-        acc.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
+      if (containsMainResultCode || (containsYroResultCode && containsYroSpecificRequirementResultCode)) {
+        triggers.push({ code: triggerCode, offenceSequenceNumber: offence.CourtOffenceSequenceNumber })
       }
 
-      return acc
+      return triggers
     },
     []
   )
