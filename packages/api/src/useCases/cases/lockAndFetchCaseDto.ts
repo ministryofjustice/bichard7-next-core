@@ -2,13 +2,13 @@ import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
-import type { AuditLogDynamoGateway } from "../services/gateways/dynamo"
-import type DataStoreGateway from "../services/gateways/interfaces/dataStoreGateway"
+import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
+import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 
-import { lockAndFetchCase } from "./cases/lockAndFetchCase"
-import { convertCaseToCaseDto } from "./dto/convertCaseToDto"
+import { convertCaseToCaseDto } from "../dto/convertCaseToDto"
+import { lockAndFetchCase } from "./lockAndFetchCase"
 
-const fetchCaseDTO = async (
+const lockAndFetchCaseDTO = async (
   user: User,
   dataStore: DataStoreGateway,
   caseId: number,
@@ -24,4 +24,4 @@ const fetchCaseDTO = async (
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }
 
-export default fetchCaseDTO
+export default lockAndFetchCaseDTO

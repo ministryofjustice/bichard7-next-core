@@ -13,7 +13,7 @@ import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchCaseDto from "../../../useCases/fetchCaseDto"
+import fetchCaseDto from "../../../useCases/cases/lockAndFetchCaseDto"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway

@@ -3,21 +3,26 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import type { CaseDataForDto } from "../types/Case"
+import type { CaseDataForDto } from "../../types/Case"
 
-import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
-import { testAhoJsonObj, testAhoXml } from "../tests/helpers/ahoHelper"
-import FakeLogger from "../tests/helpers/fakeLogger"
-import fetchCaseDto from "./fetchCaseDto"
+import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
+import auditLogDynamoConfig from "../../tests/helpers/dynamoDbConfig"
+import FakeLogger from "../../tests/helpers/fakeLogger"
+import TestDynamoGateway from "../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
+import lockAndFetchCaseDto from "./lockAndFetchCaseDto"
 
-describe("fetchCaseDto", () => {
+const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
+// const auditLogDynamoGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
+
+describe("lockAndFetchCaseDto", () => {
   const logger = new FakeLogger()
   const fakeDataStore = new FakeDataStore()
 
   it("returns a case", async () => {
     const user = { visible_forces: "001" } as User
     fakeDataStore.forceIds = [1]
-    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
+    const result = await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
 
     expect(result).toEqual({
       aho: testAhoJsonObj,
@@ -52,7 +57,9 @@ describe("fetchCaseDto", () => {
     const user = { visible_forces: "" } as User
     fakeDataStore.forceIds = []
 
-    await expect(fetchCaseDto(user, fakeDataStore, 0, logger)).rejects.toThrow("No force associated to User")
+    await expect(lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)).rejects.toThrow(
+      "No force associated to User"
+    )
   })
 
   it("returns canUserEditExceptions true when case is locked to currentUser, user has access to exceptions and errorStatus is unresolved", async () => {
@@ -70,7 +77,7 @@ describe("fetchCaseDto", () => {
 
     jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
+    const result = await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
 
     expect(result.canUserEditExceptions).toBe(true)
   })
@@ -90,7 +97,7 @@ describe("fetchCaseDto", () => {
 
     jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
+    const result = await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -110,7 +117,7 @@ describe("fetchCaseDto", () => {
 
     jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
+    const result = await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
@@ -130,7 +137,7 @@ describe("fetchCaseDto", () => {
 
     jest.spyOn(fakeDataStore, "fetchCase").mockResolvedValue(caseObj)
 
-    const result = await fetchCaseDto(user, fakeDataStore, 0, logger)
+    const result = await lockAndFetchCaseDto(user, fakeDataStore, 0, testDynamoGateway, logger)
 
     expect(result.canUserEditExceptions).toBe(false)
   })
