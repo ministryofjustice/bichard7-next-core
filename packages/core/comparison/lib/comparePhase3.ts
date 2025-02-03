@@ -166,8 +166,12 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       pncOperations
     )
 
+    const sortedCoreTriggers = sortTriggers(coreResult.triggers)
+    const sortedTriggers = sortTriggers(triggers ?? [])
+    const triggersMatch = isEqual(sortedCoreTriggers, sortedTriggers)
+
     const isIntentionalDifference =
-      !pncOperationsMatch &&
+      (!pncOperationsMatch || !triggersMatch) &&
       isValidDisposalTextDifference(
         pncGateway.updates,
         pncOperations,
@@ -188,9 +192,6 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
 
     const sortedExceptions = sortExceptions(outgoingPncUpdateDataset?.Exceptions ?? [])
     const sortedCoreExceptions = sortExceptions(coreResult.outputMessage.Exceptions ?? [])
-
-    const sortedCoreTriggers = sortTriggers(coreResult.triggers)
-    const sortedTriggers = sortTriggers(triggers ?? [])
 
     const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode).filter(excludeEventForCore)
     const bichardAuditLogEvents = extractAuditLogEventCodes(auditLogEvents).filter(excludeEventForBichard)
@@ -221,7 +222,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
 
     return {
       auditLogEventsMatch,
-      triggersMatch: outgoingMessageMissing || isEqual(sortedCoreTriggers, sortedTriggers),
+      triggersMatch: outgoingMessageMissing || triggersMatch,
       exceptionsMatch: outgoingMessageMissing || isEqual(sortedCoreExceptions, sortedExceptions),
       pncOperationsMatch: ignorePncOperationComparison || pncOperationsMatch,
       xmlOutputMatches:
