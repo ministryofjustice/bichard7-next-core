@@ -18,11 +18,6 @@ export const ExtraReasonRow = ({ isLocked, reasonCell, lockTag }: ExtraReasonRow
           <Image src={LOCKED_ICON_URL} width={20} height={20} alt="Lock icon" />
         </ConditionalRender>
       </td>
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
       <td className="govuk-table__cell">{reasonCell}</td>
       <td className="govuk-table__cell">{lockTag}</td>
     </StyledExtraReasonRow>

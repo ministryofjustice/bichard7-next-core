@@ -18,6 +18,7 @@ interface CaseDetailsRowProps {
   reasonCell?: JSX.Element | string
   lockTag?: JSX.Element
   resolutionStatus: ResolutionStatus
+  isDoubleRow: boolean
 
   previousPath: string | null
 }
@@ -27,13 +28,16 @@ export const CaseDetailsRow = ({
   reasonCell,
   lockTag,
   previousPath,
-  resolutionStatus
+  resolutionStatus,
+  isDoubleRow
 }: CaseDetailsRowProps) => {
   const { notes, errorLockedByUsername, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const userNotes = filterUserNotes(notes)
   const numberOfNotes = userNotes.length
+
+  const rowSpan = isDoubleRow ? 2 : 1
 
   let previousPathWebSafe = ""
   if (previousPath) {
@@ -43,12 +47,12 @@ export const CaseDetailsRow = ({
   return (
     <>
       <tr className="govuk-table__row caseDetailsRow">
-        <td className="govuk-table__cell">
+        <td className="govuk-table__cell" rowSpan={1}>
           <ConditionalRender isRendered={!!errorLockedByUsername}>
             <Image src={LOCKED_ICON_URL} priority width={20} height={20} alt="Lock icon" />
           </ConditionalRender>
         </td>
-        <td className="govuk-table__cell">
+        <td className="govuk-table__cell" rowSpan={rowSpan}>
           <a href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name govuk-link">
             {defendantName}
             <br />
@@ -57,12 +61,16 @@ export const CaseDetailsRow = ({
             </CaseListResolutionStatusBadgeWrapper>
           </a>
         </td>
-        <td className="govuk-table__cell">
+        <td className="govuk-table__cell" rowSpan={rowSpan}>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </td>
-        <td className="govuk-table__cell">{courtName}</td>
-        <td className="govuk-table__cell">{ptiurn}</td>
-        <td className="govuk-table__cell">
+        <td className="govuk-table__cell" rowSpan={rowSpan}>
+          {courtName}
+        </td>
+        <td className="govuk-table__cell" rowSpan={rowSpan}>
+          {ptiurn}
+        </td>
+        <td className="govuk-table__cell" rowSpan={rowSpan}>
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
         </td>
         <td className="govuk-table__cell">{reasonCell}</td>
