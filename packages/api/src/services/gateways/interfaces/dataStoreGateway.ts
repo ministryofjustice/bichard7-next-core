@@ -9,9 +9,9 @@ interface DataStoreGateway {
   fetchCase: (caseId: number) => Promise<CaseDataForDto>
   fetchUserByUsername: (username: string) => Promise<User>
   forceIds: number[]
-  lockCase: (sql: postgres.Sql, lockReason: LockReason, caseId: number, username: string) => Promise<boolean>
+  lockCase: (callbackSql: postgres.Sql, lockReason: LockReason, caseId: number, username: string) => Promise<boolean>
   selectCaseMessageId: (caseId: number) => Promise<CaseMessageId>
-  transaction: (callback: (sql: postgres.Sql) => unknown) => Promise<unknown>
+  transaction: (callback: (callbackSql: postgres.Sql) => unknown) => Promise<unknown>
 }
 
 export default DataStoreGateway

@@ -20,13 +20,13 @@ export const lockCase = async (
   logger?: FastifyBaseLogger
 ) => {
   await dataStore
-    .transaction(async (sql: postgres.Sql) => {
+    .transaction(async (callbackSql: postgres.Sql) => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const caseMessageId = (await dataStore.selectCaseMessageId(caseId)).message_id
       // TODO: Check permissions for Exceptions and Triggers
       // TODO: Lock Triggers and AuditLog them
-      const exceptionLockedResult = await dataStore.lockCase(sql, LockReason.Exception, caseId, username)
+      const exceptionLockedResult = await dataStore.lockCase(callbackSql, LockReason.Exception, caseId, username)
 
       if (exceptionLockedResult) {
         auditLogEvents.push(
