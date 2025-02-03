@@ -20,6 +20,7 @@ import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHel
 import { createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
 import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import EventCode from "../../../types/EventCode"
+import { AuditLogEventLookup } from "../../../useCases/auditLog/auditLogEventLookup"
 
 const serviceJwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
 const axiosOptions: AxiosRequestConfig = {
@@ -119,7 +120,7 @@ describe("Creating Audit Log Event", () => {
     expect(auditLogEvent).toHaveProperty("eventCode", EventCode.ExceptionsLocked)
     expect(auditLogEvent).toHaveProperty("category", EventCategory.information)
     expect(auditLogEvent).toHaveProperty("eventSource", "Bichard New UI")
-    expect(auditLogEvent).toHaveProperty("eventType", "Exception locked")
+    expect(auditLogEvent).toHaveProperty("eventType", AuditLogEventLookup[EventCode.ExceptionsLocked])
     expect(auditLogEvent).toHaveProperty("user", user.username)
   })
 })
