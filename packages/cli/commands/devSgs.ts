@@ -5,7 +5,7 @@ import path from "path"
 export function devSgs(): Command {
   const command = new Command("dev-sgs")
 
-  command.description("Apply dev security groups to out environments").action(() => {
+  command.description("Apply dev security groups to our environments").action(() => {
     const scriptPath = path.resolve(__dirname, "../../../../scripts/dev-sgs.sh")
 
     const child = spawn("bash", [scriptPath], {
