@@ -47,7 +47,7 @@ export const CaseDetailsRow = ({
   return (
     <>
       <tr className="govuk-table__row caseDetailsRow">
-        <td className="govuk-table__cell" rowSpan={1}>
+        <td className="govuk-table__cell">
           <ConditionalRender isRendered={!!errorLockedByUsername}>
             <Image src={LOCKED_ICON_URL} priority width={20} height={20} alt="Lock icon" />
           </ConditionalRender>
