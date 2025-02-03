@@ -128,10 +128,10 @@ describe("/v1/case e2e", () => {
   })
 
   it("locks exception to the user when the case is unlocked, has exceptions, and has error status unresolved", async () => {
-    const [user] = await createUsers(helper.db, 3)
+    const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, {
+    const testCase = await createCase(helper.postgres, {
       error_count: 1,
       error_locked_by_id: null,
       error_status: 1,
@@ -179,10 +179,10 @@ describe("/v1/case e2e", () => {
 
   testCases.forEach(({ caseData, description, expectedLockedByUsername }) => {
     it(`${description}`, async () => {
-      const [user] = await createUsers(helper.db, 1)
+      const [user] = await createUsers(helper.postgres, 1)
       const jwtToken = await generateJwtForUser(user)
 
-      const testCase = await createCase(helper.db, caseData)
+      const testCase = await createCase(helper.postgres, caseData)
 
       const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
         headers: {
