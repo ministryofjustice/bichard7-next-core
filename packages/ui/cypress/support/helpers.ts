@@ -87,11 +87,13 @@ export const confirmCaseNotDisplayed = (PTIURN: string) => {
 }
 
 export const confirmReasonDisplayed = (reason: string) => {
-  cy.get("tbody tr td:nth-child(7)").contains(reason).should("exist")
+  const columnSelector = reason.startsWith("PR") ? "td:nth-of-type(3)" : "td:nth-child(7)"
+  cy.get(`tbody tr ${columnSelector}`).contains(reason).should("exist")
 }
 
 export const confirmReasonNotDisplayed = (reason: string) => {
-  cy.get("tbody tr td:nth-child(7)").contains(reason).should("not.exist")
+  const columnSelector = reason.startsWith("PR") ? "td:nth-of-type(3)" : "td:nth-child(7)"
+  cy.get(`tbody tr ${columnSelector}`).contains(reason).should("not.exist")
 }
 
 export const expectToHaveNumberOfFeedbacks = (number: number) => {
