@@ -1,6 +1,6 @@
 # B7 CLI tool
 
-We have created a simple CLI tool for everyday tasks on Bichard. We have used a library called [Commander.js](https://github.com/tj/commander.js)
+A simple CLI tool for everyday tasks on Bichard. It uses a library called [Commander.js](https://github.com/tj/commander.js).
 
 To install the CLI tool please run the command `npm run install:global` this will install the CLI tool globally.
 
