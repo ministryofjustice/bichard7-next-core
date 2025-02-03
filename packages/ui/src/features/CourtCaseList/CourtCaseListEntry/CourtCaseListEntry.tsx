@@ -99,25 +99,20 @@ const CourtCaseListEntry: React.FC<Props> = ({
     )
   }
 
-  const isDoubleRow = !!(exceptionsLockTag && triggersLockTag && triggersReasonCell)
-
   return (
     <tbody className="govuk-table__body">
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={exceptionsReasonCell || triggersReasonCell}
         lockTag={exceptionsLockTag || triggersLockTag}
-        resolutionStatus={getResolutionStatus(courtCase)}
         previousPath={previousPath}
-        isDoubleRow={isDoubleRow}
       />
-      {exceptionsLockTag && triggersLockTag && triggersReasonCell && (
-        <ExtraReasonRow
-          isLocked={!!triggerLockedByUsername}
-          reasonCell={triggersReasonCell}
-          lockTag={triggersLockTag}
-        />
-      )}
+      <ExtraReasonRow
+        isLocked={!!triggerLockedByUsername}
+        resolutionStatus={getResolutionStatus(courtCase)}
+        reasonCell={triggersReasonCell}
+        lockTag={triggersLockTag}
+      />
     </tbody>
   )
 }
