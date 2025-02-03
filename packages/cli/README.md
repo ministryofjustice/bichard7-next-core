@@ -75,4 +75,5 @@ The above example would search for anyone with `avonandsomerset` in the past 2 h
 
 The command we have for opening Conductor fetches credentials from AWS and logs us into the Conductor UI
 
-> [!NOTE] We are using osascript to interact with the browser, the support for firefox is somewhat limited so and firefox users will need to refresh the browser on load.
+> [!NOTE]
+> We are using osascript to interact with the browser, the support for firefox is somewhat limited so and firefox users will need to refresh the browser on load.
