@@ -1,3 +1,4 @@
+import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 import type postgres from "postgres"
 
@@ -12,7 +13,7 @@ export const lockAndFetchCase = async (
   dataStore: DataStoreGateway,
   auditLogGateway: AuditLogDynamoGateway,
   caseId: number,
-  username: string,
+  user: User,
   logger?: FastifyBaseLogger
 ) => {
   await dataStore
@@ -21,7 +22,7 @@ export const lockAndFetchCase = async (
 
       const caseMessageId = (await dataStore.selectCaseMessageId(caseId)).message_id
 
-      await lockExceptions(dataStore, callbackSql, caseId, username, auditLogEvents)
+      await lockExceptions(dataStore, callbackSql, caseId, user, auditLogEvents)
 
       // TODO: Check permissions for Triggers
       // TODO: Lock Triggers and AuditLog them

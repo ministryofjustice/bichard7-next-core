@@ -19,7 +19,7 @@ const lockAndFetchCaseDTO = async (
     throw new Error("No force associated to User")
   }
 
-  const caseDataForDto = await lockAndFetchCase(dataStore, auditLogGateway, caseId, user.username, logger)
+  const caseDataForDto = await lockAndFetchCase(dataStore, auditLogGateway, caseId, user, logger)
 
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }

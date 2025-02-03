@@ -18,6 +18,10 @@ describe("lockAndFetchCaseDto", () => {
   const logger = new FakeLogger()
   const fakeDataStore = new FakeDataStore()
 
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   it("returns a case", async () => {
     const user = { visible_forces: "001" } as User
     fakeDataStore.forceIds = [1]
