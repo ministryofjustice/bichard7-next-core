@@ -8,19 +8,18 @@ export default async (sql: postgres.Sql, caseId: number, username: string, force
   const result = await sql`
     UPDATE br7own.error_list el
       SET
-      error_locked_by_id = ${username}
+        error_locked_by_id = ${username}
       WHERE
-      error_locked_by_id IS NULL AND
+        error_locked_by_id IS NULL AND
         error_count > 0 AND
         error_status = ${status} AND
         error_id = ${caseId} AND
         br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
-      RETURNING 1
     `
 
   if (!result) {
     throw new Error("No rows were updated.")
   }
 
-  return result.length > 0
+  return result.count > 0
 }

@@ -1,9 +1,21 @@
 enum EventCode {
   AllTriggersResolved = "triggers.all-resolved",
+  DuplicateMessage = "audit-log.duplicate-message",
   ErrorRecordArchived = "error-record.archived",
   ExceptionsGenerated = "exceptions.generated",
+  ExceptionsLocked = "exceptions.locked",
   ExceptionsResolved = "exceptions.resolved",
+  ExceptionsUnlocked = "exceptions.unlocked",
   HearingOutcomeDetails = "hearing-outcome.details",
+  HearingOutcomeReallocated = "hearing-outcome.reallocated",
+  HearingOutcomeReceivedPhase1 = "hearing-outcome.received-phase-1",
+  HearingOutcomeReceivedPhase2 = "hearing-outcome.received-phase-2",
+  HearingOutcomeReceivedPhase3 = "hearing-outcome.received-phase-3",
+  HearingOutcomeResubmittedPhase1 = "hearing-outcome.resubmitted-phase-1",
+  HearingOutcomeResubmittedPhase2 = "hearing-outcome.resubmitted-phase-2",
+  HearingOutcomeSubmittedPhase2 = "hearing-outcome.submitted-phase-2",
+  HearingOutcomeSubmittedPhase3 = "hearing-outcome.submitted-phase-3",
+  IgnoredAlreadyOnPNC = "hearing-outcome.ignored.results-already-on-pnc",
   IgnoredAncillary = "hearing-outcome.ignored.ancillary",
   IgnoredAppeal = "hearing-outcome.ignored.appeal",
   IgnoredDisabled = "hearing-outcome.ignored.court-disabled",
@@ -15,10 +27,15 @@ enum EventCode {
   PncResponseReceived = "pnc.response-received",
   PncUpdated = "pnc.updated",
   ReceivedIncomingHearingOutcome = "hearing-outcome.received-incoming",
+  ReceivedResubmittedHearingOutcome = "hearing-outcome.resubmitted-received",
+  ReportRun = "report-run",
   RetryingMessage = "hearing-outcome-retrying",
   Sanitised = "sanitised",
+  TriggersDeleted = "triggers.deleted",
   TriggersGenerated = "triggers.generated",
-  TriggersResolved = "triggers.resolved"
+  TriggersLocked = "triggers.locked",
+  TriggersResolved = "triggers.resolved",
+  TriggersUnlocked = "triggers.unlocked"
 }
 
 export default EventCode

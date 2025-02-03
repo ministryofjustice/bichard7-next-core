@@ -1,6 +1,6 @@
 import type DynamoDbConfig from "./DynamoGateway/DynamoDbConfig"
 
-export default function createAudtiLogDynamoDbConfig(): DynamoDbConfig {
+export default function createAuditLogDynamoDbConfig(): DynamoDbConfig {
   const {
     AUDIT_LOG_EVENTS_TABLE_NAME,
     AUDIT_LOG_TABLE_NAME,

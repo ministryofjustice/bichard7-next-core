@@ -6,7 +6,7 @@ import type { FastifyBaseLogger } from "fastify"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty } from "lodash"
 
-import type { CaseDataForDto } from "../../types/CaseDataForDto"
+import type { CaseDataForDto } from "../../types/Case"
 
 import parseHearingOutcome from "../../services/parseHearingOutcome"
 import { convertNoteToDto } from "./convertNoteToDto"

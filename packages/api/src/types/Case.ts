@@ -5,6 +5,8 @@ export type CaseDataForDto = Pick<Case, CaseData> & {
   trigger_locked_by_fullname: null | string
 }
 
+export type CaseMessageId = Pick<Case, "message_id">
+
 type CaseData =
   | "annotated_msg"
   | "asn"

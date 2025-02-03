@@ -3,7 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import type { CaseDataForDto } from "../types/CaseDataForDto"
+import type { CaseDataForDto } from "../types/Case"
 
 import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
 import { testAhoJsonObj, testAhoXml } from "../tests/helpers/ahoHelper"

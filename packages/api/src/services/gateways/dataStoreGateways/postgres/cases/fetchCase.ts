@@ -1,6 +1,6 @@
 import type postgres from "postgres"
 
-import type { CaseDataForDto } from "../../../../../types/CaseDataForDto"
+import type { CaseDataForDto } from "../../../../../types/Case"
 
 export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<CaseDataForDto> => {
   const [result]: [CaseDataForDto?] = await sql`

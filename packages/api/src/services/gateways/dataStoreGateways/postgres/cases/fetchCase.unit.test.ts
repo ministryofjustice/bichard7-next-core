@@ -1,6 +1,6 @@
 import type postgres from "postgres"
 
-import type { CaseDataForDto } from "../../../../../types/CaseDataForDto"
+import type { CaseData } from "../../../../../types/Case"
 
 import filter from "./fetchCase"
 
@@ -44,7 +44,7 @@ describe("fetchCase", () => {
       trigger_status: 1,
       triggers: [],
       updated_msg: ""
-    } satisfies CaseDataForDto
+    } satisfies CaseData
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
 
     const returnedCase = await filter(sql, 0, [1])
