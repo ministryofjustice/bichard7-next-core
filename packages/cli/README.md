@@ -2,11 +2,17 @@
 
 A simple CLI tool for everyday tasks on Bichard. It uses a library called [Commander.js](https://github.com/tj/commander.js).
 
-To install the CLI tool please run the command `npm run install:global` this will install the CLI tool globally.
+## Getting started
 
-If you want to do some development work on this tool, you can run the watch command `npm run install:watch`
+To install the CLI tool:
 
-To invoke the tool you the command is `b7`
+```bash
+npm run install:global
+```
+
+## Usage
+
+To invoke the tool, the command is `b7`:
 
 ```
 CLI tool for Bichard 7
@@ -30,8 +36,7 @@ Commands:
   help [command]   	display help for command)
 ```
 
-Each subcommand has its own help docs you can provide the `-h or --help` flag.
-e.g `b7 dev-sgs --help`
+Each subcommand has its own help docs you can provide the `-h or --help` flag e.g. `b7 dev-sgs --help`
 
 ```
 b7 dev-sgs --help
@@ -41,8 +46,11 @@ Apply dev security groups to out environments
 
 Options:
   -h, --help  display help for command
-
 ```
+
+## Development
+
+If you want to do some development work on this tool, you can run the watch command `npm run install:watch`.
 
 ## Querying cloudwatch
 
