@@ -63,7 +63,7 @@ b7 cloudwatch user-service --start-time <hours> <email address>
 ```
 
 If you do not provide the `--start-time or -s` flag it defaults to an hour.
-The email address uses a wildcard so you can specify a partial email if we want to check for all user login for a specific time frame if users are reporting Bichard is down.
+The email address uses a wildcard so you can specify a partial email if you want to check for all user logins for a specific time frame when users are reporting Bichard is down.
 
 `b7 cloudwatch user-service --start-time 2 avonandsomerset`
 
