@@ -17,9 +17,5 @@ export default async (sql: postgres.Sql, caseId: number, username: string, force
         br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
     `
 
-  if (!result) {
-    throw new Error("No rows were updated.")
-  }
-
   return result.count > 0
 }
