@@ -101,6 +101,8 @@ const CourtCaseListEntry: React.FC<Props> = ({
 
   const reasonCell = exceptionsReasonCell || triggersReasonCell
   const extraReasonCell = exceptionsReasonCell ? triggersReasonCell : undefined
+  const resolutionStatus = getResolutionStatus(courtCase)
+  const renderExtraReasons = resolutionStatus != "Unresolved" || extraReasonCell
 
   return (
     <tbody className="govuk-table__body">
@@ -110,12 +112,14 @@ const CourtCaseListEntry: React.FC<Props> = ({
         lockTag={exceptionsLockTag || triggersLockTag}
         previousPath={previousPath}
       />
-      <ExtraReasonRow
-        isLocked={!!triggerLockedByUsername}
-        resolutionStatus={getResolutionStatus(courtCase)}
-        reasonCell={extraReasonCell}
-        lockTag={triggersLockTag}
-      />
+      {renderExtraReasons && (
+        <ExtraReasonRow
+          isLocked={!!triggerLockedByUsername}
+          resolutionStatus={resolutionStatus}
+          reasonCell={extraReasonCell}
+          lockTag={triggersLockTag}
+        />
+      )}
     </tbody>
   )
 }
