@@ -9,9 +9,9 @@ import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 
 import CoreAuditLogger from "../lib/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
+import { parsePncUpdateDataSetXml } from "../lib/parse/parsePncUpdateDataSetXml"
 import ResultClass from "../types/ResultClass"
 import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
-import { parsePncUpdateDataSetXml } from "./parse/parsePncUpdateDataSetXml"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 

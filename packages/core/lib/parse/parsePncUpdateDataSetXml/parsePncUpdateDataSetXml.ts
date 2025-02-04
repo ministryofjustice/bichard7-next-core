@@ -1,14 +1,14 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
 
+import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../../phase2/types/PncUpdateDatasetParsedXml"
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
 
-import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../../lib/encoding"
-import { extractExceptionsFromXml, mapXmlToAho } from "../../../lib/parse/parseAhoXml"
-import { mapXmlOrganisationalUnitToAho } from "../../../lib/parse/parseAhoXml/parseAhoXml"
 import { PncOperation } from "../../../types/PncOperation"
+import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../encoding"
+import { extractExceptionsFromXml, mapXmlToAho } from "../parseAhoXml"
+import { mapXmlOrganisationalUnitToAho } from "../parseAhoXml/parseAhoXml"
 
 const mapXmlToOperationStatus = (statusXml: string): OperationStatus => {
   const statuses: Record<string, OperationStatus> = {

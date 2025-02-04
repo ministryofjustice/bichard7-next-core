@@ -1,10 +1,10 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import parseAnnotatedPncUpdateDatasetXml from "../../../lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import { parsePncUpdateDataSetXml } from "../../../lib/parse/parsePncUpdateDataSetXml"
 import getMessageType from "../../../phase1/lib/getMessageType"
 import addMockToPnc from "../../../phase1/tests/helpers/addMockToPnc"
 import clearMocksInPnc from "../../../phase1/tests/helpers/clearMocksInPnc"
-import { parsePncUpdateDataSetXml } from "../../../phase2/parse/parsePncUpdateDataSetXml"
 import getPncErrorMessages from "./getPncErrorMessages"
 import getPncOperationsFromPncUpdateDataset from "./getPncOperationsFromPncUpdateDataset"
 

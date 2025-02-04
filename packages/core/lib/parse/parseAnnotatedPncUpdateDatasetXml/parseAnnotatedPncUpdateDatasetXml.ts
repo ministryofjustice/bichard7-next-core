@@ -6,9 +6,9 @@ import { XMLParser } from "fast-xml-parser"
 import type AnnotatedPncUpdateDatasetParsedXml from "../../../phase2/types/AnnotatedPncUpdateDatasetParsedXml"
 import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
 
-import { mapXmlToPncUpdateDataSet } from "../../../phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../encoding"
 import { extractExceptionsFromXml } from "../parseAhoXml"
+import { mapXmlToPncUpdateDataSet } from "../parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 
 //TODO: Validate this against a real file
 const mapXmlToAnnotatedPncUpdateDataset = (
