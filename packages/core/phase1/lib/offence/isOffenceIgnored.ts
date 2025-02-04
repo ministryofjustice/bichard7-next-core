@@ -1,6 +1,6 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 
-import getOffenceCode from "../../../lib/getOffenceCode"
+import getOffenceCode from "../../../lib/offences/getOffenceCode"
 
 const ignoredOffenceCodes = ["05MC001"]
 

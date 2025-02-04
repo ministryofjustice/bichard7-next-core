@@ -1,6 +1,6 @@
 import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
 
-import { COMMON_LAWS, INDICTMENT } from "../../../lib/offenceTypes"
+import { COMMON_LAWS, INDICTMENT } from "../../../lib/offences/offenceTypes"
 import constructOffenceReason from "./constructOffenceReason"
 
 const localOffenceReason: OffenceReason = {

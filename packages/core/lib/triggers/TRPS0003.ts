@@ -5,8 +5,8 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import Phase from "../../types/Phase"
 import { maxDisposalTextLength } from "../createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
-import forEachRecordableResult from "../forEachRecordableResult"
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
+import forEachRecordableResult from "../offences/forEachRecordableResult"
 
 const triggerCode = TriggerCode.TRPS0003
 const phases: (Phase | undefined)[] = [Phase.PNC_UPDATE, Phase.PHASE_3]

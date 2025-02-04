@@ -6,7 +6,7 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import isAmountSpecifiedInResultValid from "../../lib/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import forEachRecordableResult from "../../lib/forEachRecordableResult"
+import forEachRecordableResult from "../../lib/offences/forEachRecordableResult"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2

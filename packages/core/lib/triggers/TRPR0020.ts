@@ -5,7 +5,7 @@ import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import { CjsVerdict } from "../../types/Verdict"
-import getOffenceFullCode from "../getOffenceFullCode"
+import getOffenceFullCode from "../offences/getOffenceFullCode"
 import resultCodeIsFinal from "../resultCodeIsFinal"
 
 const triggerCode = TriggerCode.TRPR0020

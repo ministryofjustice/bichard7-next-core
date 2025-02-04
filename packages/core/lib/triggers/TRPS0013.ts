@@ -4,7 +4,7 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import isRecordableOffence from "../isRecordableOffence"
+import isRecordableOffence from "../offences/isRecordableOffence"
 import hasCompletedDisposal from "./hasCompletedDisposal"
 
 const triggerCode = TriggerCode.TRPS0013

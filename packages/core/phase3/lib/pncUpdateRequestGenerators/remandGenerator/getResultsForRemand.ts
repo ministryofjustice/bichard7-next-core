@@ -3,8 +3,8 @@ import type { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 
 import areOrganisationUnitsEqual from "../../../../lib/areOrganisationUnitsEqual"
-import isRecordableOffence from "../../../../lib/isRecordableOffence"
 import isRecordableResult from "../../../../lib/isRecordableResult"
+import isRecordableOffence from "../../../../lib/offences/isRecordableOffence"
 import ResultClass from "../../../../types/ResultClass"
 
 const noAdjudicationResultClasses = [

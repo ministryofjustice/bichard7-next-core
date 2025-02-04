@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../../types/EnrichAhoFunction"
 
-import getOffenceCode from "../../../../lib/getOffenceCode"
+import getOffenceCode from "../../../../lib/offences/getOffenceCode"
 import constructOffenceReason from "../../../lib/offence/constructOffenceReason"
 import createCriminalProsecutionRef from "../../../lib/offence/createCriminalProsecutionRef"
 import getAreaCode from "../../../lib/offence/getAreaCode"

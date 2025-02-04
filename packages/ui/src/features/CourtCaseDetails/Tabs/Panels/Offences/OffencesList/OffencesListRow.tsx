@@ -6,7 +6,7 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
 import { CHECKMARK_ICON_URL } from "utils/icons"
 import { IconContainer } from "./OffencesListRow.styles"
-import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
+import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 
 interface OffencesListRowProps {
   offence: Offence
