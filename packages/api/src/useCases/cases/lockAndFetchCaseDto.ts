@@ -8,7 +8,7 @@ import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreG
 import { convertCaseToCaseDto } from "../dto/convertCaseToDto"
 import { lockAndFetchCase } from "./lockAndFetchCase"
 
-const lockAndFetchCaseDTO = async (
+const lockAndFetchCaseDto = async (
   user: User,
   dataStore: DataStoreGateway,
   caseId: number,
@@ -24,4 +24,4 @@ const lockAndFetchCaseDTO = async (
   return convertCaseToCaseDto(caseDataForDto, user, logger)
 }
 
-export default lockAndFetchCaseDTO
+export default lockAndFetchCaseDto
