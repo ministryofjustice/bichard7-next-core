@@ -4,13 +4,13 @@ import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/gene
 import generatePncUpdateDatasetFromOffenceList from "../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import Phase from "../../types/Phase"
 import { PncOperation } from "../../types/PncOperation"
-import isResultCompatibleWithDisposal from "../isResultCompatibleWithDisposal"
 import isRecordableOffence from "../offences/isRecordableOffence"
+import isResultCompatibleWithDisposal from "../results/isResultCompatibleWithDisposal"
 import hasCompletedDisposal from "./hasCompletedDisposal"
 import TRPS0011 from "./TRPS0011"
 jest.mock("../offences/isRecordableOffence")
 jest.mock("./hasCompletedDisposal")
-jest.mock("../isResultCompatibleWithDisposal")
+jest.mock("../results/isResultCompatibleWithDisposal")
 
 const mockedIsRecordableOffence = isRecordableOffence as jest.Mock
 const mockedHasCompletedDisarr = hasCompletedDisposal as jest.Mock

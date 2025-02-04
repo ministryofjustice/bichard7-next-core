@@ -1,7 +1,7 @@
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
 
-import isResultCompatibleWithDisposal from "../../../lib/isResultCompatibleWithDisposal"
+import isResultCompatibleWithDisposal from "../../../lib/results/isResultCompatibleWithDisposal"
 import getAdjustedRecordableOffencesForCourtCase from "../getAdjustedRecordableOffencesForCourtCase"
 import { createAdjudicationFromOffence } from "./createAdjudicationFromOffence"
 import { createArrestHearingFromOffence } from "./createArrestHearingFromOffence"

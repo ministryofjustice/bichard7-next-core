@@ -4,8 +4,8 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import Phase from "../../types/Phase"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
-import isResultCompatibleWithDisposal from "../isResultCompatibleWithDisposal"
 import isRecordableOffence from "../offences/isRecordableOffence"
+import isResultCompatibleWithDisposal from "../results/isResultCompatibleWithDisposal"
 import hasCompletedDisposal from "./hasCompletedDisposal"
 
 const triggerCode = TriggerCode.TRPS0010

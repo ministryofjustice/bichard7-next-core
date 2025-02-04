@@ -5,7 +5,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
-import isRecordableResult from "../../lib/isRecordableResult"
+import isRecordableResult from "../../lib/results/isRecordableResult"
 
 const MAX_ALLOWABLE_RECORDABLE_RESULTS = 10
 

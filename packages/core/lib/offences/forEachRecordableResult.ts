@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
 
-import isRecordableResult from "../isRecordableResult"
+import isRecordableResult from "../results/isRecordableResult"
 import isRecordableOffence from "./isRecordableOffence"
 
 type CallbackFunction = (offence: Offence, offenceIndex: number, result: Result, resultIndex: number) => void

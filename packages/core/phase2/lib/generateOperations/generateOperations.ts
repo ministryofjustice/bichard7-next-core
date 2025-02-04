@@ -1,8 +1,8 @@
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
 
-import isRecordableResult from "../../../lib/isRecordableResult"
 import isRecordableOffence from "../../../lib/offences/isRecordableOffence"
+import isRecordableResult from "../../../lib/results/isRecordableResult"
 import { PncOperation } from "../../../types/PncOperation"
 import { type Operation } from "../../../types/PncUpdateDataset"
 import ResultClass from "../../../types/ResultClass"

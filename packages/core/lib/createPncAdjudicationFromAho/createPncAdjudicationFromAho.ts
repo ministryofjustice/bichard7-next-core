@@ -2,7 +2,7 @@ import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncAdjudication } from "../../types/PncQueryResult"
 
 import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../dataLookup"
-import isRecordableResult from "../isRecordableResult"
+import isRecordableResult from "../results/isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
 
 const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): PncAdjudication | undefined => {

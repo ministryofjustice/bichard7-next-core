@@ -1,7 +1,7 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
-import isResultCompatibleWithDisposal from "../../lib/isResultCompatibleWithDisposal"
 import getRecordableOffencesForCourtCase from "../../lib/offences/getRecordableOffencesForCourtCase"
+import isResultCompatibleWithDisposal from "../../lib/results/isResultCompatibleWithDisposal"
 
 const has2059Or2060Result = (offence: Offence) =>
   offence.Result.some((result) => [2059, 2060].includes(result.PNCDisposalType ?? 0))
