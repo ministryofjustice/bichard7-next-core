@@ -11,7 +11,7 @@ export function enable(): Command {
 
       awsVault.exec({
         awsProfile: aws.profile,
-        command: `aws events enable-rule --name ${aws.account}-trigger--from-external-incoming-messages`,
+        command: `aws events enable-rule --name ${aws.account}-trigger-from-external-incoming-messages`,
         logExecution: true
       })
     })
