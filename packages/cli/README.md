@@ -15,37 +15,43 @@ npm run install:global
 To invoke the tool, the command is `b7`:
 
 ```
+❯ b7
+Usage: b7 [options] [command]
+
 CLI tool for Bichard 7
 
 Options:
-  -V, --version    	output the version number
-  --e2e            	Use the e2e environment
-  --uat            	Use the uat environment
-  --preprod        	Use the preprod environment
-  --prod           	Use the production environment
-  --shared         	Use the shared environment
-  -h, --help       	display help for command
+  -V, --version        output the version number
+  --e2e                Use the e2e environment
+  --uat                Use the uat environment
+  --preprod            Use the preprod environment
+  --prod               Use the production environment
+  --shared             Use the shared environment
+  -h, --help           display help for command
 
 Commands:
-  status [options] 	Get healthcheck endpoint output from production
-  dev-sgs          	Apply dev security groups to out environments
+  status [options]     Get healthcheck endpoint output from production
+  dev-sgs              Apply dev security groups to our environments
   fetch-image <image>  Fetch images from AWS Elastic Container Repository
+  import-vpn-profiles  Import VPN profiles into OpenVPN
   message-processing   EventBridge rule that forwards incoming messages through to Conductor
-  conductor        	Bichard workflow engine
-  cloudwatch       	A method for querying cloudwatch for user events
-  help [command]   	display help for command)
+  conductor            Bichard workflow engine
+  cloudwatch           A method for querying cloudwatch for user events
+  help [command]       display help for command
 ```
 
 Each subcommand has its own help docs you can provide the `-h or --help` flag e.g. `b7 dev-sgs --help`
 
 ```
+
 b7 dev-sgs --help
 Usage: b7 dev-sgs [options]
 
 Apply dev security groups to out environments
 
 Options:
-  -h, --help  display help for command
+-h, --help display help for command
+
 ```
 
 ## Development

@@ -8,8 +8,8 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "install:global": "npm run build && npm i -g . && chmod +x dist/index.js",
-    "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess 'chmod -v +x dist/index.js' --onSuccess 'npm i -g .'"
+    "install:global": "npm i && npm run build && npm i -g . && chmod +x dist/index.js",
+    "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess 'chmod -v +x dist/index.js' --onSuccess 'npm i -g .' && npm i"
   },
   "keywords": [],
   "author": "",

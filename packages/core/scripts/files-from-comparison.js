@@ -18,12 +18,14 @@ const fileJson = JSON.parse(fileText)
 
 const inputType = {
   1: "spi-or-aho",
-  2: "aho"
+  2: "aho",
+  3: "pnc-update-dataset"
 }[fileJson.phase]
 
 const outputType = {
   1: "aho",
-  2: "pnc-update-dataset"
+  2: "pnc-update-dataset",
+  3: "pnc-update-dataset"
 }[fileJson.phase]
 
 const inputFileName = localFileName.replace(".json", `.${inputType}-input.xml`)
