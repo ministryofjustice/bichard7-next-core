@@ -4,7 +4,7 @@ import type { PncUpdateDisposal } from "../../types/HearingDetails"
 
 import { createPncDisposalsFromResult } from "../../../lib/createPncDisposalsFromResult"
 import createPncDisposal from "../../../lib/createPncDisposalsFromResult/createPncDisposal"
-import isRecordableResult from "../../../phase2/lib/isRecordableResult"
+import isRecordableResult from "../../../lib/isRecordableResult"
 import { PncUpdateType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "./getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 

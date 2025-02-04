@@ -2,8 +2,8 @@ import type { Result } from "../../types/AnnotatedHearingOutcome"
 import type { PncAdjudication } from "../../types/PncQueryResult"
 
 import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../../lib/dataLookup"
+import isRecordableResult from "../../lib/isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
-import isRecordableResult from "./isRecordableResult"
 
 const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): PncAdjudication | undefined => {
   const result = results.find(isRecordableResult) ?? results[0]
