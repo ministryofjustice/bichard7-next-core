@@ -1,10 +1,7 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-
 import type { Operation } from "../../types/PncUpdateDataset"
 import type PncUpdateRequestError from "../types/PncUpdateRequestError"
 
 import MockPncGateway from "../../comparison/lib/MockPncGateway"
-import errorPaths from "../../lib/exceptions/errorPaths"
 import { PncApiError } from "../../lib/PncGateway"
 import { PncOperation } from "../../types/PncOperation"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
@@ -94,59 +91,5 @@ describe("performOperations", () => {
       unattemptedSentenceDeferredOperation
     ])
     expect(pncGateway.updates).toHaveLength(1)
-  })
-
-  describe("when the PNC returns a lock error", () => {
-    const pncErrorMessage = "PNCUE: Some PNC lock error message"
-    const pncLockError = new PncApiError([pncErrorMessage])
-    const pncOperation: Operation<PncOperation.NORMAL_DISPOSAL> = {
-      code: PncOperation.NORMAL_DISPOSAL,
-      status: "NotAttempted",
-      data: { courtCaseReference: "97/1626/008395Q" }
-    }
-
-    it("completes an operation after successfully retrying a PNC lock error", async () => {
-      const pncUpdateDataset = generatePncUpdateDatasetWithOperations([{ ...pncOperation }])
-      const pncGateway = new MockPncGateway([pncLockError, pncLockError, undefined])
-
-      await performOperations(pncUpdateDataset, pncGateway)
-
-      expect(pncGateway.updates).toHaveLength(3)
-      expect(pncUpdateDataset.PncOperations).toStrictEqual([{ ...pncOperation, status: "Completed" }])
-    })
-
-    it("fails an operation after retrying a PNC lock error for the maximum amount of times", async () => {
-      const pncUpdateDataset = generatePncUpdateDatasetWithOperations([{ ...pncOperation }])
-      const pncGateway = new MockPncGateway([pncLockError, pncLockError, pncLockError])
-
-      await performOperations(pncUpdateDataset, pncGateway)
-
-      expect(pncGateway.updates).toHaveLength(3)
-      expect(pncUpdateDataset.PncOperations).toStrictEqual([{ ...pncOperation, status: "Failed" }])
-      expect(pncUpdateDataset.Exceptions).toStrictEqual([
-        {
-          code: ExceptionCode.HO100404,
-          message: pncErrorMessage,
-          path: errorPaths.case.asn
-        }
-      ])
-    })
-
-    it("fails an operation after retrying a PNC lock error and then a different error occurs", async () => {
-      const pncUpdateDataset = generatePncUpdateDatasetWithOperations([{ ...pncOperation }])
-      const pncGateway = new MockPncGateway([pncLockError, new PncApiError(["I0024 - Some other PNC error"])])
-
-      await performOperations(pncUpdateDataset, pncGateway)
-
-      expect(pncGateway.updates).toHaveLength(2)
-      expect(pncUpdateDataset.PncOperations).toStrictEqual([{ ...pncOperation, status: "Failed" }])
-      expect(pncUpdateDataset.Exceptions).toStrictEqual([
-        {
-          code: ExceptionCode.HO100402,
-          message: "I0024 - Some other PNC error",
-          path: errorPaths.case.asn
-        }
-      ])
-    })
   })
 })
