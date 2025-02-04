@@ -1,7 +1,7 @@
 import type { Result } from "../types/AnnotatedHearingOutcome"
 import type { PncAdjudication } from "../types/PncQueryResult"
 
-import createPncAdjudication from "../phase2/lib/createPncAdjudication"
+import createPncAdjudication from "./createPncAdjudication"
 import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "./dataLookup"
 import isRecordableResult from "./isRecordableResult"
 

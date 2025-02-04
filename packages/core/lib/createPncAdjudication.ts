@@ -1,4 +1,4 @@
-import type { PncAdjudication } from "../../types/PncQueryResult"
+import type { PncAdjudication } from "../types/PncQueryResult"
 
 const GUILTY_DISPOSALS = [1029, 1030]
 const NOT_GUILTY_DISPOSALS = [2006, 2050, 2051]
