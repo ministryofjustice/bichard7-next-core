@@ -1,13 +1,17 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
+import { isError } from "@moj-bichard7/common/types/Result"
+import { randomUUID } from "crypto"
 import { OK } from "http-status"
 
 import { V1 } from "../../../endpoints/versionedEndpoints"
 import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../tests/helpers/caseHelper"
+import { mockInputApiAuditLog } from "../../../tests/helpers/mockAuditLogs"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken, createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
+import createAuditLog from "../../../useCases/createAuditLog"
 
 describe("/v1/case e2e", () => {
   const endpoint = V1.Case
@@ -21,6 +25,7 @@ describe("/v1/case e2e", () => {
 
   beforeEach(async () => {
     await helper.postgres.clearDb()
+    await helper.dynamo.clearDynamo()
   })
 
   afterAll(async () => {
@@ -128,6 +133,7 @@ describe("/v1/case e2e", () => {
   })
 
   it("locks exception to the user when the case is unlocked, has exceptions, and has error status unresolved", async () => {
+    const messageId = randomUUID()
     const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
 
@@ -135,8 +141,13 @@ describe("/v1/case e2e", () => {
       error_count: 1,
       error_locked_by_id: null,
       error_status: 1,
+      message_id: messageId,
       org_for_police_filter: "01"
     })
+
+    const auditLog = mockInputApiAuditLog({ caseId: "1", messageId })
+    const result = await createAuditLog(auditLog, helper.dynamo)
+    expect(isError(result)).toBe(false)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
