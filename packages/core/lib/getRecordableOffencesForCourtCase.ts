@@ -1,6 +1,6 @@
 import type { Offence } from "../types/AnnotatedHearingOutcome"
 
-import isRecordableOffence from "../phase2/lib/isRecordableOffence"
+import isRecordableOffence from "./isRecordableOffence"
 
 const getRecordableOffencesForCourtCase = (offences: Offence[], courtCaseReferenceNumber?: string) =>
   offences.filter(

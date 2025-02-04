@@ -1,7 +1,7 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
 
 // prettier-ignore
-const ignoredOffenceCategories = 
+const ignoredOffenceCategories =
   ["B7", "EF", "EM", "EX", "FC", "FL", "FO", "FP", "FV", "LB", "LC", "LG", "LL", "LM", "VA", "VP"]
 
 const isRecordableOffence = (offence: Offence): boolean =>
