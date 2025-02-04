@@ -2,11 +2,11 @@ import { spawn } from "child_process"
 import { Command } from "commander"
 import path from "path"
 
-export function devSgs(): Command {
-  const command = new Command("dev-sgs")
+export function importVpn(): Command {
+  const command = new Command("import-vpn-profiles")
 
-  command.description("Apply dev security groups to our environments").action(() => {
-    const scriptPath = path.resolve(__dirname, "../../../../scripts/dev-sgs.sh")
+  command.description("Import VPN profiles into OpenVPN").action(() => {
+    const scriptPath = path.resolve(__dirname, "../../../../scripts/import-openvpn-profiles.sh")
 
     const child = spawn("bash", [scriptPath], {
       stdio: "inherit", // Allow input/output to flow through the terminal
