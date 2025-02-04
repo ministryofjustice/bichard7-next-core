@@ -42,7 +42,7 @@ describe("Filtering cases by case state", () => {
       cy.get(`label[for="resolved"]`).click()
       cy.get("button[id=search]").click()
 
-      cy.get(".moj-scrollable-pane tbody tr").should("have.length", 2)
+      cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 2)
       cy.contains("Case00001")
       cy.contains("Case00002")
 
@@ -50,13 +50,13 @@ describe("Filtering cases by case state", () => {
       cy.get(`label[for="myResolvedCases"]`).click()
       cy.get("button[id=search]").click()
 
-      cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
+      cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
       cy.contains("Case00002")
 
       // Switch back to unresolved cases
       cy.get(`label[for="unresolved"]`).click()
       cy.get("button[id=search]").click()
-      cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
+      cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
       cy.contains("Case00000")
 
     })
