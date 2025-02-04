@@ -1,8 +1,8 @@
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateAdjudication } from "../../types/HearingDetails"
 
+import createPncAdjudicationFromAho from "../../../lib/createPncAdjudicationFromAho"
 import formatDateSpecifiedInResult from "../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import createPncAdjudicationFromAho from "../../../phase2/lib/createPncAdjudicationFromAho"
 import { PncUpdateType } from "../../types/HearingDetails"
 
 export const createAdjudicationFromOffence = (
