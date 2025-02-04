@@ -2,6 +2,8 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 import type postgres from "postgres"
 
+import { isError } from "@moj-bichard7/common/types/Result"
+
 import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
@@ -28,7 +30,11 @@ export const lockAndFetchCase = async (
       // TODO: Lock Triggers and AuditLog them
 
       if (auditLogEvents.length > 0) {
-        createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
+        const result = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
+
+        if (isError(result)) {
+          throw result
+        }
       }
     })
     .catch(async (err) => {
