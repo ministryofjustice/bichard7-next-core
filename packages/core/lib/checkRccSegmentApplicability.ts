@@ -1,7 +1,7 @@
-import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
 
-import getRecordableOffencesForCourtCase from "../../../../lib/getRecordableOffencesForCourtCase"
-import isResultCompatibleWithDisposal from "../../../../lib/isResultCompatibleWithDisposal"
+import getRecordableOffencesForCourtCase from "./getRecordableOffencesForCourtCase"
+import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
 
 export enum RccSegmentApplicability {
   CaseDoesNotRequireRcc,
