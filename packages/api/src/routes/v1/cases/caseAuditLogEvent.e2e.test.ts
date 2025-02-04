@@ -28,12 +28,6 @@ const axiosOptions: AxiosRequestConfig = {
   validateStatus: () => true
 }
 
-const delay = (time: number) => {
-  return new Promise((res) => {
-    setTimeout(res, time)
-  })
-}
-
 describe("Creating Audit Log Event", () => {
   const auditLogsEndpoint = V1.AuditLogs
   const auditLogEndpoint = V1.AuditLog
@@ -98,9 +92,6 @@ describe("Creating Audit Log Event", () => {
     const caseDto = (await caseResult.json()) as CaseDto
     expect(caseDto.errorLockedByUsername).toBe(user.username)
     expect(caseDto.errorLockedByUserFullName).toBe(`${user.forenames} ${user.surname}`)
-
-    // Need to wait for the audit log event to have been processed
-    await delay(100) // 100ms
 
     const auditLogResult = await fetch(`${helper.address}${auditLogEndpoint.replace(":correlationId", messageId)}`, {
       headers: {
