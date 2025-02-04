@@ -1,5 +1,3 @@
-import { isError } from "@moj-bichard7/common/types/Result"
-
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequest from "../types/PncUpdateRequest"
@@ -23,17 +21,17 @@ const updatePnc = async (
   for (let pncLockErrorRetries = 0; pncLockErrorRetries < MAXIMUM_PNC_LOCK_ERROR_RETRIES; pncLockErrorRetries++) {
     const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId)
 
-    if (isError(pncUpdateResult)) {
-      const pncExceptions = pncUpdateResult.messages.map(generatePncUpdateExceptionFromMessage)
+    if (pncUpdateResult === undefined) {
+      return pncUpdateResult
+    }
 
-      if (pncExceptions.some(isPncLockError) && pncLockErrorRetries !== MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1) {
-        await delayForPncLockErrorRetry()
-      } else {
-        pncUpdateDataset.Exceptions.push(...pncExceptions)
+    const pncExceptions = pncUpdateResult.messages.map(generatePncUpdateExceptionFromMessage)
 
-        return pncUpdateResult
-      }
+    if (pncExceptions.some(isPncLockError) && pncLockErrorRetries !== MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1) {
+      await delayForPncLockErrorRetry()
     } else {
+      pncUpdateDataset.Exceptions.push(...pncExceptions)
+
       return pncUpdateResult
     }
   }
