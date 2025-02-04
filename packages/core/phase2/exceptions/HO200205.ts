@@ -4,9 +4,9 @@ import type { AnnotatedHearingOutcome, Result } from "../../types/AnnotatedHeari
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import isAmountSpecifiedInResultValid from "../../lib/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import forEachRecordableResult from "../../lib/offences/forEachRecordableResult"
+import isAmountSpecifiedInResultValid from "../../lib/results/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2

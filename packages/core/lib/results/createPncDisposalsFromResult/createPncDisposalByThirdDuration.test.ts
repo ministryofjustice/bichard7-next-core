@@ -1,6 +1,6 @@
-import type { Result } from "../../types/AnnotatedHearingOutcome"
+import type { Result } from "../../../types/AnnotatedHearingOutcome"
 
-import DateSpecifiedInResultSequence from "../../types/DateSpecifiedInResultSequence"
+import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
 import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"
 
 describe("createPncDisposalByThirdDuration", () => {

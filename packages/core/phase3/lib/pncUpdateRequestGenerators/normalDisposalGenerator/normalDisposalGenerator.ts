@@ -4,7 +4,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGenerator"
 
-import formatDateSpecifiedInResult from "../../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import formatDateSpecifiedInResult from "../../../../lib/results/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import isResultCompatibleWithDisposal from "../../../../lib/results/isResultCompatibleWithDisposal"
 import { PncOperation } from "../../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
