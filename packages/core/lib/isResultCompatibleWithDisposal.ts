@@ -1,7 +1,7 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { Offence } from "../types/AnnotatedHearingOutcome"
 
-import isRecordableResult from "../../lib/isRecordableResult"
-import ResultClass from "../../types/ResultClass"
+import ResultClass from "../types/ResultClass"
+import isRecordableResult from "./isRecordableResult"
 
 const isResultClassCompatible = (resultClass?: ResultClass) =>
   !resultClass ||

@@ -6,7 +6,7 @@ import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGener
 
 import formatDateSpecifiedInResult from "../../../../lib/createPncDisposalsFromResult/formatDateSpecifiedInResult"
 import getAdjustedRecordableOffencesForCourtCase from "../../../../lib/getAdjustedRecordableOffencesForCourtCase"
-import isResultCompatibleWithDisposal from "../../../../phase2/lib/isResultCompatibleWithDisposal"
+import isResultCompatibleWithDisposal from "../../../../lib/isResultCompatibleWithDisposal"
 import { PncOperation } from "../../../../types/PncOperation"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
 import getPncCourtCode from "../../getPncCourtCode"
