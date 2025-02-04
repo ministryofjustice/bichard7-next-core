@@ -1,3 +1,5 @@
+import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
+
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequest from "../types/PncUpdateRequest"
@@ -21,7 +23,7 @@ const updatePnc = async (
   for (let pncLockErrorRetries = 0; pncLockErrorRetries < MAXIMUM_PNC_LOCK_ERROR_RETRIES; pncLockErrorRetries++) {
     const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId)
 
-    if (pncUpdateResult === undefined) {
+    if (!isError(pncUpdateResult)) {
       return pncUpdateResult
     }
 
