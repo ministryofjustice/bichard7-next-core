@@ -1,6 +1,6 @@
 import type { XML } from "@moj-bichard7/common/types/Xml"
 
-import type { PncUpdateDatasetParsedXml } from "./PncUpdateDatasetParsedXml"
+import type { PncUpdateDatasetParsedXml } from "../../types/PncUpdateDatasetParsedXml"
 
 export default interface AnnotatedPncUpdateDatasetParsedXml {
   "?xml"?: XML

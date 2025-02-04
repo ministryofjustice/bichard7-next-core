@@ -1,9 +1,9 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
 
-import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../../phase2/types/PncUpdateDatasetParsedXml"
 import type { Br7TextString } from "../../../types/AhoXml"
 import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Br7Operation, PncUpdateDatasetParsedXml } from "../../../types/PncUpdateDatasetParsedXml"
 
 import { PncOperation } from "../../../types/PncOperation"
 import { decodeAttributeEntitiesProcessor, decodeTagEntitiesProcessor } from "../../encoding"
