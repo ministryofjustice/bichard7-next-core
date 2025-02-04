@@ -50,13 +50,13 @@ describe("Filtering cases by resolved date", () => {
     cy.get("#date-resolvedFrom").should("have.value", "2022-01-01")
     cy.get("#date-resolvedTo").should("have.value", "2022-12-31")
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 7)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 7)
 
     cy.contains("Hide search panel").click()
 
     confirmFiltersAppliedContains("01/01/2022 - 31/12/2022")
     removeFilterTagWhilstSearchPanelIsHidden("01/01/2022 - 31/12/2022")
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 13)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 13)
   })
 
   it("Should update 'selected filter' chip when changing Case resolved date filter", () => {
