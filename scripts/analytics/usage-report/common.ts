@@ -1,20 +1,21 @@
-import { AuditLogEvent } from "../../../packages/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { AuditLogEvent } from "../../../packages/common/types/AuditLogEvent"
+
+type FullAuditLogEvent = AuditLogEvent & { _messageId: string }
 
 type ReportData = {
-  summary: Record<EventCode, number>
+  summary: { [key in EventCode]?: number }
   users: Record<string, Record<EventCode, number>>
   daily: Record<string, Record<EventCode, number>>
   monthly: Record<string, Record<EventCode, number>>
   dailyUsers: Record<string, Record<string, Record<EventCode, number>>>
   monthlyUsers: Record<string, Record<string, Record<EventCode, number>>>
+  monthlyForces: Record<string, Record<string, Record<EventCode, number>>>
   eventCodes: string[]
 }
 
 type ReportDataResult = {
   allEvents: ReportData
-  withNewUiEvents: ReportData,
-  usersWithNewUiEvent: string[]
 }
 
 const reportEventCodes: EventCode[] = [
@@ -25,7 +26,29 @@ const reportEventCodes: EventCode[] = [
   EventCode.ExceptionsLocked,
   EventCode.ExceptionsUnlocked,
   EventCode.ExceptionsResolved,
-  EventCode.HearingOutcomeReallocated
+  EventCode.ExceptionsGenerated,
+  EventCode.HearingOutcomeReallocated,
+  EventCode.HearingOutcomeResubmittedPhase1,
+  EventCode.HearingOutcomeResubmittedPhase2,
+  EventCode.HearingOutcomeDetails,
+  EventCode.PncResponseNotReceived,
+  EventCode.PncResponseReceived,
+  EventCode.IgnoredAlreadyOnPNC,
+  EventCode.IgnoredAncillary,
+  EventCode.IgnoredAppeal,
+  EventCode.IgnoredDisabled,
+  EventCode.IgnoredNoOffences,
+  EventCode.IgnoredNonrecordable,
+  EventCode.IgnoredReopened
+]
+
+const eventCodesToDisplay: EventCode[] = [
+  EventCode.AllTriggersResolved,
+  EventCode.TriggersResolved,
+  EventCode.ExceptionsGenerated,
+  EventCode.ExceptionsResolved,
+  EventCode.HearingOutcomeResubmittedPhase1,
+  EventCode.HearingOutcomeResubmittedPhase2
 ]
 
 const reportEventTitles = {
@@ -35,9 +58,11 @@ const reportEventTitles = {
   [EventCode.TriggersResolved]: "Triggers resolved",
   [EventCode.ExceptionsLocked]: "Exception locked",
   [EventCode.ExceptionsUnlocked]: "Exception unlocked",
-  [EventCode.ExceptionsResolved]: "Exception resolved",
-  [EventCode.HearingOutcomeReallocated]: "Case reallocated"
-} as Record<EventCode, string>
+  [EventCode.ExceptionsResolved]: "Exception manually resolved",
+  [EventCode.HearingOutcomeReallocated]: "Case reallocated",
+  [EventCode.HearingOutcomeResubmittedPhase1]: "Resubmitted to Phase 1",
+  [EventCode.HearingOutcomeResubmittedPhase2]: "Resubmitted to Phase 2"
+} as Record<EventCode | string, string>
 
 const log = (...params: unknown[]) => {
   const logContent = [new Date().toISOString(), " - ", ...params]
@@ -48,4 +73,14 @@ const getDateString = (date: string | Date) => (typeof date === "object" ? date.
 
 const isNewUIEvent = (event: AuditLogEvent) => event.eventSource === "Bichard New UI"
 
-export { reportEventCodes, reportEventTitles, ReportData, ReportDataResult, getDateString, log, isNewUIEvent }
+export {
+  eventCodesToDisplay,
+  FullAuditLogEvent,
+  getDateString,
+  isNewUIEvent,
+  log,
+  ReportData,
+  ReportDataResult,
+  reportEventCodes,
+  reportEventTitles
+}

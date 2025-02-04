@@ -13,17 +13,16 @@
  *
  */
 
-import { Lambda, RDS } from "aws-sdk"
-import { DynamoDB } from "aws-sdk"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import { isError } from "@moj-bichard7/common/types/Result"
-import findEvents from "./fetchEvents"
-import generateReportData from "./generateReportData"
-import { getDateString } from "./common"
-import WorkbookGenerator from "./WorkbookGenerator"
-import { DataSource } from "typeorm"
-import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
 import baseConfig from "@moj-bichard7/common/db/baseConfig"
+import { isError } from "@moj-bichard7/common/types/Result"
+import { DynamoDB, Lambda, RDS } from "aws-sdk"
+import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import { DataSource } from "typeorm"
+import { getDateString } from "./common"
+import findEvents from "./fetchEvents"
+import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
+import generateReportData from "./generateReportData"
+import WorkbookGenerator from "./WorkbookGenerator"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let dynamo: DocumentClient
@@ -66,8 +65,8 @@ async function setup() {
     throw Error("Couldn't get Postgres connection details (describeDBInstances)")
   }
 
-  const dbHost = dbInstances.DBClusters?.map((clusters) => clusters.ReaderEndpoint).filter(
-    (endpoint) => endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
+  const dbHost = dbInstances.DBClusters?.map((clusters) => clusters.ReaderEndpoint).filter((endpoint) =>
+    endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
   )?.[0]
   process.env.DB_USER = process.env.DB_PASSWORD = process.env.DB_SSL = "true"
   postgres = await new DataSource({
@@ -98,7 +97,8 @@ const run = async () => {
   }
 
   console.log("Generating report data...")
-  const reportData = generateReportData(events, start, end)
+  const auditLogTableName = "bichard-7-production-audit-log"
+  const reportData = await generateReportData(events, start, end, dynamo, auditLogTableName)
 
   console.log("Generating report workbook...")
   const reportFilename = `New UI Report (${getDateString(start)} to ${getDateString(end)}).xlsx`

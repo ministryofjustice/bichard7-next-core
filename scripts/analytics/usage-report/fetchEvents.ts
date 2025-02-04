@@ -1,17 +1,21 @@
-import { AuditLogEvent } from "../../../packages/common/types/AuditLogEvent"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { reportEventCodes, getDateString, isNewUIEvent, log } from "./common"
+import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import { FullAuditLogEvent, getDateString, isNewUIEvent, log, reportEventCodes } from "./common"
 
-const filterEvents = (events: AuditLogEvent[]): AuditLogEvent[] =>
+const filterEvents = (events: FullAuditLogEvent[]): FullAuditLogEvent[] =>
   events.filter((event) => reportEventCodes.includes(event.eventCode))
 
-const findEvents = async (dynamo: DocumentClient, eventsTableName: string, start: Date, end: Date) => {
+const findEvents = async (
+  dynamo: DocumentClient,
+  eventsTableName: string,
+  start: Date,
+  end: Date
+): Promise<FullAuditLogEvent[] | Error> => {
   log(`Getting messages for the period between ${getDateString(start)} and ${getDateString(end)}`)
   let lastEvaluatedKey
-  let events: AuditLogEvent[] = []
+  let events: FullAuditLogEvent[] = []
   const messageIds = new Set<string>()
-  console.log("Fetching messages and events...")
+  console.log(`Fetching messages and events between ${start.toISOString()} and ${end.toISOString()}...`)
 
   while (true) {
     const query: DocumentClient.QueryInput = {
@@ -40,13 +44,13 @@ const findEvents = async (dynamo: DocumentClient, eventsTableName: string, start
       return eventsResult
     }
 
-    if (eventsResult.Items.length === 0) {
+    if (!eventsResult.Items || eventsResult.Items.length === 0) {
       return events
     }
 
     lastEvaluatedKey = eventsResult?.LastEvaluatedKey
-    let fetchedEvents = (eventsResult.Items ?? []) as (AuditLogEvent & { _messageId: string })[]
-    fetchedEvents = filterEvents(fetchedEvents) as (AuditLogEvent & { _messageId: string })[]
+    let fetchedEvents = (eventsResult.Items ?? []) as FullAuditLogEvent[]
+    fetchedEvents = filterEvents(fetchedEvents) as FullAuditLogEvent[]
 
     fetchedEvents.forEach((event) => messageIds.add(event._messageId))
     events = events.concat(filterEvents(fetchedEvents))
