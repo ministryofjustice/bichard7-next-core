@@ -16,18 +16,18 @@ interface ExtraReasonRowProps {
 
 export const ExtraReasonRow = ({ isLocked, reasonCell, lockTag, resolutionStatus }: ExtraReasonRowProps) => {
   return (
-    <StyledExtraReasonRow className={"govuk-table__row"}>
+    <StyledExtraReasonRow className={"govuk-table__row extraReasonRow"}>
       <td className="govuk-table__cell">
         <ConditionalRender isRendered={isLocked}>
           <Image src={LOCKED_ICON_URL} width={20} height={20} alt="Lock icon" />
         </ConditionalRender>
       </td>
-      <td className="govuk-table__cell">
+      <td className="govuk-table__cell resolutionStatusBadgeCell">
         <CaseListResolutionStatusBadgeWrapper>
           <ResolutionStatusBadge resolutionStatus={resolutionStatus} />
         </CaseListResolutionStatusBadgeWrapper>
       </td>
-      <td className="govuk-table__cell">{reasonCell || ""}</td>
+      <td className="govuk-table__cell extraReasonCell">{reasonCell || ""}</td>
       <td className="govuk-table__cell">{lockTag || ""}</td>
     </StyledExtraReasonRow>
   )

@@ -55,7 +55,7 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
         <td className="govuk-table__cell" rowSpan={2}>
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
         </td>
-        <td className="govuk-table__cell">{reasonCell}</td>
+        <td className="govuk-table__cell resonCell">{reasonCell}</td>
         <td className="govuk-table__cell">{lockTag}</td>
       </tr>
       {notes.length > 0 && !showPreview && <NotePreviewRow notes={notes} />}

@@ -105,7 +105,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
   const renderExtraReasons = resolutionStatus != "Unresolved" || extraReasonCell
 
   return (
-    <tbody className="govuk-table__body">
+    <tbody className="govuk-table__body caseListEntry">
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={reasonCell}

@@ -178,14 +178,14 @@ describe("Case list", () => {
 
       cy.get("#search").contains("Apply filters").click()
 
-      cy.get("tr").not(":first").eq(0).find("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(1).contains(`Submitted`).should("exist")
-
-      cy.get("tr").not(":first").eq(2).find("td:nth-child(5)").contains(`Case00001`)
-      cy.get("tr").not(":first").eq(3).contains(`Submitted`).should("not.exist")
-
-      cy.get("tr").not(":first").eq(4).find("td:nth-child(5)").contains(`Case00002`)
-      cy.get("tr").not(":first").eq(5).contains(`Submitted`).should("exist")
+      cy.get("tr.caseDetailsRow").eq(0).find("td:nth-child(5)").contains(`Case00000`)
+      cy.get("tr.caseDetailsRow").eq(0).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
+      
+      cy.get("tr.caseDetailsRow").eq(1).find("td:nth-child(5)").contains(`Case00001`)
+      cy.get("tr.caseDetailsRow").eq(1).next().should("not.exist") //extra resons row should not render
+      
+      cy.get("tr.caseDetailsRow").eq(2).find("td:nth-child(5)").contains(`Case00002`)
+      cy.get("tr.caseDetailsRow").eq(2).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
     })
 
     it("Should display the correct number of user-created notes on cases", () => {
