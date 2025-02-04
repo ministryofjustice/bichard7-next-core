@@ -14,10 +14,26 @@ import { AsnInput } from "./AsnField.styles"
 export const AsnField = () => {
   const { courtCase, amendments, amend } = useCourtCase()
   const defendant = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
-  const amendedAsn = amendments.asn ?? ""
   const updatedAhoAsn =
     courtCase.updatedHearingOutcome?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant
       ?.ArrestSummonsNumber
+
+  const hasExceptions =
+    courtCase.canUserEditExceptions &&
+    courtCase.phase === Phase.HEARING_OUTCOME &&
+    isAsnException(courtCase.aho.Exceptions)
+
+  const isAsnEditable =
+    hasExceptions || (courtCase.canUserEditExceptions && isEditableAsnException(courtCase.aho.Exceptions))
+
+  // const amendedAsn = amendments.asn ? (!hasExceptions && isAsnEditable ? defendant.ArrestSummonsNumber : "") : ""
+
+  let amendedAsn = ""
+  if (amendments.asn || amendments.asn === "") {
+    amendedAsn = amendments.asn
+  } else if (!hasExceptions && isAsnEditable) {
+    amendedAsn = defendant.ArrestSummonsNumber
+  }
 
   const [isValidAsn, setIsValidAsn] = useState<boolean>(isAsnFormatValid(amendedAsn))
   const [isSavedAsn, setIsSavedAsn] = useState<boolean>(false)
@@ -71,14 +87,6 @@ export const AsnField = () => {
     const copiedAsn = document.getSelection()?.toString().replace(/\//g, "")
     navigator.clipboard.writeText(copiedAsn ?? "")
   }
-
-  const hasExceptions =
-    courtCase.canUserEditExceptions &&
-    courtCase.phase === Phase.HEARING_OUTCOME &&
-    isAsnException(courtCase.aho.Exceptions)
-
-  const isAsnEditable =
-    hasExceptions || (courtCase.canUserEditExceptions && isEditableAsnException(courtCase.aho.Exceptions))
 
   return (
     <EditableFieldTableRow
