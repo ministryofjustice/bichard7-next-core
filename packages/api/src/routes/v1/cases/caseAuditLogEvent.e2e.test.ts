@@ -2,7 +2,9 @@ import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
+import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import axios, { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
@@ -19,8 +21,6 @@ import { mockInputApiAuditLog } from "../../../tests/helpers/mockAuditLogs"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
 import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
-import EventCode from "../../../types/EventCode"
-import { AuditLogEventLookup } from "../../../useCases/auditLog/auditLogEventLookup"
 
 const serviceJwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
 const axiosOptions: AxiosRequestConfig = {

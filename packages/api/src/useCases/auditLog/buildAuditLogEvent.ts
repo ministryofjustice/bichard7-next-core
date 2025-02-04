@@ -1,9 +1,9 @@
 import type EventCategory from "@moj-bichard7/common/types/EventCategory"
 import type EventCode from "@moj-bichard7/common/types/EventCode"
 
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
+import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 
-import { AuditLogEventLookup } from "./auditLogEventLookup"
+import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
 const buildAuditLogEvent = (
   eventCode: EventCode,

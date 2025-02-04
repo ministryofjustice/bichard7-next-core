@@ -2,12 +2,12 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
-import EventCode from "../../types/EventCode"
 import { lockExceptions } from "./lockExceptions"
 
 describe("lockExceptions", () => {

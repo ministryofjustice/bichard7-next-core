@@ -1,6 +1,7 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
+
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
-import EventCode from "../../types/EventCode"
 import getForceOwner from "./getForceOwner"
 
 it("should return the force owner when message type is correct", () => {
