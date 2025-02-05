@@ -162,7 +162,7 @@ describe("Filtering cases", () => {
 
     cy.contains("WAYNE Bruce")
     confirmMultipleFieldsNotDisplayed(["GORDON Barbara", "PENNYWORTH Alfred"])
-    cy.get("tr").should("have.length", 2)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 1)
     confirmFiltersAppliedContains("WAYNE Bruce")
 
     removeFilterTagWhilstSearchPanelIsHidden("WAYNE Bruce")
@@ -184,7 +184,7 @@ describe("Filtering cases", () => {
 
     cy.contains("Manchester Court")
     confirmMultipleFieldsNotDisplayed(["London Court", "Bristol Court"])
-    cy.get("tr").should("have.length", 2)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 1)
     confirmFiltersAppliedContains("Manchester Court")
 
     removeFilterTagWhilstSearchPanelIsHidden("Manchester Court")
@@ -206,7 +206,7 @@ describe("Filtering cases", () => {
 
     cy.contains("Case00001")
     confirmMultipleFieldsNotDisplayed(["Case00002", "Case00003"])
-    cy.get("tr").should("have.length", 2)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 1)
     confirmFiltersAppliedContains("Case00001")
 
     removeFilterTagWhilstSearchPanelIsHidden("Case00001")
@@ -251,7 +251,7 @@ describe("Filtering cases", () => {
 
     cy.contains("Case00001")
     confirmMultipleFieldsNotDisplayed(["Case00000", "Case00002"])
-    cy.get("tr").should("have.length", 2)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 1)
 
     confirmFiltersAppliedContains("HO200212")
 
@@ -442,34 +442,34 @@ describe("Filtering cases", () => {
 
     inputAndSearch("defendantName", "Bruce")
     confirmMultipleFieldsNotDisplayed(["PENNYWORTH Alfred", "WAYNE Bruce", "GORDON Bruce", "PENNYWORTH Bruce"])
-    cy.get("tr").should("have.length", 0)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 0)
     confirmMultipleFieldsDisplayed([])
 
     inputAndSearch("defendantName", "*Bruce")
     confirmMultipleFieldsNotDisplayed(["PENNYWORTH Alfred"])
-    cy.get("tr").should("have.length", 4)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 3)
     confirmMultipleFieldsDisplayed(["WAYNE Bruce", "GORDON Bruce", "PENNYWORTH Bruce"])
 
     inputAndSearch("defendantName", " Bruce")
     confirmMultipleFieldsNotDisplayed(["PENNYWORTH Alfred"])
-    cy.get("tr").should("have.length", 4)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 3)
     confirmMultipleFieldsDisplayed(["WAYNE Bruce", "GORDON Bruce", "PENNYWORTH Bruce"])
 
     inputAndSearch("courtName", "London Court")
     confirmMultipleFieldsNotDisplayed(["PENNYWORTH Bruce", "PENNYWORTH Alfred"])
-    cy.get("tr").should("have.length", 3)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 2)
     confirmMultipleFieldsDisplayed(["WAYNE Bruce", "GORDON Bruce"])
 
     inputAndSearch("ptiurn", "Case0000")
     confirmMultipleFieldsNotDisplayed(["PENNYWORTH Bruce", "PENNYWORTH Alfred"])
-    cy.get("tr").should("have.length", 3)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 2)
     confirmMultipleFieldsDisplayed(["WAYNE Bruce", "GORDON Bruce"])
     cy.get(".moj-filter__tag").contains("Case0000").click()
 
     inputAndSearch("reasonCodes", "HO200212")
 
     confirmMultipleFieldsNotDisplayed(["GORDON Bruce", "PENNYWORTH Bruce", "PENNYWORTH Alfred"])
-    cy.get("tr").should("have.length", 2)
+    cy.get("tbody tr.caseDetailsRow").should("have.length", 1)
     confirmMultipleFieldsDisplayed(["WAYNE Bruce"])
   })
 
@@ -505,9 +505,8 @@ describe("Filtering cases", () => {
     cy.get('label[for="case-age-today"]').should("have.text", "Today (1)")
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
-    cy.get("tr")
-      .not(":first")
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
+    cy.get("tr.caseDetailsRow")
       .each((row) => {
         cy.wrap(row).contains("Case00000").should("exist")
       })
@@ -515,49 +514,48 @@ describe("Filtering cases", () => {
     cy.get(".moj-filter__tag").contains("Today").click()
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 8)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 8)
 
     // Tests for "yesterday"
     filterByCaseAge(`label[for="case-age-yesterday"]`)
     cy.get('label[for="case-age-yesterday"]').should("have.text", "Yesterday (2)")
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 2)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 2)
     confirmMultipleFieldsDisplayed(["Case00001", "Case00002"])
     confirmMultipleFieldsNotDisplayed(["Case00000", "Case00003", "Case00004", "Case00005", "Case00006", "Case00007"])
 
     cy.get(".moj-filter__tag").contains("Yesterday").click()
     cy.get("button#search").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 8)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 8)
 
     // // Tests for "2 days ago"
     cy.get('label[for="case-age-2-days-ago"]').should("have.text", `2 days ago (${day2DateString}) (1)`)
     filterByCaseAge(`label[for="case-age-2-days-ago"]`)
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
-    cy.get("tr")
-      .not(":first")
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
+    cy.get("tr.caseDetailsRow")
       .each((row) => {
         cy.wrap(row).contains("Case00003").should("exist")
       })
 
     cy.get(".moj-filter__tag").contains("2 days ago").click()
     cy.get("button#search").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 8)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 8)
 
     // // Tests for "3 days ago"
     cy.get('label[for="case-age-3-days-ago"]').should("have.text", `3 days ago (${day3DateString}) (3)`)
     filterByCaseAge(`label[for="case-age-3-days-ago"]`)
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 3)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 3)
     confirmMultipleFieldsDisplayed(["Case00004", "Case00005", "Case00006"])
     confirmMultipleFieldsNotDisplayed(["Case00000", "Case00001", "Case00002", "Case00003", "Case00007"])
 
     cy.get(".moj-filter__tag").contains("3 days ago").click()
     cy.get("button#search").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 8)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 8)
 
     // // Tests for "15 days ago and older"
     cy.get('label[for="case-age-15-days-ago-and-older"]').should(
@@ -569,7 +567,7 @@ describe("Filtering cases", () => {
 
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
     confirmMultipleFieldsDisplayed(["Case00007"])
     confirmMultipleFieldsNotDisplayed([
       "Case00000",
@@ -583,7 +581,7 @@ describe("Filtering cases", () => {
 
     cy.get(".moj-filter__tag").contains("15 days ago and older").click()
     cy.get("button#search").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 8)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 8)
 
     // // Test for multiple SLA
 
@@ -592,17 +590,17 @@ describe("Filtering cases", () => {
 
     cy.get("button#search").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 4)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 4)
     confirmMultipleFieldsDisplayed(["Case00000", "Case00004", "Case00005", "Case00006"])
     confirmMultipleFieldsNotDisplayed(["Case00001", "Case00002", "Case00003", "Case00007"])
 
     cy.get(".moj-filter__tag").contains("3 days ago").click()
     cy.get("button#search").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
 
     cy.get(".moj-filter__tag").contains("Today").click()
     cy.get("button#search").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 8)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 8)
   })
 
   it("Should display cases filtered for a date range", () => {
@@ -638,13 +636,13 @@ describe("Filtering cases", () => {
     cy.get("#date-from").should("have.value", "2022-01-01")
     cy.get("#date-to").should("have.value", "2022-12-31")
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 7)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 7)
 
     cy.contains("Hide search panel").click()
 
     confirmFiltersAppliedContains("01/01/2022 - 31/12/2022")
     removeFilterTagWhilstSearchPanelIsHidden("01/01/2022 - 31/12/2022")
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 13)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 13)
   })
 
   it("Should update 'selected filter' chip when changing date range filter", () => {
@@ -670,7 +668,7 @@ describe("Filtering cases", () => {
     ])
 
     cy.visit("/bichard?caseAge=invalid")
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 3)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 3)
   })
 
   it("Should filter cases by whether they have triggers and exceptions", () => {
@@ -739,26 +737,26 @@ describe("Filtering cases", () => {
     cy.get(`label[for="locked-state-locked"]`).click()
     cy.get("button[id=search]").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
     cy.contains("Case00000")
 
     // Removing locked filter tag all case should be shown with the filter disabled
     cy.get(".moj-filter__tag").contains("Locked").click()
     cy.get("button[id=search]").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 2)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 2)
 
     // Filter for unlocked cases
     cy.get(`label[for="locked-state-unlocked"]`).click()
     cy.get("button[id=search]").click()
 
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 1)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
     cy.contains("Case00001")
 
     // Removing unlocked filter tag all case should be shown with the filter disabled
     cy.get(".moj-filter__tag").contains("Unlocked").click()
     cy.get("button[id=search]").click()
-    cy.get(".moj-scrollable-pane tbody tr").should("have.length", 2)
+    cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 2)
   })
 
   it("Should clear filters when clicked on the link outside of the filter panel", () => {

@@ -1,7 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { TestTrigger } from "../../../test/utils/manageTriggers"
 import a11yConfig from "../../support/a11yConfig"
-import { loginAndVisit } from "../../support/helpers"
+import { confirmReasonDisplayed, confirmReasonNotDisplayed, loginAndVisit } from "../../support/helpers"
 import logAccessibilityViolations from "../../support/logAccessibilityViolations"
 
 describe("Case list", () => {
@@ -140,9 +140,8 @@ describe("Case list", () => {
       cy.get("#search").contains("Apply filters").click()
 
       cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).contains(`Resolved`).should("exist")
-      cy.get("tr").not(":first").eq(1).should("not.exist")
-      cy.get("tr").not(":first").eq(2).should("not.exist")
+      cy.get("tr").not(":first").eq(1).contains("Resolved").should("exist")
+      cy.get("tr").not(":first").should("have.length", 2)
     })
 
     it("Should display the resolved badge on cases marked as resolved using the bottom search button", () => {
@@ -164,9 +163,8 @@ describe("Case list", () => {
       cy.get("#search-bottom").contains("Apply filters").click()
 
       cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).contains(`Resolved`).should("exist")
-      cy.get("tr").not(":first").eq(1).should("not.exist")
-      cy.get("tr").not(":first").eq(2).should("not.exist")
+      cy.get("tr").not(":first").eq(1).contains("Resolved").should("exist")
+      cy.get("tr").not(":first").should("have.length", 2)
     })
 
     it("Should display the submitted badge on cases marked as submitted", () => {
@@ -180,12 +178,14 @@ describe("Case list", () => {
 
       cy.get("#search").contains("Apply filters").click()
 
-      cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).contains(`Submitted`).should("exist")
-      cy.get("tr").not(":first").eq(1).get("td:nth-child(5)").contains(`Case00001`)
-      cy.get("tr").not(":first").eq(1).contains(`Submitted`).should("not.exist")
-      cy.get("tr").not(":first").eq(2).get("td:nth-child(5)").contains(`Case00002`)
-      cy.get("tr").not(":first").eq(2).contains(`Submitted`).should("exist")
+      cy.get("tr.caseDetailsRow").eq(0).find("td:nth-child(5)").contains(`Case00000`)
+      cy.get("tr.caseDetailsRow").eq(0).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
+      
+      cy.get("tr.caseDetailsRow").eq(1).find("td:nth-child(5)").contains(`Case00001`)
+      cy.get("tr.caseDetailsRow").eq(1).next().should("not.exist") //extra resons row should not render
+      
+      cy.get("tr.caseDetailsRow").eq(2).find("td:nth-child(5)").contains(`Case00002`)
+      cy.get("tr.caseDetailsRow").eq(2).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
     })
 
     it("Should display the correct number of user-created notes on cases", () => {
@@ -336,10 +336,10 @@ describe("Case list", () => {
 
       loginAndVisit()
 
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100310 (2)")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100322")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR10 - Conditional bail")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR15 - Personal details changed")
+      confirmReasonDisplayed("HO100310 (2)")
+      confirmReasonDisplayed("HO100322")
+      confirmReasonDisplayed("PR10 - Conditional bail");
+      confirmReasonDisplayed("PR15 - Personal details changed")
     })
 
     it("Should only display error reason when the exceptions are not resolved (showing unresolved cases by default)", () => {
@@ -381,8 +381,8 @@ describe("Case list", () => {
 
       loginAndVisit()
 
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100310 (2)")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100322").should("not.exist")
+      confirmReasonDisplayed("HO100310 (2)")
+      confirmReasonNotDisplayed("HO100322")
     })
 
     it("Should only display trigger reason when the triggers are not resolved", () => {
@@ -440,10 +440,10 @@ describe("Case list", () => {
 
       loginAndVisit()
 
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR01")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR02").should("not.exist")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR03")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR04").should("not.exist")
+      confirmReasonDisplayed("PR01")
+      confirmReasonNotDisplayed("PR02")
+      confirmReasonDisplayed("PR03")
+      confirmReasonNotDisplayed("PR04")
     })
 
     it("Should display resolved reason when the exceptions are resolved and filtering resolved cases", () => {
@@ -514,10 +514,10 @@ describe("Case list", () => {
       cy.get(`label[for="resolved"]`).click()
       cy.get("button[id=search]").click()
 
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100310 (2)")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("HO100322")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR01")
-      cy.get("tr").not(":first").get("td:nth-child(7)").contains("PR02")
+      confirmReasonDisplayed("HO100310 (2)")
+      confirmReasonDisplayed("HO100322")
+      confirmReasonDisplayed("PR01")
+      confirmReasonDisplayed("PR02")
     })
   })
 
