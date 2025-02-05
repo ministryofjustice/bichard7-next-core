@@ -43,16 +43,16 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
             {defendantName}
           </a>
         </td>
-        <td className="govuk-table__cell" rowSpan={2}>
+        <td className="govuk-table__cell" rowSpan={showPreview ? 2 : 3}>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </td>
-        <td className="govuk-table__cell" rowSpan={2}>
+        <td className="govuk-table__cell" rowSpan={showPreview ? 2 : 3}>
           {courtName}
         </td>
-        <td className="govuk-table__cell" rowSpan={2}>
+        <td className="govuk-table__cell" rowSpan={showPreview ? 2 : 3}>
           {ptiurn}
         </td>
-        <td className="govuk-table__cell" rowSpan={2}>
+        <td className="govuk-table__cell">
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
         </td>
         <td className="govuk-table__cell resonCell">{reasonCell}</td>

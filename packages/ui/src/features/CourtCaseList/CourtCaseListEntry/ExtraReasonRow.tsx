@@ -27,6 +27,7 @@ export const ExtraReasonRow = ({ isLocked, reasonCell, lockTag, resolutionStatus
           <ResolutionStatusBadge resolutionStatus={resolutionStatus} />
         </CaseListResolutionStatusBadgeWrapper>
       </td>
+      <td className="govuk-table__cell" />
       <td className="govuk-table__cell extraReasonCell">{reasonCell || ""}</td>
       <td className="govuk-table__cell">{lockTag || ""}</td>
     </StyledExtraReasonRow>
