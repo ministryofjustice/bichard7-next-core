@@ -1,4 +1,4 @@
-import generateAhoMatchingPncAdjudicationAndDisposals from "../phase2/tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
+import generateAhoMatchingPncAdjudicationAndDisposals from "../../phase2/tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
 import findPncCourtCase from "./findPncCourtCase"
 
 describe("findPncCourtCase", () => {

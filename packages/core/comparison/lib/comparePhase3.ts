@@ -12,7 +12,7 @@ import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetai
 
 import CoreAuditLogger from "../../lib/CoreAuditLogger"
 import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
-import { PncApiError } from "../../lib/PncGateway"
+import { PncApiError } from "../../lib/pnc/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
 import { isPncLockError } from "../../phase3/exceptions/generatePncUpdateExceptionFromMessage"

@@ -2,10 +2,10 @@ import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
 import axios from "axios"
 import https from "https"
 
-import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
-import type PncApiConfig from "../types/PncApiConfig"
-import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../types/PncApiResult"
-import type PncGatewayInterface from "../types/PncGatewayInterface"
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+import type PncApiConfig from "../../types/PncApiConfig"
+import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../types/PncApiResult"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type {
   PncAdjudication,
   PncCourtCase,
@@ -13,10 +13,10 @@ import type {
   PncOffence,
   PncPenaltyCase,
   PncQueryResult
-} from "../types/PncQueryResult"
+} from "../../types/PncQueryResult"
 
-import { pncApiResultSchema } from "../schemas/pncApiResult"
-import { PncOperation } from "../types/PncOperation"
+import { pncApiResultSchema } from "../../schemas/pncApiResult"
+import { PncOperation } from "../../types/PncOperation"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 

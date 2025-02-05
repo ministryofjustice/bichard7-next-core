@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 
-import findPncCourtCase from "../../../lib/findPncCourtCase"
+import findPncCourtCase from "../../../lib/pnc/findPncCourtCase"
 
 const ADJOURNED_SINE_DIE_DISPOSAL_CODE = 2007
 

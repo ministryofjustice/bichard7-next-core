@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
 
-import findPncCourtCase from "../../lib/findPncCourtCase"
+import findPncCourtCase from "../../lib/pnc/findPncCourtCase"
 import isRecordableResult from "../../lib/results/isRecordableResult"
 import areResultsMatchingAPncDisposal from "./areResultsMatchingAPncDisposal"
 import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"

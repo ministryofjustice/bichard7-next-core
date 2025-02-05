@@ -7,7 +7,7 @@ import type PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../lib/CoreAuditLogger"
-import { PncApiError } from "../lib/PncGateway"
+import { PncApiError } from "../lib/pnc/PncGateway"
 import { PncOperation } from "../types/PncOperation"
 import phase3 from "./phase3"
 import generatePncUpdateDatasetWithOperations from "./tests/helpers/generatePncUpdateDatasetWithOperations"
