@@ -7,7 +7,7 @@ import type { AnnotatedHearingOutcome, Offence, Result } from "../types/Annotate
 import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 
-import CoreAuditLogger from "../lib/CoreAuditLogger"
+import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
 import { parsePncUpdateDataSetXml } from "../lib/parse/parsePncUpdateDataSetXml"
 import ResultClass from "../types/ResultClass"

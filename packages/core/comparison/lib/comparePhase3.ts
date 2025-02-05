@@ -10,7 +10,7 @@ import type { Phase3Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
 import { PncApiError } from "../../lib/pnc/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"

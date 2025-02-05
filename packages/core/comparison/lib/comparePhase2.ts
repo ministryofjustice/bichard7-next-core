@@ -7,7 +7,7 @@ import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../ty
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"

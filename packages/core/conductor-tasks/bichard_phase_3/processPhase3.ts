@@ -12,7 +12,7 @@ import logger from "@moj-bichard7/common/utils/logger"
 
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
 import PncGateway from "../../lib/pnc/PncGateway"
 import phase3 from "../../phase3/phase3"

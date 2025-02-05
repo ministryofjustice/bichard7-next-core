@@ -6,7 +6,7 @@ import type Phase3Result from "./types/Phase3Result"
 import type PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 import MockPncGateway from "../comparison/lib/MockPncGateway"
-import CoreAuditLogger from "../lib/CoreAuditLogger"
+import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import { PncApiError } from "../lib/pnc/PncGateway"
 import { PncOperation } from "../types/PncOperation"
 import phase3 from "./phase3"

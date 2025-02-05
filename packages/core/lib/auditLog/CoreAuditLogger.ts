@@ -3,7 +3,7 @@ import type EventCode from "@moj-bichard7/common/types/EventCode"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 
-import type AuditLogger from "../types/AuditLogger"
+import type AuditLogger from "../../types/AuditLogger"
 
 import getAuditLogEvent from "./getAuditLogEvent"
 

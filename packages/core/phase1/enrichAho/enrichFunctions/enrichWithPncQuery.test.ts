@@ -9,7 +9,7 @@ import type PncGatewayInterface from "../../../types/PncGatewayInterface"
 import type { PncQueryResult } from "../../../types/PncQueryResult"
 
 import MockPncGateway from "../../../comparison/lib/MockPncGateway"
-import CoreAuditLogger from "../../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../../lib/auditLog/CoreAuditLogger"
 import errorPaths from "../../../lib/exceptions/errorPaths"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../../lib/parse/transformSpiToAho"

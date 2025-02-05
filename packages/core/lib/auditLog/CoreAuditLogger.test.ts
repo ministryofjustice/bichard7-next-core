@@ -2,7 +2,7 @@ import { auditLogEventLookup, AuditLogEventSource } from "@moj-bichard7/common/t
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 
-import type AuditLogger from "../types/AuditLogger"
+import type AuditLogger from "../../types/AuditLogger"
 
 import CoreAuditLogger from "./CoreAuditLogger"
 
