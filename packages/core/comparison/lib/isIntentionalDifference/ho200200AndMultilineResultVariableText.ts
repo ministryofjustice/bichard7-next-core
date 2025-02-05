@@ -2,8 +2,8 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 
 import type { ComparisonData, ComparisonOutput } from "../../types/ComparisonData"
 
-import { maxDisposalTextLength } from "../../../lib/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
-import licencedPremisesExclusionOrderDisposalText from "../../../lib/getDisposalTextFromResult/licencedPremisesExclusionOrderDisposalText"
+import { maxDisposalTextLength } from "../../../lib/results/createPncDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
+import licencedPremisesExclusionOrderDisposalText from "../../../lib/results/getDisposalTextFromResult/licencedPremisesExclusionOrderDisposalText"
 import { checkIntentionalDifferenceForPhases } from "./index"
 
 // Previously Bichard would not raise a HO200200 exception when ResultVariableText

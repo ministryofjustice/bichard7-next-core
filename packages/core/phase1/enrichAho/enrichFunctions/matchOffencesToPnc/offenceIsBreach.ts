@@ -1,6 +1,6 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 
-import getOffenceCode from "../../../../lib/getOffenceCode"
+import getOffenceCode from "../../../../lib/offences/getOffenceCode"
 
 // These are empty in Bichard, but the logic is still valid
 // (We might want to add offence codes here in the future)

@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
 
-import findPncCourtCase from "./findPncCourtCase"
+import findPncCourtCase from "../../lib/pnc/findPncCourtCase"
 
 const areAllPncDisposalsWithType = (aho: AnnotatedHearingOutcome, offence: Offence, disposalType: number) => {
   const matchingPncCourtCase = findPncCourtCase(aho, offence)

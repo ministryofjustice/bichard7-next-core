@@ -12,11 +12,11 @@ import logger from "@moj-bichard7/common/utils/logger"
 
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
-import createPncApiConfig from "../../lib/createPncApiConfig"
-import PncGateway from "../../lib/PncGateway"
-import pncUpdateDatasetSchema from "../../phase2/schemas/pncUpdateDataset"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
+import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
+import PncGateway from "../../lib/pnc/PncGateway"
 import phase3 from "../../phase3/phase3"
+import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
 
 const pncApiConfig = createPncApiConfig()
 const s3Config = createS3Config()

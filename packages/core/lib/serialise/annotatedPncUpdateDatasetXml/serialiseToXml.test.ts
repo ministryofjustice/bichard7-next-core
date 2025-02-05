@@ -3,7 +3,7 @@ import "jest-xml-matcher"
 
 import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
 
-import parseAnnotatedPncUpdateDatasetXml from "../../../phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import parseAnnotatedPncUpdateDatasetXml from "../../parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import serialiseToXml from "./serialiseToXml"
 
 describe("serialiseToXml", () => {

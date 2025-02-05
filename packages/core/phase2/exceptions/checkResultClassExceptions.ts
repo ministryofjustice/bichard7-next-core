@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "../../types/AnnotatedHearingOutcome"
 
-import isRecordableOffence from "../lib/isRecordableOffence"
-import isRecordableResult from "../lib/isRecordableResult"
+import isRecordableOffence from "../../lib/offences/isRecordableOffence"
+import isRecordableResult from "../../lib/results/isRecordableResult"
 
 type CheckExceptionFn = (offence: Offence, result: Result, offenceIndex: number, resultIndex: number) => void
 

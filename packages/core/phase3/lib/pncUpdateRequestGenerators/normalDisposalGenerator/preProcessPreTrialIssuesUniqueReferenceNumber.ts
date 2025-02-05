@@ -1,8 +1,6 @@
 import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 
-import checkRccSegmentApplicability, {
-  RccSegmentApplicability
-} from "../../../../phase2/lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
+import checkRccSegmentApplicability, { RccSegmentApplicability } from "../../../../lib/checkRccSegmentApplicability"
 
 const preProcessPreTrialIssuesUniqueReferenceNumber = (
   offences: Offence[],

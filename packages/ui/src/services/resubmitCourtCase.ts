@@ -1,7 +1,7 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
+import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { AUDIT_LOG_EVENT_SOURCE } from "config"

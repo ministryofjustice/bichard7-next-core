@@ -2,7 +2,7 @@ import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncOffenceWithCaseRef } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/matchOffencesToPnc"
 import type { Candidate } from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/OffenceMatcher"
 
-import getOffenceCode from "../../../../lib/getOffenceCode"
+import getOffenceCode from "../../../../lib/offences/getOffenceCode"
 import offenceIsBreach from "../../../enrichAho/enrichFunctions/matchOffencesToPnc/offenceIsBreach"
 import { datesMatchApproximately } from "./datesMatchApproximately"
 import { datesMatchExactly } from "./datesMatchExactly"
