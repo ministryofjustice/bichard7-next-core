@@ -22,8 +22,8 @@ describe("preProcessAsn", () => {
   })
 
   it("should process 21 character long ASN", () => {
-    const asn = "221FD112200001234560C"
-    const expectedAsn = "22/FD11/22/1234560C"
+    const asn = "221FD112200001234560X"
+    const expectedAsn = "22/FD11/22/1234560X"
 
     const processedAsn = preProcessAsn(asn)
 
@@ -31,8 +31,8 @@ describe("preProcessAsn", () => {
   })
 
   it("should process 20 character long ASN", () => {
-    const asn = "22FD112200001234560C"
-    const expectedAsn = "22/FD11/22/1234560C"
+    const asn = "22FD112200001234560X"
+    const expectedAsn = "22/FD11/22/1234560X"
 
     const processedAsn = preProcessAsn(asn)
 

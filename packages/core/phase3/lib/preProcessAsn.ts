@@ -1,3 +1,5 @@
+import Asn from "../../phase1/lib/Asn"
+
 const preProcessAsn = (asn: string) => {
   let twentyCharacterAsn
   if (asn.length === 20) {
@@ -9,14 +11,7 @@ const preProcessAsn = (asn: string) => {
     return new Error(`Invalid ASN length. Length is ${asn.length}`)
   }
 
-  const year = twentyCharacterAsn.substring(0, 2)
-  const topLevelOrgUnit = twentyCharacterAsn.substring(2, 4)
-  const middleLevelOrgUnit = twentyCharacterAsn.substring(4, 6)
-  const bottomLevelOrgUnit = twentyCharacterAsn.substring(6, 8)
-  const serialNumberWithoutLeadingZeroes = Number(twentyCharacterAsn.substring(8, 19)).toString()
-  const checkCharacter = twentyCharacterAsn.substring(19)
-
-  return `${year}/${topLevelOrgUnit}${middleLevelOrgUnit}/${bottomLevelOrgUnit}/${serialNumberWithoutLeadingZeroes}${checkCharacter}`
+  return new Asn(twentyCharacterAsn).toPncFormat()
 }
 
 export default preProcessAsn
