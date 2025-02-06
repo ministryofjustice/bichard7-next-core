@@ -12,7 +12,7 @@ export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Pr
       br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
     `
 
-  if (!result || !result.message_id) {
+  if (!result?.message_id) {
     throw new Error("No message id found")
   }
 
