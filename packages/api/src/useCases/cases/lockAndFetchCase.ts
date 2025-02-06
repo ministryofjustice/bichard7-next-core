@@ -2,14 +2,10 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 import type postgres from "postgres"
 
-import { isError } from "@moj-bichard7/common/types/Result"
-
 import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
-import createAuditLogEvents from "../createAuditLogEvents"
-import { lockExceptions } from "./lockExceptions"
+import { lockAndAuditLog } from "./lockAndAuditLog"
 
 export const lockAndFetchCase = async (
   dataStore: DataStoreGateway,
@@ -20,22 +16,7 @@ export const lockAndFetchCase = async (
 ) => {
   await dataStore
     .transaction(async (callbackSql: postgres.Sql) => {
-      const auditLogEvents: ApiAuditLogEvent[] = []
-
-      const caseMessageId = (await dataStore.selectCaseMessageId(caseId)).message_id
-
-      await lockExceptions(dataStore, callbackSql, caseId, user, auditLogEvents)
-
-      // TODO: Check permissions for Triggers
-      // TODO: Lock Triggers and AuditLog them
-
-      if (auditLogEvents.length > 0) {
-        const result = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
-
-        if (isError(result)) {
-          throw result
-        }
-      }
+      await lockAndAuditLog(dataStore, caseId, callbackSql, user, auditLogGateway, logger)
     })
     .catch(async (err) => {
       logger?.error(err.message)
