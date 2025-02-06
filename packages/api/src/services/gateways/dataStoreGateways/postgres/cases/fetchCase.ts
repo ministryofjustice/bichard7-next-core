@@ -25,8 +25,8 @@ export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Pr
         el.trigger_locked_by_id,
         el.trigger_status,
         el.updated_msg,
-        CONCAT(errorLockU.forenames, ' ', errorLockU.surname) AS error_locked_by_fullname,
-        CONCAT(triggerLockU.forenames, ' ', triggerLockU.surname) AS trigger_locked_by_fullname,
+        NULLIF(CONCAT_WS(' ', errorLockU.forenames, errorLockU.surname), '') AS error_locked_by_fullname,
+        NULLIF(CONCAT_WS(' ', triggerLockU.forenames, triggerLockU.surname), '') AS trigger_locked_by_fullname,
         COALESCE(
           json_agg(
             DISTINCT to_jsonb(eln.*) ||
