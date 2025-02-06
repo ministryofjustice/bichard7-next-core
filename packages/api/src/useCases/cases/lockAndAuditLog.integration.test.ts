@@ -1,4 +1,3 @@
-import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -11,6 +10,7 @@ import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataSto
 import { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import auditLogDynamoConfig from "../../tests/helpers/dynamoDbConfig"
 import { mockInputApiAuditLog } from "../../tests/helpers/mockAuditLogs"
+import { minimalUser } from "../../tests/helpers/userHelper"
 import TestDynamoGateway from "../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import createAuditLog from "../createAuditLog"
 import FetchById from "../fetchAuditLogs/FetchById"
@@ -32,10 +32,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("locks the exception to the current user and creates an audit log", async () => {
-    const user = {
-      groups: [UserGroup.ExceptionHandler],
-      username: "user1"
-    } as User
+    const user = minimalUser()
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
     await createAuditLog(expectedAuditLog, auditLogDynamoGateway)
@@ -49,10 +46,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("does not attempt to lock if the user doesn't have permission to lock the case", async () => {
-    const user = {
-      groups: [UserGroup.TriggerHandler],
-      username: "user1"
-    } as User
+    const user = minimalUser([UserGroup.TriggerHandler])
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
 
@@ -66,10 +60,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("does not create audit log events if the exception is not locked", async () => {
-    const user = {
-      groups: [UserGroup.ExceptionHandler],
-      username: "user1"
-    } as User
+    const user = minimalUser()
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
 
@@ -87,10 +78,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("Throws an error when messageId is not retrieved", async () => {
-    const user = {
-      groups: [UserGroup.ExceptionHandler],
-      username: "user1"
-    } as User
+    const user = minimalUser()
 
     jest.spyOn(fakeDataStore, "selectCaseMessageId").mockRejectedValue(new Error("No message id found"))
 
@@ -100,10 +88,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("Throws an error when exception locking fails", async () => {
-    const user = {
-      groups: [UserGroup.ExceptionHandler],
-      username: "user1"
-    } as User
+    const user = minimalUser()
 
     jest.spyOn(fakeDataStore, "lockCase").mockRejectedValue(new Error())
 
@@ -111,10 +96,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("Throws an error when audit logging fails", async () => {
-    const user = {
-      groups: [UserGroup.ExceptionHandler],
-      username: "user1"
-    } as User
+    const user = minimalUser()
 
     await expect(lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)).rejects.toThrow(
       "A message with Id ABC does not exist in the database"
