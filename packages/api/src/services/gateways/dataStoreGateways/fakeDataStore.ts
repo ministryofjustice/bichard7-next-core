@@ -66,8 +66,8 @@ class FakeDataStore implements DataStoreGateway {
     return Promise.resolve({ message_id: "ABC" } as CaseMessageId)
   }
 
-  async transaction(_callback: (sql: postgres.Sql) => unknown): Promise<unknown> {
-    return Promise.resolve(true)
+  async transaction(callback: (sql: postgres.Sql) => unknown): Promise<unknown> {
+    return Promise.resolve(callback({} as postgres.Sql))
   }
 }
 
