@@ -243,7 +243,7 @@ describe("/v1/case e2e", () => {
 
     const auditLogJson = await new FetchById(helper.dynamo, messageId).fetch()
 
-    expect(isError(result)).toBe(false)
+    expect(isError(auditLogJson)).toBe(false)
     expect(auditLogJson).toBeDefined()
 
     const auditLogObj = auditLogJson as OutputApiAuditLog
