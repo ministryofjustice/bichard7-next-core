@@ -26,8 +26,6 @@ export const AsnField = () => {
   const isAsnEditable =
     hasExceptions || (courtCase.canUserEditExceptions && isEditableAsnException(courtCase.aho.Exceptions))
 
-  // const amendedAsn = amendments.asn ? (!hasExceptions && isAsnEditable ? defendant.ArrestSummonsNumber : "") : ""
-
   let amendedAsn = ""
   if (amendments.asn || amendments.asn === "") {
     amendedAsn = amendments.asn
@@ -68,6 +66,7 @@ export const AsnField = () => {
     }
 
     const { selectionStart, selectionEnd } = e.currentTarget
+    console.log("keydown")
     setSelection({ start: selectionStart, end: selectionEnd })
   }
 
