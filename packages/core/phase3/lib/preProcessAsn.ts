@@ -1,4 +1,4 @@
-import Asn from "../../phase1/lib/Asn"
+import Asn from "../../lib/Asn"
 
 const preProcessAsn = (asn: string) => {
   let twentyCharacterAsn
