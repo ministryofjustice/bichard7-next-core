@@ -4,6 +4,7 @@ import type postgres from "postgres"
 
 import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import type { CaseDataForDto } from "../../types/Case"
 
 import { lockAndAuditLog } from "./lockAndAuditLog"
 
@@ -13,7 +14,7 @@ export const lockAndFetchCase = async (
   caseId: number,
   user: User,
   logger?: FastifyBaseLogger
-) => {
+): Promise<CaseDataForDto> => {
   await dataStore
     .transaction(async (callbackSql: postgres.Sql) => {
       await lockAndAuditLog(dataStore, caseId, callbackSql, user, auditLogGateway, logger)
