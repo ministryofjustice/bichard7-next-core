@@ -59,20 +59,6 @@ describe("lockAndAuditLog", () => {
     expect(auditLogEvent?.user).toBe(user.username)
   })
 
-  it("does not attempt to lock if the user doesn't have permission to lock the case", async () => {
-    const user = minimalUser([UserGroup.TriggerHandler])
-    const messageId = randomUUID()
-    const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
-
-    await createAuditLog(expectedAuditLog, auditLogDynamoGateway)
-
-    jest.spyOn(fakeDataStore, "lockCase")
-
-    await lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)
-
-    expect(fakeDataStore.lockCase).not.toHaveBeenCalled()
-  })
-
   it("locks the trigger to the current user and creates an audit log", async () => {
     const user = minimalUser([UserGroup.TriggerHandler])
     const messageId = randomUUID()
@@ -99,7 +85,7 @@ describe("lockAndAuditLog", () => {
     expect(auditLogEvent?.user).toBe(user.username)
   })
 
-  it("does not attempt to lock the triggers when user lacks permission to lock triggers", async () => {
+  it("does not attempt to lock the exception when user lacks permission to handle exceptions", async () => {
     const user = minimalUser([UserGroup.Audit])
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
@@ -113,7 +99,21 @@ describe("lockAndAuditLog", () => {
     expect(fakeDataStore.lockCase).not.toHaveBeenCalled()
   })
 
-  it("does not create audit log events if the exception is not locked", async () => {
+  it("does not attempt to lock the triggers when user lacks permission to handle triggers", async () => {
+    const user = minimalUser([UserGroup.Audit])
+    const messageId = randomUUID()
+    const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
+
+    await createAuditLog(expectedAuditLog, auditLogDynamoGateway)
+
+    jest.spyOn(fakeDataStore, "lockCase")
+
+    await lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)
+
+    expect(fakeDataStore.lockCase).not.toHaveBeenCalled()
+  })
+
+  it("does not create audit log events if case is not locked", async () => {
     const user = minimalUser()
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
@@ -141,7 +141,7 @@ describe("lockAndAuditLog", () => {
     )
   })
 
-  it("Throws an error when exception locking fails", async () => {
+  it("Throws an error when case locking fails", async () => {
     const user = minimalUser()
 
     jest.spyOn(fakeDataStore, "lockCase").mockRejectedValue(new Error())
