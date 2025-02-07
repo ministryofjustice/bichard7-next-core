@@ -1,3 +1,4 @@
+import Asn from "services/Asn"
 import AnnotatedHO from "../../../../../test/test-data/AnnotatedHO1.json"
 import HO100206 from "../../../../../test/test-data/HO100206.json"
 import ExceptionHO100239 from "../../../../../test/test-data/HO100239_1.json"
@@ -213,6 +214,22 @@ describe("ASN", () => {
 
     clickTab("Notes")
     cy.get("td").contains(`GeneralHandler: Portal Action: Update Applied. Element: asn. New Value: ${updatedAsn}`)
+  })
+
+  it("Should default the ASN editable field value to defendant ASN when ASN is editable but not invalid", () => {
+    cy.task("clearCourtCases")
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: HO100300.hearingOutcomeXml,
+        updatedHearingOutcome: HO100300.hearingOutcomeXml,
+        errorCount: 1,
+        errorLockedByUsername: "GeneralHandler"
+      }
+    ])
+
+    loginAndVisit("/bichard/court-cases/0")
+    cy.get("#asn").should("have.value", Asn.divideAsn("1101ZD0100000448700B"))
   })
 
   it("Should be able to edit ASN field if HO100206 is raised", () => {
