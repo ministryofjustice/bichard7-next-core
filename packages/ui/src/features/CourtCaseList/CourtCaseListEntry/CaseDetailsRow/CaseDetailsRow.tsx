@@ -3,7 +3,7 @@ import DateTime from "components/DateTime"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import Image from "next/image"
 import { useRouter } from "next/router"
-import { JSX, useState } from "react"
+import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
 import { LOCKED_ICON_URL } from "utils/icons"
@@ -12,8 +12,8 @@ import { NotePreviewRow } from "./NotePreviewRow"
 
 interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase
-  reasonCell?: JSX.Element | string
-  lockTag?: JSX.Element
+  reasonCell?: React.ReactNode | string
+  lockTag?: React.ReactNode
 
   previousPath: string | null
 }

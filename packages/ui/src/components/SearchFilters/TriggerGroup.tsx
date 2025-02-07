@@ -1,6 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import IndeterminateCheckbox from "components/IndeterminateCheckbox"
-import { Dispatch, JSX } from "react"
+import { Dispatch } from "react"
 import getShortTriggerCode from "services/entities/transformers/getShortTriggerCode"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
 import allTriggersSelected from "utils/triggerGroups/allTriggersSelected"
@@ -16,7 +16,12 @@ interface TriggerGroupProps {
   dispatch: Dispatch<FilterAction>
 }
 
-const TriggerGroup = ({ name, allGroupTriggers, filteredReasonCodes, dispatch }: TriggerGroupProps): JSX.Element => {
+const TriggerGroup = ({
+  name,
+  allGroupTriggers,
+  filteredReasonCodes,
+  dispatch
+}: TriggerGroupProps): React.ReactNode => {
   const someSelected = someTriggersSelected(allGroupTriggers, filteredReasonCodes)
   const allSelected = allTriggersSelected(allGroupTriggers, filteredReasonCodes)
 
