@@ -1,5 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { ChangeEvent, Dispatch, JSX } from "react"
+import { ChangeEvent, Dispatch } from "react"
 import getShortTriggerCode from "services/entities/transformers/getShortTriggerCode"
 import { FilterAction } from "types/CourtCaseFilter"
 import getTriggerWithDescription from "utils/formatReasons/getTriggerWithDescription"
@@ -11,7 +11,7 @@ interface TriggerCheckboxProps {
   dispatch: Dispatch<FilterAction>
 }
 
-const TriggerCheckbox = ({ triggerCode, selectedTrigger, dispatch }: TriggerCheckboxProps): JSX.Element => {
+const TriggerCheckbox = ({ triggerCode, selectedTrigger, dispatch }: TriggerCheckboxProps): React.ReactNode => {
   const triggerShortCode = getShortTriggerCode(triggerCode) ?? ""
 
   return (

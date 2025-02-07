@@ -1,8 +1,7 @@
-import { ReactNode } from "react"
 import { ColumnContainer, ColumnContent } from "./ColumnHeading.styles"
 
 interface Props {
-  children?: ReactNode
+  children?: React.ReactNode
 }
 
 const ColumnHeading: React.FC<Props> = ({ children }) => {

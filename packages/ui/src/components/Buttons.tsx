@@ -1,8 +1,7 @@
 import { useRouter } from "next/router"
-import { ReactNode } from "react"
 
 interface ButtonProps extends React.ComponentProps<"button"> {
-  children: ReactNode
+  children: React.ReactNode
   dataModule?: string
 }
 
@@ -50,4 +49,4 @@ const LinkButton: React.FC<LinkButtonProps> = ({
   )
 }
 
-export { LinkButton, Button, SecondaryButton }
+export { Button, LinkButton, SecondaryButton }

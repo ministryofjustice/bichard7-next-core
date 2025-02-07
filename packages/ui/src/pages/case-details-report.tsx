@@ -70,24 +70,20 @@ interface Props {
   courtCasesForCaseDetailsReport: DisplayPartialCourtCase[]
 }
 
-const CaseDetailReportPage: NextPage<Props> = (props) => {
-  const { csrfToken, user, courtCasesForCaseDetailsReport } = props
-
+const CaseDetailReportPage: NextPage<Props> = ({ csrfToken, user, courtCasesForCaseDetailsReport }) => {
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   return (
-    <>
-      <CsrfTokenContext.Provider value={csrfTokenContext}>
-        <CurrentUserContext.Provider value={currentUserContext}>
-          {/* { TODO: waiting for design } */}
-          <h1>{"Case report"}</h1>
-          {courtCasesForCaseDetailsReport.map((r) => {
-            return <p key={r.errorId}>{r.asn}</p>
-          })}
-        </CurrentUserContext.Provider>
-      </CsrfTokenContext.Provider>
-    </>
+    <CsrfTokenContext.Provider value={csrfTokenContext}>
+      <CurrentUserContext.Provider value={currentUserContext}>
+        {/* { TODO: waiting for design } */}
+        <h1>{"Case report"}</h1>
+        {courtCasesForCaseDetailsReport.map((r) => {
+          return <p key={r.errorId}>{r.asn}</p>
+        })}
+      </CurrentUserContext.Provider>
+    </CsrfTokenContext.Provider>
   )
 }
 
