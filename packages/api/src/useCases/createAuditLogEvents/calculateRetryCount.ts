@@ -1,7 +1,7 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
+
 import type { DynamoAuditLog } from "../../types/AuditLog"
 import type { DynamoAuditLogEvent } from "../../types/AuditLogEvent"
-
-import EventCode from "../../types/EventCode"
 
 export default (events: DynamoAuditLogEvent[]): Partial<DynamoAuditLog> => {
   const retryEvents = events.filter((event) => event.eventCode === EventCode.RetryingMessage)

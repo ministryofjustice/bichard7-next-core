@@ -1,6 +1,7 @@
 import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import axios, { HttpStatusCode } from "axios"
 
@@ -12,7 +13,6 @@ import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { generateTestJwtToken } from "../../../../tests/helpers/jwtHelper"
 import { mockApiAuditLogEvent, mockInputApiAuditLog } from "../../../../tests/helpers/mockAuditLogs"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
-import EventCode from "../../../../types/EventCode"
 
 const jwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
 const axiosOptions: AxiosRequestConfig = {

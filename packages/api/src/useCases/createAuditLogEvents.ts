@@ -1,5 +1,6 @@
 import type { FastifyBaseLogger } from "fastify"
 
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogDynamoGateway from "../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGatewayInterface"
@@ -12,7 +13,6 @@ import {
 } from "../services/gateways/dynamo"
 import ConflictError from "../types/errors/ConflictError"
 import { NotFoundError } from "../types/errors/NotFoundError"
-import EventCode from "../types/EventCode"
 import calculateAuditLogEventIndices from "./createAuditLogEvents/calculateAuditLogEventIndices"
 import calculateErrorRecordArchivalDate from "./createAuditLogEvents/calculateErrorRecordArchivalDate"
 import calculateForceOwner from "./createAuditLogEvents/calculateForceOwner"
