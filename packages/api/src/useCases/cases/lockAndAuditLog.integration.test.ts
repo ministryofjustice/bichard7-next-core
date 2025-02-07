@@ -1,5 +1,7 @@
 import type postgres from "postgres"
 
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 
@@ -47,6 +49,46 @@ describe("lockAndAuditLog", () => {
 
   it("does not attempt to lock if the user doesn't have permission to lock the case", async () => {
     const user = minimalUser([UserGroup.TriggerHandler])
+    const messageId = randomUUID()
+    const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
+
+    await createAuditLog(expectedAuditLog, auditLogDynamoGateway)
+
+    jest.spyOn(fakeDataStore, "lockCase")
+
+    await lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)
+
+    expect(fakeDataStore.lockCase).not.toHaveBeenCalled()
+  })
+
+  it("locks the trigger to the current user and creates an audit log", async () => {
+    const user = minimalUser([UserGroup.TriggerHandler])
+    const messageId = randomUUID()
+    const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
+    await createAuditLog(expectedAuditLog, auditLogDynamoGateway)
+
+    jest
+      .spyOn(fakeDataStore, "selectCaseMessageId")
+      .mockResolvedValue({ message_id: messageId } satisfies CaseMessageId)
+    jest.spyOn(fakeDataStore, "lockCase").mockResolvedValue(true)
+
+    await expect(lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)).resolves.not.toThrow()
+
+    const auditLogJson = await new FetchById(testDynamoGateway, messageId).fetch()
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+
+    expect(auditLogEvent?.category).toBe(EventCategory.information)
+    expect(auditLogEvent?.eventCode).toBe(EventCode.TriggersLocked)
+    expect(auditLogEvent?.eventSource).toBe("Bichard New UI")
+    expect(auditLogEvent?.user).toBe(user.username)
+  })
+
+  it("does not attempt to lock the triggers when user lacks permission to lock triggers", async () => {
+    const user = minimalUser([UserGroup.Audit])
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
 
