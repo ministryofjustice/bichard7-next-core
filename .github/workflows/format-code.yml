@@ -8,5 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ministryofjustice/github-actions/code-formatter@v18.2.2
+        with:
+          ignore-files: "*.json"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
