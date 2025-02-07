@@ -1,6 +1,6 @@
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 
-import EventCode from "../../types/EventCode"
+import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
 export const parseForceOwner = (forceOwner: string): number | undefined => {
   if (forceOwner.match(/^\d{2}/)) {

@@ -1,6 +1,7 @@
+import EventCode from "@moj-bichard7/common/types/EventCode"
+
 import type { DynamoAuditLogEvent } from "../../types/AuditLogEvent"
 
-import EventCode from "../../types/EventCode"
 import calculateErrorRecordArchivalDate from "./calculateErrorRecordArchivalDate"
 
 const archivalTime = new Date().toISOString()
