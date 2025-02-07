@@ -1,4 +1,9 @@
+import { formatDistanceStrict } from "date-fns/formatDistanceStrict"
+import Image from "next/image"
 import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+import { REFRESH_ICON_URL } from "utils/icons"
+import { RefreshButtonContainer, StyledRefreshButton } from "./Buttons.styles"
 
 interface ButtonProps extends React.ComponentProps<"button"> {
   children: React.ReactNode
@@ -49,4 +54,39 @@ const LinkButton: React.FC<LinkButtonProps> = ({
   )
 }
 
-export { Button, LinkButton, SecondaryButton }
+const RefreshButton = ({ ...buttonProps }) => {
+  const [dateAgo] = useState(new Date())
+  const [timeAgo, setTimeAgo] = useState("")
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeAgo(formatDistanceStrict(dateAgo, new Date()))
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [dateAgo, timeAgo])
+
+  const rawTimeAgo = formatDistanceStrict(dateAgo, new Date())
+  const formattedTimeAgo = ["Last updated"]
+
+  if (/\d+ seconds?/.test(rawTimeAgo)) {
+    formattedTimeAgo.push("less than a minute ago")
+  } else {
+    formattedTimeAgo.push(`${rawTimeAgo} ago`)
+  }
+
+  const handleOnClick = () => {
+    window.location.reload()
+  }
+
+  return (
+    <RefreshButtonContainer>
+      <StyledRefreshButton {...buttonProps} aria-label="refresh" onClick={handleOnClick}>
+        <Image src={REFRESH_ICON_URL} width={24} height={24} alt="Refresh icon" />
+        {" Refresh"}
+      </StyledRefreshButton>
+      <span className="govuk-body-s">{formattedTimeAgo.join(" ")}</span>
+    </RefreshButtonContainer>
+  )
+}
+export { Button, LinkButton, RefreshButton, SecondaryButton }
