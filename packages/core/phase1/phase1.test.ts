@@ -5,7 +5,7 @@ import fs from "fs"
 import MockDate from "mockdate"
 
 import MockPncGateway from "../comparison/lib/MockPncGateway"
-import CoreAuditLogger from "../lib/CoreAuditLogger"
+import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import parseSpiResult from "../lib/parse/parseSpiResult"
 import transformSpiToAho from "../lib/parse/transformSpiToAho"
 import phase1Handler from "./phase1"

@@ -87,11 +87,11 @@ export const confirmCaseNotDisplayed = (PTIURN: string) => {
 }
 
 export const confirmReasonDisplayed = (reason: string) => {
-  cy.get("tbody tr td:nth-child(7)").contains(reason).should("exist")
+  cy.get("tbody.caseListEntry").find("td").contains(reason).should("exist")
 }
 
 export const confirmReasonNotDisplayed = (reason: string) => {
-  cy.get("tbody tr td:nth-child(7)").contains(reason).should("not.exist")
+  cy.get("tbody.caseListEntry").find("td").contains(reason).should("not.exist")
 }
 
 export const expectToHaveNumberOfFeedbacks = (number: number) => {

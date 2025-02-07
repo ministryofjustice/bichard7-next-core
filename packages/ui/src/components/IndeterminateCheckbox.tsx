@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, JSX, useEffect, useRef } from "react"
+import { ChangeEvent, Dispatch, useEffect, useRef } from "react"
 import { FilterAction } from "types/CourtCaseFilter"
 import { IndeterminateCheckboxWrapper } from "./IndeterminateCheckbox.styles"
 
@@ -18,7 +18,7 @@ const IndeterminateCheckbox = ({
   indeterminate,
   value,
   dispatch
-}: IndeterminateCheckboxProps): JSX.Element => {
+}: IndeterminateCheckboxProps): React.ReactNode => {
   const checkboxRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {

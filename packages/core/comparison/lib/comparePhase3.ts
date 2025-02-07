@@ -10,13 +10,13 @@ import type { Phase3Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
-import { PncApiError } from "../../lib/PncGateway"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
+import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
+import { PncApiError } from "../../lib/pnc/PncGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import getMessageType from "../../phase1/lib/getMessageType"
-import { parsePncUpdateDataSetXml } from "../../phase2/parse/parsePncUpdateDataSetXml"
 import { isPncLockError } from "../../phase3/exceptions/generatePncUpdateExceptionFromMessage"
-import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "../../phase3/lib/performOperations"
+import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "../../phase3/lib/updatePnc"
 import phase3Handler from "../../phase3/phase3"
 import getPncOperationsFromPncUpdateDataset from "../../phase3/tests/helpers/getPncOperationsFromPncUpdateDataset"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
@@ -31,7 +31,7 @@ const excludeEventForBichard = (eventCode: string) =>
   ![EventCode.HearingOutcomeReceivedPhase3].includes(eventCode as EventCode)
 
 const excludeEventForCore = (eventCode: string) =>
-  ![EventCode.ExceptionsGenerated, EventCode.TriggersGenerated].includes(eventCode as EventCode)
+  ![EventCode.ExceptionsGenerated, EventCode.PncUpdated, EventCode.TriggersGenerated].includes(eventCode as EventCode)
 
 // We are ignoring the hasError attributes for now because how they are set seems a bit random when there are no errors
 const normaliseXml = (xml?: string): string | undefined => {
@@ -166,8 +166,12 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
       pncOperations
     )
 
+    const sortedCoreTriggers = sortTriggers(coreResult.triggers)
+    const sortedTriggers = sortTriggers(triggers ?? [])
+    const triggersMatch = isEqual(sortedCoreTriggers, sortedTriggers)
+
     const isIntentionalDifference =
-      !pncOperationsMatch &&
+      (!pncOperationsMatch || !triggersMatch) &&
       isValidDisposalTextDifference(
         pncGateway.updates,
         pncOperations,
@@ -188,9 +192,6 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
 
     const sortedExceptions = sortExceptions(outgoingPncUpdateDataset?.Exceptions ?? [])
     const sortedCoreExceptions = sortExceptions(coreResult.outputMessage.Exceptions ?? [])
-
-    const sortedCoreTriggers = sortTriggers(coreResult.triggers)
-    const sortedTriggers = sortTriggers(triggers ?? [])
 
     const coreAuditLogEvents = coreResult.auditLogEvents.map((e) => e.eventCode).filter(excludeEventForCore)
     const bichardAuditLogEvents = extractAuditLogEventCodes(auditLogEvents).filter(excludeEventForBichard)
@@ -221,7 +222,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
 
     return {
       auditLogEventsMatch,
-      triggersMatch: outgoingMessageMissing || isEqual(sortedCoreTriggers, sortedTriggers),
+      triggersMatch: outgoingMessageMissing || triggersMatch,
       exceptionsMatch: outgoingMessageMissing || isEqual(sortedCoreExceptions, sortedExceptions),
       pncOperationsMatch: ignorePncOperationComparison || pncOperationsMatch,
       xmlOutputMatches:

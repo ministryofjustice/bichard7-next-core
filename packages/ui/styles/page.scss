@@ -26,6 +26,10 @@ tr td {
       vertical-align: top;
     }
 
+    td[rowspan] {
+      border-bottom: 1px solid $b7-row-border-color !important;
+    }
+
     tr:not(:last-child) td {
       border-bottom: none;
     }

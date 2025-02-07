@@ -5,7 +5,7 @@ import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import { CjsVerdict } from "../../types/Verdict"
-import getOffenceFullCode from "../getOffenceFullCode"
+import getOffenceFullCode from "../offences/getOffenceFullCode"
 
 const triggerCode = TriggerCode.TRPR0004
 const resultCodes = [3052, 3081, 3085, 3086, 3087, 3088, 3089, 3090, 3091, 1179, 1181, 3281, 3282]

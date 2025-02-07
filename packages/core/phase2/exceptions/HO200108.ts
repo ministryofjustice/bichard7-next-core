@@ -4,12 +4,10 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
+import checkRccSegmentApplicability, { RccSegmentApplicability } from "../../lib/checkRccSegmentApplicability"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
-import checkRccSegmentApplicability, {
-  RccSegmentApplicability
-} from "../lib/getOperationSequence/generateOperations/checkRccSegmentApplicability"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 

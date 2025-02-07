@@ -6,17 +6,19 @@ import { CaseDtoSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
 
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
 import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchCaseDto from "../../../useCases/fetchCaseDto"
+import fetchCaseDto from "../../../useCases/cases/lockAndFetchCaseDto"
 
 type HandlerProps = {
+  auditLogGateway: AuditLogDynamoGateway
   caseId: number
-  db: DataStoreGateway
+  dataStore: DataStoreGateway
   logger: FastifyBaseLogger
   reply: FastifyReply
   user: User
@@ -38,8 +40,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
-  fetchCaseDto(user, db, caseId, logger)
+const handler = async ({ auditLogGateway, caseId, dataStore, logger, reply, user }: HandlerProps) =>
+  fetchCaseDto(user, dataStore, caseId, auditLogGateway, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })
@@ -51,8 +53,9 @@ const handler = async ({ caseId, db, logger, reply, user }: HandlerProps) =>
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.Case, { schema }, async (req, reply) => {
     await handler({
+      auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
-      db: req.db,
+      dataStore: req.dataStore,
       logger: req.log,
       reply,
       user: req.user

@@ -1,21 +1,21 @@
-import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
 import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
+import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
+import { useCurrentUser } from "context/CurrentUserContext"
 import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
-import { Dispatch, JSX } from "react"
+import { Dispatch } from "react"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
-import allGroupedTriggers from "utils/triggerGroups/allGroupedTriggers"
 import allExcludedTriggers from "utils/triggerGroups/allExcludedTriggers"
+import allGroupedTriggers from "utils/triggerGroups/allGroupedTriggers"
 import filteredReasonCodes from "utils/triggerGroups/filteredReasonCodes"
 import TriggerGroup from "./TriggerGroup"
 import { ScrollableFieldset } from "./TriggerGroups.styles"
-import { useCurrentUser } from "context/CurrentUserContext"
 
 interface TriggerGroupProps {
   dispatch: Dispatch<FilterAction>
   reasonCodes: ReasonCode[]
 }
 
-const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): JSX.Element => {
+const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.ReactNode => {
   const currentUser = useCurrentUser()
   const excludedTriggers = allExcludedTriggers(currentUser, forceExcludedTriggers)
 

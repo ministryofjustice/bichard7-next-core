@@ -1,4 +1,3 @@
-import { JSX, ReactNode } from "react"
 import { blue } from "../../utils/colours"
 import { Content, Icon, IconContainer } from "./ColumnOrderIcons.styles"
 
@@ -6,7 +5,7 @@ interface Props {
   orderBy: string | string[] | undefined
   currentOrder: string | string[] | undefined
   columnName: string
-  children?: ReactNode
+  children?: React.ReactNode
 }
 
 const UpArrow: React.FC = () => {
@@ -41,7 +40,7 @@ const Unordered: React.FC = () => {
 }
 
 const ColumnOrderIcons: React.FC<Props> = ({ orderBy, currentOrder, columnName, children }) => {
-  let arrow: JSX.Element | undefined = undefined
+  let arrow: React.ReactNode | undefined = undefined
 
   if (orderBy === undefined || orderBy !== columnName) {
     arrow = <Unordered />

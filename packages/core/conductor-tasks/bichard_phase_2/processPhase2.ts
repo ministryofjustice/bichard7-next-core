@@ -13,10 +13,10 @@ import { z } from "zod"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import phase2 from "../../phase2/phase2"
-import pncUpdateDatasetSchema from "../../phase2/schemas/pncUpdateDataset"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
+import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 

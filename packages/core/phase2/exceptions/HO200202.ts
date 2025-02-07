@@ -5,7 +5,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
-import forEachRecordableResult from "../../lib/forEachRecordableResult"
+import forEachRecordableResult from "../../lib/offences/forEachRecordableResult"
 
 export const maxResultQualifierVariable = 4
 

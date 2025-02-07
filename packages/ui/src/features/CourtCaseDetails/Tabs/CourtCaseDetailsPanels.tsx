@@ -1,7 +1,5 @@
-import { ReactNode } from "react"
-
 interface CourtCaseDetailsPanelProps {
-  children: ReactNode
+  children: React.ReactNode
   heading: string
   visible: boolean
 }

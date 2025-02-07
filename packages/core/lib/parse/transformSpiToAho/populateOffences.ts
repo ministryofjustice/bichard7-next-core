@@ -2,8 +2,8 @@ import type { Offence, OffenceCode } from "../../../types/AnnotatedHearingOutcom
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml, SpiResult } from "../../../types/SpiResult"
 
 import { lookupAlcoholLevelMethodBySpiCode, lookupResultQualifierCodeByCjsCode } from "../../dataLookup"
-import nonRecordableResultCodes from "../../nonRecordableResultCodes"
-import { COMMON_LAWS, INDICTMENT } from "../../offenceTypes"
+import nonRecordableResultCodes from "../../offences/nonRecordableResultCodes"
+import { COMMON_LAWS, INDICTMENT } from "../../offences/offenceTypes"
 import populateOffenceResults from "./populateOffenceResults"
 import removeSeconds from "./removeSeconds"
 

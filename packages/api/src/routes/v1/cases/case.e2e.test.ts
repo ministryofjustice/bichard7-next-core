@@ -1,16 +1,26 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
+import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isError } from "@moj-bichard7/common/types/Result"
+import { randomUUID } from "crypto"
 import { OK } from "http-status"
 
-import { VersionedEndpoints } from "../../../endpoints/versionedEndpoints"
+import type { OutputApiAuditLog } from "../../../types/AuditLog"
+
+import { V1 } from "../../../endpoints/versionedEndpoints"
 import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../tests/helpers/caseHelper"
+import { mockInputApiAuditLog } from "../../../tests/helpers/mockAuditLogs"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken, createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
+import createAuditLog from "../../../useCases/createAuditLog"
+import FetchById from "../../../useCases/fetchAuditLogs/FetchById"
 
 describe("/v1/case e2e", () => {
-  const endpoint = VersionedEndpoints.V1.Case
+  const endpoint = V1.Case
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
@@ -20,16 +30,17 @@ describe("/v1/case e2e", () => {
   })
 
   beforeEach(async () => {
-    await helper.db.clearDb()
+    await helper.postgres.clearDb()
+    await helper.dynamo.clearDynamo()
   })
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   it("returns case data", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.db)
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres)
     const dummyCase = {
       annotated_msg: testAhoXml,
       asn: "1901ID0100000006148H",
@@ -57,7 +68,7 @@ describe("/v1/case e2e", () => {
       updated_msg: testAhoXml
     }
 
-    const testCase = await createCase(helper.db, dummyCase)
+    const testCase = await createCase(helper.postgres, dummyCase)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
@@ -90,10 +101,10 @@ describe("/v1/case e2e", () => {
   })
 
   it("returns errorLockedByUsername and errorLockedByUserFullName", async () => {
-    const [user] = await createUsers(helper.db, 3)
+    const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, { error_locked_by_id: user.username })
+    const testCase = await createCase(helper.postgres, { error_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
@@ -109,10 +120,10 @@ describe("/v1/case e2e", () => {
   })
 
   it("returns triggerLockedByUsername and triggerLockedByUserFullName", async () => {
-    const [user] = await createUsers(helper.db, 3)
+    const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
 
-    const testCase = await createCase(helper.db, { trigger_locked_by_id: user.username })
+    const testCase = await createCase(helper.postgres, { trigger_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
       headers: {
@@ -125,5 +136,126 @@ describe("/v1/case e2e", () => {
     const responseJson: CaseDto = (await response.json()) satisfies CaseDto
     expect(responseJson.triggerLockedByUsername).toBe(user.username)
     expect(responseJson.triggerLockedByUserFullName).toBe("Forename1 Surname1")
+  })
+
+  it("locks exception to the user when the case is unlocked, has exceptions, and has error status unresolved", async () => {
+    const messageId = randomUUID()
+    const [user] = await createUsers(helper.postgres, 3)
+    const jwtToken = await generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      error_count: 1,
+      error_locked_by_id: null,
+      error_status: 1,
+      message_id: messageId,
+      org_for_police_filter: "01"
+    })
+
+    const auditLog = mockInputApiAuditLog({ caseId: "1", messageId })
+    const result = await createAuditLog(auditLog, helper.dynamo)
+    expect(isError(result)).toBe(false)
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    expect(responseJson.errorLockedByUsername).toBe(user.username)
+  })
+
+  const testCases = [
+    {
+      caseData: {
+        error_count: 1,
+        error_locked_by_id: "another_user",
+        error_status: 1
+      },
+      description: "doesn't lock exception to the user when the case is locked to another user",
+      expectedLockedByUsername: "another_user"
+    },
+    {
+      caseData: { error_count: 0, error_locked_by_id: null, error_status: null },
+      description: "doesn't lock exception when case does not have any exception",
+      expectedLockedByUsername: null
+    },
+    {
+      caseData: { error_count: 1, error_locked_by_id: null, error_status: 2 },
+      description: "doesn't lock exception when error status is resolved",
+      expectedLockedByUsername: null
+    },
+    {
+      caseData: { error_count: 1, error_locked_by_id: null, error_status: 3 },
+      description: "doesn't lock exception when error status is submitted",
+      expectedLockedByUsername: null
+    }
+  ]
+
+  testCases.forEach(({ caseData, description, expectedLockedByUsername }) => {
+    it(`${description}`, async () => {
+      const [user] = await createUsers(helper.postgres, 1)
+      const jwtToken = await generateJwtForUser(user)
+
+      const testCase = await createCase(helper.postgres, caseData)
+
+      const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        },
+        method: "GET"
+      })
+
+      expect(response.status).toBe(OK)
+      const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+      expect(responseJson.errorLockedByUsername).toBe(expectedLockedByUsername)
+    })
+  })
+
+  it("should create a new audit log event when locking a case", async () => {
+    const messageId = randomUUID()
+
+    const [user] = await createUsers(helper.postgres, 3)
+    const jwtToken = await generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      error_count: 1,
+      error_locked_by_id: null,
+      error_status: 1,
+      message_id: messageId,
+      org_for_police_filter: "01"
+    })
+
+    const auditLog = mockInputApiAuditLog({ caseId: "1", messageId })
+    const result = await createAuditLog(auditLog, helper.dynamo)
+    expect(isError(result)).toBe(false)
+
+    const caseResult = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+      headers: {
+        Authorization: `Bearer ${jwtToken}`
+      },
+      method: "GET"
+    })
+
+    expect(caseResult.status).toBe(OK)
+
+    const auditLogJson = await new FetchById(helper.dynamo, messageId).fetch()
+
+    expect(isError(auditLogJson)).toBe(false)
+    expect(auditLogJson).toBeDefined()
+
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+
+    expect(auditLogEvent).toHaveProperty("eventCode", EventCode.ExceptionsLocked)
+    expect(auditLogEvent).toHaveProperty("category", EventCategory.information)
+    expect(auditLogEvent).toHaveProperty("eventSource", "Bichard New UI")
+    expect(auditLogEvent).toHaveProperty("eventType", AuditLogEventLookup[EventCode.ExceptionsLocked])
+    expect(auditLogEvent).toHaveProperty("user", user.username)
   })
 })

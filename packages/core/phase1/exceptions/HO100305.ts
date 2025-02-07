@@ -5,7 +5,7 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isCaseRecordable from "../../lib/isCaseRecordable"
-import nonRecordableResultCodes from "../../lib/nonRecordableResultCodes"
+import nonRecordableResultCodes from "../../lib/offences/nonRecordableResultCodes"
 import ResultClass from "../../types/ResultClass"
 import isNotGuiltyVerdict from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isNotGuiltyVerdict"
 import isResultClassCode from "../enrichAho/enrichFunctions/enrichOffenceResultsPostPncEnrichment/isResultClassCode"

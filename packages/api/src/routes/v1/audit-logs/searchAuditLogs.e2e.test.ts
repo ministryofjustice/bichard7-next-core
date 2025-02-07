@@ -1,6 +1,7 @@
 import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import axios, { HttpStatusCode } from "axios"
@@ -19,7 +20,6 @@ import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
 import { generateTestJwtToken } from "../../../tests/helpers/jwtHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
-import EventCode from "../../../types/EventCode"
 
 const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
 
@@ -48,7 +48,7 @@ describe("Getting Audit Logs", () => {
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   beforeEach(async () => {

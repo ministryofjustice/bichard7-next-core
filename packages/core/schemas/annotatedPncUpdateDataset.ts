@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import pncUpdateDatasetSchema from "../phase2/schemas/pncUpdateDataset"
+import pncUpdateDatasetSchema from "./pncUpdateDataset"
 
 export const annotatedPncUpdateDatasetSchema = z.object({
   AnnotatedPNCUpdateDataset: z.object({

@@ -5,7 +5,7 @@ import isMatch from "lodash.ismatch"
 import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import CorePhase1 from "../../phase1/phase1"
 import generateMockPncQueryResultFromAho from "./generateMockPncQueryResultFromAho"
