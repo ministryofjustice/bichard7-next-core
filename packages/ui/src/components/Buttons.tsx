@@ -1,4 +1,4 @@
-import { formatDistanceStrict } from "date-fns/formatDistanceStrict"
+import { format, formatDistanceStrict } from "date-fns"
 import Image from "next/image"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -85,7 +85,9 @@ const RefreshButton = ({ ...buttonProps }) => {
         <Image src={REFRESH_ICON_URL} width={24} height={24} alt="Refresh icon" />
         {" Refresh"}
       </StyledRefreshButton>
-      <span className="govuk-body-s">{formattedTimeAgo.join(" ")}</span>
+      <span className="govuk-body-s" title={`Last updated at ${format(dateAgo, "dd/MM/yyyy HH:mm:ss")}`}>
+        {formattedTimeAgo.join(" ")}
+      </span>
     </RefreshButtonContainer>
   )
 }
