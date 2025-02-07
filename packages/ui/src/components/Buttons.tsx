@@ -68,8 +68,9 @@ const RefreshButton = ({ ...buttonProps }) => {
 
   const rawTimeAgo = formatDistanceStrict(dateAgo, new Date())
   const formattedTimeAgo = ["Last updated"]
+  const regex = new RegExp(/^\b\d+\b seconds?$/)
 
-  if (/\d+ seconds?/.test(rawTimeAgo)) {
+  if (regex.test(rawTimeAgo)) {
     formattedTimeAgo.push("less than a minute ago")
   } else {
     formattedTimeAgo.push(`${rawTimeAgo} ago`)
