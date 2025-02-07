@@ -45,6 +45,18 @@ describe("lockAndAuditLog", () => {
     jest.spyOn(fakeDataStore, "lockCase").mockResolvedValue(true)
 
     await expect(lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)).resolves.not.toThrow()
+
+    const auditLogJson = await new FetchById(testDynamoGateway, messageId).fetch()
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+
+    expect(auditLogEvent?.category).toBe(EventCategory.information)
+    expect(auditLogEvent?.eventCode).toBe(EventCode.ExceptionsLocked)
+    expect(auditLogEvent?.eventSource).toBe("Bichard New UI")
+    expect(auditLogEvent?.user).toBe(user.username)
   })
 
   it("does not attempt to lock if the user doesn't have permission to lock the case", async () => {
