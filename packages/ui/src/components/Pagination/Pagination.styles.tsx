@@ -6,6 +6,7 @@ const PaginationBar = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 99%;
+  margin-top: 15px;
 `
 
 export { PaginationBar }
