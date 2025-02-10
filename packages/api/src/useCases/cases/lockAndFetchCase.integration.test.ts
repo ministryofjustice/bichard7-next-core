@@ -52,7 +52,7 @@ describe("lockAndFetchCase", () => {
   })
 
   it("does not error when given a user doesn't have access to exceptions", async () => {
-    const user = minimalUser([UserGroup.TriggerHandler])
+    const user = minimalUser([UserGroup.Audit])
 
     const result = await lockAndFetchCase(fakeDataStore, auditLogDynamoGateway, caseId, user, fakeLogger)
 
