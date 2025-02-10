@@ -22,7 +22,7 @@ const Pagination: React.FC<Props> = ({
   return (
     <ConditionalRender isRendered={totalCases > 0}>
       <PaginationBar id={`${name}-pagination-bar`} className={"pagination-bar"}>
-        <RefreshButton />
+        <RefreshButton location={name ?? "no-location"} />
         <PaginationResults pageNum={pageNum} casesPerPage={casesPerPage} totalCases={totalCases} />
         <CasesPerPage
           pageNum={pageNum}
