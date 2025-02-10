@@ -8,15 +8,30 @@ import Asn from "services/Asn"
 import { disabledKeys, handleAsnForwardSlashes, type Selection } from "utils/exceptions/handleAsnForwardSlashes"
 import isAsnFormatValid from "utils/exceptions/isAsnFormatValid"
 import isAsnException from "utils/exceptions/isException/isAsnException"
+import { isEditableAsnException } from "utils/exceptions/isException/isEditableAsnException"
 import { AsnInput } from "./AsnField.styles"
 
 export const AsnField = () => {
   const { courtCase, amendments, amend } = useCourtCase()
   const defendant = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
-  const amendedAsn = amendments.asn ?? ""
   const updatedAhoAsn =
     courtCase.updatedHearingOutcome?.AnnotatedHearingOutcome?.HearingOutcome?.Case?.HearingDefendant
       ?.ArrestSummonsNumber
+
+  const hasExceptions =
+    courtCase.canUserEditExceptions &&
+    courtCase.phase === Phase.HEARING_OUTCOME &&
+    isAsnException(courtCase.aho.Exceptions)
+
+  const isAsnEditable =
+    hasExceptions || (courtCase.canUserEditExceptions && isEditableAsnException(courtCase.aho.Exceptions))
+
+  let amendedAsn = ""
+  if (amendments.asn || amendments.asn === "") {
+    amendedAsn = amendments.asn
+  } else if (!hasExceptions && isAsnEditable) {
+    amendedAsn = defendant.ArrestSummonsNumber
+  }
 
   const [isValidAsn, setIsValidAsn] = useState<boolean>(isAsnFormatValid(amendedAsn))
   const [isSavedAsn, setIsSavedAsn] = useState<boolean>(false)
@@ -51,6 +66,7 @@ export const AsnField = () => {
     }
 
     const { selectionStart, selectionEnd } = e.currentTarget
+    console.log("keydown")
     setSelection({ start: selectionStart, end: selectionEnd })
   }
 
@@ -71,18 +87,13 @@ export const AsnField = () => {
     navigator.clipboard.writeText(copiedAsn ?? "")
   }
 
-  const isAsnEditable =
-    courtCase.canUserEditExceptions &&
-    courtCase.phase === Phase.HEARING_OUTCOME &&
-    isAsnException(courtCase.aho.Exceptions)
-
   return (
     <EditableFieldTableRow
       className={"asn-row"}
       value={defendant.ArrestSummonsNumber}
       updatedValue={updatedAhoAsn}
       label="ASN"
-      hasExceptions={isAsnEditable}
+      hasExceptions={hasExceptions}
       isEditable={isAsnEditable}
       inputLabel="Enter the ASN"
       hintText="ASN format: Last 2 digits of year / 4 divisional ID location characters / 2 digits from owning force / 1 to 11 digits and 1 check letter \n Example: 22/49AB/49/1234C"
