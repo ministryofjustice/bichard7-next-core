@@ -118,6 +118,51 @@ describe("lockAndFetchCase e2e", () => {
     expect(auditLogEvent).toHaveProperty("user", user.username)
   })
 
+  it("locks both exceptions and triggers, creates an audit log event, and fetches the updated case", async () => {
+    await createCase(helper.postgres, {
+      error_count: 1,
+      error_status: 1,
+      message_id: messageId,
+      trigger_count: 1,
+      trigger_status: 1
+    })
+
+    const caseId = 1
+    const [user] = await createUsers(helper.postgres, 1)
+
+    jest.spyOn(fakeLogger, "error")
+
+    const caseResult = await lockAndFetchCase(helper.postgres, helper.dynamo, caseId, user, fakeLogger)
+
+    expect(fakeLogger.error).not.toHaveBeenCalled()
+
+    expect(caseResult.trigger_locked_by_id).toBe(user.username)
+    expect(caseResult.trigger_locked_by_fullname).toBe(`${user.forenames} ${user.surname}`)
+
+    const auditLogJson = await new FetchById(helper.dynamo, messageId).fetch()
+
+    expect(isError(auditLogJson)).toBe(false)
+
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+
+    expect(auditLogObj.events).toHaveLength(2)
+
+    const exceptionsAuditLogEvent = auditLogObj.events?.[0]
+    const triggersAuditLogEvent = auditLogObj.events?.[1]
+
+    expect(exceptionsAuditLogEvent).toHaveProperty("eventCode", EventCode.ExceptionsLocked)
+    expect(exceptionsAuditLogEvent).toHaveProperty("category", EventCategory.information)
+    expect(exceptionsAuditLogEvent).toHaveProperty("eventSource", "Bichard New UI")
+    expect(exceptionsAuditLogEvent).toHaveProperty("eventType", AuditLogEventLookup[EventCode.ExceptionsLocked])
+    expect(exceptionsAuditLogEvent).toHaveProperty("user", user.username)
+
+    expect(triggersAuditLogEvent).toHaveProperty("eventCode", EventCode.TriggersLocked)
+    expect(triggersAuditLogEvent).toHaveProperty("category", EventCategory.information)
+    expect(triggersAuditLogEvent).toHaveProperty("eventSource", "Bichard New UI")
+    expect(triggersAuditLogEvent).toHaveProperty("eventType", AuditLogEventLookup[EventCode.TriggersLocked])
+    expect(triggersAuditLogEvent).toHaveProperty("user", user.username)
+  })
+
   it("does not update the case record and audit log when postgres throws an error, and fetches the case", async () => {
     await createCase(helper.postgres, {
       error_count: 1,
