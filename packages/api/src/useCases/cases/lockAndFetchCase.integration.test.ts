@@ -51,7 +51,7 @@ describe("lockAndFetchCase", () => {
     expect(result.error_id).toBe(0)
   })
 
-  it("does not error when given a user doesn't have access to exceptions", async () => {
+  it("does not error when given a user doesn't have access to exceptions or triggers", async () => {
     const user = minimalUser([UserGroup.Audit])
 
     const result = await lockAndFetchCase(fakeDataStore, auditLogDynamoGateway, caseId, user, fakeLogger)
