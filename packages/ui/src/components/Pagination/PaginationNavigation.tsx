@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { generatePageLinks } from "./generatePageLinks"
+import { PaginationNav } from "./PaginationNavigation.styles"
 
 interface RelativeNavigationProps {
   className: string
@@ -65,10 +66,11 @@ const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
   const pageLinks = generatePageLinks(pageNum, totalPages)
 
   return (
-    <nav
+    <PaginationNav
       className={"moj-pagination"}
       aria-label={`Pagination navigation ${name}`}
       id={`pagination-navigation${name && "-" + name}`}
+      style={{ justifySelf: "flex-end" }}
     >
       <ul className="moj-pagination__list">
         {pageLinks.map((pageLink, index) => {
@@ -113,7 +115,7 @@ const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
           }
         })}
       </ul>
-    </nav>
+    </PaginationNav>
   )
 }
 
