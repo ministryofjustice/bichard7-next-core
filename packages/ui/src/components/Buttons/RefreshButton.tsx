@@ -4,7 +4,11 @@ import { useEffect, useState } from "react"
 import { REFRESH_ICON_URL } from "utils/icons"
 import { RefreshButtonContainer, StyledRefreshButton } from "./RefreshButton.styles"
 
-export const RefreshButton = ({ ...buttonProps }) => {
+interface RefreshButtonProps extends React.ComponentProps<"button"> {
+  location: string
+}
+
+export const RefreshButton = ({ location, ...buttonProps }: RefreshButtonProps) => {
   const [dateAgo] = useState(new Date())
   const [timeAgo, setTimeAgo] = useState("")
 
@@ -31,7 +35,7 @@ export const RefreshButton = ({ ...buttonProps }) => {
   }
 
   return (
-    <RefreshButtonContainer>
+    <RefreshButtonContainer className={`${location}-refresh-container`}>
       <StyledRefreshButton {...buttonProps} aria-label="refresh" onClick={handleOnClick}>
         <Image src={REFRESH_ICON_URL} width={24} height={24} alt="Refresh icon" />
         {" Refresh"}
