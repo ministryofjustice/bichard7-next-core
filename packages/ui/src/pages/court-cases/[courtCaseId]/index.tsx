@@ -198,7 +198,6 @@ export const getServerSideProps = withMultipleServerSideProps(
 interface Props {
   user: DisplayFullUser
   courtCase: DisplayFullCourtCase
-  isLockedByCurrentUser: boolean
   canReallocate: boolean
   canResolveAndSubmit: boolean
   csrfToken: string
@@ -210,7 +209,6 @@ interface Props {
 const CourtCaseDetailsPage: NextPage<Props> = ({
   courtCase,
   user,
-  isLockedByCurrentUser,
   canReallocate,
   canResolveAndSubmit,
   displaySwitchingSurveyFeedback,
@@ -258,10 +256,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 </ConditionalRender>
                 <Header canReallocate={canReallocate} />
                 <CourtCaseDetailsSummaryBox />
-                <CourtCaseDetails
-                  isLockedByCurrentUser={isLockedByCurrentUser}
-                  canResolveAndSubmit={canResolveAndSubmit}
-                />
+                <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
               </Layout>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>
