@@ -70,7 +70,6 @@ const PaginationNavigation: React.FC<PaginationNavigationProps> = ({
       className={"moj-pagination"}
       aria-label={`Pagination navigation ${name}`}
       id={`pagination-navigation${name && "-" + name}`}
-      style={{ justifySelf: "flex-end" }}
     >
       <ul className="moj-pagination__list">
         {pageLinks.map((pageLink, index) => {

@@ -13,7 +13,7 @@ const CasesPerPage: React.FC<Props> = ({ options, selected, pageNum, casesPerPag
   const router = useRouter()
 
   return (
-    <CasesPerPageContainer className="moj-pagination__results" style={{ justifySelf: "center" }}>
+    <CasesPerPageContainer className="moj-pagination__results">
       {"View "}
       <CasesPerPagePicker
         onChange={(event: ChangeEvent<HTMLSelectElement>) => {
