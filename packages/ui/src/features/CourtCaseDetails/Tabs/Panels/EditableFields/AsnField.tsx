@@ -38,6 +38,8 @@ export const AsnField = () => {
   const [asnChanged, setAsnChanged] = useState<boolean>(false)
   const [selection, setSelection] = useState<Selection>()
   const [key, setKey] = useState<string>("")
+  const [history, setHistory] = useState<string[]>([amendedAsn])
+  const [currentIndex, setCurrentIndex] = useState<number>(0)
 
   const asnInputRef = useRef<HTMLInputElement>(null)
 
@@ -46,15 +48,56 @@ export const AsnField = () => {
   }, [selection, amendedAsn, key])
 
   const amendAsn = (asn: string, selectionStart: number | null, selectionEnd: number | null) => {
-    amend("asn")(asn.toUpperCase().replace(/\//g, ""))
+    const newAsn = asn.toUpperCase().replace(/\//g, "")
 
+    if (history[currentIndex] !== newAsn) {
+      const newHistory = history.slice(0, currentIndex + 1)
+      newHistory.push(newAsn)
+      setHistory(newHistory)
+      setCurrentIndex(newHistory.length - 1)
+    }
+
+    amend("asn")(newAsn)
     setSelection({ start: selectionStart, end: selectionEnd })
     setAsnChanged(true)
     setIsSavedAsn(false)
     setIsValidAsn(isAsnFormatValid(asn.toUpperCase()))
   }
 
+  const undoAsn = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prevIndex) => prevIndex - 1)
+      amend("asn")(history[currentIndex - 1])
+    }
+  }
+
+  const redoAsn = () => {
+    if (currentIndex < history.length - 1) {
+      setCurrentIndex((prevIndex) => prevIndex + 1)
+      amend("asn")(history[currentIndex + 1])
+    }
+  }
+
+  const setSelectionAfterUndoRedo = () => {
+    if (asnInputRef?.current?.value) {
+      const length = asnInputRef.current.value.length + 1
+      setSelection({ start: length, end: length })
+    }
+  }
+
   const handleOnKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if ((e.ctrlKey || e.metaKey) && ((e.shiftKey && e.key === "z") || e.key === "y")) {
+      e.preventDefault()
+      redoAsn()
+      setSelectionAfterUndoRedo()
+      return
+    } else if ((e.ctrlKey || e.metaKey) && e.key === "z") {
+      e.preventDefault()
+      undoAsn()
+      setSelectionAfterUndoRedo()
+      return
+    }
+
     if (e.code === "Backspace" || disabledKeys.includes(e.code)) {
       setKey(e.code)
     } else {
@@ -66,7 +109,6 @@ export const AsnField = () => {
     }
 
     const { selectionStart, selectionEnd } = e.currentTarget
-    console.log("keydown")
     setSelection({ start: selectionStart, end: selectionEnd })
   }
 
