@@ -1,4 +1,4 @@
-import { LinkButton } from "components/Buttons"
+import { LinkButton } from "components/Buttons/LinkButton"
 import Layout from "components/Layout"
 import { SkipLink, SwitchingFeedbackButtonContainer } from "components/SwitchingFeedbackHeader/Links.styles"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"

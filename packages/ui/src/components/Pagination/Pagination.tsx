@@ -1,4 +1,4 @@
-import { RefreshButton } from "components/Buttons"
+import { RefreshButton } from "components/Buttons/RefreshButton"
 import defaults from "defaults"
 import ConditionalRender from "../ConditionalRender"
 import CasesPerPage from "./CasesPerPage"
