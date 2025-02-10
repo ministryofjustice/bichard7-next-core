@@ -1,10 +1,9 @@
 import ConditionalRender from "components/ConditionalRender"
-import { JSX } from "react"
 
 interface Props {
   condition: boolean
   label: string
-  children: JSX.Element | JSX.Element[]
+  children: React.ReactNode | React.ReactNode[]
 }
 
 const FilterChipContainer: React.FC<Props> = ({ condition, label, children }: Props) => {

@@ -9,7 +9,7 @@ import type { Trigger } from "../../types/Trigger"
 import type Phase1Result from "../types/Phase1Result"
 
 import MockPncGateway from "../../comparison/lib/MockPncGateway"
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import parseSpiResult from "../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../lib/parse/transformSpiToAho"
 import CorePhase1 from "../phase1"

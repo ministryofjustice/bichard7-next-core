@@ -5,8 +5,8 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
-import isRecordableOffence from "../lib/isRecordableOffence"
-import isRecordableResult from "../lib/isRecordableResult"
+import isRecordableOffence from "../../lib/offences/isRecordableOffence"
+import isRecordableResult from "../../lib/results/isRecordableResult"
 
 const getErrorPath = (offence: Offence, offenceIndex: number) =>
   offence.CriminalProsecutionReference?.OffenceReason?.__type === "NationalOffenceReason"

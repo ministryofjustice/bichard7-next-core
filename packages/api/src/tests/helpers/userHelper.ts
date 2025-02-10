@@ -67,3 +67,10 @@ export const generateJwtForUser = async (user: User) => {
 
   return generateTestJwtToken(user, user.jwt_id)
 }
+
+export const minimalUser = (groups: UserGroup[] = [UserGroup.ExceptionHandler]): User => {
+  return {
+    groups,
+    username: "user1"
+  } as User
+}

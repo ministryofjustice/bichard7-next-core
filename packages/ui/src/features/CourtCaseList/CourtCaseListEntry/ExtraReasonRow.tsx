@@ -1,16 +1,15 @@
 import ConditionalRender from "components/ConditionalRender"
 import Image from "next/image"
-import { LOCKED_ICON_URL } from "utils/icons"
-import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"
-import { JSX } from "react"
 import { ResolutionStatus } from "types/ResolutionStatus"
+import { LOCKED_ICON_URL } from "utils/icons"
 import ResolutionStatusBadge from "../tags/ResolutionStatusBadge"
 import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow/CaseDetailsRow.styles"
+import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"
 
 interface ExtraReasonRowProps {
   isLocked: boolean
-  reasonCell?: JSX.Element
-  lockTag?: JSX.Element
+  reasonCell?: React.ReactNode
+  lockTag?: React.ReactNode
   resolutionStatus: ResolutionStatus
 }
 

@@ -8,7 +8,7 @@ import type {
   PncQueryResult
 } from "../../../types/PncQueryResult"
 
-import parsePncDate from "../../parsePncDate"
+import parsePncDate from "../parsePncDate"
 
 type OffenceDates = {
   endDate?: Date

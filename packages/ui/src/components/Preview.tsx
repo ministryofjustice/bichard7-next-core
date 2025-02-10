@@ -1,8 +1,7 @@
-import { ReactNode } from "react"
 import { CustomPreview } from "./Preview.styles"
 
 interface PreviewProps {
-  children: ReactNode
+  children: React.ReactNode
   className?: string
 }
 

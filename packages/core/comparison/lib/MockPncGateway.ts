@@ -2,7 +2,7 @@ import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncQueryResult } from "../../types/PncQueryResult"
 
-import { PncApiError } from "../../lib/PncGateway"
+import { PncApiError } from "../../lib/pnc/PncGateway"
 
 export default class MockPncGateway implements PncGatewayInterface {
   result: (PncApiError | PncQueryResult | undefined)[] = []

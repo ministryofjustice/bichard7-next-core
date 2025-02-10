@@ -1,6 +1,6 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
-import getOffenceCode from "@moj-bichard7/core/lib/getOffenceCode"
+import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import { OffencesListRow } from "./OffencesListRow"
 
 interface OffencesListProps {

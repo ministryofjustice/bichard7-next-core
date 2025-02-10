@@ -1,7 +1,7 @@
 import type { z } from "zod"
 
-import type pncUpdateDatasetSchema from "../phase2/schemas/pncUpdateDataset"
-import type { operationSchema, operationStatusSchema } from "../phase2/schemas/pncUpdateDataset"
+import type pncUpdateDatasetSchema from "../schemas/pncUpdateDataset"
+import type { operationSchema, operationStatusSchema } from "../schemas/pncUpdateDataset"
 import type { AnnotatedHearingOutcome } from "./AnnotatedHearingOutcome"
 
 const isPncUpdateDataset = (aho: AnnotatedHearingOutcome): aho is PncUpdateDataset => {

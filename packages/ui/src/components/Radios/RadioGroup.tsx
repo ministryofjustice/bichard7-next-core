@@ -1,7 +1,5 @@
-import { ReactNode } from "react"
-
 interface RadioGroupsProps extends React.ComponentProps<"div"> {
-  children: ReactNode
+  children: React.ReactNode
   legendText: string
   errorMessage?: string
   hasError?: boolean

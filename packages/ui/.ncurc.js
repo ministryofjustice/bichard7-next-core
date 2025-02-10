@@ -2,16 +2,9 @@
   Pinned:
   - cookies-next
     - v5 contains breaking changes
-  - react, react-dom, @types/react, @types/react-dom
-    - Contains breaking changes
-    - govuk-react only on react 18
 
-
-  Skipped:
-  - next
-    - 13.4.13 causes failures with fetch
 */
-const pinned = ["cookies-next", "react", "react-dom", "@types/react", "@types/react-dom"]
+const pinned = ["cookies-next"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 

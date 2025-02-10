@@ -1,6 +1,6 @@
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
-import getOffenceCode from "../../lib/getOffenceCode"
+import getOffenceCode from "../../lib/offences/getOffenceCode"
 import offencesHaveEqualResults from "../../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offencesHaveEqualResults"
 
 const hoOffencesAreEqual = (offence1: Offence, offence2: Offence): boolean =>

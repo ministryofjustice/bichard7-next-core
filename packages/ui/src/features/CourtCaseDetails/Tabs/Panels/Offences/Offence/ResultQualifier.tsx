@@ -1,6 +1,5 @@
 import ResultQualifierCodes from "@moj-bichard7-developers/bichard7-next-data/dist/data/result-qualifier-code.json"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { JSX } from "react"
 import { TableRow } from "../../TableRow"
 
 interface QualifierProps {
@@ -12,7 +11,7 @@ type ResultQualifierCode = {
   description?: string
 }
 
-const ResultQualifier = ({ result }: QualifierProps): JSX.Element => {
+const ResultQualifier = ({ result }: QualifierProps): React.ReactNode => {
   if (result.ResultQualifierVariable.length === 0) {
     return <></>
   }

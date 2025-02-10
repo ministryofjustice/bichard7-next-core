@@ -4,7 +4,7 @@ import type PncUpdateRequest from "../types/PncUpdateRequest"
 
 import MockPncGateway from "../../comparison/lib/MockPncGateway"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import { PncApiError } from "../../lib/PncGateway"
+import { PncApiError } from "../../lib/pnc/PncGateway"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
 import updatePnc from "./updatePnc"
 
