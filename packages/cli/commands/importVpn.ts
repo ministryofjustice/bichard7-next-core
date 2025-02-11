@@ -7,10 +7,12 @@ export function importVpn(): Command {
 
   command.description("Import VPN profiles into OpenVPN").action(() => {
     const scriptPath = path.resolve(__dirname, "../../../../scripts/import-openvpn-profiles.sh")
+    const scriptDir = path.dirname(scriptPath)
 
     const child = spawn("bash", [scriptPath], {
       stdio: "inherit", // Allow input/output to flow through the terminal
-      shell: true // Use the shell for better compatibility
+      shell: true, // Use the shell for better compatibility
+      cwd: scriptDir
     })
 
     child.on("close", (code) => {
