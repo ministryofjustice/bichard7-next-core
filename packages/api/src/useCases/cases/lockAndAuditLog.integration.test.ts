@@ -1,5 +1,7 @@
 import type postgres from "postgres"
 
+import EventCategory from "@moj-bichard7/common/types/EventCategory"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 
@@ -43,10 +45,48 @@ describe("lockAndAuditLog", () => {
     jest.spyOn(fakeDataStore, "lockCase").mockResolvedValue(true)
 
     await expect(lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)).resolves.not.toThrow()
+
+    const auditLogJson = await new FetchById(testDynamoGateway, messageId).fetch()
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+
+    expect(auditLogEvent?.category).toBe(EventCategory.information)
+    expect(auditLogEvent?.eventCode).toBe(EventCode.ExceptionsLocked)
+    expect(auditLogEvent?.eventSource).toBe("Bichard New UI")
+    expect(auditLogEvent?.user).toBe(user.username)
   })
 
-  it("does not attempt to lock if the user doesn't have permission to lock the case", async () => {
+  it("locks the trigger to the current user and creates an audit log", async () => {
     const user = minimalUser([UserGroup.TriggerHandler])
+    const messageId = randomUUID()
+    const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
+    await createAuditLog(expectedAuditLog, auditLogDynamoGateway)
+
+    jest
+      .spyOn(fakeDataStore, "selectCaseMessageId")
+      .mockResolvedValue({ message_id: messageId } satisfies CaseMessageId)
+    jest.spyOn(fakeDataStore, "lockCase").mockResolvedValue(true)
+
+    await expect(lockAndAuditLog(fakeDataStore, caseId, sql, user, auditLogDynamoGateway)).resolves.not.toThrow()
+
+    const auditLogJson = await new FetchById(testDynamoGateway, messageId).fetch()
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+
+    expect(auditLogEvent?.category).toBe(EventCategory.information)
+    expect(auditLogEvent?.eventCode).toBe(EventCode.TriggersLocked)
+    expect(auditLogEvent?.eventSource).toBe("Bichard New UI")
+    expect(auditLogEvent?.user).toBe(user.username)
+  })
+
+  it("does not attempt to lock the exceptions or triggers when user lacks permission to handle exceptions and triggers", async () => {
+    const user = minimalUser([UserGroup.Audit])
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
 
@@ -59,7 +99,7 @@ describe("lockAndAuditLog", () => {
     expect(fakeDataStore.lockCase).not.toHaveBeenCalled()
   })
 
-  it("does not create audit log events if the exception is not locked", async () => {
+  it("does not create audit log events when case is not locked", async () => {
     const user = minimalUser()
     const messageId = randomUUID()
     const expectedAuditLog = mockInputApiAuditLog({ caseId: "0", messageId })
@@ -87,7 +127,7 @@ describe("lockAndAuditLog", () => {
     )
   })
 
-  it("Throws an error when exception locking fails", async () => {
+  it("Throws an error when case locking fails", async () => {
     const user = minimalUser()
 
     jest.spyOn(fakeDataStore, "lockCase").mockRejectedValue(new Error())
