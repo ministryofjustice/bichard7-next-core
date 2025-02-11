@@ -1,0 +1,21 @@
+import type postgres from "postgres"
+
+import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
+
+export default async (sql: postgres.Sql, caseId: number, username: string, forceIds: number[]): Promise<boolean> => {
+  const status: number = resolutionStatusCodeByText(ResolutionStatus.Unresolved) as number
+
+  const result = await sql`
+    UPDATE br7own.error_list el
+      SET
+        trigger_locked_by_id = ${username}
+      WHERE
+        trigger_locked_by_id IS NULL AND
+        trigger_count > 0 AND
+        trigger_status = ${status} AND
+        error_id = ${caseId} AND
+        br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
+  `
+
+  return result.count > 0
+}
