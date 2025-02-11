@@ -1,63 +1,24 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
-import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { usePreviousPath } from "context/PreviousPathContext"
-import { usePathname } from "next/navigation"
-import { useRouter } from "next/router"
 
-import { LinkButton } from "components/Buttons"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
-import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
-import { ButtonContainer, LockedTagContainer, StyledButton, StyledSecondaryButton } from "./Header.styles"
+import { LockedTagContainer } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
 
 interface Props {
   canReallocate: boolean
 }
 
-const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
-  const params = new URLSearchParams()
-  if (courtCase.errorLockedByUsername) {
-    params.set("unlockException", courtCase.errorId?.toString())
-  }
-  if (courtCase.triggerLockedByUsername) {
-    params.set("unlockTrigger", courtCase.errorId?.toString())
-  }
-  return params
-}
-
-const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath } = useRouter()
-  const { csrfToken } = useCsrfToken()
+const Header: React.FC<Props> = () => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
-  const previousPath = usePreviousPath()
-
-  const leaveAndUnlockParams = getUnlockPath(courtCase)
-
-  const pathName = usePathname()
-
-  let reallocatePath = `${basePath}${pathName}`
-  let leaveAndUnlockUrl = `${basePath}?${leaveAndUnlockParams.toString()}`
-
-  if (!pathName.includes("/reallocate")) {
-    reallocatePath += "/reallocate"
-  }
-
-  if (previousPath) {
-    leaveAndUnlockUrl += `&${previousPath}`
-    reallocatePath += `?previousPath=${encodeURIComponent(previousPath)}`
-  }
 
   const caseIsViewOnly = !isLockedByCurrentUser(courtCase, currentUser.username)
-  const hasCaseLock = isLockedByCurrentUser(courtCase, currentUser.username)
 
   return (
     <HeaderContainer id="header-container">
@@ -86,33 +47,6 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
           />
         </LockedTagContainer>
       </HeaderRow>
-
-      <ButtonContainer>
-        <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-          <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
-            {"Reallocate Case"}
-          </LinkButton>
-        </ConditionalRender>
-        <ConditionalRender isRendered={hasCaseLock}>
-          <a href={basePath}>
-            <StyledButton id="leave-and-lock" className={`button`}>
-              {"Leave and lock"}
-            </StyledButton>
-          </a>
-          <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
-            <StyledButton id="leave-and-unlock" className={`button`} type="submit">
-              {"Leave and unlock"}
-            </StyledButton>
-          </Form>
-        </ConditionalRender>
-        <ConditionalRender isRendered={!hasCaseLock}>
-          <a href={basePath}>
-            <StyledSecondaryButton id="return-to-case-list" className={`button`}>
-              {"Return to case list"}
-            </StyledSecondaryButton>
-          </a>
-        </ConditionalRender>
-      </ButtonContainer>
     </HeaderContainer>
   )
 }
