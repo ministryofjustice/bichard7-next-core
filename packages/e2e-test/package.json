@@ -36,8 +36,8 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-tests#readme",
   "dependencies": {
-    "@babel/core": "^7.26.7",
-    "@babel/preset-env": "^7.26.7",
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
     "@cucumber/cucumber": "^9.5.1",
     "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^9.4.0",
@@ -55,8 +55,8 @@
     "nunjucks": "^3.2.4",
     "pg-promise": "^11.10.2",
     "promise-poller": "^1.9.1",
-    "puppeteer": "^24.1.1",
-    "puppeteer-core": "^24.1.1",
+    "puppeteer": "^24.2.0",
+    "puppeteer-core": "^24.2.0",
     "puppeteer-mass-screenshots": "^1.0.15",
     "stompit": "^1.0.0",
     "tiny-glob": "^0.2.9",
@@ -66,16 +66,16 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@swc/core": "^1.10.12",
+    "@swc/core": "^1.10.15",
     "@swc/jest": "^0.2.37",
     "@types/jsonwebtoken": "^9.0.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.1",
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
@@ -84,7 +84,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "npm-check-updates": "^17.1.14",
-    "prettier": "^3.4.2"
+    "prettier": "^3.5.0"
   },
   "lint-staged": {
     "*.js": [
