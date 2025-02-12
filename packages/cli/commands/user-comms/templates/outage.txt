@@ -1,0 +1,12 @@
+Hello {{ firstName | default("first-name") }},
+
+We wanted to inform you that the {{ outageType }} is currently experiencing a loss of service. We apologise for any inconvenience this may cause.
+
+We will keep you informed of any updates as soon as we receive them.
+
+If you have any questions, please feel free to contact us at moj-bichard7@madetech.com.
+
+Thank you for your patience and understanding.
+
+Many thanks,
+The Bichard 7 Support team
