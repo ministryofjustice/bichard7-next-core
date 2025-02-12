@@ -9,7 +9,7 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
-import { LinkButton } from "components/Buttons"
+import { LinkButton } from "components/Buttons/LinkButton"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
 import Form from "../../components/Form"
