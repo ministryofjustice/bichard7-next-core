@@ -9,7 +9,6 @@ import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenCon
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { PreviousPathContext } from "context/PreviousPathContext"
 import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
-import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -141,8 +140,7 @@ const ReallocateCasePage: NextPage<Props> = ({
             <PreviousPathContext.Provider value={{ previousPath }}>
               <Layout>
                 <HeaderContainer id="header-container">
-                  <Header canReallocate={canReallocate} />
-                  <CourtCaseDetailsSummaryBox />
+                  <CourtCaseDetailsSummaryBox canReallocate={canReallocate} />
                   <HeaderRow>
                     <h2 className="govuk-heading-m" aria-label="Reallocate Case">
                       {"Case reallocation"}

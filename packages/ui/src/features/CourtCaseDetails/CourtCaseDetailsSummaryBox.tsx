@@ -14,7 +14,7 @@ import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import getResolutionStatus from "utils/getResolutionStatus"
-import { SummaryBox, SummaryBoxGrid } from "./CourtCaseDetailsSummaryBox.styles"
+import { FlexContainer, SummaryBox, SummaryBoxGrid } from "./CourtCaseDetailsSummaryBox.styles"
 import CourtCaseDetailsSummaryBoxField from "./CourtCaseDetailsSummaryBoxField"
 import { ButtonContainer, LockedTagContainer, StyledButton, StyledSecondaryButton } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
@@ -72,55 +72,57 @@ const CourtCaseDetailsSummaryBox: React.FC<Props> = ({ canReallocate }: Props) =
   return (
     <SummaryBox className={`govuk-body`} aria-label="Court case summary">
       <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
-      <h2>
-        {courtCase.defendantName}
-        {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
-        <Badge
-          isRendered={caseIsViewOnly}
-          label="View only"
-          colour={BadgeColours.Blue}
-          className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
-        />
-      </h2>
-      <LockedTagContainer>
-        <LockStatusTag
-          isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
-          resolutionStatus={courtCase.errorStatus}
-          lockName="Exceptions"
-        />
-        <LockStatusTag
-          isRendered={currentUser.hasAccessTo[Permission.Triggers]}
-          resolutionStatus={courtCase.triggerStatus}
-          lockName="Triggers"
-        />
-      </LockedTagContainer>
+      <FlexContainer>
+        <h2>
+          {courtCase.defendantName}
+          {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
+          <Badge
+            isRendered={caseIsViewOnly}
+            label="View only"
+            colour={BadgeColours.Blue}
+            className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
+          />
+          <LockedTagContainer>
+            <LockStatusTag
+              isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
+              resolutionStatus={courtCase.errorStatus}
+              lockName="Exceptions"
+            />
+            <LockStatusTag
+              isRendered={currentUser.hasAccessTo[Permission.Triggers]}
+              resolutionStatus={courtCase.triggerStatus}
+              lockName="Triggers"
+            />
+          </LockedTagContainer>
+        </h2>
 
-      <ButtonContainer>
-        <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-          <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
-            {"Reallocate Case"}
-          </LinkButton>
-        </ConditionalRender>
-        <ConditionalRender isRendered={hasCaseLock}>
-          <a href={basePath}>
-            <StyledButton id="leave-and-lock" className={`button`}>
-              {"Leave and lock"}
-            </StyledButton>
-          </a>
-          <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
-            <StyledButton id="leave-and-unlock" className={`button`} type="submit">
-              {"Leave and unlock"}
-            </StyledButton>
-          </Form>
-        </ConditionalRender>
-        <ConditionalRender isRendered={!hasCaseLock}>
-          <a href={basePath}>
-            <StyledSecondaryButton id="return-to-case-list" className={`button`}>
-              {"Return to case list"}
-            </StyledSecondaryButton>
-          </a>
-        </ConditionalRender>
-      </ButtonContainer>
+        <ButtonContainer>
+          <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
+            <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
+              {"Reallocate Case"}
+            </LinkButton>
+          </ConditionalRender>
+          <ConditionalRender isRendered={hasCaseLock}>
+            <a href={basePath}>
+              <StyledButton id="leave-and-lock" className={`button`}>
+                {"Leave and lock"}
+              </StyledButton>
+            </a>
+            <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
+              <StyledButton id="leave-and-unlock" className={`button`} type="submit">
+                {"Leave and unlock"}
+              </StyledButton>
+            </Form>
+          </ConditionalRender>
+          <ConditionalRender isRendered={!hasCaseLock}>
+            <a href={basePath}>
+              <StyledSecondaryButton id="return-to-case-list" className={`button`}>
+                {"Return to case list"}
+              </StyledSecondaryButton>
+            </a>
+          </ConditionalRender>
+        </ButtonContainer>
+      </FlexContainer>
       <SummaryBoxGrid>
         <CourtCaseDetailsSummaryBoxField label="PTIURN" value={courtCase.ptiurn} />
         <CourtCaseDetailsSummaryBoxField label="ASN" value={asn} />
