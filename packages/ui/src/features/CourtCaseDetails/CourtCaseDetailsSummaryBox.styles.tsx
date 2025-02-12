@@ -4,6 +4,10 @@ import { gdsLightGrey } from "utils/colours"
 const SummaryBox = styled.aside`
   background-color: ${gdsLightGrey};
   padding: 25px;
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  width: 100%;
 `
 
 const SummaryBoxGrid = styled.div`
@@ -17,5 +21,12 @@ const SummaryBoxGrid = styled.div`
     font-size: 19px;
   }
 `
+const FlexContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+`
 
-export { SummaryBox, SummaryBoxGrid }
+export { FlexContainer, SummaryBox, SummaryBoxGrid }
