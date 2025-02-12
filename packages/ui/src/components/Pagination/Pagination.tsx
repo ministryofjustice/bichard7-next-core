@@ -23,14 +23,16 @@ const Pagination: React.FC<Props> = ({
     <ConditionalRender isRendered={totalCases > 0}>
       <PaginationBar id={`${name}-pagination-bar`} className={"pagination-bar"}>
         <RefreshButton location={name ?? "no-location"} />
-        <PaginationResults pageNum={pageNum} casesPerPage={casesPerPage} totalCases={totalCases} />
-        <CasesPerPage
-          pageNum={pageNum}
-          casesPerPage={casesPerPage}
-          options={[25, 50, 100, 200]}
-          selected={casesPerPage}
-        />
-        <PaginationNavigation pageNum={pageNum} totalPages={Math.ceil(totalCases / casesPerPage)} name={name} />
+        <div className="pagination-controls">
+          <PaginationResults pageNum={pageNum} casesPerPage={casesPerPage} totalCases={totalCases} />
+          <CasesPerPage
+            pageNum={pageNum}
+            casesPerPage={casesPerPage}
+            options={[25, 50, 100, 200]}
+            selected={casesPerPage}
+          />
+          <PaginationNavigation pageNum={pageNum} totalPages={Math.ceil(totalCases / casesPerPage)} name={name} />
+        </div>
       </PaginationBar>
     </ConditionalRender>
   )
