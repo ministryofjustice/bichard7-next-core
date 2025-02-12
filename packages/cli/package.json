@@ -7,7 +7,7 @@
     "b7": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
+    "build": "tsc --project tsconfig.build.json && cp -r commands/user-comms/templates dist/",
     "install:global": "npm i && npm run build && npm i -g . && chmod +x dist/index.js",
     "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess 'chmod -v +x dist/index.js' --onSuccess 'npm i -g .' && npm i"
   },
@@ -16,11 +16,15 @@
   "license": "ISC",
   "dependencies": {
     "cli-color": "^2.0.4",
-    "commander": "^13.1.0"
+    "commander": "^13.1.0",
+    "inquirer": "^12.4.1",
+    "nunjucks": "^3.2.4"
   },
   "devDependencies": {
+    "@inquirer/prompts": "^7.3.1",
     "@types/cli-color": "^2.0.6",
     "@types/commander": "^2.12.0",
+    "@types/inquirer": "^9.0.7",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "eslint": "^9.18.0",
