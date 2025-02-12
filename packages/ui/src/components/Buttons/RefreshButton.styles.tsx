@@ -16,6 +16,7 @@ export const RefreshButtonContainer = styled.div`
 
 export const StyledRefreshButton = styled.button`
   display: flex;
+  font-family: "GDS Transport";
   background-color: white;
   border-color: #1759bc;
   color: #1759bc;
