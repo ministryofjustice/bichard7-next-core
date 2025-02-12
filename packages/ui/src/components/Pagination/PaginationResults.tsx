@@ -1,3 +1,5 @@
+import { PaginationParagraph } from "./PaginationResults.styles"
+
 interface Props {
   pageNum: number
   casesPerPage: number
@@ -23,7 +25,7 @@ const PaginationResults: React.FC<Props> = ({ pageNum, casesPerPage, totalCases 
         {" cases"}
       </>
     )
-  return <p className={"moj-pagination__results"}>{content}</p>
+  return <PaginationParagraph className={"moj-pagination__results"}>{content}</PaginationParagraph>
 }
 
 export default PaginationResults

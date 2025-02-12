@@ -1,7 +1,12 @@
 import styled from "styled-components"
 
 const StyledAppliedFilters = styled.div`
-  margin-top: 20px;
+  margin-top: 0;
+
+  ul.moj-filter-tags {
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
 `
 
 const ButtonMenu = styled.div`
@@ -18,4 +23,4 @@ const CourtCaseListPane = styled.div`
   overflow: auto;
 `
 
-export { StyledAppliedFilters, CaseListButtons, ButtonMenu, CourtCaseListPane }
+export { ButtonMenu, CaseListButtons, CourtCaseListPane, StyledAppliedFilters }

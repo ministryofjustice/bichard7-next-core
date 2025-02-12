@@ -9,6 +9,7 @@ import postgresFactory from "../../db/postgresFactory"
 import caseCanBeResubmitted from "./postgres/cases/canCaseBeResubmitted"
 import fetchCase from "./postgres/cases/fetchCase"
 import lockException from "./postgres/cases/lockException"
+import lockTrigger from "./postgres/cases/lockTrigger"
 import selectMessageId from "./postgres/cases/selectMessageId"
 import { transaction } from "./postgres/transaction"
 import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
@@ -37,6 +38,8 @@ class Postgres implements DataStoreGateway {
   ): Promise<boolean> {
     if (lockReason === LockReason.Exception) {
       return await lockException(callbackSql, caseId, username, this.forceIds)
+    } else if (lockReason === LockReason.Trigger) {
+      return await lockTrigger(callbackSql, caseId, username, this.forceIds)
     }
 
     return false

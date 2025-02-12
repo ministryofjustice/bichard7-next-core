@@ -1,4 +1,4 @@
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
 import RadioButton from "components/Radios/RadioButton"
