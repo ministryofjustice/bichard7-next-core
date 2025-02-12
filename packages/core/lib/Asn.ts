@@ -30,10 +30,8 @@ class Asn {
     }
   }
 
-  toString() {
-    return `${this.year}${this.force}${this.unit}${this.system}${this.sequence
-      .toString()
-      .padStart(11, "0")}${this.checkCharacter()}`
+  toPncFormat() {
+    return `${this.year}/${this.force}${this.unit}/${this.system}/${this.sequence}${this.checkCharacter()}`
   }
 }
 
