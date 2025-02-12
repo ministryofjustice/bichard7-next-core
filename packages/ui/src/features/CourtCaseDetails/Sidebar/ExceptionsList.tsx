@@ -1,4 +1,5 @@
-import { Button, LinkButton } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
+import { LinkButton } from "components/Buttons/LinkButton"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"

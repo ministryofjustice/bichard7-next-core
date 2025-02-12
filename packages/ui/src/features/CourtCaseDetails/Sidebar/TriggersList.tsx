@@ -1,5 +1,5 @@
 import ActionLink from "components/ActionLink"
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"

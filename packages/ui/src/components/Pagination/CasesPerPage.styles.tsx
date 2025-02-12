@@ -1,7 +1,9 @@
 import styled from "styled-components"
 
-const CasesPerPagePicker = styled.select`
-  min-width: 3em;
+export const CasesPerPageContainer = styled.div`
+  justify-self: center;
 `
 
-export { CasesPerPagePicker }
+export const CasesPerPagePicker = styled.select`
+  min-width: 3em;
+`
