@@ -1,0 +1,9 @@
+Hello {{ firstName | default("first-name") }},
+
+We wanted to inform you that the {{ outageType }} issue has been resolved, and Bichard7 is fully operational.
+
+Thank you for your patience. If you have any further questions, feel free to reach out to us at moj-bichard7@madetech.com.
+
+Many thanks,
+The Bichard 7 Support team
+
