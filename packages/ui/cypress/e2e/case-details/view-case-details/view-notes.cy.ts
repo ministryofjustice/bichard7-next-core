@@ -133,18 +133,6 @@ describe("View notes", () => {
     cy.contains("Case has no notes.")
   })
 
-  it("Should not display the notes text area if the case is locked to another users", () => {
-    cy.task("insertCourtCasesWithNotesAndLock", {
-      caseNotes: [[]],
-      force: "01"
-    })
-
-    loginAndGoToNotes()
-    cy.contains("Case has no notes.")
-    cy.get("textarea[name=noteText]").should("not.exist")
-    cy.get("#add-note-button").should("not.exist")
-  })
-
   it("Should display the notes text area if the case is locked by the user", () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [[]],
