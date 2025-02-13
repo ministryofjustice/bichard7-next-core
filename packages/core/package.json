@@ -73,7 +73,7 @@
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
     "chalk": "^4.1.2",
-    "esbuild": "~0.23.0",
+    "esbuild": "~0.25.0",
     "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",

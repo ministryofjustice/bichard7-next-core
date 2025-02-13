@@ -5,7 +5,7 @@
     "@aws-sdk/client-sqs": "^3.744.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.251",
     "@stomp/stompjs": "^7.0.0",
-    "esbuild": "~0.23.0",
+    "esbuild": "~0.25.0",
     "eslint": "^9.20.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.31.0",
