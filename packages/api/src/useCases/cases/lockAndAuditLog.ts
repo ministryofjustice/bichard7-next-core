@@ -10,6 +10,7 @@ import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
 import createAuditLogEvents from "../createAuditLogEvents"
 import { lockExceptions } from "./lockExceptions"
+import { lockTriggers } from "./lockTriggers"
 
 export const lockAndAuditLog = async (
   dataStore: DataStoreGateway,
@@ -25,8 +26,8 @@ export const lockAndAuditLog = async (
 
   await lockExceptions(dataStore, callbackSql, caseId, user, auditLogEvents)
 
-  // TODO: Check permissions for Triggers
-  // TODO: Lock Triggers and AuditLog them
+  await lockTriggers(dataStore, callbackSql, caseId, user, auditLogEvents)
+
   if (auditLogEvents.length > 0) {
     const result = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
 

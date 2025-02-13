@@ -1,4 +1,4 @@
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"

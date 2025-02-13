@@ -1,6 +1,6 @@
-import { useState } from "react"
 import { useRouter } from "next/router"
-import { SecondaryButton } from "./Buttons"
+import { useState } from "react"
+import { SecondaryButton } from "./Buttons/SecondaryButton"
 
 type Props = {
   reportType: string

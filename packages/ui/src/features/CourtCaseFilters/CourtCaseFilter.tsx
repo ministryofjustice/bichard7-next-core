@@ -1,5 +1,5 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import ConditionalRender from "components/ConditionalRender"
 import CaseStateFilter from "components/SearchFilters/CaseStateFilter"
 import LockedFilter, { lockedStateShortLabels } from "components/SearchFilters/LockedFilter"

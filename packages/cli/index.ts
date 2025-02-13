@@ -40,7 +40,7 @@ const cli = new Command()
   .addCommand(conductor())
   .addCommand(cloudwatch())
 
-const skipCommands = ["wiki", "fetch-image", "dev-sgs", "cloudwatch", "import-vpn"]
+const skipCommands = ["wiki", "fetch-image", "dev-sgs", "cloudwatch", "import-vpn-profiles"]
 if (!skipCommands.some((c) => process.argv.includes(c))) {
   applyEnvironmentOptionHooks(cli)
 }

@@ -1,3 +1,4 @@
+import { RefreshButton } from "components/Buttons/RefreshButton"
 import { useRouter } from "next/router"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
@@ -28,7 +29,10 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
     .join("&")
 
   return courtCases.length === 0 ? (
-    <p className="govuk-body">{"There are no court cases to show"}</p>
+    <div>
+      <p className="govuk-body govuk-!-margin-top-4">{"There are no court cases to show"}</p>
+      <RefreshButton location="top" />
+    </div>
   ) : (
     <table className="govuk-table cases-list">
       <thead className="govuk-table__head">
