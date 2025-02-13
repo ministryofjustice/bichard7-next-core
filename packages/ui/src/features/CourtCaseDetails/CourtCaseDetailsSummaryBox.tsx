@@ -82,20 +82,19 @@ const CourtCaseDetailsSummaryBox: React.FC<Props> = ({ canReallocate }: Props) =
             colour={BadgeColours.Blue}
             className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
           />
-          <LockedTagContainer>
-            <LockStatusTag
-              isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
-              resolutionStatus={courtCase.errorStatus}
-              lockName="Exceptions"
-            />
-            <LockStatusTag
-              isRendered={currentUser.hasAccessTo[Permission.Triggers]}
-              resolutionStatus={courtCase.triggerStatus}
-              lockName="Triggers"
-            />
-          </LockedTagContainer>
         </h2>
-
+        <LockedTagContainer>
+          <LockStatusTag
+            isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
+            resolutionStatus={courtCase.errorStatus}
+            lockName="Exceptions"
+          />
+          <LockStatusTag
+            isRendered={currentUser.hasAccessTo[Permission.Triggers]}
+            resolutionStatus={courtCase.triggerStatus}
+            lockName="Triggers"
+          />
+        </LockedTagContainer>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
             <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>

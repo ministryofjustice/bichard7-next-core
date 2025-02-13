@@ -7,7 +7,6 @@ const Lockee = styled.span`
 
   & > img {
     margin-right: 5px;
-    margin-bottom: 20px;
   }
 `
 
