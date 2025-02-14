@@ -1,4 +1,5 @@
-import { isError } from "types/Result"
+import { isError } from "@moj-bichard7/common/types/Result"
+
 import ApiClient from "./ApiClient"
 
 describe("apiClient get", () => {
