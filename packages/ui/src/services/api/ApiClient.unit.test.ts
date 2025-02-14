@@ -1,5 +1,5 @@
 import { isError } from "types/Result"
-import ApiClient from "./apiClient"
+import ApiClient from "./ApiClient"
 
 describe("apiClient get", () => {
   const apiClient = new ApiClient("jwt")

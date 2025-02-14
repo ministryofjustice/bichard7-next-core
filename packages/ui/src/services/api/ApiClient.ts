@@ -1,5 +1,5 @@
 import { API_LOCATION } from "config"
-import type HttpClient from "./interfaces/httpClient"
+import type HttpClient from "./interfaces/HttpClient"
 
 enum Method {
   GET = "GET"
