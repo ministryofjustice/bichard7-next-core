@@ -12,7 +12,7 @@ class ApiClient implements HttpClient {
     this.jwt = jwt
   }
 
-  async get(route: string): Promise<unknown> {
+  async get<T>(route: string): Promise<Error | T> {
     const response = await this.useFetch(route, Method.GET)
     if (!response.ok) {
       return new Error(`Error: ${response.status} - ${response.statusText}`)

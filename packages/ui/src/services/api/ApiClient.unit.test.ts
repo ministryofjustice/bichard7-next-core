@@ -37,4 +37,18 @@ describe("apiClient get", () => {
     expect(isError(result)).toBe(true)
     expect(result).toEqual(new Error("Error: 404 - Not Found"))
   })
+
+  it("throws an error when the API returns an error response when expecting a string", async () => {
+    jest.spyOn(apiClient, "useFetch").mockResolvedValue({
+      ok: false,
+      status: 404,
+      statusText: "Not Found",
+      json: async () => ({ message: "Not Found" })
+    } as Response)
+
+    const result = await apiClient.get<string>("/v1/cases/1")
+
+    expect(isError(result)).toBe(true)
+    expect(result).toEqual(new Error("Error: 404 - Not Found"))
+  })
 })

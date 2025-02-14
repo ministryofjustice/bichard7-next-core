@@ -1,6 +1,6 @@
 interface HttpClient {
   readonly jwt: string
-  get: (route: string) => Promise<unknown>
+  get<T>(route: string): Promise<Error | T>
 }
 
 export default HttpClient
