@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { OK } from "http-status"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 
 describe("health plugin", () => {

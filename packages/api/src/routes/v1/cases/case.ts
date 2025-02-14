@@ -2,6 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { CaseDtoSchema } from "@moj-bichard7/common/types/Case"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
@@ -9,7 +10,6 @@ import z from "zod"
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
@@ -26,11 +26,7 @@ type HandlerProps = {
 
 const schema = {
   ...auth,
-  params: z.object({
-    caseId: z.string().openapi({
-      description: "Case ID"
-    })
-  }),
+  params: z.object({ caseId: z.string().openapi({ description: "Case ID" }) }),
   response: {
     [OK]: CaseDtoSchema.openapi({ description: "Case DTO" }),
     ...unauthorizedError,

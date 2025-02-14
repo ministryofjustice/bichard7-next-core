@@ -1,6 +1,7 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -10,7 +11,6 @@ import { OK } from "http-status"
 
 import type { OutputApiAuditLog } from "../../../types/AuditLog"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { mockInputApiAuditLog } from "../../../tests/helpers/mockAuditLogs"
@@ -71,9 +71,7 @@ describe("/v1/case e2e", () => {
     const testCase = await createCase(helper.postgres, dummyCase)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${encodedJwt}`
-      },
+      headers: { Authorization: `Bearer ${encodedJwt}` },
       method: "GET"
     })
 
@@ -107,9 +105,7 @@ describe("/v1/case e2e", () => {
     const testCase = await createCase(helper.postgres, { error_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -126,9 +122,7 @@ describe("/v1/case e2e", () => {
     const testCase = await createCase(helper.postgres, { trigger_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -156,9 +150,7 @@ describe("/v1/case e2e", () => {
     expect(isError(result)).toBe(false)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -185,9 +177,7 @@ describe("/v1/case e2e", () => {
     expect(isError(result)).toBe(false)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -198,11 +188,7 @@ describe("/v1/case e2e", () => {
 
   const testCases = [
     {
-      caseData: {
-        error_count: 1,
-        error_locked_by_id: "another_user",
-        error_status: 1
-      },
+      caseData: { error_count: 1, error_locked_by_id: "another_user", error_status: 1 },
       description: "doesn't lock exception to the current-user when the case is locked to another user",
       expectedErrorLockedByUsername: "another_user"
     },
@@ -222,11 +208,7 @@ describe("/v1/case e2e", () => {
       expectedErrorLockedByUsername: null
     },
     {
-      caseData: {
-        trigger_count: 1,
-        trigger_locked_by_id: "another_user",
-        trigger_status: 1
-      },
+      caseData: { trigger_count: 1, trigger_locked_by_id: "another_user", trigger_status: 1 },
       description: "doesn't lock trigger to the current-user when the case is locked to another user",
       expectedTriggerLockedByUsername: "another_user"
     },
@@ -256,9 +238,7 @@ describe("/v1/case e2e", () => {
         const testCase = await createCase(helper.postgres, caseData)
 
         const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`
-          },
+          headers: { Authorization: `Bearer ${jwtToken}` },
           method: "GET"
         })
 
@@ -290,9 +270,7 @@ describe("/v1/case e2e", () => {
     expect(isError(result)).toBe(false)
 
     const caseResult = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
