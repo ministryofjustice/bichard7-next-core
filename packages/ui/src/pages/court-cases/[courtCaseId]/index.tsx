@@ -256,8 +256,8 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                     </AttentionBanner>
                   </AttentionContainer>
                 </ConditionalRender>
-                <Header canReallocate={canReallocate} />
-                <CourtCaseDetailsSummaryBox />
+                <Header />
+                <CourtCaseDetailsSummaryBox canReallocate={canReallocate} />
                 <CourtCaseDetails
                   isLockedByCurrentUser={isLockedByCurrentUser}
                   canResolveAndSubmit={canResolveAndSubmit}

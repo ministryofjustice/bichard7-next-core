@@ -1,10 +1,6 @@
 import { HeaderContainer } from "components/Header/Header.styles"
 
-interface Props {
-  canReallocate: boolean
-}
-
-const Header: React.FC<Props> = () => {
+const Header: React.FC = () => {
   return <HeaderContainer id="header-container"></HeaderContainer>
 }
 

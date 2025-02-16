@@ -77,6 +77,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username),
       canReallocate: courtCase.canReallocate(currentUser.username)
     }
+    console.log("🚀 ~ props.canReallocate:", props.canReallocate)
 
     if (isPost(req)) {
       const { force, note } = formData as { force: string; note?: string }
