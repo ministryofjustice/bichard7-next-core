@@ -1,4 +1,5 @@
-import { Button, SecondaryButton } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
+import { SecondaryButton } from "components/Buttons/SecondaryButton"
 import styled from "styled-components"
 
 const ButtonContainer = styled.div`

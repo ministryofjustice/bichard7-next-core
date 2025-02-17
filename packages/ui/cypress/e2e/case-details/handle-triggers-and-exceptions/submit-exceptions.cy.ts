@@ -1,4 +1,4 @@
-import AsnExceptionHO100206 from "../../../../test/test-data/AsnExceptionHo100206.json"
+import AsnExceptionHO100206 from "../../../../test/test-data/HO100206.json"
 import multipleExceptions from "../../../../test/test-data/MultipleExceptions.json"
 import nextHearingDateExceptions from "../../../../test/test-data/NextHearingDateExceptions.json"
 import nextHearingLocationExceptions from "../../../../test/test-data/NextHearingLocationExceptions.json"

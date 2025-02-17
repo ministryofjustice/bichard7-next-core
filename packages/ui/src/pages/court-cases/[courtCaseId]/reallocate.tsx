@@ -97,7 +97,6 @@ interface Props {
   user: DisplayFullUser
   courtCase: DisplayFullCourtCase
   lockedByAnotherUser: boolean
-  noteTextError?: string
   csrfToken: string
   previousPath: string
   canReallocate: boolean

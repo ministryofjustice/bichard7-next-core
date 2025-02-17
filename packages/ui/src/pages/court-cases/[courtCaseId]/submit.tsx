@@ -1,6 +1,6 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import Banner from "components/Banner"
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import Form from "components/Form"

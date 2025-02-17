@@ -1,5 +1,5 @@
 import ConditionalRender from "components/ConditionalRender"
-import { ReactNode, useState } from "react"
+import { useState } from "react"
 import { Container, IconButton, Legend, LegendContainer } from "./ExpandingFilters.styles"
 
 const UpArrow: React.FC = () => (
@@ -16,7 +16,7 @@ const DownArrow: React.FC = () => (
 
 interface Props {
   filterName: string
-  children: ReactNode
+  children: React.ReactNode
   classNames?: string
 }
 

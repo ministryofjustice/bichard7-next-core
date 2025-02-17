@@ -1,8 +1,7 @@
-import { ReactNode } from "react"
 import { GovukWidthContainer } from "./PageTemplate.styles"
 
 interface Props {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 const PageTemplate = ({ children }: Props) => {
