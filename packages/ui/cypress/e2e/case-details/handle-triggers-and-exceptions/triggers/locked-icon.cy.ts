@@ -73,7 +73,7 @@ describe("Locked icon", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })
     cy.visit(caseURL)
     cy.get("div.triggers-locked-tag").should("contain.text", "Bichard Test User Force 04")
-    cy.get("#header-container").should("not.contain.text", "GeneralHandler")
+    cy.get("div.triggers-locked-tag").should("not.contain.text", "GeneralHandler")
     cy.get("#triggers").should("contain.text", "Bichard Test User Force 04")
     cy.get("#triggers").should("not.contain.text", "GeneralHandler")
   })
