@@ -15,7 +15,6 @@ import {
   getAhoWithMultipleOffences,
   insertCourtCasesWithFields,
   insertDummyCourtCasesWithNotes,
-  insertDummyCourtCasesWithNotesAndLock,
   insertDummyCourtCasesWithTriggers,
   insertMultipleDummyCourtCases
 } from "./test/utils/insertCourtCases"
@@ -103,17 +102,10 @@ export default defineConfig({
         },
 
         insertCourtCasesWithNotes(params: {
-          caseNotes: { user: string; text: string; createdAt?: Date }[][] 
-          force: string
-        }) {
-          return insertDummyCourtCasesWithNotes(params.caseNotes, params.force)
-        },
-
-        insertCourtCasesWithNotesAndLock(params: {
           caseNotes: { user: string; text: string; createdAt?: Date }[][]
           force: string
         }) {
-          return insertDummyCourtCasesWithNotesAndLock(params.caseNotes, params.force)
+          return insertDummyCourtCasesWithNotes(params.caseNotes, params.force)
         },
 
         insertCourtCaseWithPncException(params: {
@@ -178,5 +170,5 @@ export default defineConfig({
     }
   },
 
-  retries: process.env.CI ? 2 : 1
+  retries: process.env.CI ? 2 : 0
 })
