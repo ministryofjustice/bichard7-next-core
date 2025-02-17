@@ -39,12 +39,10 @@ describe("addNote", () => {
     await dataSource.destroy()
   })
 
-  it("Should add note when record is fully locked by the user", async () => {
+  it("Should add note", async () => {
     await insertCourtCasesWithFields([
       {
         messageId: randomUUID(),
-        errorLockedByUsername: currentUsername,
-        triggerLockedByUsername: currentUsername,
         ...existingCourtCasesDbObject
       }
     ])
@@ -58,49 +56,6 @@ describe("addNote", () => {
     ])
 
     expect(result).toStrictEqual({ isSuccessful: true })
-  })
-
-  it("Should add note when record is partially locked by the user", async () => {
-    await insertCourtCasesWithFields([
-      {
-        messageId: randomUUID(),
-        errorLockedByUsername: "BichardForce01",
-        triggerLockedByUsername: currentUsername,
-        ...existingCourtCasesDbObject
-      }
-    ])
-    const date = new Date()
-    MockDate.set(date)
-    const result = await addNote(dataSource, 0, currentUsername, note)
-
-    expect(insertNotes).toHaveBeenCalledTimes(1)
-    expect(insertNotes).toHaveBeenCalledWith(expect.anything(), [
-      { errorId: 0, noteText: note, userId: currentUsername }
-    ])
-
-    expect(result).toStrictEqual({ isSuccessful: true })
-  })
-
-  it("Should not add note when error is not locked by the user", async () => {
-    await insertCourtCasesWithFields([
-      {
-        ...existingCourtCasesDbObject,
-        messageId: randomUUID(),
-        errorLockedByUsername: "BichardForce01",
-        triggerLockedByUsername: "BichardForce02"
-      }
-    ])
-
-    const date = new Date()
-    MockDate.set(date)
-    const result = await addNote(dataSource, 0, currentUsername, note)
-
-    expect(result).toStrictEqual({
-      isSuccessful: false,
-      ValidationException: "Case is not locked by the user"
-    })
-
-    expect(insertNotes).toHaveBeenCalledTimes(0)
   })
 
   it("Should not add note when case does not exist", async () => {
