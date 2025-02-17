@@ -1,8 +1,8 @@
-import HO100206 from "../../../../../../test/test-data/HO100206.json"
-import HO100300 from "../../../../../../test/test-data/HO100300.json"
-import HO100301 from "../../../../../../test/test-data/HO100301.json"
+import AsnExceptionHo100206 from "../../../../../../test/test-data/AsnExceptionHo100206.json"
+import AsnExceptionHo100301 from "../../../../../../test/test-data/AsnExceptionHo100301.json"
+import AsnExceptionHo100321 from "../../../../../../test/test-data/AsnExceptionHo100321.json"
 import HO100314 from "../../../../../../test/test-data/HO100314.json"
-import HO100321 from "../../../../../../test/test-data/HO100321.json"
+import HO100300 from "../../../../../../test/test-data/HO100300.json"
 import { loginAndVisit, verifyUpdatedMessage } from "../../../../../support/helpers"
 
 describe("exceptions", () => {
@@ -35,7 +35,7 @@ describe("exceptions", () => {
   }
 
   it("Should be able to edit ASN field if HO100206 is raised", () => {
-    submitEditableAsnExceptionAmendment(HO100206, "1101ZD0100000448754K")
+    submitEditableAsnExceptionAmendment(AsnExceptionHo100206, "1101ZD0100000448754K")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -55,7 +55,7 @@ describe("exceptions", () => {
   })
 
   it("Should be able to edit ASN field if HO100301 is raised", () => {
-    submitEditableAsnExceptionAmendment(HO100301, "1101ZD0100000448754K")
+    submitEditableAsnExceptionAmendment(AsnExceptionHo100301, "1101ZD0100000448754K")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -75,7 +75,7 @@ describe("exceptions", () => {
   })
 
   it("Should be able to edit ASN field if HO100321 is raised", () => {
-    submitEditableAsnExceptionAmendment(HO100321, "1101ZD0100000448754K")
+    submitEditableAsnExceptionAmendment(AsnExceptionHo100321, "1101ZD0100000448754K")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },

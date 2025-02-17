@@ -1,4 +1,4 @@
-import AsnExceptionHO100206 from "../../../../../test/test-data/HO100206.json"
+import AsnExceptionHO100206 from "../../../../../test/test-data/AsnExceptionHo100206.json"
 import multipleEditableFieldsExceptions from "../../../../../test/test-data/multipleEditableFieldsExceptions.json"
 import { loginAndVisit, resolveExceptionsManually } from "../../../../support/helpers"
 

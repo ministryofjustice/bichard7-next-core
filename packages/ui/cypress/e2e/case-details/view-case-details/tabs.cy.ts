@@ -1,5 +1,5 @@
 import CaseDetailsTab from "types/CaseDetailsTab"
-import AsnExceptionHO100206 from "../../../../test/test-data/HO100206.json"
+import AsnExceptionHO100206 from "../../../../test/test-data/AsnExceptionHo100206.json"
 import { clickTab, loginAndVisit } from "../../../support/helpers"
 
 const testFn = (tab: string) => {
