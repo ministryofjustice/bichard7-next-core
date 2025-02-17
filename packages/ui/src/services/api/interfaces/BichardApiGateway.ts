@@ -1,8 +1,8 @@
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
-import type FakeApiClient from "../../../../test/helpers/api/fakeApiClient"
+import type ApiClient from "../ApiClient"
 
 export default interface BichardApiGateway {
-  readonly apiClient: FakeApiClient
+  readonly apiClient: ApiClient
 
-  fetchCase: (caseId: number) => Promise<DisplayFullCourtCase | Error>
+  fetchCase: (caseId: number) => Promise<DisplayFullCourtCase>
 }
