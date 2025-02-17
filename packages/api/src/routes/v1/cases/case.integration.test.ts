@@ -1,9 +1,9 @@
 import type { FastifyInstance, InjectOptions } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
@@ -12,9 +12,7 @@ import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 
 const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
   return {
-    headers: {
-      authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
-    },
+    headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "GET",
     url: V1.Case.replace(":caseId", caseId)
   }
