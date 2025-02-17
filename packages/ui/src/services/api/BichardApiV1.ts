@@ -12,11 +12,11 @@ export default class BichardApiV1 implements BichardApiGateway {
     this.apiClient = apiClient
   }
 
-  async fetchCase(caseId: number): Promise<DisplayFullCourtCase | Error> {
+  async fetchCase(caseId: number): Promise<DisplayFullCourtCase> {
     const result = await this.apiClient.get<DisplayFullCourtCase>(V1.Case.replace(":caseId", `${caseId}`))
 
     if (isError(result)) {
-      return result
+      throw result
     }
 
     return result

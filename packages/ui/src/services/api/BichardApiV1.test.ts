@@ -1,7 +1,6 @@
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
-import { isError } from "types/Result"
 import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
@@ -24,7 +23,7 @@ describe("BichardApiV1", () => {
     it("calls apiClient#get with a route", async () => {
       const endpoint = V1.Case.replace(":caseId", `${caseId}`)
 
-      jest.spyOn(client, "get")
+      jest.spyOn(client, "get").mockResolvedValue("works")
 
       await gateway.fetchCase(caseId)
 
@@ -42,11 +41,9 @@ describe("BichardApiV1", () => {
     })
 
     it("can handle errors", async () => {
-      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+      jest.spyOn(client, "get").mockRejectedValue(new Error("Error"))
 
-      const result = await gateway.fetchCase(caseId)
-
-      expect(isError(result)).toBe(true)
+      await expect(gateway.fetchCase(caseId)).rejects.toThrow("Error")
     })
   })
 })
