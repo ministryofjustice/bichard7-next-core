@@ -1,12 +1,6 @@
-import type HttpClient from "../../../src/services/api/interfaces/HttpClient"
+import ApiClient from "services/api/ApiClient"
 
-export default class FakeApiClient implements HttpClient {
-  readonly jwt: string
-
-  constructor(jwt: string) {
-    this.jwt = jwt
-  }
-
+export default class FakeApiClient extends ApiClient {
   async get<T>(_route: string): Promise<Error | T> {
     return Promise.resolve(new Error())
   }

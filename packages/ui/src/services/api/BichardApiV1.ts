@@ -2,13 +2,13 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+import type ApiClient from "./ApiClient"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
-import type HttpClient from "./interfaces/HttpClient"
 
 export default class BichardApiV1 implements BichardApiGateway {
-  readonly apiClient: HttpClient
+  readonly apiClient: ApiClient
 
-  constructor(apiClient: HttpClient) {
+  constructor(apiClient: ApiClient) {
     this.apiClient = apiClient
   }
 
