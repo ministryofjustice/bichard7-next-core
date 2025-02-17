@@ -1,11 +1,11 @@
 import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import axios, { HttpStatusCode } from "axios"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
 import { generateTestJwtToken } from "../../../tests/helpers/jwtHelper"
 import { mockInputApiAuditLog } from "../../../tests/helpers/mockAuditLogs"
@@ -13,10 +13,7 @@ import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHel
 import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 
 const jwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
-const axiosOptions: AxiosRequestConfig = {
-  headers: { Authorization: `Bearer ${jwt}` },
-  validateStatus: () => true
-}
+const axiosOptions: AxiosRequestConfig = { headers: { Authorization: `Bearer ${jwt}` }, validateStatus: () => true }
 
 describe("Creating Audit Log", () => {
   const endpoint = V1.AuditLogs

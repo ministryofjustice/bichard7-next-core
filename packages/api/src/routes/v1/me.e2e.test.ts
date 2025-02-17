@@ -1,10 +1,10 @@
 import type { UserDto } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
-import { V1 } from "../../endpoints/versionedEndpoints"
 import { SetupAppEnd2EndHelper } from "../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../tests/helpers/userHelper"
 
@@ -31,9 +31,7 @@ describe("/v1/me e2e", () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
-      headers: {
-        Authorization: `Bearer ${encodedJwt}`
-      },
+      headers: { Authorization: `Bearer ${encodedJwt}` },
       method: "GET"
     })
 
@@ -43,16 +41,7 @@ describe("/v1/me e2e", () => {
       forenames: user.forenames,
       fullname: `${user.forenames} ${user.surname}`,
       groups: [UserGroup.GeneralHandler],
-      hasAccessTo: {
-        "0": true,
-        "1": true,
-        "2": true,
-        "3": false,
-        "4": false,
-        "5": false,
-        "6": false,
-        "7": true
-      },
+      hasAccessTo: { "0": true, "1": true, "2": true, "3": false, "4": false, "5": false, "6": false, "7": true },
       surname: user.surname,
       username: user.username,
       visibleForces: "001"
@@ -67,9 +56,7 @@ describe("/v1/me e2e", () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, expectedGroups)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
-      headers: {
-        Authorization: `Bearer ${encodedJwt}`
-      },
+      headers: { Authorization: `Bearer ${encodedJwt}` },
       method: "GET"
     })
 
