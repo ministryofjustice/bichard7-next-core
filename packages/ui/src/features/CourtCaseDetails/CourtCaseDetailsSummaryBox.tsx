@@ -1,6 +1,6 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
-import { LinkButton } from "components/Buttons"
+
 import ConditionalRender from "components/ConditionalRender"
 import Form from "components/Form"
 import { useCourtCase } from "context/CourtCaseContext"
@@ -18,6 +18,7 @@ import { FlexContainer, SummaryBox, SummaryBoxGrid } from "./CourtCaseDetailsSum
 import CourtCaseDetailsSummaryBoxField from "./CourtCaseDetailsSummaryBoxField"
 import { ButtonContainer, LockedTagContainer, StyledButton, StyledSecondaryButton } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
+import { LinkButton } from "components/Buttons/LinkButton"
 
 interface Props {
   canReallocate: boolean
