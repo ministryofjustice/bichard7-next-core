@@ -1,6 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import CourtCase from "../../../../src/services/entities/CourtCase"
 import type { TestTrigger } from "../../../../test/utils/manageTriggers"
+import { resolvedTriggers } from "../../../fixtures/triggers"
 import a11yConfig from "../../../support/a11yConfig"
 import { clickTab, loginAndVisit } from "../../../support/helpers"
 import logAccessibilityViolations from "../../../support/logAccessibilityViolations"
@@ -133,7 +134,7 @@ describe("View notes", () => {
     cy.contains("Case has no notes.")
   })
 
-  it("Should display the notes text area if the case is locked by the user", () => {
+  it("Should display the notes text area", () => {
     cy.task("insertCourtCasesWithNotes", {
       caseNotes: [[]],
       force: "01"
@@ -143,10 +144,11 @@ describe("View notes", () => {
     loginAndGoToNotes()
     cy.get("label").contains("Add a new note")
     cy.get("textarea").should("be.visible")
+    cy.get("#add-note-button").should("be.visible")
     cy.get("div.govuk-hint").contains("You have 2000 characters remaining")
   })
 
-  it("Should be able to add a note when case is visible to the user and not locked by another user", () => {
+  it("Should be able to add a note when case is visible to the user", () => {
     insertCaseWithTriggerAndException()
     loginAndGoToNotes()
     cy.get("textarea").type("Dummy note")
@@ -159,21 +161,16 @@ describe("View notes", () => {
     cy.contains("Dummy note")
   })
 
-  it("Should be able to add a note when case is visible to the user and error locked by another user", () => {
-    insertCaseWithTriggerAndException({ orgForPoliceFilter: "01", errorLockedByUsername: "BichardForce01" })
-    loginAndGoToNotes()
-    cy.get("textarea").type("Dummy note")
-    cy.get("button").contains("Add note").click()
+  it("Should be able to add a note when resolved case is visible to the user", () => {
+    cy.task("insertCourtCasesWithFields", [
+      {
+        errorStatus: "Resolved",
+        triggerStatus: "Resolved",
+        orgForPoliceFilter: "01"
+      }
+    ])
+    cy.task("insertTriggers", { caseId: 0, triggers: resolvedTriggers })
 
-    clickTab("Notes")
-
-    const dateTimeRegex = /\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/
-    cy.contains(dateTimeRegex)
-    cy.contains("Dummy note")
-  })
-
-  it("Should be able to add a note when case is visible to the user and trigger locked by another user", () => {
-    insertCaseWithTriggerAndException({ orgForPoliceFilter: "01", triggerLockedByUsername: "BichardForce01" })
     loginAndGoToNotes()
     cy.get("textarea").type("Dummy note")
     cy.get("button").contains("Add note").click()
@@ -224,7 +221,7 @@ describe("View notes", () => {
     cy.contains("dummy note")
   })
 
-  it("Adding an empty note doesn't add a note, when the case is visible to the user and not locked by another user", () => {
+  it("Adding an empty note doesn't add a note", () => {
     insertCaseWithTriggerAndException()
     loginAndGoToNotes()
 
@@ -258,3 +255,4 @@ describe("View notes", () => {
 })
 
 export {}
+
