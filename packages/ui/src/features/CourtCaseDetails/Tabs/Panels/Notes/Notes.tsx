@@ -10,7 +10,6 @@ import AddNoteForm from "./AddNoteForm"
 
 interface NotesProps {
   visible: boolean
-  isLockedByCurrentUser: boolean
 }
 
 const filterNotes = (notes: DisplayNote[], viewOption?: NotesViewOption) => {
@@ -33,7 +32,7 @@ const filterNotes = (notes: DisplayNote[], viewOption?: NotesViewOption) => {
   return [filteredNotes, noNoteText] as const
 }
 
-export const Notes = ({ visible, isLockedByCurrentUser }: NotesProps) => {
+export const Notes = ({ visible }: NotesProps) => {
   const { courtCase } = useCourtCase()
   const notes: DisplayNote[] = courtCase.notes
 
@@ -51,7 +50,7 @@ export const Notes = ({ visible, isLockedByCurrentUser }: NotesProps) => {
       <ConditionalRender isRendered={!hasFilteredNotes}>
         <p className="govuk-body">{`Case has no ${noNoteText}.`}</p>
       </ConditionalRender>
-      <AddNoteForm isLockedByCurrentUser={isLockedByCurrentUser} />
+      <AddNoteForm />
     </CourtCaseDetailsPanel>
   )
 }

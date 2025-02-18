@@ -40,7 +40,6 @@ import { DisplayFullUser } from "types/display/Users"
 import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import { isPost } from "utils/http"
 import { logRenderTime } from "utils/logging"
-import notSuccessful from "utils/notSuccessful"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
 
@@ -146,14 +145,14 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req)) {
       const { noteText } = formData as { noteText: string }
       if (noteText) {
-        const { isSuccessful, ValidationException, Exception } = await addNote(
+        const { isSuccessful, ValidationException } = await addNote(
           dataSource,
           +courtCaseId,
           currentUser.username,
           noteText
         )
         if (!isSuccessful) {
-          return notSuccessful(ValidationException ?? Exception?.message ?? "")
+          throw new Error(ValidationException)
         }
       }
     }
@@ -186,7 +185,6 @@ export const getServerSideProps = withMultipleServerSideProps(
         previousPath: previousPath ?? null,
         user: userToDisplayFullUserDto(currentUser),
         courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-        isLockedByCurrentUser: courtCase.isLockedByCurrentUser(currentUser.username),
         canReallocate: courtCase.canReallocate(currentUser.username),
         canResolveAndSubmit: courtCase.canResolveOrSubmit(currentUser),
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0))
@@ -198,7 +196,6 @@ export const getServerSideProps = withMultipleServerSideProps(
 interface Props {
   user: DisplayFullUser
   courtCase: DisplayFullCourtCase
-  isLockedByCurrentUser: boolean
   canReallocate: boolean
   canResolveAndSubmit: boolean
   csrfToken: string
@@ -210,7 +207,6 @@ interface Props {
 const CourtCaseDetailsPage: NextPage<Props> = ({
   courtCase,
   user,
-  isLockedByCurrentUser,
   canReallocate,
   canResolveAndSubmit,
   displaySwitchingSurveyFeedback,
@@ -258,10 +254,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 </ConditionalRender>
                 <Header canReallocate={canReallocate} />
                 <CourtCaseDetailsSummaryBox />
-                <CourtCaseDetails
-                  isLockedByCurrentUser={isLockedByCurrentUser}
-                  canResolveAndSubmit={canResolveAndSubmit}
-                />
+                <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
               </Layout>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>

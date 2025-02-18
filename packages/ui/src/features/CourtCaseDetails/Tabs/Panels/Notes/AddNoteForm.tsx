@@ -1,5 +1,4 @@
 import { Button } from "components/Buttons/Button"
-import ConditionalRender from "components/ConditionalRender"
 import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
@@ -7,11 +6,7 @@ import { FormEvent, FormEventHandler, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import Form from "../../../../../components/Form"
 
-interface Props {
-  isLockedByCurrentUser: boolean
-}
-
-const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
+const AddNoteForm: React.FC = () => {
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const [submitted, setSubmitted] = useState(false)
   const [isFormValid, setIsFormValid] = useState(true)
@@ -45,21 +40,19 @@ const AddNoteForm: React.FC<Props> = ({ isLockedByCurrentUser }: Props) => {
   }
 
   return (
-    <ConditionalRender isRendered={isLockedByCurrentUser}>
-      <Form method="POST" action="" onSubmit={handleSubmit} csrfToken={csrfToken}>
-        <NoteTextArea
-          showError={showError}
-          handleOnNoteChange={handleOnNoteChange}
-          noteRemainingLength={noteRemainingLength}
-          labelText={"Add a new note"}
-          name="noteText"
-        />
+    <Form method="POST" action="" onSubmit={handleSubmit} csrfToken={csrfToken}>
+      <NoteTextArea
+        showError={showError}
+        handleOnNoteChange={handleOnNoteChange}
+        noteRemainingLength={noteRemainingLength}
+        labelText={"Add a new note"}
+        name="noteText"
+      />
 
-        <Button id="add-note-button" type="submit">
-          {"Add note"}
-        </Button>
-      </Form>
-    </ConditionalRender>
+      <Button id="add-note-button" type="submit">
+        {"Add note"}
+      </Button>
+    </Form>
   )
 }
 
