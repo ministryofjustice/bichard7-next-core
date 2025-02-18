@@ -7,5 +7,6 @@
   "responseTimeoutSeconds": 25,
   "timeoutPolicy": "RETRY",
   "inputKeys": ["records"],
-  "outputKeys": ["pass", "fail"]
+  "outputKeys": ["pass", "fail"],
+  "concurrentExecLimit": 10
 }
