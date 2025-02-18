@@ -1,4 +1,4 @@
-import { SecondaryButton } from "components/Buttons"
+import { SecondaryButton } from "components/Buttons/SecondaryButton"
 import { BackToAllOffencesLink } from "./BackToAllOffencesLink"
 import { NextButton, PreviousButton } from "./OffenceNavigation.styles"
 

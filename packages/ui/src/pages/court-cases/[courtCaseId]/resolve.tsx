@@ -1,5 +1,5 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"

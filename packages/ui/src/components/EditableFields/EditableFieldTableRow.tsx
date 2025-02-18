@@ -52,7 +52,7 @@ const EditableFieldTableRow = ({
   return (
     <tr className={`govuk-table__row ${className}`}>
       <LabelCell className={"govuk-table__header govuk-body-s"}>
-        <LabelField label={label} isEditable={isEditable} />
+        <LabelField label={label} showErrorIcon={hasExceptions} />
       </LabelCell>
       <td className="govuk-table__cell">{fieldToRender()}</td>
     </tr>

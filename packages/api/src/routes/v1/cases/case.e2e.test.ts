@@ -1,6 +1,7 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -10,7 +11,6 @@ import { OK } from "http-status"
 
 import type { OutputApiAuditLog } from "../../../types/AuditLog"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { mockInputApiAuditLog } from "../../../tests/helpers/mockAuditLogs"
@@ -71,9 +71,7 @@ describe("/v1/case e2e", () => {
     const testCase = await createCase(helper.postgres, dummyCase)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${encodedJwt}`
-      },
+      headers: { Authorization: `Bearer ${encodedJwt}` },
       method: "GET"
     })
 
@@ -107,9 +105,7 @@ describe("/v1/case e2e", () => {
     const testCase = await createCase(helper.postgres, { error_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -126,9 +122,7 @@ describe("/v1/case e2e", () => {
     const testCase = await createCase(helper.postgres, { trigger_locked_by_id: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -138,7 +132,7 @@ describe("/v1/case e2e", () => {
     expect(responseJson.triggerLockedByUserFullName).toBe("Forename1 Surname1")
   })
 
-  it("locks exception to the user when the case is unlocked, has exceptions, and has error status unresolved", async () => {
+  it("locks exception to the current-user when the case is unlocked, has exceptions, and has error status unresolved", async () => {
     const messageId = randomUUID()
     const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
@@ -156,9 +150,7 @@ describe("/v1/case e2e", () => {
     expect(isError(result)).toBe(false)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 
@@ -167,52 +159,97 @@ describe("/v1/case e2e", () => {
     expect(responseJson.errorLockedByUsername).toBe(user.username)
   })
 
+  it("locks trigger to the current-user when the case is unlocked, has triggers, and has trigger status unresolved", async () => {
+    const messageId = randomUUID()
+    const [user] = await createUsers(helper.postgres, 3)
+    const jwtToken = await generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      message_id: messageId,
+      org_for_police_filter: "01",
+      trigger_count: 1,
+      trigger_locked_by_id: null,
+      trigger_status: 1
+    })
+
+    const auditLog = mockInputApiAuditLog({ caseId: "1", messageId })
+    const result = await createAuditLog(auditLog, helper.dynamo)
+    expect(isError(result)).toBe(false)
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+      headers: { Authorization: `Bearer ${jwtToken}` },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    expect(responseJson.triggerLockedByUsername).toBe(user.username)
+  })
+
   const testCases = [
     {
-      caseData: {
-        error_count: 1,
-        error_locked_by_id: "another_user",
-        error_status: 1
-      },
-      description: "doesn't lock exception to the user when the case is locked to another user",
-      expectedLockedByUsername: "another_user"
+      caseData: { error_count: 1, error_locked_by_id: "another_user", error_status: 1 },
+      description: "doesn't lock exception to the current-user when the case is locked to another user",
+      expectedErrorLockedByUsername: "another_user"
     },
     {
       caseData: { error_count: 0, error_locked_by_id: null, error_status: null },
       description: "doesn't lock exception when case does not have any exception",
-      expectedLockedByUsername: null
+      expectedErrorLockedByUsername: null
     },
     {
       caseData: { error_count: 1, error_locked_by_id: null, error_status: 2 },
       description: "doesn't lock exception when error status is resolved",
-      expectedLockedByUsername: null
+      expectedErrorLockedByUsername: null
     },
     {
       caseData: { error_count: 1, error_locked_by_id: null, error_status: 3 },
       description: "doesn't lock exception when error status is submitted",
-      expectedLockedByUsername: null
+      expectedErrorLockedByUsername: null
+    },
+    {
+      caseData: { trigger_count: 1, trigger_locked_by_id: "another_user", trigger_status: 1 },
+      description: "doesn't lock trigger to the current-user when the case is locked to another user",
+      expectedTriggerLockedByUsername: "another_user"
+    },
+    {
+      caseData: { trigger_count: 0, trigger_locked_by_id: null, trigger_status: null },
+      description: "doesn't lock exception when case does not have any exception",
+      expectedTriggerLockedByUsername: null
+    },
+    {
+      caseData: { trigger_count: 1, trigger_locked_by_id: null, trigger_status: 2 },
+      description: "doesn't lock exception when error status is resolved",
+      expectedTriggerLockedByUsername: null
+    },
+    {
+      caseData: { trigger_count: 1, trigger_locked_by_id: null, trigger_status: 3 },
+      description: "doesn't lock exception when error status is submitted",
+      expectedTriggerLockedByUsername: null
     }
   ]
 
-  testCases.forEach(({ caseData, description, expectedLockedByUsername }) => {
-    it(`${description}`, async () => {
-      const [user] = await createUsers(helper.postgres, 1)
-      const jwtToken = await generateJwtForUser(user)
+  testCases.forEach(
+    ({ caseData, description, expectedErrorLockedByUsername = null, expectedTriggerLockedByUsername = null }) => {
+      it(`${description}`, async () => {
+        const [user] = await createUsers(helper.postgres, 1)
+        const jwtToken = await generateJwtForUser(user)
 
-      const testCase = await createCase(helper.postgres, caseData)
+        const testCase = await createCase(helper.postgres, caseData)
 
-      const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`
-        },
-        method: "GET"
+        const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+          headers: { Authorization: `Bearer ${jwtToken}` },
+          method: "GET"
+        })
+
+        expect(response.status).toBe(OK)
+        const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+
+        expect(responseJson.errorLockedByUsername).toBe(expectedErrorLockedByUsername)
+        expect(responseJson.triggerLockedByUsername).toBe(expectedTriggerLockedByUsername)
       })
-
-      expect(response.status).toBe(OK)
-      const responseJson: CaseDto = (await response.json()) satisfies CaseDto
-      expect(responseJson.errorLockedByUsername).toBe(expectedLockedByUsername)
-    })
-  })
+    }
+  )
 
   it("should create a new audit log event when locking a case", async () => {
     const messageId = randomUUID()
@@ -233,9 +270,7 @@ describe("/v1/case e2e", () => {
     expect(isError(result)).toBe(false)
 
     const caseResult = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
-      headers: {
-        Authorization: `Bearer ${jwtToken}`
-      },
+      headers: { Authorization: `Bearer ${jwtToken}` },
       method: "GET"
     })
 

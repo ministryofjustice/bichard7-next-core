@@ -1,22 +1,17 @@
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
 
 const defaultRequest = (jwt: string) => {
   return {
-    body: JSON.stringify({
-      phase: 1
-    }),
-    headers: {
-      Authorization: `Bearer ${jwt}`,
-      "Content-Type": "application/json"
-    },
+    body: JSON.stringify({ phase: 1 }),
+    headers: { Authorization: `Bearer ${jwt}`, "Content-Type": "application/json" },
     method: "POST"
   }
 }
@@ -77,10 +72,7 @@ describe("/v1/cases/:caseId/resubmit e2e", () => {
 
   it("will receive a 403 error if there's a case found and the case is resolved", async () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
-    await createCase(helper.postgres, {
-      error_locked_by_id: user.username,
-      resolution_ts: new Date().toDateString()
-    })
+    await createCase(helper.postgres, { error_locked_by_id: user.username, resolution_ts: new Date().toDateString() })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 

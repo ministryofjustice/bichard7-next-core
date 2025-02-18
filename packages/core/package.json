@@ -60,22 +60,22 @@
   "devDependencies": {
     "@eslint/compat": "^1.2.6",
     "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.19.0",
+    "@eslint/js": "^9.20.0",
     "@types/diff": "^5.2.3",
     "@types/jest": "^29.5.14",
     "@types/lodash.differencewith": "^4.5.9",
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^22.13.0",
+    "@types/node": "^22.13.4",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
     "chalk": "^4.1.2",
-    "esbuild": "~0.23.0",
+    "esbuild": "~0.25.0",
     "esbuild-plugin-ignore": "^1.1.1",
-    "eslint": "^9.19.0",
+    "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
@@ -98,8 +98,8 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.738.0",
-    "@aws-sdk/client-s3": "^3.740.0",
+    "@aws-sdk/client-dynamodb": "^3.749.0",
+    "@aws-sdk/client-s3": "^3.749.0",
     "@io-orkes/conductor-javascript": "^2.1.4",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.251",
     "@types/lodash.ismatch": "^4.4.9",
@@ -115,7 +115,7 @@
     "postgres": "^3.4.5",
     "pretty-data": "github:vkiryukhin/pretty-data#22a34a534745714ea974f72db2e9bf7561b3fdc7",
     "stompit": "^1.0.0",
-    "zod": "^3.24.1",
+    "zod": "^3.24.2",
     "zod-validation-error": "^3.4.0"
   }
 }

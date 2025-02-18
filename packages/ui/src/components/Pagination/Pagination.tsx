@@ -1,3 +1,4 @@
+import { RefreshButton } from "components/Buttons/RefreshButton"
 import defaults from "defaults"
 import ConditionalRender from "../ConditionalRender"
 import CasesPerPage from "./CasesPerPage"
@@ -21,14 +22,17 @@ const Pagination: React.FC<Props> = ({
   return (
     <ConditionalRender isRendered={totalCases > 0}>
       <PaginationBar id={`${name}-pagination-bar`} className={"pagination-bar"}>
-        <PaginationResults pageNum={pageNum} casesPerPage={casesPerPage} totalCases={totalCases} />
-        <CasesPerPage
-          pageNum={pageNum}
-          casesPerPage={casesPerPage}
-          options={[25, 50, 100, 200]}
-          selected={casesPerPage}
-        />
-        <PaginationNavigation pageNum={pageNum} totalPages={Math.ceil(totalCases / casesPerPage)} name={name} />
+        <RefreshButton location={name ?? "no-location"} />
+        <div className="pagination-controls">
+          <PaginationResults pageNum={pageNum} casesPerPage={casesPerPage} totalCases={totalCases} />
+          <CasesPerPage
+            pageNum={pageNum}
+            casesPerPage={casesPerPage}
+            options={[25, 50, 100, 200]}
+            selected={casesPerPage}
+          />
+          <PaginationNavigation pageNum={pageNum} totalPages={Math.ceil(totalCases / casesPerPage)} name={name} />
+        </div>
       </PaginationBar>
     </ConditionalRender>
   )
