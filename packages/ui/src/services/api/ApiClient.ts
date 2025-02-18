@@ -1,11 +1,10 @@
 import { API_LOCATION } from "config"
-import type HttpClient from "./interfaces/HttpClient"
 
-enum Method {
+export enum HttpMethod {
   GET = "GET"
 }
 
-class ApiClient implements HttpClient {
+class ApiClient {
   readonly jwt: string
 
   constructor(jwt: string) {
@@ -13,7 +12,7 @@ class ApiClient implements HttpClient {
   }
 
   async get<T>(route: string): Promise<Error | T> {
-    const response = await this.useFetch(route, Method.GET)
+    const response = await this.useFetch(route, HttpMethod.GET)
     if (!response.ok) {
       return new Error(`Error: ${response.status} - ${response.statusText}`)
     }
@@ -21,7 +20,7 @@ class ApiClient implements HttpClient {
     return await response.json()
   }
 
-  async useFetch(route: string, method: Method): Promise<Response> {
+  async useFetch(route: string, method: HttpMethod): Promise<Response> {
     return await fetch(`${API_LOCATION}${route}`, {
       headers: {
         Authorization: `Bearer ${this.jwt}`
