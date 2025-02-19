@@ -1,31 +1,22 @@
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import parsePncUpdateDatasetXml from "@moj-bichard7/core/lib/parse/parsePncUpdateDatasetXml/parsePncUpdateDatasetXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { isError } from "../types/Result"
-import { isPncUpdateDataset } from "./isPncUpdateDataset"
 
-const parseHearingOutcome = (hearingOutcome: string): AnnotatedHearingOutcome | Error => {
-  let aho: AnnotatedHearingOutcome | Error
-
-  if (isPncUpdateDataset(hearingOutcome)) {
-    const pncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)
-
-    if (isError(pncUpdateDataset)) {
-      console.error(`Failed to parse AnnotatedPNCUpdateDatasetXml: ${pncUpdateDataset}`)
-
-      aho = pncUpdateDataset
-    } else {
-      aho = pncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset
-    }
-  } else {
-    aho = parseAhoXml(hearingOutcome)
-
-    if (isError(aho)) {
-      console.error(`Failed to parse aho: ${aho}`)
-    }
+const parseHearingOutcome = (hearingOutcome: string): AnnotatedHearingOutcome | PncUpdateDataset | Error => {
+  const annotatedPncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)
+  if (!isError(annotatedPncUpdateDataset)) {
+    return annotatedPncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset
   }
 
-  return aho
+  const pncUpdateDataset = parsePncUpdateDatasetXml(hearingOutcome)
+  if (!isError(pncUpdateDataset)) {
+    return pncUpdateDataset
+  }
+
+  return parseAhoXml(hearingOutcome)
 }
 
 export default parseHearingOutcome
