@@ -7,5 +7,6 @@
   "responseTimeoutSeconds": 30,
   "timeoutPolicy": "RETRY",
   "inputKeys": ["fileName", "bucketId", "lockId"],
-  "outputKeys": ["lockState"]
+  "outputKeys": ["lockState"],
+  "concurrentExecLimit": 20
 }
