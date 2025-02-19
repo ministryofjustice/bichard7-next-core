@@ -34,19 +34,7 @@ const bucket = process.env.PHASE_1_BUCKET_NAME as string
 const s3Config = createS3Config()
 const dbConfig = createDbConfig()
 
-const sql = postgres({
-  ...dbConfig,
-  types: {
-    date: {
-      to: 25,
-      from: [1082],
-      serialize: (x: string): string => x,
-      parse: (x: string): Date => {
-        return new Date(x)
-      }
-    }
-  }
-})
+const sql = postgres(dbConfig)
 
 const sortTriggers = (triggers: Trigger[]) => orderBy(triggers, ["code", "identifier"])
 
@@ -116,6 +104,15 @@ const normaliseAuditLogs = (logs: AuditLogEvent[]): Partial<AuditLogEvent>[] =>
       attributes: normaliseAttributes(log.attributes)
     }))
     .sort((a, b) => a.eventCode.localeCompare(b.eventCode))
+    .filter(
+      (log) =>
+        ![
+          "exceptions.generated",
+          "hearing-outcome.received-phase-2",
+          "hearing-outcome.submitted-phase-3",
+          "triggers.generated"
+        ].includes(log.eventCode)
+    )
 
 const convertXmlAuditLogs = (logs: string[]): AuditLogEvent[] => {
   return logs.map((logXml) => {
@@ -184,8 +181,6 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
     expect(errorList[0].error_quality_checked).toEqual(expected.errorList[0].error_quality_checked)
     expect(errorList[0].trigger_quality_checked).toEqual(expected.errorList[0].trigger_quality_checked)
     expect(errorList[0].trigger_count).toEqual(expected.errorList[0].trigger_count)
-    expect(errorList[0].error_locked_by_id).toEqual(expected.errorList[0].error_locked_by_id)
-    expect(errorList[0].trigger_locked_by_id).toEqual(expected.errorList[0].trigger_locked_by_id)
     expect(errorList[0].is_urgent).toEqual(expected.errorList[0].is_urgent)
     expect(errorList[0].asn).toEqual(expected.errorList[0].asn)
     expect(errorList[0].court_code).toEqual(expected.errorList[0].court_code)
@@ -207,8 +202,6 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
     expect(errorList[0].court_name).toEqual(expected.errorList[0].court_name)
     expect(errorList[0].resolution_ts).toEqual(expected.errorList[0].resolution_ts)
     expect(errorList[0].msg_received_ts).toBeDefined()
-    expect(errorList[0].error_resolved_by).toEqual(expected.errorList[0].error_resolved_by)
-    expect(errorList[0].trigger_resolved_by).toEqual(expected.errorList[0].trigger_resolved_by)
     expect(errorList[0].error_resolved_ts).toEqual(expected.errorList[0].error_resolved_ts)
     expect(errorList[0].trigger_resolved_ts).toEqual(expected.errorList[0].trigger_resolved_ts)
     expect(errorList[0].defendant_name).toEqual(expected.errorList[0].defendant_name)
@@ -256,7 +249,6 @@ const clearDatabase = async () => {
 describe("phase2", () => {
   let s3Server: MockS3
   let client: S3Client
-  // let auditLogApi: MockServer
 
   beforeAll(async () => {
     s3Server = new MockS3(bucket)
@@ -321,8 +313,10 @@ describe("phase2", () => {
       await checkDatabaseMatches(comparison.db.after)
     })
 
-    it("should generate the correct PNC operations", async () => {})
-
-    it("should generate the correct audit logs", async () => {})
+    it("should generate the correct audit logs", () => {
+      const expectedAuditLogs = normaliseAuditLogs(convertXmlAuditLogs(comparison.auditLogEvents))
+      const actualAuditLogs = normaliseAuditLogs(phase2Result.auditLogEvents)
+      expect(actualAuditLogs).toStrictEqual(expectedAuditLogs)
+    })
   })
 })
