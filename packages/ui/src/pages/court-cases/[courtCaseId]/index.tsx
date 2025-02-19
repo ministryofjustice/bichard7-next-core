@@ -8,7 +8,6 @@ import { PreviousPathContext, PreviousPathContextType } from "context/PreviousPa
 import { setCookie } from "cookies-next"
 import { OptionsType } from "cookies-next/lib/types"
 import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
-import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
@@ -253,7 +252,6 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                   </AttentionContainer>
                 </ConditionalRender>
                 <Header canReallocate={canReallocate} />
-                <CourtCaseDetailsSummaryBox />
                 <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
               </Layout>
             </PreviousPathContext.Provider>
