@@ -8,7 +8,6 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
-import { LinkButton } from "components/Buttons/LinkButton"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { isLockedByCurrentUser } from "utils/caseLocks"
 import Form from "../../components/Form"
@@ -20,6 +19,7 @@ import {
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
+  ReallocateLinkButton,
   StyledButton,
   StyledSecondaryButton
 } from "./Header.styles"
@@ -94,9 +94,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </LockedTagContainer>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-            <LinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
+            <ReallocateLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
               {"Reallocate Case"}
-            </LinkButton>
+            </ReallocateLinkButton>
           </ConditionalRender>
           <ConditionalRender isRendered={hasCaseLock}>
             <a href={basePath}>
