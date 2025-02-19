@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
+    "build:docker": "cd ../.. && bash scripts/build-api-docker.sh",
     "clean": "rm -rf ./dist",
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
