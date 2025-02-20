@@ -29,7 +29,8 @@ const CaseDetailHeaderRow = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 24px;
+  margin-bottom: 0px;
+  padding-top: 5px;
   gap: 12px;
 `
 
