@@ -7,7 +7,7 @@ const SummaryBox = styled.aside`
 `
 
 const SummaryBoxGrid = styled.div`
-  display: flex;
+  display: grid;
   grid-template-columns: repeat(3, auto);
   grid-auto-flow: row dense;
   row-gap: 12px;

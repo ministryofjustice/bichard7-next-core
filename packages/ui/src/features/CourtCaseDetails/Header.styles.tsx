@@ -5,6 +5,8 @@ import styled from "styled-components"
 import { gdsLightGrey, grey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   background-color: ${gdsLightGrey};
   position: sticky;
   top: 0;
@@ -16,6 +18,12 @@ const CaseDetailHeaderRow = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  width: 100%;
+
+  @media (max-width: 1300px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `
 
 const ButtonContainer = styled.div`
@@ -46,7 +54,7 @@ export {
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
+  ReallocateLinkButton,
   StyledButton,
-  StyledSecondaryButton,
-  ReallocateLinkButton
+  StyledSecondaryButton
 }
