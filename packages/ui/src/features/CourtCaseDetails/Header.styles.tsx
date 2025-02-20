@@ -17,8 +17,13 @@ const CaseDetailHeaderRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 30px;
   width: 100%;
+
+  #case-detail-header-row > div:nth-last-child(-n + 2) {
+    margin-left: 300px;
+    gap: 10px;
+  }
 
   @media (max-width: 1300px) {
     flex-direction: column;

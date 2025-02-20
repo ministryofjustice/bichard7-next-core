@@ -68,7 +68,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
-      <CaseDetailHeaderRow>
+      <CaseDetailHeaderRow id="case-detail-header-row">
         <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
         <h2 className="govuk-heading-m">
           {courtCase.defendantName}
