@@ -239,7 +239,7 @@ jobs:
           name: Run integration tests against core code
           command: nvm use && npm run -w packages/core test:integration
 
-  comparison_test:
+  comparison_test_phase1:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
@@ -258,8 +258,33 @@ jobs:
       - install_dependencies
       - build_core
       - run:
-          name: Run integration tests against core code
-          command: npm run -w packages/core test:compare
+          name: Run integration tests against Core Phase 1
+          command: npm run -w packages/core test:compare:phase1
+
+  comparison_test_phase2:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: false
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - install_dependencies
+      - build_core
+      - run:
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          name: Run comparison tests against Core Phase 2
+          command: npm run -w packages/core test:compare:phase2
 
   characterisation_test_core:
     machine:
@@ -911,7 +936,8 @@ workflows:
       - characterisation_test_legacy_phase1
       - characterisation_test_legacy_phase2
       - characterisation_test_legacy_phase3
-      - comparison_test
+      - comparison_test_phase1
+      - comparison_test_phase2
 
       - build-ui:
           name: build-ui
