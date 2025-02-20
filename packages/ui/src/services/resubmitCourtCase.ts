@@ -55,7 +55,6 @@ const resubmitCourtCase = async (
         }
 
         const amendedCourtCase = await amendCourtCase(entityManager, form, courtCase, user)
-
         if (isError(amendedCourtCase)) {
           throw amendedCourtCase
         }
