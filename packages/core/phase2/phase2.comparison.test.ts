@@ -4,9 +4,7 @@ import "../tests/helpers/setEnvironmentVariables"
 
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 
-import { S3Client } from "@aws-sdk/client-s3"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
@@ -26,12 +24,9 @@ import processTestFile from "../comparison/lib/processTestFile"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import MockS3 from "../tests/helpers/MockS3"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 
-const bucket = process.env.PHASE_1_BUCKET_NAME as string
-const s3Config = createS3Config()
 const dbConfig = createDbConfig()
 
 const sql = postgres(dbConfig)
@@ -242,20 +237,6 @@ const clearDatabase = async () => {
 }
 
 describe("phase2", () => {
-  let s3Server: MockS3
-  let client: S3Client
-
-  beforeAll(async () => {
-    s3Server = new MockS3(bucket)
-    await s3Server.start()
-    client = new S3Client(s3Config)
-  })
-
-  afterAll(async () => {
-    await s3Server.stop()
-    await client.destroy()
-  })
-
   beforeEach(async () => {
     await clearDatabase()
   })
