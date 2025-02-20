@@ -108,6 +108,7 @@ const normaliseAuditLogs = (logs: AuditLogEvent[]): Partial<AuditLogEvent>[] =>
       (log) =>
         ![
           "exceptions.generated",
+          "hearing-outcome.ignored.results-already-on-pnc",
           "hearing-outcome.received-phase-2",
           "hearing-outcome.submitted-phase-3",
           "triggers.generated"
