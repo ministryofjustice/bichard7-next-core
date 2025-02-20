@@ -24,8 +24,6 @@ const amendCourtCase = async (
     return new Error("Exception is locked by another user")
   }
 
-  // check if pnc annotated data set before trying to parse as aho
-  // we need to parse the annotated message due to being xml in db
   const aho = parseHearingOutcome(courtCase.updatedHearingOutcome ?? courtCase.hearingOutcome)
   if (isError(aho)) {
     return aho
