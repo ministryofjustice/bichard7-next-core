@@ -223,23 +223,17 @@ const ignored: string[] = []
 
 const filter = process.env.FILTER_TEST
 
-let tests = fs
+const tests = fs
   .readdirSync(filePath)
   .filter((name) => {
     if (filter) {
-      return name.includes(filter)
+      return name.includes(`test-${filter}`)
     } else {
       return !ignored.some((i) => name.includes(`test-${i}`))
     }
   })
   .map((name) => `${filePath}/${name}`)
   .map(processTestFile) as Phase2E2eComparison[]
-
-if (filter) {
-  tests = tests.filter((t) => t.file && t.file.includes(`test-${filter}`))
-} else {
-  tests = tests.filter((t) => !ignored.some((i) => t.file && t.file.includes(`test-${i}`)))
-}
 
 const clearDatabase = async () => {
   await sql`DELETE FROM br7own.error_list_triggers`
