@@ -23,6 +23,7 @@ const reportEventCodes: EventCode[] = [
   EventCode.TriggersLocked,
   EventCode.TriggersUnlocked,
   EventCode.TriggersResolved,
+  EventCode.TriggersGenerated,
   EventCode.ExceptionsLocked,
   EventCode.ExceptionsUnlocked,
   EventCode.ExceptionsResolved,
@@ -42,13 +43,13 @@ const reportEventCodes: EventCode[] = [
   EventCode.IgnoredReopened
 ]
 
-const eventCodesToDisplay: EventCode[] = [
-  EventCode.AllTriggersResolved,
+const eventCodesToDisplay: (EventCode | string)[] = [
+  "Total triggers",
   EventCode.TriggersResolved,
-  EventCode.ExceptionsGenerated,
+  "Total exceptions",
   EventCode.ExceptionsResolved,
-  EventCode.HearingOutcomeResubmittedPhase1,
-  EventCode.HearingOutcomeResubmittedPhase2
+  "Resolved exceptions",
+  "Exceptions resubmitted"
 ]
 
 const reportEventTitles = {

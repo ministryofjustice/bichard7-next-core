@@ -1,9 +1,11 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
-// import { AuditLogEvent } from "../../../packages/common/types/AuditLogEvent"
-import { isError } from "@moj-bichard7/common/types/Result"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
-import { FullAuditLogEvent, ReportDataResult, getDateString, isNewUIEvent } from "./common"
-import getForceOwner from "./getForceOwner"
+import { FullAuditLogEvent, ReportDataResult, eventCodesToDisplay, getDateString, isNewUIEvent } from "./common"
+
+type UpdateReportDataOptions = {
+  event: FullAuditLogEvent
+  eventCodeKey: string
+  numberToAdd: number
+}
 
 const editableExceptions = [
   "HO100102",
@@ -18,6 +20,8 @@ const editableExceptions = [
   "H0100332"
 ]
 
+const AUTO_RESUBMISSION_EXCEPTIONS = ["HO100314", "HO100302", "HO100404", "HO100402"]
+
 const eventsPostExceptionsResolved = [
   EventCode.PncUpdated,
   EventCode.IgnoredAlreadyOnPNC,
@@ -28,6 +32,11 @@ const eventsPostExceptionsResolved = [
   EventCode.IgnoredNonrecordable,
   EventCode.IgnoredReopened
 ]
+
+const currentExceptions: Record<string, string[]> = {}
+const currentResubmissionUi: Record<string, "new-ui" | "old-ui"> = {}
+const exceptionsResolvedManually = EventCode.ExceptionsResolved
+const exceptionsResubmittedEvents = [EventCode.HearingOutcomeResubmittedPhase1, EventCode.HearingOutcomeResubmittedPhase2]
 
 const getDates = (start: Date, end: Date) => {
   let date = new Date(start)
@@ -42,22 +51,29 @@ const getDates = (start: Date, end: Date) => {
 
 const getEventCodeKey = (event: FullAuditLogEvent) => (isNewUIEvent(event) ? "new-ui." : "old-ui.") + event.eventCode
 
+const getResolvedExceptions = (event: FullAuditLogEvent) => {
+  if (event.eventCode !== EventCode.ExceptionsGenerated) {
+    return currentExceptions[event._messageId]
+  }
+
+  const previousExceptions = currentExceptions[event._messageId]
+  const newExceptions = extractExceptionCodes(event)
+  return previousExceptions.filter((previousException) => !newExceptions.includes(previousException))
+}
+
 const extractExceptionCodes = (event: FullAuditLogEvent): string[] =>
   Object.keys(event.attributes ?? {})
     .filter((key) => /Error \d{1,2} Details/.test(key))
-    .map((key) => event.attributes?.[key]?.toString().split("||")[0])
-    .filter((v) => v && !["HO100314", "HO100302", "HO100404", "HO100402"].includes(v)) as string[]
+    .map((key) => event.attributes?.[key]?.toString().split("||")[0]) as string[]
 
-type UpdateReportDataOptions = {
-  event: FullAuditLogEvent
-  eventCodeKey: string
-  numberToAdd: number
-}
-const currentExceptions: Record<string, string[]> = {}
-const currentResubmissionUi: Record<string, "new-ui" | "old-ui"> = {}
-const forceOwners: Record<string, string | undefined> = {}
+const excludeAutoResubmissionExceptions = (exceptionCode: string): boolean =>
+  !AUTO_RESUBMISSION_EXCEPTIONS.includes(exceptionCode)
+
+const filterAutoResubmissionExceptions = (exceptionCode: string): boolean =>
+  AUTO_RESUBMISSION_EXCEPTIONS.includes(exceptionCode)
+
 const createUpdateReportDataFunction =
-  (dynamo: DocumentClient, auditLogTableName: string, date: string, month: string) =>
+  (forceOwners: Record<string, number>, date: string, month: string) =>
   async (reportData: any, { event, eventCodeKey, numberToAdd }: UpdateReportDataOptions) => {
     reportData.allSummary[eventCodeKey] = (reportData.allSummary[eventCodeKey] || 0) + numberToAdd
 
@@ -95,15 +111,6 @@ const createUpdateReportDataFunction =
       }
     }
 
-    if (!forceOwners[event._messageId] && eventCodeKey.includes(".Total exceptions")) {
-      const forceOwnerResult = await getForceOwner(dynamo, auditLogTableName, event._messageId)
-      if (isError(forceOwnerResult)) {
-        throw forceOwnerResult
-      }
-
-      forceOwners[event._messageId] = forceOwnerResult
-    }
-
     const forceOwner = forceOwners[event._messageId]
     reportData.allMonthlyForceData[month] = {
       ...(reportData.allMonthlyForceData[month] ?? {}),
@@ -114,22 +121,11 @@ const createUpdateReportDataFunction =
     }
   }
 
-const getResolvedExceptions = (event: FullAuditLogEvent) => {
-  if (event.eventCode !== EventCode.ExceptionsGenerated) {
-    return currentExceptions[event._messageId]
-  }
-
-  const previousExceptions = currentExceptions[event._messageId]
-  const newExceptions = extractExceptionCodes(event)
-  return previousExceptions.filter((previousException) => !newExceptions.includes(previousException))
-}
-
 const generateReportData = async (
   events: FullAuditLogEvent[],
   start: Date,
   end: Date,
-  dynamo: DocumentClient,
-  auditLogTableName: string
+  forceOwners: Record<string, number>
 ): Promise<ReportDataResult> => {
   const reportData = {
     allEventCodes: new Set<string>(),
@@ -161,20 +157,32 @@ const generateReportData = async (
   })
 
   for (const event of events) {
+    if (event.eventSource === "ResubmitFailedPNCMessages") {
+      if (currentExceptions[event._messageId]) {
+        delete currentExceptions[event._messageId]
+      }
+      continue
+    }
+
     if (event.eventCode === EventCode.HearingOutcomeDetails) {
-      forceOwners[event._messageId] = event.attributes?.["Force Owner"]?.toString()?.substring(0, 2)
+      const forceOwner = event.attributes?.["Force Owner"]?.toString()?.substring(0, 2)
+      if (forceOwner) {
+        forceOwners[event._messageId] = Number(forceOwner)
+      }
+
       continue
     }
 
     const date = getDateString(event.timestamp)
     const month = date.substring(0, 7)
-    const updateReportData = createUpdateReportDataFunction(dynamo, auditLogTableName, date, month)
+    const updateReportData = createUpdateReportDataFunction(forceOwners, date, month)
 
     let eventCodeKey = getEventCodeKey(event)
     let numberToAdd = 1
 
     if (
       currentExceptions[event._messageId] &&
+      currentResubmissionUi[event._messageId] &&
       (event.eventCode === EventCode.ExceptionsGenerated || eventsPostExceptionsResolved.includes(event.eventCode))
     ) {
       const customEventCodeKey = `${currentResubmissionUi[event._messageId]}.Resolved exceptions`
@@ -206,13 +214,35 @@ const generateReportData = async (
     if (event.eventCode === EventCode.ExceptionsGenerated) {
       eventCodeKey = ".Total exceptions"
       currentExceptions[event._messageId] = extractExceptionCodes(event)
-      const numberOfExceptions = currentExceptions[event._messageId].length
+      const numberOfExceptions = currentExceptions[event._messageId].filter(excludeAutoResubmissionExceptions).length
       numberToAdd = numberOfExceptions
     }
 
-    if (
-      [EventCode.HearingOutcomeResubmittedPhase1, EventCode.HearingOutcomeResubmittedPhase2].includes(event.eventCode)
-    ) {
+    if (event.eventCode === exceptionsResolvedManually) {
+      const autoResubmissionExceptions =
+        currentExceptions[event._messageId]?.filter(filterAutoResubmissionExceptions).length || 0
+
+      if (autoResubmissionExceptions > 0) {
+        await updateReportData(reportData, {
+          event,
+          numberToAdd: autoResubmissionExceptions,
+          eventCodeKey: ".Total exceptions"
+        })
+      }
+      numberToAdd = currentExceptions[event._messageId]?.length || 0
+    }
+
+    if (event.eventCode === EventCode.TriggersGenerated) {
+      numberToAdd = Number(event?.attributes?.["Number of Triggers"] || 0)
+      eventCodeKey = ".Total triggers"
+    }
+
+    if (event.eventCode === EventCode.TriggersResolved) {
+      numberToAdd = Number(event?.attributes?.["Number Of Triggers"] || 0)
+    }
+
+    if (exceptionsResubmittedEvents.includes(event.eventCode)) {
+      eventCodeKey = (isNewUIEvent(event) ? "new-ui" : "old-ui") + ".Exceptions resubmitted"
       currentResubmissionUi[event._messageId] = isNewUIEvent(event) ? "new-ui" : "old-ui"
       numberToAdd = currentExceptions[event._messageId]?.length ?? 0
       if (event.user === "System") {
@@ -221,59 +251,15 @@ const generateReportData = async (
     }
 
     reportData.allEventCodes.add(eventCodeKey)
-    // if (isNewUIEvent(event)) {
-    //   reportData.usersWithNewUiEvent.add(username)
-    // }
 
     await updateReportData(reportData, { event, numberToAdd, eventCodeKey })
   }
 
-  // const filterEventForNewUi = (event: FullAuditLogEvent) =>
-  //   reportData.usersWithNewUiEvent.has(event.user ?? "Unknown") ||
-  //   event.eventCode.includes("pnc.response") ||
-  //   event.eventCode.includes("hearing-outcome.ignored") ||
-  //   event.eventCode.includes("hearing-outcome.resubmitted-phase")
-  // events.filter(filterEventForNewUi).forEach((event) => {
-  //   const date = getDateString(event.timestamp)
-  //   const month = date.substring(0, 7)
-  //   let eventCodeKey = getEventCodeKey(event)
-  //   let username = event.user ?? "unknown"
-
-  //   newUiEventCodes.add(eventCodeKey)
-
-  //   newUiSummary[eventCodeKey] = (newUiSummary[eventCodeKey] || 0) + 1
-
-  //   newUiUserData[username] = {
-  //     ...(newUiUserData[username] ?? {}),
-  //     [eventCodeKey]: (newUiUserData[username]?.[eventCodeKey] || 0) + 1
-  //   }
-
-  //   newUiDailyData[date] = {
-  //     ...(newUiDailyData[date] ?? {}),
-  //     [eventCodeKey]: (newUiDailyData[date]?.[eventCodeKey] || 0) + 1
-  //   }
-
-  //   newUiMonthlyData[month] = {
-  //     ...(newUiMonthlyData[month] ?? {}),
-  //     [eventCodeKey]: (newUiMonthlyData[month]?.[eventCodeKey] || 0) + 1
-  //   }
-
-  //   newUiDailyUserData[date] = {
-  //     ...(newUiDailyUserData[date] ?? {}),
-  //     [username]: {
-  //       ...(newUiDailyUserData[date]?.[username] ?? {}),
-  //       [eventCodeKey]: (newUiDailyUserData[date]?.[username]?.[eventCodeKey] || 0) + 1
-  //     }
-  //   }
-
-  //   newUiMonthlyUserData[month] = {
-  //     ...(newUiMonthlyUserData[month] ?? {}),
-  //     [username]: {
-  //       ...(newUiMonthlyUserData[month]?.[username] ?? {}),
-  //       [eventCodeKey]: (newUiMonthlyUserData[month]?.[username]?.[eventCodeKey] || 0) + 1
-  //     }
-  //   }
-  // })
+  reportData.allEventCodes = new Set(
+    Array.from(reportData.allEventCodes).filter((eventCode) =>
+      eventCodesToDisplay.some((eventCodeToDisplay) => eventCode.includes(eventCodeToDisplay))
+    )
+  )
 
   return {
     allEvents: {

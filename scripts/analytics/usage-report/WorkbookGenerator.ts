@@ -20,7 +20,7 @@ export default class WorkbookGenerator {
 
   private getEventTitle = (eventCode: string) => {
     const eventTitlePrefix =
-      eventCode.split(".")[0] === "new-ui" ? "New UI " : eventCode.split(".")[0] === "old-ui" ? "Old UI " : ""
+      eventCode.split(".")[0] === "new-ui" ? "New: " : eventCode.split(".")[0] === "old-ui" ? "Old: " : ""
     const actualEventCode = eventCode.split(".").slice(1).join(".")
     const eventTitle = reportEventTitles[actualEventCode] ?? actualEventCode
 

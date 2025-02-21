@@ -23,6 +23,7 @@ import findEvents from "./fetchEvents"
 import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
 import generateReportData from "./generateReportData"
 import WorkbookGenerator from "./WorkbookGenerator"
+import fetchForceOwners from "./fetchForceOwners"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let dynamo: DocumentClient
@@ -96,9 +97,12 @@ const run = async () => {
     throw events
   }
 
-  console.log("Generating report data...")
+  console.log("Fetching force owners...")
   const auditLogTableName = "bichard-7-production-audit-log"
-  const reportData = await generateReportData(events, start, end, dynamo, auditLogTableName)
+  const forceOwners = await fetchForceOwners(events, dynamo, auditLogTableName)
+
+  console.log("Generating report data...")
+  const reportData = await generateReportData(events, start, end, forceOwners)
 
   console.log("Generating report workbook...")
   const reportFilename = `New UI Report (${getDateString(start)} to ${getDateString(end)}).xlsx`
