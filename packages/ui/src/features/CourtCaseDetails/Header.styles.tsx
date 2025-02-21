@@ -20,14 +20,14 @@ const CaseDetailHeaderRow = styled.div`
   gap: 30px;
   width: 100%;
 
-  #case-detail-header-row > div:nth-last-child(-n + 2) {
-    margin-left: 300px;
-    gap: 10px;
-  }
-
   @media (max-width: 1300px) {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0px;
+
+    #locked-tag-container {
+      margin-left: 0;
+    }
   }
 `
 
@@ -42,6 +42,7 @@ const ButtonContainer = styled.div`
 const LockedTagContainer = styled.div`
   display: flex;
   gap: 2.5rem;
+  margin-left: auto;
 `
 
 const StyledButton = styled(Button)`

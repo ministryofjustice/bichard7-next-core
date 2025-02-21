@@ -80,7 +80,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
           />
         </h2>
-        <LockedTagContainer>
+        <LockedTagContainer id="locked-tag-container">
           <LockStatusTag
             isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
             resolutionStatus={courtCase.errorStatus}
