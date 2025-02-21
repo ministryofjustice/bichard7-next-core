@@ -167,13 +167,7 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   ResultHearingDate: new Date(xmlResult["ds:ResultHearingDate"]?.["#text"] ?? ""),
   BailCondition: mapBailCondition(xmlResult["ds:BailCondition"]),
   NextResultSourceOrganisation: xmlResult["ds:NextResultSourceOrganisation"]
-    ? {
-        TopLevelCode: xmlResult["ds:NextResultSourceOrganisation"]["ds:TopLevelCode"]?.["#text"],
-        SecondLevelCode: xmlResult["ds:NextResultSourceOrganisation"]["ds:SecondLevelCode"]["#text"],
-        ThirdLevelCode: xmlResult["ds:NextResultSourceOrganisation"]["ds:ThirdLevelCode"]["#text"],
-        BottomLevelCode: xmlResult["ds:NextResultSourceOrganisation"]["ds:BottomLevelCode"]["#text"],
-        OrganisationUnitCode: xmlResult["ds:NextResultSourceOrganisation"]["ds:OrganisationUnitCode"]["#text"]
-      }
+    ? mapXmlOrganisationalUnitToAho(xmlResult["ds:NextResultSourceOrganisation"])
     : undefined,
   Duration: mapDuration(xmlResult["ds:Duration"]),
   DateSpecifiedInResult: mapDateSpecifiedInResult(xmlResult["ds:DateSpecifiedInResult"]),
