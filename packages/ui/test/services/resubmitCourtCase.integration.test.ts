@@ -333,6 +333,45 @@ describe("resubmit court case", () => {
     expect(events).toContainEqual(exceptionUnlockedEvent)
   })
 
+  it("Should log Hearing outcome resubmission to phase 2", async () => {
+    // set up court case in the right format to insert into the db
+    const inputCourtCase = await getDummyCourtCase({
+      errorLockedByUsername: userName,
+      triggerLockedByUsername: null,
+      errorCount: 1,
+      errorStatus: "Unresolved",
+      triggerCount: 1,
+      phase: 2,
+      hearingOutcome: offenceSequenceException.hearingOutcomeXml,
+      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
+      orgForPoliceFilter: "1111"
+    })
+
+    // insert the record to the db
+    await insertCourtCasesWithFields([inputCourtCase])
+
+    const result = await resubmitCourtCase(
+      dataSource,
+      mockMqGateway,
+      { courtOffenceSequenceNumber: [{ offenceIndex: 0, value: 1234 }] },
+      inputCourtCase.errorId,
+      {
+        username: userName,
+        visibleForces: ["11"],
+        visibleCourts: [],
+        hasAccessTo: hasAccessToAll
+      } as Partial<User> as User
+    )
+    const events = await fetchAuditLogEvents(inputCourtCase.messageId)
+
+    expect(result).not.toBeInstanceOf(Error)
+    expect(events).toHaveLength(2)
+    expect(events).toContainEqual(
+      resubmissionEvent(EventCode.HearingOutcomeResubmittedPhase2, "Hearing outcome resubmitted to phase 2", userName)
+    )
+    expect(events).toContainEqual(exceptionUnlockedEvent)
+  })
+
   it("should send generatedXml to phase 1 queue", async () => {
     // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
@@ -371,7 +410,7 @@ describe("resubmit court case", () => {
     expect(messageXml).toMatchSnapshot()
   })
 
-  it("should not send generatedXml to phase 2 queue", async () => {
+  it("should send generatedXml to phase 2 queue", async () => {
     // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
@@ -401,9 +440,11 @@ describe("resubmit court case", () => {
       } as Partial<User> as User
     )
 
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Resubmission to Phase 2 is not implemented yet")
+    expect(result).not.toBeInstanceOf(Error)
 
-    expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(1)
+    const [messageXml, queueName] = (mockMqGateway.execute as jest.Mock).mock.calls[0]
+    expect(queueName).toBe("PHASE_2_RESUBMIT_QUEUE")
+    expect(messageXml).toMatchSnapshot()
   })
 })
