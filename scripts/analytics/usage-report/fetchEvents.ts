@@ -2,20 +2,24 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
 import { FullAuditLogEvent, getDateString, isNewUIEvent, log, reportEventCodes } from "./common"
 
+const generateDates = (start: Date, end: Date): Date[] => {
+  const dates: Date[] = []
+  let currentDate = new Date(start)
+  while (currentDate < end) {
+    dates.push(new Date(currentDate))
+    currentDate.setDate(currentDate.getDate() + 1)
+  }
+
+  return dates
+}
+
 const filterEvents = (events: FullAuditLogEvent[]): FullAuditLogEvent[] =>
   events.filter((event) => reportEventCodes.includes(event.eventCode))
 
-const findEvents = async (
-  dynamo: DocumentClient,
-  eventsTableName: string,
-  start: Date,
-  end: Date
-): Promise<FullAuditLogEvent[] | Error> => {
-  log(`Getting messages for the period between ${getDateString(start)} and ${getDateString(end)}`)
+const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, start: Date, end: Date) => {
   let lastEvaluatedKey
-  let events: FullAuditLogEvent[] = []
   const messageIds = new Set<string>()
-  console.log(`Fetching messages and events between ${start.toISOString()} and ${end.toISOString()}...`)
+  let events: FullAuditLogEvent[] = []
 
   while (true) {
     const query: DocumentClient.QueryInput = {
@@ -71,6 +75,54 @@ const findEvents = async (
       return events
     }
   }
+}
+
+const findEvents = async (
+  dynamo: DocumentClient,
+  eventsTableName: string,
+  start: Date,
+  end: Date
+): Promise<FullAuditLogEvent[] | Error> => {
+  log(`Getting messages for the period between ${getDateString(start)} and ${getDateString(end)}`)
+  const allEvents: FullAuditLogEvent[] = []
+  console.log(`Fetching messages and events between ${start.toISOString()} and ${end.toISOString()}...`)
+  const dates = generateDates(start, end)
+  const totalDates = dates.length
+
+  const worker = async () => {
+    while (dates.length > 0) {
+      const date = dates.shift()
+      if (!date) {
+        break
+      }
+
+      const endDate = new Date(date)
+      endDate.setDate(endDate.getDate() + 1)
+      const events = await fetchEvents(dynamo, eventsTableName, date, endDate)
+      if (isError(events)) {
+        throw events
+      }
+
+      allEvents.push(...events)
+    }
+  }
+
+  const reporter = async () => {
+    while (dates.length > 0) {
+      console.log(`Fetch events for dates ${totalDates - dates.length} of ${totalDates}`)
+
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+    }
+  }
+
+  await Promise.all(
+    new Array(10)
+      .fill(0)
+      .map(() => worker())
+      .concat(reporter())
+  )
+
+  return allEvents.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
 }
 
 export default findEvents
