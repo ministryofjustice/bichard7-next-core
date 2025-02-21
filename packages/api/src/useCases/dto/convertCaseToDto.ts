@@ -3,6 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { FastifyBaseLogger } from "fastify"
 
+import { isError } from "@moj-bichard7/common/types/Result"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty } from "lodash"
 
@@ -18,17 +19,25 @@ export const convertCaseToCaseDto = (
   user: User,
   logger: FastifyBaseLogger
 ): CaseDto => {
-  const annotatedHearingOutcome = parseHearingOutcome(caseDataForDto.annotated_msg, logger)
-  const updatedHearingOutcome = caseDataForDto.updated_msg && parseHearingOutcome(caseDataForDto.updated_msg, logger)
+  const ahoResult = parseHearingOutcome(caseDataForDto.annotated_msg, logger)
+  const updatedAhoResult = caseDataForDto.updated_msg && parseHearingOutcome(caseDataForDto.updated_msg, logger)
+
+  if (isError(ahoResult)) {
+    throw ahoResult
+  }
+
+  if (isError(updatedAhoResult)) {
+    throw updatedAhoResult
+  }
 
   return {
     ...convertCaseToCaseIndexDto(caseDataForDto, user),
-    aho: annotatedHearingOutcome as AnnotatedHearingOutcome,
+    aho: ahoResult,
     courtCode: caseDataForDto.court_code,
     courtReference: caseDataForDto.court_reference,
     orgForPoliceFilter: caseDataForDto.org_for_police_filter,
     phase: caseDataForDto.phase,
-    updatedHearingOutcome: (updatedHearingOutcome as AnnotatedHearingOutcome) ?? caseDataForDto.updated_msg
+    updatedHearingOutcome: (updatedAhoResult as AnnotatedHearingOutcome) ?? null
   } satisfies CaseDto
 }
 
