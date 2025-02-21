@@ -1,4 +1,4 @@
-import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"

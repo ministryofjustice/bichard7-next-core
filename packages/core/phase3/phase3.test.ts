@@ -1,6 +1,6 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 import type Phase3Result from "./types/Phase3Result"
 import type PncUpdateRequestError from "./types/PncUpdateRequestError"

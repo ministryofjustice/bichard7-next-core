@@ -1,7 +1,7 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import hashedPassword from "./hashedPassword"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 const numberedUsers = () => {
   const newUsers: Record<string, Partial<User> & { groups: UserGroup[] }> = {}
@@ -142,6 +142,94 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     email: "bichard18@example.com",
     password: hashedPassword,
     groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
+  },
+  userWithAllTriggersExcluded: {
+    username: "userWithAllTriggersExcluded",
+    visibleForces: ["001", "002", "003"],
+    forenames: "userWithAllTriggersExcluded",
+    surname: "User",
+    email: "userWithAllTriggersExcluded@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    excludedTriggers: [
+      TriggerCode.TRPR0001,
+      TriggerCode.TRPR0003,
+      TriggerCode.TRPR0004,
+      TriggerCode.TRPR0005,
+      TriggerCode.TRPR0006,
+      TriggerCode.TRPR0007,
+      TriggerCode.TRPR0008,
+      TriggerCode.TRPR0010,
+      TriggerCode.TRPR0014,
+      TriggerCode.TRPR0015,
+      TriggerCode.TRPR0016,
+      TriggerCode.TRPR0017,
+      TriggerCode.TRPR0018,
+      TriggerCode.TRPR0019,
+      TriggerCode.TRPR0020,
+      TriggerCode.TRPR0021,
+      TriggerCode.TRPR0022,
+      TriggerCode.TRPR0023,
+      TriggerCode.TRPR0024,
+      TriggerCode.TRPR0025,
+      TriggerCode.TRPR0026,
+      TriggerCode.TRPR0027,
+      TriggerCode.TRPR0028,
+      TriggerCode.TRPR0029,
+      TriggerCode.TRPR0030,
+      TriggerCode.TRPS0002,
+      TriggerCode.TRPS0003,
+      TriggerCode.TRPS0004,
+      TriggerCode.TRPS0008,
+      TriggerCode.TRPS0010,
+      TriggerCode.TRPS0011,
+      TriggerCode.TRPS0013,
+      TriggerCode.TRPR0002,
+      TriggerCode.TRPR0012
+    ]
+  },
+  userWithJustWarrantsTriggersIncluded: {
+    username: "userWithJustWarrantsTriggersIncluded",
+    visibleForces: ["001", "002", "003"],
+    forenames: "userWithJustWarrantsTriggersIncluded",
+    surname: "User",
+    email: "userWithJustWarrantsTriggersIncluded@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    excludedTriggers: [
+      TriggerCode.TRPR0001,
+      TriggerCode.TRPR0003,
+      TriggerCode.TRPR0004,
+      TriggerCode.TRPR0005,
+      TriggerCode.TRPR0006,
+      TriggerCode.TRPR0007,
+      TriggerCode.TRPR0008,
+      TriggerCode.TRPR0010,
+      TriggerCode.TRPR0014,
+      TriggerCode.TRPR0015,
+      TriggerCode.TRPR0016,
+      TriggerCode.TRPR0017,
+      TriggerCode.TRPR0018,
+      TriggerCode.TRPR0019,
+      TriggerCode.TRPR0020,
+      TriggerCode.TRPR0021,
+      TriggerCode.TRPR0022,
+      TriggerCode.TRPR0023,
+      TriggerCode.TRPR0024,
+      TriggerCode.TRPR0025,
+      TriggerCode.TRPR0026,
+      TriggerCode.TRPR0027,
+      TriggerCode.TRPR0028,
+      TriggerCode.TRPR0029,
+      TriggerCode.TRPR0030,
+      TriggerCode.TRPS0002,
+      TriggerCode.TRPS0003,
+      TriggerCode.TRPS0004,
+      TriggerCode.TRPS0008,
+      TriggerCode.TRPS0010,
+      TriggerCode.TRPS0011,
+      TriggerCode.TRPS0013
+    ]
   },
   ...numberedUsers()
 }

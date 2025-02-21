@@ -140,8 +140,11 @@ services:
   #     TOKEN_EXPIRES_IN: 1 week
   #     TOKEN_ISSUER: Bichard
   #     TOKEN_SECRET: ${AUTH_JWT_SECRET}
+  #     DYNAMO_AWS_ACCESS_KEY_ID: S3RVER
+  #     DYNAMO_AWS_SECRET_ACCESS_KEY: S3RVER
+  #     AWS_URL: http://localstack:4566
   #   healthcheck:
-  #     test: curl http://localhost:3321/health
+  #     test: curl --insecure --fail http://localhost:3321/v1/health
   #     interval: 2s
   #     timeout: 2s
   #     retries: 10

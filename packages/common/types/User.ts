@@ -27,7 +27,7 @@ export const UserDtoSchema = z.object({
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),
-  visibleForces: z.string().nullable()
+  visibleForces: z.array(z.string()).nullable()
 })
 
 export type User = z.infer<typeof UserSchema>

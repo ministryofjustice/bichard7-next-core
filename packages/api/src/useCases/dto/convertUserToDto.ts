@@ -10,7 +10,7 @@ export const convertUserForNoteToDto = (user: NoteUser): NoteUserDto => {
     forenames: user.forenames,
     surname: user.surname,
     username: user.username,
-    visibleForces: user.visible_forces
+    visibleForces: user.visible_forces ? user.visible_forces?.split(",") : null
   } satisfies NoteUserDto
 }
 

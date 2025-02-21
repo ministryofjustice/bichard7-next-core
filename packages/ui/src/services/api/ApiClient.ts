@@ -13,11 +13,11 @@ class ApiClient {
 
   async get<T>(route: string): Promise<Error | T> {
     const response = await this.useFetch(route, HttpMethod.GET)
-    if (!response.ok) {
-      return new Error(`Error: ${response.status} - ${response.statusText}`)
+    if (response.ok) {
+      return await response.json()
     }
 
-    return await response.json()
+    return new Error(`Error: ${response.status} - ${response.statusText}`)
   }
 
   async useFetch(route: string, method: HttpMethod): Promise<Response> {

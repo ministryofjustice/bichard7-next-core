@@ -11,8 +11,8 @@ export const SWITCHING_FEEDBACK_FORM_FREQUENCY_IN_HOURS = 3
 export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === "true"
 
 export const API_LOCATION = process.env.API_URL ?? "http://localhost:3333"
-export const USE_API = process.env.USE_API ?? false
-export const USE_API_CASE_ENDPOINT = process.env.USE_API_CASE_ENDPOINT ?? false
+export const USE_API = (process.env.USE_API ?? "false") === "true"
+export const USE_API_CASE_ENDPOINT = (process.env.USE_API_CASE_ENDPOINT ?? "false") === "true"
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
 const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"

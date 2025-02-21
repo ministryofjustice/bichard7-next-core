@@ -4,5 +4,5 @@ import type ApiClient from "../ApiClient"
 export default interface BichardApiGateway {
   readonly apiClient: ApiClient
 
-  fetchCase: (caseId: number) => Promise<DisplayFullCourtCase>
+  fetchCase: (caseId: number) => Promise<DisplayFullCourtCase | Error>
 }
