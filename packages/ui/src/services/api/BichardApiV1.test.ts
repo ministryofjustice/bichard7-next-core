@@ -1,5 +1,6 @@
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 
+import { isError } from "@moj-bichard7/common/types/Result"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
@@ -41,9 +42,12 @@ describe("BichardApiV1", () => {
     })
 
     it("can handle errors", async () => {
-      jest.spyOn(client, "get").mockRejectedValue(new Error("Error"))
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
 
-      await expect(gateway.fetchCase(caseId)).rejects.toThrow("Error")
+      const result = await gateway.fetchCase(caseId)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
     })
   })
 })
