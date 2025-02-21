@@ -8,7 +8,6 @@ import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseCon
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { PreviousPathContext } from "context/PreviousPathContext"
-import CourtCaseDetailsSummaryBox from "features/CourtCaseDetails/CourtCaseDetailsSummaryBox"
 import Header from "features/CourtCaseDetails/Header"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -141,7 +140,7 @@ const ReallocateCasePage: NextPage<Props> = ({
               <Layout>
                 <HeaderContainer id="header-container">
                   <Header canReallocate={canReallocate} />
-                  <CourtCaseDetailsSummaryBox />
+
                   <HeaderRow>
                     <h2 className="govuk-heading-m" aria-label="Reallocate Case">
                       {"Case reallocation"}

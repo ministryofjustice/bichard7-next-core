@@ -152,7 +152,9 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
           {" for support to raise a ticket. Any issues raised via this page will not be handled."}
         </p>
 
-        <h2 className="govuk-heading-m">{"Share your feedback"}</h2>
+        <h2 className="govuk-heading-m" id="share-feedback">
+          {"Share your feedback"}
+        </h2>
         <p className="govuk-body">
           {"If you would like to tell us about your experience using the new version of Bichard7, please do so below."}
         </p>

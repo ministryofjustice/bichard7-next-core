@@ -3,7 +3,7 @@ import { gdsLightGrey } from "utils/colours"
 
 const SummaryBox = styled.aside`
   background-color: ${gdsLightGrey};
-  padding: 25px;
+  padding: 0rem, 1rem, 0rem, 1rem;
 `
 
 const SummaryBoxGrid = styled.div`
