@@ -3,6 +3,7 @@ import fs from "fs"
 import "jest-xml-matcher"
 import path from "path"
 
+import pncUpdateDatasetSchema from "../../../schemas/pncUpdateDataset"
 import parsePncUpdateDataSetXml from "./parsePncUpdateDataSetXml"
 
 describe("parsePncUpdateDataSetXml", () => {
@@ -19,6 +20,9 @@ describe("parsePncUpdateDataSetXml", () => {
     it(`converts XML from file ${filePath} to PncUpdateDataSet`, () => {
       const inputXml = fs.readFileSync(filePath).toString()
       const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
+      const validationResult = pncUpdateDatasetSchema.safeParse(parsedPncUpdateDatasetAho)
+
+      expect(validationResult.success).toBe(true)
       expect(parsedPncUpdateDatasetAho).toMatchSnapshot()
     })
   })
@@ -27,7 +31,9 @@ describe("parsePncUpdateDataSetXml", () => {
     const filePath = path.join(inputDirectory, "PncUpdateDataSet-with-result-class-error.xml")
     const inputXml = fs.readFileSync(filePath).toString()
     const parsedPncUpdateDatasetAho = parsePncUpdateDataSetXml(inputXml)
+    const validationResult = pncUpdateDatasetSchema.safeParse(parsedPncUpdateDatasetAho)
 
+    expect(validationResult.success).toBe(true)
     expect(!isError(parsedPncUpdateDatasetAho) && parsedPncUpdateDatasetAho.Exceptions).toHaveLength(1)
     expect(!isError(parsedPncUpdateDatasetAho) && parsedPncUpdateDatasetAho.Exceptions[0].code).toBe("HO200104")
   })
