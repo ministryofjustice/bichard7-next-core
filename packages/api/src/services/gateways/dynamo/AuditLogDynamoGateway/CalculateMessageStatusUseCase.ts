@@ -1,8 +1,8 @@
 import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 
 import type { ApiAuditLogEvent } from "../../../../types/AuditLogEvent"
 
-import EventCode from "../../../../types/EventCode"
 import PncStatus from "../../../../types/PncStatus"
 import TriggerStatus from "../../../../types/TriggerStatus"
 

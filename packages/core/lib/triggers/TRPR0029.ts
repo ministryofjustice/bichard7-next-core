@@ -3,8 +3,8 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
-import getOffenceFullCode from "../getOffenceFullCode"
 import isCaseRecordable from "../isCaseRecordable"
+import getOffenceFullCode from "../offences/getOffenceFullCode"
 
 const triggerCode = TriggerCode.TRPR0029
 // prettier-ignore

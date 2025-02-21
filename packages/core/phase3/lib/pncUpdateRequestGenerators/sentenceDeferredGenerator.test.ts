@@ -4,7 +4,7 @@ import path from "path"
 
 import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
-import parsePncUpdateDataSetXml from "../../../phase2/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
+import parsePncUpdateDataSetXml from "../../../lib/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import { PncOperation } from "../../../types/PncOperation"
 import sentenceDeferredGenerator from "./sentenceDeferredGenerator"
 

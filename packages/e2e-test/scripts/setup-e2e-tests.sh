@@ -67,7 +67,8 @@ AUDIT_LOG_DYNAMODB_TABLE="bichard-7-${WORKSPACE}-audit-log"
 AUDIT_LOG_DYNAMODB_EVENTS_TABLE="bichard-7-${WORKSPACE}-audit-log-events"
 AUDIT_LOG_DYNAMODB_REGION="$AWS_REGION"
 AUDIT_LOG_API_ID=$(aws apigateway get-rest-apis --query "items[0].id" --output text)
-AUDIT_LOG_API_URL="https://${AUDIT_LOG_API_ID}.execute-api.eu-west-2.amazonaws.com/${WORKSPACE}"
+AUDIT_LOG_VPCE_ID=$(aws ec2 describe-vpc-endpoints --filters "Name=service-name,Values=com.amazonaws.eu-west-2.execute-api" --query 'VpcEndpoints[*].[VpcEndpointId]' | jq -r ".[0][0]")
+AUDIT_LOG_API_URL="https://${AUDIT_LOG_API_ID}-${AUDIT_LOG_VPCE_ID}.execute-api.eu-west-2.amazonaws.com/${WORKSPACE}"
 AUDIT_LOG_API_KEY=$(aws apigateway get-api-keys --include-values --query "items[0].value" --output text)
 MESSAGE_ENTRY_POINT=s3
 

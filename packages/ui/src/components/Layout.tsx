@@ -2,8 +2,7 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
-import { ReactNode } from "react"
-import { LinkButton } from "./Buttons"
+import { LinkButton } from "./Buttons/LinkButton"
 import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
 import { Banner } from "./Layout.styles"
@@ -24,7 +23,7 @@ const BichardSwitchButton: React.FC<BichardSwitchProps> = ({ href }: BichardSwit
 }
 
 interface Props {
-  children: ReactNode
+  children: React.ReactNode
   bichardSwitch?: {
     display: boolean
     href?: string

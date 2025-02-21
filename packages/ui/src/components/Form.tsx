@@ -1,8 +1,8 @@
-import { FormEventHandler, ReactNode } from "react"
+import { FormEventHandler } from "react"
 import { CSRF } from "../config"
 
 interface Props {
-  children: ReactNode
+  children: React.ReactNode
   csrfToken: string
   method: string
   action?: string

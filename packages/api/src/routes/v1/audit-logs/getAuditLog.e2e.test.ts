@@ -2,13 +2,13 @@ jest.setTimeout(999999)
 import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import axios, { HttpStatusCode } from "axios"
 
 import type { OutputApiAuditLog } from "../../../types/AuditLog"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import addQueryParams from "../../../tests/helpers/addQueryParams"
 import { createMockAuditLog } from "../../../tests/helpers/createMockAuditLogs"
 import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
@@ -19,10 +19,7 @@ import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/Tes
 const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
 
 const jwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
-const axiosOptions: AxiosRequestConfig = {
-  headers: { Authorization: `Bearer ${jwt}` },
-  validateStatus: () => true
-}
+const axiosOptions: AxiosRequestConfig = { headers: { Authorization: `Bearer ${jwt}` }, validateStatus: () => true }
 
 let url: string
 
@@ -43,7 +40,7 @@ describe("Getting a single Audit Log", () => {
 
   afterAll(async () => {
     await app.close()
-    await helper.db.close()
+    await helper.postgres.close()
   })
 
   beforeEach(async () => {

@@ -46,10 +46,6 @@ The following guidelines should help in creating a good name structure as well l
 - Lots of adjectives in a name
 - `Full`, `Partial`, `Raw`, `DB`
 
-## Decision
-
-Pending
-
 ## Consequences
 
 We will have to carefully choose names that are meaningful. That may slow down our velocity. But this will be good trade

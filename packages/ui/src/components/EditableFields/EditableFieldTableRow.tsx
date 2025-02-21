@@ -13,6 +13,7 @@ type Props = {
   children?: React.ReactNode
   inputLabel: string
   hintText: string
+  htmlFor: string
 }
 
 const EditableFieldTableRow = ({
@@ -24,7 +25,8 @@ const EditableFieldTableRow = ({
   isEditable,
   inputLabel,
   hintText,
-  children
+  children,
+  htmlFor
 }: Props) => {
   const isRendered = !!(value || updatedValue || hasExceptions)
   const hasCorrection = updatedValue && value !== updatedValue
@@ -36,7 +38,7 @@ const EditableFieldTableRow = ({
   const fieldToRender = (): React.ReactNode => {
     if (isEditable) {
       return (
-        <InputField value={value} inputLabel={inputLabel} hintText={hintText}>
+        <InputField value={value} inputLabel={inputLabel} hintText={hintText} htmlFor={htmlFor}>
           {children}
         </InputField>
       )
@@ -49,8 +51,8 @@ const EditableFieldTableRow = ({
 
   return (
     <tr className={`govuk-table__row ${className}`}>
-      <LabelCell className={"govuk-table__cell"}>
-        <LabelField label={label} isEditable={isEditable} />
+      <LabelCell className={"govuk-table__header govuk-body-s"}>
+        <LabelField label={label} showErrorIcon={hasExceptions} />
       </LabelCell>
       <td className="govuk-table__cell">{fieldToRender()}</td>
     </tr>

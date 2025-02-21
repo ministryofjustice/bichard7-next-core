@@ -1,4 +1,4 @@
-import type { PncApiError } from "../lib/PncGateway"
+import type { PncApiError } from "../lib/pnc/PncGateway"
 import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
 import type { PncQueryResult } from "./PncQueryResult"
 

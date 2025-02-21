@@ -2,7 +2,6 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import OffenceMatcherTableRow from "./TableRows/OffenceMatcherTableRow"
 import OffenceMatchingBadgeTableRow from "./TableRows/OffenceMatchingBadgeTableRow"
-import { JSX } from "react"
 
 interface OffenceMatcherRenderProps {
   offenceMatchingException: boolean
@@ -16,7 +15,7 @@ const OffenceMatcherRenderer = ({
   offenceIndex,
   offenceReasonSequence,
   isCaseLockedToCurrentUser
-}: OffenceMatcherRenderProps): JSX.Element => {
+}: OffenceMatcherRenderProps): React.ReactNode => {
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
 

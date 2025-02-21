@@ -1,13 +1,13 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 import type Phase3Result from "./types/Phase3Result"
 import type PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 import MockPncGateway from "../comparison/lib/MockPncGateway"
-import CoreAuditLogger from "../lib/CoreAuditLogger"
-import { PncApiError } from "../lib/PncGateway"
+import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
+import { PncApiError } from "../lib/pnc/PncGateway"
 import { PncOperation } from "../types/PncOperation"
 import phase3 from "./phase3"
 import generatePncUpdateDatasetWithOperations from "./tests/helpers/generatePncUpdateDatasetWithOperations"
@@ -17,7 +17,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
   let auditLogger: CoreAuditLogger
 
   beforeEach(() => {
-    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
+    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase3)
   })
 
   it("returns exceptions when updating the PNC fails", async () => {
@@ -51,7 +51,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
         },
         category: "information",
         eventCode: "exceptions.generated",
-        eventSource: "CorePhase2",
+        eventSource: "CorePhase3",
         eventType: "Exceptions generated",
         timestamp: expect.any(Date)
       }
@@ -77,39 +77,85 @@ describe("Bichard Core Phase 3 processing logic", () => {
     expect(pncGateway.updates).toHaveLength(0)
   })
 
-  it("generates triggers when all operations are completed", async () => {
-    const pncGateway = new MockPncGateway([undefined])
+  describe("when all operations are completed", () => {
+    it("generates triggers", async () => {
+      const pncGateway = new MockPncGateway([undefined])
 
-    const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
-      {
-        code: PncOperation.NORMAL_DISPOSAL,
-        status: "NotAttempted",
-        data: {
-          courtCaseReference: "97/1626/008395Q"
+      const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
+        {
+          code: PncOperation.NORMAL_DISPOSAL,
+          status: "NotAttempted",
+          data: {
+            courtCaseReference: "97/1626/008395Q"
+          }
         }
-      }
-    ])
+      ])
 
-    const result = (await phase3(pncUpdateDataset, pncGateway, auditLogger)) as Phase3Result
+      const result = (await phase3(pncUpdateDataset, pncGateway, auditLogger)) as Phase3Result
 
-    expect(result.resultType).toBe(Phase3ResultType.success)
-    expect(result.triggerGenerationAttempted).toBe(true)
-    expect(result.triggers).toStrictEqual([{ code: "TRPR0010" }, { code: "TRPR0027" }])
-    expect(result.outputMessage.PncOperations[0].status).toBe("Completed")
-    expect(result.auditLogEvents).toStrictEqual([
-      {
-        attributes: {
-          "Number of Triggers": 2,
-          "Trigger 1 Details": "TRPR0010",
-          "Trigger 2 Details": "TRPR0027",
-          "Trigger and Exception Flag": false
+      expect(result.resultType).toBe(Phase3ResultType.success)
+      expect(result.triggerGenerationAttempted).toBe(true)
+      expect(result.triggers).toStrictEqual([{ code: "TRPR0010" }, { code: "TRPR0027" }])
+      expect(result.outputMessage.PncOperations[0].status).toBe("Completed")
+      expect(result.auditLogEvents).toStrictEqual(
+        expect.arrayContaining([
+          {
+            attributes: {
+              "Number of Triggers": 2,
+              "Trigger 1 Details": "TRPR0010",
+              "Trigger 2 Details": "TRPR0027",
+              "Trigger and Exception Flag": false
+            },
+            category: "information",
+            eventCode: "triggers.generated",
+            eventSource: "CorePhase3",
+            eventType: "Triggers generated",
+            timestamp: expect.any(Date)
+          }
+        ])
+      )
+    })
+
+    it("generates PNC updated successful audit log event", async () => {
+      const pncGateway = new MockPncGateway([undefined, undefined])
+
+      const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
+        {
+          code: PncOperation.NORMAL_DISPOSAL,
+          status: "NotAttempted",
+          data: {
+            courtCaseReference: "97/1626/008395Q"
+          }
         },
-        category: "information",
-        eventCode: "triggers.generated",
-        eventSource: "CorePhase2",
-        eventType: "Triggers generated",
-        timestamp: expect.any(Date)
-      }
-    ])
+        {
+          code: PncOperation.NORMAL_DISPOSAL,
+          status: "NotAttempted",
+          data: {
+            courtCaseReference: "97/1626/008395Q"
+          }
+        }
+      ])
+
+      const result = (await phase3(pncUpdateDataset, pncGateway, auditLogger)) as Phase3Result
+
+      expect(result.resultType).toBe(Phase3ResultType.success)
+      expect(result.outputMessage.PncOperations[0].status).toBe("Completed")
+      expect(result.outputMessage.PncOperations[1].status).toBe("Completed")
+      expect(result.auditLogEvents).toStrictEqual(
+        expect.arrayContaining([
+          {
+            attributes: {
+              "Number of Operations": 2,
+              "Operation Code": "DISARR"
+            },
+            category: "information",
+            eventCode: "pnc.updated",
+            eventSource: "CorePhase3",
+            eventType: "PNC Update applied successfully",
+            timestamp: expect.any(Date)
+          }
+        ])
+      )
+    })
   })
 })

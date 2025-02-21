@@ -7,7 +7,7 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
   switch (action.type) {
     case "caseAge": {
       if (newState.caseAgeFilter.filter((caseAgeFilter) => caseAgeFilter.value === action.value).length < 1) {
-        newState.caseAgeFilter.push({ value: action.value, state: "Selected" })
+        newState.caseAgeFilter.push({ value: action.value as string, state: "Selected" })
       }
 
       break

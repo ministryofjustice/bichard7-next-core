@@ -38,11 +38,11 @@ export default [
   {
     languageOptions: {
       globals: {},
-      ecmaVersion: 6,
+      ecmaVersion: "latest",
       sourceType: "module",
 
       parserOptions: {
-        project: ["./tsconfig.json", "./packages/*/tsconfig.json"]
+        project: ["./tsconfig.json", "./packages/*/tsconfig.json", "./packages/*/cypress/tsconfig.json"]
       }
     }
   },

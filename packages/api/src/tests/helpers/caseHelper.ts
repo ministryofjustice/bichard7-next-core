@@ -4,8 +4,8 @@ import type End2EndPostgres from "../testGateways/e2ePostgres"
 
 import { testAhoXml } from "./ahoHelper"
 
-export const createCase = async (db: End2EndPostgres, overrides: object = {}): Promise<Case> => {
-  const caseData = await db.createTestCase({
+export const createCase = async (postgres: End2EndPostgres, overrides: object = {}): Promise<Case> => {
+  const caseData = await postgres.createTestCase({
     annotated_msg: testAhoXml,
     court_reference: "ABC",
     create_ts: new Date(),

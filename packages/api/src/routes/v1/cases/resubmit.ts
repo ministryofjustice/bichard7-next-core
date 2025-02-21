@@ -2,41 +2,29 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
 import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
 import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
 
-const bodySchema = z.object({
-  phase: z.number().gt(0).lte(3)
-})
+const bodySchema = z.object({ phase: z.number().gt(0).lte(3) })
 
 export type ResubmitBody = z.infer<typeof bodySchema>
 
-type HandlerProps = {
-  body: ResubmitBody
-  caseId: number
-  db: DataStoreGateway
-  reply: FastifyReply
-  user: User
-}
+type HandlerProps = { body: ResubmitBody; caseId: number; dataStore: DataStoreGateway; reply: FastifyReply; user: User }
 
 const schema = {
   ...auth,
   body: bodySchema,
-  params: z.object({
-    caseId: z.string().openapi({
-      description: "Case ID"
-    })
-  }),
+  params: z.object({ caseId: z.string().openapi({ description: "Case ID" }) }),
   response: {
     [OK]: z
       .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase" }) })
@@ -48,7 +36,7 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
+const handler = async ({ body, caseId, dataStore, reply, user }: HandlerProps) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -72,7 +60,7 @@ const handler = async ({ body, caseId, db, reply, user }: HandlerProps) => {
   // - in theory this should either be 502 or 504
 
   try {
-    const result = await canUserResubmitCase({ caseId, db, user })
+    const result = await canUserResubmitCase({ caseId, dataStore, user })
 
     if (!result) {
       reply.code(FORBIDDEN).send()
@@ -98,7 +86,7 @@ const route = async (fastify: FastifyInstance) => {
     await handler({
       body: req.body,
       caseId: Number(req.params.caseId),
-      db: req.db,
+      dataStore: req.dataStore,
       reply,
       user: req.user
     })

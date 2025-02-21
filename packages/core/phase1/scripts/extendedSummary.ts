@@ -8,7 +8,7 @@ import type { Trigger } from "../../types/Trigger"
 
 import getFile from "../../comparison/lib/getFile"
 import { lookupOffenceByCjsCode, lookupResultCodeByCjsCode, lookupVerdictByCjsCode } from "../../lib/dataLookup"
-import getOffenceCode from "../../lib/getOffenceCode"
+import getOffenceCode from "../../lib/offences/getOffenceCode"
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import parseSpiResult from "../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../lib/parse/transformSpiToAho"

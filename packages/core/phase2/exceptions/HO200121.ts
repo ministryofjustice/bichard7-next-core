@@ -5,7 +5,7 @@ import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import errorPaths from "../../lib/exceptions/errorPaths"
-import isRecordableOffence from "../lib/isRecordableOffence"
+import isRecordableOffence from "../../lib/offences/isRecordableOffence"
 
 const HO200121: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []

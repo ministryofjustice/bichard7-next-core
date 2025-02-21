@@ -24,13 +24,9 @@ export const NotePreviewRow = ({ notes, className }: NotePreviewRowProps) => {
     <tr className={classes.join(" ")}>
       <td className="govuk-table__cell" />
       <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
       <td className="govuk-table__cell" colSpan={2}>
         <NotePreview latestNote={mostRecentUserNote} numberOfNotes={numberOfNotes} />
       </td>
-      <td className="govuk-table__cell" />
       <td className="govuk-table__cell" />
     </tr>
   )

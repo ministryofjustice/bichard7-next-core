@@ -13,10 +13,10 @@ import postgres from "postgres"
 
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
-import CoreAuditLogger from "../../lib/CoreAuditLogger"
-import createPncApiConfig from "../../lib/createPncApiConfig"
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import getTriggersCount from "../../lib/database/getTriggersCount"
-import PncGateway from "../../lib/PncGateway"
+import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
+import PncGateway from "../../lib/pnc/PncGateway"
 import phase1 from "../../phase1/phase1"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 

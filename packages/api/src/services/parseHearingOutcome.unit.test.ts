@@ -1,5 +1,5 @@
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 
 import dummyAho from "../tests/fixtures/AnnotatedHO1.json"
 import dummyPNCUpdateDataset from "../tests/fixtures/AnnotatedPNCUpdateDataset.json"
@@ -7,7 +7,7 @@ import FakeLogger from "../tests/helpers/fakeLogger"
 import parseHearingOutcome from "./parseHearingOutcome"
 
 jest.mock("@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml")
-jest.mock("@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml")
+jest.mock("@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml")
 
 beforeEach(() => {
   ;(parseAhoXml as jest.Mock).mockImplementation(
@@ -15,7 +15,7 @@ beforeEach(() => {
   )
   ;(parseAnnotatedPncUpdateDatasetXml as jest.Mock).mockImplementation(
     jest.requireActual(
-      "@moj-bichard7/core/phase2/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+      "@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
     ).default
   )
 })

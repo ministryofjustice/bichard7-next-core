@@ -76,18 +76,18 @@ describe("Defendant Details", () => {
       </CourtCaseContext.Provider>
     )
 
-    cy.contains("td", "ASN").siblings().should("include.text", data.ArrestSummonsNumber)
-    cy.contains("td", "Court PNCID").siblings().should("include.text", data.CourtPNCIdentifier)
-    cy.contains("td", "PNC Check name").siblings().should("include.text", data.PNCCheckname)
-    cy.contains("td", "Given name").siblings().should("include.text", data.DefendantDetail?.PersonName.GivenName)
-    cy.contains("td", "Family name").siblings().should("include.text", data.DefendantDetail?.PersonName.FamilyName)
-    cy.contains("td", "Title").siblings().should("include.text", data.DefendantDetail?.PersonName.Title)
-    cy.contains("td", "Date of birth")
+    cy.contains("th", "ASN").siblings().should("include.text", data.ArrestSummonsNumber)
+    cy.contains("th", "Court PNCID").siblings().should("include.text", data.CourtPNCIdentifier)
+    cy.contains("th", "PNC Check name").siblings().should("include.text", data.PNCCheckname)
+    cy.contains("th", "Given name").siblings().should("include.text", data.DefendantDetail?.PersonName.GivenName)
+    cy.contains("th", "Family name").siblings().should("include.text", data.DefendantDetail?.PersonName.FamilyName)
+    cy.contains("th", "Title").siblings().should("include.text", data.DefendantDetail?.PersonName.Title)
+    cy.contains("th", "Date of birth")
       .siblings()
       .should("include.text", format(data.DefendantDetail?.BirthDate as Date, "dd/MM/yyyy"))
-    cy.contains("td", "Gender").siblings().should("include.text", "1 (male)")
+    cy.contains("th", "Gender").siblings().should("include.text", "1 (male)")
 
-    cy.contains("td", "Address")
+    cy.contains("th", "Address")
       .siblings()
       .should("include.text", data.Address?.AddressLine1)
       .should("include.text", data.Address?.AddressLine2)
@@ -95,8 +95,8 @@ describe("Defendant Details", () => {
       .should("include.text", data.Address?.AddressLine4)
       .should("include.text", data.Address?.AddressLine5)
 
-    cy.contains("td", "PNC file name").siblings().should("include.text", data.DefendantDetail?.GeneratedPNCFilename)
-    cy.contains("td", "Remand status").siblings().contains("Unconditional bail")
+    cy.contains("th", "PNC file name").siblings().should("include.text", data.DefendantDetail?.GeneratedPNCFilename)
+    cy.contains("th", "Remand status").siblings().contains("Unconditional bail")
   })
 
   it("render multiple given names", () => {
@@ -135,6 +135,6 @@ describe("Defendant Details", () => {
       </CourtCaseContext.Provider>
     )
 
-    cy.contains("td", "Given name").siblings().should("include.text", "FirstName, MiddleName")
+    cy.contains("th", "Given name").siblings().should("include.text", "FirstName, MiddleName")
   })
 })

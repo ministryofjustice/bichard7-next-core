@@ -17,8 +17,8 @@ type Props = {
 const ExceptionFieldTableRow = ({ badgeText, badgeColour, value, label, displayError, message, children }: Props) => {
   return (
     <tr className="govuk-table__row">
-      <Label className={"govuk-table__cell"}>
-        <b>{label}</b>
+      <Label className={"govuk-table__header govuk-body-s"}>
+        {label}
         {displayError !== false && (
           <>
             <div className="error-icon">

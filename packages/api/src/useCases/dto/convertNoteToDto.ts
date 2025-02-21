@@ -5,7 +5,7 @@ import { convertUserForNoteToDto } from "./convertUserToDto"
 export const convertNoteToDto = (note: Note): NoteDto => {
   let fullname: string | undefined
 
-  const noteUser: NoteUserDto | undefined = note.user ? convertUserForNoteToDto(note.user) : undefined
+  const noteUser: NoteUserDto | undefined = note.user?.username ? convertUserForNoteToDto(note.user) : undefined
 
   if (noteUser) {
     fullname = `${noteUser.forenames} ${noteUser.surname}`

@@ -9,9 +9,9 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
-import { LinkButton } from "components/Buttons"
+import { LinkButton } from "components/Buttons/LinkButton"
+import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
-import { isLockedByCurrentUser } from "utils/caseLocks"
 import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
@@ -56,8 +56,8 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
     reallocatePath += `?previousPath=${encodeURIComponent(previousPath)}`
   }
 
-  const caseIsViewOnly = !isLockedByCurrentUser(courtCase, currentUser.username)
-  const hasCaseLock = isLockedByCurrentUser(courtCase, currentUser.username)
+  const caseIsViewOnly = !isLockedByCurrentUser(currentUser.username, courtCase)
+  const hasCaseLock = isLockedByCurrentUser(currentUser.username, courtCase)
 
   return (
     <HeaderContainer id="header-container">

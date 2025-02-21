@@ -2,16 +2,14 @@ import ErrorIcon from "components/ErrorIcon"
 
 interface LabelFieldProps {
   label: string
-  isEditable: boolean
+  showErrorIcon: boolean
 }
 
-const LabelField: React.FC<LabelFieldProps> = ({ label, isEditable }) => {
+const LabelField: React.FC<LabelFieldProps> = ({ label, showErrorIcon }) => {
   return (
     <>
-      <b>
-        <div>{label}</div>
-      </b>
-      {isEditable && (
+      {label}
+      {showErrorIcon && (
         <div className="error-icon">
           <ErrorIcon />
         </div>

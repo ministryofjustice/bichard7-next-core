@@ -6,8 +6,9 @@ import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import type Phase3Result from "./types/Phase3Result"
 
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
+import generatePncUpdatedLogAttributes from "../lib/auditLog/generatePncUpdatedLogAttributes"
 import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
-import { PncApiError } from "../lib/PncGateway"
+import { PncApiError } from "../lib/pnc/PncGateway"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
 import performOperations from "./lib/performOperations"
@@ -41,6 +42,8 @@ const phase3 = async (
   if (triggers.length > 0) {
     auditLogger.info(EventCode.TriggersGenerated, generateTriggersLogAttributes(triggers, false))
   }
+
+  auditLogger.info(EventCode.PncUpdated, generatePncUpdatedLogAttributes(inputMessage.PncOperations))
 
   return {
     auditLogEvents: auditLogger.getEvents(),

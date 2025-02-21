@@ -5,7 +5,7 @@ export type FilterAction =
   | { method: FilterMethod; type: "courtName"; value: string }
   | { method: FilterMethod; type: "reasonCodes"; value: string | string[] }
   | { method: FilterMethod; type: "ptiurn"; value: string }
-  | { method: FilterMethod; type: "caseAge"; value: string }
+  | { method: FilterMethod; type: "caseAge"; value: string | undefined }
   | { method: "add"; type: "dateFrom"; value: string }
   | { method: "add"; type: "dateTo"; value: string }
   | { method: "remove"; type: "dateRange"; value: string }

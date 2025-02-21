@@ -1,12 +1,13 @@
 import Badge, { BadgeColours } from "components/Badge"
 import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
-import { JSX } from "react"
 
 interface LegacySequencingBadgeTableRowProps {
   offenceReasonSequence?: string | null
 }
 
-const LegacySequencingBadgeTableRow = ({ offenceReasonSequence }: LegacySequencingBadgeTableRowProps): JSX.Element => {
+const LegacySequencingBadgeTableRow = ({
+  offenceReasonSequence
+}: LegacySequencingBadgeTableRowProps): React.ReactNode => {
   return (
     <TableRow
       label="PNC sequence number"

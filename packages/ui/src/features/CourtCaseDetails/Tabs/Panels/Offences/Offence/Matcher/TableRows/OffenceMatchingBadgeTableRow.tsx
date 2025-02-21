@@ -1,7 +1,6 @@
 import Badge, { BadgeColours } from "components/Badge"
 import { useCourtCase } from "context/CourtCaseContext"
 import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
-import { JSX } from "react"
 
 interface OffenceMatchingBadgeTableRowProps {
   offenceIndex: number
@@ -11,7 +10,7 @@ interface OffenceMatchingBadgeTableRowProps {
 const OffenceMatchingBadgeTableRow = ({
   offenceIndex,
   offenceReasonSequence
-}: OffenceMatchingBadgeTableRowProps): JSX.Element => {
+}: OffenceMatchingBadgeTableRowProps): React.ReactNode => {
   const { savedAmendments } = useCourtCase()
   const updatedOffence = savedAmendments.offenceReasonSequence?.find((o) => o.offenceIndex === offenceIndex)
 

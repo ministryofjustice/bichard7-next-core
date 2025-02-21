@@ -80,21 +80,20 @@ describe("Hearing Result", () => {
             resultIndex={dummyIndex}
             selectedOffenceSequenceNumber={dummyIndex}
             exceptions={[]}
-            stopLeavingFn={() => {}}
           />
         </CurrentUserContext.Provider>
       </CourtCaseContext.Provider>
     )
 
-    cy.contains("td", "CJS Code").siblings().should("include.text", "1234")
-    cy.contains("td", "Result hearing type").siblings().should("include.text", "Hearing type")
-    cy.contains("td", "Result hearing date").siblings().should("include.text", "10/09/2022")
-    cy.contains("td", "Next hearing date").siblings().should("include.text", "11/09/2022")
-    cy.contains("td", "Mode of trial reason").siblings().should("include.text", "reason")
-    cy.contains("td", "Hearing result text").siblings().should("include.text", "this is some text")
-    cy.contains("td", "PNC disposal type").siblings().should("include.text", 1)
-    cy.contains("td", "Result class").siblings().should("include.text", "Adjournment")
-    cy.contains("td", "PNC adjudication exists").siblings().should("include.text", "Y")
+    cy.contains("th", "CJS Code").siblings().should("include.text", "1234")
+    cy.contains("th", "Result hearing type").siblings().should("include.text", "Hearing type")
+    cy.contains("th", "Result hearing date").siblings().should("include.text", "10/09/2022")
+    cy.contains("th", "Next hearing date").siblings().should("include.text", "11/09/2022")
+    cy.contains("th", "Mode of trial reason").siblings().should("include.text", "reason")
+    cy.contains("th", "Hearing result text").siblings().should("include.text", "this is some text")
+    cy.contains("th", "PNC disposal type").siblings().should("include.text", 1)
+    cy.contains("th", "Result class").siblings().should("include.text", "Adjournment")
+    cy.contains("th", "PNC adjudication exists").siblings().should("include.text", "Y")
   })
 
   describe("Durations", () => {
@@ -115,13 +114,12 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Duration").siblings().should("include.text", "6 months")
+      cy.contains("th", "Duration").siblings().should("include.text", "6 months")
     })
 
     it("does not display the duration row if not present", () => {
@@ -135,13 +133,12 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Duration").should("not.exist")
+      cy.contains("th", "Duration").should("not.exist")
     })
 
     it("displays multiple durations", () => {
@@ -165,13 +162,12 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
-      cy.contains("td", "Duration").siblings().should("include.text", "3 years")
-      cy.contains("td", "Duration").siblings().should("include.text", "28 days")
+      cy.contains("th", "Duration").siblings().should("include.text", "3 years")
+      cy.contains("th", "Duration").siblings().should("include.text", "28 days")
     })
   })
 
@@ -187,7 +183,6 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -207,13 +202,12 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Next hearing date").siblings().should("include.text", "false")
+      cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
     })
 
     it("displays the next hearing date field when it has no value but has an error", () => {
@@ -227,13 +221,12 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "NextHearingDate"], code: ExceptionCode.HO100323 }]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Next hearing date").siblings().should("include.text", "")
+      cy.contains("th", "Next hearing date").siblings().should("include.text", "")
     })
 
     it("displays the next hearing location field when it has no value but has an error", () => {
@@ -252,13 +245,12 @@ describe("Hearing Result", () => {
                   code: ExceptionCode.HO100200
                 }
               ]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Next hearing location").siblings().should("include.text", "")
+      cy.contains("th", "Next hearing location").siblings().should("include.text", "")
     })
   })
 
@@ -272,13 +264,12 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "CJSresultCode"], code: ExceptionCode.HO100307 }]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "CJS Code").should(
+      cy.contains("th", "CJS Code").should(
         "include.text",
         "This code could not be found via look-up, report the issue to Bichard 7 team and the courts for the correct so that they can investigate this issue and advise."
       )

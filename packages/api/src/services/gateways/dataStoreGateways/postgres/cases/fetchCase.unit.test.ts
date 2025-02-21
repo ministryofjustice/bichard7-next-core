@@ -1,6 +1,6 @@
 import type postgres from "postgres"
 
-import type { CaseDataForDto } from "../../../../../types/CaseDataForDto"
+import type { CaseDataForDto } from "../../../../../types/Case"
 
 import filter from "./fetchCase"
 

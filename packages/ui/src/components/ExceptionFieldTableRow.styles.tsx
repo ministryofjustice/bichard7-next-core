@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const Label = styled.td`
+const Label = styled.th`
   vertical-align: top;
 
   & .error-icon {

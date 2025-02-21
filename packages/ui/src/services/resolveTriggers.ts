@@ -1,7 +1,7 @@
 import { type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import getAuditLogEvent from "@moj-bichard7/core/lib/getAuditLogEvent"
+import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import type { DataSource, UpdateResult } from "typeorm"
 import { In, IsNull } from "typeorm"
 import { isError } from "types/Result"

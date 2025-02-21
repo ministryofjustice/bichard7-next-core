@@ -8,13 +8,13 @@ import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreG
 
 import { jwtConfig, jwtSignOptions } from "./jwtConfig"
 
-export default async (db: DataStoreGateway, token: string): Promise<undefined | User> => {
+export default async (dataStore: DataStoreGateway, token: string): Promise<undefined | User> => {
   const decodedJwt = jwt.verify(token, jwtConfig.tokenSecret, jwtSignOptions) as JWT
   if (decodedJwt.groups.includes(UserGroup.Service)) {
     return { email: "none", username: "service.user" } as User
   }
 
-  const user = await db.fetchUserByUsername(decodedJwt.username)
+  const user = await dataStore.fetchUserByUsername(decodedJwt.username)
 
   if (decodedJwt.id === user.jwt_id) {
     return user
