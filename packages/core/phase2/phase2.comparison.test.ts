@@ -4,19 +4,15 @@ import "../tests/helpers/setEnvironmentVariables"
 
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
 import "jest-xml-matcher"
-import orderBy from "lodash.orderby"
-import postgres from "postgres"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
-import type { DbRecords, Phase2E2eComparison } from "../comparison/types/ComparisonFile"
+import type { Phase2E2eComparison } from "../comparison/types/ComparisonFile"
 import type ErrorListRecord from "../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"
-import type { Trigger } from "../types/Trigger"
 import type Phase2Result from "./types/Phase2Result"
 
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
@@ -24,17 +20,15 @@ import processTestFile from "../comparison/lib/processTestFile"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
+import {
+  clearDatabase,
+  insertRecords,
+  normaliseTriggers,
+  sortTriggers,
+  sql
+} from "../tests/helpers/e2eComparisonTestsHelpers"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
-
-const dbConfig = createDbConfig()
-
-const sql = postgres(dbConfig)
-
-const sortTriggers = (triggers: Trigger[]) => orderBy(triggers, ["code", "identifier"])
-
-const normaliseTriggers = (triggers: ErrorListTriggerRecord[]): ErrorListTriggerRecord[] =>
-  orderBy(triggers, ["trigger_code", "trigger_item_identity"])
 
 const normaliseAttributeDetails = (attributes: Record<string, unknown>): Record<string, unknown> => {
   if (attributes["Trigger 1 Details"]) {
@@ -140,29 +134,6 @@ const convertXmlAuditLogs = (logs: string[]): AuditLogEvent[] => {
   })
 }
 
-const insertRecords = async (records: DbRecords): Promise<void> => {
-  const errorList = records.errorList.map((record) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { defendant_name_upper, court_name_upper, ...newRecord } = record
-    return newRecord
-  })
-  if (errorList.length === 0) {
-    return
-  }
-
-  await sql<ErrorListRecord[]>`INSERT INTO br7own.error_list ${sql(errorList)} returning error_id`
-
-  if (records.errorListNotes.length > 0) {
-    await sql<ErrorListRecord[]>`INSERT INTO br7own.error_list_notes ${sql(records.errorListNotes)} returning error_id`
-  }
-
-  if (records.errorListTriggers.length > 0) {
-    await sql<
-      ErrorListRecord[]
-    >`INSERT INTO br7own.error_list_triggers ${sql(records.errorListTriggers)} returning error_id`
-  }
-}
-
 const checkDatabaseMatches = async (expected: any): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
   const errorListTriggers = await sql<ErrorListTriggerRecord[]>`select * from BR7OWN.ERROR_LIST_TRIGGERS`
@@ -229,12 +200,6 @@ const tests = fs
   })
   .map((name) => `${filePath}/${name}`)
   .map(processTestFile) as Phase2E2eComparison[]
-
-const clearDatabase = async () => {
-  await sql`DELETE FROM br7own.error_list_triggers`
-  await sql`DELETE FROM br7own.error_list_notes`
-  await sql`DELETE FROM br7own.error_list`
-}
 
 describe("phase2", () => {
   beforeEach(async () => {
