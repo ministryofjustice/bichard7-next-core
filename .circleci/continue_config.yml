@@ -562,7 +562,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_common:
@@ -635,7 +634,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_ui:
