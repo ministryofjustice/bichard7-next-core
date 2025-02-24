@@ -239,7 +239,7 @@ jobs:
           name: Run integration tests against core code
           command: nvm use && npm run -w packages/core test:integration
 
-  comparison_test_phase1:
+  comparison_test:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
@@ -969,8 +969,7 @@ workflows:
       - characterisation_test_legacy_phase1
       - characterisation_test_legacy_phase2
       - characterisation_test_legacy_phase3
-      - comparison_test_phase1
-      - comparison_test_phase2
+      - comparison_test
 
       - build-ui:
           name: build-ui
