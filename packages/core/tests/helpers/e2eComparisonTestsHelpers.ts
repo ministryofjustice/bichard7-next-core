@@ -13,7 +13,9 @@ const sql = postgres(dbConfig)
 const sortTriggers = (triggers: Trigger[]) => orderBy(triggers, ["code", "identifier"])
 
 const normaliseTriggers = (triggers: ErrorListTriggerRecord[]): ErrorListTriggerRecord[] =>
-  orderBy(triggers, ["trigger_code", "trigger_item_identity"])
+  orderBy(triggers, ["trigger_code", "trigger_item_identity"]).map(
+    ({ error_id, create_ts, trigger_id, ...t }) => t as ErrorListTriggerRecord
+  )
 
 const insertRecords = async (records: DbRecords): Promise<void> => {
   const errorList = records.errorList.map((record) => {

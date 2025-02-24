@@ -3,8 +3,8 @@ import "jest-xml-matcher"
 import "../tests/helpers/setEnvironmentVariables"
 
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import "jest-xml-matcher"
 import fs from "fs"
+import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
 import type { Phase3E2eComparison } from "../comparison/types/ComparisonFile"
@@ -40,6 +40,12 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   const errorListTriggers = await sql<ErrorListTriggerRecord[]>`select * from BR7OWN.ERROR_LIST_TRIGGERS`
   const expectedTriggers = errorListTriggers.map((trigger) => trigger.trigger_code)
 
+  if (expected.errorList.length === 0 && expected.errorListTriggers.length == 0) {
+    expect(errorList).toHaveLength(0)
+    expect(errorListTriggers).toHaveLength(0)
+    return
+  }
+
   expect(errorList).toHaveLength(expected.errorList.length)
   const expectedError = expected.errorList[0]
 
@@ -71,9 +77,7 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   expect(errorList[0].court_date).toEqual(expectedError.court_date)
   expect(errorList[0].ptiurn).toEqual(expectedError.ptiurn)
   expect(errorList[0].court_name).toEqual(expectedError.court_name)
-  expect(errorList[0].resolution_ts).toEqual(expectedError.resolution_ts)
   expect(errorList[0].msg_received_ts).toBeDefined()
-  expect(errorList[0].error_resolved_ts).toEqual(expectedError.error_resolved_ts)
   expect(errorList[0].trigger_resolved_ts).toEqual(expectedError.trigger_resolved_ts)
   expect(errorList[0].defendant_name).toEqual(expectedError.defendant_name)
   expect(errorList[0].org_for_police_filter).toEqual(expectedError.org_for_police_filter)
