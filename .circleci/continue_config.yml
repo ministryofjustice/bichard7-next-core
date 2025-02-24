@@ -790,8 +790,8 @@ jobs:
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - run:
           command: |
-            USE_API="<< parameters.api >>" \\
-            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \\
+            USE_API="<< parameters.api >>" \
+            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
@@ -1001,6 +1001,7 @@ workflows:
           requires:
             - build-ui
             - build_api_docker_image
+
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           ms-edge: false
