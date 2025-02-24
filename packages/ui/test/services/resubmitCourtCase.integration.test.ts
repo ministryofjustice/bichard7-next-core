@@ -12,6 +12,7 @@ import type { DataSource } from "typeorm"
 import fetchAuditLogEvents from "../helpers/fetchAuditLogEvents"
 import { hasAccessToAll } from "../helpers/hasAccessTo"
 import offenceSequenceException from "../test-data/HO100302_1.json"
+import multipleHearingResultsOnOffence from "../test-data/multipleHearingResultsOnOffence.json"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCasesWithFields } from "../utils/insertCourtCases"
@@ -419,7 +420,7 @@ describe("resubmit court case", () => {
       errorStatus: "Unresolved",
       triggerCount: 1,
       phase: 2,
-      hearingOutcome: offenceSequenceException.hearingOutcomeXml,
+      hearingOutcome: multipleHearingResultsOnOffence.hearingOutcomeXml,
       updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
       orgForPoliceFilter: "1111"
     })

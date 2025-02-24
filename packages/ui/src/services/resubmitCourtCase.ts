@@ -2,8 +2,10 @@ import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
-import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import serialiseToAhoXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import serialiseToPncUpdateDatasetXml from "@moj-bichard7/core/lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import amendCourtCase from "services/amendCourtCase"
 import type User from "services/entities/User"
@@ -119,7 +121,10 @@ const resubmitCourtCase = async (
 
     // TODO: this doesn't look right - should it be in transaction??
     const destinationQueue = phase === 1 ? phase1ResubmissionQueue : phase2ResubmissionQueue
-    const generatedXml = serialiseToXml(resultAho, false)
+    const generatedXml =
+      phase === 1
+        ? serialiseToAhoXml(resultAho, false)
+        : serialiseToPncUpdateDatasetXml(resultAho as PncUpdateDataset, false)
     const queueResult = await mqGateway.execute(generatedXml, destinationQueue)
 
     if (isError(queueResult)) {
