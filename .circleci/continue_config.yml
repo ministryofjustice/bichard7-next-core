@@ -798,12 +798,14 @@ jobs:
               command: npm run api
       - run:
           name: Run UI tests
-          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
+          command: |
+            MS_EDGE="<< parameters.ms-edge >>" \\
+            USE_API="<< parameters.api >>" \\
+            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \\
+            bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
-            USE_API: "<< parameters.api >>"
-            USE_API_CASE_ENDPOINT: "<< parameters.case-details >>"
       - store_test_results:
           path: ~/project/packages/ui/cypress/results
       - store_artifacts:
