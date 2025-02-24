@@ -802,8 +802,8 @@ jobs:
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"
-            USE_API: << parameters.api >>
-            USE_API_CASE_ENDPOINT: << parameters.case-details >>
+            USE_API: "<< parameters.api >>"
+            USE_API_CASE_ENDPOINT: "<< parameters.case-details >>"
       - store_test_results:
           path: ~/project/packages/ui/cypress/results
       - store_artifacts:
