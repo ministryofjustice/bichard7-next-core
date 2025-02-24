@@ -1,6 +1,7 @@
 import serialiseToAhoXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import serialiseToPncUpdateDatasetXml from "@moj-bichard7/core/lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { isPncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
@@ -19,7 +20,7 @@ const amendCourtCase = async (
   amendments: Partial<Amendments>,
   courtCase: CourtCase,
   userDetails: User
-): Promise<AnnotatedHearingOutcome | Error> => {
+): Promise<AnnotatedHearingOutcome | PncUpdateDataset | Error> => {
   if (courtCase.errorLockedByUsername && courtCase.errorLockedByUsername !== userDetails.username) {
     return new Error("Exception is locked by another user")
   }
@@ -39,6 +40,7 @@ const amendCourtCase = async (
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
   }
 
+  // TODO: check this for phase 2
   const updatedAho = applyAmendmentsToAho(amendments, aho)
   if (isError(updatedAho)) {
     return updatedAho
