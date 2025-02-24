@@ -788,10 +788,11 @@ jobs:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - run:
-          command: |
-            USE_API="<< parameters.api >>" \
-            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \
-            bash .circleci/scripts/run-infrastructure.sh ui ui
+          name: Building infrastructure
+          command: bash .circleci/scripts/run-infrastructure.sh ui ui
+          environment:
+            - USE_API: "<< parameters.api >>"
+            - USE_API_CASE_ENDPOINT: "<< parameters.case-details >>"
       - when:
           condition:
             equal: [true, << parameters.api >>]
