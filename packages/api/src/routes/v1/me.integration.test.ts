@@ -46,7 +46,7 @@ describe("/v1/me", () => {
       hasAccessTo: { "0": true, "1": true, "2": true, "3": false, "4": false, "5": false, "6": false, "7": true },
       surname: "Surname",
       username: user.username,
-      visibleForces: "001"
+      visibleForces: ["001"]
     }
 
     expect(response.statusCode).toBe(OK)

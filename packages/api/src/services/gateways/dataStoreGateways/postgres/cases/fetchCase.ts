@@ -2,6 +2,8 @@ import type postgres from "postgres"
 
 import type { CaseDataForDto } from "../../../../../types/Case"
 
+import { NotFoundError } from "../../../../../types/errors/NotFoundError"
+
 export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<CaseDataForDto> => {
   const [result]: [CaseDataForDto?] = await sql`
       SELECT
@@ -56,7 +58,7 @@ export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Pr
     `
 
   if (!result) {
-    throw new Error("Case not found")
+    throw new NotFoundError("Case not found")
   }
 
   return result
