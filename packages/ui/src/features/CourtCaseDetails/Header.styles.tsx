@@ -11,19 +11,19 @@ const CaseDetailHeaderContainer = styled.div`
   position: sticky;
   top: 0;
   z-index: 9;
-  padding: 10px 10px 10px 10px;
+  padding: 0.63rem 0.63rem 0.63rem 0.63rem;
 `
 const CaseDetailHeaderRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 30px;
+  gap: 1.88rem;
   width: 100%;
 
   @media (max-width: 1300px) {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0px;
+    gap: 0;
 
     #locked-tag-container {
       margin-left: 0;
@@ -34,9 +34,9 @@ const CaseDetailHeaderRow = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 0px;
-  padding-top: 5px;
-  gap: 12px;
+  margin-bottom: 0;
+  padding-top: 0.31rem;
+  gap: 0.75rem;
 `
 
 const LockedTagContainer = styled.div`
