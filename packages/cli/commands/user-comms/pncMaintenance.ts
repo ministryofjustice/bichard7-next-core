@@ -10,7 +10,7 @@ const validateTime = (time: string): boolean => {
 
 export const pncMaintenance = async () => {
   const templateFile = "pnc-maintenance.txt"
-  const templatePath = path.join("./commands/user-comms/templates", templateFile)
+  const templatePath = path.join(__dirname, "templates", templateFile)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
   const maintenanceWindows: { date: string; startTime: string; endTime: string }[] = []

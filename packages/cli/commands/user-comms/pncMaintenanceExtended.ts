@@ -5,7 +5,7 @@ import nunjucks from "nunjucks"
 
 export const pncMaintenanceExtended = async () => {
   const templateFile = "pnc-maintenance-extended.txt"
-  const templatePath = path.join("./commands/user-comms/templates", templateFile)
+  const templatePath = path.join(__dirname, "templates", templateFile)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
   const extendedTimeFrameInput = await select({

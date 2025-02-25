@@ -5,12 +5,10 @@ import nunjucks from "nunjucks"
 
 export const outage = async (outageType: string) => {
   const templateFile = "outage.txt"
-  const templatePath = path.join("./commands/user-comms/templates", templateFile)
+  const templatePath = path.join(__dirname, "templates", templateFile)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
-  const renderedEmail = nunjucks.renderString(templateContent, {
-    outageType: outageType
-  })
+  const renderedEmail = nunjucks.renderString(templateContent, { outageType })
 
   console.log("\n=== Preview Email ===\n")
   console.log(renderedEmail)
