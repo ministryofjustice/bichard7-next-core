@@ -804,6 +804,13 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      case-details:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -832,6 +839,14 @@ jobs:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true | << parameters.api >>]
+          steps:
+            - run:
+                name: Load api fetch_images
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies
       - build_e2e_tests
@@ -844,6 +859,12 @@ jobs:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
           command: "npm run install-browsers"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
       - run:
@@ -980,7 +1001,6 @@ workflows:
             - build-ui
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cucumber_e2e_tests:
@@ -988,6 +1008,13 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_api
+          api: true
+          case-details: true
+          requires:
+            - build-ui
+            - build_api_docker_image
       - zap_scanner:
           requires:
             - build-ui
