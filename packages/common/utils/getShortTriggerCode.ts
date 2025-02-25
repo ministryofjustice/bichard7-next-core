@@ -1,4 +1,4 @@
-const getShortTriggerCode = (triggerCode: string | null) => {
+const getShortTriggerCode = (triggerCode: null | string) => {
   if (!triggerCode) {
     return null
   }
