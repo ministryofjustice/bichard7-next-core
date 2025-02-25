@@ -12,6 +12,6 @@ export const convertTriggerToDto = (triggerRow: Trigger): TriggerDto => {
     status: resolutionStatusFromDb(triggerRow.status) ?? ResolutionStatus.Unresolved,
     triggerCode: triggerRow.trigger_code,
     triggerId: triggerRow.trigger_id,
-    triggerItemIdentity: triggerRow.trigger_item_identity ? triggerRow.trigger_item_identity : undefined
+    triggerItemIdentity: triggerRow.trigger_item_identity ? Number(triggerRow.trigger_item_identity) : undefined
   } satisfies TriggerDto
 }

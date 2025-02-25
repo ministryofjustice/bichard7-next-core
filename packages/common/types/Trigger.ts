@@ -20,7 +20,7 @@ export const TriggerDtoSchema = z.object({
   status: z.string(),
   triggerCode: z.string(),
   triggerId: z.number(),
-  triggerItemIdentity: z.string().optional()
+  triggerItemIdentity: z.number().optional()
 })
 
 export type Trigger = z.infer<typeof TriggerSchema>
