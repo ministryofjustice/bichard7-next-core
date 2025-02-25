@@ -65,7 +65,7 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     ? serialiseToAnnotatedPncUpdateDatasetXml(hearingOutcome)
     : serialiseToAhoXml(hearingOutcome)
   const updatedMessageXml = isPncUpdateDataset(hearingOutcome)
-    ? serialiseToPncUpdateDatasetXml(hearingOutcome, generateFalseHasErrorAttributes)
+    ? serialiseToPncUpdateDatasetXml(hearingOutcome, generateFalseHasErrorAttributes, false)
     : serialiseToAhoXml(hearingOutcome, false, generateFalseHasErrorAttributes)
 
   return {

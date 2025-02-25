@@ -258,8 +258,14 @@ jobs:
       - install_dependencies
       - build_core
       - run:
-          name: Run integration tests against core code
-          command: npm run -w packages/core test:compare
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          name: Run E2E comparison tests against Core Phase 1
+          command: npm run -w packages/core test:compare:phase1
+      - run:
+          name: Run E2E comparison tests against Core Phase 2
+          command: npm run -w packages/core test:compare:phase2
 
   characterisation_test_core:
     machine:

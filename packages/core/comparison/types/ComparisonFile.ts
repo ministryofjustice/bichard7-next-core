@@ -1,6 +1,7 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 
@@ -10,6 +11,12 @@ export type ComparisonTrigger = {
   code: TriggerCode
   identifier?: string
   offenceSequenceNumber?: number
+}
+
+export type DbRecords = {
+  errorList: ErrorListRecord[]
+  errorListNotes: ErrorListNoteRecord[]
+  errorListTriggers: ErrorListTriggerRecord[]
 }
 
 export type NewComparison = {
@@ -43,6 +50,13 @@ export type Phase2Comparison = NewComparison & {
   phase: 2
   sentToPhase3: boolean
   triggers: ComparisonTrigger[]
+}
+
+export type Phase2E2eComparison = Phase2Comparison & {
+  db: {
+    after: DbRecords
+    before: DbRecords
+  }
 }
 
 export type Phase3Comparison = NewComparison & {
