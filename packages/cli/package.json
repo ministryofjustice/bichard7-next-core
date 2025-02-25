@@ -7,7 +7,7 @@
     "b7": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.build.json && cp -r commands/user-comms/templates dist/",
+    "build": "tsc --project tsconfig.build.json && cp -r commands/user-comms/templates dist/commands/user-comms/",
     "install:global": "npm i && npm run build && npm i -g . && chmod +x dist/index.js",
     "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess 'chmod -v +x dist/index.js' --onSuccess 'npm i -g .' && npm i"
   },
