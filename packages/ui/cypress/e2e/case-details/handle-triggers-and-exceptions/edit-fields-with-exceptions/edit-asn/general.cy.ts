@@ -157,24 +157,6 @@ describe("ASN", () => {
     cy.get(".moj-badge").should("not.exist")
     cy.get("input#asn").should("not.exist")
 
-    
-    it("Should be able to edit ASN field if HO100304 exception is raised", () => {
-      cy.task("clearCourtCases")
-      cy.task("insertCourtCasesWithFields", [
-        {
-          orgForPoliceFilter: "01",
-          hearingOutcome: HO100304.hearingOutcomeXml,
-          updatedHearingOutcome: HO100304.hearingOutcomeXml,
-          errorCount: 1,
-          errorLockedByUsername: "GeneralHandler"
-        }
-      ])
-      loginAndVisit("GeneralHandler","/bichard/court-cases/0")
-
-      cy.get(".moj-badge").contains("Editable Field").should("exist")
-      cy.get("input#asn").should("exist")
-      
-    })
   })
 
   describe("when I submit resolved exceptions I should not see the same value in the notes", () => {
