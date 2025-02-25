@@ -1,4 +1,5 @@
 import { SecondaryButton } from "components/Buttons/SecondaryButton"
+import { useEffect } from "react"
 import { BackToAllOffencesLink } from "./BackToAllOffencesLink"
 import { NextButton, PreviousButton } from "./OffenceNavigation.styles"
 
@@ -17,6 +18,18 @@ export const OffenceNavigation = ({
   onNextClick,
   offencesCount
 }: OffenceNavigationProps) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [selectedOffenceSequenceNumber])
+
+  const handleNextClick = () => {
+    onNextClick()
+  }
+
+  const handlePreviousClick = () => {
+    onPreviousClick()
+  }
+
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
@@ -25,11 +38,11 @@ export const OffenceNavigation = ({
       <div className="govuk-grid-column-one-half">
         <PreviousButton>
           {selectedOffenceSequenceNumber !== 1 && (
-            <SecondaryButton onClick={() => onPreviousClick()}>{"Previous offence"}</SecondaryButton>
+            <SecondaryButton onClick={handlePreviousClick}>{"Previous offence"}</SecondaryButton>
           )}
           {selectedOffenceSequenceNumber !== offencesCount && (
             <NextButton>
-              <SecondaryButton onClick={() => onNextClick()}>{"Next offence"}</SecondaryButton>
+              <SecondaryButton onClick={handleNextClick}>{"Next offence"}</SecondaryButton>
             </NextButton>
           )}
         </PreviousButton>
