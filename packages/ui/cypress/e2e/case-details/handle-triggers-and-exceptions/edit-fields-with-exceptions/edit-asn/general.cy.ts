@@ -1,6 +1,7 @@
 import Asn from "services/Asn"
 import AnnotatedHO from "../../../../../../test/test-data/AnnotatedHO1.json"
 import HO100206 from "../../../../../../test/test-data/HO100206.json"
+import HO100304 from "../../../../../../test/test-data/HO100304.json"
 import ExceptionHO100239 from "../../../../../../test/test-data/HO100239_1.json"
 import HO100300 from "../../../../../../test/test-data/HO100300.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions } from "../../../../../support/helpers"
@@ -155,6 +156,25 @@ describe("ASN", () => {
 
     cy.get(".moj-badge").should("not.exist")
     cy.get("input#asn").should("not.exist")
+
+    
+    it("Should be able to edit ASN field if HO100304 exception is raised", () => {
+      cy.task("clearCourtCases")
+      cy.task("insertCourtCasesWithFields", [
+        {
+          orgForPoliceFilter: "01",
+          hearingOutcome: HO100304.hearingOutcomeXml,
+          updatedHearingOutcome: HO100304.hearingOutcomeXml,
+          errorCount: 1,
+          errorLockedByUsername: "GeneralHandler"
+        }
+      ])
+      loginAndVisit("GeneralHandler","/bichard/court-cases/0")
+
+      cy.get(".moj-badge").contains("Editable Field").should("exist")
+      cy.get("input#asn").should("exist")
+      
+    })
   })
 
   describe("when I submit resolved exceptions I should not see the same value in the notes", () => {
