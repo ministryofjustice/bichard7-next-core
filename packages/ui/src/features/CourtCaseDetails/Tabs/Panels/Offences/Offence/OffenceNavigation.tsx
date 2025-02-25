@@ -22,14 +22,6 @@ export const OffenceNavigation = ({
     window.scrollTo({ top: 0, behavior: "smooth" })
   }, [selectedOffenceSequenceNumber])
 
-  const handleNextClick = () => {
-    onNextClick()
-  }
-
-  const handlePreviousClick = () => {
-    onPreviousClick()
-  }
-
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">
@@ -38,11 +30,11 @@ export const OffenceNavigation = ({
       <div className="govuk-grid-column-one-half">
         <PreviousButton>
           {selectedOffenceSequenceNumber !== 1 && (
-            <SecondaryButton onClick={handlePreviousClick}>{"Previous offence"}</SecondaryButton>
+            <SecondaryButton onClick={() => onPreviousClick()}>{"Previous offence"}</SecondaryButton>
           )}
           {selectedOffenceSequenceNumber !== offencesCount && (
             <NextButton>
-              <SecondaryButton onClick={handleNextClick}>{"Next offence"}</SecondaryButton>
+              <SecondaryButton onClick={() => onNextClick()}>{"Next offence"}</SecondaryButton>
             </NextButton>
           )}
         </PreviousButton>
