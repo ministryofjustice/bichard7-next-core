@@ -580,14 +580,26 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
   }
 }
 
-const convertPncUpdateDatasetToXml = (pud: PncUpdateDataset, addFalseHasErrorAttributes: boolean = true): AhoXml => {
+const convertPncUpdateDatasetToXml = (
+  pud: PncUpdateDataset,
+  addFalseHasErrorAttributes: boolean = true,
+  validate: boolean = true
+): AhoXml => {
   const pudClone: PncUpdateDataset = structuredClone(pud)
   addNullElementsForExceptions(pudClone)
 
   const xmlPud = mapPncUpdateDatasetToXml(pudClone)
 
-  if (pudClone.Exceptions.length > 0 || addFalseHasErrorAttributes) {
+  if ((validate && pudClone.Exceptions.length > 0) || addFalseHasErrorAttributes) {
     addExceptionsToPncUpdateDatasetXml(xmlPud, pudClone.Exceptions, addFalseHasErrorAttributes)
+  }
+
+  if (!validate && xmlPud["br7:AnnotatedHearingOutcome"]?.["br7:HasError"]?.["#text"]) {
+    if (xmlPud["?xml"]) {
+      xmlPud["?xml"]["@_standalone"] = undefined
+    }
+
+    xmlPud["br7:AnnotatedHearingOutcome"]["br7:HasError"]["#text"] = String(pudClone.Exceptions.length > 0)
   }
 
   return xmlPud
