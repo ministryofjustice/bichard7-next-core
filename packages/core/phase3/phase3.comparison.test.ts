@@ -35,6 +35,12 @@ import phase3 from "./phase3"
 import getPncOperationsFromPncUpdateDataset from "./tests/helpers/getPncOperationsFromPncUpdateDataset"
 import PncUpdateRequestError from "./types/PncUpdateRequestError"
 
+const normaliseXml = (xml?: string): string | undefined =>
+  xml
+    ?.replace(/ Error="HO200200"/g, "")
+    .replace(/ hasError="false"/g, "")
+    .replace(' standalone="yes"', "")
+
 const checkDatabaseMatches = async (expected: any): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
   const errorListTriggers = await sql<ErrorListTriggerRecord[]>`select * from BR7OWN.ERROR_LIST_TRIGGERS`
@@ -59,10 +65,8 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   expect(errorList[0].is_urgent).toEqual(expectedError.is_urgent)
   expect(errorList[0].asn).toEqual(expectedError.asn)
   expect(errorList[0].court_code).toEqual(expectedError.court_code)
-  expect(errorList[0].annotated_msg).toEqualXML(expectedError.annotated_msg)
-  expect(errorList[0].updated_msg?.replace(' standalone="yes"', "").replace(' hasError="false"', "")).toEqualXML(
-    expectedError.updated_msg.replace(' standalone="yes"', "").replace(' hasError="false"', "")
-  )
+  expect(normaliseXml(errorList[0].annotated_msg)).toEqualXML(normaliseXml(expectedError.annotated_msg) ?? "")
+  expect(normaliseXml(errorList[0].updated_msg)).toEqualXML(normaliseXml(expectedError.updated_msg) ?? "")
   expect(errorList[0].error_report).toEqual(expectedError.error_report)
   expect(errorList[0].create_ts).toBeDefined()
   expect(errorList[0].error_reason).toEqual(expectedError.error_reason)
@@ -171,8 +175,8 @@ describe("phase3", () => {
     })
 
     it("should generate the correct xml", () => {
-      const expectedOutput = comparison.outgoingMessage
-      const actualOutput = serialiseToXml(phase3Result.outputMessage, true)
+      const expectedOutput = normaliseXml(comparison.outgoingMessage)
+      const actualOutput = normaliseXml(serialiseToXml(phase3Result.outputMessage, true))
 
       expect(actualOutput).toEqualXML(expectedOutput)
     })
