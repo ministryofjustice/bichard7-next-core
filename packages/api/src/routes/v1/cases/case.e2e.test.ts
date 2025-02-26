@@ -76,7 +76,7 @@ describe("/v1/case e2e", () => {
     })
 
     expect(response.status).toBe(OK)
-    const responseJson = (await response.json()) satisfies CaseDto
+    const responseJson = (await response.json()) as CaseDto
     expect(responseJson.aho).toEqual(testAhoJsonStr)
     expect(responseJson.asn).toBe(testCase.asn)
     expect(responseJson.courtCode).toBe(testCase.court_code)
@@ -110,7 +110,7 @@ describe("/v1/case e2e", () => {
     })
 
     expect(response.status).toBe(OK)
-    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    const responseJson: CaseDto = (await response.json()) as CaseDto
     expect(responseJson.errorLockedByUsername).toBe(user.username)
     expect(responseJson.errorLockedByUserFullName).toBe("Forename1 Surname1")
   })
@@ -127,7 +127,7 @@ describe("/v1/case e2e", () => {
     })
 
     expect(response.status).toBe(OK)
-    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    const responseJson: CaseDto = (await response.json()) as CaseDto
     expect(responseJson.triggerLockedByUsername).toBe(user.username)
     expect(responseJson.triggerLockedByUserFullName).toBe("Forename1 Surname1")
   })
@@ -155,7 +155,7 @@ describe("/v1/case e2e", () => {
     })
 
     expect(response.status).toBe(OK)
-    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    const responseJson: CaseDto = (await response.json()) as CaseDto
     expect(responseJson.errorLockedByUsername).toBe(user.username)
   })
 
@@ -182,7 +182,7 @@ describe("/v1/case e2e", () => {
     })
 
     expect(response.status).toBe(OK)
-    const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+    const responseJson: CaseDto = (await response.json()) as CaseDto
     expect(responseJson.triggerLockedByUsername).toBe(user.username)
   })
 
@@ -243,7 +243,7 @@ describe("/v1/case e2e", () => {
         })
 
         expect(response.status).toBe(OK)
-        const responseJson: CaseDto = (await response.json()) satisfies CaseDto
+        const responseJson: CaseDto = (await response.json()) as CaseDto
 
         expect(responseJson.errorLockedByUsername).toBe(expectedErrorLockedByUsername)
         expect(responseJson.triggerLockedByUsername).toBe(expectedTriggerLockedByUsername)

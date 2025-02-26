@@ -358,6 +358,9 @@ services:
       AUDIT_LOG_API_URL: http://audit-log-api:7010
       CONDUCTOR_API_URL: http://conductor:4000
       ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
+      API_URL: http://api:3321
+      USE_API: ${USE_API:-false}
+      USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
     ports:
       - 4543:9443
     healthcheck:
