@@ -8,6 +8,7 @@
     "dev": "next dev -p 4080",
     "prebuild": "./scripts/symlink-node-modules.sh",
     "build": "next build",
+    "build:docker": "cd ../.. && bash scripts/build-ui-docker.sh",
     "start": "next start -p 4080",
     "prelint": "./scripts/symlink-node-modules.sh",
     "lint": "eslint .",

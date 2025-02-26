@@ -5,7 +5,7 @@ import getTriggerWithDescription from "../../utils/formatReasons/getTriggerWithD
 
 import CourtCase from "./CourtCase"
 import dateTransformer from "./transformers/dateTransformer"
-import getShortTriggerCode from "./transformers/getShortTriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import resolutionStatusTransformer from "./transformers/resolutionStatusTransformer"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 

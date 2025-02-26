@@ -1,7 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import IndeterminateCheckbox from "components/IndeterminateCheckbox"
 import { Dispatch } from "react"
-import getShortTriggerCode from "services/entities/transformers/getShortTriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
 import allTriggersSelected from "utils/triggerGroups/allTriggersSelected"
 import selectedTrigger from "utils/triggerGroups/selectedTrigger"
