@@ -5,7 +5,7 @@ import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
-import { isEmpty } from "lodash"
+import { isEmpty, sortBy } from "lodash"
 
 import type { CaseDataForDto } from "../../types/Case"
 
@@ -59,7 +59,7 @@ export const convertCaseToCaseIndexDto = (caseDataForDto: CaseDataForDto, user: 
     errorReport: caseDataForDto.error_report,
     errorStatus: resolutionStatusFromDb(caseDataForDto.error_status),
     isUrgent: caseDataForDto.is_urgent,
-    notes: caseDataForDto.notes ? caseDataForDto.notes.map(convertNoteToDto) : [],
+    notes: caseDataForDto.notes ? sortBy(caseDataForDto.notes, "create_ts").reverse().map(convertNoteToDto) : [],
     ptiurn: caseDataForDto.ptiurn,
     resolutionTimestamp: caseDataForDto.resolution_ts,
     triggerCount: caseDataForDto.trigger_count,

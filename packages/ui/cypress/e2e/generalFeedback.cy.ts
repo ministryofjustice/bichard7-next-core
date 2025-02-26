@@ -19,7 +19,7 @@ describe("General Feedback Form", () => {
 
   it("Should be able to submit a feedback that is anonymous", () => {
     cy.findByText("feedback").click()
-    cy.get("h2").contains("Share your feedback").should("exist")
+    cy.get("#share-feedback").contains("Share your feedback").should("exist")
 
     cy.get("[name=isAnonymous]").check("yes", { force: true })
     cy.get("[name=experience]").check("0", { force: true })
