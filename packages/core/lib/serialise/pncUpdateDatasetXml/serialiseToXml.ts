@@ -105,9 +105,10 @@ const normaliseNamespaces = (xmlAho: AhoXml) => {
 
 export const mapToPncUpdateDatasetXml = (
   pncUpdateDataset: PncUpdateDataset,
-  addFalseHasErrorAttributes = false
+  addFalseHasErrorAttributes = false,
+  validate = true
 ): PncUpdateDatasetXml => {
-  const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addFalseHasErrorAttributes)
+  const xmlAho = convertPncUpdateDatasetToXml(pncUpdateDataset, addFalseHasErrorAttributes, validate)
   normaliseNamespaces(xmlAho)
   return {
     "?xml": xmlAho["?xml"],
@@ -119,8 +120,12 @@ export const mapToPncUpdateDatasetXml = (
   }
 }
 
-const serialiseToXml = (pncUpdateDataset: PncUpdateDataset, addFalseHasErrorAttributes = false): string => {
-  const xmlPncUpdateDataset = mapToPncUpdateDatasetXml(pncUpdateDataset, addFalseHasErrorAttributes)
+const serialiseToXml = (
+  pncUpdateDataset: PncUpdateDataset,
+  addFalseHasErrorAttributes = false,
+  validate = true
+): string => {
+  const xmlPncUpdateDataset = mapToPncUpdateDatasetXml(pncUpdateDataset, addFalseHasErrorAttributes, validate)
 
   return generateXml(xmlPncUpdateDataset)
 }

@@ -1,4 +1,4 @@
-import { CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, UNAUTHORIZED } from "http-status"
+import { CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 export const unauthorizedError = {
@@ -16,3 +16,9 @@ const errorSchema = z.object({
 })
 
 export const conflictError = { [CONFLICT]: errorSchema.openapi({ description: "Conflict when creating resource" }) }
+
+export const unprocessableEntityError = {
+  [UNPROCESSABLE_ENTITY]: errorSchema.openapi({ description: "Error when processing the request" })
+}
+
+export const notFoundError = { [NOT_FOUND]: z.null().openapi({ description: "Not Found" }) }
