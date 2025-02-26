@@ -873,10 +873,10 @@ jobs:
             docker image load < "images/ui:latest"
       - when:
           condition:
-            equal: [true | << parameters.api >>]
+            equal: [true, << parameters.api >>]
           steps:
             - run:
-                name: Load api fetch_images
+                name: Load api
                 command: |
                   docker image load < "images/api:latest"
       - setup_ui
