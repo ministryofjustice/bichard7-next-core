@@ -23,6 +23,7 @@ import { PncApiError } from "../lib/pnc/PncGateway"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import {
   clearDatabase,
+  disconnectDb,
   insertRecords,
   normaliseTriggers,
   sortTriggers,
@@ -117,6 +118,10 @@ const tests = fs
 describe("phase3", () => {
   beforeEach(async () => {
     await clearDatabase()
+  })
+
+  afterAll(async () => {
+    await disconnectDb()
   })
 
   describe.each(tests)("should correctly process $file", (comparison: Phase3E2eComparison) => {

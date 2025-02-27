@@ -22,6 +22,7 @@ import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import {
   clearDatabase,
+  disconnectDb,
   insertRecords,
   normaliseTriggers,
   sortTriggers,
@@ -204,6 +205,10 @@ const tests = fs
 describe("phase2", () => {
   beforeEach(async () => {
     await clearDatabase()
+  })
+
+  afterAll(async () => {
+    await disconnectDb()
   })
 
   describe.each(tests)("should correctly process $file", (comparison: Phase2E2eComparison) => {

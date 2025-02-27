@@ -46,4 +46,8 @@ const clearDatabase = async () => {
   await sql`DELETE FROM br7own.error_list`
 }
 
-export { clearDatabase, insertRecords, normaliseTriggers, sortTriggers, sql }
+const disconnectDb = async () => {
+  await sql.end({ timeout: 5 })
+}
+
+export { clearDatabase, disconnectDb, insertRecords, normaliseTriggers, sortTriggers, sql }
