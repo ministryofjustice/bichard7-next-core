@@ -81,6 +81,38 @@ describe("'next offence' and 'previous offence' buttons", () => {
     cy.get("button").should("not.contain.text", "Previous offence")
     cy.get("button").should("not.contain.text", "Next offence")
   })
+  
+  it("Should show the top of the next page when the next button is clicked", () => {
+    cy.task("insertMultipleDummyCourtCases", { numToInsert: 1, force: "01" })
+    cy.visit("/bichard/court-cases/0")
+    cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
+    cy.get("tbody tr:first-child a.govuk-link").click()
+    cy.get("button").contains("Next offence").click()
+    cy.window().then((win) => {
+      
+      win.scrollTo(0, 500);
+    });
+
+    cy.get("button").contains("Next offence").click()
+    
+    cy.window().its("scrollY").should("eq", 0);  
+  })
+  
+  it("Should show the top of the previous page when the previous button is clicked", () => {
+    cy.task("insertMultipleDummyCourtCases", { numToInsert: 1, force: "01" })
+    cy.visit("/bichard/court-cases/0")
+    cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
+    cy.get("tbody tr:first-child a.govuk-link").click()
+    cy.get("button").contains("Next offence").click()
+    cy.get("button").contains("Next offence").click()
+    cy.window().then((win) => {
+      win.scrollTo(0, 500);
+    });
+
+    cy.get("button").contains("Previous offence").click()
+    
+    cy.window().its("scrollY").should("eq", 0);  
+  })
 })
 
 describe("offences tab", () => {
