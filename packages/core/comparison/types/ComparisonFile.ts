@@ -52,12 +52,7 @@ export type Phase2Comparison = NewComparison & {
   triggers: ComparisonTrigger[]
 }
 
-export type Phase2E2eComparison = Phase2Comparison & {
-  db: {
-    after: DbRecords
-    before: DbRecords
-  }
-}
+export type Phase2E2eComparison = DatabaseE2eComparison & Phase2Comparison
 
 export type Phase3Comparison = NewComparison & {
   auditLogEvents: string[]
@@ -65,4 +60,17 @@ export type Phase3Comparison = NewComparison & {
   phase: 3
   pncOperations: PncUpdateRequest[]
   triggers?: ComparisonTrigger[]
+}
+
+export type Phase3E2eComparison = DatabaseE2eComparison &
+  Phase3Comparison & {
+    outgoingMessage: string
+    triggers: ComparisonTrigger[]
+  }
+
+type DatabaseE2eComparison = {
+  db: {
+    after: DbRecords
+    before: DbRecords
+  }
 }
