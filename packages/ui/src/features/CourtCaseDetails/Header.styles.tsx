@@ -28,6 +28,10 @@ const CaseDetailHeaderRow = styled.div`
     #locked-tag-container {
       margin-left: 0;
     }
+
+    #return-to-case-list {
+      margin-bottom: 0.63rem;
+    }
   }
 `
 
