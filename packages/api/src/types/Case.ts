@@ -1,19 +1,34 @@
 import type { Case } from "@moj-bichard7/common/types/Case"
 
-export type CaseDataForDto = Pick<Case, CaseData> & {
-  error_locked_by_fullname: null | string
-  trigger_locked_by_fullname: null | string
-}
+export type CaseData =
+  | "annotated_msg"
+  | "court_code"
+  | "court_reference"
+  | "is_urgent"
+  | "org_for_police_filter"
+  | "phase"
+  | "updated_msg"
+  | CaseDataIndex
+
+export type CaseDataForDto = FullnameFields & Pick<Case, CaseData>
+
+export type CaseDataForIndexDto = FullnameFields &
+  Pick<Case, CaseDataIndex> & {
+    full_count: number
+    note_count: number
+  }
 
 export type CaseMessageId = Pick<Case, "message_id">
 
-type CaseData =
-  | "annotated_msg"
+export type Pagination = {
+  maxPerPage: number
+  pageNum: number
+}
+
+type CaseDataIndex =
   | "asn"
-  | "court_code"
   | "court_date"
   | "court_name"
-  | "court_reference"
   | "defendant_name"
   | "error_id"
   | "error_locked_by_id"
@@ -21,12 +36,14 @@ type CaseData =
   | "error_status"
   | "is_urgent"
   | "notes"
-  | "org_for_police_filter"
-  | "phase"
   | "ptiurn"
   | "resolution_ts"
   | "trigger_count"
   | "trigger_locked_by_id"
   | "trigger_status"
   | "triggers"
-  | "updated_msg"
+
+type FullnameFields = {
+  error_locked_by_fullname: null | string
+  trigger_locked_by_fullname: null | string
+}
