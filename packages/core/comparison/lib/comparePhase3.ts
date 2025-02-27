@@ -56,7 +56,7 @@ export const normalisePncOperations = (operations: PncUpdateRequest[]) => {
         if (Array.isArray(value)) {
           for (const item of value) {
             for (const [subfield, subvalue] of Object.entries(item)) {
-              if (subvalue === null) {
+              if (!subvalue) {
                 delete (item as unknown as Record<string, unknown>)[subfield]
               }
             }
