@@ -1,3 +1,5 @@
+import type { Note } from "@moj-bichard7/common/types/Note"
+import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
@@ -30,45 +32,19 @@ class Postgres implements DataStoreGateway {
   }
 
   async fetchCases(pagination: Pagination): Promise<CaseDataForIndexDto[]> {
-    // TODO: Create Use Case
-    // TODO: Add methods for `fetchNotes` and `fetchTriggers`
     // TODO: Add tests
     // TODO: Add Permissions
     // TODO: Add filters one by one
     // TODO: Reuse triggerSql for filtering
-    const cases = await fetchCases(this.postgres, this.forceIds, pagination)
+    return await fetchCases(this.postgres, this.forceIds, pagination)
+  }
 
-    if (cases.length === 0) {
-      return []
-    }
+  async fetchNotes(errorIds: number[]): Promise<Note[]> {
+    return await fetchNotes(this.postgres, errorIds)
+  }
 
-    const errorIds = cases.map((caseData) => caseData.error_id)
-
-    const notes = await fetchNotes(this.postgres, errorIds)
-    const triggers = await fetchTriggers(this.postgres, errorIds)
-
-    cases.forEach((caseData) => {
-      const matchedNotes = notes.filter((note) => note.error_id === caseData.error_id)
-      const matchedTriggers = triggers.filter((trigger) => trigger.error_id === caseData.error_id)
-
-      matchedNotes.forEach((note) => {
-        if (!caseData.notes) {
-          caseData.notes = []
-        }
-
-        caseData.notes.push(note)
-      })
-
-      matchedTriggers.forEach((trigger) => {
-        if (!caseData.triggers) {
-          caseData.triggers = []
-        }
-
-        caseData.triggers.push(trigger)
-      })
-    })
-
-    return cases
+  async fetchTriggers(errorIds: number[]): Promise<Trigger[]> {
+    return await fetchTriggers(this.postgres, errorIds)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {

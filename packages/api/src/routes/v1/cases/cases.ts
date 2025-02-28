@@ -1,4 +1,3 @@
-import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
@@ -9,7 +8,6 @@ import { INTERNAL_SERVER_ERROR, OK } from "http-status"
 import z from "zod"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
-import type { Pagination } from "../../../types/Case"
 
 import auth from "../../../server/schemas/auth"
 import {
@@ -20,7 +18,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import { convertCaseToCaseIndexDto } from "../../../useCases/dto/convertCaseToDto"
+import { fetchCasesAndFilter } from "../../../useCases/cases/fetchCasesAndFilter"
 
 type HandlerProps = {
   dataStore: DataStoreGateway
@@ -34,7 +32,7 @@ const CaseIndexQuerystringSchema = z.object({
   pageNum: z.coerce.number().min(1).default(1)
 })
 
-type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
+export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
 // TODO: Add e2e tests
 // TODO: Add query string
@@ -53,19 +51,9 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ dataStore, query, reply, user }: HandlerProps) => {
-  // TODO: Create a Use Case
-  const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }
-  return dataStore
-    .fetchCases(pagination)
-    .then((cases) => {
-      const casesDto = cases.map((caseData) => convertCaseToCaseIndexDto(caseData, user))
-      const fullCount = cases.length === 0 ? 0 : Number(cases[0].full_count)
-      return reply.code(OK).send({
-        cases: casesDto,
-        returnCases: cases.length,
-        totalCases: fullCount,
-        ...pagination
-      } satisfies CaseIndexMetadata)
+  await fetchCasesAndFilter(dataStore, query, user)
+    .then((caseIndexMetaData) => {
+      return reply.code(OK).send(caseIndexMetaData)
     })
     .catch((err) => {
       reply.log.error(err)
