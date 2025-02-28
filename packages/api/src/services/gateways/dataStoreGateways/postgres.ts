@@ -32,7 +32,6 @@ class Postgres implements DataStoreGateway {
   }
 
   async fetchCases(pagination: Pagination): Promise<CaseDataForIndexDto[]> {
-    // TODO: Add tests
     // TODO: Add Permissions
     // TODO: Add filters one by one
     // TODO: Reuse triggerSql for filtering

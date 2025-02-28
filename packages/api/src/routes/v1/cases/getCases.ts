@@ -28,8 +28,6 @@ type HandlerProps = {
   user: User
 }
 
-// TODO: Add e2e tests
-// TODO: Add query string
 const schema = {
   ...auth,
   querystring: CaseIndexQuerystringSchema,
