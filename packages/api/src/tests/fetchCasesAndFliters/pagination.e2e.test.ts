@@ -15,6 +15,10 @@ describe("fetchCasesAndFilter pagination e2e", () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
     helper.postgres.forceIds = [1]
+
+    await helper.postgres.clearDb()
+    await helper.dynamo.clearDynamo()
+
     user = (await createUsers(helper.postgres, 1))[0]
     await createCases(helper.postgres, 123)
   })
@@ -24,9 +28,6 @@ describe("fetchCasesAndFilter pagination e2e", () => {
   })
 
   afterAll(async () => {
-    await helper.postgres.clearDb()
-    await helper.dynamo.clearDynamo()
-
     await app.close()
     await helper.postgres.close()
   })
