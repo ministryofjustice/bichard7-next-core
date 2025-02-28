@@ -1,10 +1,10 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { fetchCasesAndFilter } from "../../useCases/cases/fetchCasesAndFilter"
-import { createCases } from "../helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../helpers/userHelper"
+import { createCases } from "../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUsers } from "../../../tests/helpers/userHelper"
+import { fetchCasesAndFilter } from "../fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter pagination e2e", () => {
   let helper: SetupAppEnd2EndHelper

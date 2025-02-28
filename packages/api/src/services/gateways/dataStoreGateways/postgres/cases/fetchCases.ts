@@ -1,13 +1,16 @@
 import type postgres from "postgres"
 
-import type { CaseDataForIndexDto, Pagination } from "../../../../../types/Case"
+import type { CaseDataForIndexDto } from "../../../../../types/Case"
+import type { Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
 import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
+import { ordering } from "./filters/ordering"
 
 export default async (
   sql: postgres.Sql,
   forceIds: number[],
-  pagination: Pagination
+  pagination: Pagination,
+  sortOrder: SortOrder
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
   const resolutionStatus = resolutionStatusCodeByText(ResolutionStatus.Unresolved) ?? 1
@@ -26,16 +29,11 @@ export default async (
     AND el.resolution_ts IS NULL
   `
 
-  //TODO: Ordering goes here
-  const orderSql = sql`
-    el_court_date DESC,
-    el_ptiurn ASC
-  `
-
   const allCasesSql = sql`
     SELECT DISTINCT
       distinctAlias.el_error_id AS ids_el_error_id,
       distinctAlias.el_court_date,
+      distinctAlias.el_court_name,
       distinctAlias.el_ptiurn,
       distinctAlias.el_error_locked_by_id,
       distinctAlias.el_trigger_locked_by_id
@@ -44,6 +42,7 @@ export default async (
         SELECT
           el.error_id AS el_error_id,
           el.court_date AS el_court_date,
+          el.court_name AS el_court_name,
           el.ptiurn AS el_ptiurn,
           el.error_locked_by_id AS el_error_locked_by_id,
           el.trigger_locked_by_id AS el_trigger_locked_by_id
@@ -65,7 +64,7 @@ export default async (
     FROM
       allCases
     ORDER BY
-      ${orderSql}
+      ${ordering(sql, sortOrder)}
     LIMIT ${pagination.maxPerPage}
     OFFSET ${offset}
   `
@@ -93,6 +92,7 @@ export default async (
       el.asn,
       el.court_date AS el_court_date,
       el.court_date,
+      el.court_name AS el_court_name,
       el.court_name,
       el.defendant_name,
       el.error_locked_by_id,
@@ -134,7 +134,7 @@ export default async (
       triggerLockedByUser.forenames,
       triggerLockedByUser.surname
     ORDER BY
-      ${orderSql}
+      ${ordering(sql, sortOrder)}
   `
 
   const result: CaseDataForIndexDto[] = await sql`

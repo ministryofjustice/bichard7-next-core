@@ -20,11 +20,6 @@ export type CaseDataForIndexDto = FullnameFields &
 
 export type CaseMessageId = Pick<Case, "message_id">
 
-export type Pagination = {
-  maxPerPage: number
-  pageNum: number
-}
-
 type CaseDataIndex =
   | "asn"
   | "court_date"
