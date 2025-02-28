@@ -5,9 +5,9 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { CaseIndexMetadataSchema } from "@moj-bichard7/common/types/Case"
 import { INTERNAL_SERVER_ERROR, OK } from "http-status"
-import z from "zod"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
+import type { CaseIndexQuerystring } from "../../../types/CaseIndexQuerystring"
 
 import auth from "../../../server/schemas/auth"
 import {
@@ -18,6 +18,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
+import { CaseIndexQuerystringSchema } from "../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../useCases/cases/fetchCasesAndFilter"
 
 type HandlerProps = {
@@ -26,13 +27,6 @@ type HandlerProps = {
   reply: FastifyReply
   user: User
 }
-
-const CaseIndexQuerystringSchema = z.object({
-  maxPerPage: z.coerce.number().min(25).max(200).default(50),
-  pageNum: z.coerce.number().min(1).default(1)
-})
-
-export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
 // TODO: Add e2e tests
 // TODO: Add query string

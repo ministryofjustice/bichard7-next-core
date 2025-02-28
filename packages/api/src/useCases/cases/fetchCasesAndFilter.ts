@@ -1,9 +1,9 @@
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import type { CaseIndexQuerystring } from "../../routes/v1/cases/cases"
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import type { CaseDataForIndexDto, Pagination } from "../../types/Case"
+import type { CaseIndexQuerystring } from "../../types/CaseIndexQuerystring"
 
 import { convertCaseToCaseIndexDto } from "../dto/convertCaseToDto"
 
