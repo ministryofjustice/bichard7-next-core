@@ -3,7 +3,7 @@ import type AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/Audit
 import { isError } from "@moj-bichard7/common/types/Result"
 
 const getAuditLogs = async (correlationId: string, auditLogClient: AuditLogApiClient) => {
-  const auditLog = await auditLogClient.getMessage(correlationId)
+  const auditLog = await auditLogClient.getAuditLog(correlationId)
   if (isError(auditLog)) {
     throw new Error("Error retrieving audit log")
   }
