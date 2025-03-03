@@ -36,7 +36,8 @@ export default async (
       distinctAlias.el_court_name,
       distinctAlias.el_ptiurn,
       distinctAlias.el_error_locked_by_id,
-      distinctAlias.el_trigger_locked_by_id
+      distinctAlias.el_trigger_locked_by_id,
+      distinctAlias.el_defendant_name
     FROM
       (
         SELECT
@@ -45,7 +46,8 @@ export default async (
           el.court_name AS el_court_name,
           el.ptiurn AS el_ptiurn,
           el.error_locked_by_id AS el_error_locked_by_id,
-          el.trigger_locked_by_id AS el_trigger_locked_by_id
+          el.trigger_locked_by_id AS el_trigger_locked_by_id,
+          el.defendant_name AS el_defendant_name
         FROM
           br7own.error_list el
           LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
@@ -94,6 +96,7 @@ export default async (
       el.court_date,
       el.court_name AS el_court_name,
       el.court_name,
+      el.defendant_name AS el_defendant_name,
       el.defendant_name,
       el.error_locked_by_id,
       el.error_report,

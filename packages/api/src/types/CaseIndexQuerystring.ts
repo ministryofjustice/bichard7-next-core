@@ -7,7 +7,8 @@ export enum Order {
 
 export enum OrderBy {
   courtDate = "courtDate",
-  courtName = "courtName"
+  courtName = "courtName",
+  defendantName = "defendantName"
 }
 
 export const CaseIndexQuerystringSchema = z.object({

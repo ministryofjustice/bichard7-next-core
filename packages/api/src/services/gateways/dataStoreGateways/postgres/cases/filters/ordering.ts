@@ -23,6 +23,10 @@ export const ordering = (sql: postgres.Sql, sortOrder: SortOrder) => {
       return sql`el_court_name ASC, ${defaultOrder}`
     case `${OrderBy.courtName} ${Order.desc}`:
       return sql`el_court_name DESC, ${defaultOrder}`
+    case `${OrderBy.defendantName} ${Order.asc}`:
+      return sql`el_defendant_name ASC, ${defaultOrder}`
+    case `${OrderBy.defendantName} ${Order.desc}`:
+      return sql`el_defendant_name DESC, ${defaultOrder}`
     default:
       return defaultOrder
   }
