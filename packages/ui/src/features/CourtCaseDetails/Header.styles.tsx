@@ -54,7 +54,6 @@ const StyledButton = styled(Button)`
 `
 
 const StyledSecondaryButton = styled(SecondaryButton)`
-  margin-bottom: 0;
   background-color: ${grey};
 `
 const ReallocateLinkButton = styled(LinkButton)`
