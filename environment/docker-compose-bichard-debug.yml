@@ -1,4 +1,3 @@
-version: "3.2"
 services:
   bichard7-liberty:
     image: bichard7-liberty-debug

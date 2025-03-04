@@ -62,6 +62,7 @@ export const CaseIndexDtoSchema = z.object({
   errorReport: z.string().optional(),
   errorStatus: z.string().nullable(),
   isUrgent: z.number().optional(),
+  noteCount: z.number().optional(),
   notes: z.array(NoteDtoSchema),
   ptiurn: z.string().nullable(),
   resolutionTimestamp: z.date().nullable(),
@@ -83,6 +84,15 @@ export const CaseDtoSchema = CaseIndexDtoSchema.and(
   })
 )
 
+export const CaseIndexMetadataSchema = z.object({
+  cases: z.array(CaseIndexDtoSchema),
+  maxPerPage: z.number(),
+  pageNum: z.number(),
+  returnCases: z.number(),
+  totalCases: z.number()
+})
+
 export type Case = z.infer<typeof CaseSchema>
 export type CaseDto = z.infer<typeof CaseDtoSchema>
 export type CaseIndexDto = z.infer<typeof CaseIndexDtoSchema>
+export type CaseIndexMetadata = z.infer<typeof CaseIndexMetadataSchema>
