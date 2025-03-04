@@ -3,6 +3,7 @@ import type { Row } from "postgres"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
+import { filterByCourtName } from "./courtName"
 import { filterByDefendantName } from "./defendantName"
 
 export const generateFilters = (
@@ -17,5 +18,6 @@ export const generateFilters = (
     -- End of fast
     AND el.resolution_ts IS NULL
     ${filterByDefendantName(sql, filters.defendantName)}
+    ${filterByCourtName(sql, filters.courtName)}
   `
 }
