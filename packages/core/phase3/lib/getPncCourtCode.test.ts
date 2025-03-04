@@ -4,8 +4,9 @@ import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisatio
 import getPncCourtCode from "./getPncCourtCode"
 
 jest.mock("../../lib/dataLookup/lookupOrganisationUnitByCode")
+
 describe("getPncCourtCode", () => {
-  it("Should return an empty string if organistaionUnitCode is null or undefined", () => {
+  it("Should return an empty string if organisationUnitCode is null or undefined", () => {
     const courtHouseCode = 2576
 
     const pncCourtCodes = getPncCourtCode(null, courtHouseCode)
