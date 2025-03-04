@@ -97,21 +97,6 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
     }
 
-    let lockResult: UpdateResult | Error | undefined
-
-    if (isPost(req) && lock === "false") {
-      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
-    } else if (
-      !useApi &&
-      (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
-    ) {
-      lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
-    }
-
-    if (isError(lockResult)) {
-      throw lockResult
-    }
-
     const triggersToResolve = []
     if (typeof resolveTrigger === "string" && !Number.isNaN(+resolveTrigger)) {
       triggersToResolve.push(+resolveTrigger)
@@ -178,6 +163,22 @@ export const getServerSideProps = withMultipleServerSideProps(
           throw new Error(ValidationException)
         }
       }
+    }
+
+    let lockResult: UpdateResult | Error | undefined
+
+    if (isPost(req) && lock === "false") {
+      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
+    } else if (
+      !useApi &&
+      (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
+    ) {
+      console.log(">>>>>>LOG: Should be locking the court")
+      lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
+    }
+
+    if (isError(lockResult)) {
+      throw lockResult
     }
 
     // Fetch the record from the database after updates
