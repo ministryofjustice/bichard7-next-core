@@ -35,7 +35,7 @@ describe("createAuditLogRecord", () => {
     const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
     expect(result.status).toBe("COMPLETED")
 
-    const auditLog = await apiClient.getMessage(auditLogRecord.messageId)
+    const auditLog = await apiClient.getAuditLog(auditLogRecord.messageId)
     expect(auditLog).toHaveProperty("externalCorrelationId", auditLogRecord.externalCorrelationId)
     expect(auditLog).toHaveProperty("messageId", auditLogRecord.messageId)
   })
