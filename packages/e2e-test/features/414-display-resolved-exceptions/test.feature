@@ -40,7 +40,7 @@ Feature: {414} Persist Reason codes on a case list after the case is resolved.
 		When I open this record
 			And I click the "Defendant" tab
 			And I correct "ASN" to "1101ZD0100000448754K"
-			And I submit the record on the case details page
+			And I submit the record
 		When I return to the list
 			And I reload until I don't see "(Submitted)"
 		Then the PNC updates the record
