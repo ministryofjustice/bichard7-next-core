@@ -173,7 +173,6 @@ export const getServerSideProps = withMultipleServerSideProps(
       !useApi &&
       (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
     ) {
-      console.log(">>>>>>LOG: Should be locking the court")
       lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
     }
 
