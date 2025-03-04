@@ -8,7 +8,7 @@ import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2End
 import { createUsers } from "../../../../tests/helpers/userHelper"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
-describe("fetchCasesAndFilter ordering courtName e2e", () => {
+describe("fetchCasesAndFilter filtering by defendant name e2e", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let user: User
