@@ -13,6 +13,7 @@ export enum OrderBy {
 }
 
 export const CaseIndexQuerystringSchema = z.object({
+  defendantName: z.string().optional().openapi({ example: "De*Name" }),
   maxPerPage: z.coerce.number().min(25).max(200).default(50),
   order: z.enum(Object.keys(Order) as [keyof typeof Order]).optional(),
   orderBy: z.enum(Object.keys(OrderBy) as [keyof typeof OrderBy]).optional(),
@@ -21,5 +22,6 @@ export const CaseIndexQuerystringSchema = z.object({
 
 export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
+export type Filters = Pick<CaseIndexQuerystring, "defendantName">
 export type Pagination = Pick<CaseIndexQuerystring, "maxPerPage" | "pageNum">
 export type SortOrder = Pick<CaseIndexQuerystring, "order" | "orderBy">
