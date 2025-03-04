@@ -28,6 +28,10 @@ const CaseDetailHeaderRow = styled.div`
     #locked-tag-container {
       margin-left: 0;
     }
+
+    #return-to-case-list {
+      margin-bottom: 0.63rem;
+    }
   }
 `
 
@@ -50,7 +54,6 @@ const StyledButton = styled(Button)`
 `
 
 const StyledSecondaryButton = styled(SecondaryButton)`
-  margin-bottom: 0;
   background-color: ${grey};
 `
 const ReallocateLinkButton = styled(LinkButton)`
