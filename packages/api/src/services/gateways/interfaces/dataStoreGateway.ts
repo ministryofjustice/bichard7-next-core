@@ -4,13 +4,13 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import type { CaseDataForDto, CaseDataForIndexDto, CaseMessageId } from "../../../types/Case"
-import type { Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
+import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
 import type { LockReason } from "../../../types/LockReason"
 
 interface DataStoreGateway {
   canCaseBeResubmitted: (username: string, caseId: number) => Promise<boolean>
   fetchCase: (caseId: number) => Promise<CaseDataForDto>
-  fetchCases: (pagination: Pagination, sortOrder: SortOrder) => Promise<CaseDataForIndexDto[]>
+  fetchCases: (pagination: Pagination, sortOrder: SortOrder, filters: Filters) => Promise<CaseDataForIndexDto[]>
   fetchNotes: (errorIds: number[]) => Promise<Note[]>
   fetchTriggers: (errorIds: number[]) => Promise<Trigger[]>
   fetchUserByUsername: (username: string) => Promise<User>
