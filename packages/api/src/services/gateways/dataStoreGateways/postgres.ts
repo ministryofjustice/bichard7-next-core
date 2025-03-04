@@ -4,7 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import type { CaseDataForDto, CaseDataForIndexDto, CaseMessageId } from "../../../types/Case"
-import type { Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
+import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
 import { LockReason } from "../../../types/LockReason"
@@ -32,11 +32,11 @@ class Postgres implements DataStoreGateway {
     return await fetchCase(this.postgres, caseId, this.forceIds)
   }
 
-  async fetchCases(pagination: Pagination, sortOrder: SortOrder): Promise<CaseDataForIndexDto[]> {
+  async fetchCases(pagination: Pagination, sortOrder: SortOrder, filters: Filters): Promise<CaseDataForIndexDto[]> {
     // TODO: Add Permissions
     // TODO: Add filters one by one
     // TODO: Reuse triggerSql for filtering
-    return await fetchCases(this.postgres, this.forceIds, pagination, sortOrder)
+    return await fetchCases(this.postgres, this.forceIds, pagination, sortOrder, filters)
   }
 
   async fetchNotes(errorIds: number[]): Promise<Note[]> {

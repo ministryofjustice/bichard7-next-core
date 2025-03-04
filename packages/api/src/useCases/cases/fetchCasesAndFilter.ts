@@ -3,7 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import type { CaseDataForIndexDto } from "../../types/Case"
-import type { CaseIndexQuerystring, Pagination, SortOrder } from "../../types/CaseIndexQuerystring"
+import type { CaseIndexQuerystring, Filters, Pagination, SortOrder } from "../../types/CaseIndexQuerystring"
 
 import { convertCaseToCaseIndexDto } from "../dto/convertCaseToDto"
 
@@ -41,8 +41,9 @@ export const fetchCasesAndFilter = async (
 ): Promise<CaseIndexMetadata> => {
   const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }
   const sortOrder: SortOrder = { order: query.order, orderBy: query.orderBy }
+  const filters: Filters = { defendantName: query.defendantName }
 
-  const cases = await dataStore.fetchCases(pagination, sortOrder)
+  const cases = await dataStore.fetchCases(pagination, sortOrder, filters)
 
   if (cases.length === 0) {
     return {
