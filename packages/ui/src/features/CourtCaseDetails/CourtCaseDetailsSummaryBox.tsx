@@ -1,4 +1,5 @@
 import { useCourtCase } from "context/CourtCaseContext"
+import formatAsnWithDivider from "helpers/formatAsn"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { SummaryBox, SummaryBoxGrid } from "./CourtCaseDetailsSummaryBox.styles"
 import CourtCaseDetailsSummaryBoxField from "./CourtCaseDetailsSummaryBoxField"
@@ -14,12 +15,18 @@ const CourtCaseDetailsSummaryBox = () => {
       ""
   )
   const pncIdentifier = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
+
   const asn = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+    ? formatAsnWithDivider(
+        courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+      )
+    : ""
 
   return (
     <SummaryBox className={`govuk-body`} aria-label="Court case summary">
       <SummaryBoxGrid>
         <CourtCaseDetailsSummaryBoxField label="PTIURN" value={courtCase.ptiurn} />
+
         <CourtCaseDetailsSummaryBoxField label="ASN" value={asn} />
         <CourtCaseDetailsSummaryBoxField label="PNCID" value={pncIdentifier} />
         <CourtCaseDetailsSummaryBoxField label="DOB" value={formattedDobDate} />
