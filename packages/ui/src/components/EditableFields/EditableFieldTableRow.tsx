@@ -29,7 +29,7 @@ const EditableFieldTableRow = ({
   htmlFor
 }: Props) => {
   const isRendered = !!(value || updatedValue || hasExceptions)
-  const hasCorrection = updatedValue && value !== updatedValue
+  const hasCorrection = updatedValue && value !== updatedValue // Check this logic to consider values with slashes
 
   if (!isRendered) {
     return
