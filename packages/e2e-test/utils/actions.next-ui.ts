@@ -586,7 +586,7 @@ export const submitRecord = async function (this: Bichard) {
   await page.click("#exceptions-tab")
   await Promise.all([page.click("#submit"), page.waitForNavigation()])
   await Promise.all([page.click("#confirm-submit"), page.waitForNavigation()])
-  await Promise.all([page.click("#leave-and-unlock"), page.waitForNavigation()])
+  await Promise.all([page.click("#leave-and-unlock, #return-to-case-list"), page.waitForNavigation()])
 }
 
 export const submitRecordAndStayOnPage = async function (this: Bichard) {

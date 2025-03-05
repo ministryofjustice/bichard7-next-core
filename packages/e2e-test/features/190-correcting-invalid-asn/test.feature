@@ -44,7 +44,7 @@ Feature: {190} R4.0_BR7_CC_TR_Offence Code Qualifiers
 		When I open the record for "fuller Sam"
 			And I click the "Defendant" tab
 			And I correct "ASN" to "0901VK0100000342547V"
-			And I submit the record on the case details page
+			And I submit the record
 			And I return to the list
 		Then I see exception "HO100304" in the exception list table
 			And the PNC record has not been updated
