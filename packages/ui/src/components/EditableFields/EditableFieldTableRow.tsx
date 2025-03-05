@@ -1,3 +1,4 @@
+import formatAsnWithDivider from "helpers/formatAsn"
 import { LabelCell } from "./EditableFieldTableRow.styles"
 import InitialValueAndCorrectionField from "./InitialValueAndCorrectionField"
 import InputField from "./InputField"
@@ -29,7 +30,7 @@ const EditableFieldTableRow = ({
   htmlFor
 }: Props) => {
   const isRendered = !!(value || updatedValue || hasExceptions)
-  const hasCorrection = updatedValue && value !== updatedValue // Check this logic to consider values with slashes
+  const hasCorrection = updatedValue && value !== formatAsnWithDivider(updatedValue)
 
   if (!isRendered) {
     return
