@@ -28,8 +28,9 @@ services:
       MQ_USER: ${DEFAULT_USER}
       MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
       MQ_URL: failover:(stomp://activemq:61613)
-      AUDIT_LOG_API_URL: http://audit-log-api:7010
-      AUDIT_LOG_API_KEY: super_secret_key
+      AUDIT_LOG_API_URL: http://api:3321
+      AUDIT_LOG_API_KEY: ${AUDIT_LOG_API_KEY}
+      AUDIT_LOG_API_BASE_PATH: v1/audit-logs
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}
@@ -44,6 +45,8 @@ services:
       SMTP_DEBUG: "true"
     depends_on:
       audit-log-api:
+        condition: service_healthy
+      api:
         condition: service_healthy
 
   conductor:
