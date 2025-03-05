@@ -171,7 +171,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const triggersMatch = isEqual(sortedCoreTriggers, sortedTriggers)
 
     const isIntentionalDifference =
-      (!pncOperationsMatch || !triggersMatch) &&
+      (!pncOperationsMatch || (!outgoingMessageMissing && !triggersMatch)) &&
       isValidDisposalTextDifference(
         pncGateway.updates,
         pncOperations,
