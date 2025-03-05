@@ -3,7 +3,7 @@ import type { PromiseResult, Result } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
-import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { AnyOperation, Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequest from "../types/PncUpdateRequest"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 
@@ -37,23 +37,43 @@ const generatePncUpdateRequest = <T extends PncOperation>(
   return pncUpdateRequest
 }
 
+type OperationWithPncUpdateRequest = { operation: AnyOperation; pncUpdateRequest: PncUpdateRequest }
+
+const generatePncUpdateRequests = (
+  pncUpdateDataset: PncUpdateDataset
+): Result<OperationWithPncUpdateRequest[] | PncUpdateRequestError> => {
+  const operationsWithPncUpdateRequest: OperationWithPncUpdateRequest[] = []
+  const errors: Error[] = []
+
+  const incompleteOperations = pncUpdateDataset.PncOperations.filter((operation) => operation.status !== "Completed")
+
+  for (const operation of incompleteOperations) {
+    const pncUpdateRequest = generatePncUpdateRequest(pncUpdateDataset, operation)
+
+    if (isError(pncUpdateRequest)) {
+      errors.push(pncUpdateRequest)
+    } else {
+      operationsWithPncUpdateRequest.push({ operation, pncUpdateRequest })
+    }
+  }
+
+  if (errors.length > 0) {
+    return new PncUpdateRequestError(errors.map((error) => error.message))
+  }
+
+  return operationsWithPncUpdateRequest
+}
+
 const performOperations = async (
   pncUpdateDataset: PncUpdateDataset,
   pncGateway: PncGatewayInterface
 ): PromiseResult<void> => {
-  const incompleteOperations = pncUpdateDataset.PncOperations.filter((operation) => operation.status !== "Completed")
-
-  const pncUpdateRequests = incompleteOperations.map((operation) =>
-    generatePncUpdateRequest(pncUpdateDataset, operation)
-  )
-  const pncUpdateRequestErrors = pncUpdateRequests.filter((pncUpdateRequest) => isError(pncUpdateRequest))
-  if (pncUpdateRequestErrors.length > 0) {
-    return new PncUpdateRequestError(pncUpdateRequestErrors.map((error) => error.message))
+  const pncUpdateRequests = generatePncUpdateRequests(pncUpdateDataset)
+  if (isError(pncUpdateRequests)) {
+    return pncUpdateRequests
   }
 
-  for (const [index, pncUpdateRequest] of (pncUpdateRequests as PncUpdateRequest[]).entries()) {
-    const operation = incompleteOperations[index]
-
+  for (const { operation, pncUpdateRequest } of pncUpdateRequests) {
     const pncUpdateResult = await updatePnc(pncUpdateDataset, pncUpdateRequest, pncGateway)
 
     if (isError(pncUpdateResult)) {
