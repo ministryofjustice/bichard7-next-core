@@ -2,9 +2,9 @@ import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { STATUS_CODES } from "http"
 import { CONFLICT, CREATED, INTERNAL_SERVER_ERROR } from "http-status"
-import z from "zod"
 
 import type AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGatewayInterface"
 import type { InputApiAuditLog } from "../../../types/AuditLog"
@@ -17,7 +17,7 @@ import {
   unauthorizedError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import { InputApiAuditLogSchema } from "../../../types/AuditLog"
+import { InputApiAuditLogSchema, OutputApiAuditLogSchema } from "../../../types/AuditLog"
 import ConflictError from "../../../types/errors/ConflictError"
 import createAuditLog from "../../../useCases/createAuditLog"
 
@@ -32,7 +32,7 @@ const schema = {
   ...auth,
   body: InputApiAuditLogSchema,
   response: {
-    [CREATED]: z.null().openapi({ description: "No content" }),
+    [CREATED]: OutputApiAuditLogSchema.openapi({ description: "No content" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError,
@@ -44,12 +44,12 @@ const schema = {
 const handler = async ({ auditLog, auditLogGateway, logger, reply }: HandlerProps) =>
   createAuditLog(auditLog, auditLogGateway, logger)
     .then((result) => {
-      if (!result) {
-        reply.code(CREATED).send()
-      } else if (result instanceof ConflictError) {
+      if (result instanceof ConflictError) {
         reply.code(CONFLICT).send({ code: STATUS_CODES[409], message: result.message, statusCode: 409 })
-      } else {
+      } else if (isError(result)) {
         reply.code(INTERNAL_SERVER_ERROR).send(result)
+      } else {
+        reply.code(CREATED).send(result)
       }
     })
     .catch((err) => {
