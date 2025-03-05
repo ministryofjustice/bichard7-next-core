@@ -132,7 +132,9 @@ services:
 
   api:
     image: api
-    profiles: ["b7-api"]
+    build:
+      dockerfile: packages/api/Dockerfile
+      context: ..
     environment:
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
@@ -374,6 +376,8 @@ services:
         condition: service_healthy
       db-seed:
         condition: service_started
+      api:
+        condition: service_healthy
 
   nginx-auth-proxy:
     image: nginx-auth-proxy

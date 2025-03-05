@@ -4,12 +4,13 @@ import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogDynamoGateway from "../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGatewayInterface"
-import type { DynamoAuditLog, InputApiAuditLog } from "../types/AuditLog"
+import type { DynamoAuditLog, InputApiAuditLog, OutputApiAuditLog } from "../types/AuditLog"
 
 import { isConditionalExpressionViolationError } from "../services/gateways/dynamo"
 import ConflictError from "../types/errors/ConflictError"
 import PncStatus from "../types/PncStatus"
 import TriggerStatus from "../types/TriggerStatus"
+import convertDynamoAuditLogToOutputApi from "./dto/convertDynamoAuditLogToOutputApi"
 
 const convertInputApiAuditLogToDynamoAuditLog = (input: InputApiAuditLog): DynamoAuditLog => ({
   events: [],
@@ -27,7 +28,7 @@ const createAuditLog = async (
   auditLog: InputApiAuditLog,
   auditLogGateway: AuditLogDynamoGateway,
   logger?: FastifyBaseLogger
-): PromiseResult<void> => {
+): PromiseResult<OutputApiAuditLog> => {
   const dynamoAuditLog = convertInputApiAuditLogToDynamoAuditLog(auditLog)
 
   // Check message hash doesn't already exist
@@ -52,6 +53,8 @@ const createAuditLog = async (
     logger?.error("Error creating audit log", result.message)
     return result
   }
+
+  return convertDynamoAuditLogToOutputApi(result)
 }
 
 export default createAuditLog
