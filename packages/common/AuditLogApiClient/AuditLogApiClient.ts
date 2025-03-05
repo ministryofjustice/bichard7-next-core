@@ -29,6 +29,14 @@ const httpsAgent = new https.Agent({
 })
 
 export default class AuditLogApiClient {
+  private get apiKeyHeader(): Record<string, string> {
+    if (this.apiKey.startsWith("Bearer ")) {
+      return { Authorization: this.apiKey }
+    }
+
+    return { "X-API-Key": this.apiKey }
+  }
+
   private get baseUrl(): string {
     return `${this.apiUrl}/${this.basePath}`
   }
@@ -45,7 +53,7 @@ export default class AuditLogApiClient {
       .post(this.baseUrl, this.stringify(auditLog), {
         headers: {
           "Content-Type": "application/json",
-          "X-API-Key": this.apiKey
+          ...this.apiKeyHeader
         },
         timeout: this.timeout,
         // The Audit Log API doesn't return JSON :facepalm:
@@ -73,7 +81,7 @@ export default class AuditLogApiClient {
     return axios
       .post(`${this.baseUrl}/${correlationId}/events`, event, {
         headers: {
-          "X-API-Key": this.apiKey
+          ...this.apiKeyHeader
         },
         httpsAgent,
         timeout: this.timeout,
@@ -109,7 +117,7 @@ export default class AuditLogApiClient {
     return axios
       .post(`${this.apiUrl}/users/${userName}/events`, event, {
         headers: {
-          "X-API-Key": this.apiKey
+          ...this.apiKeyHeader
         },
         httpsAgent,
         timeout: this.timeout
@@ -147,7 +155,7 @@ export default class AuditLogApiClient {
 
     return axios
       .get(url, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -176,7 +184,7 @@ export default class AuditLogApiClient {
 
     return axios
       .get(`${this.baseUrl}/${correlationId}${queryString}`, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -198,7 +206,7 @@ export default class AuditLogApiClient {
 
     return axios
       .get(url, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -229,7 +237,7 @@ export default class AuditLogApiClient {
 
     return axios
       .get(`${this.baseUrl}${queryString}`, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -252,7 +260,7 @@ export default class AuditLogApiClient {
         {},
         {
           headers: {
-            "X-API-Key": this.apiKey
+            ...this.apiKeyHeader
           },
           httpsAgent,
           timeout: this.timeout
@@ -283,7 +291,7 @@ export default class AuditLogApiClient {
         {},
         {
           headers: {
-            "X-API-Key": this.apiKey
+            ...this.apiKeyHeader
           },
           httpsAgent,
           timeout: this.timeout

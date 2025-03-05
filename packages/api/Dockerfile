@@ -1,7 +1,6 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
 FROM ${BUILD_IMAGE} AS builder
 
-RUN echo $NOTIIFCATION
 LABEL maintainer="CJSE"
 
 RUN dnf update -y \

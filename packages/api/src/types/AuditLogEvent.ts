@@ -7,7 +7,12 @@ export const AuditLogEventCompressedValueSchema = z.object({ _compressedValue: z
 export type AuditLogEventCompressedValue = z.infer<typeof AuditLogEventCompressedValueSchema>
 
 // The uncompressed data structure for an attribute
-export const AuditLogEventAttributeValueSchema = z.union([z.boolean(), z.number(), z.string()])
+export const AuditLogEventAttributeValueSchema = z.union([
+  z.boolean(),
+  z.number(),
+  z.string(),
+  z.object({}).passthrough()
+])
 
 export type AuditLogEventDecompressedAttributeValue = z.infer<typeof AuditLogEventAttributeValueSchema>
 
