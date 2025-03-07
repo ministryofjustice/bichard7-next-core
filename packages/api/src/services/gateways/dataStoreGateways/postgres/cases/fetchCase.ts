@@ -3,8 +3,14 @@ import type postgres from "postgres"
 import type { CaseDataForDto } from "../../../../../types/Case"
 
 import { NotFoundError } from "../../../../../types/errors/NotFoundError"
+import organisationUnitSql from "../organisationUnitSql"
 
-export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Promise<CaseDataForDto> => {
+export default async (
+  sql: postgres.Sql,
+  caseId: number,
+  forceIds: number[],
+  visibleCourts: string[]
+): Promise<CaseDataForDto> => {
   const [result]: [CaseDataForDto?] = await sql`
       SELECT
         el.annotated_msg,
@@ -53,10 +59,9 @@ export default async (sql: postgres.Sql, caseId: number, forceIds: number[]): Pr
         LEFT JOIN br7own.users AS triggerLockU ON triggerLockU.username = el.trigger_locked_by_id
       WHERE
         el.error_id = ${caseId} AND
-        br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
+        (${organisationUnitSql(sql, visibleCourts, forceIds)})
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `
-
   if (!result) {
     throw new NotFoundError("Case not found")
   }

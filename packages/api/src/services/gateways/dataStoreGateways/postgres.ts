@@ -16,6 +16,7 @@ import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
 class Postgres implements DataStoreGateway {
   forceIds: number[] = []
+  visibleCourts: string[] = []
   protected readonly postgres = postgresFactory()
 
   async canCaseBeResubmitted(username: string, caseId: number): Promise<boolean> {
@@ -23,7 +24,7 @@ class Postgres implements DataStoreGateway {
   }
 
   async fetchCase(caseId: number): Promise<CaseDataForDto> {
-    return await fetchCase(this.postgres, caseId, this.forceIds)
+    return await fetchCase(this.postgres, caseId, this.forceIds, this.visibleCourts)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {

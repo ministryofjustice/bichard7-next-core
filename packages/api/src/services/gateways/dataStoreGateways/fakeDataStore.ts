@@ -9,6 +9,7 @@ import dummyAho from "../../../tests/fixtures/AnnotatedHO1.json"
 
 class FakeDataStore implements DataStoreGateway {
   forceIds: number[] = []
+  visibleCourts: string[] = []
   async canCaseBeResubmitted(_username: string, _caseId: number): Promise<boolean> {
     return Promise.resolve(true)
   }
