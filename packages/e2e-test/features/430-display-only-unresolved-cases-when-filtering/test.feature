@@ -20,7 +20,6 @@ Feature: 430 - Display correct cases when filtered with reason codes in the Next
 			And I correct "ASN" to "1101ZD0100000448754K"
 			And I see the correction for "ASN" to "11/01ZD/01/00000448754K"
 		Then I submit the record
-			And I reset the filters
 			And I do not see record for "Submitted"
 			And I do not see record for "Resolved"
 		Then I apply filter "reasonCodes" to be "HO100206"

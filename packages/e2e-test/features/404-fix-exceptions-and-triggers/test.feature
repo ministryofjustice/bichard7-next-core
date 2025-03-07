@@ -17,7 +17,7 @@ Feature: 404 - Fixing exceptions and triggers and resubmitting
 		When I open the record for "SEXOFFENCE TRPRFOUR"
 			And I click the "Defendant" tab
 			And I correct "ASN" to "1101ZD0100000448754K"
-			And I submit the record on the case details page
+			And I submit the record
 		When I reload until I don't see "(Submitted)"
 			And I click the "Refresh" button
 			And I return to the list
