@@ -39,7 +39,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
       qtyDuration: "D3",
       qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
-      qualifiers: "H5",
+      qualifiers: "        H5",
       text: "Dummy disposal text",
       type: undefined
     })
@@ -67,7 +67,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
       qtyDuration: "D3",
       qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
-      qualifiers: "H5",
+      qualifiers: "        H5",
       text: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+",
       type: undefined
     })
@@ -94,7 +94,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
       qtyDuration: "D3",
       qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
-      qualifiers: "H5",
+      qualifiers: "        H5",
       text: "Dummy disposal text",
       type: undefined
     })
@@ -121,7 +121,7 @@ describe("createPncDisposalByFirstAndSecondDurations", () => {
       qtyDuration: "D3",
       qtyMonetaryValue: "11",
       qtyUnitsFined: "D3          0000011.0000",
-      qualifiers: "H5",
+      qualifiers: "        H5",
       text: "from 10/05/24",
       type: undefined
     })
