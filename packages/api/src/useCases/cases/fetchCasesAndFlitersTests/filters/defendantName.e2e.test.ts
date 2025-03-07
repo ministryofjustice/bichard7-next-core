@@ -61,7 +61,7 @@ describe("fetchCasesAndFilter filtering by defendant name e2e", () => {
   it("will match cases when the defendant name", async () => {
     const caseMetadata = await fetchCasesAndFilter(
       helper.postgres,
-      { defendantName: defendantToInclude.toLowerCase(), ...defaultQuery },
+      { defendantName: defendantToInclude, ...defaultQuery },
       user
     )
 
@@ -71,7 +71,7 @@ describe("fetchCasesAndFilter filtering by defendant name e2e", () => {
     expect(caseMetadata.cases[0].defendantName).toStrictEqual(defendantToInclude)
   })
 
-  it("will match cases with wildcard match", async () => {
+  it("will match cases with partial match", async () => {
     const caseMetadata = await fetchCasesAndFilter(helper.postgres, { defendantName: "wayne b", ...defaultQuery }, user)
 
     expect(caseMetadata.cases).toHaveLength(2)
