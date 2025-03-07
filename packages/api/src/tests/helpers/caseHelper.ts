@@ -11,7 +11,7 @@ export const createCase = async (postgres: End2EndPostgres, overrides: object = 
     annotated_msg: testAhoXml,
     court_reference: "ABC",
     create_ts: new Date(),
-    error_count: 0,
+    error_count: 1,
     error_locked_by_id: null,
     error_report: "",
     error_status: 1,
