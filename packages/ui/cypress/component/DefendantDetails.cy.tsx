@@ -3,7 +3,7 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { HearingDefendant } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { format } from "date-fns"
-import formatAsnWithDivider from "helpers/formatAsn"
+import Asn from "services/Asn"
 import { DisplayFullUser } from "types/display/Users"
 import { CourtCaseContext } from "../../src/context/CourtCaseContext"
 import { DefendantDetails } from "../../src/features/CourtCaseDetails/Tabs/Panels/DefendantDetails"
@@ -77,7 +77,7 @@ describe("Defendant Details", () => {
       </CourtCaseContext.Provider>
     )
 
-    cy.contains("th", "ASN").siblings().should("include.text", formatAsnWithDivider(data.ArrestSummonsNumber))
+    cy.contains("th", "ASN").siblings().should("include.text", Asn.divideAsn(data.ArrestSummonsNumber))
     cy.contains("th", "Court PNCID").siblings().should("include.text", data.CourtPNCIdentifier)
     cy.contains("th", "PNC Check name").siblings().should("include.text", data.PNCCheckname)
     cy.contains("th", "Given name").siblings().should("include.text", data.DefendantDetail?.PersonName.GivenName)

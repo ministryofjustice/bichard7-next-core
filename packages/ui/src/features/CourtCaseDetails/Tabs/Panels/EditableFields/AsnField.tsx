@@ -3,7 +3,6 @@ import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import { useCourtCase } from "context/CourtCaseContext"
-import formatAsnWithDivider from "helpers/formatAsn"
 import { ChangeEvent, ClipboardEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
 import Asn from "services/Asn"
 import { disabledKeys, handleAsnForwardSlashes, type Selection } from "utils/exceptions/handleAsnForwardSlashes"
@@ -133,7 +132,7 @@ export const AsnField = () => {
   return (
     <EditableFieldTableRow
       className={"asn-row"}
-      value={defendant.ArrestSummonsNumber ? formatAsnWithDivider(defendant.ArrestSummonsNumber) : ""}
+      value={defendant.ArrestSummonsNumber ? Asn.divideAsn(defendant.ArrestSummonsNumber) : ""}
       updatedValue={updatedAhoAsn}
       label="ASN"
       hasExceptions={hasExceptions}

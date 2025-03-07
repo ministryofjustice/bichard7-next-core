@@ -1,5 +1,5 @@
 import { useCourtCase } from "context/CourtCaseContext"
-import formatAsnWithDivider from "helpers/formatAsn"
+import Asn from "services/Asn"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { SummaryBox, SummaryBoxGrid } from "./CourtCaseDetailsSummaryBox.styles"
 import CourtCaseDetailsSummaryBoxField from "./CourtCaseDetailsSummaryBoxField"
@@ -17,9 +17,7 @@ const CourtCaseDetailsSummaryBox = () => {
   const pncIdentifier = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
 
   const asn = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-    ? formatAsnWithDivider(
-        courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-      )
+    ? Asn.divideAsn(courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber)
     : ""
 
   return (
