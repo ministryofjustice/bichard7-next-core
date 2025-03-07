@@ -49,7 +49,7 @@ class Asn {
     }${this.checkCharacter()}`
   }
 
-  static divideAsn = (asn: string): string => {
+  static divideAsn = (asn: string | undefined): string => {
     if (!asn) {
       return ""
     }
