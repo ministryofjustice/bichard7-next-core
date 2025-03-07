@@ -41,7 +41,7 @@ export const fetchCasesAndFilter = async (
 ): Promise<CaseIndexMetadata> => {
   const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }
   const sortOrder: SortOrder = { order: query.order, orderBy: query.orderBy }
-  const filters: Filters = { defendantName: query.defendantName }
+  const filters: Filters = { courtName: query.courtName, defendantName: query.defendantName }
 
   const cases = await dataStore.fetchCases(pagination, sortOrder, filters)
 
