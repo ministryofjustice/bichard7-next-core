@@ -28,12 +28,16 @@ export const CaseIndexQuerystringSchema = z.object({
   order: z.nativeEnum(Order).optional(),
   orderBy: z.nativeEnum(OrderBy).optional(),
   pageNum: z.coerce.number().min(1).default(1),
-  reason: z.nativeEnum(Reason).optional(),
-  reasonCodes: z.array(z.string()).optional()
+  reason: z.nativeEnum(Reason).optional().default(Reason.All),
+  reasonCodes: z.array(z.string()).optional(),
+  resolvedByUsername: z.string().optional()
 })
 
 export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
-export type Filters = Pick<CaseIndexQuerystring, "caseState" | "courtName" | "defendantName" | "reason" | "reasonCodes">
+export type Filters = Pick<
+  CaseIndexQuerystring,
+  "caseState" | "courtName" | "defendantName" | "reason" | "reasonCodes" | "resolvedByUsername"
+>
 export type Pagination = Pick<CaseIndexQuerystring, "maxPerPage" | "pageNum">
 export type SortOrder = Pick<CaseIndexQuerystring, "order" | "orderBy">

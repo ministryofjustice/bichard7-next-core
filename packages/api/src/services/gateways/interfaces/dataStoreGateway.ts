@@ -10,9 +10,14 @@ import type { LockReason } from "../../../types/LockReason"
 interface DataStoreGateway {
   canCaseBeResubmitted: (username: string, caseId: number) => Promise<boolean>
   fetchCase: (caseId: number) => Promise<CaseDataForDto>
-  fetchCases: (pagination: Pagination, sortOrder: SortOrder, filters: Filters) => Promise<CaseDataForIndexDto[]>
+  fetchCases: (
+    user: User,
+    pagination: Pagination,
+    sortOrder: SortOrder,
+    filters: Filters
+  ) => Promise<CaseDataForIndexDto[]>
   fetchNotes: (errorIds: number[]) => Promise<Note[]>
-  fetchTriggers: (errorIds: number[]) => Promise<Trigger[]>
+  fetchTriggers: (errorIds: number[], filters: Filters, user: User) => Promise<Trigger[]>
   fetchUserByUsername: (username: string) => Promise<User>
   forceIds: number[]
   lockCase: (callbackSql: postgres.Sql, lockReason: LockReason, caseId: number, username: string) => Promise<boolean>
