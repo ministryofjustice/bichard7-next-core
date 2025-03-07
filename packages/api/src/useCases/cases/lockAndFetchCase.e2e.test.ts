@@ -147,8 +147,12 @@ describe("lockAndFetchCase e2e", () => {
 
     expect(auditLogObj.events).toHaveLength(2)
 
-    const exceptionsAuditLogEvent = auditLogObj.events?.[0]
-    const triggersAuditLogEvent = auditLogObj.events?.[1]
+    const exceptionsAuditLogEvent = auditLogObj.events?.find(
+      (log) => log.eventType === AuditLogEventLookup[EventCode.ExceptionsLocked]
+    )
+    const triggersAuditLogEvent = auditLogObj.events?.find(
+      (log) => log.eventType === AuditLogEventLookup[EventCode.TriggersLocked]
+    )
 
     expect(exceptionsAuditLogEvent).toHaveProperty("eventCode", EventCode.ExceptionsLocked)
     expect(exceptionsAuditLogEvent).toHaveProperty("category", EventCategory.information)
