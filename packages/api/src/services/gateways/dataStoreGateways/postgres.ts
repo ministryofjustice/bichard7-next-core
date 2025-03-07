@@ -11,6 +11,7 @@ import fetchCase from "./postgres/cases/fetchCase"
 import lockException from "./postgres/cases/lockException"
 import lockTrigger from "./postgres/cases/lockTrigger"
 import selectMessageId from "./postgres/cases/selectMessageId"
+import organisationUnitSql from "./postgres/organisationUnitSql"
 import { transaction } from "./postgres/transaction"
 import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
@@ -24,11 +25,15 @@ class Postgres implements DataStoreGateway {
   }
 
   async fetchCase(caseId: number): Promise<CaseDataForDto> {
-    return await fetchCase(this.postgres, caseId, this.forceIds, this.visibleCourts)
+    return await fetchCase(this.postgres, caseId, this.generatedOrganisationUnitSql())
   }
 
   async fetchUserByUsername(username: string): Promise<User> {
     return await fetchUserByUsername(this.postgres, username)
+  }
+
+  generatedOrganisationUnitSql(): postgres.PendingQuery<postgres.Row[]> {
+    return organisationUnitSql(this.postgres, this.visibleCourts, this.forceIds)
   }
 
   async lockCase(
@@ -38,16 +43,16 @@ class Postgres implements DataStoreGateway {
     username: string
   ): Promise<boolean> {
     if (lockReason === LockReason.Exception) {
-      return await lockException(callbackSql, caseId, username, this.forceIds)
+      return await lockException(callbackSql, caseId, username, this.generatedOrganisationUnitSql())
     } else if (lockReason === LockReason.Trigger) {
-      return await lockTrigger(callbackSql, caseId, username, this.forceIds)
+      return await lockTrigger(callbackSql, caseId, username, this.generatedOrganisationUnitSql())
     }
 
     return false
   }
 
   async selectCaseMessageId(caseId: number): Promise<CaseMessageId> {
-    return await selectMessageId(this.postgres, caseId, this.forceIds)
+    return await selectMessageId(this.postgres, caseId, this.generatedOrganisationUnitSql())
   }
 
   async transaction(callback: (callbackSql: postgres.Sql) => unknown): Promise<unknown> {

@@ -8,13 +8,13 @@ describe("fetchCase", () => {
   it("throws an error if the case isn't found", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
 
-    await expect(filter(sql, 0, [], [])).rejects.toThrow("Case not found")
+    await expect(filter(sql, 0, sql`TRUE`)).rejects.toThrow("Case not found")
   })
 
   it("throws an error if the case isn't in the correct force", async () => {
     const sql = jest.fn(() => []) as unknown as postgres.Sql
 
-    await expect(filter(sql, 0, [2], [])).rejects.toThrow("Case not found")
+    await expect(filter(sql, 0, sql`TRUE`)).rejects.toThrow("Case not found")
   })
 
   // TODO: Replace the `as` with `satisfies`
@@ -47,7 +47,7 @@ describe("fetchCase", () => {
     } satisfies CaseDataForDto
     const sql = jest.fn(() => [expectedCase]) as unknown as postgres.Sql
 
-    const returnedCase = await filter(sql, 0, [1], [])
+    const returnedCase = await filter(sql, 0, sql`TRUE`)
 
     expect(returnedCase).toEqual(expectedCase)
   })

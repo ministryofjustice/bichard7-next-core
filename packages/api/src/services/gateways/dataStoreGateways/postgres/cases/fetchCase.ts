@@ -3,13 +3,11 @@ import type postgres from "postgres"
 import type { CaseDataForDto } from "../../../../../types/Case"
 
 import { NotFoundError } from "../../../../../types/errors/NotFoundError"
-import organisationUnitSql from "../organisationUnitSql"
 
 export default async (
   sql: postgres.Sql,
   caseId: number,
-  forceIds: number[],
-  visibleCourts: string[]
+  organisationUnitSql: postgres.PendingQuery<postgres.Row[]>
 ): Promise<CaseDataForDto> => {
   const [result]: [CaseDataForDto?] = await sql`
       SELECT
@@ -59,7 +57,7 @@ export default async (
         LEFT JOIN br7own.users AS triggerLockU ON triggerLockU.username = el.trigger_locked_by_id
       WHERE
         el.error_id = ${caseId} AND
-        (${organisationUnitSql(sql, visibleCourts, forceIds)})
+        (${organisationUnitSql})
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `
   if (!result) {
