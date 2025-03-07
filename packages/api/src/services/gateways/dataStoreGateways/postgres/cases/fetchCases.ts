@@ -1,16 +1,18 @@
 import type postgres from "postgres"
 
 import type { CaseDataForIndexDto } from "../../../../../types/Case"
-import type { Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
+import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
 import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
+import { generateFilters } from "./filters/generateFilters"
 import { ordering } from "./filters/ordering"
 
 export default async (
   sql: postgres.Sql,
   forceIds: number[],
   pagination: Pagination,
-  sortOrder: SortOrder
+  sortOrder: SortOrder,
+  filters: Filters
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
   const resolutionStatus = resolutionStatusCodeByText(ResolutionStatus.Unresolved) ?? 1
@@ -21,13 +23,7 @@ export default async (
   `
 
   // TODO: Other filtering goes here
-  const filtersSql = sql`
-    -- This makes it fast
-    AND (el.error_status = ${resolutionStatus} OR el.trigger_status = ${resolutionStatus})
-    AND (el.trigger_status = ${resolutionStatus} OR el.error_status = ${resolutionStatus})
-    -- End of fast
-    AND el.resolution_ts IS NULL
-  `
+  const filtersSql = generateFilters(sql, resolutionStatus, filters)
 
   const allCasesSql = sql`
     SELECT DISTINCT
