@@ -3,7 +3,8 @@ import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
-import type { CaseDataForDto, CaseDataForIndexDto, CaseMessageId, Pagination } from "../../../types/Case"
+import type { CaseDataForDto, CaseDataForIndexDto, CaseMessageId } from "../../../types/Case"
+import type { Pagination } from "../../../types/CaseIndexQuerystring"
 import type { LockReason } from "../../../types/LockReason"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
