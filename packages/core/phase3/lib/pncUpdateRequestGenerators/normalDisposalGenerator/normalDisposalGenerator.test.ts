@@ -33,7 +33,7 @@ const createPncUpdateDataset = () => {
         NextResultSourceOrganisation: {
           TopLevelCode: "B",
           SecondLevelCode: "01",
-          ThirdLevelCode: "00",
+          ThirdLevelCode: "BE",
           BottomLevelCode: "00",
           OrganisationUnitCode: "B000000"
         },
@@ -165,6 +165,30 @@ describe("normalDisposalGenerator", () => {
     const result = normalDisposalGenerator(pncUpdateDataset, operation)
 
     expect((result as NormalDisposalPncUpdateRequest).request.preTrialIssuesUniqueReferenceNumber).toBe("01ZD/0303208")
+    expect(result).toMatchSnapshot()
+  })
+
+  it("should set pending court details to null when no next result source organisation", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    const offence = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+    offence.Result[0].NextResultSourceOrganisation = undefined
+
+    const result = normalDisposalGenerator(pncUpdateDataset, operation)
+
+    expect((result as NormalDisposalPncUpdateRequest).request.pendingCourtDate).toBeNull()
+    expect((result as NormalDisposalPncUpdateRequest).request.pendingCourtHouseName).toBeNull()
+    expect((result as NormalDisposalPncUpdateRequest).request.pendingPsaCourtCode).toBeNull()
+    expect(result).toMatchSnapshot()
+  })
+
+  it("should set pending court date to an empty string when next result source organisation exists but no court date", () => {
+    const pncUpdateDataset = createPncUpdateDataset()
+    const offence = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
+    offence.Result[0].NextHearingDate = undefined
+
+    const result = normalDisposalGenerator(pncUpdateDataset, operation)
+
+    expect((result as NormalDisposalPncUpdateRequest).request.pendingCourtDate).toBe("")
     expect(result).toMatchSnapshot()
   })
 })
