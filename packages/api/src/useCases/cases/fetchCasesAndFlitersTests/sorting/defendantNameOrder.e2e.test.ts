@@ -1,10 +1,12 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
+import type { CaseIndexQuerystring } from "../../../../types/CaseIndexQuerystring"
+
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../tests/helpers/userHelper"
-import { Order, OrderBy, type Pagination } from "../../../../types/CaseIndexQuerystring"
+import { Order, OrderBy, Reason } from "../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter ordering Defendant Name e2e", () => {
@@ -12,7 +14,7 @@ describe("fetchCasesAndFilter ordering Defendant Name e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: Pagination = { maxPerPage: 25, pageNum: 1 }
+  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
