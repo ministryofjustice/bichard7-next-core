@@ -1,29 +1,33 @@
+import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import type { CaseDataForIndexDto } from "../../../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
-import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
+import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 import { generateFilters } from "./filters/generateFilters"
 import { ordering } from "./filters/ordering"
 
 export default async (
   sql: postgres.Sql,
   forceIds: number[],
+  user: User,
   pagination: Pagination,
   sortOrder: SortOrder,
   filters: Filters
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
-  const resolutionStatus = resolutionStatusCodeByText(ResolutionStatus.Unresolved) ?? 1
+  const visibleCourts = user.visible_courts?.split(",")
 
-  // TODO: Filter triggers here
-  const triggerFiltersSql = sql`
-    AND (elt.trigger_code NOT IN('') AND elt.status = ${resolutionStatus})
-  `
+  let visibleCourtsSql = sql`FALSE`
+
+  if (visibleCourts && visibleCourts.length > 0) {
+    const regex = `(${visibleCourts.map((vc) => vc + "*").join("|")})`
+    visibleCourtsSql = sql`el.court_code ~* ${regex}`
+  }
 
   // TODO: Other filtering goes here
-  const filtersSql = generateFilters(sql, resolutionStatus, filters)
+  const filtersSql = generateFilters(sql, user, filters)
 
   const allCasesSql = sql`
     SELECT DISTINCT
@@ -47,9 +51,9 @@ export default async (
         FROM
           br7own.error_list el
           LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
-            ${triggerFiltersSql}
+            ${excludedTriggersAndStatusSql(sql, filters, user)}
         WHERE
-          (br7own.force_code (org_for_police_filter) = ANY (${forceIds}))
+          (${visibleCourtsSql} OR br7own.force_code (org_for_police_filter) = ANY (${forceIds}))
           ${filtersSql}
       ) distinctAlias
   `

@@ -1,11 +1,12 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { Pagination } from "../../../../types/CaseIndexQuerystring"
+import type { CaseIndexQuerystring } from "../../../../types/CaseIndexQuerystring"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../tests/helpers/userHelper"
+import { Reason } from "../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by defendant name e2e", () => {
@@ -13,7 +14,7 @@ describe("fetchCasesAndFilter filtering by defendant name e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: Pagination = { maxPerPage: 25, pageNum: 1 }
+  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
   const defendantToInclude = "WAYNE Bruce"
   const defendantToIncludeWithPartialMatch = "WAYNE Bill"
   const defendantToNotInclude = "GORDON Barbara"

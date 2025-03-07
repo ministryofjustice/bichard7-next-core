@@ -32,19 +32,22 @@ class Postgres implements DataStoreGateway {
     return await fetchCase(this.postgres, caseId, this.forceIds)
   }
 
-  async fetchCases(pagination: Pagination, sortOrder: SortOrder, filters: Filters): Promise<CaseDataForIndexDto[]> {
-    // TODO: Add Permissions
+  async fetchCases(
+    user: User,
+    pagination: Pagination,
+    sortOrder: SortOrder,
+    filters: Filters
+  ): Promise<CaseDataForIndexDto[]> {
     // TODO: Add filters one by one
-    // TODO: Reuse triggerSql for filtering
-    return await fetchCases(this.postgres, this.forceIds, pagination, sortOrder, filters)
+    return await fetchCases(this.postgres, this.forceIds, user, pagination, sortOrder, filters)
   }
 
   async fetchNotes(errorIds: number[]): Promise<Note[]> {
     return await fetchNotes(this.postgres, errorIds)
   }
 
-  async fetchTriggers(errorIds: number[]): Promise<Trigger[]> {
-    return await fetchTriggers(this.postgres, errorIds)
+  async fetchTriggers(errorIds: number[], filters: Filters, user: User): Promise<Trigger[]> {
+    return await fetchTriggers(this.postgres, errorIds, filters, user)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {
