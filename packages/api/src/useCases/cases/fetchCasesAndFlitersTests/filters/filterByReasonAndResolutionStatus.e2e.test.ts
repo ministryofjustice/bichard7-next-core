@@ -2,18 +2,12 @@ import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { sortBy } from "lodash"
 
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { createExceptionOnCase } from "../../../../tests/helpers/exceptionHelper"
-import {
-  exceptionHandlerHasAccessTo,
-  generalHandlerHasAccessTo,
-  hasAccessToNone,
-  supervisorHasAccessTo,
-  triggerHandlerHasAccessTo
-} from "../../../../tests/helpers/hasAccessToHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { sortStringAsc } from "../../../../tests/helpers/sort"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
@@ -107,38 +101,38 @@ describe("Filter cases by resolution status", () => {
 
   const noGroupsUser = {
     groups: [],
-    hasAccessTo: hasAccessToNone,
-    visibleCourts: [],
-    visibleForces: [forceCode]
+    username: "noGroupsUser",
+    visible_courts: null,
+    visible_forces: forceCode
   } as Partial<User> as User
 
   const exceptionHandler = {
-    hasAccessTo: exceptionHandlerHasAccessTo,
+    groups: [UserGroup.ExceptionHandler],
     username: "exceptionHandler",
-    visibleCourts: [],
-    visibleForces: [forceCode]
-  } as Partial<User> as User
+    visible_courts: null,
+    visible_forces: forceCode
+  } as User
 
   const triggerHandler = {
-    hasAccessTo: triggerHandlerHasAccessTo,
+    groups: [UserGroup.TriggerHandler],
     username: "triggerHandler",
-    visibleCourts: [],
-    visibleForces: [forceCode]
-  } as Partial<User> as User
+    visible_courts: null,
+    visible_forces: forceCode
+  } as User
 
   const generalHandler = {
-    hasAccessTo: generalHandlerHasAccessTo,
+    groups: [UserGroup.GeneralHandler],
     username: "generalHandler",
-    visibleCourts: [],
-    visibleForces: [forceCode]
-  } as Partial<User> as User
+    visible_courts: null,
+    visible_forces: forceCode
+  } as User
 
   const supervisor = {
-    hasAccessTo: supervisorHasAccessTo,
+    groups: [UserGroup.Supervisor],
     username: "generalHandler",
-    visibleCourts: [],
-    visibleForces: [forceCode]
-  } as Partial<User> as User
+    visible_courts: null,
+    visible_forces: forceCode
+  } as User
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
@@ -328,7 +322,9 @@ describe("Filter cases by resolution status", () => {
       {
         description: "Shouldn't show cases to a user with no permissions",
         expectedCases: [],
-        filters: {},
+        filters: {
+          reason: Reason.All
+        },
         user: noGroupsUser
       },
       {
@@ -349,7 +345,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
         filters: {
-          caseState: ResolutionStatus.Unresolved
+          caseState: ResolutionStatus.Unresolved,
+          reason: Reason.All
         },
         user: exceptionHandler
       },
@@ -361,7 +358,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"
         ],
         filters: {
-          caseState: ResolutionStatus.Resolved
+          caseState: ResolutionStatus.Resolved,
+          reason: Reason.All
         },
         user: exceptionHandler
       },
@@ -375,7 +373,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
         filters: {
-          caseState: ResolutionStatus.Unresolved
+          caseState: ResolutionStatus.Unresolved,
+          reason: Reason.All
         },
         user: triggerHandler
       },
@@ -387,6 +386,7 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved"
         ],
         filters: {
+          reason: Reason.All,
           reasonCodes: ["TRPR0010"]
         },
         user: triggerHandler
@@ -401,6 +401,7 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Trigger Unresolved"
         ],
         filters: {
+          reason: Reason.All,
           reasonCodes: ["HO100300"]
         },
         user: exceptionHandler
@@ -413,6 +414,7 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved"
         ],
         filters: {
+          reason: Reason.All,
           reasonCodes: ["TRPR0010"]
         },
         user: generalHandler
@@ -427,6 +429,7 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Trigger Unresolved"
         ],
         filters: {
+          reason: Reason.All,
           reasonCodes: ["HO100300"]
         },
         user: generalHandler
@@ -443,6 +446,7 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved"
         ],
         filters: {
+          reason: Reason.All,
           reasonCodes: ["HO100300", "TRPR0010"]
         },
         user: generalHandler
@@ -460,6 +464,7 @@ describe("Filter cases by resolution status", () => {
         ],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["HO100300", "TRPR0010"]
         },
         user: generalHandler
@@ -476,6 +481,7 @@ describe("Filter cases by resolution status", () => {
         ],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["HO100300"]
         },
         user: generalHandler
@@ -488,6 +494,7 @@ describe("Filter cases by resolution status", () => {
         ],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["TRPR0010"]
         },
         user: generalHandler
@@ -502,6 +509,7 @@ describe("Filter cases by resolution status", () => {
         ],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["TRPR0010"]
         },
         user: supervisor
@@ -520,6 +528,7 @@ describe("Filter cases by resolution status", () => {
         ],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["HO100300"]
         },
         user: supervisor
@@ -532,7 +541,8 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Resolved by triggerHandler"
         ],
         filters: {
-          caseState: ResolutionStatus.Resolved
+          caseState: ResolutionStatus.Resolved,
+          reason: Reason.All
         },
         user: triggerHandler
       },
@@ -548,7 +558,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
         filters: {
-          caseState: ResolutionStatus.Unresolved
+          caseState: ResolutionStatus.Unresolved,
+          reason: Reason.All
         },
         user: generalHandler
       },
@@ -564,7 +575,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse"
         ],
         filters: {
-          caseState: ResolutionStatus.Resolved
+          caseState: ResolutionStatus.Resolved,
+          reason: Reason.All
         },
         user: generalHandler
       },
@@ -580,7 +592,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
         filters: {
-          caseState: ResolutionStatus.Unresolved
+          caseState: ResolutionStatus.Unresolved,
+          reason: Reason.All
         },
         user: supervisor
       },
@@ -601,7 +614,8 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved"
         ],
         filters: {
-          caseState: ResolutionStatus.Resolved
+          caseState: ResolutionStatus.Resolved,
+          reason: Reason.All
         },
         user: supervisor
       },
@@ -718,6 +732,7 @@ describe("Filter cases by resolution status", () => {
         expectedCases: ["No exceptions/Bails Trigger Resolved by triggerHandler"],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: [bailsTriggerCode]
         },
         user: triggerHandler
@@ -731,6 +746,7 @@ describe("Filter cases by resolution status", () => {
         ],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["HO100300"]
         },
         user: exceptionHandler
@@ -741,6 +757,7 @@ describe("Filter cases by resolution status", () => {
         expectedCases: ["Exceptions Unresolved/Trigger Unresolved", "Exceptions Unresolved/Bails Trigger Unresolved"],
         filters: {
           caseState: ResolutionStatus.Unresolved,
+          reason: Reason.All,
           reasonCodes: [dummyTriggerCode, bailsTriggerCode]
         },
         user: exceptionHandler
@@ -751,6 +768,7 @@ describe("Filter cases by resolution status", () => {
         expectedCases: ["Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"],
         filters: {
           caseState: ResolutionStatus.Resolved,
+          reason: Reason.All,
           reasonCodes: ["TRPR0001"]
         },
         user: exceptionHandler
@@ -763,7 +781,9 @@ describe("Filter cases by resolution status", () => {
           "No exceptions/Bails Trigger Unresolved",
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
-        filters: {},
+        filters: {
+          reason: Reason.All
+        },
         user: triggerHandler
       },
       {
@@ -774,7 +794,9 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
-        filters: {},
+        filters: {
+          reason: Reason.All
+        },
         user: exceptionHandler
       },
       {
@@ -787,7 +809,9 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
-        filters: {},
+        filters: {
+          reason: Reason.All
+        },
         user: generalHandler
       },
       {
@@ -800,7 +824,9 @@ describe("Filter cases by resolution status", () => {
           "Exceptions Unresolved/No triggers",
           "Exceptions Unresolved/Bails Trigger Unresolved"
         ],
-        filters: {},
+        filters: {
+          reason: Reason.All
+        },
         user: supervisor
       }
     ]
