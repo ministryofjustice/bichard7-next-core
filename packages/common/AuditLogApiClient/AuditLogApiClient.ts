@@ -10,13 +10,13 @@ import type { PromiseResult } from "../types/Result"
 import addQueryParams from "./addQueryParams"
 import ApplicationError, { AlreadyExistsError } from "./ApplicationError"
 
-export type GetMessageOptions = {
+export type GetAuditLogOptions = {
   excludeColumns?: string[]
   includeColumns?: string[]
   limit?: number
 }
 
-export type GetMessagesOptions = {
+export type GetAuditLogsOptions = {
   externalCorrelationId?: string
   largeObjects?: boolean
   lastMessageId?: string
@@ -29,15 +29,20 @@ const httpsAgent = new https.Agent({
 })
 
 export default class AuditLogApiClient {
+  private get baseUrl(): string {
+    return `${this.apiUrl}/${this.basePath}`
+  }
+
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
-    private readonly timeout: number = 0
+    private readonly timeout: number = 0,
+    private readonly basePath: string = "messages"
   ) {}
 
   createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
     return axios
-      .post(`${this.apiUrl}/messages`, this.stringify(auditLog), {
+      .post(this.baseUrl, this.stringify(auditLog), {
         headers: {
           "Content-Type": "application/json",
           "X-API-Key": this.apiKey
@@ -64,23 +69,25 @@ export default class AuditLogApiClient {
       })
   }
 
-  createEvent(messageId: string, event: AuditLogEvent): PromiseResult<void> {
+  createEvents(correlationId: string, event: AuditLogEvent | AuditLogEvent[]): PromiseResult<void> {
     return axios
-      .post(`${this.apiUrl}/messages/${messageId}/events`, event, {
+      .post(`${this.baseUrl}/${correlationId}/events`, event, {
         headers: {
           "X-API-Key": this.apiKey
         },
         httpsAgent,
-        timeout: this.timeout
+        timeout: this.timeout,
+        // The Audit Log API doesn't return JSON :facepalm:
+        transformResponse: (res) => res
       })
       .then((result) => {
         switch (result.status) {
           case HttpStatusCode.Created:
             return undefined
           case HttpStatusCode.GatewayTimeout:
-            return Error(`Timed out creating event for message with Id ${messageId}.`)
+            return Error(`Timed out creating event for message with Id ${correlationId}.`)
           case HttpStatusCode.NotFound:
-            return Error(`The message with Id ${messageId} does not exist.`)
+            return Error(`The message with Id ${correlationId} does not exist.`)
           default:
             return Error(`Error ${result.status}: Could not create audit log event.`)
         }
@@ -88,7 +95,7 @@ export default class AuditLogApiClient {
       .catch((error: AxiosError) => {
         switch (error.code) {
           case "ECONNABORTED":
-            return Error(`Timed out creating event for message with Id ${messageId}.`)
+            return Error(`Timed out creating event for message with Id ${correlationId}.`)
           default:
             return new ApplicationError(
               `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
@@ -130,8 +137,8 @@ export default class AuditLogApiClient {
       })
   }
 
-  fetchUnsanitised(options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
-    const url = addQueryParams(`${this.apiUrl}/messages`, {
+  fetchUnsanitised(options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
+    const url = addQueryParams(this.baseUrl, {
       excludeColumns: options.excludeColumns?.join(","),
       includeColumns: options.includeColumns?.join(","),
       limit: options.limit,
@@ -152,7 +159,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessage(messageId: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
+  getAuditLog(correlationId: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
     const queryParams: string[] = []
     let queryString = ""
     if (options?.includeColumns) {
@@ -168,7 +175,7 @@ export default class AuditLogApiClient {
     }
 
     return axios
-      .get(`${this.apiUrl}/messages/${messageId}${queryString}`, {
+      .get(`${this.baseUrl}/${correlationId}${queryString}`, {
         headers: { "X-API-Key": this.apiKey },
         timeout: this.timeout
       })
@@ -186,8 +193,8 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessages(options?: GetMessagesOptions): PromiseResult<AuditLogApiRecordOutput[]> {
-    const url = addQueryParams(`${this.apiUrl}/messages`, options)
+  getAuditLogs(options?: GetAuditLogsOptions): PromiseResult<AuditLogApiRecordOutput[]> {
+    const url = addQueryParams(this.baseUrl, options)
 
     return axios
       .get(url, {
@@ -207,7 +214,7 @@ export default class AuditLogApiClient {
       })
   }
 
-  getMessagesByHash(messageHash: string, options: GetMessageOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
+  getAuditLogsByHash(messageHash: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
     const queryParams: string[] = [`messageHash=${messageHash}`]
 
     if (options?.includeColumns) {
@@ -221,7 +228,7 @@ export default class AuditLogApiClient {
     const queryString = `?${queryParams.join("&")}`
 
     return axios
-      .get(`${this.apiUrl}/messages${queryString}`, {
+      .get(`${this.baseUrl}${queryString}`, {
         headers: { "X-API-Key": this.apiKey },
         timeout: this.timeout
       })
@@ -238,10 +245,10 @@ export default class AuditLogApiClient {
       })
   }
 
-  retryEvent(messageId: string): PromiseResult<void> {
+  retryEvent(correlationId: string): PromiseResult<void> {
     return axios
       .post(
-        `${this.apiUrl}/messages/${messageId}/retry`,
+        `${this.baseUrl}/${correlationId}/retry`,
         {},
         {
           headers: {
@@ -256,7 +263,7 @@ export default class AuditLogApiClient {
           case HttpStatusCode.NoContent:
             return undefined
           case HttpStatusCode.NotFound:
-            return Error(`The message with Id ${messageId} does not exist.`)
+            return Error(`The message with Id ${correlationId} does not exist.`)
           default:
             return Error(`Error ${result.status}: Could not retry audit log event.`)
         }
@@ -269,10 +276,10 @@ export default class AuditLogApiClient {
       })
   }
 
-  sanitiseMessage(messageId: string): PromiseResult<void> {
+  sanitiseAuditLog(correlationId: string): PromiseResult<void> {
     return axios
       .post(
-        `${this.apiUrl}/messages/${messageId}/sanitise`,
+        `${this.baseUrl}/${correlationId}/sanitise`,
         {},
         {
           headers: {
@@ -286,7 +293,7 @@ export default class AuditLogApiClient {
         if (result.status === HttpStatusCode.NoContent) {
           return
         } else if (result.status === HttpStatusCode.NotFound) {
-          return Error(`The message with Id ${messageId} does not exist.`)
+          return Error(`The message with Id ${correlationId} does not exist.`)
         } else {
           return new ApplicationError(
             `Error from audit log api while sanitising: ${this.stringify(result.data)}`,

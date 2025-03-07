@@ -49,14 +49,14 @@ const normaliseXml = (xml?: string): string | undefined => {
   return normalisedXml
 }
 
-const normalisePncOperations = (operations: PncUpdateRequest[]) => {
+export const normalisePncOperations = (operations: PncUpdateRequest[]) => {
   for (const operation of operations) {
     if (operation.request) {
       for (const value of Object.values(operation.request)) {
         if (Array.isArray(value)) {
           for (const item of value) {
             for (const [subfield, subvalue] of Object.entries(item)) {
-              if (subvalue === null) {
+              if (!subvalue) {
                 delete (item as unknown as Record<string, unknown>)[subfield]
               }
             }
@@ -171,7 +171,7 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const triggersMatch = isEqual(sortedCoreTriggers, sortedTriggers)
 
     const isIntentionalDifference =
-      (!pncOperationsMatch || !triggersMatch) &&
+      (!pncOperationsMatch || (!outgoingMessageMissing && !triggersMatch)) &&
       isValidDisposalTextDifference(
         pncGateway.updates,
         pncOperations,

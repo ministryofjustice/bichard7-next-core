@@ -17,7 +17,6 @@ describe("fetchCase", () => {
     await expect(filter(sql, 0, sql`TRUE`)).rejects.toThrow("Case not found")
   })
 
-  // TODO: Replace the `as` with `satisfies`
   it("fetches the Case", async () => {
     const expectedCase = {
       annotated_msg: "",
