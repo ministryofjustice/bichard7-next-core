@@ -162,6 +162,12 @@ commands:
       SKIP_IMAGES:
         default: ""
         type: string
+      USE_API:
+        default: false
+        type: boolean
+      USE_API_CASE_ENDPOINT:
+        default: false
+        type: boolean
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -169,7 +175,10 @@ commands:
       - run:
           name: Start bichard7 legacy
           command: |
-            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> \
+            ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            USE_API="<<parameters.USE_API>>" \
+            USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
@@ -830,6 +839,13 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      case-details:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -858,6 +874,14 @@ jobs:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            - run:
+                name: Load api
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies
       - build_e2e_tests
@@ -872,6 +896,14 @@ jobs:
           command: "npm run install-browsers"
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
+          USE_API: << parameters.api >>
+          USE_API_CASE_ENDPOINT: << parameters.case-details >>
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
@@ -1013,7 +1045,6 @@ workflows:
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cucumber_e2e_tests:
@@ -1021,6 +1052,13 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_api
+          api: true
+          case-details: true
+          requires:
+            - build-ui
+            - build_api_docker_image
       - zap_scanner:
           requires:
             - build-ui

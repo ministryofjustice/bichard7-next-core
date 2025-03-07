@@ -44,6 +44,7 @@ export const createUsers = async (
           jwt_id: randomUUID(),
           surname: `Surname${id}`,
           username: `User${id}`,
+          visible_courts: "AB",
           visible_forces: "001"
         })
 

@@ -2,7 +2,12 @@ import type postgres from "postgres"
 
 import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
 
-export default async (sql: postgres.Sql, caseId: number, username: string, forceIds: number[]): Promise<boolean> => {
+export default async (
+  sql: postgres.Sql,
+  caseId: number,
+  username: string,
+  organisationUnitSql: postgres.PendingQuery<postgres.Row[]>
+): Promise<boolean> => {
   const status = resolutionStatusCodeByText(ResolutionStatus.Unresolved) as number
 
   const result = await sql`
@@ -14,7 +19,7 @@ export default async (sql: postgres.Sql, caseId: number, username: string, force
         error_count > 0 AND
         error_status = ${status} AND
         error_id = ${caseId} AND
-        br7own.force_code(el.org_for_police_filter) = ANY(${forceIds}::SMALLINT[])
+        (${organisationUnitSql})
     `
 
   return result.count > 0
