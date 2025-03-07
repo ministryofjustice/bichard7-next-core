@@ -104,7 +104,7 @@ describe("ASN", () => {
   it("should display the updated ASN after submission along with CORRECTION badge", () => {
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".defendant-details-table").contains("AAAAAAAAAAAAAAAAAAA")
+    cy.get(".defendant-details-table").contains("AA/AAAA/AA/AAAAAAAAAAA")
     cy.get("#asn").clear()
     cy.get("#asn").type("1101ZD0100000448754K")
 
@@ -155,7 +155,6 @@ describe("ASN", () => {
 
     cy.get(".moj-badge").should("not.exist")
     cy.get("input#asn").should("not.exist")
-
   })
 
   describe("when I submit resolved exceptions I should not see the same value in the notes", () => {
