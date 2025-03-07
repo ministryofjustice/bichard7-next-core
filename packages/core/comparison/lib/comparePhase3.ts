@@ -80,11 +80,15 @@ const isValidDisposalTextDifference = (
     .filter((change) => change.removed)
     .every((change) => change.value.includes("EXCLUDED FROM"))
 
-  const disposalTextIsMultiline = offences.some((offence) =>
-    offence.Result.some((result) => !!result.ResultVariableText?.includes("\n"))
+  const disposalTextIsMultilineOrExclusionRequirement = offences.some((offence) =>
+    offence.Result.some(
+      (result) =>
+        !!result.ResultVariableText?.includes("\n") ||
+        !!result.ResultVariableText?.toUpperCase()?.includes("EXCLUSION REQUIREMENT")
+    )
   )
 
-  return onlyDifferenceIsDisposalText && disposalTextIsExclusion && disposalTextIsMultiline
+  return onlyDifferenceIsDisposalText && disposalTextIsExclusion && disposalTextIsMultilineOrExclusionRequirement
 }
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<ComparisonResultDetail> => {
