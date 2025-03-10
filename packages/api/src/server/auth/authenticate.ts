@@ -28,7 +28,7 @@ export default async function (dataStore: DataStoreGateway, request: FastifyRequ
 
     request.user = verificationResult
     dataStore.forceIds = formatForceNumbers(request.user.visible_forces)
-    dataStore.visibleCourts = request.user.visible_courts?.split(",") ?? []
+    dataStore.visibleCourts = request.user.visible_courts?.split(",").filter(Boolean) ?? []
     request.dataStore = dataStore
   } catch (error) {
     request.log.error(error)
