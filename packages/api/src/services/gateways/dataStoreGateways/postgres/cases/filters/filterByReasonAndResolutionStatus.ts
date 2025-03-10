@@ -7,7 +7,10 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
-import { resolutionStatusCodeByText } from "../../../../../../useCases/dto/convertResolutionStatus"
+import {
+  resolutionStatusCodeByText,
+  ResolutionStatusNumber
+} from "../../../../../../useCases/dto/convertResolutionStatus"
 import {
   canSeeTriggersAndException,
   reasonCodesAreExceptionsOnly,
@@ -102,9 +105,11 @@ export const filterByReasonAndResolutionStatus = (
   user: User,
   filters: Filters
 ): postgres.PendingQuery<Row[]> | postgres.PendingQuery<Row[]>[] => {
-  const resolutionStatus = filters.caseState ? (resolutionStatusCodeByText(filters.caseState) ?? 1) : 1
+  const resolutionStatus = filters.caseState
+    ? (resolutionStatusCodeByText(filters.caseState) ?? ResolutionStatusNumber.Unresolved)
+    : ResolutionStatusNumber.Unresolved
 
-  if (resolutionStatus === 2) {
+  if (resolutionStatus === ResolutionStatusNumber.Resolved) {
     return filterIfResolved(sql, user, filters, resolutionStatus)
   }
 

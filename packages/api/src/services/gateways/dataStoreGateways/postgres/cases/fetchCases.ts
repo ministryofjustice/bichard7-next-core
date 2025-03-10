@@ -1,6 +1,8 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
+import { isEmpty } from "lodash"
+
 import type { CaseDataForIndexDto } from "../../../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
@@ -17,7 +19,7 @@ export default async (
   filters: Filters
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
-  const visibleCourts = user.visible_courts?.split(",")
+  const visibleCourts = user.visible_courts?.split(",").filter((vc) => !isEmpty(vc))
 
   let visibleCourtsSql = sql`FALSE`
 
