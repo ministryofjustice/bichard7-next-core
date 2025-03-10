@@ -91,6 +91,18 @@ const isValidDisposalTextDifference = (
   return onlyDifferenceIsDisposalText && disposalTextIsExclusion && disposalTextIsMultilineOrExclusionRequirement
 }
 
+const isValidBailConditionsDifference = (
+  corePncOperations: PncUpdateRequest[],
+  legacyPncOperations: PncUpdateRequest[],
+  bailConditions: string[]
+) => {
+  const onlyOneDifference =
+    diffJson(corePncOperations, legacyPncOperations).filter((change) => change.added || change.removed).length === 2
+  const bailConditionsHaveTrailingSpaces = bailConditions.some((bailCondition) => /(\s+$|\s{2,})/.test(bailCondition))
+
+  return onlyOneDifference && bailConditionsHaveTrailingSpaces
+}
+
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<ComparisonResultDetail> => {
   const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase3)
@@ -174,13 +186,20 @@ const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promi
     const sortedTriggers = sortTriggers(triggers ?? [])
     const triggersMatch = isEqual(sortedCoreTriggers, sortedTriggers)
 
+    const isIntentionalDifferencePossible = !pncOperationsMatch || (!outgoingMessageMissing && !triggersMatch)
     const isIntentionalDifference =
-      (!pncOperationsMatch || (!outgoingMessageMissing && !triggersMatch)) &&
-      isValidDisposalTextDifference(
+      isIntentionalDifferencePossible &&
+      (isValidDisposalTextDifference(
         pncGateway.updates,
         pncOperations,
         parsedIncomingMessageResult.message.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence
-      )
+      ) ||
+        isValidBailConditionsDifference(
+          pncGateway.updates,
+          pncOperations,
+          parsedIncomingMessageResult.message.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+            .BailConditions
+        ))
 
     if (isIntentionalDifference) {
       return {
