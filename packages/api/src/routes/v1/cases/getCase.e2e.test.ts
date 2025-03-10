@@ -98,6 +98,28 @@ describe("/v1/case e2e", () => {
     expect(responseJson.updatedHearingOutcome).toEqual(testAhoJsonStr)
   })
 
+  it("returns case data when user's visibleCourt matches and visibleForce doesn't match", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres)
+    const dummyCase = {
+      asn: "1901ID0100000006148H",
+      court_code: "ABZ01",
+      org_for_police_filter: "05",
+      updated_msg: testAhoXml
+    }
+
+    const testCase = await createCase(helper.postgres, dummyCase)
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.error_id.toString())}`, {
+      headers: { Authorization: `Bearer ${encodedJwt}` },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(OK)
+    const responseJson = (await response.json()) as CaseDto
+    expect(responseJson.asn).toBe(testCase.asn)
+    expect(responseJson.courtCode).toBe(testCase.court_code)
+  })
+
   it("returns errorLockedByUsername and errorLockedByUserFullName", async () => {
     const [user] = await createUsers(helper.postgres, 3)
     const jwtToken = await generateJwtForUser(user)
