@@ -16,9 +16,9 @@ const CourtCaseDetailsSummaryBox = () => {
   )
   const pncIdentifier = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
 
-  const asn = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-    ? Asn.divideAsn(courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber)
-    : ""
+  const asn = Asn.divideAsn(
+    courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+  )
 
   return (
     <SummaryBox className={`govuk-body`} aria-label="Court case summary">

@@ -132,7 +132,7 @@ export const AsnField = () => {
   return (
     <EditableFieldTableRow
       className={"asn-row"}
-      value={defendant.ArrestSummonsNumber ? Asn.divideAsn(defendant.ArrestSummonsNumber) : ""}
+      value={Asn.divideAsn(defendant.ArrestSummonsNumber)}
       updatedValue={updatedAhoAsn}
       label="ASN"
       hasExceptions={hasExceptions}
