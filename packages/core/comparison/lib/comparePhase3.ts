@@ -7,8 +7,8 @@ import isEqual from "lodash.isequal"
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { Phase3Comparison } from "../types/ComparisonFile"
-import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
+import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
@@ -93,7 +93,7 @@ const isValidDisposalTextDifference = (
 
 const comparePhase3 = async (comparison: Phase3Comparison, debug = false): Promise<ComparisonResultDetail> => {
   const { incomingMessage, outgoingMessage, triggers, pncOperations, auditLogEvents, correlationId } = comparison
-  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase3)
 
   const outgoingMessageMissing = !outgoingMessage
 
