@@ -12,7 +12,11 @@ import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2End
 import { sortStringAsc } from "../../../../tests/helpers/sort"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { type Filters, type Pagination, Reason } from "../../../../types/CaseIndexQuerystring"
-import { ResolutionStatus, resolutionStatusCodeByText } from "../../../dto/convertResolutionStatus"
+import {
+  ResolutionStatus,
+  resolutionStatusCodeByText,
+  ResolutionStatusNumber
+} from "../../../dto/convertResolutionStatus"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
 type CreateReasonCaseProps = {
@@ -26,14 +30,9 @@ type CreateReasonCaseProps = {
   }
 }
 
-const createReasonCase = async (helper: SetupAppEnd2EndHelper, courtCode: string, args: CreateReasonCaseProps) => {
+const generateName = (args: CreateReasonCaseProps) => {
   const triggerOrBailsTrigger = `${args.trigger?.bailsTrigger ? "Bails Trigger" : "Trigger"}`
-  const resolvedErrorStatus = 2
-  const unresolvedErrorStatus = 1
   const expectedTestName = []
-
-  let exceptionErrorStatus: null | number
-  let triggerErrorStatus: null | number
 
   if (args.exception?.exceptionResolvedBy) {
     expectedTestName.push(`Exceptions Resolved by ${args.exception.exceptionResolvedBy}`)
@@ -49,24 +48,42 @@ const createReasonCase = async (helper: SetupAppEnd2EndHelper, courtCode: string
     expectedTestName.push("No triggers")
   }
 
+  return expectedTestName
+}
+
+const generateExceptionStatus = (args: CreateReasonCaseProps) => {
+  let exceptionErrorStatus: null | number = null
+
   if (args.exception) {
-    exceptionErrorStatus = args.exception?.exceptionResolvedBy ? resolvedErrorStatus : unresolvedErrorStatus
-  } else {
-    exceptionErrorStatus = null
+    exceptionErrorStatus = args.exception?.exceptionResolvedBy
+      ? ResolutionStatusNumber.Resolved
+      : ResolutionStatusNumber.Unresolved
   }
 
+  return exceptionErrorStatus
+}
+
+const generateTriggerStatus = (args: CreateReasonCaseProps) => {
+  let triggerErrorStatus: null | number = null
+
   if (args.trigger) {
-    triggerErrorStatus = args.trigger.triggerResolvedBy ? resolvedErrorStatus : unresolvedErrorStatus
-  } else {
-    triggerErrorStatus = null
+    triggerErrorStatus = args.trigger.triggerResolvedBy
+      ? ResolutionStatusNumber.Resolved
+      : ResolutionStatusNumber.Unresolved
   }
+
+  return triggerErrorStatus
+}
+
+const createReasonCase = async (helper: SetupAppEnd2EndHelper, courtCode: string, args: CreateReasonCaseProps) => {
+  const expectedTestName = generateName(args)
 
   await createCase(helper.postgres, {
     defendant_name: expectedTestName.join("/"),
     error_count: args.exception ? 1 : 0,
     error_id: args.caseId,
     error_resolved_by: args.exception?.exceptionResolvedBy ? new Date() : null,
-    error_status: exceptionErrorStatus,
+    error_status: generateExceptionStatus(args),
     message_id: randomUUID(),
     org_for_police_filter: courtCode,
     resolution_ts:
@@ -78,7 +95,7 @@ const createReasonCase = async (helper: SetupAppEnd2EndHelper, courtCode: string
     trigger_count: args.trigger ? 1 : 0,
     trigger_resolved_by: args.trigger?.triggerResolvedBy ? args.trigger.triggerResolvedBy : null,
     trigger_resolved_ts: args.trigger?.triggerResolvedBy ? new Date() : null,
-    trigger_status: triggerErrorStatus
+    trigger_status: generateTriggerStatus(args)
   })
 }
 
