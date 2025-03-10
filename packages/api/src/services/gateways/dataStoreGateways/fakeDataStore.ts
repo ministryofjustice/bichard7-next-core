@@ -4,14 +4,13 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import type { CaseDataForDto, CaseDataForIndexDto, CaseMessageId } from "../../../types/Case"
-import type { Pagination } from "../../../types/CaseIndexQuerystring"
 import type { LockReason } from "../../../types/LockReason"
 import type DataStoreGateway from "../interfaces/dataStoreGateway"
 
 import dummyAho from "../../../tests/fixtures/AnnotatedHO1.json"
 
 class FakeDataStore implements DataStoreGateway {
-  fetchCases: (pagination: Pagination) => Promise<CaseDataForIndexDto[]>
+  fetchCases: () => Promise<CaseDataForIndexDto[]>
   fetchNotes: (errorIds: number[]) => Promise<Note[]>
   fetchTriggers: (errorIds: number[]) => Promise<Trigger[]>
   forceIds: number[] = []
