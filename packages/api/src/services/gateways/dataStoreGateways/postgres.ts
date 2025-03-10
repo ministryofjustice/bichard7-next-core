@@ -38,7 +38,6 @@ class Postgres implements DataStoreGateway {
     sortOrder: SortOrder,
     filters: Filters
   ): Promise<CaseDataForIndexDto[]> {
-    // TODO: Add filters one by one
     return await fetchCases(this.postgres, this.forceIds, user, pagination, sortOrder, filters)
   }
 
