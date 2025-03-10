@@ -1,6 +1,10 @@
 import type End2EndPostgres from "../testGateways/e2ePostgres"
 
-import { ResolutionStatus, resolutionStatusCodeByText } from "../../useCases/dto/convertResolutionStatus"
+import {
+  ResolutionStatus,
+  resolutionStatusCodeByText,
+  ResolutionStatusNumber
+} from "../../useCases/dto/convertResolutionStatus"
 
 export const createExceptionOnCase = async (
   postgres: End2EndPostgres,
@@ -11,7 +15,9 @@ export const createExceptionOnCase = async (
   username?: string
 ) => {
   const isExceptionResolved = errorStatus === ResolutionStatus.Resolved
-  const errorStatusNum = errorStatus ? (resolutionStatusCodeByText(errorStatus) ?? 1) : 1
+  const errorStatusNum = errorStatus
+    ? (resolutionStatusCodeByText(errorStatus) ?? ResolutionStatusNumber.Unresolved)
+    : ResolutionStatusNumber.Unresolved
 
   let errorResolvedBy: null | string = null
   let errorResolvedTimestamp: Date | null = null
