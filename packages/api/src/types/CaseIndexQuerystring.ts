@@ -29,7 +29,11 @@ export const CaseIndexQuerystringSchema = z.object({
   orderBy: z.nativeEnum(OrderBy).optional(),
   pageNum: z.coerce.number().min(1).default(1),
   reason: z.nativeEnum(Reason).optional().default(Reason.All),
-  reasonCodes: z.array(z.string()).optional(),
+  reasonCodes: z
+    .string()
+    .transform((value) => value.split(","))
+    .pipe(z.string().array())
+    .optional(),
   resolvedByUsername: z.string().optional()
 })
 
