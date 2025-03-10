@@ -4,6 +4,7 @@ import type { FastifyInstance } from "fastify"
 import { createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../tests/helpers/userHelper"
+import { Reason } from "../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter pagination e2e", () => {
@@ -33,7 +34,11 @@ describe("fetchCasesAndFilter pagination e2e", () => {
   })
 
   it("will handle 25 per page on page 1", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { maxPerPage: 25, pageNum: 1 }, user)
+    const caseMetadata = await fetchCasesAndFilter(
+      helper.postgres,
+      { maxPerPage: 25, pageNum: 1, reason: Reason.All },
+      user
+    )
 
     expect(caseMetadata.cases).toHaveLength(25)
     expect(caseMetadata.maxPerPage).toBe(25)
@@ -43,7 +48,11 @@ describe("fetchCasesAndFilter pagination e2e", () => {
   })
 
   it("will handle 25 per page returning 23 cases on page 5", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { maxPerPage: 25, pageNum: 5 }, user)
+    const caseMetadata = await fetchCasesAndFilter(
+      helper.postgres,
+      { maxPerPage: 25, pageNum: 5, reason: Reason.All },
+      user
+    )
 
     expect(caseMetadata.cases).toHaveLength(23)
     expect(caseMetadata.maxPerPage).toBe(25)
@@ -53,7 +62,11 @@ describe("fetchCasesAndFilter pagination e2e", () => {
   })
 
   it("will handle 200 per page", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { maxPerPage: 200, pageNum: 1 }, user)
+    const caseMetadata = await fetchCasesAndFilter(
+      helper.postgres,
+      { maxPerPage: 200, pageNum: 1, reason: Reason.All },
+      user
+    )
 
     expect(caseMetadata.cases).toHaveLength(123)
     expect(caseMetadata.maxPerPage).toBe(200)

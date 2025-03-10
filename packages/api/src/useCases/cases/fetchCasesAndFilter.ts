@@ -7,10 +7,15 @@ import type { CaseIndexQuerystring, Filters, Pagination, SortOrder } from "../..
 
 import { convertCaseToCaseIndexDto } from "../dto/convertCaseToDto"
 
-const assignNotesAndTriggers = async (dataStore: DataStoreGateway, cases: CaseDataForIndexDto[]) => {
+const assignNotesAndTriggers = async (
+  dataStore: DataStoreGateway,
+  cases: CaseDataForIndexDto[],
+  filters: Filters,
+  user: User
+) => {
   const errorIds = cases.map((caseData) => caseData.error_id)
   const notes = await dataStore.fetchNotes(errorIds)
-  const triggers = await dataStore.fetchTriggers(errorIds)
+  const triggers = await dataStore.fetchTriggers(errorIds, filters, user)
 
   cases.forEach((caseData) => {
     const matchedNotes = notes.filter((note) => note.error_id === caseData.error_id)
@@ -41,9 +46,16 @@ export const fetchCasesAndFilter = async (
 ): Promise<CaseIndexMetadata> => {
   const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }
   const sortOrder: SortOrder = { order: query.order, orderBy: query.orderBy }
-  const filters: Filters = { courtName: query.courtName, defendantName: query.defendantName }
+  const filters: Filters = {
+    caseState: query.caseState,
+    courtName: query.courtName,
+    defendantName: query.defendantName,
+    reason: query.reason,
+    reasonCodes: query.reasonCodes,
+    resolvedByUsername: query.resolvedByUsername
+  }
 
-  const cases = await dataStore.fetchCases(pagination, sortOrder, filters)
+  const cases = await dataStore.fetchCases(user, pagination, sortOrder, filters)
 
   if (cases.length === 0) {
     return {
@@ -54,7 +66,7 @@ export const fetchCasesAndFilter = async (
     } satisfies CaseIndexMetadata
   }
 
-  await assignNotesAndTriggers(dataStore, cases)
+  await assignNotesAndTriggers(dataStore, cases, filters, user)
 
   const fullCount = Number(cases[0].full_count)
   const casesDto = cases.map((caseData) => convertCaseToCaseIndexDto(caseData, user))

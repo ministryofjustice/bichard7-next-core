@@ -1,3 +1,4 @@
+import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
@@ -5,19 +6,20 @@ import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
 import { filterByCourtName } from "./courtName"
 import { filterByDefendantName } from "./defendantName"
+import { filterByReasonAndResolutionStatus } from "./filterByReasonAndResolutionStatus"
+import { filterByReasonCodes } from "./reasonCodes"
+import { filterByResolvedByUsername } from "./resolvedByUsername"
 
-export const generateFilters = (
-  sql: postgres.Sql,
-  resolutionStatus: number,
-  filters: Filters
-): postgres.PendingQuery<Row[]> => {
+export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters): postgres.PendingQuery<Row[]> => {
+  const queries = [
+    filterByDefendantName(sql, filters.defendantName),
+    filterByCourtName(sql, filters.courtName),
+    filterByReasonCodes(sql, filters),
+    filterByResolvedByUsername(sql, filters),
+    filterByReasonAndResolutionStatus(sql, user, filters)
+  ]
+
   return sql`
-    -- This makes it fast
-    AND (el.error_status = ${resolutionStatus} OR el.trigger_status = ${resolutionStatus})
-    AND (el.trigger_status = ${resolutionStatus} OR el.error_status = ${resolutionStatus})
-    -- End of fast
-    AND el.resolution_ts IS NULL
-    ${filterByDefendantName(sql, filters.defendantName)}
-    ${filterByCourtName(sql, filters.courtName)}
+    ${queries.map((q) => sql`${q}`)}
   `
 }

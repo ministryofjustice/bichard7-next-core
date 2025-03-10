@@ -4,10 +4,16 @@ export enum ResolutionStatus {
   Unresolved = "Unresolved"
 }
 
+export enum ResolutionStatusNumber {
+  Resolved = 2,
+  Submitted = 3,
+  Unresolved = 1
+}
+
 export const resolutionStatusByCode: Record<number, ResolutionStatus> = {
-  1: ResolutionStatus.Unresolved,
-  2: ResolutionStatus.Resolved,
-  3: ResolutionStatus.Submitted
+  [ResolutionStatusNumber.Resolved]: ResolutionStatus.Resolved,
+  [ResolutionStatusNumber.Submitted]: ResolutionStatus.Submitted,
+  [ResolutionStatusNumber.Unresolved]: ResolutionStatus.Unresolved
 }
 
 export const resolutionStatusFromDb = (status: null | number): null | ResolutionStatus =>

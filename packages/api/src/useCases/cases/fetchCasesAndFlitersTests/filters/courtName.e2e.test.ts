@@ -1,11 +1,12 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { Pagination } from "../../../../types/CaseIndexQuerystring"
+import type { CaseIndexQuerystring } from "../../../../types/CaseIndexQuerystring"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../tests/helpers/userHelper"
+import { Reason } from "../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by court name e2e", () => {
@@ -13,7 +14,7 @@ describe("fetchCasesAndFilter filtering by court name e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: Pagination = { maxPerPage: 25, pageNum: 1 }
+  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
   const courtNameToInclude = "Magistrates' Courts London Croydon"
   const courtNameToIncludeWithPartialMatch = "Magistrates' Courts London Something Else"
   const courtNameToNotInclude = "Court Name not to include"
@@ -56,7 +57,7 @@ describe("fetchCasesAndFilter filtering by court name e2e", () => {
     expect(caseMetadata.cases[0].courtName).toStrictEqual(courtNameToInclude)
   })
 
-  it("will match cases when the court name with wildcard", async () => {
+  it("will match cases when the court name with partial match", async () => {
     const caseMetadata = await fetchCasesAndFilter(
       helper.postgres,
       { courtName: "courts london", ...defaultQuery },
