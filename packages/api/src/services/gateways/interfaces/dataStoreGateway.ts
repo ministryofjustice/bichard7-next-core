@@ -18,6 +18,7 @@ interface DataStoreGateway {
   lockCase: (callbackSql: postgres.Sql, lockReason: LockReason, caseId: number, username: string) => Promise<boolean>
   selectCaseMessageId: (caseId: number) => Promise<CaseMessageId>
   transaction: (callback: (callbackSql: postgres.Sql) => unknown) => Promise<unknown>
+  visibleCourts: string[]
 }
 
 export default DataStoreGateway

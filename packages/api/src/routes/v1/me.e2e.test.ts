@@ -44,6 +44,7 @@ describe("/v1/me e2e", () => {
       hasAccessTo: { "0": true, "1": true, "2": true, "3": false, "4": false, "5": false, "6": false, "7": true },
       surname: user.surname,
       username: user.username,
+      visibleCourts: "AB",
       visibleForces: ["001"]
     }
 
