@@ -28,7 +28,7 @@ describe("fetchCasesAndFilter filtering by visible court codes from User", () =>
     const users = await createUsers(helper.postgres, 1, { 1: { visible_courts: "BA,BAUD", visible_forces: "" } })
     user = users[0]
 
-    await createCases(helper.postgres, 3, {
+    await createCases(helper.postgres, 4, {
       0: { court_code: "BA", org_for_police_filter: null },
       1: { court_code: "BAUD", org_for_police_filter: null },
       2: { court_code: "BAHP", org_for_police_filter: null },
