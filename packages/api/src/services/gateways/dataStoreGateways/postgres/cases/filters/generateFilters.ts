@@ -6,6 +6,7 @@ import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
 import { filterByCourtName } from "./courtName"
 import { filterByDefendantName } from "./defendantName"
+import { filterByPtiurn } from "./filterByPtiurn"
 import { filterByReasonAndResolutionStatus } from "./filterByReasonAndResolutionStatus"
 import { filterByReasonCodes } from "./reasonCodes"
 import { filterByResolvedByUsername } from "./resolvedByUsername"
@@ -14,6 +15,7 @@ export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters)
   const queries = [
     filterByDefendantName(sql, filters.defendantName),
     filterByCourtName(sql, filters.courtName),
+    filterByPtiurn(sql, filters.ptiurn),
     filterByReasonCodes(sql, filters),
     filterByResolvedByUsername(sql, filters),
     filterByReasonAndResolutionStatus(sql, user, filters)
