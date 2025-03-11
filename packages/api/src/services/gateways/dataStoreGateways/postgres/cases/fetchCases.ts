@@ -1,8 +1,6 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
-import { isEmpty } from "lodash"
-
 import type { CaseDataForIndexDto } from "../../../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
@@ -12,21 +10,13 @@ import { ordering } from "./filters/ordering"
 
 export default async (
   sql: postgres.Sql,
-  forceIds: number[],
+  organisationUnitSql: postgres.PendingQuery<postgres.Row[]>,
   user: User,
   pagination: Pagination,
   sortOrder: SortOrder,
   filters: Filters
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
-  const visibleCourts = user.visible_courts?.split(",").filter((vc) => !isEmpty(vc))
-
-  let visibleCourtsSql = sql`FALSE`
-
-  if (visibleCourts && visibleCourts.length > 0) {
-    const regex = `(${visibleCourts.map((vc) => vc + "*").join("|")})`
-    visibleCourtsSql = sql`el.court_code ~* ${regex}`
-  }
 
   // TODO: Other filtering goes here
   const filtersSql = generateFilters(sql, user, filters)
@@ -55,7 +45,7 @@ export default async (
           LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
             ${excludedTriggersAndStatusSql(sql, filters, user)}
         WHERE
-          (${visibleCourtsSql} OR br7own.force_code (org_for_police_filter) = ANY (${forceIds}))
+          (${organisationUnitSql})
           ${filtersSql}
       ) distinctAlias
   `

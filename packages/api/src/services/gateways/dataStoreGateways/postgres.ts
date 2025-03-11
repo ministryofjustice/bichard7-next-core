@@ -17,7 +17,7 @@ import fetchTriggers from "./postgres/cases/fetchTriggers"
 import lockException from "./postgres/cases/lockException"
 import lockTrigger from "./postgres/cases/lockTrigger"
 import selectMessageId from "./postgres/cases/selectMessageId"
-import organisationUnitSql from "./postgres/organisationUnitSql"
+import { organisationUnitSql } from "./postgres/organisationUnitSql"
 import { transaction } from "./postgres/transaction"
 import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
@@ -40,7 +40,7 @@ class Postgres implements DataStoreGateway {
     sortOrder: SortOrder,
     filters: Filters
   ): Promise<CaseDataForIndexDto[]> {
-    return await fetchCases(this.postgres, this.forceIds, user, pagination, sortOrder, filters)
+    return await fetchCases(this.postgres, this.generatedOrganisationUnitSql(), user, pagination, sortOrder, filters)
   }
 
   async fetchNotes(errorIds: number[]): Promise<Note[]> {
