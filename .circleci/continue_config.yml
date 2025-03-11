@@ -258,8 +258,17 @@ jobs:
       - install_dependencies
       - build_core
       - run:
-          name: Run integration tests against core code
-          command: npm run -w packages/core test:compare
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          name: Run E2E comparison tests against Core Phase 1
+          command: npm run -w packages/core test:compare:phase1
+      - run:
+          name: Run E2E comparison tests against Core Phase 2
+          command: npm run -w packages/core test:compare:phase2
+      - run:
+          name: Run E2E comparison tests against Core Phase 3
+          command: npm run -w packages/core test:compare:phase3
 
   characterisation_test_core:
     machine:
@@ -562,7 +571,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_common:
@@ -635,7 +643,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_ui:
@@ -732,6 +739,13 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      case-details:
+        type: boolean
+        default: false
     steps:
       - unless:
           condition:
@@ -749,9 +763,17 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            - run:
+                name: Load api image
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies:
           install-cypress: true
@@ -775,7 +797,17 @@ jobs:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - run:
-          command: bash .circleci/scripts/run-infrastructure.sh ui ui
+          name: Building infrastructure
+          command: |
+            USE_API="<< parameters.api >>" \
+            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \
+            bash .circleci/scripts/run-infrastructure.sh ui ui
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - run:
           name: Run UI tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -866,13 +898,13 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
       - attach_workspace:
           at: .
       - run:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
-      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
@@ -964,7 +996,6 @@ workflows:
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cypress_e2e_tests:
@@ -972,6 +1003,14 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+      - cypress_e2e_tests:
+          name: cypress_e2e_tests_api
+          api: true
+          case-details: true
+          requires:
+            - build-ui
+            - build_api_docker_image
+
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           ms-edge: false

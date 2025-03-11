@@ -51,7 +51,7 @@ const getCorrelationId = (comparison: NewComparison | OldPhase1Comparison): stri
 const comparePhase2 = (comparison: Phase2Comparison, debug = false): ComparisonResultDetail => {
   const { incomingMessage, outgoingMessage, triggers, auditLogEvents } = comparison
   const correlationId = getCorrelationId(comparison)
-  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
   let serialisedOutgoingMessage: string
 
   try {

@@ -5,6 +5,8 @@ echo $PDW
 echo "Skipping images: $1"
 echo "Running: $2"
 echo ""
+echo "Using B7 API: $USE_API"
+echo ""
 
 success=false
 max_attempts=3

@@ -125,7 +125,7 @@ const preProcessDisposalQualifiers = (
       secondaryDurationQualifier
   }
 
-  return disposalQualifier === "" ? disposalQualifier : disposalQualifier.trim().padEnd(2, " ")
+  return disposalQualifier
 }
 
 export default createPncDisposal

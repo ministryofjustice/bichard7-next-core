@@ -16,10 +16,11 @@ export const TriggerSchema = z.object({
 export const TriggerDtoSchema = z.object({
   createAt: dateLikeToDate,
   resolvedAt: dateLikeToDate.optional(),
+  shortTriggerCode: z.string().nullable(),
   status: z.string(),
   triggerCode: z.string(),
   triggerId: z.number(),
-  triggerItemIdentity: z.string().optional()
+  triggerItemIdentity: z.number().optional()
 })
 
 export type Trigger = z.infer<typeof TriggerSchema>

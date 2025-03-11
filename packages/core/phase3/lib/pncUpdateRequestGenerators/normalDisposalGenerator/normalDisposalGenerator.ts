@@ -80,7 +80,7 @@ const normalDisposalGenerator: PncUpdateRequestGenerator<PncOperation.NORMAL_DIS
         pncUpdateDataset,
         operation.data?.courtCaseReference
       ),
-      pendingCourtDate: courtDate ? formatDateSpecifiedInResult(courtDate, true) : null,
+      pendingCourtDate: crtPsaCourtCode ? (courtDate ? formatDateSpecifiedInResult(courtDate, true) : "") : null,
       pendingCourtHouseName: crtPsaCourtCode ? pendingCourtHouseName : null,
       pendingPsaCourtCode: crtPsaCourtCode ? preProcessCourtCode(crtPsaCourtCode) : null,
       preTrialIssuesUniqueReferenceNumber: preProcessPreTrialIssuesUniqueReferenceNumber(

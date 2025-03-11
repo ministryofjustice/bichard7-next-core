@@ -253,6 +253,3 @@ describe("View notes", () => {
     cy.get('tbody tr:nth-child(4) td:nth-child(2) time[aria-label="time"]').should("contain", "18/11/2024")
   })
 })
-
-export {}
-
