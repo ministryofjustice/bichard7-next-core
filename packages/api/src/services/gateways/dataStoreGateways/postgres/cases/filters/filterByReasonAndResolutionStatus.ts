@@ -21,7 +21,13 @@ import {
   shouldFilterForTriggers
 } from "./checkPermissions"
 
-const filterIfUnresolved = (sql: postgres.Sql, user: User, filters: Filters, resolutionStatus: number) => {
+const filterIfUnresolved = (
+  sql: postgres.Sql,
+  user: User,
+  filters: Filters,
+  resolutionStatus: number,
+  reasonCodes: string[]
+) => {
   const query = []
 
   if (shouldFilterForTriggers(user, filters.reason)) {
@@ -29,9 +35,9 @@ const filterIfUnresolved = (sql: postgres.Sql, user: User, filters: Filters, res
   } else if (shouldFilterForExceptions(user, filters.reason)) {
     query.push(sql`AND el.error_status = ${resolutionStatus}`)
   } else if (canSeeTriggersAndException(user, filters.reason)) {
-    if (filters.reasonCodes && reasonCodesAreExceptionsOnly(filters.reasonCodes)) {
+    if (reasonCodesAreExceptionsOnly(reasonCodes)) {
       query.push(sql`AND el.error_status = ${resolutionStatus}`)
-    } else if (filters.reasonCodes && reasonCodesAreTriggersOnly(filters.reasonCodes)) {
+    } else if (reasonCodesAreTriggersOnly(reasonCodes)) {
       query.push(sql`AND el.trigger_status = ${resolutionStatus}`)
     } else {
       query.push(sql`
@@ -48,7 +54,13 @@ const filterIfUnresolved = (sql: postgres.Sql, user: User, filters: Filters, res
   return query.map((q) => sql`${q}`)
 }
 
-const filterIfResolved = (sql: postgres.Sql, user: User, filters: Filters, resolutionStatus: number) => {
+const filterIfResolved = (
+  sql: postgres.Sql,
+  user: User,
+  filters: Filters,
+  resolutionStatus: number,
+  reasonCodes: string[]
+) => {
   const query = []
 
   if (shouldFilterForTriggers(user, filters.reason)) {
@@ -56,9 +68,9 @@ const filterIfResolved = (sql: postgres.Sql, user: User, filters: Filters, resol
   } else if (shouldFilterForExceptions(user, filters.reason)) {
     query.push(sql`AND el.error_status = ${resolutionStatus}`)
   } else if (canSeeTriggersAndException(user, filters.reason)) {
-    if (filters.reasonCodes && reasonCodesAreExceptionsOnly(filters.reasonCodes)) {
+    if (reasonCodesAreExceptionsOnly(reasonCodes)) {
       query.push(sql`AND el.error_status = ${resolutionStatus}`)
-    } else if (filters.reasonCodes && reasonCodesAreTriggersOnly(filters.reasonCodes)) {
+    } else if (reasonCodesAreTriggersOnly(reasonCodes)) {
       query.push(sql`AND el.trigger_resolved_ts IS NOT NULL`)
     } else {
       query.push(
@@ -109,9 +121,15 @@ export const filterByReasonAndResolutionStatus = (
     ? (resolutionStatusCodeByText(filters.caseState) ?? ResolutionStatusNumber.Unresolved)
     : ResolutionStatusNumber.Unresolved
 
-  if (resolutionStatus === ResolutionStatusNumber.Resolved) {
-    return filterIfResolved(sql, user, filters, resolutionStatus)
+  let reasonCodes: string[] = []
+
+  if (filters.reasonCodes) {
+    reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
   }
 
-  return filterIfUnresolved(sql, user, filters, resolutionStatus)
+  if (resolutionStatus === ResolutionStatusNumber.Resolved) {
+    return filterIfResolved(sql, user, filters, resolutionStatus, reasonCodes)
+  }
+
+  return filterIfUnresolved(sql, user, filters, resolutionStatus, reasonCodes)
 }

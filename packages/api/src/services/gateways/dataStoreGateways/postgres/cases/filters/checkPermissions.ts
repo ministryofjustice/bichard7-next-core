@@ -12,7 +12,7 @@ export const reasonFilterOnlyIncludesTriggers = (reason: Reason): boolean => rea
 
 export const reasonFilterOnlyIncludesExceptions = (reason: Reason): boolean => reason === Reason.Exceptions
 
-export const reasonCodesAreExceptionsOnly = (reasonCodes: string[] | undefined): boolean => {
+export const reasonCodesAreExceptionsOnly = (reasonCodes: string[]): boolean => {
   if (reasonCodes?.length === 0) {
     return false
   }
@@ -20,7 +20,7 @@ export const reasonCodesAreExceptionsOnly = (reasonCodes: string[] | undefined):
   return every(reasonCodes, (rc: string) => ExceptionCode[rc as keyof typeof ExceptionCode])
 }
 
-export const reasonCodesAreTriggersOnly = (reasonCodes: string[] | undefined): boolean => {
+export const reasonCodesAreTriggersOnly = (reasonCodes: string[]): boolean => {
   if (reasonCodes?.length === 0) {
     return false
   }
