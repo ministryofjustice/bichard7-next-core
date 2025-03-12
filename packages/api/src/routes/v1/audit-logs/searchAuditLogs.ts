@@ -1,6 +1,7 @@
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { STATUS_CODES } from "http"
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
@@ -8,7 +9,6 @@ import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { AuditLogQueryParameters } from "../../../types/AuditLogQueryParameters"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
@@ -42,11 +42,7 @@ const handler = async ({ auditLogGateway, logger, queryParameters, reply }: Hand
       if (!isError(result)) {
         reply.code(OK).send(result)
       } else if (result instanceof NotFoundError) {
-        reply.code(NOT_FOUND).send({
-          code: STATUS_CODES[NOT_FOUND],
-          message: result.message,
-          statusCode: NOT_FOUND
-        })
+        reply.code(NOT_FOUND).send({ code: STATUS_CODES[NOT_FOUND], message: result.message, statusCode: NOT_FOUND })
       } else {
         reply.code(INTERNAL_SERVER_ERROR).send(result)
       }
@@ -58,12 +54,7 @@ const handler = async ({ auditLogGateway, logger, queryParameters, reply }: Hand
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.AuditLogs, { schema }, async (req, reply) => {
-    await handler({
-      auditLogGateway: req.auditLogGateway,
-      logger: req.log,
-      queryParameters: req.query,
-      reply
-    })
+    await handler({ auditLogGateway: req.auditLogGateway, logger: req.log, queryParameters: req.query, reply })
   })
 }
 

@@ -1,20 +1,15 @@
 import type { FastifyInstance } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
 
 import build from "../../app"
-import { V1 } from "../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import AuditLogDynamoGateway from "../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
 
-const defaults = {
-  headers: {
-    Authorization: "Bearer "
-  },
-  url: V1.Me
-}
+const defaults = { headers: { Authorization: "Bearer " }, url: V1.Me }
 
 describe("authenticate", () => {
   const fakeDataStore = new FakeDataStore()
@@ -36,10 +31,7 @@ describe("authenticate", () => {
   })
 
   it("will return with no headers 401 - Unauthorized", async () => {
-    const response = await app.inject({
-      ...defaults,
-      headers: {}
-    })
+    const response = await app.inject({ ...defaults, headers: {} })
 
     expect(response.statusCode).toBe(UNAUTHORIZED)
   })
@@ -47,10 +39,7 @@ describe("authenticate", () => {
   it("returns 401 if jwt doesn't start with Bearer", async () => {
     const { statusCode } = await app.inject({
       ...defaults,
-      headers: {
-        ...defaults.headers,
-        Authorization: "Not Bearer "
-      }
+      headers: { ...defaults.headers, Authorization: "Not Bearer " }
     })
 
     expect(statusCode).toBe(UNAUTHORIZED)
@@ -61,19 +50,14 @@ describe("authenticate", () => {
 
     const { statusCode } = await app.inject({
       ...defaults,
-      headers: {
-        ...defaults.headers,
-        Authorization: `Bearer ${invalidJwt}`
-      }
+      headers: { ...defaults.headers, Authorization: `Bearer ${invalidJwt}` }
     })
 
     expect(statusCode).toBe(UNAUTHORIZED)
   })
 
   it("returns 401 if the verification result is false", async () => {
-    const { statusCode } = await app.inject({
-      ...defaults
-    })
+    const { statusCode } = await app.inject({ ...defaults })
 
     expect(statusCode).toBe(UNAUTHORIZED)
   })
@@ -86,10 +70,7 @@ describe("authenticate", () => {
 
     const response = await app.inject({
       ...defaults,
-      headers: {
-        ...defaults.headers,
-        authorization: `Bearer ${encodedJwt}`
-      }
+      headers: { ...defaults.headers, authorization: `Bearer ${encodedJwt}` }
     })
 
     expect(response.statusCode).toBe(UNAUTHORIZED)
@@ -102,10 +83,7 @@ describe("authenticate", () => {
 
     const { statusCode } = await app.inject({
       ...defaults,
-      headers: {
-        ...defaults.headers,
-        authorization: `Bearer ${encodedJwt}`
-      }
+      headers: { ...defaults.headers, authorization: `Bearer ${encodedJwt}` }
     })
 
     expect(statusCode).toBe(OK)
@@ -120,10 +98,7 @@ describe("authenticate", () => {
 
     const { statusCode } = await app.inject({
       ...defaults,
-      headers: {
-        ...defaults.headers,
-        authorization: `Bearer ${encodedJwt}`
-      }
+      headers: { ...defaults.headers, authorization: `Bearer ${encodedJwt}` }
     })
 
     expect(statusCode).toBe(BAD_GATEWAY)

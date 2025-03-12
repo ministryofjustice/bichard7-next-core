@@ -49,7 +49,7 @@ describe("Incoming message handler", () => {
 
     // expect audit log and audit log event
     const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const messages = await apiClient.getMessages({
+    const messages = await apiClient.getAuditLogs({
       externalCorrelationId
     })
     expect(messages).toHaveLength(1)
@@ -112,10 +112,10 @@ describe("Incoming message handler", () => {
 
     // expect audit log and audit log event
     const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const originalMessages = await apiClient.getMessages({
+    const originalMessages = await apiClient.getAuditLogs({
       externalCorrelationId
     })
-    const duplicateMessages = await apiClient.getMessages({
+    const duplicateMessages = await apiClient.getAuditLogs({
       externalCorrelationId: duplicateCorrelationId
     })
     expect(originalMessages).toHaveLength(1)
@@ -205,7 +205,7 @@ describe("Incoming message handler", () => {
 
     // expect audit log and audit log event
     const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const messages = await apiClient.getMessages({
+    const messages = await apiClient.getAuditLogs({
       externalCorrelationId
     })
     expect(messages).toHaveLength(1)

@@ -26,13 +26,6 @@ const addNote = async (
     }
   }
 
-  if (!courtCase.isLockedByCurrentUser(username)) {
-    return {
-      isSuccessful: false,
-      ValidationException: "Case is not locked by the user"
-    }
-  }
-
   const wholeNote = noteText.match(notesRegex)
 
   const notes =

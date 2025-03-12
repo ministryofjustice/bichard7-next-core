@@ -559,7 +559,7 @@ const mapAhoToXml = (aho: AnnotatedHearingOutcome, validate = true): AhoXml => {
   }
 }
 
-const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
+const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset, includeExceptions: boolean = true): AhoXml => {
   const hearingOutcome = {
     "br7:HearingOutcome": {
       "br7:Hearing": mapAhoHearingToXml(pud.AnnotatedHearingOutcome.HearingOutcome.Hearing),
@@ -574,20 +574,32 @@ const mapPncUpdateDatasetToXml = (pud: PncUpdateDataset): AhoXml => {
       ...hearingOutcome,
       CXE01: pud.PncQuery ? mapAhoCXE01ToXml(pud.PncQuery) : undefined,
       "br7:PNCQueryDate": pud.PncQueryDate ? optionalFormatText(pud.PncQueryDate) : undefined,
-      "br7:PNCErrorMessage": mapPncExceptionsToXml(pud.Exceptions),
+      ...(includeExceptions ? { "br7:PNCErrorMessage": mapPncExceptionsToXml(pud.Exceptions) } : {}),
       ...xmlnsTags
     }
   }
 }
 
-const convertPncUpdateDatasetToXml = (pud: PncUpdateDataset, addFalseHasErrorAttributes: boolean = true): AhoXml => {
+const convertPncUpdateDatasetToXml = (
+  pud: PncUpdateDataset,
+  addFalseHasErrorAttributes: boolean = true,
+  includeExceptions: boolean = true
+): AhoXml => {
   const pudClone: PncUpdateDataset = structuredClone(pud)
   addNullElementsForExceptions(pudClone)
 
-  const xmlPud = mapPncUpdateDatasetToXml(pudClone)
+  const xmlPud = mapPncUpdateDatasetToXml(pudClone, includeExceptions)
 
-  if (pudClone.Exceptions.length > 0 || addFalseHasErrorAttributes) {
+  if ((includeExceptions && pudClone.Exceptions.length > 0) || addFalseHasErrorAttributes) {
     addExceptionsToPncUpdateDatasetXml(xmlPud, pudClone.Exceptions, addFalseHasErrorAttributes)
+  }
+
+  if (!includeExceptions && xmlPud["br7:AnnotatedHearingOutcome"]?.["br7:HasError"]?.["#text"]) {
+    if (xmlPud["?xml"]) {
+      xmlPud["?xml"]["@_standalone"] = undefined
+    }
+
+    xmlPud["br7:AnnotatedHearingOutcome"]["br7:HasError"]["#text"] = String(pudClone.Exceptions.length > 0)
   }
 
   return xmlPud

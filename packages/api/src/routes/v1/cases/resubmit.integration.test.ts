@@ -2,11 +2,11 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, InjectOptions } from "fastify"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
@@ -15,9 +15,7 @@ import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
     body: { phase: 1 },
-    headers: {
-      authorization: "Bearer {{ token }}".replace("{{ token }}", jwt)
-    },
+    headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "POST",
     url: V1.CaseResubmit.replace(":caseId", "0")
   }

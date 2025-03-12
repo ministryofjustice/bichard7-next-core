@@ -2,41 +2,29 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 
 import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
 
-import { V1 } from "../../../endpoints/versionedEndpoints"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
 import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
 import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
 
-const bodySchema = z.object({
-  phase: z.number().gt(0).lte(3)
-})
+const bodySchema = z.object({ phase: z.number().gt(0).lte(3) })
 
 export type ResubmitBody = z.infer<typeof bodySchema>
 
-type HandlerProps = {
-  body: ResubmitBody
-  caseId: number
-  dataStore: DataStoreGateway
-  reply: FastifyReply
-  user: User
-}
+type HandlerProps = { body: ResubmitBody; caseId: number; dataStore: DataStoreGateway; reply: FastifyReply; user: User }
 
 const schema = {
   ...auth,
   body: bodySchema,
-  params: z.object({
-    caseId: z.string().openapi({
-      description: "Case ID"
-    })
-  }),
+  params: z.object({ caseId: z.string().openapi({ description: "Case ID" }) }),
   response: {
     [OK]: z
       .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase" }) })

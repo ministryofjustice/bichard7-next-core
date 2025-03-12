@@ -15,11 +15,10 @@ import { Notes } from "./Tabs/Panels/Notes/Notes"
 import { Offences } from "./Tabs/Panels/Offences/Offences"
 
 interface Props {
-  isLockedByCurrentUser: boolean
   canResolveAndSubmit: boolean
 }
 
-const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAndSubmit }) => {
+const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
   const { courtCase } = useCourtCase()
   const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
   const [selectedOffenceSequenceNumber, setSelectedOffenceSequenceNumber] = useState<number | undefined>(undefined)
@@ -80,7 +79,7 @@ const CourtCaseDetails: React.FC<Props> = ({ isLockedByCurrentUser, canResolveAn
             selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
           />
 
-          <Notes visible={activeTab === "Notes"} isLockedByCurrentUser={isLockedByCurrentUser} />
+          <Notes visible={activeTab === "Notes"} />
         </PanelsGridCol>
 
         <SideBar className="govuk-grid-column-one-third">

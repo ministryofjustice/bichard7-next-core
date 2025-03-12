@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserDtoSchema } from "@moj-bichard7/common/types/User"
 import { OK } from "http-status"
 
-import { V1 } from "../../endpoints/versionedEndpoints"
 import auth from "../../server/schemas/auth"
 import { unauthorizedError } from "../../server/schemas/errorReasons"
 import useZod from "../../server/useZod"
@@ -13,9 +13,7 @@ import { convertUserToDto } from "../../useCases/dto/convertUserToDto"
 const schema = {
   ...auth,
   response: {
-    [OK]: UserDtoSchema.openapi({
-      description: "Returns details of authorised user"
-    }),
+    [OK]: UserDtoSchema.openapi({ description: "Returns details of authorised user" }),
     ...unauthorizedError
   },
   tags: ["Demo V1"]

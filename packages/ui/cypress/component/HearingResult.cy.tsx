@@ -80,7 +80,6 @@ describe("Hearing Result", () => {
             resultIndex={dummyIndex}
             selectedOffenceSequenceNumber={dummyIndex}
             exceptions={[]}
-            stopLeavingFn={() => {}}
           />
         </CurrentUserContext.Provider>
       </CourtCaseContext.Provider>
@@ -115,7 +114,6 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -135,7 +133,6 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -165,7 +162,6 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -187,7 +183,6 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -207,7 +202,6 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -227,7 +221,6 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "NextHearingDate"], code: ExceptionCode.HO100323 }]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -252,7 +245,6 @@ describe("Hearing Result", () => {
                   code: ExceptionCode.HO100200
                 }
               ]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -272,7 +264,6 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "CJSresultCode"], code: ExceptionCode.HO100307 }]}
-              stopLeavingFn={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>

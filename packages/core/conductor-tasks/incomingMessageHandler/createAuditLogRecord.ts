@@ -12,8 +12,8 @@ import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { z } from "zod"
 
-const { apiKey, apiUrl } = createApiConfig()
-const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000)
+const { apiKey, apiUrl, basePath } = createApiConfig()
+const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 
 const inputDataSchema = z.object({
   auditLogRecord: auditLogApiRecordInputSchema

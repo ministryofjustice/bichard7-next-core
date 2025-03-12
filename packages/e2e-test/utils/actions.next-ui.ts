@@ -303,7 +303,7 @@ export const exceptionResolutionStatus = async function (this: Bichard, resoluti
   const resolution = resolutionStatus.split(" ").length > 1 ? resolutionStatus.split(" ")[1] : resolutionStatus
 
   const headerResolutionStatus = await this.browser.page.$$(
-    `xpath/.//div[@id = "header-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
   const exceptionsPanelResolutionStatus = await this.browser.page.$$(
     `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
@@ -317,8 +317,9 @@ export const exceptionResolutionStatusOnCaseDetails = async function (this: Bich
   const { page } = this.browser
 
   const headerResolutionStatus = await page.$$(
-    `xpath/.//div[@id = "header-container"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
+
   expect(headerResolutionStatus.length).toEqual(1)
 
   await page.click("#exceptions-tab")
@@ -585,7 +586,7 @@ export const submitRecord = async function (this: Bichard) {
   await page.click("#exceptions-tab")
   await Promise.all([page.click("#submit"), page.waitForNavigation()])
   await Promise.all([page.click("#confirm-submit"), page.waitForNavigation()])
-  await Promise.all([page.click("#return-to-case-list"), page.waitForNavigation()])
+  await Promise.all([page.click("#leave-and-unlock, #return-to-case-list"), page.waitForNavigation()])
 }
 
 export const submitRecordAndStayOnPage = async function (this: Bichard) {

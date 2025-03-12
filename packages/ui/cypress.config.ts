@@ -1,10 +1,10 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { defineConfig } from "cypress"
 import pgPromise from "pg-promise"
-import SurveyFeedback from "services/entities/SurveyFeedback"
-import { ResolutionStatus } from "types/ResolutionStatus"
 import CourtCase from "./src/services/entities/CourtCase"
+import SurveyFeedback from "./src/services/entities/SurveyFeedback"
 import User from "./src/services/entities/User"
+import { ResolutionStatus } from "./src/types/ResolutionStatus"
 import generateAhoWithPncException, {
   GenerateAhoWithPncExceptionParams
 } from "./test/helpers/generateAhoWithPncException"
@@ -15,7 +15,6 @@ import {
   getAhoWithMultipleOffences,
   insertCourtCasesWithFields,
   insertDummyCourtCasesWithNotes,
-  insertDummyCourtCasesWithNotesAndLock,
   insertDummyCourtCasesWithTriggers,
   insertMultipleDummyCourtCases
 } from "./test/utils/insertCourtCases"
@@ -95,7 +94,7 @@ export default defineConfig({
         async getAllFeedbacksFromDatabase() {
           return getAllFeedbacksFromDatabase()
         },
-        async insertFeedback(feedback: Partial<SurveyFeedback> & { username?: string }) {
+        async insertFeedback(feedback: Partial<SurveyFeedback> & { username: string }) {
           return insertFeedback(feedback)
         },
         async clearAllFeedbacksFromDatabase() {
@@ -103,17 +102,10 @@ export default defineConfig({
         },
 
         insertCourtCasesWithNotes(params: {
-          caseNotes: { user: string; text: string; createdAt?: Date }[][] 
-          force: string
-        }) {
-          return insertDummyCourtCasesWithNotes(params.caseNotes, params.force)
-        },
-
-        insertCourtCasesWithNotesAndLock(params: {
           caseNotes: { user: string; text: string; createdAt?: Date }[][]
           force: string
         }) {
-          return insertDummyCourtCasesWithNotesAndLock(params.caseNotes, params.force)
+          return insertDummyCourtCasesWithNotes(params.caseNotes, params.force)
         },
 
         insertCourtCaseWithPncException(params: {
@@ -178,5 +170,5 @@ export default defineConfig({
     }
   },
 
-  retries: process.env.CI ? 2 : 1
+  retries: process.env.CI ? 2 : 0
 })

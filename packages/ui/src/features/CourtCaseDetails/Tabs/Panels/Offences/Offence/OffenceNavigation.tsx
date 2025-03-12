@@ -1,4 +1,5 @@
-import { SecondaryButton } from "components/Buttons"
+import { SecondaryButton } from "components/Buttons/SecondaryButton"
+import { useEffect } from "react"
 import { BackToAllOffencesLink } from "./BackToAllOffencesLink"
 import { NextButton, PreviousButton } from "./OffenceNavigation.styles"
 
@@ -17,6 +18,10 @@ export const OffenceNavigation = ({
   onNextClick,
   offencesCount
 }: OffenceNavigationProps) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [selectedOffenceSequenceNumber])
+
   return (
     <div className="govuk-grid-row">
       <div className="govuk-grid-column-one-half">

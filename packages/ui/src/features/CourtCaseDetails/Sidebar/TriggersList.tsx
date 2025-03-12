@@ -1,5 +1,5 @@
 import ActionLink from "components/ActionLink"
-import { Button } from "components/Buttons"
+import { Button } from "components/Buttons/Button"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
@@ -8,8 +8,8 @@ import { sortBy } from "lodash"
 import { useRouter } from "next/router"
 import { encode } from "querystring"
 import { ChangeEvent, SyntheticEvent, useState } from "react"
+import { triggersAreLockedByAnotherUser } from "services/case"
 import type NavigationHandler from "types/NavigationHandler"
-import { triggersAreLockedByAnotherUser } from "utils/caseLocks"
 import Form from "../../../components/Form"
 import LockStatusTag from "../LockStatusTag"
 import Trigger from "./Trigger"
@@ -29,7 +29,7 @@ const TriggersList = ({ onNavigate }: Props) => {
   const triggers = sortBy(courtCase.triggers, "triggerItemIdentity")
   const hasTriggers = triggers.length > 0
   const hasUnresolvedTriggers = triggers.filter((t) => t.status === "Unresolved").length > 0
-  const triggersLockedByAnotherUser = triggersAreLockedByAnotherUser(courtCase, currentUser.username)
+  const triggersLockedByAnotherUser = triggersAreLockedByAnotherUser(currentUser.username, courtCase)
   const { csrfToken } = useCsrfToken()
 
   const setTriggerSelection = ({ target: checkbox }: ChangeEvent<HTMLInputElement>) => {

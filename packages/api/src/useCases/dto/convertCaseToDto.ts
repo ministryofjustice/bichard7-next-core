@@ -4,9 +4,9 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/Annotated
 import type { FastifyBaseLogger } from "fastify"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
-import { isEmpty } from "lodash"
+import { isEmpty, sortBy } from "lodash"
 
-import type { CaseDataForDto } from "../../types/Case"
+import type { CaseDataForDto, CaseDataForIndexDto } from "../../types/Case"
 
 import parseHearingOutcome from "../../services/parseHearingOutcome"
 import { convertNoteToDto } from "./convertNoteToDto"
@@ -18,21 +18,24 @@ export const convertCaseToCaseDto = (
   user: User,
   logger: FastifyBaseLogger
 ): CaseDto => {
-  const annotatedHearingOutcome = parseHearingOutcome(caseDataForDto.annotated_msg, logger)
-  const updatedHearingOutcome = caseDataForDto.updated_msg && parseHearingOutcome(caseDataForDto.updated_msg, logger)
+  const aho = parseHearingOutcome(caseDataForDto.annotated_msg, logger) as AnnotatedHearingOutcome
+  const updatedAhoResult = caseDataForDto.updated_msg && parseHearingOutcome(caseDataForDto.updated_msg, logger)
 
   return {
     ...convertCaseToCaseIndexDto(caseDataForDto, user),
-    aho: annotatedHearingOutcome as AnnotatedHearingOutcome,
+    aho,
     courtCode: caseDataForDto.court_code,
     courtReference: caseDataForDto.court_reference,
     orgForPoliceFilter: caseDataForDto.org_for_police_filter,
     phase: caseDataForDto.phase,
-    updatedHearingOutcome: (updatedHearingOutcome as AnnotatedHearingOutcome) ?? caseDataForDto.updated_msg
+    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : (updatedAhoResult as AnnotatedHearingOutcome)
   } satisfies CaseDto
 }
 
-export const convertCaseToCaseIndexDto = (caseDataForDto: CaseDataForDto, user: User): CaseIndexDto => {
+export const convertCaseToCaseIndexDto = (
+  caseDataForDto: CaseDataForDto | CaseDataForIndexDto,
+  user: User
+): CaseIndexDto => {
   return {
     asn: caseDataForDto.asn,
     canUserEditExceptions:
@@ -50,7 +53,10 @@ export const convertCaseToCaseIndexDto = (caseDataForDto: CaseDataForDto, user: 
     errorReport: caseDataForDto.error_report,
     errorStatus: resolutionStatusFromDb(caseDataForDto.error_status),
     isUrgent: caseDataForDto.is_urgent,
-    notes: caseDataForDto.notes ? caseDataForDto.notes.map(convertNoteToDto) : [],
+    noteCount: (caseDataForDto as CaseDataForIndexDto).note_count
+      ? Number((caseDataForDto as CaseDataForIndexDto).note_count)
+      : undefined,
+    notes: caseDataForDto.notes ? sortBy(caseDataForDto.notes, "create_ts").reverse().map(convertNoteToDto) : [],
     ptiurn: caseDataForDto.ptiurn,
     resolutionTimestamp: caseDataForDto.resolution_ts,
     triggerCount: caseDataForDto.trigger_count,

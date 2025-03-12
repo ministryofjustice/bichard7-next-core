@@ -1,5 +1,5 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import getShortTriggerCode from "services/entities/transformers/getShortTriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import Trigger from "services/entities/Trigger"
 import getSystemNotesForTriggers from "./getSystemNotesForTriggers"
 

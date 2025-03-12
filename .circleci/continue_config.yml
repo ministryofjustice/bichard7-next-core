@@ -162,6 +162,12 @@ commands:
       SKIP_IMAGES:
         default: ""
         type: string
+      USE_API:
+        default: false
+        type: boolean
+      USE_API_CASE_ENDPOINT:
+        default: false
+        type: boolean
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -169,7 +175,10 @@ commands:
       - run:
           name: Start bichard7 legacy
           command: |
-            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> \
+            ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            USE_API="<<parameters.USE_API>>" \
+            USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
@@ -258,8 +267,17 @@ jobs:
       - install_dependencies
       - build_core
       - run:
-          name: Run integration tests against core code
-          command: npm run -w packages/core test:compare
+          name: Spin up the PostgreSQL database
+          command: npm run postgres
+      - run:
+          name: Run E2E comparison tests against Core Phase 1
+          command: npm run -w packages/core test:compare:phase1
+      - run:
+          name: Run E2E comparison tests against Core Phase 2
+          command: npm run -w packages/core test:compare:phase2
+      - run:
+          name: Run E2E comparison tests against Core Phase 3
+          command: npm run -w packages/core test:compare:phase3
 
   characterisation_test_core:
     machine:
@@ -536,6 +554,34 @@ jobs:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
 
+  build_api_docker_image:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.e2e-test-changes >>
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: ./scripts/build-api-docker.sh
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save -o "images/api:latest" "api:latest"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
   test_common:
     machine:
       image: ubuntu-2204:current
@@ -606,7 +652,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_ui:
@@ -703,6 +748,13 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      case-details:
+        type: boolean
+        default: false
     steps:
       - unless:
           condition:
@@ -720,9 +772,17 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            - run:
+                name: Load api image
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies:
           install-cypress: true
@@ -746,7 +806,17 @@ jobs:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - run:
-          command: bash .circleci/scripts/run-infrastructure.sh ui ui
+          name: Building infrastructure
+          command: |
+            USE_API="<< parameters.api >>" \
+            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \
+            bash .circleci/scripts/run-infrastructure.sh ui ui
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - run:
           name: Run UI tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -769,6 +839,13 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      case-details:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -797,6 +874,14 @@ jobs:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            - run:
+                name: Load api
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies
       - build_e2e_tests
@@ -811,6 +896,14 @@ jobs:
           command: "npm run install-browsers"
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
+          USE_API: << parameters.api >>
+          USE_API_CASE_ENDPOINT: << parameters.case-details >>
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
@@ -837,13 +930,13 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
       - attach_workspace:
           at: .
       - run:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
-      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
@@ -928,9 +1021,13 @@ workflows:
           requires:
             - test_ui
 
+      - build_api_docker_image:
+          name: build_api_docker_image
+          requires:
+            - test_api
+
       - cypress_e2e_tests:
           name: cypress_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cypress_e2e_tests:
@@ -938,9 +1035,16 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+      - cypress_e2e_tests:
+          name: cypress_e2e_tests_api
+          api: true
+          case-details: true
+          requires:
+            - build-ui
+            - build_api_docker_image
+
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cucumber_e2e_tests:
@@ -948,6 +1052,13 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_api
+          api: true
+          case-details: true
+          requires:
+            - build-ui
+            - build_api_docker_image
       - zap_scanner:
           requires:
             - build-ui

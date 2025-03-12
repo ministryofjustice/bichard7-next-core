@@ -2,6 +2,7 @@ import styled from "styled-components"
 
 const AttentionContainer = styled.div`
   margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
   max-width: calc(100% - 8px);
   padding-right: 0;
   & > .govuk-tag {

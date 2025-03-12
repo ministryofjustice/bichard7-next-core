@@ -1,5 +1,5 @@
 import triggerDefinitions from "@moj-bichard7-developers/bichard7-next-data/dist/data/trigger-definitions.json"
-import getShortTriggerCode from "../../services/entities/transformers/getShortTriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 
 const getTriggerWithDescription = (triggerCode: string, withShortTriggerCode?: boolean): string => {
   const shortTriggerCode = getShortTriggerCode(triggerCode)
