@@ -1,3 +1,5 @@
+import type { DateRange } from "@moj-bichard7/common/types/DateRange"
+
 export type QueryOrder = "asc" | "desc"
 
 export enum Reason {
@@ -11,11 +13,6 @@ export enum LockedState {
   Locked = "Locked",
   Unlocked = "Unlocked",
   LockedToMe = "LockedToMe"
-}
-
-export type DateRange = {
-  from: Date
-  to: Date
 }
 
 export type SerializedDateRange = {
