@@ -3,8 +3,7 @@ import { Command } from "commander"
 import nunjucks from "nunjucks"
 import { pncMaintenance } from "./pncMaintenance"
 import { pncMaintenanceExtended } from "./pncMaintenanceExtended"
-import { outage } from "./outage"
-import { outageResolved } from "./outage-resolved"
+import { outageComms } from "./outageComms"
 
 nunjucks.configure("templates", { autoescape: true })
 
@@ -40,6 +39,7 @@ export function userComms(): Command {
     })
 
     let outageType = ""
+    let outageResolved = false
 
     if (templateChoice === "Outage") {
       outageType = await select({
@@ -59,6 +59,7 @@ export function userComms(): Command {
         ]
       })
     } else if (templateChoice === "Outage Resolved") {
+      outageResolved = true
       outageType = await select({
         message: "What type of outage are your sending resolution communications about?",
         choices: [
@@ -89,10 +90,10 @@ export function userComms(): Command {
         pncMaintenanceExtended()
         break
       case "Outage":
-        outage(outageType)
+        outageComms(outageType, outageResolved)
         break
       case "Outage Resolved":
-        outageResolved(outageType)
+        outageComms(outageType, outageResolved)
         break
     }
   })

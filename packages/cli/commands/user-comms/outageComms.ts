@@ -3,8 +3,8 @@ import path from "path"
 import { confirm } from "@inquirer/prompts"
 import nunjucks from "nunjucks"
 
-export const outage = async (outageType: string) => {
-  const templateFile = "outage.txt"
+export const outageComms = async (outageType: string, outageResolved: boolean) => {
+  const templateFile = outageResolved ? "outage-resolved.txt" : "outage.txt"
   const templatePath = path.join(__dirname, "templates", templateFile)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
