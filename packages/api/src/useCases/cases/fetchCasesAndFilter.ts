@@ -43,10 +43,14 @@ export const fetchCasesAndFilter = async (
   const sortOrder: SortOrder = { order: query.order, orderBy: query.orderBy }
   const filters: Filters = { courtName: query.courtName, defendantName: query.defendantName }
 
-  const cases = await dataStore.fetchCases(pagination, sortOrder, filters)
+  const [caseAges, cases] = await Promise.all([
+    dataStore.fetchCaseAges(),
+    dataStore.fetchCases(pagination, sortOrder, filters)
+  ])
 
   if (cases.length === 0) {
     return {
+      caseAges,
       cases: [],
       returnCases: 0,
       totalCases: 0,
@@ -60,6 +64,7 @@ export const fetchCasesAndFilter = async (
   const casesDto = cases.map((caseData) => convertCaseToCaseIndexDto(caseData, user))
 
   return {
+    caseAges,
     cases: casesDto,
     returnCases: cases.length,
     totalCases: fullCount,

@@ -13,6 +13,7 @@ export enum OrderBy {
 }
 
 export const CaseIndexQuerystringSchema = z.object({
+  caseAge: z.array(z.string()).or(z.string()).optional(),
   courtName: z.string().optional(),
   defendantName: z.string().optional().openapi({ example: "De*Name" }),
   maxPerPage: z.coerce.number().min(25).max(200).default(50),

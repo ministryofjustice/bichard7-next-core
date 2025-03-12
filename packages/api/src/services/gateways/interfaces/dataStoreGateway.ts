@@ -1,3 +1,4 @@
+import type { CaseAges } from "@moj-bichard7/common/types/Case"
 import type { Note } from "@moj-bichard7/common/types/Note"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
@@ -10,6 +11,7 @@ import type { LockReason } from "../../../types/LockReason"
 interface DataStoreGateway {
   canCaseBeResubmitted: (username: string, caseId: number) => Promise<boolean>
   fetchCase: (caseId: number) => Promise<CaseDataForDto>
+  fetchCaseAges(): Promise<CaseAges>
   fetchCases: (pagination: Pagination, sortOrder: SortOrder, filters: Filters) => Promise<CaseDataForIndexDto[]>
   fetchNotes: (errorIds: number[]) => Promise<Note[]>
   fetchTriggers: (errorIds: number[]) => Promise<Trigger[]>
