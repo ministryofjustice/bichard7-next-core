@@ -1,4 +1,4 @@
-Hello {{ firstName | default("first-name") }},
+Hello {{ firstName | default("{first-name}") }},
 
 We regret to inform you that the PNC planned maintenance has be unexpectedly extended. 
 We have been informed that the on going work should be resolved in {{ extendedTimeFrame }}

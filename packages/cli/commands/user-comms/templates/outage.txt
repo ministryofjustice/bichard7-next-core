@@ -1,4 +1,4 @@
-Hello {{ firstName | default("first-name") }},
+Hello {{ firstName | default("{first-name}") }},
 
 We wanted to inform you that the {{ outageType }} is currently experiencing a loss of service. We apologise for any inconvenience this may cause.
 
