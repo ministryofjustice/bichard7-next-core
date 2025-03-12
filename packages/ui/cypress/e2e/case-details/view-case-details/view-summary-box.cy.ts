@@ -42,7 +42,7 @@ describe("View Court Case Details Summary Box", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     cy.contains("ASN")
-    cy.contains("asn-value")
+    cy.contains("as/n-va/lu/e")
 
     cy.contains("Court code (LJA)")
     cy.contains("1892")
