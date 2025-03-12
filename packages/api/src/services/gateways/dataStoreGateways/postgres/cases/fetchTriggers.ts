@@ -4,6 +4,7 @@ import type postgres from "postgres"
 
 import Permission from "@moj-bichard7/common/types/Permission"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import { isEmpty } from "lodash"
 
 import type { Filters } from "../../../../../types/CaseIndexQuerystring"
 
@@ -14,7 +15,12 @@ export default async (sql: postgres.Sql, errorIds: number[], filters: Filters, u
     return []
   }
 
-  const triggerCodes = filters.reasonCodes?.filter((rc) => rc.startsWith("TRP")) ?? []
+  if (filters.reasonCodes === undefined || isEmpty(filters.reasonCodes)) {
+    return []
+  }
+
+  const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
+  const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
 
   let includeTriggersSql = sql``
 

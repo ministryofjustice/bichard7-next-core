@@ -5,14 +5,14 @@ import { isEmpty } from "lodash"
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
 export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters) => {
-  if (filters.reasonCodes === undefined || filters.reasonCodes.length === 0) {
+  if (filters.reasonCodes === undefined || isEmpty(filters.reasonCodes)) {
     return sql``
   }
 
   const queries = []
-
-  const triggerCodes = filters.reasonCodes?.filter((rc) => rc.startsWith("TRP")) ?? [""]
-  const exceptionCodes = filters.reasonCodes?.filter((rc) => rc.startsWith("HO")).map((rc) => `%${rc}%`) ?? [""]
+  const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
+  const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? [""]
+  const exceptionCodes = reasonCodes.filter((rc) => rc.startsWith("HO")).map((rc) => `%${rc}%`) ?? [""]
 
   if (!isEmpty(triggerCodes)) {
     queries.push(sql`elt.trigger_code ILIKE ANY(${triggerCodes})`)
