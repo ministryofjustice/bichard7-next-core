@@ -1,10 +1,11 @@
 import type postgres from "postgres"
+import type { Row } from "postgres"
 
 import { isEmpty } from "lodash"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
-export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters) => {
+export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters): postgres.PendingQuery<Row[]> => {
   if (filters.reasonCodes === undefined || isEmpty(filters.reasonCodes)) {
     return sql``
   }
