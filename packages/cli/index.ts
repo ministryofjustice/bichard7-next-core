@@ -10,6 +10,7 @@ import { version } from "./package.json"
 import { applyEnvironmentOptionHooks } from "./utils/globalOptionsHook"
 import { cloudwatch } from "./commands/cloudwatch"
 import { importVpn } from "./commands/importVpn"
+import { userComms } from "./commands/user-comms"
 
 process.on("unhandledRejection", (reason) => {
   console.error(reason)
@@ -39,8 +40,9 @@ const cli = new Command()
   .addCommand(messageProcessing())
   .addCommand(conductor())
   .addCommand(cloudwatch())
+  .addCommand(userComms())
 
-const skipCommands = ["wiki", "fetch-image", "dev-sgs", "cloudwatch", "import-vpn-profiles"]
+const skipCommands = ["wiki", "fetch-image", "dev-sgs", "cloudwatch", "import-vpn-profiles", "user-comms"]
 if (!skipCommands.some((c) => process.argv.includes(c))) {
   applyEnvironmentOptionHooks(cli)
 }

@@ -1,10 +1,12 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
+import type { CaseIndexQuerystring } from "../../../../types/CaseIndexQuerystring"
+
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../tests/helpers/userHelper"
-import { Order, OrderBy, type Pagination } from "../../../../types/CaseIndexQuerystring"
+import { Order, OrderBy, Reason } from "../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
@@ -12,7 +14,8 @@ describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: Pagination = { maxPerPage: 25, pageNum: 1 }
+  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+
   const PTIURNs = ["01009940223", "05003737622", "03001976220", "04007638323"]
   const ascending = [...PTIURNs].sort((one, two) => (one > two ? 1 : -1))
   const descending = [...PTIURNs].sort((one, two) => (one > two ? -1 : 1))
