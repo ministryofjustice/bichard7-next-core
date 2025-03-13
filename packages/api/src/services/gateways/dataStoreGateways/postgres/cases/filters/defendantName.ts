@@ -1,10 +1,7 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-export const filterByDefendantName = (
-  sql: postgres.Sql,
-  defendantName: string | undefined
-): postgres.PendingQuery<Row[]> => {
+export const filterByDefendantName = (sql: postgres.Sql, defendantName?: string): postgres.PendingQuery<Row[]> => {
   if (defendantName === undefined) {
     return sql``
   }
