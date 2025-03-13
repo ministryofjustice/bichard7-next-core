@@ -11,7 +11,10 @@ import { ResolutionStatusNumber } from "../../../../../useCases/dto/convertResol
 const formInputDateFormat = "yyyy-MM-dd"
 const formatFormInputDateString = (date: Date): string => (isValid(date) ? format(date, formInputDateFormat) : "")
 
-export const fetchCaseAges = async (sql: postgres.Sql, organisationUnitSql: postgres.PendingQuery<Row[]>) => {
+export const fetchCaseAges = async (
+  sql: postgres.Sql,
+  organisationUnitSql: postgres.PendingQuery<Row[]>
+): Promise<CaseAges> => {
   const queries: postgres.PendingQuery<postgres.Row[]>[] = []
   const resolutionStats = ResolutionStatusNumber.Unresolved
   const slaCaseAges = Object.values(CaseAge)
