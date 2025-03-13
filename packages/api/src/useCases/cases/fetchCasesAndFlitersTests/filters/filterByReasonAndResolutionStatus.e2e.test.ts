@@ -599,7 +599,7 @@ describe("Filter cases by resolution status", () => {
       },
       {
         description:
-          "Should see cases with unresolved triggers or unresolved exceptions when user is a supervisor and resolved filter applied",
+          "Should see cases with unresolved triggers or unresolved exceptions when user is a supervisor and unresolved filter applied",
         expectedCases: [
           "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
