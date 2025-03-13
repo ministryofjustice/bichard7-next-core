@@ -8,9 +8,10 @@ import MockDate from "mockdate"
 import { createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../tests/helpers/userHelper"
+import { Reason } from "../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../fetchCasesAndFilter"
 
-const defaultQuery = { maxPerPage: 25, pageNum: 1 }
+const defaultQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
 describe("fetchCasesAndFilter pagination e2e", () => {
   let helper: SetupAppEnd2EndHelper
