@@ -56,10 +56,14 @@ export const fetchCasesAndFilter = async (
     resolvedByUsername: query.resolvedByUsername
   }
 
-  const cases = await dataStore.fetchCases(user, pagination, sortOrder, filters)
+  const [caseAges, cases] = await Promise.all([
+    dataStore.fetchCaseAges(),
+    dataStore.fetchCases(user, pagination, sortOrder, filters)
+  ])
 
   if (cases.length === 0) {
     return {
+      caseAges,
       cases: [],
       returnCases: 0,
       totalCases: 0,
@@ -73,6 +77,7 @@ export const fetchCasesAndFilter = async (
   const casesDto = cases.map((caseData) => convertCaseToCaseIndexDto(caseData, user))
 
   return {
+    caseAges,
     cases: casesDto,
     returnCases: cases.length,
     totalCases: fullCount,

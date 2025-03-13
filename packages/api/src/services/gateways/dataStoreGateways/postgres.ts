@@ -1,3 +1,4 @@
+import type { CaseAges } from "@moj-bichard7/common/types/Case"
 import type { Note } from "@moj-bichard7/common/types/Note"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
@@ -11,6 +12,7 @@ import { LockReason } from "../../../types/LockReason"
 import postgresFactory from "../../db/postgresFactory"
 import caseCanBeResubmitted from "./postgres/cases/canCaseBeResubmitted"
 import fetchCase from "./postgres/cases/fetchCase"
+import { fetchCaseAges } from "./postgres/cases/fetchCaseAges"
 import fetchCases from "./postgres/cases/fetchCases"
 import fetchNotes from "./postgres/cases/fetchNotes"
 import fetchTriggers from "./postgres/cases/fetchTriggers"
@@ -25,13 +27,16 @@ class Postgres implements DataStoreGateway {
   forceIds: number[] = []
   visibleCourts: string[] = []
   protected readonly postgres = postgresFactory()
-
   async canCaseBeResubmitted(username: string, caseId: number): Promise<boolean> {
     return await caseCanBeResubmitted(this.postgres, username, caseId, this.forceIds)
   }
 
   async fetchCase(caseId: number): Promise<CaseDataForDto> {
     return await fetchCase(this.postgres, caseId, this.generatedOrganisationUnitSql())
+  }
+
+  async fetchCaseAges(): Promise<CaseAges> {
+    return await fetchCaseAges(this.postgres, this.generatedOrganisationUnitSql())
   }
 
   async fetchCases(

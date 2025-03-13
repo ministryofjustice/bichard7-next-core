@@ -1,3 +1,4 @@
+/* eslint-disable perfectionist/sort-objects */
 import type { DateRange } from "@moj-bichard7/common/types/DateRange"
 
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"

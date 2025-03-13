@@ -1,7 +1,4 @@
-export type DateRange = {
-  from: Date
-  to: Date
-}
+import type { DateRange } from "@moj-bichard7/common/types/DateRange"
 
 export const validateDateRange = (dateRange: {
   from: string | string[] | undefined

@@ -21,6 +21,7 @@ export enum Reason {
 }
 
 export const CaseIndexQuerystringSchema = z.object({
+  caseAge: z.array(z.string()).or(z.string()).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
   courtName: z.string().optional(),
   defendantName: z.string().optional().openapi({ example: "De*Name" }),
