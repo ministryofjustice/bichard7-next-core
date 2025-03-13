@@ -1,0 +1,10 @@
+Hello {{ firstName | default("{first-name}") }},
+
+We regret to inform you that the PNC planned maintenance has be unexpectedly extended. 
+We have been informed that the on going work should be resolved in {{ extendedTimeFrame }}
+
+This is an estimated time, so we apologise for the inconvenience and appreciate your patience.
+We will keep you informed on any changes
+
+Thank you,
+The Bichard 7 Support team
