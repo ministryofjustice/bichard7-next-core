@@ -12,10 +12,11 @@ export const excludedTriggersAndStatusSql = (sql: postgres.Sql, filters: Filters
   const resolutionStatus = filters.caseState
     ? (resolutionStatusCodeByText(filters.caseState) ?? ResolutionStatusNumber.Unresolved)
     : ResolutionStatusNumber.Unresolved
+
   const excludedTriggers = user.excluded_triggers?.split(",") ?? [""]
 
   return sql`
     AND elt.status = ${resolutionStatus}
-    AND elt.trigger_code != ANY (${excludedTriggers})
+    AND NOT elt.trigger_code = ANY (${excludedTriggers})
   `
 }

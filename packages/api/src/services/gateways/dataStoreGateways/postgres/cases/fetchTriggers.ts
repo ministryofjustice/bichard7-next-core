@@ -15,17 +15,15 @@ export default async (sql: postgres.Sql, errorIds: number[], filters: Filters, u
     return []
   }
 
-  if (filters.reasonCodes === undefined || isEmpty(filters.reasonCodes)) {
-    return []
-  }
-
-  const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
-  const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
-
   let includeTriggersSql = sql``
 
-  if (triggerCodes.length > 0) {
-    includeTriggersSql = sql`AND elt.trigger_code = ANY (${triggerCodes})`
+  if (filters.reasonCodes && !isEmpty(filters.reasonCodes)) {
+    const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
+    const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
+
+    if (triggerCodes.length > 0) {
+      includeTriggersSql = sql`AND elt.trigger_code = ANY (${triggerCodes})`
+    }
   }
 
   const result: Trigger[] = await sql`

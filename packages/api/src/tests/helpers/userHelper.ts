@@ -38,6 +38,7 @@ export const createUsers = async (
         const id = index + 1 // +1 to avoid user id 0
         const user: User = await postgres.createTestUser({
           email: `user${id}@example.com`,
+          excluded_triggers: "",
           forenames: `Forename${id}`,
           groups: [UserGroup.GeneralHandler],
           id,
