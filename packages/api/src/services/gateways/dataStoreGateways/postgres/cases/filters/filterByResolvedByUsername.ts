@@ -8,10 +8,12 @@ export const filterByResolvedByUsername = (sql: postgres.Sql, filters: Filters):
     return sql``
   }
 
+  const parts = filters.resolvedByUsername.replace(/\*|\s+/g, "%")
+
   return sql`
     AND (
-      el.error_resolved_by ILIKE ${filters.resolvedByUsername}
-      OR el.trigger_resolved_by ILIKE ${filters.resolvedByUsername}
+      el.error_resolved_by ILIKE ${"%" + parts + "%"}
+      OR el.trigger_resolved_by ILIKE ${"%" + parts + "%"}
     )
   `
 }
