@@ -4,9 +4,9 @@ import type { Row } from "postgres"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
+import { filterByAsn } from "./filterByAsn"
 import { filterByCourtName } from "./filterByCourtName"
 import { filterByDefendantName } from "./filterByDefendantName"
-import { filterByAsn } from "./filterByAsn"
 import { filterByPtiurn } from "./filterByPtiurn"
 import { filterByReasonAndResolutionStatus } from "./filterByReasonAndResolutionStatus"
 import { filterByReasonCodes } from "./filterByReasonCodes"
