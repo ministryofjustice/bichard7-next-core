@@ -32,19 +32,6 @@ WORKDIR /core/packages/api
 
 RUN ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
 
-COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
-RUN mkdir -p /certs && \
-  openssl req \
-  -x509 \
-  -nodes \
-  -days 730 \
-  -newkey rsa:4096 \
-  -out /certs/server.crt \
-  -keyout /certs/server.key \
-  -config /tmp/openssl.cnf \
-  -extensions 'v3_req' && \
-  rm -rf /tmp/openssl.cnf
-
 WORKDIR /core
 
 RUN npm prune --omit=dev --workspaces --include-root
