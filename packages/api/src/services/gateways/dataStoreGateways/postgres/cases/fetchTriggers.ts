@@ -10,7 +10,7 @@ import type { Filters } from "../../../../../types/CaseIndexQuerystring"
 
 import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 
-export default async (sql: postgres.Sql, errorIds: number[], filters: Filters, user: User) => {
+export default async (sql: postgres.Sql, errorIds: number[], filters: Filters, user: User): Promise<Trigger[]> => {
   if (!userAccess(user)[Permission.Triggers]) {
     return []
   }

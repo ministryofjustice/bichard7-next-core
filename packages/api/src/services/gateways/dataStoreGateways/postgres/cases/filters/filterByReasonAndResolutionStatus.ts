@@ -27,7 +27,7 @@ const filterIfUnresolved = (
   filters: Filters,
   resolutionStatus: number,
   reasonCodes: string[]
-) => {
+): postgres.PendingQuery<postgres.Row[]> | postgres.PendingQuery<postgres.Row[]>[] => {
   const query = []
 
   if (shouldFilterForTriggers(user, filters.reason)) {
@@ -60,7 +60,7 @@ const filterIfResolved = (
   filters: Filters,
   resolutionStatus: number,
   reasonCodes: string[]
-) => {
+): postgres.PendingQuery<postgres.Row[]> | postgres.PendingQuery<postgres.Row[]>[] => {
   const query = []
 
   if (shouldFilterForTriggers(user, filters.reason)) {

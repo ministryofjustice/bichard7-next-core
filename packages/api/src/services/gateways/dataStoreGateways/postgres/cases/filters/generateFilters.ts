@@ -4,13 +4,13 @@ import type { Row } from "postgres"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
-import { filterByCourtName } from "./courtName"
-import { filterByDefendantName } from "./defendantName"
 import { filterByAsn } from "./filterByAsn"
+import { filterByCourtName } from "./filterByCourtName"
+import { filterByDefendantName } from "./filterByDefendantName"
 import { filterByPtiurn } from "./filterByPtiurn"
 import { filterByReasonAndResolutionStatus } from "./filterByReasonAndResolutionStatus"
-import { filterByReasonCodes } from "./reasonCodes"
-import { filterByResolvedByUsername } from "./resolvedByUsername"
+import { filterByReasonCodes } from "./filterByReasonCodes"
+import { filterByResolvedByUsername } from "./filterByResolvedByUsername"
 
 export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters): postgres.PendingQuery<Row[]> => {
   const queries = [
