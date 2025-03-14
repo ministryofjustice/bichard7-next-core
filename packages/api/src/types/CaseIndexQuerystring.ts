@@ -21,6 +21,7 @@ export enum Reason {
 }
 
 export const CaseIndexQuerystringSchema = z.object({
+  asn: z.string().optional(),
   caseAge: z.array(z.string()).or(z.string()).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
   courtName: z.string().optional(),
@@ -39,7 +40,7 @@ export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
 export type Filters = Pick<
   CaseIndexQuerystring,
-  "caseState" | "courtName" | "defendantName" | "ptiurn" | "reason" | "reasonCodes" | "resolvedByUsername"
+  "asn" | "caseState" | "courtName" | "defendantName" | "ptiurn" | "reason" | "reasonCodes" | "resolvedByUsername"
 >
 export type Pagination = Pick<CaseIndexQuerystring, "maxPerPage" | "pageNum">
 export type SortOrder = Pick<CaseIndexQuerystring, "order" | "orderBy">
