@@ -1,3 +1,4 @@
+import { dateLikeToDate } from "@moj-bichard7/common/schemas/dateLikeToDate"
 import z from "zod"
 
 import { ResolutionStatus } from "../useCases/dto/convertResolutionStatus"
@@ -25,7 +26,8 @@ export const CaseIndexQuerystringSchema = z.object({
   caseAge: z.array(z.string()).or(z.string()).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
   courtName: z.string().optional(),
-  defendantName: z.string().optional().openapi({ example: "De*Name" }),
+  defendantName: z.string().optional().openapi({ description: "Format: 'De*Name'" }),
+  from: dateLikeToDate.optional().openapi({ description: "Format: '2025-03-13'" }),
   maxPerPage: z.coerce.number().min(25).max(200).default(50),
   order: z.nativeEnum(Order).optional(),
   orderBy: z.nativeEnum(OrderBy).optional(),
@@ -33,14 +35,24 @@ export const CaseIndexQuerystringSchema = z.object({
   ptiurn: z.string().optional(),
   reason: z.nativeEnum(Reason).optional().default(Reason.All),
   reasonCodes: z.array(z.string()).or(z.string()).optional(),
-  resolvedByUsername: z.string().optional()
+  resolvedByUsername: z.string().optional(),
+  to: dateLikeToDate.optional().openapi({ description: "Format: '2025-03-13'" })
 })
 
 export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
 export type Filters = Pick<
   CaseIndexQuerystring,
-  "asn" | "caseState" | "courtName" | "defendantName" | "ptiurn" | "reason" | "reasonCodes" | "resolvedByUsername"
+  | "asn"
+  | "caseState"
+  | "courtName"
+  | "defendantName"
+  | "from"
+  | "ptiurn"
+  | "reason"
+  | "reasonCodes"
+  | "resolvedByUsername"
+  | "to"
 >
 export type Pagination = Pick<CaseIndexQuerystring, "maxPerPage" | "pageNum">
 export type SortOrder = Pick<CaseIndexQuerystring, "order" | "orderBy">
