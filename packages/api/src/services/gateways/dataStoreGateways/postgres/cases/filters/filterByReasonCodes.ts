@@ -10,7 +10,7 @@ export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters): postgr
     return sql``
   }
 
-  const queries = []
+  const queries: postgres.PendingQuery<Row[]>[] = []
   const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
   const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
   const exceptionCodes = reasonCodes.filter((rc) => rc.startsWith("HO")).map((rc) => `%${rc}%`) ?? []

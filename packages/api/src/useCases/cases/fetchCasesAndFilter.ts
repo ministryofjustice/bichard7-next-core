@@ -51,10 +51,12 @@ export const fetchCasesAndFilter = async (
     caseState: query.caseState,
     courtName: query.courtName,
     defendantName: query.defendantName,
+    from: query.from,
     ptiurn: query.ptiurn,
     reason: query.reason,
     reasonCodes: query.reasonCodes,
-    resolvedByUsername: query.resolvedByUsername
+    resolvedByUsername: query.resolvedByUsername,
+    to: query.to
   }
 
   const [caseAges, cases] = await Promise.all([
