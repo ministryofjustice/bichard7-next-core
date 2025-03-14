@@ -535,6 +535,8 @@ jobs:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.e2e-test-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -568,6 +570,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -754,7 +757,7 @@ jobs:
       api:
         type: boolean
         default: false
-      case-details:
+      api-case-details:
         type: boolean
         default: false
     steps:
@@ -765,7 +768,8 @@ jobs:
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
-              - equal: [<< parameters.api >>, << pipeline.parameters.api-changes >>]
+              - equal:
+                  [<< parameters.api >>, << pipeline.parameters.api-changes >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -812,7 +816,7 @@ jobs:
           name: Building infrastructure
           command: |
             USE_API="<< parameters.api >>" \
-            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \
+            USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
@@ -846,7 +850,7 @@ jobs:
       api:
         type: boolean
         default: false
-      case-details:
+      api-case-details:
         type: boolean
         default: false
     environment:
@@ -865,8 +869,8 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.api-changes >>
-              - equal: [<< parameters.api >>, << pipeline.parameters.api-changes >>]
+              - equal:
+                  [<< parameters.api >>, << pipeline.parameters.api-changes >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -902,7 +906,7 @@ jobs:
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
           USE_API: << parameters.api >>
-          USE_API_CASE_ENDPOINT: << parameters.case-details >>
+          USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -1043,7 +1047,7 @@ workflows:
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
-          case-details: true
+          api-case-details: true
           requires:
             - build-ui
             - build_api_docker_image
@@ -1060,7 +1064,7 @@ workflows:
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
-          case-details: true
+          api-case-details: true
           requires:
             - build-ui
             - build_api_docker_image
