@@ -47,6 +47,7 @@ export const fetchCasesAndFilter = async (
   const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }
   const sortOrder: SortOrder = { order: query.order, orderBy: query.orderBy }
   const filters: Filters = {
+    asn: query.asn,
     caseState: query.caseState,
     courtName: query.courtName,
     defendantName: query.defendantName,
