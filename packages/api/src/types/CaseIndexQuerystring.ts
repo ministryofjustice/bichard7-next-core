@@ -36,6 +36,8 @@ export const CaseIndexQuerystringSchema = z.object({
   reason: z.nativeEnum(Reason).optional().default(Reason.All),
   reasonCodes: z.array(z.string()).or(z.string()).optional(),
   resolvedByUsername: z.string().optional(),
+  resolvedFrom: dateLikeToDate.optional().openapi({ description: "Format: '2025-03-13'" }),
+  resolvedTo: dateLikeToDate.optional().openapi({ description: "Format: '2025-03-13'" }),
   to: dateLikeToDate.optional().openapi({ description: "Format: '2025-03-13'" })
 })
 
@@ -52,6 +54,8 @@ export type Filters = Pick<
   | "reason"
   | "reasonCodes"
   | "resolvedByUsername"
+  | "resolvedFrom"
+  | "resolvedTo"
   | "to"
 >
 export type Pagination = Pick<CaseIndexQuerystring, "maxPerPage" | "pageNum">
