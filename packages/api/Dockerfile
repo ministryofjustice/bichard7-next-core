@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE="nodejs-20-2023"
+ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
 FROM ${BUILD_IMAGE} AS builder
 
 RUN echo $NOTIIFCATION
@@ -41,11 +41,26 @@ FROM ${BUILD_IMAGE}
 WORKDIR /
 
 COPY --from=builder /core /core
-COPY --from=builder /certs /certs
 
-WORKDIR /core/packages/api
+WORKDIR /app
 
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
+COPY --from=builder /core/node_modules ./node_modules
+COPY --from=builder /core/packages/common ./packages/common
+COPY --from=builder /core/packages/core ./packages/core
+COPY --from=builder /core/packages/api ./packages/api
 
-USER node
-CMD [ "node", "dist/src/index.js" ]
+RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
+    usermod -a -G supervisor supervisor && \
+    chgrp supervisor -R /app /certs /run /var/log /var/lib/nginx && \
+    chmod g+r -R /certs/server.key /var/lib/nginx && \
+    chmod g+rw -R /app /run /var/log && \
+    npm config set cache /tmp/npm --global
+
+COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf
+COPY packages/api/docker/conf/supervisord.conf /etc/supervisord.conf
+
+EXPOSE 9443
+
+USER supervisor
+CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]
