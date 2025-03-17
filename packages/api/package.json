@@ -59,7 +59,7 @@
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
-    "@fastify/autoload": "6.1.0",
+    "@fastify/autoload": "6.2.0",
     "@fastify/swagger": "^9.4.2",
     "@fastify/swagger-ui": "^5.2.2",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.255",
