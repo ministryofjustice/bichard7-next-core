@@ -46,7 +46,7 @@ describe("fetchCasesAndFilter filtering by court date e2e", () => {
     await helper.postgres.close()
   })
 
-  it("will filter cases that within a start and end date", async () => {
+  it("will filter cases within a start and end date", async () => {
     const caseMetadata = await fetchCasesAndFilter(
       helper.postgres,
       {
