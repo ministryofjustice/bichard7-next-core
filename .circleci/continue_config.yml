@@ -574,6 +574,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - fetch_images:
+          images: nginx-nodejs-20-2023-supervisord
       - run: ./scripts/build-api-docker.sh
       - run:
           name: Save Docker image
