@@ -30,7 +30,7 @@ const s3Config = createS3Config()
 const phase2ResultFixture = String(fs.readFileSync("phase2/tests/fixtures/input-message-001-phase2-result.json"))
 
 const getPhase2Result = () => {
-  const s3TaskDataPath = `${randomUUID()}.json`
+  const s3TaskDataPath = `${randomUUID()}-phase2.json`
   const correlationId = randomUUID()
   const phase2Result = phase2ResultFixture.replace(/EXTERNAL_CORRELATION_ID/g, correlationId)
   const parsedPhase2Result = JSON.parse(phase2Result, dateReviver) as Phase2Result
@@ -111,6 +111,8 @@ describe("sendToPhase3", () => {
         "bichard_phase_3"
       )
       expect(workflow).toBeDefined()
+      expect(workflow.input).not.toContain("phase2")
+      expect(workflow.input).toContain("phase3.json")
     })
 
     it("should return failed status when putFileToS3 returns error", async () => {
@@ -186,6 +188,8 @@ describe("sendToPhase3", () => {
         "bichard_phase_3"
       )
       expect(workflow).toBeDefined()
+      expect(workflow.input).not.toContain("phase2")
+      expect(workflow.input).toContain("phase3.json")
     })
 
     it("should send a message to MQ when canary ratio in task input is -1", async () => {
@@ -252,6 +256,8 @@ describe("sendToPhase3", () => {
         "bichard_phase_3"
       )
       expect(workflow).toBeDefined()
+      expect(workflow.input).not.toContain("phase2")
+      expect(workflow.input).toContain("phase3.json")
     })
   })
 
