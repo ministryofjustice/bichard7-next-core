@@ -46,12 +46,14 @@ WORKDIR /core/packages/api
 
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
 
-RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
+RUN mkdir -p /core /certs /run /var/log /var/lib/nginx && \
+    adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
     usermod -a -G supervisor supervisor && \
     chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
     chmod g+r -R /certs/server.key /var/lib/nginx && \
     chmod g+rw -R /core /run /var/log && \
     npm config set cache /tmp/npm --global
+
 
 COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf
 COPY packages/api/docker/conf/supervisord.conf /etc/supervisord.conf
