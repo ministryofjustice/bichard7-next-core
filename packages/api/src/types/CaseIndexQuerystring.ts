@@ -22,6 +22,7 @@ export enum Reason {
 }
 
 export const CaseIndexQuerystringSchema = z.object({
+  allocatedUsername: z.string().optional(),
   asn: z.string().optional(),
   caseAge: z.array(z.string()).or(z.string()).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
@@ -45,6 +46,7 @@ export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
 
 export type Filters = Pick<
   CaseIndexQuerystring,
+  | "allocatedUsername"
   | "asn"
   | "caseState"
   | "courtName"
