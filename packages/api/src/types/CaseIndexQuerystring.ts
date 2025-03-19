@@ -1,4 +1,5 @@
 import { dateLikeToDate } from "@moj-bichard7/common/schemas/dateLikeToDate"
+import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import z from "zod"
 
 import { ResolutionStatus } from "../useCases/dto/convertResolutionStatus"
@@ -31,7 +32,7 @@ export enum Reason {
 export const CaseIndexQuerystringSchema = z.object({
   allocatedUsername: z.string().optional(),
   asn: z.string().optional(),
-  caseAge: z.array(z.string()).or(z.string()).optional(),
+  caseAge: z.array(z.nativeEnum(CaseAge)).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
   courtName: z.string().optional(),
   defendantName: z.string().optional().openapi({ description: "Format: 'De*Name'" }),
@@ -56,6 +57,7 @@ export type Filters = Pick<
   CaseIndexQuerystring,
   | "allocatedUsername"
   | "asn"
+  | "caseAge"
   | "caseState"
   | "courtName"
   | "defendantName"
