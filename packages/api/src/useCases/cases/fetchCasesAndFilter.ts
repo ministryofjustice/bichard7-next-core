@@ -53,6 +53,7 @@ export const fetchCasesAndFilter = async (
     courtName: query.courtName,
     defendantName: query.defendantName,
     from: query.from,
+    lockedState: query.lockedState,
     ptiurn: query.ptiurn,
     reason: query.reason,
     reasonCodes: query.reasonCodes,

@@ -9,6 +9,7 @@ import { filterByAsn } from "./filterByAsn"
 import { filterByCourtDate } from "./filterByCourtDate"
 import { filterByCourtName } from "./filterByCourtName"
 import { filterByDefendantName } from "./filterByDefendantName"
+import { filterByLockedState } from "./filterByLockedState"
 import { filterByPtiurn } from "./filterByPtiurn"
 import { filterByReasonAndResolutionStatus } from "./filterByReasonAndResolutionStatus"
 import { filterByReasonCodes } from "./filterByReasonCodes"
@@ -25,6 +26,7 @@ export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters)
     filterByCourtDate(sql, filters),
     filterByResolvedByUsername(sql, filters),
     filterByReasonAndResolutionStatus(sql, user, filters),
+    filterByLockedState(sql, user, filters),
     filterByResolvedCaseDateRange(sql, filters),
     filterByAllocatedUsername(sql, filters.allocatedUsername)
   ]

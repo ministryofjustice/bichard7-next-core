@@ -3,6 +3,13 @@ import z from "zod"
 
 import { ResolutionStatus } from "../useCases/dto/convertResolutionStatus"
 
+export enum LockedState {
+  All = "All",
+  Locked = "Locked",
+  LockedToMe = "LockedToMe",
+  Unlocked = "Unlocked"
+}
+
 export enum Order {
   asc = "asc",
   desc = "desc"
@@ -29,6 +36,7 @@ export const CaseIndexQuerystringSchema = z.object({
   courtName: z.string().optional(),
   defendantName: z.string().optional().openapi({ description: "Format: 'De*Name'" }),
   from: dateLikeToDate.optional().openapi({ description: "Format: '2025-03-13'" }),
+  lockedState: z.nativeEnum(LockedState).optional(),
   maxPerPage: z.coerce.number().min(25).max(200).default(50),
   order: z.nativeEnum(Order).optional(),
   orderBy: z.nativeEnum(OrderBy).optional(),
@@ -52,6 +60,7 @@ export type Filters = Pick<
   | "courtName"
   | "defendantName"
   | "from"
+  | "lockedState"
   | "ptiurn"
   | "reason"
   | "reasonCodes"
