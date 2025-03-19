@@ -290,7 +290,7 @@ export const selectTriggerToResolve = async function (this: Bichard, triggerNumb
 export const manuallyResolveRecord = async function (this: Bichard) {
   await this.browser.page.click("#exceptions-tab")
   await Promise.all([
-    await this.browser.page.click("section#exceptions a[href*='resolve'] button"),
+    await this.browser.page.click("section#exceptions a[href*='resolve']"),
     await this.browser.page.waitForNavigation()
   ])
 

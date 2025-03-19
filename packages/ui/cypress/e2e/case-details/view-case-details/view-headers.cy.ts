@@ -30,11 +30,8 @@ describe("View court case details header", () => {
     cy.get("td a").contains("NAME Defendant").click()
     cy.location("pathname").should("equal", "/bichard/court-cases/0")
 
-    cy.get("button#leave-and-lock")
-      .should("have.text", "Leave and lock")
-      .parent()
-      .should("have.attr", "href", "/bichard")
-    cy.get("button#leave-and-lock").click()
+    cy.get("a#leave-and-lock").should("have.text", "Leave and lock").and("have.attr", "href", "/bichard")
+    cy.get("a#leave-and-lock").click()
     cy.location("pathname").should("equal", "/bichard")
     cy.get(".locked-by-tag").should("have.text", "Trigger Handler User")
   })
@@ -49,7 +46,7 @@ describe("View court case details header", () => {
 
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
-    cy.get("button#leave-and-lock").should("not.exist")
+    cy.get("a#leave-and-lock").should("not.exist")
     cy.get("button#leave-and-unlock").should("not.exist")
     cy.get("button#return-to-case-list").should("exist").should("have.text", "Return to case list")
     cy.get("button#return-to-case-list").click()
