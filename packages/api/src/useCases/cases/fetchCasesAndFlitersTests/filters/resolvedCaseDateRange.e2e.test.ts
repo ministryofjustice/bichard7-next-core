@@ -10,7 +10,7 @@ import { Reason } from "../../../../types/CaseIndexQuerystring"
 import { ResolutionStatus, ResolutionStatusNumber } from "../../../dto/convertResolutionStatus"
 import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
 
-describe("fetchCasesAndFilter filtering by court date e2e", () => {
+describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let user: User
@@ -52,7 +52,8 @@ describe("fetchCasesAndFilter filtering by court date e2e", () => {
         court_date: thirdDate,
         error_resolved_by: user.username,
         error_status: ResolutionStatusNumber.Resolved,
-        resolution_ts: null
+        resolution_ts: null,
+        trigger_status: ResolutionStatusNumber.Unresolved
       },
       3: {
         court_date: fourthDate,
