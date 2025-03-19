@@ -76,7 +76,7 @@ const sendToPhase3: ConductorWorker = {
 
       logger.info({ event: "send-to-phase3:sent-to-mq", correlationId })
     } else {
-      const phase3S3TaskDataPath = path.parse(s3TaskDataPath).name.concat("-phase3.json")
+      const phase3S3TaskDataPath = path.parse(s3TaskDataPath).name.replace("phase2", "phase3.json")
 
       const s3Result = await putFileToS3(
         JSON.stringify(s3TaskData.outputMessage),
