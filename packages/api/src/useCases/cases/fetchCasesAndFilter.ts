@@ -57,6 +57,8 @@ export const fetchCasesAndFilter = async (
     reason: query.reason,
     reasonCodes: query.reasonCodes,
     resolvedByUsername: query.resolvedByUsername,
+    resolvedFrom: query.resolvedFrom,
+    resolvedTo: query.resolvedTo,
     to: query.to
   }
 

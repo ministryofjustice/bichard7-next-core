@@ -13,6 +13,7 @@ import { filterByPtiurn } from "./filterByPtiurn"
 import { filterByReasonAndResolutionStatus } from "./filterByReasonAndResolutionStatus"
 import { filterByReasonCodes } from "./filterByReasonCodes"
 import { filterByResolvedByUsername } from "./filterByResolvedByUsername"
+import { filterByResolvedCaseDateRange } from "./filterByResolvedCaseDateRange"
 
 export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters): postgres.PendingQuery<Row[]> => {
   const queries = [
@@ -25,6 +26,7 @@ export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters)
     filterByResolvedByUsername(sql, filters),
     filterByReasonAndResolutionStatus(sql, user, filters),
     filterByLockedState(sql, user, filters)
+    filterByResolvedCaseDateRange(sql, filters)
   ]
 
   return sql`
