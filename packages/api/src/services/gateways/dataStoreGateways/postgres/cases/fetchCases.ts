@@ -4,6 +4,7 @@ import type postgres from "postgres"
 import type { CaseDataForIndexDto } from "../../../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
+import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 import { generateFilters } from "./filters/generateFilters"
 import { ordering } from "./filters/ordering"
@@ -20,6 +21,8 @@ export default async (
 
   // TODO: Other filtering goes here
   const filtersSql = generateFilters(sql, user, filters)
+
+  const exceptionsAndTriggersSql = exceptionsAndTriggers(sql, user, filters)
 
   const allCasesSql = sql`
     SELECT DISTINCT
@@ -47,6 +50,7 @@ export default async (
         WHERE
           (${organisationUnitSql})
           ${filtersSql}
+          ${exceptionsAndTriggersSql}
       ) distinctAlias
   `
 
