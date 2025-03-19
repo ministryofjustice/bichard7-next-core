@@ -1,3 +1,4 @@
+import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
@@ -7,13 +8,14 @@ import MockDate from "mockdate"
 
 import { createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
+import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUsers } from "../../../tests/helpers/userHelper"
 import { Reason } from "../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../fetchCasesAndFilter"
 
 const defaultQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
-describe("fetchCasesAndFilter pagination e2e", () => {
+describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let user: User
@@ -137,6 +139,7 @@ describe("fetchCasesAndFilter pagination e2e", () => {
       1: { court_date: dateToday },
       2: { court_date: dateToday, error_status: 2, trigger_status: 1 }
     })
+    await createTriggers(helper.postgres, 2, [{ create_ts: dateToday, status: 1, trigger_code: "TRP1111" } as Trigger])
 
     const caseMetadata = await fetchCasesAndFilter(helper.postgres, defaultQuery, user)
 
