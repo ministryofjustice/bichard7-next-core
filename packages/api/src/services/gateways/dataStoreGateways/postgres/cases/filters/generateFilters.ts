@@ -26,9 +26,9 @@ export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters)
     filterByReasonCodes(sql, filters),
     filterByCourtDate(sql, filters),
     filterByCaseAge(sql, filters.caseAge),
-    filterByResolvedByUsername(sql, filters),
+    filterByResolvedByUsername(sql, filters.resolvedByUsername),
     filterByReasonAndResolutionStatus(sql, user, filters),
-    filterByLockedState(sql, user, filters),
+    filterByLockedState(sql, user, filters.lockedState),
     filterByResolvedCaseDateRange(sql, filters),
     filterByAllocatedUsername(sql, filters.allocatedUsername)
   ]
