@@ -144,13 +144,13 @@ services:
       DYNAMO_AWS_SECRET_ACCESS_KEY: S3RVER
       AWS_URL: http://localstack:4566
     healthcheck:
-      test: curl --insecure --fail http://localhost:3321/v1/health
+      test: curl --insecure --fail https://localhost:9443/v1/health
       interval: 2s
       timeout: 2s
       retries: 10
       start_period: 120s
     ports:
-      - 3333:3321
+      - 3333:9443
     depends_on:
       postgres:
         condition: service_healthy

@@ -2,7 +2,7 @@
 
 set -e
 
-readonly DOCKER_BUILD_IMAGE="nodejs-20-2023"
+readonly DOCKER_BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
 readonly DOCKER_OUTPUT_TAG="api"
 
 function has_local_image() {
@@ -45,7 +45,7 @@ function pull_and_build_from_aws() {
   docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/api/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
-    
+
     ## Run goss tests
     GOSS_SLEEP=5 GOSS_FILE=packages/api/goss.yaml dgoss run \
       "${DOCKER_OUTPUT_TAG}:latest"
