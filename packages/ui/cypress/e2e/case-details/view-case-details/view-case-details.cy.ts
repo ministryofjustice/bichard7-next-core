@@ -656,7 +656,7 @@ describe("View case details", () => {
 
         loginAndVisit("/bichard/court-cases/0")
 
-        cy.get("button.b7-reallocate-button").should(canReallocate ? "exist" : "not.exist")
+        cy.get("a.b7-reallocate-button").should(canReallocate ? "exist" : "not.exist")
       })
     }
   )

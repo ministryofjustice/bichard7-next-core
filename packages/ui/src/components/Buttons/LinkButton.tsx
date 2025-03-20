@@ -1,27 +1,40 @@
 import { useRouter } from "next/router"
-import { Button, ButtonProps } from "./Button"
-import { SecondaryButton } from "./SecondaryButton"
 
-export interface LinkButtonProps extends ButtonProps {
+export interface LinkButtonProps extends React.ComponentProps<"a"> {
   href: string
   secondary?: boolean
+  dataModule?: string
 }
 
 export const LinkButton: React.FC<LinkButtonProps> = ({
   children,
   href,
   secondary = false,
-  ...buttonProps
+  dataModule = "govuk-button",
+  ...linkButtonProps
 }: LinkButtonProps) => {
   const { asPath, basePath } = useRouter()
 
+  const classNames = linkButtonProps.className?.split(" ") ?? []
+
+  if (!classNames.includes("govuk-button")) {
+    classNames.push("govuk-button")
+  }
+
+  if (secondary) {
+    classNames.push("govuk-button--secondary")
+  }
+
   return (
-    <a href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}>
-      {secondary ? (
-        <SecondaryButton {...buttonProps}>{children}</SecondaryButton>
-      ) : (
-        <Button {...buttonProps}>{children}</Button>
-      )}
+    <a
+      {...linkButtonProps}
+      href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}
+      role="button"
+      draggable="false"
+      className={classNames.join(" ")}
+      data-module={dataModule}
+    >
+      {children}
     </a>
   )
 }

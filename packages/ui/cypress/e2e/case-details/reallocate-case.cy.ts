@@ -30,7 +30,7 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
     cy.contains("H2", "Case reallocation").should("exist")
 
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
@@ -73,7 +73,7 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
     cy.contains("H2", "Case reallocation").should("exist")
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
@@ -113,7 +113,7 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
     cy.contains("H2", "Case reallocation").should("exist")
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
@@ -186,7 +186,7 @@ describe("Case details", () => {
 
         loginAndVisit("/bichard/court-cases/0")
 
-        cy.get("button.b7-reallocate-button").should(canReallocate ? "exist" : "not.exist")
+        cy.get("a.b7-reallocate-button").should(canReallocate ? "exist" : "not.exist")
 
         cy.request({
           failOnStatusCode: false,
@@ -237,7 +237,7 @@ describe("Case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
 
     cy.contains("Case has no user notes.")
     cy.contains("show more").should("not.exist")
@@ -263,7 +263,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
 
     cy.contains("Another User2")
     cy.contains("Test note 2")
@@ -286,7 +286,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
 
     cy.contains("Another User")
     cy.contains("Test note")
@@ -311,7 +311,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
 
     cy.contains("Another User2")
     cy.contains("Test note 2")
@@ -340,7 +340,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get("button").contains("Reallocate Case").click()
+    cy.get("a").contains("Reallocate Case").click()
     cy.get("button").contains("show more").click()
 
     cy.contains("Another User2")

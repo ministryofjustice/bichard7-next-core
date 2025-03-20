@@ -24,6 +24,7 @@ import {
   StyledSecondaryButton
 } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
+import { LinkButton } from "../../components/Buttons/LinkButton"
 
 interface Props {
   canReallocate: boolean
@@ -99,11 +100,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </ReallocateLinkButton>
           </ConditionalRender>
           <ConditionalRender isRendered={hasCaseLock}>
-            <a href={basePath}>
-              <StyledButton id="leave-and-lock" className={`button`}>
-                {"Leave and lock"}
-              </StyledButton>
-            </a>
+            <LinkButton id="leave-and-lock" href={basePath}>
+              {"Leave and lock"}
+            </LinkButton>
             <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
               <StyledButton id="leave-and-unlock" className={`button`} type="submit">
                 {"Leave and unlock"}

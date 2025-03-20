@@ -25,7 +25,7 @@ const getDate = ({ minutes, hours }: { minutes: number; hours: number }) => {
 
 const navigateAndClickSwitchToOldBichard = (url = "/bichard") => {
   cy.visit(url)
-  cy.contains("button", "Switch to old Bichard").click()
+  cy.contains("a", "Switch to old Bichard").click()
 }
 
 const expectFeedbackPage = () => {
@@ -94,7 +94,7 @@ describe("Switching Bichard Version Feedback Form", () => {
 
   it("Should access the switching feedback form when user clicks 'Switch to old Bichard'", () => {
     cy.visit("/bichard")
-    cy.contains("button", "Switch to old Bichard").click()
+    cy.contains("a", "Switch to old Bichard").click()
     cy.get("a").contains("Back")
     cy.get("h1").contains("Share your feedback")
     cy.get("p")
