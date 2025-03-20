@@ -1,5 +1,5 @@
+import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { useCourtCase } from "context/CourtCaseContext"
-import Asn from "services/Asn"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { SummaryBox, SummaryBoxGrid } from "./CourtCaseDetailsSummaryBox.styles"
 import CourtCaseDetailsSummaryBoxField from "./CourtCaseDetailsSummaryBoxField"
@@ -16,7 +16,7 @@ const CourtCaseDetailsSummaryBox = () => {
   )
   const pncIdentifier = courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
 
-  const asn = Asn.divideAsn(
+  const asn = getShortAsn(
     courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
 
