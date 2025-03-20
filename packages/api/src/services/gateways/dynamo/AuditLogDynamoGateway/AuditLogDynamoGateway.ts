@@ -282,7 +282,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     return auditLog ? auditLog.version : null
   }
 
-  async getEvents(messageId: string, options: EventsFilterOptions = {}): PromiseResult<DynamoAuditLogEvent[]> {
+  async getEvents(eventCode: string, options: EventsFilterOptions = {}): PromiseResult<DynamoAuditLogEvent[]> {
     let lastMessage: InternalDynamoAuditLogEvent | undefined
     let allEvents: DynamoAuditLogEvent[] = []
 
@@ -296,10 +296,10 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       if (options.eventsFilter) {
         indexSearcher
           .useIndex(`${options.eventsFilter}Index`)
-          .setIndexKeys("_messageId", messageId, `_${options.eventsFilter}`)
+          .setIndexKeys("_messageId", eventCode, `_${options.eventsFilter}`)
           .setRangeKey(1, KeyComparison.Equals)
       } else {
-        indexSearcher.useIndex("messageIdIndex").setIndexKeys("_messageId", messageId, "timestamp")
+        indexSearcher.useIndex("eventCodeIndex").setIndexKeys("_eventCode", eventCode, "timestamp")
       }
 
       const events = (await indexSearcher.execute()) ?? []
