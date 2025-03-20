@@ -83,7 +83,7 @@ export default async (
       ) AS unionQuery
   `
 
-  const valuesSql = sql`
+  const selectValuesSql = sql`
     SELECT
       el.error_id,
       el.asn,
@@ -162,7 +162,7 @@ export default async (
         WHERE
           username IN (SELECT username FROM userIds)
       )
-    ${valuesSql}
+    ${selectValuesSql}
   `
 
   return result
