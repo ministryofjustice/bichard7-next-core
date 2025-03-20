@@ -134,7 +134,7 @@ export const AsnField = () => {
     <EditableFieldTableRow
       className={"asn-row"}
       value={getShortAsn(defendant.ArrestSummonsNumber)}
-      updatedValue={updatedAhoAsn}
+      updatedValue={getShortAsn(updatedAhoAsn)}
       label="ASN"
       hasExceptions={hasExceptions}
       isEditable={isAsnEditable}
