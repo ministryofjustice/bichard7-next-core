@@ -7,7 +7,7 @@ import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIn
 import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 import { generateFilters } from "./filters/generateFilters"
-import { ordering } from "./filters/ordering"
+import { ordering } from "./order/ordering"
 
 export default async (
   sql: postgres.Sql,
