@@ -1,3 +1,4 @@
+import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import Asn from "services/Asn"
 import { LabelCell } from "./EditableFieldTableRow.styles"
 import InitialValueAndCorrectionField from "./InitialValueAndCorrectionField"
@@ -30,7 +31,7 @@ const EditableFieldTableRow = ({
   htmlFor
 }: Props) => {
   const isRendered = !!(value || updatedValue || hasExceptions)
-  const hasCorrection = updatedValue && value !== Asn.divideAsn(updatedValue)
+  const hasCorrection = updatedValue && value !== getShortAsn(Asn.divideAsn(updatedValue))
 
   if (!isRendered) {
     return
@@ -44,7 +45,7 @@ const EditableFieldTableRow = ({
         </InputField>
       )
     } else if (hasCorrection) {
-      return <InitialValueAndCorrectionField value={value} updatedValue={updatedValue} />
+      return <InitialValueAndCorrectionField value={value} updatedValue={getShortAsn(updatedValue)} />
     } else {
       return value
     }
