@@ -49,6 +49,7 @@ export const fetchCasesAndFilter = async (
   const filters: Filters = {
     allocatedUsername: query.allocatedUsername,
     asn: query.asn,
+    caseAge: query.caseAge,
     caseState: query.caseState,
     courtName: query.courtName,
     defendantName: query.defendantName,

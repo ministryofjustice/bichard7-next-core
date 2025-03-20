@@ -4,6 +4,7 @@ import type { Row } from "postgres"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
+import { filterByCaseAge } from "./caseAge"
 import { filterByAllocatedUsername } from "./filterByAllocatedUsername"
 import { filterByAsn } from "./filterByAsn"
 import { filterByCourtDate } from "./filterByCourtDate"
@@ -24,6 +25,7 @@ export const generateFilters = (sql: postgres.Sql, user: User, filters: Filters)
     filterByAsn(sql, filters.asn),
     filterByReasonCodes(sql, filters),
     filterByCourtDate(sql, filters),
+    filterByCaseAge(sql, filters.caseAge),
     filterByResolvedByUsername(sql, filters),
     filterByReasonAndResolutionStatus(sql, user, filters),
     filterByLockedState(sql, user, filters),
