@@ -769,8 +769,8 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - and:
-                - equal: [true, << pipeline.parameters.api-changes >>]
-                - equal: [true, << parameters.api >>]
+                  - equal: [true, << pipeline.parameters.api-changes >>]
+                  - equal: [true, << parameters.api >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -871,8 +871,8 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - and:
-                - equal: [true, << pipeline.parameters.api-changes >>]
-                - equal: [true, << parameters.api >>]
+                  - equal: [true, << pipeline.parameters.api-changes >>]
+                  - equal: [true, << parameters.api >>]
           steps:
             - run: circleci-agent step halt
       - checkout
