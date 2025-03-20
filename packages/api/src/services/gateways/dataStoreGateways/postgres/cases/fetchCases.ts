@@ -19,7 +19,6 @@ export default async (
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
 
-  // TODO: Other filtering goes here
   const filtersSql = generateFilters(sql, user, filters)
 
   const exceptionsAndTriggersSql = exceptionsAndTriggers(sql, user, filters)
