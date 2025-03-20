@@ -26,3 +26,6 @@ coverage/
 packages/e2e-test/cucumber
 
 **/*.tsbuildinfo
+
+pnc-errors.json
+pnc-errors-analysis.json
