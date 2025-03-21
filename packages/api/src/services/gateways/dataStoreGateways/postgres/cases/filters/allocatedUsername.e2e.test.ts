@@ -3,13 +3,13 @@ import type { FastifyInstance } from "fastify"
 
 import { sortBy } from "lodash"
 
-import type { CaseIndexQuerystring } from "../../../../types/CaseIndexQuerystring"
+import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
 
-import { createCases } from "../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../tests/helpers/userHelper"
-import { Reason } from "../../../../types/CaseIndexQuerystring"
-import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
+import { createCases } from "../../../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUsers } from "../../../../../../tests/helpers/userHelper"
+import { Reason } from "../../../../../../types/CaseIndexQuerystring"
+import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   let helper: SetupAppEnd2EndHelper

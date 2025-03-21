@@ -18,7 +18,7 @@ export const excludedTriggersAndStatusSql = (
     ? (resolutionStatusCodeByText(filters.caseState) ?? ResolutionStatusNumber.Unresolved)
     : ResolutionStatusNumber.Unresolved
 
-  const excludedTriggers = user.excluded_triggers?.split(",") ?? [""]
+  const excludedTriggers = user.excluded_triggers?.split(",") ?? []
 
   return sql`
     AND elt.status = ${resolutionStatus}
