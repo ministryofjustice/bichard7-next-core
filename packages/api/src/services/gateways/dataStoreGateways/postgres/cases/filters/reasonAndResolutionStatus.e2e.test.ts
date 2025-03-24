@@ -2,6 +2,7 @@ import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { sortBy } from "lodash"
@@ -11,7 +12,7 @@ import { createExceptionOnCase } from "../../../../../../tests/helpers/exception
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { sortStringAsc } from "../../../../../../tests/helpers/sort"
 import { createTriggers } from "../../../../../../tests/helpers/triggerHelper"
-import { type Filters, type Pagination, Reason } from "../../../../../../types/CaseIndexQuerystring"
+import { type Filters, type Pagination } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 import {
   ResolutionStatus,

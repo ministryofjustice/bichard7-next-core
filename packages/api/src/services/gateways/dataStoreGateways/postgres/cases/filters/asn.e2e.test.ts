@@ -1,12 +1,11 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
+import { type ApiCaseQuerystring, Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { Reason } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by ASN e2e", () => {
@@ -14,7 +13,7 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
   const asnWithoutSlashes = "1101ZD0100000448754K"
   const invalidAsnWithoutSlashes = "AAAAAAAAAAAAAAAAAAA"
   const validAsnWithoutSlashes = "1101ZD0100000410836V"

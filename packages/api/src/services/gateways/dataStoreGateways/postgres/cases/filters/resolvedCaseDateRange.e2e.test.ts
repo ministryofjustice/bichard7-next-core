@@ -1,12 +1,12 @@
+import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { Reason } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 import { ResolutionStatus, ResolutionStatusNumber } from "../../../../../../useCases/dto/convertResolutionStatus"
 
@@ -15,7 +15,7 @@ describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: CaseIndexQuerystring = {
+  const defaultQuery: ApiCaseQuerystring = {
     caseState: ResolutionStatus.Resolved,
     maxPerPage: 25,
     pageNum: 1,

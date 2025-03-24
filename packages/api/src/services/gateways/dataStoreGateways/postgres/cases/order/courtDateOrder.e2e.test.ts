@@ -1,12 +1,12 @@
+import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
+import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { Order, OrderBy, Reason } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter ordering courtDate e2e", () => {
@@ -17,7 +17,7 @@ describe("fetchCasesAndFilter ordering courtDate e2e", () => {
   const firstDate = new Date("2001-09-26")
   const secondDate = new Date("2008-01-26")
   const thirdDate = new Date("2013-10-16")
-  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()

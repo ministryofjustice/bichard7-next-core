@@ -1,14 +1,13 @@
+import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 import { sortBy } from "lodash"
-
-import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { Reason } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
@@ -16,7 +15,7 @@ describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: CaseIndexQuerystring = {
+  const defaultQuery: ApiCaseQuerystring = {
     maxPerPage: 25,
     pageNum: 1,
     reason: Reason.All
