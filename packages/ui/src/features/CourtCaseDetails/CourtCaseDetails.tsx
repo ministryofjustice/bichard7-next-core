@@ -47,7 +47,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
   }
 
   return (
-    <>
+    <div aria-live="polite" aria-label="Case Details page loaded">
       <CourtCaseDetailsTabs
         activeTab={activeTab}
         onTabClick={(tab) => {
@@ -90,7 +90,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
           />
         </SideBar>
       </PanelsGridRow>
-    </>
+    </div>
   )
 }
 
