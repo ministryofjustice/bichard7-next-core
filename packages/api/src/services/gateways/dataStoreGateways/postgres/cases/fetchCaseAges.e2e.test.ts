@@ -6,12 +6,12 @@ import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 
-import { createCases } from "../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
-import { createTriggers } from "../../../tests/helpers/triggerHelper"
-import { createUsers } from "../../../tests/helpers/userHelper"
-import { Reason } from "../../../types/CaseIndexQuerystring"
-import { fetchCasesAndFilter } from "../fetchCasesAndFilter"
+import { createCases } from "../../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createTriggers } from "../../../../../tests/helpers/triggerHelper"
+import { createUsers } from "../../../../../tests/helpers/userHelper"
+import { Reason } from "../../../../../types/CaseIndexQuerystring"
+import { fetchCasesAndFilter } from "../../../../../useCases/cases/fetchCasesAndFilter"
 
 const defaultQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 

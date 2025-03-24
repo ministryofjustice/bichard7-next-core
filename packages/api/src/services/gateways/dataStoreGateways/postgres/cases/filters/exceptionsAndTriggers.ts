@@ -12,9 +12,6 @@ import {
   ResolutionStatusNumber
 } from "../../../../../../useCases/dto/convertResolutionStatus"
 
-const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
-  excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : []
-
 export const exceptionsAndTriggers = (
   sql: postgres.Sql,
   user: User,
@@ -31,7 +28,7 @@ export const exceptionsAndTriggers = (
   }
 
   if (userAccess(user)[Permission.Triggers]) {
-    const excludedTriggers = getExcludedTriggers(user.excluded_triggers?.split(","))
+    const excludedTriggers = user.excluded_triggers?.split(",") ?? []
 
     triggersSql = sql`
         (

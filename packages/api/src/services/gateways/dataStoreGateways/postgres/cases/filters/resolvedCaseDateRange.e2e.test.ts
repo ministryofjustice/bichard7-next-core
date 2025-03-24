@@ -1,14 +1,14 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { CaseIndexQuerystring } from "../../../../types/CaseIndexQuerystring"
+import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
 
-import { createCases } from "../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../tests/helpers/userHelper"
-import { Reason } from "../../../../types/CaseIndexQuerystring"
-import { ResolutionStatus, ResolutionStatusNumber } from "../../../dto/convertResolutionStatus"
-import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
+import { createCases } from "../../../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUsers } from "../../../../../../tests/helpers/userHelper"
+import { Reason } from "../../../../../../types/CaseIndexQuerystring"
+import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { ResolutionStatus, ResolutionStatusNumber } from "../../../../../../useCases/dto/convertResolutionStatus"
 
 describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   let helper: SetupAppEnd2EndHelper

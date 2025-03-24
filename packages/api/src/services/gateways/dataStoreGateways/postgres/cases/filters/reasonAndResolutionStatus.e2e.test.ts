@@ -6,18 +6,18 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { sortBy } from "lodash"
 
-import { createCase } from "../../../../tests/helpers/caseHelper"
-import { createExceptionOnCase } from "../../../../tests/helpers/exceptionHelper"
-import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
-import { sortStringAsc } from "../../../../tests/helpers/sort"
-import { createTriggers } from "../../../../tests/helpers/triggerHelper"
-import { type Filters, type Pagination, Reason } from "../../../../types/CaseIndexQuerystring"
+import { createCase } from "../../../../../../tests/helpers/caseHelper"
+import { createExceptionOnCase } from "../../../../../../tests/helpers/exceptionHelper"
+import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
+import { sortStringAsc } from "../../../../../../tests/helpers/sort"
+import { createTriggers } from "../../../../../../tests/helpers/triggerHelper"
+import { type Filters, type Pagination, Reason } from "../../../../../../types/CaseIndexQuerystring"
+import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 import {
   ResolutionStatus,
   resolutionStatusCodeByText,
   ResolutionStatusNumber
-} from "../../../dto/convertResolutionStatus"
-import { fetchCasesAndFilter } from "../../fetchCasesAndFilter"
+} from "../../../../../../useCases/dto/convertResolutionStatus"
 
 type CreateReasonCaseProps = {
   caseId: number

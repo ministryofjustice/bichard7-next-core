@@ -7,7 +7,7 @@ import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIn
 import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 import { generateFilters } from "./filters/generateFilters"
-import { ordering } from "./filters/ordering"
+import { ordering } from "./order/ordering"
 
 export default async (
   sql: postgres.Sql,
@@ -19,7 +19,6 @@ export default async (
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
 
-  // TODO: Other filtering goes here
   const filtersSql = generateFilters(sql, user, filters)
 
   const exceptionsAndTriggersSql = exceptionsAndTriggers(sql, user, filters)
@@ -84,7 +83,7 @@ export default async (
       ) AS unionQuery
   `
 
-  const valuesSql = sql`
+  const selectValuesSql = sql`
     SELECT
       el.error_id,
       el.asn,
@@ -163,7 +162,7 @@ export default async (
         WHERE
           username IN (SELECT username FROM userIds)
       )
-    ${valuesSql}
+    ${selectValuesSql}
   `
 
   return result
