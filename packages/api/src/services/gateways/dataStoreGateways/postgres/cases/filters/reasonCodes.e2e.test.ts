@@ -1,10 +1,10 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { createExceptionOnCase } from "../../../../../../tests/helpers/exceptionHelper"
@@ -19,7 +19,7 @@ describe("fetchCasesAndFilter filtering by reason codes e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()

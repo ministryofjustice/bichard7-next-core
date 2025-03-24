@@ -1,8 +1,8 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -14,7 +14,7 @@ describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
   const PTIURNs = ["01009940223", "05003737622", "03001976220", "04007638323"]
   const ascending = [...PTIURNs].sort((one, two) => (one > two ? 1 : -1))

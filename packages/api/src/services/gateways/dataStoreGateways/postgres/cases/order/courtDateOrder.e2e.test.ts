@@ -1,8 +1,8 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -17,7 +17,7 @@ describe("fetchCasesAndFilter ordering courtDate e2e", () => {
   const firstDate = new Date("2001-09-26")
   const secondDate = new Date("2008-01-26")
   const thirdDate = new Date("2013-10-16")
-  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()

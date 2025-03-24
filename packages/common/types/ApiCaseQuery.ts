@@ -34,7 +34,7 @@ export enum ResolutionStatus {
   Unresolved = "Unresolved"
 }
 
-export const ApiCaseQuerystringSchema = z.object({
+export const ApiCaseQuerySchema = z.object({
   allocatedUsername: z.string().optional(),
   asn: z.string().optional(),
   caseAge: z.array(z.nativeEnum(CaseAge)).optional(),
@@ -56,4 +56,4 @@ export const ApiCaseQuerystringSchema = z.object({
   to: dateLikeToDate.optional().describe("Format: '2025-03-13'")
 })
 
-export type ApiCaseQuerystring = z.infer<typeof ApiCaseQuerystringSchema>
+export type ApiCaseQuery = z.infer<typeof ApiCaseQuerySchema>

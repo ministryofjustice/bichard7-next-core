@@ -1,8 +1,8 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -14,7 +14,7 @@ describe("fetchCasesAndFilter filtering by court date e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
   const firstDate = new Date("2001-09-26")
   const secondDate = new Date("2008-01-26")
   const thirdDate = new Date("2008-03-26")

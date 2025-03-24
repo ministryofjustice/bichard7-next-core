@@ -1,4 +1,4 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
@@ -42,7 +42,7 @@ const assignNotesAndTriggers = async (
 
 export const fetchCasesAndFilter = async (
   dataStore: DataStoreGateway,
-  query: ApiCaseQuerystring,
+  query: ApiCaseQuery,
   user: User
 ): Promise<CaseIndexMetadata> => {
   const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }

@@ -1,10 +1,10 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { ApiCaseQuerystringSchema } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { ApiCaseQuerySchema } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseIndexMetadataSchema } from "@moj-bichard7/common/types/Case"
 import { INTERNAL_SERVER_ERROR, OK } from "http-status"
 
@@ -23,14 +23,14 @@ import { fetchCasesAndFilter } from "../../../useCases/cases/fetchCasesAndFilter
 
 type HandlerProps = {
   dataStore: DataStoreGateway
-  query: ApiCaseQuerystring
+  query: ApiCaseQuery
   reply: FastifyReply
   user: User
 }
 
 const schema = {
   ...auth,
-  querystring: ApiCaseQuerystringSchema,
+  querystring: ApiCaseQuerySchema,
   response: {
     [OK]: CaseIndexMetadataSchema,
     ...unauthorizedError,

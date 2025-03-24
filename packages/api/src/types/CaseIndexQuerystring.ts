@@ -1,7 +1,7 @@
-import type { ApiCaseQuerystring } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 export type Filters = Pick<
-  ApiCaseQuerystring,
+  ApiCaseQuery,
   | "allocatedUsername"
   | "asn"
   | "caseAge"
@@ -18,5 +18,5 @@ export type Filters = Pick<
   | "resolvedTo"
   | "to"
 >
-export type Pagination = Pick<ApiCaseQuerystring, "maxPerPage" | "pageNum">
-export type SortOrder = Pick<ApiCaseQuerystring, "order" | "orderBy">
+export type Pagination = Pick<ApiCaseQuery, "maxPerPage" | "pageNum">
+export type SortOrder = Pick<ApiCaseQuery, "order" | "orderBy">

@@ -1,7 +1,7 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-import { Order, OrderBy } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { Order, OrderBy } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import type { SortOrder } from "../../../../../../types/CaseIndexQuerystring"
 

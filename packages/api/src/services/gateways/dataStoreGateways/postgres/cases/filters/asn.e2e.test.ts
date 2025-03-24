@@ -1,7 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { type ApiCaseQuerystring, Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { type ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -13,7 +13,7 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: ApiCaseQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
   const asnWithoutSlashes = "1101ZD0100000448754K"
   const invalidAsnWithoutSlashes = "AAAAAAAAAAAAAAAAAAA"
   const validAsnWithoutSlashes = "1101ZD0100000410836V"
