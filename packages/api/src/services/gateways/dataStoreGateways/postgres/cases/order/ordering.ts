@@ -1,7 +1,9 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-import { Order, OrderBy, type SortOrder } from "../../../../../../types/CaseIndexQuerystring"
+import { Order, OrderBy } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+
+import type { SortOrder } from "../../../../../../types/CaseIndexQuerystring"
 
 export const ordering = (sql: postgres.Sql, sortOrder: SortOrder): postgres.PendingQuery<Row[]> => {
   const defaultCourtDate = sql`el_court_date DESC`

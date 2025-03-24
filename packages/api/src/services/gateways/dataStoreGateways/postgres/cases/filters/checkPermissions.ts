@@ -2,11 +2,10 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { every } from "lodash"
-
-import { Reason } from "../../../../../../types/CaseIndexQuerystring"
 
 export const reasonFilterOnlyIncludesTriggers = (reason: Reason): boolean => reason === Reason.Triggers
 
