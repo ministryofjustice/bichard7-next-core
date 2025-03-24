@@ -764,10 +764,10 @@ jobs:
       - unless:
           condition:
             or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
+              # - << pipeline.parameters.circleci-changes >>
+              # - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
+              # - << pipeline.parameters.core-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
                   - equal: [true, << parameters.api >>]
@@ -865,11 +865,11 @@ jobs:
       - unless:
           condition:
             or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.e2e-test-changes >>
+              # - << pipeline.parameters.circleci-changes >>
+              # - << pipeline.parameters.ui-changes >>
+              # - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
+              # - << pipeline.parameters.core-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
                   - equal: [true, << parameters.api >>]
