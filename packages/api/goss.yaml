@@ -94,8 +94,8 @@ user:
     shell: /bin/bash
   supervisor:
     exists: true
-    uid: 996
-    gid: 996
+    uid: 997
+    gid: 997
     groups:
       - supervisor
     home: /home/supervisor
