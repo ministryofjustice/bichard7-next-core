@@ -47,7 +47,7 @@ function pull_and_build_from_aws() {
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
 
     ## Run goss tests
-    GOSS_SLEEP=5 GOSS_FILE=packages/api/goss.yaml dgoss run \
+    GOSS_SLEEP=15 GOSS_FILE=packages/api/goss.yaml dgoss run \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
