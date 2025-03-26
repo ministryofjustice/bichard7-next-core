@@ -77,6 +77,8 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
               setSelectedOffenceSequenceNumber(offenceIndex)
             }}
             selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
+            aria-live="polite"
+            aria-label="Offences tab loaded"
           />
 
           <Notes visible={activeTab === "Notes"} />
