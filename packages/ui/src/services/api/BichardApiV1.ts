@@ -24,6 +24,10 @@ export default class BichardApiV1 implements BichardApiGateway {
       if (Array.isArray(value)) {
         value.forEach((v) => urlSearchParams.append(key, String(v)))
       } else {
+        if (value instanceof Date) {
+          value = value.toISOString().split("T")[0]
+        }
+
         urlSearchParams.append(key, String(value))
       }
     })
