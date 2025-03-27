@@ -32,6 +32,6 @@ export default class BichardApiV1 implements BichardApiGateway {
       }
     })
 
-    return await this.apiClient.get<CaseIndexMetadata>(`${V1.Cases}?${urlSearchParams.toString()}`)
+    return await this.apiClient.get<CaseIndexMetadata>(`${V1.Cases}?${urlSearchParams}`)
   }
 }
