@@ -4,6 +4,7 @@ import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import type ApiClient from "./ApiClient"
+import { generateUrlSearchParams } from "./generateUrlSearchParams"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 
 export default class BichardApiV1 implements BichardApiGateway {
@@ -18,20 +19,6 @@ export default class BichardApiV1 implements BichardApiGateway {
   }
 
   async fetchCases(apiCaseQuery: ApiCaseQuery): Promise<CaseIndexMetadata | Error> {
-    const urlSearchParams = new URLSearchParams()
-
-    Object.entries(apiCaseQuery).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        value.forEach((v) => urlSearchParams.append(key, String(v)))
-      } else {
-        if (value instanceof Date) {
-          value = value.toISOString().split("T")[0]
-        }
-
-        urlSearchParams.append(key, String(value))
-      }
-    })
-
-    return await this.apiClient.get<CaseIndexMetadata>(`${V1.Cases}?${urlSearchParams}`)
+    return await this.apiClient.get<CaseIndexMetadata>(`${V1.Cases}?${generateUrlSearchParams(apiCaseQuery)}`)
   }
 }
