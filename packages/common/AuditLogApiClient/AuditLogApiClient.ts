@@ -55,6 +55,7 @@ export default class AuditLogApiClient {
           "Content-Type": "application/json",
           ...this.apiKeyHeader
         },
+        httpsAgent,
         timeout: this.timeout,
         // The Audit Log API doesn't return JSON :facepalm:
         transformResponse: (res) => res
@@ -156,6 +157,7 @@ export default class AuditLogApiClient {
     return axios
       .get(url, {
         headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -185,6 +187,7 @@ export default class AuditLogApiClient {
     return axios
       .get(`${this.baseUrl}/${correlationId}${queryString}`, {
         headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -207,6 +210,7 @@ export default class AuditLogApiClient {
     return axios
       .get(url, {
         headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -238,6 +242,7 @@ export default class AuditLogApiClient {
     return axios
       .get(`${this.baseUrl}${queryString}`, {
         headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
