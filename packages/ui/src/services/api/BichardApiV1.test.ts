@@ -1,6 +1,6 @@
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 
-import { Reason, ResolutionStatus, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { Order, OrderBy, Reason, ResolutionStatus, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -93,30 +93,24 @@ describe("BichardApiV1", () => {
     })
 
     it("accepts filter queries with arrays", async () => {
-      const sortQuery = (query: string) =>
-        query
-          .split("?")[1]
-          .split("&")
-          .sort()
-          .map((q) => q.replace(/\+/g, "%20"))
-          .join("&")
-
       const endpoint = V1.Cases
 
       const apiCaseQuerystring: ApiCaseQuery = {
-        maxPerPage: 50,
-        pageNum: 1,
-        reason: Reason.All,
-        caseAge: [CaseAge.Today, CaseAge.Yesterday],
-        reasonCodes: ["HO100206", "HO100323"],
         allocatedUsername: "user1",
         asn: "1101ZD01448754K",
+        caseAge: [CaseAge.Today, CaseAge.Yesterday],
         caseState: ResolutionStatus.Resolved,
         courtName: "Kings Court",
         defendantName: "Adam Smith",
         from: new Date("2025-02-01"),
         lockedState: LockedState.All,
+        maxPerPage: 50,
+        order: Order.asc,
+        orderBy: OrderBy.courtDate,
+        pageNum: 1,
         ptiurn: "110011001",
+        reason: Reason.All,
+        reasonCodes: ["HO100206", "HO100323"],
         resolvedByUsername: "user.resolver",
         resolvedFrom: new Date("2025-03-01"),
         resolvedTo: new Date("2025-03-25"),
@@ -129,10 +123,8 @@ describe("BichardApiV1", () => {
 
       const result = await gateway.fetchCases(apiCaseQuerystring)
 
-      const generatedQuery = sortQuery((client.get as jest.Mock).mock.calls[0][0])
-      const expectedQuery = sortQuery(
-        `${endpoint}?allocatedUsername=user1&asn=1101ZD01448754K&caseAge=Today&caseAge=Yesterday&caseState=Resolved&courtName=Kings%20Court&defendantName=Adam%20Smith&from=2025-02-01&lockedState=All&maxPerPage=50&pageNum=1&ptiurn=110011001&reason=All&reasonCodes=HO100206&reasonCodes=HO100323&resolvedByUsername=user.resolver&resolvedFrom=2025-03-01&resolvedTo=2025-03-25&to=2025-03-31`
-      )
+      const generatedQuery = (client.get as jest.Mock).mock.calls[0][0]
+      const expectedQuery = `${endpoint}?allocatedUsername=user1&asn=1101ZD01448754K&caseAge=Today&caseAge=Yesterday&caseState=Resolved&courtName=Kings+Court&defendantName=Adam+Smith&from=2025-02-01&lockedState=All&maxPerPage=50&order=asc&orderBy=courtDate&pageNum=1&ptiurn=110011001&reason=All&reasonCodes=HO100206&reasonCodes=HO100323&resolvedByUsername=user.resolver&resolvedFrom=2025-03-01&resolvedTo=2025-03-25&to=2025-03-31`
 
       expect(result).toEqual(expectedData)
       expect(generatedQuery).toEqual(expectedQuery)
