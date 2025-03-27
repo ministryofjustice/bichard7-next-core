@@ -80,13 +80,8 @@ describe("BichardApiV1", () => {
       expect(result).toEqual(expectedData)
     })
 
-    it("fetchCases accepts filter queries", async () => {
+    it("accepts filter queries", async () => {
       const endpoint = V1.Cases
-      const apiCaseQuerystring: ApiCaseQuery = {
-        maxPerPage: 1,
-        pageNum: 1,
-        reason: Reason.All
-      }
       const expectedData = {} as CaseIndexMetadata
 
       jest.spyOn(client, "get").mockResolvedValue({} as CaseIndexMetadata)
@@ -97,7 +92,7 @@ describe("BichardApiV1", () => {
       expect(client.get).toHaveBeenCalledWith(`${endpoint}?maxPerPage=1&pageNum=1&reason=All`)
     })
 
-    it("fetchCases accepts filter queries with arrays", async () => {
+    it("accepts filter queries with arrays", async () => {
       const sortQuery = (query: string) =>
         query
           .split("?")[1]
@@ -141,6 +136,15 @@ describe("BichardApiV1", () => {
 
       expect(result).toEqual(expectedData)
       expect(generatedQuery).toEqual(expectedQuery)
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+
+      const result = await gateway.fetchCases(apiCaseQuerystring)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
     })
   })
 })
