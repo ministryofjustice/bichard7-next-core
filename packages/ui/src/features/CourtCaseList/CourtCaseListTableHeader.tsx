@@ -23,37 +23,53 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           className={"table-column-header-link"}
           href={orderByParams("defendantName")}
           id="defendant-name-sort"
+          aria-sort={order === "asc" ? "ascending" : "descending"}
         >
           {"Defendant name"}
           <ColumnOrderIcons columnName={"defendantName"} currentOrder={query.order} orderBy={query.orderBy} />
         </HeaderLink>
       </HeaderCell>
       <HeaderCell className={className} style={{ width: "115px" }}>
-        <HeaderLink className={"table-column-header-link"} href={orderByParams("courtDate")} id="court-date-sort">
+        <HeaderLink
+          className={"table-column-header-link"}
+          href={orderByParams("courtDate")}
+          id="court-date-sort"
+          aria-sort={order === "asc" ? "ascending" : "descending"}
+        >
           {"Court date"}
           <ColumnOrderIcons columnName={"courtDate"} currentOrder={query.order} orderBy={query.orderBy} />
         </HeaderLink>
       </HeaderCell>
       <HeaderCell className={className}>
-        <HeaderLink className={"table-column-header-link"} href={orderByParams("courtName")} id="court-name-sort">
+        <HeaderLink
+          className={"table-column-header-link"}
+          href={orderByParams("courtName")}
+          id="court-name-sort"
+          aria-sort={order === "asc" ? "ascending" : "descending"}
+        >
           {"Court name"}
           <ColumnOrderIcons columnName={"courtName"} currentOrder={query.order} orderBy={query.orderBy} />
         </HeaderLink>
       </HeaderCell>
       <HeaderCell className={className}>
-        <HeaderLink className={"table-column-header-link"} href={orderByParams("ptiurn")} id="ptiurn-sort">
+        <HeaderLink
+          className={"table-column-header-link"}
+          href={orderByParams("ptiurn")}
+          id="ptiurn-sort"
+          aria-sort={order === "asc" ? "ascending" : "descending"}
+        >
           {"PTIURN"}
           <ColumnOrderIcons columnName={"ptiurn"} currentOrder={query.order} orderBy={query.orderBy} />
         </HeaderLink>
       </HeaderCell>
       <HeaderCell className={className}>
-        <ColumnHeading>{"Notes"}</ColumnHeading>
+        <ColumnHeading aria-sort="none">{"Notes"}</ColumnHeading>
       </HeaderCell>
       <HeaderCell className={className}>
-        <ColumnHeading>{"Reason"}</ColumnHeading>
+        <ColumnHeading aria-sort="none">{"Reason"}</ColumnHeading>
       </HeaderCell>
       <HeaderCell className={className}>
-        <ColumnHeading>{"Locked by"}</ColumnHeading>
+        <ColumnHeading aria-sort="none">{"Locked by"}</ColumnHeading>
       </HeaderCell>
     </tr>
   )
