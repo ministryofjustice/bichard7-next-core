@@ -23,6 +23,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           className={"table-column-header-link"}
           href={orderByParams("defendantName")}
           id="defendant-name-sort"
+          aria-live="polite"
           aria-sort={order === "asc" ? "ascending" : "descending"}
         >
           {"Defendant name"}
@@ -34,6 +35,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           className={"table-column-header-link"}
           href={orderByParams("courtDate")}
           id="court-date-sort"
+          aria-live="polite"
           aria-sort={order === "asc" ? "ascending" : "descending"}
         >
           {"Court date"}
@@ -45,6 +47,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           className={"table-column-header-link"}
           href={orderByParams("courtName")}
           id="court-name-sort"
+          aria-live="polite"
           aria-sort={order === "asc" ? "ascending" : "descending"}
         >
           {"Court name"}
@@ -56,6 +59,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           className={"table-column-header-link"}
           href={orderByParams("ptiurn")}
           id="ptiurn-sort"
+          aria-live="polite"
           aria-sort={order === "asc" ? "ascending" : "descending"}
         >
           {"PTIURN"}
