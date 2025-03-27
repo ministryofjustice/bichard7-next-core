@@ -4,7 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { Reason } from "@moj-bichard7/common/types/ApiCaseQuerystring"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { sortBy } from "lodash"
 
 import { createCases } from "../../../../../tests/helpers/caseHelper"
