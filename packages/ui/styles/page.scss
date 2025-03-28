@@ -3,6 +3,7 @@
 html {
   font-family: $b7-font-family;
   font-size: $b7-default-font-size;
+  color: $b7-black-color;
 }
 
 .hidden-header {
@@ -46,5 +47,14 @@ tr td {
     td {
       padding-top: 0;
     }
+  }
+}
+
+// stylelint-disable selector-class-pattern
+.govuk-frontend-supported .govuk-tabs__list-item {
+  background-color: $b7-light-grey-color;
+
+  &.govuk-tabs__list-item--selected {
+    background-color: $b7-white-color;
   }
 }
