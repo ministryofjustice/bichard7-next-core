@@ -1,17 +1,16 @@
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
-import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { createExceptionOnCase } from "../../../../../../tests/helpers/exceptionHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createTriggers } from "../../../../../../tests/helpers/triggerHelper"
 import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { Reason } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 import { ResolutionStatusNumber } from "../../../../../../useCases/dto/convertResolutionStatus"
 
@@ -20,7 +19,7 @@ describe("fetchCasesAndFilter filtering by reason codes e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()

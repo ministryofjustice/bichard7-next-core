@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-import { LockedState } from "../../../../../../types/CaseIndexQuerystring"
+import { LockedState } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 export const filterByLockedState = (
   sql: postgres.Sql,
