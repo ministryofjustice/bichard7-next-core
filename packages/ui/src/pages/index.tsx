@@ -1,5 +1,7 @@
+import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
+import { USE_API_CASES_INDEX_ENDPOINT } from "config"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { deleteCookie, getCookie, setCookie } from "cookies-next"
@@ -15,6 +17,9 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
+import ApiClient from "services/api/ApiClient"
+import BichardApiV1 from "services/api/BichardApiV1"
+import { canUseApiEndpoint } from "services/api/canUseEndpoint"
 import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import getCountOfCasesByCaseAge from "services/getCountOfCasesByCaseAge"
@@ -35,6 +40,7 @@ import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import getQueryStringCookieName from "utils/getQueryStringCookieName"
 import { isPost } from "utils/http"
 import { logUiDetails } from "utils/logUiDetails"
+import logger from "utils/logger"
 import { logCaseListRenderTime } from "utils/logging"
 import { calculateLastPossiblePageNumber } from "utils/pagination/calculateLastPossiblePageNumber"
 import redirectTo from "utils/redirectTo"
@@ -59,6 +65,8 @@ type Props = {
   user: DisplayFullUser
   caseResolvedDateRange: SerializedDateRange | null
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
+
+const useApi = canUseApiEndpoint(USE_API_CASES_INDEX_ENDPOINT)
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -104,25 +112,56 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
     }
 
-    const [caseAgeCounts, courtCases] = await Promise.all([
-      getCountOfCasesByCaseAge(dataSource, currentUser),
-      listCourtCases(dataSource, caseListQueryParams, currentUser)
-    ])
+    let caseAgeCounts
+    let courtCases
+    let totalCases: number
+    let apiCases
 
-    if (isError(caseAgeCounts)) {
-      throw caseAgeCounts
-    }
+    if (useApi) {
+      const jwt = req.cookies[".AUTH"] as string
+      const apiClient = new ApiClient(jwt)
+      const apiGateway = new BichardApiV1(apiClient)
 
-    if (isError(courtCases)) {
-      throw courtCases
+      logger.info("[API] Using API to fetch case details")
+
+      const apiCaseQuery = {
+        maxPerPage: caseListQueryParams.maxPageItems ?? 50,
+        pageNum: caseListQueryParams.page ?? 1,
+        reason: caseListQueryParams.reason ?? Reason.All
+      } satisfies ApiCaseQuery
+
+      const caseIndexMetadata = await apiGateway.fetchCases(apiCaseQuery)
+
+      if (isError(caseIndexMetadata)) {
+        throw caseIndexMetadata
+      }
+
+      caseAgeCounts = caseIndexMetadata.caseAges as Record<string, number>
+      apiCases = caseIndexMetadata.cases
+      totalCases = caseIndexMetadata.totalCases
+    } else {
+      const [tempCaseAgeCounts, tempCourtCases] = await Promise.all([
+        getCountOfCasesByCaseAge(dataSource, currentUser),
+        listCourtCases(dataSource, caseListQueryParams, currentUser)
+      ])
+
+      if (isError(tempCaseAgeCounts)) {
+        throw tempCaseAgeCounts
+      }
+
+      if (isError(tempCourtCases)) {
+        throw tempCourtCases
+      }
+
+      courtCases = tempCourtCases.result
+      caseAgeCounts = tempCaseAgeCounts
+
+      totalCases = tempCourtCases.totalCases
     }
 
     const oppositeOrder: QueryOrder = caseListQueryParams.order === "asc" ? "desc" : "asc"
 
-    const lastPossiblePageNumber = calculateLastPossiblePageNumber(
-      courtCases.totalCases,
-      caseListQueryParams.maxPageItems
-    )
+    const lastPossiblePageNumber = calculateLastPossiblePageNumber(totalCases, caseListQueryParams.maxPageItems)
     if ((caseListQueryParams.page ?? 1) > lastPossiblePageNumber) {
       if (req.url) {
         const [urlPath, urlQuery] = req.url.split("?")
@@ -147,7 +186,9 @@ export const getServerSideProps = withMultipleServerSideProps(
         build: process.env.NEXT_PUBLIC_BUILD || null,
         caseAge: caseAges,
         caseAgeCounts: caseAgeCounts,
-        courtCases: courtCases.result.map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
+        courtCases: useApi
+          ? (apiCases as unknown[] as DisplayPartialCourtCase[])
+          : (courtCases ?? []).map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
         csrfToken,
         dateRange:
           !!caseListQueryParams.courtDateRange && !Array.isArray(caseListQueryParams.courtDateRange)
@@ -161,7 +202,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         oppositeOrder,
         queryStringCookieName,
         caseDetailsCookieName,
-        totalCases: courtCases.totalCases,
+        totalCases,
         user: userToDisplayFullUserDto(currentUser),
         caseResolvedDateRange: caseListQueryParams.resolvedDateRange
           ? {
