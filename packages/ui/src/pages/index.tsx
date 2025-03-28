@@ -1,7 +1,6 @@
 import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
-import { USE_API_CASES_INDEX_ENDPOINT } from "config"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { deleteCookie, getCookie, setCookie } from "cookies-next"
@@ -19,7 +18,7 @@ import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { canUseApiEndpoint } from "services/api/canUseEndpoint"
+import { ApiEndpoints, canUseApiEndpoint } from "services/api/canUseEndpoint"
 import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import CourtCase from "services/entities/CourtCase"
@@ -67,7 +66,7 @@ type Props = {
   caseResolvedDateRange: SerializedDateRange | null
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
 
-const useApi = canUseApiEndpoint(USE_API_CASES_INDEX_ENDPOINT)
+const useApi = canUseApiEndpoint(ApiEndpoints.CaseList)
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
