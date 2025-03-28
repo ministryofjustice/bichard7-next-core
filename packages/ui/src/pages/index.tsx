@@ -1,4 +1,5 @@
 import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
@@ -112,10 +113,10 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
     }
 
-    let caseAgeCounts
+    let caseAgeCounts: Record<string, number>
     let courtCases: CourtCase[] = []
     let totalCases: number
-    let apiCases
+    let apiCases: CaseIndexDto[] = []
 
     if (useApi) {
       const jwt = req.cookies[".AUTH"] as string
@@ -127,8 +128,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       const apiCaseQuery = {
         maxPerPage: caseListQueryParams.maxPageItems ?? 50,
         pageNum: caseListQueryParams.page ?? 1,
-        reason: caseListQueryParams.reason ?? Reason.All
-      } satisfies ApiCaseQuery
+        reason: caseListQueryParams.reason ?? Reason.All,
+        ...caseListQueryParams
+      } as ApiCaseQuery
 
       const caseIndexMetadata = await apiGateway.fetchCases(apiCaseQuery)
 
