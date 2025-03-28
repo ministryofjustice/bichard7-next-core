@@ -22,6 +22,7 @@ import BichardApiV1 from "services/api/BichardApiV1"
 import { canUseApiEndpoint } from "services/api/canUseEndpoint"
 import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
+import CourtCase from "services/entities/CourtCase"
 import getCountOfCasesByCaseAge from "services/getCountOfCasesByCaseAge"
 import getDataSource from "services/getDataSource"
 import getLastSwitchingFormSubmission from "services/getLastSwitchingFormSubmission"
@@ -113,7 +114,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     let caseAgeCounts
-    let courtCases
+    let courtCases: CourtCase[] = []
     let totalCases: number
     let apiCases
 
@@ -122,7 +123,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       const apiClient = new ApiClient(jwt)
       const apiGateway = new BichardApiV1(apiClient)
 
-      logger.info("[API] Using API to fetch case details")
+      logger.info("[API] Using API to fetch cases")
 
       const apiCaseQuery = {
         maxPerPage: caseListQueryParams.maxPageItems ?? 50,
@@ -188,7 +189,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         caseAgeCounts: caseAgeCounts,
         courtCases: useApi
           ? (apiCases as unknown[] as DisplayPartialCourtCase[])
-          : (courtCases ?? []).map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
+          : courtCases.map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
         csrfToken,
         dateRange:
           !!caseListQueryParams.courtDateRange && !Array.isArray(caseListQueryParams.courtDateRange)
