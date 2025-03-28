@@ -1,6 +1,5 @@
 import { ApiEndpoints } from "./canUseEndpoint"
 
-// Utility function to mock the module with different values
 const mockUseApiModule = (useApi: boolean, useApiCaseEndpoint: boolean, useApiCaseIndexEndpoint: boolean) => {
   jest.doMock("../../config.ts", () => ({
     USE_API: useApi,
@@ -11,7 +10,7 @@ const mockUseApiModule = (useApi: boolean, useApiCaseEndpoint: boolean, useApiCa
 
 describe("canUseEndpoint", () => {
   beforeEach(() => {
-    jest.resetModules() // Reset module registry to clear previous mocks
+    jest.resetModules()
   })
 
   afterEach(() => {
@@ -21,7 +20,6 @@ describe("canUseEndpoint", () => {
   it("returns false when USE_API is disabled", () => {
     mockUseApiModule(false, true, false)
 
-    // Re-import the module to apply the mock
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails)).toBe(false)
@@ -30,7 +28,6 @@ describe("canUseEndpoint", () => {
   it("returns true when USE_API_CASE_ENDPOINT is enabled", () => {
     mockUseApiModule(true, true, false)
 
-    // Re-import the module to apply the mock
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails)).toBe(true)
@@ -39,7 +36,6 @@ describe("canUseEndpoint", () => {
   it("returns true when USE_API_CASES_INDEX_ENDPOINT is enabled", () => {
     mockUseApiModule(true, false, true)
 
-    // Re-import the module to apply the mock
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseList)).toBe(true)
