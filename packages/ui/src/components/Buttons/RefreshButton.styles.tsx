@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { yellow } from "utils/colours"
+import { blue, offWhite, yellow } from "utils/colours"
 
 export const RefreshButtonContainer = styled.div`
   display: flex;
@@ -17,9 +17,9 @@ export const RefreshButtonContainer = styled.div`
 export const StyledRefreshButton = styled.button`
   display: flex;
   font-family: "GDS Transport";
-  background-color: white;
-  border-color: #1759bc;
-  color: #1759bc;
+  background-color: ${offWhite};
+  border-color: ${blue};
+  color: ${blue};
   font-size: 1rem;
   line-height: 1.25;
   padding: 8px 10px 7px 6px;

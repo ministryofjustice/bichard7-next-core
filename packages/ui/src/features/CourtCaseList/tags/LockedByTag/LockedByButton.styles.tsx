@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { blue, gdsBlack, tagBlue, textBlue, yellow } from "utils/colours"
+import { blue, gdsBlack, tagBlue, yellow } from "utils/colours"
 
 const StyledLockedByButton = styled.button`
   display: inline-flex;
@@ -10,7 +10,7 @@ const StyledLockedByButton = styled.button`
   border: none;
   gap: 11px;
   background-color: ${tagBlue};
-  color: ${textBlue};
+  color: ${blue};
   font-size: 1em;
   text-decoration: underline;
   cursor: pointer;

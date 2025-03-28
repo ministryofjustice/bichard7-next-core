@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import { gdsSecondaryTextColour } from "utils/colours"
+import { textSecondary } from "utils/colours"
 
 const HintText = styled.span`
   display: block;
-  color: ${gdsSecondaryTextColour};
+  color: ${textSecondary};
 `
 
 const HintTextNoMargin = styled(HintText)`
