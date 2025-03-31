@@ -825,7 +825,7 @@ jobs:
           command: |
             USE_API="<< parameters.api >>" \
             USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
-            USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >> \
+            USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
