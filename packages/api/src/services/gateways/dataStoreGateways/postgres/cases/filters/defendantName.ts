@@ -8,5 +8,5 @@ export const filterByDefendantName = (sql: postgres.Sql, defendantName?: string)
 
   const parts = defendantName.replace(/\*|\s+/g, "%")
 
-  return sql`AND el.defendant_name ILIKE ${"%" + parts + "%"}`
+  return sql`AND el.defendant_name ILIKE ${parts + "%"}`
 }

@@ -18,7 +18,7 @@ export const filterByLockedState = (
   }
 
   if (lockedState === LockedState.Unlocked) {
-    return sql`AND (el.error_locked_by_id IS NULL OR el.trigger_locked_by_id IS NULL)`
+    return sql`AND (el.error_locked_by_id IS NULL AND el.trigger_locked_by_id IS NULL)`
   }
 
   if (lockedState === LockedState.LockedToMe && user.username) {

@@ -1,5 +1,6 @@
 import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseIndexDto } from "@moj-bichard7/common/types/Case"
+import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
@@ -125,6 +126,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
       logger.info("[API] Using API to fetch cases")
 
+      const caseAge = [query?.caseAge].flat().filter((value) => Object.values(CaseAge).includes(value as CaseAge))
+
       const apiCaseQuery = {
         ...caseListQueryParams,
         maxPerPage: caseListQueryParams.maxPageItems ?? 50,
@@ -132,7 +135,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         reason: caseListQueryParams.reason ?? Reason.All,
         ...(query.from && { from: query.from }),
         ...(query.to && { to: query.to }),
-        ...(query.caseAge && { caseAge: query.caseAge }),
+        ...(query.caseAge && { caseAge }),
         ...(query.resolvedFrom && { resolvedFrom: query.resolvedFrom }),
         ...(query.resolvedTo && { resolvedTo: query.resolvedTo })
       } as ApiCaseQuery
