@@ -168,6 +168,9 @@ commands:
       USE_API_CASE_ENDPOINT:
         default: false
         type: boolean
+      USE_API_CASES_INDEX_ENDPOINT:
+        default: false
+        type: boolean
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -179,6 +182,7 @@ commands:
             ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
             USE_API="<<parameters.USE_API>>" \
             USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
+            USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
@@ -760,6 +764,9 @@ jobs:
       api-case-details:
         type: boolean
         default: false
+      api-case-list:
+        type: boolean
+        default: false
     steps:
       - unless:
           condition:
@@ -818,6 +825,7 @@ jobs:
           command: |
             USE_API="<< parameters.api >>" \
             USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
+            USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >> \
             bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
@@ -852,6 +860,9 @@ jobs:
         type: boolean
         default: false
       api-case-details:
+        type: boolean
+        default: false
+      api-case-list:
         type: boolean
         default: false
     environment:
@@ -909,6 +920,7 @@ jobs:
           SKIP_IMAGES: "ui"
           USE_API: << parameters.api >>
           USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
+          USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -1050,6 +1062,7 @@ workflows:
           name: cypress_e2e_tests_api
           api: true
           api-case-details: true
+          api-case-list: true
           requires:
             - build-ui
             - build_api_docker_image
@@ -1067,6 +1080,7 @@ workflows:
           name: cucumber_e2e_tests_api
           api: true
           api-case-details: true
+          api-case-list: true
           requires:
             - build-ui
             - build_api_docker_image
