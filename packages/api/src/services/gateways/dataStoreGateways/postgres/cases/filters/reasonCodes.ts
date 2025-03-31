@@ -1,6 +1,7 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
+import getLongTriggerCode from "@moj-bichard7/common/utils/getLongTriggerCode"
 import { isEmpty } from "lodash"
 
 import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
@@ -12,7 +13,7 @@ export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters): postgr
 
   const queries: postgres.PendingQuery<Row[]>[] = []
   const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
-  const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
+  const triggerCodes = reasonCodes.filter((rc) => !rc.startsWith("HO")).map((rc) => getLongTriggerCode(rc)) ?? []
   const exceptionCodes = reasonCodes.filter((rc) => rc.startsWith("HO")).map((rc) => `%${rc}%`) ?? []
 
   if (!isEmpty(triggerCodes)) {

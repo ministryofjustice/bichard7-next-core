@@ -1,5 +1,6 @@
 import triggerDefinitions from "@moj-bichard7-developers/bichard7-next-data/dist/data/trigger-definitions.json"
-import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
+
+import getShortTriggerCode from "./getShortTriggerCode"
 
 const getTriggerWithDescription = (triggerCode: string, withShortTriggerCode?: boolean): string => {
   const shortTriggerCode = getShortTriggerCode(triggerCode)
@@ -9,7 +10,7 @@ const getTriggerWithDescription = (triggerCode: string, withShortTriggerCode?: b
     triggerWithDescription = shortTriggerCode
   }
 
-  triggerDefinitions.filter((record) => {
+  triggerDefinitions.forEach((record) => {
     if (record.code === triggerCode) {
       if (withShortTriggerCode) {
         triggerWithDescription = `${shortTriggerCode} - ${record.shortDescription}`

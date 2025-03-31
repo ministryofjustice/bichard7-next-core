@@ -15,6 +15,7 @@ export const TriggerSchema = z.object({
 
 export const TriggerDtoSchema = z.object({
   createAt: dateLikeToDate,
+  description: z.string(),
   resolvedAt: dateLikeToDate.optional(),
   shortTriggerCode: z.string().nullable(),
   status: z.string(),

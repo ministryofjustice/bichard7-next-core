@@ -126,10 +126,15 @@ export const getServerSideProps = withMultipleServerSideProps(
       logger.info("[API] Using API to fetch cases")
 
       const apiCaseQuery = {
+        ...caseListQueryParams,
         maxPerPage: caseListQueryParams.maxPageItems ?? 50,
         pageNum: caseListQueryParams.page ?? 1,
         reason: caseListQueryParams.reason ?? Reason.All,
-        ...caseListQueryParams
+        ...(query.from && { from: query.from }),
+        ...(query.to && { to: query.to }),
+        ...(query.caseAge && { caseAge: query.caseAge }),
+        ...(query.resolvedFrom && { resolvedFrom: query.resolvedFrom }),
+        ...(query.resolvedTo && { resolvedTo: query.resolvedTo })
       } as ApiCaseQuery
 
       const caseIndexMetadata = await apiGateway.fetchCases(apiCaseQuery)
