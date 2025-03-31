@@ -360,6 +360,7 @@ services:
       API_URL: http://api:3321
       USE_API: ${USE_API:-false}
       USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
+      USE_API_CASES_INDEX_ENDPOINT: ${USE_API_CASES_INDEX_ENDPOINT:-false}
     ports:
       - 4543:9443
     healthcheck:
