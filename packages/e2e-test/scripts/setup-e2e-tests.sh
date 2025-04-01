@@ -59,7 +59,7 @@ fi
 BROKER_ID=$(aws mq list-brokers --query "BrokerSummaries[?BrokerName=='cjse-${WORKSPACE}-bichard-7-amq'].BrokerId" --output text)
 BROKER_ENDPOINTS=$(aws mq describe-broker --broker-id ${BROKER_ID} --query "join(',', BrokerInstances[*].Endpoints[2])" --output text)
 BROKER_URL="failover:(${BROKER_ENDPOINTS})"
-DB_HOST=$($AWS_CLI_PATH rds describe-db-clusters --region eu-west-2 --filters Name=db-cluster-id,Values=cjse-${WORKSPACE}-bichard-7-aurora-cluster --query "DBClusters[0].Endpoint" --output text)
+DB_HOST=$($AWS_CLI_PATH rds describe-db-clusters --region eu-west-2 --filters Name=db-cluster-id,Values=cjse-${WORKSPACE}-bichard-7-aurora-cluster --query "DBClusters[0].ReaderEndpoint" --output text)
 S3_INCOMING_MESSAGE_BUCKET=$(aws lambda list-functions --query "Functions[?contains(FunctionName, 'transfer-messages') && contains(FunctionName, '-${WORKSPACE}-')].Environment.Variables.EXTERNAL_INCOMING_MESSAGE_BUCKET_NAME" --output text)
 S3_REGION="$AWS_REGION"
 INCOMING_MESSAGE_HANDLER_REGION="$AWS_REGION"
