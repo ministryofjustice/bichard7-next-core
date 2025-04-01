@@ -202,16 +202,21 @@ const Home: NextPage<Props> = (props) => {
     const queryParams = new URLSearchParams(queryString)
     nonSavedParams.forEach((param) => queryParams.delete(param))
 
-    setCookie(queryStringCookieName, queryParams.toString(), { path: "/" } as OptionsType)
-
     const { pathname } = router
     const newQueryParams = removeBlankQueryParams(queryParams)
     nonSavedParams.forEach((param) => newQueryParams.delete(param))
 
+    if (newQueryParams.has("caseAge")) {
+      newQueryParams.delete("caseAge")
+      searchParams.caseAge.forEach((ca) => newQueryParams.append("caseAge", ca))
+    }
+
     if (!isEqual(newQueryParams.toString(), queryParams.toString())) {
       router.push({ pathname, query: newQueryParams.toString() }, undefined, { shallow: true })
     }
-  }, [router, queryStringCookieName, environment, build, caseDetailsCookieName])
+
+    setCookie(queryStringCookieName, newQueryParams.toString(), { path: "/" } as OptionsType)
+  }, [router, queryStringCookieName, environment, build, caseDetailsCookieName, searchParams.caseAge])
 
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
