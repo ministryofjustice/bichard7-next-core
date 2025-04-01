@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "devDependencies": {
     "@aws-sdk/client-sqs": "^3.772.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.263",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.264",
     "@stomp/stompjs": "^7.1.0",
     "esbuild": "~0.25.0",
     "eslint": "^9.23.0",
