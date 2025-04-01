@@ -19,9 +19,8 @@ import {
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
-  ReallocateLinkButton,
   StyledButton,
-  StyledSecondaryButton
+  SecondaryLinkButton
 } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
 import { LinkButton } from "../../components/Buttons/LinkButton"
@@ -95,9 +94,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </LockedTagContainer>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-            <ReallocateLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
+            <SecondaryLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
               {"Reallocate Case"}
-            </ReallocateLinkButton>
+            </SecondaryLinkButton>
           </ConditionalRender>
           <ConditionalRender isRendered={hasCaseLock}>
             <LinkButton id="leave-and-lock" href={basePath}>
@@ -110,11 +109,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </Form>
           </ConditionalRender>
           <ConditionalRender isRendered={!hasCaseLock}>
-            <a href={basePath}>
-              <StyledSecondaryButton id="return-to-case-list" className={`button`}>
-                {"Return to case list"}
-              </StyledSecondaryButton>
-            </a>
+            <SecondaryLinkButton id="return-to-case-list" className={`button`} href={basePath} secondary={true}>
+              {"Return to case list"}
+            </SecondaryLinkButton>
           </ConditionalRender>
         </ButtonContainer>
       </CaseDetailHeaderRow>

@@ -1,6 +1,5 @@
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
-import { SecondaryButton } from "components/Buttons/SecondaryButton"
 import styled from "styled-components"
 import { lightGrey, gdsLightGrey } from "utils/colours"
 
@@ -53,7 +52,7 @@ const StyledButton = styled(Button)`
   margin-bottom: 0;
 `
 
-const StyledSecondaryButton = styled(SecondaryButton)`
+const SecondaryLinkButton = styled(LinkButton)`
   background-color: ${gdsLightGrey};
 
   &:hover {
@@ -61,20 +60,12 @@ const StyledSecondaryButton = styled(SecondaryButton)`
     background-color: #222222;
   }
 `
-const ReallocateLinkButton = styled(LinkButton)`
-  background-color: ${gdsLightGrey};
 
-  &:hover {
-    color: ${gdsLightGrey};
-    background-color: #222222;
-  }
-`
 export {
   ButtonContainer,
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
-  ReallocateLinkButton,
   StyledButton,
-  StyledSecondaryButton
+  SecondaryLinkButton
 }

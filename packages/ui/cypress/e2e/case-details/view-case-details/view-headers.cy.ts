@@ -48,8 +48,8 @@ describe("View court case details header", () => {
 
     cy.get("a#leave-and-lock").should("not.exist")
     cy.get("button#leave-and-unlock").should("not.exist")
-    cy.get("button#return-to-case-list").should("exist").should("have.text", "Return to case list")
-    cy.get("button#return-to-case-list").click()
+    cy.get("a#return-to-case-list").should("exist").should("have.text", "Return to case list")
+    cy.get("a#return-to-case-list").click()
     cy.location("pathname").should("equal", "/bichard")
   })
 
