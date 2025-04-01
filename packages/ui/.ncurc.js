@@ -2,9 +2,11 @@
   Pinned:
   - cookies-next
     - v5 contains breaking changes
+  - react, react-dom
+    - Has breaking changes. Need to look into this more.
 
 */
-const pinned = ["cookies-next"]
+const pinned = ["cookies-next", "react", "react-dom"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 
