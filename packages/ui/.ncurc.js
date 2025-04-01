@@ -6,11 +6,19 @@
     - Has breaking changes. Need to look into this more.
 
 */
-const pinned = ["cookies-next", "react", "react-dom"]
-const ignored = []
+const pinned = ["cookies-next"]
+const ignored = ["react", "react-dom"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
 module.exports = {
+  filter: (pkg) => {
+    if (ignored.some((ignore) => ignore === pkg)) {
+      return false
+    }
+
+    return true
+  },
+
   target: (pkg) => {
     if (pinned.some((pin) => pin === pkg)) {
       const res = "minor"
