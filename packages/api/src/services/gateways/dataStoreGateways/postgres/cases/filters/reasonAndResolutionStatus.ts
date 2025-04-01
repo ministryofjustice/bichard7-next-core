@@ -25,24 +25,25 @@ const filterIfUnresolved = (
   sql: postgres.Sql,
   user: User,
   filters: Filters,
-  resolutionStatus: number,
   reasonCodes: string[]
 ): postgres.PendingQuery<postgres.Row[]> | postgres.PendingQuery<postgres.Row[]>[] => {
   const query = []
 
   if (shouldFilterForTriggers(user, filters.reason)) {
-    query.push(sql`AND el.trigger_status = ${resolutionStatus}`)
+    query.push(sql`AND el.trigger_status = ${ResolutionStatusNumber.Unresolved}`)
   } else if (shouldFilterForExceptions(user, filters.reason)) {
-    query.push(sql`AND el.error_status = ${resolutionStatus}`)
+    query.push(sql`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`)
   } else if (canSeeTriggersAndException(user, filters.reason)) {
     if (reasonCodesAreExceptionsOnly(reasonCodes)) {
-      query.push(sql`AND el.error_status = ${resolutionStatus}`)
+      query.push(
+        sql`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`
+      )
     } else if (reasonCodesAreTriggersOnly(reasonCodes)) {
-      query.push(sql`AND el.trigger_status = ${resolutionStatus}`)
+      query.push(sql`AND el.trigger_status = ${ResolutionStatusNumber.Unresolved}`)
     } else {
       query.push(sql`
-        AND (el.error_status = ${resolutionStatus} OR el.trigger_status = ${resolutionStatus})
-        AND (el.trigger_status = ${resolutionStatus} OR el.error_status = ${resolutionStatus})
+        AND (el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}) OR el.trigger_status = ${ResolutionStatusNumber.Unresolved})
+        AND (el.trigger_status = ${ResolutionStatusNumber.Unresolved} OR el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}))
       `)
     }
   }
@@ -131,5 +132,5 @@ export const filterByReasonAndResolutionStatus = (
     return filterIfResolved(sql, user, filters, resolutionStatus, reasonCodes)
   }
 
-  return filterIfUnresolved(sql, user, filters, resolutionStatus, reasonCodes)
+  return filterIfUnresolved(sql, user, filters, reasonCodes)
 }

@@ -2,7 +2,6 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import Layout from "components/Layout"
 import { Loading } from "components/Loading"
-import { USE_API_CASE_ENDPOINT } from "config"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
@@ -20,7 +19,7 @@ import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { canUseApiEndpoint } from "services/api/canUseEndpoint"
+import { ApiEndpoints, canUseApiEndpoint } from "services/api/canUseEndpoint"
 import { canReallocate, canResolveOrSubmit } from "services/case"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
@@ -52,7 +51,7 @@ import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackFo
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
-const useApi = canUseApiEndpoint(USE_API_CASE_ENDPOINT)
+const useApi = canUseApiEndpoint(ApiEndpoints.CaseDetails)
 
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]

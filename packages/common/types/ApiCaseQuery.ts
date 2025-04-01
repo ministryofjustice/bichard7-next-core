@@ -37,7 +37,7 @@ export enum ResolutionStatus {
 export const ApiCaseQuerySchema = z.object({
   allocatedUsername: z.string().optional(),
   asn: z.string().optional(),
-  caseAge: z.array(z.nativeEnum(CaseAge)).optional(),
+  caseAge: z.array(z.nativeEnum(CaseAge)).or(z.nativeEnum(CaseAge)).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
   courtName: z.string().optional(),
   defendantName: z.string().optional().describe("Format: 'De*Name'"),

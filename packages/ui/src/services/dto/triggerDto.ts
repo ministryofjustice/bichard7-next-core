@@ -1,6 +1,6 @@
+import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 import type Trigger from "services/entities/Trigger"
 import type { DisplayTrigger } from "types/display/Triggers"
-import getTriggerWithDescription from "utils/formatReasons/getTriggerWithDescription"
 
 export const triggerToDisplayTriggerDto = (trigger: Trigger): DisplayTrigger => {
   const displayTrigger: DisplayTrigger = {

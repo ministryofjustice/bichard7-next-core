@@ -86,9 +86,10 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
       user
     )
 
-    expect(caseMetadata.cases).toHaveLength(5)
-    expect(caseMetadata.totalCases).toBe(5)
-    expect(caseMetadata.returnCases).toBe(5)
+    expect(caseMetadata.cases).toHaveLength(1)
+    expect(caseMetadata.totalCases).toBe(1)
+    expect(caseMetadata.returnCases).toBe(1)
+    expect(caseMetadata.cases[0].errorId).toBe(3)
   })
 
   it("will fetch cases which are locked to the current user", async () => {
