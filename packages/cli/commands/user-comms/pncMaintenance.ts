@@ -1,7 +1,4 @@
-import fs from "fs"
-import path from "path"
 import { input, confirm } from "@inquirer/prompts"
-import nunjucks from "nunjucks"
 import { parse, format, isValid, isMatch } from "date-fns"
 
 const validateTime = (time: string): boolean => {
@@ -9,12 +6,7 @@ const validateTime = (time: string): boolean => {
 }
 
 export const pncMaintenance = async () => {
-  const templateFile = "pnc-maintenance.txt"
-  const templatePath = path.join(__dirname, "templates", templateFile)
-  const templateContent = fs.readFileSync(templatePath, "utf-8")
-
   const maintenanceWindows: { date: string; startTime: string; endTime: string }[] = []
-
   let addAnotherDate = true
 
   while (addAnotherDate) {
@@ -48,16 +40,5 @@ export const pncMaintenance = async () => {
     })
   }
 
-  const renderedEmail = nunjucks.renderString(templateContent, {
-    maintenanceWindows
-  })
-
-  console.log("\n=== Preview Email ===\n")
-  console.log(renderedEmail)
-
-  const answer = await confirm({ message: "Do you want to use this template?" })
-
-  if (!answer) {
-    process.exit(1)
-  }
+  return { maintenanceWindows }
 }
