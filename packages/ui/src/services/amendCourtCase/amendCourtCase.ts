@@ -40,7 +40,6 @@ const amendCourtCase = async (
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
   }
 
-  // TODO: check this for phase 2
   const updatedAho = applyAmendmentsToAho(amendments, aho)
   if (isError(updatedAho)) {
     return updatedAho
