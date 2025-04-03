@@ -2,6 +2,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { AUDIT_LOG_EVENT_SOURCE } from "config"
+import { readFileSync } from "fs"
 import CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
@@ -12,7 +13,6 @@ import type { DataSource } from "typeorm"
 import fetchAuditLogEvents from "../helpers/fetchAuditLogEvents"
 import { hasAccessToAll } from "../helpers/hasAccessTo"
 import offenceSequenceException from "../test-data/HO100302_1.json"
-import multipleHearingResultsOnOffence from "../test-data/multipleHearingResultsOnOffence.json"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCasesWithFields } from "../utils/insertCourtCases"
@@ -20,6 +20,13 @@ import { getDummyCourtCase, insertCourtCasesWithFields } from "../utils/insertCo
 jest.mock("services/insertNotes")
 
 jest.setTimeout(60 * 60 * 1000)
+
+const annotatedPncUpdateDataset = readFileSync(
+  "../core/phase2/tests/fixtures/AnnotatedPncUpdateDataset-with-exception.xml"
+).toString()
+const pncUpdateDataset = readFileSync(
+  "../core/phase2/tests/fixtures/PncUpdateDataSet-with-single-NEWREM.xml"
+).toString()
 
 describe("resubmit court case", () => {
   const mockMqGateway = { execute: jest.fn() } as unknown as MqGateway
@@ -67,7 +74,6 @@ describe("resubmit court case", () => {
   })
 
   it("Should resubmit a court case with no updates", async () => {
-    // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: userName,
@@ -80,29 +86,20 @@ describe("resubmit court case", () => {
       orgForPoliceFilter: "01"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
-    // check the queue hasn't been called
     expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
 
-    const result = await resubmitCourtCase(
-      dataSource,
-      mockMqGateway,
-      { noUpdatesResubmit: true },
-      inputCourtCase.errorId,
-      {
-        username: userName,
-        visibleForces: ["01"],
-        visibleCourts: [],
-        hasAccessTo: hasAccessToAll
-      } as Partial<User> as User
-    )
+    const result = await resubmitCourtCase(dataSource, mockMqGateway, {}, inputCourtCase.errorId, {
+      username: userName,
+      visibleForces: ["01"],
+      visibleCourts: [],
+      hasAccessTo: hasAccessToAll
+    } as Partial<User> as User)
 
     expect(result).not.toBeInstanceOf(Error)
     expect(result).toMatchSnapshot()
 
-    // pull out the case from the db
     const retrievedCase = await dataSource
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
@@ -117,14 +114,12 @@ describe("resubmit court case", () => {
       }
     ])
 
-    // assert that the xml in the db is as we expect
     expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.errorStatus).toBe("Submitted")
   })
 
   it("Should resubmit a court case with updates to Court Offence Sequence Number", async () => {
-    // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: null,
@@ -137,13 +132,10 @@ describe("resubmit court case", () => {
       orgForPoliceFilter: "1111"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
-    // check the queue hasn't been called
     expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
 
-    // parse the xml so we can assert on the values before they change
     const input = parseAhoXml(inputCourtCase.updatedHearingOutcome as string)
 
     expect(input).not.toBeInstanceOf(Error)
@@ -169,7 +161,6 @@ describe("resubmit court case", () => {
     expect(result).not.toBeInstanceOf(Error)
     expect(result).toMatchSnapshot()
 
-    // pull out the case from the db
     const retrievedCase = await dataSource
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
@@ -184,7 +175,6 @@ describe("resubmit court case", () => {
       }
     ])
 
-    // parse the retreived case to aho format so we can assert on the values
     const parsedCase = parseAhoXml((retrievedCase as CourtCase).updatedHearingOutcome as string)
 
     expect(parsedCase).not.toBeInstanceOf(Error)
@@ -194,7 +184,6 @@ describe("resubmit court case", () => {
         .CourtOffenceSequenceNumber
     ).toBe(1234)
 
-    // assert that the xml in the db is as we expect
     expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.errorStatus).toBe("Submitted")
@@ -206,7 +195,6 @@ describe("resubmit court case", () => {
       { offenceIndex: 1, value: 1234 }
     ]
 
-    // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: null,
@@ -219,13 +207,10 @@ describe("resubmit court case", () => {
       orgForPoliceFilter: "1111"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
-    // check the queue hasn't been called
     expect(mockMqGateway.execute).toHaveBeenCalledTimes(0)
 
-    // parse the xml so we can assert on the values before they change
     const input = parseAhoXml(inputCourtCase.updatedHearingOutcome as string)
 
     expect(input).not.toBeInstanceOf(Error)
@@ -256,7 +241,6 @@ describe("resubmit court case", () => {
     expect(result).not.toBeInstanceOf(Error)
     expect(result).toMatchSnapshot()
 
-    // pull out the case from the db
     const retrievedCase = await dataSource
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
@@ -271,7 +255,6 @@ describe("resubmit court case", () => {
       }
     ])
 
-    // parse the retreived case to aho format so we can assert on the values
     const parsedCase = parseAhoXml((retrievedCase as CourtCase).updatedHearingOutcome as string)
 
     expect(parsedCase).not.toBeInstanceOf(Error)
@@ -289,14 +272,12 @@ describe("resubmit court case", () => {
       ).toEqual(value)
     })
 
-    // assert that the xml in the db is as we expect
     expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
     expect(retrievedCase?.errorStatus).toBe("Submitted")
   })
 
   it("Should log Hearing outcome resubmission to phase 1", async () => {
-    // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: null,
@@ -309,7 +290,6 @@ describe("resubmit court case", () => {
       orgForPoliceFilter: "1111"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
     const result = await resubmitCourtCase(
@@ -335,7 +315,6 @@ describe("resubmit court case", () => {
   })
 
   it("Should log Hearing outcome resubmission to phase 2", async () => {
-    // set up court case in the right format to insert into the db
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: null,
@@ -343,12 +322,11 @@ describe("resubmit court case", () => {
       errorStatus: "Unresolved",
       triggerCount: 1,
       phase: 2,
-      hearingOutcome: offenceSequenceException.hearingOutcomeXml,
-      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
+      hearingOutcome: annotatedPncUpdateDataset,
+      updatedHearingOutcome: pncUpdateDataset,
       orgForPoliceFilter: "1111"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
     const result = await resubmitCourtCase(
@@ -371,10 +349,14 @@ describe("resubmit court case", () => {
       resubmissionEvent(EventCode.HearingOutcomeResubmittedPhase2, "Hearing outcome resubmitted to phase 2", userName)
     )
     expect(events).toContainEqual(exceptionUnlockedEvent)
+
+    expect(mockMqGateway.execute).toHaveBeenCalledTimes(1)
+    const [messageXml, queueName] = (mockMqGateway.execute as jest.Mock).mock.calls[0]
+    expect(messageXml).toMatchSnapshot()
+    expect(queueName).toBe("PHASE_2_RESUBMIT_QUEUE")
   })
 
-  it("should send generatedXml to phase 1 queue", async () => {
-    // set up court case in the right format to insert into the db
+  it("should send the generated XML to phase 1 queue", async () => {
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: null,
@@ -387,7 +369,6 @@ describe("resubmit court case", () => {
       orgForPoliceFilter: "1111"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
     const result = await resubmitCourtCase(
@@ -411,8 +392,7 @@ describe("resubmit court case", () => {
     expect(messageXml).toMatchSnapshot()
   })
 
-  it("should send generatedXml to phase 2 queue", async () => {
-    // set up court case in the right format to insert into the db
+  it("should send the generated XML to phase 2 queue", async () => {
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: userName,
       triggerLockedByUsername: null,
@@ -420,12 +400,11 @@ describe("resubmit court case", () => {
       errorStatus: "Unresolved",
       triggerCount: 1,
       phase: 2,
-      hearingOutcome: multipleHearingResultsOnOffence.hearingOutcomeXml,
-      updatedHearingOutcome: offenceSequenceException.updatedHearingOutcomeXml,
+      hearingOutcome: annotatedPncUpdateDataset,
+      updatedHearingOutcome: pncUpdateDataset,
       orgForPoliceFilter: "1111"
     })
 
-    // insert the record to the db
     await insertCourtCasesWithFields([inputCourtCase])
 
     const result = await resubmitCourtCase(

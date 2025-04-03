@@ -138,12 +138,13 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req) && resubmitCase === "true") {
       const { amendments } = formData as { amendments: string }
 
-      const parsedAmendments = JSON.parse(amendments)
-
-      const updatedAmendments =
-        Object.keys(parsedAmendments).length > 0 ? parsedAmendments : { noUpdatesResubmit: true }
-
-      const amendedCase = await resubmitCourtCase(dataSource, mqGateway, updatedAmendments, +courtCaseId, currentUser)
+      const amendedCase = await resubmitCourtCase(
+        dataSource,
+        mqGateway,
+        JSON.parse(amendments),
+        +courtCaseId,
+        currentUser
+      )
 
       if (isError(amendedCase)) {
         throw amendedCase
