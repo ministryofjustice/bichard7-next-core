@@ -7,6 +7,7 @@ import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
 import type { DataSource, EntityManager } from "typeorm"
 import type { Amendments } from "types/Amendments"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import getSystemNotes from "utils/amendments/getSystemNotes"
 import createForceOwner from "utils/createForceOwner"
@@ -15,12 +16,14 @@ import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
 
+type AmendCourtCaseResult = { json: AnnotatedHearingOutcome | PncUpdateDataset; xml: string }
+
 const amendCourtCase = async (
   dataSource: DataSource | EntityManager,
   amendments: Partial<Amendments>,
   courtCase: CourtCase,
   userDetails: User
-): Promise<AnnotatedHearingOutcome | PncUpdateDataset | Error> => {
+): PromiseResult<AmendCourtCaseResult> => {
   if (courtCase.errorLockedByUsername && courtCase.errorLockedByUsername !== userDetails.username) {
     return new Error("Exception is locked by another user")
   }
@@ -46,16 +49,11 @@ const amendCourtCase = async (
   }
 
   // Depending on the phase, treat the update as either hoUpdate or pncUpdate
-  const generatedXml = isPncUpdateDataset(updatedAho)
+  const updatedAhoXml = isPncUpdateDataset(updatedAho)
     ? serialiseToPncUpdateDatasetXml(updatedAho, false)
     : serialiseToAhoXml(updatedAho, false)
 
-  const updateResult = await updateCourtCaseAho(
-    dataSource,
-    courtCase.errorId,
-    generatedXml,
-    !amendments.noUpdatesResubmit
-  )
+  const updateResult = await updateCourtCaseAho(dataSource, courtCase.errorId, updatedAhoXml)
   if (isError(updateResult)) {
     return updateResult
   }
@@ -65,7 +63,7 @@ const amendCourtCase = async (
     return addNoteResult
   }
 
-  return updatedAho
+  return { json: updatedAho, xml: updatedAhoXml }
 }
 
 export default amendCourtCase
