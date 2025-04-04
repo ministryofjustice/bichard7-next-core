@@ -12,4 +12,35 @@ const Banner = styled.div`
   }
 `
 
-export { Banner }
+const Box = styled.div`
+  background-color: #005bbb;
+  color: white;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+
+  > .govuk-phase-banner__text {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  svg {
+    flex-shrink: 0;
+    display: block;
+  }
+
+  a {
+    color: #ffffff;
+    text-decoration: underline;
+    font-weight: normal;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+`
+
+export { Banner, Box }
