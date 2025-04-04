@@ -1,14 +1,16 @@
-import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import Phase from "@moj-bichard7/core/types/Phase"
+import serialiseToAhoXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import serialiseToPncUpdateDatasetXml from "@moj-bichard7/core/lib/serialise/pncUpdateDatasetXml/serialiseToXml"
+import { isPncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import getCourtCase from "services/getCourtCase"
 import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
 import type { DataSource, EntityManager } from "typeorm"
 import type { Amendments } from "types/Amendments"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import getSystemNotes from "utils/amendments/getSystemNotes"
 import createForceOwner from "utils/createForceOwner"
+import parseHearingOutcome from "utils/parseHearingOutcome"
 import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
@@ -18,14 +20,12 @@ const amendCourtCase = async (
   amendments: Partial<Amendments>,
   courtCase: CourtCase,
   userDetails: User
-): Promise<AnnotatedHearingOutcome | Error> => {
+): PromiseResult<CourtCase> => {
   if (courtCase.errorLockedByUsername && courtCase.errorLockedByUsername !== userDetails.username) {
     return new Error("Exception is locked by another user")
   }
 
-  // we need to parse the annotated message due to being xml in db
-  const aho = parseAhoXml(courtCase.updatedHearingOutcome ?? courtCase.hearingOutcome)
-
+  const aho = parseHearingOutcome(courtCase.updatedHearingOutcome ?? courtCase.hearingOutcome)
   if (isError(aho)) {
     return aho
   }
@@ -33,7 +33,6 @@ const amendCourtCase = async (
   const ahoForceOwner = aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner
   if (ahoForceOwner === undefined || !ahoForceOwner.OrganisationUnitCode) {
     const organisationUnitCodes = createForceOwner(courtCase.orgForPoliceFilter || "")
-
     if (isError(organisationUnitCodes)) {
       return organisationUnitCodes
     }
@@ -42,39 +41,35 @@ const amendCourtCase = async (
   }
 
   const updatedAho = applyAmendmentsToAho(amendments, aho)
-
   if (isError(updatedAho)) {
     return updatedAho
   }
 
-  const generatedXml = serialiseToXml(updatedAho, false)
-
   // Depending on the phase, treat the update as either hoUpdate or pncUpdate
-  if (courtCase.phase === Phase.HEARING_OUTCOME) {
-    if (courtCase.errorLockedByUsername === userDetails.username || courtCase.errorLockedByUsername === null) {
-      const updateResult = await updateCourtCaseAho(
-        dataSource,
-        courtCase.errorId,
-        generatedXml,
-        !amendments.noUpdatesResubmit
-      )
+  const updatedAhoXml = isPncUpdateDataset(updatedAho)
+    ? serialiseToPncUpdateDatasetXml(updatedAho, false)
+    : serialiseToAhoXml(updatedAho, false)
 
-      if (isError(updateResult)) {
-        return updateResult
-      }
-
-      const addNoteResult = await insertNotes(dataSource, getSystemNotes(amendments, userDetails, courtCase.errorId))
-
-      if (isError(addNoteResult)) {
-        return addNoteResult
-      }
-    }
-  } else {
-    // TODO: Cover PNC update phase
-    return Error("Resubmission to Phase 2 is not implemented yet")
+  const updateResult = await updateCourtCaseAho(dataSource, courtCase.errorId, updatedAhoXml)
+  if (isError(updateResult)) {
+    return updateResult
   }
 
-  return updatedAho
+  const updatedCourtCase = await getCourtCase(dataSource, courtCase.errorId)
+  if (isError(updatedCourtCase)) {
+    return updatedCourtCase
+  }
+
+  if (!updatedCourtCase) {
+    return Error(`Couldn't find the court case id ${courtCase.errorId}`)
+  }
+
+  const addNoteResult = await insertNotes(dataSource, getSystemNotes(amendments, userDetails, courtCase.errorId))
+  if (isError(addNoteResult)) {
+    return addNoteResult
+  }
+
+  return updatedCourtCase
 }
 
 export default amendCourtCase

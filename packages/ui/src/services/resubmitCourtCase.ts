@@ -2,8 +2,7 @@ import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
-import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import Phase from "@moj-bichard7/core/types/Phase"
 import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import amendCourtCase from "services/amendCourtCase"
 import type User from "services/entities/User"
@@ -16,6 +15,7 @@ import type { Amendments } from "types/Amendments"
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+import type CourtCase from "./entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import type MqGateway from "./mq/types/MqGateway"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
@@ -26,112 +26,104 @@ const phase2ResubmissionQueue = process.env.PHASE_2_RESUBMIT_QUEUE_NAME ?? "PHAS
 const resubmitCourtCase = async (
   dataSource: DataSource,
   mqGateway: MqGateway,
-  form: Partial<Amendments>,
+  amendments: Partial<Amendments>,
   courtCaseId: number,
   user: User
-): PromiseResult<AnnotatedHearingOutcome | Error> => {
-  try {
-    let phase
-    const resultAho = await dataSource.transaction(
-      "SERIALIZABLE",
-      async (entityManager): Promise<AnnotatedHearingOutcome | Error> => {
-        const events: AuditLogEvent[] = []
+): PromiseResult<void> => {
+  const updatedCourtCase = await dataSource
+    .transaction("SERIALIZABLE", async (entityManager): PromiseResult<CourtCase> => {
+      const events: AuditLogEvent[] = []
 
-        const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
-
-        if (isError(courtCase)) {
-          throw courtCase
-        }
-
-        if (!courtCase) {
-          throw new Error("Failed to resubmit: Case not found")
-        }
-
-        phase = courtCase.phase
-
-        const lockResult = await updateLockStatusToLocked(entityManager, +courtCaseId, user, events)
-        if (isError(lockResult)) {
-          throw lockResult
-        }
-
-        const amendedCourtCase = await amendCourtCase(entityManager, form, courtCase, user)
-
-        if (isError(amendedCourtCase)) {
-          throw amendedCourtCase
-        }
-
-        const addNoteResult = await insertNotes(entityManager, [
-          {
-            noteText: `${user.username}: Portal Action: Resubmitted Message.`,
-            errorId: courtCaseId,
-            userId: "System"
-          }
-        ])
-
-        if (isError(addNoteResult)) {
-          throw addNoteResult
-        }
-
-        const statusResult = await updateCourtCaseStatus(entityManager, courtCase, "Error", "Submitted", user)
-
-        if (isError(statusResult)) {
-          return statusResult
-        }
-
-        const unlockResult = await updateLockStatusToUnlocked(
-          entityManager,
-          courtCase,
-          user,
-          UnlockReason.TriggerAndException,
-          events
-        )
-
-        if (isError(unlockResult)) {
-          throw unlockResult
-        }
-
-        events.push(
-          getAuditLogEvent(
-            phase === 1 ? EventCode.HearingOutcomeResubmittedPhase1 : EventCode.HearingOutcomeResubmittedPhase2,
-            EventCategory.information,
-            AUDIT_LOG_EVENT_SOURCE,
-            {
-              user: user.username,
-              auditLogVersion: 2
-            }
-          )
-        )
-
-        const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch(
-          (error) => error
-        )
-
-        if (isError(storeAuditLogResponse)) {
-          throw storeAuditLogResponse
-        }
-
-        return amendedCourtCase
+      const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
+      if (isError(courtCase)) {
+        throw courtCase
       }
-    )
 
-    if (isError(resultAho)) {
-      throw resultAho
-    }
+      if (!courtCase) {
+        throw new Error("Failed to resubmit: Case not found")
+      }
 
-    // TODO: this doesn't look right - should it be in transaction??
-    const destinationQueue = phase === 1 ? phase1ResubmissionQueue : phase2ResubmissionQueue
-    const generatedXml = serialiseToXml(resultAho, false)
-    const queueResult = await mqGateway.execute(generatedXml, destinationQueue)
+      const lockResult = await updateLockStatusToLocked(entityManager, +courtCaseId, user, events)
+      if (isError(lockResult)) {
+        throw lockResult
+      }
 
-    if (isError(queueResult)) {
-      return queueResult
-    }
+      const updatedCourtCase = await amendCourtCase(entityManager, amendments, courtCase, user)
+      if (isError(updatedCourtCase)) {
+        throw updatedCourtCase
+      }
 
-    return resultAho
-  } catch (err) {
-    return isError(err)
-      ? err
-      : new Error(`Unspecified database error when resubmitting court case with ID: ${courtCaseId}`)
+      const addNoteResult = await insertNotes(entityManager, [
+        {
+          noteText: `${user.username}: Portal Action: Resubmitted Message.`,
+          errorId: courtCaseId,
+          userId: "System"
+        }
+      ])
+
+      if (isError(addNoteResult)) {
+        throw addNoteResult
+      }
+
+      const statusResult = await updateCourtCaseStatus(entityManager, courtCase, "Error", "Submitted", user)
+
+      if (isError(statusResult)) {
+        return statusResult
+      }
+
+      const unlockResult = await updateLockStatusToUnlocked(
+        entityManager,
+        courtCase,
+        user,
+        UnlockReason.TriggerAndException,
+        events
+      )
+
+      if (isError(unlockResult)) {
+        throw unlockResult
+      }
+
+      events.push(
+        getAuditLogEvent(
+          updatedCourtCase.phase == Phase.HEARING_OUTCOME
+            ? EventCode.HearingOutcomeResubmittedPhase1
+            : EventCode.HearingOutcomeResubmittedPhase2,
+          EventCategory.information,
+          AUDIT_LOG_EVENT_SOURCE,
+          {
+            user: user.username,
+            auditLogVersion: 2
+          }
+        )
+      )
+
+      const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch(
+        (error) => error
+      )
+
+      if (isError(storeAuditLogResponse)) {
+        throw storeAuditLogResponse
+      }
+
+      return updatedCourtCase
+    })
+    .catch((error: Error) => error)
+
+  if (isError(updatedCourtCase)) {
+    throw updatedCourtCase
+  }
+
+  if (!updatedCourtCase.updatedHearingOutcome) {
+    return Error(`Cannot resubmit court case id ${courtCaseId} because updated hearing outcome is null`)
+  }
+
+  // TODO: this doesn't look right - should it be in transaction??
+  const destinationQueue =
+    updatedCourtCase.phase == Phase.HEARING_OUTCOME ? phase1ResubmissionQueue : phase2ResubmissionQueue
+  const queueResult = await mqGateway.execute(updatedCourtCase.updatedHearingOutcome, destinationQueue)
+
+  if (isError(queueResult)) {
+    return queueResult
   }
 }
 

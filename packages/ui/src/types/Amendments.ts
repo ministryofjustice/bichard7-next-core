@@ -11,7 +11,6 @@ export type Amendments = {
   courtReference?: string
   courtOffenceSequenceNumber?: OffenceField<number>[]
   forceOwner?: string
-  noUpdatesResubmit?: boolean
 }
 
 export type AmendmentKeys = keyof Amendments

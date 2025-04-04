@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import type { AmendmentKeys, Amendments } from "types/Amendments"
 import amendAsn from "utils/amendments/amendAsn/amendAsn"
 import amendCourtCaseReference from "utils/amendments/amendCourtCaseReference/amendCourtCaseReference"
@@ -60,10 +61,10 @@ const selectKey =
     }
   }
 
-const applyAmendmentsToAho = (
+const applyAmendmentsToAho = <T extends AnnotatedHearingOutcome | PncUpdateDataset>(
   amendments: Amendments,
-  aho: AnnotatedHearingOutcome
-): AnnotatedHearingOutcome | Error => {
+  aho: T
+): T | Error => {
   const selectKeyWithAho = selectKey(aho)
   for (const [key, value] of Object.entries(amendments)) {
     try {

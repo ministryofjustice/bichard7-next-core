@@ -11,10 +11,6 @@ const getSystemNotes = (amendments: Partial<Amendments>, userDetails: User, cour
   const portalActionText = `${userDetails.username}: Portal Action: Update Applied.`
 
   for (const [key, value] of Object.entries(amendments)) {
-    if (key === "noUpdatesResubmit") {
-      continue
-    }
-
     const noteText = `${portalActionText} Element: ${key}. New Value: `
 
     if (Array.isArray(value)) {
