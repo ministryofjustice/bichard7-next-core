@@ -25,9 +25,12 @@ export type CaseState = "Resolved" | "Unresolved" | undefined
 export type CaseListQueryParams = {
   allocatedToUserName?: string
   caseState?: CaseState
+  caseAge?: string[]
   courtDateRange?: DateRange | DateRange[]
   courtName?: string
   defendantName?: string
+  from?: string | undefined
+  to?: string | undefined
   lockedState?: string
   maxPageItems?: number
   order?: QueryOrder
@@ -35,8 +38,11 @@ export type CaseListQueryParams = {
   page?: number
   ptiurn?: string
   reason?: Reason
-  reasonCodes?: string[]
+  reasonCodes?: (string | undefined)[]
   resolvedByUsername?: string
   resolvedDateRange?: DateRange
+  resolvedFrom?: string
+  resolvedTo?: string
+  state?: string
   asn?: string
 }

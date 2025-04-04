@@ -12,6 +12,16 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
   const { basePath, query } = useRouter()
   const orderByParams = (orderBy: string) => `${basePath}/?${new URLSearchParams({ ...query, orderBy, order })}`
   const className = "govuk-table__header table-column-header-cell govuk-body-s"
+  const handleHeaderClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    const target = event.target as HTMLElement
+    const headerId = target.closest("a")?.id
+    if (headerId) {
+      const headerElement = document.getElementById(headerId)
+      if (headerElement) {
+        headerElement.focus()
+      }
+    }
+  }
 
   return (
     <tr className="govuk-table__row">
@@ -24,7 +34,8 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           href={orderByParams("defendantName")}
           id="defendant-name-sort"
           aria-live="polite"
-          aria-sort={order === "asc" ? "ascending" : "descending"}
+          aria-sort={query.orderBy === "defendantName" ? (query.order === "asc" ? "ascending" : "descending") : "none"}
+          onClick={handleHeaderClick}
         >
           {"Defendant name"}
           <ColumnOrderIcons columnName={"defendantName"} currentOrder={query.order} orderBy={query.orderBy} />
@@ -36,7 +47,8 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           href={orderByParams("courtDate")}
           id="court-date-sort"
           aria-live="polite"
-          aria-sort={order === "asc" ? "ascending" : "descending"}
+          aria-sort={query.orderBy === "courtDate" ? (query.order === "asc" ? "ascending" : "descending") : "none"}
+          onClick={handleHeaderClick}
         >
           {"Court date"}
           <ColumnOrderIcons columnName={"courtDate"} currentOrder={query.order} orderBy={query.orderBy} />
@@ -48,7 +60,8 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           href={orderByParams("courtName")}
           id="court-name-sort"
           aria-live="polite"
-          aria-sort={order === "asc" ? "ascending" : "descending"}
+          aria-sort={query.orderBy === "courtName" ? (query.order === "asc" ? "ascending" : "descending") : "none"}
+          onClick={handleHeaderClick}
         >
           {"Court name"}
           <ColumnOrderIcons columnName={"courtName"} currentOrder={query.order} orderBy={query.orderBy} />
@@ -60,7 +73,8 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           href={orderByParams("ptiurn")}
           id="ptiurn-sort"
           aria-live="polite"
-          aria-sort={order === "asc" ? "ascending" : "descending"}
+          aria-sort={query.orderBy === "ptiurn" ? (query.order === "asc" ? "ascending" : "descending") : "none"}
+          onClick={handleHeaderClick}
         >
           {"PTIURN"}
           <ColumnOrderIcons columnName={"ptiurn"} currentOrder={query.order} orderBy={query.orderBy} />
