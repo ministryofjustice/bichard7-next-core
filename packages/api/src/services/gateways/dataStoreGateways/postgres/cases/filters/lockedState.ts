@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-import { LockedState } from "../../../../../../types/CaseIndexQuerystring"
+import { LockedState } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 export const filterByLockedState = (
   sql: postgres.Sql,
@@ -18,7 +18,7 @@ export const filterByLockedState = (
   }
 
   if (lockedState === LockedState.Unlocked) {
-    return sql`AND (el.error_locked_by_id IS NULL OR el.trigger_locked_by_id IS NULL)`
+    return sql`AND (el.error_locked_by_id IS NULL AND el.trigger_locked_by_id IS NULL)`
   }
 
   if (lockedState === LockedState.LockedToMe && user.username) {

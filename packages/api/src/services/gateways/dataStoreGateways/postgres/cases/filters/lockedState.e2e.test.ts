@@ -1,12 +1,12 @@
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import type { CaseIndexQuerystring } from "../../../../../../types/CaseIndexQuerystring"
+import { LockedState, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { LockedState, Reason } from "../../../../../../types/CaseIndexQuerystring"
 import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
@@ -14,7 +14,7 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   let app: FastifyInstance
   let user: User
 
-  const defaultQuery: CaseIndexQuerystring = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
+  const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
   const errorLockedByUsername = "BichardForce01"
   const triggerLockedByUsername = "BichardForce01"
 
@@ -86,9 +86,10 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
       user
     )
 
-    expect(caseMetadata.cases).toHaveLength(5)
-    expect(caseMetadata.totalCases).toBe(5)
-    expect(caseMetadata.returnCases).toBe(5)
+    expect(caseMetadata.cases).toHaveLength(1)
+    expect(caseMetadata.totalCases).toBe(1)
+    expect(caseMetadata.returnCases).toBe(1)
+    expect(caseMetadata.cases[0].errorId).toBe(3)
   })
 
   it("will fetch cases which are locked to the current user", async () => {
