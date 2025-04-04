@@ -87,7 +87,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req) && confirm) {
       const { amendments } = formData as { amendments: string }
 
-      const amendedCase = await resubmitCourtCase(
+      const resubmitCourtCaseResult = await resubmitCourtCase(
         dataSource,
         mqGateway,
         JSON.parse(amendments),
@@ -95,8 +95,8 @@ export const getServerSideProps = withMultipleServerSideProps(
         currentUser
       )
 
-      if (isError(amendedCase)) {
-        throw amendedCase
+      if (isError(resubmitCourtCaseResult)) {
+        throw resubmitCourtCaseResult
       }
 
       let redirectUrl = `/court-cases/${courtCase.errorId}`

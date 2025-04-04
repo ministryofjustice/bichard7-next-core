@@ -1,8 +1,7 @@
 import serialiseToAhoXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import serialiseToPncUpdateDatasetXml from "@moj-bichard7/core/lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
 import { isPncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import getCourtCase from "services/getCourtCase"
 import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
 import type { DataSource, EntityManager } from "typeorm"
@@ -16,14 +15,12 @@ import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
 
-type AmendCourtCaseResult = { json: AnnotatedHearingOutcome | PncUpdateDataset; xml: string }
-
 const amendCourtCase = async (
   dataSource: DataSource | EntityManager,
   amendments: Partial<Amendments>,
   courtCase: CourtCase,
   userDetails: User
-): PromiseResult<AmendCourtCaseResult> => {
+): PromiseResult<CourtCase> => {
   if (courtCase.errorLockedByUsername && courtCase.errorLockedByUsername !== userDetails.username) {
     return new Error("Exception is locked by another user")
   }
@@ -58,12 +55,21 @@ const amendCourtCase = async (
     return updateResult
   }
 
+  const updatedCourtCase = await getCourtCase(dataSource, courtCase.errorId)
+  if (isError(updatedCourtCase)) {
+    return updatedCourtCase
+  }
+
+  if (!updatedCourtCase) {
+    return Error(`Couldn't find the court case id ${courtCase.errorId}`)
+  }
+
   const addNoteResult = await insertNotes(dataSource, getSystemNotes(amendments, userDetails, courtCase.errorId))
   if (isError(addNoteResult)) {
     return addNoteResult
   }
 
-  return { json: updatedAho, xml: updatedAhoXml }
+  return updatedCourtCase
 }
 
 export default amendCourtCase

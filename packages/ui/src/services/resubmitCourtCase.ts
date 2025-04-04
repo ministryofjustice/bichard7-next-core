@@ -2,9 +2,7 @@ import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
-import { isPncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import Phase from "@moj-bichard7/core/types/Phase"
 import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import amendCourtCase from "services/amendCourtCase"
 import type User from "services/entities/User"
@@ -17,6 +15,7 @@ import type { Amendments } from "types/Amendments"
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+import type CourtCase from "./entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import type MqGateway from "./mq/types/MqGateway"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
@@ -24,17 +23,15 @@ import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 const phase1ResubmissionQueue = process.env.PHASE_1_RESUBMIT_QUEUE_NAME ?? "PHASE_1_RESUBMIT_QUEUE"
 const phase2ResubmissionQueue = process.env.PHASE_2_RESUBMIT_QUEUE_NAME ?? "PHASE_2_RESUBMIT_QUEUE"
 
-type TransactionResult = { json: AnnotatedHearingOutcome | PncUpdateDataset; xml: string }
-
 const resubmitCourtCase = async (
   dataSource: DataSource,
   mqGateway: MqGateway,
   amendments: Partial<Amendments>,
   courtCaseId: number,
   user: User
-): PromiseResult<AnnotatedHearingOutcome | Error> => {
-  const resultAho = await dataSource
-    .transaction("SERIALIZABLE", async (entityManager): PromiseResult<TransactionResult> => {
+): PromiseResult<void> => {
+  const updatedCourtCase = await dataSource
+    .transaction("SERIALIZABLE", async (entityManager): PromiseResult<CourtCase> => {
       const events: AuditLogEvent[] = []
 
       const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
@@ -51,9 +48,9 @@ const resubmitCourtCase = async (
         throw lockResult
       }
 
-      const amendedAhoResult = await amendCourtCase(entityManager, amendments, courtCase, user)
-      if (isError(amendedAhoResult)) {
-        throw amendedAhoResult
+      const updatedCourtCase = await amendCourtCase(entityManager, amendments, courtCase, user)
+      if (isError(updatedCourtCase)) {
+        throw updatedCourtCase
       }
 
       const addNoteResult = await insertNotes(entityManager, [
@@ -88,9 +85,9 @@ const resubmitCourtCase = async (
 
       events.push(
         getAuditLogEvent(
-          isPncUpdateDataset(amendedAhoResult.json)
-            ? EventCode.HearingOutcomeResubmittedPhase2
-            : EventCode.HearingOutcomeResubmittedPhase1,
+          updatedCourtCase.phase == Phase.HEARING_OUTCOME
+            ? EventCode.HearingOutcomeResubmittedPhase1
+            : EventCode.HearingOutcomeResubmittedPhase2,
           EventCategory.information,
           AUDIT_LOG_EVENT_SOURCE,
           {
@@ -108,23 +105,26 @@ const resubmitCourtCase = async (
         throw storeAuditLogResponse
       }
 
-      return amendedAhoResult
+      return updatedCourtCase
     })
     .catch((error: Error) => error)
 
-  if (isError(resultAho)) {
-    throw resultAho
+  if (isError(updatedCourtCase)) {
+    throw updatedCourtCase
+  }
+
+  if (!updatedCourtCase.updatedHearingOutcome) {
+    return Error(`Cannot resubmit court case id ${courtCaseId} because updated hearing outcome is null`)
   }
 
   // TODO: this doesn't look right - should it be in transaction??
-  const destinationQueue = isPncUpdateDataset(resultAho.json) ? phase2ResubmissionQueue : phase1ResubmissionQueue
-  const queueResult = await mqGateway.execute(resultAho.xml, destinationQueue)
+  const destinationQueue =
+    updatedCourtCase.phase == Phase.HEARING_OUTCOME ? phase1ResubmissionQueue : phase2ResubmissionQueue
+  const queueResult = await mqGateway.execute(updatedCourtCase.updatedHearingOutcome, destinationQueue)
 
   if (isError(queueResult)) {
     return queueResult
   }
-
-  return resultAho.json
 }
 
 export default resubmitCourtCase
