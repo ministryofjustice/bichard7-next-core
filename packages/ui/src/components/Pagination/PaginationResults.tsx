@@ -26,7 +26,7 @@ const PaginationResults: React.FC<Props> = ({ pageNum, casesPerPage, totalCases 
       </>
     )
   return (
-    <PaginationParagraph className={"moj-pagination__results"} aria-live="polite">
+    <PaginationParagraph className={"moj-pagination__results"} aria-live="polite" role="status" aria-atomic="true">
       {content}
     </PaginationParagraph>
   )
