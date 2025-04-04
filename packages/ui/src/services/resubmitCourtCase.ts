@@ -33,105 +33,98 @@ const resubmitCourtCase = async (
   courtCaseId: number,
   user: User
 ): PromiseResult<AnnotatedHearingOutcome | Error> => {
-  try {
-    const resultAho = await dataSource.transaction(
-      "SERIALIZABLE",
-      async (entityManager): PromiseResult<TransactionResult> => {
-        const events: AuditLogEvent[] = []
+  const resultAho = await dataSource
+    .transaction("SERIALIZABLE", async (entityManager): PromiseResult<TransactionResult> => {
+      const events: AuditLogEvent[] = []
 
-        const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
-        if (isError(courtCase)) {
-          throw courtCase
-        }
-
-        if (!courtCase) {
-          throw new Error("Failed to resubmit: Case not found")
-        }
-
-        const lockResult = await updateLockStatusToLocked(entityManager, +courtCaseId, user, events)
-        if (isError(lockResult)) {
-          throw lockResult
-        }
-
-        const amendedAhoResult = await amendCourtCase(entityManager, amendments, courtCase, user)
-        if (isError(amendedAhoResult)) {
-          throw amendedAhoResult
-        }
-
-        const addNoteResult = await insertNotes(entityManager, [
-          {
-            noteText: `${user.username}: Portal Action: Resubmitted Message.`,
-            errorId: courtCaseId,
-            userId: "System"
-          }
-        ])
-
-        if (isError(addNoteResult)) {
-          throw addNoteResult
-        }
-
-        const statusResult = await updateCourtCaseStatus(entityManager, courtCase, "Error", "Submitted", user)
-
-        if (isError(statusResult)) {
-          return statusResult
-        }
-
-        const unlockResult = await updateLockStatusToUnlocked(
-          entityManager,
-          courtCase,
-          user,
-          UnlockReason.TriggerAndException,
-          events
-        )
-
-        if (isError(unlockResult)) {
-          throw unlockResult
-        }
-
-        events.push(
-          getAuditLogEvent(
-            isPncUpdateDataset(amendedAhoResult.json)
-              ? EventCode.HearingOutcomeResubmittedPhase2
-              : EventCode.HearingOutcomeResubmittedPhase1,
-            EventCategory.information,
-            AUDIT_LOG_EVENT_SOURCE,
-            {
-              user: user.username,
-              auditLogVersion: 2
-            }
-          )
-        )
-
-        const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch(
-          (error) => error
-        )
-
-        if (isError(storeAuditLogResponse)) {
-          throw storeAuditLogResponse
-        }
-
-        return amendedAhoResult
+      const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
+      if (isError(courtCase)) {
+        throw courtCase
       }
-    )
 
-    if (isError(resultAho)) {
-      throw resultAho
-    }
+      if (!courtCase) {
+        throw new Error("Failed to resubmit: Case not found")
+      }
 
-    // TODO: this doesn't look right - should it be in transaction??
-    const destinationQueue = isPncUpdateDataset(resultAho.json) ? phase2ResubmissionQueue : phase1ResubmissionQueue
-    const queueResult = await mqGateway.execute(resultAho.xml, destinationQueue)
+      const lockResult = await updateLockStatusToLocked(entityManager, +courtCaseId, user, events)
+      if (isError(lockResult)) {
+        throw lockResult
+      }
 
-    if (isError(queueResult)) {
-      return queueResult
-    }
+      const amendedAhoResult = await amendCourtCase(entityManager, amendments, courtCase, user)
+      if (isError(amendedAhoResult)) {
+        throw amendedAhoResult
+      }
 
-    return resultAho.json
-  } catch (err) {
-    return isError(err)
-      ? err
-      : new Error(`Unspecified database error when resubmitting court case with ID: ${courtCaseId}`)
+      const addNoteResult = await insertNotes(entityManager, [
+        {
+          noteText: `${user.username}: Portal Action: Resubmitted Message.`,
+          errorId: courtCaseId,
+          userId: "System"
+        }
+      ])
+
+      if (isError(addNoteResult)) {
+        throw addNoteResult
+      }
+
+      const statusResult = await updateCourtCaseStatus(entityManager, courtCase, "Error", "Submitted", user)
+
+      if (isError(statusResult)) {
+        return statusResult
+      }
+
+      const unlockResult = await updateLockStatusToUnlocked(
+        entityManager,
+        courtCase,
+        user,
+        UnlockReason.TriggerAndException,
+        events
+      )
+
+      if (isError(unlockResult)) {
+        throw unlockResult
+      }
+
+      events.push(
+        getAuditLogEvent(
+          isPncUpdateDataset(amendedAhoResult.json)
+            ? EventCode.HearingOutcomeResubmittedPhase2
+            : EventCode.HearingOutcomeResubmittedPhase1,
+          EventCategory.information,
+          AUDIT_LOG_EVENT_SOURCE,
+          {
+            user: user.username,
+            auditLogVersion: 2
+          }
+        )
+      )
+
+      const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch(
+        (error) => error
+      )
+
+      if (isError(storeAuditLogResponse)) {
+        throw storeAuditLogResponse
+      }
+
+      return amendedAhoResult
+    })
+    .catch((error: Error) => error)
+
+  if (isError(resultAho)) {
+    throw resultAho
   }
+
+  // TODO: this doesn't look right - should it be in transaction??
+  const destinationQueue = isPncUpdateDataset(resultAho.json) ? phase2ResubmissionQueue : phase1ResubmissionQueue
+  const queueResult = await mqGateway.execute(resultAho.xml, destinationQueue)
+
+  if (isError(queueResult)) {
+    return queueResult
+  }
+
+  return resultAho.json
 }
 
 export default resubmitCourtCase
