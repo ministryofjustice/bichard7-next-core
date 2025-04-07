@@ -1,11 +1,13 @@
 ---
 ---
-img{
-    max-width:80%;
+
+#exceptionResolution,
+#triggerList {
+    table td:first-child {
+        width: 25%;
+    }
 }
 
-#exceptionResolution, #triggerList{
-    table td:first-child {
-        width:25%
-    }
+img {
+    max-width: 80%;
 }
