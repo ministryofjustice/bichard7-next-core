@@ -77,8 +77,6 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
               <li
                 className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Triggers ? "govuk-tabs__list-item--selected" : ""}`}
                 role="presentation"
-                aria-live="polite"
-                aria-label="Triggers tab loaded"
               >
                 <a
                   id={"triggers-tab"}
