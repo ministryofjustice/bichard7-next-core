@@ -52,7 +52,7 @@ const InfoBanner = () => {
       </span>
       {"."}
 
-      <CloseButton onClick={handleClose} aria-label="Close banner" />
+      <CloseButton className="info-banner__close" onClick={handleClose} aria-label="Close banner" />
     </Banner>
   )
 }
