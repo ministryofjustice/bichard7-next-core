@@ -3,13 +3,15 @@ import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
 
 const InfoBanner = () => {
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const isClosed = sessionStorage.getItem("infoBannerClosed")
+    setMounted(true)
 
-    if (Boolean(isClosed)) {
-      setVisible(false)
+    const isClosed = sessionStorage.getItem("infoBannerClosed")
+    if (!isClosed) {
+      setVisible(true)
     }
   }, [])
 
@@ -18,7 +20,7 @@ const InfoBanner = () => {
     sessionStorage.setItem("infoBannerClosed", "true")
   }
 
-  if (!visible) {
+  if (!mounted || !visible) {
     return null
   }
 
@@ -34,14 +36,13 @@ const InfoBanner = () => {
         height="25"
         width="25"
       >
-        <path
-          d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8
-	C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"
-        />
+        <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8 C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z" />
       </svg>
+
       <span className="info-banner__text" id="info-banner-text">
         {"There are new features available on new Bichard."}
       </span>
+
       <span>
         {"\u00A0"}
         {"View "}
@@ -50,6 +51,7 @@ const InfoBanner = () => {
         </Link>
       </span>
       {"."}
+
       <CloseButton onClick={handleClose} aria-label="Close banner" />
     </Banner>
   )
