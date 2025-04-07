@@ -8,7 +8,7 @@ const Banner = styled.div`
   align-items: center;
   margin-bottom: 0.7rem;
 
-  > .govuk-phase-banner__text {
+  > .info-banner__text {
     display: flex;
     align-items: center;
     gap: 10px;

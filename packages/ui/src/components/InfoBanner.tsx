@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
 
@@ -9,7 +10,7 @@ const InfoBanner = () => {
   }
 
   return (
-    <Banner>
+    <Banner className="info-banner" role="region" aria-labelledby="info-banner-text">
       <svg
         className="moj-banner__icon"
         fill="currentColor"
@@ -25,11 +26,15 @@ const InfoBanner = () => {
 	C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"
         />
       </svg>
-      <span className="govuk-phase-banner__text">{"There are new features available on new Bichard."}</span>
+      <span className="info-banner__text" id="info-banner-text">
+        {"There are new features available on new Bichard."}
+      </span>
       <span>
         {"\u00A0"}
         {"View "}
-        <a href="/">{"the help guidance for new features"}</a>
+        <Link href={"/help/whats-new"} target={"_blank"}>
+          {"the help guidance for new features"}
+        </Link>
       </span>
       {"."}
       <CloseButton onClick={() => setVisible(false)} aria-label="Close banner" />
