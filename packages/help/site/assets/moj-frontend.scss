@@ -1,0 +1,100 @@
+---
+---
+
+$baseurl: "{{ site.baseurl }}";
+
+.moj-header {
+  padding-top: 15px;
+  border-bottom: 10px solid #1d70b8;
+  background-color: #0b0c0c;
+  height: 45px;
+
+  &__logo {
+    padding-bottom: 5px;
+  }
+
+  &__logotype-crest {
+    position: relative;
+    top: -8px;
+    margin-right: 5px;
+    vertical-align: top;
+  }
+
+  &__link {
+    &:link,
+    &:visited,
+    &:hover,
+    &:active,
+    & > a:link,
+    & > a:visited,
+    & > a:hover,
+    & > a:active {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    &--organisation-name,
+    & > a--organisation-name {
+      vertical-align: middle;
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: 700;
+      font-size: 1.125rem;
+      line-height: 1.1111111111;
+      padding-right: 55px;
+    }
+
+    &--service-name,
+    & > a--service-name {
+      vertical-align: middle;
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 1.125rem;
+      line-height: 1.1111111111;
+    }
+
+    &,
+    & > a {
+      display: inline-block;
+      margin-bottom: -1px;
+      overflow: hidden;
+      border-bottom: 1px solid transparent;
+      color: #ffffff;
+      line-height: 25px;
+      vertical-align: middle;
+      font-family: "GDS Transport", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-decoration: underline;
+      text-decoration-thickness: max(1px, 0.0625rem);
+      text-underline-offset: 0.1578em;
+    }
+  }
+
+  @media (min-width: 40.0625em) {
+    &__link--organisation-name,
+    &__link > a--organisation-name {
+      font-size: 1.5rem;
+      line-height: 1.25;
+    }
+
+    &__link--service-name,
+    &__link > a--service-name {
+      font-size: 1.5rem;
+      line-height: 1.25;
+    }
+  }
+
+  @media (min-width: 48.0625em) {
+    &__logo {
+      float: left;
+    }
+
+    &__link--service-name,
+    &__link > a--service-name {
+      margin-left: 5px;
+    }
+  }
+}
