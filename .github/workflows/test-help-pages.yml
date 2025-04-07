@@ -20,7 +20,9 @@ jobs:
           bundler-cache: true
 
       - name: Build
+        working-directory: packages/help
         run: bundle exec jekyll build
 
       - name: Run tests
+        working-directory: packages/help
         run: bundle exec htmlproofer --disable-external ./_site --url-swap '^/help/:/'
