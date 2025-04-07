@@ -1,6 +1,13 @@
-import { Banner } from "./InfoBanner.styles"
+import { useState } from "react"
+import { Banner, CloseButton } from "./InfoBanner.styles"
 
 const InfoBanner = () => {
+  const [visible, setVisible] = useState(true)
+
+  if (!visible) {
+    return null
+  }
+
   return (
     <Banner>
       <svg
@@ -25,6 +32,7 @@ const InfoBanner = () => {
         <a href="/">{"the help guidance for new features"}</a>
       </span>
       {"."}
+      <CloseButton onClick={() => setVisible(false)} aria-label="Close banner" />
     </Banner>
   )
 }

@@ -32,4 +32,34 @@ const Banner = styled.div`
   }
 `
 
-export { Banner }
+const CloseButton = styled.button`
+  margin-left: auto;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 0;
+    height: 20px;
+    width: 2px;
+    background-color: white;
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+`
+
+export { Banner, CloseButton }
