@@ -5,10 +5,11 @@ import { useRouter } from "next/router"
 import { LinkButton } from "./Buttons/LinkButton"
 import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
-import { Banner, Box } from "./Layout.styles"
+import { Banner } from "./Layout.styles"
 import NavBar from "./NavBar"
 import PageTemplate from "./PageTemplate"
 import PhaseBanner from "./PhaseBanner"
+import InfoBanner from "./InfoBanner"
 
 interface BichardSwitchProps {
   href: string
@@ -61,28 +62,9 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
             <BichardSwitchButton href={bichardSwitchUrl} />
           </ConditionalRender>
         </Banner>
-        <Box>
-          <span className="govuk-phase-banner__text">
-            <svg
-              // className="moj-banner__icon"
-              fill="currentColor"
-              role="presentation"
-              focusable="false"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 25 25"
-              height="25"
-              width="25"
-            >
-              <path
-                d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8
-	C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z"
-              />
-            </svg>
-            {"There are new features available on new Bichard."}{" "}
-            <a href="/">{"View the help guidance for new features"}</a>
-            {"."}
-          </span>
-        </Box>
+
+        <InfoBanner />
+
         {children}
       </PageTemplate>
       <footer className="govuk-footer">
