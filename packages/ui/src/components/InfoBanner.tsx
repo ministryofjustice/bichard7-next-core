@@ -1,9 +1,22 @@
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
 
 const InfoBanner = () => {
   const [visible, setVisible] = useState(true)
+
+  useEffect(() => {
+    const isClosed = sessionStorage.getItem("infoBannerClosed")
+
+    if (Boolean(isClosed)) {
+      setVisible(false)
+    }
+  }, [])
+
+  const handleClose = () => {
+    setVisible(false)
+    sessionStorage.setItem("infoBannerClosed", "true")
+  }
 
   if (!visible) {
     return null
@@ -37,7 +50,7 @@ const InfoBanner = () => {
         </Link>
       </span>
       {"."}
-      <CloseButton onClick={() => setVisible(false)} aria-label="Close banner" />
+      <CloseButton onClick={handleClose} aria-label="Close banner" />
     </Banner>
   )
 }
