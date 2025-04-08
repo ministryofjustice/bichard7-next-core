@@ -81,18 +81,23 @@ const reallocateCourtCaseToForce = async (
         throw updateTriggersResult
       }
 
-      const amendResult = await amendCourtCase(entityManager, { forceOwner: forceCode }, courtCase, user)
+      const amendedCourtCase = await amendCourtCase(entityManager, { forceOwner: forceCode }, courtCase, user)
 
-      if (isError(amendResult)) {
-        throw amendResult
+      if (isError(amendedCourtCase)) {
+        throw amendedCourtCase
       }
 
-      const newForceCode = amendResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
+      const updatedAho = parseHearinOutcome(amendedCourtCase.updatedHearingOutcome ?? amendedCourtCase.hearingOutcome)
+      if (isError(updatedAho)) {
+        return updatedAho
+      }
+
+      const newForceCode = updatedAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
 
       const updateCourtCaseResult = await updateCourtCase(
         entityManager,
         courtCase,
-        amendResult,
+        updatedAho,
         triggersToAdd.length > 0 || triggersToDelete.length > 0
       )
 

@@ -8,7 +8,7 @@ Feature: {441} Phase 2 resubmission
     Given the data for this test is in the PNC
       And "input-message" is received
 
-  @Must
+  @Must @NextUI
   Scenario: PNC is updated when there are multiple identical results
     Given I am logged in as "supervisor"
       And I view the list of exceptions
