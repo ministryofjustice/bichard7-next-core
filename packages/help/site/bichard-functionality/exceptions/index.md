@@ -214,7 +214,7 @@ Post Hearing Outcome Publication ('update' errors):
 | HO200109 | Invalid operation sequence: Results in the Hearing Outcome are not consistent |
 | HO200110 | Non-police / Dummy ASN encountered |
 | HO200111 | Unknown order varied/revoked result code |
-| HO200113 | The PNC cannot be updated automatically because there are new remands together with sentencing. It will have to be done manually.
+| HO200113 | The PNC cannot be updated automatically because there are new remands together with sentencing. It will have to be done manually. |
 | HO200114 | The PNC cannot be updated automatically because there are changes to existing disposals together with sentencing. It will have to be done manually. |
 | HO200115 | The PNC cannot be updated automatically because there are changes to existing disposals together with new disposals. It will have to be done manually. |
 | HO200117 | Too many results present - review on PNC |
