@@ -1,14 +1,14 @@
 import { Command } from "commander"
-import nunjucks from "nunjucks"
 import { outageComms } from "./outageComms"
 import { selectTemplate } from "./selectTemplate"
 import { selectOutageType } from "./selectOutageType"
-import type { Templates } from "./commsTypes"
-import { t } from "./commsTypes"
+import type { Content, Templates } from "./templateTypes"
+import { templateTypes } from "./templateTypes"
 import { pncMaintenance } from "./pncMaintenance"
 import { pncMaintenanceExtended } from "./pncMaintenanceExtended"
+import nunjucks from "nunjucks"
 
-nunjucks.configure("templates", { autoescape: true })
+nunjucks.configure({ autoescape: true })
 
 export function userComms(): Command {
   const program = new Command("user-comms")
@@ -16,26 +16,24 @@ export function userComms(): Command {
   program.description("A way to send group communications to all users").action(async () => {
     const selectedTemplate = await selectTemplate()
     console.log(selectedTemplate)
-    let content
+    let content: Content
 
     if (selectedTemplate === "Outage" || selectedTemplate === "Outage Resolved") {
       content = await selectOutageType(selectedTemplate)
-    }
-
-    if (selectedTemplate === "PNC maintenance") {
+    } else if (selectedTemplate === "PNC maintenance") {
       content = await pncMaintenance()
-    }
-
-    if (selectedTemplate === "PNC maintenance extended") {
+    } else if (selectedTemplate === "PNC maintenance extended") {
       content = await pncMaintenanceExtended()
+    } else {
+      console.error("Invalid template selection")
+      return
     }
-    console.log(content)
 
     const templateMap: Record<string, Templates> = {
-      "PNC maintenance": t.PNCMAINTENACE,
-      "PNC maintenance extended": t.EXTENDEDPNCMAINTENACE,
-      Outage: t.OUTAGE,
-      "Outage Resolved": t.OUTAGERESOLVED
+      "PNC maintenance": templateTypes.PNCMAINTENACE,
+      "PNC maintenance extended": templateTypes.EXTENDEDPNCMAINTENACE,
+      Outage: templateTypes.OUTAGE,
+      "Outage Resolved": templateTypes.OUTAGERESOLVED
     }
 
     const templateData = templateMap[selectedTemplate]
@@ -46,7 +44,38 @@ export function userComms(): Command {
     }
 
     const templateFile = templateData.template.templateFile
-    outageComms(content, templateFile)
+    const { parsedUsers, templateContent } = await outageComms(content, templateFile)
+    console.log(templateContent)
+    let NotifyClient = require("notifications-node-client").NotifyClient
+
+
+    const updatedUsers = parsedUsers.map((user) => ({
+      ...user,
+      message: nunjucks.renderString(templateContent, { firstName: user.name, ...content })
+    }))
+
+    const sendEmails = async (updatedUsers, templateId, selectedTemplate) => {
+      const emailPromises = updatedUsers.map((user) =>
+        notifyClient
+          .sendEmail(templateId, user.email, {
+            personalisation: {
+              email_subject: selectedTemplate,
+              email_message: user.message
+            },
+            reference: `email-${user.email}`
+          })
+          .then((response) => {
+            console.log(`✅ Email sent to ${user.email}:`)
+          })
+          .catch((error) => {
+            console.error(`❌ Failed to send email to ${user.email}:`, error.response || error)
+          })
+      )
+
+      await Promise.all(emailPromises)
+    }
+    sendEmails(updatedUsers, templateId, selectedTemplate)
   })
+
   return program
 }
