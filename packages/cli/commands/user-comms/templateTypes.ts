@@ -1,10 +1,15 @@
+export type Content =
+  | { outageType: string }
+  | { maintenanceWindows: { date: string; startTime: string; endTime: string }[] }
+  | { extendedTimeFrame: string }
+
 export type Templates = {
   template: {
     templateFile: string
   }
 }
 
-export const commsTemplates: {
+export const templateTypes: {
   PNCMAINTENACE: Templates
   EXTENDEDPNCMAINTENACE: Templates
   OUTAGE: Templates
