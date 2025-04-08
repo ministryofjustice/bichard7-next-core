@@ -33,7 +33,7 @@ If the correct Force Owner or ASN is available (for instance on paperwork or fro
 If the exception is straightforward, the force that received it should result the case itself. Otherwise;
 A copy of the register should be sent to the owning force and the exception marked as 'Manually Resolved'.
 
-## Ensuring Completeness
+## Ensuring Completeness
 
 Forces need to ensure that all cases where they are the prosecuting authority have been resulted. This will involve reviewing the standard PNC reports of outstanding IPs distributed to all forces.
 
