@@ -1,12 +1,13 @@
 import { Command } from "commander"
-import { outageComms } from "./outageComms"
-import { selectTemplate } from "./selectTemplate"
-import { selectOutageType } from "./selectOutageType"
-import type { Content, Templates } from "./templateTypes"
-import { templateTypes } from "./templateTypes"
-import { pncMaintenance } from "./pncMaintenance"
-import { pncMaintenanceExtended } from "./pncMaintenanceExtended"
+import { prepareComms } from "./prepareComms"
+import { selectTemplate } from "./utils/selectTemplate"
+import { selectOutageType } from "./utils/selectOutageType"
+import type { Content, Template } from "./userCommsTypes"
+import { templateTypes } from "./userCommsTypes"
+import { pncMaintenance } from "./utils/pncMaintenance"
+import { pncMaintenanceExtended } from "./utils/pncMaintenanceExtended"
 import nunjucks from "nunjucks"
+import sendUserComms from "./utils/sendUserComms"
 
 nunjucks.configure({ autoescape: true })
 
@@ -15,23 +16,10 @@ export function userComms(): Command {
 
   program.description("A way to send group communications to all users").action(async () => {
     const selectedTemplate = await selectTemplate()
-    console.log(selectedTemplate)
-    let content: Content
 
-    if (selectedTemplate === "Outage" || selectedTemplate === "Outage Resolved") {
-      content = await selectOutageType(selectedTemplate)
-    } else if (selectedTemplate === "PNC maintenance") {
-      content = await pncMaintenance()
-    } else if (selectedTemplate === "PNC maintenance extended") {
-      content = await pncMaintenanceExtended()
-    } else {
-      console.error("Invalid template selection")
-      return
-    }
-
-    const templateMap: Record<string, Templates> = {
-      "PNC maintenance": templateTypes.PNCMAINTENACE,
-      "PNC maintenance extended": templateTypes.EXTENDEDPNCMAINTENACE,
+    const templateMap: Record<string, Template> = {
+      "PNC maintenance": templateTypes.PNCMAINTENANCE,
+      "PNC maintenance extended": templateTypes.EXTENDEDPNCMAINTENANCE,
       Outage: templateTypes.OUTAGE,
       "Outage Resolved": templateTypes.OUTAGERESOLVED
     }
@@ -43,38 +31,34 @@ export function userComms(): Command {
       return
     }
 
-    const templateFile = templateData.template.templateFile
-    const { parsedUsers, templateContent } = await outageComms(content, templateFile)
-    console.log(templateContent)
-    let NotifyClient = require("notifications-node-client").NotifyClient
+    let inputedContent: Content
 
+    switch (selectedTemplate) {
+      case "Outage":
+      case "Outage Resolved":
+        inputedContent = await selectOutageType(selectedTemplate)
+        templateData.templateTitle = `Unexpected ${inputedContent.outageType}`
+        break
+      case "PNC maintenance":
+        inputedContent = await pncMaintenance()
+        break
+      case "PNC maintenance extended":
+        inputedContent = await pncMaintenanceExtended()
+        break
+      default:
+        console.error("Invalid template selection")
+        return
+    }
+
+    const templateFile = templateData.templateFile
+    const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateFile)
 
     const updatedUsers = parsedUsers.map((user) => ({
       ...user,
-      message: nunjucks.renderString(templateContent, { firstName: user.name, ...content })
+      message: nunjucks.renderString(templateContent, { firstName: user.name, ...inputedContent })
     }))
 
-    const sendEmails = async (updatedUsers, templateId, selectedTemplate) => {
-      const emailPromises = updatedUsers.map((user) =>
-        notifyClient
-          .sendEmail(templateId, user.email, {
-            personalisation: {
-              email_subject: selectedTemplate,
-              email_message: user.message
-            },
-            reference: `email-${user.email}`
-          })
-          .then((response) => {
-            console.log(`✅ Email sent to ${user.email}:`)
-          })
-          .catch((error) => {
-            console.error(`❌ Failed to send email to ${user.email}:`, error.response || error)
-          })
-      )
-
-      await Promise.all(emailPromises)
-    }
-    sendEmails(updatedUsers, templateId, selectedTemplate)
+    sendUserComms(updatedUsers, templateData)
   })
 
   return program
