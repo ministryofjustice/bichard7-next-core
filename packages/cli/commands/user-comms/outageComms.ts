@@ -19,14 +19,20 @@ export const outageComms = async (content: Content, templateFile: string) => {
 
   renderTemplate(templateContent, { ...content })
 
-  const users = await getUsersFromDb()
+  const confirmTemplateChoice = await confirm({ message: "Do you want to use this template?", default: false })
 
+  if (!confirmTemplateChoice) {
+    process.exit(1)
+  }
+
+  const users = await getUsersFromDb()
   const parsedUsers = parseDbUserResponse(users)
+
   const randomEntry = parsedUsers[Math.floor(Math.random() * parsedUsers.length)]
   console.log(`To: ${randomEntry.email}`)
   renderTemplate(templateContent, { firstName: randomEntry.name, ...content })
 
-  const confirmUpdatedTemplate = await confirm({ message: "Are you happy with the updated template?" })
+  const confirmUpdatedTemplate = await confirm({ message: "Are you happy with the updated template?", default: false })
 
   if (!confirmUpdatedTemplate) {
     process.exit(1)
