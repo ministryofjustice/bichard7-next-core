@@ -1,34 +1,21 @@
-import { RDS } from "aws-sdk"
+import { Lambda, RDS } from "aws-sdk"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { DataSource } from "typeorm"
 import baseConfig from "@moj-bichard7/common/db/baseConfig"
-
-type UsersQueryResult = { forenames: string; email: string }[]
-
-async function fetchUserDetailsForComms(postgres: DataSource): Promise<string[][] | Error> {
-  const result = await postgres
-    .query<UsersQueryResult>(
-      `
-        SELECT u.forenames, u.email 
-        FROM br7own.users AS u
-        WHERE u.email ILIKE '%madete%' 
-          AND u.deleted_at IS NULL
-        ORDER BY u.forenames
-      `
-    )
-    .catch((error) => error as Error)
-
-  if (isError(result)) {
-    return result
-  }
-
-  return result.map(({ forenames, email }) => [forenames, email])
-}
+import { fetchUserDetailsForComms } from "./fetchUserDetailsForComms"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let postgres: DataSource
 
 async function setup() {
+  const lambda = new Lambda({ region: "eu-west-2" })
+  const sanitiseMessageLambda = await lambda
+    .getFunction({ FunctionName: `bichard-7-${WORKSPACE}-sanitise-message` })
+    .promise()
+  if (isError(sanitiseMessageLambda)) {
+    throw Error("Couldn't get Postgres connection details (failed to get sanitise lambda function)")
+  }
+
   const rds = new RDS({ region: "eu-west-2" })
   const dbInstances = await rds.describeDBClusters().promise()
   if (isError(dbInstances)) {
@@ -42,8 +29,8 @@ async function setup() {
   postgres = await new DataSource({
     ...baseConfig,
     host: dbHost || "",
-    username: "bichard",
-    password: password,
+    username: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_USER || "",
+    password: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_PASSWORD || "",
     type: "postgres",
     applicationName: "ui-connection",
     ssl: { rejectUnauthorized: false }
