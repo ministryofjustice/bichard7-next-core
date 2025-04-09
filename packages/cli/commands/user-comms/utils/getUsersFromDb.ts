@@ -12,17 +12,9 @@ const getUsersFromDb = async (): Promise<string> => {
 
   console.log("Fetching users from the database\n")
 
-  console.log(aws.dbPrefix)
-  const getPostgressPassword = `aws ssm get-parameter --name ${aws.dbPrefix} --with-decryption --query "Parameter.Value" --output text`
-
-  const dbPassword = await awsVault.exec({
-    awsProfile: aws.profile,
-    command: getPostgressPassword
-  })
-
   return await awsVault.exec({
     awsProfile: aws.profile,
-    command: `sh -c DB_PASSWORD="${dbPassword.trim()} npx ts-node -T ./commands/user-comms/utils/index.ts"`
+    command: `npx ts-node -T ./commands/user-comms/utils/index.ts`
   })
 }
 
