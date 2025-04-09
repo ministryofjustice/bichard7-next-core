@@ -2,7 +2,7 @@ import type CourtCase from "services/entities/CourtCase"
 
 const DummyCourtCase: Partial<CourtCase> = {
   courtName: "Magistrates' Courts Essex Basildon",
-  courtDate: new Date("2008-09-26"),
+  courtDate: new Date("2008-09-26T00:00:00.000Z"),
   ptiurn: "42CY0300108",
   defendantName: "NAME Defendant",
   errorReason: "",
@@ -22,11 +22,11 @@ const DummyCourtCase: Partial<CourtCase> = {
   courtCode: "B42AZ01",
   updatedHearingOutcome: null,
   errorReport: "",
-  createdTimestamp: new Date("2022-06-30 09:44:03.93"),
+  createdTimestamp: new Date("2022-06-30T08:44:03.930Z"),
   errorCount: 0,
   userUpdatedFlag: 0,
   resolutionTimestamp: null,
-  messageReceivedTimestamp: new Date("2022-06-30 09:44:03.93"),
+  messageReceivedTimestamp: new Date("2022-06-30T08:44:03.930Z"),
   errorResolvedBy: null,
   triggerResolvedBy: null,
   errorResolvedTimestamp: null,
@@ -34,8 +34,8 @@ const DummyCourtCase: Partial<CourtCase> = {
   orgForPoliceFilter: "36FP  ",
   courtRoom: "01",
   courtReference: "42CY0300108",
-  errorInsertedTimestamp: new Date("2022-06-30 09:44:03.99"),
-  triggerInsertedTimestamp: new Date("2022-06-30 09:44:11.193"),
+  errorInsertedTimestamp: new Date("2022-06-30T08:44:03.990Z"),
+  triggerInsertedTimestamp: new Date("2022-06-30T08:44:11.193Z"),
   pncUpdateEnabled: "Y",
   notes: [],
   triggers: []
