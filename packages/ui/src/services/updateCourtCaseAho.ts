@@ -4,8 +4,7 @@ import CourtCase from "./entities/CourtCase"
 const updateCourtCaseAho = async (
   dataSource: DataSource | EntityManager,
   courtCaseId: number,
-  updatedHo: string,
-  userUpdated: boolean
+  updatedHo: string
 ): Promise<UpdateResult | Error> =>
   await dataSource
     .getRepository(CourtCase)
@@ -13,7 +12,7 @@ const updateCourtCaseAho = async (
     .update(CourtCase)
     .set({
       updatedHearingOutcome: updatedHo,
-      userUpdatedFlag: userUpdated ? 1 : 0
+      userUpdatedFlag: 1
     })
     .where("error_id = :id", { id: courtCaseId })
     .returning("*")

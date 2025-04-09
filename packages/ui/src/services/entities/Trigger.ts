@@ -1,13 +1,13 @@
+import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 import type { Relation } from "typeorm"
 import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
 import type { ResolutionStatus } from "types/ResolutionStatus"
-import getTriggerWithDescription from "../../utils/formatReasons/getTriggerWithDescription"
 
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import CourtCase from "./CourtCase"
 import dateTransformer from "./transformers/dateTransformer"
-import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import resolutionStatusTransformer from "./transformers/resolutionStatusTransformer"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 @Entity({ name: "error_list_triggers" })
 export default class Trigger {

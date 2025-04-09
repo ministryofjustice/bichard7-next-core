@@ -1,17 +1,17 @@
-import listCourtCases from "services/listCourtCases"
-import type { DateRange } from "types/CaseListQueryParams"
-import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
+import type { DateRange } from "@moj-bichard7/common/types/DateRange"
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
 import Trigger from "services/entities/Trigger"
 import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
+import listCourtCases from "services/listCourtCases"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
 import type { DataSource } from "typeorm"
+import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
 import { hasAccessToAll } from "../../helpers/hasAccessTo"
 import deleteFromEntity from "../../utils/deleteFromEntity"
+import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")

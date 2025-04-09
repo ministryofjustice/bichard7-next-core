@@ -1,6 +1,7 @@
 import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
+import { CaseAge } from "./CaseAge"
 import { NoteDtoSchema, NoteSchema } from "./Note"
 import { TriggerDtoSchema, TriggerSchema } from "./Trigger"
 
@@ -84,7 +85,12 @@ export const CaseDtoSchema = CaseIndexDtoSchema.and(
   })
 )
 
+export const CaseAgesSchema = z.object(
+  Object.fromEntries(Object.values(CaseAge).map((key) => [key, z.coerce.number().min(0).optional()]))
+)
+
 export const CaseIndexMetadataSchema = z.object({
+  caseAges: CaseAgesSchema,
   cases: z.array(CaseIndexDtoSchema),
   maxPerPage: z.number(),
   pageNum: z.number(),
@@ -93,6 +99,7 @@ export const CaseIndexMetadataSchema = z.object({
 })
 
 export type Case = z.infer<typeof CaseSchema>
+export type CaseAges = z.infer<typeof CaseAgesSchema>
 export type CaseDto = z.infer<typeof CaseDtoSchema>
 export type CaseIndexDto = z.infer<typeof CaseIndexDtoSchema>
 export type CaseIndexMetadata = z.infer<typeof CaseIndexMetadataSchema>

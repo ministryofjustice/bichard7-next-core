@@ -1,3 +1,4 @@
+import type { CaseAges } from "@moj-bichard7/common/types/Case"
 import type { Note } from "@moj-bichard7/common/types/Note"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
@@ -10,6 +11,7 @@ import type DataStoreGateway from "../interfaces/dataStoreGateway"
 import dummyAho from "../../../tests/fixtures/AnnotatedHO1.json"
 
 class FakeDataStore implements DataStoreGateway {
+  fetchCaseAges: () => Promise<CaseAges>
   fetchCases: () => Promise<CaseDataForIndexDto[]>
   fetchNotes: (errorIds: number[]) => Promise<Note[]>
   fetchTriggers: (errorIds: number[]) => Promise<Trigger[]>
@@ -18,7 +20,6 @@ class FakeDataStore implements DataStoreGateway {
   async canCaseBeResubmitted(_username: string, _caseId: number): Promise<boolean> {
     return Promise.resolve(true)
   }
-
   async fetchCase(_caseId: number): Promise<CaseDataForDto> {
     return Promise.resolve({
       annotated_msg: dummyAho.hearingOutcomeXml,

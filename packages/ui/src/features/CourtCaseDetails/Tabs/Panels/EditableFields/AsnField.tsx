@@ -1,3 +1,4 @@
+import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import Phase from "@moj-bichard7/core/types/Phase"
 import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
@@ -132,8 +133,8 @@ export const AsnField = () => {
   return (
     <EditableFieldTableRow
       className={"asn-row"}
-      value={Asn.divideAsn(defendant.ArrestSummonsNumber)}
-      updatedValue={updatedAhoAsn}
+      value={getShortAsn(defendant.ArrestSummonsNumber)}
+      updatedValue={getShortAsn(updatedAhoAsn)}
       label="ASN"
       hasExceptions={hasExceptions}
       isEditable={isAsnEditable}

@@ -1,3 +1,4 @@
+import type { CaseAges } from "@moj-bichard7/common/types/Case"
 import type { Note } from "@moj-bichard7/common/types/Note"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
@@ -11,13 +12,14 @@ import { LockReason } from "../../../types/LockReason"
 import postgresFactory from "../../db/postgresFactory"
 import caseCanBeResubmitted from "./postgres/cases/canCaseBeResubmitted"
 import fetchCase from "./postgres/cases/fetchCase"
+import { fetchCaseAges } from "./postgres/cases/fetchCaseAges"
 import fetchCases from "./postgres/cases/fetchCases"
 import fetchNotes from "./postgres/cases/fetchNotes"
 import fetchTriggers from "./postgres/cases/fetchTriggers"
 import lockException from "./postgres/cases/lockException"
 import lockTrigger from "./postgres/cases/lockTrigger"
 import selectMessageId from "./postgres/cases/selectMessageId"
-import organisationUnitSql from "./postgres/organisationUnitSql"
+import { organisationUnitSql } from "./postgres/organisationUnitSql"
 import { transaction } from "./postgres/transaction"
 import fetchUserByUsername from "./postgres/users/fetchUserByUsername"
 
@@ -25,7 +27,6 @@ class Postgres implements DataStoreGateway {
   forceIds: number[] = []
   visibleCourts: string[] = []
   protected readonly postgres = postgresFactory()
-
   async canCaseBeResubmitted(username: string, caseId: number): Promise<boolean> {
     return await caseCanBeResubmitted(this.postgres, username, caseId, this.forceIds)
   }
@@ -34,19 +35,25 @@ class Postgres implements DataStoreGateway {
     return await fetchCase(this.postgres, caseId, this.generatedOrganisationUnitSql())
   }
 
-  async fetchCases(pagination: Pagination, sortOrder: SortOrder, filters: Filters): Promise<CaseDataForIndexDto[]> {
-    // TODO: Add Permissions
-    // TODO: Add filters one by one
-    // TODO: Reuse triggerSql for filtering
-    return await fetchCases(this.postgres, this.forceIds, pagination, sortOrder, filters)
+  async fetchCaseAges(): Promise<CaseAges> {
+    return await fetchCaseAges(this.postgres, this.generatedOrganisationUnitSql())
+  }
+
+  async fetchCases(
+    user: User,
+    pagination: Pagination,
+    sortOrder: SortOrder,
+    filters: Filters
+  ): Promise<CaseDataForIndexDto[]> {
+    return await fetchCases(this.postgres, this.generatedOrganisationUnitSql(), user, pagination, sortOrder, filters)
   }
 
   async fetchNotes(errorIds: number[]): Promise<Note[]> {
     return await fetchNotes(this.postgres, errorIds)
   }
 
-  async fetchTriggers(errorIds: number[]): Promise<Trigger[]> {
-    return await fetchTriggers(this.postgres, errorIds)
+  async fetchTriggers(errorIds: number[], filters: Filters, user: User): Promise<Trigger[]> {
+    return await fetchTriggers(this.postgres, errorIds, filters, user)
   }
 
   async fetchUserByUsername(username: string): Promise<User> {

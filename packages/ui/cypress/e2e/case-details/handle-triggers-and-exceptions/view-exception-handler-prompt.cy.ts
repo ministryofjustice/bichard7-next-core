@@ -80,7 +80,7 @@ describe("View Exception Handler Prompts", () => {
       cy.get(".offences-table .error-prompt").contains(ErrorMessages.HO100306ErrorPrompt)
 
       cy.get("#exceptions-tab").contains("Exceptions").click()
-      cy.get("button").contains("Mark as manually resolved").click()
+      cy.get("a").contains("Mark as manually resolved").click()
       cy.get("button").contains("Resolve").click()
 
       cy.visit(`/bichard/court-cases/${caseWithOffenceQualifierError}`)
@@ -142,7 +142,7 @@ describe("View Exception Handler Prompts", () => {
 
     it("Should not display any error prompts when exceptions are marked as manually resolved", () => {
       cy.get("#exceptions-tab").contains("Exceptions").click()
-      cy.get("button").contains("Mark as manually resolved").click()
+      cy.get("a").contains("Mark as manually resolved").click()
       cy.get("button").contains("Resolve").click()
 
       cy.visit(`/bichard/court-cases/${caseWithOffenceCodeErrors}`)
@@ -182,7 +182,7 @@ describe("View Exception Handler Prompts", () => {
 
       loginAndVisit("/bichard/court-cases/0")
 
-      cy.get(".defendant-details-table").contains("11/01ZD/01/00000448754K")
+      cy.get(".defendant-details-table").contains("11/01ZD/01/448754K")
       cy.get(".error-prompt-message").should("not.exist")
     })
 
@@ -213,7 +213,7 @@ describe("View Exception Handler Prompts", () => {
 
       loginAndVisit("/bichard/court-cases/0")
 
-      cy.get(".defendant-details-table").contains("11/01ZD/01/00000448754K")
+      cy.get(".defendant-details-table").contains("11/01ZD/01/448754K")
       cy.get(".error-prompt-message").should("not.exist")
     })
 

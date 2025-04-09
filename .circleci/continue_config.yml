@@ -168,6 +168,9 @@ commands:
       USE_API_CASE_ENDPOINT:
         default: false
         type: boolean
+      USE_API_CASES_INDEX_ENDPOINT:
+        default: false
+        type: boolean
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -179,6 +182,7 @@ commands:
             ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
             USE_API="<<parameters.USE_API>>" \
             USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
+            USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
@@ -535,6 +539,7 @@ jobs:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.ui-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -568,6 +573,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -640,6 +646,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -667,6 +674,7 @@ jobs:
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -752,7 +760,10 @@ jobs:
       api:
         type: boolean
         default: false
-      case-details:
+      api-case-details:
+        type: boolean
+        default: false
+      api-case-list:
         type: boolean
         default: false
     steps:
@@ -763,6 +774,9 @@ jobs:
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - and:
+                  - equal: [true, << pipeline.parameters.api-changes >>]
+                  - equal: [true, << parameters.api >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -809,7 +823,8 @@ jobs:
           name: Building infrastructure
           command: |
             USE_API="<< parameters.api >>" \
-            USE_API_CASE_ENDPOINT="<< parameters.case-details >>" \
+            USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
+            USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
@@ -843,7 +858,10 @@ jobs:
       api:
         type: boolean
         default: false
-      case-details:
+      api-case-details:
+        type: boolean
+        default: false
+      api-case-list:
         type: boolean
         default: false
     environment:
@@ -862,6 +880,9 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - and:
+                  - equal: [true, << pipeline.parameters.api-changes >>]
+                  - equal: [true, << parameters.api >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -897,7 +918,8 @@ jobs:
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
           USE_API: << parameters.api >>
-          USE_API_CASE_ENDPOINT: << parameters.case-details >>
+          USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
+          USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -1038,7 +1060,8 @@ workflows:
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
-          case-details: true
+          api-case-details: true
+          api-case-list: true
           requires:
             - build-ui
             - build_api_docker_image
@@ -1055,7 +1078,8 @@ workflows:
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
-          case-details: true
+          api-case-details: true
+          api-case-list: true
           requires:
             - build-ui
             - build_api_docker_image

@@ -1,29 +1,27 @@
+import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import type { CaseDataForIndexDto } from "../../../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../../../types/CaseIndexQuerystring"
 
-import { ResolutionStatus, resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
+import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
+import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 import { generateFilters } from "./filters/generateFilters"
-import { ordering } from "./filters/ordering"
+import { ordering } from "./order/ordering"
 
 export default async (
   sql: postgres.Sql,
-  forceIds: number[],
+  organisationUnitSql: postgres.PendingQuery<postgres.Row[]>,
+  user: User,
   pagination: Pagination,
   sortOrder: SortOrder,
   filters: Filters
 ): Promise<CaseDataForIndexDto[]> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
-  const resolutionStatus = resolutionStatusCodeByText(ResolutionStatus.Unresolved) ?? 1
 
-  // TODO: Filter triggers here
-  const triggerFiltersSql = sql`
-    AND (elt.trigger_code NOT IN('') AND elt.status = ${resolutionStatus})
-  `
+  const filtersSql = generateFilters(sql, user, filters)
 
-  // TODO: Other filtering goes here
-  const filtersSql = generateFilters(sql, resolutionStatus, filters)
+  const exceptionsAndTriggersSql = exceptionsAndTriggers(sql, user, filters)
 
   const allCasesSql = sql`
     SELECT DISTINCT
@@ -47,10 +45,11 @@ export default async (
         FROM
           br7own.error_list el
           LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
-            ${triggerFiltersSql}
+            ${excludedTriggersAndStatusSql(sql, filters, user)}
         WHERE
-          (br7own.force_code (org_for_police_filter) = ANY (${forceIds}))
+          (${organisationUnitSql})
           ${filtersSql}
+          ${exceptionsAndTriggersSql}
       ) distinctAlias
   `
 
@@ -84,7 +83,7 @@ export default async (
       ) AS unionQuery
   `
 
-  const valuesSql = sql`
+  const selectValuesSql = sql`
     SELECT
       el.error_id,
       el.asn,
@@ -163,7 +162,7 @@ export default async (
         WHERE
           username IN (SELECT username FROM userIds)
       )
-    ${valuesSql}
+    ${selectValuesSql}
   `
 
   return result

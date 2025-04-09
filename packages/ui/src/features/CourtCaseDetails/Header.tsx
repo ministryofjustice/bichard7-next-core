@@ -19,11 +19,11 @@ import {
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
-  ReallocateLinkButton,
   StyledButton,
-  StyledSecondaryButton
+  SecondaryLinkButton
 } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
+import { LinkButton } from "../../components/Buttons/LinkButton"
 
 interface Props {
   canReallocate: boolean
@@ -94,16 +94,14 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </LockedTagContainer>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
-            <ReallocateLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
+            <SecondaryLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
               {"Reallocate Case"}
-            </ReallocateLinkButton>
+            </SecondaryLinkButton>
           </ConditionalRender>
           <ConditionalRender isRendered={hasCaseLock}>
-            <a href={basePath}>
-              <StyledButton id="leave-and-lock" className={`button`}>
-                {"Leave and lock"}
-              </StyledButton>
-            </a>
+            <LinkButton id="leave-and-lock" href={basePath}>
+              {"Leave and lock"}
+            </LinkButton>
             <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
               <StyledButton id="leave-and-unlock" className={`button`} type="submit">
                 {"Leave and unlock"}
@@ -111,11 +109,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </Form>
           </ConditionalRender>
           <ConditionalRender isRendered={!hasCaseLock}>
-            <a href={basePath}>
-              <StyledSecondaryButton id="return-to-case-list" className={`button`}>
-                {"Return to case list"}
-              </StyledSecondaryButton>
-            </a>
+            <SecondaryLinkButton id="return-to-case-list" className={`button`} href={basePath} secondary={true}>
+              {"Return to case list"}
+            </SecondaryLinkButton>
           </ConditionalRender>
         </ButtonContainer>
       </CaseDetailHeaderRow>

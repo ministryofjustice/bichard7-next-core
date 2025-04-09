@@ -1,28 +1,22 @@
-import z from "zod"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-export enum Order {
-  asc = "asc",
-  desc = "desc"
-}
-
-export enum OrderBy {
-  courtDate = "courtDate",
-  courtName = "courtName",
-  defendantName = "defendantName",
-  ptiurn = "ptiurn"
-}
-
-export const CaseIndexQuerystringSchema = z.object({
-  courtName: z.string().optional(),
-  defendantName: z.string().optional().openapi({ example: "De*Name" }),
-  maxPerPage: z.coerce.number().min(25).max(200).default(50),
-  order: z.enum(Object.keys(Order) as [keyof typeof Order]).optional(),
-  orderBy: z.enum(Object.keys(OrderBy) as [keyof typeof OrderBy]).optional(),
-  pageNum: z.coerce.number().min(1).default(1)
-})
-
-export type CaseIndexQuerystring = z.infer<typeof CaseIndexQuerystringSchema>
-
-export type Filters = Pick<CaseIndexQuerystring, "courtName" | "defendantName">
-export type Pagination = Pick<CaseIndexQuerystring, "maxPerPage" | "pageNum">
-export type SortOrder = Pick<CaseIndexQuerystring, "order" | "orderBy">
+export type Filters = Pick<
+  ApiCaseQuery,
+  | "allocatedUsername"
+  | "asn"
+  | "caseAge"
+  | "caseState"
+  | "courtName"
+  | "defendantName"
+  | "from"
+  | "lockedState"
+  | "ptiurn"
+  | "reason"
+  | "reasonCodes"
+  | "resolvedByUsername"
+  | "resolvedFrom"
+  | "resolvedTo"
+  | "to"
+>
+export type Pagination = Pick<ApiCaseQuery, "maxPerPage" | "pageNum">
+export type SortOrder = Pick<ApiCaseQuery, "order" | "orderBy">
