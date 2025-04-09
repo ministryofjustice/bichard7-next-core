@@ -3,16 +3,16 @@ import path from "path"
 import { confirm, input } from "@inquirer/prompts"
 import getUsersFromDb from "./utils/getUsersFromDb"
 import renderTemplate from "./utils/renderTemplate"
-import type { Content } from "./templateTypes"
+import type { Content, User } from "./userCommsTypes"
 
-const parseDbUserResponse = (users: string) => {
+const parseDbUserResponse = (users: string): User => {
   const formattedUsers = users.replace(/'/g, '"')
   const parseUsers = JSON.parse(formattedUsers)
   const mapUsers = parseUsers.map(([name, email, message]: [string, string, string]) => ({ name, email, message }))
   return mapUsers
 }
 
-export const outageComms = async (content: Content, templateFile: string) => {
+export const prepareComms = async (content: Content, templateFile: string) => {
   const template = templateFile
   const templatePath = path.join(__dirname, "templates", template)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
