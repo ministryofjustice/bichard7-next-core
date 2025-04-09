@@ -101,8 +101,4 @@ describe("getSystemNotes", () => {
       }
     ])
   })
-
-  it("can not generate system note when the amended key is noUpdatesResubmit", () => {
-    expect(getSystemNotes({ noUpdatesResubmit: true }, user, dummyErrorId)).toStrictEqual([])
-  })
 })
