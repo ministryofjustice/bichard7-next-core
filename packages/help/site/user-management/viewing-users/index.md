@@ -22,4 +22,3 @@ Which will then show you specific details for that selected user:
 You can also use the search functionality to search for a user in your Force:
 
 ![User search](image5.png)
-
