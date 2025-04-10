@@ -9,8 +9,7 @@ export async function fetchUserDetailsForComms(postgres: DataSource): Promise<st
       `
         SELECT u.forenames, u.email 
         FROM br7own.users AS u
-        WHERE u.email ILIKE '%madete%' 
-          AND u.deleted_at IS NULL
+        WHERE u.deleted_at IS NULL
         ORDER BY u.forenames
       `
     )
