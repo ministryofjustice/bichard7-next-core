@@ -3,6 +3,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { DataSource } from "typeorm"
 import baseConfig from "@moj-bichard7/common/db/baseConfig"
 import { fetchUserDetailsForComms } from "./fetchUserDetailsForComms"
+import fs from "fs/promises"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let postgres: DataSource
@@ -43,8 +44,7 @@ const run = async () => {
   if (isError(userEmail)) {
     throw userEmail
   }
-
-  console.log(userEmail)
+  await fs.writeFile("/tmp/users.json", JSON.stringify(userEmail, null, 2), "utf-8")
   await postgres.destroy()
 }
 

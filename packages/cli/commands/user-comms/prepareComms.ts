@@ -6,8 +6,7 @@ import renderTemplate from "./utils/renderTemplate"
 import type { Content, User } from "./userCommsTypes"
 
 const parseDbUserResponse = (users: string): User => {
-  const formattedUsers = users.replace(/'/g, '"')
-  const parseUsers = JSON.parse(formattedUsers)
+  const parseUsers = JSON.parse(users)
   const mapUsers = parseUsers.map(([name, email, message]: [string, string, string]) => ({ name, email, message }))
   return mapUsers
 }
@@ -25,7 +24,8 @@ export const prepareComms = async (content: Content, templateFile: string) => {
     process.exit(1)
   }
 
-  const users = await getUsersFromDb()
+  await getUsersFromDb()
+  const users = fs.readFileSync("/tmp/users.json", "utf-8")
   const parsedUsers = parseDbUserResponse(users)
 
   const randomEntry = parsedUsers[Math.floor(Math.random() * parsedUsers.length)]
