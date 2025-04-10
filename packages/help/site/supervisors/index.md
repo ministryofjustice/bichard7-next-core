@@ -6,11 +6,11 @@ title: Supervisors
 ## Supervisor Responsibility - Quality control
 
 The supervisor role allows team leaders to review the exceptions and triggers which have been resolved by the members within their team and undertake a quality review. Exceptions and triggers marked as resolved are available for review up to 35 days after resolution.
- 
+
 Once supervisors have reviewed a case, they are able to judge the standard of the resolved exceptions and triggers. They are able to mark the case as 'passed' if they have been correctly dealt with or choose from alternative options to indicate the case has not been completed correctly.
- 
+
 ## Quality control: exceptions
- 
+
 The level of quality control for exceptions will be set by your force in conjunction with PNC guidelines.
 As a supervisor you can determine the quality status of each completed entry. On the error list set the 'state' filter to 'resolved' and refresh the screen.                                                                   From resultant list select and click on the name of the entry you wish to quality assess.
 
@@ -68,12 +68,13 @@ The following section outlines the reports that can be accessed by clicking on t
 ### Live status summary
 
 Report shows an overview of outstanding exceptions and triggers. It provides a live summary of:
+
 - Exceptions that require resolution and their status with regard to being, or approaching, "overdue".
 - Those triggers that require action and their statuses with regard to being, or approaching, "overdue".
 
 ![Live Status Summary](image7.png)
 
-### Live status detail – exceptions
+### Live status detail - exceptions
 
 List of Exceptions that are "Overdue" or "Approaching overdue" It allows a manager to prioritise resources on those exceptions that are approaching "overdue" status, and shows which are actually overdue.
 
@@ -97,11 +98,11 @@ Lists each individual exception (and/or trigger) that has been resolved on the p
 
 ![Resolved exceptions](image11.png)
 
-### Live status detail – triggers
+### Live status detail - triggers
 
 Lists triggers that are overdue or approaching overdue. It allows a manager to prioritise resources on those triggers that are approaching overdue status, and shows which are actually overdue.
 
-![Live status detail – triggers](image12.png)
+![Live status detail - triggers](image12.png)
 
 ### User workload summary
 
@@ -123,13 +124,13 @@ Performance figures (i.e. received, resolved and outstanding exception/trigger).
 
 ### Bail Conditions
 
-Lists each case which has fired the conditional bail trigger (TRPR0010), whether or not it has been resolved on the portal. Allows you to select a date range within that month – note that this is the date of arrival in the Portal, and not (necessarily) the court hearing date. To be used to support the National Protocol for reporting details of conditional bail.
+Lists each case which has fired the conditional bail trigger (TRPR0010), whether or not it has been resolved on the portal. Allows you to select a date range within that month - note that this is the date of arrival in the Portal, and not (necessarily) the court hearing date. To be used to support the National Protocol for reporting details of conditional bail.
 
 ![Bail Conditions](image16.png)
 
 Note that the Bail Conditions Imposed field will contain the text "No bail conditions found" if the bail conditions have been cancelled and the trigger has fired on the presence of the LI (bail conditions cancelled) result qualifier.
 
-### Warrants
+### Warrants
 
 Lists each case which has fired the warrant triggers (TRPR0002 or TRPR0012), whether or not it has been resolved on the portal. Allows you to select a date range within the month - note that this is the date of arrival in the Portal, and not (necessarily) the court hearing date. To be used by Warrant teams.
 
@@ -137,11 +138,11 @@ Lists each case which has fired the warrant triggers (TRPR0002 or TRPR0012), whe
 
 ### Domestic Violence / Vulnerable Victim
 
-Lists each case which has fired the domestic violence trigger (TRPR0023) or the vulnerable victim trigger (TRPR0024), whether or not it has been resolved on the portal. Allows you to select a date range within the month – note that this is the date of arrival in the Portal, and not (necessarily) the court hearing date. To be used by Witness Care teams.
+Lists each case which has fired the domestic violence trigger (TRPR0023) or the vulnerable victim trigger (TRPR0024), whether or not it has been resolved on the portal. Allows you to select a date range within the month - note that this is the date of arrival in the Portal, and not (necessarily) the court hearing date. To be used by Witness Care teams.
 
 ![Domestic Violence / Vulnerable Victim](image18.png)
 
-Note that this report contains one line for each offence on the case – so a case may be spread over several lines.
+Note that this report contains one line for each offence on the case - so a case may be spread over several lines.
 
 ## Allocating exceptions & triggers
 
