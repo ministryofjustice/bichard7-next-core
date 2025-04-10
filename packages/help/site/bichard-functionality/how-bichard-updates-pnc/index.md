@@ -18,4 +18,3 @@ Bichard 7 receives CJS result codes and result information from Libra and perfor
 | Offence | Offence TIC - Number | Disposal history | Number of Offences taken into account |
 | Disposal | Disposal qualifiers | Disposal history | Up to 4 two letter qualifiers as received from Libra |
 | Disposal | Disposal quantity | Disposal history | Used to hold the Sentence (e.g. 2 years, Life, etc) or the fine/cost,etc. amount depending on the result code |
-

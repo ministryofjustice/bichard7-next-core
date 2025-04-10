@@ -95,7 +95,7 @@ When you have selected your filter values, click on the refresh button at the to
 
 ## Searching
 
-The search facility will allow users to lookup records via a defendant name or by court. The search looks for an exact match to the search term entered. A common search facility (known as a wildcard) is used to allow users greater flexibility in searching. A wildcard is a character that may be used in a search to represent one or more characters – this is an asterisk '\*'. Wildcards can be used at the start, end or in the middle of words, e.g. S*H would return both Smith and South.
+The search facility will allow users to lookup records via a defendant name or by court. The search looks for an exact match to the search term entered. A common search facility (known as a wildcard) is used to allow users greater flexibility in searching. A wildcard is a character that may be used in a search to represent one or more characters - this is an asterisk '\*'. Wildcards can be used at the start, end or in the middle of words, e.g. S*H would return both Smith and South.
 
 It should also be noted that searches are NOT case sensitive.
 

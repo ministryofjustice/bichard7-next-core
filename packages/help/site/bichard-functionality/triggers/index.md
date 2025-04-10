@@ -6,15 +6,15 @@ title: Triggers
 ## What is a Trigger?
 
 Triggers are created when a result is passed through the Bichard 7 solution that requires an external system to be updated, for example ViSOR (Violent and Sexual Offenders Register). Examples of triggers include Driver Disqualifications, certain types of orders, and particular disposals. They can also be a prompt to show another action is required although the result has been successfully passed to PNC.
- 
+
 If there is more than one trigger these may be dealt with by different handlers e.g. one user may update the Driver Disqualification screen and another user may update the Custody History. You should be aware that a case hearing in the portal may have an exception and a trigger. It is therefore possible that a trigger may be actioned before the exception has been rectified. E.g. the Custody History may be updated as a result of action indicated by a trigger before the impending prosecution is resulted if it has exceptioned.
- 
+
 Triggers are categorized into two groups: Pre-update and Post-update. The pre-update ones are sent before the Bichard 7 validation check and the post-update ones are sent after the result has been accepted by PNC.
 
 ## How to resolve a trigger
 
 Triggers are actioned outside the portal and should then be marked as complete in the portal.
- 
+
 Trigger processing is totally independent of the automated resulting/exception handling process. A result should be automatically updated on the PNC even if it is also being routed to the portal as a 'trigger'. All triggers on the error list start with the code PR or PS. You can filter for specific triggers by searching for them using their FULL code, e.g. 'TRPR0001'.
 
 Select and click on the name of the defendant for the trigger you wish to update.
@@ -25,7 +25,7 @@ A yellow triangle in the trigger tab indicates action is required and the status
 
 ![View Trigger](image2.png)
 
-Click on the trigger tab and the update screen is shown. The text next to the trigger number will indicate to you what action is required. 
+Click on the trigger tab and the update screen is shown. The text next to the trigger number will indicate to you what action is required.
 
 ![Trigger list on record](image3.png)
 
@@ -35,7 +35,7 @@ Note that only those triggers which have been set up in your profile will have a
 
 ![Complete triggers](image4.png)
 
-If, having clicked the 'mark selected as complete' button, there are no further actions available – all the triggers within your profile have been completed and there is no exception outstanding (or your role is a trigger handler so you cannot resolve it) – then you will be returned to the error report list and this case will be removed from your list.
+If, having clicked the 'mark selected as complete' button, there are no further actions available - all the triggers within your profile have been completed and there is no exception outstanding (or your role is a trigger handler so you cannot resolve it) - then you will be returned to the error report list and this case will be removed from your list.
 
 If you wish, you can leave the case partially resolved with some of the triggers (or an exception) outstanding by clicking one of the 'Return To List' buttons which takes you to a confirmation screen. Clicking either 'yes' or 'no' takes you to your error report list, but 'no' does not save the changes so any triggers which you marked as complete will still be outstanding.
 
