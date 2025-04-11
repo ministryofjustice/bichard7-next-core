@@ -1,15 +1,16 @@
 import Permission from "@moj-bichard7/common/types/Permission"
+import { INFO_BANNER_FIRST_SHOWN } from "config"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 import { LinkButton } from "./Buttons/LinkButton"
 import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
+import InfoBanner from "./InfoBanner"
 import { Banner } from "./Layout.styles"
 import NavBar from "./NavBar"
 import PageTemplate from "./PageTemplate"
 import PhaseBanner from "./PhaseBanner"
-import InfoBanner from "./InfoBanner"
 
 interface BichardSwitchProps {
   href: string
@@ -63,7 +64,11 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
           </ConditionalRender>
         </Banner>
 
-        <InfoBanner />
+        <InfoBanner
+          firstShownDate={INFO_BANNER_FIRST_SHOWN}
+          message={"There are new features available on new Bichard."}
+          href={"/help/whats-new"}
+        />
 
         {children}
       </PageTemplate>

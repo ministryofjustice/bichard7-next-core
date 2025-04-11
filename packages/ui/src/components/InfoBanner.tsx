@@ -2,22 +2,38 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
 
-const InfoBanner = () => {
+interface Props {
+  firstShownDate: Date
+  message: string
+  href: string
+}
+
+const InfoBanner = ({ message, firstShownDate = new Date(), href }: Props) => {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  const firstShownDayOfMonth = firstShownDate.getDate()
+  const currentDayOfMonth = new Date().getDate()
 
   useEffect(() => {
     setMounted(true)
 
-    const isClosed = sessionStorage.getItem("infoBannerClosed")
-    if (!isClosed) {
-      setVisible(true)
+    if (currentDayOfMonth - firstShownDayOfMonth > 3) {
+      return
     }
-  }, [])
+
+    const lastClosed = localStorage.getItem("infoBannerLastClosed")
+
+    if (lastClosed === String(currentDayOfMonth)) {
+      return
+    }
+
+    setVisible(true)
+  }, [currentDayOfMonth, firstShownDayOfMonth])
 
   const handleClose = () => {
     setVisible(false)
-    sessionStorage.setItem("infoBannerClosed", "true")
+    localStorage.setItem("infoBannerLastClosed", String(currentDayOfMonth))
   }
 
   if (!mounted || !visible) {
@@ -40,13 +56,13 @@ const InfoBanner = () => {
       </svg>
 
       <span className="info-banner__text" id="info-banner-text">
-        {"There are new features available on new Bichard."}
+        {message}
       </span>
 
       <span>
         {"\u00A0"}
         {"View "}
-        <Link href={"/help/whats-new"} target={"_blank"}>
+        <Link href={href} target={"_blank"}>
           {"the help guidance for new features"}
         </Link>
       </span>
