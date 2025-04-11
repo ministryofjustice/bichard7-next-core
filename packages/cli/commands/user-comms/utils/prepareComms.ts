@@ -1,8 +1,8 @@
 import fs from "fs"
 import path from "path"
 import { confirm, input } from "@inquirer/prompts"
-import getUsersFromDb from "./utils/getUsersFromDb"
-import renderTemplate from "./utils/renderTemplate"
+import getUsersFromDb from "./getUsersFromDb"
+import renderTemplate from "./renderTemplate"
 import type { Content, User } from "./userCommsTypes"
 
 const parseDbUserResponse = (users: string): User => {
@@ -13,7 +13,8 @@ const parseDbUserResponse = (users: string): User => {
 
 export const prepareComms = async (content: Content, templateFile: string) => {
   const template = templateFile
-  const templatePath = path.join(__dirname, "templates", template)
+  console.log(__dirname)
+  const templatePath = path.join(__dirname, "../templates", template)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
   renderTemplate(templateContent, { ...content })

@@ -1,4 +1,4 @@
-import { Template, User } from "../userCommsTypes"
+import { Template, User } from "./userCommsTypes"
 import { env } from "../../../config"
 import awsVault from "../../../utils/awsVault"
 

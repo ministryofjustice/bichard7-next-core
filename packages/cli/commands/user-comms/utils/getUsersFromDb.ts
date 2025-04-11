@@ -8,7 +8,7 @@ const getUsersFromDb = async (): Promise<string> => {
 
   return await awsVault.exec({
     awsProfile: aws.profile,
-    command: `npx ts-node -T ./commands/user-comms/utils/index.ts`
+    command: `npx ts-node -T ./commands/user-comms/index.ts`
   })
 }
 
