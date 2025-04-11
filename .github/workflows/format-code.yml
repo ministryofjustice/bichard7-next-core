@@ -1,6 +1,7 @@
+name: MoJ Code Formatter
+
 on:
   pull_request:
-    types: [opened, edited, reopened, synchronize]
 
 jobs:
   format-code:
@@ -9,6 +10,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ministryofjustice/github-actions/code-formatter@v18.2.2
         with:
-          ignore-files: "**/tests/fixtures/e2e-comparison/*.json"
+          ignore-files: "**/tests/fixtures/e2e-comparison/*.json,**/help/**/*.md"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
