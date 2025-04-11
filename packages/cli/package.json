@@ -19,7 +19,8 @@
     "commander": "^13.1.0",
     "inquirer": "^12.4.1",
     "notifications-node-client": "^8.2.1",
-    "nunjucks": "^3.2.4"
+    "nunjucks": "^3.2.4",
+    "pg": "^8.14.1"
   },
   "devDependencies": {
     "@inquirer/prompts": "^7.3.1",
@@ -36,6 +37,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "typeorm": "^0.3.22",
     "typescript": "^5.7.3"
   }
 }
