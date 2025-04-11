@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json && cp -r commands/user-comms/templates dist/commands/user-comms/",
     "install:global": "npm i && npm run build && npm i -g . && chmod +x dist/index.js",
-    "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess 'chmod -v +x dist/index.js' --onSuccess 'npm i -g .' && npm i"
+    "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess \"sh -c 'chmod -v +x dist/index.js && mkdir -p dist/commands/user-comms/ && cp -r commands/user-comms/templates dist/commands/user-comms/'\" --onSuccess \"npm i -g .\" && npm i"
   },
   "keywords": [],
   "author": "",
@@ -18,7 +18,9 @@
     "cli-color": "^2.0.4",
     "commander": "^13.1.0",
     "inquirer": "^12.4.1",
-    "nunjucks": "^3.2.4"
+    "notifications-node-client": "^8.2.1",
+    "nunjucks": "^3.2.4",
+    "pg": "^8.14.1"
   },
   "devDependencies": {
     "@inquirer/prompts": "^7.3.1",
@@ -35,6 +37,7 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "typeorm": "^0.3.22",
     "typescript": "^5.7.3"
   }
 }
