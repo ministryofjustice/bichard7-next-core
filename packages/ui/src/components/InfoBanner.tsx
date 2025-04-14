@@ -3,22 +3,27 @@ import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
 
 interface Props {
-  firstShownDate: Date
+  firstShownDate: Date | undefined
   message: string
   href: string
 }
 
-const InfoBanner = ({ message, firstShownDate = new Date(), href }: Props) => {
+const InfoBanner = ({ message, firstShownDate, href }: Props) => {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  const firstShownDayOfMonth = firstShownDate.getDate()
   const currentDayOfMonth = new Date().getDate()
 
   useEffect(() => {
     setMounted(true)
 
-    if (currentDayOfMonth - firstShownDayOfMonth > 3) {
+    if (!firstShownDate) {
+      return
+    }
+
+    const firstShownDayOfMonth = firstShownDate.getDate()
+
+    if (currentDayOfMonth - firstShownDayOfMonth > 5) {
       return
     }
 
@@ -29,7 +34,7 @@ const InfoBanner = ({ message, firstShownDate = new Date(), href }: Props) => {
     }
 
     setVisible(true)
-  }, [currentDayOfMonth, firstShownDayOfMonth])
+  }, [currentDayOfMonth, firstShownDate])
 
   const handleClose = () => {
     setVisible(false)
