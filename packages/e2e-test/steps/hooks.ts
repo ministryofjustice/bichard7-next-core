@@ -15,7 +15,7 @@ export const setupHooks = () => {
     if (clearRecordings) {
       try {
         fs.rmSync("./screenshots", { recursive: true })
-      } catch (e) {
+      } catch {
         console.log("Screenshots directory did not exist")
       }
     }
