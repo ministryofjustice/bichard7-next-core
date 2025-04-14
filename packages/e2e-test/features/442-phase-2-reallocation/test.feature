@@ -1,7 +1,7 @@
-Feature: {441} Phase 2 resubmission
+Feature: {442} Phase 2 reallocation
 
       """
-      This tests that an exception raised in Phase 2 or 3 can be resubmitted.
+      This tests that Phase 2 case can be reallocated.
       """
 
   Background:
