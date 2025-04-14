@@ -53,11 +53,13 @@ describe("infoBanner", () => {
     cy.get(".info-banner").should("exist")
   })
 
-  it("disappears after three days from the first shown date", () => {
-    const fourDaysAgo = new Date()
-    fourDaysAgo.setDate(fourDaysAgo.getDate() - 4)
-    visitWithBannerDate("/bichard", new Date(fourDaysAgo).toISOString())
+  it("disappears after five days from the first shown date", () => {
+    const fiveDaysAgo = new Date()
+    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
+    visitWithBannerDate("/bichard", new Date(fiveDaysAgo).toISOString())
 
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000)
     cy.get(".info-banner").should("not.exist")
   })
 
@@ -70,6 +72,7 @@ describe("infoBanner", () => {
     cy.get(".info-banner").should("not.exist")
 
     cy.reload()
+    visitWithBannerDate("/bichard", new Date().toISOString())
     cy.get(".info-banner").should("not.exist")
   })
 
@@ -118,13 +121,13 @@ describe("infoBanner", () => {
     cy.get(".info-banner").should("not.exist")
   })
 
-  it("disappears for current session when closed on a case-details page and does not reappear on case-list or any other page", () => {
+  it("disappears closed on a case-details page and does not reappear on case-list or any other page", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         orgForPoliceFilter: "01",
         hearingOutcome: HO100206.hearingOutcomeXml,
         updatedHearingOutcome: HO100206.hearingOutcomeXml,
-        errorCount: 1,
+        errorCount: 1
       }
     ])
 
