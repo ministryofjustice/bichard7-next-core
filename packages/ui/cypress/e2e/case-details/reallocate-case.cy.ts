@@ -1,15 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { readFileSync } from "fs"
 import { TestTrigger } from "../../../test/utils/manageTriggers"
 import canReallocateTestData from "../../fixtures/canReallocateTestData.json"
 import { clickTab, loginAndVisit } from "../../support/helpers"
-
-const annotatedPncUpdateDataset = readFileSync(
-  "../core/phase2/tests/fixtures/AnnotatedPncUpdateDataset-with-exception-and-post-update-trigger.xml"
-).toString()
-const pncUpdateDataset = readFileSync(
-  "../core/phase2/tests/fixtures/PncUpdateDataSet-with-single-NEWREM.xml"
-).toString()
 
 describe("Case details", () => {
   before(() => {
@@ -207,15 +199,7 @@ describe("Case details", () => {
   )
 
   it("Should allow reallocating phase 2 cases", () => {
-    cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", phase: 1 },
-      {
-        orgForPoliceFilter: "01",
-        phase: 2,
-        hearingOutcome: annotatedPncUpdateDataset,
-        updatedHearingoutcome: pncUpdateDataset
-      }
-    ])
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", phase: 2 }])
     const triggers: TestTrigger[] = [
       {
         triggerId: 0,
