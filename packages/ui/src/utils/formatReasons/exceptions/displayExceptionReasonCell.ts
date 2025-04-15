@@ -1,9 +1,9 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import type { DisplayPartialCourtCase } from "types/display/CourtCases"
 import type { DisplayFullUser } from "types/display/Users"
-import { displayExceptions } from "./displayExceptions"
 import groupErrorsFromReport from "./groupErrorsFromReport"
-import type { ReasonCodes } from "./reasonCodes"
+import type { ReasonCodes } from "../reasonCodes"
+import { displayExceptions } from "./displayExceptions"
 
 type DisplayExceptionReasonsResult = {
   hasExceptionReasonCodes: boolean
