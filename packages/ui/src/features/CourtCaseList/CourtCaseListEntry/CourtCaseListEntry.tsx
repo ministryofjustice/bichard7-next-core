@@ -110,37 +110,30 @@ const CourtCaseListEntry: React.FC<Props> = ({
   triggerHasBeenRecentlyUnlocked,
   previousPath
 }: Props) => {
-  const { errorReport, triggerLockedByUsername, triggers } = courtCase
+  const { triggerLockedByUsername } = courtCase
 
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
 
-  const hasTriggers = triggers.length > 0
-  const hasExceptions = !!errorReport
-
   const formattedReasonCodes = formatReasonCodes(query.reasonCodes)
 
-  const exceptionsCells = hasExceptions
-    ? generateExceptionComponents(
-        currentUser,
-        courtCase,
-        query,
-        basePath,
-        exceptionHasBeenRecentlyUnlocked,
-        formattedReasonCodes
-      )
-    : undefined
+  const exceptionsCells = generateExceptionComponents(
+    currentUser,
+    courtCase,
+    query,
+    basePath,
+    exceptionHasBeenRecentlyUnlocked,
+    formattedReasonCodes
+  )
 
-  const triggerCells = hasTriggers
-    ? generateTriggerComponents(
-        currentUser,
-        courtCase,
-        query,
-        basePath,
-        triggerHasBeenRecentlyUnlocked,
-        formattedReasonCodes
-      )
-    : undefined
+  const triggerCells = generateTriggerComponents(
+    currentUser,
+    courtCase,
+    query,
+    basePath,
+    triggerHasBeenRecentlyUnlocked,
+    formattedReasonCodes
+  )
 
   const reasonCell = exceptionsCells?.exceptionsReasonCell || triggerCells?.triggersReasonCell
   const extraReasonCell = exceptionsCells?.exceptionsReasonCell ? triggerCells?.triggersReasonCell : undefined
