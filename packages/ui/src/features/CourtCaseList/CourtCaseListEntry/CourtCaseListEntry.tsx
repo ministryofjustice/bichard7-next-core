@@ -16,11 +16,6 @@ interface Props {
   previousPath: string | null
 }
 
-export type CourtCaseListEntryRowCells = {
-  ReasonCell: React.ReactNode
-  LockTag: React.ReactNode
-}
-
 const CourtCaseListEntry: React.FC<Props> = ({
   courtCase,
   exceptionHasBeenRecentlyUnlocked,
@@ -51,7 +46,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
     formattedReasonCodes
   )
 
-  const reasonCell = exceptionsCells?.ReasonCell || triggerCells?.ReasonCell
+  const reasonCell = exceptionsCells?.ReasonCell ?? triggerCells?.ReasonCell
   const extraReasonCell = exceptionsCells?.ReasonCell ? triggerCells?.ReasonCell : undefined
   const resolutionStatus = getResolutionStatus(courtCase)
   const renderExtraReasons = resolutionStatus !== ResolutionStatus.Unresolved || extraReasonCell
@@ -61,7 +56,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={reasonCell}
-        lockTag={exceptionsCells?.LockTag || triggerCells?.LockTag}
+        lockTag={exceptionsCells?.LockTag ?? triggerCells?.LockTag}
         previousPath={previousPath}
       />
       {renderExtraReasons && (

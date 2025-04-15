@@ -1,11 +1,11 @@
 import { ParsedUrlQuery } from "querystring"
+import { type CourtCaseListEntryRowCells } from "types/CourtCaseListEntryRowCells"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
 import { canUserUnlockCase } from "utils/formatReasons/canUserUnlockCase"
 import { ReasonCodes, ReasonCodeTitle } from "utils/formatReasons/reasonCodes"
 import { displayTriggerReasonCell } from "utils/formatReasons/triggers/displayTriggerReasonCell"
 import { unlockCaseWithReasonPath } from "utils/formatReasons/unlockCaseWithReasonPath"
-import { type CourtCaseListEntryRowCells } from "../CourtCaseListEntry"
 import { TriggersLockTag, TriggersReasonCell } from "../TriggersColumns"
 
 export const generateTriggerComponents = (
