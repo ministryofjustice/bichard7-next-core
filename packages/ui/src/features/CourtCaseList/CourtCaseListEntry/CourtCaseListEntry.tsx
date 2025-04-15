@@ -48,7 +48,7 @@ const generateExceptionComponents = (
   exceptionHasBeenRecentlyUnlocked: boolean,
   formattedReasonCodes: ReasonCodes
 ): ExceptionsCells | undefined => {
-  const displayExceptionReasonsResult = displayExceptionReasons(user, courtCase, query.state, formattedReasonCodes)
+  const displayExceptionReasonsResult = displayExceptionReasons(user, courtCase, formattedReasonCodes, query.state)
 
   if (!displayExceptionReasonsResult) {
     return

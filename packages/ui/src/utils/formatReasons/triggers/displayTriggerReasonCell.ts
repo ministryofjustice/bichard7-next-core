@@ -16,14 +16,14 @@ export const displayTriggerReasonCell = (
   formattedReasonCodes: ReasonCodes
 ): DisplayTriggerReasonsResult | undefined => {
   if (!user.hasAccessTo[Permission.Triggers]) {
-    return undefined
+    return
   }
 
   const exceptionReasonCodes = formattedReasonCodes.Exceptions
   const triggerReasonCodes = formattedReasonCodes.Triggers
 
   if (triggerReasonCodes.length === 0 && exceptionReasonCodes.length > 0) {
-    return undefined
+    return
   }
 
   const { triggers } = courtCase

@@ -14,22 +14,22 @@ type DisplayExceptionReasonsResult = {
 export const displayExceptionReasons = (
   user: DisplayFullUser,
   courtCase: DisplayPartialCourtCase,
-  state: string | string[] | undefined,
-  formattedReasonCodes: ReasonCodes
+  formattedReasonCodes: ReasonCodes,
+  state?: string | string[]
 ): DisplayExceptionReasonsResult | undefined => {
   if (!user.hasAccessTo[Permission.Exceptions]) {
-    return undefined
+    return
   }
 
   if (!displayExceptions(courtCase.errorStatus, state)) {
-    return undefined
+    return
   }
 
   const exceptionReasonCodes = formattedReasonCodes.Exceptions
   const triggerReasonCodes = formattedReasonCodes.Triggers
 
   if (exceptionReasonCodes.length === 0 && triggerReasonCodes.length > 0) {
-    return undefined
+    return
   }
 
   const exceptions = groupErrorsFromReport(courtCase.errorReport)
