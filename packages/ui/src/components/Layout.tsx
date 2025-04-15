@@ -11,6 +11,7 @@ import { Banner } from "./Layout.styles"
 import NavBar from "./NavBar"
 import PageTemplate from "./PageTemplate"
 import PhaseBanner from "./PhaseBanner"
+import { NavLink } from "types/NavLinks"
 
 interface BichardSwitchProps {
   href: string
@@ -67,7 +68,7 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
         <InfoBanner
           firstShownDate={INFO_BANNER_FIRST_SHOWN}
           message={"There are new features available on new Bichard."}
-          href={"/help/whats-new"}
+          href={NavLink.WhatsNew}
         />
 
         {children}
