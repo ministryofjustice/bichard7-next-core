@@ -1,8 +1,9 @@
 import styled from "styled-components"
+import { blue, white } from "utils/colours"
 
 const Banner = styled.div`
-  background-color: #005bbb;
-  color: white;
+  background-color: ${blue};
+  color: ${white};
   padding: 14px 20px;
   display: flex;
   align-items: center;
@@ -22,7 +23,7 @@ const Banner = styled.div`
   }
 
   a {
-    color: #ffffff;
+    color: ${white};
     text-decoration: underline;
     font-weight: normal;
   }
