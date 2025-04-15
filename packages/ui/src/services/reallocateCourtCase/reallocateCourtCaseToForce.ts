@@ -5,11 +5,12 @@ import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import Phase from "@moj-bichard7/core/types/Phase"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
-import type { DataSource, EntityManager, UpdateResult } from "typeorm"
+import type { DataSource, EntityManager } from "typeorm"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
+import parseHearingOutcome from "utils/parseHearingOutcome"
 import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
-import parseHearinOutcome from "../../utils/parseHearingOutcome"
 import amendCourtCase from "../amendCourtCase"
 import type User from "../entities/User"
 import getCourtCaseByOrganisationUnit from "../getCourtCaseByOrganisationUnit"
@@ -26,13 +27,12 @@ const reallocateCourtCaseToForce = async (
   user: User,
   forceCode: string,
   note?: string
-): Promise<UpdateResult | Error> => {
+): PromiseResult<void> => {
   return await dataSource
-    .transaction("SERIALIZABLE", async (entityManager): Promise<UpdateResult | Error> => {
+    .transaction("SERIALIZABLE", async (entityManager): Promise<void> => {
       const events: AuditLogEvent[] = []
 
       const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
-
       if (isError(courtCase)) {
         throw courtCase
       }
@@ -41,27 +41,21 @@ const reallocateCourtCaseToForce = async (
         throw new Error("Failed to reallocate: Case not found")
       }
 
-      const aho = parseHearinOutcome(courtCase.hearingOutcome)
-
+      const aho = parseHearingOutcome(courtCase.hearingOutcome)
       if (isError(aho)) {
-        return aho
+        throw aho
       }
 
-      const preUpdateTrigger = generateTriggers(aho)
-      const postUpdateTriggers: Trigger[] = []
       const isCaseRecordableOnPnc = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
-      if (
-        courtCase.phase === Phase.PNC_UPDATE &&
-        isCaseRecordableOnPnc &&
-        (!courtCase.errorStatus || courtCase.errorStatus === "Resolved")
-      ) {
-        //TODO: Update this when post triggers generation logic is implemented in core
-        throw Error("Logic to generate post update triggers is not implemented")
-      }
+      const hasNoExceptionsOrAllResolved = !courtCase.errorStatus || courtCase.errorStatus === "Resolved"
+      const triggersPhase =
+        courtCase.phase === Phase.PNC_UPDATE && isCaseRecordableOnPnc && hasNoExceptionsOrAllResolved
+          ? Phase.PNC_UPDATE
+          : Phase.HEARING_OUTCOME
 
-      const triggers = preUpdateTrigger.concat(postUpdateTriggers)
+      const triggers = generateTriggers(aho, triggersPhase)
 
-      if (!courtCase.errorStatus || courtCase.errorStatus === "Resolved") {
+      if (hasNoExceptionsOrAllResolved) {
         triggers.push({ code: REALLOCATE_CASE_TRIGGER_CODE } as Trigger)
       }
 
@@ -76,23 +70,19 @@ const reallocateCourtCaseToForce = async (
         user,
         events
       )
-
       if (isError(updateTriggersResult)) {
         throw updateTriggersResult
       }
 
       const amendedCourtCase = await amendCourtCase(entityManager, { forceOwner: forceCode }, courtCase, user)
-
       if (isError(amendedCourtCase)) {
         throw amendedCourtCase
       }
 
-      const updatedAho = parseHearinOutcome(amendedCourtCase.updatedHearingOutcome ?? amendedCourtCase.hearingOutcome)
+      const updatedAho = parseHearingOutcome(amendedCourtCase.updatedHearingOutcome ?? amendedCourtCase.hearingOutcome)
       if (isError(updatedAho)) {
-        return updatedAho
+        throw updatedAho
       }
-
-      const newForceCode = updatedAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
 
       const updateCourtCaseResult = await updateCourtCase(
         entityManager,
@@ -105,6 +95,7 @@ const reallocateCourtCaseToForce = async (
         throw updateCourtCaseResult
       }
 
+      const newForceCode = updatedAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
       const addNoteResult = await insertNotes(entityManager, [
         {
           noteText: `${user.username}: Case reallocated to new force owner: ${newForceCode}`,
@@ -112,7 +103,6 @@ const reallocateCourtCaseToForce = async (
           userId: "System"
         }
       ])
-
       if (isError(addNoteResult)) {
         throw addNoteResult
       }
@@ -125,7 +115,6 @@ const reallocateCourtCaseToForce = async (
             userId: user.username
           }
         ])
-
         if (isError(addUserNoteResult)) {
           throw addUserNoteResult
         }
@@ -146,7 +135,6 @@ const reallocateCourtCaseToForce = async (
         UnlockReason.TriggerAndException,
         events
       )
-
       if (isError(unlockResult)) {
         throw unlockResult
       }
@@ -154,12 +142,9 @@ const reallocateCourtCaseToForce = async (
       const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch(
         (error) => error
       )
-
       if (isError(storeAuditLogResponse)) {
         throw storeAuditLogResponse
       }
-
-      return unlockResult
     })
     .catch((error) => error)
 }

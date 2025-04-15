@@ -3,8 +3,10 @@ import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
+import { readFileSync } from "fs"
 import Note from "services/entities/Note"
 import SurveyFeedback from "services/entities/SurveyFeedback"
+import Trigger from "services/entities/Trigger"
 import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
 import reallocateCourtCaseToForce from "services/reallocateCourtCase/reallocateCourtCaseToForce"
@@ -22,6 +24,7 @@ import fetchAuditLogEvents from "../../helpers/fetchAuditLogEvents"
 import { hasAccessToAll } from "../../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../../utils/deleteFromEntity"
+import { getCourtCaseById } from "../../utils/getCourtCaseById"
 import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
 
 jest.mock("services/insertNotes")
@@ -30,6 +33,14 @@ jest.mock("services/reallocateCourtCase/updateTriggers")
 jest.mock("services/reallocateCourtCase/updateCourtCase")
 jest.mock("services/amendCourtCase")
 jest.mock("@moj-bichard7/core/lib/triggers/generateTriggers")
+
+const oldForceCode = "01"
+const user = {
+  username: "GeneralHandler",
+  visibleForces: [oldForceCode],
+  visibleCourts: [],
+  hasAccessTo: hasAccessToAll
+} as Partial<User> as User
 
 const createUnlockedEvent = (unlockReason: "Trigger" | "Exception", userName: string) => {
   return {
@@ -80,9 +91,15 @@ const createTriggersGeneratedEvent = (triggers: string[], hasUnresolvedException
   }
 }
 
+const annotatedPncUpdateDataset = readFileSync(
+  "../core/phase2/tests/fixtures/AnnotatedPncUpdateDataset-with-exception-and-post-update-trigger.xml"
+).toString()
+const pncUpdateDataset = readFileSync(
+  "../core/phase2/tests/fixtures/PncUpdateDataSet-with-single-NEWREM.xml"
+).toString()
+
 describe("reallocate court case to another force", () => {
   const courtCaseId = 1
-  const oldForceCode = "01"
   let dataSource: DataSource
 
   beforeAll(async () => {
@@ -255,6 +272,62 @@ describe("reallocate court case to another force", () => {
         )
       )
     })
+
+    it("should reallocate the case and generate post-update triggers when case is recordable, in PNC update phase, and exceptions are resolved", async () => {
+      await insertCourtCasesWithFields([
+        {
+          orgForPoliceFilter: oldForceCode,
+          errorId: courtCaseId,
+          errorStatus: "Resolved",
+          errorLockedByUsername: user.username,
+          triggerLockedByUsername: user.username,
+          phase: Phase.PNC_UPDATE,
+          hearingOutcome: annotatedPncUpdateDataset,
+          updatedHearingOutcome: pncUpdateDataset
+        }
+      ])
+
+      const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
+      expect(isError(result)).toBe(false)
+
+      const reallocatedCourtCase = (await getCourtCaseById(courtCaseId)) as CourtCase
+      expect(reallocatedCourtCase.orgForPoliceFilter).toBe("06YZ  ")
+
+      const triggers = await dataSource
+        .getRepository(Trigger)
+        .createQueryBuilder()
+        .where({ errorId: courtCaseId })
+        .getMany()
+      expect(triggers.map((t) => t.triggerCode)).toEqual(["TRPR0001", "TRPR0006", "TRPR0012", "TRPS0002"])
+    })
+
+    it("should reallocate the case and generate post-update triggers when case is recordable, in PNC update phase, and there are no exceptions", async () => {
+      await insertCourtCasesWithFields([
+        {
+          orgForPoliceFilter: oldForceCode,
+          errorId: courtCaseId,
+          errorStatus: null,
+          errorLockedByUsername: user.username,
+          triggerLockedByUsername: user.username,
+          phase: Phase.PNC_UPDATE,
+          hearingOutcome: annotatedPncUpdateDataset,
+          updatedHearingOutcome: pncUpdateDataset
+        }
+      ])
+
+      const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
+      expect(isError(result)).toBe(false)
+
+      const reallocatedCourtCase = (await getCourtCaseById(courtCaseId)) as CourtCase
+      expect(reallocatedCourtCase.orgForPoliceFilter).toBe("06YZ  ")
+
+      const triggers = await dataSource
+        .getRepository(Trigger)
+        .createQueryBuilder()
+        .where({ errorId: courtCaseId })
+        .getMany()
+      expect(triggers.map((t) => t.triggerCode)).toEqual(["TRPR0001", "TRPR0006", "TRPR0012", "TRPS0002"])
+    })
   })
 
   it("Should call functions in order", async () => {
@@ -394,45 +467,6 @@ describe("reallocate court case to another force", () => {
   })
 
   describe("when there is an unexpected error", () => {
-    const user = {
-      username: "GeneralHandler",
-      visibleForces: [oldForceCode],
-      visibleCourts: [],
-      hasAccessTo: hasAccessToAll
-    } as Partial<User> as User
-
-    it("should return error when case is recordable, in PNC update phase, and exceptions are resolved", async () => {
-      await insertCourtCasesWithFields([
-        {
-          orgForPoliceFilter: oldForceCode,
-          errorId: courtCaseId,
-          phase: Phase.PNC_UPDATE,
-          errorStatus: "Resolved",
-          errorLockedByUsername: user.username,
-          triggerLockedByUsername: user.username
-        }
-      ])
-
-      const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
-      expect(result).toEqual(Error("Logic to generate post update triggers is not implemented"))
-    })
-
-    it("should return error when case is recordable, in PNC update phase, and there are no exceptions", async () => {
-      await insertCourtCasesWithFields([
-        {
-          orgForPoliceFilter: oldForceCode,
-          errorId: courtCaseId,
-          phase: Phase.PNC_UPDATE,
-          errorStatus: null,
-          errorLockedByUsername: user.username,
-          triggerLockedByUsername: user.username
-        }
-      ])
-
-      const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
-      expect(result).toEqual(Error("Logic to generate post update triggers is not implemented"))
-    })
-
     it("Should return error if fails to update triggers", async () => {
       await insertCourtCasesWithFields([
         {

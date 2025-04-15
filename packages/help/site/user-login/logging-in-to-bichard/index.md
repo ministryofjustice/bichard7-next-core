@@ -6,6 +6,7 @@ title: Logging in to Bichard
 We have introduced a form of MFA (Multi-Factor Authentication) to the Bichard login process, making it more secure but also easier for you to self-manage your Bichard accounts. This is detailed in the section below.
 
 ## The new login process
+
 To log-in to Bichard, you will need to visit the following URL from your device, ensuring you are connected to the network:
 [http://psnportal.bichard7.pnn.police.uk/](http://psnportal.bichard7.pnn.police.uk/)
 
@@ -40,4 +41,3 @@ User Managers will be able to select the "User Management" option which is expla
 On the screen above, you will be able to click the "Access Bichard" button to be directed to the Bichard homepage:
 
 ![Bichard home](image6.png)
-
