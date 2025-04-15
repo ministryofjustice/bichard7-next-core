@@ -1,19 +1,13 @@
 import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
-import { encode, ParsedUrlQuery } from "querystring"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
-import { DisplayFullUser } from "types/display/Users"
-import { deleteQueryParamsByName } from "utils/deleteQueryParam"
-import { canUserUnlockCase } from "utils/formatReasons/canUserUnlockCase"
-import { displayExceptionReasons } from "utils/formatReasons/exceptions/displayExceptionReasonCell"
-import { formatReasonCodes, ReasonCodes, ReasonCodeTitle } from "utils/formatReasons/reasonCodes"
-import { displayTriggerReasonCell } from "utils/formatReasons/triggers/displayTriggerReasonCell"
+import { formatReasonCodes } from "utils/formatReasons/reasonCodes"
 import getResolutionStatus from "../../../utils/getResolutionStatus"
 import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
-import { ExceptionsLockTag, ExceptionsReasonCell } from "./ExceptionsColumns"
+import { generateExceptionComponents } from "./CourtCaseListEntryCells/generateExceptionComponents"
+import { generateTriggerComponents } from "./CourtCaseListEntryCells/generateTriggerComponents"
 import { ExtraReasonRow } from "./ExtraReasonRow"
-import { TriggersLockTag, TriggersReasonCell } from "./TriggersColumns"
 
 interface Props {
   courtCase: DisplayPartialCourtCase
@@ -22,79 +16,9 @@ interface Props {
   previousPath: string | null
 }
 
-type Cells = {
+export type CourtCaseListEntryRowCells = {
   ReasonCell: React.ReactNode
   LockTag: React.ReactNode
-}
-
-const unlockCaseWithReasonPath = (reason: ReasonCodeTitle, caseId: number, query: ParsedUrlQuery, basePath: string) => {
-  const searchParams = new URLSearchParams(encode(query))
-  deleteQueryParamsByName(["unlockException", "unlockTrigger"], searchParams)
-
-  searchParams.append(`unlock${reason.replace(/s$/, "")}`, String(caseId))
-  return `${basePath}/?${searchParams}`
-}
-
-const generateExceptionComponents = (
-  user: DisplayFullUser,
-  courtCase: DisplayPartialCourtCase,
-  query: ParsedUrlQuery,
-  basePath: string,
-  exceptionHasBeenRecentlyUnlocked: boolean,
-  formattedReasonCodes: ReasonCodes
-): Cells | undefined => {
-  const displayExceptionReasonsResult = displayExceptionReasons(user, courtCase, formattedReasonCodes, query.state)
-
-  if (!displayExceptionReasonsResult) {
-    return
-  }
-
-  const { hasExceptionReasonCodes, filteredExceptions, exceptions } = displayExceptionReasonsResult
-  const { errorId, errorLockedByUsername, errorLockedByUserFullName } = courtCase
-
-  return {
-    ReasonCell: <ExceptionsReasonCell exceptionCounts={hasExceptionReasonCodes ? filteredExceptions : exceptions} />,
-    LockTag: (
-      <ExceptionsLockTag
-        errorLockedByUsername={errorLockedByUsername}
-        errorLockedByFullName={errorLockedByUserFullName}
-        canUnlockCase={canUserUnlockCase(user, errorLockedByUsername)}
-        unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Exceptions, errorId, query, basePath)}
-        exceptionsHaveBeenRecentlyUnlocked={exceptionHasBeenRecentlyUnlocked}
-      />
-    )
-  }
-}
-
-const generateTriggerComponents = (
-  user: DisplayFullUser,
-  courtCase: DisplayPartialCourtCase,
-  query: ParsedUrlQuery,
-  basePath: string,
-  triggerHasBeenRecentlyUnlocked: boolean,
-  formattedReasonCodes: ReasonCodes
-): Cells | undefined => {
-  const displayTriggerReasonResult = displayTriggerReasonCell(user, courtCase, formattedReasonCodes)
-
-  if (!displayTriggerReasonResult) {
-    return
-  }
-
-  const { hasTriggerReasonCodes, filteredTriggers, triggers } = displayTriggerReasonResult
-  const { errorId, triggerLockedByUserFullName, triggerLockedByUsername } = courtCase
-
-  return {
-    ReasonCell: <TriggersReasonCell triggers={hasTriggerReasonCodes ? filteredTriggers : triggers} />,
-    LockTag: (
-      <TriggersLockTag
-        triggersLockedByUsername={triggerLockedByUsername}
-        triggersLockedByFullName={triggerLockedByUserFullName}
-        triggersHaveBeenRecentlyUnlocked={triggerHasBeenRecentlyUnlocked}
-        canUnlockCase={canUserUnlockCase(user, triggerLockedByUsername)}
-        unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Triggers, errorId, query, basePath)}
-      />
-    )
-  }
 }
 
 const CourtCaseListEntry: React.FC<Props> = ({
@@ -104,7 +28,6 @@ const CourtCaseListEntry: React.FC<Props> = ({
   previousPath
 }: Props) => {
   const { triggerLockedByUsername } = courtCase
-
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
 
