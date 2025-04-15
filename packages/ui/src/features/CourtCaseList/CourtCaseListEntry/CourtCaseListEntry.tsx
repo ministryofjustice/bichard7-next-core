@@ -22,14 +22,9 @@ interface Props {
   previousPath: string | null
 }
 
-type ExceptionsCells = {
-  exceptionsReasonCell: React.ReactNode
-  exceptionsLockTag: React.ReactNode
-}
-
-type TriggersCells = {
-  triggersReasonCell: React.ReactNode
-  triggersLockTag: React.ReactNode
+type Cells = {
+  ReasonCell: React.ReactNode
+  LockTag: React.ReactNode
 }
 
 const unlockCaseWithReasonPath = (reason: ReasonCodeTitle, caseId: number, query: ParsedUrlQuery, basePath: string) => {
@@ -47,7 +42,7 @@ const generateExceptionComponents = (
   basePath: string,
   exceptionHasBeenRecentlyUnlocked: boolean,
   formattedReasonCodes: ReasonCodes
-): ExceptionsCells | undefined => {
+): Cells | undefined => {
   const displayExceptionReasonsResult = displayExceptionReasons(user, courtCase, formattedReasonCodes, query.state)
 
   if (!displayExceptionReasonsResult) {
@@ -58,10 +53,8 @@ const generateExceptionComponents = (
   const { errorId, errorLockedByUsername, errorLockedByUserFullName } = courtCase
 
   return {
-    exceptionsReasonCell: (
-      <ExceptionsReasonCell exceptionCounts={hasExceptionReasonCodes ? filteredExceptions : exceptions} />
-    ),
-    exceptionsLockTag: (
+    ReasonCell: <ExceptionsReasonCell exceptionCounts={hasExceptionReasonCodes ? filteredExceptions : exceptions} />,
+    LockTag: (
       <ExceptionsLockTag
         errorLockedByUsername={errorLockedByUsername}
         errorLockedByFullName={errorLockedByUserFullName}
@@ -80,7 +73,7 @@ const generateTriggerComponents = (
   basePath: string,
   triggerHasBeenRecentlyUnlocked: boolean,
   formattedReasonCodes: ReasonCodes
-): TriggersCells | undefined => {
+): Cells | undefined => {
   const displayTriggerReasonResult = displayTriggerReasonCell(user, courtCase, formattedReasonCodes)
 
   if (!displayTriggerReasonResult) {
@@ -91,8 +84,8 @@ const generateTriggerComponents = (
   const { errorId, triggerLockedByUserFullName, triggerLockedByUsername } = courtCase
 
   return {
-    triggersReasonCell: <TriggersReasonCell triggers={hasTriggerReasonCodes ? filteredTriggers : triggers} />,
-    triggersLockTag: (
+    ReasonCell: <TriggersReasonCell triggers={hasTriggerReasonCodes ? filteredTriggers : triggers} />,
+    LockTag: (
       <TriggersLockTag
         triggersLockedByUsername={triggerLockedByUsername}
         triggersLockedByFullName={triggerLockedByUserFullName}
@@ -135,8 +128,8 @@ const CourtCaseListEntry: React.FC<Props> = ({
     formattedReasonCodes
   )
 
-  const reasonCell = exceptionsCells?.exceptionsReasonCell || triggerCells?.triggersReasonCell
-  const extraReasonCell = exceptionsCells?.exceptionsReasonCell ? triggerCells?.triggersReasonCell : undefined
+  const reasonCell = exceptionsCells?.ReasonCell || triggerCells?.ReasonCell
+  const extraReasonCell = exceptionsCells?.ReasonCell ? triggerCells?.ReasonCell : undefined
   const resolutionStatus = getResolutionStatus(courtCase)
   const renderExtraReasons = resolutionStatus !== ResolutionStatus.Unresolved || extraReasonCell
 
@@ -145,7 +138,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={reasonCell}
-        lockTag={exceptionsCells?.exceptionsLockTag || triggerCells?.triggersLockTag}
+        lockTag={exceptionsCells?.LockTag || triggerCells?.LockTag}
         previousPath={previousPath}
       />
       {renderExtraReasons && (
@@ -153,7 +146,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
           isLocked={!!triggerLockedByUsername}
           resolutionStatus={resolutionStatus}
           reasonCell={extraReasonCell}
-          lockTag={triggerCells?.triggersLockTag}
+          lockTag={triggerCells?.LockTag}
         />
       )}
     </tbody>
