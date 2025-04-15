@@ -17,8 +17,8 @@ export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters): postgr
 
   const queries: postgres.PendingQuery<Row[]>[] = []
   const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
-  const triggerCodes = filterReasonCodesForExceptions(reasonCodes).map((rc) => getLongTriggerCode(rc)) ?? []
-  const exceptionCodes = filterReasonCodesForTriggers(reasonCodes).map((rc) => `%${rc}%`) ?? []
+  const triggerCodes = filterReasonCodesForTriggers(reasonCodes).map((rc) => getLongTriggerCode(rc)) ?? []
+  const exceptionCodes = filterReasonCodesForExceptions(reasonCodes).map((rc) => `%${rc}%`) ?? []
 
   if (!isEmpty(triggerCodes)) {
     queries.push(sql`elt.trigger_code ILIKE ANY(${triggerCodes})`)
