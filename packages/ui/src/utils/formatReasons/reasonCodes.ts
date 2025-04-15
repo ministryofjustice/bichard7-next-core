@@ -24,7 +24,7 @@ const validateReasonCodes = (reasonCodes: string | string[]): string[] => {
   return reasonCodesArray
 }
 
-export const formatReasonCodes = (reasonCodes: string | string[] | undefined): ReasonCodes => {
+export const formatReasonCodes = (reasonCodes?: string | string[]): ReasonCodes => {
   const formattedReasonCodes: ReasonCodes = { Exceptions: [], Triggers: [] }
 
   if (!reasonCodes || isEmpty(reasonCodes)) {
