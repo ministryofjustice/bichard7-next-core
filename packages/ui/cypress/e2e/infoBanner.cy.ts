@@ -146,4 +146,14 @@ describe("infoBanner", () => {
     visitWithBannerDate("/bichard", new Date().toISOString())
     cy.get(".info-banner").should("not.exist")
   })
+
+  it("doesn't appear if firstShownDate is in future", () => {
+    const futureFirstShownDate = new Date()
+    futureFirstShownDate.setDate(futureFirstShownDate.getDate() + 5)
+
+    visitWithBannerDate("/bichard", futureFirstShownDate.toISOString())
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000)
+    cy.get(".info-banner").should("not.exist")
+  })
 })

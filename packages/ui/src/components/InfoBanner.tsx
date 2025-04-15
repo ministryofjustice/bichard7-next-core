@@ -21,14 +21,14 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
       return
     }
 
+    const bannerLifespanDays = 5
     const firstShownDayOfMonth = firstShownDate.getDate()
+    const bannerShownInFuture = firstShownDayOfMonth > currentDayOfMonth
+    const bannerExpired = currentDayOfMonth - firstShownDayOfMonth >= bannerLifespanDays
 
-    if (currentDayOfMonth - firstShownDayOfMonth >= 5) {
+    if (bannerShownInFuture || bannerExpired) {
       return
     }
-
-    console.log(currentDayOfMonth)
-    console.log(firstShownDayOfMonth)
 
     const lastClosed = localStorage.getItem("infoBannerLastClosed")
 
