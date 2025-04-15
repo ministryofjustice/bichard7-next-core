@@ -1,5 +1,4 @@
 import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
-import Permission from "@moj-bichard7/common/types/Permission"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { encode, ParsedUrlQuery } from "querystring"
@@ -9,6 +8,7 @@ import { deleteQueryParamsByName } from "utils/deleteQueryParam"
 import { canUserUnlockCase } from "utils/formatReasons/canUserUnlockCase"
 import { displayExceptionReasons } from "utils/formatReasons/exceptions/displayExceptionReasonCell"
 import { formatReasonCodes, ReasonCodes, ReasonCodeTitle } from "utils/formatReasons/reasonCodes"
+import { displayTriggerReasonCell } from "utils/formatReasons/triggers/displayTriggerReasonCell"
 import getResolutionStatus from "../../../utils/getResolutionStatus"
 import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
 import { ExceptionsLockTag, ExceptionsReasonCell } from "./ExceptionsColumns"
@@ -81,35 +81,23 @@ const generateTriggerComponents = (
   triggerHasBeenRecentlyUnlocked: boolean,
   formattedReasonCodes: ReasonCodes
 ): TriggersCells | undefined => {
-  if (!user.hasAccessTo[Permission.Triggers]) {
-    return undefined
+  const displayTriggerReasonResult = displayTriggerReasonCell(user, courtCase, formattedReasonCodes)
+
+  if (!displayTriggerReasonResult) {
+    return
   }
 
-  const { errorId, triggers, triggerLockedByUserFullName, triggerLockedByUsername } = courtCase
-
-  const exceptionReasonCodes = formattedReasonCodes.Exceptions
-  const triggerReasonCodes = formattedReasonCodes.Triggers
-
-  if (triggerReasonCodes.length === 0 && exceptionReasonCodes.length > 0) {
-    return undefined
-  }
+  const { hasTriggerReasonCodes, filteredTriggers, triggers } = displayTriggerReasonResult
+  const { errorId, triggerLockedByUserFullName, triggerLockedByUsername } = courtCase
 
   return {
-    triggersReasonCell: (
-      <TriggersReasonCell
-        triggers={
-          triggerReasonCodes.length > 0
-            ? triggers.filter((trigger) => triggerReasonCodes.includes(trigger.triggerCode))
-            : triggers
-        }
-      />
-    ),
+    triggersReasonCell: <TriggersReasonCell triggers={hasTriggerReasonCodes ? filteredTriggers : triggers} />,
     triggersLockTag: (
       <TriggersLockTag
         triggersLockedByUsername={triggerLockedByUsername}
         triggersLockedByFullName={triggerLockedByUserFullName}
         triggersHaveBeenRecentlyUnlocked={triggerHasBeenRecentlyUnlocked}
-        canUnlockCase={!!triggerLockedByUsername && canUserUnlockCase(user, triggerLockedByUsername)}
+        canUnlockCase={canUserUnlockCase(user, triggerLockedByUsername)}
         unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Triggers, errorId, query, basePath)}
       />
     )
