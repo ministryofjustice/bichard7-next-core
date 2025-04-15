@@ -8,7 +8,6 @@ import { DisplayFullUser } from "types/display/Users"
 import { deleteQueryParamsByName } from "utils/deleteQueryParam"
 import { canUserUnlockCase } from "utils/formatReasons/canUserUnlockCase"
 import { displayExceptionReasons } from "utils/formatReasons/exceptions/displayExceptionReasonCell"
-import { canUnlockCase } from "utils/formatReasons/exceptions/displayExceptionsLockTag"
 import { formatReasonCodes, ReasonCodes, ReasonCodeTitle } from "utils/formatReasons/reasonCodes"
 import getResolutionStatus from "../../../utils/getResolutionStatus"
 import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
@@ -66,7 +65,7 @@ const generateExceptionComponents = (
       <ExceptionsLockTag
         errorLockedByUsername={errorLockedByUsername}
         errorLockedByFullName={errorLockedByUserFullName}
-        canUnlockCase={canUnlockCase(user, errorLockedByUsername)}
+        canUnlockCase={canUserUnlockCase(user, errorLockedByUsername)}
         unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Exceptions, errorId, query, basePath)}
         exceptionsHaveBeenRecentlyUnlocked={exceptionHasBeenRecentlyUnlocked}
       />
