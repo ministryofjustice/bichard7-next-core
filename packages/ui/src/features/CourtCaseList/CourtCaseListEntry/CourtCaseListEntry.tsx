@@ -36,7 +36,7 @@ const unlockCaseWithReasonPath = (reason: ReasonCodeTitle, caseId: number, query
   const searchParams = new URLSearchParams(encode(query))
   deleteQueryParamsByName(["unlockException", "unlockTrigger"], searchParams)
 
-  searchParams.append(`unlock${reason}`, String(caseId))
+  searchParams.append(`unlock${reason.replace(/s$/, "")}`, String(caseId))
   return `${basePath}/?${searchParams}`
 }
 
