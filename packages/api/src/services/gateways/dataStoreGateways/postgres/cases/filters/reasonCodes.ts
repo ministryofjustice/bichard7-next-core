@@ -1,6 +1,10 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
+import {
+  filterReasonCodesForExceptions,
+  filterReasonCodesForTriggers
+} from "@moj-bichard7/common/utils/filterReasonCodes"
 import getLongTriggerCode from "@moj-bichard7/common/utils/getLongTriggerCode"
 import { isEmpty } from "lodash"
 
@@ -13,8 +17,8 @@ export const filterByReasonCodes = (sql: postgres.Sql, filters: Filters): postgr
 
   const queries: postgres.PendingQuery<Row[]>[] = []
   const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
-  const triggerCodes = reasonCodes.filter((rc) => !rc.startsWith("HO")).map((rc) => getLongTriggerCode(rc)) ?? []
-  const exceptionCodes = reasonCodes.filter((rc) => rc.startsWith("HO")).map((rc) => `%${rc}%`) ?? []
+  const triggerCodes = filterReasonCodesForExceptions(reasonCodes).map((rc) => getLongTriggerCode(rc)) ?? []
+  const exceptionCodes = filterReasonCodesForTriggers(reasonCodes).map((rc) => `%${rc}%`) ?? []
 
   if (!isEmpty(triggerCodes)) {
     queries.push(sql`elt.trigger_code ILIKE ANY(${triggerCodes})`)
