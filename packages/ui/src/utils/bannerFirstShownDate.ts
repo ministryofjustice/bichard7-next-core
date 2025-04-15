@@ -4,7 +4,7 @@ declare global {
   }
 }
 
-const resolveBannerFirstShownDate = (firstShownDate?: Date): Date | undefined => {
+const bannerFirstShownDate = (firstShownDate?: Date): Date | undefined => {
   if (typeof window !== "undefined" && window.TEST_INFO_BANNER_FIRST_SHOWN) {
     return new Date(window.TEST_INFO_BANNER_FIRST_SHOWN)
   }
@@ -12,4 +12,4 @@ const resolveBannerFirstShownDate = (firstShownDate?: Date): Date | undefined =>
   return firstShownDate
 }
 
-export default resolveBannerFirstShownDate
+export default bannerFirstShownDate
