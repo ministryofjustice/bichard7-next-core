@@ -65,10 +65,6 @@ export const getServerSideProps = withMultipleServerSideProps(
       return forbidden(res)
     }
 
-    if (courtCase.phase !== 1) {
-      return redirectTo(`/court-cases/${courtCase.errorId}`)
-    }
-
     const props = {
       csrfToken,
       previousPath: previousPath || "",

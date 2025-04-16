@@ -15,6 +15,11 @@ import { insertLockUsers } from "./insertLockUsers"
 import insertManyIntoDynamoTable from "./insertManyIntoDynamoTable"
 import { insertNoteUser } from "./insertNoteUser"
 
+const getAnnotatedPncUpdateDatasetXml = () =>
+  fs
+    .readFileSync("../core/phase2/tests/fixtures/AnnotatedPncUpdateDataset-with-exception-and-post-update-trigger.xml")
+    .toString()
+
 const getAhoWithMultipleOffences = (offenceCount: number) => {
   const offenceXml = fs.readFileSync("test/test-data/offence.xml").toString()
   const offences = offenceXml.repeat(offenceCount)
@@ -37,15 +42,20 @@ const getAhoWithCustomExceptions = (exceptions: Record<string, ExceptionCode>) =
   }
 }
 
-const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtCase> =>
-  (await getDataSource()).getRepository(CourtCase).create({
+const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtCase> => {
+  const hearingOutcome =
+    overrides?.hearingOutcome ??
+    (overrides?.phase === 2 ? getAnnotatedPncUpdateDatasetXml() : DummyMultipleOffencesAho.hearingOutcomeXml)
+
+  return (await getDataSource()).getRepository(CourtCase).create({
     ...DummyCourtCase,
-    hearingOutcome: DummyMultipleOffencesAho.hearingOutcomeXml,
+    hearingOutcome,
     errorCount: 1,
     errorReason: "HO100102",
     errorReport: "HO100102||ds:NextHearingDate",
     ...overrides
   } as CourtCase)
+}
 
 const insertCourtCases = async (courtCases: CourtCase | CourtCase[]): Promise<CourtCase[]> => {
   const dataSource = await getDataSource()
