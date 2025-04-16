@@ -63,6 +63,18 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
       cy.task("insertTriggers", { caseId: 1, triggers: trigger2 })
     })
 
+    it("contains two rows (triggers and exceptions)", () => {
+      cy.visit("/bichard")
+
+      cy.get(".cases-list tbody").should("have.length", 2)
+
+      cy.get(".cases-list tbody:nth-child(2) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(2) tr.extraReasonRow").should("have.length", 1)
+
+      cy.get(".cases-list tbody:nth-child(3) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(3) tr.extraReasonRow").should("have.length", 1)
+    })
+
     it("only finds one case when searching for exception HO100321", () => {
       cy.visit("/bichard")
 
@@ -73,6 +85,9 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
 
       cy.get(".cases-list tbody").should("have.length", 1)
       cy.get(".cases-list tbody").contains("GORDON Barbara")
+
+      cy.get(".cases-list tbody:nth-child(2) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(2) tr.extraReasonRow").should("not.exist")
     })
 
     it("only finds one case when searching for resolved exception HO100321", () => {
@@ -151,6 +166,9 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
 
       cy.get(".cases-list tbody").should("have.length", 1)
       cy.get(".cases-list tbody").contains("GORDON Barbara")
+
+      cy.get(".cases-list tbody:nth-child(2) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(2) tr.extraReasonRow").should("not.exist")
     })
 
     it("only finds one case when searching for resolved trigger TRPR0017", () => {
