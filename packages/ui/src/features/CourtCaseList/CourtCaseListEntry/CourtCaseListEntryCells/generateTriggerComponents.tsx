@@ -16,13 +16,19 @@ export const generateTriggerComponents = (
   triggerHasBeenRecentlyUnlocked: boolean,
   formattedReasonCodes: ReasonCodes
 ): CourtCaseListEntryRowCells | undefined => {
-  const displayTriggerReasonResult = displayTriggerReasonCell(user, courtCase, formattedReasonCodes)
+  const { triggers } = courtCase
+
+  if (triggers.length === 0) {
+    return
+  }
+
+  const displayTriggerReasonResult = displayTriggerReasonCell(user, triggers, formattedReasonCodes)
 
   if (!displayTriggerReasonResult) {
     return
   }
 
-  const { hasTriggerReasonCodes, filteredTriggers, triggers } = displayTriggerReasonResult
+  const { hasTriggerReasonCodes, filteredTriggers } = displayTriggerReasonResult
   const { errorId, triggerLockedByUserFullName, triggerLockedByUsername } = courtCase
 
   return {

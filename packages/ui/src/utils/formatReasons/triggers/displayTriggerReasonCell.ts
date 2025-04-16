@@ -1,5 +1,4 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import type { DisplayPartialCourtCase } from "types/display/CourtCases"
 import type { DisplayTrigger } from "types/display/Triggers"
 import type { DisplayFullUser } from "types/display/Users"
 import type { ReasonCodes } from "../reasonCodes"
@@ -12,7 +11,7 @@ type DisplayTriggerReasonsResult = {
 
 export const displayTriggerReasonCell = (
   user: DisplayFullUser,
-  courtCase: DisplayPartialCourtCase,
+  triggers: DisplayTrigger[],
   formattedReasonCodes: ReasonCodes
 ): DisplayTriggerReasonsResult | undefined => {
   if (!user.hasAccessTo[Permission.Triggers]) {
@@ -25,8 +24,6 @@ export const displayTriggerReasonCell = (
   if (triggerReasonCodes.length === 0 && exceptionReasonCodes.length > 0) {
     return
   }
-
-  const { triggers } = courtCase
 
   return {
     hasTriggerReasonCodes: triggerReasonCodes.length > 0,
