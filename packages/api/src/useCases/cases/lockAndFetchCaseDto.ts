@@ -15,10 +15,6 @@ const lockAndFetchCaseDto = async (
   auditLogGateway: AuditLogDynamoGateway,
   logger: FastifyBaseLogger
 ): Promise<CaseDto> => {
-  if (dataStore.forceIds.length === 0) {
-    throw new Error("No force associated to User")
-  }
-
   const caseDataForDto = await lockAndFetchCase(dataStore, auditLogGateway, caseId, user, logger)
 
   return convertCaseToCaseDto(caseDataForDto, user, logger)
