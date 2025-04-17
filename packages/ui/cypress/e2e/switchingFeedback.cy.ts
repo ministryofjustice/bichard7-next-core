@@ -29,7 +29,7 @@ const navigateAndClickSwitchToOldBichard = (url = "/bichard") => {
 }
 
 const expectFeedbackPage = () => {
-  cy.get(".b7-switching-feedback-button").contains("Send feedback email").should("exist")
+  cy.get(".send-feedback-email").contains("Send feedback email").should("exist")
 }
 
 const clickSkipFeedbackButton = () => {
@@ -130,7 +130,7 @@ describe("Switching Bichard Version Feedback Form", () => {
     const encodedSubject = encodeURIComponent(expectedSubject)
     const encodedBody = encodeURIComponent(expectedBody)
 
-    cy.get("#main-content > div:nth-of-type(2) > a")
+    cy.get(".send-feedback-email")
       .should("have.attr", "href")
       .and("include", `mailto:moj-bichard7@madetech.com?subject=${encodedSubject}&body=${encodedBody}`)
     cy.get("a").contains("Send feedback email").click()
