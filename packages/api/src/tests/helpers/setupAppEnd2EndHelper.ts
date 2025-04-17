@@ -22,7 +22,7 @@ export class SetupAppEnd2EndHelper {
     const auditLogGateway = new TestDynamoGateway(auditLogDynamoConfig)
     const app = await build({ auditLogGateway, dataStore: e2ePostgres })
     await app.ready()
-    app.listen({ port })
+    await app.listen({ port })
 
     return new SetupAppEnd2EndHelper(port, app, e2ePostgres, auditLogGateway)
   }
