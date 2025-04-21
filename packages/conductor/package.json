@@ -6,7 +6,7 @@
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.268",
     "@stomp/stompjs": "^7.1.1",
     "esbuild": "~0.25.0",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
