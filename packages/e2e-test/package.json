@@ -75,7 +75,7 @@
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
-    "eslint": "^9.24.0",
+    "eslint": "^9.25.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
