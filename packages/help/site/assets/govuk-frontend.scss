@@ -1,0 +1,6 @@
+---
+---
+
+@use "govuk/index" with (
+  $govuk-assets-path: "{{ site.baseurl }}/assets/govuk/assets/"
+);

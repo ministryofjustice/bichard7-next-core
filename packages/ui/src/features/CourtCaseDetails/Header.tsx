@@ -10,6 +10,7 @@ import { useRouter } from "next/router"
 
 import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
+import { LinkButton } from "../../components/Buttons/LinkButton"
 import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
 import ResolutionStatusBadge from "../CourtCaseList/tags/ResolutionStatusBadge"
@@ -19,11 +20,10 @@ import {
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
-  StyledButton,
-  SecondaryLinkButton
+  SecondaryLinkButton,
+  StyledButton
 } from "./Header.styles"
 import LockStatusTag from "./LockStatusTag"
-import { LinkButton } from "../../components/Buttons/LinkButton"
 
 interface Props {
   canReallocate: boolean
@@ -93,7 +93,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
           />
         </LockedTagContainer>
         <ButtonContainer>
-          <ConditionalRender isRendered={canReallocate && courtCase.phase === 1 && !pathName.includes("/reallocate")}>
+          <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
             <SecondaryLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
               {"Reallocate Case"}
             </SecondaryLinkButton>

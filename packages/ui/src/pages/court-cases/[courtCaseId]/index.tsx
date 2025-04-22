@@ -1,5 +1,4 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import ConditionalRender from "components/ConditionalRender"
 import Layout from "components/Layout"
 import { Loading } from "components/Loading"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
@@ -33,7 +32,6 @@ import { createMqConfig, StompitMqGateway } from "services/mq"
 import resolveTriggers from "services/resolveTriggers"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
-import { AttentionBanner, AttentionContainer } from "styles/index.styles"
 import { UpdateResult } from "typeorm"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
@@ -138,15 +136,16 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req) && resubmitCase === "true") {
       const { amendments } = formData as { amendments: string }
 
-      const parsedAmendments = JSON.parse(amendments)
+      const resubmitCourtCaseResult = await resubmitCourtCase(
+        dataSource,
+        mqGateway,
+        JSON.parse(amendments),
+        +courtCaseId,
+        currentUser
+      )
 
-      const updatedAmendments =
-        Object.keys(parsedAmendments).length > 0 ? parsedAmendments : { noUpdatesResubmit: true }
-
-      const amendedCase = await resubmitCourtCase(dataSource, mqGateway, updatedAmendments, +courtCaseId, currentUser)
-
-      if (isError(amendedCase)) {
-        throw amendedCase
+      if (isError(resubmitCourtCaseResult)) {
+        throw resubmitCourtCaseResult
       }
     }
 
@@ -295,16 +294,6 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                   displaySwitchingSurveyFeedback
                 }}
               >
-                <ConditionalRender isRendered={courtCase.phase !== 1}>
-                  <AttentionContainer className={`attention-container govuk-tag govuk-!-width-full`}>
-                    <div className="govuk-tag">{"Attention:"}</div>
-                    <AttentionBanner className={`attention-banner govuk-tag`}>
-                      {
-                        "This case can not be reallocated within new bichard; Switch to the old bichard to reallocate this case."
-                      }
-                    </AttentionBanner>
-                  </AttentionContainer>
-                </ConditionalRender>
                 <Header canReallocate={canReallocate} />
                 {isClient ? <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} /> : <Loading />}
               </Layout>

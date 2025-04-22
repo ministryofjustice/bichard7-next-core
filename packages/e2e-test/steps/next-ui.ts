@@ -121,6 +121,7 @@ export const setupNextSteps = () => {
   When("I match the offence to PNC offence {string} in case {string}", ui.matchOffenceAndCcr)
   When("I match the offence as Added In Court", ui.offenceAddedInCourt)
   When("I submit the record", ui.submitRecord)
+  When("I submit the unchanged record", ui.submitRecord)
   When("I submit the record on the case details page", ui.submitRecordAndStayOnPage)
   Then("I reload until I see {string}", ui.reloadUntilStringPresent)
   Then("I reload until I don't see {string}", ui.reloadUntilStringNotPresent)

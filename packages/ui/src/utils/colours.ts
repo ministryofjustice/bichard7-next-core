@@ -9,6 +9,7 @@ const textSecondary = "#505a5f"
 const blue = "#005BBB"
 const yellow = "#FFDD00"
 const gdsBlack = "#0b0c0c"
+const gdsTagBlue = "#bbd4ea"
 const grey = "#b0b4b6"
 const gdsGreen = "#00703c"
 const gdsRed = "#d4351c"
@@ -24,6 +25,7 @@ export {
   gdsLightGrey,
   gdsMidGrey,
   gdsRed,
+  gdsTagBlue,
   gdsWhite,
   grey,
   lightGrey,
