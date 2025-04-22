@@ -58,8 +58,7 @@ describe("infoBanner", () => {
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
     visitWithBannerDate("/bichard", new Date(fiveDaysAgo).toISOString())
 
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000)
+    cy.get("h2")
     cy.get(".info-banner").should("not.exist")
   })
 
@@ -152,8 +151,8 @@ describe("infoBanner", () => {
     futureFirstShownDate.setDate(futureFirstShownDate.getDate() + 5)
 
     visitWithBannerDate("/bichard", futureFirstShownDate.toISOString())
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000)
+
+    cy.get("h2")
     cy.get(".info-banner").should("not.exist")
   })
 })
