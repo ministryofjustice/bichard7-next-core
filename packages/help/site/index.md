@@ -9,8 +9,8 @@ Welcome to the Bichard 7 documentation site.
   - [Case List](whats-new/case-list/)
   - [Case Details](whats-new/case-details/)
   - [Bug fixes](whats-new/bug-fixes/)
-  <!-- - [Reports](whats-new/reports/) -->
-  <!-- - [User Management](whats-new/user-management/) -->
+    <!-- - [Reports](whats-new/reports/) -->
+    <!-- - [User Management](whats-new/user-management/) -->
 - [User Login](user-login/)
   - [Logging in to Bichard](user-login/logging-in-to-bichard/)
   - [Resetting your password](user-login/resetting-password/)

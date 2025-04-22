@@ -8,5 +8,5 @@ Here you’ll find information on what’s new in Bichard, we’ll explain new f
 - [Case List features & improvements](case-list/)
 - [Case Details features & improvements](case-details/)
 - [Bug fixes](bug-fixes/)
-<!-- - [Reports](reports/) -->
-<!-- - [User Management](user-management/) -->
+  <!-- - [Reports](reports/) -->
+  <!-- - [User Management](user-management/) -->
