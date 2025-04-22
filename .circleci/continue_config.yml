@@ -1011,6 +1011,12 @@ parameters:
     type: boolean
     default: false
 
+merge_queue_only: &merge_queue_only
+  filters:
+    branches:
+      only:
+        - /^gh-readonly-queue\/main.*/
+
 workflows:
   test-all:
     jobs:
@@ -1037,11 +1043,6 @@ workflows:
           ms-edge: false
           requires:
             - test_ui
-      - cypress_component_test:
-          name: cypress_component_test_ms_edge
-          ms-edge: true
-          requires:
-            - test_ui
 
       - build_api_docker_image:
           name: build_api_docker_image
@@ -1050,11 +1051,6 @@ workflows:
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
-          requires:
-            - build-ui
-      - cypress_e2e_tests:
-          name: cypress_e2e_tests_ms_edge
-          ms-edge: true
           requires:
             - build-ui
       - cypress_e2e_tests:
@@ -1068,11 +1064,6 @@ workflows:
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
-          requires:
-            - build-ui
-      - cucumber_e2e_tests:
-          name: cucumber_e2e_tests_ms_edge
-          ms-edge: true
           requires:
             - build-ui
       - cucumber_e2e_tests:
@@ -1094,3 +1085,20 @@ workflows:
           ms-edge: false
           requires:
             - lint_and_build
+
+      - cypress_component_test:
+          <<: *merge_queue_only
+          name: cypress_component_test_ms_edge
+          ms-edge: true
+      - cypress_e2e_tests:
+          <<: *merge_queue_only
+          name: cypress_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
+      - cucumber_e2e_tests:
+          <<: *merge_queue_only
+          name: cucumber_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
