@@ -198,11 +198,8 @@ describe("Case details", () => {
     }
   )
 
-  it("Should not allow reallocating phase 2 cases", () => {
-    cy.task("insertCourtCasesWithFields", [
-      { orgForPoliceFilter: "01", phase: 1 },
-      { orgForPoliceFilter: "01", phase: 2 }
-    ])
+  it("Should allow reallocating phase 2 cases", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", phase: 2 }])
     const triggers: TestTrigger[] = [
       {
         triggerId: 0,
@@ -215,22 +212,33 @@ describe("Case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".govuk-tag:visible")
-      .contains(
-        "This case can not be reallocated within new bichard; Switch to the old bichard to reallocate this case."
-      )
-      .should("not.exist")
+    cy.findByText("NAME Defendant").click()
 
-    cy.visit("/bichard/court-cases/1")
+    cy.get("a").contains("Reallocate Case").click()
+    cy.contains("H2", "Case reallocation").should("exist")
 
-    cy.get(".govuk-tag")
-      .contains(
-        "This case can not be reallocated within new bichard; Switch to the old bichard to reallocate this case."
-      )
-      .should("exist")
+    cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
-    cy.visit("/bichard/court-cases/1/reallocate")
-    cy.url().should("match", /\/court-cases\/\d+/)
+    cy.get('select[name="force"]').select("03 - Cumbria")
+    cy.get('textarea[name="note"]').type("This is a dummy note")
+    cy.get("div.govuk-hint").should("contain", "You have 1980 characters remaining")
+    cy.get("button").contains("Reallocate").click()
+
+    cy.get("H1").should("have.text", "Case list")
+    cy.contains("NAME Defendant").should("not.exist")
+
+    loginAndVisit("BichardForce03")
+    cy.findByText("NAME Defendant").click()
+
+    clickTab("Notes")
+
+    cy.get("table tbody tr:visible").should("have.length", 3)
+    cy.get("table tbody tr:visible").should(
+      "contain",
+      "GeneralHandler: Portal Action: Update Applied. Element: forceOwner. New Value: 03"
+    )
+    cy.get("table tbody tr:visible").should("contain", "GeneralHandler: Case reallocated to new force owner: 03YZ00")
+    cy.get("table tbody tr:visible").should("contain", "This is a dummy note")
   })
 
   it("should display there are no user notes when none exist", () => {

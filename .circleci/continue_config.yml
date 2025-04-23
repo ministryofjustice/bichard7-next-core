@@ -1088,23 +1088,6 @@ workflows:
             - build-ui
 
       - e2e_test:
-          name: e2e_test_phase1
-          next-ui: false
-          phase2-core-canary-ratio: "0.0"
-          phase3-core-canary-ratio: "0.0"
-          ms-edge: false
-          requires:
-            - lint_and_build
-      - e2e_test:
-          name: e2e_test_phase2
-          next-ui: false
-          phase2-core-canary-ratio: "1.0"
-          phase3-core-canary-ratio: "0.0"
-          ms-edge: false
-          requires:
-            - lint_and_build
-      - e2e_test:
-          name: e2e_test_phase3
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"

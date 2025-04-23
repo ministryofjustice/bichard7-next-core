@@ -13,7 +13,7 @@ async function start() {
 
   await app.ready()
 
-  app.listen({ host: "0.0.0.0", port })
+  await app.listen({ host: "0.0.0.0", port })
 }
 
 start()

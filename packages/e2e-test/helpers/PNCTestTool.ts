@@ -170,7 +170,7 @@ class PNCTestTool {
 
       try {
         return axios.get(url, { ...axiosConfig, timeout: 1000 })
-      } catch (err) {
+      } catch {
         return Promise.resolve(false)
       }
     }
