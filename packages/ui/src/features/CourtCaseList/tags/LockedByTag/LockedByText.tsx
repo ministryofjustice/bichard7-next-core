@@ -1,4 +1,4 @@
-import { LockedByTag, LockedByTextSpan } from "./LockedByText.styles"
+import { LockedByTag } from "./LockedByText.styles"
 import LockedImage from "./LockedImage"
 
 interface LockedByTextProps {
@@ -8,12 +8,10 @@ interface LockedByTextProps {
 
 const LockedByText = ({ lockedBy, unlockPath }: LockedByTextProps) => {
   return (
-    <strong className={`locked-by-tag govuk-tag`}>
-      <LockedByTag>
-        <LockedImage unlockPath={unlockPath} />
-        <LockedByTextSpan className={`locked-by-text`}>{lockedBy}</LockedByTextSpan>
-      </LockedByTag>
-    </strong>
+    <LockedByTag className={`locked-by-tag`}>
+      <LockedImage unlockPath={unlockPath} />
+      <span className={`locked-by-text`}>{lockedBy}</span>
+    </LockedByTag>
   )
 }
 

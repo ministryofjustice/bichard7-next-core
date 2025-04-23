@@ -45,9 +45,9 @@ function pull_and_build_from_aws() {
   docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/message-forwarder/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
-    
+
     ## Run goss tests
-    GOSS_SLEEP=5 GOSS_FILE=packages/message-forwarder/goss.yaml dgoss run \
+    GOSS_FILES_PATH=packages/message-forwarder dgoss run \
       -e MQ_URL="ws://mq" \
       -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \

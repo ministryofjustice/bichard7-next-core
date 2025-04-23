@@ -47,7 +47,7 @@ function pull_and_build_from_aws() {
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
 
     ## Run goss tests
-    GOSS_SLEEP=5 GOSS_FILE=packages/conductor/goss.yaml dgoss run \
+    GOSS_FILES_PATH=packages/conductor dgoss run \
       -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
       -e PHASE2_COMPARISON_TABLE_NAME="bichard-7-phase2-comparison-log" \
       -e PHASE3_COMPARISON_TABLE_NAME="bichard-7-phase3-comparison-log" \

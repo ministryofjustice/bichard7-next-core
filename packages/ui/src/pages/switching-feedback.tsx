@@ -124,7 +124,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
           <li>{"any other reason"}</li>
         </ul>
         <SwitchingFeedbackButtonContainer>
-          <LinkButton href={emailHref} className="b7-switching-feedback-button" onClick={handleSendEmailClick}>
+          <LinkButton href={emailHref} className="send-feedback-email" onClick={handleSendEmailClick}>
             {"Send feedback email"}
           </LinkButton>
           <Form method="POST" action={skipUrl?.search} csrfToken={csrfToken}>
