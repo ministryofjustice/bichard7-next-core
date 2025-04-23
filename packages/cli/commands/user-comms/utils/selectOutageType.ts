@@ -16,7 +16,7 @@ export const selectOutageType = async (templateChoice: string) => {
           value: "PSN",
           description: "Notify users of a PSN Outage"
         },
-        { name: "Bichard", value: "Bichard", description: "Notify users of a Bichard Outage" }
+        { name: "Bichard Outage", value: "Bichard", description: "Notify users of a Bichard Outage" }
       ]
     })
   } else if (templateChoice === "Outage Resolved") {
