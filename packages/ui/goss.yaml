@@ -58,15 +58,6 @@ package:
     installed: true
   shadow-utils:
     installed: true
-port:
-  tcp:9443:
-    listening: true
-    ip:
-      - 0.0.0.0
-  tcp:3000:
-    listening: true
-    ip:
-      - 0.0.0.0
 user:
   dbus:
     exists: true
@@ -109,7 +100,5 @@ user:
     home: /
     shell: /usr/sbin/nologin
 process:
-  nginx:
-    running: true
   supervisord:
     running: true

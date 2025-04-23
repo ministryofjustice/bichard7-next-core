@@ -63,7 +63,7 @@ fi
     ## Run goss tests
     # DB_CONTAINER=docker ps -aqf "name=bichard7-next_pg"
     # DB_HOST=docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $DB_CONTAINER
-    GOSS_SLEEP=15 GOSS_FILE=packages/ui/goss.yaml dgoss run "${DOCKER_OUTPUT_TAG}:latest"
+    GOSS_FILES_PATH=packages/ui dgoss run "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
         ${DOCKER_OUTPUT_TAG}:latest \

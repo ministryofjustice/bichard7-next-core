@@ -1,0 +1,13 @@
+---
+port:
+  tcp:9443:
+    listening: true
+    ip:
+      - 0.0.0.0
+  tcp:3000:
+    listening: true
+    ip:
+      - 0.0.0.0
+process:
+  nginx:
+    running: true
