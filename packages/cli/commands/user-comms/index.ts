@@ -32,12 +32,15 @@ export function userComms(): Command {
     }
 
     let inputedContent: Content
-
+    console.log(selectTemplate)
     switch (selectedTemplate) {
       case "Outage":
+        inputedContent = await selectOutageType(selectedTemplate)
+        templateData.templateTitle = `Unexpected ${inputedContent.outageType} Outage`
+        break
       case "Outage Resolved":
         inputedContent = await selectOutageType(selectedTemplate)
-        templateData.templateTitle = `Unexpected ${inputedContent.outageType}`
+        templateData.templateTitle = `Unexpected ${inputedContent.outageType} Outage Resolved`
         break
       case "PNC maintenance":
         inputedContent = await pncMaintenance()
@@ -50,8 +53,7 @@ export function userComms(): Command {
         return
     }
 
-    const templateFile = templateData.templateFile
-    const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateFile)
+    const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateData)
 
     const updatedUsers = parsedUsers.map((user) => ({
       ...user,
