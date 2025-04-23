@@ -18,7 +18,7 @@ const RelativeNavigation: React.FC<RelativeNavigationProps> = ({
 
   return (
     <li className={`moj-pagination__item moj-pagination__item--${className}`}>
-      <Link className="moj-pagination__link" href={{ query: { ...query, page: linkedPageNum } }}>
+      <Link className="moj-pagination__link" href={{ query: { ...query, page: linkedPageNum } }} aria-label={label}>
         {label}
         <span className="govuk-visually-hidden">{" page"}</span>
       </Link>

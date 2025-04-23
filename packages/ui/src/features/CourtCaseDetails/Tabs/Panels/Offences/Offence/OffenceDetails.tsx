@@ -88,7 +88,7 @@ export const OffenceDetails = ({
   }
 
   return (
-    <OffenceDetailsContainer className={"offence-details"}>
+    <OffenceDetailsContainer className={"offence-details"} aria-live="polite" aria-label="Offences tab active">
       <OffenceNavigation
         onBackToAllOffences={() => onBackToAllOffences()}
         selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
@@ -96,7 +96,11 @@ export const OffenceDetails = ({
         onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
       />
-      <h3 className="govuk-heading-m">{`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}</h3>
+      <h3
+        className="govuk-heading-m"
+        aria-live="polite"
+        aria-label={`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
+      >{`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}</h3>
       <div className="offences-table">
         <table className="govuk-table">
           <tbody className="govuk-table__body">
