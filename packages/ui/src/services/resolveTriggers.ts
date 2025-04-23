@@ -3,7 +3,7 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import type { DataSource, UpdateResult } from "typeorm"
-import { In, IsNull } from "typeorm"
+import { In, IsNull, QueryFailedError } from "typeorm"
 import { isError } from "types/Result"
 import getSystemNotesForTriggers from "utils/getSystemNotesForTriggers"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
@@ -24,7 +24,7 @@ const generateTriggersAttributes = (triggers: Trigger[]) =>
     return acc
   }, {})
 
-const resolveTriggers = async (
+const resolveTriggersInTransaction = async (
   dataSource: DataSource,
   triggerIds: number[],
   courtCaseId: number,
@@ -171,6 +171,30 @@ const resolveTriggers = async (
 
     return updateTriggersResult
   })
+}
+
+const resolveTriggers = async (
+  dataSource: DataSource,
+  triggerIds: number[],
+  courtCaseId: number,
+  user: User
+): Promise<UpdateResult | Error> => {
+  const maxRetries = 2
+  let result
+
+  for (let retries = 0; retries < maxRetries; retries++) {
+    try {
+      return await resolveTriggersInTransaction(dataSource, triggerIds, courtCaseId, user)
+    } catch (error) {
+      if (!(error instanceof QueryFailedError)) {
+        throw error
+      }
+
+      result = error
+    }
+  }
+
+  throw result
 }
 
 export default resolveTriggers

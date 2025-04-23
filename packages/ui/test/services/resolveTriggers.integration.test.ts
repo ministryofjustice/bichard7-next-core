@@ -2,7 +2,7 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import { differenceInMinutes } from "date-fns"
 import Note from "services/entities/Note"
 import type User from "services/entities/User"
-import type { DataSource } from "typeorm"
+import { QueryFailedError, type DataSource } from "typeorm"
 import { isError } from "types/Result"
 import { AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
@@ -78,6 +78,10 @@ describe("resolveTriggers", () => {
     await deleteFromEntity(CourtCase)
     await deleteFromDynamoTable("auditLogTable", "messageId")
     await deleteFromDynamoTable("auditLogEventsTable", "_id")
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   afterAll(async () => {
@@ -697,6 +701,75 @@ describe("resolveTriggers", () => {
 
       const note = courtCaseAfterResolvingTrigger.notes[0]
       expect(note.noteText).toBe("TriggerHandler: Portal Action: Resolved Trigger. Code: PR01")
+    })
+
+    it("throws error QueryFailedError", async () => {
+      const error = new QueryFailedError("QueryFailedError", ["Transaction failed"], new Error())
+      jest.spyOn(dataSource, "transaction").mockRejectedValue(error)
+
+      const [courtCase] = await insertCourtCasesWithFields([
+        {
+          triggerLockedByUsername: resolverUsername,
+          orgForPoliceFilter: visibleForce
+        }
+      ])
+      const trigger: TestTrigger = {
+        triggerId: 0,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-12T10:22:34.000Z")
+      }
+      await insertTriggers(0, [trigger])
+
+      await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).rejects.toEqual(error)
+
+      expect(dataSource.transaction).toHaveBeenCalledTimes(2)
+    })
+
+    it("will retry if the first transaction throws a QueryFailedError", async () => {
+      const error = new QueryFailedError("QueryFailedError", ["Transaction failed"], new Error())
+      jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error).mockResolvedValueOnce(true)
+
+      const [courtCase] = await insertCourtCasesWithFields([
+        {
+          triggerLockedByUsername: resolverUsername,
+          orgForPoliceFilter: visibleForce
+        }
+      ])
+      const trigger: TestTrigger = {
+        triggerId: 0,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-12T10:22:34.000Z")
+      }
+      await insertTriggers(0, [trigger])
+
+      await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).resolves.toBe(true)
+
+      expect(dataSource.transaction).toHaveBeenCalledTimes(2)
+    })
+
+    it("throws immediately if it isn't a QueryFailedError", async () => {
+      const error = new Error("One or more triggers are already resolved")
+      jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error)
+
+      const [courtCase] = await insertCourtCasesWithFields([
+        {
+          triggerLockedByUsername: resolverUsername,
+          orgForPoliceFilter: visibleForce
+        }
+      ])
+      const trigger: TestTrigger = {
+        triggerId: 0,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-12T10:22:34.000Z")
+      }
+      await insertTriggers(0, [trigger])
+
+      await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).rejects.toThrow(error)
+
+      expect(dataSource.transaction).toHaveBeenCalledTimes(1)
     })
   })
 })
