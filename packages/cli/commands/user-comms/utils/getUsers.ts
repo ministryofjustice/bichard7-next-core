@@ -6,6 +6,8 @@ import { fetchUserDetailsForComms } from "./fetchUserDetailsForComms"
 import fs from "fs/promises"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
+const dbPassword = process.env.DB_PASSWORD
+const dbUser = process.env.DB_USER
 let postgres: DataSource
 
 async function setup() {
@@ -30,15 +32,15 @@ async function setup() {
   postgres = await new DataSource({
     ...baseConfig,
     host: dbHost || "",
-    username: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_USER || "",
-    password: sanitiseMessageLambda.Configuration?.Environment?.Variables?.DB_PASSWORD || "",
+    username: dbUser,
+    password: dbPassword,
     type: "postgres",
     applicationName: "ui-connection",
     ssl: { rejectUnauthorized: false }
   }).initialize()
 }
 
-const run = async () => {
+const getUsers = async () => {
   await setup()
   const userEmail = await fetchUserDetailsForComms(postgres)
   if (isError(userEmail)) {
@@ -48,6 +50,6 @@ const run = async () => {
   await postgres.destroy()
 }
 
-run()
+getUsers()
 
-export default run
+export default getUsers
