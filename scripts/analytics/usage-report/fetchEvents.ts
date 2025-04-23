@@ -57,7 +57,7 @@ const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, star
     fetchedEvents = filterEvents(fetchedEvents) as FullAuditLogEvent[]
 
     fetchedEvents.forEach((event) => messageIds.add(event._messageId))
-    events = events.concat(filterEvents(fetchedEvents))
+    events = events.concat(fetchedEvents)
     const newUiEventsCount = events.filter(isNewUIEvent).length
 
     console.log(

@@ -242,8 +242,9 @@ const generateReportData = async (
     }
 
     if (exceptionsResubmittedEvents.includes(event.eventCode)) {
-      eventCodeKey = (isNewUIEvent(event) ? "new-ui" : "old-ui") + ".Exceptions resubmitted"
-      currentResubmissionUi[event._messageId] = isNewUIEvent(event) ? "new-ui" : "old-ui"
+      const ui = isNewUIEvent(event) ? "new-ui" : "old-ui"
+      eventCodeKey = `${ui}.Exceptions resubmitted`
+      currentResubmissionUi[event._messageId] = ui
       numberToAdd = currentExceptions[event._messageId]?.length ?? 0
       if (event.user === "System") {
         numberToAdd = 0
