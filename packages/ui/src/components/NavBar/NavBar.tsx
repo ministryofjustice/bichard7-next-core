@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import { NavLink } from "types/NavLinks"
 import { MojNavContainer } from "./NavBar.styles"
 
 interface NavItemProps {
@@ -37,10 +38,10 @@ const NavBar: React.FC<NavBarProps> = ({ hasAccessToUserManagement, hasAccessToR
         <div className="moj-primary-navigation__nav">
           <nav className="moj-primary-navigation" aria-label="Primary navigation">
             <ul className="moj-primary-navigation__list">
-              <NavItem name={"Case list"} link={"/bichard/"} />
-              {hasAccessToReports && <NavItem name={"Reports"} link={"/bichard-ui/ReturnToReportIndex"} />}
-              {hasAccessToUserManagement && <NavItem name={"User management"} link={"/users/users/"} />}
-              <NavItem name={"Help"} link={"/help/"} newTab />
+              <NavItem name={"Case list"} link={NavLink.CaseList} />
+              {hasAccessToReports && <NavItem name={"Reports"} link={NavLink.Reports} />}
+              {hasAccessToUserManagement && <NavItem name={"User management"} link={NavLink.UserManagement} />}
+              <NavItem name={"Help"} link={NavLink.Help} newTab />
             </ul>
           </nav>
         </div>

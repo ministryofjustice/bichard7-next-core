@@ -1,13 +1,12 @@
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
-import { SecondaryButton } from "components/Buttons/SecondaryButton"
 import styled from "styled-components"
-import { gdsLightGrey, grey } from "utils/colours"
+import { lightGrey, gdsLightGrey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${gdsLightGrey};
+  background-color: ${lightGrey};
   position: sticky;
   top: 0;
   z-index: 9;
@@ -27,6 +26,10 @@ const CaseDetailHeaderRow = styled.div`
 
     #locked-tag-container {
       margin-left: 0;
+    }
+
+    #return-to-case-list {
+      margin-bottom: 0.63rem;
     }
   }
 `
@@ -49,19 +52,20 @@ const StyledButton = styled(Button)`
   margin-bottom: 0;
 `
 
-const StyledSecondaryButton = styled(SecondaryButton)`
-  margin-bottom: 0;
-  background-color: ${grey};
+const SecondaryLinkButton = styled(LinkButton)`
+  background-color: ${gdsLightGrey};
+
+  &:hover {
+    color: ${gdsLightGrey};
+    background-color: #222222;
+  }
 `
-const ReallocateLinkButton = styled(LinkButton)`
-  background-color: ${grey};
-`
+
 export {
   ButtonContainer,
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
   LockedTagContainer,
-  ReallocateLinkButton,
   StyledButton,
-  StyledSecondaryButton
+  SecondaryLinkButton
 }

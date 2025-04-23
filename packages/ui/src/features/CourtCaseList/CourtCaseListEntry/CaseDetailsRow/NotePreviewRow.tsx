@@ -8,12 +8,12 @@ import { NotePreview } from "./NotePreviewButton"
 interface NotePreviewRowProps {
   notes: DisplayNote[]
   className?: string
+  numberOfNotes: number
 }
 
-export const NotePreviewRow = ({ notes, className }: NotePreviewRowProps) => {
+export const NotePreviewRow = ({ notes, className, numberOfNotes }: NotePreviewRowProps) => {
   const userNotes = filterUserNotes(notes)
   const mostRecentUserNote = getMostRecentNote(userNotes)
-  const numberOfNotes = userNotes.length
   const classes = ["govuk-table__row", "note-preview-row"]
 
   if (className) {

@@ -1,0 +1,15 @@
+---
+port:
+  tcp:9443:
+    listening: true
+    ip:
+      - 0.0.0.0
+  tcp:3321:
+    listening: true
+    ip:
+      - 0.0.0.0
+process:
+  node:
+    running: true
+  nginx:
+    running: true

@@ -50,7 +50,8 @@ describe("lockAndFetchCase e2e", () => {
     await createCase(helper.postgres, {
       error_count: 1,
       error_status: 1,
-      message_id: messageId
+      message_id: messageId,
+      trigger_count: 0
     })
 
     const caseId = 1
@@ -84,6 +85,7 @@ describe("lockAndFetchCase e2e", () => {
 
   it("locks the triggers, creates an audit log event and fetches the updated case", async () => {
     await createCase(helper.postgres, {
+      error_status: 0,
       message_id: messageId,
       trigger_count: 1,
       trigger_status: 1
@@ -147,8 +149,12 @@ describe("lockAndFetchCase e2e", () => {
 
     expect(auditLogObj.events).toHaveLength(2)
 
-    const exceptionsAuditLogEvent = auditLogObj.events?.[0]
-    const triggersAuditLogEvent = auditLogObj.events?.[1]
+    const exceptionsAuditLogEvent = auditLogObj.events?.find(
+      (log) => log.eventType === AuditLogEventLookup[EventCode.ExceptionsLocked]
+    )
+    const triggersAuditLogEvent = auditLogObj.events?.find(
+      (log) => log.eventType === AuditLogEventLookup[EventCode.TriggersLocked]
+    )
 
     expect(exceptionsAuditLogEvent).toHaveProperty("eventCode", EventCode.ExceptionsLocked)
     expect(exceptionsAuditLogEvent).toHaveProperty("category", EventCategory.information)

@@ -128,7 +128,7 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Defendant")
-    cy.contains("th", "ASN").siblings().contains("1101ZD0100000448754K")
+    cy.contains("th", "ASN").siblings().contains("11/01ZD/01/448754K")
     cy.contains("th", "PNC Check name").siblings().contains("SEXOFFENCE")
     cy.contains("th", "Given name").siblings().contains("TRPRFOUR")
     cy.contains("th", "Family name").siblings().contains("SEXOFFENCE")
@@ -656,7 +656,7 @@ describe("View case details", () => {
 
         loginAndVisit("/bichard/court-cases/0")
 
-        cy.get("button.b7-reallocate-button").should(canReallocate ? "exist" : "not.exist")
+        cy.get("a.b7-reallocate-button").should(canReallocate ? "exist" : "not.exist")
       })
     }
   )

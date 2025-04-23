@@ -162,6 +162,15 @@ commands:
       SKIP_IMAGES:
         default: ""
         type: string
+      USE_API:
+        default: false
+        type: boolean
+      USE_API_CASE_ENDPOINT:
+        default: false
+        type: boolean
+      USE_API_CASES_INDEX_ENDPOINT:
+        default: false
+        type: boolean
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -169,7 +178,11 @@ commands:
       - run:
           name: Start bichard7 legacy
           command: |
-            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> \
+            ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
+            USE_API="<<parameters.USE_API>>" \
+            USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
+            USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
@@ -266,6 +279,9 @@ jobs:
       - run:
           name: Run E2E comparison tests against Core Phase 2
           command: npm run -w packages/core test:compare:phase2
+      - run:
+          name: Run E2E comparison tests against Core Phase 3
+          command: npm run -w packages/core test:compare:phase3
 
   characterisation_test_core:
     machine:
@@ -523,6 +539,7 @@ jobs:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.ui-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -556,6 +573,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -568,7 +586,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_common:
@@ -629,6 +646,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -641,7 +659,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
             - images
 
   test_ui:
@@ -657,6 +674,7 @@ jobs:
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -738,6 +756,16 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      api-case-details:
+        type: boolean
+        default: false
+      api-case-list:
+        type: boolean
+        default: false
     steps:
       - unless:
           condition:
@@ -746,6 +774,9 @@ jobs:
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - and:
+                  - equal: [true, << pipeline.parameters.api-changes >>]
+                  - equal: [true, << parameters.api >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -755,9 +786,17 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            - run:
+                name: Load api image
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies:
           install-cypress: true
@@ -781,7 +820,18 @@ jobs:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - run:
-          command: bash .circleci/scripts/run-infrastructure.sh ui ui
+          name: Building infrastructure
+          command: |
+            USE_API="<< parameters.api >>" \
+            USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
+            USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
+            bash .circleci/scripts/run-infrastructure.sh ui ui
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - run:
           name: Run UI tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -804,6 +854,16 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
+      api:
+        type: boolean
+        default: false
+      api-case-details:
+        type: boolean
+        default: false
+      api-case-list:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -820,6 +880,9 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - and:
+                  - equal: [true, << pipeline.parameters.api-changes >>]
+                  - equal: [true, << parameters.api >>]
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -832,6 +895,14 @@ jobs:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            - run:
+                name: Load api
+                command: |
+                  docker image load < "images/api:latest"
       - setup_ui
       - install_dependencies
       - build_e2e_tests
@@ -846,6 +917,15 @@ jobs:
           command: "npm run install-browsers"
       - start_bichard7_legacy:
           SKIP_IMAGES: "ui"
+          USE_API: << parameters.api >>
+          USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
+          USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
+      - when:
+          condition:
+            equal: [true, << parameters.api >>]
+          steps:
+            run:
+              command: npm run api
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
@@ -872,13 +952,13 @@ jobs:
               - << pipeline.parameters.core-changes >>
           steps:
             - run: circleci-agent step halt
+      - checkout
       - attach_workspace:
           at: .
       - run:
           name: Load image
           command: |
             docker image load < "images/ui:latest"
-      - checkout
       - setup_ui
       - install_dependencies
       - fetch_images:
@@ -931,6 +1011,12 @@ parameters:
     type: boolean
     default: false
 
+merge_queue_only: &merge_queue_only
+  filters:
+    branches:
+      only:
+        - /^gh-readonly-queue\/main.*/
+
 workflows:
   test-all:
     jobs:
@@ -957,11 +1043,6 @@ workflows:
           ms-edge: false
           requires:
             - test_ui
-      - cypress_component_test:
-          name: cypress_component_test_ms_edge
-          ms-edge: true
-          requires:
-            - test_ui
 
       - build_api_docker_image:
           name: build_api_docker_image
@@ -970,49 +1051,54 @@ workflows:
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cypress_e2e_tests:
-          name: cypress_e2e_tests_ms_edge
-          ms-edge: true
+          name: cypress_e2e_tests_api
+          api: true
+          api-case-details: true
+          api-case-list: true
           requires:
             - build-ui
+            - build_api_docker_image
+
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
-          ms-edge: false
           requires:
             - build-ui
       - cucumber_e2e_tests:
-          name: cucumber_e2e_tests_ms_edge
-          ms-edge: true
+          name: cucumber_e2e_tests_api
+          api: true
+          api-case-details: true
+          api-case-list: true
           requires:
             - build-ui
+            - build_api_docker_image
       - zap_scanner:
           requires:
             - build-ui
 
       - e2e_test:
-          name: e2e_test_phase1
-          next-ui: false
-          phase2-core-canary-ratio: "0.0"
-          phase3-core-canary-ratio: "0.0"
-          ms-edge: false
-          requires:
-            - lint_and_build
-      - e2e_test:
-          name: e2e_test_phase2
-          next-ui: false
-          phase2-core-canary-ratio: "1.0"
-          phase3-core-canary-ratio: "0.0"
-          ms-edge: false
-          requires:
-            - lint_and_build
-      - e2e_test:
-          name: e2e_test_phase3
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
           ms-edge: false
           requires:
             - lint_and_build
+
+      - cypress_component_test:
+          <<: *merge_queue_only
+          name: cypress_component_test_ms_edge
+          ms-edge: true
+      - cypress_e2e_tests:
+          <<: *merge_queue_only
+          name: cypress_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
+      - cucumber_e2e_tests:
+          <<: *merge_queue_only
+          name: cucumber_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui

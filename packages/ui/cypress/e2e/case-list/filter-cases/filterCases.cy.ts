@@ -139,6 +139,32 @@ describe("Filtering cases", () => {
     cy.get("#date-range").should("be.checked")
   })
 
+  it("should retain the case age filters after refresh", () => {
+    visitBasePath()
+
+    filterByCaseAge(`label[for="case-age-today"]`)
+    cy.get("#case-age").should("be.checked")
+
+    filterByCaseAge(`label[for="case-age-yesterday"]`)
+    filterByCaseAge(`label[for="case-age-2-days-ago"]`)
+
+    cy.get("#case-age-today").should("be.checked")
+    cy.get("#case-age-yesterday").should("be.checked")
+    cy.get("#case-age-2-days-ago").should("be.checked")
+
+    cy.get("#search").click()
+
+    cy.get("#case-age-today").should("be.checked")
+    cy.get("#case-age-yesterday").should("be.checked")
+    cy.get("#case-age-2-days-ago").should("be.checked")
+
+    cy.get("button[aria-label=refresh]").click()
+
+    cy.get("#case-age-today").should("be.checked")
+    cy.get("#case-age-yesterday").should("be.checked")
+    cy.get("#case-age-2-days-ago").should("be.checked")
+  })
+
   it("Should expand and collapse locked state filter navigation", () => {
     visitBasePath()
 
@@ -506,10 +532,9 @@ describe("Filtering cases", () => {
     cy.get("button#search").click()
 
     cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
-    cy.get("tr.caseDetailsRow")
-      .each((row) => {
-        cy.wrap(row).contains("Case00000").should("exist")
-      })
+    cy.get("tr.caseDetailsRow").each((row) => {
+      cy.wrap(row).contains("Case00000").should("exist")
+    })
 
     cy.get(".moj-filter__tag").contains("Today").click()
     cy.get("button#search").click()
@@ -535,10 +560,9 @@ describe("Filtering cases", () => {
     cy.get("button#search").click()
 
     cy.get(".moj-scrollable-pane tbody tr.caseDetailsRow").should("have.length", 1)
-    cy.get("tr.caseDetailsRow")
-      .each((row) => {
-        cy.wrap(row).contains("Case00003").should("exist")
-      })
+    cy.get("tr.caseDetailsRow").each((row) => {
+      cy.wrap(row).contains("Case00003").should("exist")
+    })
 
     cy.get(".moj-filter__tag").contains("2 days ago").click()
     cy.get("button#search").click()
@@ -901,5 +925,3 @@ describe("Filtering cases", () => {
     })
   })
 })
-
-export {}

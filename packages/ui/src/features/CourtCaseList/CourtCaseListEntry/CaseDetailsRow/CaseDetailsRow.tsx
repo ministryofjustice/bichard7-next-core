@@ -22,8 +22,7 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
   const { notes, errorLockedByUsername, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
-  const userNotes = filterUserNotes(notes)
-  const numberOfNotes = userNotes.length
+  const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
 
   let previousPathWebSafe = ""
   if (previousPath) {
@@ -58,7 +57,7 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
         <td className="govuk-table__cell resonCell">{reasonCell}</td>
         <td className="govuk-table__cell">{lockTag}</td>
       </tr>
-      {notes.length > 0 && !showPreview && <NotePreviewRow notes={notes} />}
+      {notes.length > 0 && !showPreview && <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} />}
     </>
   )
 }

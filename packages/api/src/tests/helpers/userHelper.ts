@@ -29,22 +29,24 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.Ge
 export const createUsers = async (
   postgres: End2EndPostgres,
   numberOfUsers: number,
-  groups: UserGroup[] = [UserGroup.GeneralHandler]
+  overrides: Record<number, object> = {}
 ): Promise<User[]> => {
   return Promise.all(
     Array(numberOfUsers)
       .fill(null)
-      .map(async (_, i) => {
-        const id = i + 1 // +1 to avoid user id 0
+      .map(async (_, index) => {
+        const id = index + 1 // +1 to avoid user id 0
         const user: User = await postgres.createTestUser({
           email: `user${id}@example.com`,
           forenames: `Forename${id}`,
-          groups,
+          groups: [UserGroup.GeneralHandler],
           id,
           jwt_id: randomUUID(),
           surname: `Surname${id}`,
           username: `User${id}`,
-          visible_forces: "001"
+          visible_courts: "AB",
+          visible_forces: "001",
+          ...overrides[id]
         })
 
         return user
@@ -56,7 +58,7 @@ export const createUserAndJwtToken = async (
   postgres: End2EndPostgres,
   groups: UserGroup[] = [UserGroup.GeneralHandler]
 ): Promise<[string, User]> => {
-  const [user] = await createUsers(postgres, 1, groups)
+  const [user] = await createUsers(postgres, 1, { 1: { groups } })
   return [generateTestJwtToken(user, user.jwt_id ?? ""), user]
 }
 

@@ -26,3 +26,13 @@ coverage/
 packages/e2e-test/cucumber
 
 **/*.tsbuildinfo
+
+pnc-errors.json
+pnc-errors-analysis.json
+
+packages/help/_site
+packages/help/.sass-cache
+packages/help/.jekyll-cache
+packages/help/.jekyll-metadata
+packages/help/vendor
+.DS_Store

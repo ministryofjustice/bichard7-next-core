@@ -8,7 +8,7 @@ export function userService(): Command {
     .description("A way of querying our User Service ECS cluster for user login events")
     .usage("<email>")
     .argument("<email>", "The user email that you want to look up - this is a partial search")
-    .option("-s, --start-time", "Specify the start time in hours to query from (defaults to 1 hour)", "1")
+    .option("-s, --start-time <hours>", "Specify the start time in hours to query from (defaults to 1 hour)", "1")
     .action(async (email: string, options: { startTime: string }) => {
       const hours = parseInt(options.startTime, 10)
       if (isNaN(hours)) {

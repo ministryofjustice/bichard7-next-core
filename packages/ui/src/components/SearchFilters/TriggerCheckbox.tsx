@@ -1,8 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
+import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 import { ChangeEvent, Dispatch } from "react"
-import getShortTriggerCode from "services/entities/transformers/getShortTriggerCode"
 import { FilterAction } from "types/CourtCaseFilter"
-import getTriggerWithDescription from "utils/formatReasons/getTriggerWithDescription"
 import { TriggerCheckboxLabel } from "./TriggerCheckbox.styles"
 
 interface TriggerCheckboxProps {

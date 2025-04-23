@@ -7,12 +7,7 @@ describe("Exception permissions", () => {
   })
 
   canManuallyResolveAndSubmitTestData.forEach(
-    ({
-      canManuallyResolveAndSubmit,
-      exceptionStatus,
-      exceptionLockedByAnotherUser,
-      loggedInAs
-    }) => {
+    ({ canManuallyResolveAndSubmit, exceptionStatus, exceptionLockedByAnotherUser, loggedInAs }) => {
       it(`Should ${
         canManuallyResolveAndSubmit ? "be able to resolve or submit" : "NOT be able to resolve or submit"
       } when exceptions are ${exceptionStatus}, ${
@@ -32,7 +27,7 @@ describe("Exception permissions", () => {
         }
 
         if (canManuallyResolveAndSubmit) {
-          cy.get("button").contains("Mark as manually resolved").should("exist")
+          cy.get("a").contains("Mark as manually resolved").should("exist")
           cy.get("button").contains("Submit exception(s)").should("exist")
         } else {
           cy.get("button").contains("Mark as manually resolved").should("not.exist")

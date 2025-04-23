@@ -26,6 +26,7 @@ const DefaultException = ({ path, code, onNavigate }: Props) => {
         onNavigate({ location: "Case Details > Case" })
         break
     }
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (

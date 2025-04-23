@@ -1,4 +1,3 @@
-version: "3.2"
 services:
   activemq:
     image: symptoma/activemq:5.17.4
@@ -145,13 +144,13 @@ services:
       DYNAMO_AWS_SECRET_ACCESS_KEY: S3RVER
       AWS_URL: http://localstack:4566
     healthcheck:
-      test: curl --insecure --fail http://localhost:3321/v1/health
+      test: curl --insecure --fail https://localhost:9443/v1/health
       interval: 2s
       timeout: 2s
       retries: 10
       start_period: 120s
     ports:
-      - 3333:3321
+      - 3333:9443
     depends_on:
       postgres:
         condition: service_healthy
@@ -358,6 +357,10 @@ services:
       AUDIT_LOG_API_URL: http://audit-log-api:7010
       CONDUCTOR_API_URL: http://conductor:4000
       ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
+      API_URL: http://api:3321
+      USE_API: ${USE_API:-false}
+      USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
+      USE_API_CASES_INDEX_ENDPOINT: ${USE_API_CASES_INDEX_ENDPOINT:-false}
     ports:
       - 4543:9443
     healthcheck:

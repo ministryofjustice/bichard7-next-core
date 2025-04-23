@@ -1,8 +1,8 @@
 import styled from "styled-components"
-import { gdsLightGrey } from "utils/colours"
+import { lightGrey } from "utils/colours"
 
 const SummaryBox = styled.aside`
-  background-color: ${gdsLightGrey};
+  background-color: ${lightGrey};
   padding: 0rem, 1rem, 0rem, 1rem;
 `
 

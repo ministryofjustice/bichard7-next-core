@@ -1,4 +1,4 @@
-const toArray = <T>(element: unknown): T[] =>
-  element === undefined ? [] : !Array.isArray(element) ? [element] : element
+const toArray = <T>(element: T | T[]): T[] =>
+  element === undefined || element === null ? [] : !Array.isArray(element) ? [element] : element
 
 export default toArray

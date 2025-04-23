@@ -22,6 +22,7 @@ export const confirmMultipleFieldsDisplayed = (fields: string[]) => {
 }
 
 export const submitAndConfirmExceptions = () => {
+  cy.get(".case-details-sidebar #exceptions-tab").click()
   cy.get("button").contains("Submit exception(s)").click()
   cy.url().should("match", /\/bichard\/court-cases\/[0-9]+\/submit$/)
   cy.get("button").contains("Submit exception(s)").click()
@@ -125,7 +126,8 @@ export const verifyUpdatedMessage = (args: {
 }
 
 export const resolveExceptionsManually = () => {
-  cy.get("button").contains("Mark as manually resolved").click()
+  cy.get(".case-details-sidebar #exceptions-tab").click()
+  cy.get("a").contains("Mark as manually resolved").click()
   cy.get("H1").should("have.text", "Resolve Case")
   cy.get('select[name="reason"]').select("PNCRecordIsAccurate")
   cy.get("button").contains("Resolve").click()

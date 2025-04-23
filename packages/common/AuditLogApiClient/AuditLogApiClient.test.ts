@@ -6,7 +6,6 @@ import type { AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 
 import { mockApiAuditLogEvent, mockAuditLogApiRecordOutput } from "../test/auditLogMocks"
 import "../test/jest"
-import { isError } from "../types/Result"
 import AuditLogApiClient from "./AuditLogApiClient"
 
 const apiClient = new AuditLogApiClient("http://localhost", "dummy")
@@ -26,7 +25,7 @@ const createErrorResponse = (errorCode: number, errorMessage: string): AxiosErro
     response: { data: errorMessage, status: errorCode }
   }) as unknown as AxiosError
 
-describe("getMessages()", () => {
+describe("getAuditLogs()", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -34,7 +33,7 @@ describe("getMessages()", () => {
   it("should return the messages if successful", async () => {
     jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages()
+    const result = await apiClient.getAuditLogs()
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
@@ -44,7 +43,7 @@ describe("getMessages()", () => {
     const expectedError = <AxiosError>new Error("An unknown error")
     jest.spyOn(axios, "get").mockRejectedValue(expectedError)
 
-    const result = await apiClient.getMessages()
+    const result = await apiClient.getAuditLogs()
 
     expect(result).toBeError(`Error getting messages: ${expectedError.message}`)
   })
@@ -52,7 +51,7 @@ describe("getMessages()", () => {
   it("should filter by status", async () => {
     const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages({ status: "Error" })
+    const result = await apiClient.getAuditLogs({ status: "Error" })
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
@@ -62,7 +61,7 @@ describe("getMessages()", () => {
   it("should filter by lastMessageId", async () => {
     const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages({ lastMessageId: "12345" })
+    const result = await apiClient.getAuditLogs({ lastMessageId: "12345" })
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
@@ -72,7 +71,7 @@ describe("getMessages()", () => {
   it("should filter by status and lastMessageId", async () => {
     const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages({ lastMessageId: "12345", status: "Error" })
+    const result = await apiClient.getAuditLogs({ lastMessageId: "12345", status: "Error" })
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
@@ -82,7 +81,7 @@ describe("getMessages()", () => {
   it("should pass through largeObjects and limit", async () => {
     const getRequest = jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
 
-    const result = await apiClient.getMessages({ largeObjects: false, limit: 99 })
+    const result = await apiClient.getAuditLogs({ largeObjects: false, limit: 99 })
 
     expect(result).toNotBeError()
     expect(result).toEqual([message, message2])
@@ -90,11 +89,11 @@ describe("getMessages()", () => {
   })
 })
 
-describe("getMessage()", () => {
+describe("getAuditLog()", () => {
   it("should return the message when message exists", async () => {
     jest.spyOn(axios, "get").mockResolvedValue({ data: [message], status: 200 })
 
-    const result = await apiClient.getMessage(message.messageId)
+    const result = await apiClient.getAuditLog(message.messageId)
 
     expect(result).toNotBeError()
 
@@ -108,7 +107,7 @@ describe("getMessage()", () => {
     const expectedError = <AxiosError>new Error("An unknown error")
     jest.spyOn(axios, "get").mockRejectedValue(expectedError)
 
-    const result = await apiClient.getMessage(message.messageId)
+    const result = await apiClient.getAuditLog(message.messageId)
 
     expect(result).toBeError(`Error getting messages: ${expectedError.message}`)
   })
@@ -116,7 +115,7 @@ describe("getMessage()", () => {
   it("should pass through the api key as a header", async () => {
     const mockGet = jest.spyOn(axios, "get").mockResolvedValue({ data: [], status: 200 })
 
-    const result = await apiClient.getMessage(message.messageId)
+    const result = await apiClient.getAuditLog(message.messageId)
 
     expect(result).toNotBeError()
 
@@ -164,11 +163,11 @@ describe("createAuditLog()", () => {
   })
 })
 
-describe("createEvent()", () => {
+describe("createEvents()", () => {
   it("should return Created http status code when message exists", async () => {
     jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
 
-    const result = await apiClient.createEvent(message.messageId, event)
+    const result = await apiClient.createEvents(message.messageId, event)
 
     expect(result).toNotBeError()
   })
@@ -176,7 +175,7 @@ describe("createEvent()", () => {
   it("should fail when message does not exist", async () => {
     jest.spyOn(axios, "post").mockResolvedValue({ status: 404 })
 
-    const result = await apiClient.createEvent(message.messageId, event)
+    const result = await apiClient.createEvents(message.messageId, event)
 
     expect(result).toBeError(`The message with Id ${message.messageId} does not exist.`)
   })
@@ -185,7 +184,7 @@ describe("createEvent()", () => {
     const expectedError = <AxiosError>new Error("An unknown error")
     jest.spyOn(axios, "post").mockRejectedValue(expectedError)
 
-    const result = await apiClient.createEvent(message.messageId, event)
+    const result = await apiClient.createEvents(message.messageId, event)
 
     expect(result).toBeError(`Error creating event: ${expectedError.message}`)
   })
@@ -193,7 +192,7 @@ describe("createEvent()", () => {
   it("should pass through the api key as a header", async () => {
     const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
 
-    const result = await apiClient.createEvent(message.messageId, event)
+    const result = await apiClient.createEvents(message.messageId, event)
 
     expect(result).toNotBeError()
 
@@ -206,7 +205,7 @@ describe("createEvent()", () => {
     const expectedErrorMsg = `Timed out creating event for message with Id ${message.messageId}.`
     jest.spyOn(axios, "post").mockRejectedValue(timedOutResponse)
 
-    const result = await apiClient.createEvent(message.messageId, event)
+    const result = await apiClient.createEvents(message.messageId, event)
 
     expect(result).toBeError(expectedErrorMsg)
   })
@@ -290,11 +289,11 @@ describe("retryEvent()", () => {
   })
 })
 
-describe("sanitiseMessage()", () => {
+describe("sanitiseAuditLog()", () => {
   it("should return NoContent http status code when successful", async () => {
     jest.spyOn(axios, "post").mockResolvedValue({ status: 204 })
 
-    const result = await apiClient.sanitiseMessage(message.messageId)
+    const result = await apiClient.sanitiseAuditLog(message.messageId)
 
     expect(result).toNotBeError()
   })
@@ -302,7 +301,7 @@ describe("sanitiseMessage()", () => {
   it("should fail when message does not exist", async () => {
     jest.spyOn(axios, "post").mockResolvedValue({ status: 404 })
 
-    const result = await apiClient.sanitiseMessage(message.messageId)
+    const result = await apiClient.sanitiseAuditLog(message.messageId)
 
     expect(result).toBeError(`The message with Id ${message.messageId} does not exist.`)
   })
@@ -310,7 +309,7 @@ describe("sanitiseMessage()", () => {
   it("should fail when the api errors", async () => {
     jest.spyOn(axios, "post").mockResolvedValue({ data: "api has gone bang", status: 500 })
 
-    const result = await apiClient.sanitiseMessage(message.messageId)
+    const result = await apiClient.sanitiseAuditLog(message.messageId)
 
     expect(result).toBeError("Error from audit log api while sanitising: api has gone bang")
   })
@@ -319,7 +318,7 @@ describe("sanitiseMessage()", () => {
     const expectedError = <AxiosError>new Error("An unknown error")
     jest.spyOn(axios, "post").mockRejectedValue(expectedError)
 
-    const result = await apiClient.sanitiseMessage(message.messageId)
+    const result = await apiClient.sanitiseAuditLog(message.messageId)
 
     expect(result).toBeError("Error sanitising message: An unknown error")
   })
@@ -328,7 +327,7 @@ describe("sanitiseMessage()", () => {
     const timedOutResponse = <AxiosError>{ code: "ECONNABORTED", message: "Connection expired" }
     jest.spyOn(axios, "post").mockRejectedValue(timedOutResponse)
 
-    const result = await apiClient.sanitiseMessage(message.messageId)
+    const result = await apiClient.sanitiseAuditLog(message.messageId)
 
     expect(result).toBeError("Error sanitising message: Connection expired")
   })

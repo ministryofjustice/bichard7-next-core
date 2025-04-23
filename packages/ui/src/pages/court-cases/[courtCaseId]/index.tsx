@@ -1,7 +1,6 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import ConditionalRender from "components/ConditionalRender"
 import Layout from "components/Layout"
-import { USE_API_CASE_ENDPOINT } from "config"
+import { Loading } from "components/Loading"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
@@ -19,7 +18,7 @@ import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { canUseApiEndpoint } from "services/api/canUseEndpoint"
+import { ApiEndpoints, canUseApiEndpoint } from "services/api/canUseEndpoint"
 import { canReallocate, canResolveOrSubmit } from "services/case"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
@@ -33,7 +32,6 @@ import { createMqConfig, StompitMqGateway } from "services/mq"
 import resolveTriggers from "services/resolveTriggers"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
-import { AttentionBanner, AttentionContainer } from "styles/index.styles"
 import { UpdateResult } from "typeorm"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
@@ -51,7 +49,7 @@ import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackFo
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
-const useApi = canUseApiEndpoint(USE_API_CASE_ENDPOINT)
+const useApi = canUseApiEndpoint(ApiEndpoints.CaseDetails)
 
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
@@ -97,21 +95,6 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
     }
 
-    let lockResult: UpdateResult | Error | undefined
-
-    if (isPost(req) && lock === "false") {
-      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
-    } else if (
-      !useApi &&
-      (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
-    ) {
-      lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
-    }
-
-    if (isError(lockResult)) {
-      throw lockResult
-    }
-
     const triggersToResolve = []
     if (typeof resolveTrigger === "string" && !Number.isNaN(+resolveTrigger)) {
       triggersToResolve.push(+resolveTrigger)
@@ -153,15 +136,16 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req) && resubmitCase === "true") {
       const { amendments } = formData as { amendments: string }
 
-      const parsedAmendments = JSON.parse(amendments)
+      const resubmitCourtCaseResult = await resubmitCourtCase(
+        dataSource,
+        mqGateway,
+        JSON.parse(amendments),
+        +courtCaseId,
+        currentUser
+      )
 
-      const updatedAmendments =
-        Object.keys(parsedAmendments).length > 0 ? parsedAmendments : { noUpdatesResubmit: true }
-
-      const amendedCase = await resubmitCourtCase(dataSource, mqGateway, updatedAmendments, +courtCaseId, currentUser)
-
-      if (isError(amendedCase)) {
-        throw amendedCase
+      if (isError(resubmitCourtCaseResult)) {
+        throw resubmitCourtCaseResult
       }
     }
 
@@ -178,6 +162,21 @@ export const getServerSideProps = withMultipleServerSideProps(
           throw new Error(ValidationException)
         }
       }
+    }
+
+    let lockResult: UpdateResult | Error | undefined
+
+    if (isPost(req) && lock === "false") {
+      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
+    } else if (
+      !useApi &&
+      (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
+    ) {
+      lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
+    }
+
+    if (isError(lockResult)) {
+      throw lockResult
     }
 
     // Fetch the record from the database after updates
@@ -268,11 +267,14 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const [previousPathContext] = useState<PreviousPathContextType>({ previousPath })
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
     setCookie(caseDetailsCookieName, `${courtCase.errorId}?previousPath=${encodeURIComponent(previousPath)}`, {
       path: "/"
     } as OptionsType)
+
+    setIsClient(true)
   }, [caseDetailsCookieName, courtCase.errorId, previousPath])
 
   return (
@@ -292,18 +294,8 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                   displaySwitchingSurveyFeedback
                 }}
               >
-                <ConditionalRender isRendered={courtCase.phase !== 1}>
-                  <AttentionContainer className={`attention-container govuk-tag govuk-!-width-full`}>
-                    <div className="govuk-tag">{"Attention:"}</div>
-                    <AttentionBanner className={`attention-banner govuk-tag`}>
-                      {
-                        "This case can not be reallocated within new bichard; Switch to the old bichard to reallocate this case."
-                      }
-                    </AttentionBanner>
-                  </AttentionContainer>
-                </ConditionalRender>
                 <Header canReallocate={canReallocate} />
-                <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
+                {isClient ? <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} /> : <Loading />}
               </Layout>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>

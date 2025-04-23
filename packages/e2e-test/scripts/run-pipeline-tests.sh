@@ -16,13 +16,13 @@ then
   if [ $RUN_ALL_TESTS = "true" ]
   then
     echo "Running all tests (old UI)"
-    CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test
+    CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:oldUI
 
     echo "Running all tests (next UI)"
     CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:nextUI
   else
     echo "Running must tests (old UI)"
-    CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:must
+    CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:oldUI:must
 
     echo "Running must tests (next UI)"
     CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:nextUI:must
@@ -30,7 +30,7 @@ then
 elif [ "$WORKSPACE" == "preprod" ]
 then
   echo "Running preprod tests (old UI)"
-  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:preprod
+  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:oldUI:preprod
 
   echo "Running preprod tests (next UI)"
   CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:nextUI:preprod

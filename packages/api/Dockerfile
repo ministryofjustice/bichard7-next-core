@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE="nodejs-20-2023"
+ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
 FROM ${BUILD_IMAGE} AS builder
 
 RUN echo $NOTIIFCATION
@@ -32,19 +32,6 @@ WORKDIR /core/packages/api
 
 RUN ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
 
-COPY packages/api/files/openssl.cnf /tmp/openssl.cnf
-RUN mkdir -p /certs && \
-  openssl req \
-  -x509 \
-  -nodes \
-  -days 730 \
-  -newkey rsa:4096 \
-  -out /certs/server.crt \
-  -keyout /certs/server.key \
-  -config /tmp/openssl.cnf \
-  -extensions 'v3_req' && \
-  rm -rf /tmp/openssl.cnf
-
 WORKDIR /core
 
 RUN npm prune --omit=dev --workspaces --include-root
@@ -54,11 +41,23 @@ FROM ${BUILD_IMAGE}
 WORKDIR /
 
 COPY --from=builder /core /core
-COPY --from=builder /certs /certs
 
 WORKDIR /core/packages/api
 
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
 
-USER node
-CMD [ "node", "dist/src/index.js" ]
+RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
+    usermod -a -G supervisor supervisor && \
+    chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
+    chmod g+r -R /certs/server.key /var/lib/nginx && \
+    chmod g+rw -R /core /run /var/log && \
+    npm config set cache /tmp/npm --global
+
+
+COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf
+COPY packages/api/docker/conf/supervisord.conf /etc/supervisord.conf
+
+EXPOSE 9443
+
+USER supervisor
+CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]
