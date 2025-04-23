@@ -115,21 +115,16 @@ export const OffenceDetails = ({
             ) : (
               <TableRow label="Offence code" value={offenceCode} />
             )}
-            <TableRow label="Title" value={offence.OffenceTitle} />
-            <TableRow label="Category" value={offenceCategoryWithDescription} />
+            <TableRow label="Offence title" value={offence.OffenceTitle} />
+            <TableRow label="Offence start date" value={<StartDate offence={offence} />} />
             <TableRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
             <TableRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
-            <TableRow label="Start date" value={<StartDate offence={offence} />} />
-            <TableRow label="Location" value={offence.LocationOfOffence} />
-            <TableRow label="Wording" value={offence.ActualOffenceWording} />
-            <TableRow label="Record on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
-            <TableRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
-            <TableRow label="Home Office classification" value={offence.HomeOfficeClassification} />
             <TableRow
               label="Conviction date"
               value={offence.ConvictionDate && formatDisplayedDate(offence.ConvictionDate)}
             />
-
+            <TableRow label="Offence description" value={offence.ActualOffenceWording} />
+            <TableRow label="Offence location" value={offence.LocationOfOffence} />
             <OffenceMatching
               offenceIndex={selectedOffenceSequenceNumber - 1}
               offence={offence}
@@ -137,15 +132,18 @@ export const OffenceDetails = ({
               exceptions={exceptions}
               isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
             ></OffenceMatching>
-
             <TableRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
-            <TableRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
             <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
               <TableRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
             </ConditionalRender>
             <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
               <TableRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
             </ConditionalRender>
+            <TableRow label="Offence category" value={offenceCategoryWithDescription} />
+            <TableRow label="Recordable on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
+            <TableRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
+            <TableRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
+            <TableRow label="Home Office classification" value={offence.HomeOfficeClassification} />
           </tbody>
         </table>
       </div>
