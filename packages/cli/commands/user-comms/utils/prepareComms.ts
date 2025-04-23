@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import { confirm, input } from "@inquirer/prompts"
 import renderTemplate from "./renderTemplate"
-import type { Content, User } from "./userCommsTypes"
+import type { Content, Template, User } from "./userCommsTypes"
 import { env } from "../../../config"
 import awsVault from "../../../utils/awsVault"
 
@@ -18,8 +18,8 @@ const getDbPassword =
 const getDbUser =
   "aws ssm get-parameter --name \"/cjse-production-bichard-7/rds/db/user\" --with-decryption --output json | jq -r '.Parameter.Value'"
 
-export const prepareComms = async (content: Content, templateFile: string) => {
-  const template = templateFile
+export const prepareComms = async (content: Content, templateData: Template) => {
+  const template = templateData.templateFile
   const templatePath = path.join(__dirname, "../templates", template)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
@@ -53,6 +53,7 @@ export const prepareComms = async (content: Content, templateFile: string) => {
 
   const randomEntry = parsedUsers[Math.floor(Math.random() * parsedUsers.length)]
   console.log(`To: ${randomEntry.email}`)
+  console.log(`Subject: ${templateData.templateTitle}`)
   renderTemplate(templateContent, { firstName: randomEntry.name, ...content })
 
   const confirmUpdatedTemplate = await confirm({ message: "Are you happy with the updated template?", default: false })
