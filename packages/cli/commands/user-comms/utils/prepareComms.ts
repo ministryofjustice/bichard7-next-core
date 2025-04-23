@@ -1,9 +1,10 @@
 import fs from "fs"
 import path from "path"
 import { confirm, input } from "@inquirer/prompts"
-import getUsersFromDb from "./getUsersFromDb"
 import renderTemplate from "./renderTemplate"
 import type { Content, User } from "./userCommsTypes"
+import { env } from "../../../config"
+import awsVault from "../../../utils/awsVault"
 
 const parseDbUserResponse = (users: string): User => {
   const parseUsers = JSON.parse(users)
@@ -11,9 +12,14 @@ const parseDbUserResponse = (users: string): User => {
   return mapUsers
 }
 
+const getDbPassword =
+  "aws ssm get-parameter --name \"/cjse-production-bichard-7/rds/db/password\" --with-decryption --output json | jq -r '.Parameter.Value'"
+
+const getDbUser =
+  "aws ssm get-parameter --name \"/cjse-production-bichard-7/rds/db/user\" --with-decryption --output json | jq -r '.Parameter.Value'"
+
 export const prepareComms = async (content: Content, templateFile: string) => {
   const template = templateFile
-  console.log(__dirname)
   const templatePath = path.join(__dirname, "../templates", template)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
 
@@ -25,7 +31,23 @@ export const prepareComms = async (content: Content, templateFile: string) => {
     process.exit(1)
   }
 
-  await getUsersFromDb()
+  const { aws } = env.PROD
+
+  const dbPassword = await awsVault.exec({
+    awsProfile: aws.profile,
+    command: getDbPassword
+  })
+
+  const dbUser = await awsVault.exec({
+    awsProfile: aws.profile,
+    command: getDbUser
+  })
+
+  await awsVault.exec({
+    awsProfile: aws.profile,
+    command: `sh -c 'DB_USER="${dbUser}" DB_PASSWORD="${dbPassword}" npx ts-node -T ./commands/user-comms/utils/getUsers.ts'`
+  })
+
   const users = fs.readFileSync("/tmp/users.json", "utf-8")
   const parsedUsers = parseDbUserResponse(users)
 
@@ -40,7 +62,7 @@ export const prepareComms = async (content: Content, templateFile: string) => {
   }
 
   const answer = await input({
-    message: `Are you sure you want to send this email to ${parsedUsers.length} users?\n Type 'confirm send' to send, anything else to abort:`,
+    message: `Are you sure you want to send this email to ${parsedUsers.length} users?\n Type 'confirm send' to send, or press <ctrl-c> to abort:`,
     validate: (value) => {
       if (value.toLowerCase() !== "confirm send") {
         return "Please type 'confirm send' to send or anything to abort."
