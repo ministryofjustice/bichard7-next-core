@@ -180,9 +180,10 @@ const resolveTriggers = async (
   user: User
 ): Promise<UpdateResult | Error> => {
   const maxRetries = 2
+  let retries = 0
   let result
 
-  for (let retries = 0; retries < maxRetries; retries++) {
+  while (retries < maxRetries) {
     try {
       return await resolveTriggersInTransaction(dataSource, triggerIds, courtCaseId, user)
     } catch (error) {
@@ -191,6 +192,7 @@ const resolveTriggers = async (
       }
 
       result = error
+      retries++
     }
   }
 
