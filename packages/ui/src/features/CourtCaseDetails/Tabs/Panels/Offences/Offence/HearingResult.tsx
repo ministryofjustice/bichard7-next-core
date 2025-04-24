@@ -63,14 +63,19 @@ export const HearingResult = ({
           ) : (
             <TableRow label="CJS Code" value={result.CJSresultCode} />
           )}
+          <TableRow label="PNC disposal type" value={result.PNCDisposalType} />
           <TableRow
             label="Result hearing type"
             value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
           />
+          {/* Result Qualifier codes */}
           <TableRow
             label="Result hearing date"
             value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}
           />
+          <StyledTableRow label="Hearing result description" value={formattedResult} className={`result-text`} />
+          <TableRow label="Type of trial" value={result.ModeOfTrialReason} />
+          <TableRow label="Type of result" value={result.ResultClass} />
           <ConditionalRender isRendered={typeof result.Duration !== "undefined" && result.Duration?.length > 0}>
             <TableRow
               label="Duration"
@@ -99,10 +104,6 @@ export const HearingResult = ({
             resultIndex={resultIndex}
             isCaseEditable={isCaseEditable}
           />
-          <TableRow label="Mode of trial reason" value={result.ModeOfTrialReason} />
-          <StyledTableRow label="Hearing result text" value={formattedResult} className={`result-text`} />
-          <TableRow label="PNC disposal type" value={result.PNCDisposalType} />
-          <TableRow label="Result class" value={result.ResultClass} />
           <TableRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
           <ConditionalRender isRendered={typeof result.Urgent !== "undefined"}>
             <TableRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />

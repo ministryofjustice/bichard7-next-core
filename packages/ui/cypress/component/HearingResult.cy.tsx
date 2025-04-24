@@ -1,5 +1,6 @@
 import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CjsPlea } from "@moj-bichard7/core/types/Plea"
 import ResultClass from "@moj-bichard7/core/types/ResultClass"
@@ -7,7 +8,6 @@ import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
 import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 
 const courtCase = {
@@ -86,14 +86,14 @@ describe("Hearing Result", () => {
     )
 
     cy.contains("th", "CJS Code").siblings().should("include.text", "1234")
+    cy.contains("th", "PNC disposal type").siblings().should("include.text", 1)
     cy.contains("th", "Result hearing type").siblings().should("include.text", "Hearing type")
     cy.contains("th", "Result hearing date").siblings().should("include.text", "10/09/2022")
+    cy.contains("th", "Hearing result description").siblings().should("include.text", "this is some text")
+    cy.contains("th", "Type of trial").siblings().should("include.text", "reason")
+    cy.contains("th", "Type of result").siblings().should("include.text", "Adjournment")
+    cy.contains("th", "PNC adjudication exists").siblings().should("include.text", "Yes")
     cy.contains("th", "Next hearing date").siblings().should("include.text", "11/09/2022")
-    cy.contains("th", "Mode of trial reason").siblings().should("include.text", "reason")
-    cy.contains("th", "Hearing result text").siblings().should("include.text", "this is some text")
-    cy.contains("th", "PNC disposal type").siblings().should("include.text", 1)
-    cy.contains("th", "Result class").siblings().should("include.text", "Adjournment")
-    cy.contains("th", "PNC adjudication exists").siblings().should("include.text", "Y")
   })
 
   describe("Durations", () => {
