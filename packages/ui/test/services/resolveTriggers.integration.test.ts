@@ -2,7 +2,7 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import { differenceInMinutes } from "date-fns"
 import Note from "services/entities/Note"
 import type User from "services/entities/User"
-import { type DataSource } from "typeorm"
+import type { DataSource } from "typeorm"
 import { isError } from "types/Result"
 import { AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
@@ -78,10 +78,6 @@ describe("resolveTriggers", () => {
     await deleteFromEntity(CourtCase)
     await deleteFromDynamoTable("auditLogTable", "messageId")
     await deleteFromDynamoTable("auditLogEventsTable", "_id")
-  })
-
-  afterEach(() => {
-    jest.restoreAllMocks()
   })
 
   afterAll(async () => {
