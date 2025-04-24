@@ -6,8 +6,7 @@ import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import Phase from "@moj-bichard7/core/types/Phase"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
 import { retryTransaction } from "services/retryTransaction"
-import type { DataSource, EntityManager } from "typeorm"
-import type PromiseResult from "types/PromiseResult"
+import type { DataSource, EntityManager, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import parseHearingOutcome from "utils/parseHearingOutcome"
@@ -152,10 +151,15 @@ const reallocateCourtCaseToForce = async (
   user: User,
   forceCode: string,
   note?: string
-): PromiseResult<void> => {
-  await retryTransaction(reallocateCourtCaseToForceTransaction, dataSource, courtCaseId, user, forceCode, note).catch(
-    (error) => error
-  )
+): Promise<UpdateResult | Error> => {
+  return await retryTransaction(
+    reallocateCourtCaseToForceTransaction,
+    dataSource,
+    courtCaseId,
+    user,
+    forceCode,
+    note
+  ).catch((error) => error)
 }
 
 export default reallocateCourtCaseToForce
