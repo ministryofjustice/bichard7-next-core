@@ -7,15 +7,16 @@ import type CourtCase from "./entities/CourtCase"
 import type User from "./entities/User"
 import insertNotes from "./insertNotes"
 import resolveError from "./resolveError"
+import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
-const resolveCourtCase = async (
+const resolveCourtCaseTransaction = async (
   dataSource: DataSource | EntityManager,
   courtCase: CourtCase,
   resolution: ManualResolution,
   user: User
-): Promise<UpdateResult | Error> => {
+) => {
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
 
@@ -59,6 +60,15 @@ const resolveCourtCase = async (
 
     return resolveErrorResult
   })
+}
+
+const resolveCourtCase = async (
+  dataSource: DataSource | EntityManager,
+  courtCase: CourtCase,
+  resolution: ManualResolution,
+  user: User
+): Promise<UpdateResult | Error> => {
+  return await retryTransaction(resolveCourtCaseTransaction, dataSource, courtCase, resolution, user)
 }
 
 export default resolveCourtCase
