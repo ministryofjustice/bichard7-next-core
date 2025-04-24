@@ -3,7 +3,7 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import type { DataSource, UpdateResult } from "typeorm"
-import { In, IsNull, QueryFailedError } from "typeorm"
+import { In, IsNull } from "typeorm"
 import { isError } from "types/Result"
 import getSystemNotesForTriggers from "utils/getSystemNotesForTriggers"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
@@ -13,6 +13,7 @@ import Trigger from "./entities/Trigger"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
+import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
@@ -179,24 +180,7 @@ const resolveTriggers = async (
   courtCaseId: number,
   user: User
 ): Promise<UpdateResult | Error> => {
-  const maxRetries = 2
-  let retries = 0
-  let result
-
-  while (retries < maxRetries) {
-    try {
-      return await resolveTriggersInTransaction(dataSource, triggerIds, courtCaseId, user)
-    } catch (error) {
-      if (!(error instanceof QueryFailedError)) {
-        throw error
-      }
-
-      result = error
-      retries++
-    }
-  }
-
-  throw result
+  return await retryTransaction(resolveTriggersInTransaction, dataSource, triggerIds, courtCaseId, user)
 }
 
 export default resolveTriggers
