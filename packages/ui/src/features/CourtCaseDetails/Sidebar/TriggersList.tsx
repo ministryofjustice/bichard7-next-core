@@ -31,6 +31,7 @@ const TriggersList = ({ onNavigate }: Props) => {
   const hasUnresolvedTriggers = triggers.filter((t) => t.status === "Unresolved").length > 0
   const triggersLockedByAnotherUser = triggersAreLockedByAnotherUser(currentUser.username, courtCase)
   const { csrfToken } = useCsrfToken()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const setTriggerSelection = ({ target: checkbox }: ChangeEvent<HTMLInputElement>) => {
     const triggerId = parseInt(checkbox.value, 10)
@@ -68,8 +69,12 @@ const TriggersList = ({ onNavigate }: Props) => {
     }
   }
 
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+  }
+
   return (
-    <Form method="post" action={resolveTriggerUrl(selectedTriggerIds)} csrfToken={csrfToken}>
+    <Form method="post" onSubmit={handleSubmit} action={resolveTriggerUrl(selectedTriggerIds)} csrfToken={csrfToken}>
       {!hasTriggers && "There are no triggers for this case."}
       <ConditionalRender isRendered={hasUnresolvedTriggers && !triggersLockedByAnotherUser}>
         <SelectAllTriggersGridRow className="govuk-grid-row" id={"select-all-triggers"}>
@@ -96,7 +101,11 @@ const TriggersList = ({ onNavigate }: Props) => {
       <ConditionalRender isRendered={hasTriggers && !triggersLockedByAnotherUser}>
         <div className="govuk-grid-row">
           <MarkCompleteGridCol className="govuk-grid-column-full">
-            <Button type="submit" disabled={selectedTriggerIds.length === 0} id="mark-triggers-complete-button">
+            <Button
+              type="submit"
+              disabled={selectedTriggerIds.length === 0 || isSubmitting}
+              id="mark-triggers-complete-button"
+            >
               {"Mark trigger(s) as complete"}
             </Button>
           </MarkCompleteGridCol>
