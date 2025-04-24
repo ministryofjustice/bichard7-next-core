@@ -21,6 +21,7 @@ import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
 import { TableRow } from "../../TableRow"
 import { StyledTableRow } from "./HearingResult.styles"
+import ResultQualifier from "./ResultQualifier"
 
 interface HearingResultProps {
   result: Result
@@ -68,7 +69,7 @@ export const HearingResult = ({
             label="Result hearing type"
             value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
           />
-          {/* Result Qualifier codes */}
+          <ResultQualifier result={result} />
           <TableRow
             label="Result hearing date"
             value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}

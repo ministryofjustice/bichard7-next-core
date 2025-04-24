@@ -33,20 +33,16 @@ const ResultQualifier = ({ result }: QualifierProps): React.ReactNode => {
   })
 
   return (
-    <div className="result-qualifier-code-table">
-      <h4 className="govuk-heading-m">{"Result qualifier code" + (showIndex ? "s" : "")}</h4>
-      <table className="govuk-table">
-        <tbody className="govuk-table__body">
-          {qualifierCodes.map((qualifierCode, i) => (
-            <TableRow
-              key={qualifierCode.code}
-              label={"Code" + (showIndex ? ` ${i + 1}` : "")}
-              value={qualifierCode.code + (qualifierCode.description ? ` (${qualifierCode.description})` : "")}
-            />
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <>
+      <TableRow
+        label={"Result qualifier code" + (showIndex ? "s" : "")}
+        value={qualifierCodes.map((qualifierCode) => (
+          <div key={qualifierCode.code}>
+            {qualifierCode.code + (qualifierCode.description ? ` (${qualifierCode.description})` : "")}
+          </div>
+        ))}
+      />
+    </>
   )
 }
 
