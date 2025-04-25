@@ -67,7 +67,8 @@ describe("Hearing Result", () => {
       ResultVariableText: "this is some text",
       PNCDisposalType: 1,
       ResultClass: ResultClass.ADJOURNMENT,
-      PNCAdjudicationExists: true
+      PNCAdjudicationExists: true,
+      ResultQualifierVariable: [{}]
     } as Result
   })
 
@@ -85,14 +86,14 @@ describe("Hearing Result", () => {
       </CourtCaseContext.Provider>
     )
 
-    cy.contains("th", "CJS Code").siblings().should("include.text", "1234")
-    cy.contains("th", "PNC disposal type").siblings().should("include.text", 1)
-    cy.contains("th", "Result hearing type").siblings().should("include.text", "Hearing type")
-    cy.contains("th", "Result hearing date").siblings().should("include.text", "10/09/2022")
-    cy.contains("th", "Hearing result description").siblings().should("include.text", "this is some text")
-    cy.contains("th", "Type of trial").siblings().should("include.text", "reason")
-    cy.contains("th", "Type of result").siblings().should("include.text", "Adjournment")
-    cy.contains("th", "PNC adjudication exists").siblings().should("include.text", "Yes")
+    cy.contains("dt", "CJS Code").siblings().should("include.text", "1234")
+    cy.contains("dt", "PNC disposal type").siblings().should("include.text", 1)
+    cy.contains("dt", "Result hearing type").siblings().should("include.text", "Hearing type")
+    cy.contains("dt", "Result hearing date").siblings().should("include.text", "10/09/2022")
+    cy.contains("dt", "Hearing result description").siblings().should("include.text", "this is some text")
+    cy.contains("dt", "Type of trial").siblings().should("include.text", "reason")
+    cy.contains("dt", "Type of result").siblings().should("include.text", "Adjournment")
+    cy.contains("dt", "PNC adjudication exists").siblings().should("include.text", "Yes")
     cy.contains("th", "Next hearing date").siblings().should("include.text", "11/09/2022")
   })
 
@@ -119,7 +120,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Duration").siblings().should("include.text", "6 months")
+      cy.contains("dt", "Duration").siblings().should("include.text", "6 months")
     })
 
     it("does not display the duration row if not present", () => {
@@ -138,7 +139,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Duration").should("not.exist")
+      cy.contains("dt", "Duration").should("not.exist")
     })
 
     it("displays multiple durations", () => {
@@ -166,8 +167,8 @@ describe("Hearing Result", () => {
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
-      cy.contains("th", "Duration").siblings().should("include.text", "3 years")
-      cy.contains("th", "Duration").siblings().should("include.text", "28 days")
+      cy.contains("dt", "Duration").siblings().should("include.text", "3 years")
+      cy.contains("dt", "Duration").siblings().should("include.text", "28 days")
     })
   })
 
