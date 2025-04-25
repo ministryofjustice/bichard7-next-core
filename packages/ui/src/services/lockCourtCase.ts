@@ -3,11 +3,12 @@ import type { DataSource, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
+import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
 
-const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: User): Promise<UpdateResult | Error> =>
-  await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: number, user: User) => {
+  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (!courtCase) {
@@ -33,5 +34,9 @@ const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: 
 
     return lockResult
   })
+}
+
+const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: User): Promise<UpdateResult | Error> =>
+  await retryTransaction(lockCourtCaseTransaction, dataSource, courtCaseId, user)
 
 export default lockCourtCase
