@@ -1,9 +1,12 @@
 import { useRouter } from "next/router"
+import { SyntheticEvent, useState } from "react"
 
 export interface LinkButtonProps extends React.ComponentProps<"a"> {
   href: string
   secondary?: boolean
   dataModule?: string
+  canBeDisabled?: boolean
+  disabled?: boolean
 }
 
 export const LinkButton: React.FC<LinkButtonProps> = ({
@@ -11,9 +14,11 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   href,
   secondary = false,
   dataModule = "govuk-button",
+  canBeDisabled = false,
   ...linkButtonProps
 }: LinkButtonProps) => {
   const { asPath, basePath } = useRouter()
+  const [isClicked, setIsClicked] = useState(false)
 
   const classNames = linkButtonProps.className?.split(" ") ?? []
 
@@ -25,6 +30,15 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
     classNames.push("govuk-button--secondary")
   }
 
+  const handleClick = (event: SyntheticEvent) => {
+    if (event.currentTarget.getAttribute("disabled")) {
+      event.preventDefault()
+    }
+    setIsClicked(true)
+  }
+
+  linkButtonProps.disabled = canBeDisabled && isClicked
+
   return (
     <a
       {...linkButtonProps}
@@ -33,6 +47,7 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
       draggable="false"
       className={classNames.join(" ")}
       data-module={dataModule}
+      onClick={handleClick}
     >
       {children}
     </a>
