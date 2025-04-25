@@ -13,6 +13,7 @@ import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
+import { InfoRow } from "../../InfoRow"
 import { TableRow } from "../../TableRow"
 import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"
@@ -95,14 +96,19 @@ export const OffenceDetails = ({
         onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
       />
-      <h3
-        className="govuk-heading-m"
-        aria-live="polite"
-        aria-label={`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
-      >{`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}</h3>
-      <div className="offences-table">
-        <table className="govuk-table">
-          <tbody className="govuk-table__body">
+
+      <div className="govuk-summary-card">
+        <div className="govuk-summary-card__title-wrapper">
+          <h2
+            className="govuk-summary-card__title"
+            aria-live="polite"
+            aria-label={`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
+          >
+            {`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
+          </h2>
+        </div>
+        <div className="govuk-summary-card__content">
+          <dl className="govuk-summary-list">
             {offenceCodeErrorPrompt ? (
               <ExceptionFieldTableRow
                 badgeText={ExceptionBadgeType.SystemError}
@@ -112,18 +118,18 @@ export const OffenceDetails = ({
                 <ErrorPromptMessage message={offenceCodeErrorPrompt} />
               </ExceptionFieldTableRow>
             ) : (
-              <TableRow label="Offence code" value={offenceCode} />
+              <InfoRow label="Offence code" value={offenceCode} />
             )}
-            <TableRow label="Offence title" value={offence.OffenceTitle} />
-            <TableRow label="Offence start date" value={<StartDate offence={offence} />} />
-            <TableRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
-            <TableRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
-            <TableRow
+            <InfoRow label="Offence title" value={offence.OffenceTitle} />
+            <InfoRow label="Offence start date" value={<StartDate offence={offence} />} />
+            <InfoRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
+            <InfoRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
+            <InfoRow
               label="Conviction date"
               value={offence.ConvictionDate && formatDisplayedDate(offence.ConvictionDate)}
             />
-            <TableRow label="Offence description" value={offence.ActualOffenceWording} />
-            <TableRow label="Offence location" value={offence.LocationOfOffence} />
+            <InfoRow label="Offence description" value={offence.ActualOffenceWording} />
+            <InfoRow label="Offence location" value={offence.LocationOfOffence} />
             <OffenceMatching
               offenceIndex={selectedOffenceSequenceNumber - 1}
               offence={offence}
@@ -131,20 +137,20 @@ export const OffenceDetails = ({
               exceptions={exceptions}
               isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
             ></OffenceMatching>
-            <TableRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
+            <InfoRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
             <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
-              <TableRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
+              <InfoRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
             </ConditionalRender>
             <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
-              <TableRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
+              <InfoRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
             </ConditionalRender>
-            <TableRow label="Offence category" value={offenceCategoryWithDescription} />
-            <TableRow label="Recordable on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
-            <TableRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
-            <TableRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
-            <TableRow label="Home Office classification" value={offence.HomeOfficeClassification} />
-          </tbody>
-        </table>
+            <InfoRow label="Offence category" value={offenceCategoryWithDescription} />
+            <InfoRow label="Recordable on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
+            <InfoRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
+            <InfoRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
+            <InfoRow label="Home Office classification" value={offence.HomeOfficeClassification} />
+          </dl>
+        </div>
       </div>
 
       <div className="offence-results-table">

@@ -1,5 +1,5 @@
 import Badge, { BadgeColours } from "components/Badge"
-import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
+import { InfoRow } from "features/CourtCaseDetails/Tabs/Panels/InfoRow"
 
 interface LegacySequencingBadgeTableRowProps {
   offenceReasonSequence?: string | null
@@ -9,7 +9,7 @@ const LegacySequencingBadgeTableRow = ({
   offenceReasonSequence
 }: LegacySequencingBadgeTableRowProps): React.ReactNode => {
   return (
-    <TableRow
+    <InfoRow
       label="PNC sequence number"
       value={
         <>
