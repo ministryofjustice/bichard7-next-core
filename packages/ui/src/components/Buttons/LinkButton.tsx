@@ -34,7 +34,9 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
     if (event.currentTarget.getAttribute("disabled")) {
       event.preventDefault()
     }
-    setIsClicked(true)
+    if (canBeDisabled) {
+      setIsClicked(true)
+    }
   }
 
   linkButtonProps.disabled = canBeDisabled && isClicked
@@ -47,7 +49,12 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
       draggable="false"
       className={classNames.join(" ")}
       data-module={dataModule}
-      onClick={handleClick}
+      onClick={(e) => {
+        handleClick(e)
+        if (linkButtonProps.onClick) {
+          linkButtonProps.onClick(e)
+        }
+      }}
     >
       {children}
     </a>
