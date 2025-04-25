@@ -1,4 +1,5 @@
 import { QueryFailedError } from "typeorm"
+import logger from "utils/logger"
 
 export const retryTransaction = async <T, Args extends unknown[]>(
   callback: (...args: Args) => Promise<T>,
@@ -12,6 +13,9 @@ export const retryTransaction = async <T, Args extends unknown[]>(
     try {
       return await callback(...callbackArgs)
     } catch (error) {
+      const errorForLog = error as Error
+      logger.error(`Error inside transaction (retry: ${retries}): ${errorForLog.name} - ${errorForLog.message}`)
+
       if (!(error instanceof QueryFailedError)) {
         throw error
       }
