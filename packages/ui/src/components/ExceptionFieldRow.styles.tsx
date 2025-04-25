@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const Label = styled.th`
+const Label = styled.dt`
   vertical-align: top;
 
   & .error-icon {
@@ -8,7 +8,7 @@ const Label = styled.th`
   }
 `
 
-const Content = styled.td`
+const Content = styled.dd`
   vertical-align: top;
 
   & .badge-wrapper {

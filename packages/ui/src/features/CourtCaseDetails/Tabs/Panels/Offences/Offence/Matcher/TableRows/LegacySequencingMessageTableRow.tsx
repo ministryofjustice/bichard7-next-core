@@ -1,4 +1,4 @@
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import type { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
 
@@ -14,14 +14,14 @@ const LegacySequencingMessageTableRow = ({
   const { courtCase } = useCourtCase()
 
   return (
-    <ExceptionFieldTableRow badgeText={exception.badge} label={"PNC sequence number"} message={message}>
+    <ExceptionFieldRow badgeText={exception.badge} label={"PNC sequence number"} message={message}>
       {" "}
       <>
         {"Court Case Reference:"}
         <br />
         {courtCase.courtReference}
       </>
-    </ExceptionFieldTableRow>
+    </ExceptionFieldRow>
   )
 }
 

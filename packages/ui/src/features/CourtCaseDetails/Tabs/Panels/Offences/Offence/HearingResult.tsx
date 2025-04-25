@@ -3,7 +3,7 @@ import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { findExceptions } from "types/ErrorMessages"
 import { ResolutionStatus } from "types/ResolutionStatus"
@@ -56,13 +56,13 @@ export const HearingResult = ({
       <div className="govuk-summary-card__content">
         <dl className="govuk-summary-list">
           {cjsErrorMessage ? (
-            <ExceptionFieldTableRow
+            <ExceptionFieldRow
               badgeText={ExceptionBadgeType.SystemError}
               value={result.CJSresultCode}
               label={"CJS Code"}
             >
               <ErrorPromptMessage message={cjsErrorMessage} />
-            </ExceptionFieldTableRow>
+            </ExceptionFieldRow>
           ) : (
             <InfoRow label="CJS Code" value={result.CJSresultCode} />
           )}

@@ -5,7 +5,7 @@ import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import ErrorMessages from "types/ErrorMessages"
@@ -110,13 +110,9 @@ export const OffenceDetails = ({
         <div className="govuk-summary-card__content">
           <dl className="govuk-summary-list">
             {offenceCodeErrorPrompt ? (
-              <ExceptionFieldTableRow
-                badgeText={ExceptionBadgeType.SystemError}
-                value={offenceCode}
-                label={"Offence code"}
-              >
+              <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={offenceCode} label={"Offence code"}>
                 <ErrorPromptMessage message={offenceCodeErrorPrompt} />
-              </ExceptionFieldTableRow>
+              </ExceptionFieldRow>
             ) : (
               <InfoRow label="Offence code" value={offenceCode} />
             )}
@@ -177,9 +173,9 @@ export const OffenceDetails = ({
           <table className="govuk-table">
             <tbody className="govuk-table__body">
               {qualifierErrorPrompt ? (
-                <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
+                <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
                   <ErrorPromptMessage message={qualifierErrorPrompt} />
-                </ExceptionFieldTableRow>
+                </ExceptionFieldRow>
               ) : (
                 <TableRow label={"Code"} value={qualifierCode} />
               )}

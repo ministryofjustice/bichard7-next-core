@@ -2,7 +2,7 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import { BadgeColours } from "components/Badge"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import ErrorPromptMessage from "../../src/components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "../../src/components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "../../src/components/ExceptionFieldRow"
 import ErrorMessage from "../../src/types/ErrorMessages"
 
 describe("Uneditable Fields", () => {
@@ -42,9 +42,9 @@ describe("Uneditable Fields", () => {
   ].forEach(({ title, exception, badge, message, value, label }) => {
     it(`should show an error prompt for exception ${exception} (${title})`, () => {
       cy.mount(
-        <ExceptionFieldTableRow badgeText={badge} value={value} label={label} badgeColour={BadgeColours.Purple}>
+        <ExceptionFieldRow badgeText={badge} value={value} label={label} badgeColour={BadgeColours.Purple}>
           <ErrorPromptMessage message={message} />
-        </ExceptionFieldTableRow>
+        </ExceptionFieldRow>
       )
       cy.get(".field-value").should("have.text", value)
       cy.get(".error-badge").should("have.text", badge)

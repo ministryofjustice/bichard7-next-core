@@ -3,7 +3,7 @@ import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { findExceptions } from "types/ErrorMessages"
@@ -69,7 +69,7 @@ export const OffenceMatching = ({
       we should display the PNC sequence number input box below. */}
       <ConditionalRender isRendered={displayOffenceMatcher}>
         {offenceMatchingException && userCanMatchOffence ? (
-          <ExceptionFieldTableRow
+          <ExceptionFieldRow
             label={"Matched PNC offence"}
             value={
               <OffenceMatcher
@@ -80,7 +80,7 @@ export const OffenceMatching = ({
             }
           >
             <ErrorPromptMessage message={offenceMatchingExceptionMessage} />
-          </ExceptionFieldTableRow>
+          </ExceptionFieldRow>
         ) : (
           <TableRow
             label="Matched PNC offence"
@@ -102,7 +102,7 @@ export const OffenceMatching = ({
       {/* PNC sequence number */}
       <ConditionalRender isRendered={!displayOffenceMatcher}>
         {offenceMatchingException ? (
-          <ExceptionFieldTableRow
+          <ExceptionFieldRow
             badgeText={offenceMatchingException.badge}
             label={"PNC sequence number"}
             message={offenceMatchingExceptionMessage}
@@ -113,7 +113,7 @@ export const OffenceMatching = ({
               <br />
               {courtCase.courtReference}
             </>
-          </ExceptionFieldTableRow>
+          </ExceptionFieldRow>
         ) : (
           <TableRow
             label="PNC sequence number"

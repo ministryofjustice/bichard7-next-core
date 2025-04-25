@@ -1,5 +1,5 @@
 import ErrorPromptMessage from "components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import findCandidates from "utils/offenceMatcher/findCandidates"
 import getExceptionMessage from "utils/offenceMatcher/getExceptionMessage"
@@ -18,7 +18,7 @@ const OffenceMatcherTableRow = ({
   const offenceMatchingExceptionMessage = getExceptionMessage(courtCase, offenceIndex)
 
   return (
-    <ExceptionFieldTableRow
+    <ExceptionFieldRow
       label={"Matched PNC offence"}
       value={
         <OffenceMatcher
@@ -29,7 +29,7 @@ const OffenceMatcherTableRow = ({
       }
     >
       <ErrorPromptMessage message={offenceMatchingExceptionMessage} />
-    </ExceptionFieldTableRow>
+    </ExceptionFieldRow>
   )
 }
 
