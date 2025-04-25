@@ -94,12 +94,17 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </LockedTagContainer>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
-            <SecondaryLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
+            <SecondaryLinkButton
+              href={reallocatePath}
+              className="b7-reallocate-button"
+              secondary={true}
+              canBeDisabled={true}
+            >
               {"Reallocate Case"}
             </SecondaryLinkButton>
           </ConditionalRender>
           <ConditionalRender isRendered={hasCaseLock}>
-            <LinkButton id="leave-and-lock" href={basePath}>
+            <LinkButton id="leave-and-lock" href={basePath} canBeDisabled={true}>
               {"Leave and lock"}
             </LinkButton>
             <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
