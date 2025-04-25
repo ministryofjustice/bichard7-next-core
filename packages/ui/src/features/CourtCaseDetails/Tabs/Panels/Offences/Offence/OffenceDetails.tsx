@@ -97,10 +97,10 @@ export const OffenceDetails = ({
         offencesCount={offencesCount}
       />
 
-      <div className="govuk-summary-card">
+      <div className="govuk-summary-card offence-details">
         <div className="govuk-summary-card__title-wrapper">
           <h2
-            className="govuk-summary-card__title"
+            className="govuk-summary-card__title offence-details__title"
             aria-live="polite"
             aria-label={`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
           >

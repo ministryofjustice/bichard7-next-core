@@ -1,9 +1,9 @@
 import styled from "styled-components"
-import { TableRow } from "../../TableRow"
+import { InfoRow } from "../../InfoRow"
 
-const StyledTableRow = styled(TableRow)`
+const StyledInfoRow = styled(InfoRow)`
   &.result-text .row-value {
     white-space: pre-line;
   }
 `
-export { StyledTableRow }
+export { StyledInfoRow }

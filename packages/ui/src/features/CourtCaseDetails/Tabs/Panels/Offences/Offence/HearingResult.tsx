@@ -19,8 +19,8 @@ import {
 } from "utils/valueTransformers"
 import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
-import { TableRow } from "../../TableRow"
-import { StyledTableRow } from "./HearingResult.styles"
+import { InfoRow } from "../../InfoRow"
+import { StyledInfoRow } from "./HearingResult.styles"
 import ResultQualifier from "./ResultQualifier"
 
 interface HearingResultProps {
@@ -49,10 +49,12 @@ export const HearingResult = ({
   const formattedResult = text?.replace(/([^\d])\.([^\d\n])/g, "$1.\n\n$2")
 
   return (
-    <>
-      <h4 className="govuk-heading-m">{"Hearing result"}</h4>
-      <table className="govuk-table">
-        <tbody className="govuk-table__body">
+    <div className="govuk-summary-card">
+      <div className="govuk-summary-card__title-wrapper">
+        <h2 className="govuk-summary-card__title">{"Hearing result"}</h2>
+      </div>
+      <div className="govuk-summary-card__content">
+        <dl className="govuk-summary-list">
           {cjsErrorMessage ? (
             <ExceptionFieldTableRow
               badgeText={ExceptionBadgeType.SystemError}
@@ -62,23 +64,23 @@ export const HearingResult = ({
               <ErrorPromptMessage message={cjsErrorMessage} />
             </ExceptionFieldTableRow>
           ) : (
-            <TableRow label="CJS Code" value={result.CJSresultCode} />
+            <InfoRow label="CJS Code" value={result.CJSresultCode} />
           )}
-          <TableRow label="PNC disposal type" value={result.PNCDisposalType} />
-          <TableRow
+          <InfoRow label="PNC disposal type" value={result.PNCDisposalType} />
+          <InfoRow
             label="Result hearing type"
             value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
           />
           <ResultQualifier result={result} />
-          <TableRow
+          <InfoRow
             label="Result hearing date"
             value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}
           />
-          <StyledTableRow label="Hearing result description" value={formattedResult} className={`result-text`} />
-          <TableRow label="Type of trial" value={result.ModeOfTrialReason} />
-          <TableRow label="Type of result" value={result.ResultClass} />
+          <StyledInfoRow label="Hearing result description" value={formattedResult} className={`result-text`} />
+          <InfoRow label="Type of trial" value={result.ModeOfTrialReason} />
+          <InfoRow label="Type of result" value={result.ResultClass} />
           <ConditionalRender isRendered={typeof result.Duration !== "undefined" && result.Duration?.length > 0}>
-            <TableRow
+            <InfoRow
               label="Duration"
               value={
                 <>
@@ -105,13 +107,13 @@ export const HearingResult = ({
             resultIndex={resultIndex}
             isCaseEditable={isCaseEditable}
           />
-          <TableRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
+          <InfoRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
           <ConditionalRender isRendered={typeof result.Urgent !== "undefined"}>
-            <TableRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />
-            <TableRow label="Urgency" value={getNumberOfHours(result.Urgent?.urgency)} />
+            <InfoRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />
+            <InfoRow label="Urgency" value={getNumberOfHours(result.Urgent?.urgency)} />
           </ConditionalRender>
-        </tbody>
-      </table>
-    </>
+        </dl>
+      </div>
+    </div>
   )
 }

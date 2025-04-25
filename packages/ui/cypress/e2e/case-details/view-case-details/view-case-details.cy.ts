@@ -257,8 +257,8 @@ describe("View case details", () => {
     cy.contains("dt", "Charge date").siblings().contains("02/12/2010")
     cy.contains("dt", "Conviction date").siblings().contains("26/09/2011")
     cy.contains("dt", "Offence description")
-    .siblings()
-    .contains("Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.")
+      .siblings()
+      .contains("Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.")
     cy.contains("dt", "Offence location").siblings().contains("Kingston High Street")
     cy.contains("dt", "PNC sequence number").siblings().contains("001")
     cy.contains("dt", "Court offence sequence number").siblings().contains("1")
@@ -270,15 +270,15 @@ describe("View case details", () => {
     cy.contains("dt", "Notifiable to Home Office").siblings().contains("Y")
     cy.contains("dt", "Home Office classification").siblings().contains("019/11")
 
-    cy.contains("th", "CJS Code").siblings().contains("3078")
-    cy.contains("th", "Result hearing type").siblings().contains("Other")
-    cy.contains("th", "Result hearing date").siblings().contains("26/09/2011")
+    cy.contains("dt", "CJS Code").siblings().contains("3078")
+    cy.contains("dt", "Result hearing type").siblings().contains("Other")
+    cy.contains("dt", "Result hearing date").siblings().contains("26/09/2011")
 
-    cy.contains("th", "Type of trial").siblings().contains("SUM")
-    cy.contains("th", "Hearing result description").siblings().contains("Travel Restriction Order")
-    cy.contains("th", "PNC disposal type").siblings().contains("3078")
-    cy.contains("th", "Type of result").siblings().contains("Judgement with final result")
-    cy.contains("th", "PNC adjudication exists").siblings().contains("N")
+    cy.contains("dt", "Type of trial").siblings().contains("SUM")
+    cy.contains("dt", "Hearing result description").siblings().contains("Travel Restriction Order")
+    cy.contains("dt", "PNC disposal type").siblings().contains("3078")
+    cy.contains("dt", "Type of result").siblings().contains("Judgement with final result")
+    cy.contains("dt", "PNC adjudication exists").siblings().contains("N")
     cy.contains(".qualifier-code-table h4", "Qualifier")
     cy.contains(".qualifier-code-table th", "Code").siblings().contains("A")
 
@@ -307,16 +307,16 @@ describe("View case details", () => {
     cy.contains("dt", "Notifiable to Home Office").siblings().contains("Y")
     cy.contains("dt", "Home Office classification").siblings().contains("019/07")
 
-    cy.contains("th", "CJS Code").siblings().contains("3052")
-    cy.contains("th", "Result hearing type").siblings().contains("Other")
-    cy.contains("th", "Result hearing date").siblings().contains("26/09/2011")
-    cy.contains("th", "Type of trial").siblings().contains("SUM")
-    cy.contains("th", "Hearing result description").siblings().contains("defendant must never be allowed out")
-    cy.contains("th", "PNC disposal type").siblings().contains("3052")
-    cy.contains("th", "Type of result").siblings().contains("Judgement with final result")
-    cy.contains("th", "PNC adjudication exists").siblings().contains("N")
-    cy.contains("th", "Urgent").siblings().contains("Yes")
-    cy.contains("th", "Urgency").siblings().contains("24 Hours")
+    cy.contains("dt", "CJS Code").siblings().contains("3052")
+    cy.contains("dt", "Result hearing type").siblings().contains("Other")
+    cy.contains("dt", "Result hearing date").siblings().contains("26/09/2011")
+    cy.contains("dt", "Type of trial").siblings().contains("SUM")
+    cy.contains("dt", "Hearing result description").siblings().contains("defendant must never be allowed out")
+    cy.contains("dt", "PNC disposal type").siblings().contains("3052")
+    cy.contains("dt", "Type of result").siblings().contains("Judgement with final result")
+    cy.contains("dt", "PNC adjudication exists").siblings().contains("N")
+    cy.contains("dt", "Urgent").siblings().contains("Yes")
+    cy.contains("dt", "Urgency").siblings().contains("24 Hours")
 
     // Checking the third offence details
     cy.contains("a", "Back to all offences").click()
@@ -345,14 +345,14 @@ describe("View case details", () => {
     cy.contains("dt", "Notifiable to Home Office").siblings().contains("N")
     cy.contains("dt", "Home Office classification").siblings().contains("809/01")
 
-    cy.contains("th", "CJS Code").siblings().contains("1015")
-    cy.contains("th", "Result hearing type").siblings().contains("Other")
-    cy.contains("th", "Result hearing date").siblings().contains("26/09/2011")
-    cy.contains("th", "Type of trial").siblings().contains("SUM")
-    cy.contains("th", "Hearing result description").siblings().contains("Fined 100.")
-    cy.contains("th", "PNC disposal type").siblings().contains("1015")
-    cy.contains("th", "Type of result").siblings().contains("Judgement with final result")
-    cy.contains("th", "PNC adjudication exists").siblings().contains("N")
+    cy.contains("dt", "CJS Code").siblings().contains("1015")
+    cy.contains("dt", "Result hearing type").siblings().contains("Other")
+    cy.contains("dt", "Result hearing date").siblings().contains("26/09/2011")
+    cy.contains("dt", "Type of trial").siblings().contains("SUM")
+    cy.contains("dt", "Hearing result description").siblings().contains("Fined 100.")
+    cy.contains("dt", "PNC disposal type").siblings().contains("1015")
+    cy.contains("dt", "Type of result").siblings().contains("Judgement with final result")
+    cy.contains("dt", "PNC adjudication exists").siblings().contains("N")
   })
 
   it("Should be able to see 'Hearing result' heading before every hearing result, when there are multiple", () => {
@@ -368,7 +368,7 @@ describe("View case details", () => {
     clickTab("Offences")
     cy.get("tbody tr:nth-child(1) td:nth-child(5) a").click()
 
-    cy.get('h4:contains("Hearing result")').should("have.length", 6)
+    cy.get('h2.govuk-summary-card__title:contains("Hearing result")').should("have.length", 6)
   })
 
   it("Should be able to see 'Hearing result' heading before every hearing result, when there is one", () => {
@@ -384,7 +384,7 @@ describe("View case details", () => {
     clickTab("Offences")
     cy.get("tbody tr:nth-child(1) td:nth-child(5) a").click()
 
-    cy.get('h4:contains("Hearing result")').should("have.length", 1)
+    cy.get('h2.govuk-summary-card__title:contains("Hearing result")').should("have.length", 1)
   })
 
   it("Should show triggers tab by default when navigating to court case details page", () => {
@@ -501,11 +501,11 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h2.govuk-summary-card__title").should("not.exist")
+    cy.get(".offence-details h2.offence-details__title").should("not.exist")
     cy.get(".moj-tab-panel-triggers .trigger-header button").eq(0).contains("Offence 1").click()
-    cy.get("h2.govuk-summary-card__title").should("have.text", "Offence 1 of 3")
+    cy.get("h2.offence-details__title").should("have.text", "Offence 1 of 3")
     cy.get(".moj-tab-panel-triggers .trigger-header button").eq(1).contains("Offence 2").click()
-    cy.get("h2.govuk-summary-card__title").should("have.text", "Offence 2 of 3")
+    cy.get("h2.offence-details__title").should("have.text", "Offence 2 of 3")
   })
 
   it("Should take the user to offence tab when exception is clicked", () => {
@@ -513,11 +513,11 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h2.govuk-summary-card__title").should("not.exist")
+    cy.get("h2.offence-details__title").should("not.exist")
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Next hearing date / Offence 1")
     cy.get(".exception-header .exception-location").click()
-    cy.get("h2.govuk-summary-card__title").should("have.text", "Offence 1 of 3")
+    cy.get("h2.offence-details__title").should("have.text", "Offence 1 of 3")
   })
 
   it("Should be able to refresh after I click 'Back to all offences'", () => {
@@ -525,11 +525,11 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h2.govuk-summary-card__title").should("not.exist")
+    cy.get("h2.offence-details__title").should("not.exist")
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Next hearing date / Offence 1")
     cy.get(".exception-header .exception-location").click()
-    cy.get("h2.govuk-summary-card__title").should("have.text", "Offence 1 of 3")
+    cy.get("h2.offence-details__title").should("have.text", "Offence 1 of 3")
 
     cy.contains("Back to all offences").click()
     cy.reload()

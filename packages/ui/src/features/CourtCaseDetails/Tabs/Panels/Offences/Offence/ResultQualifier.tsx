@@ -1,6 +1,6 @@
 import ResultQualifierCodes from "@moj-bichard7-developers/bichard7-next-data/dist/data/result-qualifier-code.json"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import { TableRow } from "../../TableRow"
+import { InfoRow } from "../../InfoRow"
 
 interface QualifierProps {
   result: Result
@@ -33,16 +33,14 @@ const ResultQualifier = ({ result }: QualifierProps): React.ReactNode => {
   })
 
   return (
-    <>
-      <TableRow
-        label={"Result qualifier code" + (showIndex ? "s" : "")}
-        value={qualifierCodes.map((qualifierCode) => (
-          <div key={qualifierCode.code}>
-            {qualifierCode.code + (qualifierCode.description ? ` (${qualifierCode.description})` : "")}
-          </div>
-        ))}
-      />
-    </>
+    <InfoRow
+      label={"Result qualifier code" + (showIndex ? "s" : "")}
+      value={qualifierCodes.map((qualifierCode) => (
+        <div key={qualifierCode.code}>
+          {qualifierCode.code + (qualifierCode.description ? ` (${qualifierCode.description})` : "")}
+        </div>
+      ))}
+    />
   )
 }
 
