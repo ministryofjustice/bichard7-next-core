@@ -270,7 +270,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "CJS Code").should(
+      cy.contains("dt", "CJS Code").should(
         "include.text",
         "This code could not be found via look-up, report the issue to Bichard 7 team and the courts for the correct so that they can investigate this issue and advise."
       )
