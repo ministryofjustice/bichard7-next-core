@@ -1,4 +1,4 @@
-import { LabelCell } from "./EditableFieldTableRow.styles"
+import { LabelCell } from "./EditableFieldRow.styles"
 import InitialValueAndCorrectionField from "./InitialValueAndCorrectionField"
 import InputField from "./InputField"
 import LabelField from "./LabelField"
@@ -16,7 +16,7 @@ type Props = {
   htmlFor: string
 }
 
-const EditableFieldTableRow = ({
+const EditableFieldRow = ({
   className,
   value,
   updatedValue,
@@ -50,13 +50,13 @@ const EditableFieldTableRow = ({
   }
 
   return (
-    <tr className={`govuk-table__row ${className}`}>
-      <LabelCell className={"govuk-table__header govuk-body-s"}>
+    <div className={`govuk-summary-list__row ${className}`}>
+      <LabelCell className={"govuk-summary-list__key"}>
         <LabelField label={label} showErrorIcon={hasExceptions} />
       </LabelCell>
-      <td className="govuk-table__cell">{fieldToRender()}</td>
-    </tr>
+      <dd className="govuk-summary-list__value">{fieldToRender()}</dd>
+    </div>
   )
 }
 
-export default EditableFieldTableRow
+export default EditableFieldRow

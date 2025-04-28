@@ -94,7 +94,7 @@ describe("Hearing Result", () => {
     cy.contains("dt", "Type of trial").siblings().should("include.text", "reason")
     cy.contains("dt", "Type of result").siblings().should("include.text", "Adjournment")
     cy.contains("dt", "PNC adjudication exists").siblings().should("include.text", "Yes")
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "11/09/2022")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "11/09/2022")
   })
 
   describe("Durations", () => {
@@ -189,7 +189,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Next hearing date").should("not.exist")
+      cy.contains("dt", "Next hearing date").should("not.exist")
     })
 
     it("displays the next hearing date with an invalid value", () => {
@@ -208,7 +208,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
+      cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
     })
 
     it("displays the next hearing date field when it has no value but has an error", () => {
@@ -227,7 +227,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+      cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     })
 
     it("displays the next hearing location field when it has no value but has an error", () => {
@@ -251,7 +251,7 @@ describe("Hearing Result", () => {
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Next hearing location").siblings().should("include.text", "")
+      cy.contains("dt", "Next hearing location").siblings().should("include.text", "")
     })
   })
 
