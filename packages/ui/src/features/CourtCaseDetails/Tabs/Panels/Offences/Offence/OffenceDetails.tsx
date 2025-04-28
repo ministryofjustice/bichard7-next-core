@@ -14,7 +14,6 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
 import { InfoRow } from "../../InfoRow"
-import { TableRow } from "../../TableRow"
 import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"
 import { OffenceDetailsContainer } from "./OffenceDetails.styles"
@@ -149,7 +148,7 @@ export const OffenceDetails = ({
         </div>
       </div>
 
-      <div className="offence-results-table">
+      <div className="offence-results">
         {offence.Result.map((result, index) => {
           const resultKey = `hearing-result-${index + 1}`
           return (
@@ -168,19 +167,21 @@ export const OffenceDetails = ({
         })}
       </div>
       {qualifierCode && (
-        <div className="qualifier-code-table">
-          <h4 className="govuk-heading-m">{"Qualifier"}</h4>
-          <table className="govuk-table">
-            <tbody className="govuk-table__body">
+        <div className="govuk-summary-card qualifier-code">
+          <div className="govuk-summary-card__title-wrapper">
+            <h2 className="govuk-summary-card__title">{"Qualifier"}</h2>
+          </div>
+          <div className="govuk-summary-card__content">
+            <dl className="govuk-summary-list">
               {qualifierErrorPrompt ? (
                 <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
                   <ErrorPromptMessage message={qualifierErrorPrompt} />
                 </ExceptionFieldRow>
               ) : (
-                <TableRow label={"Code"} value={qualifierCode} />
+                <InfoRow label={"Code"} value={qualifierCode} />
               )}
-            </tbody>
-          </table>
+            </dl>
+          </div>
         </div>
       )}
       <OffenceNavigation

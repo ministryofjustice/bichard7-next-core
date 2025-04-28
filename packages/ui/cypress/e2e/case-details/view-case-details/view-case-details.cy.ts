@@ -128,7 +128,7 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Defendant")
-    cy.contains("th", "ASN").siblings().contains("11/01ZD/01/448754K")
+    cy.contains("dt", "ASN").siblings().contains("11/01ZD/01/448754K")
     cy.contains("th", "PNC Check name").siblings().contains("SEXOFFENCE")
     cy.contains("th", "Given name").siblings().contains("TRPRFOUR")
     cy.contains("th", "Family name").siblings().contains("SEXOFFENCE")
@@ -279,8 +279,8 @@ describe("View case details", () => {
     cy.contains("dt", "PNC disposal type").siblings().contains("3078")
     cy.contains("dt", "Type of result").siblings().contains("Judgement with final result")
     cy.contains("dt", "PNC adjudication exists").siblings().contains("N")
-    cy.contains(".qualifier-code-table h4", "Qualifier")
-    cy.contains(".qualifier-code-table th", "Code").siblings().contains("A")
+    cy.contains(".qualifier-code h2", "Qualifier")
+    cy.contains(".qualifier-code dt", "Code").siblings().contains("A")
 
     // Checking the second offence details
     cy.contains("a", "Back to all offences").click()
