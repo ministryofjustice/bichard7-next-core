@@ -25,17 +25,17 @@ describe("Check Result Qualifiers", () => {
   })
 
   it("has two result qualifier code table rows", () => {
-    cy.get(".hearing-result-1").contains("th", "Result qualifier codes")
-    cy.get(".hearing-result-2").contains("th", "Result qualifier code")
+    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes")
+    cy.get(".hearing-result-2").contains("dt", "Result qualifier code")
   })
 
   it("will have three codes in the first table", () => {
-    cy.get(".hearing-result-1").contains("th", "Result qualifier codes").siblings().should("contain.text", "F (Consecutive)")
-    cy.get(".hearing-result-1").contains("th", "Result qualifier codes").siblings().should("contain.text", "YP (Effective)")
-    cy.get(".hearing-result-1").contains("th", "Result qualifier codes").siblings().should("contain.text", "RA (Condition - Other)")
+    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes").siblings().should("contain.text", "F (Consecutive)")
+    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes").siblings().should("contain.text", "YP (Effective)")
+    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes").siblings().should("contain.text", "RA (Condition - Other)")
   })
 
   it("will have one codes in the second table", () => {
-    cy.get(".hearing-result-2").contains("th", "Result qualifier code").siblings().should("contain.text", "F (Consecutive)")
+    cy.get(".hearing-result-2").contains("dt", "Result qualifier code").siblings().should("contain.text", "F (Consecutive)")
   })
 })
