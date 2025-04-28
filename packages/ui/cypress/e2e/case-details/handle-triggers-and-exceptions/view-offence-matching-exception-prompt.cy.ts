@@ -22,7 +22,7 @@ describe("View offence matching exception prompts", () => {
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
 
-    cy.get(".offences-table").contains("td", "Matched PNC offence").should("not.exist")
+    cy.get(".offence-details").contains("dt", "Matched PNC offence").should("not.exist")
   })
 
   // TODO: re-enable this for offence matching
