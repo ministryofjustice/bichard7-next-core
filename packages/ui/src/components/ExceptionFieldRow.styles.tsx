@@ -1,5 +1,9 @@
 import styled from "styled-components"
 
+const StyledExceptionFieldRow = styled.div`
+  font-size: 16px;
+`
+
 const Label = styled.dt`
   vertical-align: top;
 
@@ -22,4 +26,4 @@ const Content = styled.dd`
     padding-bottom: 0.62rem;
   }
 `
-export { Content, Label }
+export { StyledExceptionFieldRow, Content, Label }

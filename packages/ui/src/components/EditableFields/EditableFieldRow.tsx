@@ -1,4 +1,4 @@
-import { LabelCell } from "./EditableFieldRow.styles"
+import { StyledEditableFieldRow, LabelCell } from "./EditableFieldRow.styles"
 import InitialValueAndCorrectionField from "./InitialValueAndCorrectionField"
 import InputField from "./InputField"
 import LabelField from "./LabelField"
@@ -50,12 +50,12 @@ const EditableFieldRow = ({
   }
 
   return (
-    <div className={`govuk-summary-list__row ${className}`}>
+    <StyledEditableFieldRow className={`govuk-summary-list__row ${className}`}>
       <LabelCell className={"govuk-summary-list__key"}>
         <LabelField label={label} showErrorIcon={hasExceptions} />
       </LabelCell>
       <dd className="govuk-summary-list__value">{fieldToRender()}</dd>
-    </div>
+    </StyledEditableFieldRow>
   )
 }
 

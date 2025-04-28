@@ -2,7 +2,7 @@ import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import Badge, { BadgeColours } from "./Badge"
 import ErrorIcon from "./ErrorIcon"
 import ErrorPromptMessage from "./ErrorPromptMessage"
-import { Content, Label } from "./ExceptionFieldRow.styles"
+import { StyledExceptionFieldRow, Content, Label } from "./ExceptionFieldRow.styles"
 
 type Props = {
   badgeText?: ExceptionBadgeType
@@ -16,7 +16,7 @@ type Props = {
 
 const ExceptionFieldRow = ({ badgeText, badgeColour, value, label, displayError, message, children }: Props) => {
   return (
-    <div className="govuk-summary-list__row">
+    <StyledExceptionFieldRow className="govuk-summary-list__row">
       <Label className="govuk-summary-list__key">
         {label}
         {displayError !== false && (
@@ -42,7 +42,7 @@ const ExceptionFieldRow = ({ badgeText, badgeColour, value, label, displayError,
         )}
         {message && <ErrorPromptMessage message={message} />}
       </Content>
-    </div>
+    </StyledExceptionFieldRow>
   )
 }
 
