@@ -73,7 +73,7 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
           </Form>
         </ButtonContainer>
         <ButtonContainer className={"buttonContainer"}>
-          <LinkButton href={resolveLink} className="b7-manually-resolve-button" secondary={true}>
+          <LinkButton href={resolveLink} className="b7-manually-resolve-button" secondary={true} canBeDisabled={true}>
             {"Mark as manually resolved"}
           </LinkButton>
         </ButtonContainer>

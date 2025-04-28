@@ -131,11 +131,16 @@ const ResolveCourtCasePage: NextPage<Props> = ({
 }: Props) => {
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   let backLink = `/court-cases/${courtCase.errorId}`
 
   if (previousPath) {
     backLink += `?previousPath=${encodeURIComponent(previousPath)}`
+  }
+
+  const handleSubmit = () => {
+    setIsSubmitting(true)
   }
 
   return (
@@ -157,7 +162,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
         </HeaderContainer>
         <ConditionalRender isRendered={lockedByAnotherUser}>{"Case is locked by another user."}</ConditionalRender>
         <ConditionalRender isRendered={!lockedByAnotherUser}>
-          <Form method="POST" action="#" csrfToken={csrfToken}>
+          <Form method="POST" action="#" csrfToken={csrfToken} onSubmit={handleSubmit}>
             <fieldset className="govuk-fieldset">
               <div className={"govuk-form-group"}>
                 <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
@@ -180,7 +185,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
               />
 
               <ButtonsGroup>
-                <Button id="Resolve" type="submit">
+                <Button id="Resolve" type="submit" disabled={isSubmitting}>
                   {"Resolve"}
                 </Button>
                 <Link href={backLink} className="govuk-link">

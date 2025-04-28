@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.7.0",
-    "@types/node": "^22.14.1"
+    "@types/node": "^22.15.3"
   }
 }

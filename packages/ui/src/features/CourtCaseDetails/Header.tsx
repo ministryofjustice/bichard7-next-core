@@ -8,6 +8,7 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
+import { useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { LinkButton } from "../../components/Buttons/LinkButton"
@@ -46,6 +47,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
   const previousPath = usePreviousPath()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
@@ -65,6 +67,10 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
   const caseIsViewOnly = !isLockedByCurrentUser(currentUser.username, courtCase)
   const hasCaseLock = isLockedByCurrentUser(currentUser.username, courtCase)
+
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+  }
 
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
@@ -94,16 +100,21 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </LockedTagContainer>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
-            <SecondaryLinkButton href={reallocatePath} className="b7-reallocate-button" secondary={true}>
+            <SecondaryLinkButton
+              href={reallocatePath}
+              className="b7-reallocate-button"
+              secondary={true}
+              canBeDisabled={true}
+            >
               {"Reallocate Case"}
             </SecondaryLinkButton>
           </ConditionalRender>
           <ConditionalRender isRendered={hasCaseLock}>
-            <LinkButton id="leave-and-lock" href={basePath}>
+            <LinkButton id="leave-and-lock" href={basePath} canBeDisabled={true}>
               {"Leave and lock"}
             </LinkButton>
-            <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken}>
-              <StyledButton id="leave-and-unlock" className={`button`} type="submit">
+            <Form method="post" action={leaveAndUnlockUrl} csrfToken={csrfToken} onSubmit={handleSubmit}>
+              <StyledButton id="leave-and-unlock" className={`button`} type="submit" disabled={isSubmitting}>
                 {"Leave and unlock"}
               </StyledButton>
             </Form>
