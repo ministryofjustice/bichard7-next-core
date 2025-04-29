@@ -1,3 +1,4 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 import "reflect-metadata"
@@ -10,6 +11,7 @@ import getDataSource from "../../src/services/getDataSource"
 import { isError } from "../../src/types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
+import { insertTriggers } from "../utils/manageTriggers"
 
 describe("listCourtCases", () => {
   let dataSource: DataSource
@@ -108,6 +110,36 @@ describe("listCourtCases", () => {
     ])
 
     const result = (await getCountOfCasesByCaseAge(dataSource, {
+      visibleCourts: [],
+      visibleForces: [forceCode]
+    } as Partial<User> as User)) as Record<string, number>
+
+    expect(isError(result)).toBeFalsy()
+
+    expect(result.Today).toBe("2")
+  })
+
+  it("will ignore cases with user's excluded triggers", async () => {
+    const dateToday = new Date("2001-09-26")
+    MockDate.set(dateToday)
+
+    await insertCourtCasesWithFields([
+      { courtDate: dateToday, orgForPoliceFilter: orgCode },
+      { courtDate: dateToday, orgForPoliceFilter: orgCode },
+      { courtDate: dateToday, orgForPoliceFilter: orgCode }
+    ])
+    await insertTriggers(0, [
+      { createdAt: dateToday, triggerCode: TriggerCode.TRPR0001, triggerId: 1, status: "Unresolved" }
+    ])
+    await insertTriggers(1, [
+      { createdAt: dateToday, triggerCode: TriggerCode.TRPR0020, triggerId: 2, status: "Unresolved" }
+    ])
+    await insertTriggers(2, [
+      { createdAt: dateToday, triggerCode: TriggerCode.TRPR0030, triggerId: 3, status: "Unresolved" }
+    ])
+
+    const result = (await getCountOfCasesByCaseAge(dataSource, {
+      excludedTriggers: [TriggerCode.TRPR0001],
       visibleCourts: [],
       visibleForces: [forceCode]
     } as Partial<User> as User)) as Record<string, number>

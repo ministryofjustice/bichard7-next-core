@@ -4,6 +4,7 @@ import type { Row } from "postgres"
 
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { format, isValid } from "date-fns"
+import { isEmpty } from "lodash"
 
 import { CaseAgeOptions } from "../../../../../useCases/cases/caseAgeOptions"
 import { ResolutionStatusNumber } from "../../../../../useCases/dto/convertResolutionStatus"
@@ -13,7 +14,8 @@ const formatFormInputDateString = (date: Date): string => (isValid(date) ? forma
 
 export const fetchCaseAges = async (
   sql: postgres.Sql,
-  organisationUnitSql: postgres.PendingQuery<Row[]>
+  organisationUnitSql: postgres.PendingQuery<Row[]>,
+  excludedTriggers: null | string
 ): Promise<CaseAges> => {
   const queries: postgres.PendingQuery<postgres.Row[]>[] = []
   const resolutionStats = ResolutionStatusNumber.Unresolved
@@ -38,16 +40,28 @@ export const fetchCaseAges = async (
     throw Error("Generated no CaseAges queries")
   }
 
+  let excludedTriggersSql: postgres.PendingQuery<postgres.Row[]> = sql``
+
+  if (excludedTriggers && !isEmpty(excludedTriggers)) {
+    const excludedTriggersArray = excludedTriggers.split(",")
+
+    if (excludedTriggersArray.length > 0) {
+      excludedTriggersSql = sql`AND NOT elt.trigger_code = ANY (${excludedTriggersArray})`
+    }
+  }
+
   const query = queries.map((q) => sql`${q}`)
 
   const [caseAges]: [CaseAges?] = await sql`
     SELECT
       ${query}
     FROM br7own.error_list el
+    LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
     WHERE
       ${organisationUnitSql}
       AND (el.error_status = ${resolutionStats} OR el.trigger_status = ${resolutionStats})
       AND (el.trigger_status = ${resolutionStats} OR el.error_status = ${resolutionStats})
+      ${excludedTriggersSql}
   `
 
   if (!caseAges) {
