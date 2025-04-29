@@ -122,7 +122,13 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     email: "userExcludedTriggers@example.com",
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.Supervisor],
-    excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002, TriggerCode.TRPR0003, TriggerCode.TRPR0008]
+    excludedTriggers: [
+      TriggerCode.TRPR0001,
+      TriggerCode.TRPR0002,
+      TriggerCode.TRPR0003,
+      TriggerCode.TRPR0006,
+      TriggerCode.TRPR0008
+    ]
   },
   userExcludedTriggersMultiForces: {
     username: "userExcludedTriggersMultiForces",
@@ -132,7 +138,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     email: "userExclTriggsMultiForces@example.com",
     password: hashedPassword,
     groups: [UserGroup.NewUI, UserGroup.Supervisor],
-    excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0021, TriggerCode.TRPR0030]
+    excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0020, TriggerCode.TRPR0030]
   },
   userWithoutExcludedTriggers: {
     username: "Bichard18",
