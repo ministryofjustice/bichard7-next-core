@@ -3,5 +3,5 @@ export enum NavLink {
   Reports = "/bichard-ui/ReturnToReportIndex",
   UserManagement = "/users/users/",
   Help = "/help/",
-  WhatsNew = "/help/whats-new"
+  WhatsNew = "/help/whats-new/"
 }
