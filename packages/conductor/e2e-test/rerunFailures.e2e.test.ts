@@ -2,6 +2,7 @@ jest.setTimeout(30_000)
 jest.retryTimes(10)
 
 import { randomUUID } from "crypto"
+import path from "path"
 import waitForExpect from "wait-for-expect"
 
 import { dbClient, s3Client } from "./helpers/clients"
@@ -16,7 +17,7 @@ import {
 describe("Rerun failures workflow", () => {
   it("should rerun failed phase 2 comparisons and update dynamo record", async () => {
     const phase = 2
-    const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
+    const fixturePath = path.resolve(__dirname, `./fixtures/phase${phase}/test-001.json`)
     const tableName = getPhaseTableName(phase)
     //write file to s3 with unique id
     const firstMessageS3Path = `${new Date().toISOString().replace(/:/g, "_")}.json`

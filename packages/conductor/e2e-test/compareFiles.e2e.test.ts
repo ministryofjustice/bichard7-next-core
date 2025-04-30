@@ -4,6 +4,7 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import fs from "fs"
+import path from "path"
 import waitForExpect from "wait-for-expect"
 
 const endpoint = (process.env.S3_ENDPOINT = "http://localhost:4566")
@@ -47,7 +48,7 @@ const getPhaseTableName = (phase: number): string => {
 describe("Compare files workflow", () => {
   const phases = [1, 2, 3]
   it.each(phases)("should compare the phase %i file and write results to dynamo", async (phase) => {
-    const fixturePath = `../core/phase${phase}/tests/fixtures/e2e-comparison/test-001.json`
+    const fixturePath = path.resolve(__dirname, `./fixtures/phase${phase}/test-001.json`)
     const tableName = getPhaseTableName(phase)
     //write file to s3 with unique id
     const s3Path = `${new Date().toISOString().replace(/:/g, "_")}.json`
