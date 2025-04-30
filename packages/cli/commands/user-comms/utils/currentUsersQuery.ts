@@ -3,7 +3,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 type UsersQueryResult = { forenames: string; email: string }[]
 
-export async function fetchUserDetailsForComms(postgres: DataSource): Promise<string[][] | Error> {
+export async function currentUsersQuery(postgres: DataSource): Promise<string[][] | Error> {
   const result = await postgres
     .query<UsersQueryResult>(
       `
