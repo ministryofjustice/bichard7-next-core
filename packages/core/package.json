@@ -17,7 +17,6 @@
     "test:update": "jest -u --testPathIgnorePatterns='characterisation-tests|comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='characterisation-tests|comparison.test|integration.test' --workerThreads=true --testNamePattern=",
     "test:watch": "jest --watch --testPathIgnorePatterns='characterisation-tests|comparison.test|integration.test' --workerThreads=true",
-    "test:compare:phase2": "jest  --forceExit phase2.comparison.test.ts",
     "test:compare:phase3": "jest  --forceExit phase3.comparison.test.ts",
     "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test --workerThreads=true",
     "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",

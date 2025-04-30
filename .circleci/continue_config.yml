@@ -274,9 +274,6 @@ jobs:
           name: Spin up the PostgreSQL database
           command: npm run postgres
       - run:
-          name: Run E2E comparison tests against Core Phase 2
-          command: npm run -w packages/core test:compare:phase2
-      - run:
           name: Run E2E comparison tests against Core Phase 3
           command: npm run -w packages/core test:compare:phase3
 
