@@ -20,7 +20,7 @@ import {
 import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
 import { InfoRow } from "../../InfoRow"
-import { StyledInfoRow } from "./HearingResult.styles"
+import { HeaderWrapper, StyledInfoRow } from "./HearingResult.styles"
 import ResultQualifier from "./ResultQualifier"
 
 interface HearingResultProps {
@@ -50,9 +50,9 @@ export const HearingResult = ({
 
   return (
     <div className="govuk-summary-card">
-      <div className="govuk-summary-card__title-wrapper">
+      <HeaderWrapper className="govuk-summary-card__title-wrapper">
         <h2 className="govuk-summary-card__title">{"Hearing result"}</h2>
-      </div>
+      </HeaderWrapper>
       <div className="govuk-summary-card__content">
         <dl className="govuk-summary-list">
           {cjsErrorMessage ? (

@@ -16,7 +16,7 @@ import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "uti
 import { InfoRow } from "../../InfoRow"
 import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"
-import { OffenceDetailsContainer } from "./OffenceDetails.styles"
+import { HeaderWrapper, OffenceDetailsContainer } from "./OffenceDetails.styles"
 import { OffenceNavigation } from "./OffenceNavigation"
 import { StartDate } from "./StartDate"
 
@@ -97,7 +97,7 @@ export const OffenceDetails = ({
       />
 
       <div className="govuk-summary-card offence-details">
-        <div className="govuk-summary-card__title-wrapper">
+        <HeaderWrapper className="govuk-summary-card__title-wrapper">
           <h2
             className="govuk-summary-card__title offence-details__title"
             aria-live="polite"
@@ -105,7 +105,7 @@ export const OffenceDetails = ({
           >
             {`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
           </h2>
-        </div>
+        </HeaderWrapper>
         <div className="govuk-summary-card__content">
           <dl className="govuk-summary-list">
             {offenceCodeErrorPrompt ? (
@@ -168,9 +168,9 @@ export const OffenceDetails = ({
       </div>
       {qualifierCode && (
         <div className="govuk-summary-card qualifier-code">
-          <div className="govuk-summary-card__title-wrapper">
+          <HeaderWrapper className="govuk-summary-card__title-wrapper">
             <h2 className="govuk-summary-card__title">{"Qualifier"}</h2>
-          </div>
+          </HeaderWrapper>
           <div className="govuk-summary-card__content">
             <dl className="govuk-summary-list">
               {qualifierErrorPrompt ? (

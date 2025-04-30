@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { lightGrey } from "utils/colours"
 
 const OffenceDetailsContainer = styled.div`
   & td {
@@ -6,4 +7,8 @@ const OffenceDetailsContainer = styled.div`
   }
 `
 
-export { OffenceDetailsContainer }
+const HeaderWrapper = styled.div`
+  background-color: ${lightGrey};
+`
+
+export { OffenceDetailsContainer, HeaderWrapper }
