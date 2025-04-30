@@ -20,7 +20,6 @@
     "test:compare:phase1": "NODE_ENV=test ts-node -T comparison/cli.ts --phase 1 -d ./phase1/tests/fixtures/e2e-comparison",
     "test:compare:phase2": "jest  --forceExit phase2.comparison.test.ts",
     "test:compare:phase3": "jest  --forceExit phase3.comparison.test.ts",
-    "test:compare:e2e": "jest --runInBand --forceExit --testPathPattern=e2e.comparison.test --workerThreads=true",
     "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test --workerThreads=true",
     "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
     "test:e2e": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
