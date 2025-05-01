@@ -8,7 +8,7 @@ import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -60,23 +60,21 @@ export const OffenceDetails = ({
     }
     return initialState
   })
-  const [resultVisibility, setResultVisibility] = useState<ResultVisibilityMap>({})
+  const [resultVisibility, setResultVisibility] = useState<ResultVisibilityMap>(() => {
+    const initialState: ResultVisibilityMap = {}
+    Array.from({ length: offencesCount }).forEach((_, offenceIdx) => {
+      const hearingResultsVisibility: { [key: number]: boolean } = {}
+      const offenceResults =
+        courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case?.HearingDefendant?.Offence[offenceIdx].Result
 
-  useEffect(() => {
-    setResultVisibility((prev) => {
-      if (prev[offenceIndex]) {
-        return prev
-      }
-      const initialVisibility: { [resultIndex: number]: boolean } = {}
-      offence.Result.forEach((_, index) => {
-        initialVisibility[index] = true
+      offenceResults.forEach((_, resultIdx) => {
+        hearingResultsVisibility[resultIdx] = true
       })
-      return {
-        ...prev,
-        [offenceIndex]: initialVisibility
-      }
+
+      initialState[offenceIdx] = hearingResultsVisibility
     })
-  }, [selectedOffenceSequenceNumber, offence.Result, offenceIndex])
+    return initialState
+  })
 
   const toggleOffenceVisibility = () => {
     setOffenceVisibility((prev) => ({
