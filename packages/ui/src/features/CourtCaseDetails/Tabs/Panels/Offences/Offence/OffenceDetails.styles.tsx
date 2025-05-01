@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { lightGrey } from "utils/colours"
+import { blue, lightGrey } from "utils/colours"
 
 const OffenceDetailsContainer = styled.div`
   & td {
@@ -9,6 +9,17 @@ const OffenceDetailsContainer = styled.div`
 
 const HeaderWrapper = styled.div`
   background-color: ${lightGrey};
+  cursor: pointer;
 `
 
-export { OffenceDetailsContainer, HeaderWrapper }
+const AccordionToggle = styled.div`
+  display: flex;
+  align-items: center;
+  color: ${blue};
+
+  .chevron {
+    margin-right: 5px;
+  }
+`
+
+export { AccordionToggle, HeaderWrapper, OffenceDetailsContainer }
