@@ -8,7 +8,7 @@ import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -31,8 +31,14 @@ interface OffenceDetailsProps {
   exceptions: Exception[]
 }
 
-type VisibilityMap = {
+type OffenceVisibilityMap = {
   [key: number]: boolean
+}
+
+type ResultVisibilityMap = {
+  [offenceIndex: number]: {
+    [resultIndex: number]: boolean
+  }
 }
 
 export const OffenceDetails = ({
@@ -44,26 +50,54 @@ export const OffenceDetails = ({
   selectedOffenceSequenceNumber,
   exceptions
 }: OffenceDetailsProps) => {
+  const offenceIndex = selectedOffenceSequenceNumber - 1
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
-  const [offenceVisibility, setOffenceVisibility] = useState<VisibilityMap>(() => {
-    const initialState: VisibilityMap = {}
+  const [offenceVisibility, setOffenceVisibility] = useState<OffenceVisibilityMap>(() => {
+    const initialState: OffenceVisibilityMap = {}
     for (let i = 1; i <= offencesCount; i++) {
       initialState[i] = true
     }
     return initialState
   })
+  const [resultVisibility, setResultVisibility] = useState<ResultVisibilityMap>({})
 
-  const toggleContentVisibility = () => {
+  useEffect(() => {
+    setResultVisibility((prev) => {
+      if (prev[offenceIndex]) {
+        return prev
+      }
+      const initialVisibility: { [resultIndex: number]: boolean } = {}
+      offence.Result.forEach((_, index) => {
+        initialVisibility[index] = true
+      })
+      return {
+        ...prev,
+        [offenceIndex]: initialVisibility
+      }
+    })
+  }, [selectedOffenceSequenceNumber, offence.Result, offenceIndex])
+
+  const toggleOffenceVisibility = () => {
     setOffenceVisibility((prev) => ({
       ...prev,
       [selectedOffenceSequenceNumber]: !prev[selectedOffenceSequenceNumber]
     }))
   }
 
-  const isContentVisible = offenceVisibility[selectedOffenceSequenceNumber]
+  const toggleResultVisibility = (offenceIndex: number, resultIndex: number) => {
+    setResultVisibility((prev) => ({
+      ...prev,
+      [offenceIndex]: {
+        ...prev[offenceIndex],
+        [resultIndex]: !prev[offenceIndex][resultIndex]
+      }
+    }))
+  }
 
-  const accordion = isContentVisible
+  const isOffenceVisible = offenceVisibility[selectedOffenceSequenceNumber]
+
+  const accordion = isOffenceVisible
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
     : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
 
@@ -122,7 +156,7 @@ export const OffenceDetails = ({
       />
 
       <div className="govuk-summary-card offence-details">
-        <HeaderWrapper className="govuk-summary-card__title-wrapper" onClick={toggleContentVisibility}>
+        <HeaderWrapper className="govuk-summary-card__title-wrapper" onClick={toggleOffenceVisibility}>
           <h2
             className="govuk-summary-card__title offence-details__title"
             aria-live="polite"
@@ -135,7 +169,7 @@ export const OffenceDetails = ({
             <span>{accordion.text}</span>
           </AccordionToggle>
         </HeaderWrapper>
-        {isContentVisible && (
+        {isOffenceVisible && (
           <div className="govuk-summary-card__content">
             <dl className="govuk-summary-list">
               {offenceCodeErrorPrompt ? (
@@ -185,6 +219,7 @@ export const OffenceDetails = ({
 
       <div className="offence-results">
         {offence.Result.map((result, index) => {
+          const isVisible = resultVisibility[offenceIndex]?.[index] ?? true
           const resultKey = `hearing-result-${index + 1}`
           return (
             <div className={resultKey} key={resultKey}>
@@ -196,6 +231,8 @@ export const OffenceDetails = ({
                 selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
                 resultIndex={index}
                 errorStatus={courtCase.errorStatus}
+                isContentVisible={isVisible}
+                onToggleContent={() => toggleResultVisibility(offenceIndex, index)}
               />
             </div>
           )
