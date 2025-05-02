@@ -45,6 +45,7 @@ export const HearingResult = ({
   const { courtCase } = useCourtCase()
   const cjsErrorMessage = findExceptions(courtCase, exceptions, ExceptionCode.HO100307)
   const titleDataTestId = `hearing-result-title-${resultIndex + 1}`
+  const hearingResultsDetailsId = `hearing-results-${resultIndex + 1}`
 
   const offenceIndex = selectedOffenceSequenceNumber - 1
 
@@ -59,8 +60,17 @@ export const HearingResult = ({
 
   return (
     <div className="govuk-summary-card">
-      <HeaderWrapper className="govuk-summary-card__title-wrapper" onClick={onToggleContent}>
-        <h2 className="govuk-summary-card__title" data-testid={titleDataTestId}>
+      <HeaderWrapper
+        className="govuk-summary-card__title-wrapper"
+        onClick={onToggleContent}
+        aria-expanded={isContentVisible}
+        aria-controls={hearingResultsDetailsId}
+      >
+        <h2
+          className="govuk-summary-card__title"
+          data-testid={titleDataTestId}
+          aria-label={`hearing-result-${resultIndex + 1}`}
+        >
           {"Hearing result"}
         </h2>
         <AccordionToggle>
@@ -69,7 +79,7 @@ export const HearingResult = ({
         </AccordionToggle>
       </HeaderWrapper>
       {isContentVisible && (
-        <div className="govuk-summary-card__content">
+        <div id={hearingResultsDetailsId} className="govuk-summary-card__content">
           <dl className="govuk-summary-list">
             {cjsErrorMessage ? (
               <ExceptionFieldRow

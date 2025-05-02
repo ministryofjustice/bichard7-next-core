@@ -13,8 +13,8 @@ import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
-import { initialResultsVisibility, ResultVisibilityMap } from "utils/offenceDetails/initialResultsVisibility"
 import { initialOffencesVisibility, OffenceVisibilityMap } from "utils/offenceDetails/initialOffencesVisibility"
+import { initialResultsVisibility, ResultVisibilityMap } from "utils/offenceDetails/initialResultsVisibility"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
 import { InfoRow } from "../../InfoRow"
 import { HearingResult } from "./HearingResult"
@@ -130,7 +130,12 @@ export const OffenceDetails = ({
       />
 
       <div className="govuk-summary-card offence-details">
-        <HeaderWrapper className="govuk-summary-card__title-wrapper" onClick={toggleOffenceVisibility}>
+        <HeaderWrapper
+          className="govuk-summary-card__title-wrapper"
+          onClick={toggleOffenceVisibility}
+          aria-expanded={isOffenceVisible}
+          aria-controls={`offence-details-${selectedOffenceSequenceNumber}`}
+        >
           <h2
             className="govuk-summary-card__title offence-details__title"
             aria-live="polite"
@@ -144,7 +149,7 @@ export const OffenceDetails = ({
           </AccordionToggle>
         </HeaderWrapper>
         {isOffenceVisible && (
-          <div className="govuk-summary-card__content">
+          <div id={`offence-details-${selectedOffenceSequenceNumber}`} className="govuk-summary-card__content">
             <dl className="govuk-summary-list">
               {offenceCodeErrorPrompt ? (
                 <ExceptionFieldRow
