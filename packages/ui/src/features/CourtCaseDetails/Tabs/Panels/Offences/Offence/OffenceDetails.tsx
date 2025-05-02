@@ -13,6 +13,8 @@ import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
+import { initialResultsVisibility, ResultVisibilityMap } from "utils/offenceDetails/initialResultsVisibility"
+import { initialOffencesVisibility, OffenceVisibilityMap } from "utils/offenceDetails/initialOffencesVisibility"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
 import { InfoRow } from "../../InfoRow"
 import { HearingResult } from "./HearingResult"
@@ -31,16 +33,6 @@ interface OffenceDetailsProps {
   exceptions: Exception[]
 }
 
-type OffenceVisibilityMap = {
-  [key: number]: boolean
-}
-
-type ResultVisibilityMap = {
-  [offenceIndex: number]: {
-    [resultIndex: number]: boolean
-  }
-}
-
 export const OffenceDetails = ({
   offence,
   offencesCount,
@@ -53,38 +45,22 @@ export const OffenceDetails = ({
   const offenceIndex = selectedOffenceSequenceNumber - 1
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
-  const [offenceVisibility, setOffenceVisibility] = useState<OffenceVisibilityMap>(() => {
-    const initialState: OffenceVisibilityMap = {}
-    for (let i = 1; i <= offencesCount; i++) {
-      initialState[i] = true
-    }
-    return initialState
-  })
-  const [resultVisibility, setResultVisibility] = useState<ResultVisibilityMap>(() => {
-    const initialState: ResultVisibilityMap = {}
-    Array.from({ length: offencesCount }).forEach((_, offenceIdx) => {
-      const hearingResultsVisibility: { [key: number]: boolean } = {}
-      const offenceResults =
-        courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case?.HearingDefendant?.Offence[offenceIdx].Result
-
-      offenceResults.forEach((_, resultIdx) => {
-        hearingResultsVisibility[resultIdx] = true
-      })
-
-      initialState[offenceIdx] = hearingResultsVisibility
-    })
-    return initialState
-  })
+  const [offencesVisibility, setOffencesVisibility] = useState<OffenceVisibilityMap>(
+    initialOffencesVisibility(offencesCount)
+  )
+  const [resultsVisibility, setResultsVisibility] = useState<ResultVisibilityMap>(
+    initialResultsVisibility(offencesCount, courtCase)
+  )
 
   const toggleOffenceVisibility = () => {
-    setOffenceVisibility((prev) => ({
+    setOffencesVisibility((prev) => ({
       ...prev,
       [selectedOffenceSequenceNumber]: !prev[selectedOffenceSequenceNumber]
     }))
   }
 
   const toggleResultVisibility = (offenceIndex: number, resultIndex: number) => {
-    setResultVisibility((prev) => ({
+    setResultsVisibility((prev) => ({
       ...prev,
       [offenceIndex]: {
         ...prev[offenceIndex],
@@ -93,7 +69,7 @@ export const OffenceDetails = ({
     }))
   }
 
-  const isOffenceVisible = offenceVisibility[selectedOffenceSequenceNumber]
+  const isOffenceVisible = offencesVisibility[selectedOffenceSequenceNumber]
 
   const accordion = isOffenceVisible
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
@@ -217,7 +193,7 @@ export const OffenceDetails = ({
 
       <div className="offence-results">
         {offence.Result.map((result, index) => {
-          const isVisible = resultVisibility[offenceIndex]?.[index] ?? true
+          const isVisible = resultsVisibility[offenceIndex]?.[index] ?? true
           const resultKey = `hearing-result-${index + 1}`
           return (
             <div className={resultKey} key={resultKey}>
