@@ -81,6 +81,8 @@ describe("Hearing Result", () => {
             resultIndex={dummyIndex}
             selectedOffenceSequenceNumber={dummyIndex}
             exceptions={[]}
+            isContentVisible={true}
+            onToggleContent={() => {}}
           />
         </CurrentUserContext.Provider>
       </CourtCaseContext.Provider>
@@ -115,6 +117,8 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -134,6 +138,8 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -163,6 +169,8 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -184,6 +192,8 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -203,6 +213,8 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -222,6 +234,8 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "NextHearingDate"], code: ExceptionCode.HO100323 }]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -246,6 +260,8 @@ describe("Hearing Result", () => {
                   code: ExceptionCode.HO100200
                 }
               ]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
@@ -265,6 +281,8 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "CJSresultCode"], code: ExceptionCode.HO100307 }]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
