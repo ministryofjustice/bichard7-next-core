@@ -7,11 +7,17 @@ const StyledA = styled.a`
   &:visited {
     color: white;
   }
-  &:after {
+  &::after {
     background-image: url(/bichard/moj_assets/images/icon-tag-remove-cross-white.svg);
   }
   &:link {
     color: white;
+  }
+  &:focus {
+    color: #222;
+    &::after {
+      background-image: url(/bichard/moj_assets/images/icon-tag-remove-cross.svg);
+    }
   }
 `
 

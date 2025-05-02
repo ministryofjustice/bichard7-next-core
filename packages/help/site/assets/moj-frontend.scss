@@ -31,6 +31,11 @@
       text-decoration: none;
     }
 
+    &:focus {
+      border-color: transparent;
+      color: #0b0c0c;
+    }
+
     &--organisation-name,
     & > a--organisation-name {
       vertical-align: middle;

@@ -11,7 +11,7 @@ import type { LockReason } from "../../../types/LockReason"
 interface DataStoreGateway {
   canCaseBeResubmitted: (username: string, caseId: number) => Promise<boolean>
   fetchCase: (caseId: number) => Promise<CaseDataForDto>
-  fetchCaseAges(): Promise<CaseAges>
+  fetchCaseAges(user: User): Promise<CaseAges>
   fetchCases: (
     user: User,
     pagination: Pagination,

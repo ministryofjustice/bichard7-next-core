@@ -94,6 +94,9 @@ class GovUkDocument extends Document<DocumentProps> {
         </Head>
 
         <body className="govuk-template__body">
+          <a href="#main-content" className="govuk-skip-link" data-module="govuk-skip-link">
+            {"Skip to main content"}
+          </a>
           <Main />
           <NextScript />
         </body>

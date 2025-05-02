@@ -14,7 +14,7 @@ describe("Filters with triggers", () => {
 
     cy.get(".selected-filters .moj-filter__tag").contains("PR08")
     cy.get(".selected-filters .moj-filter__tag").contains("PR10")
-    cy.get(".selected-filters .moj-filter__tag").contains("PR20")
+    cy.get(".selected-filters .moj-filter__tag").contains("PR19")
     cy.get(".selected-filters .moj-filter__tag").contains("PR30")
   })
 
@@ -30,7 +30,7 @@ describe("Filters with triggers", () => {
 
     cy.get(".applied-filters .moj-filter__tag").contains("PR08")
     cy.get(".applied-filters .moj-filter__tag").contains("PR10")
-    cy.get(".applied-filters .moj-filter__tag").contains("PR20")
+    cy.get(".applied-filters .moj-filter__tag").contains("PR19")
     cy.get(".applied-filters .moj-filter__tag").contains("PR30")
   })
 
@@ -50,7 +50,7 @@ describe("Filters with triggers", () => {
     cy.get(".selected-filters .moj-filter__tag").should("length", 1)
 
     cy.get(".applied-filters .moj-filter__tag").contains("PR10")
-    cy.get(".applied-filters .moj-filter__tag").contains("PR20")
+    cy.get(".applied-filters .moj-filter__tag").contains("PR19")
     cy.get(".applied-filters .moj-filter__tag").contains("PR30")
 
     cy.get(".selected-filters .moj-filter__tag").contains("PR08")

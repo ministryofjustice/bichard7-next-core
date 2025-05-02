@@ -1,3 +1,4 @@
+import { subDays } from "date-fns"
 import HO100206 from "../../test/test-data/HO100206.json"
 import { loginAndVisit } from "../support/helpers"
 
@@ -73,6 +74,19 @@ describe("infoBanner", () => {
     cy.reload()
     visitWithBannerDate("/bichard", new Date().toISOString())
     cy.get(".info-banner").should("not.exist")
+  })
+
+  it("disappears when closed on today and does reappear on next day", () => {
+    visitWithBannerDate("/bichard", new Date().toISOString())
+
+    cy.get(".info-banner").should("exist")
+
+    cy.get(".info-banner__close").click()
+    cy.get(".info-banner").should("not.exist")
+
+    cy.reload()
+    visitWithBannerDate("/bichard", subDays(new Date(), 1).toISOString())
+    cy.get(".info-banner").should("exist")
   })
 
   it("persists when navigating through different pages", () => {
