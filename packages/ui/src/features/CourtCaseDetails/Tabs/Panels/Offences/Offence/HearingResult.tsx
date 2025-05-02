@@ -44,6 +44,7 @@ export const HearingResult = ({
 }: HearingResultProps) => {
   const { courtCase } = useCourtCase()
   const cjsErrorMessage = findExceptions(courtCase, exceptions, ExceptionCode.HO100307)
+  const titleDataTestId = `hearing-result-title-${resultIndex + 1}`
 
   const offenceIndex = selectedOffenceSequenceNumber - 1
 
@@ -59,7 +60,9 @@ export const HearingResult = ({
   return (
     <div className="govuk-summary-card">
       <HeaderWrapper className="govuk-summary-card__title-wrapper" onClick={onToggleContent}>
-        <h2 className="govuk-summary-card__title">{"Hearing result"}</h2>
+        <h2 className="govuk-summary-card__title" data-testid={titleDataTestId}>
+          {"Hearing result"}
+        </h2>
         <AccordionToggle>
           <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
           <span>{accordion.text}</span>

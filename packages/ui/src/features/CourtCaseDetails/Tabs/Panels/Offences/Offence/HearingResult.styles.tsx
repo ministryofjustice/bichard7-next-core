@@ -1,6 +1,6 @@
 import styled from "styled-components"
-import { InfoRow } from "../../InfoRow"
 import { blue, lightGrey } from "utils/colours"
+import { InfoRow } from "../../InfoRow"
 
 const StyledInfoRow = styled(InfoRow)`
   &.result-text .row-value {
@@ -10,6 +10,7 @@ const StyledInfoRow = styled(InfoRow)`
 
 const HeaderWrapper = styled.div`
   background-color: ${lightGrey};
+  cursor: pointer;
 `
 
 const AccordionToggle = styled.div`
@@ -22,4 +23,4 @@ const AccordionToggle = styled.div`
   }
 `
 
-export { StyledInfoRow, HeaderWrapper, AccordionToggle }
+export { AccordionToggle, HeaderWrapper, StyledInfoRow }
