@@ -1,40 +1,96 @@
 import { Command } from "commander"
+import { prepareComms } from "./utils/prepareComms"
+import { selectTemplate } from "./utils/selectTemplate"
+import { selectOutageType } from "./utils/selectOutageType"
+import type { Content, Template } from "./utils/userCommsTypes"
+import { templateTypes } from "./utils/userCommsTypes"
+import { pncMaintenance } from "./utils/pncMaintenance"
+import { pncMaintenanceExtended } from "./utils/pncMaintenanceExtended"
 import nunjucks from "nunjucks"
-import { pncMaintenance } from "./pncMaintenance"
-import { pncMaintenanceExtended } from "./pncMaintenanceExtended"
-import { outageComms } from "./outageComms"
-import { selectTemplate } from "./selectTemplate"
-import { selectOutageType } from "./selectOutageType"
+import sendUserComms from "./utils/sendUserComms"
+import awsVault from "../../utils/awsVault"
+import { env, Environment } from "../../config"
+import { bold } from "cli-color"
+import testDbConnection from "../../utils/testDbConnection"
 
-nunjucks.configure("templates", { autoescape: true })
+const WORKSPACE = process.env.WORKSPACE ?? "production"
+
+nunjucks.configure({ autoescape: true })
 
 export function userComms(): Command {
   const program = new Command("user-comms")
 
   program.description("A way to send group communications to all users").action(async () => {
+    const { aws }: Environment = env.PROD
+
+    const readerEndpoints: string[] = JSON.parse(
+      await awsVault.exec({
+        awsProfile: aws.profile,
+        command: 'aws rds describe-db-clusters --query "DBClusters[*].ReaderEndpoint"'
+      })
+    )
+
+    const dbHostname = readerEndpoints.filter((endpoint) =>
+      endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
+    )?.[0]
+
+    const isConnectedToDb = await testDbConnection(dbHostname)
+    if (!isConnectedToDb) {
+      console.error(
+        bold(
+          "Failed to connect to database - make sure you're connected to the correct VPN and that dev SGs have been applied."
+        )
+      )
+
+      return
+    }
+
     const selectedTemplate = await selectTemplate()
 
-    let outageType = ""
-    let hasOutageResolved = false
-
-    if (selectedTemplate === "Outage" || selectedTemplate === "Outage Resolved") {
-      const outageValues = await selectOutageType(selectedTemplate)
-      outageType = outageValues.outageType
-      hasOutageResolved = outageValues.hasOutageResolved
+    const templateMap: Record<string, Template> = {
+      "PNC maintenance": templateTypes.PNC_MAINTENANCE,
+      "PNC maintenance extended": templateTypes.EXTENDED_PNC_MAINTENANCE,
+      Outage: templateTypes.OUTAGE,
+      "Outage Resolved": templateTypes.OUTAGE_RESOLVED
     }
 
+    const templateData = templateMap[selectedTemplate]
+
+    if (!templateData) {
+      console.error("Invalid template selection")
+      return
+    }
+
+    let inputedContent: Content
     switch (selectedTemplate) {
+      case "Outage":
+        inputedContent = await selectOutageType(selectedTemplate)
+        templateData.templateTitle = `Unexpected ${inputedContent.outageType} Outage`
+        break
+      case "Outage Resolved":
+        inputedContent = await selectOutageType(selectedTemplate)
+        templateData.templateTitle = `Unexpected ${inputedContent.outageType} Outage Resolved`
+        break
       case "PNC maintenance":
-        pncMaintenance()
+        inputedContent = await pncMaintenance()
         break
       case "PNC maintenance extended":
-        pncMaintenanceExtended()
+        inputedContent = await pncMaintenanceExtended()
         break
-      case "Outage":
-      case "Outage Resolved":
-        outageComms(outageType, hasOutageResolved)
-        break
+      default:
+        console.error("Invalid template selection")
+        return
     }
+
+    const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateData)
+
+    const updatedUsers = parsedUsers.map((user) => ({
+      ...user,
+      message: nunjucks.renderString(templateContent, { firstName: user.name, ...inputedContent })
+    }))
+
+    sendUserComms(updatedUsers, templateData)
   })
+
   return program
 }

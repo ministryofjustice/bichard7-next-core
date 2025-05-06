@@ -2,7 +2,6 @@ import { select } from "@inquirer/prompts"
 
 export const selectOutageType = async (templateChoice: string) => {
   let outageType = ""
-  let hasOutageResolved = false
   if (templateChoice === "Outage") {
     outageType = await select({
       message: "What type of outage are we reporting?",
@@ -21,7 +20,6 @@ export const selectOutageType = async (templateChoice: string) => {
       ]
     })
   } else if (templateChoice === "Outage Resolved") {
-    hasOutageResolved = true
     outageType = await select({
       message: "What type of outage are your sending resolution communications about?",
       choices: [
@@ -44,5 +42,5 @@ export const selectOutageType = async (templateChoice: string) => {
     })
   }
 
-  return { outageType, hasOutageResolved }
+  return { outageType }
 }
