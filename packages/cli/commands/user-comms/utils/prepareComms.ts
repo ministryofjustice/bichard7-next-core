@@ -45,7 +45,7 @@ export const prepareComms = async (content: Content, templateData: Template) => 
 
   await awsVault.exec({
     awsProfile: aws.profile,
-    command: `sh -c 'DB_USER="${dbUser}" DB_PASSWORD="${dbPassword}" npx ts-node -T ./commands/user-comms/utils/getUsers.ts'`
+    command: `sh -c 'DB_USER="${dbUser}" DB_PASSWORD="${dbPassword}" npx ts-node -T ./commands/user-comms/utils/getUsersDetails.ts'`
   })
 
   const users = fs.readFileSync("/tmp/users.json", "utf-8")
