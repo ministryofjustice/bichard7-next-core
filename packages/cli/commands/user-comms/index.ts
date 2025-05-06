@@ -32,7 +32,6 @@ export function userComms(): Command {
     }
 
     let inputedContent: Content
-    console.log(selectTemplate)
     switch (selectedTemplate) {
       case "Outage":
         inputedContent = await selectOutageType(selectedTemplate)
