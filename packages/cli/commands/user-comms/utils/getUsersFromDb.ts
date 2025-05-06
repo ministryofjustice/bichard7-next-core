@@ -1,4 +1,4 @@
-import { Lambda, RDS } from "aws-sdk"
+import { RDS } from "aws-sdk"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { DataSource } from "typeorm"
 import baseConfig from "@moj-bichard7/common/db/baseConfig"
@@ -11,14 +11,6 @@ const dbUser = process.env.DB_USER
 let postgres: DataSource
 
 async function setup() {
-  const lambda = new Lambda({ region: "eu-west-2" })
-  const sanitiseMessageLambda = await lambda
-    .getFunction({ FunctionName: `bichard-7-${WORKSPACE}-sanitise-message` })
-    .promise()
-  if (isError(sanitiseMessageLambda)) {
-    throw Error("Couldn't get Postgres connection details (failed to get sanitise lambda function)")
-  }
-
   const rds = new RDS({ region: "eu-west-2" })
   const dbInstances = await rds.describeDBClusters().promise()
   if (isError(dbInstances)) {
