@@ -62,7 +62,8 @@ export const pncMaintenance = async () => {
     })
 
     addAnotherDate = await confirm({
-      message: "Would you like to add another planned maintenance window?"
+      message: "Would you like to add another planned maintenance window?",
+      default: false
     })
   }
 

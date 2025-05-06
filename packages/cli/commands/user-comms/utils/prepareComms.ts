@@ -25,7 +25,7 @@ export const prepareComms = async (content: Content, templateData: Template) => 
 
   renderTemplate(templateContent, { ...content })
 
-  const confirmTemplateChoice = await confirm({ message: "Do you want to use this template?", default: false })
+  const confirmTemplateChoice = await confirm({ message: "Do you want to use this template?" })
 
   if (!confirmTemplateChoice) {
     process.exit(1)
