@@ -59,7 +59,9 @@ describe("infoBanner", () => {
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
     visitWithBannerDate("/bichard", new Date(fiveDaysAgo).toISOString())
 
-    cy.get("h2")
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(150) // We use "useEffect" on the client so we have to wait for the React lifecycle to run
+
     cy.get(".info-banner").should("not.exist")
   })
 
