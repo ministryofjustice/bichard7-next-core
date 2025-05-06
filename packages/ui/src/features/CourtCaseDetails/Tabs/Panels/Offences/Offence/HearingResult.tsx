@@ -20,7 +20,8 @@ import {
 import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
 import { InfoRow } from "../../InfoRow"
-import { AccordionToggle, HeaderWrapper, StyledInfoRow } from "./HearingResult.styles"
+import Card from "./Card"
+import { StyledInfoRow } from "./HearingResult.styles"
 import ResultQualifier from "./ResultQualifier"
 
 interface HearingResultProps {
@@ -44,8 +45,6 @@ export const HearingResult = ({
 }: HearingResultProps) => {
   const { courtCase } = useCourtCase()
   const cjsErrorMessage = findExceptions(courtCase, exceptions, ExceptionCode.HO100307)
-  const titleDataTestId = `hearing-result-title-${resultIndex + 1}`
-  const hearingResultId = `hearing-results-${resultIndex + 1}`
 
   const offenceIndex = selectedOffenceSequenceNumber - 1
 
@@ -54,93 +53,68 @@ export const HearingResult = ({
   const text = result.ResultVariableText
   const formattedResult = text?.replace(/([^\d])\.([^\d\n])/g, "$1.\n\n$2")
 
-  const accordion = isContentVisible
-    ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
-    : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
-
   return (
-    <div className="govuk-summary-card">
-      <HeaderWrapper
-        className="govuk-summary-card__title-wrapper"
-        onClick={onToggleContent}
-        aria-expanded={isContentVisible}
-        aria-controls={hearingResultId}
+    <>
+      <Card
+        heading={"Hearing result"}
+        isContentVisible={isContentVisible}
+        contentInstanceKey={`hearing-result-${resultIndex + 1}`}
+        toggleContentVisibility={() => onToggleContent()}
       >
-        <h2
-          className="govuk-summary-card__title"
-          data-testid={titleDataTestId}
-          aria-label={`hearing-result-${resultIndex + 1}`}
-        >
-          {"Hearing result"}
-        </h2>
-        <AccordionToggle>
-          <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
-          <span>{accordion.text}</span>
-        </AccordionToggle>
-      </HeaderWrapper>
-      {isContentVisible && (
-        <div id={hearingResultId} className="govuk-summary-card__content">
-          <dl className="govuk-summary-list">
-            {cjsErrorMessage ? (
-              <ExceptionFieldRow
-                badgeText={ExceptionBadgeType.SystemError}
-                value={result.CJSresultCode}
-                label={"CJS Code"}
-              >
-                <ErrorPromptMessage message={cjsErrorMessage} />
-              </ExceptionFieldRow>
-            ) : (
-              <InfoRow label="CJS Code" value={result.CJSresultCode} />
-            )}
-            <InfoRow label="PNC disposal type" value={result.PNCDisposalType} />
-            <InfoRow
-              label="Result hearing type"
-              value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
-            />
-            <ResultQualifier result={result} />
-            <InfoRow
-              label="Result hearing date"
-              value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}
-            />
-            <StyledInfoRow label="Hearing result description" value={formattedResult} className={`result-text`} />
-            <InfoRow label="Type of trial" value={result.ModeOfTrialReason} />
-            <InfoRow label="Type of result" value={result.ResultClass} />
-            <ConditionalRender isRendered={typeof result.Duration !== "undefined" && result.Duration?.length > 0}>
-              <InfoRow
-                label="Duration"
-                value={
-                  <>
-                    {result.Duration?.map((duration) => (
-                      <div key={`duration-${duration.DurationLength}-${duration.DurationUnit}`}>
-                        {formatDuration(duration.DurationLength, duration.DurationUnit)}
-                      </div>
-                    ))}
-                  </>
-                }
-              />
-            </ConditionalRender>
-            <NextHearingLocationField
-              result={result}
-              exceptions={exceptions}
-              offenceIndex={offenceIndex}
-              resultIndex={resultIndex}
-              isCaseEditable={isCaseEditable}
-            />
-            <NextHearingDateField
-              result={result}
-              exceptions={exceptions}
-              offenceIndex={offenceIndex}
-              resultIndex={resultIndex}
-              isCaseEditable={isCaseEditable}
-            />
-            <InfoRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
-            <ConditionalRender isRendered={typeof result.Urgent !== "undefined"}>
-              <InfoRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />
-              <InfoRow label="Urgency" value={getNumberOfHours(result.Urgent?.urgency)} />
-            </ConditionalRender>
-          </dl>
-        </div>
-      )}
-    </div>
+        {cjsErrorMessage ? (
+          <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={result.CJSresultCode} label={"CJS Code"}>
+            <ErrorPromptMessage message={cjsErrorMessage} />
+          </ExceptionFieldRow>
+        ) : (
+          <InfoRow label="CJS Code" value={result.CJSresultCode} />
+        )}
+        <InfoRow label="PNC disposal type" value={result.PNCDisposalType} />
+        <InfoRow
+          label="Result hearing type"
+          value={result.ResultHearingType && capitaliseExpression(result.ResultHearingType)}
+        />
+        <ResultQualifier result={result} />
+        <InfoRow
+          label="Result hearing date"
+          value={result.ResultHearingDate && formatDisplayedDate(result.ResultHearingDate)}
+        />
+        <StyledInfoRow label="Hearing result description" value={formattedResult} className={`result-text`} />
+        <InfoRow label="Type of trial" value={result.ModeOfTrialReason} />
+        <InfoRow label="Type of result" value={result.ResultClass} />
+        <ConditionalRender isRendered={typeof result.Duration !== "undefined" && result.Duration?.length > 0}>
+          <InfoRow
+            label="Duration"
+            value={
+              <>
+                {result.Duration?.map((duration) => (
+                  <div key={`duration-${duration.DurationLength}-${duration.DurationUnit}`}>
+                    {formatDuration(duration.DurationLength, duration.DurationUnit)}
+                  </div>
+                ))}
+              </>
+            }
+          />
+        </ConditionalRender>
+        <NextHearingLocationField
+          result={result}
+          exceptions={exceptions}
+          offenceIndex={offenceIndex}
+          resultIndex={resultIndex}
+          isCaseEditable={isCaseEditable}
+        />
+        <NextHearingDateField
+          result={result}
+          exceptions={exceptions}
+          offenceIndex={offenceIndex}
+          resultIndex={resultIndex}
+          isCaseEditable={isCaseEditable}
+        />
+        <InfoRow label="PNC adjudication exists" value={getYesOrNo(result.PNCAdjudicationExists)} />
+        <ConditionalRender isRendered={typeof result.Urgent !== "undefined"}>
+          <InfoRow label="Urgent" value={getUrgentYesOrNo(result.Urgent?.urgent)} />
+          <InfoRow label="Urgency" value={getNumberOfHours(result.Urgent?.urgency)} />
+        </ConditionalRender>
+      </Card>
+    </>
   )
 }

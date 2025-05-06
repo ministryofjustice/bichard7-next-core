@@ -501,11 +501,14 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".offence-details h2.offence-details__title").should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-1"]`).should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-2"]`).should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-3"]`).should("not.exist")
+
     cy.get(".moj-tab-panel-triggers .trigger-header button").eq(0).contains("Offence 1").click()
-    cy.get("h2.offence-details__title").should("have.text", "Offence 1 of 3")
+    cy.get(`[data-testid="offence-details-1"]`).should("have.text", "Offence 1 of 3")
     cy.get(".moj-tab-panel-triggers .trigger-header button").eq(1).contains("Offence 2").click()
-    cy.get("h2.offence-details__title").should("have.text", "Offence 2 of 3")
+    cy.get(`[data-testid="offence-details-2"]`).should("have.text", "Offence 2 of 3")
   })
 
   it("Should take the user to offence tab when exception is clicked", () => {
@@ -513,11 +516,14 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h2.offence-details__title").should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-1"]`).should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-2"]`).should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-3"]`).should("not.exist")
+
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Next hearing date / Offence 1")
     cy.get(".exception-header .exception-location").click()
-    cy.get("h2.offence-details__title").should("have.text", "Offence 1 of 3")
+    cy.get(`[data-testid="offence-details-1"]`).should("have.text", "Offence 1 of 3")
   })
 
   it("Should be able to refresh after I click 'Back to all offences'", () => {
@@ -525,11 +531,14 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h2.offence-details__title").should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-1"]`).should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-2"]`).should("not.exist")
+    cy.get(`.offence-details [data-testid="offence-details-3"]`).should("not.exist")
+
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Next hearing date / Offence 1")
     cy.get(".exception-header .exception-location").click()
-    cy.get("h2.offence-details__title").should("have.text", "Offence 1 of 3")
+    cy.get(`[data-testid="offence-details-1"]`).should("have.text", "Offence 1 of 3")
 
     cy.contains("Back to all offences").click()
     cy.reload()
