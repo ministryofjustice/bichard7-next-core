@@ -18,7 +18,7 @@ parameters:
 jobs:
   set_parameters:
     docker:
-      - image: cimg/python:3.8
+      - image: cimg/python:3.9
     steps:
       - checkout
       - path-filtering/set-parameters:

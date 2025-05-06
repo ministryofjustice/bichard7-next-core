@@ -66,7 +66,7 @@ export const fetchCasesAndFilter = async (
   }
 
   const [caseAges, cases] = await Promise.all([
-    dataStore.fetchCaseAges(),
+    dataStore.fetchCaseAges(user),
     dataStore.fetchCases(user, pagination, sortOrder, filters)
   ])
 

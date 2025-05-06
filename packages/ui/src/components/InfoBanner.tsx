@@ -1,3 +1,4 @@
+import { isAfter, isEqual, isFuture, subDays } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
@@ -12,8 +13,6 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  const currentDayOfMonth = new Date().getDate()
-
   useEffect(() => {
     setMounted(true)
 
@@ -22,9 +21,9 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
     }
 
     const bannerLifespanDays = 5
-    const firstShownDayOfMonth = firstShownDate.getDate()
-    const bannerShownInFuture = firstShownDayOfMonth > currentDayOfMonth
-    const bannerExpired = currentDayOfMonth - firstShownDayOfMonth >= bannerLifespanDays
+
+    const bannerShownInFuture = isFuture(firstShownDate)
+    const bannerExpired = isAfter(subDays(firstShownDate, bannerLifespanDays), firstShownDate)
 
     if (bannerShownInFuture || bannerExpired) {
       return
@@ -32,16 +31,16 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
 
     const lastClosed = localStorage.getItem("infoBannerLastClosed")
 
-    if (lastClosed === String(currentDayOfMonth)) {
+    if (lastClosed && isEqual(firstShownDate, new Date(lastClosed))) {
       return
     }
 
     setVisible(true)
-  }, [currentDayOfMonth, firstShownDate])
+  }, [firstShownDate])
 
   const handleClose = () => {
     setVisible(false)
-    localStorage.setItem("infoBannerLastClosed", String(currentDayOfMonth))
+    localStorage.setItem("infoBannerLastClosed", new Date().toISOString())
   }
 
   if (!mounted || !visible) {

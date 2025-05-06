@@ -1,5 +1,6 @@
 import ButtonsGroup from "components/ButtonsGroup"
 import { useCsrfToken } from "context/CsrfTokenContext"
+import { useState } from "react"
 import Form from "../../../../components/Form"
 import { StyledLockedByButton } from "./LockedByButton.styles"
 import LockedImage from "./LockedImage"
@@ -11,13 +12,18 @@ interface UnlockConfirmationProps {
 
 const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) => {
   const { csrfToken } = useCsrfToken()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+  }
 
   return (
     <>
       <p>{"Click the button to unlock the case"}</p>
-      <Form method="post" action={unlockPath} csrfToken={csrfToken}>
+      <Form method="post" action={unlockPath} csrfToken={csrfToken} onSubmit={handleSubmit}>
         <ButtonsGroup noGap={true}>
-          <button className="govuk-button" data-module="govuk-button" id="unlock">
+          <button className="govuk-button" data-module="govuk-button" id="unlock" disabled={isSubmitting}>
             {"Unlock"}
           </button>
           <a

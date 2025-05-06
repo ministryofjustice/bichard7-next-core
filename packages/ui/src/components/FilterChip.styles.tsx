@@ -16,11 +16,16 @@ const ButtonAlt = styled.button`
   &:visited {
     color: white;
   }
-  &:after {
+  &::after {
     background-image: url(/bichard/moj_assets/images/icon-tag-remove-cross-white.svg);
   }
   &:link {
     color: white;
+  }
+  &:focus {
+    &::after {
+      background-image: url(/bichard/moj_assets/images/icon-tag-remove-cross.svg);
+    }
   }
 `
 

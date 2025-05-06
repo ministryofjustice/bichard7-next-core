@@ -35,8 +35,8 @@ class Postgres implements DataStoreGateway {
     return await fetchCase(this.postgres, caseId, this.generatedOrganisationUnitSql())
   }
 
-  async fetchCaseAges(): Promise<CaseAges> {
-    return await fetchCaseAges(this.postgres, this.generatedOrganisationUnitSql())
+  async fetchCaseAges(user: User): Promise<CaseAges> {
+    return await fetchCaseAges(this.postgres, this.generatedOrganisationUnitSql(), user.excluded_triggers)
   }
 
   async fetchCases(
