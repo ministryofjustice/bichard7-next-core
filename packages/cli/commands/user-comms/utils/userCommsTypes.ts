@@ -15,16 +15,16 @@ export type User = {
 }[]
 
 export const templateTypes: {
-  PNCMAINTENANCE: Template
-  EXTENDEDPNCMAINTENANCE: Template
+  PNC_MAINTENANCE: Template
+  EXTENDED_PNC_MAINTENANCE: Template
   OUTAGE: Template
-  OUTAGERESOLVED: Template
+  OUTAGE_RESOLVED: Template
 } = {
-  PNCMAINTENANCE: {
+  PNC_MAINTENANCE: {
     templateFile: "pnc-maintenance.txt",
     templateTitle: "Scheduled PNC Maintenance windows"
   },
-  EXTENDEDPNCMAINTENANCE: {
+  EXTENDED_PNC_MAINTENANCE: {
     templateFile: "pnc-maintenance-extended.txt",
     templateTitle: "Unexpected PNC maintenance extended"
   },
@@ -32,7 +32,7 @@ export const templateTypes: {
     templateFile: "outage.txt",
     templateTitle: ""
   },
-  OUTAGERESOLVED: {
+  OUTAGE_RESOLVED: {
     templateFile: "outage-resolved.txt",
     templateTitle: ""
   }

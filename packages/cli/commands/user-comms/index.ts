@@ -23,13 +23,16 @@ export function userComms(): Command {
   program.description("A way to send group communications to all users").action(async () => {
     const { aws }: Environment = env.PROD
 
-    const { DBClusters: dbClusters } = JSON.parse(
-      await awsVault.exec({ awsProfile: aws.profile, command: "aws rds describe-db-clusters" })
+    const readerEndpoints: string[] = JSON.parse(
+      await awsVault.exec({
+        awsProfile: aws.profile,
+        command: 'aws rds describe-db-clusters --query "DBClusters[*].ReaderEndpoint"'
+      })
     )
 
-    const dbHostname = dbClusters
-      .map((cluster) => cluster.ReaderEndpoint)
-      .filter((endpoint) => endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`))?.[0]
+    const dbHostname = readerEndpoints.filter((endpoint) =>
+      endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
+    )?.[0]
 
     const isConnectedToDb = await testDbConnection(dbHostname)
     if (!isConnectedToDb) {
@@ -45,10 +48,10 @@ export function userComms(): Command {
     const selectedTemplate = await selectTemplate()
 
     const templateMap: Record<string, Template> = {
-      "PNC maintenance": templateTypes.PNCMAINTENANCE,
-      "PNC maintenance extended": templateTypes.EXTENDEDPNCMAINTENANCE,
+      "PNC maintenance": templateTypes.PNC_MAINTENANCE,
+      "PNC maintenance extended": templateTypes.EXTENDED_PNC_MAINTENANCE,
       Outage: templateTypes.OUTAGE,
-      "Outage Resolved": templateTypes.OUTAGERESOLVED
+      "Outage Resolved": templateTypes.OUTAGE_RESOLVED
     }
 
     const templateData = templateMap[selectedTemplate]
