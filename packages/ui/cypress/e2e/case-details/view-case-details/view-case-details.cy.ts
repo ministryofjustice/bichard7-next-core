@@ -279,8 +279,8 @@ describe("View case details", () => {
     cy.contains("dt", "PNC disposal type").siblings().contains("3078")
     cy.contains("dt", "Type of result").siblings().contains("Judgement with final result")
     cy.contains("dt", "PNC adjudication exists").siblings().contains("N")
-    cy.contains(".qualifier-code h2", "Qualifier")
-    cy.contains(".qualifier-code dt", "Code").siblings().contains("A")
+    cy.contains(".qualifier h2", "Qualifier")
+    cy.contains(".qualifier dt", "Code").siblings().contains("A")
 
     // Checking the second offence details
     cy.contains("a", "Back to all offences").click()

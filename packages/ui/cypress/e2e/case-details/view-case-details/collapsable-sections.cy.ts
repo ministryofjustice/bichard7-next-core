@@ -149,7 +149,7 @@ describe("Collapsable-sections", () => {
       cy.contains(".hearing-result-3 dt", "PNC adjudication exists").should("exist")
 
       // Collapse First Hearing-results details
-      cy.get('[data-testid="hearing-result-title-1"]').click()
+      cy.get('[data-testid="hearing-result-1"]').click()
 
       cy.contains(".hearing-result-1 dt", "CJS Code").should("not.exist")
       cy.contains(".hearing-result-1 dt", "PNC disposal type").should("not.exist")
@@ -161,7 +161,7 @@ describe("Collapsable-sections", () => {
       cy.contains(".hearing-result-1 dt", "PNC adjudication exists").should("not.exist")
 
       // Collapse Third Hearing-results details
-      cy.get('[data-testid="hearing-result-title-3"]').click()
+      cy.get('[data-testid="hearing-result-3"]').click()
 
       cy.contains(".hearing-result-3 dt", "CJS Code").should("not.exist")
       cy.contains(".hearing-result-3 dt", "PNC disposal type").should("not.exist")
@@ -195,8 +195,8 @@ describe("Collapsable-sections", () => {
       cy.contains(".hearing-result-3 dt", "PNC adjudication exists").should("exist")
 
       // Collapse first and third Hearing-results details
-      cy.get('[data-testid="hearing-result-title-1"]').click()
-      cy.get('[data-testid="hearing-result-title-3"]').click()
+      cy.get('[data-testid="hearing-result-1"]').click()
+      cy.get('[data-testid="hearing-result-3"]').click()
 
       cy.get("button").contains("Next offence").click()
       cy.get("button").contains("Previous offence").click()

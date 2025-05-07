@@ -49,7 +49,7 @@ describe("View Exception Handler Prompts", () => {
 
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains("Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003").click()
-      cy.get(".qualifier-code").contains("A")
+      cy.get(".qualifier").contains("A")
     })
 
     it("Should display an error prompt when a HO100309 is raised", () => {
@@ -58,7 +58,7 @@ describe("View Exception Handler Prompts", () => {
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains("Aid and abet theft").click()
 
-      cy.get(".qualifier-code").contains("XX")
+      cy.get(".qualifier").contains("XX")
       cy.get(".error-prompt").contains(ErrorMessages.QualifierCode)
 
       cy.get("button").contains("Next offence").click()
@@ -74,8 +74,8 @@ describe("View Exception Handler Prompts", () => {
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains("Aid and abet theft").click()
 
-      cy.get(".qualifier-code").contains("XX")
-      cy.get(".qualifier-code .error-prompt").contains(ErrorMessages.QualifierCode)
+      cy.get(".qualifier").contains("XX")
+      cy.get(".qualifier .error-prompt").contains(ErrorMessages.QualifierCode)
       cy.get(".offence-details").contains("YY10XYZXX")
       cy.get(".offence-details .error-prompt").contains(ErrorMessages.HO100306ErrorPrompt)
 
@@ -87,7 +87,7 @@ describe("View Exception Handler Prompts", () => {
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains("Aid and abet theft").click()
 
-      cy.get(".qualifier-code .error-prompt").should("not.exist")
+      cy.get(".qualifier .error-prompt").should("not.exist")
       cy.get(".offence-details .error-prompt").should("not.exist")
     })
   })
@@ -149,22 +149,22 @@ describe("View Exception Handler Prompts", () => {
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
 
       cy.get(".govuk-link").contains("National Offence with Offence Code not found exception").click()
-      cy.get(".qualifier-code .error-prompt").should("not.exist")
+      cy.get(".qualifier .error-prompt").should("not.exist")
       cy.get(".offence-details .error-prompt").should("not.exist")
       cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
       cy.get(".govuk-link").contains("National Offence with Offence Code not recognised exception").click()
-      cy.get(".qualifier-code .error-prompt").should("not.exist")
+      cy.get(".qualifier .error-prompt").should("not.exist")
       cy.get(".offence-details .error-prompt").should("not.exist")
       cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
       cy.get(".govuk-link").contains("Local Offence with Offence Code not found exception").click()
-      cy.get(".qualifier-code .error-prompt").should("not.exist")
+      cy.get(".qualifier .error-prompt").should("not.exist")
       cy.get(".offence-details .error-prompt").should("not.exist")
       cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
       cy.get(".govuk-link").contains("Local Offence with Offence Code not recognised exception").click()
-      cy.get(".qualifier-code .error-prompt").should("not.exist")
+      cy.get(".qualifier .error-prompt").should("not.exist")
       cy.get(".offence-details .error-prompt").should("not.exist")
       cy.get("a.govuk-back-link").contains("Back to all offences").click()
     })

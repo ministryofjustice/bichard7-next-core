@@ -11,7 +11,6 @@ describe("initialOffencesVisibility", () => {
     }
 
     const initialOffencesVisibilityMap = initialOffencesVisibility(5)
-    console.log(initialOffencesVisibilityMap)
 
     expect(initialOffencesVisibilityMap).toEqual(expectedResult)
   })
