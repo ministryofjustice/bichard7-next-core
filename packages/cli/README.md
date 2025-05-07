@@ -87,6 +87,9 @@ The command we have for opening Conductor fetches credentials from AWS and logs 
 
 ## Sending user communications via GovNotify
 
+> [!NOTE]
+> You will need to have postgres installed locally to test the connection. Simply run `brew install postgresql` in your terminal
+
 Historically, sending out mass communications to all users has been very involved, with many steps required before we could actually communicate an issue to our users.
 Now, we can simply run:
 
