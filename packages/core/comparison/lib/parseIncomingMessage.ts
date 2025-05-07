@@ -1,28 +1,10 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { ParseIncomingMessageResult } from "../../tests/types/ParseIncomingMessageResult"
 
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
 import parseSpiResult from "../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../lib/parse/transformSpiToAho"
 import getMessageType from "../../phase1/lib/getMessageType"
-
-export type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult
-
-type HearingOutcomeResult = {
-  message: AnnotatedHearingOutcome
-  type: "AnnotatedHearingOutcome"
-}
-
-type PncUpdateDatasetResult = {
-  message: PncUpdateDataset
-  type: "PncUpdateDataset"
-}
-
-type SPIResultsResult = {
-  message: AnnotatedHearingOutcome
-  type: "SPIResults"
-}
 
 const parseIncomingMessage = (message: string): ParseIncomingMessageResult => {
   const messageType = getMessageType(message)
