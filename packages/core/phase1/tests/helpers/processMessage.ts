@@ -6,11 +6,11 @@ import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOut
 import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import type Phase1Result from "../../types/Phase1Result"
 
-import MockPncGateway from "../../../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../../../lib/auditLog/CoreAuditLogger"
 import extractExceptionsFromAho from "../../../lib/parse/parseAhoXml/extractExceptionsFromXml"
 import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
+import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import phase1Handler from "../../phase1"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
 import defaults from "../../tests/helpers/defaults"

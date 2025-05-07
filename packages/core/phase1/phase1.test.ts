@@ -4,10 +4,10 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import fs from "fs"
 import MockDate from "mockdate"
 
-import MockPncGateway from "../comparison/lib/MockPncGateway"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import parseSpiResult from "../lib/parse/parseSpiResult"
 import transformSpiToAho from "../lib/parse/transformSpiToAho"
+import MockPncGateway from "../tests/helpers/MockPncGateway"
 import phase1Handler from "./phase1"
 import generateMockPncQueryResult from "./tests/helpers/generateMockPncQueryResult"
 

@@ -2,9 +2,9 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 
 import type PncUpdateRequest from "../types/PncUpdateRequest"
 
-import MockPncGateway from "../../comparison/lib/MockPncGateway"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import { PncApiError } from "../../lib/pnc/PncGateway"
+import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
 import updatePnc from "./updatePnc"
 

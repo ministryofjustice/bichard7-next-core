@@ -1,8 +1,8 @@
 import type { Operation } from "../../types/PncUpdateDataset"
 import type PncUpdateRequestError from "../types/PncUpdateRequestError"
 
-import MockPncGateway from "../../comparison/lib/MockPncGateway"
 import { PncApiError } from "../../lib/pnc/PncGateway"
+import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import { PncOperation } from "../../types/PncOperation"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
 import performOperations from "./performOperations"
