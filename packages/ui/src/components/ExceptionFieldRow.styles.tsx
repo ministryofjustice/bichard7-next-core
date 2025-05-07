@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 const StyledExceptionFieldRow = styled.div`
-  font-size: 16px;
+  font-size: 1rem;
 `
 
 const Label = styled.dt`

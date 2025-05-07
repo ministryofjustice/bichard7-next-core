@@ -12,7 +12,7 @@ const AccordionToggle = styled.div`
   color: ${blue};
 
   .chevron {
-    margin-right: 5px;
+    margin-right: 0.33rem;
   }
 `
 
