@@ -1,26 +1,15 @@
-import { RDS } from "aws-sdk"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { DataSource } from "typeorm"
 import baseConfig from "@moj-bichard7/common/db/baseConfig"
 import { currentUsersQuery } from "./currentUsersQuery"
 import fs from "fs/promises"
 
-const WORKSPACE = process.env.WORKSPACE ?? "production"
 const dbPassword = process.env.DB_PASSWORD
 const dbUser = process.env.DB_USER
+const dbHost = process.env.DB_HOST
 let postgres: DataSource
 
 async function setup() {
-  const rds = new RDS({ region: "eu-west-2" })
-  const dbInstances = await rds.describeDBClusters().promise()
-  if (isError(dbInstances)) {
-    throw Error("Couldn't get Postgres connection details (describeDBInstances)")
-  }
-
-  const dbHost = dbInstances.DBClusters?.map((clusters) => clusters.ReaderEndpoint).filter((endpoint) =>
-    endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
-  )?.[0]
-  process.env.DB_USER = process.env.DB_PASSWORD = process.env.DB_SSL = "true"
   postgres = await new DataSource({
     ...baseConfig,
     host: dbHost || "",

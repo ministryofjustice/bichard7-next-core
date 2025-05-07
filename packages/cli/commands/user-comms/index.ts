@@ -22,7 +22,6 @@ export function userComms(): Command {
 
   program.description("A way to send group communications to all users").action(async () => {
     const { aws }: Environment = env.PROD
-
     const readerEndpoints: string[] = JSON.parse(
       await awsVault.exec({
         awsProfile: aws.profile,
@@ -33,7 +32,6 @@ export function userComms(): Command {
     const dbHostname = readerEndpoints.filter((endpoint) =>
       endpoint?.startsWith(`cjse-${WORKSPACE}-bichard-7-aurora-cluster.cluster-ro-`)
     )?.[0]
-
     const isConnectedToDb = await testDbConnection(dbHostname)
     if (!isConnectedToDb) {
       console.error(
@@ -82,7 +80,7 @@ export function userComms(): Command {
         return
     }
 
-    const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateData)
+    const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateData, dbHostname)
 
     const updatedUsers = parsedUsers.map((user) => ({
       ...user,
