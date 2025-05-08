@@ -12,8 +12,8 @@ import type ErrorListRecord from "../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"
 import type { PncException } from "../types/Exception"
 import type Phase3Result from "./types/Phase3Result"
+import type PncUpdateRequest from "./types/PncUpdateRequest"
 
-import { normalisePncOperations } from "../comparison/lib/comparePhase3"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
@@ -41,6 +41,24 @@ const normaliseXml = (xml?: string): string =>
     ?.replace(/ Error="HO200200"/g, "")
     .replace(/ hasError="false"/g, "")
     .replace(' standalone="yes"', "") ?? ""
+
+const normalisePncOperations = (operations: PncUpdateRequest[]) => {
+  for (const operation of operations) {
+    if (operation.request) {
+      for (const value of Object.values(operation.request)) {
+        if (Array.isArray(value)) {
+          for (const item of value) {
+            for (const [subfield, subvalue] of Object.entries(item)) {
+              if (!subvalue) {
+                delete (item as unknown as Record<string, unknown>)[subfield]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 const checkDatabaseMatches = async (expected: any): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
