@@ -192,34 +192,15 @@ export const OffenceDetails = ({
         })}
       </div>
       {qualifierCode && (
-        <>
-          <Card heading={"Qualifier"} isContentVisible={true}>
-            {qualifierErrorPrompt ? (
-              <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
-                <ErrorPromptMessage message={qualifierErrorPrompt} />
-              </ExceptionFieldRow>
-            ) : (
-              <InfoRow label={"Code"} value={qualifierCode} />
-            )}
-          </Card>
-
-          {/* <div className="govuk-summary-card qualifier-code">
-            <HeaderWrapper className="govuk-summary-card__title-wrapper">
-              <h2 className="govuk-summary-card__title">{"Qualifier"}</h2>
-            </HeaderWrapper>
-            <div className="govuk-summary-card__content">
-              <dl className="govuk-summary-list">
-                {qualifierErrorPrompt ? (
-                  <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
-                    <ErrorPromptMessage message={qualifierErrorPrompt} />
-                  </ExceptionFieldRow>
-                ) : (
-                  <InfoRow label={"Code"} value={qualifierCode} />
-                )}
-              </dl>
-            </div>
-          </div> */}
-        </>
+        <Card heading={"Qualifier"} isContentVisible={true}>
+          {qualifierErrorPrompt ? (
+            <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
+              <ErrorPromptMessage message={qualifierErrorPrompt} />
+            </ExceptionFieldRow>
+          ) : (
+            <InfoRow label={"Code"} value={qualifierCode} />
+          )}
+        </Card>
       )}
       <OffenceNavigation
         onBackToAllOffences={() => onBackToAllOffences()}
