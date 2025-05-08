@@ -9,7 +9,7 @@ import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
 import "jest-xml-matcher"
 
-import type { Phase2E2eComparison } from "../comparison/types/ComparisonFile"
+import type { Phase2E2eComparison } from "../tests/types/ComparisonFile"
 import type { ParseIncomingMessageResult } from "../tests/types/ParseIncomingMessageResult"
 import type ErrorListRecord from "../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"

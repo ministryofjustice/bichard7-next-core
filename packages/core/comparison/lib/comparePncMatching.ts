@@ -2,7 +2,7 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isMatch from "lodash.ismatch"
 
-import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
+import type { OldPhase1Comparison, Phase1Comparison } from "../../tests/types/ComparisonFile"
 import type PncComparisonResultDetail from "../types/PncComparisonResultDetail"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"

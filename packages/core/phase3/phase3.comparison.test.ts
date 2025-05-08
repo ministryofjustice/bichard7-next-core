@@ -6,7 +6,7 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import fs from "fs"
 import "jest-xml-matcher"
 
-import type { Phase3E2eComparison } from "../comparison/types/ComparisonFile"
+import type { Phase3E2eComparison } from "../tests/types/ComparisonFile"
 import type { ParseIncomingMessageResult } from "../tests/types/ParseIncomingMessageResult"
 import type ErrorListRecord from "../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"

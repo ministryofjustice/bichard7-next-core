@@ -2,10 +2,10 @@ import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import orderBy from "lodash.orderby"
 import postgres from "postgres"
 
-import type { DbRecords } from "../../comparison/types/ComparisonFile"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 import type { Trigger } from "../../types/Trigger"
+import type { DbRecords } from "../types/ComparisonFile"
 
 const dbConfig = createDbConfig()
 const sql = postgres(dbConfig)
