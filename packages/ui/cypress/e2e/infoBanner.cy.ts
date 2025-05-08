@@ -12,12 +12,21 @@ describe("infoBanner", () => {
     cy.loginAs("GeneralHandler")
   })
 
-  const visitWithBannerDate = (url: string, date: string) => {
+  const doNotWait = false
+  const wait = true
+
+  const visitWithBannerDate = (url: string, date: string, wait: boolean = false) => {
     cy.visit(url, {
       onBeforeLoad(window) {
         window.TEST_INFO_BANNER_FIRST_SHOWN = date
       }
     })
+
+    // We use "useEffect" on the client so we have to wait for the React lifecycle to run
+    if (wait) {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(50)
+    }
   }
 
   it("doesn't appear when first shown date is not set in config.ts", () => {
@@ -57,10 +66,7 @@ describe("infoBanner", () => {
   it("disappears after five days from the first shown date", () => {
     const fiveDaysAgo = new Date()
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
-    visitWithBannerDate("/bichard", new Date(fiveDaysAgo).toISOString())
-
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(300) // We use "useEffect" on the client so we have to wait for the React lifecycle to run
+    visitWithBannerDate("/bichard", new Date(fiveDaysAgo).toISOString(), wait)
 
     cy.get(".info-banner").should("not.exist")
   })
@@ -74,20 +80,30 @@ describe("infoBanner", () => {
     cy.get(".info-banner").should("not.exist")
 
     cy.reload()
-    visitWithBannerDate("/bichard", new Date().toISOString())
+    visitWithBannerDate("/bichard", new Date().toISOString(), wait)
     cy.get(".info-banner").should("not.exist")
   })
 
   it("disappears when closed on today and does reappear on next day", () => {
-    visitWithBannerDate("/bichard", new Date().toISOString())
+    const firstShownDateYesterday = subDays(new Date(), 1)
+
+    visitWithBannerDate("/bichard", firstShownDateYesterday.toISOString())
 
     cy.get(".info-banner").should("exist")
 
     cy.get(".info-banner__close").click()
     cy.get(".info-banner").should("not.exist")
 
-    cy.reload()
-    visitWithBannerDate("/bichard", subDays(new Date(), 1).toISOString())
+    visitWithBannerDate("/bichard", firstShownDateYesterday.toISOString(), wait)
+    cy.get(".info-banner").should("not.exist")
+
+    cy.visit("/bichard", {
+      onBeforeLoad(win) {
+        win.TEST_INFO_BANNER_FIRST_SHOWN = firstShownDateYesterday.toISOString()
+        win.localStorage.setItem("infoBannerLastClosed", firstShownDateYesterday.toISOString())
+      }
+    })
+
     cy.get(".info-banner").should("exist")
   })
 
@@ -122,17 +138,17 @@ describe("infoBanner", () => {
       }
     ])
 
-    visitWithBannerDate("/bichard", new Date().toISOString())
+    visitWithBannerDate("/bichard", new Date().toISOString(), doNotWait)
 
     cy.get(".info-banner").should("exist")
     cy.get(".info-banner__close").click()
     cy.get(".info-banner").should("not.exist")
 
-    visitWithBannerDate("/bichard/court-cases/0", new Date().toISOString())
+    visitWithBannerDate("/bichard/court-cases/0", new Date().toISOString(), wait)
     cy.get(".info-banner").should("not.exist")
 
     cy.get("a").contains("Mark as manually resolved").click()
-    visitWithBannerDate("/bichard/court-cases/0/resolve", new Date().toISOString())
+    visitWithBannerDate("/bichard/court-cases/0/resolve", new Date().toISOString(), wait)
     cy.get(".info-banner").should("not.exist")
   })
 
@@ -146,19 +162,19 @@ describe("infoBanner", () => {
       }
     ])
 
-    visitWithBannerDate("/bichard", new Date().toISOString())
+    visitWithBannerDate("/bichard", new Date().toISOString(), doNotWait)
     cy.get(".info-banner").should("exist")
 
-    visitWithBannerDate("/bichard/court-cases/0", new Date().toISOString())
+    visitWithBannerDate("/bichard/court-cases/0", new Date().toISOString(), wait)
     cy.get(".info-banner__close").click()
     cy.get(".info-banner").should("not.exist")
 
     cy.get("a").contains("Mark as manually resolved").click()
-    visitWithBannerDate("/bichard/court-cases/0/resolve", new Date().toISOString())
+    visitWithBannerDate("/bichard/court-cases/0/resolve", new Date().toISOString(), wait)
     cy.get(".info-banner").should("not.exist")
 
     cy.get("a").contains("Case list").click()
-    visitWithBannerDate("/bichard", new Date().toISOString())
+    visitWithBannerDate("/bichard", new Date().toISOString(), wait)
     cy.get(".info-banner").should("not.exist")
   })
 
@@ -166,7 +182,7 @@ describe("infoBanner", () => {
     const futureFirstShownDate = new Date()
     futureFirstShownDate.setDate(futureFirstShownDate.getDate() + 5)
 
-    visitWithBannerDate("/bichard", futureFirstShownDate.toISOString())
+    visitWithBannerDate("/bichard", futureFirstShownDate.toISOString(), wait)
 
     cy.get("h2")
     cy.get(".info-banner").should("not.exist")

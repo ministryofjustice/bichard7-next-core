@@ -1,4 +1,4 @@
-import { addDays, isAfter, isEqual, isFuture } from "date-fns"
+import { addDays, format, isAfter, isFuture } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
@@ -30,8 +30,9 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
     }
 
     const lastClosed = localStorage.getItem("infoBannerLastClosed")
+    const dateFormat = "yyyy-MM-dd"
 
-    if (lastClosed && isEqual(firstShownDate, new Date(lastClosed))) {
+    if (lastClosed && format(lastClosed, dateFormat) === format(new Date(), dateFormat)) {
       return
     }
 
