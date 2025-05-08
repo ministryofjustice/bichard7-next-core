@@ -50,9 +50,9 @@ describe("'next offence' and 'previous offence' buttons", () => {
     cy.get('button:contains("Next offence")').should("have.length", 2)
     cy.get("button").contains("Next offence").click()
     cy.get('button:contains("Next offence")').should("have.length", 2)
-    cy.get("h3").should("include.text", "Offence 2 of 3")
+    cy.get(`[data-testid="offence-details-2"]`).should("have.text", "Offence 2 of 3")
     cy.get("button").contains("Next offence").click()
-    cy.get("h3").should("include.text", "Offence 3 of 3")
+    cy.get(`[data-testid="offence-details-3"]`).should("have.text", "Offence 3 of 3")
     cy.get("button").should("not.contain.text", "Next offence")
   })
 
@@ -66,10 +66,10 @@ describe("'next offence' and 'previous offence' buttons", () => {
     cy.get("button").contains("Next offence").click()
     cy.get('button:contains("Previous offence")').should("have.length", 2)
     cy.get("button").contains("Previous offence").click()
-    cy.get("h3").should("include.text", "Offence 2 of 3")
+    cy.get(`[data-testid="offence-details-2"]`).should("have.text", "Offence 2 of 3")
     cy.get('button:contains("Previous offence")').should("have.length", 2)
     cy.get("button").contains("Previous offence").click()
-    cy.get("h3").should("include.text", "Offence 1 of 3")
+    cy.get(`[data-testid="offence-details-1"]`).should("have.text", "Offence 1 of 3")
     cy.get("button").should("not.contain.text", "Previous offence")
   })
 
@@ -81,7 +81,7 @@ describe("'next offence' and 'previous offence' buttons", () => {
     cy.get("button").should("not.contain.text", "Previous offence")
     cy.get("button").should("not.contain.text", "Next offence")
   })
-  
+
   it("Should show the top of the next page when the next button is clicked", () => {
     cy.task("insertMultipleDummyCourtCases", { numToInsert: 1, force: "01" })
     cy.visit("/bichard/court-cases/0")
@@ -89,15 +89,15 @@ describe("'next offence' and 'previous offence' buttons", () => {
     cy.get("tbody tr:first-child a.govuk-link").click()
     cy.get("button").contains("Next offence").click()
     cy.window().then((win) => {
-      
+
       win.scrollTo(0, 500);
     });
 
     cy.get("button").contains("Next offence").click()
-    
-    cy.window().its("scrollY").should("eq", 0);  
+
+    cy.window().its("scrollY").should("eq", 0);
   })
-  
+
   it("Should show the top of the previous page when the previous button is clicked", () => {
     cy.task("insertMultipleDummyCourtCases", { numToInsert: 1, force: "01" })
     cy.visit("/bichard/court-cases/0")
@@ -110,8 +110,8 @@ describe("'next offence' and 'previous offence' buttons", () => {
     });
 
     cy.get("button").contains("Previous offence").click()
-    
-    cy.window().its("scrollY").should("eq", 0);  
+
+    cy.window().its("scrollY").should("eq", 0);
   })
 })
 
@@ -129,7 +129,7 @@ describe("offences tab", () => {
     clickTab("Offences")
 
     cy.get("tbody tr:first-child a.govuk-link").click()
-    cy.get(".result-text .row-value")
+    cy.get(".result-text .govuk-summary-list__value")
       .eq(3)
       .should(
         "have.text",

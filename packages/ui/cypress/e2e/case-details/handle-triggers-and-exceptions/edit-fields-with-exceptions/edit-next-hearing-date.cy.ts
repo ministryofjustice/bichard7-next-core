@@ -28,7 +28,7 @@ describe("NextHearingDate", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Burglary other than dwelling with intent to steal").click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "01/02/2008")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "01/02/2008")
     cy.get(".hearing-result-1 #next-hearing-date").should("not.exist")
   })
 
@@ -58,14 +58,14 @@ describe("NextHearingDate", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
     cy.get(".hearing-result-1 #next-hearing-date").should("not.exist")
 
     cy.visit(`/bichard/court-cases/${resolvedCaseId}`)
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
     cy.get(".hearing-result-1 #next-hearing-date").should("not.exist")
   })
 
@@ -74,7 +74,7 @@ describe("NextHearingDate", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with no exceptions").click()
-    cy.contains("th", "Next hearing date").should("not.exist")
+    cy.contains("dt", "Next hearing date").should("not.exist")
   })
 
   it("Should be able to edit field if HO100102 is raised", () => {
@@ -92,7 +92,7 @@ describe("NextHearingDate", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
     cy.get(".hearing-result-1 #next-hearing-date").type("2024-01-01")
 
     submitAndConfirmExceptions()
@@ -115,10 +115,10 @@ describe("NextHearingDate", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "1/01/2024")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "1/01/2024")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
   })
 
   it("Should be able to edit field if HO100323 is raised", () => {
@@ -137,7 +137,7 @@ describe("NextHearingDate", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     cy.get(".hearing-result-1 #next-hearing-date").type("2023-12-24")
     submitAndConfirmExceptions()
 
@@ -161,10 +161,10 @@ describe("NextHearingDate", () => {
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
 
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "24/12/2023")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "24/12/2023")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
   })
 
   it("Should be able to edit and submit multiple next hearing dates", () => {
@@ -199,18 +199,18 @@ describe("NextHearingDate", () => {
     })
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "1/01/2024")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "1/01/2024")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "24/12/2023")
-    cy.contains("th", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Initial Value")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "24/12/2023")
+    cy.contains("dt", "Next hearing date").siblings().get(".moj-badge").contains("Correction")
   })
 
   it("Should be able to edit multiple hearing results with incorrect next hearing date", () => {
@@ -218,11 +218,11 @@ describe("NextHearingDate", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
-    cy.get(".hearing-result-1").contains("th", "Next hearing date").siblings().should("include.text", "false")
+    cy.get(".hearing-result-1").contains("dt", "Next hearing date").siblings().should("include.text", "false")
     cy.get(".hearing-result-1 #next-hearing-date").type("2024-01-01")
     cy.get(".hearing-result-1 .next-hearing-date-row .success-message").contains("Input saved").should("exist")
 
-    cy.get(".hearing-result-2").contains("th", "Next hearing date").siblings().should("include.text", "203-12-aa")
+    cy.get(".hearing-result-2").contains("dt", "Next hearing date").siblings().should("include.text", "203-12-aa")
     cy.get(".hearing-result-2 #next-hearing-date").type("2025-12-12")
     cy.get(".hearing-result-2 .next-hearing-date-row .success-message").contains("Input saved").should("exist")
 
@@ -263,7 +263,7 @@ describe("NextHearingDate", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     cy.get(".hearing-result-1 .next-hearing-date-row #next-hearing-date").type("2023-12-24")
     cy.get(".hearing-result-1 .next-hearing-date-row .error-message")
       .contains("Autosave has failed, please refresh")
@@ -287,7 +287,7 @@ describe("NextHearingDate", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     cy.get(".hearing-result-1 #next-hearing-date").type("2023-12-24")
     cy.get(".hearing-result-1 .next-hearing-date-row .success-message").contains("Input saved").should("exist")
 
@@ -320,7 +320,7 @@ describe("NextHearingDate", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     cy.get("#next-hearing-date").type(newDate)
 
     cy.wait("@save")
@@ -406,7 +406,7 @@ describe("NextHearingDate", () => {
       cy.get(".govuk-link")
         .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
         .click()
-      cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+      cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
       cy.get("#next-hearing-date").type(newDate)
 
       cy.wait("@save")

@@ -5,20 +5,23 @@ import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
+import { useState } from "react"
 import ErrorMessages from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
+import { initialOffencesVisibility, OffenceVisibilityMap } from "utils/offenceDetails/initialOffencesVisibility"
+import { initialResultsVisibility, ResultVisibilityMap } from "utils/offenceDetails/initialResultsVisibility"
 import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
-import { TableRow } from "../../TableRow"
+import { InfoRow } from "../../InfoRow"
+import Card from "./Card"
 import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"
 import { OffenceDetailsContainer } from "./OffenceDetails.styles"
 import { OffenceNavigation } from "./OffenceNavigation"
-import ResultQualifier from "./ResultQualifier"
 import { StartDate } from "./StartDate"
 
 interface OffenceDetailsProps {
@@ -40,8 +43,34 @@ export const OffenceDetails = ({
   selectedOffenceSequenceNumber,
   exceptions
 }: OffenceDetailsProps) => {
+  const offenceIndex = selectedOffenceSequenceNumber - 1
   const { courtCase } = useCourtCase()
   const currentUser = useCurrentUser()
+  const [offencesVisibility, setOffencesVisibility] = useState<OffenceVisibilityMap>(
+    initialOffencesVisibility(offencesCount)
+  )
+  const [resultsVisibility, setResultsVisibility] = useState<ResultVisibilityMap>(
+    initialResultsVisibility(offencesCount, courtCase)
+  )
+
+  const toggleOffenceVisibility = () => {
+    setOffencesVisibility((prev) => ({
+      ...prev,
+      [selectedOffenceSequenceNumber]: !prev[selectedOffenceSequenceNumber]
+    }))
+  }
+
+  const toggleResultVisibility = (offenceIndex: number, resultIndex: number) => {
+    setResultsVisibility((prev) => ({
+      ...prev,
+      [offenceIndex]: {
+        ...prev[offenceIndex],
+        [resultIndex]: !prev[offenceIndex][resultIndex]
+      }
+    }))
+  }
+
+  const isOffenceVisible = offencesVisibility[selectedOffenceSequenceNumber]
 
   const offenceCode = getOffenceCode(offence) || ""
   const qualifierCode =
@@ -96,62 +125,54 @@ export const OffenceDetails = ({
         onNextClick={() => onNextClick()}
         offencesCount={offencesCount}
       />
-      <h3
-        className="govuk-heading-m"
-        aria-live="polite"
-        aria-label={`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
-      >{`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}</h3>
-      <div className="offences-table">
-        <table className="govuk-table">
-          <tbody className="govuk-table__body">
-            {offenceCodeErrorPrompt ? (
-              <ExceptionFieldTableRow
-                badgeText={ExceptionBadgeType.SystemError}
-                value={offenceCode}
-                label={"Offence code"}
-              >
-                <ErrorPromptMessage message={offenceCodeErrorPrompt} />
-              </ExceptionFieldTableRow>
-            ) : (
-              <TableRow label="Offence code" value={offenceCode} />
-            )}
-            <TableRow label="Title" value={offence.OffenceTitle} />
-            <TableRow label="Category" value={offenceCategoryWithDescription} />
-            <TableRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
-            <TableRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
-            <TableRow label="Start date" value={<StartDate offence={offence} />} />
-            <TableRow label="Location" value={offence.LocationOfOffence} />
-            <TableRow label="Wording" value={offence.ActualOffenceWording} />
-            <TableRow label="Record on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
-            <TableRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
-            <TableRow label="Home Office classification" value={offence.HomeOfficeClassification} />
-            <TableRow
-              label="Conviction date"
-              value={offence.ConvictionDate && formatDisplayedDate(offence.ConvictionDate)}
-            />
 
-            <OffenceMatching
-              offenceIndex={selectedOffenceSequenceNumber - 1}
-              offence={offence}
-              isCaseUnresolved={isCaseUnresolved}
-              exceptions={exceptions}
-              isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
-            ></OffenceMatching>
+      <Card
+        heading={`Offence ${selectedOffenceSequenceNumber} of ${offencesCount}`}
+        isContentVisible={isOffenceVisible}
+        contentInstanceKey={`offence-details-${selectedOffenceSequenceNumber}`}
+        toggleContentVisibility={() => toggleOffenceVisibility()}
+      >
+        {offenceCodeErrorPrompt ? (
+          <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={offenceCode} label={"Offence code"}>
+            <ErrorPromptMessage message={offenceCodeErrorPrompt} />
+          </ExceptionFieldRow>
+        ) : (
+          <InfoRow label="Offence code" value={offenceCode} />
+        )}
+        <InfoRow label="Offence title" value={offence.OffenceTitle} />
+        <InfoRow label="Offence start date" value={<StartDate offence={offence} />} />
+        <InfoRow label="Arrest date" value={offence.ArrestDate && formatDisplayedDate(offence.ArrestDate)} />
+        <InfoRow label="Charge date" value={offence.ChargeDate && formatDisplayedDate(offence.ChargeDate)} />
+        <InfoRow
+          label="Conviction date"
+          value={offence.ConvictionDate && formatDisplayedDate(offence.ConvictionDate)}
+        />
+        <InfoRow label="Offence description" value={offence.ActualOffenceWording} />
+        <InfoRow label="Offence location" value={offence.LocationOfOffence} />
+        <OffenceMatching
+          offenceIndex={selectedOffenceSequenceNumber - 1}
+          offence={offence}
+          isCaseUnresolved={isCaseUnresolved}
+          exceptions={exceptions}
+          isCaseLockedToCurrentUser={isCaseLockedToCurrentUser}
+        ></OffenceMatching>
+        <InfoRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
+        <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
+          <InfoRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
+        </ConditionalRender>
+        <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
+          <InfoRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
+        </ConditionalRender>
+        <InfoRow label="Offence category" value={offenceCategoryWithDescription} />
+        <InfoRow label="Recordable on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />
+        <InfoRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
+        <InfoRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
+        <InfoRow label="Home Office classification" value={offence.HomeOfficeClassification} />
+      </Card>
 
-            <TableRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
-            <TableRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
-            <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
-              <TableRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
-            </ConditionalRender>
-            <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
-              <TableRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
-            </ConditionalRender>
-          </tbody>
-        </table>
-      </div>
-
-      <div className="offence-results-table">
+      <div className="offence-results">
         {offence.Result.map((result, index) => {
+          const isVisible = resultsVisibility[offenceIndex]?.[index] ?? true
           const resultKey = `hearing-result-${index + 1}`
           return (
             <div className={resultKey} key={resultKey}>
@@ -163,28 +184,23 @@ export const OffenceDetails = ({
                 selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
                 resultIndex={index}
                 errorStatus={courtCase.errorStatus}
+                isContentVisible={isVisible}
+                onToggleContent={() => toggleResultVisibility(offenceIndex, index)}
               />
-
-              <ResultQualifier result={result} />
             </div>
           )
         })}
       </div>
       {qualifierCode && (
-        <div className="qualifier-code-table">
-          <h4 className="govuk-heading-m">{"Qualifier"}</h4>
-          <table className="govuk-table">
-            <tbody className="govuk-table__body">
-              {qualifierErrorPrompt ? (
-                <ExceptionFieldTableRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
-                  <ErrorPromptMessage message={qualifierErrorPrompt} />
-                </ExceptionFieldTableRow>
-              ) : (
-                <TableRow label={"Code"} value={qualifierCode} />
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Card heading={"Qualifier"} isContentVisible={true}>
+          {qualifierErrorPrompt ? (
+            <ExceptionFieldRow badgeText={ExceptionBadgeType.SystemError} value={qualifierCode} label={"Code"}>
+              <ErrorPromptMessage message={qualifierErrorPrompt} />
+            </ExceptionFieldRow>
+          ) : (
+            <InfoRow label={"Code"} value={qualifierCode} />
+          )}
+        </Card>
       )}
       <OffenceNavigation
         onBackToAllOffences={() => onBackToAllOffences()}

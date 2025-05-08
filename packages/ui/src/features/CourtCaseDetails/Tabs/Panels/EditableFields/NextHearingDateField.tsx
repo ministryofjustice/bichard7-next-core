@@ -1,6 +1,6 @@
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import AutoSave from "components/EditableFields/AutoSave"
-import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
+import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useState } from "react"
@@ -35,7 +35,7 @@ export const NextHearingDateField = ({
   const isEditable = isCaseEditable && hasNextHearingDateExceptions(exceptions)
 
   return (
-    <EditableFieldTableRow
+    <EditableFieldRow
       className={"next-hearing-date-row"}
       label="Next hearing date"
       hasExceptions={hasNextHearingDateExceptions(exceptions)}
@@ -75,6 +75,6 @@ export const NextHearingDateField = ({
           <ErrorMessage message="Select valid Next hearing date" />
         )}
       </AutoSave>
-    </EditableFieldTableRow>
+    </EditableFieldRow>
   )
 }
