@@ -12,11 +12,6 @@ export default class CoreAuditLogger implements AuditLogger {
 
   constructor(private source: AuditLogEventSource) {}
 
-  log = (code: EventCode, category: EventCategory, attributes: Record<string, unknown> = {}) => {
-    const event = getAuditLogEvent(code, category, this.source, attributes)
-    this.events.push(event)
-  }
-
   debug = (code: EventCode, attributes: Record<string, unknown> = {}) => {
     this.log(code, EventCategory.debug, attributes)
   }
@@ -29,6 +24,11 @@ export default class CoreAuditLogger implements AuditLogger {
 
   info = (code: EventCode, attributes: Record<string, unknown> = {}) => {
     this.log(code, EventCategory.information, attributes)
+  }
+
+  log = (code: EventCode, category: EventCategory, attributes: Record<string, unknown> = {}) => {
+    const event = getAuditLogEvent(code, category, this.source, attributes)
+    this.events.push(event)
   }
 
   warn = (code: EventCode, attributes: Record<string, unknown> = {}) => {
