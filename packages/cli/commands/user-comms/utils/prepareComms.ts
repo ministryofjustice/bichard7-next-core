@@ -18,7 +18,7 @@ const getDbPassword =
 const getDbUser =
   "aws ssm get-parameter --name \"/cjse-production-bichard-7/rds/db/user\" --with-decryption --output json | jq -r '.Parameter.Value'"
 
-export const prepareComms = async (content: Content, templateData: Template) => {
+export const prepareComms = async (content: Content, templateData: Template, dbHost: string) => {
   const template = templateData.templateFile
   const templatePath = path.join(__dirname, "../templates", template)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
@@ -45,7 +45,7 @@ export const prepareComms = async (content: Content, templateData: Template) => 
 
   await awsVault.exec({
     awsProfile: aws.profile,
-    command: `sh -c 'DB_USER="${dbUser}" DB_PASSWORD="${dbPassword}" npx ts-node -T ./commands/user-comms/utils/getUsersDetails.ts'`
+    command: `sh -c 'DB_HOST="${dbHost}" DB_USER="${dbUser}" DB_PASSWORD="${dbPassword}" npx ts-node -T ./commands/user-comms/utils/getUsersFromDb.ts'`
   })
 
   const users = fs.readFileSync("/tmp/users.json", "utf-8")
