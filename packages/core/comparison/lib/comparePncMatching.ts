@@ -9,9 +9,9 @@ import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import CorePhase1 from "../../phase1/phase1"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
+import parseIncomingMessage from "../../tests/helpers/parseIncomingMessage"
 import generateMockPncQueryResultFromAho from "./generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "./getPncQueryTimeFromAho"
-import parseIncomingMessage from "./parseIncomingMessage"
 import summariseMatching from "./summariseMatching"
 
 type CompareOptions = {

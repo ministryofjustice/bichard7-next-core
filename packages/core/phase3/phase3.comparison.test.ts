@@ -14,7 +14,6 @@ import type { PncException } from "../types/Exception"
 import type Phase3Result from "./types/Phase3Result"
 
 import { normalisePncOperations } from "../comparison/lib/comparePhase3"
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import processTestFile from "../comparison/lib/processTestFile"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
@@ -29,6 +28,7 @@ import {
   sql
 } from "../tests/helpers/e2eComparisonTestsHelpers"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
+import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
 import { isPncUpdateDataset } from "../types/PncUpdateDataset"
 import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "./lib/updatePnc"

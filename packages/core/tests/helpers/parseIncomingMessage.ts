@@ -1,4 +1,4 @@
-import type { ParseIncomingMessageResult } from "../../tests/types/ParseIncomingMessageResult"
+import type { ParseIncomingMessageResult } from "../types/ParseIncomingMessageResult"
 
 import { parseAhoXml } from "../../lib/parse/parseAhoXml"
 import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"

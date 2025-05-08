@@ -15,7 +15,6 @@ import type ErrorListRecord from "../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"
 import type Phase2Result from "./types/Phase2Result"
 
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import processTestFile from "../comparison/lib/processTestFile"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
@@ -28,6 +27,7 @@ import {
   sortTriggers,
   sql
 } from "../tests/helpers/e2eComparisonTestsHelpers"
+import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 
