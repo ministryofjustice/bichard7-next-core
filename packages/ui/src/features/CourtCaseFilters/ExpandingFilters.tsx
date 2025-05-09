@@ -1,6 +1,6 @@
 import ConditionalRender from "components/ConditionalRender"
 import { useState } from "react"
-import { Container, IconButton, Legend, LegendContainer } from "./ExpandingFilters.styles"
+import { Container, IconContainer, Legend, LegendContainer } from "./ExpandingFilters.styles"
 
 const UpArrow: React.FC = () => (
   <svg width={18} height={10} viewBox="0 0 18 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,25 +22,29 @@ interface Props {
 
 const ExpandingFilters: React.FC<Props> = ({ filterName, classNames, children }: Props) => {
   const [isVisible, setVisible] = useState(true)
+  const id = filterName.toLowerCase().replace(/\s+/g, "-") + "-panel"
 
   return (
     <fieldset className="govuk-fieldset">
       <Container
-        className={"container"}
-        onClick={() => {
-          setVisible(!isVisible)
-        }}
+        as={"button"}
+        type={"button"}
+        className={classNames}
+        aria-label={`${filterName} filter options`}
+        aria-expanded={isVisible}
+        aria-controls={id}
+        onClick={() => setVisible(!isVisible)}
       >
-        <IconButton type="button" className={`icon-button ${classNames}`} aria-label={`${filterName} filter options`}>
-          {isVisible ? <UpArrow /> : <DownArrow />}
-        </IconButton>
+        <IconContainer>{isVisible ? <UpArrow /> : <DownArrow />}</IconContainer>
         <LegendContainer className={"legend-container"}>
           <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
             <Legend>{filterName}</Legend>
           </legend>
         </LegendContainer>
       </Container>
-      <ConditionalRender isRendered={isVisible}>{children}</ConditionalRender>
+      <div id={id} aria-hidden={!isVisible}>
+        <ConditionalRender isRendered={isVisible}>{children}</ConditionalRender>
+      </div>
     </fieldset>
   )
 }

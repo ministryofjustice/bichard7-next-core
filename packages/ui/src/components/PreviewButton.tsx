@@ -25,9 +25,17 @@ interface PreviewButtonProps {
   previewLabel: string
   hideLabel?: string
   className?: string
+  ariaControls: string
 }
 
-const PreviewButton = ({ showPreview, onClick, previewLabel, hideLabel, className }: PreviewButtonProps) => {
+const PreviewButton = ({
+  showPreview,
+  onClick,
+  previewLabel,
+  hideLabel,
+  className,
+  ariaControls
+}: PreviewButtonProps) => {
   return (
     <StyledPreviewButton
       type="button"
@@ -35,6 +43,8 @@ const PreviewButton = ({ showPreview, onClick, previewLabel, hideLabel, classNam
       onClick={() => {
         onClick(!showPreview)
       }}
+      aria-expanded={!showPreview}
+      aria-controls={ariaControls}
     >
       {showPreview ? <Preview label={previewLabel} /> : <Hide label={hideLabel ?? "Hide"} />}
     </StyledPreviewButton>

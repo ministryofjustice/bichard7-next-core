@@ -9,15 +9,14 @@ const LegendContainer = styled.div`
   margin-top: 8px;
 `
 
-const IconButton = styled.button`
-  border: 3px solid transparent;
-  background-color: transparent;
-  &:active {
-    background-color: ${grey};
-  }
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1px 6px;
 `
 
 const Container = styled.div`
+  border: 3px solid transparent;
   margin-left: -10px;
   width: fit-content;
   padding-right: 10px;
@@ -32,4 +31,4 @@ const Container = styled.div`
   }
 `
 
-export { Container, IconButton, Legend, LegendContainer }
+export { Container, Legend, LegendContainer, IconContainer }

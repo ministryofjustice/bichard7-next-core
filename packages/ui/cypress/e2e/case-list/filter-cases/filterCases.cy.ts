@@ -41,7 +41,7 @@ describe("Filtering cases", () => {
 
   it("Should be accessible with conditional radio buttons opened", () => {
     visitBasePath()
-    cy.contains("Court date").parent().parent().parent().find("button").click()
+    cy.contains("Court date").click()
     cy.get("#case-age").should("not.exist")
     expandFilterSection(".filters-court-date", "#case-age")
 
@@ -94,7 +94,7 @@ describe("Filtering cases", () => {
     cy.get(`label[for="date-from"]`).should("be.visible")
     cy.get(`label[for="case-age-yesterday"]`).should("not.be.visible")
 
-    cy.contains("Court date").parent().parent().parent().find("button").click()
+    cy.contains("Court date").click()
     cy.get("#case-age").should("not.exist")
     expandFilterSection(".filters-court-date", "#case-age")
 
