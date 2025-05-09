@@ -88,6 +88,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
             showPreview={!showHelpBox}
             previewLabel="More information"
             onClick={() => setShowHelpBox(!showHelpBox)}
+            ariaControls="trigger-preview"
           />
         </div>
       </div>
@@ -95,7 +96,7 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-full">
           <ConditionalRender isRendered={showHelpBox}>
-            <Preview className="triggers-help">
+            <Preview id={"rigger-preview"} className="triggers-help" aria-hidden={!showHelpBox}>
               <h3 className="govuk-heading-s">{"PNC screen to update"}</h3>
               <p className="govuk-body-s">{triggerDefinition?.pncScreenToUpdate ?? "Trigger not found"}</p>
               <h3 className="govuk-heading-s">{"CJS result code"}</h3>
