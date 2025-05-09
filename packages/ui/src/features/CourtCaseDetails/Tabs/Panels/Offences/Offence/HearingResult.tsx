@@ -1,6 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
+import { Card } from "components/Card"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
 import ExceptionFieldRow from "components/ExceptionFieldRow"
@@ -20,7 +21,6 @@ import {
 import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
 import { InfoRow } from "../../InfoRow"
-import Card from "./Card"
 import { StyledInfoRow } from "./HearingResult.styles"
 import ResultQualifier from "./ResultQualifier"
 
