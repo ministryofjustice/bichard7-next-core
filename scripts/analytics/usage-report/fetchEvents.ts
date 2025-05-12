@@ -2,12 +2,18 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { DocumentClient } from "aws-sdk/clients/dynamodb"
 import { FullAuditLogEvent, getDateString, isNewUIEvent, log, reportEventCodes } from "./common"
 
+const addOneDay = (date: Date): Date => {
+  const newDate = new Date(date)
+  newDate.setDate(newDate.getDate() + 1)
+  return newDate
+}
+
 const generateDates = (start: Date, end: Date): Date[] => {
   const dates: Date[] = []
   let currentDate = new Date(start)
   while (currentDate < end) {
     dates.push(new Date(currentDate))
-    currentDate.setDate(currentDate.getDate() + 1)
+    addOneDay(currentDate)
   }
 
   return dates
@@ -96,8 +102,7 @@ const findEvents = async (
         break
       }
 
-      const endDate = new Date(date)
-      endDate.setDate(endDate.getDate() + 1)
+      const endDate = addOneDay(date)
       const events = await fetchEvents(dynamo, eventsTableName, date, endDate)
       if (isError(events)) {
         throw events
