@@ -19,15 +19,15 @@ import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import {
   clearDatabase,
   disconnectDb,
   insertRecords,
-  normaliseTriggers,
   sortTriggers,
   sql
-} from "../tests/helpers/e2eComparisonTestsHelpers"
+} from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import normaliseErrorListTriggers from "../tests/helpers/normaliseErrorListTriggers"
 import { isPncUpdateDataset } from "../types/PncUpdateDataset"
 import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "./lib/updatePnc"
@@ -92,7 +92,9 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   expect(errorList[0].pnc_update_enabled).toEqual(expectedError.pnc_update_enabled)
 
   expect(errorListTriggers).toHaveLength(expected.errorListTriggers.length)
-  expect(normaliseTriggers(errorListTriggers)).toStrictEqual(normaliseTriggers(expected.errorListTriggers))
+  expect(normaliseErrorListTriggers(errorListTriggers)).toStrictEqual(
+    normaliseErrorListTriggers(expected.errorListTriggers)
+  )
 }
 
 describe("phase3", () => {

@@ -18,15 +18,15 @@ import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import {
   clearDatabase,
   disconnectDb,
   insertRecords,
-  normaliseTriggers,
   sortTriggers,
   sql
-} from "../tests/helpers/e2eComparisonTestsHelpers"
+} from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import normaliseErrorListTriggers from "../tests/helpers/normaliseErrorListTriggers"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 
@@ -181,7 +181,9 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   }
 
   expect(errorListTriggers).toHaveLength(expected.errorListTriggers.length)
-  expect(normaliseTriggers(errorListTriggers)).toStrictEqual(normaliseTriggers(expected.errorListTriggers))
+  expect(normaliseErrorListTriggers(errorListTriggers)).toStrictEqual(
+    normaliseErrorListTriggers(expected.errorListTriggers)
+  )
 }
 
 describe("phase2", () => {
@@ -228,6 +230,7 @@ describe("phase2", () => {
       expect(actualExceptions).toStrictEqual(expectedExceptions)
     })
 
+    // eslint-disable-next-line jest/expect-expect
     it("should store the data correctly in the database", async () => {
       await insertRecords(comparison.db.before)
 

@@ -2,20 +2,14 @@ import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import orderBy from "lodash.orderby"
 import postgres from "postgres"
 
-import type { DbRecords } from "../../comparison/types/ComparisonFile"
-import type ErrorListRecord from "../../types/ErrorListRecord"
-import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
-import type { Trigger } from "../../types/Trigger"
+import type { DbRecords } from "../../../comparison/types/ComparisonFile"
+import type ErrorListRecord from "../../../types/ErrorListRecord"
+import type { Trigger } from "../../../types/Trigger"
 
 const dbConfig = createDbConfig()
 const sql = postgres(dbConfig)
 
 const sortTriggers = (triggers: Trigger[]) => orderBy(triggers, ["code", "identifier"])
-
-const normaliseTriggers = (triggers: ErrorListTriggerRecord[]): ErrorListTriggerRecord[] =>
-  orderBy(triggers, ["trigger_code", "trigger_item_identity"]).map(
-    ({ error_id, create_ts, trigger_id, ...t }) => t as ErrorListTriggerRecord
-  )
 
 const insertRecords = async (records: DbRecords): Promise<void> => {
   const errorList = records.errorList.map((record) => {
@@ -50,4 +44,4 @@ const disconnectDb = async () => {
   await sql.end({ timeout: 5 })
 }
 
-export { clearDatabase, disconnectDb, insertRecords, normaliseTriggers, sortTriggers, sql }
+export { clearDatabase, disconnectDb, insertRecords, sortTriggers, sql }

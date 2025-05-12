@@ -22,8 +22,8 @@ import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { extractExceptionsFromXml } from "../lib/parse/parseAhoXml"
 import serialiseToXml from "../lib/serialise/ahoXml/serialiseToXml"
+import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
-import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/e2eComparisonTestsHelpers"
 import phase1 from "./phase1"
 
 const checkDatabaseMatches = async (expected: any): Promise<void> => {
