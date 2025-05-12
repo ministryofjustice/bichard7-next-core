@@ -10,14 +10,13 @@ import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
 import type { Phase2E2eComparison } from "../comparison/types/ComparisonFile"
-import type ErrorListRecord from "../types/ErrorListRecord"
-import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"
 import type Phase2Result from "./types/Phase2Result"
 
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
+import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
 import {
   clearDatabase,
   disconnectDb,
@@ -26,7 +25,6 @@ import {
   sql
 } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
-import normaliseErrorListTriggers from "../tests/helpers/normaliseErrorListTriggers"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 
@@ -132,58 +130,6 @@ const convertXmlAuditLogs = (logs: string[]): AuditLogEvent[] => {
 
     return { timestamp, category, eventCode, eventType, eventSource, attributes, ...user } as any as AuditLogEvent
   })
-}
-
-const checkDatabaseMatches = async (expected: any): Promise<void> => {
-  const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
-  const errorListTriggers = await sql<ErrorListTriggerRecord[]>`select * from BR7OWN.ERROR_LIST_TRIGGERS`
-  const expectedTriggers = errorListTriggers.map((trigger) => trigger.trigger_code)
-
-  expect(errorList).toHaveLength(expected.errorList.length)
-  if (expected.errorList.length === 1) {
-    expect(errorList[0].message_id).toEqual(expected.errorList[0].message_id)
-    expect(errorList[0].phase).toEqual(expected.errorList[0].phase)
-    expect(errorList[0].error_status).toEqual(expected.errorList[0].error_status)
-    expect(errorList[0].trigger_status).toEqual(expected.errorList[0].trigger_status)
-    expect(errorList[0].error_quality_checked).toEqual(expected.errorList[0].error_quality_checked)
-    expect(errorList[0].trigger_quality_checked).toEqual(expected.errorList[0].trigger_quality_checked)
-    expect(errorList[0].trigger_count).toEqual(expected.errorList[0].trigger_count)
-    expect(errorList[0].is_urgent).toEqual(expected.errorList[0].is_urgent)
-    expect(errorList[0].asn).toEqual(expected.errorList[0].asn)
-    expect(errorList[0].court_code).toEqual(expected.errorList[0].court_code)
-    expect(errorList[0].annotated_msg).toEqualXML(expected.errorList[0].annotated_msg)
-    expect(errorList[0].updated_msg).toEqualXML(expected.errorList[0].updated_msg)
-    expect(errorList[0].error_report).toEqual(expected.errorList[0].error_report)
-    expect(errorList[0].create_ts).toBeDefined()
-    expect(errorList[0].error_reason).toEqual(expected.errorList[0].error_reason)
-    if (expected.errorList[0].trigger_reason) {
-      expect(expectedTriggers).toContain(errorList[0].trigger_reason)
-    } else {
-      expect(errorList[0].trigger_reason).toBeNull()
-    }
-
-    expect(errorList[0].error_count).toEqual(expected.errorList[0].error_count)
-    expect(errorList[0].user_updated_flag).toEqual(expected.errorList[0].user_updated_flag)
-    expect(errorList[0].court_date).toEqual(expected.errorList[0].court_date)
-    expect(errorList[0].ptiurn).toEqual(expected.errorList[0].ptiurn)
-    expect(errorList[0].court_name).toEqual(expected.errorList[0].court_name)
-    expect(errorList[0].resolution_ts).toEqual(expected.errorList[0].resolution_ts)
-    expect(errorList[0].msg_received_ts).toBeDefined()
-    expect(errorList[0].error_resolved_ts).toEqual(expected.errorList[0].error_resolved_ts)
-    expect(errorList[0].trigger_resolved_ts).toEqual(expected.errorList[0].trigger_resolved_ts)
-    expect(errorList[0].defendant_name).toEqual(expected.errorList[0].defendant_name)
-    expect(errorList[0].org_for_police_filter).toEqual(expected.errorList[0].org_for_police_filter)
-    expect(errorList[0].court_room).toEqual(expected.errorList[0].court_room)
-    expect(errorList[0].court_reference).toEqual(expected.errorList[0].court_reference)
-    expect(errorList[0].error_insert_ts).toBeDefined()
-    expect(errorList[0].trigger_insert_ts).toBeDefined()
-    expect(errorList[0].pnc_update_enabled).toEqual(expected.errorList[0].pnc_update_enabled)
-  }
-
-  expect(errorListTriggers).toHaveLength(expected.errorListTriggers.length)
-  expect(normaliseErrorListTriggers(errorListTriggers)).toStrictEqual(
-    normaliseErrorListTriggers(expected.errorListTriggers)
-  )
 }
 
 describe("phase2", () => {
