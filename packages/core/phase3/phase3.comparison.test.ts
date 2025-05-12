@@ -17,11 +17,12 @@ import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import checkDatabaseMatches, { normaliseXml } from "../tests/helpers/comparison/checkDatabaseMatches"
+import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
 import {
   clearDatabase,
   disconnectDb,
   insertRecords,
+  normaliseXml,
   sortTriggers,
   sql
 } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"

@@ -41,14 +41,14 @@ const normaliseAttributeDetails = (attributes: Record<string, unknown>): Record<
   }
 
   if (attributes["Error 1 Details"]) {
-    const allTriggers = Object.entries(attributes).reduce((acc: string[], [k, v]) => {
+    const allErrorDetails = Object.entries(attributes).reduce((acc: string[], [k, v]) => {
       if (k.match(/Error \d+ Details/)) {
         acc.push(v as string)
       }
 
       return acc
     }, [])
-    allTriggers.sort().forEach((t, i) => (attributes[`Error ${i + 1} Details`] = t))
+    allErrorDetails.sort().forEach((t, i) => (attributes[`Error ${i + 1} Details`] = t))
   }
 
   Object.entries(attributes).forEach(([k, v]) => {

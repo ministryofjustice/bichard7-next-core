@@ -11,6 +11,12 @@ const sql = postgres(dbConfig)
 
 const sortTriggers = (triggers: Trigger[]) => orderBy(triggers, ["code", "identifier"])
 
+const normaliseXml = (xml?: string): string =>
+  xml
+    ?.replace(/ Error="HO200200"/g, "")
+    .replace(/ hasError="false"/g, "")
+    .replace(' standalone="yes"', "") ?? ""
+
 const insertRecords = async (records: DbRecords): Promise<void> => {
   const errorList = records.errorList.map((record) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -44,4 +50,4 @@ const disconnectDb = async () => {
   await sql.end({ timeout: 5 })
 }
 
-export { clearDatabase, disconnectDb, insertRecords, sortTriggers, sql }
+export { clearDatabase, disconnectDb, insertRecords, normaliseXml, sortTriggers, sql }

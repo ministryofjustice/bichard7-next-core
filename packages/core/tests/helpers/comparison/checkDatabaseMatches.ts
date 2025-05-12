@@ -3,13 +3,7 @@ import type ErrorListRecord from "../../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../../types/ErrorListTriggerRecord"
 
 import normaliseErrorListTriggers from "../normaliseErrorListTriggers"
-import { sql } from "./e2eComparisonTestsHelpers"
-
-export const normaliseXml = (xml?: string): string =>
-  xml
-    ?.replace(/ Error="HO200200"/g, "")
-    .replace(/ hasError="false"/g, "")
-    .replace(' standalone="yes"', "") ?? ""
+import { normaliseXml, sql } from "./e2eComparisonTestsHelpers"
 
 const checkDatabaseMatches = async (expected: DbRecords): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
