@@ -3,7 +3,6 @@ import "jest-xml-matcher"
 import "../tests/helpers/setEnvironmentVariables"
 
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import fs from "fs"
 import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
@@ -16,11 +15,11 @@ import type Phase3Result from "./types/Phase3Result"
 import { normalisePncOperations } from "../comparison/lib/comparePhase3"
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
-import processTestFile from "../comparison/lib/processTestFile"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
+import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import {
   clearDatabase,
   disconnectDb,
@@ -96,25 +95,6 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   expect(normaliseTriggers(errorListTriggers)).toStrictEqual(normaliseTriggers(expected.errorListTriggers))
 }
 
-const filePath = "phase3/tests/fixtures/e2e-comparison"
-// const ignored: string[] = ["001", "006", "007", "019", "018"]
-const ignored: string[] = []
-
-const filter = process.env.FILTER_TEST
-// const filter = "001"
-
-const tests = fs
-  .readdirSync(filePath)
-  .filter((name) => {
-    if (filter) {
-      return name.includes(`test-${filter}`)
-    } else {
-      return !ignored.some((i) => name.includes(`test-${i}`))
-    }
-  })
-  .map((name) => `${filePath}/${name}`)
-  .map(processTestFile) as Phase3E2eComparison[]
-
 describe("phase3", () => {
   beforeEach(async () => {
     await clearDatabase()
@@ -123,6 +103,8 @@ describe("phase3", () => {
   afterAll(async () => {
     await disconnectDb()
   })
+
+  const tests = getComparisonTests<Phase3E2eComparison>(3)
 
   describe.each(tests)("should correctly process $file", (comparison: Phase3E2eComparison) => {
     let phase3Result: Phase3Result

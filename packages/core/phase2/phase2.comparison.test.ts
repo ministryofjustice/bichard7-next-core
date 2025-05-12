@@ -6,7 +6,6 @@ import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { XMLParser } from "fast-xml-parser"
-import fs from "fs"
 import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
@@ -16,10 +15,10 @@ import type ErrorListTriggerRecord from "../types/ErrorListTriggerRecord"
 import type Phase2Result from "./types/Phase2Result"
 
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
-import processTestFile from "../comparison/lib/processTestFile"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
+import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import {
   clearDatabase,
   disconnectDb,
@@ -185,23 +184,6 @@ const checkDatabaseMatches = async (expected: any): Promise<void> => {
   expect(normaliseTriggers(errorListTriggers)).toStrictEqual(normaliseTriggers(expected.errorListTriggers))
 }
 
-const filePath = "phase2/tests/fixtures/e2e-comparison"
-const ignored: string[] = []
-
-const filter = process.env.FILTER_TEST
-
-const tests = fs
-  .readdirSync(filePath)
-  .filter((name) => {
-    if (filter) {
-      return name.includes(`test-${filter}`)
-    } else {
-      return !ignored.some((i) => name.includes(`test-${i}`))
-    }
-  })
-  .map((name) => `${filePath}/${name}`)
-  .map(processTestFile) as Phase2E2eComparison[]
-
 describe("phase2", () => {
   beforeEach(async () => {
     await clearDatabase()
@@ -210,6 +192,8 @@ describe("phase2", () => {
   afterAll(async () => {
     await disconnectDb()
   })
+
+  const tests = getComparisonTests<Phase2E2eComparison>(2)
 
   describe.each(tests)("should correctly process $file", (comparison: Phase2E2eComparison) => {
     let phase2Result: Phase2Result

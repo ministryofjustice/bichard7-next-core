@@ -5,7 +5,6 @@ import "./tests/helpers/setEnvironmentVariables"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
-import fs from "fs"
 
 import type { OldPhase1Comparison } from "../comparison/types/ComparisonFile"
 import type ErrorListRecord from "../types/ErrorListRecord"
@@ -17,31 +16,15 @@ import generateMockPncQueryResultFromAho from "../comparison/lib/generateMockPnc
 import getPncQueryTimeFromAho from "../comparison/lib/getPncQueryTimeFromAho"
 import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
-import processTestFile from "../comparison/lib/processTestFile"
 import { sortExceptions } from "../comparison/lib/sortExceptions"
 import { matchingExceptions } from "../comparison/lib/summariseMatching"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { extractExceptionsFromXml } from "../lib/parse/parseAhoXml"
 import serialiseToXml from "../lib/serialise/ahoXml/serialiseToXml"
+import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/e2eComparisonTestsHelpers"
 import phase1 from "./phase1"
-
-const filePath = "phase1/tests/fixtures/e2e-comparison"
-const ignored: string[] = ["108-1", "295-1"]
-const filter = process.env.FILTER_TEST
-
-const tests = fs
-  .readdirSync(filePath)
-  .filter((name) => {
-    if (filter) {
-      return name.includes(`test-${filter}`)
-    } else {
-      return !ignored.some((i) => name.includes(`test-${i}`))
-    }
-  })
-  .map((name) => `${filePath}/${name}`)
-  .map(processTestFile) as OldPhase1Comparison[]
 
 const checkDatabaseMatches = async (expected: any): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`
@@ -104,6 +87,9 @@ describe("phase1", () => {
   afterAll(async () => {
     await disconnectDb()
   })
+
+  const ignored = ["108-1", "295-1"]
+  const tests = getComparisonTests<OldPhase1Comparison>(1, ignored)
 
   describe.each(tests)("should correctly process $file", (comparison: OldPhase1Comparison) => {
     let phase1Result: Phase1Result
