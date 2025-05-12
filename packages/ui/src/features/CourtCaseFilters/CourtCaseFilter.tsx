@@ -80,7 +80,7 @@ const CourtCaseFilter: React.FC<Props> = ({
         <div className="moj-filter__header-action"></div>
       </div>
       <div className="moj-filter__content">
-        <div className="moj-filter__selected">
+        <div className="moj-filter__selected" aria-live="assertive" aria-label={`filters applied`}>
           <div className="moj-filter__selected-heading">
             <SelectedFiltersContainer className={`moj-filter__heading-title`}>
               <FilterChipSection state={state} dispatch={dispatch} sectionState={"Applied"} marginTop={false} />

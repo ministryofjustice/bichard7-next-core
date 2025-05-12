@@ -8,7 +8,7 @@ export const capitalizeString = (str = ""): string => {
 }
 
 export const getYesOrNo = (code: boolean | undefined) => {
-  return code === true ? "Y" : code === false ? "N" : undefined
+  return code === true ? "Yes" : code === false ? "No" : undefined
 }
 
 export const capitaliseExpression = (expression: string) => {
@@ -16,7 +16,7 @@ export const capitaliseExpression = (expression: string) => {
 }
 
 export const getUrgentYesOrNo = (urgent: boolean | undefined): string => {
-  return urgent === true ? "Y" : "N"
+  return urgent === true ? "Yes" : "No"
 }
 
 export const getNumberOfHours = (hours: number | undefined): string | undefined => {

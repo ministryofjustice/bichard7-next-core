@@ -31,6 +31,8 @@ const PncCourtCaseAccordion = ({
   return (
     <CourtCase key={courtCaseReference}>
       <CourtCaseHeaderContainer
+        as={"button"}
+        type={"button"}
         className={`courtcase-toggle ${isContentVisible ? "expanded" : ""}`}
         onClick={toggleContentVisibility}
         aria-expanded={isContentVisible}

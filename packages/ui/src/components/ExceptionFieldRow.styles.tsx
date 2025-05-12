@@ -1,6 +1,10 @@
 import styled from "styled-components"
 
-const Label = styled.th`
+const StyledExceptionFieldRow = styled.div`
+  font-size: 1rem;
+`
+
+const Label = styled.dt`
   vertical-align: top;
 
   & .error-icon {
@@ -8,7 +12,7 @@ const Label = styled.th`
   }
 `
 
-const Content = styled.td`
+const Content = styled.dd`
   vertical-align: top;
 
   & .badge-wrapper {
@@ -22,4 +26,4 @@ const Content = styled.td`
     padding-bottom: 0.62rem;
   }
 `
-export { Content, Label }
+export { StyledExceptionFieldRow, Content, Label }

@@ -1,5 +1,6 @@
 import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import { CjsPlea } from "@moj-bichard7/core/types/Plea"
 import ResultClass from "@moj-bichard7/core/types/ResultClass"
@@ -7,7 +8,6 @@ import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
 import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 
 const courtCase = {
@@ -67,7 +67,8 @@ describe("Hearing Result", () => {
       ResultVariableText: "this is some text",
       PNCDisposalType: 1,
       ResultClass: ResultClass.ADJOURNMENT,
-      PNCAdjudicationExists: true
+      PNCAdjudicationExists: true,
+      ResultQualifierVariable: [{}]
     } as Result
   })
 
@@ -80,20 +81,22 @@ describe("Hearing Result", () => {
             resultIndex={dummyIndex}
             selectedOffenceSequenceNumber={dummyIndex}
             exceptions={[]}
+            isContentVisible={true}
+            onToggleContent={() => {}}
           />
         </CurrentUserContext.Provider>
       </CourtCaseContext.Provider>
     )
 
-    cy.contains("th", "CJS Code").siblings().should("include.text", "1234")
-    cy.contains("th", "Result hearing type").siblings().should("include.text", "Hearing type")
-    cy.contains("th", "Result hearing date").siblings().should("include.text", "10/09/2022")
-    cy.contains("th", "Next hearing date").siblings().should("include.text", "11/09/2022")
-    cy.contains("th", "Mode of trial reason").siblings().should("include.text", "reason")
-    cy.contains("th", "Hearing result text").siblings().should("include.text", "this is some text")
-    cy.contains("th", "PNC disposal type").siblings().should("include.text", 1)
-    cy.contains("th", "Result class").siblings().should("include.text", "Adjournment")
-    cy.contains("th", "PNC adjudication exists").siblings().should("include.text", "Y")
+    cy.contains("dt", "CJS Code").siblings().should("include.text", "1234")
+    cy.contains("dt", "PNC disposal type").siblings().should("include.text", 1)
+    cy.contains("dt", "Result hearing type").siblings().should("include.text", "Hearing type")
+    cy.contains("dt", "Result hearing date").siblings().should("include.text", "10/09/2022")
+    cy.contains("dt", "Hearing result description").siblings().should("include.text", "this is some text")
+    cy.contains("dt", "Type of trial").siblings().should("include.text", "reason")
+    cy.contains("dt", "Type of result").siblings().should("include.text", "Adjournment")
+    cy.contains("dt", "PNC adjudication exists").siblings().should("include.text", "Yes")
+    cy.contains("dt", "Next hearing date").siblings().should("include.text", "11/09/2022")
   })
 
   describe("Durations", () => {
@@ -114,12 +117,14 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Duration").siblings().should("include.text", "6 months")
+      cy.contains("dt", "Duration").siblings().should("include.text", "6 months")
     })
 
     it("does not display the duration row if not present", () => {
@@ -133,12 +138,14 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Duration").should("not.exist")
+      cy.contains("dt", "Duration").should("not.exist")
     })
 
     it("displays multiple durations", () => {
@@ -162,12 +169,14 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
-      cy.contains("th", "Duration").siblings().should("include.text", "3 years")
-      cy.contains("th", "Duration").siblings().should("include.text", "28 days")
+      cy.contains("dt", "Duration").siblings().should("include.text", "3 years")
+      cy.contains("dt", "Duration").siblings().should("include.text", "28 days")
     })
   })
 
@@ -183,12 +192,14 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("td", "Next hearing date").should("not.exist")
+      cy.contains("dt", "Next hearing date").should("not.exist")
     })
 
     it("displays the next hearing date with an invalid value", () => {
@@ -202,12 +213,14 @@ describe("Hearing Result", () => {
               resultIndex={dummyIndex}
               selectedOffenceSequenceNumber={dummyIndex}
               exceptions={[]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Next hearing date").siblings().should("include.text", "false")
+      cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
     })
 
     it("displays the next hearing date field when it has no value but has an error", () => {
@@ -221,12 +234,14 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "NextHearingDate"], code: ExceptionCode.HO100323 }]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Next hearing date").siblings().should("include.text", "")
+      cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     })
 
     it("displays the next hearing location field when it has no value but has an error", () => {
@@ -245,12 +260,14 @@ describe("Hearing Result", () => {
                   code: ExceptionCode.HO100200
                 }
               ]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "Next hearing location").siblings().should("include.text", "")
+      cy.contains("dt", "Next hearing location").siblings().should("include.text", "")
     })
   })
 
@@ -264,12 +281,14 @@ describe("Hearing Result", () => {
               resultIndex={0}
               selectedOffenceSequenceNumber={0}
               exceptions={[{ path: ["dummyPath", "CJSresultCode"], code: ExceptionCode.HO100307 }]}
+              isContentVisible={true}
+              onToggleContent={() => {}}
             />
           </CurrentUserContext.Provider>
         </CourtCaseContext.Provider>
       )
 
-      cy.contains("th", "CJS Code").should(
+      cy.contains("dt", "CJS Code").should(
         "include.text",
         "This code could not be found via look-up, report the issue to Bichard 7 team and the courts for the correct so that they can investigate this issue and advise."
       )

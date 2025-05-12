@@ -23,11 +23,16 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { csrfToken } = useCsrfToken()
 
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+  }
+
   return (
-    <Form method="POST" action="#" csrfToken={csrfToken || ""}>
+    <Form method="POST" action="#" csrfToken={csrfToken || ""} onSubmit={handleSubmit}>
       <fieldset className="govuk-fieldset">
         <div className="govuk-form-group">
           <label className="govuk-label govuk-label--s">{"Current force owner"}</label>
@@ -57,7 +62,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
         />
 
         <ButtonsGroup>
-          <Button id="Reallocate" type="submit">
+          <Button id="Reallocate" type="submit" disabled={isSubmitting}>
             {"Reallocate Case"}
           </Button>
           <Link href={backLink} className="govuk-link">

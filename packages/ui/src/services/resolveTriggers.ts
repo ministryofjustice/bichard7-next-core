@@ -13,6 +13,7 @@ import Trigger from "./entities/Trigger"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
+import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
@@ -24,7 +25,7 @@ const generateTriggersAttributes = (triggers: Trigger[]) =>
     return acc
   }, {})
 
-const resolveTriggers = async (
+const resolveTriggersInTransaction = async (
   dataSource: DataSource,
   triggerIds: number[],
   courtCaseId: number,
@@ -46,7 +47,7 @@ const resolveTriggers = async (
     const areAnyTriggersResolved =
       courtCase.triggers.some((trigger) => triggerIds.includes(trigger.triggerId) && !!trigger.resolvedAt) ?? false
     if (areAnyTriggersResolved) {
-      throw Error("One or more triggers are already resolved")
+      throw Error(`One or more triggers are already resolved - ${courtCaseId}`)
     }
 
     if (courtCase === null) {
@@ -54,7 +55,7 @@ const resolveTriggers = async (
     }
 
     if (!courtCase.triggersAreLockedByCurrentUser(resolver)) {
-      throw Error("Triggers are not locked by the user")
+      throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
     }
 
     const updateTriggersResult = await entityManager.getRepository(Trigger).update(
@@ -71,7 +72,7 @@ const resolveTriggers = async (
     )
 
     if (updateTriggersResult.affected && updateTriggersResult.affected !== triggerIds.length) {
-      throw Error("Failed to resolve triggers")
+      throw Error(`Failed to resolve triggers - ${courtCaseId}`)
     }
 
     const addNoteResult = await insertNotes(
@@ -136,7 +137,7 @@ const resolveTriggers = async (
       }
 
       if (!updateCaseResult.affected || updateCaseResult.affected === 0) {
-        throw Error("Failed to update court case")
+        throw Error(`Failed to update court case - ${courtCaseId}`)
       }
 
       events.push(
@@ -171,6 +172,15 @@ const resolveTriggers = async (
 
     return updateTriggersResult
   })
+}
+
+const resolveTriggers = async (
+  dataSource: DataSource,
+  triggerIds: number[],
+  courtCaseId: number,
+  user: User
+): Promise<UpdateResult | Error> => {
+  return await retryTransaction(resolveTriggersInTransaction, dataSource, triggerIds, courtCaseId, user)
 }
 
 export default resolveTriggers

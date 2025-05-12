@@ -37,6 +37,7 @@ Commands:
   message-processing   EventBridge rule that forwards incoming messages through to Conductor
   conductor            Bichard workflow engine
   cloudwatch           A method for querying cloudwatch for user events
+  user-comms           A way to send group communications to all users
   help [command]       display help for command
 ```
 
@@ -83,3 +84,106 @@ The command we have for opening Conductor fetches credentials from AWS and logs 
 
 > [!NOTE]
 > We are using osascript to interact with the browser, the support for firefox is somewhat limited so and firefox users will need to refresh the browser on load.
+
+## Sending user communications via GovNotify
+
+> [!NOTE]
+> You will need to have postgres installed locally to test the connection. Simply run `brew install postgresql` in your terminal
+
+Historically, sending out mass communications to all users has been very involved, with many steps required before we could actually communicate an issue to our users.
+Now, we can simply run:
+
+```
+b7 user-comms
+```
+
+We have some predefined templates that cover scenarios that we've faced in the past. These templates live in the `user-comms` directory.
+
+```
+❯ b7 user-comms
+? Select a template to use (Use arrow keys)
+❯ PNC Scheduled Maintenance
+  PNC Maintenance Window Extended
+  Outage Notification
+  Outage Resolved
+Notify users of upcoming scheduled maintenance
+```
+
+You can navigate up and down using the arrow keys, or j and k for Vim fans, and press Enter to choose an option.
+
+There are further options depending on the template you choose:
+
+```
+❯ b7 user-comms
+✔ Select a template to use Outage Notification
+? What type of outage are we reporting? (Use arrow keys)
+❯ PNC Outage
+  PSN Outage
+  Bichard Outage
+Notify users of a PNC Outage
+```
+
+Once you have chosen a template, you will be shown a preview:
+
+```
+❯ b7 user-comms
+✔ Select a template to use Outage Notification
+✔ What type of outage are we reporting? PNC Outage
+
+=== Preview template ===
+
+Hello {first-name},
+
+We wanted to inform you that the PNC Outage is currently experiencing a loss of service. We apologise for any inconvenience this may cause.
+
+We will keep you informed of any updates as soon as we receive them.
+
+If you have any questions, please feel free to contact us at moj-bichard7@madetech.com.
+
+Thank you for your patience and understanding.
+
+Many thanks,
+The Bichard 7 Support team
+
+? Do you want to use this template? (y/N)
+```
+
+After you hit y, it will query Postgres for all active Bichard users, and you will be shown a preview of the email using a random user—similar to the behaviour in GovNotify.
+
+```
+To: wen.ting.wang@madetech.com
+Subject: Unexpected PNC Outage
+
+=== Preview template ===
+
+Hello Wen Ting,
+
+We wanted to inform you that the PNC is currently experiencing a loss of service. We apologise for any inconvenience this may cause.
+
+We will keep you informed of any updates as soon as we receive them.
+
+If you have any questions, please feel free to contact us at moj-bichard7@madetech.com.
+
+Thank you for your patience and understanding.
+
+Many thanks,
+The Bichard 7 Support team
+
+? Are you happy with the updated template? (y/N)
+```
+
+If you are happy with the updated preview, you can hit y, and then you will be asked to type confirm send to send the email. This step ensures that messages aren’t sent accidentally.
+
+We have a blank template in GovNotify, located in a folder called 'CLI Templates', which contains placeholders where the message is inserted. This means we can add more templates to this repository without needing to make any changes in GovNotify.
+
+```
+ Type 'confirm send' to send, or press <ctrl-c> to abort: confirm send
+✅ Email sent to joe.folkard@madetech.com
+✅ Email sent to richard.race@madetech.com
+✅ Email sent to ben.pirt@madetech.com
+✅ Email sent to emad.karamad@madetech.com
+✅ Email sent to richard.cane@madetech.com
+✅ Email sent to ian.king@madetech.com
+✅ Email sent to tausif.patel@madetech.com
+✅ Email sent to wen.ting.wang@madetech.com
+```

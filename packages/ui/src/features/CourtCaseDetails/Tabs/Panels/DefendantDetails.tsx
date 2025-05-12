@@ -4,7 +4,7 @@ import { RemandStatuses } from "@moj-bichard7-developers/bichard7-next-data/dist
 import { GenderCode, RemandStatusCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import { BadgeColours } from "components/Badge"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
-import ExceptionFieldTableRow from "components/ExceptionFieldTableRow"
+import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { findExceptions } from "types/ErrorMessages"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
@@ -31,7 +31,7 @@ export const DefendantDetails = () => {
       <table className="govuk-table">
         <tbody className="govuk-table__body">
           {asnSystemErrorExceptionPrompt ? (
-            <ExceptionFieldTableRow
+            <ExceptionFieldRow
               badgeText={ExceptionBadgeType.SystemError}
               value={defendant.ArrestSummonsNumber}
               badgeColour={BadgeColours.Purple}
@@ -39,7 +39,7 @@ export const DefendantDetails = () => {
               displayError={!!asnSystemErrorExceptionPrompt}
             >
               <ErrorPromptMessage message={asnSystemErrorExceptionPrompt} />
-            </ExceptionFieldTableRow>
+            </ExceptionFieldRow>
           ) : (
             <AsnEditableField />
           )}

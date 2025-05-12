@@ -1,5 +1,6 @@
 import type { DateRange } from "@moj-bichard7/common/types/DateRange"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { endOfDay, startOfDay } from "date-fns"
 import type { DataSource, SelectQueryBuilder } from "typeorm"
 import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from "typeorm"
 import type { CaseListQueryParams, CaseState, QueryOrder } from "types/CaseListQueryParams"
@@ -185,11 +186,11 @@ const resolvedCasesDateRange = (
   resolvedDateRange?: DateRange
 ): SelectQueryBuilder<CourtCase> => {
   if (caseState === "Resolved" && resolvedDateRange?.from) {
-    query.andWhere({ resolutionTimestamp: MoreThanOrEqual(resolvedDateRange?.from) })
+    query.andWhere({ resolutionTimestamp: MoreThanOrEqual(startOfDay(resolvedDateRange.from)) })
   }
 
   if (caseState === "Resolved" && resolvedDateRange?.to) {
-    query.andWhere({ resolutionTimestamp: LessThanOrEqual(resolvedDateRange?.to) })
+    query.andWhere({ resolutionTimestamp: LessThanOrEqual(endOfDay(resolvedDateRange.to)) })
   }
 
   return query
