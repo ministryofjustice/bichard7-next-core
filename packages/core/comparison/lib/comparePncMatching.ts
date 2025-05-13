@@ -11,8 +11,8 @@ import CorePhase1 from "../../phase1/phase1"
 import generateMockPncQueryResultFromAho from "../../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../tests/helpers/comparison/getPncQueryTimeFromAho"
 import parseIncomingMessage from "../../tests/helpers/comparison/parseIncomingMessage"
+import summariseMatching from "../../tests/helpers/comparison/summariseMatching"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
-import summariseMatching from "./summariseMatching"
 
 type CompareOptions = {
   defaultStandingDataVersion?: string

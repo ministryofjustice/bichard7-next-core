@@ -16,11 +16,11 @@ import phase1Handler from "../../phase1/phase1"
 import generateMockPncQueryResultFromAho from "../../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../../tests/helpers/comparison/getPncQueryTimeFromAho"
 import parseIncomingMessage from "../../tests/helpers/comparison/parseIncomingMessage"
+import { matchingExceptions } from "../../tests/helpers/comparison/summariseMatching"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import sortExceptions from "../../tests/helpers/sortExceptions"
 import isIntentionalDifference from "./isIntentionalDifference"
 import { sortTriggers } from "./sortTriggers"
-import { matchingExceptions } from "./summariseMatching"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
 type CompareOptions = {

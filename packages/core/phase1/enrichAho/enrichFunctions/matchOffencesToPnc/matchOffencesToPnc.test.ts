@@ -2,8 +2,8 @@ import type { CourtResultMatchingSummary } from "../../../../comparison/types/Ma
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 
 import matchOffencesToPnc from "."
-import summariseMatching from "../../../../comparison/lib/summariseMatching"
 import errorPaths from "../../../../lib/exceptions/errorPaths"
+import summariseMatching from "../../../../tests/helpers/comparison/summariseMatching"
 
 type Adjudication = {
   sentenceDate?: Date

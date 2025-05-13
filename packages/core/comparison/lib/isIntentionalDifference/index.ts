@@ -3,7 +3,7 @@ import type Phase from "../../../types/Phase"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { ComparisonData } from "../../types/ComparisonData"
 
-import summariseMatching from "../summariseMatching"
+import summariseMatching from "../../../tests/helpers/comparison/summariseMatching"
 import badlyAnnotatedSingleCaseMatch from "./badlyAnnotatedSingleCaseMatch"
 import badManualMatch from "./badManualMatch"
 import bichardMatchesRandomFinalOffence from "./bichardMatchesRandomFinalOffence"

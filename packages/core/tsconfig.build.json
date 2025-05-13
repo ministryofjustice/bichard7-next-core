@@ -13,6 +13,7 @@
     "tests/helpers/comparison/generateMockPncQueryResultFromAho.ts",
     "tests/helpers/comparison/getPncQueryTimeFromAho.ts",
     "tests/helpers/comparison/parseIncomingMessage.ts",
+    "tests/helpers/comparison/summariseMatching.ts",
     "tests/types/ComparisonFile.ts",
   ]
 }

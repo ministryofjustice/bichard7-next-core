@@ -8,13 +8,13 @@ import type { Trigger } from "../types/Trigger"
 
 import getFile from "../comparison/lib/getFile"
 import hoOffencesAreEqual from "../comparison/lib/hoOffencesAreEqual"
-import summariseMatching from "../comparison/lib/summariseMatching"
 import { lookupOffenceByCjsCode } from "../lib/dataLookup"
 import getOffenceCode from "../lib/offences/getOffenceCode"
 import { parseAhoXml } from "../lib/parse/parseAhoXml"
 import parseSpiResult from "../lib/parse/parseSpiResult"
 import transformSpiToAho from "../lib/parse/transformSpiToAho"
 import offenceHasFinalResult from "../phase1/enrichAho/enrichFunctions/matchOffencesToPnc/offenceHasFinalResult"
+import summariseMatching from "../tests/helpers/comparison/summariseMatching"
 
 interface ComparisonFile {
   annotatedHearingOutcome: string
