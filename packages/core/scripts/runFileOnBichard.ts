@@ -4,7 +4,7 @@ import type {
   Phase1Comparison,
   Phase2Comparison,
   Phase3Comparison
-} from "../comparison/types/ComparisonFile"
+} from "../tests/types/ComparisonFile"
 
 import getFile from "../comparison/lib/getFile"
 import ActiveMqHelper from "../phase1/tests/helpers/ActiveMqHelper"

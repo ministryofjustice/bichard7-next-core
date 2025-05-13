@@ -1,6 +1,6 @@
-import type { DbRecords } from "../../../comparison/types/ComparisonFile"
 import type ErrorListRecord from "../../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../../types/ErrorListTriggerRecord"
+import type { DbRecords } from "../../types/ComparisonFile"
 
 import normaliseErrorListTriggers from "../normaliseErrorListTriggers"
 import { normaliseXml, sql } from "./e2eComparisonTestsHelpers"

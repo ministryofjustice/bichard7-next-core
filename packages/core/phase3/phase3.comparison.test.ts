@@ -6,7 +6,7 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
-import type { Phase3E2eComparison } from "../comparison/types/ComparisonFile"
+import type { Phase3E2eComparison } from "../tests/types/ComparisonFile"
 import type { PncException } from "../types/Exception"
 import type Phase3Result from "./types/Phase3Result"
 

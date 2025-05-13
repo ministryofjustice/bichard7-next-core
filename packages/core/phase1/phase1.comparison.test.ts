@@ -6,7 +6,7 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
-import type { OldPhase1Comparison } from "../comparison/types/ComparisonFile"
+import type { OldPhase1Comparison } from "../tests/types/ComparisonFile"
 import type Exception from "../types/Exception"
 import type Phase1Result from "./types/Phase1Result"
 

@@ -3,7 +3,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import isEqual from "lodash.isequal"
 
-import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../types/ComparisonFile"
+import type { NewComparison, OldPhase1Comparison, Phase2Comparison } from "../../tests/types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 

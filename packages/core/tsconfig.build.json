@@ -8,6 +8,7 @@
     "phase2/tests/fixtures/helpers/generateFakePncUpdateDataset.ts",
     "phase3/tests/helpers/getPncErrorMessages.ts",
     "phase3/tests/helpers/getPncOperationsFromPncUpdateDataset.ts",
-    "tests/helpers/MockPncGateway.ts"
+    "tests/helpers/MockPncGateway.ts",
+    "tests/types/ComparisonFile.ts",
   ]
 }

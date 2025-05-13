@@ -1,4 +1,4 @@
-import type { OldPhase1Comparison } from "../types/ComparisonFile"
+import type { OldPhase1Comparison } from "../../tests/types/ComparisonFile"
 
 import comparePhase1 from "./comparePhase1"
 import processTestFile from "./processTestFile"

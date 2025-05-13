@@ -8,7 +8,7 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
-import type { Phase2E2eComparison } from "../comparison/types/ComparisonFile"
+import type { Phase2E2eComparison } from "../tests/types/ComparisonFile"
 import type Phase2Result from "./types/Phase2Result"
 
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"

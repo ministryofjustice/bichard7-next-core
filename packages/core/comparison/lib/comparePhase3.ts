@@ -5,8 +5,8 @@ import { diffJson } from "diff"
 import isEqual from "lodash.isequal"
 
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+import type { Phase3Comparison } from "../../tests/types/ComparisonFile"
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type { Phase3Comparison } from "../types/ComparisonFile"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 

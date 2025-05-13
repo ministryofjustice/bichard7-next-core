@@ -3,8 +3,8 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import logger from "@moj-bichard7/common/utils/logger"
 import isEqual from "lodash.isequal"
 
+import type { OldPhase1Comparison, Phase1Comparison } from "../../tests/types/ComparisonFile"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { OldPhase1Comparison, Phase1Comparison } from "../types/ComparisonFile"
 import type ComparisonResultDetail from "../types/ComparisonResultDetail"
 import type { ComparisonResultDebugOutput } from "../types/ComparisonResultDetail"
 
