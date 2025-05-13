@@ -9,6 +9,6 @@
     "phase3/tests/helpers/getPncErrorMessages.ts",
     "phase3/tests/helpers/getPncOperationsFromPncUpdateDataset.ts",
     "tests/helpers/MockPncGateway.ts",
-    "tests/helpers/parseIncomingMessage.ts",
+    "tests/helpers/parseIncomingMessage.ts"
   ]
 }
