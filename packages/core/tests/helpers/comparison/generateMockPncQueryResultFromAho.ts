@@ -1,10 +1,10 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { PncException } from "../../types/Exception"
-import type { PncQueryResult } from "../../types/PncQueryResult"
+import type { PncException } from "../../../types/Exception"
+import type { PncQueryResult } from "../../../types/PncQueryResult"
 
-import { parseAhoXml } from "../../lib/parse/parseAhoXml"
-import { PncApiError } from "../../lib/pnc/PncGateway"
+import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
+import { PncApiError } from "../../../lib/pnc/PncGateway"
 
 /*
 Sample CXE element
