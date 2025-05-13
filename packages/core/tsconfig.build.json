@@ -9,14 +9,6 @@
     "phase3/tests/helpers/getPncErrorMessages.ts",
     "phase3/tests/helpers/getPncOperationsFromPncUpdateDataset.ts",
     "tests/helpers/MockPncGateway.ts",
-    "tests/helpers/sortExceptions.ts",
-    "tests/helpers/comparison/generateMockPncQueryResultFromAho.ts",
-    "tests/helpers/comparison/getPncQueryTimeFromAho.ts",
     "tests/helpers/parseIncomingMessage.ts",
-    "tests/helpers/summariseMatching.ts",
-    "tests/helpers/comparison/normalisePncOperations.ts",
-    "tests/helpers/comparison/processTestFile.ts",
-    "tests/types/ComparisonFile.ts",
-    "tests/types/MatchingComparisonOutput.ts"
   ]
 }
