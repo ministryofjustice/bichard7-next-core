@@ -29,7 +29,7 @@ const insertRecords = async (records: DbRecords): Promise<void> => {
 
   await sql<ErrorListRecord[]>`INSERT INTO br7own.error_list ${sql(errorList)} returning error_id`
 
-  if (records.errorListNotes.length > 0) {
+  if (records.errorListNotes && records.errorListNotes.length > 0) {
     await sql<ErrorListRecord[]>`INSERT INTO br7own.error_list_notes ${sql(records.errorListNotes)} returning error_id`
   }
 
