@@ -14,6 +14,7 @@
     "tests/helpers/comparison/getPncQueryTimeFromAho.ts",
     "tests/helpers/comparison/parseIncomingMessage.ts",
     "tests/helpers/comparison/summariseMatching.ts",
+    "tests/helpers/comparison/normalisePncOperations.ts",
     "tests/types/ComparisonFile.ts",
   ]
 }

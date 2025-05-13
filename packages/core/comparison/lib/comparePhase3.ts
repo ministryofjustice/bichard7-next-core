@@ -19,6 +19,7 @@ import { isPncLockError } from "../../phase3/exceptions/generatePncUpdateExcepti
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "../../phase3/lib/updatePnc"
 import phase3Handler from "../../phase3/phase3"
 import getPncOperationsFromPncUpdateDataset from "../../phase3/tests/helpers/getPncOperationsFromPncUpdateDataset"
+import normalisePncOperations from "../../tests/helpers/comparison/normalisePncOperations"
 import parseIncomingMessage from "../../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import sortExceptions from "../../tests/helpers/sortExceptions"
@@ -47,24 +48,6 @@ const normaliseXml = (xml?: string): string | undefined => {
   }
 
   return normalisedXml
-}
-
-export const normalisePncOperations = (operations: PncUpdateRequest[]) => {
-  for (const operation of operations) {
-    if (operation.request) {
-      for (const value of Object.values(operation.request)) {
-        if (Array.isArray(value)) {
-          for (const item of value) {
-            for (const [subfield, subvalue] of Object.entries(item)) {
-              if (!subvalue) {
-                delete (item as unknown as Record<string, unknown>)[subfield]
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 }
 
 const isValidDisposalTextDifference = (
