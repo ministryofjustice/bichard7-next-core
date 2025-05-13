@@ -20,13 +20,13 @@ import {
   disconnectDb,
   insertRecords,
   normaliseXml,
-  sortTriggers,
   sql
 } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import normalisePncOperations from "../tests/helpers/comparison/normalisePncOperations"
 import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
+import sortTriggers from "../tests/helpers/sortTriggers"
 import { isPncUpdateDataset } from "../types/PncUpdateDataset"
 import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "./lib/updatePnc"

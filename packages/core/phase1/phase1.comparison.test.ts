@@ -15,7 +15,7 @@ import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { extractExceptionsFromXml } from "../lib/parse/parseAhoXml"
 import serialiseToXml from "../lib/serialise/ahoXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
-import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import { clearDatabase, disconnectDb, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import generateMockPncQueryResultFromAho from "../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import getPncQueryTimeFromAho from "../tests/helpers/comparison/getPncQueryTimeFromAho"
@@ -23,6 +23,7 @@ import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessa
 import { matchingExceptions } from "../tests/helpers/comparison/summariseMatching"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import sortExceptions from "../tests/helpers/sortExceptions"
+import sortTriggers from "../tests/helpers/sortTriggers"
 import phase1 from "./phase1"
 
 describe("phase1", () => {

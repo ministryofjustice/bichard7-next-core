@@ -16,15 +16,10 @@ import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
 import convertXmlAuditLogs from "../tests/helpers/comparison/convertXmlAuditLogs"
-import {
-  clearDatabase,
-  disconnectDb,
-  insertRecords,
-  sortTriggers,
-  sql
-} from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import { clearDatabase, disconnectDb, insertRecords, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
+import sortTriggers from "../tests/helpers/sortTriggers"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 

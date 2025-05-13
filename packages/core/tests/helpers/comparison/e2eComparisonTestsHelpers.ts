@@ -1,15 +1,11 @@
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import orderBy from "lodash.orderby"
 import postgres from "postgres"
 
 import type ErrorListRecord from "../../../types/ErrorListRecord"
-import type { Trigger } from "../../../types/Trigger"
 import type { DbRecords } from "../../types/ComparisonFile"
 
 const dbConfig = createDbConfig()
 const sql = postgres(dbConfig)
-
-const sortTriggers = (triggers: Trigger[]) => orderBy(triggers, ["code", "identifier"])
 
 const normaliseXml = (xml?: string): string =>
   xml
@@ -50,4 +46,4 @@ const disconnectDb = async () => {
   await sql.end({ timeout: 5 })
 }
 
-export { clearDatabase, disconnectDb, insertRecords, normaliseXml, sortTriggers, sql }
+export { clearDatabase, disconnectDb, insertRecords, normaliseXml, sql }
