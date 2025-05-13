@@ -1,7 +1,7 @@
 import type { OldPhase1Comparison } from "../../tests/types/ComparisonFile"
 
+import processTestFile from "../../tests/helpers/comparison/processTestFile"
 import comparePhase1 from "./comparePhase1"
-import processTestFile from "./processTestFile"
 
 describe("compare", () => {
   describe("success", () => {
