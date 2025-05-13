@@ -5,10 +5,10 @@ import express from "express"
 
 import type { PncQueryResult } from "../types/PncQueryResult"
 
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import CorePhase1 from "../phase1/phase1"
 import CorePhase2 from "../phase2/phase2"
+import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import Phase from "../types/Phase"
 

@@ -5,13 +5,12 @@ import "../tests/helpers/setEnvironmentVariables"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
-import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
+import type { ParseIncomingMessageResult } from "../tests/helpers/comparison/parseIncomingMessage"
 import type { Phase3E2eComparison } from "../tests/types/ComparisonFile"
 import type { PncException } from "../types/Exception"
 import type Phase3Result from "./types/Phase3Result"
 
 import { normalisePncOperations } from "../comparison/lib/comparePhase3"
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
@@ -26,6 +25,7 @@ import {
   sql
 } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import { isPncUpdateDataset } from "../types/PncUpdateDataset"
 import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"

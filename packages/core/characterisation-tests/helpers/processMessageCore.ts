@@ -7,12 +7,12 @@ import type PncUpdateRequestError from "../../phase3/types/PncUpdateRequestError
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { ProcessMessageOptions } from "./processMessage"
 
-import parseIncomingMessage from "../../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { PncApiError } from "../../lib/pnc/PncGateway"
 import CorePhase1 from "../../phase1/phase1"
 import CorePhase2 from "../../phase2/phase2"
 import CorePhase3 from "../../phase3/phase3"
+import parseIncomingMessage from "../../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
 

@@ -7,11 +7,10 @@ import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
-import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
+import type { ParseIncomingMessageResult } from "../tests/helpers/comparison/parseIncomingMessage"
 import type { Phase2E2eComparison } from "../tests/types/ComparisonFile"
 import type Phase2Result from "./types/Phase2Result"
 
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
@@ -25,6 +24,7 @@ import {
   sql
 } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 

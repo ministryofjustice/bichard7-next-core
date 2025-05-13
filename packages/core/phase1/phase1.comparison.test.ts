@@ -10,7 +10,6 @@ import type { OldPhase1Comparison } from "../tests/types/ComparisonFile"
 import type Exception from "../types/Exception"
 import type Phase1Result from "./types/Phase1Result"
 
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import { sortExceptions } from "../comparison/lib/sortExceptions"
 import { matchingExceptions } from "../comparison/lib/summariseMatching"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
@@ -22,6 +21,7 @@ import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers
 import generateMockPncQueryResultFromAho from "../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import getPncQueryTimeFromAho from "../tests/helpers/comparison/getPncQueryTimeFromAho"
+import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import phase1 from "./phase1"
 
