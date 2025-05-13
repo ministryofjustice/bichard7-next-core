@@ -17,5 +17,6 @@
     "tests/helpers/comparison/normalisePncOperations.ts",
     "tests/helpers/comparison/processTestFile.ts",
     "tests/types/ComparisonFile.ts",
+    "tests/types/MatchingComparisonOutput.ts",
   ]
 }

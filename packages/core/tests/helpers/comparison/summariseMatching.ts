@@ -1,7 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
-import type { CourtResultMatchingSummary } from "../../../comparison/types/MatchingComparisonOutput"
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { CourtResultMatchingSummary } from "../../types/MatchingComparisonOutput"
 
 import getOffenceCode from "../../../lib/offences/getOffenceCode"
 

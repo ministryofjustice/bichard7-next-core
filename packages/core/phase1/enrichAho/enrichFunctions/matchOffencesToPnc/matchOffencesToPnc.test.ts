@@ -1,4 +1,4 @@
-import type { CourtResultMatchingSummary } from "../../../../comparison/types/MatchingComparisonOutput"
+import type { CourtResultMatchingSummary } from "../../../../tests/types/MatchingComparisonOutput"
 import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 
 import matchOffencesToPnc from "."

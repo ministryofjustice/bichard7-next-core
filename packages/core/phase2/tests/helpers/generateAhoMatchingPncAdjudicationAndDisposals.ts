@@ -1,4 +1,4 @@
-import type { PncCourtCaseSummary } from "../../../comparison/types/MatchingComparisonOutput"
+import type { PncCourtCaseSummary } from "../../../tests/types/MatchingComparisonOutput"
 import type { Hearing, Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 
