@@ -10,7 +10,6 @@ import type { OldPhase1Comparison } from "../tests/types/ComparisonFile"
 import type Exception from "../types/Exception"
 import type Phase1Result from "./types/Phase1Result"
 
-import getPncQueryTimeFromAho from "../comparison/lib/getPncQueryTimeFromAho"
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import { sortExceptions } from "../comparison/lib/sortExceptions"
 import { matchingExceptions } from "../comparison/lib/summariseMatching"
@@ -22,6 +21,7 @@ import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatch
 import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import generateMockPncQueryResultFromAho from "../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import getPncQueryTimeFromAho from "../tests/helpers/comparison/getPncQueryTimeFromAho"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import phase1 from "./phase1"
 
@@ -44,8 +44,6 @@ describe("phase1", () => {
     let ignoreNewMatcherXmlDifferences: boolean
 
     beforeEach(async () => {
-      await clearDatabase()
-
       const normalisedAho = comparison.annotatedHearingOutcome.replace(/ WeedFlag="[^"]*"/g, "")
       const pncQuery = generateMockPncQueryResultFromAho(normalisedAho)
       const pncQueryTime = getPncQueryTimeFromAho(normalisedAho)
