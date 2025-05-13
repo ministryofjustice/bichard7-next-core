@@ -12,11 +12,11 @@
     "tests/helpers/sortExceptions.ts",
     "tests/helpers/comparison/generateMockPncQueryResultFromAho.ts",
     "tests/helpers/comparison/getPncQueryTimeFromAho.ts",
-    "tests/helpers/comparison/parseIncomingMessage.ts",
+    "tests/helpers/parseIncomingMessage.ts",
     "tests/helpers/comparison/summariseMatching.ts",
     "tests/helpers/comparison/normalisePncOperations.ts",
     "tests/helpers/comparison/processTestFile.ts",
     "tests/types/ComparisonFile.ts",
-    "tests/types/MatchingComparisonOutput.ts",
+    "tests/types/MatchingComparisonOutput.ts"
   ]
 }

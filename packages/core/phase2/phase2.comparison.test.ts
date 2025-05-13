@@ -7,7 +7,7 @@ import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
-import type { ParseIncomingMessageResult } from "../tests/helpers/comparison/parseIncomingMessage"
+import type { ParseIncomingMessageResult } from "../tests/helpers/parseIncomingMessage"
 import type { Phase2E2eComparison } from "../tests/types/ComparisonFile"
 import type Phase2Result from "./types/Phase2Result"
 
@@ -18,7 +18,7 @@ import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatch
 import { clearDatabase, disconnectDb, insertRecords, sql } from "../tests/helpers/comparison/ComparisonTestDbHelpers"
 import convertXmlAuditLogs from "../tests/helpers/comparison/convertXmlAuditLogs"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
-import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
+import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
 import sortTriggers from "../tests/helpers/sortTriggers"
 import phase2 from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
