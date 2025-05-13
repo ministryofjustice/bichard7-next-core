@@ -12,7 +12,6 @@ import type Phase1Result from "./types/Phase1Result"
 
 import generateMockPncQueryResultFromAho from "../comparison/lib/generateMockPncQueryResultFromAho"
 import getPncQueryTimeFromAho from "../comparison/lib/getPncQueryTimeFromAho"
-import MockPncGateway from "../comparison/lib/MockPncGateway"
 import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import { sortExceptions } from "../comparison/lib/sortExceptions"
 import { matchingExceptions } from "../comparison/lib/summariseMatching"
@@ -23,6 +22,7 @@ import serialiseToXml from "../lib/serialise/ahoXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
 import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import MockPncGateway from "../tests/helpers/MockPncGateway"
 import phase1 from "./phase1"
 
 describe("phase1", () => {
