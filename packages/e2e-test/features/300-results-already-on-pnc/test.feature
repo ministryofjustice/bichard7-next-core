@@ -26,5 +26,6 @@ Feature: {300} BR7-R5.9-RCD401-501-Subsequent Remand-Different Dates
 			And "input-message-2" is received
 		When I view the list of exceptions
 		Then there are no exceptions or triggers
+			And I wait "5" seconds
 			And the PNC updates the record
 			And "Results already on PNC" is not in the audit log
