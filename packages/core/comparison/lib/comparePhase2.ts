@@ -13,9 +13,9 @@ import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToX
 import getMessageType from "../../phase1/lib/getMessageType"
 import phase2Handler from "../../phase2/phase2"
 import parseIncomingMessage from "../../tests/helpers/comparison/parseIncomingMessage"
+import sortExceptions from "../../tests/helpers/sortExceptions"
 import extractAuditLogEventCodes from "./extractAuditLogEventCodes"
 import isIntentionalDifference from "./isIntentionalDifference"
-import { sortExceptions } from "./sortExceptions"
 import { sortTriggers } from "./sortTriggers"
 import { xmlOutputDiff, xmlOutputMatches } from "./xmlOutputComparison"
 
