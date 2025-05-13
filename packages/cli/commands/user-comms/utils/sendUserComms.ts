@@ -47,7 +47,13 @@ const sendUserComms = async (updatedUsers: User, templateData: Template) => {
       })
   )
   await Promise.all(emailPromises)
-  console.log(`Failed to send email to ${errorCount} user(s)`)
+
+  console.log(`\nSuccessfully sent ${updatedUsers.length - errorCount} emails`)
+
+  if (errorCount > 0) {
+    console.log(`\nFailed to send email to ${errorCount} user(s)`)
+    console.log("Check error logs located at /tmp/email-logs/\n")
+  }
 }
 
 export default sendUserComms
