@@ -15,15 +15,10 @@ import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
-import {
-  clearDatabase,
-  disconnectDb,
-  insertRecords,
-  normaliseXml,
-  sql
-} from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import { clearDatabase, disconnectDb, insertRecords, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import normalisePncOperations from "../tests/helpers/comparison/normalisePncOperations"
+import normaliseXml from "../tests/helpers/comparison/normaliseXml"
 import parseIncomingMessage from "../tests/helpers/comparison/parseIncomingMessage"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import sortTriggers from "../tests/helpers/sortTriggers"

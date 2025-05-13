@@ -2,8 +2,9 @@ import type ErrorListRecord from "../../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../../types/ErrorListTriggerRecord"
 import type { DbRecords } from "../../types/ComparisonFile"
 
-import normaliseErrorListTriggers from "../normaliseErrorListTriggers"
-import { normaliseXml, sql } from "./e2eComparisonTestsHelpers"
+import { sql } from "./e2eComparisonTestsHelpers"
+import normaliseErrorListTriggers from "./normaliseErrorListTriggers"
+import normaliseXml from "./normaliseXml"
 
 const checkDatabaseMatches = async (expected: DbRecords): Promise<void> => {
   const errorList = await sql<ErrorListRecord[]>`select * from BR7OWN.ERROR_LIST`

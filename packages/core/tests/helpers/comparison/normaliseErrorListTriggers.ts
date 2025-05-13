@@ -1,6 +1,6 @@
 import orderBy from "lodash.orderby"
 
-import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
+import type ErrorListTriggerRecord from "../../../types/ErrorListTriggerRecord"
 
 const normaliseErrorListTriggers = (triggers: ErrorListTriggerRecord[]): ErrorListTriggerRecord[] =>
   orderBy(triggers, ["trigger_code", "trigger_item_identity"]).map(
