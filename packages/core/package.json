@@ -30,12 +30,6 @@
     "test:characterisation:bichard:phase3": "ENABLE_PHASE_2=false ENABLE_PHASE_3=true npm run test:characterisation:bichard",
     "test:characterisation": "cd characterisation-tests && jest --runInBand --workerThreads=true",
     "compare": "DELAY_FOR_PNC_LOCK_ERROR_RETRY=0 TS_NODE_TRANSPILE_ONLY=true ts-node comparison/cli.ts",
-    "compare:files": "scripts/files-from-comparison.js",
-    "compare:summarise": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/summariseRecord.ts",
-    "compare:summarise:extended": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/extendedSummary.ts",
-    "compare:repeat": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/repeatTestBichard.ts",
-    "compare:skip": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/skip-test.ts",
-    "compare:runonbichard": "TS_NODE_TRANSPILE_ONLY=true ts-node scripts/runFileOnBichard.ts",
     "update-deps": "ncu -u && npm install"
   },
   "repository": {
