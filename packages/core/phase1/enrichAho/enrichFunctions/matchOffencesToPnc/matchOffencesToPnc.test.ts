@@ -3,7 +3,7 @@ import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearing
 
 import matchOffencesToPnc from "."
 import errorPaths from "../../../../lib/exceptions/errorPaths"
-import summariseMatching from "../../../../tests/helpers/comparison/summariseMatching"
+import summariseMatching from "../../../../tests/helpers/summariseMatching"
 
 type Adjudication = {
   sentenceDate?: Date
