@@ -1,6 +1,7 @@
 import { Template, User } from "./userCommsTypes"
 import { env } from "../../../config"
 import awsVault from "../../../utils/awsVault"
+import { logToFile } from "../../../utils/logger"
 
 const { aws } = env.SHARED
 
@@ -14,6 +15,7 @@ const getApiKey = (arn: string) => `\
     aws secretsmanager get-secret-value --secret-id "${arn.trim()}" \
       | jq -r ".SecretString"`
 
+let errorCount: number = 0
 const sendUserComms = async (updatedUsers: User, templateData: Template) => {
   const apiArn = await awsVault.exec({
     awsProfile: aws.profile,
@@ -39,11 +41,13 @@ const sendUserComms = async (updatedUsers: User, templateData: Template) => {
         console.log(`✅ Email sent to ${user.email}`)
       })
       .catch((error: any) => {
-        console.error(`❌ Failed to send email to ${user.email}:`, error.response || error)
+        errorCount = errorCount + 1
+        logToFile(`❌ Failed to send email to ${user.email}`)
+        logToFile(`${JSON.stringify(error.response.data.errors)}`)
       })
   )
-
   await Promise.all(emailPromises)
+  console.log(`Failed to send email to ${errorCount} user(s)`)
 }
 
 export default sendUserComms
