@@ -1,7 +1,6 @@
 import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
-import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 
@@ -15,7 +14,6 @@ export type ComparisonTrigger = {
 
 export type DbRecords = {
   errorList: ErrorListRecord[]
-  errorListNotes: ErrorListNoteRecord[]
   errorListTriggers: ErrorListTriggerRecord[]
 }
 
@@ -30,7 +28,7 @@ export type NewComparison = {
 export type OldPhase1Comparison = {
   annotatedHearingOutcome: string
   auditLogEvents?: string[]
-  dbContent?: { errorList: ErrorListRecord[]; errorListTriggers: ErrorListTriggerRecord[] }
+  dbContent?: DbRecords
   file?: string
   incomingMessage: string
   standingDataVersion: string
