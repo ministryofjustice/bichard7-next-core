@@ -17,10 +17,9 @@
     "test:update": "jest -u --testPathIgnorePatterns='characterisation-tests|comparison.test|integration.test' 'integration.test'",
     "test:bichard": "USE_BICHARD=true jest --runInBand --testPathIgnorePatterns='characterisation-tests|comparison.test|integration.test' --workerThreads=true --testNamePattern=",
     "test:watch": "jest --watch --testPathIgnorePatterns='characterisation-tests|comparison.test|integration.test' --workerThreads=true",
-    "test:compare:phase1": "NODE_ENV=test ts-node -T comparison/cli.ts --phase 1 -d ./phase1/tests/fixtures/e2e-comparison",
-    "test:compare:phase2": "jest  --forceExit phase2.comparison.test.ts",
-    "test:compare:phase3": "jest  --forceExit phase3.comparison.test.ts",
-    "test:compare:e2e": "jest --runInBand --forceExit --testPathPattern=e2e.comparison.test --workerThreads=true",
+    "test:compare:phase1": "jest --forceExit phase1.comparison.test.ts",
+    "test:compare:phase2": "jest --forceExit phase2.comparison.test.ts",
+    "test:compare:phase3": "jest --forceExit phase3.comparison.test.ts",
     "test:integration": "jest --forceExit --runInBand --testPathPattern=integration.test --workerThreads=true",
     "test:server": "NODE_ENV=test ts-node scripts/testServer.ts",
     "test:e2e": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
@@ -69,7 +68,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^22.15.3",
+    "@types/node": "^22.15.17",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -78,10 +77,10 @@
     "esbuild": "~0.25.0",
     "esbuild-plugin-ignore": "^1.1.1",
     "eslint": "^9.26.0",
-    "eslint-config-prettier": "^10.1.2",
+    "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.11.0",
-    "eslint-plugin-prettier": "^5.3.1",
+    "eslint-plugin-prettier": "^5.4.0",
     "express": "^5.1.0",
     "jest": "^29.7.0",
     "jest-mock-server": "^0.1.0",
@@ -101,8 +100,8 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.799.0",
-    "@aws-sdk/client-s3": "^3.802.0",
+    "@aws-sdk/client-dynamodb": "^3.806.0",
+    "@aws-sdk/client-s3": "^3.806.0",
     "@io-orkes/conductor-javascript": "^2.1.4",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.273",
     "@types/lodash.ismatch": "^4.4.9",
@@ -110,7 +109,7 @@
     "axios": "^1.9.0",
     "diff": "^7.0.0",
     "dynalite": "^3.2.2",
-    "fast-xml-parser": "^5.2.2",
+    "fast-xml-parser": "^5.2.3",
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.orderby": "^4.6.0",
@@ -119,6 +118,6 @@
     "pretty-data": "github:vkiryukhin/pretty-data#22a34a534745714ea974f72db2e9bf7561b3fdc7",
     "stompit": "^1.0.0",
     "zod": "^3.24.4",
-    "zod-validation-error": "^3.4.0"
+    "zod-validation-error": "^3.4.1"
   }
 }
