@@ -6,23 +6,24 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
-import type { OldPhase1Comparison } from "../comparison/types/ComparisonFile"
+import type { OldPhase1Comparison } from "../tests/types/ComparisonFile"
 import type Exception from "../types/Exception"
 import type Phase1Result from "./types/Phase1Result"
 
-import generateMockPncQueryResultFromAho from "../comparison/lib/generateMockPncQueryResultFromAho"
-import getPncQueryTimeFromAho from "../comparison/lib/getPncQueryTimeFromAho"
-import MockPncGateway from "../comparison/lib/MockPncGateway"
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
-import { sortExceptions } from "../comparison/lib/sortExceptions"
-import { matchingExceptions } from "../comparison/lib/summariseMatching"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { extractExceptionsFromXml } from "../lib/parse/parseAhoXml"
 import serialiseToXml from "../lib/serialise/ahoXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
-import { clearDatabase, disconnectDb, sortTriggers, sql } from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import { clearDatabase, disconnectDb, sql } from "../tests/helpers/comparison/ComparisonTestDbHelpers"
+import generateMockPncQueryResultFromAho from "../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import getPncQueryTimeFromAho from "../tests/helpers/comparison/getPncQueryTimeFromAho"
+import MockPncGateway from "../tests/helpers/MockPncGateway"
+import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
+import sortExceptions from "../tests/helpers/sortExceptions"
+import sortTriggers from "../tests/helpers/sortTriggers"
+import { matchingExceptions } from "../tests/helpers/summariseMatching"
 import phase1 from "./phase1"
 
 describe("phase1", () => {
@@ -44,8 +45,6 @@ describe("phase1", () => {
     let ignoreNewMatcherXmlDifferences: boolean
 
     beforeEach(async () => {
-      await clearDatabase()
-
       const normalisedAho = comparison.annotatedHearingOutcome.replace(/ WeedFlag="[^"]*"/g, "")
       const pncQuery = generateMockPncQueryResultFromAho(normalisedAho)
       const pncQueryTime = getPncQueryTimeFromAho(normalisedAho)

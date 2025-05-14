@@ -1,6 +1,6 @@
 import fs from "fs"
 
-import processTestFile from "../../../comparison/lib/processTestFile"
+import processTestFile from "./processTestFile"
 
 const getComparisonTests = <ComparisonFile>(phase: 1 | 2 | 3, ignored: string[] = []): ComparisonFile[] => {
   const filePath = `phase${phase}/tests/fixtures/e2e-comparison`

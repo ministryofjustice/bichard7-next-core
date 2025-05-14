@@ -1,4 +1,3 @@
-import type { PncCourtCaseSummary } from "../../../comparison/types/MatchingComparisonOutput"
 import type { Hearing, Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
 
@@ -14,6 +13,20 @@ export type GenerateAhoMatchingPncAdjudicationAndDisposalsOptions = {
   hasPncId?: boolean
   hasPncOffences?: boolean
   hasResults?: boolean
+}
+
+type PncCourtCaseSummary = {
+  courtCaseReference: string
+  offences: PncOffenceSummary[]
+}
+
+type PncOffenceSummary = {
+  offence: {
+    cjsOffenceCode: string
+    endDate?: Date
+    sequenceNumber: number
+    startDate: Date
+  }
 }
 
 const generateResult = (pncDisposalType: number): Result => ({

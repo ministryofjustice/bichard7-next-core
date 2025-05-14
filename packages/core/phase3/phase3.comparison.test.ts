@@ -5,28 +5,23 @@ import "../tests/helpers/setEnvironmentVariables"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
-import type { ParseIncomingMessageResult } from "../comparison/lib/parseIncomingMessage"
-import type { Phase3E2eComparison } from "../comparison/types/ComparisonFile"
+import type { ParseIncomingMessageResult } from "../tests/helpers/parseIncomingMessage"
+import type { Phase3E2eComparison } from "../tests/types/ComparisonFile"
 import type { PncException } from "../types/Exception"
 import type Phase3Result from "./types/Phase3Result"
 
-import { normalisePncOperations } from "../comparison/lib/comparePhase3"
-import MockPncGateway from "../comparison/lib/MockPncGateway"
-import parseIncomingMessage from "../comparison/lib/parseIncomingMessage"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
 import { PncApiError } from "../lib/pnc/PncGateway"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
-import {
-  clearDatabase,
-  disconnectDb,
-  insertRecords,
-  normaliseXml,
-  sortTriggers,
-  sql
-} from "../tests/helpers/comparison/e2eComparisonTestsHelpers"
+import { clearDatabase, disconnectDb, insertRecords, sql } from "../tests/helpers/comparison/ComparisonTestDbHelpers"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
+import normalisePncOperations from "../tests/helpers/comparison/normalisePncOperations"
+import normaliseXml from "../tests/helpers/comparison/normaliseXml"
+import MockPncGateway from "../tests/helpers/MockPncGateway"
+import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
+import sortTriggers from "../tests/helpers/sortTriggers"
 import { isPncUpdateDataset } from "../types/PncUpdateDataset"
 import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "./lib/updatePnc"
