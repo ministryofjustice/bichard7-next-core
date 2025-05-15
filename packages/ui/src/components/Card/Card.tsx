@@ -22,6 +22,7 @@ const Card = ({ heading, contentInstanceKey, isContentVisible, toggleContentVisi
         onClick={toggleContentVisibility}
         aria-expanded={isContentVisible}
         aria-controls={indexedKey}
+        $clickable={!!toggleContentVisibility}
       >
         <h2
           className={"govuk-summary-card__title"}
@@ -31,10 +32,12 @@ const Card = ({ heading, contentInstanceKey, isContentVisible, toggleContentVisi
         >
           {heading}
         </h2>
-        <AccordionToggle>
-          <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
-          <span>{accordion.text}</span>
-        </AccordionToggle>
+        {toggleContentVisibility && (
+          <AccordionToggle>
+            <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
+            <span>{accordion.text}</span>
+          </AccordionToggle>
+        )}
       </HeaderWrapper>
       {isContentVisible && (
         <div id={`${indexedKey}`} className="govuk-summary-card__content">
