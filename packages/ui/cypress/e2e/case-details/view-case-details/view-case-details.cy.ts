@@ -106,7 +106,7 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Defendant")
-    cy.get("h3").contains("Defendant details")
+    cy.get("h2").contains("Defendant details")
     clickTab("Hearing")
     cy.get("h3").contains("Hearing details")
     clickTab("Case")
