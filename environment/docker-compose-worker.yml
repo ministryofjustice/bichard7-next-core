@@ -4,10 +4,6 @@ services:
       context: ..
       dockerfile: ./packages/conductor/Dockerfile
     environment:
-      PHASE1_COMPARISON_TABLE_NAME: bichard-7-production-comparison-log
-      PHASE2_COMPARISON_TABLE_NAME: bichard-7-production-phase2-comparison-log
-      PHASE3_COMPARISON_TABLE_NAME: bichard-7-production-phase3-comparison-log
-      COMPARISON_BUCKET: comparisons
       DYNAMO_REGION: eu-west-2
       DYNAMO_URL: http://localstack:4566
       S3_REGION: eu-west-2
