@@ -1,4 +1,4 @@
-import "../../phase1/tests/helpers/setEnvironmentVariables"
+import "../../tests/helpers/setEnvironmentVariables"
 
 import type { S3ClientConfig } from "@aws-sdk/client-s3"
 
