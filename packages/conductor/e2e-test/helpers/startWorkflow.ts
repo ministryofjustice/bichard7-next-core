@@ -9,4 +9,4 @@ const startWorkflow = async (
 ): Promise<string> =>
   await conductorClient.workflowResource.startWorkflow1(workflowName, requestBody, undefined, correlationId)
 
-export { startWorkflow }
+export default startWorkflow

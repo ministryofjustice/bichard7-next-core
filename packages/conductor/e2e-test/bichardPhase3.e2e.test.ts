@@ -20,9 +20,9 @@ import { randomUUID } from "crypto"
 import postgres from "postgres"
 
 import successNoTriggersPncMock from "./fixtures/phase3/success-no-triggers-aho.pnc.json"
-import { startWorkflow } from "./helpers/e2eHelpers"
 import getAuditLogs from "./helpers/getAuditLogs"
 import getFixture from "./helpers/getFixture"
+import startWorkflow from "./helpers/startWorkflow"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
