@@ -61,7 +61,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
             <DefendantDetails />
           </CourtCaseDetailsPanel>
 
-          <CourtCaseDetailsPanel visible={activeTab === "Hearing"} heading={"Hearing details"}>
+          <CourtCaseDetailsPanel visible={activeTab === "Hearing"}>
             <HearingDetails hearing={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Hearing} />
           </CourtCaseDetailsPanel>
 
