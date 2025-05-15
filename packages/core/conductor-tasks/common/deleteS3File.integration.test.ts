@@ -1,4 +1,4 @@
-import "../../phase1/tests/helpers/setEnvironmentVariables"
+import "../../tests/helpers/setEnvironmentVariables"
 
 const bucketName = (process.env.TASK_DATA_BUCKET_NAME = "conductor-task-data")
 

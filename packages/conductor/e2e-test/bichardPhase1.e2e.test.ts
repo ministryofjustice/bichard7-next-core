@@ -20,9 +20,9 @@ import ignoredTriggersPncMock from "./fixtures/ignored-aho-triggers.pnc.json"
 import onlyTriggersPncMock from "./fixtures/only-triggers-aho.pnc.json"
 import successExceptionsPncMock from "./fixtures/success-exceptions-aho.pnc.json"
 import successNoTriggersPncMock from "./fixtures/success-no-triggers-aho.pnc.json"
-import { startWorkflow } from "./helpers/e2eHelpers"
 import getAuditLogs from "./helpers/getAuditLogs"
 import getFixture from "./helpers/getFixture"
+import startWorkflow from "./helpers/startWorkflow"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
