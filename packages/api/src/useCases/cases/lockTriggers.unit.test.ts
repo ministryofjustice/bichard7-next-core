@@ -6,7 +6,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import FakeDataStore from "../../services/gateways/database/FakeDatabase"
 import { minimalUser } from "../../tests/helpers/userHelper"
 import { lockTriggers } from "./lockTriggers"
 

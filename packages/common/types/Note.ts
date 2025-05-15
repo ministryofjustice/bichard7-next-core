@@ -8,7 +8,7 @@ export const NoteSchema = z.object({
   error_id: z.number(),
   note_id: z.number(),
   note_text: z.string(),
-  user: UserSchema.pick({ forenames: true, surname: true, username: true, visible_forces: true }).optional(),
+  user: UserSchema.pick({ forenames: true, surname: true, username: true, visibleForces: true }).optional(),
   user_id: z.string()
 })
 

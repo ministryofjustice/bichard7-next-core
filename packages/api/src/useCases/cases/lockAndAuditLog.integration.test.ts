@@ -8,7 +8,7 @@ import { randomUUID } from "crypto"
 import type { OutputApiAuditLog } from "../../types/AuditLog"
 import type { CaseMessageId } from "../../types/Case"
 
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import FakeDataStore from "../../services/gateways/database/FakeDatabase"
 import { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import auditLogDynamoConfig from "../../tests/helpers/dynamoDbConfig"
 import { mockInputApiAuditLog } from "../../tests/helpers/mockAuditLogs"

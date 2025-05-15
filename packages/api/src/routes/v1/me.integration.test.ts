@@ -6,7 +6,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
 import build from "../../app"
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import FakeDataStore from "../../services/gateways/database/FakeDatabase"
 import AuditLogDynamoGateway from "../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"

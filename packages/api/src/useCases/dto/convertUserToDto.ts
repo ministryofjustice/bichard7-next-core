@@ -10,7 +10,7 @@ export const convertUserForNoteToDto = (user: NoteUser): NoteUserDto => {
     forenames: user.forenames,
     surname: user.surname,
     username: user.username,
-    visibleForces: user.visible_forces ? user.visible_forces?.split(",") : null
+    visibleForces: user.visibleForces
   } satisfies NoteUserDto
 }
 
@@ -24,11 +24,11 @@ export const convertUserToDto = (user: User): UserDto => {
   return {
     ...convertUserForNoteToDto(user),
     email: user.email,
-    excludedTriggers: user.excluded_triggers ?? undefined,
-    featureFlags: user.feature_flags,
+    excludedTriggers: user.excludedTriggers.join(","),
+    featureFlags: user.featureFlags,
     fullname,
     groups: user.groups,
     hasAccessTo: userAccess(user),
-    visibleCourts: user.visible_courts ?? undefined
+    visibleCourts: user.visibleCourts.join(",")
   } satisfies UserDto
 }

@@ -2,7 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import FakeDataStore from "../services/gateways/dataStoreGateways/fakeDataStore"
+import FakeDataStore from "../services/gateways/database/FakeDatabase"
 import canUseResubmitCaseExecute from "./canUserResubmitCase"
 
 describe("canUseResubmitCase", () => {

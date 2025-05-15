@@ -4,16 +4,16 @@ import { UserGroup } from "./UserGroup"
 
 export const UserSchema = z.object({
   email: z.string(),
-  excluded_triggers: z.string().nullable(),
-  feature_flags: z.record(z.boolean()),
+  excludedTriggers: z.array(z.string()).min(0),
+  featureFlags: z.record(z.boolean()),
   forenames: z.string().nullable(),
   groups: z.array(z.nativeEnum(UserGroup)),
   id: z.number(),
-  jwt_id: z.string().nullable(),
+  jwtId: z.string().nullable(),
   surname: z.string().nullable(),
   username: z.string(),
-  visible_courts: z.string().nullable(),
-  visible_forces: z.string().nullable()
+  visibleCourts: z.array(z.string()).min(0),
+  visibleForces: z.array(z.number()).min(0)
 })
 
 export const UserDtoSchema = z.object({
@@ -27,7 +27,7 @@ export const UserDtoSchema = z.object({
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),
-  visibleForces: z.array(z.string()).nullable()
+  visibleForces: z.array(z.number()).nullable()
 })
 
 export type User = z.infer<typeof UserSchema>

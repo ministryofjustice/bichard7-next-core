@@ -8,7 +8,7 @@ import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
-import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
+import type DatabaseGateway from "../../../types/DatabaseGateway"
 
 import auth from "../../../server/schemas/auth"
 import {
@@ -21,12 +21,12 @@ import {
 import useZod from "../../../server/useZod"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import fetchCaseDto from "../../../useCases/cases/lockAndFetchCaseDto"
+import lockAndFetchCaseDto from "../../../useCases/cases/lockAndFetchCaseDto"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
   caseId: number
-  dataStore: DataStoreGateway
+  database: DatabaseGateway
   logger: FastifyBaseLogger
   reply: FastifyReply
   user: User
@@ -46,21 +46,21 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ auditLogGateway, caseId, dataStore, logger, reply, user }: HandlerProps) =>
-  fetchCaseDto(user, dataStore, caseId, auditLogGateway, logger)
+const handler = async ({ auditLogGateway, caseId, database, logger, reply, user }: HandlerProps) =>
+  lockAndFetchCaseDto(database.writable, auditLogGateway, user, caseId, logger)
     .then((foundCase) => {
       reply.code(OK).send(foundCase)
     })
-    .catch((err) => {
-      reply.log.error(err)
+    .catch((error: Error) => {
+      reply.log.error(error)
 
       switch (true) {
-        case err instanceof NotFoundError:
+        case error instanceof NotFoundError:
           return reply.code(NOT_FOUND).send()
-        case err instanceof UnprocessableEntityError:
+        case error instanceof UnprocessableEntityError:
           return reply
             .code(UNPROCESSABLE_ENTITY)
-            .send({ code: `${UNPROCESSABLE_ENTITY}`, message: err.message, statusCode: UNPROCESSABLE_ENTITY })
+            .send({ code: `${UNPROCESSABLE_ENTITY}`, message: error.message, statusCode: UNPROCESSABLE_ENTITY })
         default:
           return reply.code(FORBIDDEN).send()
       }
@@ -71,7 +71,7 @@ const route = async (fastify: FastifyInstance) => {
     await handler({
       auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
-      dataStore: req.dataStore,
+      database: req.database,
       logger: req.log,
       reply,
       user: req.user

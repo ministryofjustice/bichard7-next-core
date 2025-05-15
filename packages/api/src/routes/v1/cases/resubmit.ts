@@ -3,11 +3,12 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
 import "zod-openapi/extend"
 
-import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
+import type DatabaseGateway from "../../../types/DatabaseGateway"
 
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
@@ -19,7 +20,7 @@ const bodySchema = z.object({ phase: z.number().gt(0).lte(3) })
 
 export type ResubmitBody = z.infer<typeof bodySchema>
 
-type HandlerProps = { body: ResubmitBody; caseId: number; dataStore: DataStoreGateway; reply: FastifyReply; user: User }
+type HandlerProps = { body: ResubmitBody; caseId: number; database: DatabaseGateway; reply: FastifyReply; user: User }
 
 const schema = {
   ...auth,
@@ -36,7 +37,7 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, dataStore, reply, user }: HandlerProps) => {
+const handler = async ({ body, caseId, database, reply, user }: HandlerProps) => {
   // validate the request
   // - user must have one of the following roles:
   //   - Exception handler
@@ -59,22 +60,20 @@ const handler = async ({ body, caseId, dataStore, reply, user }: HandlerProps) =
   // upload failed = 500
   // - in theory this should either be 502 or 504
 
-  try {
-    const result = await canUserResubmitCase({ caseId, dataStore, user })
-
-    if (!result) {
-      reply.code(FORBIDDEN).send()
-      return
-    }
-  } catch (err) {
-    reply.log.error(err)
-
-    if (handleDisconnectedError(err)) {
+  const canResubmitCase = await canUserResubmitCase(database.readonly, user, caseId)
+  if (isError(canResubmitCase)) {
+    reply.log.error(canResubmitCase)
+    if (handleDisconnectedError(canResubmitCase)) {
       reply.code(BAD_GATEWAY).send()
       return
     }
 
     reply.code(BAD_REQUEST).send()
+    return
+  }
+
+  if (!canResubmitCase) {
+    reply.code(FORBIDDEN).send()
     return
   }
 
@@ -86,7 +85,7 @@ const route = async (fastify: FastifyInstance) => {
     await handler({
       body: req.body,
       caseId: Number(req.params.caseId),
-      dataStore: req.dataStore,
+      database: req.database,
       reply,
       user: req.user
     })

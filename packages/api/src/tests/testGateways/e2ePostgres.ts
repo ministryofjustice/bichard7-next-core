@@ -2,9 +2,9 @@ import type { Case } from "@moj-bichard7/common/types/Case"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import type DataStoreGateway from "../../types/DatabaseGateway"
 
-import Postgres from "../../services/gateways/dataStoreGateways/postgres"
+import Postgres from "../../services/gateways/database/Postgres"
 import clearAllTables from "./e2ePostgres/clearAllTables"
 import insertCase from "./e2ePostgres/insertCase"
 import insertTrigger from "./e2ePostgres/insertTrigger"

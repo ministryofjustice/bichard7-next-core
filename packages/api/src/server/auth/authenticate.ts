@@ -1,43 +1,36 @@
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply, FastifyRequest } from "fastify"
 
+import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_GATEWAY, UNAUTHORIZED } from "http-status"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import type { DatabaseConnection } from "../../types/DatabaseGateway"
 
 import handleDisconnectedError from "../../services/db/handleDisconnectedError"
-import formatForceNumbers from "../../services/formatForceNumbers"
-import jwtVerify from "./jwtVerify"
+import verifyJwt from "./verifyJwt"
 
-export default async function (dataStore: DataStoreGateway, request: FastifyRequest, reply: FastifyReply) {
+export default async function (
+  database: DatabaseConnection,
+  request: FastifyRequest,
+  reply: FastifyReply
+): Promise<undefined | User> {
   const token = request.headers["authorization"]
 
   if (!token?.startsWith("Bearer ")) {
     reply.code(UNAUTHORIZED).send()
-    return
+    return undefined
   }
 
-  try {
-    const jwtString = token.replace("Bearer ", "")
-    const verificationResult: undefined | User = await jwtVerify(dataStore, jwtString)
+  const jwtString = token.replace("Bearer ", "")
+  const verificationResult = await verifyJwt(database, jwtString).catch((error: Error) => error)
 
-    if (!verificationResult) {
-      reply.code(UNAUTHORIZED).send()
-      return
-    }
+  if (isError(verificationResult)) {
+    request.log.error(verificationResult)
 
-    request.user = verificationResult
-    dataStore.forceIds = formatForceNumbers(request.user.visible_forces)
-    dataStore.visibleCourts = request.user.visible_courts?.split(",").filter(Boolean) ?? []
-    request.dataStore = dataStore
-  } catch (error) {
-    request.log.error(error)
-
-    if (handleDisconnectedError(error)) {
-      reply.code(BAD_GATEWAY).send()
-      return
-    }
-
-    reply.code(UNAUTHORIZED).send()
+    const replyCode = handleDisconnectedError(verificationResult) ? BAD_GATEWAY : UNAUTHORIZED
+    reply.code(replyCode).send()
+    return undefined
   }
+
+  return verificationResult
 }

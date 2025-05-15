@@ -1,36 +1,38 @@
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
-import type postgres from "postgres"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
+import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
-import { LockReason } from "../../types/LockReason"
+import lockException from "../../services/db/cases/lockException"
 import buildAuditLogEvent from "../auditLog/buildAuditLogEvent"
 
 export const lockExceptions = async (
-  dataStore: DataStoreGateway,
-  callbackSql: postgres.Sql,
-  caseId: number,
+  database: WritableDatabaseConnection,
   user: User,
+  caseId: number,
   auditLogEvents: ApiAuditLogEvent[]
-): Promise<void> => {
+): PromiseResult<void> => {
   if (!userAccess(user)[Permission.Exceptions]) {
     return
   }
 
-  const exceptionLockedResult = await dataStore.lockCase(callbackSql, LockReason.Exception, caseId, user.username)
+  const exceptionLockedResult = await lockException(database, user, caseId)
 
-  if (exceptionLockedResult) {
-    auditLogEvents.push(
-      buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, "Bichard New UI", {
-        auditLogVersion: 2,
-        user: user.username
-      })
-    )
+  if (isError(exceptionLockedResult)) {
+    return exceptionLockedResult
   }
+
+  auditLogEvents.push(
+    buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, "Bichard New UI", {
+      auditLogVersion: 2,
+      user: user.username
+    })
+  )
 }

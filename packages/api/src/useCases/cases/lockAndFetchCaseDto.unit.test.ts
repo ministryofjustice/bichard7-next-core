@@ -5,7 +5,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { CaseDataForDto } from "../../types/Case"
 
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
+import FakeDataStore from "../../services/gateways/database/FakeDatabase"
 import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
 import auditLogDynamoConfig from "../../tests/helpers/dynamoDbConfig"
 import FakeLogger from "../../tests/helpers/fakeLogger"

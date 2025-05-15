@@ -4,8 +4,8 @@ import AutoLoad from "@fastify/autoload"
 import path from "path"
 
 import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
-import type AwsS3Gateway from "./services/gateways/interfaces/awsS3Gateway"
-import type DataStoreGateway from "./services/gateways/interfaces/dataStoreGateway"
+import type AwsS3Gateway from "./types/AwsS3Gateway"
+import type DatabaseGateway from "./types/DatabaseGateway"
 
 import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
@@ -15,7 +15,7 @@ import setupZod from "./server/openapi/setupZod"
 declare module "fastify" {
   interface FastifyRequest {
     auditLogGateway: AuditLogDynamoGateway
-    dataStore: DataStoreGateway
+    database: DatabaseGateway
     s3: AwsS3Gateway
     user: User
   }
@@ -23,11 +23,11 @@ declare module "fastify" {
 
 type Gateways = {
   auditLogGateway: AuditLogDynamoGateway
-  dataStore: DataStoreGateway
+  database: DatabaseGateway
   s3?: AwsS3Gateway
 }
 
-export default async function ({ auditLogGateway, dataStore }: Gateways) {
+export default async function ({ auditLogGateway, database }: Gateways) {
   const fastify = createFastify()
 
   await setupZod(fastify)
@@ -46,8 +46,14 @@ export default async function ({ auditLogGateway, dataStore }: Gateways) {
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      await authenticate(dataStore, request, reply)
+      const authenticatedUser = await authenticate(database.readonly, request, reply)
+      if (!authenticatedUser) {
+        return
+      }
+
       request.auditLogGateway = auditLogGateway
+      request.database = database
+      request.user = authenticatedUser
     })
 
     await instance.register(AutoLoad, {
