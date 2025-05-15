@@ -57,7 +57,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
 
       <PanelsGridRow className="govuk-grid-row">
         <PanelsGridCol className="govuk-grid-column-two-thirds">
-          <CourtCaseDetailsPanel visible={activeTab === "Defendant"} heading={"Defendant details"}>
+          <CourtCaseDetailsPanel visible={activeTab === "Defendant"}>
             <DefendantDetails />
           </CourtCaseDetailsPanel>
 
