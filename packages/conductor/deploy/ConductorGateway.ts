@@ -12,6 +12,13 @@ type ConductorOptions = {
 class ConductorGateway {
   constructor(private conductorOptions: ConductorOptions) {}
 
+  deleteEventHandler(name: string): Promise<void> {
+    return axios.delete(`${this.conductorOptions.url}/event/${name}`, {
+      auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
+      headers: { "Content-Type": "application/json" }
+    })
+  }
+
   getEventHandler(event: string, name: string): Promise<EventHandlerDef | undefined> {
     return axios
       .get<EventHandlerDef[]>(`${this.conductorOptions.url}/event/${event}`, {
@@ -25,6 +32,22 @@ class ConductorGateway {
 
         return undefined
       })
+  }
+
+  getEventHandlers(): Promise<Error | EventHandlerDef[]> {
+    return axios
+      .get<EventHandlerDef[]>(`${this.conductorOptions.url}/event`, {
+        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
+        validateStatus: (status: number) => status >= 200 && status < 500
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          return res.data
+        }
+
+        return Error(`Failed to get event handlers (${res.status})`)
+      })
+      .catch(() => Error("Failed to get event handlers"))
   }
 
   getTask(name: string): Promise<TaskDef | undefined> {

@@ -6,6 +6,7 @@ import isMatch from "lodash.ismatch"
 import type ConductorGateway from "./ConductorGateway"
 
 class EventHandler {
+  name: string
   private localEventHandler: EventHandlerDef
 
   constructor(
@@ -14,6 +15,17 @@ class EventHandler {
   ) {
     const fileContent = fs.readFileSync(filename)
     this.localEventHandler = JSON.parse(fileContent.toString()) as EventHandlerDef
+    this.name = this.localEventHandler.name
+  }
+
+  static async delete(conductor: ConductorGateway, name: string): Promise<void> {
+    await conductor.deleteEventHandler(name)
+
+    console.log(`EventHandler '${name}' was deleted`)
+  }
+
+  static async getAll(conductor: ConductorGateway): Promise<Error | EventHandlerDef[]> {
+    return await conductor.getEventHandlers()
   }
 
   async upsert(): Promise<void> {
