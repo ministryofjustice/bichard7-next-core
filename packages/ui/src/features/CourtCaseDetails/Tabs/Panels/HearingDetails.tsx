@@ -1,7 +1,8 @@
 import courtTypes from "@moj-bichard7-developers/bichard7-next-data/dist/data/court-type.json"
 import { Hearing } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Card } from "components/Card"
 import { formatDisplayedDate } from "utils/date/formattedDate"
-import { TableRow } from "./TableRow"
+import { InfoRow } from "./InfoRow"
 
 interface HearingDetailsProps {
   hearing: Hearing
@@ -32,21 +33,19 @@ export const HearingDetails = ({ hearing }: HearingDetailsProps) => {
   }
 
   return (
-    <table className="govuk-table">
-      <tbody className="govuk-table__body">
-        <TableRow label="Court location" value={hearing.CourtHearingLocation.OrganisationUnitCode} />
-        <TableRow label="Date of hearing" value={formatDisplayedDate(hearing.DateOfHearing)} />
-        <TableRow label="Time of hearing" value={hearing.TimeOfHearing} />
-        <TableRow label="Defendant present" value={hearing.DefendantPresentAtHearing} />
-        <TableRow label="Source reference document name" value={hearing.SourceReference.DocumentName} />
-        <TableRow label="Source reference identification" value={hearing.SourceReference.UniqueID} />
-        <TableRow label="Source reference document type" value={hearing.SourceReference.DocumentType} />
-        <TableRow label="Court type" value={getCourtType(hearing.CourtType)} />
-        <TableRow label="LJA code" value={hearing.CourtHouseCode.toString()} />
-        <TableRow label="Court name" value={hearing.CourtHouseName} />
-        <TableRow label="Hearing language" value={getLanguage(hearing.HearingLanguage)} />
-        <TableRow label="Documentation language" value={getLanguage(hearing.HearingDocumentationLanguage)} />
-      </tbody>
-    </table>
+    <Card heading={"Hearing details"} isContentVisible={true}>
+      <InfoRow label="Court location" value={hearing.CourtHearingLocation.OrganisationUnitCode} />
+      <InfoRow label="Date of hearing" value={formatDisplayedDate(hearing.DateOfHearing)} />
+      <InfoRow label="Time of hearing" value={hearing.TimeOfHearing} />
+      <InfoRow label="Defendant present" value={hearing.DefendantPresentAtHearing} />
+      <InfoRow label="Source reference document name" value={hearing.SourceReference.DocumentName} />
+      <InfoRow label="Source reference identification" value={hearing.SourceReference.UniqueID} />
+      <InfoRow label="Source reference document type" value={hearing.SourceReference.DocumentType} />
+      <InfoRow label="Court type" value={getCourtType(hearing.CourtType)} />
+      <InfoRow label="LJA code" value={hearing.CourtHouseCode.toString()} />
+      <InfoRow label="Court name" value={hearing.CourtHouseName} />
+      <InfoRow label="Hearing language" value={getLanguage(hearing.HearingLanguage)} />
+      <InfoRow label="Documentation language" value={getLanguage(hearing.HearingDocumentationLanguage)} />
+    </Card>
   )
 }
