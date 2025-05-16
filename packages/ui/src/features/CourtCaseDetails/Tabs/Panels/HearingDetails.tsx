@@ -33,7 +33,7 @@ export const HearingDetails = ({ hearing }: HearingDetailsProps) => {
   }
 
   return (
-    <Card heading={"Hearing details"} isContentVisible={true}>
+    <Card heading={"Hearing details"}>
       <InfoRow label="Court location" value={hearing.CourtHearingLocation.OrganisationUnitCode} />
       <InfoRow label="Date of hearing" value={formatDisplayedDate(hearing.DateOfHearing)} />
       <InfoRow label="Time of hearing" value={hearing.TimeOfHearing} />

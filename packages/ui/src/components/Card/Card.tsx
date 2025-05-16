@@ -2,13 +2,19 @@ import { AccordionToggle, HeaderWrapper } from "./Card.styles"
 
 interface CardProps {
   heading: string
-  isContentVisible: boolean
   children: React.ReactNode
+  isContentVisible?: boolean
   contentInstanceKey?: string
   toggleContentVisibility?: () => void
 }
 
-const Card = ({ heading, contentInstanceKey, isContentVisible, toggleContentVisibility, children }: CardProps) => {
+const Card = ({
+  heading,
+  contentInstanceKey,
+  isContentVisible = true,
+  toggleContentVisibility,
+  children
+}: CardProps) => {
   const contentKey = heading.split(" ").join("-").toLowerCase()
   const indexedKey = contentInstanceKey ?? contentKey
   const accordion = isContentVisible
