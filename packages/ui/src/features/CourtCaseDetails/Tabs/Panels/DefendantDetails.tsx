@@ -28,7 +28,7 @@ export const DefendantDetails = () => {
 
   return (
     <>
-      <Card heading={"Defendant details"} isContentVisible={true}>
+      <Card heading={"Defendant details"}>
         {asnSystemErrorExceptionPrompt ? (
           <ExceptionFieldRow
             badgeText={ExceptionBadgeType.SystemError}
