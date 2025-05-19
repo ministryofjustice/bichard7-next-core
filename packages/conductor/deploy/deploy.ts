@@ -1,4 +1,3 @@
-import { isError } from "@moj-bichard7/common/types/Result"
 import fs from "fs/promises"
 
 import ConductorGateway from "./ConductorGateway"
@@ -38,7 +37,7 @@ const main = async () => {
 
   const existingEventHandlers = await EventHandler.getAll(conductor)
 
-  if (isError(existingEventHandlers)) {
+  if (existingEventHandlers instanceof Error) {
     console.error(existingEventHandlers.message)
     process.exit(1)
   }
