@@ -110,7 +110,7 @@ describe("View case details", () => {
     clickTab("Hearing")
     cy.get("h2").contains("Hearing details")
     clickTab("Case")
-    cy.get("h3").contains("Case")
+    cy.get("h2").contains("Case")
     clickTab("Offences")
     cy.get("h3").contains("Offences")
     clickTab("Notes")
@@ -170,18 +170,12 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Case")
-    const expectedRows = [
-      ["PTIURN", "01ZD0303208"],
-      ["Force owner", "Metropolitan Police Service 01ZD00"],
-      ["Court case reference", "97/1626/008395Q"],
-      ["Court reference", "01ZD0303208"],
-      ["Notifiable to PNC", "Yes"],
-      ["Pre decision ind", "No"]
-    ]
-    expectedRows.map((row) => {
-      cy.get("tbody th").contains(row[0]).should("exist")
-      cy.get("tbody th").contains(row[0]).next().should("contain.text", row[1])
-    })
+    cy.contains("dt", "PTIURN").siblings().contains("01ZD0303208")
+    cy.contains("dt", "Force owner").siblings().contains("Metropolitan Police Service 01ZD00")
+    cy.contains("dt", "Court case reference").siblings().contains("97/1626/008395Q")
+    cy.contains("dt", "Court reference").siblings().contains("01ZD0303208")
+    cy.contains("dt", "Notifiable to PNC").siblings().contains("Yes")
+    cy.contains("dt", "Pre decision ind").siblings().contains("No")
   })
 
   it("Should display the content of the Hearing tab", () => {
@@ -551,11 +545,12 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h3").should("not.have.text", "Case")
+    cy.get('[data-testid="case"]').should("not.be.visible")
+    cy.get("h2").should("not.have.text", "Case")
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Organisation unit code / Case Details")
     cy.get(".exception-header .exception-location").click()
-    cy.get("h3:visible").should("have.text", "Case")
+    cy.get('[data-testid="case"]').should("be.visible")
   })
 
   it("Should show contextual help for a trigger when the accordion button is clicked", () => {
