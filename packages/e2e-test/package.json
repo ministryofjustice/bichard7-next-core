@@ -43,6 +43,8 @@
     "@faker-js/faker": "^9.7.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.273",
     "@types/jest": "^29.5.14",
+    "@aws-sdk/lib-storage": "^3.806.0",
+    "@aws-sdk/client-s3": "^3.806.0",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.9.0",
     "csv-parse": "^5.6.0",
