@@ -39,7 +39,6 @@ const nextConfig = {
         "organisation-unit",
         "crest-disposal",
         "result-code",
-        "result-qualifier-code",
         "country",
         "pnc-disposal"
       ]
