@@ -34,6 +34,8 @@ const nextConfig = {
     if (!isServer) {
       const emptyJSONPath = require.resolve("./empty.json")
 
+      // The following JSON files are large so we don't want to send them to the client.
+      // Also, the client React does not use these files
       const jsonFiles = [
         "offence-code",
         "organisation-unit",
