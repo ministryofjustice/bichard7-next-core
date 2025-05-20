@@ -3,6 +3,8 @@ import { INFO_BANNER_FIRST_SHOWN } from "config"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
+import { useEffect } from "react"
+import { Ui } from "types/Ui"
 import { LinkButton } from "./Buttons/LinkButton"
 import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
@@ -19,7 +21,12 @@ interface BichardSwitchProps {
 
 const BichardSwitchButton: React.FC<BichardSwitchProps> = ({ href }: BichardSwitchProps) => {
   return (
-    <LinkButton className={"BichardSwitch"} style={{ marginBottom: "10px" }} href={href}>
+    <LinkButton
+      className={"BichardSwitch"}
+      style={{ marginBottom: "10px" }}
+      href={href}
+      onClick={() => localStorage.setItem("currentUi", Ui.Old)}
+    >
       {"Switch to old Bichard"}
     </LinkButton>
   )
@@ -48,6 +55,10 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
     })
     bichardSwitchUrl = `${basePath}/switching-feedback?${searchParams}`
   }
+
+  useEffect(() => {
+    localStorage.setItem("currentUi", Ui.New)
+  })
 
   return (
     <>
