@@ -98,7 +98,6 @@
     "@io-orkes/conductor-javascript": "^2.1.4",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.273",
     "@types/lodash.ismatch": "^4.4.9",
-    "aws-sdk": "^2.1692.0",
     "axios": "^1.9.0",
     "diff": "^7.0.0",
     "dynalite": "^3.2.2",
