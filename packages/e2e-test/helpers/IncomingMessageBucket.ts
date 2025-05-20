@@ -3,6 +3,7 @@ import { S3, S3ClientConfig } from "@aws-sdk/client-s3"
 import { format } from "date-fns"
 import getUtcDate from "../utils/getUtcDate"
 
+console.log("asdfasd")
 type IncomingMessageBucketConfig = {
   region: string
   url: string
