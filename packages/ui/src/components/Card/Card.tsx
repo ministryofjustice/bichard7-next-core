@@ -2,13 +2,19 @@ import { AccordionToggle, HeaderWrapper } from "./Card.styles"
 
 interface CardProps {
   heading: string
-  isContentVisible: boolean
   children: React.ReactNode
+  isContentVisible?: boolean
   contentInstanceKey?: string
   toggleContentVisibility?: () => void
 }
 
-const Card = ({ heading, contentInstanceKey, isContentVisible, toggleContentVisibility, children }: CardProps) => {
+const Card = ({
+  heading,
+  contentInstanceKey,
+  isContentVisible = true,
+  toggleContentVisibility,
+  children
+}: CardProps) => {
   const contentKey = heading.split(" ").join("-").toLowerCase()
   const indexedKey = contentInstanceKey ?? contentKey
   const accordion = isContentVisible
@@ -22,6 +28,7 @@ const Card = ({ heading, contentInstanceKey, isContentVisible, toggleContentVisi
         onClick={toggleContentVisibility}
         aria-expanded={isContentVisible}
         aria-controls={indexedKey}
+        $clickable={!!toggleContentVisibility}
       >
         <h2
           className={"govuk-summary-card__title"}
@@ -31,10 +38,12 @@ const Card = ({ heading, contentInstanceKey, isContentVisible, toggleContentVisi
         >
           {heading}
         </h2>
-        <AccordionToggle>
-          <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
-          <span>{accordion.text}</span>
-        </AccordionToggle>
+        {toggleContentVisibility && (
+          <AccordionToggle>
+            <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
+            <span>{accordion.text}</span>
+          </AccordionToggle>
+        )}
       </HeaderWrapper>
       {isContentVisible && (
         <div id={`${indexedKey}`} className="govuk-summary-card__content">

@@ -106,11 +106,11 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Defendant")
-    cy.get("h3").contains("Defendant details")
+    cy.get("h2").contains("Defendant details")
     clickTab("Hearing")
-    cy.get("h3").contains("Hearing details")
+    cy.get("h2").contains("Hearing details")
     clickTab("Case")
-    cy.get("h3").contains("Case")
+    cy.get("h2").contains("Case")
     clickTab("Offences")
     cy.get("h3").contains("Offences")
     clickTab("Notes")
@@ -128,15 +128,15 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Defendant")
-    cy.contains("th", "ASN").siblings().contains("11/01ZD/01/448754K")
-    cy.contains("th", "PNC Check name").siblings().contains("SEXOFFENCE")
-    cy.contains("th", "Given name").siblings().contains("TRPRFOUR")
-    cy.contains("th", "Family name").siblings().contains("SEXOFFENCE")
-    cy.contains("th", "Title").siblings().contains("Mr")
-    cy.contains("th", "Date of birth").siblings().contains("11/11/1948")
-    cy.contains("th", "Gender").siblings().contains("1 (male)")
+    cy.contains("dt", "ASN").siblings().contains("11/01ZD/01/448754K")
+    cy.contains("dt", "PNC Check name").siblings().contains("SEXOFFENCE")
+    cy.contains("dt", "Given name").siblings().contains("TRPRFOUR")
+    cy.contains("dt", "Family name").siblings().contains("SEXOFFENCE")
+    cy.contains("dt", "Title").siblings().contains("Mr")
+    cy.contains("dt", "Date of birth").siblings().contains("11/11/1948")
+    cy.contains("dt", "Gender").siblings().contains("1 (male)")
 
-    cy.contains("th", "Address")
+    cy.contains("dt", "Address")
       .siblings()
       .contains("Scenario1 Address Line 1")
       .siblings()
@@ -144,18 +144,18 @@ describe("View case details", () => {
       .siblings()
       .contains("Scenario1 Address Line 3")
 
-    cy.contains("th", "PNC file name").siblings().contains("SEXOFFENCE/TRPRFOUR")
-    cy.contains("th", "Remand status").siblings().contains("Unconditional bail")
+    cy.contains("dt", "PNC file name").siblings().contains("SEXOFFENCE/TRPRFOUR")
+    cy.contains("dt", "Remand status").siblings().contains("Unconditional bail")
     cy.get("h3").contains("Notes")
-    cy.contains("th", "Exclusion").siblings().contains("Exclusion: text describing exclusion")
-    cy.contains("th", "Other")
+    cy.contains("dt", "Exclusion").siblings().contains("Exclusion: text describing exclusion")
+    cy.contains("dt", "Other")
       .siblings()
       .contains("Other: not to go to the address of 11 Made Up street, Somewhere town")
-    cy.contains("th", "Residence")
+    cy.contains("dt", "Residence")
       .siblings()
       .contains("Residence: live and sleep each night at 29 Made Up street, Another town")
-    cy.contains("th", "Curfew").siblings().contains("Curfew: curfew conditions")
-    cy.contains("th", "Bail reason").siblings().contains("to prevent offending")
+    cy.contains("dt", "Curfew").siblings().contains("Curfew: curfew conditions")
+    cy.contains("dt", "Bail reason").siblings().contains("to prevent offending")
   })
 
   it("Should display the content of the Case tab", () => {
@@ -170,18 +170,12 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Case")
-    const expectedRows = [
-      ["PTIURN", "01ZD0303208"],
-      ["Force owner", "Metropolitan Police Service 01ZD00"],
-      ["Court case reference", "97/1626/008395Q"],
-      ["Court reference", "01ZD0303208"],
-      ["Notifiable to PNC", "Yes"],
-      ["Pre decision ind", "No"]
-    ]
-    expectedRows.map((row) => {
-      cy.get("tbody th").contains(row[0]).should("exist")
-      cy.get("tbody th").contains(row[0]).next().should("contain.text", row[1])
-    })
+    cy.contains("dt", "PTIURN").siblings().contains("01ZD0303208")
+    cy.contains("dt", "Force owner").siblings().contains("Metropolitan Police Service 01ZD00")
+    cy.contains("dt", "Court case reference").siblings().contains("97/1626/008395Q")
+    cy.contains("dt", "Court reference").siblings().contains("01ZD0303208")
+    cy.contains("dt", "Notifiable to PNC").siblings().contains("Yes")
+    cy.contains("dt", "Pre decision ind").siblings().contains("No")
   })
 
   it("Should display the content of the Hearing tab", () => {
@@ -196,18 +190,18 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     clickTab("Hearing")
-    cy.contains("th", "Court location").siblings().contains("B01EF01")
-    cy.contains("th", "Date of hearing").siblings().contains("26/09/2011")
-    cy.contains("th", "Time of hearing").siblings().contains("10:00")
-    cy.contains("th", "Defendant present").siblings().contains("A")
-    cy.contains("th", "Source reference document name").siblings().contains("SPI TRPRFOUR SEXOFFENCE")
-    cy.contains("th", "Source reference identification").siblings().contains("CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415")
-    cy.contains("th", "Source reference document type").siblings().contains("SPI Case Result")
-    cy.contains("th", "Court type").siblings().contains("MCA (MC adult)")
-    cy.contains("th", "LJA code").siblings().contains("2576")
-    cy.contains("th", "Court name").siblings().contains("London Croydon")
-    cy.contains("th", "Hearing language").siblings().contains("Don't know (D)")
-    cy.contains("th", "Documentation language").siblings().contains("Don't know (D)")
+    cy.contains("dt", "Court location").siblings().contains("B01EF01")
+    cy.contains("dt", "Date of hearing").siblings().contains("26/09/2011")
+    cy.contains("dt", "Time of hearing").siblings().contains("10:00")
+    cy.contains("dt", "Defendant present").siblings().contains("A")
+    cy.contains("dt", "Source reference document name").siblings().contains("SPI TRPRFOUR SEXOFFENCE")
+    cy.contains("dt", "Source reference identification").siblings().contains("CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415")
+    cy.contains("dt", "Source reference document type").siblings().contains("SPI Case Result")
+    cy.contains("dt", "Court type").siblings().contains("MCA (MC adult)")
+    cy.contains("dt", "LJA code").siblings().contains("2576")
+    cy.contains("dt", "Court name").siblings().contains("London Croydon")
+    cy.contains("dt", "Hearing language").siblings().contains("Don't know (D)")
+    cy.contains("dt", "Documentation language").siblings().contains("Don't know (D)")
   })
 
   it("Should display the content of the Offences tab", () => {
@@ -551,11 +545,12 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("h3").should("not.have.text", "Case")
+    cy.get('[data-testid="case"]').should("not.be.visible")
+    cy.get("h2").should("not.have.text", "Case")
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Organisation unit code / Case Details")
     cy.get(".exception-header .exception-location").click()
-    cy.get("h3:visible").should("have.text", "Case")
+    cy.get('[data-testid="case"]').should("be.visible")
   })
 
   it("Should show contextual help for a trigger when the accordion button is clicked", () => {

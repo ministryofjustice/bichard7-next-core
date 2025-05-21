@@ -32,9 +32,23 @@ const main = async () => {
   const eventHandlers = eventHandlerFilenames.map(
     (filename) => new EventHandler(`${eventHandlerDir}/${filename}`, conductor)
   )
-
   const eventHandlerPromises = eventHandlers.map((eventHandler) => eventHandler.upsert())
   await Promise.all(eventHandlerPromises)
+
+  const existingEventHandlers = await EventHandler.getAll(conductor)
+
+  if (existingEventHandlers instanceof Error) {
+    console.error(existingEventHandlers.message)
+    process.exit(1)
+  }
+
+  const eventHandlersToRemove = existingEventHandlers.filter(
+    (existingEventHandler) => !eventHandlers.map((e) => e.name).includes(existingEventHandler.name)
+  )
+  const eventHandlersToRemovePromises = eventHandlersToRemove.map((eventHandler) =>
+    EventHandler.delete(conductor, eventHandler.name)
+  )
+  await Promise.all(eventHandlersToRemovePromises)
 }
 
 main()

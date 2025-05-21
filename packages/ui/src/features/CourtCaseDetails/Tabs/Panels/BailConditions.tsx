@@ -1,6 +1,7 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Card } from "components/Card"
 import ConditionalRender from "../../../../components/ConditionalRender"
-import { TableRow } from "./TableRow"
+import { InfoRow } from "./InfoRow"
 
 interface BailConditionsProps {
   bailConditions?: string[]
@@ -26,21 +27,17 @@ export const BailConditions = ({ bailConditions, bailReason, offences }: BailCon
 
   return (
     <ConditionalRender isRendered={conditions.length > 0}>
-      <p />
-      <h3 className="govuk-heading-s">{"Bail conditions"}</h3>
-      <table className="govuk-table">
-        <tbody className="govuk-table__body">
-          {conditions.map((condition, i) => (
-            <TableRow
-              key={`bail-condition-${i}`}
-              label={condition.label}
-              hintText={condition.offenceIndex ? `Offence ${condition.offenceIndex}` : ""}
-              value={condition.value}
-            />
-          ))}
-          {bailReason && <TableRow label="Bail reason" value={bailReason} />}
-        </tbody>
-      </table>
+      <Card heading={"Bail conditions"} isContentVisible={true}>
+        {conditions.map((condition, i) => (
+          <InfoRow
+            key={`bail-condition-${i}`}
+            label={condition.label}
+            hintText={condition.offenceIndex ? `Offence ${condition.offenceIndex}` : ""}
+            value={condition.value}
+          />
+        ))}
+        {bailReason && <InfoRow label="Bail reason" value={bailReason} />}
+      </Card>
     </ConditionalRender>
   )
 }

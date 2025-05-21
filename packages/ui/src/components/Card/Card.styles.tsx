@@ -1,9 +1,13 @@
 import styled from "styled-components"
 import { blue, lightGrey } from "utils/colours"
 
-const HeaderWrapper = styled.div`
+interface HeaderWrapperProps {
+  $clickable?: boolean
+}
+
+const HeaderWrapper = styled.div<HeaderWrapperProps>`
   background-color: ${lightGrey};
-  cursor: pointer;
+  ${({ $clickable }) => $clickable && "cursor: pointer;"}
 `
 
 const AccordionToggle = styled.div`
