@@ -12,6 +12,7 @@ import { triggersAreLockedByAnotherUser } from "services/case"
 import { DisplayTrigger } from "types/display/Triggers"
 import type NavigationHandler from "types/NavigationHandler"
 import Form from "../../../components/Form"
+import { updateTabLink } from "../../../utils/updateTabLink"
 import LockStatusTag from "../LockStatusTag"
 import Trigger from "./Trigger"
 import { LockStatus, MarkCompleteGridCol, SelectAllTriggersGridRow } from "./TriggersList.styles"
@@ -23,6 +24,7 @@ interface Props {
 const TriggersList = ({ onNavigate }: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
+  const router = useRouter()
 
   const [selectedTriggerIds, setSelectedTriggerIds] = useState<number[]>([])
   const { basePath, query } = useRouter()
@@ -52,6 +54,7 @@ const TriggersList = ({ onNavigate }: Props) => {
   }
 
   const handleClick = (offenceOrderIndex?: number) => {
+    updateTabLink(router, "Offences")
     onNavigate({ location: "Case Details > Offences", args: { offenceOrderIndex } })
   }
 

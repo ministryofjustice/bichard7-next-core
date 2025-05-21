@@ -1,7 +1,9 @@
 import { useCourtCase } from "context/CourtCaseContext"
+import { useRouter } from "next/router"
 import CaseDetailsTab from "types/CaseDetailsTab"
 import { CHECKMARK_ICON_URL } from "utils/icons"
 import type { TabDetails } from "utils/tabDetails/getTabDetails"
+import { updateTabLink } from "../../../utils/updateTabLink"
 import { CheckmarkIcon } from "./CourtCaseDetailsSingleTab.styles"
 
 interface CourtCaseDetailsSingleTabProps {
@@ -16,13 +18,17 @@ export const CourtCaseDetailsSingleTab = ({ tab, isActive, onClick }: CourtCaseD
   } = useCourtCase()
   const displayExceptionCount: boolean = tab.exceptionsCount > 0 && errorStatus === "Unresolved"
 
+  const router = useRouter()
+  const newPath = updateTabLink(router, tab.name)
+
   return (
     <li className="moj-sub-navigation__item">
       <a
         className="moj-sub-navigation__link"
         aria-current={isActive ? "page" : undefined}
-        href="/"
+        href={router.basePath + newPath}
         onClick={(e) => {
+          router.replace(newPath, newPath, { shallow: true })
           e.preventDefault()
           onClick(tab.name)
         }}

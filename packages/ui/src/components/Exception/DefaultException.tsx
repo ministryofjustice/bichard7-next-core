@@ -1,5 +1,7 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { useRouter } from "next/router"
 import ErrorMessages from "types/ErrorMessages"
+import { updateTabLink } from "utils/updateTabLink"
 import NavigationHandler from "../../types/NavigationHandler"
 import getExceptionDefinition from "../../utils/exceptionDefinition/getExceptionDefinition"
 import getExceptionPathDetails from "../../utils/getExceptionPathDetails"
@@ -16,14 +18,17 @@ const DefaultException = ({ path, code, onNavigate }: Props) => {
   const { tab, offenceOrderIndex, formattedFieldName, location } = getExceptionPathDetails(path)
   const exceptionDefinition =
     getExceptionDefinition(code)?.shortDescription || ErrorMessages[code as keyof typeof ErrorMessages]
+  const router = useRouter()
 
   const handleClick = () => {
     switch (tab) {
       case "Offences":
         onNavigate({ location: "Case Details > Offences", args: { offenceOrderIndex } })
+        updateTabLink(router, tab)
         break
       case "Case":
         onNavigate({ location: "Case Details > Case" })
+        updateTabLink(router, tab)
         break
     }
     window.scrollTo({ top: 0, behavior: "smooth" })
