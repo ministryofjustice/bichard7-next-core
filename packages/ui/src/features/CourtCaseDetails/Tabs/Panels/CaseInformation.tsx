@@ -1,6 +1,7 @@
 import { Case } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Card } from "components/Card"
 import formatForce from "utils/formatForce"
-import { TableRow } from "./TableRow"
+import { InfoRow } from "./InfoRow"
 
 interface caseInformationProps {
   caseInformation: Case
@@ -58,12 +59,10 @@ export const CaseInformation = ({ caseInformation }: caseInformationProps) => {
   })
 
   return (
-    <table className="govuk-table">
-      <tbody className="govuk-table__body">
-        {rows.map((row, idx) => (
-          <TableRow label={row.label} value={row.value} key={idx} />
-        ))}
-      </tbody>
-    </table>
+    <Card heading={"Case"}>
+      {rows.map((row, idx) => (
+        <InfoRow label={row.label} value={row.value} key={idx} />
+      ))}
+    </Card>
   )
 }
