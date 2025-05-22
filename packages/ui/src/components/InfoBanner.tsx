@@ -2,6 +2,7 @@ import { addDays, format, isAfter, isFuture } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Banner, CloseButton } from "./InfoBanner.styles"
+import { LocalStorageKey } from "types/Ui"
 
 interface Props {
   firstShownDate: Date | undefined
@@ -29,7 +30,7 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
       return
     }
 
-    const lastClosed = localStorage.getItem("infoBannerLastClosed")
+    const lastClosed = localStorage.getItem(LocalStorageKey.InfoBannerLastClosed)
     const dateFormat = "yyyy-MM-dd"
 
     if (lastClosed && format(lastClosed, dateFormat) === format(new Date(), dateFormat)) {
@@ -41,7 +42,7 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
 
   const handleClose = () => {
     setVisible(false)
-    localStorage.setItem("infoBannerLastClosed", new Date().toISOString())
+    localStorage.setItem(LocalStorageKey.InfoBannerLastClosed, new Date().toISOString())
   }
 
   if (!mounted || !visible) {

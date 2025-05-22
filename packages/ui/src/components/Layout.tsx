@@ -4,7 +4,7 @@ import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { Ui } from "types/Ui"
+import { LocalStorageKey, Ui } from "types/Ui"
 import { LinkButton } from "./Buttons/LinkButton"
 import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
@@ -25,7 +25,7 @@ const BichardSwitchButton: React.FC<BichardSwitchProps> = ({ href }: BichardSwit
       className={"BichardSwitch"}
       style={{ marginBottom: "10px" }}
       href={href}
-      onClick={() => localStorage.setItem("currentUi", Ui.Old)}
+      onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.Old)}
     >
       {"Switch to old Bichard"}
     </LinkButton>
@@ -58,7 +58,7 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
 
   useEffect(() => {
     if (!window.location.href.includes("switching-feedback")) {
-      localStorage.setItem("currentUi", Ui.New)
+      localStorage.setItem(LocalStorageKey.CurrentUi, Ui.New)
     }
   }, [])
 
