@@ -24,6 +24,7 @@ export const CourtCaseDetailsSingleTab = ({ tab, isActive, onClick }: CourtCaseD
   return (
     <li className="moj-sub-navigation__item">
       <a
+        id={`${tab.name.toLowerCase()}-tab`}
         className="moj-sub-navigation__link"
         aria-current={isActive ? "page" : undefined}
         href={router.basePath + newPath}

@@ -182,7 +182,7 @@ export const loadTab = async function (this: Bichard, tabName: string) {
     return
   }
 
-  await this.browser.page.click(`text=${tabName}`)
+  await this.browser.page.click(`#${tabName.toLowerCase()}-tab`)
 }
 
 export const returnToOffenceList = async function (this: Bichard) {
