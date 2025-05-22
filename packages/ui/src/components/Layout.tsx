@@ -57,8 +57,10 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
   }
 
   useEffect(() => {
-    localStorage.setItem("currentUi", Ui.New)
-  })
+    if (!window.location.href.includes("switching-feedback")) {
+      localStorage.setItem("currentUi", Ui.New)
+    }
+  }, [])
 
   return (
     <>
