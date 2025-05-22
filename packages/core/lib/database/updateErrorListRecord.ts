@@ -38,11 +38,17 @@ const updateErrorListRecord = async (db: Sql, recordId: number, result: PhaseRes
     const updateResult = await db<ErrorListRecord[]>`
       UPDATE br7own.error_list SET ${db(updateFields)},
         trigger_status = CASE
-          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId} AND status <> ${
-            ResolutionStatus.RESOLVED
-          }::integer) > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
-          WHEN trigger_status IS NULL THEN NULL
-          ELSE ${ResolutionStatus.RESOLVED}::integer
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId} AND status <> ${ResolutionStatus.RESOLVED}::integer) > 0 THEN ${ResolutionStatus.UNRESOLVED}::integer
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId}) > 0 THEN ${ResolutionStatus.RESOLVED}::integer
+          ELSE NULL
+        END,
+        trigger_resolved_ts = CASE
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId} AND status <> ${ResolutionStatus.RESOLVED}::integer) > 0 THEN NULL
+          ELSE trigger_resolved_ts
+        END,
+        trigger_resolved_by = CASE
+          WHEN (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId} AND status <> ${ResolutionStatus.RESOLVED}::integer) > 0 THEN NULL
+          ELSE trigger_resolved_by
         END,
         trigger_count = (SELECT COUNT(*) FROM br7own.error_list_triggers WHERE error_id = ${recordId}),
         trigger_reason = (SELECT trigger_code FROM br7own.error_list_triggers WHERE error_id = ${recordId} LIMIT 1),

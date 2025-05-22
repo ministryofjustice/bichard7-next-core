@@ -206,4 +206,61 @@ describe("updateErrorListRecord", () => {
       expect(updatedRecord.trigger_quality_checked).toBe(1)
     })
   })
+
+  it("should clear trigger_resolved_ts and trigger_resolved_by when trigger is raised after resubmission", async () => {
+    const result = generateMockPhase1Result()
+    result.hearingOutcome.Exceptions = [
+      {
+        code: ExceptionCode.HO100206,
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
+    ]
+    const recordId = await insertErrorListRecord(db, result)
+    await db<ErrorListRecord[]>`UPDATE br7own.error_list SET
+        error_status = 2, trigger_resolved_by = 'dummy.user', trigger_resolved_ts = ${new Date()}
+        WHERE error_id = ${recordId}`
+    await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers
+        (trigger_id, error_id, trigger_code, status, create_ts, resolved_by, resolved_ts)
+        VALUES (1, ${recordId}, 'TRPR0001', ${ResolutionStatus.RESOLVED}, ${new Date()}, 'dummy.user' , ${new Date()})`
+    await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers
+        (trigger_id, error_id, trigger_code, status, create_ts)
+        VALUES (2, ${recordId}, 'TRPR0001', ${ResolutionStatus.UNRESOLVED}, ${new Date()})`
+    result.hearingOutcome.Exceptions = []
+    await updateErrorListRecord(db, recordId, result)
+
+    const updatedRecord = (
+      await db<ErrorListRecord[]>`
+        SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
+    )[0]
+
+    expect(updatedRecord.trigger_status).toBe(ResolutionStatus.UNRESOLVED)
+    expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
+  })
+
+  it("should keep trigger_resolved_ts and trigger_resolved_by when trigger is resolved", async () => {
+    const result = generateMockPhase1Result()
+    result.hearingOutcome.Exceptions = [
+      {
+        code: ExceptionCode.HO100206,
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      }
+    ]
+    const recordId = await insertErrorListRecord(db, result)
+    await db<ErrorListRecord[]>`UPDATE br7own.error_list SET
+        error_status = 2, trigger_resolved_by = 'dummy.user', trigger_resolved_ts = ${new Date()}
+        WHERE error_id = ${recordId}`
+    await db<ErrorListTriggerRecord[]>`INSERT INTO br7own.error_list_triggers
+        (trigger_id, error_id, trigger_code, status, create_ts, resolved_by, resolved_ts)
+        VALUES (1, ${recordId}, 'TRPR0001', ${ResolutionStatus.RESOLVED}, ${new Date()}, 'dummy.user' , ${new Date()})`
+    result.hearingOutcome.Exceptions = []
+    await updateErrorListRecord(db, recordId, result)
+
+    const updatedRecord = (
+      await db<ErrorListRecord[]>`
+        SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
+    )[0]
+
+    expect(updatedRecord.trigger_status).toBe(ResolutionStatus.RESOLVED)
+    expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
+  })
 })
