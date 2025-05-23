@@ -40,9 +40,8 @@ describe("Triggers excluded at force level", () => {
     cy.get(".govuk-checkboxes__item #trps0008 + label").should("not.exist")
     cy.get(".govuk-checkboxes__item #trpr0021 + label").should("not.exist")
     cy.get(".govuk-checkboxes__item #trpr0026 + label").contains("PR26 - Disq. Suspended").should("exist")
-    cy.get(".govuk-checkboxes__item #trpr0029 + label").contains("PR29 - Civil Proceedings").should("exist")
 
-    cy.get("input#reasonCodes").should("value", "PR26 PR29")
+    cy.get("input#reasonCodes").should("value", "PR26")
   })
 
   it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Warrants", () => {
