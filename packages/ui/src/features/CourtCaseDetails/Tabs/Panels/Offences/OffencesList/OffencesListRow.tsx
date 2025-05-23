@@ -1,12 +1,13 @@
+import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import WarningIcon from "components/WarningIcon"
 import { useCourtCase } from "context/CourtCaseContext"
 import Image from "next/image"
+import { useRouter } from "next/router"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
 import { CHECKMARK_ICON_URL } from "utils/icons"
 import { IconContainer } from "./OffencesListRow.styles"
-import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 
 interface OffencesListRowProps {
   offence: Offence
@@ -17,6 +18,7 @@ interface OffencesListRowProps {
 export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesListRowProps) => {
   const { courtCase, amendments } = useCourtCase()
   const exceptions = courtCase.aho.Exceptions
+  const router = useRouter()
 
   const offenceAlerts = getOffenceAlertsDetails(exceptions, amendments)
 
@@ -49,7 +51,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
         <a
           id={`offence-${offence.CourtOffenceSequenceNumber}`}
           className={`govuk-link`}
-          href="/"
+          href={router.basePath + router.asPath}
           onClick={(e) => {
             e.preventDefault()
             onClick(offence)

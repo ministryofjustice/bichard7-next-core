@@ -182,6 +182,14 @@ export const loadTab = async function (this: Bichard, tabName: string) {
     return
   }
 
+  // TODO: This a temporary fix to get the e2e_tests passing. They do not have the latest UI image
+  const tab = await this.browser.page.$$(`#${tabName.toLowerCase()}-tab`)
+
+  if (tab.length > 0) {
+    await tab[0].click()
+    return
+  }
+
   await this.browser.page.click(`text=${tabName}`)
 }
 

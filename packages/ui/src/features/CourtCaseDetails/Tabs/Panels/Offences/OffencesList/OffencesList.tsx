@@ -1,6 +1,7 @@
 import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 
 import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
+import { ScreenReaderOnly } from "./OffencesList.styles"
 import { OffencesListRow } from "./OffencesListRow"
 
 interface OffencesListProps {
@@ -15,7 +16,9 @@ export const OffencesList = ({ offences, setDetailedOffenceIndex }: OffencesList
       <table className="govuk-table">
         <thead className="govuk-table__head">
           <tr className="govuk-table__row">
-            <th scope="col" className="govuk-table__header" />
+            <th scope="col" className="govuk-table__header">
+              <ScreenReaderOnly className="sr-only">{"Exception icon"}</ScreenReaderOnly>
+            </th>
             <th scope="col" className="govuk-table__header">
               {"Offence number"}
             </th>
