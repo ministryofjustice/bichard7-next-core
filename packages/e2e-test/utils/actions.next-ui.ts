@@ -1,4 +1,5 @@
 import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
+import assert from "assert"
 import { expect } from "expect"
 import type { KeyInput, Page } from "puppeteer"
 import type BrowserHelper from "../helpers/BrowserHelper"
@@ -9,7 +10,7 @@ import {
   reloadUntilNotContent,
   reloadUntilXPathSelector
 } from "./puppeteer-utils"
-import { caseListPage } from "./urls"
+import { caseListPage, notFoundPage } from "./urls"
 import type Bichard from "./world"
 
 const waitForRecord = (name: string | null, page: Page, reloadAttempts?: number) => {
@@ -443,6 +444,14 @@ export const goToExceptionList = async function (this: Bichard) {
   await Promise.all([this.browser.page.waitForNavigation(), this.browser.page.goto(caseListPage())])
 }
 
+export const goToNotFoundPage = async function (this: Bichard) {
+  if (this.config.noUi) {
+    return
+  }
+
+  await Promise.all([this.browser.page.waitForNavigation(), this.browser.page.goto(notFoundPage())])
+}
+
 // TODO: refactor down with noExceptionsPresentForOffender
 export const noTriggersPresentForOffender = async function (this: Bichard, name: string) {
   await this.browser.page.waitForSelector("#triggers-reason")
@@ -688,6 +697,25 @@ export const seeBadge = async function (this: Bichard, badge: string) {
   const { page } = this.browser
 
   await page.$$(`xpath/.//span[contains(@class, "moj-badge") and text() = "${badge}"]`)
+}
+
+export const seeButton = async function (this: Bichard, buttonText: string, className: string) {
+  const { page } = this.browser
+
+  let elements
+
+  if (className === "wpsToolBarBichardSwitch") {
+    elements = await page.$$(
+      `xpath/.//div[contains(@class, "${className}")]//button[normalize-space()="${buttonText}"]`
+    )
+  } else {
+    elements = await page.$$(`xpath/.//a[contains(@class, "${className}")][normalize-space()="${buttonText}"]`)
+  }
+
+  assert(
+    elements.length > 0,
+    `Expected to find button with text "${buttonText}" inside div with class "${className}", but found none`
+  )
 }
 
 export const goToExceptionPage = async function (this: Bichard, exception: string) {

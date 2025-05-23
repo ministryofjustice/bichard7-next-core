@@ -7,3 +7,4 @@ export const caseListPage = () => url(nextui ? "/bichard" : "/bichard-ui/Initial
 export const authenticateUrl = (token: string) => url(`/bichard-ui/Authenticate?token=${token}`)
 export const logout = () => url("/bichard-ui/bichard-lo")
 export const login = () => url("/users/login")
+export const notFoundPage = () => url(nextui ? "/bichard/xx" : "/bichard-ui/InitialRefreshList/xx")
