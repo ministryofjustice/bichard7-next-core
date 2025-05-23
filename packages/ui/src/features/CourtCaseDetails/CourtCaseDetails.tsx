@@ -1,9 +1,12 @@
 import { useCourtCase } from "context/CourtCaseContext"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
+import { useRouter } from "next/router"
 import { useCallback, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
 import type CaseDetailsTab from "types/CaseDetailsTab"
+import { isValidCaseDetailsTabArray } from "types/CaseDetailsTab"
 import type NavigationHandler from "types/NavigationHandler"
+import { updateTabLink } from "../../utils/updateTabLink"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
 import TriggersAndExceptions from "./Sidebar/Sidebar"
 import { CourtCaseDetailsPanel } from "./Tabs/CourtCaseDetailsPanels"
@@ -19,8 +22,19 @@ interface Props {
 }
 
 const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
+  const router = useRouter()
+  const { query } = router
+
+  const urlQueryTab = query.tab as string | undefined
+  const queryTab = `${urlQueryTab?.charAt(0).toUpperCase()}${urlQueryTab?.slice(1)}`
+  let tab: CaseDetailsTab | undefined
+
+  if (isValidCaseDetailsTabArray(queryTab)) {
+    tab = queryTab
+  }
+
   const { courtCase } = useCourtCase()
-  const [activeTab, setActiveTab] = useState<CaseDetailsTab>("Defendant")
+  const [activeTab, setActiveTab] = useState<CaseDetailsTab>(tab ?? "Defendant")
   const [selectedOffenceSequenceNumber, setSelectedOffenceSequenceNumber] = useState<number | undefined>(undefined)
   const [useBeforeUnload, setUseBeforeUnload] = useState<boolean>(false)
 
@@ -34,15 +48,23 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
 
   const handleNavigation: NavigationHandler = ({ location, args }) => {
     switch (location) {
-      case "Case Details > Case":
+      case "Case Details > Case": {
         setActiveTab("Case")
+        const newPath = updateTabLink(router, "Case")
+        router.replace(newPath, newPath, { shallow: true })
+
         break
-      case "Case Details > Offences":
+      }
+      case "Case Details > Offences": {
         if (typeof args?.offenceOrderIndex === "number") {
           setSelectedOffenceSequenceNumber(+args.offenceOrderIndex)
         }
         setActiveTab("Offences")
+        const newPath = updateTabLink(router, "Offences")
+        router.replace(newPath, newPath, { shallow: true })
+
         break
+      }
     }
   }
 
@@ -52,6 +74,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
         activeTab={activeTab}
         onTabClick={(tab) => {
           setActiveTab(tab)
+          updateTabLink(router, tab)
         }}
       />
 

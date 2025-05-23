@@ -1,5 +1,6 @@
 import ButtonsGroup from "components/ButtonsGroup"
 import { useCsrfToken } from "context/CsrfTokenContext"
+import { useRouter } from "next/router"
 import { useState } from "react"
 import Form from "../../../../components/Form"
 import { StyledLockedByButton } from "./LockedByButton.styles"
@@ -13,6 +14,7 @@ interface UnlockConfirmationProps {
 const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) => {
   const { csrfToken } = useCsrfToken()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = () => {
     setIsSubmitting(true)
@@ -28,7 +30,7 @@ const UnlockConfirmation = ({ onCancel, unlockPath }: UnlockConfirmationProps) =
           </button>
           <a
             className="govuk-link"
-            href="/"
+            href={router.basePath}
             onClick={(event) => {
               event.preventDefault()
               onCancel()
