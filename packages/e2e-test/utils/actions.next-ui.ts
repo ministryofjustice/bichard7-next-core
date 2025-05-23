@@ -701,7 +701,7 @@ export const seeButton = async function (this: Bichard, buttonText: string, clas
       `xpath/.//div[contains(@class, "${className}")]//button[normalize-space()="${buttonText}"]`
     )
   } else {
-    elements = await page.$$(`xpath/.//div[contains(@class, "${className}")]//a[normalize-space()="${buttonText}"]`)
+    elements = await page.$$(`xpath/.//a[contains(@class, "${className}")][normalize-space()="${buttonText}"]`)
   }
 
   assert(
