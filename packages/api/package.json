@@ -62,7 +62,7 @@
     "@fastify/autoload": "6.3.0",
     "@fastify/swagger": "^9.5.1",
     "@fastify/swagger-ui": "^5.2.2",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.274",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.276",
     "date-fns": "^4.1.0",
     "fastify": "^5.3.3",
     "fastify-zod-openapi": "^4.1.2",
