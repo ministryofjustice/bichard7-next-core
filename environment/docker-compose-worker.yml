@@ -4,8 +4,6 @@ services:
       context: ..
       dockerfile: ./packages/conductor/Dockerfile
     environment:
-      DYNAMO_REGION: eu-west-2
-      DYNAMO_URL: http://localstack:4566
       S3_REGION: eu-west-2
       CONDUCTOR_URL: http://conductor:4000/api
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
@@ -14,8 +12,6 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
       AWS_SECURITY_TOKEN: ${AWS_SECURITY_TOKEN}
-      DYNAMO_AWS_ACCESS_KEY_ID: FAKE
-      DYNAMO_AWS_SECRET_ACCESS_KEY: FAKE
       S3_AWS_ACCESS_KEY_ID: FAKE
       S3_AWS_SECRET_ACCESS_KEY: FAKE
       S3_ENDPOINT: http://localstack:4566
