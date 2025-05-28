@@ -1,5 +1,15 @@
 import { formatDisplayedDate } from "utils/date/formattedDate"
 
+const formatDisplayedDateWithTime = (date: Date, time?: string): string => {
+  const formattedDate = formatDisplayedDate(date, "dd/MM/yyyy")
+
+  if (time) {
+    return `${formattedDate} ${time}`
+  }
+
+  return formattedDate
+}
+
 interface PncOffenceDetailsProps {
   details: {
     sequenceNumber?: number
@@ -7,7 +17,9 @@ interface PncOffenceDetailsProps {
     acpoOffenceCode?: string
     title?: string
     startDate?: Date
+    startTime?: string
     endDate?: Date
+    endTime?: string
     qualifier1?: string
     qualifier2?: string
   }
@@ -21,7 +33,18 @@ interface PncOffenceDetailsProps {
 }
 
 const PncOffenceDetails = ({
-  details: { sequenceNumber, cjsOffenceCode, acpoOffenceCode, title, startDate, endDate, qualifier1, qualifier2 },
+  details: {
+    sequenceNumber,
+    cjsOffenceCode,
+    acpoOffenceCode,
+    title,
+    startDate,
+    startTime,
+    endDate,
+    endTime,
+    qualifier1,
+    qualifier2
+  },
   // eslint-disable-next-line @typescript-eslint/naming-convention
   adjudication: { verdict, plea, sentenceDate, offenceTICNumber } = {
     verdict: "-",
@@ -45,11 +68,11 @@ const PncOffenceDetails = ({
       <div className="details">
         <div id={"start-date"}>
           <b>{"Start Date"}</b>
-          <div>{startDate ? formatDisplayedDate(startDate, "dd/MM/yyyy HH:mm") : "-"}</div>
+          <div>{startDate ? formatDisplayedDateWithTime(startDate, startTime) : "-"}</div>
         </div>
         <div id={"end-date"}>
           <b>{"End Date"}</b>
-          <div>{endDate ? formatDisplayedDate(endDate, "dd/MM/yyyy HH:mm") : "-"}</div>
+          <div>{endDate ? formatDisplayedDateWithTime(endDate, endTime) : "-"}</div>
         </div>
         <div id={"qualifier-1"}>
           <b>{"Qualifier 1"}</b>

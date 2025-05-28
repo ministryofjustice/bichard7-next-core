@@ -1,8 +1,8 @@
+import Permission from "@moj-bichard7/common/types/Permission"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import Permission from "@moj-bichard7/common/types/Permission"
 import PncDetails from "../../src/features/CourtCaseDetails/Sidebar/PncDetails/PncDetails"
 
 describe("PNC details", () => {
@@ -44,7 +44,9 @@ describe("PNC details", () => {
                 qualifier1: "Q1",
                 qualifier2: "Q2",
                 startDate: "2010-11-28T00:00:00.000Z",
-                endDate: "2010-12-31T00:00:00.000Z"
+                startTime: "09:30",
+                endDate: "2010-12-31T00:00:00.000Z",
+                endTime: "16:45"
               },
               adjudication: {
                 verdict: "GUILTY",
@@ -91,8 +93,8 @@ describe("PNC details", () => {
     cy.get(".heading").children().first().contains("001 - TH68001").should("exist")
     cy.get(".heading").children().last().contains("ACPO 5:5:5:1").should("exist")
     cy.get("#offence-title").contains("Theft from the person of another").should("exist")
-    cy.get("#start-date").contains("28/11/2010 00:00").should("exist")
-    cy.get("#end-date").contains("31/12/2010 00:00").should("exist")
+    cy.get("#start-date").contains("28/11/2010").should("have.text", "28/11/2010 09:30")
+    cy.get("#end-date").contains("31/12/2010").should("have.text", "31/12/2010 16:45")
     cy.get("#qualifier-1").contains("Q1").should("exist")
     cy.get("#qualifier-2").contains("Q2").should("exist")
     cy.get("#adjudication").contains("GUILTY").should("exist")
@@ -107,6 +109,50 @@ describe("PNC details", () => {
     cy.get("#disposal-units-fined").should("not.exist")
     cy.get("summary").first().click()
     cy.get(".disposal-text").contains("This is a dummy text").should("exist")
+  })
+
+  it("doesn't display start/end time if it is not present", () => {
+    const pncQueryData = {
+      forceStationCode: "01ZD",
+      checkName: "LEBOWSKI",
+      pncId: "2021/0000006A",
+      courtCases: [
+        {
+          courtCaseReference: "21/2732/000006N",
+          offences: [
+            {
+              offence: {
+                acpoOffenceCode: "5:5:5:1",
+                cjsOffenceCode: "TH68001",
+                title: "Theft from the person of another",
+                sequenceNumber: 1,
+                startDate: "2010-11-28T00:00:00.000Z",
+                endDate: "2010-12-31T00:00:00.000Z"
+              }
+            }
+          ],
+          crimeOffenceReference: "XOXO"
+        }
+      ]
+    }
+
+    const courtCase = {
+      aho: {
+        PncQuery: pncQueryData,
+        PncQueryDate: "2024-07-10T00:00:00.000Z"
+      }
+    } as unknown as DisplayFullCourtCase
+
+    cy.mount(
+      <CurrentUserContext.Provider value={{ currentUser }}>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <PncDetails />
+        </CourtCaseContext.Provider>
+      </CurrentUserContext.Provider>
+    )
+
+    cy.get("#start-date").contains("28/11/2010").should("have.text", "28/11/2010")
+    cy.get("#end-date").contains("31/12/2010").should("have.text", "31/12/2010")
   })
 
   it("displays missing pnc data as dash", () => {
