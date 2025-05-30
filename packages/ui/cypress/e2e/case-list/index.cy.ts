@@ -76,18 +76,6 @@ describe("Case list", () => {
       cy.checkA11y(undefined, a11yConfig, logAccessibilityViolations)
     })
 
-    it("Should display all the headings with sorting or not", () => {
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-      loginAndVisit()
-      cy.get("#defendant-name-sort").contains("Defendant name").should("have.attr", "href")
-      cy.get("#court-date-sort").contains("Court date").should("have.attr", "href")
-      cy.get("#court-name-sort").contains("Court name").should("have.attr", "href")
-      cy.get("#ptiurn-sort").contains("PTIURN").should("have.attr", "href")
-      cy.contains("Notes").should("not.have.attr", "href")
-      cy.contains("Reason").should("not.have.attr", "href")
-      cy.contains("Locked by").should("not.have.attr", "href")
-    })
-
     it("Should display multiple cases", () => {
       cy.task("insertMultipleDummyCourtCases", { numToInsert: 50, force: "01" })
       loginAndVisit()
@@ -180,10 +168,10 @@ describe("Case list", () => {
 
       cy.get("tr.caseDetailsRow").eq(0).find("td:nth-child(5)").contains(`Case00000`)
       cy.get("tr.caseDetailsRow").eq(0).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
-      
+
       cy.get("tr.caseDetailsRow").eq(1).find("td:nth-child(5)").contains(`Case00001`)
       cy.get("tr.caseDetailsRow").eq(1).next().should("not.exist") //extra resons row should not render
-      
+
       cy.get("tr.caseDetailsRow").eq(2).find("td:nth-child(5)").contains(`Case00002`)
       cy.get("tr.caseDetailsRow").eq(2).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
     })

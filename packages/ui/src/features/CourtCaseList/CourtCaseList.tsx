@@ -52,6 +52,9 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
     <>
       <div aria-live="polite" aria-atomic="true" ref={announcerRef} className="govuk-visually-hidden"></div>
       <table className="govuk-table cases-list">
+        <caption>
+          <span className="govuk-visually-hidden">{"Column headers with buttons are sortable."}</span>
+        </caption>
         <thead className="govuk-table__head">
           <CourtCaseListTableHeader order={order} />
         </thead>
