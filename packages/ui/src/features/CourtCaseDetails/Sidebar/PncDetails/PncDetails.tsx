@@ -1,8 +1,8 @@
-import { useCourtCase } from "context/CourtCaseContext"
-import { UpdatedDate, CourtCases, PncQueryError } from "./PncDetails.styles"
-import PncCourtCaseAccordion from "./PncCourtCaseAccordion"
-import { formatDisplayedDate } from "utils/date/formattedDate"
 import ConditionalRender from "components/ConditionalRender"
+import { useCourtCase } from "context/CourtCaseContext"
+import { formatDisplayedDate } from "utils/date/formattedDate"
+import PncCourtCaseAccordion from "./PncCourtCaseAccordion"
+import { CourtCases, PncQueryError, UpdatedDate } from "./PncDetails.styles"
 
 const PncDetails = () => {
   const {
@@ -13,6 +13,8 @@ const PncDetails = () => {
 
   return (
     <>
+      <h2 className="govuk-heading-s govuk-visually-hidden">{"PNC Details"}</h2>
+
       <ConditionalRender isRendered={!pncQuery}>
         <PncQueryError className="pnc-error-message">{"PNC details unavailable"}</PncQueryError>
       </ConditionalRender>
