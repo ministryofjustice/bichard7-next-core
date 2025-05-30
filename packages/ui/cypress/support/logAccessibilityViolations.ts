@@ -1,7 +1,8 @@
 import type { Result } from "axe-core"
 
 const logAccessibilityViolations = (violations: Result[]) => {
-  console.log(violations)
+  console.log("Violations:", violations)
+
   const violationData = violations.map(({ id, impact, description, nodes }) => ({
     id,
     impact,

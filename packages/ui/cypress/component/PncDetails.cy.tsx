@@ -88,7 +88,7 @@ describe("PNC details", () => {
     )
 
     cy.get("#pnc-details-update-date").contains("Updated 10/07/2024 01:00:00").should("exist")
-    cy.get("h1").contains("21/2732/000006N").should("exist")
+    cy.get("h3").contains("21/2732/000006N").should("exist")
     cy.get("#crime-offence-reference").contains("XOXO").should("exist")
     cy.get(".heading").children().first().contains("001 - TH68001").should("exist")
     cy.get(".heading").children().last().contains("ACPO 5:5:5:1").should("exist")
