@@ -9,22 +9,24 @@ const HeaderCell = styled.th`
   vertical-align: bottom;
   border-color: var(--border-input);
 `
-const HeaderLink = styled.a`
+
+const HeaderButton = styled.button`
   color: ${blue};
   display: flex;
   align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
   &:focus {
     max-width: fit-content;
   }
-  &:active {
-    color: ${blue};
-  }
-  &:visited {
-    color: ${blue};
-  }
+  &:active,
+  &:visited,
   &:hover {
     color: ${blue};
   }
 `
 
-export { HeaderCell, HeaderCellAlt, HeaderLink }
+export { HeaderButton, HeaderCell, HeaderCellAlt }
