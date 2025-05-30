@@ -8,7 +8,7 @@ import type NavigationHandler from "types/NavigationHandler"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import ExceptionsList from "./ExceptionsList"
 import PncDetails from "./PncDetails/PncDetails"
-import { SidebarContainer } from "./Sidebar.styles"
+import { SidebarContainer, TabHeader } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
 
 enum SidebarTab {
@@ -78,19 +78,21 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
                 className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Triggers ? "govuk-tabs__list-item--selected" : ""}`}
                 role="presentation"
               >
-                <a
-                  id={"triggers-tab"}
-                  className="govuk-tabs__tab"
-                  href="#triggers"
-                  onClick={(e) => handleTabClicked(e, SidebarTab.Triggers)}
-                  role="tab"
-                  aria-controls="triggers"
-                  aria-selected={selectedTab == SidebarTab.Triggers}
-                  tabIndex={selectedTab == SidebarTab.Triggers ? 0 : -1}
-                  onKeyDown={(e) => handleOnKeyDown(e, selectedTab)}
-                >
-                  {"Triggers"}
-                </a>
+                <TabHeader className="govuk-heading-s">
+                  <a
+                    id={"triggers-tab"}
+                    className="govuk-tabs__tab"
+                    href="#triggers"
+                    onClick={(e) => handleTabClicked(e, SidebarTab.Triggers)}
+                    role="tab"
+                    aria-controls="triggers"
+                    aria-selected={selectedTab == SidebarTab.Triggers}
+                    tabIndex={selectedTab == SidebarTab.Triggers ? 0 : -1}
+                    onKeyDown={(e) => handleOnKeyDown(e, selectedTab)}
+                  >
+                    {"Triggers"}
+                  </a>
+                </TabHeader>
               </li>
             </ConditionalRender>
 
@@ -99,19 +101,21 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
                 className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Exceptions ? "govuk-tabs__list-item--selected" : ""}`}
                 role="presentation"
               >
-                <a
-                  id={"exceptions-tab"}
-                  className="govuk-tabs__tab"
-                  href="#exceptions"
-                  onClick={(e) => handleTabClicked(e, SidebarTab.Exceptions)}
-                  role="tab"
-                  aria-controls="exceptions"
-                  aria-selected={selectedTab == SidebarTab.Exceptions}
-                  tabIndex={selectedTab == SidebarTab.Exceptions ? 0 : -1}
-                  onKeyDown={(e) => handleOnKeyDown(e, selectedTab)}
-                >
-                  {"Exceptions"}
-                </a>
+                <TabHeader className="govuk-heading-s">
+                  <a
+                    id={"exceptions-tab"}
+                    className="govuk-tabs__tab"
+                    href="#exceptions"
+                    onClick={(e) => handleTabClicked(e, SidebarTab.Exceptions)}
+                    role="tab"
+                    aria-controls="exceptions"
+                    aria-selected={selectedTab == SidebarTab.Exceptions}
+                    tabIndex={selectedTab == SidebarTab.Exceptions ? 0 : -1}
+                    onKeyDown={(e) => handleOnKeyDown(e, selectedTab)}
+                  >
+                    {"Exceptions"}
+                  </a>
+                </TabHeader>
               </li>
             </ConditionalRender>
 
@@ -119,19 +123,21 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
               className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Pnc ? "govuk-tabs__list-item--selected" : ""}`}
               role="presentation"
             >
-              <a
-                id={"pnc-details-tab"}
-                className="govuk-tabs__tab"
-                href="#pnc-details"
-                onClick={(e) => handleTabClicked(e, SidebarTab.Pnc)}
-                role="tab"
-                aria-controls="pnc-details"
-                aria-selected={selectedTab == SidebarTab.Pnc}
-                tabIndex={selectedTab == SidebarTab.Pnc ? 0 : -1}
-                onKeyDown={(e) => handleOnKeyDown(e, selectedTab)}
-              >
-                {"PNC Details"}
-              </a>
+              <TabHeader className="govuk-heading-s">
+                <a
+                  id={"pnc-details-tab"}
+                  className="govuk-tabs__tab"
+                  href="#pnc-details"
+                  onClick={(e) => handleTabClicked(e, SidebarTab.Pnc)}
+                  role="tab"
+                  aria-controls="pnc-details"
+                  aria-selected={selectedTab == SidebarTab.Pnc}
+                  tabIndex={selectedTab == SidebarTab.Pnc ? 0 : -1}
+                  onKeyDown={(e) => handleOnKeyDown(e, selectedTab)}
+                >
+                  {"PNC Details"}
+                </a>
+              </TabHeader>
             </li>
           </ul>
 
