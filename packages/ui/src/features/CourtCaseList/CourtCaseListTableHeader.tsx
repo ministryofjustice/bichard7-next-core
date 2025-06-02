@@ -13,9 +13,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
   const { query } = router
   const orderByParams = (orderBy: string) => `?${new URLSearchParams({ ...query, orderBy, order })}`
   const className = "govuk-table__header table-column-header-cell govuk-body-s"
-  const ariaSort = (columnHeader: string) =>
-    query.orderBy === columnHeader ? (query.order === "asc" ? "ascending" : "descending") : "none"
-  const handleHeaderClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, columnHeader: string) => {
+  const handleHeaderClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, columnName: string) => {
     const target = event.target as HTMLElement
     const headerId = target.closest("button")?.id
     if (headerId) {
@@ -25,7 +23,18 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
       }
     }
 
-    router.push(orderByParams(columnHeader))
+    router.push(orderByParams(columnName))
+  }
+
+  const ariaSort = (columnName: string) =>
+    query.orderBy === columnName ? (query.order === "asc" ? "ascending" : "descending") : "none"
+
+  const ariaLabel = (columnName: string): string => {
+    const isSorted = query.orderBy === columnName
+    const direction = ariaSort(columnName)
+    return isSorted
+      ? `${columnName} column, sorted ${direction}, click to change sort order`
+      : `${columnName} column, sortable, click to sort ascending`
   }
 
   return (
@@ -39,6 +48,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="defendant-name-sort"
           aria-live="polite"
           aria-sort={ariaSort("defendantName")}
+          aria-label={ariaLabel("defendantName")}
           onClick={(event) => handleHeaderClick(event, "defendantName")}
         >
           {"Defendant name"}
@@ -51,6 +61,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="court-date-sort"
           aria-live="polite"
           aria-sort={ariaSort("courtDate")}
+          aria-label={ariaLabel("courtDate")}
           onClick={(event) => handleHeaderClick(event, "courtDate")}
         >
           {"Court date"}
@@ -63,6 +74,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="court-name-sort"
           aria-live="polite"
           aria-sort={ariaSort("courtName")}
+          aria-label={ariaLabel("courtName")}
           onClick={(event) => handleHeaderClick(event, "courtName")}
         >
           {"Court name"}
@@ -75,6 +87,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="ptiurn-sort"
           aria-live="polite"
           aria-sort={ariaSort("ptiurn")}
+          aria-label={ariaLabel("ptiurn")}
           onClick={(event) => handleHeaderClick(event, "ptiurn")}
         >
           {"PTIURN"}
