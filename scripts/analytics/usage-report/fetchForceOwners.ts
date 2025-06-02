@@ -1,12 +1,12 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
 import { FullAuditLogEvent } from "./common"
 import getForceOwner from "./getForceOwner"
 
 const fetchForceOwners = async (
   events: FullAuditLogEvent[],
-  dynamo: DocumentClient,
+  dynamo: DynamoDBDocumentClient,
   auditLogTableName: string
 ): Promise<Record<string, number>> => {
   const messageIdsSet = events.reduce((acc, event) => {
