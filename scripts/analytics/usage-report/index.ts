@@ -15,8 +15,10 @@
 
 import baseConfig from "@moj-bichard7/common/db/baseConfig"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { DynamoDB, Lambda, RDS } from "aws-sdk"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import { Lambda } from "@aws-sdk/client-lambda"
+import { RDS } from "@aws-sdk/client-rds"
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
 import { DataSource } from "typeorm"
 import { getDateString } from "./common"
 import findEvents from "./fetchEvents"
@@ -26,13 +28,15 @@ import WorkbookGenerator from "./WorkbookGenerator"
 import fetchForceOwners from "./fetchForceOwners"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
-let dynamo: DocumentClient
+let dynamo: DynamoDBClient
 let postgres: DataSource
 let eventsTableName: string
 
 async function setup() {
-  const lambda = new Lambda({ region: "eu-west-2" })
-  const retryLambda = await lambda.getFunction({ FunctionName: `bichard-7-${WORKSPACE}-retry-message` }).promise()
+  const lambda = new Lambda({
+    region: "eu-west-2"
+  })
+  const retryLambda = await lambda.getFunction({ FunctionName: `bichard-7-${WORKSPACE}-retry-message` })
   if (isError(retryLambda)) {
     throw Error("Couldn't get DynamoDB connection details")
   }
@@ -47,21 +51,22 @@ async function setup() {
     throw Error("Couldn't get DynamoDB events table name")
   }
 
-  const service = new DynamoDB({
+  const service = new DynamoDBClient({
     endpoint: dynamoEndpoint,
     region: "eu-west-2"
   })
-  dynamo = new DocumentClient({ service })
 
-  const sanitiseMessageLambda = await lambda
-    .getFunction({ FunctionName: `bichard-7-${WORKSPACE}-sanitise-message` })
-    .promise()
+  dynamo = DynamoDBDocumentClient.from(service)
+
+  const sanitiseMessageLambda = await lambda.getFunction({ FunctionName: `bichard-7-${WORKSPACE}-sanitise-message` })
   if (isError(sanitiseMessageLambda)) {
     throw Error("Couldn't get Postgres connection details (failed to get sanitise lambda function)")
   }
 
-  const rds = new RDS({ region: "eu-west-2" })
-  const dbInstances = await rds.describeDBClusters().promise()
+  const rds = new RDS({
+    region: "eu-west-2"
+  })
+  const dbInstances = await rds.describeDBClusters()
   if (isError(dbInstances)) {
     throw Error("Couldn't get Postgres connection details (describeDBInstances)")
   }
