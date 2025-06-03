@@ -32,9 +32,10 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
   const ariaLabel = (columnName: string): string => {
     const isSorted = query.orderBy === columnName
     const direction = ariaSort(columnName)
+    const readableColumnName = columnName.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase())
     return isSorted
-      ? `${columnName} column, sorted ${direction}, click to change sort order`
-      : `${columnName} column, sortable, click to sort ascending`
+      ? `${readableColumnName} column, sorted ${direction}, click to change sort order`
+      : `${readableColumnName} column, sortable, click to sort ascending`
   }
 
   return (
