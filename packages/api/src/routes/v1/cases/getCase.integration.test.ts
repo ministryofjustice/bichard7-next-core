@@ -1,14 +1,15 @@
 import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { FORBIDDEN, OK } from "http-status"
+import { NOT_FOUND, OK } from "http-status"
 
 import build from "../../../app"
-import FakeDataStore from "../../../services/gateways/database/FakeDatabase"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
-import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 import { testAhoJsonStr } from "../../../tests/helpers/ahoHelper"
-import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
+import { createUser, generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 
 const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
   return {
@@ -19,14 +20,17 @@ const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
 }
 
 describe("retrieve a case", () => {
-  const fakeDataStore = new FakeDataStore()
   let app: FastifyInstance
-  const dynamoConfig = createAuditLogDynamoDbConfig()
-  const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
+  const testDatabaseGateway = new End2EndPostgres()
+  const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway, dataStore: fakeDataStore })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
+  })
+
+  beforeEach(async () => {
+    await testDatabaseGateway.clearDb()
   })
 
   afterEach(() => {
@@ -34,52 +38,53 @@ describe("retrieve a case", () => {
   })
 
   afterAll(async () => {
+    await testDatabaseGateway.close()
     await app.close()
   })
 
   it("returns a case with response code OK when case exists", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
+    await createUser(testDatabaseGateway, { jwtId: user.jwtId, username: user.username })
+    const caseObj = await createCase(testDatabaseGateway, { errorId: 1 })
 
-    const response = await app.inject(defaultInjectParams(encodedJwt, "0"))
+    const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
     expect(response.statusCode).toBe(OK)
     expect(response.json()).toEqual({
       aho: testAhoJsonStr,
-      asn: "",
-      canUserEditExceptions: false,
-      courtCode: "",
-      courtDate: new Date("2022-06-30").toISOString(),
-      courtName: "",
-      courtReference: "",
-      defendantName: "",
-      errorId: 0,
-      errorLockedByUserFullName: null,
-      errorLockedByUsername: null,
-      errorReport: "",
-      errorStatus: null,
-      isUrgent: 0,
+      asn: "1901ID0100000006148H",
+      canUserEditExceptions: true,
+      courtCode: "ABC",
+      courtDate: "2025-05-23T00:00:00.000Z",
+      courtName: "Kingston Crown Court",
+      courtReference: "ABC",
+      defendantName: "Defendant",
+      errorId: 1,
+      errorLockedByUserFullName: "Forename1 Surname1",
+      errorLockedByUsername: "User 1",
+      errorReport: "HO100304||br7:ArrestSummonsNumber",
+      errorStatus: "Unresolved",
+      isUrgent: 1,
       notes: [],
-      orgForPoliceFilter: "",
+      orgForPoliceFilter: "01    ",
       phase: 1,
-      ptiurn: null,
+      ptiurn: "00112233",
       resolutionTimestamp: null,
-      triggerCount: 0,
-      triggerLockedByUserFullName: null,
-      triggerLockedByUsername: null,
+      triggerCount: 1,
+      triggerLockedByUserFullName: "Forename1 Surname1",
+      triggerLockedByUsername: "User 1",
       triggers: [],
-      triggerStatus: null,
+      triggerStatus: "Unresolved",
       updatedHearingOutcome: null
     })
   })
 
-  it("returns response code FORBIDDEN when case doesn't exist", async () => {
+  it("returns response code 404 (NOT FOUND) when case doesn't exist", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
-    jest.spyOn(fakeDataStore, "fetchCase").mockRejectedValue(new Error("Case not found"))
+    await createUser(testDatabaseGateway, { jwtId: user.jwtId, username: user.username })
 
     const response = await app.inject(defaultInjectParams(encodedJwt, "1"))
 
-    expect(response.statusCode).toBe(FORBIDDEN)
+    expect(response.statusCode).toBe(NOT_FOUND)
   })
 })

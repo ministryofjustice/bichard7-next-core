@@ -8,17 +8,7 @@ import type { DatabaseConnection } from "../types/DatabaseGateway"
 
 import canCaseBeResubmitted from "../services/db/cases/canCaseBeResubmitted"
 
-const canUserResubmitCase = async (
-  database: DatabaseConnection,
-  user: User,
-  caseId: number
-): PromiseResult<boolean> => {
-  const normalizedUser = { ...user, groups: user.groups ?? [] }
-  if (!userAccess(normalizedUser)[Permission.CanResubmit]) {
-    return false
-  }
-
-  return canCaseBeResubmitted(database, user, caseId)
-}
+const canUserResubmitCase = async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<boolean> =>
+  userAccess(user)[Permission.CanResubmit] && (await canCaseBeResubmitted(database, user, caseId))
 
 export default canUserResubmitCase

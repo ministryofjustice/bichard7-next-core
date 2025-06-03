@@ -1,25 +1,27 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import type { UserRow } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
-export default async (sql: postgres.Sql, partialUser: Partial<User>) => {
-  if (!(partialUser.email && partialUser.username)) {
+import { isError } from "@moj-bichard7/common/types/Result"
+
+export default async (sql: postgres.Sql, userRow: UserRow): Promise<UserRow> => {
+  if (!(userRow.email && userRow.username)) {
     throw new Error("Missing required attributes")
   }
 
-  const userColumns = Object.keys(partialUser).sort()
+  const userColumns = Object.keys(userRow).sort()
 
-  const [result]: [User?] = await sql`
+  const result = await sql<UserRow[]>`
     INSERT INTO br7own.users
       ${sql(
-        partialUser as never,
+        userRow as never,
         userColumns.filter((uc) => uc !== "groups")
       )}
     RETURNING *
-  `
+  `.catch((error: Error) => error)
 
-  if (!result) {
-    throw new Error("Could not insert User into the DB")
+  if (!result || isError(result)) {
+    throw new Error(`Could not insert User into the DB: ${result.message}`)
   }
 
-  return result
+  return result[0]
 }

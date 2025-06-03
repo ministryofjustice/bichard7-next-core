@@ -6,20 +6,24 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
 import build from "../../app"
-import FakeDataStore from "../../services/gateways/database/FakeDatabase"
 import AuditLogDynamoGateway from "../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
-import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
+import { createUser, generateJwtForStaticUser } from "../../tests/helpers/userHelper"
+import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
 
 describe("/v1/me", () => {
-  const fakeDataStore = new FakeDataStore()
   let app: FastifyInstance
+  const testDatabaseGateway = new End2EndPostgres()
   const dynamoConfig = createAuditLogDynamoDbConfig()
   const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway, dataStore: fakeDataStore })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
+  })
+
+  beforeEach(async () => {
+    await testDatabaseGateway.clearDb()
   })
 
   afterEach(() => {
@@ -27,26 +31,28 @@ describe("/v1/me", () => {
   })
 
   afterAll(async () => {
+    await testDatabaseGateway.close()
     await app.close()
   })
 
-  it("will return the current user with a correct JWT", async () => {
+  it("returns the current user with a correct JWT", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    const spy = jest.spyOn(fakeDataStore, "fetchUserByUsername")
-    spy.mockResolvedValue(user)
+    await createUser(testDatabaseGateway, { groups: user.groups, jwtId: user.jwtId, username: user.username })
 
     const response = await app.inject({ headers: { authorization: `Bearer ${encodedJwt}` }, method: "GET", url: V1.Me })
 
     const responseUser: UserDto = {
       email: user.email,
+      excludedTriggers: "",
       featureFlags: {},
-      forenames: "Forename",
-      fullname: "Forename Surname",
+      forenames: "Forename1",
+      fullname: "Forename1 Surname1",
       groups: user.groups,
       hasAccessTo: { "0": true, "1": true, "2": true, "3": false, "4": false, "5": false, "6": false, "7": true },
-      surname: "Surname",
+      surname: "Surname1",
       username: user.username,
-      visibleForces: ["001"]
+      visibleCourts: "AB",
+      visibleForces: [1]
     }
 
     expect(response.statusCode).toBe(OK)

@@ -1,33 +1,38 @@
+import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
-import { type Case } from "@moj-bichard7/common/types/Case"
-
-export default async function (sql: postgres.Sql, partialCase: Partial<Case>): Promise<Case> {
+export default async function (sql: postgres.Sql, caseRow: CaseRow): Promise<CaseRow> {
   if (
     !(
-      partialCase.annotated_msg ||
-      partialCase.court_reference ||
-      partialCase.create_ts ||
-      partialCase.error_count ||
-      partialCase.error_report ||
-      partialCase.is_urgent ||
-      partialCase.message_id ||
-      partialCase.msg_received_ts ||
-      partialCase.org_for_police_filter ||
-      partialCase.phase ||
-      partialCase.total_pnc_failure_resubmissions ||
-      partialCase.trigger_count ||
-      partialCase.user_updated_flag
+      caseRow.annotated_msg ||
+      caseRow.court_reference ||
+      caseRow.create_ts ||
+      caseRow.error_count ||
+      caseRow.error_report ||
+      caseRow.is_urgent ||
+      caseRow.message_id ||
+      caseRow.msg_received_ts ||
+      caseRow.org_for_police_filter ||
+      caseRow.phase ||
+      caseRow.total_pnc_failure_resubmissions ||
+      caseRow.trigger_count ||
+      caseRow.user_updated_flag
     )
   ) {
     throw new Error("Missing required attributes")
   }
 
-  const caseColumns = Object.keys(partialCase).sort()
+  const caseToInsert: Record<string, unknown> = { ...caseRow }
+  delete caseToInsert.defendant_name_upper
+  delete caseToInsert.court_name_upper
+  delete caseToInsert.notes
+  delete caseToInsert.triggers
 
-  const [result]: [Case?] = await sql`
+  const caseColumns = Object.keys(caseToInsert).sort()
+
+  const result = await sql<CaseRow[]>`
     INSERT INTO br7own.error_list
-      ${sql(partialCase as never, caseColumns)}
+      ${sql(caseToInsert as never, caseColumns)}
     RETURNING *;
   `
 
@@ -35,5 +40,5 @@ export default async function (sql: postgres.Sql, partialCase: Partial<Case>): P
     throw new Error("Could not insert Case into the DB")
   }
 
-  return result
+  return result[0]
 }

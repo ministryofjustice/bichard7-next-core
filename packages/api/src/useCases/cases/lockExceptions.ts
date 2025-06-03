@@ -24,7 +24,6 @@ export const lockExceptions = async (
   }
 
   const exceptionLockedResult = await lockException(database, user, caseId)
-
   if (isError(exceptionLockedResult)) {
     return exceptionLockedResult
   }

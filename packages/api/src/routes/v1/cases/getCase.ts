@@ -4,6 +4,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { CaseDtoSchema } from "@moj-bichard7/common/types/Case"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
@@ -46,25 +47,26 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ auditLogGateway, caseId, database, logger, reply, user }: HandlerProps) =>
-  lockAndFetchCaseDto(database.writable, auditLogGateway, user, caseId, logger)
-    .then((foundCase) => {
-      reply.code(OK).send(foundCase)
-    })
-    .catch((error: Error) => {
-      reply.log.error(error)
+const handler = async ({ auditLogGateway, caseId, database, logger, reply, user }: HandlerProps) => {
+  const caseResult = await lockAndFetchCaseDto(database.writable, auditLogGateway, user, caseId, logger)
 
-      switch (true) {
-        case error instanceof NotFoundError:
-          return reply.code(NOT_FOUND).send()
-        case error instanceof UnprocessableEntityError:
-          return reply
-            .code(UNPROCESSABLE_ENTITY)
-            .send({ code: `${UNPROCESSABLE_ENTITY}`, message: error.message, statusCode: UNPROCESSABLE_ENTITY })
-        default:
-          return reply.code(FORBIDDEN).send()
-      }
-    })
+  if (!isError(caseResult)) {
+    return reply.code(OK).send(caseResult)
+  }
+
+  reply.log.error(caseResult)
+
+  switch (true) {
+    case caseResult instanceof NotFoundError:
+      return reply.code(NOT_FOUND).send()
+    case caseResult instanceof UnprocessableEntityError:
+      return reply
+        .code(UNPROCESSABLE_ENTITY)
+        .send({ code: `${UNPROCESSABLE_ENTITY}`, message: caseResult.message, statusCode: UNPROCESSABLE_ENTITY })
+    default:
+      return reply.code(FORBIDDEN).send()
+  }
+}
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.Case, { schema }, async (req, reply) => {

@@ -61,23 +61,20 @@ const handler = async ({ body, caseId, database, reply, user }: HandlerProps) =>
   // - in theory this should either be 502 or 504
 
   const canResubmitCase = await canUserResubmitCase(database.readonly, user, caseId)
-  if (isError(canResubmitCase)) {
-    reply.log.error(canResubmitCase)
-    if (handleDisconnectedError(canResubmitCase)) {
-      reply.code(BAD_GATEWAY).send()
-      return
-    }
-
-    reply.code(BAD_REQUEST).send()
-    return
-  }
-
   if (!canResubmitCase) {
-    reply.code(FORBIDDEN).send()
-    return
+    return reply.code(FORBIDDEN).send()
   }
 
-  reply.code(OK).send({ phase: body.phase })
+  if (!isError(canResubmitCase)) {
+    return reply.code(OK).send({ phase: body.phase })
+  }
+
+  reply.log.error(canResubmitCase)
+  if (handleDisconnectedError(canResubmitCase)) {
+    return reply.code(BAD_GATEWAY).send()
+  }
+
+  return reply.code(BAD_REQUEST).send()
 }
 
 const route = async (fastify: FastifyInstance) => {

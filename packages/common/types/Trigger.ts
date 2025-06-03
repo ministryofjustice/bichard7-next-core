@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { dateLikeToDate } from "../schemas/dateLikeToDate"
 
-export const TriggerSchema = z.object({
+export const TriggerRowSchema = z.object({
   create_ts: dateLikeToDate,
   error_id: z.number().nullable(),
   resolved_by: z.string().nullable(),
@@ -11,6 +11,17 @@ export const TriggerSchema = z.object({
   trigger_code: z.string(),
   trigger_id: z.number(),
   trigger_item_identity: z.string().nullable()
+})
+
+export const TriggerSchema = z.object({
+  createAt: dateLikeToDate,
+  errorId: z.number().nullable(),
+  resolvedAt: dateLikeToDate.nullable(),
+  resolvedBy: z.string().nullable(),
+  status: z.number(),
+  triggerCode: z.string(),
+  triggerId: z.number(),
+  triggerItemIdentity: z.string().nullable()
 })
 
 export const TriggerDtoSchema = z.object({
@@ -26,3 +37,4 @@ export const TriggerDtoSchema = z.object({
 
 export type Trigger = z.infer<typeof TriggerSchema>
 export type TriggerDto = z.infer<typeof TriggerDtoSchema>
+export type TriggerRow = z.infer<typeof TriggerRowSchema>

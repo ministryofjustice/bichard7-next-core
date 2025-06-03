@@ -1,15 +1,23 @@
+import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyBaseLogger } from "fastify"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { CaseDataForDto } from "../../../types/Case"
+import type { CaseRowForDto } from "../../../types/Case"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
 
-export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<CaseDataForDto> => {
-  const result = await database.connection<CaseDataForDto[]>`
+export default async (
+  database: DatabaseConnection,
+  user: User,
+  caseId: number,
+  logger: FastifyBaseLogger
+): PromiseResult<CaseDto> => {
+  const result = await database.connection<CaseRowForDto[]>`
       SELECT
         el.annotated_msg,
         el.asn,
@@ -66,8 +74,8 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
   }
 
   if (!result || result.length === 0) {
-    throw new NotFoundError(`Case id ${caseId} for user ${user.username} not found`)
+    return new NotFoundError(`Case id ${caseId} for user ${user.username} not found`)
   }
 
-  return result[0]
+  return convertCaseToCaseDto(result[0], user, logger)
 }

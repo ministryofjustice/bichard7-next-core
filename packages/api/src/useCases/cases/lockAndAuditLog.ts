@@ -41,7 +41,6 @@ export const lockAndAuditLog = async (
 
       if (auditLogEvents.length > 0) {
         const auditLogEventsResult = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
-
         if (isError(auditLogEventsResult)) {
           throw auditLogEventsResult
         }

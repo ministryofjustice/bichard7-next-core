@@ -2,10 +2,10 @@ import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unva
 import { z } from "zod"
 
 import { CaseAge } from "./CaseAge"
-import { NoteDtoSchema, NoteSchema } from "./Note"
-import { TriggerDtoSchema, TriggerSchema } from "./Trigger"
+import { NoteDtoSchema, NoteRowSchema, NoteSchema } from "./Note"
+import { TriggerDtoSchema, TriggerRowSchema, TriggerSchema } from "./Trigger"
 
-export const CaseSchema = z.object({
+export const CaseRowSchema = z.object({
   annotated_msg: z.string().describe("Annotated Hearing Outcome"),
   asn: z.string().max(21).nullable(),
   court_code: z.string().max(7).nullable(),
@@ -31,7 +31,7 @@ export const CaseSchema = z.object({
   last_pnc_failure_resubmission_ts: z.date().nullable(),
   message_id: z.string(),
   msg_received_ts: z.date(),
-  notes: z.array(NoteSchema).optional(),
+  notes: z.array(NoteRowSchema).optional(),
   org_for_police_filter: z.string(),
   phase: z.number().gt(0).lte(3),
   pnc_update_enabled: z.string().nullable(),
@@ -46,9 +46,55 @@ export const CaseSchema = z.object({
   trigger_resolved_by: z.string().max(32).nullable(),
   trigger_resolved_ts: z.date().nullable(),
   trigger_status: z.number().nullable(),
-  triggers: z.array(TriggerSchema).optional(),
+  triggers: z.array(TriggerRowSchema).optional(),
   updated_msg: z.string().nullable(),
   user_updated_flag: z.number()
+})
+
+export const CaseSchema = z.object({
+  aho: z.string().describe("Annotated Hearing Outcome"),
+  asn: z.string().max(21).nullable(),
+  courtCode: z.string().max(7).nullable(),
+  courtDate: z.date().nullable(),
+  courtName: z.string().max(500).nullable(),
+  courtNameUpper: z.string().max(200).nullable(),
+  courtReference: z.string().max(11),
+  courtRoom: z.string().max(2),
+  createdAt: z.date(),
+  defendantName: z.string().max(500).nullable(),
+  defendantNameUpper: z.string().max(200).nullable(),
+  errorCount: z.number().describe("The number of Exceptions are on case"),
+  errorId: z.number().describe("The primary key"),
+  errorInsertedAt: z.date().nullable(),
+  errorLockedById: z.string().max(32).nullable(),
+  errorQualityChecked: z.number().nullable(),
+  errorReason: z.string().max(350).nullable(),
+  errorReport: z.string().max(1000),
+  errorResolvedAt: z.date().nullable(),
+  errorResolvedBy: z.string().max(32).nullable(),
+  errorStatus: z.number().nullable(),
+  isUrgent: z.number(),
+  lastPncFailureResubmissionAt: z.date().nullable(),
+  messageId: z.string(),
+  messageReceivedAt: z.date(),
+  notes: z.array(NoteSchema).optional(),
+  orgForPoliceFilter: z.array(z.number()).min(0),
+  phase: z.number().gt(0).lte(3),
+  pncUpdateEnabled: z.string().nullable(),
+  ptiurn: z.string().max(11).nullable(),
+  resolutionAt: z.date().nullable(),
+  totalPncFailureResubmissions: z.number().default(0),
+  triggerCount: z.number(),
+  triggerInsertedAt: z.date().nullable(),
+  triggerLockedById: z.string().nullable(),
+  triggerQualityChecked: z.number().nullable(),
+  triggerReason: z.string().max(350).nullable(),
+  triggerResolvedAt: z.date().nullable(),
+  triggerResolvedBy: z.string().max(32).nullable(),
+  triggers: z.array(TriggerSchema).optional(),
+  triggerStatus: z.number().nullable(),
+  updatedAho: z.string().nullable(),
+  userUpdatedFlag: z.number()
 })
 
 export const CaseIndexDtoSchema = z.object({
@@ -103,3 +149,4 @@ export type CaseAges = z.infer<typeof CaseAgesSchema>
 export type CaseDto = z.infer<typeof CaseDtoSchema>
 export type CaseIndexDto = z.infer<typeof CaseIndexDtoSchema>
 export type CaseIndexMetadata = z.infer<typeof CaseIndexMetadataSchema>
+export type CaseRow = z.infer<typeof CaseRowSchema>

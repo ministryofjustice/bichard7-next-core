@@ -7,19 +7,17 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 
 export interface CanCaseBeResubmittedResult {
-  caseInForce: boolean
-  caseIsSubmitted: boolean
-  caseIsUnresolved: boolean
-  lockedByUser: boolean
+  caseInForce: 0 | 1
+  caseIsUnresolved: 0 | 1
+  lockedByUser: 0 | 1
 }
 
 export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<boolean> => {
   const result = await database.connection<CanCaseBeResubmittedResult[]>`
       SELECT
-        (el.error_locked_by_id = ${user.username})::INTEGER as lockedByUser,
-        (br7own.force_code(el.org_for_police_filter) = ANY((${user.visibleForces}::SMALLINT[])))::INTEGER as caseInForce,
-        (el.resolution_ts IS NULL)::INTEGER as caseIsUnresolved,
-        (el.error_status = 3)::INTEGER as caseIsSubmitted
+        (el.error_locked_by_id = ${user.username})::INTEGER as "lockedByUser",
+        (br7own.force_code(el.org_for_police_filter) = ANY((${user.visibleForces}::SMALLINT[])))::INTEGER as "caseInForce",
+        (el.error_status = 1)::INTEGER as "caseIsUnresolved"
       FROM br7own.error_list el
       WHERE
         el.error_id = ${caseId}
@@ -36,5 +34,5 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
   }
 
   const caseData = result[0]
-  return caseData.lockedByUser && caseData.caseInForce && caseData.caseIsUnresolved && !caseData.caseIsSubmitted
+  return !!caseData.lockedByUser && !!caseData.caseInForce && !!caseData.caseIsUnresolved
 }

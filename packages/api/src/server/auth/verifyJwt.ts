@@ -1,5 +1,5 @@
 import type { JWT } from "@moj-bichard7/common/types/JWT"
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type { PromiseResult, Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -11,8 +11,21 @@ import type { DatabaseConnection } from "../../types/DatabaseGateway"
 import fetchUserByUsername from "../../services/db/users/fetchUserByUsername"
 import { jwtConfig, jwtSignOptions } from "./jwtConfig"
 
+const verifyToken = (jwtToken: string) =>
+  new Promise<Result<JWT>>((resolve) => {
+    try {
+      resolve(jwt.verify(jwtToken, jwtConfig.tokenSecret, jwtSignOptions) as JWT)
+    } catch (error) {
+      resolve(error as Error)
+    }
+  })
+
 const verifyJwt = async (database: DatabaseConnection, token: string): PromiseResult<User> => {
-  const decodedJwt = jwt.verify(token, jwtConfig.tokenSecret, jwtSignOptions) as JWT
+  const decodedJwt = await verifyToken(token)
+  if (isError(decodedJwt)) {
+    return decodedJwt
+  }
+
   if (decodedJwt.groups.includes(UserGroup.Service)) {
     return { email: "none", username: "service.user" } as User
   }

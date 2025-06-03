@@ -1,16 +1,23 @@
+import type { CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { CaseDataForIndexDto } from "../../../types/Case"
+import type { CaseRowForIndexDto } from "../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { convertCaseToCaseIndexDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
 import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 import { generateFilters } from "./filters/generateFilters"
 import { ordering } from "./order/ordering"
+
+export type FetchCasesResult = {
+  cases: CaseIndexDto[]
+  fullCount: number
+}
 
 const fetchCases = async (
   database: DatabaseConnection,
@@ -18,7 +25,7 @@ const fetchCases = async (
   pagination: Pagination,
   sortOrder: SortOrder,
   filters: Filters
-): PromiseResult<CaseDataForIndexDto[]> => {
+): PromiseResult<FetchCasesResult> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
 
   const filtersSql = generateFilters(database, user, filters)
@@ -137,7 +144,7 @@ const fetchCases = async (
       ${ordering(database.connection, sortOrder)}
   `
 
-  const result = await database.connection<CaseDataForIndexDto[]>`
+  const result = await database.connection<CaseRowForIndexDto[]>`
     WITH
       allCases AS (
         ${allCasesSql}
@@ -171,7 +178,12 @@ const fetchCases = async (
     return Error(`Error while fetching cases: ${result.message}`)
   }
 
-  return result
+  const casesDto = result.map((caseData) => convertCaseToCaseIndexDto(caseData, user))
+
+  return {
+    cases: casesDto,
+    fullCount: result[0]?.full_count ?? 0
+  }
 }
 
 export default fetchCases

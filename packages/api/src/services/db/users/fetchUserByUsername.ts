@@ -1,14 +1,14 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type { User, UserRow } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
-import { type User } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import formatForceNumbers from "../../formatForceNumbers"
+import mapUserRowToUser from "../mapUserRowToUser"
 
 export default async (database: DatabaseConnection, username: string): PromiseResult<User> => {
-  const userResult = await database.connection`
+  const userResult = await database.connection<UserRow[]>`
       SELECT
         u.id,
         u.username,
@@ -37,22 +37,8 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
   }
 
   if (!userResult || userResult.length === 0) {
-    throw new Error(`User "${username}" does not exist`)
+    return Error(`User "${username}" does not exist`)
   }
 
-  const user = userResult[0]
-
-  return {
-    email: user.email,
-    excludedTriggers: user.excluded_triggers?.split(",").filter(Boolean) ?? [],
-    featureFlags: user.feature_flags,
-    forenames: user.forenames,
-    groups: user.groups,
-    id: user.id,
-    jwtId: user.jwt_id,
-    surname: user.surname,
-    username: user.username,
-    visibleCourts: user.visible_courts?.split(",").filter(Boolean) ?? [],
-    visibleForces: formatForceNumbers(user.visible_forces)
-  }
+  return mapUserRowToUser(userResult[0])
 }

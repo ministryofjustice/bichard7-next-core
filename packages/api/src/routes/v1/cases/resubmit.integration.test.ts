@@ -7,29 +7,42 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
-import FakeDataStore from "../../../services/gateways/database/FakeDatabase"
+import canCaseBeResubmitted from "../../../services/db/cases/canCaseBeResubmitted"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
-import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
-import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
+import { createUser, generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
+
+jest.mock("../../../services/db/cases/canCaseBeResubmitted")
+
+const mockedCanCaseBeResubmitted = canCaseBeResubmitted as jest.Mock
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
     body: { phase: 1 },
     headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "POST",
-    url: V1.CaseResubmit.replace(":caseId", "0")
+    url: V1.CaseResubmit.replace(":caseId", "100")
   }
 }
 
 describe("resubmit", () => {
-  const fakeDataStore = new FakeDataStore()
+  const testDatabaseGateway = new End2EndPostgres()
   let app: FastifyInstance
-  const dynamoConfig = createAuditLogDynamoDbConfig()
-  const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
+  const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway, dataStore: fakeDataStore })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
+  })
+
+  beforeEach(async () => {
+    mockedCanCaseBeResubmitted.mockImplementation(
+      jest.requireActual("../../../services/db/cases/canCaseBeResubmitted").default
+    )
+    await testDatabaseGateway.clearDb()
   })
 
   afterEach(() => {
@@ -37,6 +50,7 @@ describe("resubmit", () => {
   })
 
   afterAll(async () => {
+    await testDatabaseGateway.close()
     await app.close()
   })
 
@@ -47,15 +61,17 @@ describe("resubmit", () => {
   }
 
   it("fails if user not in any permitted role", async () => {
-    const [encodedJwt, user] = generateJwtForStaticUser([
+    const groups = [
       UserGroup.TriggerHandler,
       UserGroup.Audit,
       UserGroup.UserManager,
       UserGroup.AuditLoggingManager,
       UserGroup.SuperUserManager,
       UserGroup.NewUI
-    ])
-    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
+    ]
+    const [encodedJwt, user] = generateJwtForStaticUser(groups)
+    await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
+    await createCase(testDatabaseGateway, { errorId: 100 })
 
     await assertStatusCode(encodedJwt, FORBIDDEN)
   })
@@ -64,7 +80,8 @@ describe("resubmit", () => {
     "succeeds if user is in role: %s",
     async (role) => {
       const [encodedJwt, user] = generateJwtForStaticUser([role])
-      jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
+      await createUser(testDatabaseGateway, { groups: [role], jwtId: user.jwtId, username: user.username })
+      await createCase(testDatabaseGateway, { errorId: 100, errorLockedById: user.username })
 
       await assertStatusCode(encodedJwt, OK)
     }
@@ -73,51 +90,66 @@ describe("resubmit", () => {
   describe("fails if", () => {
     let encodedJwt: string
     let user: User
+    const groups = [UserGroup.GeneralHandler]
 
     beforeEach(() => {
-      ;[encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-      jest.spyOn(fakeDataStore, "fetchUserByUsername").mockResolvedValue(user)
+      ;[encodedJwt, user] = generateJwtForStaticUser(groups)
     })
 
-    const canCaseBeResubmittedFalse = () => {
-      jest.spyOn(fakeDataStore, "canCaseBeResubmitted").mockResolvedValue(false)
-    }
-
-    it("case doesn't belong to same force as user", async () => {
-      canCaseBeResubmittedFalse()
+    test("case doesn't belong to same force as user", async () => {
+      await createUser(testDatabaseGateway, {
+        groups,
+        jwtId: user.jwtId,
+        username: user.username,
+        visibleCourts: [],
+        visibleForces: [1]
+      })
+      await createCase(testDatabaseGateway, { errorId: 100, orgForPoliceFilter: [2] })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    it("case is locked to a different user", async () => {
-      canCaseBeResubmittedFalse()
+    test("case is locked to a different user", async () => {
+      await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
+      await createCase(testDatabaseGateway, { errorId: 100, errorLockedById: "another-user" })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    it("case does not exist", async () => {
-      jest.spyOn(fakeDataStore, "canCaseBeResubmitted").mockRejectedValue(new Error("Case not found"))
+    test("case does not exist", async () => {
+      await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
+      await createCase(testDatabaseGateway, { errorId: 101 })
 
       await assertStatusCode(encodedJwt, BAD_REQUEST)
     })
 
-    it("case is resolved", async () => {
-      canCaseBeResubmittedFalse()
+    test("case is resolved", async () => {
+      await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
+      await createCase(testDatabaseGateway, {
+        errorId: 100,
+        errorResolvedAt: new Date(),
+        errorResolvedBy: "a-user",
+        errorStatus: ResolutionStatusNumber.Resolved,
+        resolutionAt: new Date()
+      })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    it("case is already submitted", async () => {
-      canCaseBeResubmittedFalse()
+    test("case is already submitted", async () => {
+      await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
+      await createCase(testDatabaseGateway, { errorId: 100, errorStatus: ResolutionStatusNumber.Submitted })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    it("DB fails", async () => {
+    test("DB fails", async () => {
+      await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
+      await createCase(testDatabaseGateway, { errorId: 100 })
       const error = new Error("AggregateError")
       error.name = "AggregateError"
       error.stack = "Something Sql or pOstGreS"
-      jest.spyOn(fakeDataStore, "canCaseBeResubmitted").mockRejectedValue(error)
+      mockedCanCaseBeResubmitted.mockResolvedValue(error)
 
       await assertStatusCode(encodedJwt, BAD_GATEWAY)
     })

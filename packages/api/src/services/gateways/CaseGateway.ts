@@ -1,13 +1,14 @@
-import type { CaseAges } from "@moj-bichard7/common/types/Case"
+import type { CaseAges, CaseDto } from "@moj-bichard7/common/types/Case"
 import type { Note } from "@moj-bichard7/common/types/Note"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyBaseLogger } from "fastify"
 
-import type { CaseDataForDto, CaseDataForIndexDto } from "../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../types/CaseIndexQuerystring"
 import type DatabaseGateway from "../../types/DatabaseGateway"
 import type { LockReason } from "../../types/LockReason"
+import type { FetchCasesResult } from "../db/cases/fetchCases"
 
 import canCaseBeResubmitted from "../db/cases/canCaseBeResubmitted"
 import fetchCase from "../db/cases/fetchCase"
@@ -20,6 +21,7 @@ import selectMessageId from "../db/cases/selectMessageId"
 export default class CaseGateway {
   constructor(
     private database: DatabaseGateway,
+    private logger: FastifyBaseLogger,
     private user: User
   ) {}
 
@@ -27,8 +29,8 @@ export default class CaseGateway {
     return canCaseBeResubmitted(this.database.readonly, this.user, caseId)
   }
 
-  fetchCase(caseId: number): PromiseResult<CaseDataForDto> {
-    return fetchCase(this.database.readonly, this.user, caseId)
+  fetchCase(caseId: number): PromiseResult<CaseDto> {
+    return fetchCase(this.database.readonly, this.user, caseId, this.logger)
   }
 
   fetchCaseAges(): PromiseResult<CaseAges> {
@@ -40,7 +42,7 @@ export default class CaseGateway {
     pagination: Pagination,
     sortOrder: SortOrder,
     filters: Filters
-  ): PromiseResult<CaseDataForIndexDto[]> {
+  ): PromiseResult<FetchCasesResult> {
     return fetchCases(this.database.readonly, user, pagination, sortOrder, filters)
   }
 
