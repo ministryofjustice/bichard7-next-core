@@ -13,6 +13,3 @@ process.env.INCOMING_BUCKET_NAME = "incoming-messages"
 process.env.AUDIT_LOG_API_URL = "http://localhost:7010"
 process.env.AUDIT_LOG_API_KEY = "dummy"
 process.env.TASK_DATA_BUCKET_NAME = "conductor-task-data"
-
-process.env.DYNAMO_URL = "http://localhost:8000"
-process.env.DYNAMO_REGION = "test"
