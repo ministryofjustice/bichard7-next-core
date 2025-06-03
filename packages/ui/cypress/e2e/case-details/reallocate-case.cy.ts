@@ -362,6 +362,53 @@ describe("Case details", () => {
     cy.contains("Another User1").should("not.exist")
     cy.contains("Test note 1").should("not.exist")
   })
+
+  it("should reallocate a case and keep existing triggers", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+    const triggers: TestTrigger[] = [
+      {
+        triggerId: 0,
+        triggerCode: TriggerCode.TRPR0010,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-09T10:22:34.000Z")
+      },
+      {
+        triggerId: 1,
+        triggerCode: TriggerCode.TRPR0004,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
+        triggerItemIdentity: 1
+      },
+      {
+        triggerId: 2,
+        triggerCode: TriggerCode.TRPR0004,
+        status: "Unresolved",
+        createdAt: new Date("2022-07-09T10:22:34.000Z"),
+        triggerItemIdentity: 3
+      }
+    ]
+    cy.task("insertTriggers", { caseId: 0, triggers })
+
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.get("a").contains("Reallocate Case").click()
+    cy.contains("H2", "Case reallocation").should("exist")
+
+    cy.get('select[name="force"]').select("03 - Cumbria")
+    cy.get('textarea[name="note"]').type("This is a dummy note")
+    cy.get("div.govuk-hint").should("contain", "You have 1980 characters remaining")
+    cy.get("button").contains("Reallocate").click()
+
+    cy.get("H1").should("have.text", "Case list")
+    cy.contains("NAME Defendant").should("not.exist")
+
+    loginAndVisit("BichardForce03")
+    cy.findByText("NAME Defendant").click()
+
+    cy.get("#triggers").contains("PR10").should("exist")
+    cy.get("#triggers").contains("PR04 / Offence 1").should("exist")
+    cy.get("#triggers").contains("PR04 / Offence 3").should("exist")
+  })
 })
 
 export {}
