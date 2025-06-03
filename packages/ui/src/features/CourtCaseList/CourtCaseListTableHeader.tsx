@@ -49,7 +49,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="defendant-name-sort"
           aria-live="polite"
           aria-sort={ariaSort("defendantName")}
-          aria-label={ariaLabel("Defendant name")}
+          aria-label={ariaLabel("defendantName")}
           onClick={(event) => handleHeaderClick(event, "defendantName")}
         >
           {"Defendant name"}
@@ -62,7 +62,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="court-date-sort"
           aria-live="polite"
           aria-sort={ariaSort("courtDate")}
-          aria-label={ariaLabel("Court date")}
+          aria-label={ariaLabel("courtDate")}
           onClick={(event) => handleHeaderClick(event, "courtDate")}
         >
           {"Court date"}
@@ -75,7 +75,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
           id="court-name-sort"
           aria-live="polite"
           aria-sort={ariaSort("courtName")}
-          aria-label={ariaLabel("Court name")}
+          aria-label={ariaLabel("courtName")}
           onClick={(event) => handleHeaderClick(event, "courtName")}
         >
           {"Court name"}
