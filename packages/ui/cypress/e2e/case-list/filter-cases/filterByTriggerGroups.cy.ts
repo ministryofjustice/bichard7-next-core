@@ -174,93 +174,93 @@ describe("Filtering cases by trigger groups", () => {
       cy.get("tbody").should("have.length", "20")
 
       // Bails
-      cy.get("table tbody:nth-child(2)").within(() => {
+      cy.get("table tbody:nth-child(3)").within(() => {
         cy.get(".defendant-name").contains("WAYNE Bruce")
         cy.get(".trigger-description").contains("PR08 - Breach of bail")
       })
-      cy.get("table tbody:nth-child(3)").within(() => {
+      cy.get("table tbody:nth-child(4)").within(() => {
         cy.get(".defendant-name").contains("GORDON Barbara")
         cy.get(".trigger-description").contains("PR10 - Conditional bail")
       })
-      cy.get("table tbody:nth-child(4)").within(() => {
+      cy.get("table tbody:nth-child(5)").within(() => {
         cy.get(".defendant-name").contains("PENNYWORTH Alfred")
         cy.get(".trigger-description").contains("PR19 - Bail direction")
       })
-      cy.get("table tbody:nth-child(5)").within(() => {
+      cy.get("table tbody:nth-child(6)").within(() => {
         cy.get(".defendant-name").contains("GRAYSON Richard")
         cy.get(".trigger-description").contains("PR30 - Pre-charge bail application")
       })
 
       // Results
-      cy.get("table tbody:nth-child(6)").within(() => {
+      cy.get("table tbody:nth-child(7)").within(() => {
         cy.get(".defendant-name").contains("SAVAGE Pete")
         cy.get(".trigger-description").contains("PR06 - Imprisoned")
       })
-      cy.get("table tbody:nth-child(7)").within(() => {
+      cy.get("table tbody:nth-child(8)").within(() => {
         cy.get(".defendant-name").contains("FALCONE Carmine")
         cy.get(".trigger-description").contains("PR16 - Forfeiture order")
       })
-      cy.get("table tbody:nth-child(8)").within(() => {
+      cy.get("table tbody:nth-child(9)").within(() => {
         cy.get(".defendant-name").contains("GORDON James")
         cy.get(".trigger-description").contains("PR20 - Breach")
       })
-      cy.get("table tbody:nth-child(9)").within(() => {
+      cy.get("table tbody:nth-child(10)").within(() => {
         cy.get(".defendant-name").contains("COLSON Gil")
         cy.get(".trigger-description").contains("PR25 - Case reopened")
       })
 
       // Custody
-      cy.get("table tbody:nth-child(10)").within(() => {
+      cy.get("table tbody:nth-child(11)").within(() => {
         cy.get(".defendant-name").contains("KYKLE Selina")
         cy.get(".trigger-description").contains("PR05 - Remand in custody")
       })
 
       // Orders
-      cy.get("table tbody:nth-child(11)").within(() => {
+      cy.get("table tbody:nth-child(12)").within(() => {
         cy.get(".defendant-name").contains("COOPER Harriet")
         cy.get(".trigger-description").contains("PR03 - Order issues")
       })
-      cy.get("table tbody:nth-child(12)").within(() => {
+      cy.get("table tbody:nth-child(13)").within(() => {
         cy.get(".defendant-name").contains("REID Britt")
         cy.get(".trigger-description").contains("PS08 - Curfew order")
       })
-      cy.get("table tbody:nth-child(13)").within(() => {
+      cy.get("table tbody:nth-child(14)").within(() => {
         cy.get(".defendant-name").contains("BENNETT Ethan")
         cy.get(".trigger-description").contains("PR21 - Disq. non-motoring")
       })
-      cy.get("table tbody:nth-child(14)").within(() => {
+      cy.get("table tbody:nth-child(15)").within(() => {
         cy.get(".defendant-name").contains("ROJAS Angel")
         cy.get(".trigger-description").contains("PR26 - Disq. Suspended")
       })
-      cy.get("table tbody:nth-child(15)").within(() => {
+      cy.get("table tbody:nth-child(16)").within(() => {
         cy.get(".defendant-name").contains("YIN Ellen")
         cy.get(".trigger-description").contains("PR29 - Civil Proceedings")
       })
 
       // Warrants
-      cy.get("table tbody:nth-child(16)").within(() => {
+      cy.get("table tbody:nth-child(17)").within(() => {
         cy.get(".defendant-name").contains("KARLO Basil")
         cy.get(".trigger-description").contains("PR02 - Warrant issued")
       })
-      cy.get("table tbody:nth-child(17)").within(() => {
+      cy.get("table tbody:nth-child(18)").within(() => {
         cy.get(".defendant-name").contains("GRAVES Mercy")
         cy.get(".trigger-description").contains("PR12 - Warrant withdrawn")
       })
 
       // Other
-      cy.get("table tbody:nth-child(18)").within(() => {
+      cy.get("table tbody:nth-child(19)").within(() => {
         cy.get(".defendant-name").contains("GREY Francis")
         cy.get(".trigger-description").contains("PR17 - Adjourned sine die")
       })
-      cy.get("table tbody:nth-child(19)").within(() => {
+      cy.get("table tbody:nth-child(20)").within(() => {
         cy.get(".defendant-name").contains("QUINN Harley")
         cy.get(".trigger-description").contains("PR17 - Adjourned sine die")
       })
-      cy.get("table tbody:nth-child(20)").within(() => {
+      cy.get("table tbody:nth-child(21)").within(() => {
         cy.get(".defendant-name").contains("KATSU Hideto")
         cy.get(".trigger-description").contains("PR17 - Adjourned sine die")
       })
-      cy.get("table tbody:nth-child(21)").within(() => {
+      cy.get("table tbody:nth-child(22)").within(() => {
         cy.get(".defendant-name").contains("LUTHOR Lex")
         cy.get(".trigger-description").contains("PR17 - Adjourned sine die")
       })
