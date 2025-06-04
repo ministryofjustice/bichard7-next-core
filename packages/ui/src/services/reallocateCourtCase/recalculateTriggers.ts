@@ -42,7 +42,7 @@ const sameTriggers = (existingTriggers: TriggerEntity[], triggers: Trigger[]): b
     existingTriggers.find(
       (existingTrigger) =>
         existingTrigger.triggerCode === trigger.code &&
-        existingTrigger.triggerItemIdentity === trigger.offenceSequenceNumber &&
+        (existingTrigger.triggerItemIdentity ?? undefined) === trigger.offenceSequenceNumber &&
         existingTrigger.status !== "Resolved"
     )
   )
