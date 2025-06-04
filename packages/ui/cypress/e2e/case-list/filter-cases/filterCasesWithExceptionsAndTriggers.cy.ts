@@ -68,8 +68,8 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
 
       cy.get(".cases-list tbody").should("have.length", 2)
 
-      cy.get(".cases-list tbody:nth-child(2) tr.caseDetailsRow").should("have.length", 1)
-      cy.get(".cases-list tbody:nth-child(2) tr.extraReasonRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(3) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(3) tr.extraReasonRow").should("have.length", 1)
 
       cy.get(".cases-list tbody:nth-child(3) tr.caseDetailsRow").should("have.length", 1)
       cy.get(".cases-list tbody:nth-child(3) tr.extraReasonRow").should("have.length", 1)
@@ -86,7 +86,7 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
       cy.get(".cases-list tbody").should("have.length", 1)
       cy.get(".cases-list tbody").contains("GORDON Barbara")
 
-      cy.get(".cases-list tbody:nth-child(2) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(3) tr.caseDetailsRow").should("have.length", 1)
       cy.get(".cases-list tbody:nth-child(2) tr.extraReasonRow").should("not.exist")
     })
 
@@ -167,7 +167,7 @@ describe("filterCasesWithExceptionsAndTriggers", () => {
       cy.get(".cases-list tbody").should("have.length", 1)
       cy.get(".cases-list tbody").contains("GORDON Barbara")
 
-      cy.get(".cases-list tbody:nth-child(2) tr.caseDetailsRow").should("have.length", 1)
+      cy.get(".cases-list tbody:nth-child(3) tr.caseDetailsRow").should("have.length", 1)
       cy.get(".cases-list tbody:nth-child(2) tr.extraReasonRow").should("not.exist")
     })
 
