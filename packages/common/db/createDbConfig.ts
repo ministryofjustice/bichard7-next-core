@@ -27,7 +27,7 @@ const createDbConfig = (readOnly = false): postgres.Options<{}> => {
   return {
     ...config,
     connection: {
-      default_transaction_read_only: readOnly
+      default_transaction_read_only: true
     },
     host: process.env.DB_READER_HOST ?? "localhost"
   }
