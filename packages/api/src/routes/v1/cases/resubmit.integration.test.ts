@@ -102,9 +102,9 @@ describe("resubmit", () => {
         jwtId: user.jwtId,
         username: user.username,
         visibleCourts: [],
-        visibleForces: [1]
+        visibleForces: ["01"]
       })
-      await createCase(testDatabaseGateway, { errorId: 100, orgForPoliceFilter: [2] })
+      await createCase(testDatabaseGateway, { errorId: 100, orgForPoliceFilter: "02" })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })

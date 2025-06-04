@@ -1,13 +1,14 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { LockedState, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -21,20 +22,19 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    user = (await createUsers(helper.postgres, 1))[0]
+    user = await createUser(helper.postgres)
     await createCases(helper.postgres, 7, {
-      0: { error_locked_by_id: errorLockedByUsername, trigger_locked_by_id: triggerLockedByUsername },
-      1: { error_locked_by_id: errorLockedByUsername, trigger_locked_by_id: null },
-      2: { error_locked_by_id: null, trigger_locked_by_id: triggerLockedByUsername },
-      3: { error_locked_by_id: null, trigger_locked_by_id: null },
-      4: { error_locked_by_id: user.username, trigger_locked_by_id: null },
-      5: { error_locked_by_id: null, trigger_locked_by_id: user.username },
-      6: { error_locked_by_id: user.username, trigger_locked_by_id: user.username }
+      0: { errorLockedById: errorLockedByUsername, triggerLockedById: triggerLockedByUsername },
+      1: { errorLockedById: errorLockedByUsername, triggerLockedById: null },
+      2: { errorLockedById: null, triggerLockedById: triggerLockedByUsername },
+      3: { errorLockedById: null, triggerLockedById: null },
+      4: { errorLockedById: user.username, triggerLockedById: null },
+      5: { errorLockedById: null, triggerLockedById: user.username },
+      6: { errorLockedById: user.username, triggerLockedById: user.username }
     })
   })
 
@@ -48,7 +48,7 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   })
 
   it("will fetch all cases when with no Locked State in the query", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, defaultQuery, user)
+    const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(7)
     expect(caseMetadata.totalCases).toBe(7)
@@ -56,11 +56,11 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   })
 
   it("will fetch all cases when Locked State is set to All", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { lockedState: LockedState.All, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(7)
     expect(caseMetadata.totalCases).toBe(7)
@@ -68,11 +68,11 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   })
 
   it("will fetch cases which are locked", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { lockedState: LockedState.Locked, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(6)
     expect(caseMetadata.totalCases).toBe(6)
@@ -80,11 +80,11 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   })
 
   it("will fetch cases which are unlocked", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { lockedState: LockedState.Unlocked, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
@@ -93,11 +93,11 @@ describe("fetchCasesAndFilter filtering by Locked State e2e", () => {
   })
 
   it("will fetch cases which are locked to the current user", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { lockedState: LockedState.LockedToMe, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.totalCases).toBe(3)

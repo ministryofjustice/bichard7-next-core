@@ -20,7 +20,7 @@ export class SetupAppEnd2EndHelper {
   static async setup(port: number = 8888): Promise<SetupAppEnd2EndHelper> {
     const e2ePostgres = new End2EndPostgres()
     const auditLogGateway = new TestDynamoGateway(auditLogDynamoConfig)
-    const app = await build({ auditLogGateway, dataStore: e2ePostgres })
+    const app = await build({ auditLogGateway, database: e2ePostgres })
     await app.ready()
     await app.listen({ port })
 

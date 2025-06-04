@@ -3,7 +3,7 @@ import type { Row } from "postgres"
 
 import type { DatabaseConnection } from "../../types/DatabaseGateway"
 
-export const visibleForcesSql = (database: DatabaseConnection, forceIds: number[]): postgres.PendingQuery<Row[]> => {
+export const visibleForcesSql = (database: DatabaseConnection, forceIds: string[]): postgres.PendingQuery<Row[]> => {
   if (forceIds.length === 0) {
     return database.connection`FALSE`
   }

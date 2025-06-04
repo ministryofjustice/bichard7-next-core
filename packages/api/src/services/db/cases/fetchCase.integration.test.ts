@@ -27,10 +27,10 @@ describe("fetchCase", () => {
   })
 
   it("returns an error if the case isn't in the correct force and court", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleCourts: [], visibleForces: [1] })
+    const user = await createUser(testDatabaseGateway, { visibleCourts: [], visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
       courtCode: "ABC",
-      orgForPoliceFilter: [2]
+      orgForPoliceFilter: "02"
     })
 
     const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
@@ -39,10 +39,10 @@ describe("fetchCase", () => {
   })
 
   it("fetches the Case when both court and force match", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleCourts: ["AB"], visibleForces: [2] })
+    const user = await createUser(testDatabaseGateway, { visibleCourts: ["AB"], visibleForces: ["02"] })
     const caseObj = await createCase(testDatabaseGateway, {
       courtCode: "ABC",
-      orgForPoliceFilter: [2]
+      orgForPoliceFilter: "02"
     })
 
     const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
@@ -51,10 +51,10 @@ describe("fetchCase", () => {
   })
 
   it("fetches the Case when only court matches", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleCourts: ["AB"], visibleForces: [1] })
+    const user = await createUser(testDatabaseGateway, { visibleCourts: ["AB"], visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
       courtCode: "ABC",
-      orgForPoliceFilter: [2]
+      orgForPoliceFilter: "02"
     })
 
     const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
@@ -63,10 +63,10 @@ describe("fetchCase", () => {
   })
 
   it("fetches the Case when only force matches", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleCourts: ["QW"], visibleForces: [2] })
+    const user = await createUser(testDatabaseGateway, { visibleCourts: ["QW"], visibleForces: ["02"] })
     const caseObj = await createCase(testDatabaseGateway, {
       courtCode: "ABC",
-      orgForPoliceFilter: [2]
+      orgForPoliceFilter: "02"
     })
 
     const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto

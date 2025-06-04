@@ -14,7 +14,7 @@ export const TriggerRowSchema = z.object({
 })
 
 export const TriggerSchema = z.object({
-  createAt: dateLikeToDate,
+  createdAt: dateLikeToDate,
   errorId: z.number().nullable(),
   resolvedAt: dateLikeToDate.nullable(),
   resolvedBy: z.string().nullable(),

@@ -27,7 +27,7 @@ export const UserSchema = z.object({
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.array(z.string()).min(0),
-  visibleForces: z.array(z.number()).min(0)
+  visibleForces: z.array(z.string()).min(0)
 })
 
 export const UserDtoSchema = z.object({
@@ -41,7 +41,7 @@ export const UserDtoSchema = z.object({
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),
-  visibleForces: z.array(z.number()).nullable()
+  visibleForces: z.array(z.string()).nullable()
 })
 
 export type User = z.infer<typeof UserSchema>

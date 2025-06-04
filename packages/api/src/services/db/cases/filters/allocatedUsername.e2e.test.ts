@@ -1,14 +1,15 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { sortBy } from "lodash"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -24,18 +25,17 @@ describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    user = (await createUsers(helper.postgres, 1))[0]
+    user = await createUser(helper.postgres)
     await createCases(helper.postgres, 5, {
-      0: { error_locked_by_id: "user", trigger_locked_by_id: "user" },
-      1: { error_locked_by_id: "user", trigger_locked_by_id: null },
-      2: { error_locked_by_id: null, trigger_locked_by_id: "user" },
-      3: { error_locked_by_id: null, trigger_locked_by_id: null },
-      4: { error_locked_by_id: "anotherUser", trigger_locked_by_id: "anotherUser" }
+      0: { errorLockedById: "user", triggerLockedById: "user" },
+      1: { errorLockedById: "user", triggerLockedById: null },
+      2: { errorLockedById: null, triggerLockedById: "user" },
+      3: { errorLockedById: null, triggerLockedById: null },
+      4: { errorLockedById: "anotherUser", triggerLockedById: "anotherUser" }
     })
   })
 
@@ -49,7 +49,7 @@ describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   })
 
   it("will not filter when not given a query value of allocatedUsername", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, defaultQuery, user)
+    const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(5)
     expect(caseMetadata.totalCases).toBe(5)
@@ -57,11 +57,11 @@ describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   })
 
   it("will filter when given a query value of allocatedUsername", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { allocatedUsername: "user", ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.totalCases).toBe(3)

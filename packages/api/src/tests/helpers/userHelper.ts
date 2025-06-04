@@ -7,6 +7,8 @@ import type End2EndPostgres from "../testGateways/e2ePostgres"
 
 import { generateTestJwtToken } from "./jwtHelper"
 
+let userId = 1
+
 export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.GeneralHandler]): [string, User] => {
   const jwtId = randomUUID()
   const user: User = {
@@ -20,14 +22,14 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.Ge
     surname: "Surname",
     username: "User 1",
     visibleCourts: [],
-    visibleForces: [1]
+    visibleForces: ["01"]
   }
 
   return [generateTestJwtToken(user, jwtId), user]
 }
 
 export const createUser = async (databaseGateway: End2EndPostgres, overrides: Partial<User> = {}): Promise<User> => {
-  const id = overrides.id ?? 1
+  const id = overrides.id ?? userId++
   return databaseGateway.createTestUser({
     email: `user${id}@example.com`,
     excludedTriggers: [],
@@ -39,7 +41,7 @@ export const createUser = async (databaseGateway: End2EndPostgres, overrides: Pa
     surname: `Surname${id}`,
     username: `User${id}`,
     visibleCourts: ["AB"],
-    visibleForces: [1],
+    visibleForces: ["01"],
     ...(overrides ?? {})
   })
 }
@@ -53,20 +55,20 @@ export const createUsers = async (
     Array(numberOfUsers)
       .fill(null)
       .map(async (_, index) => {
-        const id = index + 1 // +1 to avoid user id 0
+        const id = userId++
         return databaseGateway.createTestUser({
           email: `user${id}@example.com`,
           excludedTriggers: [],
           featureFlags: {},
           forenames: `Forename${id}`,
           groups: [UserGroup.GeneralHandler],
-          id,
+          id: userId++,
           jwtId: randomUUID(),
           surname: `Surname${id}`,
           username: `User${id}`,
           visibleCourts: ["AB"],
-          visibleForces: [1],
-          ...(overrides[id] ?? {})
+          visibleForces: ["01"],
+          ...(overrides[index] ?? {})
         })
       })
   )
@@ -77,7 +79,7 @@ export const createUserAndJwtToken = async (
   groups: UserGroup[] = [UserGroup.GeneralHandler],
   overrides: Partial<User> = {}
 ): Promise<[string, User]> => {
-  const [user] = await createUsers(databaseGateway, 1, { 1: { groups, ...overrides } })
+  const user = await createUser(databaseGateway, { groups, ...overrides })
   return [generateTestJwtToken(user, user.jwtId ?? ""), user]
 }
 

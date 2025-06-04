@@ -7,7 +7,7 @@ import { ResolutionStatus, resolutionStatusFromDb } from "./convertResolutionSta
 
 export const convertTriggerToDto = (trigger: Trigger): TriggerDto => {
   return {
-    createAt: trigger.createAt,
+    createAt: trigger.createdAt,
     description: getTriggerWithDescription(trigger.triggerCode, true),
     resolvedAt: trigger.resolvedAt ? trigger.resolvedAt : undefined,
     shortTriggerCode: getShortTriggerCode(trigger.triggerCode),

@@ -1,7 +1,7 @@
 import type { Trigger, TriggerRow } from "@moj-bichard7/common/types/Trigger"
 
 const mapTriggerRowToTrigger = (triggerRow: TriggerRow): Trigger => ({
-  createAt: triggerRow.create_ts,
+  createdAt: triggerRow.create_ts,
   errorId: triggerRow.error_id,
   resolvedAt: triggerRow.resolved_ts,
   resolvedBy: triggerRow.resolved_by,

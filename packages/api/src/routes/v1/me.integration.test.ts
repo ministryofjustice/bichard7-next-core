@@ -52,7 +52,7 @@ describe("/v1/me", () => {
       surname: "Surname1",
       username: user.username,
       visibleCourts: "AB",
-      visibleForces: [1]
+      visibleForces: ["01"]
     }
 
     expect(response.statusCode).toBe(OK)

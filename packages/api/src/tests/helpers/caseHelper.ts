@@ -33,7 +33,7 @@ const getDefaultCase = (): Case => ({
   lastPncFailureResubmissionAt: null,
   messageId: randomUUID(),
   messageReceivedAt: new Date("2025-05-23"),
-  orgForPoliceFilter: [1],
+  orgForPoliceFilter: "01",
   phase: 1,
   pncUpdateEnabled: "",
   ptiurn: "00112233",
@@ -73,8 +73,8 @@ export const createCases = async (
       .map((_, index) =>
         createCase(databaseGateway, {
           ...getDefaultCase(),
-          errorId: index + 1,
-          ...(overrides[index + 1] ?? {})
+          errorId: index,
+          ...(overrides[index] ?? {})
         })
       )
   )

@@ -30,7 +30,7 @@ const mapCaseToCaseRow = (caseObj: Case): CaseRow => ({
   message_id: caseObj.messageId,
   msg_received_ts: caseObj.messageReceivedAt,
   notes: caseObj.notes?.map(mapNoteToNoteRow) ?? [],
-  org_for_police_filter: caseObj.orgForPoliceFilter.map((force) => String(force).padStart(2, "0")).join(","),
+  org_for_police_filter: caseObj.orgForPoliceFilter,
   phase: caseObj.phase,
   pnc_update_enabled: caseObj.pncUpdateEnabled,
   ptiurn: caseObj.ptiurn,

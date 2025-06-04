@@ -1,13 +1,14 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -23,12 +24,11 @@ describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    user = (await createUsers(helper.postgres, 1))[0]
+    user = await createUser(helper.postgres)
 
     await createCases(helper.postgres, 4, {
       0: { ptiurn: PTIURNs[0] },
@@ -48,7 +48,11 @@ describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   })
 
   it("will order the PTIURN and with the default ordering", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { orderBy: OrderBy.ptiurn, ...defaultQuery }, user)
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { orderBy: OrderBy.ptiurn, ...defaultQuery },
+      user
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(4)
     expect(caseMetadata.cases[0].ptiurn).toBe(ascending[0])
@@ -58,11 +62,11 @@ describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   })
 
   it("will order the PTIURN by asc and with the default ordering", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { order: Order.asc, orderBy: OrderBy.ptiurn, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(4)
     expect(caseMetadata.cases[0].ptiurn).toBe(ascending[0])
@@ -72,11 +76,11 @@ describe("fetchCasesAndFilter ordering PTIURN e2e", () => {
   })
 
   it("will order the PTIURN by desc and with the default ordering", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { order: Order.desc, orderBy: OrderBy.ptiurn, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(4)
     expect(caseMetadata.cases[0].ptiurn).toBe(descending[0])

@@ -7,12 +7,14 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { sortBy } from "lodash"
 
-import { createCases } from "../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createTriggers } from "../../../../../tests/helpers/triggerHelper"
-import { createUsers } from "../../../../../tests/helpers/userHelper"
-import { type Filters } from "../../../../../types/CaseIndexQuerystring"
-import { ResolutionStatusNumber } from "../../../../../useCases/dto/convertResolutionStatus"
+import type { Filters } from "../../../types/CaseIndexQuerystring"
+
+import { createCases } from "../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
+import { createTriggers } from "../../../tests/helpers/triggerHelper"
+import { createUsers } from "../../../tests/helpers/userHelper"
+import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
+import fetchTriggers from "./fetchTriggers"
 
 describe("fetchTriggers e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -26,29 +28,28 @@ describe("fetchTriggers e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
     const users = await createUsers(helper.postgres, 2, {
-      1: { excluded_triggers: "" },
-      2: { excluded_triggers: `${TriggerCode.TRPR0001},${TriggerCode.TRPR0010}` }
+      0: { excludedTriggers: [] },
+      1: { excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0010] }
     })
 
     user = users[0]
     user2 = users[1]
     cases = await createCases(helper.postgres, 2)
 
-    await createTriggers(helper.postgres, cases[0].error_id, [
-      { create_ts: new Date(), status: ResolutionStatusNumber.Unresolved, trigger_code: TriggerCode.TRPR0001 },
-      { create_ts: new Date(), status: ResolutionStatusNumber.Unresolved, trigger_code: TriggerCode.TRPR0005 },
-      { create_ts: new Date(), status: ResolutionStatusNumber.Unresolved, trigger_code: TriggerCode.TRPR0010 },
-      { create_ts: new Date(), status: ResolutionStatusNumber.Unresolved, trigger_code: TriggerCode.TRPS0010 }
+    await createTriggers(helper.postgres, cases[0].errorId, [
+      { createdAt: new Date(), status: ResolutionStatusNumber.Unresolved, triggerCode: TriggerCode.TRPR0001 },
+      { createdAt: new Date(), status: ResolutionStatusNumber.Unresolved, triggerCode: TriggerCode.TRPR0005 },
+      { createdAt: new Date(), status: ResolutionStatusNumber.Unresolved, triggerCode: TriggerCode.TRPR0010 },
+      { createdAt: new Date(), status: ResolutionStatusNumber.Unresolved, triggerCode: TriggerCode.TRPS0010 }
     ] as Trigger[])
 
-    await createTriggers(helper.postgres, cases[1].error_id, [
-      { create_ts: new Date(), status: ResolutionStatusNumber.Unresolved, trigger_code: TriggerCode.TRPR0001 }
+    await createTriggers(helper.postgres, cases[1].errorId, [
+      { createdAt: new Date(), status: ResolutionStatusNumber.Unresolved, triggerCode: TriggerCode.TRPR0001 }
     ] as Trigger[])
   })
 
@@ -62,53 +63,57 @@ describe("fetchTriggers e2e", () => {
   })
 
   it("will get all triggers by case IDs", async () => {
-    const triggers = await helper.postgres.fetchTriggers(
-      cases.map((c) => c.error_id),
-      defaultFilter,
-      user
+    const triggers = await fetchTriggers(
+      helper.postgres.readonly,
+      user,
+      cases.map((c) => c.errorId),
+      defaultFilter
     )
 
     expect(triggers).toHaveLength(5)
   })
 
   it("will get all triggers based on one case", async () => {
-    const triggers = await helper.postgres.fetchTriggers([cases[0].error_id], defaultFilter, user)
+    const triggers = await fetchTriggers(helper.postgres.readonly, user, [cases[0].errorId], defaultFilter)
 
     expect(triggers).toHaveLength(4)
   })
 
   it("will get triggers that match the trigger code in reason codes only", async () => {
-    const triggers = await helper.postgres.fetchTriggers(
-      cases.map((c) => c.error_id),
-      { reasonCodes: [TriggerCode.TRPR0001], ...defaultFilter },
-      user
-    )
+    const triggers = (await fetchTriggers(
+      helper.postgres.readonly,
+      user,
+      cases.map((c) => c.errorId),
+      { reasonCodes: [TriggerCode.TRPR0001], ...defaultFilter }
+    )) as Trigger[]
 
     expect(triggers).toHaveLength(2)
-    expect(sortBy(triggers, "error_id").map((t) => t.error_id)).toEqual([0, 1])
+    expect(sortBy(triggers, "errorId").map((t) => t.errorId)).toEqual([0, 1])
   })
 
   it("will get triggers that match the trigger codes in reason codes only", async () => {
-    const triggers = await helper.postgres.fetchTriggers(
-      cases.map((c) => c.error_id),
-      { reasonCodes: [TriggerCode.TRPR0001, TriggerCode.TRPS0010], ...defaultFilter },
-      user
-    )
+    const triggers = (await fetchTriggers(
+      helper.postgres.readonly,
+      user,
+      cases.map((c) => c.errorId),
+      { reasonCodes: [TriggerCode.TRPR0001, TriggerCode.TRPS0010], ...defaultFilter }
+    )) as Trigger[]
 
     expect(triggers).toHaveLength(3)
-    expect(sortBy(triggers, "error_id").map((t) => t.error_id)).toEqual([0, 0, 1])
+    expect(sortBy(triggers, "errorId").map((t) => t.errorId)).toEqual([0, 0, 1])
   })
 
   it("will filter out triggers if the user has excluded them", async () => {
-    const triggers = await helper.postgres.fetchTriggers(
-      cases.map((c) => c.error_id),
-      defaultFilter,
-      user2
-    )
+    const triggers = (await fetchTriggers(
+      helper.postgres.readonly,
+      user2,
+      cases.map((c) => c.errorId),
+      defaultFilter
+    )) as Trigger[]
 
     expect(triggers).toHaveLength(2)
-    expect(sortBy(triggers, "error_id").map((t) => t.error_id)).toEqual([0, 0])
-    expect(sortBy(triggers, "trigger_code").map((t) => t.trigger_code)).toEqual([
+    expect(sortBy(triggers, "errorId").map((t) => t.errorId)).toEqual([0, 0])
+    expect(sortBy(triggers, "triggerCode").map((t) => t.triggerCode)).toEqual([
       TriggerCode.TRPR0005,
       TriggerCode.TRPS0010
     ])

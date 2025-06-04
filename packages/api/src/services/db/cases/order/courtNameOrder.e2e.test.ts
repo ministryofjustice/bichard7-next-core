@@ -1,13 +1,14 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter ordering courtName e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -19,16 +20,15 @@ describe("fetchCasesAndFilter ordering courtName e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    user = (await createUsers(helper.postgres, 1))[0]
+    user = await createUser(helper.postgres)
     await createCases(helper.postgres, 3, {
-      0: { court_name: "AAAA" },
-      1: { court_name: "BBBB" },
-      2: { court_name: "CCCC" }
+      0: { courtName: "AAAA" },
+      1: { courtName: "BBBB" },
+      2: { courtName: "CCCC" }
     })
   })
 
@@ -42,11 +42,11 @@ describe("fetchCasesAndFilter ordering courtName e2e", () => {
   })
 
   it("will order the case name by asc by default", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { orderBy: OrderBy.courtName, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.cases[0].courtName).toBe("AAAA")
@@ -55,11 +55,11 @@ describe("fetchCasesAndFilter ordering courtName e2e", () => {
   })
 
   it("will order the case name by asc when it is specifically set", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { order: Order.asc, orderBy: OrderBy.courtName, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.cases[0].courtName).toBe("AAAA")
@@ -68,11 +68,11 @@ describe("fetchCasesAndFilter ordering courtName e2e", () => {
   })
 
   it("will order the case name by DESC", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { order: Order.desc, orderBy: OrderBy.courtName, ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.cases[0].courtName).toBe("CCCC")

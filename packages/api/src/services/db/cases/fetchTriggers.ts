@@ -1,5 +1,5 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { Trigger } from "@moj-bichard7/common/types/Trigger"
+import type { Trigger, TriggerRow } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -10,6 +10,7 @@ import { isEmpty } from "lodash"
 import type { Filters } from "../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
+import mapTriggerRowToTrigger from "../mapTriggerRowToTrigger"
 import { excludedTriggersAndStatusSql } from "./filters/excludedTriggersAndStatusSql"
 
 export default async (
@@ -33,7 +34,7 @@ export default async (
     }
   }
 
-  const result = await database.connection<Trigger[]>`
+  const result = await database.connection<TriggerRow[]>`
     SELECT
       *
     FROM
@@ -48,5 +49,5 @@ export default async (
     return Error(`Error while fetching triggers for case ids ${caseIds} and user ${user.username}: ${result.message}`)
   }
 
-  return result
+  return result.map(mapTriggerRowToTrigger)
 }

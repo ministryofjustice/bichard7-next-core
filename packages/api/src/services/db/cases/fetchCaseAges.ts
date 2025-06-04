@@ -17,7 +17,6 @@ const formInputDateFormat = "yyyy-MM-dd"
 const formatFormInputDateString = (date: Date): string => (isValid(date) ? format(date, formInputDateFormat) : "")
 
 export const fetchCaseAges = async (database: DatabaseConnection, user: User): PromiseResult<CaseAges> => {
-  const resolutionStats = ResolutionStatusNumber.Unresolved
   const slaCaseAges = Object.values(CaseAge)
 
   const queries = slaCaseAges.reduce((queries: postgres.PendingQuery<postgres.Row[]>[], key, index) => {
@@ -49,9 +48,8 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     FROM br7own.error_list el
     LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
     WHERE
-      ${organisationUnitSql(database, user)}
-      AND (el.error_status = ${resolutionStats} OR el.trigger_status = ${resolutionStats})
-      AND (el.trigger_status = ${resolutionStats} OR el.error_status = ${resolutionStats})
+      (${organisationUnitSql(database, user)})
+      AND (el.error_status = ${ResolutionStatusNumber.Unresolved} OR el.trigger_status = ${ResolutionStatusNumber.Unresolved})
       ${excludedTriggersSql}
   `.catch((error: Error) => error)
 

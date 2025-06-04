@@ -182,7 +182,7 @@ const fetchCases = async (
 
   return {
     cases: casesDto,
-    fullCount: result[0]?.full_count ?? 0
+    fullCount: Number(result[0]?.full_count) ?? 0
   }
 }
 

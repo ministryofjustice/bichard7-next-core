@@ -1,12 +1,13 @@
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { type ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -24,12 +25,11 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    user = (await createUsers(helper.postgres, 1))[0]
+    user = await createUser(helper.postgres)
     await createCases(helper.postgres, 3, {
       0: { asn: asnWithoutSlashes },
       1: { asn: validAsnWithoutSlashes },
@@ -47,11 +47,11 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   })
 
   it("will match cases when the ASN is case insensitive", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       { asn: asnWithoutSlashes.toLowerCase(), ...defaultQuery },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
@@ -60,7 +60,11 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   })
 
   it("will match cases when the ASN is invalid", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { asn: invalidAsnInput, ...defaultQuery }, user)
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { asn: invalidAsnInput, ...defaultQuery },
+      user
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
@@ -69,7 +73,11 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   })
 
   it("will partial match", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { asn: partialAsnInput, ...defaultQuery }, user)
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { asn: partialAsnInput, ...defaultQuery },
+      user
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
     expect(caseMetadata.totalCases).toBe(2)
@@ -79,7 +87,11 @@ describe("fetchCasesAndFilter filtering by ASN e2e", () => {
   })
 
   it("will ignore slashes in the query", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { asn: asnWithSlashesInput, ...defaultQuery }, user)
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { asn: asnWithSlashesInput, ...defaultQuery },
+      user
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)

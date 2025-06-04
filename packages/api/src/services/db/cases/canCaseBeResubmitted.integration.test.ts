@@ -33,8 +33,8 @@ describe("canCaseBeResubmitted", () => {
   })
 
   it("returns false if the case does not belong to the same force as the case", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleForces: [2] })
-    const caseObj = await createCase(testDatabaseGateway, { orgForPoliceFilter: [1] })
+    const user = await createUser(testDatabaseGateway, { visibleForces: ["02"] })
+    const caseObj = await createCase(testDatabaseGateway, { orgForPoliceFilter: "01" })
 
     const result = await canCaseBeResubmitted(testDatabaseGateway.readonly, user, caseObj.errorId)
 
@@ -42,11 +42,11 @@ describe("canCaseBeResubmitted", () => {
   })
 
   it("returns false if user is locked to the case and case belongs to user's force but case is resolved", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleForces: [1] })
+    const user = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Resolved,
-      orgForPoliceFilter: [1]
+      orgForPoliceFilter: "01"
     })
 
     const result = await canCaseBeResubmitted(testDatabaseGateway.readonly, user, caseObj.errorId)
@@ -55,11 +55,11 @@ describe("canCaseBeResubmitted", () => {
   })
 
   it("returns false if user is locked to the case and case belongs to user's force but case is submitted", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleForces: [1] })
+    const user = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Submitted,
-      orgForPoliceFilter: [1]
+      orgForPoliceFilter: "01"
     })
 
     const result = await canCaseBeResubmitted(testDatabaseGateway.readonly, user, caseObj.errorId)
@@ -68,11 +68,11 @@ describe("canCaseBeResubmitted", () => {
   })
 
   it("returns true if user is locked to the case, case belongs to user's force and case is unresolved", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleForces: [1] })
+    const user = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved,
-      orgForPoliceFilter: [1]
+      orgForPoliceFilter: "01"
     })
 
     const result = await canCaseBeResubmitted(testDatabaseGateway.readonly, user, caseObj.errorId)

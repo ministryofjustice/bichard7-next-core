@@ -13,7 +13,7 @@ const mapUserRowToUser = (userRow: UserRow): User => ({
   surname: userRow.surname,
   username: userRow.username,
   visibleCourts: userRow.visible_courts?.split(",").filter(Boolean) ?? [],
-  visibleForces: formatForceNumbers(userRow.visible_forces)
+  visibleForces: formatForceNumbers(userRow.visible_forces).map((f) => String(f).padStart(2, "0"))
 })
 
 export default mapUserRowToUser

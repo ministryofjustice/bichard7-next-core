@@ -66,7 +66,7 @@ describe("retrieve a case", () => {
       errorStatus: "Unresolved",
       isUrgent: 1,
       notes: [],
-      orgForPoliceFilter: "01    ",
+      orgForPoliceFilter: "01",
       phase: 1,
       ptiurn: "00112233",
       resolutionTimestamp: null,

@@ -33,7 +33,7 @@ export const convertCaseToCaseDto = (
     aho,
     courtCode: caseRowForDto.court_code,
     courtReference: caseRowForDto.court_reference,
-    orgForPoliceFilter: caseRowForDto.org_for_police_filter,
+    orgForPoliceFilter: caseRowForDto.org_for_police_filter.trim(),
     phase: caseRowForDto.phase,
     updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : updatedAhoResult
   }
@@ -42,36 +42,34 @@ export const convertCaseToCaseDto = (
 export const convertCaseToCaseIndexDto = (
   caseRowForDto: CaseRowForDto | CaseRowForIndexDto,
   user: User
-): CaseIndexDto => {
-  return {
-    asn: caseRowForDto.asn,
-    canUserEditExceptions:
-      caseRowForDto.error_locked_by_id === user?.username &&
-      hasAccessToExceptions(user) &&
-      caseRowForDto.error_status === resolutionStatusCodeByText(ResolutionStatus.Unresolved),
-    courtDate: caseRowForDto.court_date,
-    courtName: caseRowForDto.court_name,
-    defendantName: caseRowForDto.defendant_name,
-    errorId: caseRowForDto.error_id,
-    errorLockedByUserFullName: isEmpty(caseRowForDto.error_locked_by_fullname?.replace(/ /g, ""))
-      ? null
-      : caseRowForDto.error_locked_by_fullname,
-    errorLockedByUsername: caseRowForDto.error_locked_by_id,
-    errorReport: caseRowForDto.error_report,
-    errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
-    isUrgent: caseRowForDto.is_urgent,
-    noteCount: (caseRowForDto as CaseRowForIndexDto).note_count
-      ? Number((caseRowForDto as CaseRowForIndexDto).note_count)
-      : undefined,
-    notes: caseRowForDto.notes ? sortBy(caseRowForDto.notes, "create_ts").reverse().map(convertNoteToDto) : [],
-    ptiurn: caseRowForDto.ptiurn,
-    resolutionTimestamp: caseRowForDto.resolution_ts,
-    triggerCount: caseRowForDto.trigger_count,
-    triggerLockedByUserFullName: isEmpty(caseRowForDto.trigger_locked_by_fullname?.replace(/ /g, ""))
-      ? null
-      : caseRowForDto.trigger_locked_by_fullname,
-    triggerLockedByUsername: caseRowForDto.trigger_locked_by_id,
-    triggers: caseRowForDto.triggers ? caseRowForDto.triggers.map(convertTriggerRowToDto) : [],
-    triggerStatus: resolutionStatusFromDb(caseRowForDto.trigger_status)
-  }
-}
+): CaseIndexDto => ({
+  asn: caseRowForDto.asn,
+  canUserEditExceptions:
+    caseRowForDto.error_locked_by_id === user?.username &&
+    hasAccessToExceptions(user) &&
+    caseRowForDto.error_status === resolutionStatusCodeByText(ResolutionStatus.Unresolved),
+  courtDate: caseRowForDto.court_date,
+  courtName: caseRowForDto.court_name,
+  defendantName: caseRowForDto.defendant_name,
+  errorId: caseRowForDto.error_id,
+  errorLockedByUserFullName: isEmpty(caseRowForDto.error_locked_by_fullname?.replace(/ /g, ""))
+    ? null
+    : caseRowForDto.error_locked_by_fullname,
+  errorLockedByUsername: caseRowForDto.error_locked_by_id,
+  errorReport: caseRowForDto.error_report,
+  errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
+  isUrgent: caseRowForDto.is_urgent,
+  noteCount: (caseRowForDto as CaseRowForIndexDto).note_count
+    ? Number((caseRowForDto as CaseRowForIndexDto).note_count)
+    : undefined,
+  notes: caseRowForDto.notes ? sortBy(caseRowForDto.notes, "create_ts").reverse().map(convertNoteToDto) : [],
+  ptiurn: caseRowForDto.ptiurn,
+  resolutionTimestamp: caseRowForDto.resolution_ts,
+  triggerCount: caseRowForDto.trigger_count,
+  triggerLockedByUserFullName: isEmpty(caseRowForDto.trigger_locked_by_fullname?.replace(/ /g, ""))
+    ? null
+    : caseRowForDto.trigger_locked_by_fullname,
+  triggerLockedByUsername: caseRowForDto.trigger_locked_by_id,
+  triggers: caseRowForDto.triggers ? caseRowForDto.triggers.map(convertTriggerRowToDto) : [],
+  triggerStatus: resolutionStatusFromDb(caseRowForDto.trigger_status)
+})

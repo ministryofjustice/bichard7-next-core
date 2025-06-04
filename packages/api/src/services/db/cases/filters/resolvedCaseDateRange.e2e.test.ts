@@ -1,14 +1,15 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { Reason, ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
-import { ResolutionStatus, ResolutionStatusNumber } from "../../../../../../useCases/dto/convertResolutionStatus"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
+import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   let helper: SetupAppEnd2EndHelper
@@ -29,37 +30,36 @@ describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    user = (await createUsers(helper.postgres, 1))[0]
+    user = await createUser(helper.postgres)
     await createCases(helper.postgres, 4, {
       0: {
-        court_date: firstDate,
-        error_resolved_by: user.username,
-        error_status: ResolutionStatusNumber.Resolved,
-        resolution_ts: firstDate
+        courtDate: firstDate,
+        errorResolvedBy: user.username,
+        errorStatus: ResolutionStatusNumber.Resolved,
+        resolutionAt: firstDate
       },
       1: {
-        court_date: secondDate,
-        error_resolved_by: user.username,
-        error_status: ResolutionStatusNumber.Resolved,
-        resolution_ts: secondDate
+        courtDate: secondDate,
+        errorResolvedBy: user.username,
+        errorStatus: ResolutionStatusNumber.Resolved,
+        resolutionAt: secondDate
       },
       2: {
-        court_date: thirdDate,
-        error_resolved_by: user.username,
-        error_status: ResolutionStatusNumber.Resolved,
-        resolution_ts: null,
-        trigger_status: ResolutionStatusNumber.Unresolved
+        courtDate: thirdDate,
+        errorResolvedBy: user.username,
+        errorStatus: ResolutionStatusNumber.Resolved,
+        resolutionAt: null,
+        triggerStatus: ResolutionStatusNumber.Unresolved
       },
       3: {
-        court_date: fourthDate,
-        error_resolved_by: user.username,
-        error_status: ResolutionStatusNumber.Resolved,
-        resolution_ts: fourthDate
+        courtDate: fourthDate,
+        errorResolvedBy: user.username,
+        errorStatus: ResolutionStatusNumber.Resolved,
+        resolutionAt: fourthDate
       }
     })
   })
@@ -74,15 +74,15 @@ describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   })
 
   it("will filter resolved cases within a start and end date", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       {
         resolvedFrom: new Date("2008-01-01"),
         resolvedTo: new Date("2008-12-31"),
         ...defaultQuery
       },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
@@ -91,15 +91,15 @@ describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   })
 
   it("Should filter resolved cases by a single date", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       {
         resolvedFrom: new Date("2008-01-26"),
         resolvedTo: new Date("2008-01-26"),
         ...defaultQuery
       },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
@@ -108,15 +108,15 @@ describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   })
 
   it("will return no cases where the date range only contains unresolved cases", async () => {
-    const caseMetadata = await fetchCasesAndFilter(
-      helper.postgres,
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
       {
         resolvedFrom: new Date("2008-03-01"),
         resolvedTo: new Date("2008-03-30"),
         ...defaultQuery
       },
       user
-    )
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(0)
     expect(caseMetadata.totalCases).toBe(0)

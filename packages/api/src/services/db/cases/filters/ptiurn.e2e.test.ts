@@ -1,13 +1,14 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by PTIURN", () => {
   let helper: SetupAppEnd2EndHelper
@@ -22,13 +23,11 @@ describe("fetchCasesAndFilter filtering by PTIURN", () => {
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = [1]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    const users = await createUsers(helper.postgres, 1)
-    user = users[0]
+    user = await createUser(helper.postgres)
 
     await createCases(helper.postgres, 3, {
       0: { ptiurn: ptiurnToInclude },
@@ -47,7 +46,11 @@ describe("fetchCasesAndFilter filtering by PTIURN", () => {
   })
 
   it("will match cases with ptiurn with '01ZD0303908'", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { ptiurn: "01ZD0303908", ...defaultQuery }, user)
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { ptiurn: "01ZD0303908", ...defaultQuery },
+      user
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
@@ -56,7 +59,11 @@ describe("fetchCasesAndFilter filtering by PTIURN", () => {
   })
 
   it("will match cases with partial ptiurn with '01ZD030390'", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, { ptiurn: "01ZD030390", ...defaultQuery }, user)
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { ptiurn: "01ZD030390", ...defaultQuery },
+      user
+    )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
     expect(caseMetadata.totalCases).toBe(2)

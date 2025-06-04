@@ -7,6 +7,7 @@ import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
+import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
 const defaultRequest = (jwt: string) => {
   return {
@@ -45,7 +46,7 @@ describe("/v1/cases/:caseId/resubmit e2e", () => {
 
   it("will receive a 400 error if there's a case found and not with the users force", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres)
-    await createCase(helper.postgres, { org_for_police_filter: "002" })
+    await createCase(helper.postgres, { orgForPoliceFilter: "02" })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -72,7 +73,11 @@ describe("/v1/cases/:caseId/resubmit e2e", () => {
 
   it("will receive a 403 error if there's a case found and the case is resolved", async () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
-    await createCase(helper.postgres, { error_locked_by_id: user.username, resolution_ts: new Date().toDateString() })
+    await createCase(helper.postgres, {
+      errorLockedById: user.username,
+      errorStatus: ResolutionStatusNumber.Resolved,
+      resolutionAt: new Date()
+    })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -81,7 +86,7 @@ describe("/v1/cases/:caseId/resubmit e2e", () => {
 
   it("will receive a 403 error if there's a case found and the case is submitted", async () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
-    await createCase(helper.postgres, { error_locked_by_id: user.username, error_status: 3 })
+    await createCase(helper.postgres, { errorLockedById: user.username, errorStatus: ResolutionStatusNumber.Submitted })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
@@ -90,7 +95,7 @@ describe("/v1/cases/:caseId/resubmit e2e", () => {
 
   it("will receive a 200 error if there's a case found and the case is locked by the user", async () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
-    await createCase(helper.postgres, { error_locked_by_id: user.username })
+    await createCase(helper.postgres, { errorLockedById: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 

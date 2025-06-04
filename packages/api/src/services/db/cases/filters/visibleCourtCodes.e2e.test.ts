@@ -1,13 +1,14 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
-import { createCases } from "../../../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUsers } from "../../../../../../tests/helpers/userHelper"
-import { fetchCasesAndFilter } from "../../../../../../useCases/cases/fetchCasesAndFilter"
+import { createCases } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUser } from "../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by visible court codes from User", () => {
   let helper: SetupAppEnd2EndHelper
@@ -19,20 +20,17 @@ describe("fetchCasesAndFilter filtering by visible court codes from User", () =>
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
     app = helper.app
-    helper.postgres.forceIds = []
-    helper.postgres.visibleCourts = ["BA", "BAUD"]
 
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    const users = await createUsers(helper.postgres, 1, { 1: { visible_courts: "BA,BAUD", visible_forces: "" } })
-    user = users[0]
+    user = await createUser(helper.postgres, { visibleCourts: ["BA", "BAUD"], visibleForces: [] })
 
     await createCases(helper.postgres, 4, {
-      0: { court_code: "BA", org_for_police_filter: null },
-      1: { court_code: "BAUD", org_for_police_filter: null },
-      2: { court_code: "BAHP", org_for_police_filter: null },
-      3: { court_code: "XBA", org_for_police_filter: null }
+      0: { courtCode: "BA", orgForPoliceFilter: "" },
+      1: { courtCode: "BAUD", orgForPoliceFilter: "" },
+      2: { courtCode: "BAHP", orgForPoliceFilter: "" },
+      3: { courtCode: "XBA", orgForPoliceFilter: "" }
     })
   })
 
@@ -46,7 +44,7 @@ describe("fetchCasesAndFilter filtering by visible court codes from User", () =>
   })
 
   it("will match cases with court codes starting with 'BA'", async () => {
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, defaultQuery, user)
+    const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.totalCases).toBe(3)

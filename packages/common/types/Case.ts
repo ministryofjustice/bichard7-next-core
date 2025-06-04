@@ -78,7 +78,7 @@ export const CaseSchema = z.object({
   messageId: z.string(),
   messageReceivedAt: z.date(),
   notes: z.array(NoteSchema).optional(),
-  orgForPoliceFilter: z.array(z.number()).min(0),
+  orgForPoliceFilter: z.string().min(0),
   phase: z.number().gt(0).lte(3),
   pncUpdateEnabled: z.string().nullable(),
   ptiurn: z.string().max(11).nullable(),

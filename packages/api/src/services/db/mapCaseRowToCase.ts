@@ -1,6 +1,5 @@
 import type { Case, CaseRow } from "@moj-bichard7/common/types/Case"
 
-import formatForceNumbers from "../formatForceNumbers"
 import mapNoteRowToNote from "./mapNoteRowToNote"
 import mapTriggerRowToTrigger from "./mapTriggerRowToTrigger"
 
@@ -31,7 +30,7 @@ const mapCaseRowToCase = (caseRow: CaseRow): Case => ({
   messageId: caseRow.message_id,
   messageReceivedAt: caseRow.msg_received_ts,
   notes: caseRow.notes?.map(mapNoteRowToNote) ?? [],
-  orgForPoliceFilter: formatForceNumbers(caseRow.org_for_police_filter),
+  orgForPoliceFilter: caseRow.org_for_police_filter.trim(),
   phase: caseRow.phase,
   pncUpdateEnabled: caseRow.pnc_update_enabled,
   ptiurn: caseRow.ptiurn,

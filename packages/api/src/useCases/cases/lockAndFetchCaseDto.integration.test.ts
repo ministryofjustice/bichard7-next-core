@@ -51,7 +51,7 @@ describe("lockAndFetchCaseDto", () => {
       isUrgent: 1,
       noteCount: undefined,
       notes: [],
-      orgForPoliceFilter: "01    ",
+      orgForPoliceFilter: "01",
       phase: 1,
       ptiurn: "00112233",
       resolutionTimestamp: null,
