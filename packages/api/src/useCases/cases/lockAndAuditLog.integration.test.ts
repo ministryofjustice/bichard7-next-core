@@ -133,7 +133,7 @@ describe("lockAndAuditLog", () => {
   })
 
   it("returns an error when messageId is not retrieved", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.GeneralHandler] })
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
     const caseId = 20
 
     const result = await lockAndAuditLog(testDatabaseGateway.writable, auditLogDynamoGateway, user, caseId)

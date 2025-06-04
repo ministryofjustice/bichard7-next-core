@@ -65,8 +65,8 @@ describe("lockAndFetchCaseDto", () => {
   })
 
   it("returns error when no force associated to a user", async () => {
-    const user = await createUser(databaseGateway, { visibleCourts: [], visibleForces: [] })
-    const caseObj = await createCase(databaseGateway)
+    const user = await createUser(databaseGateway, { id: 1, visibleCourts: [], visibleForces: [] })
+    const caseObj = await createCase(databaseGateway, { errorId: 1 })
 
     const result = await lockAndFetchCaseDto(databaseGateway.writable, testDynamoGateway, user, caseObj.errorId, logger)
 

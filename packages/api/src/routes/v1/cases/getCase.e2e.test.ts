@@ -299,7 +299,8 @@ describe("/v1/case e2e", () => {
 
     expect(auditLogObj.events).toHaveLength(2)
 
-    const [exceptionAuditLogEvent, triggerAuditLogEvent] = auditLogObj.events!
+    const triggerAuditLogEvent = auditLogObj.events!.find((e) => e.eventCode === "triggers.locked")
+    const exceptionAuditLogEvent = auditLogObj.events!.find((e) => e.eventCode === "exceptions.locked")
 
     expect(exceptionAuditLogEvent).toHaveProperty("eventCode", EventCode.ExceptionsLocked)
     expect(exceptionAuditLogEvent).toHaveProperty("category", EventCategory.information)

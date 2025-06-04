@@ -27,9 +27,10 @@ describe("fetchCase", () => {
   })
 
   it("returns an error if the case isn't in the correct force and court", async () => {
-    const user = await createUser(testDatabaseGateway, { visibleCourts: [], visibleForces: ["01"] })
+    const user = await createUser(testDatabaseGateway, { id: 1, visibleCourts: [], visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
       courtCode: "ABC",
+      errorId: 1,
       orgForPoliceFilter: "02"
     })
 
