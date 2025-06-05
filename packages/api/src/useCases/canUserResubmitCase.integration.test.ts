@@ -78,9 +78,9 @@ describe("canUseResubmitCase", () => {
     it("returns false if exceptions are not locked by the user", async () => {
       const user = await createUser(testDatabaseGateway, {
         groups: [UserGroup.GeneralHandler],
-        visibleForces: [2]
+        visibleForces: ["02"]
       })
-      const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null, orgForPoliceFilter: [2] })
+      const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null, orgForPoliceFilter: "02" })
 
       const result = await canUseResubmitCaseExecute(testDatabaseGateway.readonly, user, caseObj.errorId)
 
@@ -90,9 +90,12 @@ describe("canUseResubmitCase", () => {
     it("returns false if user force is not the same as the case force", async () => {
       const user = await createUser(testDatabaseGateway, {
         groups: [UserGroup.GeneralHandler],
-        visibleForces: [2]
+        visibleForces: ["02"]
       })
-      const caseObj = await createCase(testDatabaseGateway, { errorLockedById: user.username, orgForPoliceFilter: [1] })
+      const caseObj = await createCase(testDatabaseGateway, {
+        errorLockedById: user.username,
+        orgForPoliceFilter: "01"
+      })
 
       const result = await canUseResubmitCaseExecute(testDatabaseGateway.readonly, user, caseObj.errorId)
 
@@ -102,12 +105,12 @@ describe("canUseResubmitCase", () => {
     it("returns false if case is resolved", async () => {
       const user = await createUser(testDatabaseGateway, {
         groups: [UserGroup.GeneralHandler],
-        visibleForces: [2]
+        visibleForces: ["02"]
       })
       const caseObj = await createCase(testDatabaseGateway, {
         errorLockedById: user.username,
         errorStatus: ResolutionStatusNumber.Resolved,
-        orgForPoliceFilter: [2]
+        orgForPoliceFilter: "02"
       })
 
       const result = await canUseResubmitCaseExecute(testDatabaseGateway.readonly, user, caseObj.errorId)

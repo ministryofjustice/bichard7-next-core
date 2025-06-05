@@ -53,9 +53,9 @@ describe("lockExceptions", () => {
     const auditLogEvents: ApiAuditLogEvent[] = []
     const user = await createUser(testDatabaseGateway, {
       groups: [UserGroup.ExceptionHandler],
-      visibleForces: [2]
+      visibleForces: ["02"]
     })
-    const caseObj = await createCase(testDatabaseGateway, { orgForPoliceFilter: [2] })
+    const caseObj = await createCase(testDatabaseGateway, { orgForPoliceFilter: "02" })
     const databaseGatewayMock = jest
       .spyOn(testDatabaseGateway.writable, "connection")
       .mockResolvedValue(Error("Dummy Error") as unknown as RowList<readonly (object | undefined)[]>)

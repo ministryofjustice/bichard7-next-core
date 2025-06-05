@@ -27,7 +27,7 @@ describe("lockAndFetchCaseDto", () => {
   })
 
   it("returns a case", async () => {
-    const user = await createUser(databaseGateway, { visibleForces: [1] })
+    const user = await createUser(databaseGateway, { visibleForces: ["01"] })
     const caseObj = await createCase(databaseGateway, {
       aho: testAhoXml,
       errorId: 1
@@ -78,7 +78,7 @@ describe("lockAndFetchCaseDto", () => {
     const user = await createUser(databaseGateway, {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
-      visibleForces: [1]
+      visibleForces: ["01"]
     })
     const caseObj = await createCase(databaseGateway, {
       aho: testAhoXml,
@@ -102,7 +102,7 @@ describe("lockAndFetchCaseDto", () => {
     const user = await createUser(databaseGateway, {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
-      visibleForces: [1]
+      visibleForces: ["01"]
     })
     const caseObj = await createCase(databaseGateway, {
       aho: testAhoXml,
@@ -126,7 +126,7 @@ describe("lockAndFetchCaseDto", () => {
     const user = await createUser(databaseGateway, {
       groups: [UserGroup.Audit],
       username: "user1",
-      visibleForces: [1]
+      visibleForces: ["01"]
     })
     const caseObj = await createCase(databaseGateway, {
       aho: testAhoXml,
@@ -150,7 +150,7 @@ describe("lockAndFetchCaseDto", () => {
     const user = await createUser(databaseGateway, {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
-      visibleForces: [1]
+      visibleForces: ["01"]
     })
     const caseObj = await createCase(databaseGateway, {
       aho: testAhoXml,
@@ -173,7 +173,7 @@ describe("lockAndFetchCaseDto", () => {
   it("calls transaction on the writable database connection", async () => {
     const writableDatabaseSpy = jest.spyOn(databaseGateway.writable, "transaction")
     const user = await createUser(databaseGateway, {
-      visibleForces: [1]
+      visibleForces: ["01"]
     })
 
     await lockAndFetchCaseDto(databaseGateway.writable, testDynamoGateway, user, 0, logger)
