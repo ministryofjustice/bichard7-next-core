@@ -69,7 +69,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
   }
 
   return (
-    <div aria-live="polite" aria-label="Case Details page loaded">
+    <PanelsGridRow aria-live="polite" aria-label="Case Details page loaded" className="govuk-grid-row">
       <CourtCaseDetailsTabs
         activeTab={activeTab}
         onTabClick={(tab) => {
@@ -78,42 +78,40 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
         }}
       />
 
-      <PanelsGridRow className="govuk-grid-row">
-        <PanelsGridCol className="govuk-grid-column-two-thirds">
-          <CourtCaseDetailsPanel visible={activeTab === "Defendant"}>
-            <DefendantDetails />
-          </CourtCaseDetailsPanel>
+      <PanelsGridCol className="govuk-grid-column-two-thirds">
+        <CourtCaseDetailsPanel visible={activeTab === "Defendant"}>
+          <DefendantDetails />
+        </CourtCaseDetailsPanel>
 
-          <CourtCaseDetailsPanel visible={activeTab === "Hearing"}>
-            <HearingDetails hearing={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Hearing} />
-          </CourtCaseDetailsPanel>
+        <CourtCaseDetailsPanel visible={activeTab === "Hearing"}>
+          <HearingDetails hearing={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Hearing} />
+        </CourtCaseDetailsPanel>
 
-          <CourtCaseDetailsPanel visible={activeTab === "Case"}>
-            <CaseInformation caseInformation={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case} />
-          </CourtCaseDetailsPanel>
+        <CourtCaseDetailsPanel visible={activeTab === "Case"}>
+          <CaseInformation caseInformation={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case} />
+        </CourtCaseDetailsPanel>
 
-          <Offences
-            visible={activeTab === "Offences"}
-            exceptions={courtCase.aho.Exceptions}
-            offences={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case?.HearingDefendant?.Offence}
-            onOffenceSelected={(offenceIndex) => {
-              setSelectedOffenceSequenceNumber(offenceIndex)
-            }}
-            selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
-          />
+        <Offences
+          visible={activeTab === "Offences"}
+          exceptions={courtCase.aho.Exceptions}
+          offences={courtCase.aho.AnnotatedHearingOutcome.HearingOutcome.Case?.HearingDefendant?.Offence}
+          onOffenceSelected={(offenceIndex) => {
+            setSelectedOffenceSequenceNumber(offenceIndex)
+          }}
+          selectedOffenceSequenceNumber={selectedOffenceSequenceNumber}
+        />
 
-          <Notes visible={activeTab === "Notes"} />
-        </PanelsGridCol>
+        <Notes visible={activeTab === "Notes"} />
+      </PanelsGridCol>
 
-        <SideBar className="govuk-grid-column-one-third">
-          <TriggersAndExceptions
-            onNavigate={handleNavigation}
-            canResolveAndSubmit={canResolveAndSubmit}
-            stopLeavingFn={stopLeavingFn}
-          />
-        </SideBar>
-      </PanelsGridRow>
-    </div>
+      <SideBar className="govuk-grid-column-one-third">
+        <TriggersAndExceptions
+          onNavigate={handleNavigation}
+          canResolveAndSubmit={canResolveAndSubmit}
+          stopLeavingFn={stopLeavingFn}
+        />
+      </SideBar>
+    </PanelsGridRow>
   )
 }
 
