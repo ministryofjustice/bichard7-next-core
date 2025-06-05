@@ -1,12 +1,14 @@
-import type { Note } from "@moj-bichard7/common/types/Note"
+import type { Note, NoteRow } from "@moj-bichard7/common/types/Note"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
+import mapNoteRowToNote from "../mapNoteRowToNote"
+
 export default async (database: DatabaseConnection, caseIds: number[]): PromiseResult<Note[]> => {
-  const result = await database.connection<Note[]>`
+  const result = await database.connection<NoteRow[]>`
     SELECT DISTINCT ON (eln.error_id)
       eln.note_id,
       eln.error_id,
@@ -27,5 +29,5 @@ export default async (database: DatabaseConnection, caseIds: number[]): PromiseR
     return Error(`Error while fetching notes for case ids ${caseIds}: ${result.message}`)
   }
 
-  return result
+  return result.map(mapNoteRowToNote)
 }

@@ -1,11 +1,11 @@
-import type { NoteDto, NoteRow, NoteUserDto } from "@moj-bichard7/common/types/Note"
+import type { NoteDto, NoteRow } from "@moj-bichard7/common/types/Note"
 
-import { convertUserForNoteToDto } from "./convertUserToDto"
+import { convertNoteUserRowToNoteUserDto } from "./convertUserToDto"
 
 export const convertNoteToDto = (noteRow: NoteRow): NoteDto => {
   let fullname: string | undefined
 
-  const noteUser: NoteUserDto | undefined = noteRow.user?.username ? convertUserForNoteToDto(noteRow.user) : undefined
+  const noteUser = noteRow.user?.username ? convertNoteUserRowToNoteUserDto(noteRow.user) : undefined
 
   if (noteUser) {
     fullname = `${noteUser.forenames} ${noteUser.surname}`
@@ -17,5 +17,5 @@ export const convertNoteToDto = (noteRow: NoteRow): NoteDto => {
     user: noteUser,
     userFullName: fullname,
     userId: noteRow.user_id
-  } satisfies NoteDto
+  }
 }
