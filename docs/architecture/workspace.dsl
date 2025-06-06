@@ -235,6 +235,7 @@ workspace "Bichard" {
     bichardNextCore -> pncApi
     pncApi -> beanconnect
 
+    conductor -> database
     messageTransfer -> conductor
 
     # Inside conductor
