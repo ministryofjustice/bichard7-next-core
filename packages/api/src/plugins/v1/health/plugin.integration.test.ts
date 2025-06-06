@@ -4,18 +4,18 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { OK } from "http-status"
 
 import build from "../../../app"
-import FakeDataStore from "../../../services/gateways/dataStoreGateways/fakeDataStore"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 
 describe("health plugin", () => {
-  const fakeDataStore = new FakeDataStore()
+  const testDatabaseGateway = new End2EndPostgres()
   let app: FastifyInstance
   const dynamoConfig = createAuditLogDynamoDbConfig()
   const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway, dataStore: fakeDataStore })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
   })
 

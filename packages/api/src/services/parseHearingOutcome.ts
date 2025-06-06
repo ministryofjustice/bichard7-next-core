@@ -4,28 +4,23 @@ import type { FastifyBaseLogger } from "fastify"
 import { isError } from "@moj-bichard7/common/types/Result"
 import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
 import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
-
-const isPncUpdateDatasetFromXml = (message: string) => /<AnnotatedPNCUpdateDataset/.exec(message)
+import parsePncUpdateDataSetXml from "@moj-bichard7/core/lib/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 
 const parseHearingOutcome = (hearingOutcome: string, logger: FastifyBaseLogger): AnnotatedHearingOutcome | Error => {
-  let aho: AnnotatedHearingOutcome | Error
+  const annotatedPncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)
+  if (!isError(annotatedPncUpdateDataset)) {
+    return annotatedPncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset
+  }
 
-  if (isPncUpdateDatasetFromXml(hearingOutcome)) {
-    const pncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)
+  const pncUpdateDataset = parsePncUpdateDataSetXml(hearingOutcome)
+  if (!isError(pncUpdateDataset)) {
+    return pncUpdateDataset
+  }
 
-    if (isError(pncUpdateDataset)) {
-      logger.error(`Failed to parse AnnotatedPNCUpdateDatasetXml: ${pncUpdateDataset}`)
+  const aho = parseAhoXml(hearingOutcome)
 
-      aho = pncUpdateDataset
-    } else {
-      aho = pncUpdateDataset.AnnotatedPNCUpdateDataset.PNCUpdateDataset
-    }
-  } else {
-    aho = parseAhoXml(hearingOutcome)
-
-    if (isError(aho)) {
-      logger.error(`Failed to parse aho: ${aho}`)
-    }
+  if (isError(aho)) {
+    logger.error(`Failed to parse aho: ${aho}`)
   }
 
   return aho

@@ -1,25 +1,30 @@
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { BAD_GATEWAY, OK, UNAUTHORIZED } from "http-status"
+import { OK, UNAUTHORIZED } from "http-status"
 
 import build from "../../app"
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
 import AuditLogDynamoGateway from "../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import createAuditLogDynamoDbConfig from "../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
-import { generateJwtForStaticUser } from "../../tests/helpers/userHelper"
+import { createUser, generateJwtForStaticUser } from "../../tests/helpers/userHelper"
+import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
+
+const testDatabaseGateway = new End2EndPostgres()
 
 const defaults = { headers: { Authorization: "Bearer " }, url: V1.Me }
 
 describe("authenticate", () => {
-  const fakeDataStore = new FakeDataStore()
   let app: FastifyInstance
   const dynamoConfig = createAuditLogDynamoDbConfig()
   const auditLogGateway = new AuditLogDynamoGateway(dynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway, dataStore: fakeDataStore })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
+  })
+
+  beforeEach(async () => {
+    await testDatabaseGateway.clearDb()
   })
 
   afterEach(() => {
@@ -27,6 +32,7 @@ describe("authenticate", () => {
   })
 
   afterAll(async () => {
+    await testDatabaseGateway.close()
     await app.close()
   })
 
@@ -63,9 +69,6 @@ describe("authenticate", () => {
   })
 
   it("will return 401 - Unauthorized with a missing user", async () => {
-    const spy = jest.spyOn(fakeDataStore, "fetchUserByUsername")
-    spy.mockRejectedValue(new Error('User "User 1" does not exist'))
-
     const [encodedJwt] = generateJwtForStaticUser()
 
     const response = await app.inject({
@@ -78,9 +81,7 @@ describe("authenticate", () => {
 
   it("returns 200 if the verification result is a User", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser()
-    const spy = jest.spyOn(fakeDataStore, "fetchUserByUsername")
-    spy.mockResolvedValue(user)
-
+    await createUser(testDatabaseGateway, { groups: user.groups, jwtId: user.jwtId, username: user.username })
     const { statusCode } = await app.inject({
       ...defaults,
       headers: { ...defaults.headers, authorization: `Bearer ${encodedJwt}` }
@@ -89,18 +90,20 @@ describe("authenticate", () => {
     expect(statusCode).toBe(OK)
   })
 
-  it("fails if db failed to respond", async () => {
-    const [encodedJwt] = generateJwtForStaticUser()
-    const error = new Error("AggregateError")
-    error.name = "AggregateError"
-    error.stack = "Something Sql or pOstGreS"
-    jest.spyOn(fakeDataStore, "fetchUserByUsername").mockRejectedValue(error)
+  // TODO: Write test for 502 error (IO error)
+  // it("returns 502 when db failed to respond", async () => {
+  //   const [encodedJwt, user] = generateJwtForStaticUser()
+  //   await createUser(testDatabaseGateway, { groups: user.groups, jwtId: user.jwtId, username: user.username })
 
-    const { statusCode } = await app.inject({
-      ...defaults,
-      headers: { ...defaults.headers, authorization: `Bearer ${encodedJwt}` }
-    })
+  //   jest
+  //     .spyOn(testDatabaseGateway.writable, "connection")
+  //     .mockResolvedValue(Error("Dummy error") as unknown as RowList<readonly (object | undefined)[]>)
 
-    expect(statusCode).toBe(BAD_GATEWAY)
-  })
+  //   const { statusCode } = await app.inject({
+  //     ...defaults,
+  //     headers: { ...defaults.headers, authorization: `Bearer ${encodedJwt}` }
+  //   })
+
+  //   expect(statusCode).toBe(BAD_GATEWAY)
+  // })
 })

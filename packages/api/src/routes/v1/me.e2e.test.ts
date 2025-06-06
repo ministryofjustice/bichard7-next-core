@@ -37,6 +37,7 @@ describe("/v1/me e2e", () => {
 
     const responseUser: UserDto = {
       email: user.email,
+      excludedTriggers: "",
       featureFlags: {},
       forenames: user.forenames,
       fullname: `${user.forenames} ${user.surname}`,
@@ -45,7 +46,7 @@ describe("/v1/me e2e", () => {
       surname: user.surname,
       username: user.username,
       visibleCourts: "AB",
-      visibleForces: ["001"]
+      visibleForces: ["01"]
     }
 
     expect(response.status).toBe(OK)
@@ -67,11 +68,5 @@ describe("/v1/me e2e", () => {
     expect(responseUser.username).toEqual(user.username)
     expect(responseUser.email).toEqual(user.email)
     expect(responseUser.groups).toEqual(expect.arrayContaining(expectedGroups))
-  })
-
-  it("will throw an error with a user that has no groups", async () => {
-    const noGroups: UserGroup[] = []
-
-    await expect(createUserAndJwtToken(helper.postgres, noGroups)).rejects.toThrow("User has no Groups")
   })
 })

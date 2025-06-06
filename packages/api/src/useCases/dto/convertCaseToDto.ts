@@ -1,70 +1,75 @@
 import type { CaseDto, CaseIndexDto } from "@moj-bichard7/common/types/Case"
+import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import type { FastifyBaseLogger } from "fastify"
 
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
-import { isEmpty, sortBy } from "lodash"
+import { isEmpty, isError, sortBy } from "lodash"
 
-import type { CaseDataForDto, CaseDataForIndexDto } from "../../types/Case"
+import type { CaseRowForDto, CaseRowForIndexDto } from "../../types/Case"
 
 import parseHearingOutcome from "../../services/parseHearingOutcome"
 import { convertNoteToDto } from "./convertNoteToDto"
 import { ResolutionStatus, resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
-import { convertTriggerToDto } from "./convertTriggerToDto"
+import { convertTriggerRowToDto } from "./convertTriggerRowToDto"
 
 export const convertCaseToCaseDto = (
-  caseDataForDto: CaseDataForDto,
+  caseRowForDto: CaseRowForDto,
   user: User,
   logger: FastifyBaseLogger
-): CaseDto => {
-  const aho = parseHearingOutcome(caseDataForDto.annotated_msg, logger) as AnnotatedHearingOutcome
-  const updatedAhoResult = caseDataForDto.updated_msg && parseHearingOutcome(caseDataForDto.updated_msg, logger)
+): Result<CaseDto> => {
+  const aho = parseHearingOutcome(caseRowForDto.annotated_msg, logger)
+  if (isError(aho)) {
+    return Error(`Failed to parse hearing outcome in convertCaseToCaseDto: ${aho.message}`)
+  }
+
+  const updatedAhoResult = caseRowForDto.updated_msg ? parseHearingOutcome(caseRowForDto.updated_msg, logger) : null
+  if (isError(updatedAhoResult)) {
+    return Error(`Failed to parse updated hearing outcome in convertCaseToCaseDto: ${updatedAhoResult.message}`)
+  }
 
   return {
-    ...convertCaseToCaseIndexDto(caseDataForDto, user),
+    ...convertCaseToCaseIndexDto(caseRowForDto, user),
     aho,
-    courtCode: caseDataForDto.court_code,
-    courtReference: caseDataForDto.court_reference,
-    orgForPoliceFilter: caseDataForDto.org_for_police_filter,
-    phase: caseDataForDto.phase,
-    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : (updatedAhoResult as AnnotatedHearingOutcome)
-  } satisfies CaseDto
+    courtCode: caseRowForDto.court_code,
+    courtReference: caseRowForDto.court_reference,
+    orgForPoliceFilter: caseRowForDto.org_for_police_filter.trim(),
+    phase: caseRowForDto.phase,
+    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : updatedAhoResult
+  }
 }
 
 export const convertCaseToCaseIndexDto = (
-  caseDataForDto: CaseDataForDto | CaseDataForIndexDto,
+  caseRowForDto: CaseRowForDto | CaseRowForIndexDto,
   user: User
-): CaseIndexDto => {
-  return {
-    asn: caseDataForDto.asn,
-    canUserEditExceptions:
-      caseDataForDto.error_locked_by_id === user?.username &&
-      hasAccessToExceptions(user) &&
-      caseDataForDto.error_status === resolutionStatusCodeByText(ResolutionStatus.Unresolved),
-    courtDate: caseDataForDto.court_date,
-    courtName: caseDataForDto.court_name,
-    defendantName: caseDataForDto.defendant_name,
-    errorId: caseDataForDto.error_id,
-    errorLockedByUserFullName: isEmpty(caseDataForDto.error_locked_by_fullname?.replace(/ /g, ""))
-      ? null
-      : caseDataForDto.error_locked_by_fullname,
-    errorLockedByUsername: caseDataForDto.error_locked_by_id,
-    errorReport: caseDataForDto.error_report,
-    errorStatus: resolutionStatusFromDb(caseDataForDto.error_status),
-    isUrgent: caseDataForDto.is_urgent,
-    noteCount: (caseDataForDto as CaseDataForIndexDto).note_count
-      ? Number((caseDataForDto as CaseDataForIndexDto).note_count)
-      : undefined,
-    notes: caseDataForDto.notes ? sortBy(caseDataForDto.notes, "create_ts").reverse().map(convertNoteToDto) : [],
-    ptiurn: caseDataForDto.ptiurn,
-    resolutionTimestamp: caseDataForDto.resolution_ts,
-    triggerCount: caseDataForDto.trigger_count,
-    triggerLockedByUserFullName: isEmpty(caseDataForDto.trigger_locked_by_fullname?.replace(/ /g, ""))
-      ? null
-      : caseDataForDto.trigger_locked_by_fullname,
-    triggerLockedByUsername: caseDataForDto.trigger_locked_by_id,
-    triggers: caseDataForDto.triggers ? caseDataForDto.triggers.map(convertTriggerToDto) : [],
-    triggerStatus: resolutionStatusFromDb(caseDataForDto.trigger_status)
-  } satisfies CaseIndexDto
-}
+): CaseIndexDto => ({
+  asn: caseRowForDto.asn,
+  canUserEditExceptions:
+    caseRowForDto.error_locked_by_id === user?.username &&
+    hasAccessToExceptions(user) &&
+    caseRowForDto.error_status === resolutionStatusCodeByText(ResolutionStatus.Unresolved),
+  courtDate: caseRowForDto.court_date,
+  courtName: caseRowForDto.court_name,
+  defendantName: caseRowForDto.defendant_name,
+  errorId: caseRowForDto.error_id,
+  errorLockedByUserFullName: isEmpty(caseRowForDto.error_locked_by_fullname?.replace(/ /g, ""))
+    ? null
+    : caseRowForDto.error_locked_by_fullname,
+  errorLockedByUsername: caseRowForDto.error_locked_by_id,
+  errorReport: caseRowForDto.error_report,
+  errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
+  isUrgent: caseRowForDto.is_urgent,
+  noteCount: (caseRowForDto as CaseRowForIndexDto).note_count
+    ? Number((caseRowForDto as CaseRowForIndexDto).note_count)
+    : undefined,
+  notes: caseRowForDto.notes ? sortBy(caseRowForDto.notes, "create_ts").reverse().map(convertNoteToDto) : [],
+  ptiurn: caseRowForDto.ptiurn,
+  resolutionTimestamp: caseRowForDto.resolution_ts,
+  triggerCount: caseRowForDto.trigger_count,
+  triggerLockedByUserFullName: isEmpty(caseRowForDto.trigger_locked_by_fullname?.replace(/ /g, ""))
+    ? null
+    : caseRowForDto.trigger_locked_by_fullname,
+  triggerLockedByUsername: caseRowForDto.trigger_locked_by_id,
+  triggers: caseRowForDto.triggers ? caseRowForDto.triggers.map(convertTriggerRowToDto) : [],
+  triggerStatus: resolutionStatusFromDb(caseRowForDto.trigger_status)
+})

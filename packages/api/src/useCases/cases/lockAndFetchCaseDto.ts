@@ -1,27 +1,29 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
-import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import { isError } from "@moj-bichard7/common/types/Result"
 
-import { convertCaseToCaseDto } from "../dto/convertCaseToDto"
-import { lockAndFetchCase } from "./lockAndFetchCase"
+import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
+import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
+
+import fetchCase from "../../services/db/cases/fetchCase"
+import { lockAndAuditLog } from "./lockAndAuditLog"
 
 const lockAndFetchCaseDto = async (
-  user: User,
-  dataStore: DataStoreGateway,
-  caseId: number,
+  database: WritableDatabaseConnection,
   auditLogGateway: AuditLogDynamoGateway,
+  user: User,
+  caseId: number,
   logger: FastifyBaseLogger
-): Promise<CaseDto> => {
-  if (dataStore.forceIds.length === 0) {
-    throw new Error("No force associated to User")
+): PromiseResult<CaseDto> => {
+  const lockAndFetchCaseResult = await lockAndAuditLog(database, auditLogGateway, user, caseId, logger)
+  if (isError(lockAndFetchCaseResult)) {
+    return lockAndFetchCaseResult
   }
 
-  const caseDataForDto = await lockAndFetchCase(dataStore, auditLogGateway, caseId, user, logger)
-
-  return convertCaseToCaseDto(caseDataForDto, user, logger)
+  return fetchCase(database, user, caseId, logger)
 }
 
 export default lockAndFetchCaseDto

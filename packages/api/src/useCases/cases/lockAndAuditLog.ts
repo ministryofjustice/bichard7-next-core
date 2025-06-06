@@ -1,38 +1,53 @@
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
-import type postgres from "postgres"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
+import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
+import selectMessageId from "../../services/db/cases/selectMessageId"
 import createAuditLogEvents from "../createAuditLogEvents"
 import { lockExceptions } from "./lockExceptions"
 import { lockTriggers } from "./lockTriggers"
 
 export const lockAndAuditLog = async (
-  dataStore: DataStoreGateway,
-  caseId: number,
-  callbackSql: postgres.Sql<{}>,
-  user: User,
+  database: WritableDatabaseConnection,
   auditLogGateway: AuditLogDynamoGateway,
+  user: User,
+  caseId: number,
   logger?: FastifyBaseLogger
-): Promise<void> => {
+): PromiseResult<void> => {
   const auditLogEvents: ApiAuditLogEvent[] = []
 
-  const caseMessageId = (await dataStore.selectCaseMessageId(caseId)).message_id
+  return database
+    .transaction(async (db: WritableDatabaseConnection) => {
+      const caseMessageId = await selectMessageId(db, user, caseId)
+      if (isError(caseMessageId)) {
+        throw caseMessageId
+      }
 
-  await lockExceptions(dataStore, callbackSql, caseId, user, auditLogEvents)
+      const lockExceptionsResult = await lockExceptions(db, user, caseId, auditLogEvents)
+      if (isError(lockExceptionsResult)) {
+        throw lockExceptionsResult
+      }
 
-  await lockTriggers(dataStore, callbackSql, caseId, user, auditLogEvents)
+      const lockTriggersResult = await lockTriggers(db, user, caseId, auditLogEvents)
+      if (isError(lockTriggersResult)) {
+        throw lockTriggersResult
+      }
 
-  if (auditLogEvents.length > 0) {
-    const result = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
-
-    if (isError(result)) {
-      throw result
-    }
-  }
+      if (auditLogEvents.length > 0) {
+        const auditLogEventsResult = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
+        if (isError(auditLogEventsResult)) {
+          throw auditLogEventsResult
+        }
+      }
+    })
+    .catch((error: Error) => {
+      logger?.error(error.message)
+      return error
+    })
 }

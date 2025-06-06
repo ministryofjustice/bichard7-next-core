@@ -6,9 +6,10 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ApiCaseQuerySchema } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseIndexMetadataSchema } from "@moj-bichard7/common/types/Case"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { INTERNAL_SERVER_ERROR, OK } from "http-status"
 
-import type DataStoreGateway from "../../../services/gateways/interfaces/dataStoreGateway"
+import type DatabaseGateway from "../../../types/DatabaseGateway"
 
 import auth from "../../../server/schemas/auth"
 import {
@@ -19,10 +20,10 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import { fetchCasesAndFilter } from "../../../useCases/cases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../useCases/cases/fetchCasesAndFilter"
 
 type HandlerProps = {
-  dataStore: DataStoreGateway
+  database: DatabaseGateway
   query: ApiCaseQuery
   reply: FastifyReply
   user: User
@@ -42,21 +43,20 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ dataStore, query, reply, user }: HandlerProps) => {
-  await fetchCasesAndFilter(dataStore, query, user)
-    .then((caseIndexMetaData) => {
-      return reply.code(OK).send(caseIndexMetaData)
-    })
-    .catch((err) => {
-      reply.log.error(err)
-      return reply.code(INTERNAL_SERVER_ERROR).send()
-    })
+const handler = async ({ database, query, reply, user }: HandlerProps) => {
+  const caseIndexMetaData = await fetchCasesAndFilter(database.readonly, query, user)
+  if (isError(caseIndexMetaData)) {
+    reply.log.error(caseIndexMetaData)
+    return reply.code(INTERNAL_SERVER_ERROR).send()
+  }
+
+  return reply.code(OK).send(caseIndexMetaData)
 }
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.Cases, { schema }, async (req, reply) => {
     await handler({
-      dataStore: req.dataStore,
+      database: req.database,
       query: req.query,
       reply,
       user: req.user

@@ -1,26 +1,39 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
-import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
+import type { CaseDto, CaseIndexDto, CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
-import type { CaseDataForIndexDto } from "../../types/Case"
-import type { Filters, Pagination, SortOrder } from "../../types/CaseIndexQuerystring"
+import { isError } from "@moj-bichard7/common/types/Result"
 
-import { convertCaseToCaseIndexDto } from "../dto/convertCaseToDto"
+import type { Filters, Pagination, SortOrder } from "../../types/CaseIndexQuerystring"
+import type { DatabaseConnection } from "../../types/DatabaseGateway"
+
+import { fetchCaseAges } from "../../services/db/cases/fetchCaseAges"
+import fetchCases from "../../services/db/cases/fetchCases"
+import fetchNotes from "../../services/db/cases/fetchNotes"
+import fetchTriggers from "../../services/db/cases/fetchTriggers"
+import { convertTriggerToDto } from "../dto/convertTriggerToDto"
 
 const assignNotesAndTriggers = async (
-  dataStore: DataStoreGateway,
-  cases: CaseDataForIndexDto[],
-  filters: Filters,
-  user: User
-) => {
-  const errorIds = cases.map((caseData) => caseData.error_id)
-  const notes = await dataStore.fetchNotes(errorIds)
-  const triggers = await dataStore.fetchTriggers(errorIds, filters, user)
+  database: DatabaseConnection,
+  user: User,
+  cases: CaseDto[] | CaseIndexDto[],
+  filters: Filters
+): PromiseResult<void> => {
+  const caseIds = cases.map((caseData) => caseData.errorId)
+  const notes = await fetchNotes(database, caseIds)
+  if (isError(notes)) {
+    return Error(`Error while fetching notes for case ids ${caseIds}: ${notes.message}`)
+  }
+
+  const triggers = await fetchTriggers(database, user, caseIds, filters)
+  if (isError(triggers)) {
+    return Error(`Error while fetching triggers for case ids ${caseIds}: ${triggers.message}`)
+  }
 
   cases.forEach((caseData) => {
-    const matchedNotes = notes.filter((note) => note.error_id === caseData.error_id)
-    const matchedTriggers = triggers.filter((trigger) => trigger.error_id === caseData.error_id)
+    const matchedNotes = notes.filter((note) => note.errorId === caseData.errorId)
+    const matchedTriggers = triggers.filter((trigger) => trigger.errorId === caseData.errorId)
 
     matchedNotes.forEach((note) => {
       if (!caseData.notes) {
@@ -30,7 +43,7 @@ const assignNotesAndTriggers = async (
       caseData.notes.push(note)
     })
 
-    matchedTriggers.forEach((trigger) => {
+    matchedTriggers.map(convertTriggerToDto).forEach((trigger) => {
       if (!caseData.triggers) {
         caseData.triggers = []
       }
@@ -40,11 +53,11 @@ const assignNotesAndTriggers = async (
   })
 }
 
-export const fetchCasesAndFilter = async (
-  dataStore: DataStoreGateway,
+const fetchCasesAndFilter = async (
+  database: DatabaseConnection,
   query: ApiCaseQuery,
   user: User
-): Promise<CaseIndexMetadata> => {
+): PromiseResult<CaseIndexMetadata> => {
   const pagination: Pagination = { maxPerPage: query.maxPerPage, pageNum: query.pageNum }
   const sortOrder: SortOrder = { order: query.order, orderBy: query.orderBy }
   const filters: Filters = {
@@ -65,10 +78,17 @@ export const fetchCasesAndFilter = async (
     to: query.to
   }
 
-  const [caseAges, cases] = await Promise.all([
-    dataStore.fetchCaseAges(user),
-    dataStore.fetchCases(user, pagination, sortOrder, filters)
-  ])
+  const caseAges = await fetchCaseAges(database, user)
+  if (isError(caseAges)) {
+    return caseAges
+  }
+
+  const fetchCasesResult = await fetchCases(database, user, pagination, sortOrder, filters)
+  if (isError(fetchCasesResult)) {
+    return fetchCasesResult
+  }
+
+  const { cases, fullCount } = fetchCasesResult
 
   if (cases.length === 0) {
     return {
@@ -80,16 +100,18 @@ export const fetchCasesAndFilter = async (
     } satisfies CaseIndexMetadata
   }
 
-  await assignNotesAndTriggers(dataStore, cases, filters, user)
-
-  const fullCount = Number(cases[0].full_count)
-  const casesDto = cases.map((caseData) => convertCaseToCaseIndexDto(caseData, user))
+  const assignNotesAndTriggersResult = await assignNotesAndTriggers(database, user, cases, filters)
+  if (isError(assignNotesAndTriggersResult)) {
+    return Error(`Failed to assign notes and triggers: ${assignNotesAndTriggersResult.message}`)
+  }
 
   return {
     caseAges,
-    cases: casesDto,
+    cases,
     returnCases: cases.length,
     totalCases: fullCount,
     ...pagination
   } satisfies CaseIndexMetadata
 }
+
+export default fetchCasesAndFilter
