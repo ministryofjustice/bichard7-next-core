@@ -114,12 +114,6 @@ workspace "Bichard" {
         }
 
         monitoring = container "Monitoring" {
-          openSearch = component "OpenSearch"
-          prometheus = component "Prometheus"
-          prometheusCloudWatchExporter = component "Prometheus CloudWatch Exporter"
-          prometheusBlackBoxExporter = component "Prometheus Black Box Exporter"
-          grafana = component "Grafana"
-          logStash = component "LogStash"
           cloudWatchLogs = component "CloudWatch Logs" "Logs gathered from all AWS services"
           cloudWatchMetrics = component "CloudWatch Metrics"
           slackLambda = component "Slack message handler" {
@@ -210,23 +204,11 @@ workspace "Bichard" {
     topExceptionsReport -> auditLogApi
 
     # Monitoring
-    prometheusBlackBoxExporter -> prometheus
-    prometheusBlackBoxExporter -> bichardJavaApplication
-    prometheusBlackBoxExporter -> grafana
-    prometheusBlackBoxExporter -> openSearch
-    prometheusCloudWatchExporter -> prometheus
-    prometheusCloudWatchExporter -> cloudWatchMetrics
-
-    prometheus -> sns
     cloudWatchMetrics -> sns
-    prometheus -> grafana
-    logStash -> openSearch
-    cloudWatchLogs -> logStash
 
     sns -> pagerDuty "Sends message"
     sns -> slackLambda "Sends message"
     slackLambda -> slack "Sends message" "via TLS Webhook"
-
 
     ####### Hybrid
     nginxAuthProxy -> bichardUI
