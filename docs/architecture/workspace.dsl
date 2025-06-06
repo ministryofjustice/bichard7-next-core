@@ -130,7 +130,7 @@ workspace "Bichard" {
         }
 
         bichardUI = container "Bichard UI" "A new way of interacting with Bichard, complying with Gov.uk standards" "TypeScript & React" "Web Browser" {
-          url "https://github.com/ministryofjustice/bichard7-next-ui"
+          url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui"
           tags "Web Browser"
         }
 
