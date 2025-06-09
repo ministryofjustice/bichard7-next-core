@@ -273,7 +273,7 @@ workspace "Bichard" {
 
     container bichard "HybridBichard" {
       include *
-      exclude slack pagerDuty activeMQ eventHandler eventLambda incomingMessageHandler bichardJavaApplication bichardNextCore
+      exclude slack pagerDuty activeMQ eventHandler eventLambda incomingMessageHandler bichardNextCore
       title "Hybrid Bichard"
     }
 
