@@ -13,6 +13,12 @@ workspace "Bichard" {
       tags "Existing System"
     }
 
+    aws = group "AWS" {
+      dynamoDB =  softwareSystem "DynamoDB" {
+        tags "Existing System"
+      }
+    }
+
     group "CJSE" {
       qsolution = softwareSystem "PSN Proxy" "Q-Solution" "Nginx" {
         tags "Existing System"
@@ -85,7 +91,7 @@ workspace "Bichard" {
 
         bichardUserService = container "Bichard User Service" "An application to provide user authentication and user management" "Next.js, TypeScript & React" {
           url "https://github.com/ministryofjustice/bichard7-next-user-service"
-          tags "API"
+          tags "Web Browser"
         }
 
         auditLogApi = container "Audit Log" {
@@ -93,7 +99,6 @@ workspace "Bichard" {
 
           auditLogApiGateway = component "Audit Log API Gateway"
           auditLogApiLambda = component "Audit Log API Lambda"
-          dynamoDB = component "DynamoDB" "" "DynamoDB"
         }
 
         staticFileService = container "Static File Service"
@@ -114,12 +119,6 @@ workspace "Bichard" {
         }
 
         monitoring = container "Monitoring" {
-          openSearch = component "OpenSearch"
-          prometheus = component "Prometheus"
-          prometheusCloudWatchExporter = component "Prometheus CloudWatch Exporter"
-          prometheusBlackBoxExporter = component "Prometheus Black Box Exporter"
-          grafana = component "Grafana"
-          logStash = component "LogStash"
           cloudWatchLogs = component "CloudWatch Logs" "Logs gathered from all AWS services"
           cloudWatchMetrics = component "CloudWatch Metrics"
           slackLambda = component "Slack message handler" {
@@ -136,14 +135,25 @@ workspace "Bichard" {
         }
 
         bichardUI = container "Bichard UI" "A new way of interacting with Bichard, complying with Gov.uk standards" "TypeScript & React" "Web Browser" {
-          url "https://github.com/ministryofjustice/bichard7-next-ui"
+          url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui"
           tags "Web Browser"
         }
 
+        bichardNextCore = container "Bichard Next Core" "The code to replace the processing logic of Bichard7" "Next.js, TypeScript" {
+          url "https://github.com/ministryofjustice/bichard7-next-core"
+        }
+
         conductor = container "Conductor" {
-          bichardNextCore = component "Bichard Next Core" "The code to replace the processing logic of Bichard7" "Next.js, TypeScript" {
-            url "https://github.com/ministryofjustice/bichard7-next-core"
-          }
+          url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor"
+
+          phaseOne = component "Phase 1 Queue" "" "TypeScript"
+          phaseTwo = component "Phase 2 Queue" "" "TypeScript"
+          phaseThree = component "Phase 3 Queue" "" "TypeScript"
+        }
+
+        bichardAPI = container "Bichard API" "An API to remove DB actions from UI and to be Audit Logs" "TypeScript, Fastify & Zod" "API" {
+          url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api"
+          tags "API"
         }
       }
     }
@@ -162,9 +172,6 @@ workspace "Bichard" {
 
     beanconnect -> qsolution
 
-    qsolution -> pnc
-    qsolution -> nginxAuthProxy
-
     # Relationships to/from components
     emailSystem -> cjsm "Sends verification code"
     bichardUserService -> emailSystem "Sends verification code"
@@ -175,6 +182,7 @@ workspace "Bichard" {
 
     bichardUserService -> database "Reads from / Writes to"
     bichardJavaApplication -> database "Reads from / Writes to"
+    bichardAPI -> database "Reads from / Writes to"
 
     exiss -> incomingS3Bucket
     incomingS3Bucket -> transferProcess
@@ -197,8 +205,6 @@ workspace "Bichard" {
     # Audit Logger
     auditLogApiGateway -> auditLogApiLambda
     auditLogApiLambda -> dynamoDB
-    auditLogApiLambda -> database
-    auditLogApiLambda -> activeMQ
 
     # Reporting
     automationReport -> auditLogApi
@@ -210,58 +216,64 @@ workspace "Bichard" {
     topExceptionsReport -> auditLogApi
 
     # Monitoring
-    prometheusBlackBoxExporter -> prometheus
-    prometheusBlackBoxExporter -> bichardJavaApplication
-    prometheusBlackBoxExporter -> grafana
-    prometheusBlackBoxExporter -> openSearch
-    prometheusCloudWatchExporter -> prometheus
-    prometheusCloudWatchExporter -> cloudWatchMetrics
-
-    prometheus -> sns
     cloudWatchMetrics -> sns
-    prometheus -> grafana
-    logStash -> openSearch
-    cloudWatchLogs -> logStash
 
     sns -> pagerDuty "Sends message"
     sns -> slackLambda "Sends message"
     slackLambda -> slack "Sends message" "via TLS Webhook"
 
-
     ####### Hybrid
     nginxAuthProxy -> bichardUI
     bichardUI -> database
+    bichardUI -> bichardAPI
+    bichardUI -> auditLogApi
+
+    bichardAPI -> dynamoDB
 
     bichardNextCore -> auditLogApi
     bichardNextCore -> database "Reads from and writes to"
     bichardNextCore -> pncApi
     pncApi -> beanconnect
 
+    conductor -> database
+    messageTransfer -> conductor
+
+    # Inside conductor
+    phaseOne -> phaseOne
+    phaseOne -> phaseTwo
+    phaseTwo -> phaseTwo
+    phaseTwo -> phaseThree
+
+    phaseOne -> auditLogApi
+    phaseTwo -> auditLogApi
+    phaseThree -> auditLogApi
+
+    phaseThree -> pncApi
   }
 
   views {
     systemLandscape "SystemLandscape" {
       include *
-      exclude slack pagerDuty
+      exclude slack pagerDuty aws
       autoLayout lr
     }
 
     systemContext bichard "BichardSystemContext" {
       include *
-      exclude slack pagerDuty
+      exclude slack pagerDuty aws
       autoLayout lr
     }
 
     container bichard "OldBichard" {
       include *
-      exclude slack pagerDuty bichardUI bichardNextCore conductor pncApi
+      exclude slack pagerDuty bichardUI bichardNextCore conductor pncApi bichardAPI
       autoLayout
       title "Old Bichard"
     }
 
     container bichard "HybridBichard" {
       include *
-      exclude slack pagerDuty
+      exclude slack pagerDuty activeMQ eventHandler eventLambda incomingMessageHandler bichardNextCore
       title "Hybrid Bichard"
     }
 
