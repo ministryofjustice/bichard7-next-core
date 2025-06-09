@@ -1,1829 +1,2264 @@
 {
-  "configuration" : { },
-  "description" : "Description",
-  "documentation" : {
-    "decisions" : [ {
-      "content" : "# 1. Record architecture decisions\n\nDate: 2023-06-27\n\n## Status\n\nAccepted\n\n## Context\n\nWe need to record the architectural decisions made on this system.\n\n## Decision\n\nWe will use Architecture Decision Records, as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).\n\n## Consequences\n\n- See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).\n- Using [Structurizr](https://structurizr.com/)\n",
-      "date" : "2023-06-27T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "1",
-      "status" : "Accepted",
-      "title" : "Record architecture decisions"
-    }, {
-      "content" : "# 2. Use Data Transfer Objects\n\nDate: 2023-09-22\n\n## Status\n\nAccepted\n\n## Context\n\nUsing a Data Transfer Object (DTO) in the `bichard-next-ui` repo will help separate the User Interface (React) from\nthe Database objects. It will also allow to use TypeScript more effectively, enforcing stricter types on objects at\ncompile time.\n\nWe have chosen the naming convention of:\n\n- Types:\n  - `Display` - Prefix for the object to be consumed in the UI\n  - `DisplayPartial` - Prefix for the object which has limited fields\n  - `DisplayFull` - Prefix for the object which has all fields (that aren't a security risk)\n- File structure for DTOs\n  - `src/services/dto` top level\n  - Then for example: `objectDto.ts`\n- Which holds functions like:\n  - `objToDisplayObjDto`\n  - `objToDisplayPartialObjDto`\n\nA DTO object is a new object mirror with some of a Entity's attributes. We are actively using `Pick<T, \"field\">` to\nselect what we want to use out of the Entity and mapping via a function (e.g.\n`const displayObj = objToDisplayObjDto(obj)`).\n\nWe can control the levels of data we want share. E.g. `displayPartialObj` or `displayFullObj`.\n\n## Consequences\n\n- It's more complex than just using the Database Record\n- It's more secure than sending out raw database records into the UI\n- You have to be disciplined in it's use and following the architectural pattern\n",
-      "date" : "2023-09-22T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "2",
-      "status" : "Accepted",
-      "title" : "Use Data Transfer Objects"
-    }, {
-      "content" : "# 3. Use Styled Components\n\nDate: 2024-04-12\n\n## Status\n\nAccepted\n\n## Context\n\nWe are currently using two different styling libraries (3 if you include `scss` files). We want to reduce the need to\nknow how to use the libraries and simplify the code base.\n\nWe have opted to choose [Styled Components](https://styled-components.com/) over\n[React-JSS](https://cssinjs.org/react-jss/?v=v10.10.0)\n\nThe negatives for `react-jss` are it is less flexible with `React`. E.g. you can pass `props` to `styled-components`\nfor separate themes. It can also pollute other `components` as it based on class names rather than `components`.\n\n### File structure\n\nWe have opted to take the following approach to structuring the files:\n\n- `src/components/Action.styles.tsx`\n- `src/components/Action.tsx`\n\nThat allows to separate the styles from the `component` and keep close by. We can import other JS/TS files if needed,\ne.g. colours.\n\nWe should also export all the Styled Components at bottom of the file, e.g.\n\n```TypeScript\nexport { ActionLink, ActionButton }\n```\n\n## Consequences\n\n- More files\n- Need to know plain CSS\n- Need to learn how this library works\n",
-      "date" : "2024-04-12T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "3",
-      "status" : "Accepted",
-      "title" : "Use Styled Components"
-    }, {
-      "content" : "# 4. ESLint rule for newline after control flow blocks\n\nDate: 2024-05-23\n\n## Status\n\nAccepted\n\n## Context\n\nThis Pull Request introduces a new ESLint rule that enforces the addition of a newline after control flow blocks (e.g., `if`, `for`, `while`, `switch`). This rule aims to maintain consistent code formatting and enhance code readability across our codebase.\n\nWe have been following the convention of adding newlines after control flow blocks to improve code readability and formatting. However, this practice has been manually enforced, leading to potential inconsistencies. By introducing this ESLint rule, we can ensure that the linter automatically checks for this convention, streamlining the process and promoting a consistent coding style.\n\n## Consequences\n\n- ESLint might slow us down when committing changes if we have to fix files\n- ESLint might be too aggressive when it comes to applying the changes\n",
-      "date" : "2024-05-23T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "4",
-      "status" : "Accepted",
-      "title" : "ESLint rule for newline after control flow blocks"
-    }, {
-      "content" : "# 5. Using External Libraries\n\nDate: 2024-06-25\n\n## Status\n\nAccepted\n\n## Context\n\nTo ensure rapid delivery without reinventing the wheel, we will utilize external libraries and leverage existing solutions for complex problems. While these libraries provide substantial benefits, it's essential to establish guidelines to ensure a shared understanding of when to use external libraries and when to avoid them. Transitive dependencies can introduce underlying security vulnerabilities, increase the risk of dependency conflicts, and complicate the upgrade and maintenance processes.\n\n## Decision\n\n- We will prioritise using well-established libraries that are actively maintained and expected to have long-term support.\n- Libraries should have a proven track record of stability and regular updates, with a robust community or organizational backing to ensure continued maintenance and support.\n- To maintain simplicity and control over our codebase, we will avoid using external libraries for problems that can be solved internally with minimal effort and maintenance. For instance, we decided to create our own [AutoSave component](https://github.com/ministryofjustice/bichard7-next-ui/blob/main/src/components/EditableFields/AutoSave.tsx) for this reason.\n- Libraries with minimal dependencies are preferred (use `npm ls` to view dependency graph e.g `npm ls --all` or `npm ls sass`)\n\n## Consequences\n\n- By adopting well-established and maintained libraries with minimal dependencies, we enhance the security and stability of our projects and reduce the risk of vulnerabilities and maintenance issues.\n",
-      "date" : "2024-06-25T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "5",
-      "status" : "Accepted",
-      "title" : "Using External Libraries"
-    }, {
-      "content" : "# 6. Use [Fastify](https://fastify.dev/) API framework\n\nDate: 2024-09-13\n\n## Status\n\nAccepted\n\n## Context\n\nAs a team who are significantly invested in both [TypeScript](https://www.typescriptlang.org/) and [Zod](https://zod.dev/) for type safety both in development and at runtime, choosing technologies that provide first class support for these tools provides numerous benefits to the team:\n\n- Simplified developer experience\n- Succinct and easily digestible code\n- Shorter delivery time for features\n\nOur current web framework for the API is [Express](https://expressjs.com/). [Express](https://expressjs.com/) is a well supported, widely used framework that can be effectively used to build APIs. Given that our API is currently under development and isn't actively used in production, there isn't much code to change in order to change the web framework.\n\nWe are proposing to remove [Express](https://expressjs.com/) in order to utilise [Fastify](https://fastify.dev/), primarily on the basis that both frameworks can be effectively used to build APIs, but that [Fastify](https://fastify.dev/) provides first-class support for [TypeScript](https://www.typescriptlang.org/), [Zod](https://zod.dev/) and [OpenAPI](https://www.openapis.org/) document generation out of the box.\n\nThe decision to suggest [Fastify](https://fastify.dev/) results from having reviewed a number of web frameworks against our team's operational context - namely [NextJS](https://nextjs.org/) (as it is used elsewhere in the project), [Encore](https://encore.dev/) (because it has a good reputation for developer experience), [Fastify](https://fastify.dev/) and [Express](https://expressjs.com/) itself.\n\nHaving performed a few basic spikes to test the functionality and usability of each library with [Zod](https://zod.dev/), [TypeScript](https://www.typescriptlang.org/) and [OpenAPI](https://www.openapis.org/) document generation, both [Fastify](https://fastify.dev/) and [Encore](https://encore.dev/) performed above [NextJS](https://nextjs.org/) and [Express](https://expressjs.com/), but [Encore](https://encore.dev/) unfortunately takes too much responsibility for the resulting Docker image (no ability to edit the Dockerfile) for the service, which isn't a measure of control we're willing to give away.\n\n## Decision\n\nUsing principles for library adoption established in **ADR0005**, this is how we justify the decision.\n\n- [Fastify](https://fastify.dev/) reached v1 in October, 2018. Throughout the package's history, it has releases almost every month and has a consistent group of maintainers contributing to the project on a regular basis. The project is hosted by the OpenJS foundation and provides an LTS schedule on their website.\n- [Fastify](https://fastify.dev/) has fewer dependencies than [Express](https://expressjs.com/).\n\n## Consequences\n\n- Adopting [Fastify](https://fastify.dev/) will improve the developer experience for the API project, it will provide a web framework that is fast and well optimised and it will provide first class support within the API project for strong typing and accurate documentation.\n- Developers will need to learn a new web framework, which will incur an operational cost.\n- Developers will need to be able to work with [Zod](https://zod.dev/) in order to build new features on the API.\n",
-      "date" : "2024-09-13T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "6",
-      "status" : "Accepted",
-      "title" : "Use [Fastify](https://fastify.dev/) API framework"
-    }, {
-      "content" : "# 7. API Authentication and Authorisation Approach\n\nDate: 2024-10-21\n\n## Status\n\nAccepted\n\n## Context\n\nWe want the API to be secure, so we need Authentication and Authorisation. To maintain consistency throughout the\nservice, we will use the same tokens and secrets as the front end to verify the token and ensure it is correct.\n\nAlthough the primary use case is to handle requests coming from the UI made by end users, we also want to be able to\nhandle service requests, e.g.\n\n- Core creating records for exceptions and triggers\n- The resubmission service resubmitting PNC failures\n\n### Authentication and Authorisation\n\nThis is handled by the `Authorisation` header with a `Bearer` token. The bearer token will be validated to demonstrate\nthat the request is authenticated. When a service-to-service request is required and not on a user's behalf, we will\ngenerate a bearer token for that service.\n\nThe token is in the format of a [JWT](https://jwt.io/) and contains the user's or service information to verify what the\ntoken can and cannot do.\n\n## Consequences\n\n- A developer needs to understand:\n  - JWT and how they can be used\n  - The Bichard user permission model\n",
-      "date" : "2024-10-21T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "7",
-      "status" : "Accepted",
-      "title" : "API Authentication and Authorisation Approach"
-    }, {
-      "content" : "# 8. API Design\n\nDate: 2024-12-18\n\n## Status\n\nAccepted\n\n## Context\n\nWe want the API to be well-designed and consistent. To achieve this we are proposing the following approach which lays out some of the key design decisions when building an API:\n\n### RESTful API First\n\nWe will aim to use a RESTful approach as our primary design for the API. This means:\n\n- Using HTTP verbs to represent actions\n- Modelling our domain objects in the API, e.g. `/cases`\n\nThere may be times when an RPC approach is more suited to particular operations, expecially if they involve transactional constraints or coordinate a number of separate operations. In this case we will allow a hybrid ReST / RPC approach, e.g. `/cases/:caseId/resubmit`\n\n### Versioning\n\nIt's always easier to add versioning into the API in the beginning, therefore we will include a version in the URL, e.g. `/v1/cases`\n\n### Representation of data\n\nWe are using JSON to serialise our data and should apply the following conventions:\n\n- Use camelCase for attributes in the JSON data, e.g. `courtHouse`\n- Where the endpoint returns more than one record, we should have a root object which also contains pagination data\n\n### URL Design\n\nWe will apply the following rules to designing URLs in the API:\n\n- Use lowercase separate words with hyphens for path segments, e.g. `/court-cases`\n- Use snake_case words for query parameters, e.g. `/cases?per_page=20`\n- Pluralise resource names, e.g. `/cases`\n- Avoid trailing slashes\n- Use nesting if the resource should only be available via its parent, e.g. `/cases/:caseId/triggers`\n\n## Consequences\n\n- Setting out these design guidelines in advance means we will be more likely to end up with a consistent API design\n",
-      "date" : "2024-12-18T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "8",
-      "status" : "Accepted",
-      "title" : "API Design"
-    }, {
-      "content" : "# 9. Naming of Types and Schemas\n\nDate: 2025-01-16\n\n## Status\n\nAccepted\n\n## Context\n\nWe want to leverage [Zod's](https://zod.dev/) ability to validate schemas and turn the schemas into objects. This is\nespecially helpful whilst build the API as we can auto generate Swagger documentation for API calls (parameters,\nrequests and responses).\n\nWe also want to have a clear and concise naming convention for the Schemas and Types that the Zod schemas will create.\n\nTypes should be context and use case based, using `Pick<Case, CaseData>`, for example. It leads to not having to define\nthe Type in the Common package. This should be considered as an intermediate type, only to be used in this context and\nnot to be used outside the use case. The type should be clearly named for the use case to be involved with e.g.\n`CaseDataForDto` which contains only the attributes needed for that conversion (from the database to DTO).\n\nFor example:\n\n- Case (database representation) -> CaseDataForDto (picked fields for database query) -> CaseDto (data transform object\n  to send to the external services e.g. UI)\n- Trigger -> TriggerDto\n\nThe following guidelines should help in creating a good name structure as well looking at the API package code.\n\n### Names we will expect\n\n- `Schema` as a suffix to Zod Schema\n- `Dto` as a suffix to a Type which has been convert from a database object to a domain object\n- Strict camel case, for files and functions\n\n### Names we find acceptable\n\n- Try to avoid unnecessary suffixes\n- If you can't define an object using what it represents try either these suffixes:\n  - Object as aggregate `Data` e.g. has relations as part of the dataset\n  - Object is a pure database row `Row` e.g. no relations is part of the dataset\n- Try to create Types that are close to domain, context and use case\n\n### Names we want to avoid using\n\n- Lots of adjectives in a name\n- `Full`, `Partial`, `Raw`, `DB`\n\n## Consequences\n\nWe will have to carefully choose names that are meaningful. That may slow down our velocity. But this will be good trade\noff for the readability and maintainability for Bichard.\n",
-      "date" : "2025-01-16T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "9",
-      "status" : "Accepted",
-      "title" : "Naming of Types and Schemas"
-    } ],
-    "sections" : [ {
-      "content" : "## Bichard\n\nWelcome to the microsite for the Bichard architecture and documentation.\n\nThe following diagram shows how Bichard fits in with high level view of MoJ.\n\n![System Landscape Diagram](embed:SystemLandscape)\n",
-      "filename" : "001-index.md",
-      "format" : "Markdown",
-      "order" : 1,
-      "title" : ""
-    }, {
-      "content" : "## Transitioning Bichard\n\n### \"Old\" Bichard\n\nBichard after the \"lift and shift\" into AWS. [Link to nice version of Old Bichard](/diagrams/OldBichard.png).\n\n![Old Bichard](embed:OldBichard)\n\n### Hybrid Bichard\n\nBichard in its current state. [Link to nice version of Hybrid Bichard](/diagrams/HybridBichard.png).\n![Old Bichard](embed:HybridBichard)\n",
-      "filename" : "002-transitioning-bichard.md",
-      "format" : "Markdown",
-      "order" : 2,
-      "title" : ""
-    }, {
-      "content" : "## Schemas\n\n- [Schema for Annotated Hearing Outcome](https://ministryofjustice.github.io/bichard7-next-core/schema/aho/index.html)\n- [Schema for SPI](https://ministryofjustice.github.io/bichard7-next-core/schema/spi/index.html)\n",
-      "filename" : "003-schemas.md",
-      "format" : "Markdown",
-      "order" : 3,
-      "title" : ""
-    } ]
+  "configuration": {},
+  "description": "Description",
+  "documentation": {
+    "decisions": [
+      {
+        "content": "# 1. Record architecture decisions\n\nDate: 2023-06-27\n\n## Status\n\nAccepted\n\n## Context\n\nWe need to record the architectural decisions made on this system.\n\n## Decision\n\nWe will use Architecture Decision Records, as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).\n\n## Consequences\n\n- See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).\n- Using [Structurizr](https://structurizr.com/)\n",
+        "date": "2023-06-27T00:00:00Z",
+        "format": "Markdown",
+        "id": "1",
+        "status": "Accepted",
+        "title": "Record architecture decisions"
+      },
+      {
+        "content": "# 2. Use Data Transfer Objects\n\nDate: 2023-09-22\n\n## Status\n\nAccepted\n\n## Context\n\nUsing a Data Transfer Object (DTO) in the `bichard-next-ui` repo will help separate the User Interface (React) from\nthe Database objects. It will also allow to use TypeScript more effectively, enforcing stricter types on objects at\ncompile time.\n\nWe have chosen the naming convention of:\n\n- Types:\n  - `Display` - Prefix for the object to be consumed in the UI\n  - `DisplayPartial` - Prefix for the object which has limited fields\n  - `DisplayFull` - Prefix for the object which has all fields (that aren't a security risk)\n- File structure for DTOs\n  - `src/services/dto` top level\n  - Then for example: `objectDto.ts`\n- Which holds functions like:\n  - `objToDisplayObjDto`\n  - `objToDisplayPartialObjDto`\n\nA DTO object is a new object mirror with some of a Entity's attributes. We are actively using `Pick<T, \"field\">` to\nselect what we want to use out of the Entity and mapping via a function (e.g.\n`const displayObj = objToDisplayObjDto(obj)`).\n\nWe can control the levels of data we want share. E.g. `displayPartialObj` or `displayFullObj`.\n\n## Consequences\n\n- It's more complex than just using the Database Record\n- It's more secure than sending out raw database records into the UI\n- You have to be disciplined in it's use and following the architectural pattern\n",
+        "date": "2023-09-22T00:00:00Z",
+        "format": "Markdown",
+        "id": "2",
+        "status": "Accepted",
+        "title": "Use Data Transfer Objects"
+      },
+      {
+        "content": "# 3. Use Styled Components\n\nDate: 2024-04-12\n\n## Status\n\nAccepted\n\n## Context\n\nWe are currently using two different styling libraries (3 if you include `scss` files). We want to reduce the need to\nknow how to use the libraries and simplify the code base.\n\nWe have opted to choose [Styled Components](https://styled-components.com/) over\n[React-JSS](https://cssinjs.org/react-jss/?v=v10.10.0)\n\nThe negatives for `react-jss` are it is less flexible with `React`. E.g. you can pass `props` to `styled-components`\nfor separate themes. It can also pollute other `components` as it based on class names rather than `components`.\n\n### File structure\n\nWe have opted to take the following approach to structuring the files:\n\n- `src/components/Action.styles.tsx`\n- `src/components/Action.tsx`\n\nThat allows to separate the styles from the `component` and keep close by. We can import other JS/TS files if needed,\ne.g. colours.\n\nWe should also export all the Styled Components at bottom of the file, e.g.\n\n```TypeScript\nexport { ActionLink, ActionButton }\n```\n\n## Consequences\n\n- More files\n- Need to know plain CSS\n- Need to learn how this library works\n",
+        "date": "2024-04-12T00:00:00Z",
+        "format": "Markdown",
+        "id": "3",
+        "status": "Accepted",
+        "title": "Use Styled Components"
+      },
+      {
+        "content": "# 4. ESLint rule for newline after control flow blocks\n\nDate: 2024-05-23\n\n## Status\n\nAccepted\n\n## Context\n\nThis Pull Request introduces a new ESLint rule that enforces the addition of a newline after control flow blocks (e.g., `if`, `for`, `while`, `switch`). This rule aims to maintain consistent code formatting and enhance code readability across our codebase.\n\nWe have been following the convention of adding newlines after control flow blocks to improve code readability and formatting. However, this practice has been manually enforced, leading to potential inconsistencies. By introducing this ESLint rule, we can ensure that the linter automatically checks for this convention, streamlining the process and promoting a consistent coding style.\n\n## Consequences\n\n- ESLint might slow us down when committing changes if we have to fix files\n- ESLint might be too aggressive when it comes to applying the changes\n",
+        "date": "2024-05-23T00:00:00Z",
+        "format": "Markdown",
+        "id": "4",
+        "status": "Accepted",
+        "title": "ESLint rule for newline after control flow blocks"
+      },
+      {
+        "content": "# 5. Using External Libraries\n\nDate: 2024-06-25\n\n## Status\n\nAccepted\n\n## Context\n\nTo ensure rapid delivery without reinventing the wheel, we will utilize external libraries and leverage existing solutions for complex problems. While these libraries provide substantial benefits, it's essential to establish guidelines to ensure a shared understanding of when to use external libraries and when to avoid them. Transitive dependencies can introduce underlying security vulnerabilities, increase the risk of dependency conflicts, and complicate the upgrade and maintenance processes.\n\n## Decision\n\n- We will prioritise using well-established libraries that are actively maintained and expected to have long-term support.\n- Libraries should have a proven track record of stability and regular updates, with a robust community or organizational backing to ensure continued maintenance and support.\n- To maintain simplicity and control over our codebase, we will avoid using external libraries for problems that can be solved internally with minimal effort and maintenance. For instance, we decided to create our own [AutoSave component](https://github.com/ministryofjustice/bichard7-next-ui/blob/main/src/components/EditableFields/AutoSave.tsx) for this reason.\n- Libraries with minimal dependencies are preferred (use `npm ls` to view dependency graph e.g `npm ls --all` or `npm ls sass`)\n\n## Consequences\n\n- By adopting well-established and maintained libraries with minimal dependencies, we enhance the security and stability of our projects and reduce the risk of vulnerabilities and maintenance issues.\n",
+        "date": "2024-06-25T00:00:00Z",
+        "format": "Markdown",
+        "id": "5",
+        "status": "Accepted",
+        "title": "Using External Libraries"
+      },
+      {
+        "content": "# 6. Use [Fastify](https://fastify.dev/) API framework\n\nDate: 2024-09-13\n\n## Status\n\nAccepted\n\n## Context\n\nAs a team who are significantly invested in both [TypeScript](https://www.typescriptlang.org/) and [Zod](https://zod.dev/) for type safety both in development and at runtime, choosing technologies that provide first class support for these tools provides numerous benefits to the team:\n\n- Simplified developer experience\n- Succinct and easily digestible code\n- Shorter delivery time for features\n\nOur current web framework for the API is [Express](https://expressjs.com/). [Express](https://expressjs.com/) is a well supported, widely used framework that can be effectively used to build APIs. Given that our API is currently under development and isn't actively used in production, there isn't much code to change in order to change the web framework.\n\nWe are proposing to remove [Express](https://expressjs.com/) in order to utilise [Fastify](https://fastify.dev/), primarily on the basis that both frameworks can be effectively used to build APIs, but that [Fastify](https://fastify.dev/) provides first-class support for [TypeScript](https://www.typescriptlang.org/), [Zod](https://zod.dev/) and [OpenAPI](https://www.openapis.org/) document generation out of the box.\n\nThe decision to suggest [Fastify](https://fastify.dev/) results from having reviewed a number of web frameworks against our team's operational context - namely [NextJS](https://nextjs.org/) (as it is used elsewhere in the project), [Encore](https://encore.dev/) (because it has a good reputation for developer experience), [Fastify](https://fastify.dev/) and [Express](https://expressjs.com/) itself.\n\nHaving performed a few basic spikes to test the functionality and usability of each library with [Zod](https://zod.dev/), [TypeScript](https://www.typescriptlang.org/) and [OpenAPI](https://www.openapis.org/) document generation, both [Fastify](https://fastify.dev/) and [Encore](https://encore.dev/) performed above [NextJS](https://nextjs.org/) and [Express](https://expressjs.com/), but [Encore](https://encore.dev/) unfortunately takes too much responsibility for the resulting Docker image (no ability to edit the Dockerfile) for the service, which isn't a measure of control we're willing to give away.\n\n## Decision\n\nUsing principles for library adoption established in **ADR0005**, this is how we justify the decision.\n\n- [Fastify](https://fastify.dev/) reached v1 in October, 2018. Throughout the package's history, it has releases almost every month and has a consistent group of maintainers contributing to the project on a regular basis. The project is hosted by the OpenJS foundation and provides an LTS schedule on their website.\n- [Fastify](https://fastify.dev/) has fewer dependencies than [Express](https://expressjs.com/).\n\n## Consequences\n\n- Adopting [Fastify](https://fastify.dev/) will improve the developer experience for the API project, it will provide a web framework that is fast and well optimised and it will provide first class support within the API project for strong typing and accurate documentation.\n- Developers will need to learn a new web framework, which will incur an operational cost.\n- Developers will need to be able to work with [Zod](https://zod.dev/) in order to build new features on the API.\n",
+        "date": "2024-09-13T00:00:00Z",
+        "format": "Markdown",
+        "id": "6",
+        "status": "Accepted",
+        "title": "Use [Fastify](https://fastify.dev/) API framework"
+      },
+      {
+        "content": "# 7. API Authentication and Authorisation Approach\n\nDate: 2024-10-21\n\n## Status\n\nAccepted\n\n## Context\n\nWe want the API to be secure, so we need Authentication and Authorisation. To maintain consistency throughout the\nservice, we will use the same tokens and secrets as the front end to verify the token and ensure it is correct.\n\nAlthough the primary use case is to handle requests coming from the UI made by end users, we also want to be able to\nhandle service requests, e.g.\n\n- Core creating records for exceptions and triggers\n- The resubmission service resubmitting PNC failures\n\n### Authentication and Authorisation\n\nThis is handled by the `Authorisation` header with a `Bearer` token. The bearer token will be validated to demonstrate\nthat the request is authenticated. When a service-to-service request is required and not on a user's behalf, we will\ngenerate a bearer token for that service.\n\nThe token is in the format of a [JWT](https://jwt.io/) and contains the user's or service information to verify what the\ntoken can and cannot do.\n\n## Consequences\n\n- A developer needs to understand:\n  - JWT and how they can be used\n  - The Bichard user permission model\n",
+        "date": "2024-10-21T00:00:00Z",
+        "format": "Markdown",
+        "id": "7",
+        "status": "Accepted",
+        "title": "API Authentication and Authorisation Approach"
+      },
+      {
+        "content": "# 8. API Design\n\nDate: 2024-12-18\n\n## Status\n\nAccepted\n\n## Context\n\nWe want the API to be well-designed and consistent. To achieve this we are proposing the following approach which lays out some of the key design decisions when building an API:\n\n### RESTful API First\n\nWe will aim to use a RESTful approach as our primary design for the API. This means:\n\n- Using HTTP verbs to represent actions\n- Modelling our domain objects in the API, e.g. `/cases`\n\nThere may be times when an RPC approach is more suited to particular operations, expecially if they involve transactional constraints or coordinate a number of separate operations. In this case we will allow a hybrid ReST / RPC approach, e.g. `/cases/:caseId/resubmit`\n\n### Versioning\n\nIt's always easier to add versioning into the API in the beginning, therefore we will include a version in the URL, e.g. `/v1/cases`\n\n### Representation of data\n\nWe are using JSON to serialise our data and should apply the following conventions:\n\n- Use camelCase for attributes in the JSON data, e.g. `courtHouse`\n- Where the endpoint returns more than one record, we should have a root object which also contains pagination data\n\n### URL Design\n\nWe will apply the following rules to designing URLs in the API:\n\n- Use lowercase separate words with hyphens for path segments, e.g. `/court-cases`\n- Use snake_case words for query parameters, e.g. `/cases?per_page=20`\n- Pluralise resource names, e.g. `/cases`\n- Avoid trailing slashes\n- Use nesting if the resource should only be available via its parent, e.g. `/cases/:caseId/triggers`\n\n## Consequences\n\n- Setting out these design guidelines in advance means we will be more likely to end up with a consistent API design\n",
+        "date": "2024-12-18T00:00:00Z",
+        "format": "Markdown",
+        "id": "8",
+        "status": "Accepted",
+        "title": "API Design"
+      },
+      {
+        "content": "# 9. Naming of Types and Schemas\n\nDate: 2025-01-16\n\n## Status\n\nAccepted\n\n## Context\n\nWe want to leverage [Zod's](https://zod.dev/) ability to validate schemas and turn the schemas into objects. This is\nespecially helpful whilst build the API as we can auto generate Swagger documentation for API calls (parameters,\nrequests and responses).\n\nWe also want to have a clear and concise naming convention for the Schemas and Types that the Zod schemas will create.\n\nTypes should be context and use case based, using `Pick<Case, CaseData>`, for example. It leads to not having to define\nthe Type in the Common package. This should be considered as an intermediate type, only to be used in this context and\nnot to be used outside the use case. The type should be clearly named for the use case to be involved with e.g.\n`CaseDataForDto` which contains only the attributes needed for that conversion (from the database to DTO).\n\nFor example:\n\n- Case (database representation) -> CaseDataForDto (picked fields for database query) -> CaseDto (data transform object\n  to send to the external services e.g. UI)\n- Trigger -> TriggerDto\n\nThe following guidelines should help in creating a good name structure as well looking at the API package code.\n\n### Names we will expect\n\n- `Schema` as a suffix to Zod Schema\n- `Dto` as a suffix to a Type which has been convert from a database object to a domain object\n- Strict camel case, for files and functions\n\n### Names we find acceptable\n\n- Try to avoid unnecessary suffixes\n- If you can't define an object using what it represents try either these suffixes:\n  - Object as aggregate `Data` e.g. has relations as part of the dataset\n  - Object is a pure database row `Row` e.g. no relations is part of the dataset\n- Try to create Types that are close to domain, context and use case\n\n### Names we want to avoid using\n\n- Lots of adjectives in a name\n- `Full`, `Partial`, `Raw`, `DB`\n\n## Consequences\n\nWe will have to carefully choose names that are meaningful. That may slow down our velocity. But this will be good trade\noff for the readability and maintainability for Bichard.\n",
+        "date": "2025-01-16T00:00:00Z",
+        "format": "Markdown",
+        "id": "9",
+        "status": "Accepted",
+        "title": "Naming of Types and Schemas"
+      }
+    ],
+    "sections": [
+      {
+        "content": "## Bichard\n\nWelcome to the microsite for the Bichard architecture and documentation.\n\nThe following diagram shows how Bichard fits in with high level view of MoJ.\n\n![System Landscape Diagram](embed:SystemLandscape)\n",
+        "filename": "001-index.md",
+        "format": "Markdown",
+        "order": 1,
+        "title": ""
+      },
+      {
+        "content": "## Transitioning Bichard\n\n### \"Old\" Bichard\n\nBichard after the \"lift and shift\" into AWS. [Link to nice version of Old Bichard](/diagrams/OldBichard.png).\n\n![Old Bichard](embed:OldBichard)\n\n### Hybrid Bichard\n\nBichard in its current state. [Link to nice version of Hybrid Bichard](/diagrams/HybridBichard.png).\n![Old Bichard](embed:HybridBichard)\n",
+        "filename": "002-transitioning-bichard.md",
+        "format": "Markdown",
+        "order": 2,
+        "title": ""
+      },
+      {
+        "content": "## Schemas\n\n- [Schema for Annotated Hearing Outcome](https://ministryofjustice.github.io/bichard7-next-core/schema/aho/index.html)\n- [Schema for SPI](https://ministryofjustice.github.io/bichard7-next-core/schema/spi/index.html)\n",
+        "filename": "003-schemas.md",
+        "format": "Markdown",
+        "order": 3,
+        "title": ""
+      }
+    ]
   },
-  "id" : 1,
-  "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-06-09T09:12:56Z",
-  "model" : {
-    "people" : [ {
-      "id" : "1",
-      "location" : "Unspecified",
-      "name" : "Police User",
-      "properties" : {
-        "structurizr.dsl.identifier" : "policeuser"
+  "id": 1,
+  "lastModifiedAgent": "structurizr-ui",
+  "lastModifiedDate": "2025-06-09T09:12:56Z",
+  "model": {
+    "people": [
+      {
+        "id": "1",
+        "location": "Unspecified",
+        "name": "Police User",
+        "properties": {
+          "structurizr.dsl.identifier": "policeuser"
+        },
+        "relationships": [
+          {
+            "description": "Uses",
+            "destinationId": "9",
+            "id": "53",
+            "sourceId": "1",
+            "tags": "Relationship"
+          },
+          {
+            "description": "Uses",
+            "destinationId": "4",
+            "id": "54",
+            "sourceId": "1",
+            "tags": "Relationship"
+          }
+        ],
+        "tags": "Element,Person"
+      }
+    ],
+    "softwareSystems": [
+      {
+        "documentation": {},
+        "group": "HMCTS",
+        "id": "2",
+        "location": "Unspecified",
+        "name": "Common Platform",
+        "properties": {
+          "structurizr.dsl.identifier": "commonplatform"
+        },
+        "relationships": [
+          {
+            "description": "Sends result of a court case",
+            "destinationId": "10",
+            "id": "56",
+            "sourceId": "2",
+            "tags": "Relationship"
+          }
+        ],
+        "tags": "Element,Software System,Existing System"
       },
-      "relationships" : [ {
-        "description" : "Uses",
-        "destinationId" : "9",
-        "id" : "53",
-        "sourceId" : "1",
-        "tags" : "Relationship"
-      }, {
-        "description" : "Uses",
-        "destinationId" : "4",
-        "id" : "54",
-        "sourceId" : "1",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Person"
-    } ],
-    "softwareSystems" : [ {
-      "documentation" : { },
-      "group" : "HMCTS",
-      "id" : "2",
-      "location" : "Unspecified",
-      "name" : "Common Platform",
-      "properties" : {
-        "structurizr.dsl.identifier" : "commonplatform"
+      {
+        "documentation": {},
+        "group": "HMCTS",
+        "id": "3",
+        "location": "Unspecified",
+        "name": "Libra",
+        "properties": {
+          "structurizr.dsl.identifier": "libra"
+        },
+        "relationships": [
+          {
+            "description": "Sends result of a court case",
+            "destinationId": "10",
+            "id": "57",
+            "sourceId": "3",
+            "tags": "Relationship"
+          }
+        ],
+        "tags": "Element,Software System,Existing System"
       },
-      "relationships" : [ {
-        "description" : "Sends result of a court case",
-        "destinationId" : "10",
-        "id" : "56",
-        "sourceId" : "2",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Software System,Existing System"
-    }, {
-      "documentation" : { },
-      "group" : "HMCTS",
-      "id" : "3",
-      "location" : "Unspecified",
-      "name" : "Libra",
-      "properties" : {
-        "structurizr.dsl.identifier" : "libra"
+      {
+        "documentation": {},
+        "group": "Home Office - Police",
+        "id": "4",
+        "location": "Unspecified",
+        "name": "Police National Computer",
+        "properties": {
+          "structurizr.dsl.identifier": "pnc"
+        },
+        "tags": "Element,Software System,Existing System"
       },
-      "relationships" : [ {
-        "description" : "Sends result of a court case",
-        "destinationId" : "10",
-        "id" : "57",
-        "sourceId" : "3",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Software System,Existing System"
-    }, {
-      "documentation" : { },
-      "group" : "Home Office - Police",
-      "id" : "4",
-      "location" : "Unspecified",
-      "name" : "Police National Computer",
-      "properties" : {
-        "structurizr.dsl.identifier" : "pnc"
+      {
+        "description": "An instant messaging service used by Made Tech",
+        "documentation": {},
+        "id": "5",
+        "location": "Unspecified",
+        "name": "Slack",
+        "properties": {
+          "structurizr.dsl.identifier": "slack"
+        },
+        "tags": "Element,Software System,External",
+        "url": "https://slack.com/"
       },
-      "tags" : "Element,Software System,Existing System"
-    }, {
-      "description" : "An instant messaging service used by Made Tech",
-      "documentation" : { },
-      "id" : "5",
-      "location" : "Unspecified",
-      "name" : "Slack",
-      "properties" : {
-        "structurizr.dsl.identifier" : "slack"
+      {
+        "description": "An alert tool for instances when the systems trigger an alarm",
+        "documentation": {},
+        "id": "6",
+        "location": "Unspecified",
+        "name": "PagerDuty",
+        "properties": {
+          "structurizr.dsl.identifier": "pagerduty"
+        },
+        "tags": "Element,Software System,External",
+        "url": "https://www.pagerduty.com/"
       },
-      "tags" : "Element,Software System,External",
-      "url" : "https://slack.com/"
-    }, {
-      "description" : "An alert tool for instances when the systems trigger an alarm",
-      "documentation" : { },
-      "id" : "6",
-      "location" : "Unspecified",
-      "name" : "PagerDuty",
-      "properties" : {
-        "structurizr.dsl.identifier" : "pagerduty"
+      {
+        "documentation": {},
+        "id": "7",
+        "location": "Unspecified",
+        "name": "CJSM",
+        "properties": {
+          "structurizr.dsl.identifier": "cjsm"
+        },
+        "relationships": [
+          {
+            "description": "Gets email",
+            "destinationId": "1",
+            "id": "55",
+            "sourceId": "7",
+            "tags": "Relationship"
+          }
+        ],
+        "tags": "Element,Software System,Existing System"
       },
-      "tags" : "Element,Software System,External",
-      "url" : "https://www.pagerduty.com/"
-    }, {
-      "documentation" : { },
-      "id" : "7",
-      "location" : "Unspecified",
-      "name" : "CJSM",
-      "properties" : {
-        "structurizr.dsl.identifier" : "cjsm"
+      {
+        "documentation": {},
+        "group": "AWS",
+        "id": "8",
+        "location": "Unspecified",
+        "name": "DynamoDB",
+        "properties": {
+          "structurizr.dsl.identifier": "dynamodb"
+        },
+        "tags": "Element,Software System,Existing System"
       },
-      "relationships" : [ {
-        "description" : "Gets email",
-        "destinationId" : "1",
-        "id" : "55",
-        "sourceId" : "7",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Software System,Existing System"
-    }, {
-      "documentation" : { },
-      "group" : "AWS",
-      "id" : "8",
-      "location" : "Unspecified",
-      "name" : "DynamoDB",
-      "properties" : {
-        "structurizr.dsl.identifier" : "dynamodb"
+      {
+        "description": "Q-Solution",
+        "documentation": {},
+        "group": "CJSE",
+        "id": "9",
+        "location": "Unspecified",
+        "name": "PSN Proxy",
+        "properties": {
+          "structurizr.dsl.identifier": "qsolution"
+        },
+        "relationships": [
+          {
+            "description": "Uses",
+            "destinationId": "4",
+            "id": "58",
+            "sourceId": "9",
+            "tags": "Relationship"
+          }
+        ],
+        "tags": "Element,Software System,Nginx,Existing System"
       },
-      "tags" : "Element,Software System,Existing System"
-    }, {
-      "description" : "Q-Solution",
-      "documentation" : { },
-      "group" : "CJSE",
-      "id" : "9",
-      "location" : "Unspecified",
-      "name" : "PSN Proxy",
-      "properties" : {
-        "structurizr.dsl.identifier" : "qsolution"
+      {
+        "documentation": {},
+        "group": "CJSE",
+        "id": "10",
+        "location": "Unspecified",
+        "name": "ExISS",
+        "properties": {
+          "structurizr.dsl.identifier": "exiss"
+        },
+        "relationships": [
+          {
+            "destinationId": "14",
+            "id": "71",
+            "sourceId": "10",
+            "tags": "Relationship"
+          },
+          {
+            "destinationId": "13",
+            "id": "72",
+            "linkedRelationshipId": "71",
+            "sourceId": "10"
+          },
+          {
+            "destinationId": "11",
+            "id": "73",
+            "linkedRelationshipId": "71",
+            "sourceId": "10"
+          }
+        ],
+        "tags": "Element,Software System,Existing System"
       },
-      "relationships" : [ {
-        "description" : "Uses",
-        "destinationId" : "4",
-        "id" : "58",
-        "sourceId" : "9",
-        "tags" : "Relationship"
-      } ],
-      "tags" : "Element,Software System,Nginx,Existing System"
-    }, {
-      "documentation" : { },
-      "group" : "CJSE",
-      "id" : "10",
-      "location" : "Unspecified",
-      "name" : "ExISS",
-      "properties" : {
-        "structurizr.dsl.identifier" : "exiss"
-      },
-      "relationships" : [ {
-        "destinationId" : "14",
-        "id" : "71",
-        "sourceId" : "10",
-        "tags" : "Relationship"
-      }, {
-        "destinationId" : "13",
-        "id" : "72",
-        "linkedRelationshipId" : "71",
-        "sourceId" : "10"
-      }, {
-        "destinationId" : "11",
-        "id" : "73",
-        "linkedRelationshipId" : "71",
-        "sourceId" : "10"
-      } ],
-      "tags" : "Element,Software System,Existing System"
-    }, {
-      "containers" : [ {
-        "documentation" : { },
-        "id" : "12",
-        "name" : "Beanconnect",
-        "properties" : {
-          "structurizr.dsl.identifier" : "beanconnect"
+      {
+        "containers": [
+          {
+            "documentation": {},
+            "id": "12",
+            "name": "Beanconnect",
+            "properties": {
+              "structurizr.dsl.identifier": "beanconnect"
+            },
+            "relationships": [
+              {
+                "destinationId": "9",
+                "id": "60",
+                "sourceId": "12",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "components": [
+              {
+                "documentation": {},
+                "id": "14",
+                "name": "External Incoming S3 bucket",
+                "properties": {
+                  "structurizr.dsl.identifier": "incomings3bucket"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "15",
+                    "id": "74",
+                    "sourceId": "14",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Queue"
+              },
+              {
+                "documentation": {},
+                "id": "15",
+                "name": "Transfer lambda",
+                "properties": {
+                  "structurizr.dsl.identifier": "transferprocess"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "17",
+                    "id": "75",
+                    "sourceId": "15",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "16",
+                    "id": "76",
+                    "linkedRelationshipId": "75",
+                    "sourceId": "15"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              }
+            ],
+            "documentation": {},
+            "id": "13",
+            "name": "Message Transfer Lambda",
+            "properties": {
+              "structurizr.dsl.identifier": "messagetransfer"
+            },
+            "relationships": [
+              {
+                "destinationId": "17",
+                "id": "77",
+                "linkedRelationshipId": "75",
+                "sourceId": "13"
+              },
+              {
+                "destinationId": "16",
+                "id": "78",
+                "linkedRelationshipId": "75",
+                "sourceId": "13"
+              },
+              {
+                "destinationId": "48",
+                "id": "128",
+                "sourceId": "13",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "components": [
+              {
+                "description": "Blah blah",
+                "documentation": {},
+                "id": "17",
+                "name": "Internal Incoming S3 bucket",
+                "properties": {
+                  "structurizr.dsl.identifier": "internalincomings3bucket"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "18",
+                    "id": "79",
+                    "sourceId": "17",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Queue"
+              },
+              {
+                "documentation": {},
+                "id": "18",
+                "name": "Store Message",
+                "properties": {
+                  "structurizr.dsl.identifier": "storemessage"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "31",
+                    "id": "80",
+                    "sourceId": "18",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "19",
+                    "id": "82",
+                    "sourceId": "18",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              },
+              {
+                "documentation": {},
+                "id": "19",
+                "name": "Send to Bichard",
+                "properties": {
+                  "structurizr.dsl.identifier": "sendtobichard"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "25",
+                    "id": "83",
+                    "sourceId": "19",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "20",
+                    "id": "85",
+                    "sourceId": "19",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              },
+              {
+                "documentation": {},
+                "id": "20",
+                "name": "Record Sent to Bichard",
+                "properties": {
+                  "structurizr.dsl.identifier": "recordsenttobichard"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "31",
+                    "id": "86",
+                    "sourceId": "20",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              }
+            ],
+            "documentation": {},
+            "id": "16",
+            "name": "Incoming Message Handler Step Function",
+            "properties": {
+              "structurizr.dsl.identifier": "incomingmessagehandler"
+            },
+            "relationships": [
+              {
+                "destinationId": "31",
+                "id": "81",
+                "linkedRelationshipId": "80",
+                "sourceId": "16"
+              },
+              {
+                "destinationId": "25",
+                "id": "84",
+                "linkedRelationshipId": "83",
+                "sourceId": "16"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "documentation": {},
+            "id": "21",
+            "name": "Event Lambda",
+            "properties": {
+              "structurizr.dsl.identifier": "eventlambda"
+            },
+            "relationships": [
+              {
+                "destinationId": "23",
+                "id": "88",
+                "sourceId": "21",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "22",
+                "id": "89",
+                "linkedRelationshipId": "88",
+                "sourceId": "21"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "components": [
+              {
+                "documentation": {},
+                "id": "23",
+                "name": "Event S3 bucket",
+                "properties": {
+                  "structurizr.dsl.identifier": "events3bucket"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "24",
+                    "id": "90",
+                    "sourceId": "23",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Queue"
+              },
+              {
+                "documentation": {},
+                "id": "24",
+                "name": "Write to Audit Log",
+                "properties": {
+                  "structurizr.dsl.identifier": "writetoauditlog"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "31",
+                    "id": "91",
+                    "sourceId": "24",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              }
+            ],
+            "documentation": {},
+            "id": "22",
+            "name": "Event Handler Step Function",
+            "properties": {
+              "structurizr.dsl.identifier": "eventhandler"
+            },
+            "relationships": [
+              {
+                "destinationId": "31",
+                "id": "92",
+                "linkedRelationshipId": "91",
+                "sourceId": "22"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "documentation": {},
+            "id": "25",
+            "name": "Active MQ",
+            "properties": {
+              "structurizr.dsl.identifier": "activemq"
+            },
+            "relationships": [
+              {
+                "destinationId": "21",
+                "id": "87",
+                "sourceId": "25",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "29",
+                "id": "93",
+                "sourceId": "25",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container",
+            "technology": "Active MQ"
+          },
+          {
+            "documentation": {},
+            "id": "26",
+            "name": "Nginx Auth Proxy",
+            "properties": {
+              "structurizr.dsl.identifier": "nginxauthproxy"
+            },
+            "relationships": [
+              {
+                "destinationId": "29",
+                "id": "65",
+                "sourceId": "26",
+                "tags": "Relationship"
+              },
+              {
+                "description": "Uses",
+                "destinationId": "30",
+                "id": "66",
+                "sourceId": "26",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "34",
+                "id": "67",
+                "sourceId": "26",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "46",
+                "id": "118",
+                "sourceId": "26",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container",
+            "technology": "Nginx",
+            "url": "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Nginx_Auth_Proxy"
+          },
+          {
+            "documentation": {},
+            "id": "27",
+            "name": "Bichard Database",
+            "properties": {
+              "structurizr.dsl.identifier": "database"
+            },
+            "tags": "Element,Container,Database,Existing System",
+            "technology": "PostgreSQL"
+          },
+          {
+            "documentation": {},
+            "id": "28",
+            "name": "Email System",
+            "properties": {
+              "structurizr.dsl.identifier": "emailsystem"
+            },
+            "relationships": [
+              {
+                "description": "Sends verification code",
+                "destinationId": "7",
+                "id": "62",
+                "sourceId": "28",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container",
+            "technology": "Postfix",
+            "url": "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Postfix"
+          },
+          {
+            "documentation": {},
+            "id": "29",
+            "name": "Bichard Java Application",
+            "properties": {
+              "structurizr.dsl.identifier": "bichardjavaapplication"
+            },
+            "relationships": [
+              {
+                "destinationId": "12",
+                "id": "59",
+                "sourceId": "29",
+                "tags": "Relationship"
+              },
+              {
+                "description": "Reads from / Writes to",
+                "destinationId": "27",
+                "id": "69",
+                "sourceId": "29",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "25",
+                "id": "94",
+                "sourceId": "29",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,Existing System",
+            "technology": "Java EE"
+          },
+          {
+            "description": "An application to provide user authentication and user management",
+            "documentation": {},
+            "id": "30",
+            "name": "Bichard User Service",
+            "properties": {
+              "structurizr.dsl.identifier": "bicharduserservice"
+            },
+            "relationships": [
+              {
+                "description": "Sends verification code",
+                "destinationId": "28",
+                "id": "64",
+                "sourceId": "30",
+                "tags": "Relationship"
+              },
+              {
+                "description": "Reads from / Writes to",
+                "destinationId": "27",
+                "id": "68",
+                "sourceId": "30",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,Web Browser",
+            "technology": "Next.js, TypeScript & React",
+            "url": "https://github.com/ministryofjustice/bichard7-next-user-service"
+          },
+          {
+            "components": [
+              {
+                "documentation": {},
+                "id": "32",
+                "name": "Audit Log API Gateway",
+                "properties": {
+                  "structurizr.dsl.identifier": "auditlogapigateway"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "33",
+                    "id": "95",
+                    "sourceId": "32",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component"
+              },
+              {
+                "documentation": {},
+                "id": "33",
+                "name": "Audit Log API Lambda",
+                "properties": {
+                  "structurizr.dsl.identifier": "auditlogapilambda"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "8",
+                    "id": "96",
+                    "sourceId": "33",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component"
+              }
+            ],
+            "documentation": {},
+            "id": "31",
+            "name": "Audit Log",
+            "properties": {
+              "structurizr.dsl.identifier": "auditlogapi"
+            },
+            "relationships": [
+              {
+                "destinationId": "8",
+                "id": "97",
+                "linkedRelationshipId": "96",
+                "sourceId": "31"
+              }
+            ],
+            "tags": "Element,Container,API"
+          },
+          {
+            "documentation": {},
+            "id": "34",
+            "name": "Static File Service",
+            "properties": {
+              "structurizr.dsl.identifier": "staticfileservice"
+            },
+            "tags": "Element,Container"
+          },
+          {
+            "components": [
+              {
+                "documentation": {},
+                "id": "36",
+                "name": "Automation Report",
+                "properties": {
+                  "structurizr.dsl.identifier": "automationreport"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "31",
+                    "id": "99",
+                    "sourceId": "36",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "34",
+                    "id": "102",
+                    "sourceId": "36",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              },
+              {
+                "documentation": {},
+                "id": "37",
+                "name": "Common Platform Report",
+                "properties": {
+                  "structurizr.dsl.identifier": "commonplatformreport"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "31",
+                    "id": "101",
+                    "sourceId": "37",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "28",
+                    "id": "105",
+                    "sourceId": "37",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              },
+              {
+                "documentation": {},
+                "id": "38",
+                "name": "MPS Report",
+                "properties": {
+                  "structurizr.dsl.identifier": "mpsreport"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "27",
+                    "id": "107",
+                    "sourceId": "38",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              },
+              {
+                "documentation": {},
+                "id": "39",
+                "name": "Top Exceptions Report",
+                "properties": {
+                  "structurizr.dsl.identifier": "topexceptionsreport"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "34",
+                    "id": "104",
+                    "sourceId": "39",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "31",
+                    "id": "109",
+                    "sourceId": "39",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              }
+            ],
+            "documentation": {},
+            "id": "35",
+            "name": "Reporting",
+            "properties": {
+              "structurizr.dsl.identifier": "reportingservice"
+            },
+            "relationships": [
+              {
+                "destinationId": "31",
+                "id": "100",
+                "linkedRelationshipId": "99",
+                "sourceId": "35"
+              },
+              {
+                "destinationId": "34",
+                "id": "103",
+                "linkedRelationshipId": "102",
+                "sourceId": "35"
+              },
+              {
+                "destinationId": "28",
+                "id": "106",
+                "linkedRelationshipId": "105",
+                "sourceId": "35"
+              },
+              {
+                "destinationId": "27",
+                "id": "108",
+                "linkedRelationshipId": "107",
+                "sourceId": "35"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "components": [
+              {
+                "description": "Logs gathered from all AWS services",
+                "documentation": {},
+                "id": "41",
+                "name": "CloudWatch Logs",
+                "properties": {
+                  "structurizr.dsl.identifier": "cloudwatchlogs"
+                },
+                "tags": "Element,Component"
+              },
+              {
+                "documentation": {},
+                "id": "42",
+                "name": "CloudWatch Metrics",
+                "properties": {
+                  "structurizr.dsl.identifier": "cloudwatchmetrics"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "44",
+                    "id": "110",
+                    "sourceId": "42",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component"
+              },
+              {
+                "documentation": {},
+                "id": "43",
+                "name": "Slack message handler",
+                "properties": {
+                  "structurizr.dsl.identifier": "slacklambda"
+                },
+                "relationships": [
+                  {
+                    "description": "Sends message",
+                    "destinationId": "5",
+                    "id": "115",
+                    "sourceId": "43",
+                    "tags": "Relationship",
+                    "technology": "via TLS Webhook"
+                  }
+                ],
+                "tags": "Element,Component,Lambda"
+              },
+              {
+                "documentation": {},
+                "id": "44",
+                "name": "SNS",
+                "properties": {
+                  "structurizr.dsl.identifier": "sns"
+                },
+                "relationships": [
+                  {
+                    "description": "Sends message",
+                    "destinationId": "6",
+                    "id": "111",
+                    "sourceId": "44",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "description": "Sends message",
+                    "destinationId": "43",
+                    "id": "114",
+                    "sourceId": "44",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component,SNS"
+              }
+            ],
+            "documentation": {},
+            "id": "40",
+            "name": "Monitoring",
+            "properties": {
+              "structurizr.dsl.identifier": "monitoring"
+            },
+            "relationships": [
+              {
+                "description": "Sends message",
+                "destinationId": "6",
+                "id": "112",
+                "linkedRelationshipId": "111",
+                "sourceId": "40"
+              },
+              {
+                "description": "Sends message",
+                "destinationId": "5",
+                "id": "116",
+                "linkedRelationshipId": "115",
+                "sourceId": "40",
+                "technology": "via TLS Webhook"
+              }
+            ],
+            "tags": "Element,Container"
+          },
+          {
+            "documentation": {},
+            "id": "45",
+            "name": "PNC API",
+            "properties": {
+              "structurizr.dsl.identifier": "pncapi"
+            },
+            "relationships": [
+              {
+                "destinationId": "12",
+                "id": "126",
+                "sourceId": "45",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,API"
+          },
+          {
+            "description": "A new way of interacting with Bichard, complying with Gov.uk standards",
+            "documentation": {},
+            "id": "46",
+            "name": "Bichard UI",
+            "properties": {
+              "structurizr.dsl.identifier": "bichardui"
+            },
+            "relationships": [
+              {
+                "destinationId": "27",
+                "id": "119",
+                "sourceId": "46",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "52",
+                "id": "120",
+                "sourceId": "46",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "31",
+                "id": "121",
+                "sourceId": "46",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,Web Browser",
+            "technology": "TypeScript & React",
+            "url": "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui"
+          },
+          {
+            "description": "The code to replace the processing logic of Bichard7",
+            "documentation": {},
+            "id": "47",
+            "name": "Bichard Next Core",
+            "properties": {
+              "structurizr.dsl.identifier": "bichardnextcore"
+            },
+            "relationships": [
+              {
+                "destinationId": "31",
+                "id": "123",
+                "sourceId": "47",
+                "tags": "Relationship"
+              },
+              {
+                "description": "Reads from and writes to",
+                "destinationId": "27",
+                "id": "124",
+                "sourceId": "47",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "45",
+                "id": "125",
+                "sourceId": "47",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container",
+            "technology": "Next.js, TypeScript",
+            "url": "https://github.com/ministryofjustice/bichard7-next-core"
+          },
+          {
+            "components": [
+              {
+                "documentation": {},
+                "id": "49",
+                "name": "Phase 1 Queue",
+                "properties": {
+                  "structurizr.dsl.identifier": "phaseone"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "49",
+                    "id": "129",
+                    "sourceId": "49",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "50",
+                    "id": "130",
+                    "sourceId": "49",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "31",
+                    "id": "133",
+                    "sourceId": "49",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component",
+                "technology": "TypeScript"
+              },
+              {
+                "documentation": {},
+                "id": "50",
+                "name": "Phase 2 Queue",
+                "properties": {
+                  "structurizr.dsl.identifier": "phasetwo"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "50",
+                    "id": "131",
+                    "sourceId": "50",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "51",
+                    "id": "132",
+                    "sourceId": "50",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "31",
+                    "id": "135",
+                    "sourceId": "50",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component",
+                "technology": "TypeScript"
+              },
+              {
+                "documentation": {},
+                "id": "51",
+                "name": "Phase 3 Queue",
+                "properties": {
+                  "structurizr.dsl.identifier": "phasethree"
+                },
+                "relationships": [
+                  {
+                    "destinationId": "31",
+                    "id": "136",
+                    "sourceId": "51",
+                    "tags": "Relationship"
+                  },
+                  {
+                    "destinationId": "45",
+                    "id": "137",
+                    "sourceId": "51",
+                    "tags": "Relationship"
+                  }
+                ],
+                "tags": "Element,Component",
+                "technology": "TypeScript"
+              }
+            ],
+            "documentation": {},
+            "id": "48",
+            "name": "Conductor",
+            "properties": {
+              "structurizr.dsl.identifier": "conductor"
+            },
+            "relationships": [
+              {
+                "destinationId": "27",
+                "id": "127",
+                "sourceId": "48",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "31",
+                "id": "134",
+                "linkedRelationshipId": "133",
+                "sourceId": "48"
+              },
+              {
+                "destinationId": "45",
+                "id": "138",
+                "linkedRelationshipId": "137",
+                "sourceId": "48"
+              }
+            ],
+            "tags": "Element,Container",
+            "url": "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor"
+          },
+          {
+            "description": "An API to remove DB actions from UI and to be Audit Logs",
+            "documentation": {},
+            "id": "52",
+            "name": "Bichard API",
+            "properties": {
+              "structurizr.dsl.identifier": "bichardapi"
+            },
+            "relationships": [
+              {
+                "description": "Reads from / Writes to",
+                "destinationId": "27",
+                "id": "70",
+                "sourceId": "52",
+                "tags": "Relationship"
+              },
+              {
+                "destinationId": "8",
+                "id": "122",
+                "sourceId": "52",
+                "tags": "Relationship"
+              }
+            ],
+            "tags": "Element,Container,API",
+            "technology": "TypeScript, Fastify & Zod",
+            "url": "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api"
+          }
+        ],
+        "documentation": {},
+        "group": "CJSE",
+        "id": "11",
+        "location": "Unspecified",
+        "name": "Bichard",
+        "properties": {
+          "structurizr.dsl.identifier": "bichard"
         },
-        "relationships" : [ {
-          "destinationId" : "9",
-          "id" : "60",
-          "sourceId" : "12",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "components" : [ {
-          "documentation" : { },
-          "id" : "14",
-          "name" : "External Incoming S3 bucket",
-          "properties" : {
-            "structurizr.dsl.identifier" : "incomings3bucket"
+        "relationships": [
+          {
+            "destinationId": "9",
+            "id": "61",
+            "linkedRelationshipId": "60",
+            "sourceId": "11"
           },
-          "relationships" : [ {
-            "destinationId" : "15",
-            "id" : "74",
-            "sourceId" : "14",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Queue"
-        }, {
-          "documentation" : { },
-          "id" : "15",
-          "name" : "Transfer lambda",
-          "properties" : {
-            "structurizr.dsl.identifier" : "transferprocess"
+          {
+            "description": "Sends verification code",
+            "destinationId": "7",
+            "id": "63",
+            "linkedRelationshipId": "62",
+            "sourceId": "11"
           },
-          "relationships" : [ {
-            "destinationId" : "17",
-            "id" : "75",
-            "sourceId" : "15",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "16",
-            "id" : "76",
-            "linkedRelationshipId" : "75",
-            "sourceId" : "15"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        } ],
-        "documentation" : { },
-        "id" : "13",
-        "name" : "Message Transfer Lambda",
-        "properties" : {
-          "structurizr.dsl.identifier" : "messagetransfer"
-        },
-        "relationships" : [ {
-          "destinationId" : "17",
-          "id" : "77",
-          "linkedRelationshipId" : "75",
-          "sourceId" : "13"
-        }, {
-          "destinationId" : "16",
-          "id" : "78",
-          "linkedRelationshipId" : "75",
-          "sourceId" : "13"
-        }, {
-          "destinationId" : "48",
-          "id" : "128",
-          "sourceId" : "13",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "components" : [ {
-          "description" : "Blah blah",
-          "documentation" : { },
-          "id" : "17",
-          "name" : "Internal Incoming S3 bucket",
-          "properties" : {
-            "structurizr.dsl.identifier" : "internalincomings3bucket"
+          {
+            "destinationId": "8",
+            "id": "98",
+            "linkedRelationshipId": "96",
+            "sourceId": "11"
           },
-          "relationships" : [ {
-            "destinationId" : "18",
-            "id" : "79",
-            "sourceId" : "17",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Queue"
-        }, {
-          "documentation" : { },
-          "id" : "18",
-          "name" : "Store Message",
-          "properties" : {
-            "structurizr.dsl.identifier" : "storemessage"
+          {
+            "description": "Sends message",
+            "destinationId": "6",
+            "id": "113",
+            "linkedRelationshipId": "111",
+            "sourceId": "11"
           },
-          "relationships" : [ {
-            "destinationId" : "31",
-            "id" : "80",
-            "sourceId" : "18",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "19",
-            "id" : "82",
-            "sourceId" : "18",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        }, {
-          "documentation" : { },
-          "id" : "19",
-          "name" : "Send to Bichard",
-          "properties" : {
-            "structurizr.dsl.identifier" : "sendtobichard"
-          },
-          "relationships" : [ {
-            "destinationId" : "25",
-            "id" : "83",
-            "sourceId" : "19",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "20",
-            "id" : "85",
-            "sourceId" : "19",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        }, {
-          "documentation" : { },
-          "id" : "20",
-          "name" : "Record Sent to Bichard",
-          "properties" : {
-            "structurizr.dsl.identifier" : "recordsenttobichard"
-          },
-          "relationships" : [ {
-            "destinationId" : "31",
-            "id" : "86",
-            "sourceId" : "20",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        } ],
-        "documentation" : { },
-        "id" : "16",
-        "name" : "Incoming Message Handler Step Function",
-        "properties" : {
-          "structurizr.dsl.identifier" : "incomingmessagehandler"
-        },
-        "relationships" : [ {
-          "destinationId" : "31",
-          "id" : "81",
-          "linkedRelationshipId" : "80",
-          "sourceId" : "16"
-        }, {
-          "destinationId" : "25",
-          "id" : "84",
-          "linkedRelationshipId" : "83",
-          "sourceId" : "16"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "documentation" : { },
-        "id" : "21",
-        "name" : "Event Lambda",
-        "properties" : {
-          "structurizr.dsl.identifier" : "eventlambda"
-        },
-        "relationships" : [ {
-          "destinationId" : "23",
-          "id" : "88",
-          "sourceId" : "21",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "22",
-          "id" : "89",
-          "linkedRelationshipId" : "88",
-          "sourceId" : "21"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "components" : [ {
-          "documentation" : { },
-          "id" : "23",
-          "name" : "Event S3 bucket",
-          "properties" : {
-            "structurizr.dsl.identifier" : "events3bucket"
-          },
-          "relationships" : [ {
-            "destinationId" : "24",
-            "id" : "90",
-            "sourceId" : "23",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Queue"
-        }, {
-          "documentation" : { },
-          "id" : "24",
-          "name" : "Write to Audit Log",
-          "properties" : {
-            "structurizr.dsl.identifier" : "writetoauditlog"
-          },
-          "relationships" : [ {
-            "destinationId" : "31",
-            "id" : "91",
-            "sourceId" : "24",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        } ],
-        "documentation" : { },
-        "id" : "22",
-        "name" : "Event Handler Step Function",
-        "properties" : {
-          "structurizr.dsl.identifier" : "eventhandler"
-        },
-        "relationships" : [ {
-          "destinationId" : "31",
-          "id" : "92",
-          "linkedRelationshipId" : "91",
-          "sourceId" : "22"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "documentation" : { },
-        "id" : "25",
-        "name" : "Active MQ",
-        "properties" : {
-          "structurizr.dsl.identifier" : "activemq"
-        },
-        "relationships" : [ {
-          "destinationId" : "21",
-          "id" : "87",
-          "sourceId" : "25",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "29",
-          "id" : "93",
-          "sourceId" : "25",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container",
-        "technology" : "Active MQ"
-      }, {
-        "documentation" : { },
-        "id" : "26",
-        "name" : "Nginx Auth Proxy",
-        "properties" : {
-          "structurizr.dsl.identifier" : "nginxauthproxy"
-        },
-        "relationships" : [ {
-          "destinationId" : "29",
-          "id" : "65",
-          "sourceId" : "26",
-          "tags" : "Relationship"
-        }, {
-          "description" : "Uses",
-          "destinationId" : "30",
-          "id" : "66",
-          "sourceId" : "26",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "34",
-          "id" : "67",
-          "sourceId" : "26",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "46",
-          "id" : "118",
-          "sourceId" : "26",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container",
-        "technology" : "Nginx",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Nginx_Auth_Proxy"
-      }, {
-        "documentation" : { },
-        "id" : "27",
-        "name" : "Bichard Database",
-        "properties" : {
-          "structurizr.dsl.identifier" : "database"
-        },
-        "tags" : "Element,Container,Database,Existing System",
-        "technology" : "PostgreSQL"
-      }, {
-        "documentation" : { },
-        "id" : "28",
-        "name" : "Email System",
-        "properties" : {
-          "structurizr.dsl.identifier" : "emailsystem"
-        },
-        "relationships" : [ {
-          "description" : "Sends verification code",
-          "destinationId" : "7",
-          "id" : "62",
-          "sourceId" : "28",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container",
-        "technology" : "Postfix",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Postfix"
-      }, {
-        "documentation" : { },
-        "id" : "29",
-        "name" : "Bichard Java Application",
-        "properties" : {
-          "structurizr.dsl.identifier" : "bichardjavaapplication"
-        },
-        "relationships" : [ {
-          "destinationId" : "12",
-          "id" : "59",
-          "sourceId" : "29",
-          "tags" : "Relationship"
-        }, {
-          "description" : "Reads from / Writes to",
-          "destinationId" : "27",
-          "id" : "69",
-          "sourceId" : "29",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "25",
-          "id" : "94",
-          "sourceId" : "29",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container,Existing System",
-        "technology" : "Java EE"
-      }, {
-        "description" : "An application to provide user authentication and user management",
-        "documentation" : { },
-        "id" : "30",
-        "name" : "Bichard User Service",
-        "properties" : {
-          "structurizr.dsl.identifier" : "bicharduserservice"
-        },
-        "relationships" : [ {
-          "description" : "Sends verification code",
-          "destinationId" : "28",
-          "id" : "64",
-          "sourceId" : "30",
-          "tags" : "Relationship"
-        }, {
-          "description" : "Reads from / Writes to",
-          "destinationId" : "27",
-          "id" : "68",
-          "sourceId" : "30",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container,Web Browser",
-        "technology" : "Next.js, TypeScript & React",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-user-service"
-      }, {
-        "components" : [ {
-          "documentation" : { },
-          "id" : "32",
-          "name" : "Audit Log API Gateway",
-          "properties" : {
-            "structurizr.dsl.identifier" : "auditlogapigateway"
-          },
-          "relationships" : [ {
-            "destinationId" : "33",
-            "id" : "95",
-            "sourceId" : "32",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component"
-        }, {
-          "documentation" : { },
-          "id" : "33",
-          "name" : "Audit Log API Lambda",
-          "properties" : {
-            "structurizr.dsl.identifier" : "auditlogapilambda"
-          },
-          "relationships" : [ {
-            "destinationId" : "8",
-            "id" : "96",
-            "sourceId" : "33",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component"
-        } ],
-        "documentation" : { },
-        "id" : "31",
-        "name" : "Audit Log",
-        "properties" : {
-          "structurizr.dsl.identifier" : "auditlogapi"
-        },
-        "relationships" : [ {
-          "destinationId" : "8",
-          "id" : "97",
-          "linkedRelationshipId" : "96",
-          "sourceId" : "31"
-        } ],
-        "tags" : "Element,Container,API"
-      }, {
-        "documentation" : { },
-        "id" : "34",
-        "name" : "Static File Service",
-        "properties" : {
-          "structurizr.dsl.identifier" : "staticfileservice"
-        },
-        "tags" : "Element,Container"
-      }, {
-        "components" : [ {
-          "documentation" : { },
-          "id" : "36",
-          "name" : "Automation Report",
-          "properties" : {
-            "structurizr.dsl.identifier" : "automationreport"
-          },
-          "relationships" : [ {
-            "destinationId" : "31",
-            "id" : "99",
-            "sourceId" : "36",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "34",
-            "id" : "102",
-            "sourceId" : "36",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        }, {
-          "documentation" : { },
-          "id" : "37",
-          "name" : "Common Platform Report",
-          "properties" : {
-            "structurizr.dsl.identifier" : "commonplatformreport"
-          },
-          "relationships" : [ {
-            "destinationId" : "31",
-            "id" : "101",
-            "sourceId" : "37",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "28",
-            "id" : "105",
-            "sourceId" : "37",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        }, {
-          "documentation" : { },
-          "id" : "38",
-          "name" : "MPS Report",
-          "properties" : {
-            "structurizr.dsl.identifier" : "mpsreport"
-          },
-          "relationships" : [ {
-            "destinationId" : "27",
-            "id" : "107",
-            "sourceId" : "38",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        }, {
-          "documentation" : { },
-          "id" : "39",
-          "name" : "Top Exceptions Report",
-          "properties" : {
-            "structurizr.dsl.identifier" : "topexceptionsreport"
-          },
-          "relationships" : [ {
-            "destinationId" : "34",
-            "id" : "104",
-            "sourceId" : "39",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "31",
-            "id" : "109",
-            "sourceId" : "39",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        } ],
-        "documentation" : { },
-        "id" : "35",
-        "name" : "Reporting",
-        "properties" : {
-          "structurizr.dsl.identifier" : "reportingservice"
-        },
-        "relationships" : [ {
-          "destinationId" : "31",
-          "id" : "100",
-          "linkedRelationshipId" : "99",
-          "sourceId" : "35"
-        }, {
-          "destinationId" : "34",
-          "id" : "103",
-          "linkedRelationshipId" : "102",
-          "sourceId" : "35"
-        }, {
-          "destinationId" : "28",
-          "id" : "106",
-          "linkedRelationshipId" : "105",
-          "sourceId" : "35"
-        }, {
-          "destinationId" : "27",
-          "id" : "108",
-          "linkedRelationshipId" : "107",
-          "sourceId" : "35"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "components" : [ {
-          "description" : "Logs gathered from all AWS services",
-          "documentation" : { },
-          "id" : "41",
-          "name" : "CloudWatch Logs",
-          "properties" : {
-            "structurizr.dsl.identifier" : "cloudwatchlogs"
-          },
-          "tags" : "Element,Component"
-        }, {
-          "documentation" : { },
-          "id" : "42",
-          "name" : "CloudWatch Metrics",
-          "properties" : {
-            "structurizr.dsl.identifier" : "cloudwatchmetrics"
-          },
-          "relationships" : [ {
-            "destinationId" : "44",
-            "id" : "110",
-            "sourceId" : "42",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component"
-        }, {
-          "documentation" : { },
-          "id" : "43",
-          "name" : "Slack message handler",
-          "properties" : {
-            "structurizr.dsl.identifier" : "slacklambda"
-          },
-          "relationships" : [ {
-            "description" : "Sends message",
-            "destinationId" : "5",
-            "id" : "115",
-            "sourceId" : "43",
-            "tags" : "Relationship",
-            "technology" : "via TLS Webhook"
-          } ],
-          "tags" : "Element,Component,Lambda"
-        }, {
-          "documentation" : { },
-          "id" : "44",
-          "name" : "SNS",
-          "properties" : {
-            "structurizr.dsl.identifier" : "sns"
-          },
-          "relationships" : [ {
-            "description" : "Sends message",
-            "destinationId" : "6",
-            "id" : "111",
-            "sourceId" : "44",
-            "tags" : "Relationship"
-          }, {
-            "description" : "Sends message",
-            "destinationId" : "43",
-            "id" : "114",
-            "sourceId" : "44",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component,SNS"
-        } ],
-        "documentation" : { },
-        "id" : "40",
-        "name" : "Monitoring",
-        "properties" : {
-          "structurizr.dsl.identifier" : "monitoring"
-        },
-        "relationships" : [ {
-          "description" : "Sends message",
-          "destinationId" : "6",
-          "id" : "112",
-          "linkedRelationshipId" : "111",
-          "sourceId" : "40"
-        }, {
-          "description" : "Sends message",
-          "destinationId" : "5",
-          "id" : "116",
-          "linkedRelationshipId" : "115",
-          "sourceId" : "40",
-          "technology" : "via TLS Webhook"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "documentation" : { },
-        "id" : "45",
-        "name" : "PNC API",
-        "properties" : {
-          "structurizr.dsl.identifier" : "pncapi"
-        },
-        "relationships" : [ {
-          "destinationId" : "12",
-          "id" : "126",
-          "sourceId" : "45",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container,API"
-      }, {
-        "description" : "A new way of interacting with Bichard, complying with Gov.uk standards",
-        "documentation" : { },
-        "id" : "46",
-        "name" : "Bichard UI",
-        "properties" : {
-          "structurizr.dsl.identifier" : "bichardui"
-        },
-        "relationships" : [ {
-          "destinationId" : "27",
-          "id" : "119",
-          "sourceId" : "46",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "52",
-          "id" : "120",
-          "sourceId" : "46",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "31",
-          "id" : "121",
-          "sourceId" : "46",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container,Web Browser",
-        "technology" : "TypeScript & React",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui"
-      }, {
-        "description" : "The code to replace the processing logic of Bichard7",
-        "documentation" : { },
-        "id" : "47",
-        "name" : "Bichard Next Core",
-        "properties" : {
-          "structurizr.dsl.identifier" : "bichardnextcore"
-        },
-        "relationships" : [ {
-          "destinationId" : "31",
-          "id" : "123",
-          "sourceId" : "47",
-          "tags" : "Relationship"
-        }, {
-          "description" : "Reads from and writes to",
-          "destinationId" : "27",
-          "id" : "124",
-          "sourceId" : "47",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "45",
-          "id" : "125",
-          "sourceId" : "47",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container",
-        "technology" : "Next.js, TypeScript",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-core"
-      }, {
-        "components" : [ {
-          "documentation" : { },
-          "id" : "49",
-          "name" : "Phase 1 Queue",
-          "properties" : {
-            "structurizr.dsl.identifier" : "phaseone"
-          },
-          "relationships" : [ {
-            "destinationId" : "49",
-            "id" : "129",
-            "sourceId" : "49",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "50",
-            "id" : "130",
-            "sourceId" : "49",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "31",
-            "id" : "133",
-            "sourceId" : "49",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component",
-          "technology" : "TypeScript"
-        }, {
-          "documentation" : { },
-          "id" : "50",
-          "name" : "Phase 2 Queue",
-          "properties" : {
-            "structurizr.dsl.identifier" : "phasetwo"
-          },
-          "relationships" : [ {
-            "destinationId" : "50",
-            "id" : "131",
-            "sourceId" : "50",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "51",
-            "id" : "132",
-            "sourceId" : "50",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "31",
-            "id" : "135",
-            "sourceId" : "50",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component",
-          "technology" : "TypeScript"
-        }, {
-          "documentation" : { },
-          "id" : "51",
-          "name" : "Phase 3 Queue",
-          "properties" : {
-            "structurizr.dsl.identifier" : "phasethree"
-          },
-          "relationships" : [ {
-            "destinationId" : "31",
-            "id" : "136",
-            "sourceId" : "51",
-            "tags" : "Relationship"
-          }, {
-            "destinationId" : "45",
-            "id" : "137",
-            "sourceId" : "51",
-            "tags" : "Relationship"
-          } ],
-          "tags" : "Element,Component",
-          "technology" : "TypeScript"
-        } ],
-        "documentation" : { },
-        "id" : "48",
-        "name" : "Conductor",
-        "properties" : {
-          "structurizr.dsl.identifier" : "conductor"
-        },
-        "relationships" : [ {
-          "destinationId" : "27",
-          "id" : "127",
-          "sourceId" : "48",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "31",
-          "id" : "134",
-          "linkedRelationshipId" : "133",
-          "sourceId" : "48"
-        }, {
-          "destinationId" : "45",
-          "id" : "138",
-          "linkedRelationshipId" : "137",
-          "sourceId" : "48"
-        } ],
-        "tags" : "Element,Container",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor"
-      }, {
-        "description" : "An API to remove DB actions from UI and to be Audit Logs",
-        "documentation" : { },
-        "id" : "52",
-        "name" : "Bichard API",
-        "properties" : {
-          "structurizr.dsl.identifier" : "bichardapi"
-        },
-        "relationships" : [ {
-          "description" : "Reads from / Writes to",
-          "destinationId" : "27",
-          "id" : "70",
-          "sourceId" : "52",
-          "tags" : "Relationship"
-        }, {
-          "destinationId" : "8",
-          "id" : "122",
-          "sourceId" : "52",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container,API",
-        "technology" : "TypeScript, Fastify & Zod",
-        "url" : "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api"
-      } ],
-      "documentation" : { },
-      "group" : "CJSE",
-      "id" : "11",
-      "location" : "Unspecified",
-      "name" : "Bichard",
-      "properties" : {
-        "structurizr.dsl.identifier" : "bichard"
-      },
-      "relationships" : [ {
-        "destinationId" : "9",
-        "id" : "61",
-        "linkedRelationshipId" : "60",
-        "sourceId" : "11"
-      }, {
-        "description" : "Sends verification code",
-        "destinationId" : "7",
-        "id" : "63",
-        "linkedRelationshipId" : "62",
-        "sourceId" : "11"
-      }, {
-        "destinationId" : "8",
-        "id" : "98",
-        "linkedRelationshipId" : "96",
-        "sourceId" : "11"
-      }, {
-        "description" : "Sends message",
-        "destinationId" : "6",
-        "id" : "113",
-        "linkedRelationshipId" : "111",
-        "sourceId" : "11"
-      }, {
-        "description" : "Sends message",
-        "destinationId" : "5",
-        "id" : "117",
-        "linkedRelationshipId" : "115",
-        "sourceId" : "11",
-        "technology" : "via TLS Webhook"
-      } ],
-      "tags" : "Element,Software System"
-    } ]
+          {
+            "description": "Sends message",
+            "destinationId": "5",
+            "id": "117",
+            "linkedRelationshipId": "115",
+            "sourceId": "11",
+            "technology": "via TLS Webhook"
+          }
+        ],
+        "tags": "Element,Software System"
+      }
+    ]
   },
-  "name" : "Bichard",
-  "properties" : {
-    "structurizr.dsl" : "d29ya3NwYWNlICJCaWNoYXJkIiB7CiAgIWRvY3MgZG9jcwogICFhZHJzIGFkcnMKCiAgbW9kZWwgewogICAgcG9saWNlVXNlciA9IHBlcnNvbiAiUG9saWNlIFVzZXIiCgogICAgZ3JvdXAgIkhNQ1RTIiB7CiAgICAgIGNvbW1vblBsYXRmb3JtID0gc29mdHdhcmVTeXN0ZW0gIkNvbW1vbiBQbGF0Zm9ybSIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQogICAgICBsaWJyYSA9IHNvZnR3YXJlU3lzdGVtICJMaWJyYSIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQogICAgfQogICAgZ3JvdXAgIkhvbWUgT2ZmaWNlIC0gUG9saWNlIiB7CiAgICAgIHBuYyA9IHNvZnR3YXJlU3lzdGVtICJQb2xpY2UgTmF0aW9uYWwgQ29tcHV0ZXIiIHsKICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgIH0KICAgIH0KICAgIHNsYWNrID0gc29mdHdhcmVTeXN0ZW0gIlNsYWNrIiAiQW4gaW5zdGFudCBtZXNzYWdpbmcgc2VydmljZSB1c2VkIGJ5IE1hZGUgVGVjaCIgewogICAgICB1cmwgImh0dHBzOi8vc2xhY2suY29tLyIKICAgICAgdGFncyAiRXh0ZXJuYWwiCiAgICB9CiAgICAKICAgIHBhZ2VyRHV0eSA9IHNvZnR3YXJlU3lzdGVtICJQYWdlckR1dHkiICJBbiBhbGVydCB0b29sIGZvciBpbnN0YW5jZXMgd2hlbiB0aGUgc3lzdGVtcyB0cmlnZ2VyIGFuIGFsYXJtIiB7CiAgICAgIHVybCAiaHR0cHM6Ly93d3cucGFnZXJkdXR5LmNvbS8iCiAgICAgIHRhZ3MgIkV4dGVybmFsIgogICAgfQoKICAgIGNqc20gPSBzb2Z0d2FyZVN5c3RlbSAiQ0pTTSIgewogICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICB9CgogICAgYXdzID0gZ3JvdXAgIkFXUyIgewogICAgICBkeW5hbW9EQiA9ICBzb2Z0d2FyZVN5c3RlbSAiRHluYW1vREIiIHsKICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgIH0KICAgIH0KCiAgICBncm91cCAiQ0pTRSIgewogICAgICBxc29sdXRpb24gPSBzb2Z0d2FyZVN5c3RlbSAiUFNOIFByb3h5IiAiUS1Tb2x1dGlvbiIgIk5naW54IiB7CiAgICAgICAgdGFncyAiRXhpc3RpbmcgU3lzdGVtIgogICAgICB9CgogICAgICBleGlzcyA9IHNvZnR3YXJlU3lzdGVtICJFeElTUyIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQoKICAgICAgYmljaGFyZCA9IHNvZnR3YXJlU3lzdGVtICJCaWNoYXJkIiB7CiAgICAgICAgYmVhbmNvbm5lY3QgPSBjb250YWluZXIgIkJlYW5jb25uZWN0IgoKICAgICAgICBtZXNzYWdlVHJhbnNmZXIgPSBjb250YWluZXIgIk1lc3NhZ2UgVHJhbnNmZXIgTGFtYmRhIiB7CiAgICAgICAgICBpbmNvbWluZ1MzQnVja2V0ID0gY29tcG9uZW50ICJFeHRlcm5hbCBJbmNvbWluZyBTMyBidWNrZXQiIHsKICAgICAgICAgICAgdGFncyAiUXVldWUiCiAgICAgICAgICB9CgogICAgICAgICAgdHJhbnNmZXJQcm9jZXNzID0gY29tcG9uZW50ICJUcmFuc2ZlciBsYW1iZGEiIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgaW5jb21pbmdNZXNzYWdlSGFuZGxlciA9IGNvbnRhaW5lciAiSW5jb21pbmcgTWVzc2FnZSBIYW5kbGVyIFN0ZXAgRnVuY3Rpb24iIHsKICAgICAgICAgIGludGVybmFsSW5jb21pbmdTM0J1Y2tldCA9IGNvbXBvbmVudCAiSW50ZXJuYWwgSW5jb21pbmcgUzMgYnVja2V0IiAiQmxhaCBibGFoIiB7CiAgICAgICAgICAgIHRhZ3MgIlF1ZXVlIgogICAgICAgICAgfQoKICAgICAgICAgIHN0b3JlTWVzc2FnZSA9IGNvbXBvbmVudCAiU3RvcmUgTWVzc2FnZSIgewogICAgICAgICAgICB0YWdzICJMYW1iZGEiCiAgICAgICAgICB9CgogICAgICAgICAgc2VuZFRvQmljaGFyZCA9IGNvbXBvbmVudCAiU2VuZCB0byBCaWNoYXJkIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KCiAgICAgICAgICByZWNvcmRTZW50VG9CaWNoYXJkID0gY29tcG9uZW50ICJSZWNvcmQgU2VudCB0byBCaWNoYXJkIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIGV2ZW50TGFtYmRhID0gY29udGFpbmVyICJFdmVudCBMYW1iZGEiCgogICAgICAgIGV2ZW50SGFuZGxlciA9IGNvbnRhaW5lciAiRXZlbnQgSGFuZGxlciBTdGVwIEZ1bmN0aW9uIiB7CiAgICAgICAgICBldmVudFMzQnVja2V0ID0gY29tcG9uZW50ICJFdmVudCBTMyBidWNrZXQiIHsKICAgICAgICAgICAgdGFncyAiUXVldWUiCiAgICAgICAgICB9CgogICAgICAgICAgd3JpdGVUb0F1ZGl0TG9nID0gY29tcG9uZW50ICJXcml0ZSB0byBBdWRpdCBMb2ciIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgYWN0aXZlTVEgPSBjb250YWluZXIgIkFjdGl2ZSBNUSIgIiIgIkFjdGl2ZSBNUSIKCiAgICAgICAgbmdpbnhBdXRoUHJveHkgPSBjb250YWluZXIgIk5naW54IEF1dGggUHJveHkiICIiICJOZ2lueCIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1pbmZyYXN0cnVjdHVyZS1kb2NrZXItaW1hZ2VzL3RyZWUvbWFpbi9OZ2lueF9BdXRoX1Byb3h5IgogICAgICAgIH0KCiAgICAgICAgZGF0YWJhc2UgPSBjb250YWluZXIgIkJpY2hhcmQgRGF0YWJhc2UiICIiICJQb3N0Z3JlU1FMIiAiRGF0YWJhc2UiIHsKICAgICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgICB9CgogICAgICAgIGVtYWlsU3lzdGVtID0gY29udGFpbmVyICJFbWFpbCBTeXN0ZW0iICIiICJQb3N0Zml4IiB7CiAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9taW5pc3RyeW9manVzdGljZS9iaWNoYXJkNy1uZXh0LWluZnJhc3RydWN0dXJlLWRvY2tlci1pbWFnZXMvdHJlZS9tYWluL1Bvc3RmaXgiCiAgICAgICAgfQoKICAgICAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uID0gY29udGFpbmVyICJCaWNoYXJkIEphdmEgQXBwbGljYXRpb24iICIiICJKYXZhIEVFInsKICAgICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgICB9CgogICAgICAgIGJpY2hhcmRVc2VyU2VydmljZSA9IGNvbnRhaW5lciAiQmljaGFyZCBVc2VyIFNlcnZpY2UiICJBbiBhcHBsaWNhdGlvbiB0byBwcm92aWRlIHVzZXIgYXV0aGVudGljYXRpb24gYW5kIHVzZXIgbWFuYWdlbWVudCIgIk5leHQuanMsIFR5cGVTY3JpcHQgJiBSZWFjdCIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC11c2VyLXNlcnZpY2UiCiAgICAgICAgICB0YWdzICJXZWIgQnJvd3NlciIKICAgICAgICB9CgogICAgICAgIGF1ZGl0TG9nQXBpID0gY29udGFpbmVyICJBdWRpdCBMb2ciIHsKICAgICAgICAgIHRhZ3MgIkFQSSIKCiAgICAgICAgICBhdWRpdExvZ0FwaUdhdGV3YXkgPSBjb21wb25lbnQgIkF1ZGl0IExvZyBBUEkgR2F0ZXdheSIKICAgICAgICAgIGF1ZGl0TG9nQXBpTGFtYmRhID0gY29tcG9uZW50ICJBdWRpdCBMb2cgQVBJIExhbWJkYSIKICAgICAgICB9CgogICAgICAgIHN0YXRpY0ZpbGVTZXJ2aWNlID0gY29udGFpbmVyICJTdGF0aWMgRmlsZSBTZXJ2aWNlIgoKICAgICAgICByZXBvcnRpbmdTZXJ2aWNlID0gY29udGFpbmVyICJSZXBvcnRpbmciIHsKICAgICAgICAgIGF1dG9tYXRpb25SZXBvcnQgPSBjb21wb25lbnQgIkF1dG9tYXRpb24gUmVwb3J0IiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICAgIGNvbW1vblBsYXRmb3JtUmVwb3J0ID0gY29tcG9uZW50ICJDb21tb24gUGxhdGZvcm0gUmVwb3J0InsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgICAgTVBTUmVwb3J0ID0gY29tcG9uZW50ICJNUFMgUmVwb3J0InsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgICAgdG9wRXhjZXB0aW9uc1JlcG9ydCA9IGNvbXBvbmVudCAiVG9wIEV4Y2VwdGlvbnMgUmVwb3J0InsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgbW9uaXRvcmluZyA9IGNvbnRhaW5lciAiTW9uaXRvcmluZyIgewogICAgICAgICAgY2xvdWRXYXRjaExvZ3MgPSBjb21wb25lbnQgIkNsb3VkV2F0Y2ggTG9ncyIgIkxvZ3MgZ2F0aGVyZWQgZnJvbSBhbGwgQVdTIHNlcnZpY2VzIgogICAgICAgICAgY2xvdWRXYXRjaE1ldHJpY3MgPSBjb21wb25lbnQgIkNsb3VkV2F0Y2ggTWV0cmljcyIKICAgICAgICAgIHNsYWNrTGFtYmRhID0gY29tcG9uZW50ICJTbGFjayBtZXNzYWdlIGhhbmRsZXIiIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgICAgc25zID0gY29tcG9uZW50ICJTTlMiIHsKICAgICAgICAgICAgdGFncyAiU05TIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgIyMjIyMjIyBIeWJyaWQKICAgICAgICBwbmNBcGkgPSBjb250YWluZXIgIlBOQyBBUEkiIHsKICAgICAgICAgIHRhZ3MgIkFQSSIKICAgICAgICB9CgogICAgICAgIGJpY2hhcmRVSSA9IGNvbnRhaW5lciAiQmljaGFyZCBVSSIgIkEgbmV3IHdheSBvZiBpbnRlcmFjdGluZyB3aXRoIEJpY2hhcmQsIGNvbXBseWluZyB3aXRoIEdvdi51ayBzdGFuZGFyZHMiICJUeXBlU2NyaXB0ICYgUmVhY3QiICJXZWIgQnJvd3NlciIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlL3RyZWUvbWFpbi9wYWNrYWdlcy91aSIKICAgICAgICAgIHRhZ3MgIldlYiBCcm93c2VyIgogICAgICAgIH0KCiAgICAgICAgYmljaGFyZE5leHRDb3JlID0gY29udGFpbmVyICJCaWNoYXJkIE5leHQgQ29yZSIgIlRoZSBjb2RlIHRvIHJlcGxhY2UgdGhlIHByb2Nlc3NpbmcgbG9naWMgb2YgQmljaGFyZDciICJOZXh0LmpzLCBUeXBlU2NyaXB0IiB7CiAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9taW5pc3RyeW9manVzdGljZS9iaWNoYXJkNy1uZXh0LWNvcmUiCiAgICAgICAgfQoKICAgICAgICBjb25kdWN0b3IgPSBjb250YWluZXIgIkNvbmR1Y3RvciIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlL3RyZWUvbWFpbi9wYWNrYWdlcy9jb25kdWN0b3IiCgogICAgICAgICAgcGhhc2VPbmUgPSBjb21wb25lbnQgIlBoYXNlIDEgUXVldWUiICIiICJUeXBlU2NyaXB0IgogICAgICAgICAgcGhhc2VUd28gPSBjb21wb25lbnQgIlBoYXNlIDIgUXVldWUiICIiICJUeXBlU2NyaXB0IgogICAgICAgICAgcGhhc2VUaHJlZSA9IGNvbXBvbmVudCAiUGhhc2UgMyBRdWV1ZSIgIiIgIlR5cGVTY3JpcHQiCiAgICAgICAgfQoKICAgICAgICBiaWNoYXJkQVBJID0gY29udGFpbmVyICJCaWNoYXJkIEFQSSIgIkFuIEFQSSB0byByZW1vdmUgREIgYWN0aW9ucyBmcm9tIFVJIGFuZCB0byBiZSBBdWRpdCBMb2dzIiAiVHlwZVNjcmlwdCwgRmFzdGlmeSAmIFpvZCIgIkFQSSIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlL3RyZWUvbWFpbi9wYWNrYWdlcy9hcGkiCiAgICAgICAgICB0YWdzICJBUEkiCiAgICAgICAgfQogICAgICB9CiAgICB9CgogICAgIyBSZWxhdGlvbnNoaXBzIGJldHdlZW4gcGVvcGxlIGFuZCBzb2Z0d2FyZSBzeXN0ZW1zCiAgICBwb2xpY2VVc2VyIC0+IHFzb2x1dGlvbiAiVXNlcyIKICAgIHBvbGljZVVzZXIgLT4gcG5jICJVc2VzIgogICAgY2pzbSAtPiBwb2xpY2VVc2VyICJHZXRzIGVtYWlsIgoKICAgICMgUmVsYXRpb25zaGlwcyBiZXR3ZWVuIHNvZnR3YXJlIHN5c3RlbXMKICAgIGNvbW1vblBsYXRmb3JtIC0+IGV4aXNzICJTZW5kcyByZXN1bHQgb2YgYSBjb3VydCBjYXNlIgogICAgbGlicmEgLT4gZXhpc3MgIlNlbmRzIHJlc3VsdCBvZiBhIGNvdXJ0IGNhc2UiCiAgICBxc29sdXRpb24gLT4gcG5jICJVc2VzIgoKICAgIGJpY2hhcmRKYXZhQXBwbGljYXRpb24gLT4gYmVhbmNvbm5lY3QKCiAgICBiZWFuY29ubmVjdCAtPiBxc29sdXRpb24KCiAgICAjIFJlbGF0aW9uc2hpcHMgdG8vZnJvbSBjb21wb25lbnRzCiAgICBlbWFpbFN5c3RlbSAtPiBjanNtICJTZW5kcyB2ZXJpZmljYXRpb24gY29kZSIKICAgIGJpY2hhcmRVc2VyU2VydmljZSAtPiBlbWFpbFN5c3RlbSAiU2VuZHMgdmVyaWZpY2F0aW9uIGNvZGUiCgogICAgbmdpbnhBdXRoUHJveHkgLT4gYmljaGFyZEphdmFBcHBsaWNhdGlvbgogICAgbmdpbnhBdXRoUHJveHkgLT4gYmljaGFyZFVzZXJTZXJ2aWNlICJVc2VzIgogICAgbmdpbnhBdXRoUHJveHkgLT4gc3RhdGljRmlsZVNlcnZpY2UKCiAgICBiaWNoYXJkVXNlclNlcnZpY2UgLT4gZGF0YWJhc2UgIlJlYWRzIGZyb20gLyBXcml0ZXMgdG8iCiAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uIC0+IGRhdGFiYXNlICJSZWFkcyBmcm9tIC8gV3JpdGVzIHRvIgogICAgYmljaGFyZEFQSSAtPiBkYXRhYmFzZSAiUmVhZHMgZnJvbSAvIFdyaXRlcyB0byIKCiAgICBleGlzcyAtPiBpbmNvbWluZ1MzQnVja2V0CiAgICBpbmNvbWluZ1MzQnVja2V0IC0+IHRyYW5zZmVyUHJvY2VzcwogICAgdHJhbnNmZXJQcm9jZXNzIC0+IGludGVybmFsSW5jb21pbmdTM0J1Y2tldAogICAgaW50ZXJuYWxJbmNvbWluZ1MzQnVja2V0IC0+IHN0b3JlTWVzc2FnZQogICAgc3RvcmVNZXNzYWdlIC0+IGF1ZGl0TG9nQXBpCiAgICBzdG9yZU1lc3NhZ2UgLT4gc2VuZFRvQmljaGFyZAogICAgc2VuZFRvQmljaGFyZCAtPiBhY3RpdmVNUQogICAgc2VuZFRvQmljaGFyZCAtPiByZWNvcmRTZW50VG9CaWNoYXJkCiAgICByZWNvcmRTZW50VG9CaWNoYXJkIC0+IGF1ZGl0TG9nQXBpCgogICAgYWN0aXZlTVEgLT4gZXZlbnRMYW1iZGEKICAgIGV2ZW50TGFtYmRhIC0+IGV2ZW50UzNCdWNrZXQKICAgIGV2ZW50UzNCdWNrZXQgLT4gd3JpdGVUb0F1ZGl0TG9nCiAgICB3cml0ZVRvQXVkaXRMb2cgLT4gYXVkaXRMb2dBcGkKCiAgICBhY3RpdmVNUSAtPiBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uCiAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uIC0+IGFjdGl2ZU1RCgogICAgIyBBdWRpdCBMb2dnZXIKICAgIGF1ZGl0TG9nQXBpR2F0ZXdheSAtPiBhdWRpdExvZ0FwaUxhbWJkYQogICAgYXVkaXRMb2dBcGlMYW1iZGEgLT4gZHluYW1vREIKCiAgICAjIFJlcG9ydGluZwogICAgYXV0b21hdGlvblJlcG9ydCAtPiBhdWRpdExvZ0FwaQogICAgY29tbW9uUGxhdGZvcm1SZXBvcnQgLT4gYXVkaXRMb2dBcGkKICAgIGF1dG9tYXRpb25SZXBvcnQgLT4gc3RhdGljRmlsZVNlcnZpY2UKICAgIHRvcEV4Y2VwdGlvbnNSZXBvcnQgLT4gc3RhdGljRmlsZVNlcnZpY2UKICAgIGNvbW1vblBsYXRmb3JtUmVwb3J0IC0+IGVtYWlsU3lzdGVtCiAgICBNUFNSZXBvcnQgLT4gZGF0YWJhc2UKICAgIHRvcEV4Y2VwdGlvbnNSZXBvcnQgLT4gYXVkaXRMb2dBcGkKCiAgICAjIE1vbml0b3JpbmcKICAgIGNsb3VkV2F0Y2hNZXRyaWNzIC0+IHNucwoKICAgIHNucyAtPiBwYWdlckR1dHkgIlNlbmRzIG1lc3NhZ2UiCiAgICBzbnMgLT4gc2xhY2tMYW1iZGEgIlNlbmRzIG1lc3NhZ2UiCiAgICBzbGFja0xhbWJkYSAtPiBzbGFjayAiU2VuZHMgbWVzc2FnZSIgInZpYSBUTFMgV2ViaG9vayIKCiAgICAjIyMjIyMjIEh5YnJpZAogICAgbmdpbnhBdXRoUHJveHkgLT4gYmljaGFyZFVJCiAgICBiaWNoYXJkVUkgLT4gZGF0YWJhc2UKICAgIGJpY2hhcmRVSSAtPiBiaWNoYXJkQVBJCiAgICBiaWNoYXJkVUkgLT4gYXVkaXRMb2dBcGkKCiAgICBiaWNoYXJkQVBJIC0+IGR5bmFtb0RCCgogICAgYmljaGFyZE5leHRDb3JlIC0+IGF1ZGl0TG9nQXBpCiAgICBiaWNoYXJkTmV4dENvcmUgLT4gZGF0YWJhc2UgIlJlYWRzIGZyb20gYW5kIHdyaXRlcyB0byIKICAgIGJpY2hhcmROZXh0Q29yZSAtPiBwbmNBcGkKICAgIHBuY0FwaSAtPiBiZWFuY29ubmVjdAoKICAgIGNvbmR1Y3RvciAtPiBkYXRhYmFzZQogICAgbWVzc2FnZVRyYW5zZmVyIC0+IGNvbmR1Y3RvcgoKICAgICMgSW5zaWRlIGNvbmR1Y3RvcgogICAgcGhhc2VPbmUgLT4gcGhhc2VPbmUKICAgIHBoYXNlT25lIC0+IHBoYXNlVHdvCiAgICBwaGFzZVR3byAtPiBwaGFzZVR3bwogICAgcGhhc2VUd28gLT4gcGhhc2VUaHJlZQoKICAgIHBoYXNlT25lIC0+IGF1ZGl0TG9nQXBpCiAgICBwaGFzZVR3byAtPiBhdWRpdExvZ0FwaQogICAgcGhhc2VUaHJlZSAtPiBhdWRpdExvZ0FwaQoKICAgIHBoYXNlVGhyZWUgLT4gcG5jQXBpCiAgfQoKICB2aWV3cyB7CiAgICBzeXN0ZW1MYW5kc2NhcGUgIlN5c3RlbUxhbmRzY2FwZSIgewogICAgICBpbmNsdWRlICoKICAgICAgZXhjbHVkZSBzbGFjayBwYWdlckR1dHkgYXdzCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBzeXN0ZW1Db250ZXh0IGJpY2hhcmQgIkJpY2hhcmRTeXN0ZW1Db250ZXh0IiB7CiAgICAgIGluY2x1ZGUgKgogICAgICBleGNsdWRlIHNsYWNrIHBhZ2VyRHV0eSBhd3MKICAgICAgYXV0b0xheW91dCBscgogICAgfQoKICAgIGNvbnRhaW5lciBiaWNoYXJkICJPbGRCaWNoYXJkIiB7CiAgICAgIGluY2x1ZGUgKgogICAgICBleGNsdWRlIHNsYWNrIHBhZ2VyRHV0eSBiaWNoYXJkVUkgYmljaGFyZE5leHRDb3JlIGNvbmR1Y3RvciBwbmNBcGkgYmljaGFyZEFQSQogICAgICBhdXRvTGF5b3V0CiAgICAgIHRpdGxlICJPbGQgQmljaGFyZCIKICAgIH0KCiAgICBjb250YWluZXIgYmljaGFyZCAiSHlicmlkQmljaGFyZCIgewogICAgICBpbmNsdWRlICoKICAgICAgZXhjbHVkZSBzbGFjayBwYWdlckR1dHkgYWN0aXZlTVEgZXZlbnRIYW5kbGVyIGV2ZW50TGFtYmRhIGluY29taW5nTWVzc2FnZUhhbmRsZXIgYmljaGFyZE5leHRDb3JlCiAgICAgIHRpdGxlICJIeWJyaWQgQmljaGFyZCIKICAgIH0KCiAgICBjb21wb25lbnQgY29uZHVjdG9yIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgaW5jb21pbmdNZXNzYWdlSGFuZGxlciB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgY29tcG9uZW50IG1lc3NhZ2VUcmFuc2ZlciB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0CiAgICB9CgogICAgY29tcG9uZW50IGF1ZGl0TG9nQXBpIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgZXZlbnRIYW5kbGVyIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgcmVwb3J0aW5nU2VydmljZSB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgY29tcG9uZW50IG1vbml0b3JpbmcgewogICAgICBpbmNsdWRlICoKICAgICAgYXV0b0xheW91dCBscgogICAgfQoKICAgIHRoZW1lIGRlZmF1bHQKCiAgICBzdHlsZXMgewogICAgICBlbGVtZW50ICJXZWIgQnJvd3NlciIgewogICAgICAgIHNoYXBlIFdlYkJyb3dzZXIKICAgICAgfQoKICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICBzaGFwZSBDeWxpbmRlcgogICAgICB9CgogICAgICBlbGVtZW50ICJBUEkiIHsKICAgICAgICBzaGFwZSBoZXhhZ29uCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIlF1ZXVlIiB7CiAgICAgICAgc2hhcGUgIlBpcGUiCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIkxhbWJkYSIgewogICAgICAgIHNoYXBlICJEaWFtb25kIgogICAgICB9CgogICAgICBlbGVtZW50ICJTTlMiIHsKICAgICAgICBzaGFwZSBQaXBlCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIkV4dGVybmFsIiB7CiAgICAgICAgYmFja2dyb3VuZCAjOWI3NmZmCiAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICB9CgogICAgICBlbGVtZW50ICJFeGlzdGluZyBTeXN0ZW0iIHsKICAgICAgICBiYWNrZ3JvdW5kICM5OTk5OTkKICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgIH0KICAgIH0KICB9Cn0="
+  "name": "Bichard",
+  "properties": {
+    "structurizr.dsl": "d29ya3NwYWNlICJCaWNoYXJkIiB7CiAgIWRvY3MgZG9jcwogICFhZHJzIGFkcnMKCiAgbW9kZWwgewogICAgcG9saWNlVXNlciA9IHBlcnNvbiAiUG9saWNlIFVzZXIiCgogICAgZ3JvdXAgIkhNQ1RTIiB7CiAgICAgIGNvbW1vblBsYXRmb3JtID0gc29mdHdhcmVTeXN0ZW0gIkNvbW1vbiBQbGF0Zm9ybSIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQogICAgICBsaWJyYSA9IHNvZnR3YXJlU3lzdGVtICJMaWJyYSIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQogICAgfQogICAgZ3JvdXAgIkhvbWUgT2ZmaWNlIC0gUG9saWNlIiB7CiAgICAgIHBuYyA9IHNvZnR3YXJlU3lzdGVtICJQb2xpY2UgTmF0aW9uYWwgQ29tcHV0ZXIiIHsKICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgIH0KICAgIH0KICAgIHNsYWNrID0gc29mdHdhcmVTeXN0ZW0gIlNsYWNrIiAiQW4gaW5zdGFudCBtZXNzYWdpbmcgc2VydmljZSB1c2VkIGJ5IE1hZGUgVGVjaCIgewogICAgICB1cmwgImh0dHBzOi8vc2xhY2suY29tLyIKICAgICAgdGFncyAiRXh0ZXJuYWwiCiAgICB9CiAgICAKICAgIHBhZ2VyRHV0eSA9IHNvZnR3YXJlU3lzdGVtICJQYWdlckR1dHkiICJBbiBhbGVydCB0b29sIGZvciBpbnN0YW5jZXMgd2hlbiB0aGUgc3lzdGVtcyB0cmlnZ2VyIGFuIGFsYXJtIiB7CiAgICAgIHVybCAiaHR0cHM6Ly93d3cucGFnZXJkdXR5LmNvbS8iCiAgICAgIHRhZ3MgIkV4dGVybmFsIgogICAgfQoKICAgIGNqc20gPSBzb2Z0d2FyZVN5c3RlbSAiQ0pTTSIgewogICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICB9CgogICAgYXdzID0gZ3JvdXAgIkFXUyIgewogICAgICBkeW5hbW9EQiA9ICBzb2Z0d2FyZVN5c3RlbSAiRHluYW1vREIiIHsKICAgICAgICB0YWdzICJFeGlzdGluZyBTeXN0ZW0iCiAgICAgIH0KICAgIH0KCiAgICBncm91cCAiQ0pTRSIgewogICAgICBxc29sdXRpb24gPSBzb2Z0d2FyZVN5c3RlbSAiUFNOIFByb3h5IiAiUS1Tb2x1dGlvbiIgIk5naW54IiB7CiAgICAgICAgdGFncyAiRXhpc3RpbmcgU3lzdGVtIgogICAgICB9CgogICAgICBleGlzcyA9IHNvZnR3YXJlU3lzdGVtICJFeElTUyIgewogICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgfQoKICAgICAgYmljaGFyZCA9IHNvZnR3YXJlU3lzdGVtICJCaWNoYXJkIiB7CiAgICAgICAgYmVhbmNvbm5lY3QgPSBjb250YWluZXIgIkJlYW5jb25uZWN0IgoKICAgICAgICBtZXNzYWdlVHJhbnNmZXIgPSBjb250YWluZXIgIk1lc3NhZ2UgVHJhbnNmZXIgTGFtYmRhIiB7CiAgICAgICAgICBpbmNvbWluZ1MzQnVja2V0ID0gY29tcG9uZW50ICJFeHRlcm5hbCBJbmNvbWluZyBTMyBidWNrZXQiIHsKICAgICAgICAgICAgdGFncyAiUXVldWUiCiAgICAgICAgICB9CgogICAgICAgICAgdHJhbnNmZXJQcm9jZXNzID0gY29tcG9uZW50ICJUcmFuc2ZlciBsYW1iZGEiIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgaW5jb21pbmdNZXNzYWdlSGFuZGxlciA9IGNvbnRhaW5lciAiSW5jb21pbmcgTWVzc2FnZSBIYW5kbGVyIFN0ZXAgRnVuY3Rpb24iIHsKICAgICAgICAgIGludGVybmFsSW5jb21pbmdTM0J1Y2tldCA9IGNvbXBvbmVudCAiSW50ZXJuYWwgSW5jb21pbmcgUzMgYnVja2V0IiAiQmxhaCBibGFoIiB7CiAgICAgICAgICAgIHRhZ3MgIlF1ZXVlIgogICAgICAgICAgfQoKICAgICAgICAgIHN0b3JlTWVzc2FnZSA9IGNvbXBvbmVudCAiU3RvcmUgTWVzc2FnZSIgewogICAgICAgICAgICB0YWdzICJMYW1iZGEiCiAgICAgICAgICB9CgogICAgICAgICAgc2VuZFRvQmljaGFyZCA9IGNvbXBvbmVudCAiU2VuZCB0byBCaWNoYXJkIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KCiAgICAgICAgICByZWNvcmRTZW50VG9CaWNoYXJkID0gY29tcG9uZW50ICJSZWNvcmQgU2VudCB0byBCaWNoYXJkIiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIGV2ZW50TGFtYmRhID0gY29udGFpbmVyICJFdmVudCBMYW1iZGEiCgogICAgICAgIGV2ZW50SGFuZGxlciA9IGNvbnRhaW5lciAiRXZlbnQgSGFuZGxlciBTdGVwIEZ1bmN0aW9uIiB7CiAgICAgICAgICBldmVudFMzQnVja2V0ID0gY29tcG9uZW50ICJFdmVudCBTMyBidWNrZXQiIHsKICAgICAgICAgICAgdGFncyAiUXVldWUiCiAgICAgICAgICB9CgogICAgICAgICAgd3JpdGVUb0F1ZGl0TG9nID0gY29tcG9uZW50ICJXcml0ZSB0byBBdWRpdCBMb2ciIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgYWN0aXZlTVEgPSBjb250YWluZXIgIkFjdGl2ZSBNUSIgIiIgIkFjdGl2ZSBNUSIKCiAgICAgICAgbmdpbnhBdXRoUHJveHkgPSBjb250YWluZXIgIk5naW54IEF1dGggUHJveHkiICIiICJOZ2lueCIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1pbmZyYXN0cnVjdHVyZS1kb2NrZXItaW1hZ2VzL3RyZWUvbWFpbi9OZ2lueF9BdXRoX1Byb3h5IgogICAgICAgIH0KCiAgICAgICAgZGF0YWJhc2UgPSBjb250YWluZXIgIkJpY2hhcmQgRGF0YWJhc2UiICIiICJQb3N0Z3JlU1FMIiAiRGF0YWJhc2UiIHsKICAgICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgICB9CgogICAgICAgIGVtYWlsU3lzdGVtID0gY29udGFpbmVyICJFbWFpbCBTeXN0ZW0iICIiICJQb3N0Zml4IiB7CiAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9taW5pc3RyeW9manVzdGljZS9iaWNoYXJkNy1uZXh0LWluZnJhc3RydWN0dXJlLWRvY2tlci1pbWFnZXMvdHJlZS9tYWluL1Bvc3RmaXgiCiAgICAgICAgfQoKICAgICAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uID0gY29udGFpbmVyICJCaWNoYXJkIEphdmEgQXBwbGljYXRpb24iICIiICJKYXZhIEVFInsKICAgICAgICAgIHRhZ3MgIkV4aXN0aW5nIFN5c3RlbSIKICAgICAgICB9CgogICAgICAgIGJpY2hhcmRVc2VyU2VydmljZSA9IGNvbnRhaW5lciAiQmljaGFyZCBVc2VyIFNlcnZpY2UiICJBbiBhcHBsaWNhdGlvbiB0byBwcm92aWRlIHVzZXIgYXV0aGVudGljYXRpb24gYW5kIHVzZXIgbWFuYWdlbWVudCIgIk5leHQuanMsIFR5cGVTY3JpcHQgJiBSZWFjdCIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC11c2VyLXNlcnZpY2UiCiAgICAgICAgICB0YWdzICJXZWIgQnJvd3NlciIKICAgICAgICB9CgogICAgICAgIGF1ZGl0TG9nQXBpID0gY29udGFpbmVyICJBdWRpdCBMb2ciIHsKICAgICAgICAgIHRhZ3MgIkFQSSIKCiAgICAgICAgICBhdWRpdExvZ0FwaUdhdGV3YXkgPSBjb21wb25lbnQgIkF1ZGl0IExvZyBBUEkgR2F0ZXdheSIKICAgICAgICAgIGF1ZGl0TG9nQXBpTGFtYmRhID0gY29tcG9uZW50ICJBdWRpdCBMb2cgQVBJIExhbWJkYSIKICAgICAgICB9CgogICAgICAgIHN0YXRpY0ZpbGVTZXJ2aWNlID0gY29udGFpbmVyICJTdGF0aWMgRmlsZSBTZXJ2aWNlIgoKICAgICAgICByZXBvcnRpbmdTZXJ2aWNlID0gY29udGFpbmVyICJSZXBvcnRpbmciIHsKICAgICAgICAgIGF1dG9tYXRpb25SZXBvcnQgPSBjb21wb25lbnQgIkF1dG9tYXRpb24gUmVwb3J0IiB7CiAgICAgICAgICAgIHRhZ3MgIkxhbWJkYSIKICAgICAgICAgIH0KICAgICAgICAgIGNvbW1vblBsYXRmb3JtUmVwb3J0ID0gY29tcG9uZW50ICJDb21tb24gUGxhdGZvcm0gUmVwb3J0InsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgICAgTVBTUmVwb3J0ID0gY29tcG9uZW50ICJNUFMgUmVwb3J0InsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgICAgdG9wRXhjZXB0aW9uc1JlcG9ydCA9IGNvbXBvbmVudCAiVG9wIEV4Y2VwdGlvbnMgUmVwb3J0InsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgbW9uaXRvcmluZyA9IGNvbnRhaW5lciAiTW9uaXRvcmluZyIgewogICAgICAgICAgY2xvdWRXYXRjaExvZ3MgPSBjb21wb25lbnQgIkNsb3VkV2F0Y2ggTG9ncyIgIkxvZ3MgZ2F0aGVyZWQgZnJvbSBhbGwgQVdTIHNlcnZpY2VzIgogICAgICAgICAgY2xvdWRXYXRjaE1ldHJpY3MgPSBjb21wb25lbnQgIkNsb3VkV2F0Y2ggTWV0cmljcyIKICAgICAgICAgIHNsYWNrTGFtYmRhID0gY29tcG9uZW50ICJTbGFjayBtZXNzYWdlIGhhbmRsZXIiIHsKICAgICAgICAgICAgdGFncyAiTGFtYmRhIgogICAgICAgICAgfQogICAgICAgICAgc25zID0gY29tcG9uZW50ICJTTlMiIHsKICAgICAgICAgICAgdGFncyAiU05TIgogICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgIyMjIyMjIyBIeWJyaWQKICAgICAgICBwbmNBcGkgPSBjb250YWluZXIgIlBOQyBBUEkiIHsKICAgICAgICAgIHRhZ3MgIkFQSSIKICAgICAgICB9CgogICAgICAgIGJpY2hhcmRVSSA9IGNvbnRhaW5lciAiQmljaGFyZCBVSSIgIkEgbmV3IHdheSBvZiBpbnRlcmFjdGluZyB3aXRoIEJpY2hhcmQsIGNvbXBseWluZyB3aXRoIEdvdi51ayBzdGFuZGFyZHMiICJUeXBlU2NyaXB0ICYgUmVhY3QiICJXZWIgQnJvd3NlciIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlL3RyZWUvbWFpbi9wYWNrYWdlcy91aSIKICAgICAgICAgIHRhZ3MgIldlYiBCcm93c2VyIgogICAgICAgIH0KCiAgICAgICAgYmljaGFyZE5leHRDb3JlID0gY29udGFpbmVyICJCaWNoYXJkIE5leHQgQ29yZSIgIlRoZSBjb2RlIHRvIHJlcGxhY2UgdGhlIHByb2Nlc3NpbmcgbG9naWMgb2YgQmljaGFyZDciICJOZXh0LmpzLCBUeXBlU2NyaXB0IiB7CiAgICAgICAgICB1cmwgImh0dHBzOi8vZ2l0aHViLmNvbS9taW5pc3RyeW9manVzdGljZS9iaWNoYXJkNy1uZXh0LWNvcmUiCiAgICAgICAgfQoKICAgICAgICBjb25kdWN0b3IgPSBjb250YWluZXIgIkNvbmR1Y3RvciIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlL3RyZWUvbWFpbi9wYWNrYWdlcy9jb25kdWN0b3IiCgogICAgICAgICAgcGhhc2VPbmUgPSBjb21wb25lbnQgIlBoYXNlIDEgUXVldWUiICIiICJUeXBlU2NyaXB0IgogICAgICAgICAgcGhhc2VUd28gPSBjb21wb25lbnQgIlBoYXNlIDIgUXVldWUiICIiICJUeXBlU2NyaXB0IgogICAgICAgICAgcGhhc2VUaHJlZSA9IGNvbXBvbmVudCAiUGhhc2UgMyBRdWV1ZSIgIiIgIlR5cGVTY3JpcHQiCiAgICAgICAgfQoKICAgICAgICBiaWNoYXJkQVBJID0gY29udGFpbmVyICJCaWNoYXJkIEFQSSIgIkFuIEFQSSB0byByZW1vdmUgREIgYWN0aW9ucyBmcm9tIFVJIGFuZCB0byBiZSBBdWRpdCBMb2dzIiAiVHlwZVNjcmlwdCwgRmFzdGlmeSAmIFpvZCIgIkFQSSIgewogICAgICAgICAgdXJsICJodHRwczovL2dpdGh1Yi5jb20vbWluaXN0cnlvZmp1c3RpY2UvYmljaGFyZDctbmV4dC1jb3JlL3RyZWUvbWFpbi9wYWNrYWdlcy9hcGkiCiAgICAgICAgICB0YWdzICJBUEkiCiAgICAgICAgfQogICAgICB9CiAgICB9CgogICAgIyBSZWxhdGlvbnNoaXBzIGJldHdlZW4gcGVvcGxlIGFuZCBzb2Z0d2FyZSBzeXN0ZW1zCiAgICBwb2xpY2VVc2VyIC0+IHFzb2x1dGlvbiAiVXNlcyIKICAgIHBvbGljZVVzZXIgLT4gcG5jICJVc2VzIgogICAgY2pzbSAtPiBwb2xpY2VVc2VyICJHZXRzIGVtYWlsIgoKICAgICMgUmVsYXRpb25zaGlwcyBiZXR3ZWVuIHNvZnR3YXJlIHN5c3RlbXMKICAgIGNvbW1vblBsYXRmb3JtIC0+IGV4aXNzICJTZW5kcyByZXN1bHQgb2YgYSBjb3VydCBjYXNlIgogICAgbGlicmEgLT4gZXhpc3MgIlNlbmRzIHJlc3VsdCBvZiBhIGNvdXJ0IGNhc2UiCiAgICBxc29sdXRpb24gLT4gcG5jICJVc2VzIgoKICAgIGJpY2hhcmRKYXZhQXBwbGljYXRpb24gLT4gYmVhbmNvbm5lY3QKCiAgICBiZWFuY29ubmVjdCAtPiBxc29sdXRpb24KCiAgICAjIFJlbGF0aW9uc2hpcHMgdG8vZnJvbSBjb21wb25lbnRzCiAgICBlbWFpbFN5c3RlbSAtPiBjanNtICJTZW5kcyB2ZXJpZmljYXRpb24gY29kZSIKICAgIGJpY2hhcmRVc2VyU2VydmljZSAtPiBlbWFpbFN5c3RlbSAiU2VuZHMgdmVyaWZpY2F0aW9uIGNvZGUiCgogICAgbmdpbnhBdXRoUHJveHkgLT4gYmljaGFyZEphdmFBcHBsaWNhdGlvbgogICAgbmdpbnhBdXRoUHJveHkgLT4gYmljaGFyZFVzZXJTZXJ2aWNlICJVc2VzIgogICAgbmdpbnhBdXRoUHJveHkgLT4gc3RhdGljRmlsZVNlcnZpY2UKCiAgICBiaWNoYXJkVXNlclNlcnZpY2UgLT4gZGF0YWJhc2UgIlJlYWRzIGZyb20gLyBXcml0ZXMgdG8iCiAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uIC0+IGRhdGFiYXNlICJSZWFkcyBmcm9tIC8gV3JpdGVzIHRvIgogICAgYmljaGFyZEFQSSAtPiBkYXRhYmFzZSAiUmVhZHMgZnJvbSAvIFdyaXRlcyB0byIKCiAgICBleGlzcyAtPiBpbmNvbWluZ1MzQnVja2V0CiAgICBpbmNvbWluZ1MzQnVja2V0IC0+IHRyYW5zZmVyUHJvY2VzcwogICAgdHJhbnNmZXJQcm9jZXNzIC0+IGludGVybmFsSW5jb21pbmdTM0J1Y2tldAogICAgaW50ZXJuYWxJbmNvbWluZ1MzQnVja2V0IC0+IHN0b3JlTWVzc2FnZQogICAgc3RvcmVNZXNzYWdlIC0+IGF1ZGl0TG9nQXBpCiAgICBzdG9yZU1lc3NhZ2UgLT4gc2VuZFRvQmljaGFyZAogICAgc2VuZFRvQmljaGFyZCAtPiBhY3RpdmVNUQogICAgc2VuZFRvQmljaGFyZCAtPiByZWNvcmRTZW50VG9CaWNoYXJkCiAgICByZWNvcmRTZW50VG9CaWNoYXJkIC0+IGF1ZGl0TG9nQXBpCgogICAgYWN0aXZlTVEgLT4gZXZlbnRMYW1iZGEKICAgIGV2ZW50TGFtYmRhIC0+IGV2ZW50UzNCdWNrZXQKICAgIGV2ZW50UzNCdWNrZXQgLT4gd3JpdGVUb0F1ZGl0TG9nCiAgICB3cml0ZVRvQXVkaXRMb2cgLT4gYXVkaXRMb2dBcGkKCiAgICBhY3RpdmVNUSAtPiBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uCiAgICBiaWNoYXJkSmF2YUFwcGxpY2F0aW9uIC0+IGFjdGl2ZU1RCgogICAgIyBBdWRpdCBMb2dnZXIKICAgIGF1ZGl0TG9nQXBpR2F0ZXdheSAtPiBhdWRpdExvZ0FwaUxhbWJkYQogICAgYXVkaXRMb2dBcGlMYW1iZGEgLT4gZHluYW1vREIKCiAgICAjIFJlcG9ydGluZwogICAgYXV0b21hdGlvblJlcG9ydCAtPiBhdWRpdExvZ0FwaQogICAgY29tbW9uUGxhdGZvcm1SZXBvcnQgLT4gYXVkaXRMb2dBcGkKICAgIGF1dG9tYXRpb25SZXBvcnQgLT4gc3RhdGljRmlsZVNlcnZpY2UKICAgIHRvcEV4Y2VwdGlvbnNSZXBvcnQgLT4gc3RhdGljRmlsZVNlcnZpY2UKICAgIGNvbW1vblBsYXRmb3JtUmVwb3J0IC0+IGVtYWlsU3lzdGVtCiAgICBNUFNSZXBvcnQgLT4gZGF0YWJhc2UKICAgIHRvcEV4Y2VwdGlvbnNSZXBvcnQgLT4gYXVkaXRMb2dBcGkKCiAgICAjIE1vbml0b3JpbmcKICAgIGNsb3VkV2F0Y2hNZXRyaWNzIC0+IHNucwoKICAgIHNucyAtPiBwYWdlckR1dHkgIlNlbmRzIG1lc3NhZ2UiCiAgICBzbnMgLT4gc2xhY2tMYW1iZGEgIlNlbmRzIG1lc3NhZ2UiCiAgICBzbGFja0xhbWJkYSAtPiBzbGFjayAiU2VuZHMgbWVzc2FnZSIgInZpYSBUTFMgV2ViaG9vayIKCiAgICAjIyMjIyMjIEh5YnJpZAogICAgbmdpbnhBdXRoUHJveHkgLT4gYmljaGFyZFVJCiAgICBiaWNoYXJkVUkgLT4gZGF0YWJhc2UKICAgIGJpY2hhcmRVSSAtPiBiaWNoYXJkQVBJCiAgICBiaWNoYXJkVUkgLT4gYXVkaXRMb2dBcGkKCiAgICBiaWNoYXJkQVBJIC0+IGR5bmFtb0RCCgogICAgYmljaGFyZE5leHRDb3JlIC0+IGF1ZGl0TG9nQXBpCiAgICBiaWNoYXJkTmV4dENvcmUgLT4gZGF0YWJhc2UgIlJlYWRzIGZyb20gYW5kIHdyaXRlcyB0byIKICAgIGJpY2hhcmROZXh0Q29yZSAtPiBwbmNBcGkKICAgIHBuY0FwaSAtPiBiZWFuY29ubmVjdAoKICAgIGNvbmR1Y3RvciAtPiBkYXRhYmFzZQogICAgbWVzc2FnZVRyYW5zZmVyIC0+IGNvbmR1Y3RvcgoKICAgICMgSW5zaWRlIGNvbmR1Y3RvcgogICAgcGhhc2VPbmUgLT4gcGhhc2VPbmUKICAgIHBoYXNlT25lIC0+IHBoYXNlVHdvCiAgICBwaGFzZVR3byAtPiBwaGFzZVR3bwogICAgcGhhc2VUd28gLT4gcGhhc2VUaHJlZQoKICAgIHBoYXNlT25lIC0+IGF1ZGl0TG9nQXBpCiAgICBwaGFzZVR3byAtPiBhdWRpdExvZ0FwaQogICAgcGhhc2VUaHJlZSAtPiBhdWRpdExvZ0FwaQoKICAgIHBoYXNlVGhyZWUgLT4gcG5jQXBpCiAgfQoKICB2aWV3cyB7CiAgICBzeXN0ZW1MYW5kc2NhcGUgIlN5c3RlbUxhbmRzY2FwZSIgewogICAgICBpbmNsdWRlICoKICAgICAgZXhjbHVkZSBzbGFjayBwYWdlckR1dHkgYXdzCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBzeXN0ZW1Db250ZXh0IGJpY2hhcmQgIkJpY2hhcmRTeXN0ZW1Db250ZXh0IiB7CiAgICAgIGluY2x1ZGUgKgogICAgICBleGNsdWRlIHNsYWNrIHBhZ2VyRHV0eSBhd3MKICAgICAgYXV0b0xheW91dCBscgogICAgfQoKICAgIGNvbnRhaW5lciBiaWNoYXJkICJPbGRCaWNoYXJkIiB7CiAgICAgIGluY2x1ZGUgKgogICAgICBleGNsdWRlIHNsYWNrIHBhZ2VyRHV0eSBiaWNoYXJkVUkgYmljaGFyZE5leHRDb3JlIGNvbmR1Y3RvciBwbmNBcGkgYmljaGFyZEFQSQogICAgICBhdXRvTGF5b3V0CiAgICAgIHRpdGxlICJPbGQgQmljaGFyZCIKICAgIH0KCiAgICBjb250YWluZXIgYmljaGFyZCAiSHlicmlkQmljaGFyZCIgewogICAgICBpbmNsdWRlICoKICAgICAgZXhjbHVkZSBzbGFjayBwYWdlckR1dHkgYWN0aXZlTVEgZXZlbnRIYW5kbGVyIGV2ZW50TGFtYmRhIGluY29taW5nTWVzc2FnZUhhbmRsZXIgYmljaGFyZE5leHRDb3JlCiAgICAgIHRpdGxlICJIeWJyaWQgQmljaGFyZCIKICAgIH0KCiAgICBjb21wb25lbnQgY29uZHVjdG9yIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgaW5jb21pbmdNZXNzYWdlSGFuZGxlciB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgY29tcG9uZW50IG1lc3NhZ2VUcmFuc2ZlciB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0CiAgICB9CgogICAgY29tcG9uZW50IGF1ZGl0TG9nQXBpIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgZXZlbnRIYW5kbGVyIHsKICAgICAgaW5jbHVkZSAqCiAgICAgIGF1dG9MYXlvdXQgbHIKICAgIH0KCiAgICBjb21wb25lbnQgcmVwb3J0aW5nU2VydmljZSB7CiAgICAgIGluY2x1ZGUgKgogICAgICBhdXRvTGF5b3V0IGxyCiAgICB9CgogICAgY29tcG9uZW50IG1vbml0b3JpbmcgewogICAgICBpbmNsdWRlICoKICAgICAgYXV0b0xheW91dCBscgogICAgfQoKICAgIHRoZW1lIGRlZmF1bHQKCiAgICBzdHlsZXMgewogICAgICBlbGVtZW50ICJXZWIgQnJvd3NlciIgewogICAgICAgIHNoYXBlIFdlYkJyb3dzZXIKICAgICAgfQoKICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICBzaGFwZSBDeWxpbmRlcgogICAgICB9CgogICAgICBlbGVtZW50ICJBUEkiIHsKICAgICAgICBzaGFwZSBoZXhhZ29uCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIlF1ZXVlIiB7CiAgICAgICAgc2hhcGUgIlBpcGUiCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIkxhbWJkYSIgewogICAgICAgIHNoYXBlICJEaWFtb25kIgogICAgICB9CgogICAgICBlbGVtZW50ICJTTlMiIHsKICAgICAgICBzaGFwZSBQaXBlCiAgICAgIH0KCiAgICAgIGVsZW1lbnQgIkV4dGVybmFsIiB7CiAgICAgICAgYmFja2dyb3VuZCAjOWI3NmZmCiAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICB9CgogICAgICBlbGVtZW50ICJFeGlzdGluZyBTeXN0ZW0iIHsKICAgICAgICBiYWNrZ3JvdW5kICM5OTk5OTkKICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgIH0KICAgIH0KICB9Cn0="
   },
-  "views" : {
-    "componentViews" : [ {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
+  "views": {
+    "componentViews": [
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "48",
+        "elements": [
+          {
+            "id": "31",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "45",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "49",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "50",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "51",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-001",
+        "order": 5,
+        "relationships": [
+          {
+            "id": "129"
+          },
+          {
+            "id": "130"
+          },
+          {
+            "id": "131"
+          },
+          {
+            "id": "132"
+          },
+          {
+            "id": "133"
+          },
+          {
+            "id": "135"
+          },
+          {
+            "id": "136"
+          },
+          {
+            "id": "137"
+          }
+        ]
       },
-      "containerId" : "48",
-      "elements" : [ {
-        "id" : "31",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "45",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "49",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "50",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "51",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-001",
-      "order" : 5,
-      "relationships" : [ {
-        "id" : "129"
-      }, {
-        "id" : "130"
-      }, {
-        "id" : "131"
-      }, {
-        "id" : "132"
-      }, {
-        "id" : "133"
-      }, {
-        "id" : "135"
-      }, {
-        "id" : "136"
-      }, {
-        "id" : "137"
-      } ]
-    }, {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "16",
+        "elements": [
+          {
+            "id": "13",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "17",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "18",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "19",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "20",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "25",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "31",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-002",
+        "order": 6,
+        "relationships": [
+          {
+            "id": "77"
+          },
+          {
+            "id": "79"
+          },
+          {
+            "id": "80"
+          },
+          {
+            "id": "82"
+          },
+          {
+            "id": "83"
+          },
+          {
+            "id": "85"
+          },
+          {
+            "id": "86"
+          }
+        ]
       },
-      "containerId" : "16",
-      "elements" : [ {
-        "id" : "13",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "17",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "18",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "19",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "20",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "25",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "31",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-002",
-      "order" : 6,
-      "relationships" : [ {
-        "id" : "77"
-      }, {
-        "id" : "79"
-      }, {
-        "id" : "80"
-      }, {
-        "id" : "82"
-      }, {
-        "id" : "83"
-      }, {
-        "id" : "85"
-      }, {
-        "id" : "86"
-      } ]
-    }, {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "TopBottom",
-        "rankSeparation" : 300,
-        "vertices" : false
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "TopBottom",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "13",
+        "elements": [
+          {
+            "id": "10",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "14",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "15",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "16",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-003",
+        "order": 7,
+        "relationships": [
+          {
+            "id": "71"
+          },
+          {
+            "id": "74"
+          },
+          {
+            "id": "76"
+          }
+        ]
       },
-      "containerId" : "13",
-      "elements" : [ {
-        "id" : "10",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "14",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "15",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "16",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-003",
-      "order" : 7,
-      "relationships" : [ {
-        "id" : "71"
-      }, {
-        "id" : "74"
-      }, {
-        "id" : "76"
-      } ]
-    }, {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "31",
+        "elements": [
+          {
+            "id": "8",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "32",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "33",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-004",
+        "order": 8,
+        "relationships": [
+          {
+            "id": "95"
+          },
+          {
+            "id": "96"
+          }
+        ]
       },
-      "containerId" : "31",
-      "elements" : [ {
-        "id" : "8",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "32",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "33",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-004",
-      "order" : 8,
-      "relationships" : [ {
-        "id" : "95"
-      }, {
-        "id" : "96"
-      } ]
-    }, {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "22",
+        "elements": [
+          {
+            "id": "21",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "23",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "24",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "31",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-005",
+        "order": 9,
+        "relationships": [
+          {
+            "id": "88"
+          },
+          {
+            "id": "90"
+          },
+          {
+            "id": "91"
+          }
+        ]
       },
-      "containerId" : "22",
-      "elements" : [ {
-        "id" : "21",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "23",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "24",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "31",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-005",
-      "order" : 9,
-      "relationships" : [ {
-        "id" : "88"
-      }, {
-        "id" : "90"
-      }, {
-        "id" : "91"
-      } ]
-    }, {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "35",
+        "elements": [
+          {
+            "id": "27",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "28",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "31",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "34",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "36",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "37",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "38",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "39",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-006",
+        "order": 10,
+        "relationships": [
+          {
+            "id": "101"
+          },
+          {
+            "id": "102"
+          },
+          {
+            "id": "104"
+          },
+          {
+            "id": "105"
+          },
+          {
+            "id": "107"
+          },
+          {
+            "id": "109"
+          },
+          {
+            "id": "99"
+          }
+        ]
       },
-      "containerId" : "35",
-      "elements" : [ {
-        "id" : "27",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "28",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "31",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "34",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "36",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "37",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "38",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "39",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-006",
-      "order" : 10,
-      "relationships" : [ {
-        "id" : "101"
-      }, {
-        "id" : "102"
-      }, {
-        "id" : "104"
-      }, {
-        "id" : "105"
-      }, {
-        "id" : "107"
-      }, {
-        "id" : "109"
-      }, {
-        "id" : "99"
-      } ]
-    }, {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "containerId": "40",
+        "elements": [
+          {
+            "id": "5",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "6",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "41",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "42",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "43",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "44",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalContainerBoundariesVisible": false,
+        "generatedKey": true,
+        "key": "Component-007",
+        "order": 11,
+        "relationships": [
+          {
+            "id": "110"
+          },
+          {
+            "id": "111"
+          },
+          {
+            "id": "114"
+          },
+          {
+            "id": "115"
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "branding": {},
+      "lastSavedView": "HybridBichard",
+      "metadataSymbols": "SquareBrackets",
+      "styles": {
+        "elements": [
+          {
+            "shape": "WebBrowser",
+            "tag": "Web Browser"
+          },
+          {
+            "shape": "Cylinder",
+            "tag": "Database"
+          },
+          {
+            "shape": "Hexagon",
+            "tag": "API"
+          },
+          {
+            "shape": "Pipe",
+            "tag": "Queue"
+          },
+          {
+            "shape": "Diamond",
+            "tag": "Lambda"
+          },
+          {
+            "shape": "Pipe",
+            "tag": "SNS"
+          },
+          {
+            "background": "#9b76ff",
+            "color": "#ffffff",
+            "tag": "External"
+          },
+          {
+            "background": "#999999",
+            "color": "#ffffff",
+            "tag": "Existing System"
+          }
+        ]
       },
-      "containerId" : "40",
-      "elements" : [ {
-        "id" : "5",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "6",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "41",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "42",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "43",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "44",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalContainerBoundariesVisible" : false,
-      "generatedKey" : true,
-      "key" : "Component-007",
-      "order" : 11,
-      "relationships" : [ {
-        "id" : "110"
-      }, {
-        "id" : "111"
-      }, {
-        "id" : "114"
-      }, {
-        "id" : "115"
-      } ]
-    } ],
-    "configuration" : {
-      "branding" : { },
-      "lastSavedView" : "HybridBichard",
-      "metadataSymbols" : "SquareBrackets",
-      "styles" : {
-        "elements" : [ {
-          "shape" : "WebBrowser",
-          "tag" : "Web Browser"
-        }, {
-          "shape" : "Cylinder",
-          "tag" : "Database"
-        }, {
-          "shape" : "Hexagon",
-          "tag" : "API"
-        }, {
-          "shape" : "Pipe",
-          "tag" : "Queue"
-        }, {
-          "shape" : "Diamond",
-          "tag" : "Lambda"
-        }, {
-          "shape" : "Pipe",
-          "tag" : "SNS"
-        }, {
-          "background" : "#9b76ff",
-          "color" : "#ffffff",
-          "tag" : "External"
-        }, {
-          "background" : "#999999",
-          "color" : "#ffffff",
-          "tag" : "Existing System"
-        } ]
-      },
-      "terminology" : { },
-      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ]
+      "terminology": {},
+      "themes": ["https://static.structurizr.com/themes/default/theme.json"]
     },
-    "containerViews" : [ {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "TopBottom",
-        "rankSeparation" : 300,
-        "vertices" : false
+    "containerViews": [
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "TopBottom",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "elements": [
+          {
+            "id": "7",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "8",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "9",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "10",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "12",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "13",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "16",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "21",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "22",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "25",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "26",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "27",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "28",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "29",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "30",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "31",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "34",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "35",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "40",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "externalSoftwareSystemBoundariesVisible": false,
+        "key": "OldBichard",
+        "order": 3,
+        "relationships": [
+          {
+            "id": "100"
+          },
+          {
+            "id": "103"
+          },
+          {
+            "id": "106"
+          },
+          {
+            "id": "108"
+          },
+          {
+            "id": "59"
+          },
+          {
+            "id": "60"
+          },
+          {
+            "id": "62"
+          },
+          {
+            "id": "64"
+          },
+          {
+            "id": "65"
+          },
+          {
+            "id": "66"
+          },
+          {
+            "id": "67"
+          },
+          {
+            "id": "68"
+          },
+          {
+            "id": "69"
+          },
+          {
+            "id": "72"
+          },
+          {
+            "id": "78"
+          },
+          {
+            "id": "81"
+          },
+          {
+            "id": "84"
+          },
+          {
+            "id": "87"
+          },
+          {
+            "id": "89"
+          },
+          {
+            "id": "92"
+          },
+          {
+            "id": "93"
+          },
+          {
+            "id": "94"
+          },
+          {
+            "id": "97"
+          }
+        ],
+        "softwareSystemId": "11",
+        "title": "Old Bichard"
       },
-      "elements" : [ {
-        "id" : "7",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "8",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "9",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "10",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "12",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "13",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "16",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "21",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "22",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "25",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "26",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "27",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "28",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "29",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "30",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "31",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "34",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "35",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "40",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "externalSoftwareSystemBoundariesVisible" : false,
-      "key" : "OldBichard",
-      "order" : 3,
-      "relationships" : [ {
-        "id" : "100"
-      }, {
-        "id" : "103"
-      }, {
-        "id" : "106"
-      }, {
-        "id" : "108"
-      }, {
-        "id" : "59"
-      }, {
-        "id" : "60"
-      }, {
-        "id" : "62"
-      }, {
-        "id" : "64"
-      }, {
-        "id" : "65"
-      }, {
-        "id" : "66"
-      }, {
-        "id" : "67"
-      }, {
-        "id" : "68"
-      }, {
-        "id" : "69"
-      }, {
-        "id" : "72"
-      }, {
-        "id" : "78"
-      }, {
-        "id" : "81"
-      }, {
-        "id" : "84"
-      }, {
-        "id" : "87"
-      }, {
-        "id" : "89"
-      }, {
-        "id" : "92"
-      }, {
-        "id" : "93"
-      }, {
-        "id" : "94"
-      }, {
-        "id" : "97"
-      } ],
-      "softwareSystemId" : "11",
-      "title" : "Old Bichard"
-    }, {
-      "dimensions" : {
-        "height" : 4050,
-        "width" : 4017
-      },
-      "elements" : [ {
-        "id" : "7",
-        "x" : 330,
-        "y" : 3505
-      }, {
-        "id" : "8",
-        "x" : 2380,
-        "y" : 3495
-      }, {
-        "id" : "9",
-        "x" : 3356,
-        "y" : 3500
-      }, {
-        "id" : "10",
-        "x" : 3005,
-        "y" : 165
-      }, {
-        "id" : "12",
-        "x" : 3346,
-        "y" : 2995
-      }, {
-        "id" : "13",
-        "x" : 3015,
-        "y" : 670
-      }, {
-        "id" : "26",
-        "x" : 1179,
-        "y" : 645
-      }, {
-        "id" : "27",
-        "x" : 1151,
-        "y" : 2155
-      }, {
-        "id" : "28",
-        "x" : 355,
-        "y" : 2275
-      }, {
-        "id" : "29",
-        "x" : 2405,
-        "y" : 1200
-      }, {
-        "id" : "30",
-        "x" : 1159,
-        "y" : 1207
-      }, {
-        "id" : "31",
-        "x" : 2630,
-        "y" : 2150
-      }, {
-        "id" : "34",
-        "x" : 375,
-        "y" : 1200
-      }, {
-        "id" : "35",
-        "x" : 1121,
-        "y" : 2970
-      }, {
-        "id" : "40",
-        "x" : 219,
-        "y" : 617
-      }, {
-        "id" : "45",
-        "x" : 3336,
-        "y" : 2110
-      }, {
-        "id" : "46",
-        "x" : 1785,
-        "y" : 1195
-      }, {
-        "id" : "48",
-        "x" : 3020,
-        "y" : 1205
-      }, {
-        "id" : "52",
-        "x" : 2085,
-        "y" : 2100
-      } ],
-      "externalSoftwareSystemBoundariesVisible" : false,
-      "key" : "HybridBichard",
-      "order" : 4,
-      "relationships" : [ {
-        "id" : "100"
-      }, {
-        "id" : "103"
-      }, {
-        "id" : "106"
-      }, {
-        "id" : "108"
-      }, {
-        "id" : "118"
-      }, {
-        "id" : "119"
-      }, {
-        "id" : "120"
-      }, {
-        "id" : "121"
-      }, {
-        "id" : "122"
-      }, {
-        "id" : "126"
-      }, {
-        "id" : "127"
-      }, {
-        "id" : "128"
-      }, {
-        "id" : "134"
-      }, {
-        "id" : "138"
-      }, {
-        "id" : "59"
-      }, {
-        "id" : "60"
-      }, {
-        "id" : "62"
-      }, {
-        "id" : "64"
-      }, {
-        "id" : "65"
-      }, {
-        "id" : "66"
-      }, {
-        "id" : "67"
-      }, {
-        "id" : "68"
-      }, {
-        "id" : "69"
-      }, {
-        "id" : "70"
-      }, {
-        "id" : "72"
-      }, {
-        "id" : "97"
-      } ],
-      "softwareSystemId" : "11",
-      "title" : "Hybrid Bichard"
-    } ],
-    "systemContextViews" : [ {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
-      },
-      "elements" : [ {
-        "id" : "7",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "9",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "10",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "11",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "enterpriseBoundaryVisible" : true,
-      "key" : "BichardSystemContext",
-      "order" : 2,
-      "relationships" : [ {
-        "id" : "61"
-      }, {
-        "id" : "63"
-      }, {
-        "id" : "73"
-      } ],
-      "softwareSystemId" : "11"
-    } ],
-    "systemLandscapeViews" : [ {
-      "automaticLayout" : {
-        "applied" : false,
-        "edgeSeparation" : 0,
-        "implementation" : "Graphviz",
-        "nodeSeparation" : 300,
-        "rankDirection" : "LeftRight",
-        "rankSeparation" : 300,
-        "vertices" : false
-      },
-      "elements" : [ {
-        "id" : "1",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "2",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "3",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "4",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "7",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "9",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "10",
-        "x" : 0,
-        "y" : 0
-      }, {
-        "id" : "11",
-        "x" : 0,
-        "y" : 0
-      } ],
-      "enterpriseBoundaryVisible" : true,
-      "key" : "SystemLandscape",
-      "order" : 1,
-      "relationships" : [ {
-        "id" : "53"
-      }, {
-        "id" : "54"
-      }, {
-        "id" : "55"
-      }, {
-        "id" : "56"
-      }, {
-        "id" : "57"
-      }, {
-        "id" : "58"
-      }, {
-        "id" : "61"
-      }, {
-        "id" : "63"
-      }, {
-        "id" : "73"
-      } ]
-    } ]
+      {
+        "dimensions": {
+          "height": 4050,
+          "width": 4017
+        },
+        "elements": [
+          {
+            "id": "7",
+            "x": 330,
+            "y": 3505
+          },
+          {
+            "id": "8",
+            "x": 2380,
+            "y": 3495
+          },
+          {
+            "id": "9",
+            "x": 3356,
+            "y": 3500
+          },
+          {
+            "id": "10",
+            "x": 3005,
+            "y": 165
+          },
+          {
+            "id": "12",
+            "x": 3346,
+            "y": 2995
+          },
+          {
+            "id": "13",
+            "x": 3015,
+            "y": 670
+          },
+          {
+            "id": "26",
+            "x": 1179,
+            "y": 645
+          },
+          {
+            "id": "27",
+            "x": 1151,
+            "y": 2155
+          },
+          {
+            "id": "28",
+            "x": 355,
+            "y": 2275
+          },
+          {
+            "id": "29",
+            "x": 2405,
+            "y": 1200
+          },
+          {
+            "id": "30",
+            "x": 1159,
+            "y": 1207
+          },
+          {
+            "id": "31",
+            "x": 2630,
+            "y": 2150
+          },
+          {
+            "id": "34",
+            "x": 375,
+            "y": 1200
+          },
+          {
+            "id": "35",
+            "x": 1121,
+            "y": 2970
+          },
+          {
+            "id": "40",
+            "x": 219,
+            "y": 617
+          },
+          {
+            "id": "45",
+            "x": 3336,
+            "y": 2110
+          },
+          {
+            "id": "46",
+            "x": 1785,
+            "y": 1195
+          },
+          {
+            "id": "48",
+            "x": 3020,
+            "y": 1205
+          },
+          {
+            "id": "52",
+            "x": 2085,
+            "y": 2100
+          }
+        ],
+        "externalSoftwareSystemBoundariesVisible": false,
+        "key": "HybridBichard",
+        "order": 4,
+        "relationships": [
+          {
+            "id": "100"
+          },
+          {
+            "id": "103"
+          },
+          {
+            "id": "106"
+          },
+          {
+            "id": "108"
+          },
+          {
+            "id": "118"
+          },
+          {
+            "id": "119"
+          },
+          {
+            "id": "120"
+          },
+          {
+            "id": "121"
+          },
+          {
+            "id": "122"
+          },
+          {
+            "id": "126"
+          },
+          {
+            "id": "127"
+          },
+          {
+            "id": "128"
+          },
+          {
+            "id": "134"
+          },
+          {
+            "id": "138"
+          },
+          {
+            "id": "59"
+          },
+          {
+            "id": "60"
+          },
+          {
+            "id": "62"
+          },
+          {
+            "id": "64"
+          },
+          {
+            "id": "65"
+          },
+          {
+            "id": "66"
+          },
+          {
+            "id": "67"
+          },
+          {
+            "id": "68"
+          },
+          {
+            "id": "69"
+          },
+          {
+            "id": "70"
+          },
+          {
+            "id": "72"
+          },
+          {
+            "id": "97"
+          }
+        ],
+        "softwareSystemId": "11",
+        "title": "Hybrid Bichard"
+      }
+    ],
+    "systemContextViews": [
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "elements": [
+          {
+            "id": "7",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "9",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "10",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "11",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "enterpriseBoundaryVisible": true,
+        "key": "BichardSystemContext",
+        "order": 2,
+        "relationships": [
+          {
+            "id": "61"
+          },
+          {
+            "id": "63"
+          },
+          {
+            "id": "73"
+          }
+        ],
+        "softwareSystemId": "11"
+      }
+    ],
+    "systemLandscapeViews": [
+      {
+        "automaticLayout": {
+          "applied": false,
+          "edgeSeparation": 0,
+          "implementation": "Graphviz",
+          "nodeSeparation": 300,
+          "rankDirection": "LeftRight",
+          "rankSeparation": 300,
+          "vertices": false
+        },
+        "elements": [
+          {
+            "id": "1",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "2",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "3",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "4",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "7",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "9",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "10",
+            "x": 0,
+            "y": 0
+          },
+          {
+            "id": "11",
+            "x": 0,
+            "y": 0
+          }
+        ],
+        "enterpriseBoundaryVisible": true,
+        "key": "SystemLandscape",
+        "order": 1,
+        "relationships": [
+          {
+            "id": "53"
+          },
+          {
+            "id": "54"
+          },
+          {
+            "id": "55"
+          },
+          {
+            "id": "56"
+          },
+          {
+            "id": "57"
+          },
+          {
+            "id": "58"
+          },
+          {
+            "id": "61"
+          },
+          {
+            "id": "63"
+          },
+          {
+            "id": "73"
+          }
+        ]
+      }
+    ]
   }
 }
