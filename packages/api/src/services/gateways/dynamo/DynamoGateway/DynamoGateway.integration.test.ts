@@ -39,15 +39,19 @@ describe("DynamoGateway", () => {
   })
 
   describe("insertOne()", () => {
-    it("should return undefined when successful and have inserted one record", async () => {
+    it("should return success and insert one record", async () => {
       const expectedRecord = {
         id: "InsertOneRecord",
         someOtherValue: "SomeOtherValue"
       }
 
-      const result = await gateway.insertOne(auditLogDynamoConfig.auditLogTableName, expectedRecord, "id")
+      const insertResult = await (gateway as DynamoGateway).insertOne(
+        auditLogDynamoConfig.auditLogTableName,
+        expectedRecord,
+        "id"
+      )
 
-      expect(result).toBeUndefined()
+      expect(insertResult).toBeUndefined()
 
       const actualRecords = await testGateway.getAll(auditLogDynamoConfig.auditLogTableName)
       expect(actualRecords.Count).toBe(1)
@@ -141,7 +145,7 @@ describe("DynamoGateway", () => {
         version: 1
       }
 
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, "id", 1)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, 1)
 
       expect(result).toBeTruthy()
       expect(isError(result)).toBe(true)
@@ -162,7 +166,7 @@ describe("DynamoGateway", () => {
         someOtherValue: "NewValue",
         version: 2
       }
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, "id", 1)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, 1)
 
       expect(result).toBeUndefined()
 
@@ -188,7 +192,7 @@ describe("DynamoGateway", () => {
         someOtherValue: "NewValue",
         version: 2
       }
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, "id", 2)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, 2)
 
       expect(result).toBeTruthy()
       expect(isError(result)).toBe(true)
@@ -202,7 +206,7 @@ describe("DynamoGateway", () => {
         version: 1
       }
 
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, "id", 1)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, 1)
 
       expect(result).toBeTruthy()
       expect(isError(result)).toBe(true)
@@ -330,15 +334,14 @@ describe("DynamoGateway", () => {
       }
 
       await testGateway.insertOne(auditLogDynamoConfig.auditLogTableName, expectedRecord, "id")
-
       const result = await gateway.getOne(auditLogDynamoConfig.auditLogTableName, "id", "Record1")
 
-      const { Item: actualRecord } = result as {
-        Item: {
-          id: string
-          someOtherValue: string
-        }
+      if (result instanceof Error) {
+        throw result
       }
+
+      const { Item: actualRecord } = result
+
       expect(actualRecord).toBeDefined()
       expect(actualRecord?.id).toBe(expectedRecord.id)
       expect(actualRecord?.someOtherValue).toBe(expectedRecord.someOtherValue)
