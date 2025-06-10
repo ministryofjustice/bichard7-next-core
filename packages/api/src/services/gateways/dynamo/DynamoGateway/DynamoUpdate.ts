@@ -1,5 +1,5 @@
-import type { DocumentClient } from "aws-sdk/clients/dynamodb"
+import type { TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb"
 
-type DynamoUpdate = DocumentClient.TransactWriteItem
+type DynamoUpdate = NonNullable<TransactWriteCommandInput["TransactItems"]>[number]
 
 export default DynamoUpdate
