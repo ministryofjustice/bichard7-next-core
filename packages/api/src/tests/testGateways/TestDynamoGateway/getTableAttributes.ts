@@ -1,4 +1,4 @@
-import type DynamoDB from "aws-sdk/clients/dynamodb"
+import type { AttributeDefinition } from "@aws-sdk/client-dynamodb"
 
 import type { SecondaryIndex } from "./SecondaryIndex"
 
@@ -6,15 +6,16 @@ const getTableAttributes = (
   partitionKey: string,
   sortKey: string | undefined,
   secondaryIndexes: SecondaryIndex[]
-): DynamoDB.AttributeDefinitions => {
-  const attributesInIndexes: DynamoDB.AttributeDefinition[] = []
+): AttributeDefinition[] => {
+  const attributesInIndexes: AttributeDefinition[] = []
 
   secondaryIndexes.forEach((index) => {
     const { hashKey, rangeKey } = index
+
     if (
       hashKey !== partitionKey &&
       hashKey !== sortKey &&
-      attributesInIndexes.filter((x) => x.AttributeName === hashKey).length === 0
+      !attributesInIndexes.some((x) => x.AttributeName === hashKey)
     ) {
       attributesInIndexes.push({
         AttributeName: hashKey,
@@ -23,10 +24,10 @@ const getTableAttributes = (
     }
 
     if (
-      !!rangeKey &&
+      rangeKey &&
       rangeKey !== partitionKey &&
       rangeKey !== sortKey &&
-      attributesInIndexes.filter((x) => x.AttributeName === rangeKey).length === 0
+      !attributesInIndexes.some((x) => x.AttributeName === rangeKey)
     ) {
       attributesInIndexes.push({
         AttributeName: rangeKey,
@@ -44,13 +45,13 @@ const getTableAttributes = (
       ? [
           {
             AttributeName: sortKey,
-            AttributeType: "S"
+            AttributeType: "S" as const
           }
         ]
       : []),
     {
       AttributeName: "_",
-      AttributeType: "S"
+      AttributeType: "S" as const
     },
     ...attributesInIndexes
   ]
