@@ -1,5 +1,4 @@
-import type { DocumentClient } from "aws-sdk/clients/dynamodb"
-
+import { type TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
 import { v4 as uuid } from "uuid"
@@ -359,7 +358,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
   async prepareUpdate(
     existing: DynamoAuditLog,
     updates: Partial<DynamoAuditLog>
-  ): PromiseResult<DocumentClient.TransactWriteItem[]> {
+  ): PromiseResult<TransactWriteCommandInput["TransactItems"]> {
     const updateExpression = []
     let removeExpression = ""
     const addExpression: string[] = []
@@ -367,7 +366,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     const expressionAttributeNames: Record<string, string> = {}
     const expressionValues: Record<string, unknown> = {}
 
-    const dynamoUpdates: DynamoUpdate[] = []
+    const dynamoUpdates: TransactWriteCommandInput["TransactItems"] = []
 
     if (updates.events) {
       const events = await this.prepareStoreEvents(existing.messageId, updates.events)
@@ -457,7 +456,8 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
   replaceAuditLog(auditLog: DynamoAuditLog, version: number): PromiseResult<void> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { events, ...replacement } = { ...auditLog, version: version + 1 }
-    return this.replaceOne(this.config.auditLogTableName, replacement, this.auditLogTableKey, version)
+
+    return this.replaceOne(this.config.auditLogTableName, replacement, version)
   }
 
   replaceAuditLogEvents(events: DynamoAuditLogEvent[]): PromiseResult<void> {
@@ -467,6 +467,10 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
   async update(existing: DynamoAuditLog, updates: Partial<DynamoAuditLog>): PromiseResult<void> {
     const dynamoUpdates = await this.prepareUpdate(existing, updates)
     if (isError(dynamoUpdates)) {
+      return dynamoUpdates
+    }
+
+    if (!dynamoUpdates) {
       return dynamoUpdates
     }
 
