@@ -1,4 +1,4 @@
-import type { DocumentClient } from "aws-sdk/clients/dynamodb"
+import type { GetCommandOutput } from "@aws-sdk/lib-dynamodb"
 
 import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -853,22 +853,24 @@ describe("AuditLogDynamoGateway", () => {
     })
 
     it("should not update if an empty object is passed in", async () => {
-      const before = await gateway.getOne(
+      const before = (await gateway.getOne(
         auditLogDynamoConfig.auditLogTableName,
         gateway.auditLogTableKey,
         auditLog.messageId
-      )
+      )) as GetCommandOutput
 
       const result = await gateway.update(auditLog, {})
       expect(isError(result)).toBeFalsy()
 
-      const after = await gateway.getOne(
+      const after = (await gateway.getOne(
         auditLogDynamoConfig.auditLogTableName,
         gateway.auditLogTableKey,
         auditLog.messageId
-      )
+      )) as GetCommandOutput
 
-      expect(after).toStrictEqual(before)
+      expect(isError(after)).toBe(false)
+      expect(after.Item).toBeDefined()
+      expect(after.Item).toStrictEqual(before.Item)
     })
 
     it.each([
@@ -890,7 +892,7 @@ describe("AuditLogDynamoGateway", () => {
             auditLogDynamoConfig.auditLogTableName,
             gateway.auditLogTableKey,
             auditLog.messageId
-          )) as DocumentClient.GetItemOutput
+          )) as GetCommandOutput
         ).Item!
 
         const expected = updates as Record<string, any>
@@ -916,7 +918,7 @@ describe("AuditLogDynamoGateway", () => {
           auditLogDynamoConfig.auditLogTableName,
           gateway.auditLogTableKey,
           auditLog.messageId
-        )) as DocumentClient.GetItemOutput
+        )) as GetCommandOutput
       ).Item!
 
       expect(updated.errorRecordArchivalDate).toBe("2020-01-02")
@@ -938,7 +940,7 @@ describe("AuditLogDynamoGateway", () => {
           auditLogDynamoConfig.auditLogTableName,
           gateway.auditLogTableKey,
           auditLog.messageId
-        )) as DocumentClient.GetItemOutput
+        )) as GetCommandOutput
       ).Item!
 
       expect(updated.events).toBeUndefined()
@@ -1027,7 +1029,7 @@ describe("AuditLogDynamoGateway", () => {
           auditLogDynamoConfig.auditLogTableName,
           gateway.auditLogTableKey,
           auditLog.messageId
-        )) as DocumentClient.GetItemOutput
+        )) as GetCommandOutput
       ).Item!
 
       expect(updated.events).toBeUndefined()
