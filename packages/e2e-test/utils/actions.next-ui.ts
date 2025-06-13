@@ -296,10 +296,30 @@ export const selectTriggerToResolve = async function (this: Bichard, triggerNumb
   await checkbox.click()
 }
 
-export const checkTriggerHasCompleted = async function (this: Bichard, triggerNumber: string) {
+export const markTriggerComplete = async function (this: Bichard, triggerCode: string, offenceId: string) {
   await this.browser.page.click("#triggers-tab")
+
+  const shortTriggerCode = getShortTriggerCode(triggerCode)
+
+  await this.browser.page.click(
+    `xpath/.//div[contains(@class, 'trigger-header-row')
+      and .//label[contains(text(), '${shortTriggerCode}')]
+      and .//button[normalize-space() = 'Offence ${offenceId}']
+    ]//input[@type='checkbox']`
+  )
+}
+
+export const checkTriggerHasCompleted = async function (this: Bichard, triggerCode: string, offenceId: string) {
+  await this.browser.page.click("#triggers-tab")
+
+  const shortTriggerCode = getShortTriggerCode(triggerCode)
+
   await this.browser.page.waitForSelector(
-    `.trigger-rows .moj-trigger-row:nth-child(${triggerNumber}) .moj-badge--green`
+    `xpath/.//div[contains(@class, 'trigger-header-row')
+      and .//label[contains(text(), '${shortTriggerCode}')]
+      and .//button[normalize-space() = 'Offence ${offenceId}']
+      and .//span[contains(@class, 'moj-badge--green')]
+    ]`
   )
 }
 

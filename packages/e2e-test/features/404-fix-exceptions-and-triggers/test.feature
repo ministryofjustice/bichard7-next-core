@@ -48,6 +48,6 @@ Feature: 404 - Fixing exceptions and triggers and resubmitting
 			And I see trigger "TRPR0003" for offence "1"
 			And I see trigger "TRPR0004" for offence "1"
 			And I see trigger "TRPR0004" for offence "2"
-		When I select trigger "1" to resolve
+		When I select trigger "TRPR0004" for offence "1" to resolve
 			And I resolve the selected triggers
-		Then I see trigger "1" is Marked as Complete
+		Then I see trigger "TRPR0004" for offence "1" is Marked as Complete
