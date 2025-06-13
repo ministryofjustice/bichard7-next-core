@@ -296,6 +296,13 @@ export const selectTriggerToResolve = async function (this: Bichard, triggerNumb
   await checkbox.click()
 }
 
+export const checkTriggerHasCompleted = async function (this: Bichard, triggerNumber: string) {
+  await this.browser.page.click("#triggers-tab")
+  await this.browser.page.waitForSelector(
+    `.trigger-rows .moj-trigger-row:nth-child(${triggerNumber}) .moj-badge--green`
+  )
+}
+
 export const manuallyResolveRecord = async function (this: Bichard) {
   await this.browser.page.click("#exceptions-tab")
   await Promise.all([
