@@ -2,20 +2,11 @@ import { Button } from "components/Buttons/Button"
 import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
-import { NextRouter, useRouter } from "next/router"
+import { useRouter } from "next/router"
 import { FormEvent, FormEventHandler, useState } from "react"
 import { useBeforeunload } from "react-beforeunload"
+import { updateQueryWithoutResubmitCase } from "utils/updateQueryWithoutResubmitCase"
 import Form from "../../../../../components/Form"
-
-const updateLink = (router: NextRouter): string => {
-  const [path, query] = router.asPath.split("?")
-  const params = new URLSearchParams(query)
-
-  // Remove this param as it causes the POST notes to fail
-  params.delete("resubmitCase")
-
-  return `${router.basePath}${path}?${params}`
-}
 
 const AddNoteForm: React.FC = () => {
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
@@ -52,7 +43,12 @@ const AddNoteForm: React.FC = () => {
   }
 
   return (
-    <Form method="POST" action={updateLink(router)} onSubmit={handleSubmit} csrfToken={csrfToken}>
+    <Form
+      method="POST"
+      action={updateQueryWithoutResubmitCase(router.basePath, router.asPath)}
+      onSubmit={handleSubmit}
+      csrfToken={csrfToken}
+    >
       <NoteTextArea
         showError={showError}
         handleOnNoteChange={handleOnNoteChange}
