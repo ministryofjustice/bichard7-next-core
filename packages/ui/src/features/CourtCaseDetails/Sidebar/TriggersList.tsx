@@ -11,6 +11,7 @@ import { ChangeEvent, SyntheticEvent, useState } from "react"
 import { triggersAreLockedByAnotherUser } from "services/case"
 import { DisplayTrigger } from "types/display/Triggers"
 import type NavigationHandler from "types/NavigationHandler"
+import { updateQueryWithoutResubmitCase } from "utils/updateQueryWithoutResubmitCase"
 import Form from "../../../components/Form"
 import { updateTabLink } from "../../../utils/updateTabLink"
 import LockStatusTag from "../LockStatusTag"
@@ -64,13 +65,7 @@ const TriggersList = ({ onNavigate }: Props) => {
     // Delete the `courtCaseId` param, which comes from the URL dynamic router, not the query string
     const filteredQuery = Object.fromEntries(Object.entries(resolveQuery).filter(([key]) => key !== "courtCaseId"))
 
-    const url = `${basePath}/court-cases/${courtCase.errorId}?${encode(filteredQuery)}`
-
-    if (url.slice(-1) === "&") {
-      return url.slice(0, -1)
-    } else {
-      return url
-    }
+    return updateQueryWithoutResubmitCase(basePath, `/court-cases/${courtCase.errorId}?${encode(filteredQuery)}`)
   }
 
   const handleSubmit = () => {
