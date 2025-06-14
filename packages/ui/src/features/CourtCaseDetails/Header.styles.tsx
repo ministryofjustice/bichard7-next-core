@@ -1,7 +1,7 @@
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import styled from "styled-components"
-import { lightGrey, gdsLightGrey } from "utils/colours"
+import { gdsLightGrey, lightGrey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
   display: flex;
@@ -32,6 +32,13 @@ const CaseDetailHeaderRow = styled.div`
       margin-bottom: 0.63rem;
     }
   }
+`
+
+const CaseDetailsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 `
 
 const ButtonContainer = styled.div`
@@ -65,7 +72,8 @@ export {
   ButtonContainer,
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
+  CaseDetailsHeader,
   LockedTagContainer,
-  StyledButton,
-  SecondaryLinkButton
+  SecondaryLinkButton,
+  StyledButton
 }

@@ -20,6 +20,7 @@ import {
   ButtonContainer,
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
+  CaseDetailsHeader,
   LockedTagContainer,
   SecondaryLinkButton,
   StyledButton
@@ -75,29 +76,31 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
       <CaseDetailHeaderRow id="case-detail-header-row">
-        <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
-        <h2 className="govuk-heading-m">
-          {courtCase.defendantName}
-          {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
-          <Badge
-            isRendered={caseIsViewOnly}
-            label="View only"
-            colour={BadgeColours.Blue}
-            className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
-          />
-        </h2>
-        <LockedTagContainer id="locked-tag-container">
-          <LockStatusTag
-            isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
-            resolutionStatus={courtCase.errorStatus}
-            lockName="Exceptions"
-          />
-          <LockStatusTag
-            isRendered={currentUser.hasAccessTo[Permission.Triggers]}
-            resolutionStatus={courtCase.triggerStatus}
-            lockName="Triggers"
-          />
-        </LockedTagContainer>
+        <CaseDetailsHeader>
+          <h1 className="hidden-header govuk-heading-l">{"Case details"}</h1>
+          <h2 className="govuk-heading-m">
+            {courtCase.defendantName}
+            {<ResolutionStatusBadge resolutionStatus={getResolutionStatus(courtCase)} />}
+            <Badge
+              isRendered={caseIsViewOnly}
+              label="View only"
+              colour={BadgeColours.Blue}
+              className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
+            />
+          </h2>
+          <LockedTagContainer id="locked-tag-container">
+            <LockStatusTag
+              isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
+              resolutionStatus={courtCase.errorStatus}
+              lockName="Exceptions"
+            />
+            <LockStatusTag
+              isRendered={currentUser.hasAccessTo[Permission.Triggers]}
+              resolutionStatus={courtCase.triggerStatus}
+              lockName="Triggers"
+            />
+          </LockedTagContainer>
+        </CaseDetailsHeader>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
             <SecondaryLinkButton
