@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components"
 
 const repeatedCss = css`
-  @media (max-width: 1024px) {
+  @media (max-width: 1211px) {
     max-width: 100%;
     min-width: 100%;
     width: 100%;
@@ -30,7 +30,7 @@ const SideBar = styled.div`
   padding-left: 20px;
 
   ${repeatedCss}
-  @media (max-width: 1024px) {
+  @media (max-width: 1211px) {
     padding-top: 50px;
     padding-left: 0px;
   }
