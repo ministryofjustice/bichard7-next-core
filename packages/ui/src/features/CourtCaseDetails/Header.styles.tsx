@@ -53,6 +53,10 @@ const LockedTagContainer = styled.div`
   display: flex;
   gap: 2.5rem;
   margin-left: auto;
+
+  @media (max-width: 1019px) {
+    gap: 1rem;
+  }
 `
 
 const StyledButton = styled(Button)`
