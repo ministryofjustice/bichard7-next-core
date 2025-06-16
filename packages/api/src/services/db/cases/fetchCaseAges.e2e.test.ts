@@ -151,6 +151,10 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
 
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
+    console.log(
+      "Fetched case IDs:",
+      caseMetadata.cases.map((c) => c.errorId)
+    )
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.caseAges[CaseAge.Today]).toBe("3")
   })
