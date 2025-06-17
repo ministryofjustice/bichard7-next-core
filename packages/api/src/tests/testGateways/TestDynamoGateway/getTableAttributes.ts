@@ -15,7 +15,7 @@ const getTableAttributes = (
     if (
       hashKey !== partitionKey &&
       hashKey !== sortKey &&
-      !attributesInIndexes.some((x) => x.AttributeName === hashKey)
+      attributesInIndexes.filter((x) => x.AttributeName === hashKey).length === 0
     ) {
       attributesInIndexes.push({
         AttributeName: hashKey,
@@ -27,7 +27,7 @@ const getTableAttributes = (
       rangeKey &&
       rangeKey !== partitionKey &&
       rangeKey !== sortKey &&
-      !attributesInIndexes.some((x) => x.AttributeName === rangeKey)
+      attributesInIndexes.filter((x) => x.AttributeName === hashKey).length === 0
     ) {
       attributesInIndexes.push({
         AttributeName: rangeKey,
