@@ -1,6 +1,7 @@
 import type { JWT } from "@moj-bichard7/common/types/JWT"
 import type { PromiseResult, Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { JwtPayload } from "jsonwebtoken"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -9,12 +10,12 @@ import jwt from "jsonwebtoken"
 import type { DatabaseConnection } from "../../types/DatabaseGateway"
 
 import fetchUserByUsername from "../../services/db/users/fetchUserByUsername"
-import { jwtConfig, jwtSignOptions } from "./jwtConfig"
+import { jwtConfig, jwtVerifyOptions } from "./jwtConfig"
 
 const verifyToken = (jwtToken: string) =>
   new Promise<Result<JWT>>((resolve) => {
     try {
-      resolve(jwt.verify(jwtToken, jwtConfig.tokenSecret, jwtSignOptions) as JWT)
+      resolve(jwt.verify(jwtToken, jwtConfig.tokenSecret, jwtVerifyOptions) as JwtPayload as JWT)
     } catch (error) {
       resolve(error as Error)
     }
