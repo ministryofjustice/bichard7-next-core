@@ -15,8 +15,9 @@
  */
 
 import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
-import { DynamoDB, Lambda } from "aws-sdk"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
+import { Lambda } from "@aws-sdk/client-lambda"
 import { getDateString, pncErrorsFilePath } from "./common"
 import getPncResponseReceivedEvents from "./getPncResponseReceivedEvents"
 import extractPncErrors from "./extractPncErrors"
@@ -24,12 +25,12 @@ import analysePncErrors from "./analysePncErrors"
 
 const fs = require("fs")
 const WORKSPACE = process.env.WORKSPACE ?? "production"
-let dynamo: DocumentClient
+let dynamo: DynamoDBClient
 let eventsTableName: string
 
 const setup = async () => {
   const lambda = new Lambda({ region: "eu-west-2" })
-  const retryLambda = await lambda.getFunction({ FunctionName: `bichard-7-${WORKSPACE}-retry-message` }).promise()
+  const retryLambda = await lambda.getFunction({ FunctionName: `bichard-7-${WORKSPACE}-retry-message` })
   if (isError(retryLambda)) {
     throw Error("Couldn't get DynamoDB connection details")
   }
@@ -44,11 +45,11 @@ const setup = async () => {
     throw Error("Couldn't get DynamoDB events table name")
   }
 
-  const service = new DynamoDB({
+  const service = new DynamoDBClient({
     endpoint: dynamoEndpoint,
     region: "eu-west-2"
   })
-  dynamo = new DocumentClient({ service })
+  dynamo = DynamoDBDocumentClient.from(service)
 }
 
 const getPncErrors = async () => {
