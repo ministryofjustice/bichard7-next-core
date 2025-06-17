@@ -1,6 +1,25 @@
+import type { DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
+import type {
+  GetCommandOutput,
+  PutCommandInput,
+  TransactWriteCommandInput,
+  UpdateCommandInput,
+  UpdateCommandOutput
+} from "@aws-sdk/lib-dynamodb"
+
+import { DynamoDBClient, TransactionCanceledException } from "@aws-sdk/client-dynamodb"
+import {
+  DeleteCommand,
+  DynamoDBDocumentClient,
+  GetCommand,
+  PutCommand,
+  QueryCommand,
+  type QueryCommandInput,
+  type QueryCommandOutput,
+  TransactWriteCommand,
+  UpdateCommand
+} from "@aws-sdk/lib-dynamodb"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-import { DynamoDB } from "aws-sdk"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import type TransactionFailureReason from "../../../../types/TransactionFailureReason"
 import type DynamoDbConfig from "./DynamoDbConfig"
@@ -20,85 +39,87 @@ export type Projection = {
 }
 
 export default class DynamoGateway {
-  protected readonly client: DocumentClient
+  protected readonly client: DynamoDBDocumentClient
 
-  protected readonly service: DynamoDB
+  protected readonly service: DynamoDBClient
 
   constructor(config: DynamoDbConfig) {
-    this.service = new DynamoDB(config)
+    const dynamoClientConfig: DynamoDBClientConfig = {
+      credentials: {
+        accessKeyId: config.accessKeyId ?? "test",
+        secretAccessKey: config.secretAccessKey ?? "test"
+      },
+      endpoint: config.endpoint,
+      region: config.region
+    }
 
-    this.client = new DocumentClient({
-      service: this.service
-    })
+    this.service = new DynamoDBClient(dynamoClientConfig)
+    this.client = DynamoDBDocumentClient.from(this.service)
   }
-
   async deleteMany(tableName: string, keyName: string, keyValues: string[]): PromiseResult<void> {
     for (const keyValue of keyValues) {
-      const result = await this.client
-        .delete({
-          Key: {
-            [keyName]: keyValue
-          },
-          TableName: tableName
-        })
-        .promise()
-        .catch((error) => <Error>error)
-
-      if (isError(result)) {
-        return result
+      try {
+        await this.client.send(
+          new DeleteCommand({
+            Key: {
+              [keyName]: keyValue
+            },
+            TableName: tableName
+          })
+        )
+      } catch (error) {
+        return <Error>error
       }
     }
+
+    return undefined
   }
 
-  executeTransaction(actions: DynamoUpdate[]): PromiseResult<void> {
+  async executeTransaction(actions: DynamoUpdate[]): PromiseResult<void> {
     let failureReasons: TransactionFailureReason[] = []
-    return this.client
-      .transactWrite({ TransactItems: actions })
-      .on("extractError", (response) => {
-        // Error when we perform more actions than dynamodb supports
-        // see https://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_TransactWriteItems.html
-        if (response.error && response.error.message?.startsWith("Member must have length less than or equal to")) {
-          failureReasons.push({
-            Code: "TooManyItems",
-            Message: response.error.message
-          })
+
+    const result = await this.client
+      .send(
+        new TransactWriteCommand({
+          TransactItems: actions
+        })
+      )
+      .catch((error: Error) => error)
+    if (!isError(result)) {
+      return undefined
+    }
+
+    if (result.name === "TransactionCanceledException" && result instanceof TransactionCanceledException) {
+      try {
+        const cancellationReasons = result.CancellationReasons as TransactionFailureReason[] | undefined
+
+        if (cancellationReasons && cancellationReasons.length > 0) {
+          failureReasons = cancellationReasons
         } else {
-          // Save the returned reasons for the transaction failing as they are not returned
-          try {
-            failureReasons = JSON.parse(response.httpResponse.body.toString())
-              .CancellationReasons as TransactionFailureReason[]
-          } catch (error) {
-            console.error("Error extracting cancellation error", error)
+          failureReasons = [
+            {
+              Code: "UnknownError",
+              Message: result.message ?? "Unknown transaction failure"
+            }
+          ]
+        }
+      } catch (parseError) {
+        console.error("Error parsing cancellation reasons:", parseError)
+        failureReasons = [
+          {
+            Code: "UnknownError",
+            Message: result.message ?? "Unknown transaction failure"
           }
+        ]
+      }
 
-          if (failureReasons === undefined || failureReasons.length < 1) {
-            failureReasons = [
-              {
-                Code: "UnknownError",
-                Message: response.httpResponse.body.toString()
-              }
-            ]
-          }
-        }
-      })
-      .promise()
-      .then(() => {
-        if (failureReasons.length > 0) {
-          return new TransactionFailedError(failureReasons, failureReasons[0].Message)
-        }
+      return new TransactionFailedError(failureReasons, result.message ?? "Transaction failed")
+    }
 
-        return undefined
-      })
-      .catch((error) => {
-        if (failureReasons.length > 0) {
-          return new TransactionFailedError(failureReasons, error.message)
-        }
-
-        return <Error>error
-      })
+    return result
   }
 
-  fetchByIndex(tableName: string, options: FetchByIndexOptions): PromiseResult<DocumentClient.QueryOutput> {
+  async fetchByIndex(tableName: string, options: FetchByIndexOptions): PromiseResult<QueryCommandOutput> {
     const {
       hashKeyName: attributeName,
       hashKeyValue: attributeValue,
@@ -110,7 +131,7 @@ export default class DynamoGateway {
 
     const { attributeNames, expression } = projection ?? {}
 
-    const queryOptions: DynamoDB.DocumentClient.QueryInput = {
+    const queryOptions: QueryCommandInput = {
       ExclusiveStartKey: lastItemKey,
       ExpressionAttributeNames: {
         "#keyName": attributeName,
@@ -159,19 +180,16 @@ export default class DynamoGateway {
       }
     }
 
-    return this.client
-      .query(queryOptions)
-      .promise()
-      .catch((error) => <Error>error)
+    return await this.client.send(new QueryCommand(queryOptions)).catch((error: Error) => error)
   }
 
-  getMany(tableName: string, options: GetManyOptions): PromiseResult<DocumentClient.QueryOutput> {
+  async getMany(tableName: string, options: GetManyOptions): PromiseResult<QueryCommandOutput> {
     const { projection, sortKey } = options
     const { lastItemKey, limit } = options.pagination
 
     const { attributeNames, expression } = projection ?? {}
 
-    const queryOptions: DynamoDB.DocumentClient.QueryInput = {
+    const queryOptions: QueryCommandInput = {
       ExpressionAttributeNames: {
         "#dummyKey": "_",
         ...attributeNames
@@ -191,142 +209,139 @@ export default class DynamoGateway {
       queryOptions.ExclusiveStartKey = { ...lastItemKey, _: "_" }
     }
 
-    return this.client
-      .query(queryOptions)
-      .promise()
-      .catch((error) => <Error>error)
+    return await this.client.send(new QueryCommand(queryOptions)).catch((error: Error) => error)
   }
 
-  getOne(
+  async getOne(
     tableName: string,
     keyName: string,
     keyValue: unknown,
     projection?: Projection,
     stronglyConsistentRead = false
-  ): PromiseResult<DocumentClient.GetItemOutput | Error> {
+  ): PromiseResult<GetCommandOutput> {
     const { attributeNames, expression } = projection ?? {}
 
     return this.client
-      .get({
-        ConsistentRead: stronglyConsistentRead,
-        ExpressionAttributeNames: attributeNames,
-        Key: {
-          [keyName]: keyValue
-        },
-        ProjectionExpression: expression,
-        TableName: tableName
-      })
-      .promise()
-      .catch((error) => <Error>error)
+      .send(
+        new GetCommand({
+          ConsistentRead: stronglyConsistentRead,
+          ExpressionAttributeNames: attributeNames,
+          Key: {
+            [keyName]: keyValue
+          },
+          ProjectionExpression: expression,
+          TableName: tableName
+        })
+      )
+      .catch((error: Error) => error)
   }
 
-  getRecordVersion(
+  async getRecordVersion(
     tableName: string,
     keyName: string,
     keyValue: unknown
-  ): PromiseResult<DocumentClient.GetItemOutput | Error | null> {
-    return this.client
-      .get({
-        ConsistentRead: true,
-        Key: {
-          [keyName]: keyValue
-        },
-        ProjectionExpression: "version",
-        TableName: tableName
-      })
-      .promise()
-      .catch((error) => <Error>error)
+  ): PromiseResult<Error | GetCommandOutput | null> {
+    return await this.client
+      .send(
+        new GetCommand({
+          ConsistentRead: true,
+          Key: {
+            [keyName]: keyValue
+          },
+          ProjectionExpression: "version",
+          TableName: tableName
+        })
+      )
+      .catch((error: Error) => error)
   }
 
-  insertMany<T>(tableName: string, records: T[], keyName: string): PromiseResult<void> {
-    const params: DocumentClient.TransactWriteItemsInput = {
-      TransactItems: records.map((record) => {
-        return {
-          Put: {
-            ConditionExpression: `attribute_not_exists(${keyName})`,
-            Item: { _: "_", ...record },
-            TableName: tableName
-          }
+  async insertMany<T>(tableName: string, records: T[], keyName: string): PromiseResult<void> {
+    const params: TransactWriteCommandInput = {
+      TransactItems: records.map((record) => ({
+        Put: {
+          ConditionExpression: `attribute_not_exists(${keyName})`,
+          Item: { _: "_", ...record },
+          TableName: tableName
         }
-      })
+      }))
     }
 
-    let failureReasons: TransactionFailureReason[]
-    return this.client
-      .transactWrite(params)
-      .on("extractError", (response) => {
-        try {
-          failureReasons = JSON.parse(response.httpResponse.body.toString())
-            .CancellationReasons as TransactionFailureReason[]
-        } catch (error) {
-          console.error("Error extracting cancellation error", error)
-        }
-      })
-      .promise()
-      .then(() => {
-        return undefined
-      })
-      .catch((error) => {
-        if (failureReasons) {
-          return new TransactionFailedError(failureReasons, error.message)
-        }
+    const result = await this.client.send(new TransactWriteCommand(params)).catch((error: Error) => error)
+    if (!isError(result)) {
+      return undefined
+    }
 
-        return <Error>error
-      })
+    let failureReasons
+
+    if (
+      result.name === "TransactionCanceledException" &&
+      result instanceof TransactionCanceledException &&
+      Array.isArray(result.CancellationReasons)
+    ) {
+      failureReasons = result.CancellationReasons as TransactionFailureReason[]
+    }
+
+    if (failureReasons && failureReasons.length > 0) {
+      return new TransactionFailedError(failureReasons, result.message)
+    }
+
+    return result
   }
 
-  insertOne<T>(tableName: string, record: T, keyName: string): PromiseResult<void> {
-    const params: DocumentClient.PutItemInput = {
+  async insertOne<T extends Record<string, unknown>>(
+    tableName: string,
+    record: T,
+    keyName: string
+  ): PromiseResult<void> {
+    const params: PutCommandInput = {
       ConditionExpression: "attribute_not_exists(#keyName)",
       ExpressionAttributeNames: { "#keyName": keyName },
       Item: { _: "_", ...record },
       TableName: tableName
     }
 
-    return this.client
-      .put(params)
-      .promise()
-      .then(() => undefined)
-      .catch((error) => <Error>error)
+    const result = await this.client.send(new PutCommand(params)).catch((error: Error) => error)
+
+    return isError(result) ? result : undefined
   }
 
   replaceMany<T>(tableName: string, records: T[], keyName: string): PromiseResult<void> {
-    const dynamoQueries = []
-
-    for (const record of records) {
-      dynamoQueries.push({
-        Put: {
-          ConditionExpression: "attribute_exists(#keyName)",
-          ExpressionAttributeNames: {
-            "#keyName": keyName
-          },
-          Item: { _: "_", ...record },
-          TableName: tableName
-        }
-      })
-    }
+    const dynamoQueries: TransactWriteCommandInput["TransactItems"] = records.map((record) => ({
+      Put: {
+        ConditionExpression: "attribute_exists(#keyName)",
+        ExpressionAttributeNames: {
+          "#keyName": keyName
+        },
+        Item: { _: "_", ...record },
+        TableName: tableName
+      }
+    }))
 
     return this.executeTransaction(dynamoQueries)
   }
 
-  replaceOne<T>(tableName: string, record: T, keyName: string, version: number): PromiseResult<void> {
-    const params: DocumentClient.PutItemInput = {
-      ConditionExpression: `attribute_exists(${keyName}) and version = :version`,
-      ExpressionAttributeValues: {
-        ":version": version
+  async replaceOne<T extends Record<string, unknown>>(
+    tableName: string,
+    record: T,
+    version: number
+  ): PromiseResult<void> {
+    const params: PutCommandInput = {
+      ConditionExpression: "#version = :expectedVersion",
+      ExpressionAttributeNames: {
+        "#version": "version"
       },
-      Item: { _: "_", ...record },
+      ExpressionAttributeValues: {
+        ":expectedVersion": version
+      },
+      Item: record,
       TableName: tableName
     }
+    const result = await this.client.send(new PutCommand(params)).catch((error: Error) => error)
 
-    return this.client
-      .put(params)
-      .promise()
-      .then(() => undefined)
-      .catch((error) => <Error>error)
+    return isError(result) ? result : undefined
   }
 
-  updateEntry(tableName: string, options: UpdateOptions): PromiseResult<DocumentClient.UpdateItemOutput> {
+  async updateEntry(tableName: string, options: UpdateOptions): PromiseResult<UpdateCommandOutput> {
     const { expressionAttributeNames, keyName, keyValue } = options
     const expressionAttributeValues = {
       ...options.updateExpressionValues,
@@ -335,7 +350,7 @@ export default class DynamoGateway {
     }
     const updateExpression = `${options.updateExpression} ADD version :version_increment`
 
-    const updateParams = <DocumentClient.UpdateItemInput>{
+    const updateParams = <UpdateCommandInput>{
       ConditionExpression: `attribute_exists(${keyName}) and version = :version`,
       ExpressionAttributeNames: expressionAttributeNames,
       ExpressionAttributeValues: expressionAttributeValues,
@@ -346,9 +361,6 @@ export default class DynamoGateway {
       UpdateExpression: updateExpression
     }
 
-    return this.client
-      .update(updateParams)
-      .promise()
-      .catch((error) => <Error>error)
+    return this.client.send(new UpdateCommand(updateParams)).catch((error: Error) => error)
   }
 }

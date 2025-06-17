@@ -1,8 +1,9 @@
 import { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
 import { getDateString } from "./common"
+import { DynamoDBClient, QueryCommand, QueryCommandInput } from "@aws-sdk/client-dynamodb"
+import { unmarshall } from "@aws-sdk/util-dynamodb"
 
 const log = (...params: unknown[]) => {
   const logContent = [new Date().toISOString(), " - ", ...params]
@@ -20,12 +21,12 @@ const generateDates = (start: Date, end: Date): Date[] => {
   return dates
 }
 
-const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, startDate: Date, endDate: Date) => {
+const fetchEvents = async (dynamo: DynamoDBClient, eventsTableName: string, startDate: Date, endDate: Date) => {
   let lastEvaluatedKey
   let events: AuditLogEvent[] = []
 
   while (true) {
-    const query: DocumentClient.QueryInput = {
+    const query: QueryCommandInput = {
       TableName: eventsTableName,
       IndexName: "eventCodeIndex",
       KeyConditionExpression: "#partitionKey = :partitionKeyValue and #rangeKey between :start and :end",
@@ -34,18 +35,15 @@ const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, star
         "#rangeKey": "timestamp"
       },
       ExpressionAttributeValues: {
-        ":start": startDate.toISOString(),
-        ":end": endDate.toISOString(),
-        ":partitionKeyValue": EventCode.PncResponseReceived
+        ":start": { S: startDate.toISOString() },
+        ":end": { S: endDate.toISOString() },
+        ":partitionKeyValue": { S: EventCode.PncResponseReceived }
       },
       Limit: 1000,
       ...(lastEvaluatedKey ? { ExclusiveStartKey: lastEvaluatedKey } : {})
     }
 
-    const eventsResult = await dynamo
-      .query(query)
-      .promise()
-      .catch((error: Error) => error)
+    const eventsResult = await dynamo.send(new QueryCommand(query)).catch((error: Error) => error)
 
     if (isError(eventsResult)) {
       return eventsResult
@@ -56,10 +54,10 @@ const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, star
     }
 
     lastEvaluatedKey = eventsResult?.LastEvaluatedKey
-    let fetchedEvents = (eventsResult.Items ?? []) as AuditLogEvent[]
+    const fetchedEvents = eventsResult.Items.map((item) => unmarshall(item)) as AuditLogEvent[]
     events = events.concat(fetchedEvents)
 
-    console.log(`Fetched events: ${fetchedEvents.length} - Current date: ${lastEvaluatedKey?.timestamp}`)
+    console.log(`Fetched events: ${fetchedEvents.length} - Current date: ${lastEvaluatedKey?.timestamp?.S}`)
 
     if (!eventsResult?.LastEvaluatedKey) {
       console.log(`\nTotal number of audit log events: ${events.length}`)
@@ -70,7 +68,7 @@ const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, star
 }
 
 const getPncResponseReceivedEvents = async (
-  dynamo: DocumentClient,
+  dynamo: DynamoDBClient,
   eventsTableName: string,
   startDate: Date,
   endDate: Date

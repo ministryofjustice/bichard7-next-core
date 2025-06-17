@@ -1,5 +1,4 @@
 import type { Result } from "@moj-bichard7/common/types/Result"
-import type { DocumentClient } from "aws-sdk/clients/dynamodb"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
@@ -132,7 +131,7 @@ export default class IndexSearcher<TResult> {
     return this
   }
 
-  private createLastItemKey(): Result<DocumentClient.Key | undefined> {
+  private createLastItemKey(): Result<Record<string, unknown> | undefined> {
     if (!this.lastItemForPagination) {
       return undefined
     }
