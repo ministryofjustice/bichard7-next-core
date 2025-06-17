@@ -149,7 +149,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     })
     await createTriggers(helper.postgres, 2, [{ createdAt: dateToday, status: 1, triggerCode: "TRP1111" } as Trigger])
 
-    const caseMetadata = await fetchCasesAndFilter(helper.postgres, defaultQuery, user)
+    const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
     expect(caseMetadata.caseAges[CaseAge.Today]).toBe("3")
