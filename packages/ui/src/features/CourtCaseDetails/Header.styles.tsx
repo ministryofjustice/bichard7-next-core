@@ -38,7 +38,12 @@ const CaseDetailsHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+
+  @media (max-width: 1300px) {
+    width: 100%;
+  }
 `
 
 const ButtonContainer = styled.div`
