@@ -1,6 +1,8 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
 import { FullAuditLogEvent, getDateString, isNewUIEvent, log, reportEventCodes } from "./common"
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
+import type { QueryCommandInput } from "@aws-sdk/lib-dynamodb"
+import { QueryCommand } from "@aws-sdk/lib-dynamodb"
 
 const addOneDay = (date: Date): Date => {
   const newDate = new Date(date)
@@ -22,13 +24,13 @@ const generateDates = (start: Date, end: Date): Date[] => {
 const filterEvents = (events: FullAuditLogEvent[]): FullAuditLogEvent[] =>
   events.filter((event) => reportEventCodes.includes(event.eventCode))
 
-const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, start: Date, end: Date) => {
+const fetchEvents = async (dynamo: DynamoDBDocumentClient, eventsTableName: string, start: Date, end: Date) => {
   let lastEvaluatedKey
   const messageIds = new Set<string>()
   let events: FullAuditLogEvent[] = []
 
   while (true) {
-    const query: DocumentClient.QueryInput = {
+    const query: QueryCommandInput = {
       TableName: eventsTableName,
       IndexName: "timestampIndex",
       KeyConditionExpression: "#partitionKey = :partitionKeyValue and #rangeKey between :start and :end",
@@ -45,10 +47,7 @@ const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, star
       ...(lastEvaluatedKey ? { ExclusiveStartKey: lastEvaluatedKey } : {})
     }
 
-    const eventsResult = await dynamo
-      .query(query)
-      .promise()
-      .catch((error: Error) => error)
+    const eventsResult = await dynamo.send(new QueryCommand(query)).catch((error: Error) => error)
 
     if (isError(eventsResult)) {
       return eventsResult
@@ -84,7 +83,7 @@ const fetchEvents = async (dynamo: DocumentClient, eventsTableName: string, star
 }
 
 const findEvents = async (
-  dynamo: DocumentClient,
+  dynamo: DynamoDBDocumentClient,
   eventsTableName: string,
   start: Date,
   end: Date
