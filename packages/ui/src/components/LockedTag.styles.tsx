@@ -7,13 +7,18 @@ const Lockee = styled.span`
 
   & > img {
     margin-right: 5px;
-    margin-bottom: 20px;
   }
 `
 
 const LockedTagContainer = styled.div`
   display: flex;
   justify-content: end;
+  font-size: 1.1875rem;
+  margin-bottom: 20px;
+
+  @media (max-width: 1024px) {
+    font-size: 1rem;
+  }
 `
 
 export { LockedTagContainer, Lockee }
