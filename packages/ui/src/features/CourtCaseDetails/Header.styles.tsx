@@ -59,6 +59,12 @@ const ButtonContainer = styled.div`
   margin-bottom: 0;
   padding-top: 0.31rem;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
 `
 
 const LockedTagContainer = styled.div`
