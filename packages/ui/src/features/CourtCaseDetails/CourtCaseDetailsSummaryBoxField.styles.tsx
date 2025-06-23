@@ -5,6 +5,10 @@ const SummaryBoxDetail = styled.div`
     grid-column: 1 / span 3;
   }
 
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
   @media (min-width: 1680px) {
     display: block;
     padding-right: 35px;
