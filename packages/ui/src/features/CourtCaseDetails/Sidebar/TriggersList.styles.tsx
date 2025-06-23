@@ -11,6 +11,12 @@ const MarkCompleteGridCol = styled.div`
   display: flex;
   justify-content: end;
   margin-bottom: 0;
+
+  @media (max-width: 768px) {
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
 `
 
 const LockStatus = styled.div`
