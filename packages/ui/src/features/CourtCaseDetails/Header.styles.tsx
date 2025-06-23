@@ -19,6 +19,13 @@ const CaseDetailHeaderRow = styled.div`
   gap: 1.88rem;
   width: 100%;
 
+  @media (max-width: 768px) {
+    h2.govuk-heading-m {
+      font-size: 1.1875rem;
+      line-height: 1.31579;
+    }
+  }
+
   @media (max-width: 1300px) {
     flex-direction: column;
     align-items: flex-start;
