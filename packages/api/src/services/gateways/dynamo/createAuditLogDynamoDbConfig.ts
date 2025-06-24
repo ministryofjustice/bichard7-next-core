@@ -17,12 +17,11 @@ export default function createAuditLogDynamoDbConfig(): DynamoDbConfig {
     region: AWS_REGION ?? "eu-west-2"
   }
 
-  if (DYNAMO_AWS_ACCESS_KEY_ID) {
-    config.accessKeyId = DYNAMO_AWS_ACCESS_KEY_ID
-  }
-
-  if (DYNAMO_AWS_SECRET_ACCESS_KEY) {
-    config.secretAccessKey = DYNAMO_AWS_SECRET_ACCESS_KEY
+  if (DYNAMO_AWS_ACCESS_KEY_ID && DYNAMO_AWS_SECRET_ACCESS_KEY) {
+    config.credentials = {
+      accessKeyId: DYNAMO_AWS_ACCESS_KEY_ID,
+      secretAccessKey: DYNAMO_AWS_SECRET_ACCESS_KEY
+    }
   }
 
   return config
