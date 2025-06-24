@@ -1,4 +1,3 @@
-import type { DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
 import type {
   GetCommandOutput,
   PutCommandInput,
@@ -44,16 +43,7 @@ export default class DynamoGateway {
   protected readonly service: DynamoDBClient
 
   constructor(config: DynamoDbConfig) {
-    const dynamoClientConfig: DynamoDBClientConfig = {
-      credentials: {
-        accessKeyId: config.accessKeyId ?? "test",
-        secretAccessKey: config.secretAccessKey ?? "test"
-      },
-      endpoint: config.endpoint,
-      region: config.region
-    }
-
-    this.service = new DynamoDBClient(dynamoClientConfig)
+    this.service = new DynamoDBClient(config)
     this.client = DynamoDBDocumentClient.from(this.service)
   }
   async deleteMany(tableName: string, keyName: string, keyValues: string[]): PromiseResult<void> {
