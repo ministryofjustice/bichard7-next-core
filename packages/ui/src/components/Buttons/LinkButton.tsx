@@ -1,5 +1,6 @@
 import { useRouter } from "next/router"
 import { SyntheticEvent, useState } from "react"
+import { StyledLinkButton } from "./LinkButton.styles"
 
 export interface LinkButtonProps extends React.ComponentProps<"a"> {
   href: string
@@ -42,7 +43,7 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   linkButtonProps.disabled = canBeDisabled && isClicked
 
   return (
-    <a
+    <StyledLinkButton
       {...linkButtonProps}
       href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}
       role="button"
@@ -57,6 +58,6 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
       }}
     >
       {children}
-    </a>
+    </StyledLinkButton>
   )
 }

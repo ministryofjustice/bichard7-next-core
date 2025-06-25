@@ -7,6 +7,25 @@ const TriggerContainer = styled.div`
   &:not(:last-child) {
     margin-bottom: 30px;
   }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+
+    .govuk-checkboxes__input {
+      width: 30px;
+      height: 30px;
+    }
+
+    .govuk-checkboxes__label::before {
+      width: 30px;
+      height: 30px;
+    }
+
+    .govuk-checkboxes__label::after {
+      top: 8px;
+      left: 6px;
+    }
+  }
 `
 
 const TriggerHeaderRow = styled.div`
