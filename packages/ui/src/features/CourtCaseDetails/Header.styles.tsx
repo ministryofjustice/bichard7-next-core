@@ -19,6 +19,13 @@ const CaseDetailHeaderRow = styled.div`
   gap: 1.88rem;
   width: 100%;
 
+  @media (max-width: 768px) {
+    h2.govuk-heading-m {
+      font-size: 1.1875rem;
+      line-height: 1.31579;
+    }
+  }
+
   @media (max-width: 1300px) {
     flex-direction: column;
     align-items: flex-start;
@@ -52,6 +59,12 @@ const ButtonContainer = styled.div`
   margin-bottom: 0;
   padding-top: 0.31rem;
   gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
 `
 
 const LockedTagContainer = styled.div`
