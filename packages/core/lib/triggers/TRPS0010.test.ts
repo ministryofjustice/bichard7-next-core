@@ -170,8 +170,7 @@ describe("TRPS0010", () => {
       }
     ] as Offence[])
 
-    generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].AddedByTheCourt =
-      true
+    generatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].AddedByTheCourt = true
 
     mockedIsRecordableOffence.mockReturnValue(true)
     mockedHasCompletedDisarr.mockReturnValue(true)
