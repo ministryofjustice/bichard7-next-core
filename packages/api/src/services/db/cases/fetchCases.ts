@@ -179,10 +179,11 @@ const fetchCases = async (
   }
 
   const casesDto = result.map((caseData) => convertCaseToCaseIndexDto(caseData, user))
+  const fullCount = Number(result[0]?.full_count)
 
   return {
     cases: casesDto,
-    fullCount: Number(result[0]?.full_count) ?? 0
+    fullCount: isNaN(fullCount) ? 0 : fullCount
   }
 }
 
