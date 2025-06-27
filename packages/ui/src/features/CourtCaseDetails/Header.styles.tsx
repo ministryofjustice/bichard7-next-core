@@ -1,6 +1,7 @@
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import styled from "styled-components"
+import { breakpoints } from "types/breakpoints"
 import { gdsLightGrey, lightGrey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
@@ -19,7 +20,7 @@ const CaseDetailHeaderRow = styled.div`
   gap: 1.88rem;
   width: 100%;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.compact}) {
     h2.govuk-heading-m {
       font-size: 1.1875rem;
       line-height: 1.31579;
@@ -60,7 +61,7 @@ const ButtonContainer = styled.div`
   padding-top: 0.31rem;
   gap: 0.75rem;
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.compact}) {
     .govuk-button {
       font-size: 1rem;
     }
@@ -72,7 +73,7 @@ const LockedTagContainer = styled.div`
   gap: 2.5rem;
   margin-left: auto;
 
-  @media (max-width: 1019px) {
+  @media (max-width: ${breakpoints.regular}) {
     gap: 1rem;
   }
 `
