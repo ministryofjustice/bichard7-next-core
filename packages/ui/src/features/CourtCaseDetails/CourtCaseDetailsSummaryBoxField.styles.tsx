@@ -1,11 +1,12 @@
 import styled from "styled-components"
+import { breakpoints } from "types/breakpoints"
 
 const SummaryBoxDetail = styled.div`
   &.detail__court-name {
     grid-column: 1 / span 3;
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: ${breakpoints.compact}) {
     font-size: 1rem;
   }
 
