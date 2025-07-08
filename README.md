@@ -14,11 +14,6 @@ The code to replace the processing logic of Bichard 7.
 - [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
 - [Excluding Triggers](#excluding-triggers)
-- [Comparing New and Old Bichard](#comparing-new-and-old-bichard)
-  - [Checking a comparison file](#checking-a-comparison-file)
-  - [Checking a comparison file on old Bichard](#checking-a-comparison-file-on-old-bichard)
-  - [Comparing outputs locally](#comparing-outputs-locally)
-  - [Configuration](#configuration)
 - [Conductor](#conductor)
 
 ## Structure of this Monorepo
@@ -51,18 +46,20 @@ This project has a number of external dependencies that need building in order t
 following out and run `make build` in each repository:
 
 - [Docker Images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images)
-  - Make command is `make build-local` for this repo
-- [Bichard7 Liberty](https://github.com/ministryofjustice/bichard7-next)
-  - Make command is `make buid` for this repo, or
+  - Make command is `SKIP_GOSS=true make build-local` for this repo
+- [Bichard7 Next (Old Bichard)](https://github.com/ministryofjustice/bichard7-next)
+  - Make command is `make build` for this repo, or
   - `make build-debug` if you need to run Bichard in debug mode
 - [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
+  - Make command is `make build` for this repo
 - [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
-- [End-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests)
-- [Nginx Authentication Proxy](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Nginx_Auth_Proxy)
+  - Make command is `SKIP_GOSS=true make build` for this repo
 - [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
   - Make command is `make build-api-server build-event-handler-server` for this repo
 - [User Service](https://github.com/ministryofjustice/bichard7-next-user-service)
   - Make command is `make build` for this repo
+- packages/ui
+  - Navigate to bichard7-next-core/packages/ui and run `make build`
 
 Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
 
