@@ -2,15 +2,12 @@ import ExceptionFieldRow from "components/ExceptionFieldRow"
 import { useCourtCase } from "context/CourtCaseContext"
 import type { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
 
-interface LegacySequencingMessageTableRowProps {
+interface LegacySequencingMessageRowProps {
   exception: OffenceMatchingException
   message?: string
 }
 
-const LegacySequencingMessageTableRow = ({
-  exception,
-  message
-}: LegacySequencingMessageTableRowProps): React.ReactNode => {
+const LegacySequencingMessageRow = ({ exception, message }: LegacySequencingMessageRowProps): React.ReactNode => {
   const { courtCase } = useCourtCase()
 
   return (
@@ -25,4 +22,4 @@ const LegacySequencingMessageTableRow = ({
   )
 }
 
-export default LegacySequencingMessageTableRow
+export default LegacySequencingMessageRow

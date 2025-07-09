@@ -1,7 +1,7 @@
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
-import OffenceMatcherTableRow from "./TableRows/OffenceMatcherTableRow"
-import OffenceMatchingBadgeTableRow from "./TableRows/OffenceMatchingBadgeTableRow"
+import OffenceMatcherRow from "./Rows/OffenceMatcherRow"
+import OffenceMatchingBadgeRow from "./Rows/OffenceMatchingBadgeRow"
 
 interface OffenceMatcherRenderProps {
   offenceMatchingException: boolean
@@ -25,9 +25,9 @@ const OffenceMatcherRenderer = ({
   return (
     <>
       {offenceMatchingException && userCanMatchOffence ? (
-        <OffenceMatcherTableRow offenceIndex={offenceIndex} isCaseLockedToCurrentUser={isCaseLockedToCurrentUser} />
+        <OffenceMatcherRow offenceIndex={offenceIndex} isCaseLockedToCurrentUser={isCaseLockedToCurrentUser} />
       ) : (
-        <OffenceMatchingBadgeTableRow offenceIndex={offenceIndex} offenceReasonSequence={offenceReasonSequence} />
+        <OffenceMatchingBadgeRow offenceIndex={offenceIndex} offenceReasonSequence={offenceReasonSequence} />
       )}
     </>
   )

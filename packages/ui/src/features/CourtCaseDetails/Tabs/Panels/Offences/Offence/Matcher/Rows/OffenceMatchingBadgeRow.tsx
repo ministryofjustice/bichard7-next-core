@@ -1,16 +1,16 @@
 import Badge, { BadgeColours } from "components/Badge"
 import { useCourtCase } from "context/CourtCaseContext"
-import { TableRow } from "features/CourtCaseDetails/Tabs/Panels/TableRow"
+import { InfoRow } from "features/CourtCaseDetails/Tabs/Panels/InfoRow"
 
-interface OffenceMatchingBadgeTableRowProps {
+interface OffenceMatchingBadgeRowProps {
   offenceIndex: number
   offenceReasonSequence?: string | null
 }
 
-const OffenceMatchingBadgeTableRow = ({
+const OffenceMatchingBadgeRow = ({
   offenceIndex,
   offenceReasonSequence
-}: OffenceMatchingBadgeTableRowProps): React.ReactNode => {
+}: OffenceMatchingBadgeRowProps): React.ReactNode => {
   const { savedAmendments } = useCourtCase()
   const updatedOffence = savedAmendments.offenceReasonSequence?.find((o) => o.offenceIndex === offenceIndex)
 
@@ -20,7 +20,7 @@ const OffenceMatchingBadgeTableRow = ({
   }
 
   return (
-    <TableRow
+    <InfoRow
       label="Matched PNC offence"
       value={
         <>
@@ -32,4 +32,4 @@ const OffenceMatchingBadgeTableRow = ({
   )
 }
 
-export default OffenceMatchingBadgeTableRow
+export default OffenceMatchingBadgeRow
