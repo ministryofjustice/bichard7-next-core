@@ -58,8 +58,8 @@ following out and run `make build` in each repository:
   - Make command is `make build-api-server build-event-handler-server` for this repo
 - [User Service](https://github.com/ministryofjustice/bichard7-next-user-service)
   - Make command is `make build` for this repo
-- packages/ui
-  - Navigate to bichard7-next-core/packages/ui and run `make build`
+- [UI](packages/ui)
+  - Navigate to packages/ui and run `make build`
 
 Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
 
