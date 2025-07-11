@@ -10,7 +10,7 @@ import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputD
 import { auditLogApiRecordInputSchema } from "@moj-bichard7/common/schemas/auditLogRecord"
 import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 const { apiKey, apiUrl, basePath } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)

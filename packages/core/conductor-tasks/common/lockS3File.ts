@@ -9,7 +9,7 @@ import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import readS3FileTags from "@moj-bichard7/common/s3/readS3FileTags"
 import writeS3FileTags from "@moj-bichard7/common/s3/writeS3FileTags"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 const s3Config = createS3Config()
 

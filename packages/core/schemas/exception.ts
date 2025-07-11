@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 export const exceptionPathSchema = z.array(z.number().or(z.string()))
 

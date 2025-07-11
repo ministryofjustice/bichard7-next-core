@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import { SpiPlea } from "../types/Plea"
 import toArray from "./toArray"
@@ -149,6 +149,7 @@ export const defendantSchema = z
         (!("CourtCorporateDefendant" in d) && !("CourtIndividualDefendant" in d)) ||
         ("CourtCorporateDefendant" in d && "CourtIndividualDefendant" in d)
       ),
+
     "Either CourtIndividualDefendant or CourtCorporateDefendant should exist."
   )
 

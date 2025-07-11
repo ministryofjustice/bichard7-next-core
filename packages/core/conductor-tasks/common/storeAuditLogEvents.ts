@@ -9,7 +9,7 @@ import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputD
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 const inputDataSchema = z.object({
   correlationId: z.string(),

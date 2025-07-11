@@ -13,7 +13,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import {
   extractIncomingMessage,
@@ -105,6 +105,7 @@ const buildParsingFailedOutput = (
         timestamp: new Date()
       }
     ],
+
     errorReportData: {
       receivedDate: receivedDate.toISOString(),
       messageId: correlationId,

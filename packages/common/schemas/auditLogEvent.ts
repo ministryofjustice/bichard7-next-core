@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import EventCategory from "../types/EventCategory"
 import EventCode from "../types/EventCode"

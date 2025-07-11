@@ -2,9 +2,9 @@ import "zod-openapi/extend"
 
 import type { FastifyInstance } from "fastify"
 
+import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi"
 import { fastifyZodOpenApiPlugin, serializerCompiler, validatorCompiler } from "fastify-zod-openapi"
 import { z, ZodError } from "zod"
-import { extendZodWithOpenApi } from "zod-openapi"
 
 extendZodWithOpenApi(z)
 

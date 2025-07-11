@@ -1,4 +1,4 @@
-import type { z } from "zod"
+import type * as z from "zod/v4"
 
 import type pncUpdateDatasetSchema from "../schemas/pncUpdateDataset"
 import type { operationSchema, operationStatusSchema } from "../schemas/pncUpdateDataset"

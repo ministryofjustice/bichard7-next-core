@@ -1,11 +1,11 @@
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import { UserGroup } from "./UserGroup"
 
 export const UserRowSchema = z.object({
   email: z.string(),
   excluded_triggers: z.string().nullable(),
-  feature_flags: z.record(z.boolean()),
+  feature_flags: z.record(z.string(), z.boolean()),
   forenames: z.string().nullable(),
   groups: z.array(z.nativeEnum(UserGroup)),
   id: z.number(),
@@ -19,7 +19,7 @@ export const UserRowSchema = z.object({
 export const UserSchema = z.object({
   email: z.string(),
   excludedTriggers: z.array(z.string()).min(0),
-  featureFlags: z.record(z.boolean()),
+  featureFlags: z.record(z.string(), z.boolean()),
   forenames: z.string().nullable(),
   groups: z.array(z.nativeEnum(UserGroup)),
   id: z.number(),
@@ -33,11 +33,11 @@ export const UserSchema = z.object({
 export const UserDtoSchema = z.object({
   email: z.string(),
   excludedTriggers: z.string().optional(),
-  featureFlags: z.record(z.boolean()),
+  featureFlags: z.record(z.string(), z.boolean()),
   forenames: z.string().nullable(),
   fullname: z.string().optional(),
   groups: z.array(z.nativeEnum(UserGroup)),
-  hasAccessTo: z.record(z.boolean()),
+  hasAccessTo: z.record(z.string(), z.boolean()),
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),

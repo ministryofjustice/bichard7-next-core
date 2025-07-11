@@ -7,7 +7,7 @@ import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
 import getEmailer from "@moj-bichard7/common/email/getEmailer"
 import getSmtpConfig from "@moj-bichard7/common/email/getSmtpConfig"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import { type ErrorReportData, errorReportDataSchema } from "../types/errorReportData"
 
@@ -16,9 +16,8 @@ const inputDataSchema = z.object({
 })
 type InputData = z.infer<typeof inputDataSchema>
 
-const generateEmailContent = (
-  inputData: ErrorReportData
-) => `There was a problem processing the message with the following details:
+const generateEmailContent = (inputData: ErrorReportData) =>
+  `There was a problem processing the message with the following details:
 
 Received date: ${inputData.receivedDate}
 Bichard internal message ID: ${inputData.messageId}
