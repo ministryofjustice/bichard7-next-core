@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import AuditLogStatus from "../types/AuditLogStatus"
 import { auditLogEventSchema } from "./auditLogEvent"

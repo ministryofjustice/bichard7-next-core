@@ -8,7 +8,7 @@ import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputD
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import deleteFileFromS3 from "@moj-bichard7/common/s3/deleteFileFromS3"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 const s3Config = createS3Config()
 

@@ -1,4 +1,4 @@
-import type { z } from "zod"
+import type * as z from "zod/v4"
 
 import type { phase3ResultSchema } from "../schemas/phase3Result"
 

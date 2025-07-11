@@ -1,5 +1,5 @@
 import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import { CaseAge } from "./CaseAge"
 import { NoteDtoSchema, NoteRowSchema, NoteSchema } from "./Note"

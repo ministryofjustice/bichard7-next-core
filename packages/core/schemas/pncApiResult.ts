@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as z from "zod/v4"
 
 const dateOrUndefined = (input: unknown): Date | undefined => {
   if (input instanceof Date) {

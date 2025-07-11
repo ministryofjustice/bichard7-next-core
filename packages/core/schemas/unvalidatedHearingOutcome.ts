@@ -1,4 +1,4 @@
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"

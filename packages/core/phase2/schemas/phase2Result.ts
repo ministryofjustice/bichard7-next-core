@@ -1,5 +1,5 @@
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
 import { triggerSchema } from "../../schemas/trigger"

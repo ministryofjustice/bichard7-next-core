@@ -8,7 +8,7 @@ import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { z } from "zod"
+import * as z from "zod/v4"
 
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
