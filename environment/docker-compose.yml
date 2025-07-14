@@ -457,3 +457,8 @@ services:
     ports:
       - 21025:1025
       - 8025:8025
+
+  leds-simulator:
+    image: mockserver/mockserver:5.14.0
+    ports:
+      - 1080:1080
