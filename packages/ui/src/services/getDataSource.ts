@@ -30,7 +30,7 @@ const getDataSource = async (): Promise<DataSource> => {
     throw Error("Synchronize must be false.")
   }
 
-  if (!appDataSource || !appDataSource.isInitialized) {
+  if (!appDataSource?.isInitialized) {
     appDataSource = await new DataSource(config).initialize()
   }
 
@@ -38,7 +38,7 @@ const getDataSource = async (): Promise<DataSource> => {
 }
 
 process.on("beforeExit", async () => {
-  if (appDataSource && appDataSource.isInitialized) {
+  if (appDataSource?.isInitialized) {
     await appDataSource.destroy()
   }
 })
