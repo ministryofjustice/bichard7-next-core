@@ -8,7 +8,7 @@ import type NavigationHandler from "types/NavigationHandler"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import ExceptionsList from "./ExceptionsList"
 import PncDetails from "./PncDetails/PncDetails"
-import { SidebarContainer } from "./Sidebar.styles"
+import { SidebarContainer, TabHeaders } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
 
 enum SidebarTab {
@@ -72,7 +72,7 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
     <SidebarContainer className={`side-bar case-details-sidebar`}>
       <ConditionalRender isRendered={currentUser.hasAccessTo[Permission.CaseDetailsSidebar]}>
         <div className="govuk-tabs">
-          <ul className="govuk-tabs__list" role="tablist">
+          <TabHeaders className="govuk-tabs__list tab-list" role="tablist">
             <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
               <li
                 className={`tab govuk-tabs__list-item ${selectedTab === SidebarTab.Triggers ? "govuk-tabs__list-item--selected" : ""}`}
@@ -133,7 +133,7 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
                 {"PNC Details"}
               </a>
             </li>
-          </ul>
+          </TabHeaders>
 
           <ConditionalRender isRendered={accessibleTabs.includes(SidebarTab.Triggers)}>
             <section

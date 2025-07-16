@@ -9,12 +9,12 @@ interface LockedTagProps {
 
 const LockedTag = ({ lockName, lockedBy, ...rest }: LockedTagProps) => (
   <LockedTagContainer {...rest} className={`${lockName.toLowerCase()}-locked-tag`}>
-    <span className="govuk-body">
+    <span>
       <b>{lockName}</b>
     </span>
     <Lockee id={`${lockName.toLowerCase()}-locked-tag-lockee`}>
       <Image src={LOCKED_ICON_URL} width={18} height={18} alt="Lock icon" />
-      <span className="govuk-body">{lockedBy}</span>
+      <span>{lockedBy}</span>
     </Lockee>
   </LockedTagContainer>
 )

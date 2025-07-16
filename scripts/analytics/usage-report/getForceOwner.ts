@@ -1,21 +1,19 @@
 import { isError } from "@moj-bichard7/common/types/Result"
-import { DocumentClient } from "aws-sdk/clients/dynamodb"
-// import { DynamoDB } from "@aws-sdk/client-dynamodb";
+import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
 
-const getForceOwner = async (dynamo: DocumentClient, auditLogTableName: string, messageId: string): Promise<string | Error> => {
-  const query: DocumentClient.GetItemInput = {
+const getForceOwner = async (
+  dynamo: DynamoDBDocumentClient,
+  auditLogTableName: string,
+  messageId: string
+): Promise<string | Error> => {
+  const command = new GetCommand({
     TableName: auditLogTableName,
-    Key: {
-      messageId
-    },
+    Key: { messageId },
     ProjectionExpression: "forceOwner",
     ConsistentRead: false
-  }
+  })
 
-  const auditLogResult = await dynamo
-    .get(query)
-    .promise()
-    .catch((error: Error) => error)
+  const auditLogResult = await dynamo.send(command).catch((error: Error) => error)
 
   if (isError(auditLogResult)) {
     return auditLogResult

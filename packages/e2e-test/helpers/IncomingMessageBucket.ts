@@ -1,4 +1,6 @@
-import { S3 } from "aws-sdk"
+import { S3Client, S3ClientConfig } from "@aws-sdk/client-s3"
+import { Upload } from "@aws-sdk/lib-storage"
+
 import { format } from "date-fns"
 import getUtcDate from "../utils/getUtcDate"
 
@@ -9,14 +11,14 @@ type IncomingMessageBucketConfig = {
 }
 
 class IncomingMessageBucket {
-  s3Client: S3
+  s3Client: S3Client
   incomingMessageBucketName: string
   uploadedS3Files: string[]
 
   constructor(config: IncomingMessageBucketConfig) {
-    const options: S3.Types.ClientConfiguration = {
+    const options: S3ClientConfig = {
       region: config.region,
-      s3ForcePathStyle: true
+      forcePathStyle: true
     }
 
     if (config.url && config.url !== "none") {
@@ -27,7 +29,7 @@ class IncomingMessageBucket {
       }
     }
 
-    this.s3Client = new S3(options)
+    this.s3Client = new S3Client(options)
     this.incomingMessageBucketName = config.incomingMessageBucketName
     this.uploadedS3Files = []
   }
@@ -43,11 +45,13 @@ class IncomingMessageBucket {
       Body: message
     }
 
-    return this.s3Client
-      .upload(params)
-      .promise()
+    return new Upload({
+      client: this.s3Client,
+      params
+    })
+      .done()
       .then(() => s3FileName)
-      .catch((error) => error)
+      .catch((error: Error) => error)
   }
 }
 

@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { breakpoints } from "types/breakpoints"
 
 const SelectAllTriggersGridRow = styled.div`
   text-align: right;
@@ -11,6 +12,12 @@ const MarkCompleteGridCol = styled.div`
   display: flex;
   justify-content: end;
   margin-bottom: 0;
+
+  @media (max-width: ${breakpoints.compact}) {
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
 `
 
 const LockStatus = styled.div`

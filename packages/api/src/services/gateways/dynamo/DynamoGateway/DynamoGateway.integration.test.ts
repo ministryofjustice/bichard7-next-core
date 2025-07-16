@@ -1,4 +1,4 @@
-import type { DocumentClient, GetItemOutput } from "aws-sdk/clients/dynamodb"
+import type { GetCommandOutput, ScanCommandOutput } from "@aws-sdk/lib-dynamodb"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
@@ -39,15 +39,19 @@ describe("DynamoGateway", () => {
   })
 
   describe("insertOne()", () => {
-    it("should return undefined when successful and have inserted one record", async () => {
+    it("should return success and insert one record", async () => {
       const expectedRecord = {
         id: "InsertOneRecord",
         someOtherValue: "SomeOtherValue"
       }
 
-      const result = await gateway.insertOne(auditLogDynamoConfig.auditLogTableName, expectedRecord, "id")
+      const insertResult = await (gateway as DynamoGateway).insertOne(
+        auditLogDynamoConfig.auditLogTableName,
+        expectedRecord,
+        "id"
+      )
 
-      expect(result).toBeUndefined()
+      expect(insertResult).toBeUndefined()
 
       const actualRecords = await testGateway.getAll(auditLogDynamoConfig.auditLogTableName)
       expect(actualRecords.Count).toBe(1)
@@ -141,7 +145,7 @@ describe("DynamoGateway", () => {
         version: 1
       }
 
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, "id", 1)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, 1)
 
       expect(result).toBeTruthy()
       expect(isError(result)).toBe(true)
@@ -162,7 +166,7 @@ describe("DynamoGateway", () => {
         someOtherValue: "NewValue",
         version: 2
       }
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, "id", 1)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, 1)
 
       expect(result).toBeUndefined()
 
@@ -188,7 +192,7 @@ describe("DynamoGateway", () => {
         someOtherValue: "NewValue",
         version: 2
       }
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, "id", 2)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, updatedRecord, 2)
 
       expect(result).toBeTruthy()
       expect(isError(result)).toBe(true)
@@ -202,7 +206,7 @@ describe("DynamoGateway", () => {
         version: 1
       }
 
-      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, "id", 1)
+      const result = await gateway.replaceOne(auditLogDynamoConfig.auditLogTableName, record, 1)
 
       expect(result).toBeTruthy()
       expect(isError(result)).toBe(true)
@@ -233,7 +237,7 @@ describe("DynamoGateway", () => {
         sortKey
       }
       const actualRecords = await gateway.getMany(auditLogDynamoConfig.auditLogTableName, options)
-      const results = <DocumentClient.ScanOutput>actualRecords
+      const results = <ScanCommandOutput>actualRecords
       expect(results.Count).toBe(1)
     })
 
@@ -243,7 +247,7 @@ describe("DynamoGateway", () => {
         sortKey
       }
       const actualRecords = await gateway.getMany(auditLogDynamoConfig.auditLogTableName, options)
-      const results = <DocumentClient.ScanOutput>actualRecords
+      const results = <ScanCommandOutput>actualRecords
       expect(results.Count).toBe(3)
 
       const items = results.Items
@@ -262,7 +266,7 @@ describe("DynamoGateway", () => {
         sortKey
       }
       const actualRecords = await gateway.getMany(auditLogDynamoConfig.auditLogTableName, options)
-      const results = <DocumentClient.ScanOutput>actualRecords
+      const results = <ScanCommandOutput>actualRecords
       expect(results.Count).toBe(1)
 
       const item = results.Items![0]
@@ -297,7 +301,7 @@ describe("DynamoGateway", () => {
 
       expect(isError(actualRecords)).toBe(false)
 
-      const results = <DocumentClient.QueryOutput>actualRecords
+      const results = <ScanCommandOutput>actualRecords
       expect(results.Count).toBe(1)
 
       const item = results.Items![0]
@@ -317,7 +321,7 @@ describe("DynamoGateway", () => {
 
       expect(isError(actualRecords)).toBe(false)
 
-      const results = <DocumentClient.QueryOutput>actualRecords
+      const results = <ScanCommandOutput>actualRecords
       expect(results.Count).toBe(0)
     })
   })
@@ -330,15 +334,14 @@ describe("DynamoGateway", () => {
       }
 
       await testGateway.insertOne(auditLogDynamoConfig.auditLogTableName, expectedRecord, "id")
-
       const result = await gateway.getOne(auditLogDynamoConfig.auditLogTableName, "id", "Record1")
 
-      const { Item: actualRecord } = result as {
-        Item: {
-          id: string
-          someOtherValue: string
-        }
+      if (result instanceof Error) {
+        throw result
       }
+
+      const { Item: actualRecord } = result
+
       expect(actualRecord).toBeDefined()
       expect(actualRecord?.id).toBe(expectedRecord.id)
       expect(actualRecord?.someOtherValue).toBe(expectedRecord.someOtherValue)
@@ -360,7 +363,7 @@ describe("DynamoGateway", () => {
       expect(result).toBeDefined()
       expect(isError(result)).toBe(false)
 
-      const itemResult = result as GetItemOutput
+      const itemResult = result as GetCommandOutput
       expect(itemResult.Item).toBeDefined()
 
       const actualRecord = itemResult.Item as { id: string; someOtherValue: string; version: number }
@@ -375,7 +378,7 @@ describe("DynamoGateway", () => {
       expect(isError(result)).toBe(false)
       expect(result).toBeDefined()
 
-      const itemResult = result as GetItemOutput
+      const itemResult = result as GetCommandOutput
       expect(itemResult.Item).toBeUndefined()
     })
   })
@@ -417,7 +420,7 @@ describe("DynamoGateway", () => {
         pagination: { limit: 3 },
         sortKey
       }
-      const actualRecords = <DocumentClient.ScanOutput>(
+      const actualRecords = <ScanCommandOutput>(
         await testGateway.getMany(auditLogDynamoConfig.auditLogTableName, getManyOptions)
       )
       expect(isError(actualRecords)).toBeFalsy()

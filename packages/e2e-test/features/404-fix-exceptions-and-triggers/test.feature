@@ -33,3 +33,21 @@ Feature: 404 - Fixing exceptions and triggers and resubmitting
 		When I resolve all of the triggers
 		Then the "record" for "SEXOFFENCE TRPRFOUR" is "resolved"
 			And there are no exceptions for this record
+
+	@NextUI
+	@ExcludeOnLegacyUI
+	Scenario: Updates and triggers are correctly generated for sexual offences
+		Given I am logged in as "supervisor"
+			And I view the list of exceptions
+		Then I see exception "HO100206" in the exception list table
+		When I open the record for "SEXOFFENCE TRPRFOUR"
+			And I click the "Defendant" tab
+			And I correct "ASN" to "1101ZD0100000448754K"
+			And I submit the record on the case details page
+		When I click the "Triggers" tab
+			And I see trigger "TRPR0003" for offence "1"
+			And I see trigger "TRPR0004" for offence "1"
+			And I see trigger "TRPR0004" for offence "2"
+		When I select trigger "TRPR0004" for offence "1" to resolve
+			And I resolve the selected triggers
+		Then I see trigger "TRPR0004" for offence "1" is Marked as Complete

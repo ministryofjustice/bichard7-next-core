@@ -14,4 +14,9 @@ const SidebarContainer = styled.div`
   }
 `
 
-export { SidebarContainer }
+const TabHeaders = styled.ul`
+  display: flex;
+  flex-wrap: nowrap;
+`
+
+export { SidebarContainer, TabHeaders }

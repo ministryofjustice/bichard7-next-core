@@ -11,7 +11,7 @@ import { Exception } from "types/exceptions"
 import getExceptionDefinition from "utils/exceptionDefinition/getExceptionDefinition"
 import getOffenceMatchingException from "utils/offenceMatcher/getOffenceMatchingException"
 import findCandidates from "../../../../../../utils/offenceMatcher/findCandidates"
-import { TableRow } from "../../TableRow"
+import { InfoRow } from "../../InfoRow"
 import OffenceMatcher from "./OffenceMatcher"
 
 type Props = {
@@ -82,7 +82,7 @@ export const OffenceMatching = ({
             <ErrorPromptMessage message={offenceMatchingExceptionMessage} />
           </ExceptionFieldRow>
         ) : (
-          <TableRow
+          <InfoRow
             label="Matched PNC offence"
             value={
               <>
@@ -115,7 +115,7 @@ export const OffenceMatching = ({
             </>
           </ExceptionFieldRow>
         ) : (
-          <TableRow
+          <InfoRow
             label="PNC sequence number"
             value={
               <>
