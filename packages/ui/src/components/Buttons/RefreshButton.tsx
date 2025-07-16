@@ -14,14 +14,20 @@ export const RefreshButton = ({ location, ...buttonProps }: RefreshButtonProps) 
   const [timeAgo, setTimeAgo] = useState("")
   const [nextRouterChanged, setNextRouterChanged] = useState(false)
 
-  router.events?.on("routeChangeComplete", () => setNextRouterChanged(true))
+  useEffect(() => {
+    const handleRouteChangeComplete = () => {
+      setNextRouterChanged(true)
+    }
+
+    router.events.on("routeChangeComplete", handleRouteChangeComplete)
+
+    return () => router.events.off("routeChangeComplete", handleRouteChangeComplete)
+  }, [])
 
   useEffect(() => {
     if (nextRouterChanged) {
       setDateAgo(new Date())
     }
-
-    setNextRouterChanged(false)
 
     const interval = setInterval(() => {
       setTimeAgo(formatDistanceStrict(dateAgo, new Date()))
