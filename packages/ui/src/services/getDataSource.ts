@@ -37,4 +37,10 @@ const getDataSource = async (): Promise<DataSource> => {
   return appDataSource
 }
 
+process.on("beforeExit", async () => {
+  if (appDataSource && appDataSource.isInitialized) {
+    await appDataSource.destroy()
+  }
+})
+
 export default getDataSource
