@@ -16,7 +16,7 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard) => {
   }
 
   const parsed = parser.parse(xmlData) as ParsedNCM
-  const prosecutorRef = parsed.NewCaseMessage.Case.Defendant.ProsecutorReference.slice(-7)
+  const prosecutorRef = parsed.NewCaseMessage.Case.Defendant.ProsecutorReference
   const offenceEl = parsed.NewCaseMessage.Case.Defendant.Offence
   const offenceData = Array.isArray(offenceEl) ? offenceEl : [offenceEl]
   const offences = offenceData.map((offence) => ({
@@ -57,12 +57,12 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard) => {
         json: {
           personId: randomUUID(),
           reportId: randomUUID(),
-          asn,
+          asn: prosecutorRef,
           ownerCode: forceStationCode,
           disposals: [
             {
               courtCaseId: randomUUID(),
-              courtCaseReference: "K97/1626/8395Q",
+              courtCaseReference: "97/1626/008395Q",
               caseStatusMarker: "impending-prosecution-detail",
               court: {
                 courtIdentityType: "code",
@@ -71,7 +71,7 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard) => {
               offences: offences.map((offence) => ({
                 offenceId: randomUUID(),
                 courtOffenceSequenceNumber: offence.sequenceNo,
-                cjsOffenceCode: offence.code,
+                cjsOffenceCode: offence.code.trim(),
                 offenceStartDate: offence.startDate,
                 offenceEndDate: offence.endDate,
                 offenceDescription: [offence.description],
