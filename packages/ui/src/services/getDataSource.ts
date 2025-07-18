@@ -22,7 +22,7 @@ const getDataSource = async (): Promise<DataSource> => {
     migrations: [],
     logging: false, // Set to true to see what queries are being sent to Postgres
     extra: {
-      max: 1
+      max: 20
     }
   }
 
