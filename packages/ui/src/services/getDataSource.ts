@@ -11,6 +11,8 @@ import { NoteSubscriber } from "./subscribers/noteSubscriber"
 
 let appDataSource: DataSource
 const getDataSource = async (): Promise<DataSource> => {
+  const { NODE_ENV, CYPRESS } = process.env
+
   const config: DataSourceOptions = {
     ...baseConfig,
     type: "postgres",
@@ -22,7 +24,7 @@ const getDataSource = async (): Promise<DataSource> => {
     migrations: [],
     logging: false, // Set to true to see what queries are being sent to Postgres
     extra: {
-      max: process.env.NODE_ENV === "test" ? 1 : 20
+      max: NODE_ENV === "test" || CYPRESS === "true" ? 1 : 20
     }
   }
 
