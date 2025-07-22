@@ -13,11 +13,7 @@ workspace "Bichard" {
       tags "Existing System"
     }
 
-    aws = group "AWS" {
-      dynamoDB =  softwareSystem "DynamoDB" {
-        tags "Existing System"
-      }
-    }
+
 
     group "CJSE" {
       qsolution = softwareSystem "PSN Proxy" "Q-Solution" "Nginx" {
@@ -29,6 +25,10 @@ workspace "Bichard" {
       }
 
       bichard = softwareSystem "Bichard" {
+        dynamoDB =  container "DynamoDB" {
+          tags "Existing System"
+        }
+
         beanconnect = container "Beanconnect"
 
         messageTransfer = container "Message Transfer Lambda" {
@@ -39,6 +39,10 @@ workspace "Bichard" {
           transferProcess = component "Transfer lambda" {
             tags "Lambda"
           }
+
+          # sqs = component "SQS event" {
+          #   tags "Existing System"
+          # }
         }
 
         incomingMessageHandler = container "Incoming Message Handler Step Function" {
@@ -146,9 +150,11 @@ workspace "Bichard" {
         conductor = container "Conductor" {
           url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor"
 
-          phaseOne = component "Phase 1 Queue" "" "TypeScript"
-          phaseTwo = component "Phase 2 Queue" "" "TypeScript"
-          phaseThree = component "Phase 3 Queue" "" "TypeScript"
+          group "Core Worker" {
+            phaseOne = component "Phase 1 Queue" "" "TypeScript"
+            phaseTwo = component "Phase 2 Queue" "" "TypeScript"
+            phaseThree = component "Phase 3 Queue" "" "TypeScript"
+          }
         }
 
         bichardAPI = container "Bichard API" "An API to remove DB actions from UI and to be Audit Logs" "TypeScript, Fastify & Zod" "API" {
@@ -159,8 +165,8 @@ workspace "Bichard" {
     }
 
     # Relationships between people and software systems
-    policeUser -> qsolution "Uses"
     policeUser -> pnc "Uses"
+    policeUser -> nginxAuthProxy "Uses"
     cjsm -> policeUser "Gets email"
 
     # Relationships between software systems
@@ -234,6 +240,7 @@ workspace "Bichard" {
     bichardNextCore -> database "Reads from and writes to"
     bichardNextCore -> pncApi
     pncApi -> beanconnect
+    pncApi -> qsolution
 
     conductor -> database
     messageTransfer -> conductor
@@ -249,18 +256,22 @@ workspace "Bichard" {
     phaseThree -> auditLogApi
 
     phaseThree -> pncApi
+
+    phaseOne -> database
+    phaseTwo -> database
+    phaseThree -> database
   }
 
   views {
     systemLandscape "SystemLandscape" {
       include *
-      exclude slack pagerDuty aws
+      exclude slack pagerDuty
       autoLayout lr
     }
 
     systemContext bichard "BichardSystemContext" {
       include *
-      exclude slack pagerDuty aws
+      exclude slack pagerDuty
       autoLayout lr
     }
 
@@ -273,13 +284,13 @@ workspace "Bichard" {
 
     container bichard "HybridBichard" {
       include *
-      exclude slack pagerDuty activeMQ eventHandler eventLambda incomingMessageHandler bichardNextCore
+      exclude slack pagerDuty activeMQ eventHandler eventLambda bichardNextCore beanconnect incomingMessageHandler
       title "Hybrid Bichard"
     }
 
     component conductor {
       include *
-      autoLayout lr
+      # autoLayout lr
     }
 
     component incomingMessageHandler {
