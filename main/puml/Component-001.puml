@@ -2,7 +2,7 @@
 set separator none
 title Bichard - Conductor - Components
 
-left to right direction
+top to bottom direction
 
 !include <C4/C4>
 !include <C4/C4_Context>
@@ -14,13 +14,26 @@ Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="
 Container(Bichard.PNCAPI, "PNC API", $techn="", $descr="", $tags="", $link="")
 
 Container_Boundary("Bichard.Conductor_boundary", "Conductor", $tags="") {
-  Component(Bichard.Conductor.BichardNextCore, "Bichard Next Core", $techn="Next.js, TypeScript", $descr="The code to replace the processing logic of Bichard7", $tags="", $link="")
+  AddBoundaryTag("Core Worker", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
+  Boundary(group_1, "Core Worker", $tags="Core Worker") {
+    Component(Bichard.Conductor.Phase1Queue, "Phase 1 Queue", $techn="TypeScript", $descr="", $tags="", $link="")
+    Component(Bichard.Conductor.Phase2Queue, "Phase 2 Queue", $techn="TypeScript", $descr="", $tags="", $link="")
+    Component(Bichard.Conductor.Phase3Queue, "Phase 3 Queue", $techn="TypeScript", $descr="", $tags="", $link="")
+  }
+
 }
 
-Rel(Bichard.AuditLog, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.BichardNextCore, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.BichardNextCore, Bichard.BichardDatabase, "Reads from and writes to", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.BichardNextCore, Bichard.PNCAPI, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1Queue, Bichard.Conductor.Phase1Queue, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1Queue, Bichard.Conductor.Phase2Queue, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase2Queue, Bichard.Conductor.Phase2Queue, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase2Queue, Bichard.Conductor.Phase3Queue, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1Queue, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase2Queue, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase3Queue, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase3Queue, Bichard.PNCAPI, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1Queue, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase2Queue, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase3Queue, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

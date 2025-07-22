@@ -8,11 +8,13 @@ top to bottom direction
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 
+Person(PoliceUser, "Police User", $descr="", $tags="", $link="")
 System(CJSM, "CJSM", $descr="", $tags="", $link="")
 System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
 System(ExISS, "ExISS", $descr="", $tags="", $link="")
 
 System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container(Bichard.DynamoDB, "DynamoDB", $techn="", $descr="", $tags="", $link="")
   Container(Bichard.Beanconnect, "Beanconnect", $techn="", $descr="", $tags="", $link="")
   Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="", $descr="", $tags="", $link="")
   Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", $techn="", $descr="", $tags="", $link="")
@@ -30,16 +32,14 @@ System_Boundary("Bichard_boundary", "Bichard", $tags="") {
   Container(Bichard.Monitoring, "Monitoring", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel(Bichard.AuditLog, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel(Bichard.AuditLog, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
 Rel(Bichard.Reporting, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 Rel(Bichard.Reporting, Bichard.StaticFileService, "", $techn="", $tags="", $link="")
 Rel(Bichard.Reporting, Bichard.EmailSystem, "", $techn="", $tags="", $link="")
 Rel(Bichard.Reporting, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel(Bichard.Monitoring, Bichard.BichardJavaApplication, "", $techn="", $tags="", $link="")
+Rel(PoliceUser, Bichard.NginxAuthProxy, "Uses", $techn="", $tags="", $link="")
+Rel(CJSM, PoliceUser, "Gets email", $techn="", $tags="", $link="")
 Rel(Bichard.BichardJavaApplication, Bichard.Beanconnect, "", $techn="", $tags="", $link="")
 Rel(Bichard.Beanconnect, PSNProxy, "", $techn="", $tags="", $link="")
-Rel(PSNProxy, Bichard.NginxAuthProxy, "", $techn="", $tags="", $link="")
 Rel(Bichard.EmailSystem, CJSM, "Sends verification code", $techn="", $tags="", $link="")
 Rel(Bichard.BichardUserService, Bichard.EmailSystem, "Sends verification code", $techn="", $tags="", $link="")
 Rel(Bichard.NginxAuthProxy, Bichard.BichardJavaApplication, "", $techn="", $tags="", $link="")
@@ -56,6 +56,7 @@ Rel(Bichard.EventLambda, Bichard.EventHandlerStepFunction, "", $techn="", $tags=
 Rel(Bichard.EventHandlerStepFunction, Bichard.AuditLog, "", $techn="", $tags="", $link="")
 Rel(Bichard.ActiveMQ, Bichard.BichardJavaApplication, "", $techn="", $tags="", $link="")
 Rel(Bichard.BichardJavaApplication, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
+Rel(Bichard.AuditLog, Bichard.DynamoDB, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

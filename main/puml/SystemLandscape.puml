@@ -28,15 +28,13 @@ Boundary(group_3, "Home Office - Police", $tags="Home Office - Police") {
 Person(PoliceUser, "Police User", $descr="", $tags="", $link="")
 System(CJSM, "CJSM", $descr="", $tags="", $link="")
 
-Rel(PoliceUser, PSNProxy, "Uses", $techn="", $tags="", $link="")
 Rel(PoliceUser, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
+Rel(PoliceUser, Bichard, "Uses", $techn="", $tags="", $link="")
 Rel(CJSM, PoliceUser, "Gets email", $techn="", $tags="", $link="")
 Rel(CommonPlatform, ExISS, "Sends result of a court case", $techn="", $tags="", $link="")
 Rel(Libra, ExISS, "Sends result of a court case", $techn="", $tags="", $link="")
 Rel(PSNProxy, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
 Rel(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
-Rel(PSNProxy, PoliceNationalComputer, "", $techn="", $tags="", $link="")
-Rel(PSNProxy, Bichard, "", $techn="", $tags="", $link="")
 Rel(Bichard, CJSM, "Sends verification code", $techn="", $tags="", $link="")
 Rel(ExISS, Bichard, "", $techn="", $tags="", $link="")
 

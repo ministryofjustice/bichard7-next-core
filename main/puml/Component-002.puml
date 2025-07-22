@@ -20,7 +20,6 @@ Container_Boundary("Bichard.IncomingMessageHandlerStepFunction_boundary", "Incom
   Component(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "Record Sent to Bichard", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel(Bichard.AuditLog, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
 Rel(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $techn="", $tags="", $link="")
 Rel(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $techn="", $tags="", $link="")
 Rel(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $techn="", $tags="", $link="")

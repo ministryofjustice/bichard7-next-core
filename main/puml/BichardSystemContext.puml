@@ -14,10 +14,12 @@ Boundary(group_1, "CJSE", $tags="CJSE") {
   System(ExISS, "ExISS", $descr="", $tags="", $link="")
 }
 
+Person(PoliceUser, "Police User", $descr="", $tags="", $link="")
 System(CJSM, "CJSM", $descr="", $tags="", $link="")
 
+Rel(PoliceUser, Bichard, "Uses", $techn="", $tags="", $link="")
+Rel(CJSM, PoliceUser, "Gets email", $techn="", $tags="", $link="")
 Rel(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
-Rel(PSNProxy, Bichard, "", $techn="", $tags="", $link="")
 Rel(Bichard, CJSM, "Sends verification code", $techn="", $tags="", $link="")
 Rel(ExISS, Bichard, "", $techn="", $tags="", $link="")
 
