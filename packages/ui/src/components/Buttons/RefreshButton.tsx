@@ -11,10 +11,26 @@ interface RefreshButtonProps extends React.ComponentProps<"button"> {
 
 export const RefreshButton = ({ location, ...buttonProps }: RefreshButtonProps) => {
   const [dateAgo, setDateAgo] = useState(new Date())
-  const [timeAgo, setTimeAgo] = useState("")
+  const [timeAgo, setTimeAgo] = useState(formatDistanceStrict(dateAgo, new Date()))
   const [nextRouterChanged, setNextRouterChanged] = useState(false)
 
-  router.events?.on("routeChangeComplete", () => setNextRouterChanged(true))
+  useEffect(() => {
+    const handleRouteChange = () => setNextRouterChanged(true)
+
+    router.events.on("routeChangeComplete", handleRouteChange)
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange)
+    }
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeAgo(formatDistanceStrict(dateAgo, new Date()))
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [dateAgo])
 
   useEffect(() => {
     if (nextRouterChanged) {
@@ -22,22 +38,15 @@ export const RefreshButton = ({ location, ...buttonProps }: RefreshButtonProps) 
     }
 
     setNextRouterChanged(false)
+  }, [nextRouterChanged])
 
-    const interval = setInterval(() => {
-      setTimeAgo(formatDistanceStrict(dateAgo, new Date()))
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [dateAgo, timeAgo, nextRouterChanged])
-
-  const rawTimeAgo = formatDistanceStrict(dateAgo, new Date())
   const formattedTimeAgo = ["Last updated"]
   const regex = new RegExp(/^\b\d+\b seconds?$/)
 
-  if (regex.test(rawTimeAgo)) {
+  if (regex.test(timeAgo)) {
     formattedTimeAgo.push("less than a minute ago")
   } else {
-    formattedTimeAgo.push(`${rawTimeAgo} ago`)
+    formattedTimeAgo.push(`${timeAgo} ago`)
   }
 
   const handleOnClick = () => {
