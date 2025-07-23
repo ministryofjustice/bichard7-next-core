@@ -12,10 +12,9 @@ interface RefreshButtonProps extends React.ComponentProps<"button"> {
 export const RefreshButton = ({ location, ...buttonProps }: RefreshButtonProps) => {
   const [dateAgo, setDateAgo] = useState(new Date())
   const [timeAgo, setTimeAgo] = useState(formatDistanceStrict(dateAgo, new Date()))
-  const [nextRouterChanged, setNextRouterChanged] = useState(false)
 
   useEffect(() => {
-    const handleRouteChange = () => setNextRouterChanged(true)
+    const handleRouteChange = () => setDateAgo(new Date())
 
     router.events.on("routeChangeComplete", handleRouteChange)
 
@@ -31,14 +30,6 @@ export const RefreshButton = ({ location, ...buttonProps }: RefreshButtonProps) 
 
     return () => clearInterval(interval)
   }, [dateAgo])
-
-  useEffect(() => {
-    if (nextRouterChanged) {
-      setDateAgo(new Date())
-    }
-
-    setNextRouterChanged(false)
-  }, [nextRouterChanged])
 
   const formattedTimeAgo = ["Last updated"]
   const regex = new RegExp(/^\b\d+\b seconds?$/)
