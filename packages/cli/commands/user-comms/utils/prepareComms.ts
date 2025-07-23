@@ -68,6 +68,7 @@ export const prepareComms = async (content: Content, templateData: Template, dbH
       if (value.toLowerCase() !== "confirm send") {
         return "Please type 'confirm send' to send or anything to abort."
       }
+
       return true
     }
   })
@@ -76,5 +77,6 @@ export const prepareComms = async (content: Content, templateData: Template, dbH
     console.log("Operation cancelled.")
     process.exit(1)
   }
+
   return { parsedUsers, templateContent }
 }

@@ -3,13 +3,14 @@ import { red, green, bold } from "cli-color"
 
 const isPostgresInstalled = (): boolean => {
   try {
-    execSync(`which psql`, { stdio: "ignore" })
+    execSync("which psql", { stdio: "ignore" })
     return true
   } catch {
     return false
   }
 }
-const testDbConnection = async (hostname?: string) => {
+
+const testDbConnection = (hostname?: string) => {
   const checkPostgresInstalled = isPostgresInstalled()
 
   if (!checkPostgresInstalled) {

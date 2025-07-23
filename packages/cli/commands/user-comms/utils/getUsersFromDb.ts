@@ -27,6 +27,7 @@ const getUsersDetails = async () => {
   if (isError(userEmail)) {
     throw userEmail
   }
+
   await fs.writeFile("/tmp/users.json", JSON.stringify(userEmail, null, 2), "utf-8")
   await postgres.destroy()
 }

@@ -1,9 +1,17 @@
-import { Template, User } from "./userCommsTypes"
+import type { Template, User } from "./userCommsTypes"
 import { env } from "../../../config"
 import awsVault from "../../../utils/awsVault"
 import { logToFile } from "../../../utils/logger"
 
 const { aws } = env.SHARED
+
+interface NotifyError {
+  response: {
+    data: {
+      errors: unknown
+    }
+  }
+}
 
 const govNotifyTemplateId = "1f6f59c9-7eca-449c-9843-9d6b84e04437"
 const getApiSecretArn =
@@ -25,10 +33,10 @@ const sendUserComms = async (updatedUsers: User, templateData: Template) => {
     awsProfile: aws.profile,
     command: getApiKey(apiArn)
   })
-  let NotifyClient = require("notifications-node-client").NotifyClient
-  let notifyClient = new NotifyClient(apiKey)
+  const NotifyClient = require("notifications-node-client").NotifyClient
+  const notifyClient = new NotifyClient(apiKey)
 
-  const emailPromises = updatedUsers.map((user) =>
+  const emailPromises: Promise<void>[] = updatedUsers.map((user) =>
     notifyClient
       .sendEmail(govNotifyTemplateId, user.email, {
         personalisation: {
@@ -37,10 +45,10 @@ const sendUserComms = async (updatedUsers: User, templateData: Template) => {
         },
         reference: `email-${user.email}`
       })
-      .then((_: any) => {
+      .then(() => {
         console.log(`✅ Email sent to ${user.email}`)
       })
-      .catch((error: any) => {
+      .catch((error: NotifyError) => {
         errorCount = errorCount + 1
         logToFile(`❌ Failed to send email to ${user.email}`)
         logToFile(`${JSON.stringify(error.response.data.errors)}`)
