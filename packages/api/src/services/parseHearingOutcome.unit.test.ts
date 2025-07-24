@@ -16,7 +16,6 @@ describe("parseHearingOutcome", () => {
 
   it("Should call parseAnnotatedPncUpdateDatasetXml when the XML is an AnnotatedPncUpdateDataset", () => {
     const spy = jest.spyOn(parseAnnotatedPncUpdateDatasetXmlModule, "default")
-    console.log(__dirname)
     const annotatedPncUpdateDataset = fs
       .readFileSync(path.resolve(__dirname, "../tests/fixtures/AnnotatedPNCUpdateDataset.xml"))
       .toString()
