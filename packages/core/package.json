@@ -99,7 +99,7 @@
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.285",
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1692.0",
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "diff": "^8.0.2",
     "dynalite": "^3.2.2",
     "fast-xml-parser": "^5.2.5",

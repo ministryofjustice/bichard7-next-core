@@ -43,7 +43,7 @@
     "@io-orkes/conductor-javascript": "^2.1.4",
     "@stomp/stompjs": "^7.1.1",
     "@types/nodemailer": "^6.4.17",
-    "axios": "^1.10.0",
+    "axios": "^1.11.0",
     "nodemailer": "^7.0.4",
     "pg-promise": "^11.14.0",
     "pino": "^9.7.0",
