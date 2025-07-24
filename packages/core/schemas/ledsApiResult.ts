@@ -7,10 +7,16 @@ const ledsApiAdjudication = z.object({
   adjudication: z.string()
 })
 
+const ledsApiDisposalDuration = z.object({
+  units: z.string(),
+  count: z.number()
+})
+
 const ledsApiDisposalResult = z.object({
   disposalId: z.string(),
   disposalCode: z.number(),
-  disposalEffectiveDate: z.coerce.date().optional()
+  disposalEffectiveDate: z.coerce.date().optional(),
+  disposalDuration: ledsApiDisposalDuration.optional()
 })
 
 const ledsApiOffence = z.object({

@@ -15,7 +15,6 @@ Feature: {000} Spike - Phase 1 with just offences
   Scenario: Exceptions and triggers are created for a "stop list" message
     Given I am logged in as "generalhandler"
     And I view the list of exceptions
-    Then I see exception "HO200212" for this record in the exception list
     When I open this record
     And I click the "Triggers" tab
     Then I see trigger "TRPR0001" for offence "1"

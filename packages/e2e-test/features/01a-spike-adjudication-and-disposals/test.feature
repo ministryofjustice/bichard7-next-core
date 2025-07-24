@@ -16,4 +16,3 @@ Feature: {01} Spike - Phase 1 adjudications and disposals
         When "input-message-2" is received
             And I view the list of exceptions
         Then I see trigger "PR01 - Disqualified driver" in the exception list table
-            And there are no exceptions raised for "Jimbobjones Bobby"

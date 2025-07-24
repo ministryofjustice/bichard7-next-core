@@ -75,6 +75,7 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard) => {
                 offenceStartDate: offence.startDate,
                 offenceEndDate: offence.endDate,
                 offenceDescription: [offence.description],
+                plea: "Not Known",
                 adjudications: [],
                 disposalResults: []
               }))
