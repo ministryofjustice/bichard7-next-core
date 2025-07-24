@@ -76,6 +76,7 @@
     "eslint-plugin-prettier": "^5.5.3",
     "express": "^5.1.0",
     "jest": "^30.0.5",
+    "jest-environment-node": "30.0.5",
     "jest-mock-server": "^0.1.0",
     "jest-xml-matcher": "^1.2.0",
     "lodash.ismatch": "^4.4.0",

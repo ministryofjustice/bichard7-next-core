@@ -123,6 +123,7 @@
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "jest": "^30.0.5",
+    "jest-environment-node": "30.0.5",
     "jest-axe": "^10.0.0",
     "jsonwebtoken": "^9.0.2",
     "lint-staged": "^16.1.2",
