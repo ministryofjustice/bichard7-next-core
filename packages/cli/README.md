@@ -187,3 +187,8 @@ We have a blank template in GovNotify, located in a folder called 'CLI Templates
 ✅ Email sent to tausif.patel@madetech.com
 ✅ Email sent to wen.ting.wang@madetech.com
 ```
+
+> [!NOTE]
+> Due to the requirement for two-factor authentication (2FA) to create a user account on GovNotify, the API key is currently created using the GovNotify account of a developer working on Bichard.
+
+> If the account associated with the API key is deactivated, the key will need to be updated. In such a case, a user must log in to GovNotify, create a new API key for the live service, and store it in AWS Secrets Manager.

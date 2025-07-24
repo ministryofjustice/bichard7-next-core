@@ -1,6 +1,24 @@
-import { exec } from "child_process"
+import { exec, execSync } from "child_process"
+import { red, green, bold } from "cli-color"
 
-const testDbConnection = async (hostname?: string) => {
+const isPostgresInstalled = (): boolean => {
+  try {
+    execSync("which psql", { stdio: "ignore" })
+    return true
+  } catch {
+    return false
+  }
+}
+
+const testDbConnection = (hostname?: string) => {
+  const checkPostgresInstalled = isPostgresInstalled()
+
+  if (!checkPostgresInstalled) {
+    console.log(red("You need to install the postgress cli tool\n"))
+    console.log(`Run ${bold(green("brew install postgresql"))} to install.`)
+    process.exit(1)
+  }
+
   if (!hostname) {
     return false
   }

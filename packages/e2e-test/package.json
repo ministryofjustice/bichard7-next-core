@@ -47,7 +47,7 @@
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.285",
     "@types/jest": "^30.0.0",
     "axios": "^1.11.0",
-    "csv-parse": "^6.1.0",
+    "csv-parse": "^5.6.0",
     "date-fns": "^4.1.0",
     "expect": "^30.0.5",
     "fast-xml-parser": "^5.2.5",
