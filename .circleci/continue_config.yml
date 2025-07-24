@@ -547,11 +547,8 @@ jobs:
       - node_install
       - install_dependencies
       - build_api
-      - run:
-          name: Start localstack
-          command: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait localstack
       - start_services:
-          SERVICES: db-seed
+          SERVICES: db-seed localstack
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
