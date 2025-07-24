@@ -42,7 +42,7 @@
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@cucumber/cucumber": "^9.5.1",
-    "@cucumber/pretty-formatter": "^2.0.1",
+    "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^9.9.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.285",
     "@types/jest": "^30.0.0",
