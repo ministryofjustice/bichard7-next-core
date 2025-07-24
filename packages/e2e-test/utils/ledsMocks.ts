@@ -70,7 +70,7 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard) => {
               },
               offences: offences.map((offence) => ({
                 offenceId: randomUUID(),
-                courtOffenceSequenceNumber: offence.sequenceNo,
+                courtOffenceSequenceNumber: Number(offence.sequenceNo),
                 cjsOffenceCode: offence.code.trim(),
                 offenceStartDate: offence.startDate,
                 offenceEndDate: offence.endDate,

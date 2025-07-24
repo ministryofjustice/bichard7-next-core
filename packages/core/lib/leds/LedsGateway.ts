@@ -51,8 +51,15 @@ export default class LedsGateway implements PncGatewayInterface {
                 startDate: offence.offenceStartDate,
                 endDate: offence.offenceEndDate,
                 title: offence.offenceDescription[0],
-                sequenceNumber: Number(offence.courtOffenceSequenceNumber)
-              }
+                sequenceNumber: offence.courtOffenceSequenceNumber
+              },
+              adjudication: {
+                verdict: offence.adjudications[0].adjudication.toUpperCase(),
+                plea: offence.plea.toUpperCase(),
+                sentenceDate: offence.adjudications[0].disposalDate,
+                offenceTICNumber: 0
+              },
+              disposals: offence.disposalResults.map((disposalResult) => ({ type: disposalResult.disposalCode }))
             }))
           }))
         }
