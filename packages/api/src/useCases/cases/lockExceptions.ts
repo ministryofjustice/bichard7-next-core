@@ -28,10 +28,12 @@ export const lockExceptions = async (
     return exceptionLockedResult
   }
 
-  auditLogEvents.push(
-    buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, "Bichard New UI", {
-      auditLogVersion: 2,
-      user: user.username
-    })
-  )
+  if (exceptionLockedResult) {
+    auditLogEvents.push(
+      buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, "Bichard New UI", {
+        auditLogVersion: 2,
+        user: user.username
+      })
+    )
+  }
 }
