@@ -2,12 +2,9 @@
   Pinned:
   - cookies-next
     - v5 contains breaking changes
-  - react, react-dom - v19.1 +
-    - Has breaking changes. Need to look into this more.
-
 */
 const pinned = ["cookies-next"]
-const ignored = ["react", "react-dom"]
+const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 
 module.exports = {
