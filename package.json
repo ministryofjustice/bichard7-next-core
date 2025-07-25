@@ -93,7 +93,6 @@
     "excel4node": "^1.8.2",
     "husky": "^9.1.7",
     "jest": "30.0.5",
-    "jest-environment-node": "30.0.5",
     "lint-staged": "^15.2.10",
     "npm-check-updates": "^17.1.11",
     "zod-to-json-schema": "^3.23.5"
