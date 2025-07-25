@@ -54,7 +54,7 @@ export default () => [
                   ],
                   disposalResults: [
                     { disposalId: randomUUID(), disposalCode: 3096 },
-                    { disposalId: randomUUID(), disposalCode: 4047, disposalEffectiveDate: "2011-10-26" }
+                    { disposalId: randomUUID(), disposalCode: 4047 }
                   ]
                 }
               ]

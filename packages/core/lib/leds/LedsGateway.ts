@@ -37,7 +37,7 @@ export default class LedsGateway implements PncGatewayInterface {
       )
       .then((result) => {
         const ledsApiResult = ledsApiResultSchema.parse(result.data)
-        console.log({ ledsApiResult })
+
         return {
           forceStationCode: ledsApiResult.ownerCode,
           checkName: "TRTHREE",
