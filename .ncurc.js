@@ -21,7 +21,14 @@ const semver = new RegExp(
     - from tests repo migration, version was pinned to v9
 */
 const pinned = ["chalk", "@types/diff", "zod", "fastify-zod-openapi", "zod-openapi", "zod-validation-error"]
-const ignored = [`bichard7-next-data-(${semver.source})`, "p-limit", "esbuild", "@cucumber/cucumber", "http-status"]
+const ignored = [
+  `bichard7-next-data-(${semver.source})`,
+  "p-limit",
+  "esbuild",
+  "@cucumber/cucumber",
+  "@cucumber/pretty-formatter",
+  "http-status"
+]
 
 module.exports = {
   target: (package) => {
