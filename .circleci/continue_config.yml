@@ -306,75 +306,6 @@ jobs:
           name: Run tests against core code
           command: npm run test:characterisation -w packages/core
 
-  characterisation_test_legacy_phase1:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_dependencies
-      - build_core
-      - start_bichard7_legacy:
-          ENABLE_PHASE_2: "false"
-          ENABLE_PHASE_3: "false"
-      - run:
-          name: Run Phase 1 characterisation tests for legacy Bichard
-          command: npm run test:characterisation:bichard:phase1 -w packages/core
-
-  characterisation_test_legacy_phase2:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_dependencies
-      - build_core
-      - start_bichard7_legacy:
-          ENABLE_PHASE_2: "true"
-          ENABLE_PHASE_3: "false"
-      - run:
-          name: Run Phase 2 characterisation tests for legacy Bichard
-          command: npm run test:characterisation:bichard:phase2 -w packages/core
-
-  characterisation_test_legacy_phase3:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_dependencies
-      - build_core
-      - start_bichard7_legacy:
-          ENABLE_PHASE_2: "false"
-          ENABLE_PHASE_3: "true"
-      - run:
-          name: Run Phase 3 characterisation tests for legacy Bichard
-          command: npm run test:characterisation:bichard:phase3 -w packages/core
-
   test_conductor:
     machine:
       image: ubuntu-2204:current
@@ -1026,9 +957,6 @@ workflows:
       - test_core
       - test_ui
       - characterisation_test_core
-      - characterisation_test_legacy_phase1
-      - characterisation_test_legacy_phase2
-      - characterisation_test_legacy_phase3
       - comparison_test
 
       - build-ui:
