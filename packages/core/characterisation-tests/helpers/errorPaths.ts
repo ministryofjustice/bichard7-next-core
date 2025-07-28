@@ -1,14 +1,3 @@
-export const offenceReasonSequencePath = (offenceIndex: number): (number | string)[] => [
-  "AnnotatedHearingOutcome",
-  "HearingOutcome",
-  "Case",
-  "HearingDefendant",
-  "Offence",
-  offenceIndex,
-  "CriminalProsecutionReference",
-  "OffenceReasonSequence"
-]
-
 export const asnPath = ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
 
 export const offenceResultClassPath = (offenceIndex: number, resultIndex: number): (number | string)[] => [
@@ -69,23 +58,4 @@ export const amountSpecifiedInResultPath = (
   resultIndex,
   "AmountSpecifiedInResult",
   amountSpecifiedInResultIndex
-]
-
-export const resultQualifierVariableDurationTypePath = (
-  offenceIndex: number,
-  resultIndex: number,
-  resultQualifierVariableIndex: number
-): (number | string)[] => [
-  "AnnotatedHearingOutcome",
-  "HearingOutcome",
-  "Case",
-  "HearingDefendant",
-  "Offence",
-  offenceIndex,
-  "Result",
-  resultIndex,
-  "ResultQualifierVariable",
-  resultQualifierVariableIndex,
-  "Duration",
-  "DurationType"
 ]
