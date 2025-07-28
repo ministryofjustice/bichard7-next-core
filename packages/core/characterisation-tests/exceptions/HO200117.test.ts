@@ -5,7 +5,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200117", () => {
+describe("HO200117", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

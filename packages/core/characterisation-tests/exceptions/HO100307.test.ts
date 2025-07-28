@@ -3,7 +3,7 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100307", () => {
+describe("HO100307", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

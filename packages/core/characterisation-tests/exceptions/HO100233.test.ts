@@ -4,7 +4,7 @@ import { lookupOffenceByCjsCode } from "../../lib/dataLookup"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100233", () => {
+describe("HO100233", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

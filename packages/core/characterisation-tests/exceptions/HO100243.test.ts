@@ -21,12 +21,12 @@ const expectedExceptions = [
   }
 ]
 
-describe.ifPhase1("HO100243", () => {
+describe("HO100243", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should not create an exception if the amount in the result is acceptable", async () => {
+  it("should not create an exception if the amount in the result is acceptable", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ outcome: { amountSterling: 100000 } }] }]
     })
@@ -38,22 +38,19 @@ describe.ifPhase1("HO100243", () => {
     expect(exceptions).toHaveLength(0)
   })
 
-  it.ifNewBichard(
-    "should create an exception if the amount in the result is greater than 999999999999.99",
-    async () => {
-      const inputMessage = generateSpiMessage({
-        offences: [{ results: [{ outcome: { amountSterling: 1000000000000 } }] }]
-      })
+  it("should create an exception if the amount in the result is greater than 999999999999.99", async () => {
+    const inputMessage = generateSpiMessage({
+      offences: [{ results: [{ outcome: { amountSterling: 1000000000000 } }] }]
+    })
 
-      const {
-        hearingOutcome: { Exceptions: exceptions }
-      } = await processPhase1Message(inputMessage)
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processPhase1Message(inputMessage)
 
-      expect(exceptions).toStrictEqual(expectedExceptions)
-    }
-  )
+    expect(exceptions).toStrictEqual(expectedExceptions)
+  })
 
-  it.ifNewBichard("should create an exception if the amount in the result is less than 0.01", async () => {
+  it("should create an exception if the amount in the result is less than 0.01", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ outcome: { amountSterling: 0.001 } }] }]
     })
@@ -65,7 +62,7 @@ describe.ifPhase1("HO100243", () => {
     expect(exceptions).toStrictEqual(expectedExceptions)
   })
 
-  it.ifNewBichard("should create an exception if the amount in the result has more than 14 digits", async () => {
+  it("should create an exception if the amount in the result has more than 14 digits", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ outcome: { amountSterling: 123456789.123456 } }] }]
     })
@@ -77,18 +74,15 @@ describe.ifPhase1("HO100243", () => {
     expect(exceptions).toStrictEqual(expectedExceptions)
   })
 
-  it.ifNewBichard(
-    "should create an exception if the amount in the result has more than 2 fraction digits",
-    async () => {
-      const inputMessage = generateSpiMessage({
-        offences: [{ results: [{ outcome: { amountSterling: 12345.123456 } }] }]
-      })
+  it("should create an exception if the amount in the result has more than 2 fraction digits", async () => {
+    const inputMessage = generateSpiMessage({
+      offences: [{ results: [{ outcome: { amountSterling: 12345.123456 } }] }]
+    })
 
-      const {
-        hearingOutcome: { Exceptions: exceptions }
-      } = await processPhase1Message(inputMessage)
+    const {
+      hearingOutcome: { Exceptions: exceptions }
+    } = await processPhase1Message(inputMessage)
 
-      expect(exceptions).toStrictEqual(expectedExceptions)
-    }
-  )
+    expect(exceptions).toStrictEqual(expectedExceptions)
+  })
 })

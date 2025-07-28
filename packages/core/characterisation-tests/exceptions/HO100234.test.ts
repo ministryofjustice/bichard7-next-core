@@ -3,7 +3,7 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("validate hearing outcome", () => {
+describe("validate hearing outcome", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -45,7 +45,7 @@ describe.ifPhase1("validate hearing outcome", () => {
     ])
   })
 
-  it.ifNewBichard("should throw an exception for an offence wording greater than max length", async () => {
+  it("should throw an exception for an offence wording greater than max length", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ code: 1015 }], offenceWording: "x".repeat(3000) }]
     })

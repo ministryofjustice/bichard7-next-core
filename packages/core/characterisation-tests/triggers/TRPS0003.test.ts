@@ -5,7 +5,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("TRPS0003", () => {
+describe("TRPS0003", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -35,7 +35,7 @@ describe.ifPhase2("TRPS0003", () => {
     expect(triggers).toContainEqual({ code: TriggerCode.TRPS0003, offenceSequenceNumber: 1 })
   })
 
-  it.ifNewBichard("creates a TRPS0003 for PncUpdateDataset when no operations and HO200200 exception", async () => {
+  it("creates a TRPS0003 for PncUpdateDataset when no operations and HO200200 exception", async () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.PNC_UPDATE_DATASET,
       hoTemplate: "NoOperationsAndExceptions",

@@ -7,7 +7,7 @@ import { processPhase1Message } from "../helpers/processMessage"
 const trigger1ResultCode = 3070
 const trigger5ResultCode = 4012
 
-describe.ifPhase1("Trigger force configuration", () => {
+describe("Trigger force configuration", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

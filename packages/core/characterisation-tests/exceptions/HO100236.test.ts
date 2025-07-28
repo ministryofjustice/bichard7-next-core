@@ -9,7 +9,7 @@ jest.mock("../../lib/dataLookup", () => ({
   lookupOffenceByCjsCode: jest.fn()
 }))
 
-describe.ifPhase1("HO100236", () => {
+describe("HO100236", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })

@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100242", () => {
+describe("HO100242", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should create an exception if the duration length is too high", async () => {
+  it("should create an exception if the duration length is too high", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ outcome: { duration: { value: 1000 } } }] }]
     })
@@ -35,7 +35,7 @@ describe.ifPhase1("HO100242", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the duration length is too low", async () => {
+  it("should create an exception if the duration length is too low", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ outcome: { duration: { value: 0 } } }] }]
     })

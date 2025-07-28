@@ -5,7 +5,7 @@ import type { GenerateSpiMessageOptions } from "../helpers/generateSpiMessage"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100108", () => {
+describe("HO100108", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

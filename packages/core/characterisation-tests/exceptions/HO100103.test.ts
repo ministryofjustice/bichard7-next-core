@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100103", () => {
+describe("HO100103", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should create an exception if the hearing time is invalid", async () => {
+  it("should create an exception if the hearing time is invalid", async () => {
     const inputMessage = generateSpiMessage({
       timeOfHearing: "XXXX",
       offences: [{ results: [{}] }]
@@ -24,7 +24,7 @@ describe.ifPhase1("HO100103", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the offence time is invalid", async () => {
+  it("should create an exception if the offence time is invalid", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ startTime: "XXXX", results: [{}] }]
     })
@@ -39,7 +39,7 @@ describe.ifPhase1("HO100103", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the offence start time is invalid", async () => {
+  it("should create an exception if the offence start time is invalid", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ startTime: "XXXX", offenceDateCode: 4, results: [{}] }]
     })
@@ -54,7 +54,7 @@ describe.ifPhase1("HO100103", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the offence end time is invalid", async () => {
+  it("should create an exception if the offence end time is invalid", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ endDate: new Date(), endTime: "XXXX", results: [{}] }]
     })
@@ -69,7 +69,7 @@ describe.ifPhase1("HO100103", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the next hearing time is invalid", async () => {
+  it("should create an exception if the next hearing time is invalid", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ nextHearing: { nextHearingDetails: { timeOfHearing: "XXXX" } } }] }]
     })
@@ -94,7 +94,7 @@ describe.ifPhase1("HO100103", () => {
     })
   })
 
-  it.ifNewBichard("should create an exception if the time specified in the result is invalid", async () => {
+  it("should create an exception if the time specified in the result is invalid", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ endDate: new Date(), endTime: "XXXX", results: [{}] }]
     })

@@ -21,12 +21,12 @@ const expectedExceptions = [
   }
 ]
 
-describe.ifPhase1("HO100244", () => {
+describe("HO100244", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should not be raised if the number in the result is acceptable", async () => {
+  it("should not be raised if the number in the result is acceptable", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ code: 3008, outcome: { penaltyPoints: 100 } }] }]
     })
@@ -38,7 +38,7 @@ describe.ifPhase1("HO100244", () => {
     expect(exceptions).toHaveLength(0)
   })
 
-  it.ifNewBichard("should be raised if the number in the result is too large", async () => {
+  it("should be raised if the number in the result is too large", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ code: 3008, outcome: { penaltyPoints: 10000 } }] }]
     })
@@ -50,7 +50,7 @@ describe.ifPhase1("HO100244", () => {
     expect(exceptions).toStrictEqual(expectedExceptions)
   })
 
-  it.ifNewBichard("should be raised if the number in the result is too small", async () => {
+  it("should be raised if the number in the result is too small", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ code: 3008, outcome: { penaltyPoints: 0.1 } }] }]
     })

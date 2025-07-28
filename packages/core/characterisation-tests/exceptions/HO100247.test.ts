@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100247", () => {
+describe("HO100247", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should be raised if the result qualifier code is too short", async () => {
+  it("should be raised if the result qualifier code is too short", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ qualifier: "" }] }]
     })
@@ -35,7 +35,7 @@ describe.ifPhase1("HO100247", () => {
     })
   })
 
-  it.ifNewBichard("should be raised if the result qualifier code is too long", async () => {
+  it("should be raised if the result qualifier code is too long", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ qualifier: "XXX" }] }]
     })
