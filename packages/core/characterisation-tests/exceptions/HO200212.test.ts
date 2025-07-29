@@ -11,7 +11,7 @@ describe("HO200212", () => {
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "creates a HO200212 exception for %s when offence results are not recordable",
-    async (messageType) => {
+    (messageType) => {
       const inputMessage = generatePhase2Message({
         messageType,
         offences: [{ results: [{ pncDisposalType: 1000 }] }]
@@ -19,7 +19,7 @@ describe("HO200212", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage)
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).toStrictEqual([
         {
@@ -43,7 +43,7 @@ describe("HO200212", () => {
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "doesn't create a HO200212 exception for %s when offence results are recordable",
-    async (messageType) => {
+    (messageType) => {
       const inputMessage = generatePhase2Message({
         messageType,
         offences: [{ results: [{ pncDisposalType: 1015 }] }]
@@ -51,7 +51,7 @@ describe("HO200212", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage, { expectRecord: false })
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).toHaveLength(0)
     }

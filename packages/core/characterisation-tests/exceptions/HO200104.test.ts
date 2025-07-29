@@ -11,7 +11,7 @@ describe("HO200104", () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it("creates a HO200104 exception for AHO when result class is sentence", async () => {
+  it("creates a HO200104 exception for AHO when result class is sentence", () => {
     const aho = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [{ results: [{ resultClass: ResultClass.SENTENCE, pncAdjudicationExists: true }] }],
@@ -21,7 +21,7 @@ describe("HO200104", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(aho)
+    } = processPhase2Message(aho)
 
     expect(exceptions).toStrictEqual([
       {
@@ -31,7 +31,7 @@ describe("HO200104", () => {
     ])
   })
 
-  it("creates a HO200104 exception for AHO when result class is judgement with final result", async () => {
+  it("creates a HO200104 exception for AHO when result class is judgement with final result", () => {
     const aho = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [{ results: [{ resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, pncAdjudicationExists: true }] }]
@@ -39,7 +39,7 @@ describe("HO200104", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(aho)
+    } = processPhase2Message(aho)
 
     expect(exceptions).toStrictEqual([
       {
@@ -49,7 +49,7 @@ describe("HO200104", () => {
     ])
   })
 
-  it("doesn't create an exception for a PncUpdateDataset when result class is judgement with final result", async () => {
+  it("doesn't create an exception for a PncUpdateDataset when result class is judgement with final result", () => {
     const pncUpdateDataset = generatePhase2Message({
       messageType: MessageType.PNC_UPDATE_DATASET,
       offences: [{ results: [{ resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, pncAdjudicationExists: true }] }]
@@ -57,12 +57,12 @@ describe("HO200104", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(pncUpdateDataset, { expectRecord: false })
+    } = processPhase2Message(pncUpdateDataset)
 
     expect(exceptions).toHaveLength(0)
   })
 
-  it("doesn't create an exception for a PncUpdateDataset when result class is sentence", async () => {
+  it("doesn't create an exception for a PncUpdateDataset when result class is sentence", () => {
     const pncUpdateDataset = generatePhase2Message({
       messageType: MessageType.PNC_UPDATE_DATASET,
       offences: [{ results: [{ resultClass: ResultClass.SENTENCE, pncAdjudicationExists: true }] }],
@@ -71,7 +71,7 @@ describe("HO200104", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(pncUpdateDataset, { expectRecord: false })
+    } = processPhase2Message(pncUpdateDataset)
 
     expect(exceptions).toHaveLength(0)
   })

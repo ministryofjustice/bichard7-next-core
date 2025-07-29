@@ -24,7 +24,7 @@ describe("HO200115", () => {
           it.each([
             { messageType: MessageType.ANNOTATED_HEARING_OUTCOME },
             { messageType: MessageType.PNC_UPDATE_DATASET }
-          ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
+          ])("creates a HO200115 exception for $messageType", ({ messageType }) => {
             const resultGeneratesDisarr = {
               resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
               pncAdjudicationExists: false
@@ -44,7 +44,7 @@ describe("HO200115", () => {
 
             const {
               outputMessage: { Exceptions: exceptions }
-            } = await processPhase2Message(inputMessage)
+            } = processPhase2Message(inputMessage)
 
             expect(exceptions).toStrictEqual([
               {
@@ -63,7 +63,7 @@ describe("HO200115", () => {
           it.each([
             { messageType: MessageType.ANNOTATED_HEARING_OUTCOME },
             { messageType: MessageType.PNC_UPDATE_DATASET }
-          ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
+          ])("creates a HO200115 exception for $messageType", ({ messageType }) => {
             const resultsGeneratingDisarr = [
               { resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, pncAdjudicationExists: false },
               { resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, pncAdjudicationExists: false }
@@ -87,7 +87,7 @@ describe("HO200115", () => {
 
             const {
               outputMessage: { Exceptions: exceptions }
-            } = await processPhase2Message(inputMessage)
+            } = processPhase2Message(inputMessage)
 
             expect(exceptions).toStrictEqual([
               {
@@ -106,7 +106,7 @@ describe("HO200115", () => {
           it.each([
             { messageType: MessageType.ANNOTATED_HEARING_OUTCOME },
             { messageType: MessageType.PNC_UPDATE_DATASET }
-          ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
+          ])("creates a HO200115 exception for $messageType", ({ messageType }) => {
             const resultGeneratesDisarr = {
               resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
               pncAdjudicationExists: false
@@ -126,7 +126,7 @@ describe("HO200115", () => {
 
             const {
               outputMessage: { Exceptions: exceptions }
-            } = await processPhase2Message(inputMessage)
+            } = processPhase2Message(inputMessage)
 
             expect(exceptions).toStrictEqual([
               {
@@ -145,7 +145,7 @@ describe("HO200115", () => {
           it.each([
             { messageType: MessageType.ANNOTATED_HEARING_OUTCOME },
             { messageType: MessageType.PNC_UPDATE_DATASET }
-          ])("creates a HO200115 exception for $messageType", async ({ messageType }) => {
+          ])("creates a HO200115 exception for $messageType", ({ messageType }) => {
             const resultsGeneratingDisarr = [
               { resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, pncAdjudicationExists: false },
               { resultClass: ResultClass.ADJOURNMENT_PRE_JUDGEMENT, pncAdjudicationExists: false }
@@ -169,7 +169,7 @@ describe("HO200115", () => {
 
             const {
               outputMessage: { Exceptions: exceptions }
-            } = await processPhase2Message(inputMessage)
+            } = processPhase2Message(inputMessage)
 
             expect(exceptions).toStrictEqual([
               {

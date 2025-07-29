@@ -8,9 +8,10 @@ import type { ProcessMessageOptions } from "../types/ProcessMessageOptions"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import CorePhase1 from "../../phase1/phase1"
+import CorePhase2 from "../../phase2/phase2"
 import parseIncomingMessage from "../../tests/helpers/parseIncomingMessage"
 import Phase from "../../types/Phase"
-import { createMockPncGateway, processMessageCorePhase2, processMessageCorePhase3 } from "./processMessageCore"
+import { createMockPncGateway, processMessageCorePhase3 } from "./processMessageCore"
 
 export const processPhase1Message = async (
   messageXml: string,
@@ -23,7 +24,12 @@ export const processPhase1Message = async (
   return await CorePhase1(incomingMessage, pncGateway, auditLogger)
 }
 
-export const processPhase2Message = (messageXml: string): Promise<Phase2Result> => processMessageCorePhase2(messageXml)
+export const processPhase2Message = (messageXml: string): Phase2Result => {
+  const { message: incomingMessage } = parseIncomingMessage(messageXml)
+  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase2)
+
+  return CorePhase2(incomingMessage, auditLogger)
+}
 
 export const processPhase3Message = (
   messageXml: string,

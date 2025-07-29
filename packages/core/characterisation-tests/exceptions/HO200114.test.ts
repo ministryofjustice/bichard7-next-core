@@ -11,7 +11,7 @@ describe("HO200114", () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it("creates a HO200114 exception for PncUpdateDataset when results with judgement with final result and sentence", async () => {
+  it("creates a HO200114 exception for PncUpdateDataset when results with judgement with final result and sentence", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.PNC_UPDATE_DATASET,
       offences: [
@@ -28,7 +28,7 @@ describe("HO200114", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(inputMessage)
+    } = processPhase2Message(inputMessage)
 
     expect(exceptions).toStrictEqual([
       {
@@ -38,7 +38,7 @@ describe("HO200114", () => {
     ])
   })
 
-  it("doesn't create a HO200114 exception for AHO when results with judgement with final result and sentence", async () => {
+  it("doesn't create a HO200114 exception for AHO when results with judgement with final result and sentence", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [
@@ -55,7 +55,7 @@ describe("HO200114", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(inputMessage)
+    } = processPhase2Message(inputMessage)
 
     expect(exceptions).not.toContainEqual({
       code: "HO200114",

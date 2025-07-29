@@ -12,7 +12,7 @@ describe("TRPS0010", () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it("creates a TRPS0010 for PncUpdateDataset when no operations and exceptions are generated", async () => {
+  it("creates a TRPS0010 for PncUpdateDataset when no operations and exceptions are generated", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.PNC_UPDATE_DATASET,
       penaltyNoticeCaseReferenceNumber: undefined,
@@ -35,7 +35,7 @@ describe("TRPS0010", () => {
       }
     })
 
-    const { triggers } = await processPhase2Message(inputMessage)
+    const { triggers } = processPhase2Message(inputMessage)
 
     expect(triggers).toContainEqual({ code: TriggerCode.TRPS0010, offenceSequenceNumber: 1 })
   })

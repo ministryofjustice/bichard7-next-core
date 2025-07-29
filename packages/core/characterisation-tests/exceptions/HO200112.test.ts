@@ -13,7 +13,7 @@ describe("HO200112", () => {
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "creates a HO200112 exception for %s when results with judgement with final result and sentence",
-    async (messageType) => {
+    (messageType) => {
       const inputMessage = generatePhase2Message({
         messageType,
         offences: [
@@ -30,7 +30,7 @@ describe("HO200112", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage)
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).toStrictEqual([
         {
