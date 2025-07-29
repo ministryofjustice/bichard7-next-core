@@ -1,6 +1,5 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 
-import type Phase1Result from "../../phase1/types/Phase1Result"
 import type Phase2Result from "../../phase2/types/Phase2Result"
 import type Phase3Result from "../../phase3/types/Phase3Result"
 import type PncUpdateRequestError from "../../phase3/types/PncUpdateRequestError"
@@ -9,14 +8,13 @@ import type { ProcessMessageOptions } from "../types/ProcessMessageOptions"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { PncApiError } from "../../lib/pnc/PncGateway"
-import CorePhase1 from "../../phase1/phase1"
 import CorePhase2 from "../../phase2/phase2"
 import CorePhase3 from "../../phase3/phase3"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import parseIncomingMessage from "../../tests/helpers/parseIncomingMessage"
 import generateMockPncQueryResult from "./generateMockPncQueryResult"
 
-const createMockPncGateway = (
+export const createMockPncGateway = (
   messageXml: string,
   {
     recordable = true,
@@ -34,17 +32,6 @@ const createMockPncGateway = (
     : undefined
 
   return new MockPncGateway(mockPncResponse)
-}
-
-export const processMessageCorePhase1 = async (
-  messageXml: string,
-  options: ProcessMessageOptions
-): Promise<Phase1Result> => {
-  const { message: incomingMessage } = parseIncomingMessage(messageXml)
-  const pncGateway = createMockPncGateway(messageXml, options)
-  const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
-
-  return await CorePhase1(incomingMessage, pncGateway, auditLogger)
 }
 
 // eslint-disable-next-line require-await
