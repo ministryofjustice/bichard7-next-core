@@ -5,7 +5,7 @@ import type Phase2Result from "../../phase2/types/Phase2Result"
 import type Phase3Result from "../../phase3/types/Phase3Result"
 import type PncUpdateRequestError from "../../phase3/types/PncUpdateRequestError"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-import type { ProcessMessageOptions } from "./processMessage"
+import type { ProcessMessageOptions } from "../types/ProcessMessageOptions"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import { PncApiError } from "../../lib/pnc/PncGateway"
