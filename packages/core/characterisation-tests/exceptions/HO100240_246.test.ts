@@ -34,7 +34,7 @@ const expectedExceptions = [
   }
 ]
 
-describe.ifPhase1("HO100240 and HO100246", () => {
+describe("HO100240 and HO100246", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -52,7 +52,7 @@ describe.ifPhase1("HO100240 and HO100246", () => {
   })
 
   // Masked by XML parsing error
-  it.ifNewBichard("should create exceptions if the result code is too high", async () => {
+  it("should create exceptions if the result code is too high", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ code: 10000 }] }]
     })

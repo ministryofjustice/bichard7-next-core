@@ -38,7 +38,7 @@ const pncOffenceDateOverrides = (dates: PncOffenceDateOverride[]) => ({
   } as Partial<ResultedCaseMessageParsedXml>
 })
 
-describe.ifPhase1("TRPR0018", () => {
+describe("TRPR0018", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

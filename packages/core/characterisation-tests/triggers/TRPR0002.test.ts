@@ -8,7 +8,7 @@ const code = TriggerCode.TRPR0002
 const resultCode = 4575
 const resultQualifier = "EO"
 
-describe.ifPhase1("TRPR0002", () => {
+describe("TRPR0002", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

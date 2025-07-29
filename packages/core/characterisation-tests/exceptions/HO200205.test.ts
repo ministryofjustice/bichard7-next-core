@@ -7,7 +7,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200205", () => {
+describe("HO200205", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -39,7 +39,7 @@ describe.ifPhase2("HO200205", () => {
   describe("when two durations in result", () => {
     it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
       "creates a HO200205 exception for %s when amount specified for result is too long",
-      async (messageType) => {
+      (messageType) => {
         const inputMessage = generatePhase2Message(
           generateOptions(
             messageType,
@@ -53,7 +53,7 @@ describe.ifPhase2("HO200205", () => {
 
         const {
           outputMessage: { Exceptions: exceptions }
-        } = await processPhase2Message(inputMessage)
+        } = processPhase2Message(inputMessage)
 
         expect(exceptions).toContainEqual({
           code: "HO200205",
@@ -66,7 +66,7 @@ describe.ifPhase2("HO200205", () => {
   describe("when three durations in result", () => {
     it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
       "creates a HO200205 exception for %s when amount specified for result is too long",
-      async (messageType) => {
+      (messageType) => {
         const inputMessage = generatePhase2Message(
           generateOptions(
             messageType,
@@ -81,7 +81,7 @@ describe.ifPhase2("HO200205", () => {
 
         const {
           outputMessage: { Exceptions: exceptions }
-        } = await processPhase2Message(inputMessage)
+        } = processPhase2Message(inputMessage)
 
         expect(exceptions).toContainEqual({
           code: "HO200205",
@@ -93,7 +93,7 @@ describe.ifPhase2("HO200205", () => {
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "doesn't create a HO200205 exception for %s when amount specified for result is within the limit",
-    async (messageType) => {
+    (messageType) => {
       const inputMessage = generatePhase2Message(
         generateOptions(
           messageType,
@@ -107,7 +107,7 @@ describe.ifPhase2("HO200205", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage)
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).not.toContainEqual({
         code: "HO200205",

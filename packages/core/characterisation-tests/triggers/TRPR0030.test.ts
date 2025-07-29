@@ -7,7 +7,7 @@ import { processPhase1Message } from "../helpers/processMessage"
 const code = TriggerCode.TRPR0030
 const offenceCode = "PL84504"
 
-describe.ifPhase1("TRPR0030", () => {
+describe("TRPR0030", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

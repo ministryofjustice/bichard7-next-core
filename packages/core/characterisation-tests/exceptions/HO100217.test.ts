@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100217", () => {
+describe("HO100217", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should create an exception if the address line 1 is too many characters", async () => {
+  it("should create an exception if the address line 1 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine1: "X".repeat(36) } },
       offences: [{ results: [] }]
@@ -26,7 +26,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 1 is too short", async () => {
+  it("should create an exception if the address line 1 is too short", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine1: "" } },
       offences: [{ results: [] }]
@@ -44,7 +44,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 2 is too many characters", async () => {
+  it("should create an exception if the address line 2 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine2: "X".repeat(36) } },
       offences: [{ results: [] }]
@@ -62,7 +62,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 2 is too short", async () => {
+  it("should create an exception if the address line 2 is too short", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine2: "" } },
       offences: [{ results: [] }]
@@ -80,7 +80,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 3 is too many characters", async () => {
+  it("should create an exception if the address line 3 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine3: "X".repeat(36) } },
       offences: [{ results: [] }]
@@ -98,7 +98,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 3 is too short", async () => {
+  it("should create an exception if the address line 3 is too short", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine3: "" } },
       offences: [{ results: [] }]
@@ -116,7 +116,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 4 is too many characters", async () => {
+  it("should create an exception if the address line 4 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine4: "X".repeat(36) } },
       offences: [{ results: [] }]
@@ -134,7 +134,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 4 is too short", async () => {
+  it("should create an exception if the address line 4 is too short", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine4: "" } },
       offences: [{ results: [] }]
@@ -152,7 +152,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 5 is too many characters", async () => {
+  it("should create an exception if the address line 5 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine5: "X".repeat(36) } },
       offences: [{ results: [] }]
@@ -170,7 +170,7 @@ describe.ifPhase1("HO100217", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the address line 5 is too short", async () => {
+  it("should create an exception if the address line 5 is too short", async () => {
     const inputMessage = generateSpiMessage({
       person: { address: { addressLine5: "" } },
       offences: [{ results: [] }]

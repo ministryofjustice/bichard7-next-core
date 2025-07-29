@@ -3,7 +3,7 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100232", () => {
+describe("HO100232", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -45,7 +45,7 @@ describe.ifPhase1("HO100232", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the offence location is greater than the max length", async () => {
+  it("should create an exception if the offence location is greater than the max length", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ results: [{ code: 1015 }], location: "x".repeat(100) }]
     })

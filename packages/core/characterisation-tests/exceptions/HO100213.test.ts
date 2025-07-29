@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100213", () => {
+describe("HO100213", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should create an exception if the Person's given name 1 is too many characters", async () => {
+  it("should create an exception if the Person's given name 1 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { givenName1: "X".repeat(36) },
       offences: [{ results: [] }]
@@ -35,7 +35,7 @@ describe.ifPhase1("HO100213", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the Person's given name 2 is too many characters", async () => {
+  it("should create an exception if the Person's given name 2 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { givenName1: "one", givenName2: "X".repeat(36) },
       offences: [{ results: [] }]
@@ -62,7 +62,7 @@ describe.ifPhase1("HO100213", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the Person's given name 3 is too many characters", async () => {
+  it("should create an exception if the Person's given name 3 is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       person: { givenName1: "one", givenName2: "Two", givenName3: "X".repeat(36) },
       offences: [{ results: [] }]

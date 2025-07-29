@@ -8,7 +8,7 @@ const code = TriggerCode.TRPR0029
 const offenceCode = "AS14511"
 const offenceCodeForGranted = "CD98516"
 
-describe.ifPhase1("TRPR0029", () => {
+describe("TRPR0029", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

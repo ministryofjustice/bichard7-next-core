@@ -5,7 +5,7 @@ import { processPhase1Message } from "../helpers/processMessage"
 
 const dummyASN = "0807NRPR00000038482H"
 
-describe.ifPhase1("HO100321", () => {
+describe("HO100321", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

@@ -5,12 +5,12 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("TRPS0003", () => {
+describe("TRPS0003", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it("creates a TRPS0003 for AnnotatedHearingOutcome when no operations and HO200200 exception", async () => {
+  it("creates a TRPS0003 for AnnotatedHearingOutcome when no operations and HO200200 exception", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       hoTemplate: "NoOperationsAndExceptions",
@@ -30,12 +30,12 @@ describe.ifPhase2("TRPS0003", () => {
       pncDisposals: [{ type: 1000 }]
     })
 
-    const { triggers } = await processPhase2Message(inputMessage)
+    const { triggers } = processPhase2Message(inputMessage)
 
     expect(triggers).toContainEqual({ code: TriggerCode.TRPS0003, offenceSequenceNumber: 1 })
   })
 
-  it.ifNewBichard("creates a TRPS0003 for PncUpdateDataset when no operations and HO200200 exception", async () => {
+  it("creates a TRPS0003 for PncUpdateDataset when no operations and HO200200 exception", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.PNC_UPDATE_DATASET,
       hoTemplate: "NoOperationsAndExceptions",
@@ -55,7 +55,7 @@ describe.ifPhase2("TRPS0003", () => {
       pncDisposals: [{ type: 1000 }]
     })
 
-    const { triggers } = await processPhase2Message(inputMessage)
+    const { triggers } = processPhase2Message(inputMessage)
 
     expect(triggers).toContainEqual({ code: TriggerCode.TRPS0003, offenceSequenceNumber: 1 })
   })

@@ -6,7 +6,7 @@ import { asnPath } from "../helpers/errorPaths"
 import generatePhase3Message from "../helpers/generatePhase3Message"
 import { processPhase3Message } from "../helpers/processMessage"
 
-describe.ifPhase3("HO100401", () => {
+describe("HO100401", () => {
   const legacyBichard = process.env.USE_BICHARD === "true"
 
   afterAll(async () => {

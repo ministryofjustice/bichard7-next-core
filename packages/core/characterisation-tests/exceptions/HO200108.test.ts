@@ -6,7 +6,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200108", () => {
+describe("HO200108", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -28,7 +28,7 @@ describe.ifPhase2("HO200108", () => {
       messageType: MessageType.PNC_UPDATE_DATASET,
       resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
     }
-  ])("creates a HO200108 exception for $messageType when $resultClass", async ({ messageType, resultClass }) => {
+  ])("creates a HO200108 exception for $messageType when $resultClass", ({ messageType, resultClass }) => {
     const inputMessage = generatePhase2Message({
       messageType,
       offences: [
@@ -41,7 +41,7 @@ describe.ifPhase2("HO200108", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(inputMessage)
+    } = processPhase2Message(inputMessage)
 
     expect(exceptions).toStrictEqual([
       {
@@ -51,7 +51,7 @@ describe.ifPhase2("HO200108", () => {
     ])
   })
 
-  it("doesn't create a HO200108 exception when not 2060 disposal type", async () => {
+  it("doesn't create a HO200108 exception when not 2060 disposal type", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [
@@ -64,7 +64,7 @@ describe.ifPhase2("HO200108", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(inputMessage, { expectRecord: false })
+    } = processPhase2Message(inputMessage)
 
     expect(exceptions).not.toContainEqual({
       code: "HO200108",
@@ -72,7 +72,7 @@ describe.ifPhase2("HO200108", () => {
     })
   })
 
-  it("doesn't create a HO200108 exception when reportable result", async () => {
+  it("doesn't create a HO200108 exception when reportable result", () => {
     const inputMessage = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [
@@ -85,7 +85,7 @@ describe.ifPhase2("HO200108", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(inputMessage)
+    } = processPhase2Message(inputMessage)
 
     expect(exceptions).not.toContainEqual({
       code: "HO200108",

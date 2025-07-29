@@ -5,14 +5,14 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200202", () => {
+describe("HO200202", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "creates a HO200202 exception for %s when too many qualifier variables for results",
-    async (messageType) => {
+    (messageType) => {
       const inputMessage = generatePhase2Message({
         messageType,
         offences: [
@@ -33,7 +33,7 @@ describe.ifPhase2("HO200202", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage)
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).toStrictEqual(
         expect.arrayContaining(
@@ -48,7 +48,7 @@ describe.ifPhase2("HO200202", () => {
 
   it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
     "doesn't create a HO200202 exception for %s when within limit for qualifier variables for results",
-    async (messageType) => {
+    (messageType) => {
       const inputMessage = generatePhase2Message({
         messageType,
         offences: [{ results: [{ resultQualifierVariables: [{ code: 1 }], pncAdjudicationExists: true }] }],
@@ -59,7 +59,7 @@ describe.ifPhase2("HO200202", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage)
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).not.toContainEqual({
         code: "HO200202",
