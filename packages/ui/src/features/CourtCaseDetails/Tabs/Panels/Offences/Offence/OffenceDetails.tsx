@@ -168,6 +168,9 @@ export const OffenceDetails = ({
         <InfoRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
         <InfoRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
         <InfoRow label="Home Office classification" value={offence.HomeOfficeClassification} />
+        <ConditionalRender isRendered={offence.AddedByTheCourt !== undefined}>
+          <InfoRow label="Added by the Court" value={getYesOrNo(offence.AddedByTheCourt)} />
+        </ConditionalRender>
       </Card>
 
       <div className="offence-results">
