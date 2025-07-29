@@ -56,7 +56,9 @@ export default class LedsGateway implements PncGatewayInterface {
               adjudication:
                 offence.adjudications.length > 0
                   ? {
-                      verdict: offence.adjudications[0].adjudication.toUpperCase(),
+                      verdict: offence.adjudications
+                        .sort((a, b) => (a.appearanceNumber < b.appearanceNumber ? 1 : -1))[0]
+                        .adjudication.toUpperCase(),
                       plea: offence.plea?.toUpperCase(),
                       sentenceDate: offence.adjudications[0].disposalDate,
                       offenceTICNumber: 0
