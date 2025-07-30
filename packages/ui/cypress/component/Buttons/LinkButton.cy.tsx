@@ -16,6 +16,11 @@ describe("LinkButton", () => {
     cy.mount(<LinkButton href="page">{"Text"}</LinkButton>)
   })
 
+  it("renders text", () => {
+    cy.mount(<LinkButton href="page">{"Text"}</LinkButton>)
+    cy.get("a").should("have.text", "Text")
+  })
+
   it("shows link with /", () => {
     cy.mount(<LinkButton href="/page">{"Text"}</LinkButton>)
     cy.get("a").should("have.attr", "href").and("include", "/page")
