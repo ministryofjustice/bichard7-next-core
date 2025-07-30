@@ -1,6 +1,7 @@
 import { useRouter } from "next/router"
 import { SyntheticEvent, useState } from "react"
 import { StyledLinkButton } from "./LinkButton.styles"
+import { mergeClassNames } from "../../helpers/mergeClassNames"
 
 export interface LinkButtonProps extends React.ComponentProps<"a"> {
   href: string
@@ -21,16 +22,6 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   const { asPath, basePath } = useRouter()
   const [isClicked, setIsClicked] = useState(false)
 
-  const classNames = linkButtonProps.className?.split(" ") ?? []
-
-  if (!classNames.includes("govuk-button")) {
-    classNames.push("govuk-button")
-  }
-
-  if (secondary) {
-    classNames.push("govuk-button--secondary")
-  }
-
   const handleClick = (event: SyntheticEvent) => {
     if (event.currentTarget.getAttribute("disabled")) {
       event.preventDefault()
@@ -48,7 +39,11 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
       href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}
       role="button"
       draggable="false"
-      className={classNames.join(" ")}
+      className={mergeClassNames(
+        "govuk-button",
+        secondary ? "govuk-button--secondary" : undefined,
+        linkButtonProps.className
+      )}
       data-module={dataModule}
       onClick={(e) => {
         handleClick(e)
