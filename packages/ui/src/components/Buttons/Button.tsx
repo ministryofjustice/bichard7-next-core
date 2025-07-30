@@ -1,17 +1,17 @@
+import { mergeClassNames } from "../../helpers/mergeClassNames"
+
 export interface ButtonProps extends React.ComponentProps<"button"> {
   children: React.ReactNode
   dataModule?: string
 }
 
 export const Button = ({ children, dataModule = "govuk-button", ...buttonProps }: ButtonProps) => {
-  const classNames = buttonProps.className?.split(" ") ?? []
-
-  if (!classNames.includes("govuk-button")) {
-    classNames.push("govuk-button")
-  }
-
   return (
-    <button {...buttonProps} className={classNames.join(" ")} data-module={dataModule}>
+    <button
+      {...buttonProps}
+      className={mergeClassNames("govuk-button", buttonProps.className)}
+      data-module={dataModule}
+    >
       {children}
     </button>
   )
