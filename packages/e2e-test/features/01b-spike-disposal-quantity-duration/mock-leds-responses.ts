@@ -24,6 +24,7 @@ export default () => [
         type: "JSON",
         json: {
           personId: randomUUID(),
+          personUrn: "21/12G",
           reportId: randomUUID(),
           asn: "1101ZD0100000411380L",
           ownerCode: "01ZD",

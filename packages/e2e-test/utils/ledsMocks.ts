@@ -56,6 +56,7 @@ export const mockEnquiryFromNCM = (ncmFile: string, world: Bichard) => {
         type: "JSON",
         json: {
           personId: randomUUID(),
+          personUrn: "2000/0410769X",
           reportId: randomUUID(),
           asn: prosecutorRef,
           ownerCode: forceStationCode,

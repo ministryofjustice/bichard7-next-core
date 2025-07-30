@@ -41,7 +41,7 @@ export default class LedsGateway implements PncGatewayInterface {
         return {
           forceStationCode: ledsApiResult.ownerCode,
           checkName: "TRTHREE",
-          pncId: "2000/0410769X",
+          pncId: ledsApiResult.personUrn,
           courtCases: ledsApiResult.disposals.map((disposal) => ({
             courtCaseReference: disposal.courtCaseReference,
             offences: disposal.offences.map((offence) => ({

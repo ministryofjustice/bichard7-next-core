@@ -40,6 +40,7 @@ const ledsApiDisposal = z.object({
 
 export const ledsApiResultSchema = z.object({
   personId: z.string(),
+  personUrn: z.string(),
   reportId: z.string(),
   asn: z.string(),
   ownerCode: z.string(),
