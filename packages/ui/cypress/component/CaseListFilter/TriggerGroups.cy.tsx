@@ -6,7 +6,7 @@ import { DisplayFullUser } from "types/display/Users"
 describe("TriggerGroups", () => {
   const dispatch = () => {}
   beforeEach(() => {
-    const currentUser = { visibleForces: ["001"], excludedTriggers: [] } as unknown as DisplayFullUser
+    const currentUser = { visibleForces: ["18"], excludedTriggers: [] } as unknown as DisplayFullUser
 
     cy.mount(
       <CurrentUserContext.Provider value={{ currentUser }}>
@@ -18,6 +18,11 @@ describe("TriggerGroups", () => {
   it("contains Bails checkbox", () => {
     cy.get("input#bails[type=checkbox]")
     cy.get("label[for=bails]").contains("Bails")
+  })
+
+  it("contains Results checkbox", () => {
+    cy.get("input#results[type=checkbox]")
+    cy.get("label[for=results]").contains("Results")
   })
 
   it("contains Custody checkbox", () => {

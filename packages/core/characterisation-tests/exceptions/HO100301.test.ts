@@ -4,7 +4,7 @@ import { asnPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100301", () => {
+describe("HO100301", () => {
   const legacyBichard = process.env.USE_BICHARD === "true"
 
   afterAll(async () => {

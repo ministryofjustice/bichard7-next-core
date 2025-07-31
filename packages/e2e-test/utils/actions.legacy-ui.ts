@@ -8,7 +8,7 @@ import {
   reloadUntilSelector,
   waitForRecord
 } from "./puppeteer-utils"
-import { caseListPage } from "./urls"
+import { caseListPage, notFoundPage } from "./urls"
 import type Bichard from "./world"
 
 const filterByRecordName = async function (world: Bichard) {
@@ -78,6 +78,14 @@ export const goToExceptionList = async function (this: Bichard) {
   }
 
   await Promise.all([this.browser.page.goto(caseListPage()), this.browser.page.waitForNavigation()])
+}
+
+export const goToNotFoundPage = async function (this: Bichard) {
+  if (this.config.noUi) {
+    return
+  }
+
+  await Promise.all([this.browser.page.waitForNavigation(), this.browser.page.goto(notFoundPage())])
 }
 
 export const findRecordFor = async function (this: Bichard, name: string) {
@@ -168,6 +176,11 @@ const isButtonVisible = async function (page: Page, sectionName: string) {
 
 export const clickButton = async function (this: Bichard, value: string) {
   const { page } = this.browser
+
+  if (value === "Return to case list") {
+    return await this.browser.clickAndWait(`text=${value}`)
+  }
+
   await Promise.all([page.click(`input[type='submit'][value='${value}']`), page.waitForNavigation()])
 }
 

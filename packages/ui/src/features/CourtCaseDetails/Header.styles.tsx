@@ -1,7 +1,8 @@
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import styled from "styled-components"
-import { lightGrey, gdsLightGrey } from "utils/colours"
+import { breakpoints } from "types/breakpoints"
+import { gdsLightGrey, lightGrey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
   display: flex;
@@ -19,6 +20,13 @@ const CaseDetailHeaderRow = styled.div`
   gap: 1.88rem;
   width: 100%;
 
+  @media (max-width: ${breakpoints.compact}) {
+    h2.govuk-heading-m {
+      font-size: 1.1875rem;
+      line-height: 1.31579;
+    }
+  }
+
   @media (max-width: 1300px) {
     flex-direction: column;
     align-items: flex-start;
@@ -34,18 +42,40 @@ const CaseDetailHeaderRow = styled.div`
   }
 `
 
+const CaseDetailsHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+
+  @media (max-width: 1300px) {
+    width: 100%;
+  }
+`
+
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-bottom: 0;
   padding-top: 0.31rem;
   gap: 0.75rem;
+
+  @media (max-width: ${breakpoints.compact}) {
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
 `
 
 const LockedTagContainer = styled.div`
   display: flex;
   gap: 2.5rem;
   margin-left: auto;
+
+  @media (max-width: ${breakpoints.regular}) {
+    gap: 1rem;
+  }
 `
 
 const StyledButton = styled(Button)`
@@ -65,7 +95,8 @@ export {
   ButtonContainer,
   CaseDetailHeaderContainer,
   CaseDetailHeaderRow,
+  CaseDetailsHeader,
   LockedTagContainer,
-  StyledButton,
-  SecondaryLinkButton
+  SecondaryLinkButton,
+  StyledButton
 }

@@ -4,7 +4,7 @@ import { offenceResultClassPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100305", () => {
+describe("HO100305", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

@@ -1,9 +1,9 @@
-import type DynamoDB from "aws-sdk/clients/dynamodb"
+import type { GlobalSecondaryIndex, KeySchemaElement } from "@aws-sdk/client-dynamodb"
 
 import type { SecondaryIndex } from "./SecondaryIndex"
 
-const getKeySchema = (hashKey: string, rangeKey?: string) => {
-  const keySchema = [
+const getKeySchema = (hashKey: string, rangeKey?: string): KeySchemaElement[] => {
+  const keySchema: KeySchemaElement[] = [
     {
       AttributeName: hashKey,
       KeyType: "HASH"
@@ -20,8 +20,8 @@ const getKeySchema = (hashKey: string, rangeKey?: string) => {
   return keySchema
 }
 
-const getTableIndexes = (sortKey: string, secondaryIndexes: SecondaryIndex[]): DynamoDB.GlobalSecondaryIndexList => {
-  const indexes = secondaryIndexes.map((index) => {
+const getTableIndexes = (sortKey: string, secondaryIndexes: SecondaryIndex[]): GlobalSecondaryIndex[] => {
+  const indexes: GlobalSecondaryIndex[] = secondaryIndexes.map((index) => {
     const { hashKey, name, rangeKey } = index
 
     return {

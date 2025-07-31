@@ -47,19 +47,13 @@ function pull_and_build_from_aws() {
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
 
     ## Run goss tests
-    GOSS_SLEEP=5 GOSS_FILE=packages/conductor/goss.yaml dgoss run \
-      -e PHASE1_COMPARISON_TABLE_NAME="bichard-7-comparison-log" \
-      -e PHASE2_COMPARISON_TABLE_NAME="bichard-7-phase2-comparison-log" \
-      -e PHASE3_COMPARISON_TABLE_NAME="bichard-7-phase3-comparison-log" \
+    GOSS_FILES_PATH=packages/conductor dgoss run \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       -e AUDIT_LOG_API_KEY="xxx" \
       -e AUDIT_LOG_API_URL="http://localhost:3011" \
-      -e COMPARISON_BUCKET="comparisons" \
       -e MQ_URL="mq" \
       -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e INCOMING_BUCKET_NAME="incoming-messages" \
-      -e DYNAMO_REGION="eu-west-2" \
-      -e DYNAMO_URL="https://dynamodb.eu-west-2.amazonaws.com" \
       -e S3_REGION="eu-west-2" \
       -e CONDUCTOR_URL="http://conductor:4000/api" \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \

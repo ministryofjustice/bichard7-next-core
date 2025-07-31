@@ -8,7 +8,7 @@ export default async function (
   errorResolvedTimestamp: Date | null,
   errorStatus: number,
   errorReport?: string
-) {
+): Promise<void> {
   let errorReportSql = sql``
 
   if (errorReport) {

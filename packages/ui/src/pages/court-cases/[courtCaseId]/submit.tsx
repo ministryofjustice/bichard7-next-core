@@ -130,6 +130,11 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
   }
   const resubmitCasePath = `${basePath}/court-cases/${courtCase.errorId}?resubmitCase=true`
   const validAmendments = amendmentsHaveChanged(courtCase, JSON.parse(amendments ?? "{}"))
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = () => {
+    setIsSubmitting(true)
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
@@ -161,10 +166,10 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
             {"Do you want to submit case details to the PNC and mark the exception(s) as resolved?"}
           </p>
         </ConditionalRender>
-        <Form action={resubmitCasePath} method="post" csrfToken={csrfToken}>
+        <Form onSubmit={handleSubmit} action={resubmitCasePath} method="post" csrfToken={csrfToken}>
           <input type="hidden" name="amendments" value={amendments} />
           <ButtonsGroup>
-            <Button id="confirm-submit" type="submit">
+            <Button id="confirm-submit" type="submit" disabled={isSubmitting}>
               {"Submit exception(s)"}
             </Button>
             <Link className="govuk-link" href={backLink}>

@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100211", () => {
+describe("HO100211", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should create an exception if the Organisation Name is too many characters", async () => {
+  it("should create an exception if the Organisation Name is too many characters", async () => {
     const inputMessage = generateSpiMessage({
       organisation: { name: "X".repeat(256) },
       offences: [{ results: [] }]
@@ -26,7 +26,7 @@ describe.ifPhase1("HO100211", () => {
     ])
   })
 
-  it.ifNewBichard("should create an exception if the Organisation Name is too few characters", async () => {
+  it("should create an exception if the Organisation Name is too few characters", async () => {
     const inputMessage = generateSpiMessage({
       organisation: { name: "" },
       offences: [{ results: [] }]

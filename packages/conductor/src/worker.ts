@@ -1,9 +1,6 @@
 import { TaskManager } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import logger from "@moj-bichard7/common/utils/logger"
-import compareFiles from "@moj-bichard7/core/comparison/conductor-tasks/compareFiles"
-import generateRerunTasks from "@moj-bichard7/core/comparison/conductor-tasks/generateRerunTasks"
-import rerunPeriod from "@moj-bichard7/core/comparison/conductor-tasks/rerunPeriod"
 import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/persistPhase1"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/processPhase1"
 import sendToPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/sendToPhase2"
@@ -25,11 +22,9 @@ import { configureWorker, defaultConcurrency, defaultPollInterval } from "./conf
 const client = createConductorClient()
 const tasks = [
   alertCommonPlatform,
-  compareFiles,
   convertSpiToAho,
   createAuditLogRecord,
   deleteS3File,
-  generateRerunTasks,
   lockS3File,
   persistPhase1,
   persistPhase2,
@@ -37,7 +32,6 @@ const tasks = [
   processPhase1,
   processPhase2,
   processPhase3,
-  rerunPeriod,
   sendToPhase2,
   sendToPhase3,
   storeAuditLogEvents

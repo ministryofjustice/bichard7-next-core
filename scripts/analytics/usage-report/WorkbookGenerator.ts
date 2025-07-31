@@ -1,4 +1,3 @@
-import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ReportData, ReportDataResult, reportEventTitles } from "./common"
 
 const excel = require("excel4node")
@@ -20,11 +19,12 @@ export default class WorkbookGenerator {
   }
 
   private getEventTitle = (eventCode: string) => {
-    const eventTitlePrefix = eventCode.split(".")[0] === "new-ui" ? "New UI" : "Old UI"
+    const eventTitlePrefix =
+      eventCode.split(".")[0] === "new-ui" ? "New: " : eventCode.split(".")[0] === "old-ui" ? "Old: " : ""
     const actualEventCode = eventCode.split(".").slice(1).join(".")
     const eventTitle = reportEventTitles[actualEventCode] ?? actualEventCode
 
-    return `${eventTitlePrefix} ${eventTitle}`
+    return `${eventTitlePrefix}${eventTitle}`
   }
 
   public generate = () => {
@@ -35,12 +35,8 @@ export default class WorkbookGenerator {
     this.generateUserReport(this.reportDataResult.allEvents, "All")
     this.generateDailyUserReport(this.reportDataResult.allEvents, "All")
     this.generateMonthlyUserReport(this.reportDataResult.allEvents, "All")
+    this.generateMonthlyForceReport(this.reportDataResult.allEvents, "All")
 
-    this.generateDailyReport(this.reportDataResult.withNewUiEvents, "New UI")
-    this.generateMonthlyReport(this.reportDataResult.withNewUiEvents, "New UI")
-    this.generateUserReport(this.reportDataResult.withNewUiEvents, "New UI")
-    this.generateDailyUserReport(this.reportDataResult.withNewUiEvents, "New UI")
-    this.generateMonthlyUserReport(this.reportDataResult.withNewUiEvents, "New UI")
     return this
   }
 
@@ -137,6 +133,26 @@ export default class WorkbookGenerator {
     this.addFooterRow(sheet, reportData, rowIndex - 2, true)
   }
 
+  private generateMonthlyForceReport = (reportData: ReportData, title: string) => {
+    const sheet = this.workbook.addWorksheet(`Forces Monthly (${title})`)
+    this.addHeaderRow(sheet, reportData, "Date", "Force")
+
+    let rowIndex = 2
+    Object.entries(reportData.monthlyForces).forEach(([date, forceData]) => {
+      Object.entries(forceData).forEach(([force, data]) => {
+        sheet.cell(rowIndex, 1).string(date).style(this.mainCellStyle)
+        sheet.cell(rowIndex, 2).string(force).style(this.mainCellStyle)
+        reportData.eventCodes.forEach((eventCode, columnIndex) => {
+          sheet.cell(rowIndex, columnIndex + 3).number(data[eventCode] || 0)
+        })
+
+        rowIndex += 1
+      })
+    })
+
+    this.addFooterRow(sheet, reportData, rowIndex - 2, true)
+  }
+
   private addHeaderRow = (sheet, reportData: ReportData, firstColumnName: string, secondColumnName?: string) => {
     sheet.cell(1, 1).string(firstColumnName).style(this.mainCellStyle)
     if (secondColumnName) {
@@ -145,8 +161,10 @@ export default class WorkbookGenerator {
 
     const startColumnIndex = 2 + (secondColumnName ? 1 : 0)
     reportData.eventCodes.forEach((eventCode, index) => {
-      const eventTitle =
-        (eventCode.split(".")[0] === "new-ui" ? "New UI " : "Old UI ") + eventCode.split(".").slice(1).join()
+      // REVIEW AND REMOVE
+      // const eventTitle =
+      //   (eventCode.split(".")[0] === "new-ui" ? "New UI " : eventCode.split(".")[0] === "old-ui" ? "Old UI " : "") +
+      //   eventCode.split(".").slice(1).join()
       sheet
         .cell(1, startColumnIndex + index)
         .string(this.getEventTitle(eventCode))
@@ -174,18 +192,18 @@ export default class WorkbookGenerator {
     // XX People have the new UI turned on
     sheet.cell(rowIndex++, 1).string(`${this.usersWithAccessToNewUi.length} People have the new UI turned on`)
 
-    Object.entries(reportDataResult.withNewUiEvents.monthly).forEach(([date, newUiMonthlyData]) => {
+    Object.entries(reportDataResult.allEvents.monthly).forEach(([date, monthlyData]) => {
       sheet.cell(rowIndex++, 1).string(date).style(this.mainCellStyle)
-      const newUiMonthlyUsersData = reportDataResult.withNewUiEvents.monthlyUsers[date]
+      const monthlyUsersData = reportDataResult.allEvents.monthlyUsers[date]
 
       // XX People resolved a trigger on the new UI
-      const totalUsersResolvedTriggersInNewUi = Object.entries(newUiMonthlyUsersData).filter(
+      const totalUsersResolvedTriggersInNewUi = Object.entries(monthlyUsersData).filter(
         ([_, monthlyUserData]) => (monthlyUserData["new-ui.triggers.resolved"] || 0) > 0
       ).length
       sheet.cell(rowIndex++, 1).string(`${totalUsersResolvedTriggersInNewUi} People resolved a trigger on the new UI`)
 
       // XX People resolved an exception on the new UI
-      const totalUsersResolvedExceptionsInNewUi = Object.entries(newUiMonthlyUsersData).filter(
+      const totalUsersResolvedExceptionsInNewUi = Object.entries(monthlyUsersData).filter(
         ([_, monthlyUserData]) => (monthlyUserData["new-ui.exceptions.resolved"] || 0) > 0
       ).length
       sheet
@@ -193,8 +211,8 @@ export default class WorkbookGenerator {
         .string(`${totalUsersResolvedExceptionsInNewUi} People resolved an exception on the new UI`)
 
       // Of XX people who have the UI turned on, XX.XX% of their triggers were resolved in the new UI
-      const oldUiTriggersResolved = newUiMonthlyData["old-ui.triggers.resolved"] || 0
-      const newUiTriggersResolved = newUiMonthlyData["new-ui.triggers.resolved"] || 0
+      const oldUiTriggersResolved = monthlyData["old-ui.triggers.resolved"] || 0
+      const newUiTriggersResolved = monthlyData["new-ui.triggers.resolved"] || 0
       const totalTriggersResolved = oldUiTriggersResolved + newUiTriggersResolved
       // prettier-ignore
       const triggersResolvedInNewUiPercentage = (totalTriggersResolved ? newUiTriggersResolved / totalTriggersResolved * 100 : 0 ).toFixed(2)
@@ -205,8 +223,8 @@ export default class WorkbookGenerator {
         )
 
       // Of XX people who have the UI turned on, XX.XX% of their exceptions were resolved in the new UI
-      const oldUiExceptionResolved = newUiMonthlyData["old-ui.exceptions.resolved"] || 0
-      const newUiExceptionResolved = newUiMonthlyData["new-ui.exceptions.resolved"] || 0
+      const oldUiExceptionResolved = monthlyData["old-ui.exceptions.resolved"] || 0
+      const newUiExceptionResolved = monthlyData["new-ui.exceptions.resolved"] || 0
       const totalExceptionsResolved = oldUiExceptionResolved + newUiExceptionResolved
       // prettier-ignore
       const exceptionsResolvedInNewUiPercentage = (totalExceptionsResolved ? newUiExceptionResolved / totalExceptionsResolved * 100 : 0).toFixed(2)

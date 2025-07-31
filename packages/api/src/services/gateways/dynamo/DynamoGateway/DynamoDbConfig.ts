@@ -1,10 +1,8 @@
-type DynamoDbConfig = {
-  accessKeyId?: string
+import type { DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
+
+type DynamoDbConfig = DynamoDBClientConfig & {
   auditLogTableName: string
-  endpoint: string
   eventsTableName: string
-  region: string
-  secretAccessKey?: string
 }
 
 export default DynamoDbConfig

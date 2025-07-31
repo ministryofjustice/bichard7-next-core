@@ -17,3 +17,7 @@ export const jwtSignOptions: jwt.SignOptions = {
   expiresIn: jwtConfig.tokenExpiresIn,
   issuer: jwtConfig.tokenIssuer
 }
+
+export const jwtVerifyOptions: jwt.VerifyOptions = {
+  issuer: jwtConfig.tokenIssuer
+}

@@ -5,7 +5,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200110", () => {
+describe("HO200110", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -13,7 +13,7 @@ describe.ifPhase2("HO200110", () => {
   describe("when a dummy ASN", () => {
     it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
       "creates a HO200110 exception for %s when recordable on PNC",
-      async (messageType) => {
+      (messageType) => {
         const inputMessage = generatePhase2Message({
           messageType,
           recordableOnPncIndicator: true,
@@ -23,7 +23,7 @@ describe.ifPhase2("HO200110", () => {
 
         const {
           outputMessage: { Exceptions: exceptions }
-        } = await processPhase2Message(inputMessage)
+        } = processPhase2Message(inputMessage)
 
         expect(exceptions).toStrictEqual([
           {
@@ -34,7 +34,7 @@ describe.ifPhase2("HO200110", () => {
       }
     )
 
-    it("doesn't create a HO200110 exception when not recordable on PNC", async () => {
+    it("doesn't create a HO200110 exception when not recordable on PNC", () => {
       const inputMessage = generatePhase2Message({
         messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
         recordableOnPncIndicator: false,
@@ -44,7 +44,7 @@ describe.ifPhase2("HO200110", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage, { expectRecord: false })
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).not.toContainEqual({
         code: "HO200110",

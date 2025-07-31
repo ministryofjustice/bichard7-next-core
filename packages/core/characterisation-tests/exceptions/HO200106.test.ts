@@ -6,7 +6,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200106", () => {
+describe("HO200106", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -14,7 +14,7 @@ describe.ifPhase2("HO200106", () => {
   describe("when sentence for offence result", () => {
     it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
       "creates a HO200106 exception for %s when PNC adjudication doesn't exist and not added by the court",
-      async (messageType) => {
+      (messageType) => {
         const inputMessage = generatePhase2Message({
           messageType,
           offences: [
@@ -27,7 +27,7 @@ describe.ifPhase2("HO200106", () => {
 
         const {
           outputMessage: { Exceptions: exceptions }
-        } = await processPhase2Message(inputMessage)
+        } = processPhase2Message(inputMessage)
 
         expect(exceptions).toStrictEqual([
           {
@@ -38,7 +38,7 @@ describe.ifPhase2("HO200106", () => {
       }
     )
 
-    it("doesn't create a HO200106 exception when PNC adjudication exists", async () => {
+    it("doesn't create a HO200106 exception when PNC adjudication exists", () => {
       const inputMessage = generatePhase2Message({
         messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
         offences: [
@@ -51,7 +51,7 @@ describe.ifPhase2("HO200106", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage, { expectRecord: false })
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).not.toContainEqual({
         code: "HO200106",
@@ -59,7 +59,7 @@ describe.ifPhase2("HO200106", () => {
       })
     })
 
-    it("doesn't create a HO200106 exception when PNC adjudication doesn't exist but added by the court", async () => {
+    it("doesn't create a HO200106 exception when PNC adjudication doesn't exist but added by the court", () => {
       const inputMessage = generatePhase2Message({
         messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
         offences: [
@@ -72,7 +72,7 @@ describe.ifPhase2("HO200106", () => {
 
       const {
         outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage)
+      } = processPhase2Message(inputMessage)
 
       expect(exceptions).not.toContainEqual({
         code: "HO200106",

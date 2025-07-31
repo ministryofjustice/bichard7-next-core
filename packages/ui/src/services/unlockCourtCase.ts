@@ -4,16 +4,17 @@ import { isError } from "types/Result"
 import type UnlockReason from "types/UnlockReason"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
+import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
-const unlockCourtCase = async (
+const unlockCourtCaseTransaction = async (
   dataSource: DataSource,
   courtCaseId: number,
   user: User,
   unlockReason: UnlockReason
-): Promise<UpdateResult | Error> => {
-  const updateResult = await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+) => {
+  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
 
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
@@ -40,8 +41,15 @@ const unlockCourtCase = async (
 
     return unlockResult
   })
+}
 
-  return updateResult
+const unlockCourtCase = async (
+  dataSource: DataSource,
+  courtCaseId: number,
+  user: User,
+  unlockReason: UnlockReason
+): Promise<UpdateResult | Error> => {
+  return await retryTransaction(unlockCourtCaseTransaction, dataSource, courtCaseId, user, unlockReason)
 }
 
 export default unlockCourtCase

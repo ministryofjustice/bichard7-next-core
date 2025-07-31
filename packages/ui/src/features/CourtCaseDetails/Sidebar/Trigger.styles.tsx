@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { breakpoints } from "types/breakpoints"
 
 const TriggerContainer = styled.div`
   &:first-child {
@@ -6,6 +7,25 @@ const TriggerContainer = styled.div`
   }
   &:not(:last-child) {
     margin-bottom: 30px;
+  }
+
+  @media (max-width: ${breakpoints.compact}) {
+    font-size: 1rem;
+
+    .govuk-checkboxes__input {
+      width: 30px;
+      height: 30px;
+    }
+
+    .govuk-checkboxes__label::before {
+      width: 30px;
+      height: 30px;
+    }
+
+    .govuk-checkboxes__label::after {
+      top: 8px;
+      left: 6px;
+    }
   }
 `
 

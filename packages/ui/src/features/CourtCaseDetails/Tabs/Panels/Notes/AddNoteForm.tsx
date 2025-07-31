@@ -2,8 +2,10 @@ import { Button } from "components/Buttons/Button"
 import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
+import { useBeforeunload } from "hooks/useBeforeunload"
+import { useRouter } from "next/router"
 import { FormEvent, FormEventHandler, useState } from "react"
-import { useBeforeunload } from "react-beforeunload"
+import { updateQueryWithoutResubmitCase } from "utils/updateQueryWithoutResubmitCase"
 import Form from "../../../../../components/Form"
 
 const AddNoteForm: React.FC = () => {
@@ -12,6 +14,7 @@ const AddNoteForm: React.FC = () => {
   const [isFormValid, setIsFormValid] = useState(true)
   const showError = !isFormValid && noteRemainingLength === MAX_NOTE_LENGTH
   const { csrfToken } = useCsrfToken()
+  const router = useRouter()
 
   useBeforeunload(
     !submitted && noteRemainingLength !== MAX_NOTE_LENGTH
@@ -40,7 +43,12 @@ const AddNoteForm: React.FC = () => {
   }
 
   return (
-    <Form method="POST" action="" onSubmit={handleSubmit} csrfToken={csrfToken}>
+    <Form
+      method="POST"
+      action={updateQueryWithoutResubmitCase(router.basePath, router.asPath)}
+      onSubmit={handleSubmit}
+      csrfToken={csrfToken}
+    >
       <NoteTextArea
         showError={showError}
         handleOnNoteChange={handleOnNoteChange}

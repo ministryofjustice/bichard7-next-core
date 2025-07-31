@@ -289,7 +289,7 @@ describe("resolveTriggers", () => {
       )
 
       expect(isError(resolvedResult)).toBeTruthy()
-      expect((resolvedResult as Error).message).toBe("One or more triggers are already resolved")
+      expect((resolvedResult as Error).message).toBe("One or more triggers are already resolved - 0")
 
       const updatedTrigger = (await dataSource
         .getRepository(Trigger)
@@ -327,7 +327,7 @@ describe("resolveTriggers", () => {
         (error) => error
       )
       expect(isError(resolveResult)).toBeTruthy()
-      expect((resolveResult as Error).message).toBe("Triggers are not locked by the user")
+      expect((resolveResult as Error).message).toBe("Triggers are not locked by the user - 0")
 
       const retrievedTrigger = await dataSource
         .getRepository(Trigger)
@@ -357,7 +357,7 @@ describe("resolveTriggers", () => {
         (error) => error
       )
       expect(isError(resolveResult)).toBeTruthy()
-      expect((resolveResult as Error).message).toBe("Triggers are not locked by the user")
+      expect((resolveResult as Error).message).toBe("Triggers are not locked by the user - 0")
 
       const retrievedTrigger = await dataSource
         .getRepository(Trigger)

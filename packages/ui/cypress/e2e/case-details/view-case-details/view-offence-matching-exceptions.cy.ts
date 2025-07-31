@@ -35,14 +35,14 @@ describe("View offence matching exceptions", () => {
 
       cy.get("tbody tr:nth-child(1) td:nth-child(5) a").click()
 
-      cy.contains("h3", "Offence 1 of 2")
-      cy.contains("th", "Offence code").siblings().contains("TH68010")
-      cy.contains("th", "PNC sequence number").siblings().contains(firstOffenceBadge)
+      cy.get(`[data-testid="offence-details-1"]`).should("have.text", "Offence 1 of 2")
+      cy.contains("dt", "Offence code").siblings().contains("TH68010")
+      cy.contains("dt", "PNC sequence number").siblings().contains(firstOffenceBadge)
 
       cy.get("button").contains("Next offence").click()
-      cy.contains("h3", "Offence 2 of 2")
-      cy.contains("th", "Offence code").siblings().contains("TH68010")
-      cy.contains("th", "PNC sequence number").siblings().contains(secondOffenceBadge)
+      cy.get(`[data-testid="offence-details-2"]`).should("have.text", "Offence 2 of 2")
+      cy.contains("dt", "Offence code").siblings().contains("TH68010")
+      cy.contains("dt", "PNC sequence number").siblings().contains(secondOffenceBadge)
     })
   })
 })

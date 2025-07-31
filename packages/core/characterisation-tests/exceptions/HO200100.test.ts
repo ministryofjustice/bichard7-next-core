@@ -6,7 +6,7 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200100", () => {
+describe("HO200100", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
@@ -14,7 +14,7 @@ describe.ifPhase2("HO200100", () => {
   describe("when adjournment pre-judgement for offence result", () => {
     it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
       "creates a HO200100 exception for %s when PNC adjudication exists",
-      async (messageType) => {
+      (messageType) => {
         const inputMessage = generatePhase2Message({
           messageType,
           offences: [
@@ -26,7 +26,7 @@ describe.ifPhase2("HO200100", () => {
 
         const {
           outputMessage: { Exceptions: exceptions }
-        } = await processPhase2Message(inputMessage)
+        } = processPhase2Message(inputMessage)
 
         expect(exceptions).toStrictEqual([
           {
@@ -39,7 +39,7 @@ describe.ifPhase2("HO200100", () => {
 
     it.each([MessageType.ANNOTATED_HEARING_OUTCOME, MessageType.PNC_UPDATE_DATASET])(
       "doesn't create a HO200100 exception for %s when PNC adjudication doesn't exist",
-      async (messageType) => {
+      (messageType) => {
         const inputMessage = generatePhase2Message({
           messageType,
           offences: [
@@ -51,7 +51,7 @@ describe.ifPhase2("HO200100", () => {
 
         const {
           outputMessage: { Exceptions: exceptions }
-        } = await processPhase2Message(inputMessage, { expectRecord: false })
+        } = processPhase2Message(inputMessage)
 
         expect(exceptions).toHaveLength(0)
       }

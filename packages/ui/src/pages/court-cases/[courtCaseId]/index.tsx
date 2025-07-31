@@ -1,6 +1,5 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import Layout from "components/Layout"
-import { Loading } from "components/Loading"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
@@ -267,14 +266,11 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const [previousPathContext] = useState<PreviousPathContextType>({ previousPath })
-  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
     setCookie(caseDetailsCookieName, `${courtCase.errorId}?previousPath=${encodeURIComponent(previousPath)}`, {
       path: "/"
     } as OptionsType)
-
-    setIsClient(true)
   }, [caseDetailsCookieName, courtCase.errorId, previousPath])
 
   return (
@@ -295,7 +291,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 }}
               >
                 <Header canReallocate={canReallocate} />
-                {isClient ? <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} /> : <Loading />}
+                <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
               </Layout>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>

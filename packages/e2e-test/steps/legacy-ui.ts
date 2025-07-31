@@ -146,4 +146,6 @@ export const setupLegacySteps = () => {
   Then("the alternate exception list should contain a record for {string}", ui.findRecordFor)
   Then("I save a record", legacy.saveChanges)
   Then("I see the correction for {string} to {string}", legacy.checkCorrectionFieldAndValue)
+  Then("I am redirected to a Page Not Found page", legacy.goToNotFoundPage)
+  Then("I see button {string} with class {string}", ui.seeButton)
 }

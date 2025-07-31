@@ -9,7 +9,7 @@ const resultCode = 4592
 const otherTriggerCode = TriggerCode.TRPR0010
 const otherResultCode = 4597
 
-describe.ifPhase1("TRPR0015", () => {
+describe("TRPR0015", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

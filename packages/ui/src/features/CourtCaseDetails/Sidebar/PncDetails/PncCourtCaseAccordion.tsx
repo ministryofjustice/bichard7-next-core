@@ -31,6 +31,8 @@ const PncCourtCaseAccordion = ({
   return (
     <CourtCase key={courtCaseReference}>
       <CourtCaseHeaderContainer
+        as={"button"}
+        type={"button"}
         className={`courtcase-toggle ${isContentVisible ? "expanded" : ""}`}
         onClick={toggleContentVisibility}
         aria-expanded={isContentVisible}
@@ -63,7 +65,9 @@ const PncCourtCaseAccordion = ({
                   <p className={"no-disposals-message"}>{"No disposals"}</p>
                 </ConditionalRender>
                 <ConditionalRender isRendered={hasDisposals}>
-                  {disposals?.map((d, j) => <Disposal key={`${j}-${d.type}`} {...d} />)}
+                  {disposals?.map((d, j) => (
+                    <Disposal key={`${j}-${d.type}`} {...d} />
+                  ))}
                 </ConditionalRender>
                 <ConditionalRender isRendered={offences.length !== i + 1}>
                   <hr />

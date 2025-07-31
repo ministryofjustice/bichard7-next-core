@@ -3,7 +3,7 @@ import MessageType from "../types/MessageType"
 import generateMessage from "./generateMessage"
 
 const generatePhase3Message = (): string => {
-  return generateMessage("test-data/Phase2Message.xml.njk", {
+  return generateMessage("test-data/Message.xml.njk", {
     messageType: MessageType.PNC_UPDATE_DATASET,
     offences: [{ offenceReasonSequence: true, courtCaseReferenceNumber: true, results: [{}] }],
     normalDisposalOperation: {

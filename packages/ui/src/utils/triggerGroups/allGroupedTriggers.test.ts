@@ -30,7 +30,7 @@ describe("allGroupedTriggers", () => {
   it("removes excluded triggers from the groupedTriggers", () => {
     const result = allGroupedTriggers(TriggerCodeGroups.Custody, excludedTriggers)
 
-    expect(result).toHaveLength(4)
+    expect(result).toHaveLength(1)
     expect(result).not.toContain(TriggerCode.TRPR0001)
   })
 })

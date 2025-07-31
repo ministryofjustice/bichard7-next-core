@@ -79,6 +79,8 @@ export const setupNextSteps = () => {
   When("I resolve all of the triggers", ui.resolveAllTriggers)
   When("I select trigger {string} to resolve", ui.selectTriggerToResolve)
   When("I resolve the selected triggers", ui.resolveSelectedTriggers)
+  When("I select trigger {string} for offence {string} to resolve", ui.markTriggerComplete)
+  When("I see trigger {string} for offence {string} is Marked as Complete", ui.checkTriggerHasCompleted)
   When("I correct {string} to {string}", ui.correctOffenceException)
   When("I wait for {string} in the list of records", ui.waitForRecordStep)
   When("I see {int} record for {string}", ui.nRecordsForPerson)
@@ -149,4 +151,6 @@ export const setupNextSteps = () => {
   Then("I see applied filters", ui.exceptionReasonChip)
   Then("I sign out", ui.signOut)
   Then("I should be on the same case details page with exception {string}", ui.sameException)
+  Then("I am redirected to a Page Not Found page", ui.goToNotFoundPage)
+  Then("I see button {string} with class {string}", ui.seeButton)
 }

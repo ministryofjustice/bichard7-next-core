@@ -1,4 +1,4 @@
-import "../../phase1/tests/helpers/setEnvironmentVariables"
+import "../../tests/helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"

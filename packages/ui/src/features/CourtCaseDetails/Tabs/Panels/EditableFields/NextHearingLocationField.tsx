@@ -1,6 +1,6 @@
 import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
 import AutoSave from "components/EditableFields/AutoSave"
-import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
+import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import OrganisationUnitTypeahead from "components/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
@@ -37,7 +37,7 @@ export const NextHearingLocationField = ({
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
 
   return (
-    <EditableFieldTableRow
+    <EditableFieldRow
       className={"next-hearing-location-row"}
       label="Next hearing location"
       hasExceptions={hasNextHearingLocationException(exceptions)}
@@ -66,6 +66,6 @@ export const NextHearingLocationField = ({
       >
         {isNhlChanged && !isValidNhl && <ErrorMessage message="Select valid Next hearing location" />}
       </AutoSave>
-    </EditableFieldTableRow>
+    </EditableFieldRow>
   )
 }

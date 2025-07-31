@@ -111,7 +111,7 @@ const generatePhase2Message = (options: GeneratePhase2MessageOptions): string =>
     options = updateOptionsForAintCase(options)
   }
 
-  return generateMessage("test-data/Phase2Message.xml.njk", options)
+  return generateMessage("test-data/Message.xml.njk", options)
 }
 
 export default generatePhase2Message

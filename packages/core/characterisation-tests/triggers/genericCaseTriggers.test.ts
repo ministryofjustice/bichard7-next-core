@@ -38,7 +38,7 @@ const offenceTests = [
   }
 ]
 
-describe.ifPhase1("Generic case triggers", () => {
+describe("Generic case triggers", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })

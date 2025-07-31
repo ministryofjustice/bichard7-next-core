@@ -1,4 +1,4 @@
-import type postgres from "postgres"
+import type { RowList } from "postgres"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -6,53 +6,34 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 
-import FakeDataStore from "../../services/gateways/dataStoreGateways/fakeDataStore"
-import { minimalUser } from "../../tests/helpers/userHelper"
+import { createCase } from "../../tests/helpers/caseHelper"
+import { createUser } from "../../tests/helpers/userHelper"
+import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
 import { lockTriggers } from "./lockTriggers"
 
+const testDatabaseGateway = new End2EndPostgres()
+
 describe("lockTriggers", () => {
-  const fakeDataStore = new FakeDataStore()
-  const callbackSql = {} as postgres.Sql
-  const caseId = 0
+  afterAll(async () => {
+    await testDatabaseGateway.close()
+  })
+
+  beforeEach(async () => {
+    await testDatabaseGateway.clearDb()
+  })
 
   afterEach(() => {
     jest.restoreAllMocks()
   })
 
-  it("calls lockCase and updates audit log when user has permission to handle triggers", async () => {
-    const user = minimalUser([UserGroup.TriggerHandler])
+  it("locks the triggers and generate an audit log event when user has permission to handle triggers", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler] })
+    const caseObj = await createCase(testDatabaseGateway)
     const auditLogEvents: ApiAuditLogEvent[] = []
 
-    jest.spyOn(fakeDataStore, "lockCase")
-
-    await lockTriggers(fakeDataStore, callbackSql, caseId, user, auditLogEvents)
-
-    expect(fakeDataStore.lockCase).toHaveBeenCalled()
-    expect(auditLogEvents).toHaveLength(1)
-  })
-
-  it("does not call lockCase and update audit log when user lacks permission to handle triggers", async () => {
-    const user = minimalUser([UserGroup.ExceptionHandler])
-    const auditLogEvents: ApiAuditLogEvent[] = []
-
-    jest.spyOn(fakeDataStore, "lockCase")
-
-    await lockTriggers(fakeDataStore, callbackSql, caseId, user, auditLogEvents)
-
-    expect(fakeDataStore.lockCase).not.toHaveBeenCalled()
-    expect(auditLogEvents).toHaveLength(0)
-  })
-
-  it("updates audit logs when trigger is locked successfully", async () => {
-    const user = minimalUser([UserGroup.TriggerHandler])
-    const auditLogEvents: ApiAuditLogEvent[] = []
-
-    jest.spyOn(fakeDataStore, "lockCase").mockResolvedValue(true)
-
-    await lockTriggers(fakeDataStore, callbackSql, caseId, user, auditLogEvents)
+    await lockTriggers(testDatabaseGateway.writable, user, caseObj.errorId, auditLogEvents)
 
     expect(auditLogEvents).toHaveLength(1)
-
     const auditLogEvent = auditLogEvents[0]
     expect(auditLogEvent.category).toBe(EventCategory.information)
     expect(auditLogEvent.eventCode).toBe(EventCode.TriggersLocked)
@@ -60,14 +41,28 @@ describe("lockTriggers", () => {
     expect(auditLogEvent.attributes?.user).toBe(user.username)
   })
 
-  it("doesn't update audit logs when trigger locking fails", async () => {
-    const user = minimalUser([UserGroup.TriggerHandler])
+  it("does not lock the trigger when user lacks permission to handle triggers", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler] })
+    const caseObj = await createCase(testDatabaseGateway)
     const auditLogEvents: ApiAuditLogEvent[] = []
 
-    jest.spyOn(fakeDataStore, "lockCase").mockResolvedValue(false)
-
-    await lockTriggers(fakeDataStore, callbackSql, caseId, user, auditLogEvents)
+    await lockTriggers(testDatabaseGateway.writable, user, caseObj.errorId, auditLogEvents)
 
     expect(auditLogEvents).toHaveLength(0)
+  })
+
+  it("doesn't update audit logs when trigger locking fails", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler] })
+    const caseObj = await createCase(testDatabaseGateway)
+    const auditLogEvents: ApiAuditLogEvent[] = []
+    const databaseGatewayMock = jest
+      .spyOn(testDatabaseGateway.writable, "connection")
+      .mockResolvedValue(Error("Dummy Trigger Error") as unknown as RowList<readonly (object | undefined)[]>)
+
+    await lockTriggers(testDatabaseGateway.writable, user, caseObj.errorId, auditLogEvents)
+
+    expect(auditLogEvents).toHaveLength(0)
+
+    databaseGatewayMock.mockClear()
   })
 })

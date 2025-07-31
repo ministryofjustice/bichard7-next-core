@@ -283,7 +283,7 @@ jobs:
           name: Run E2E comparison tests against Core Phase 3
           command: npm run -w packages/core test:compare:phase3
 
-  characterisation_test_core:
+  characterisation_test:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: false
@@ -305,75 +305,6 @@ jobs:
       - run:
           name: Run tests against core code
           command: npm run test:characterisation -w packages/core
-
-  characterisation_test_legacy_phase1:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_dependencies
-      - build_core
-      - start_bichard7_legacy:
-          ENABLE_PHASE_2: "false"
-          ENABLE_PHASE_3: "false"
-      - run:
-          name: Run Phase 1 characterisation tests for legacy Bichard
-          command: npm run test:characterisation:bichard:phase1 -w packages/core
-
-  characterisation_test_legacy_phase2:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_dependencies
-      - build_core
-      - start_bichard7_legacy:
-          ENABLE_PHASE_2: "true"
-          ENABLE_PHASE_3: "false"
-      - run:
-          name: Run Phase 2 characterisation tests for legacy Bichard
-          command: npm run test:characterisation:bichard:phase2 -w packages/core
-
-  characterisation_test_legacy_phase3:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_dependencies
-      - build_core
-      - start_bichard7_legacy:
-          ENABLE_PHASE_2: "false"
-          ENABLE_PHASE_3: "true"
-      - run:
-          name: Run Phase 3 characterisation tests for legacy Bichard
-          command: npm run test:characterisation:bichard:phase3 -w packages/core
 
   test_conductor:
     machine:
@@ -543,14 +474,11 @@ jobs:
       - node_install
       - install_dependencies
       - build_api
-      - run:
-          name: Start localstack
-          command: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait localstack
+      - start_services:
+          SERVICES: db-seed localstack
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
-      - start_services:
-          SERVICES: db-seed
       - run:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
@@ -1007,6 +935,12 @@ parameters:
     type: boolean
     default: false
 
+merge_queue_only: &merge_queue_only
+  filters:
+    branches:
+      only:
+        - /^gh-readonly-queue\/main.*/
+
 workflows:
   test-all:
     jobs:
@@ -1018,10 +952,7 @@ workflows:
       - test_conductor
       - test_core
       - test_ui
-      - characterisation_test_core
-      - characterisation_test_legacy_phase1
-      - characterisation_test_legacy_phase2
-      - characterisation_test_legacy_phase3
+      - characterisation_test
       - comparison_test
 
       - build-ui:
@@ -1033,11 +964,6 @@ workflows:
           ms-edge: false
           requires:
             - test_ui
-      - cypress_component_test:
-          name: cypress_component_test_ms_edge
-          ms-edge: true
-          requires:
-            - test_ui
 
       - build_api_docker_image:
           name: build_api_docker_image
@@ -1046,11 +972,6 @@ workflows:
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
-          requires:
-            - build-ui
-      - cypress_e2e_tests:
-          name: cypress_e2e_tests_ms_edge
-          ms-edge: true
           requires:
             - build-ui
       - cypress_e2e_tests:
@@ -1067,11 +988,6 @@ workflows:
           requires:
             - build-ui
       - cucumber_e2e_tests:
-          name: cucumber_e2e_tests_ms_edge
-          ms-edge: true
-          requires:
-            - build-ui
-      - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
           api-case-details: true
@@ -1084,26 +1000,26 @@ workflows:
             - build-ui
 
       - e2e_test:
-          name: e2e_test_phase1
-          next-ui: false
-          phase2-core-canary-ratio: "0.0"
-          phase3-core-canary-ratio: "0.0"
-          ms-edge: false
-          requires:
-            - lint_and_build
-      - e2e_test:
-          name: e2e_test_phase2
-          next-ui: false
-          phase2-core-canary-ratio: "1.0"
-          phase3-core-canary-ratio: "0.0"
-          ms-edge: false
-          requires:
-            - lint_and_build
-      - e2e_test:
-          name: e2e_test_phase3
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
           ms-edge: false
           requires:
             - lint_and_build
+
+      - cypress_component_test:
+          <<: *merge_queue_only
+          name: cypress_component_test_ms_edge
+          ms-edge: true
+      - cypress_e2e_tests:
+          <<: *merge_queue_only
+          name: cypress_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui
+      - cucumber_e2e_tests:
+          <<: *merge_queue_only
+          name: cucumber_e2e_tests_ms_edge
+          ms-edge: true
+          requires:
+            - build-ui

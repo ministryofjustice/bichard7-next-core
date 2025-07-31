@@ -1,4 +1,5 @@
 import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
+import assert from "assert"
 import { expect } from "expect"
 import type { KeyInput, Page } from "puppeteer"
 import type BrowserHelper from "../helpers/BrowserHelper"
@@ -9,7 +10,7 @@ import {
   reloadUntilNotContent,
   reloadUntilXPathSelector
 } from "./puppeteer-utils"
-import { caseListPage } from "./urls"
+import { caseListPage, notFoundPage } from "./urls"
 import type Bichard from "./world"
 
 const waitForRecord = (name: string | null, page: Page, reloadAttempts?: number) => {
@@ -136,10 +137,10 @@ export const checkOffenceData = async function (this: Bichard, value: string, ke
   // case-sensitivity hack because old bichard capitalises every word and new bichard does not
 
   const [cellContent] = await this.browser.page.$$eval(
-    `xpath/.//table//th[contains(
+    `xpath/.//dt[contains(
         translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),
         "${key.toLowerCase()}"
-      )]/following-sibling::td`,
+      )]/following-sibling::dd`,
     (cells) => cells.map((cell) => cell.textContent)
   )
 
@@ -179,6 +180,14 @@ export const loadTab = async function (this: Bichard, tabName: string) {
 
   if (tabName === "Offences" && backToAllOffencesLink.length > 0) {
     await backToAllOffencesLink[0].click()
+    return
+  }
+
+  // TODO: This a temporary fix to get the e2e_tests passing. They do not have the latest UI image
+  const tab = await this.browser.page.$$(`#${tabName.toLowerCase()}-tab`)
+
+  if (tab.length > 0) {
+    await tab[0].click()
     return
   }
 
@@ -285,6 +294,33 @@ export const resolveAllTriggers = async function (this: Bichard) {
 export const selectTriggerToResolve = async function (this: Bichard, triggerNumber: string) {
   const checkbox = (await this.browser.page.$$(".moj-trigger-row input[type=checkbox]"))[Number(triggerNumber) - 1]
   await checkbox.click()
+}
+
+export const markTriggerComplete = async function (this: Bichard, triggerCode: string, offenceId: string) {
+  await this.browser.page.click("#triggers-tab")
+
+  const shortTriggerCode = getShortTriggerCode(triggerCode)
+
+  await this.browser.page.click(
+    `xpath/.//div[contains(@class, 'trigger-header-row')
+      and .//label[contains(text(), '${shortTriggerCode}')]
+      and .//button[normalize-space() = 'Offence ${offenceId}']
+    ]//input[@type='checkbox']`
+  )
+}
+
+export const checkTriggerHasCompleted = async function (this: Bichard, triggerCode: string, offenceId: string) {
+  await this.browser.page.click("#triggers-tab")
+
+  const shortTriggerCode = getShortTriggerCode(triggerCode)
+
+  await this.browser.page.waitForSelector(
+    `xpath/.//div[contains(@class, 'trigger-header-row')
+      and .//label[contains(text(), '${shortTriggerCode}')]
+      and .//button[normalize-space() = 'Offence ${offenceId}']
+      and .//span[contains(@class, 'moj-badge--green')]
+    ]`
+  )
 }
 
 export const manuallyResolveRecord = async function (this: Bichard) {
@@ -433,6 +469,14 @@ export const goToExceptionList = async function (this: Bichard) {
   }
 
   await Promise.all([this.browser.page.waitForNavigation(), this.browser.page.goto(caseListPage())])
+}
+
+export const goToNotFoundPage = async function (this: Bichard) {
+  if (this.config.noUi) {
+    return
+  }
+
+  await Promise.all([this.browser.page.waitForNavigation(), this.browser.page.goto(notFoundPage())])
 }
 
 // TODO: refactor down with noExceptionsPresentForOffender
@@ -680,6 +724,25 @@ export const seeBadge = async function (this: Bichard, badge: string) {
   const { page } = this.browser
 
   await page.$$(`xpath/.//span[contains(@class, "moj-badge") and text() = "${badge}"]`)
+}
+
+export const seeButton = async function (this: Bichard, buttonText: string, className: string) {
+  const { page } = this.browser
+
+  let elements
+
+  if (className === "wpsToolBarBichardSwitch") {
+    elements = await page.$$(
+      `xpath/.//div[contains(@class, "${className}")]//button[normalize-space()="${buttonText}"]`
+    )
+  } else {
+    elements = await page.$$(`xpath/.//a[contains(@class, "${className}")][normalize-space()="${buttonText}"]`)
+  }
+
+  assert(
+    elements.length > 0,
+    `Expected to find button with text "${buttonText}" inside div with class "${className}", but found none`
+  )
 }
 
 export const goToExceptionPage = async function (this: Bichard, exception: string) {

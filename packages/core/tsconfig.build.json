@@ -3,10 +3,13 @@
   "exclude": ["dist", "node_modules", "scripts", "phase1/scripts", "**/tests", "**/*.test.*"],
   "files": [
     "phase1/tests/fixtures/exampleAho.json",
+    "phase1/tests/helpers/generateMockPncQueryResult.ts",
     "phase2/tests/helpers/generateMockPhase2Result.ts",
     "phase2/tests/helpers/PartialPncUpdateDataset.ts",
     "phase2/tests/fixtures/helpers/generateFakePncUpdateDataset.ts",
     "phase3/tests/helpers/getPncErrorMessages.ts",
-    "phase3/tests/helpers/getPncOperationsFromPncUpdateDataset.ts"
+    "phase3/tests/helpers/getPncOperationsFromPncUpdateDataset.ts",
+    "tests/helpers/MockPncGateway.ts",
+    "tests/helpers/parseIncomingMessage.ts"
   ]
 }

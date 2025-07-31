@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gem "jekyll", "~> 4.3.3"
 gem "webrick", "~> 1.9.1"
-gem "nokogiri", "~> 1.18.7"
+gem "nokogiri", "~> 1.18.9"
 gem "html-proofer", "3.19.3"
 
 gem "logger", "~> 1.7"

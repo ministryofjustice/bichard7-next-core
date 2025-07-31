@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { blue, gdsBlack, yellow } from "utils/colours"
+import { blue, gdsBlack, white, yellow } from "utils/colours"
 
 const SmallButton = styled.button`
   display: inline-flex;
@@ -8,14 +8,15 @@ const SmallButton = styled.button`
   flex-direction: row;
   padding: 0px;
   border: none;
-  background-color: white;
+  background-color: ${white};
   gap: 11px;
   color: ${blue};
   font-size: 1em;
+  font-family: "GDS Transport";
   text-decoration: underline;
   cursor: pointer;
   &:hover {
-    color: white;
+    color: ${white};
     background: ${blue};
   }
   &:hover img {

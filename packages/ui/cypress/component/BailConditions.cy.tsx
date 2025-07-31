@@ -5,18 +5,18 @@ describe("BailConditions", () => {
   const reason = "expected reason"
   it("should not render the component if there are no bails", () => {
     cy.mount(<BailConditions bailConditions={[]} offences={[]} />)
-    cy.contains("h3", "Bail conditions").should("not.exist")
-    cy.get("td").should("not.exist")
+    cy.contains("h2", "Bail conditions").should("not.exist")
+    cy.get("dt").should("not.exist")
   })
 
   it("should render the list of bail conditions and", () => {
     const conditions = ["first condition", "second condition", "third condition"]
     cy.mount(<BailConditions bailConditions={conditions} bailReason={reason} offences={[]} />)
-    cy.contains("h3", "Bail conditions").should("exist")
-    cy.contains("td", conditions[0]).should("exist")
-    cy.contains("td", conditions[1]).should("exist")
-    cy.contains("td", conditions[2]).should("exist")
-    cy.contains("th", "Bail reason").siblings().should("include.text", reason)
+    cy.contains("h2", "Bail conditions").should("exist")
+    cy.contains("dd", conditions[0]).should("exist")
+    cy.contains("dd", conditions[1]).should("exist")
+    cy.contains("dd", conditions[2]).should("exist")
+    cy.contains("dt", "Bail reason").siblings().should("include.text", reason)
   })
 
   it("should generate labels of the bail conditions", () => {
@@ -27,11 +27,11 @@ describe("BailConditions", () => {
         bailReason={reason}
       />
     )
-    cy.contains("h3", "Bail conditions").should("exist")
-    cy.contains("th", "Exclusion").siblings().should("include.text", "Exclusion: first condition")
-    cy.contains("th", "Curfew").siblings().should("include.text", "Curfew: second condition")
-    cy.contains("th", "Other").siblings().should("include.text", "third condition")
-    cy.contains("th", "Bail reason").siblings().should("include.text", reason)
+    cy.contains("h2", "Bail conditions").should("exist")
+    cy.contains("dt", "Exclusion").siblings().should("include.text", "Exclusion: first condition")
+    cy.contains("dt", "Curfew").siblings().should("include.text", "Curfew: second condition")
+    cy.contains("dt", "Other").siblings().should("include.text", "third condition")
+    cy.contains("dt", "Bail reason").siblings().should("include.text", reason)
   })
 
   it("should include the offence number on the label where the bail condition is included in the offence result text", () => {
@@ -57,11 +57,11 @@ describe("BailConditions", () => {
         bailReason={reason}
       />
     )
-    cy.contains("h3", "Bail conditions").should("exist")
-    cy.contains("th", "Offence 1").siblings().should("include.text", "Exclusion: first condition")
-    cy.contains("th", "Offence 3").siblings().should("include.text", "Curfew: second condition")
-    cy.contains("th", "Offence 2").siblings().should("include.text", "third condition")
+    cy.contains("h2", "Bail conditions").should("exist")
+    cy.contains("dt", "Offence 1").siblings().should("include.text", "Exclusion: first condition")
+    cy.contains("dt", "Offence 3").siblings().should("include.text", "Curfew: second condition")
+    cy.contains("dt", "Offence 2").siblings().should("include.text", "third condition")
 
-    cy.contains("th", "Bail reason").siblings().should("include.text", reason)
+    cy.contains("dt", "Bail reason").siblings().should("include.text", reason)
   })
 })

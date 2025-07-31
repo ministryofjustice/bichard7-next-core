@@ -104,13 +104,13 @@ describe("ASN", () => {
   it("should display the updated ASN after submission along with CORRECTION badge", () => {
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".defendant-details-table").contains("AA/AAAA/AA/AAAAAA")
+    cy.get(".defendant-details").contains("AA/AAAA/AA/AAAAAA")
     cy.get("#asn").clear()
     cy.get("#asn").type("1101ZD0100000448754K")
 
     submitAndConfirmExceptions()
 
-    cy.get(".defendant-details-table").contains("11/01ZD/01/448754K")
+    cy.get(".defendant-details").contains("11/01ZD/01/448754K")
     cy.get(".moj-badge").contains("Correction").should("exist")
   })
 
@@ -120,8 +120,8 @@ describe("ASN", () => {
     cy.get("#asn").clear()
     cy.get("#asn").type("1101ZD01448754")
 
-    cy.get(".defendant-details-table").find(".warning-icon").should("exist")
-    cy.get(".defendant-details-table").contains("Enter ASN in the correct format")
+    cy.get(".defendant-details").find(".warning-icon").should("exist")
+    cy.get(".defendant-details").contains("Enter ASN in the correct format")
   })
 
   it("Should not be able to edit ASN field if case is not locked by the current user", () => {

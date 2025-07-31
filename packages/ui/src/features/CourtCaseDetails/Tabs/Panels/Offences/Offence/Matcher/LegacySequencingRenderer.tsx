@@ -1,6 +1,6 @@
 import { OffenceMatchingException } from "utils/offenceMatcher/getOffenceMatchingException"
-import LegacySequencingBadgeTableRow from "./TableRows/LegacySequencingBadgeTableRow"
-import LegacySequencingMessageTableRow from "./TableRows/LegacySequencingMessageTableRow"
+import LegacySequencingBadgeRow from "./Rows/LegacySequencingBadgeRow"
+import LegacySequencingMessageRow from "./Rows/LegacySequencingMessageRow"
 
 interface LegacySequencingRenderProps {
   offenceMatchingException?: OffenceMatchingException | boolean
@@ -16,12 +16,12 @@ const LegacySequencingRenderer = ({
   return (
     <>
       {offenceMatchingException ? (
-        <LegacySequencingMessageTableRow
+        <LegacySequencingMessageRow
           exception={offenceMatchingException as OffenceMatchingException}
           message={offenceMatchingExceptionMessage}
         />
       ) : (
-        <LegacySequencingBadgeTableRow offenceReasonSequence={offenceReasonSequence} />
+        <LegacySequencingBadgeRow offenceReasonSequence={offenceReasonSequence} />
       )}
     </>
   )

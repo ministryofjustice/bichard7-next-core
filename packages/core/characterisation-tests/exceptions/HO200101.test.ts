@@ -6,12 +6,12 @@ import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"
 import MessageType from "../types/MessageType"
 
-describe.ifPhase2("HO200101", () => {
+describe("HO200101", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it("creates a HO200101 exception for AHO when adjournment with judgement", async () => {
+  it("creates a HO200101 exception for AHO when adjournment with judgement", () => {
     const aho = generatePhase2Message({
       messageType: MessageType.ANNOTATED_HEARING_OUTCOME,
       offences: [{ results: [{ resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT, pncAdjudicationExists: true }] }]
@@ -19,7 +19,7 @@ describe.ifPhase2("HO200101", () => {
 
     const {
       outputMessage: { Exceptions: exceptions }
-    } = await processPhase2Message(aho)
+    } = processPhase2Message(aho)
 
     expect(exceptions).toStrictEqual([
       {
@@ -36,30 +36,25 @@ describe.ifPhase2("HO200101", () => {
     },
     {
       messageType: MessageType.PNC_UPDATE_DATASET,
-      resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT,
-      processMessageOptions: { expectRecord: false }
+      resultClass: ResultClass.ADJOURNMENT_WITH_JUDGEMENT
     },
     {
       messageType: MessageType.PNC_UPDATE_DATASET,
-      resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT,
-      processMessageOptions: { expectRecord: false }
+      resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT
     }
-  ])(
-    "doesn't create a HO200101 exception for $messageType when $resultClass",
-    async ({ messageType, resultClass, processMessageOptions }) => {
-      const inputMessage = generatePhase2Message({
-        messageType,
-        offences: [{ results: [{ resultClass, pncAdjudicationExists: true }] }]
-      })
+  ])("doesn't create a HO200101 exception for $messageType when $resultClass", ({ messageType, resultClass }) => {
+    const inputMessage = generatePhase2Message({
+      messageType,
+      offences: [{ results: [{ resultClass, pncAdjudicationExists: true }] }]
+    })
 
-      const {
-        outputMessage: { Exceptions: exceptions }
-      } = await processPhase2Message(inputMessage, processMessageOptions)
+    const {
+      outputMessage: { Exceptions: exceptions }
+    } = processPhase2Message(inputMessage)
 
-      expect(exceptions).not.toContainEqual({
-        code: "HO200101",
-        path: offenceResultClassPath(0, 0)
-      })
-    }
-  )
+    expect(exceptions).not.toContainEqual({
+      code: "HO200101",
+      path: offenceResultClassPath(0, 0)
+    })
+  })
 })

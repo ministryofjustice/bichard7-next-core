@@ -1,7 +1,7 @@
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import Phase from "@moj-bichard7/core/types/Phase"
 import AutoSave from "components/EditableFields/AutoSave"
-import EditableFieldTableRow from "components/EditableFields/EditableFieldTableRow"
+import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import { useCourtCase } from "context/CourtCaseContext"
 import { ChangeEvent, ClipboardEvent, KeyboardEvent, useEffect, useRef, useState } from "react"
@@ -131,7 +131,7 @@ export const AsnField = () => {
   }
 
   return (
-    <EditableFieldTableRow
+    <EditableFieldRow
       className={"asn-row"}
       value={getShortAsn(defendant.ArrestSummonsNumber)}
       updatedValue={getShortAsn(updatedAhoAsn)}
@@ -168,6 +168,6 @@ export const AsnField = () => {
           {!isValidAsn && <ErrorMessage message="Enter ASN in the correct format" />}
         </AutoSave>
       </div>
-    </EditableFieldTableRow>
+    </EditableFieldRow>
   )
 }

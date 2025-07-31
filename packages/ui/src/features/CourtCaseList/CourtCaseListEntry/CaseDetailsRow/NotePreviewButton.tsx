@@ -9,6 +9,7 @@ import { NotePreviewBody, NotePreviewHeader, StyledPreviewButton } from "./NoteP
 interface NotePreviewProps {
   latestNote: DisplayNote
   numberOfNotes: number
+  ariaHidden?: boolean
 }
 
 interface NotePreviewButtonProps {
@@ -17,11 +18,11 @@ interface NotePreviewButtonProps {
   numberOfNotes: number
 }
 
-export const NotePreview = ({ latestNote, numberOfNotes }: NotePreviewProps) => {
+export const NotePreview = ({ latestNote, numberOfNotes, ariaHidden }: NotePreviewProps) => {
   const displayDate = validateMostRecentNoteDate(latestNote)
 
   return (
-    <Preview>
+    <Preview id={"note-preview"} aria-hidden={ariaHidden}>
       <NotePreviewHeader className={`govuk-body govuk-!-font-weight-bold note-preview-heading`}>
         {numberOfNotes > 1
           ? `Most recent note added ${displayDate} by ${latestNote.userId}`
@@ -45,6 +46,7 @@ export const NotePreviewButton: React.FC<NotePreviewButtonProps> = (props: NoteP
           onClick={props.setShowPreview}
           previewLabel={buttonText}
           hideLabel={buttonText}
+          ariaControls={"note-preview"}
         />
       </ConditionalRender>
     </>

@@ -3,12 +3,12 @@ import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 
-describe.ifPhase1("HO100237", () => {
+describe("HO100237", () => {
   afterAll(async () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it.ifNewBichard("should create an exception if alcohol level is too high", async () => {
+  it("should create an exception if alcohol level is too high", async () => {
     const inputMessage = generateSpiMessage({
       offences: [{ alcoholLevel: { amount: 1000 }, results: [{}] }]
     })

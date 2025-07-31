@@ -10,9 +10,13 @@ const CourtCase = styled.div`
   }
 `
 const CourtCaseHeaderContainer = styled.div`
+  all: unset;
+  display: block;
+  width: 100%;
+  cursor: pointer;
+
   display: flex;
   justify-content: space-between;
-  cursor: pointer;
   background-color: ${gdsLightGrey};
   border-bottom: solid 1px ${gdsMidGrey};
 
@@ -31,7 +35,7 @@ const CourtCaseHeader = styled.div`
   margin: 15px 20px;
 `
 
-const CCR = styled.h1`
+const CCR = styled.h3`
   margin: 0;
   width: 100%;
   padding-bottom: 10px;
@@ -116,7 +120,7 @@ const Offence = styled.div`
   }
 `
 
-const DisposalHeader = styled.h2`
+const DisposalHeader = styled.h4`
   background-color: ${gdsLightGrey};
   margin: 0 -20px;
   padding-left: 20px;

@@ -1,5 +1,5 @@
 jest.setTimeout(9999999)
-import "../../phase1/tests/helpers/setEnvironmentVariables"
+import "../../tests/helpers/setEnvironmentVariables"
 
 import type Email from "@moj-bichard7/common/email/Email"
 

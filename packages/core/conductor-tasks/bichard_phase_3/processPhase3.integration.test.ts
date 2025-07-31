@@ -1,4 +1,4 @@
-import "../../phase1/tests/helpers/setEnvironmentVariables"
+import "../../tests/helpers/setEnvironmentVariables"
 
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"

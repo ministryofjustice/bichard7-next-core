@@ -2,9 +2,15 @@ import type { Case } from "@moj-bichard7/common/types/Case"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import type DataStoreGateway from "../../services/gateways/interfaces/dataStoreGateway"
+import type DataStoreGateway from "../../types/DatabaseGateway"
 
-import Postgres from "../../services/gateways/dataStoreGateways/postgres"
+import mapCaseRowToCase from "../../services/db/mapCaseRowToCase"
+import mapCaseToCaseRow from "../../services/db/mapCaseToCaseRow"
+import mapTriggerRowToTrigger from "../../services/db/mapTriggerRowToTrigger"
+import mapTriggerToTriggerRow from "../../services/db/mapTriggerToTriggerRow"
+import mapUserRowToUser from "../../services/db/mapUserRowToUser"
+import mapUserToUserRow from "../../services/db/mapUserToUserRow"
+import Postgres from "../../services/gateways/database/Postgres"
 import clearAllTables from "./e2ePostgres/clearAllTables"
 import insertCase from "./e2ePostgres/insertCase"
 import insertTrigger from "./e2ePostgres/insertTrigger"
@@ -14,36 +20,40 @@ import updateCaseWithException from "./e2ePostgres/updateCaseWithException"
 import updateCaseWithTriggers from "./e2ePostgres/updateCaseWithTriggers"
 
 class End2EndPostgres extends Postgres implements DataStoreGateway {
-  async clearDb(): Promise<boolean> {
-    return await clearAllTables(this.postgres)
+  clearDb(): Promise<boolean> {
+    return clearAllTables(this.writable.connection)
   }
 
-  async close() {
-    await this.postgres.end()
+  async close(): Promise<void> {
+    await this.writable.connection.end()
+    await this.readonly.connection.end()
   }
 
-  async createTestCase(partialCase: Partial<Case>): Promise<Case> {
-    return await insertCase(this.postgres, partialCase)
+  async createTestCase(caseData: Case): Promise<Case> {
+    const caseRow = await insertCase(this.writable.connection, mapCaseToCaseRow(caseData))
+
+    return mapCaseRowToCase(caseRow)
   }
 
-  async createTestTrigger(partialTrigger: Partial<Trigger>): Promise<Trigger> {
-    return await insertTrigger(this.postgres, partialTrigger)
+  async createTestTrigger(trigger: Trigger): Promise<Trigger> {
+    const triggerRow = await insertTrigger(this.writable.connection, mapTriggerToTriggerRow(trigger))
+
+    return mapTriggerRowToTrigger(triggerRow)
   }
 
-  async createTestUser(user: Partial<User>): Promise<User> {
-    if (!user.groups || user.groups.length === 0) {
-      throw new Error("User has no Groups")
+  async createTestUser(user: User): Promise<User> {
+    const dbUser = await insertUser(this.writable.connection, mapUserToUserRow(user))
+
+    if (user.groups && user.groups.length > 0) {
+      await insertUserIntoGroup(this.writable.connection, dbUser, user.groups)
     }
-
-    const dbUser = await insertUser(this.postgres, user)
-    await insertUserIntoGroup(this.postgres, dbUser, user.groups)
 
     dbUser.groups = user.groups
 
-    return dbUser
+    return mapUserRowToUser(dbUser)
   }
 
-  async updateCaseWithException(
+  updateCaseWithException(
     caseId: number,
     exceptionCode: string,
     errorResolvedBy: null | string,
@@ -51,8 +61,8 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     errorStatus: number,
     errorReport?: string
   ) {
-    await updateCaseWithException(
-      this.postgres,
+    return updateCaseWithException(
+      this.writable.connection,
       caseId,
       exceptionCode,
       errorResolvedBy,
@@ -62,14 +72,21 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     )
   }
 
-  async updateCaseWithTriggers(
+  updateCaseWithTriggers(
     caseId: number,
     triggerResolvedBy: null | string,
     triggerCount: number,
     triggerStatus: number,
     triggerReason: string
   ) {
-    await updateCaseWithTriggers(this.postgres, caseId, triggerResolvedBy, triggerCount, triggerStatus, triggerReason)
+    return updateCaseWithTriggers(
+      this.writable.connection,
+      caseId,
+      triggerResolvedBy,
+      triggerCount,
+      triggerStatus,
+      triggerReason
+    )
   }
 }
 

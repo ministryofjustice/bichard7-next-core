@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { breakpoints } from "types/breakpoints"
 
 const Lockee = styled.span`
   display: flex;
@@ -7,13 +8,18 @@ const Lockee = styled.span`
 
   & > img {
     margin-right: 5px;
-    margin-bottom: 20px;
   }
 `
 
 const LockedTagContainer = styled.div`
   display: flex;
   justify-content: end;
+  font-size: 1.1875rem;
+  margin-bottom: 20px;
+
+  @media (max-width: ${breakpoints.regular}) {
+    font-size: 1rem;
+  }
 `
 
 export { LockedTagContainer, Lockee }
