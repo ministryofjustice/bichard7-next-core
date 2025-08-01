@@ -34,12 +34,12 @@ describe("RefreshButton", () => {
   })
 
   it("sets class name", () => {
-    cy.mount(<RefreshButton location="test" />)
-    cy.get("div").should("have.class", "test-refresh-container")
+    cy.mount(<RefreshButton location="top" />)
+    cy.get("div").should("have.class", "top-refresh-container")
   })
 
   it("shows the time since last refresh initially", () => {
-    cy.mount(<RefreshButton location="test" />)
+    cy.mount(<RefreshButton location="top" />)
     cy.get("span.govuk-body-s").should("have.text", "Last updated less than a minute ago")
   })
 
@@ -47,10 +47,10 @@ describe("RefreshButton", () => {
     const currentDate = new Date()
     cy.clock(currentDate.getTime())
 
-    cy.mount(<RefreshButton location="test" />)
+    cy.mount(<RefreshButton location="top" />)
     cy.get("span.govuk-body-s").should("have.text", "Last updated less than a minute ago")
 
-    cy.tick(300_000) // Move time forward by 5 minutes
+    cy.tick(1000 * 60 * 5) // Move time forward by 5 minutes
     cy.get("span.govuk-body-s").should("have.text", "Last updated 5 minutes ago")
   })
 
@@ -58,12 +58,12 @@ describe("RefreshButton", () => {
     const currentDate = new Date()
     cy.clock(currentDate.getTime())
 
-    cy.mount(<RefreshButton location="test" />)
+    cy.mount(<RefreshButton location="top" />)
     cy.get("span.govuk-body-s")
       .should("have.attr", "title")
       .and("include", `Last updated at ${format(currentDate, "HH:mm:ss dd/MM/yyyy")}`)
 
-    cy.tick(300_000) // Move time forward by 5 minutes
+    cy.tick(1000 * 60 * 5) // Move time forward by 5 minutes
     cy.get("button").click()
     cy.get("@routerReload").should("have.been.calledOnce")
     cy.get("span.govuk-body-s")
