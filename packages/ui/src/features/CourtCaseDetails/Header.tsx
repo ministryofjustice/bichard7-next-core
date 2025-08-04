@@ -8,6 +8,7 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
+import { AccordionToggle } from "components/Card/Card.styles"
 import { useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
@@ -49,6 +50,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const { courtCase } = useCourtCase()
   const previousPath = usePreviousPath()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isContentVisible, setIsContentVisible] = useState(true)
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
@@ -72,6 +74,8 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const handleSubmit = () => {
     setIsSubmitting(true)
   }
+
+  const toggleContentVisibility = () => setIsContentVisible((previousValue) => !previousValue)
 
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
@@ -100,6 +104,19 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
               lockName="Triggers"
             />
           </LockedTagContainer>
+
+          <AccordionToggle
+            className={"govuk-accordion__summary-box"}
+            onClick={toggleContentVisibility}
+            aria-expanded={isContentVisible}
+          >
+            <span className="govuk-accordion__section-toggle-focus">
+              <span
+                className={`govuk-accordion-nav__chevron ${!isContentVisible ? "govuk-accordion-nav__chevron--down" : ""}`}
+              ></span>
+              <span className="govuk-accordion__section-toggle-text">{isContentVisible ? "Hide" : "Show"}</span>
+            </span>
+          </AccordionToggle>
         </CaseDetailsHeader>
         <ButtonContainer>
           <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
@@ -130,7 +147,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </ButtonContainer>
       </CaseDetailHeaderRow>
 
-      <CourtCaseDetailsSummaryBox />
+      {isContentVisible && <CourtCaseDetailsSummaryBox />}
     </CaseDetailHeaderContainer>
   )
 }

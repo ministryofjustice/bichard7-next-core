@@ -40,6 +40,18 @@ const CaseDetailHeaderRow = styled.div`
       margin-bottom: 0.63rem;
     }
   }
+
+  .govuk-accordion__summary-box {
+    visibility: hidden;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+
+  @media (min-resolution: 144dpi) and (max-width: 768px) {
+    .govuk-accordion__summary-box {
+      visibility: visible;
+    }
+  }
 `
 
 const CaseDetailsHeader = styled.div`
