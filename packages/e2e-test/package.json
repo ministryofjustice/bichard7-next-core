@@ -37,8 +37,8 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-tests#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.850.0",
-    "@aws-sdk/lib-storage": "^3.850.0",
+    "@aws-sdk/client-s3": "^3.859.0",
+    "@aws-sdk/lib-storage": "^3.859.0",
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@cucumber/cucumber": "^9.5.1",
@@ -62,13 +62,13 @@
     "puppeteer-mass-screenshots": "^1.0.15",
     "stompit": "^1.0.0",
     "tiny-glob": "^0.2.9",
-    "ts-jest": "^29.4.0",
+    "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
+    "typescript": "^5.9.2",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@swc/core": "^1.13.2",
+    "@swc/core": "^1.13.3",
     "@swc/jest": "^0.2.39",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.merge": "^4.6.9",
@@ -84,7 +84,7 @@
     "eslint-plugin-prettier": "^5.5.3",
     "gherkin-lint": "^4.2.4",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.2",
+    "lint-staged": "^16.1.4",
     "npm-check-updates": "^18.0.2",
     "prettier": "^3.6.2"
   },
