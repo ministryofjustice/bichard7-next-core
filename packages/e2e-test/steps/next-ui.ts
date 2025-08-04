@@ -5,6 +5,7 @@ import { checkAuditLogExists } from "../utils/auditLogging"
 import { logInAs, logInAsSameWindow } from "../utils/auth"
 import * as messages from "../utils/message"
 import * as pnc from "../utils/pnc"
+import * as leds from "../utils/leds"
 import * as reports from "../utils/reports"
 import type Bichard from "../utils/world"
 
@@ -51,6 +52,9 @@ export const setupNextSteps = () => {
   Then("the PNC update includes {string}", pnc.pncUpdateIncludes)
   Then("no PNC requests have been made", pnc.noPncRequests)
   Then("no PNC updates have been made", pnc.noPncUpdates)
+
+  // LEDS Actions
+  Given("the data for this test is in LEDS", leds.mockLedsDataForTest)
 
   // Report Actions
   When("I fake the data for the operational trigger report", reports.fakeTriggerReportData)

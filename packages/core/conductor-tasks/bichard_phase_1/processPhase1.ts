@@ -15,12 +15,12 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import getTriggersCount from "../../lib/database/getTriggersCount"
-import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
-import PncGateway from "../../lib/pnc/PncGateway"
+import createLedsApiConfig from "../../lib/leds/createLedsApiConfig"
+import LedsGateway from "../../lib/leds/LedsGateway"
 import phase1 from "../../phase1/phase1"
 import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 
-const pncApiConfig = createPncApiConfig()
+const ledsApiConfig = createLedsApiConfig()
 const dbConfig = createDbConfig()
 
 const s3Config = createS3Config()
@@ -31,13 +31,13 @@ const processPhase1: ConductorWorker = {
   taskDefName: "process_phase1",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedHearingOutcomeSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
-    const pncGateway = new PncGateway(pncApiConfig)
+    const ledsGateway = new LedsGateway(ledsApiConfig)
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     const db = postgres(dbConfig)
 
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase1)
 
-    const result = await phase1(s3TaskData, pncGateway, auditLogger)
+    const result = await phase1(s3TaskData, ledsGateway, auditLogger)
 
     const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
     const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
