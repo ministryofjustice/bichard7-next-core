@@ -99,4 +99,22 @@ describe("View Court Case Details Summary Box", () => {
 
     cy.get("aside").should("have.length", 0)
   })
+
+  it("when the window grows the summary should reappear", () => {
+    insertCaseWithTriggerAndException()
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.viewport(768, 1024)
+    cy.setDevicePixelRatio(2)
+
+    cy.get(".govuk-accordion__summary-box").should("be.visible")
+    cy.get("aside").should("have.length", 1)
+    cy.get(".govuk-accordion__summary-box").click()
+    cy.get("aside").should("have.length", 0)
+
+    cy.viewport(1000, 1024) // Trigger the resize event
+    cy.resetDeviceMetrics()
+
+    cy.get("aside").should("have.length", 1)
+  })
 })

@@ -7,7 +7,7 @@ const useContentToggle = (initialState = true) => {
     setIsContentVisible((prev) => !prev)
   }, [])
 
-  return { isContentVisible, toggleContentVisibility }
+  return { isContentVisible, toggleContentVisibility, setIsContentVisible }
 }
 
 export default useContentToggle

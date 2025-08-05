@@ -10,7 +10,7 @@ import { useRouter } from "next/router"
 
 import { AccordionToggle } from "components/Card/Card.styles"
 import useContentToggle from "hooks/useContentToggle"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { LinkButton } from "../../components/Buttons/LinkButton"
@@ -51,8 +51,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const { courtCase } = useCourtCase()
   const previousPath = usePreviousPath()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(0)
 
-  const { isContentVisible, toggleContentVisibility } = useContentToggle(true)
+  const { isContentVisible, toggleContentVisibility, setIsContentVisible } = useContentToggle(true)
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
@@ -76,6 +77,24 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const handleSubmit = () => {
     setIsSubmitting(true)
   }
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth)
+      }
+
+      window.addEventListener("resize", handleResize)
+
+      if (windowWidth > 768) {
+        setIsContentVisible(true)
+      }
+
+      return () => {
+        window.removeEventListener("resize", handleResize)
+      }
+    }
+  }, [setIsContentVisible, windowWidth])
 
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
