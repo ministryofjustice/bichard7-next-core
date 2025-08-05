@@ -8,6 +8,7 @@ const tagBlue = "#E9F1F8"
 const textSecondary = "#505a5f"
 const blue = "#005BBB"
 const yellow = "#FFDD00"
+const gdsYellow = "#FFDD00"
 const gdsBlack = "#0b0c0c"
 const gdsTagBlue = "#bbd4ea"
 const grey = "#b0b4b6"
@@ -27,11 +28,12 @@ export {
   gdsRed,
   gdsTagBlue,
   gdsWhite,
+  gdsYellow,
   grey,
   lightGrey,
-  white,
   tagBlue,
   textPrimary,
   textSecondary,
+  white,
   yellow
 }

@@ -128,6 +128,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             className={"govuk-accordion__summary-box"}
             onClick={toggleContentVisibility}
             aria-expanded={isContentVisible}
+            aria-live={"polite"}
+            aria-label={"Show/Hide summary"}
+            tabIndex={0}
           >
             <span className="govuk-accordion__section-toggle-focus">
               <span
