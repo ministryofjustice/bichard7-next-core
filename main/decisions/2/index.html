@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Use Data Transfer Objects | Bichard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.3/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" rel="stylesheet">
     <link href="../../../style.css" rel="stylesheet">
     <link href="./../../style-branding.css" rel="stylesheet">
     <script type="text/javascript" src="../../../modal.js"></script>
@@ -48,18 +48,18 @@
 <p>Using a Data Transfer Object (DTO) in the <code>bichard-next-ui</code> repo will help separate the User Interface (React) from the Database objects. It will also allow to use TypeScript more effectively, enforcing stricter types on objects at compile time.</p>
 <p>We have chosen the naming convention of:</p>
 <ul>
- <li>Types: 
+ <li>Types:
   <ul>
    <li><code>Display</code> - Prefix for the object to be consumed in the UI</li>
    <li><code>DisplayPartial</code> - Prefix for the object which has limited fields</li>
    <li><code>DisplayFull</code> - Prefix for the object which has all fields (that aren't a security risk)</li>
   </ul></li>
- <li>File structure for DTOs 
+ <li>File structure for DTOs
   <ul>
    <li><code>src/services/dto</code> top level</li>
    <li>Then for example: <code>objectDto.ts</code></li>
   </ul></li>
- <li>Which holds functions like: 
+ <li>Which holds functions like:
   <ul>
    <li><code>objToDisplayObjDto</code></li>
    <li><code>objToDisplayPartialObjDto</code></li>
@@ -77,6 +77,6 @@
       </div>
     </div>
     <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
-    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';</script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.esm.min.mjs';</script>
   </body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>API Authentication and Authorisation Approach | Bichard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.3/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" rel="stylesheet">
     <link href="../../../style.css" rel="stylesheet">
     <link href="./../../style-branding.css" rel="stylesheet">
     <script type="text/javascript" src="../../../modal.js"></script>
@@ -53,10 +53,10 @@
 </ul>
 <h3>Authentication and Authorisation</h3>
 <p>This is handled by the <code>Authorisation</code> header with a <code>Bearer</code> token. The bearer token will be validated to demonstrate that the request is authenticated. When a service-to-service request is required and not on a user's behalf, we will generate a bearer token for that service.</p>
-<p>The token is in the format of a <a href="https://jwt.io/">JWT</a> and contains the user's or service information to verify what the token can and cannot do.</p>
+<p>The token is in the format of a <a href="https://jwt.io/" target="blank">JWT</a> and contains the user's or service information to verify what the token can and cannot do.</p>
 <h2>Consequences</h2>
 <ul>
- <li>A developer needs to understand: 
+ <li>A developer needs to understand:
   <ul>
    <li>JWT and how they can be used</li>
    <li>The Bichard user permission model</li>
@@ -66,6 +66,6 @@
       </div>
     </div>
     <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
-    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';</script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.esm.min.mjs';</script>
   </body>
 </html>

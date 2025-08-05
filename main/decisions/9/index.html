@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Naming of Types and Schemas | Bichard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.3/css/bulma.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" rel="stylesheet">
     <link href="../../../style.css" rel="stylesheet">
     <link href="./../../style-branding.css" rel="stylesheet">
     <script type="text/javascript" src="../../../modal.js"></script>
@@ -45,7 +45,7 @@
 <h2>Status</h2>
 <p>Accepted</p>
 <h2>Context</h2>
-<p>We want to leverage <a href="https://zod.dev/">Zod's</a> ability to validate schemas and turn the schemas into objects. This is especially helpful whilst build the API as we can auto generate Swagger documentation for API calls (parameters, requests and responses).</p>
+<p>We want to leverage <a href="https://zod.dev/" target="blank">Zod's</a> ability to validate schemas and turn the schemas into objects. This is especially helpful whilst build the API as we can auto generate Swagger documentation for API calls (parameters, requests and responses).</p>
 <p>We also want to have a clear and concise naming convention for the Schemas and Types that the Zod schemas will create.</p>
 <p>Types should be context and use case based, using <code>Pick&lt;Case, CaseData&gt;</code>, for example. It leads to not having to define the Type in the Common package. This should be considered as an intermediate type, only to be used in this context and not to be used outside the use case. The type should be clearly named for the use case to be involved with e.g. <code>CaseDataForDto</code> which contains only the attributes needed for that conversion (from the database to DTO).</p>
 <p>For example:</p>
@@ -63,7 +63,7 @@
 <h3>Names we find acceptable</h3>
 <ul>
  <li>Try to avoid unnecessary suffixes</li>
- <li>If you can't define an object using what it represents try either these suffixes: 
+ <li>If you can't define an object using what it represents try either these suffixes:
   <ul>
    <li>Object as aggregate <code>Data</code> e.g. has relations as part of the dataset</li>
    <li>Object is a pure database row <code>Row</code> e.g. no relations is part of the dataset</li>
@@ -81,6 +81,6 @@
       </div>
     </div>
     <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
-    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';</script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.esm.min.mjs';</script>
   </body>
 </html>
