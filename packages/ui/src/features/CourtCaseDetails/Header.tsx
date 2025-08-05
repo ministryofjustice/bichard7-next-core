@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
 import { AccordionToggle } from "components/Card/Card.styles"
+import useContentToggle from "hooks/useContentToggle"
 import { useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
@@ -50,7 +51,8 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const { courtCase } = useCourtCase()
   const previousPath = usePreviousPath()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isContentVisible, setIsContentVisible] = useState(true)
+
+  const { isContentVisible, toggleContentVisibility } = useContentToggle(true)
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
@@ -74,8 +76,6 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const handleSubmit = () => {
     setIsSubmitting(true)
   }
-
-  const toggleContentVisibility = () => setIsContentVisible((previousValue) => !previousValue)
 
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
