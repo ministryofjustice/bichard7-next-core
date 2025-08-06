@@ -1,5 +1,5 @@
 import { DisplayNote } from "types/display/Notes"
-import { NotesTable } from "../../src/components/NotesTable"
+import { NotesTable } from "../../src/features/CourtCaseDetails/Tabs/Panels/Notes/NotesTable"
 
 describe("NotesTable", () => {
   it("displays provided notes", () => {

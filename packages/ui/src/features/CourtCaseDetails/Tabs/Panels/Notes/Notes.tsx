@@ -4,7 +4,7 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useState } from "react"
 import type NotesViewOption from "types/NotesViewOption"
 import { DisplayNote } from "types/display/Notes"
-import { NotesTable } from "../../../../../components/NotesTable"
+import { NotesTable } from "./NotesTable"
 import { CourtCaseDetailsPanel } from "../../CourtCaseDetailsPanels"
 import AddNoteForm from "./AddNoteForm"
 
