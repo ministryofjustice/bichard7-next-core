@@ -3,7 +3,7 @@ import { gdsLightGrey, gdsMidGrey } from "utils/colours"
 
 const CourtCase = styled.div`
   font-family: var(--default-font-family);
-  font-size: var(--default-font-size);
+  font-size: var(--case-details-default-font-size);
 
   &:not(:first-of-type) {
     border-top: solid 1px ${gdsMidGrey};
