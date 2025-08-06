@@ -15,30 +15,19 @@ const CaseDetailHeaderContainer = styled.div`
 `
 const CaseDetailHeaderRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.88rem;
-  width: 100%;
+  flex-wrap: wrap;
 
   @media (max-width: ${breakpoints.compact}) {
+    display: initial;
+
     h2.govuk-heading-m {
       font-size: 1.1875rem;
       line-height: 1.31579;
     }
   }
 
-  @media (max-width: 1300px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-
-    #locked-tag-container {
-      margin-left: 0;
-    }
-
-    #return-to-case-list {
-      margin-bottom: 0.63rem;
-    }
+  @media (min-width: ${breakpoints.spacious}) {
+    flex-wrap: nowrap;
   }
 `
 
@@ -47,19 +36,10 @@ const CaseDetailsHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   flex: 1 1 auto;
-  min-width: 0;
 
-  @media (max-width: 1300px) {
-    width: 100%;
+  h2 {
+    margin-bottom: 10px;
   }
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0;
-  padding-top: 0.31rem;
-  gap: 0.75rem;
 
   @media (max-width: ${breakpoints.compact}) {
     .govuk-button {
@@ -70,11 +50,41 @@ const ButtonContainer = styled.div`
 
 const LockedTagContainer = styled.div`
   display: flex;
-  gap: 2.5rem;
+  flex: 1 1 auto;
   margin-left: auto;
+  gap: 2.5rem;
+  justify-content: end;
 
-  @media (max-width: ${breakpoints.regular}) {
-    gap: 1rem;
+  @media (max-width: ${breakpoints.compact}) {
+    justify-content: unset;
+
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
+
+  @media (min-width: ${breakpoints.spacious}) {
+    justify-content: unset;
+  }
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex: 1 1 100%;
+  gap: 0.75rem;
+
+  a {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: ${breakpoints.compact}) {
+    .govuk-button {
+      font-size: 1rem;
+    }
+  }
+
+  @media (min-width: ${breakpoints.spacious}) {
+    flex: unset;
   }
 `
 
