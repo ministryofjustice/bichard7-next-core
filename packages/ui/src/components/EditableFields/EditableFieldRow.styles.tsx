@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 const StyledEditableFieldRow = styled.div`
-  font-size: 1.1875rem;
+  font-size: var(--case-details-default-font-size);
 `
 
 const LabelCell = styled.dt`

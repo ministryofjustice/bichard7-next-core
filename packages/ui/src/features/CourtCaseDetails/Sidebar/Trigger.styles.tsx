@@ -2,7 +2,7 @@ import styled from "styled-components"
 import { breakpoints } from "types/breakpoints"
 
 const TriggerContainer = styled.div`
-  font-size: 1.1875rem;
+  font-size: var(--case-details-default-font-size);
 
   &:first-child {
     margin-top: 20px;
