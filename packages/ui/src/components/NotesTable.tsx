@@ -1,5 +1,6 @@
 import DateTime from "components/DateTime"
 import { DisplayNote } from "types/display/Notes"
+import { StyledNotesTable } from "./NotesTable.styles"
 
 interface Props {
   notes: DisplayNote[]
@@ -8,7 +9,7 @@ interface Props {
 
 export const NotesTable = ({ notes, displayForce }: Props) => {
   return (
-    <table className={"govuk-table notes-table"}>
+    <StyledNotesTable className={"govuk-table notes-table"}>
       <thead className="govuk-table__head">
         <tr className="govuk-table__row">
           <th scope="col" className="govuk-table__header">
@@ -49,6 +50,6 @@ export const NotesTable = ({ notes, displayForce }: Props) => {
           )
         })}
       </tbody>
-    </table>
+    </StyledNotesTable>
   )
 }
