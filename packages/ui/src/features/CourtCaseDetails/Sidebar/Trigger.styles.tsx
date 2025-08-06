@@ -43,7 +43,7 @@ const TriggerCodeLabel = styled.label`
 `
 
 const CjsResultCode = styled.div`
-  font-size: 1em;
+  font-size: var(--case-details-default-font-size);
   line-height: 1.25;
 `
 
