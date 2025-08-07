@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^5.1.5",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.290",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.293",
     "@types/lodash.clonedeep": "^4.5.9",
     "axios": "^1.11.0",
     "babel-plugin-transform-typescript-metadata": "^0.3.2",

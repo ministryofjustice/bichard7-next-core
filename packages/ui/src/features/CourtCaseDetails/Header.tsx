@@ -111,19 +111,6 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
               className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
             />
           </h2>
-          <LockedTagContainer id="locked-tag-container">
-            <LockStatusTag
-              isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
-              resolutionStatus={courtCase.errorStatus}
-              lockName="Exceptions"
-            />
-            <LockStatusTag
-              isRendered={currentUser.hasAccessTo[Permission.Triggers]}
-              resolutionStatus={courtCase.triggerStatus}
-              lockName="Triggers"
-            />
-          </LockedTagContainer>
-
           <AccordionToggle
             className={"govuk-accordion__summary-box"}
             onClick={toggleContentVisibility}
@@ -140,7 +127,19 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </span>
           </AccordionToggle>
         </CaseDetailsHeader>
-        <ButtonContainer>
+        <LockedTagContainer id="locked-tag-container">
+          <LockStatusTag
+            isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
+            resolutionStatus={courtCase.errorStatus}
+            lockName="Exceptions"
+          />
+          <LockStatusTag
+            isRendered={currentUser.hasAccessTo[Permission.Triggers]}
+            resolutionStatus={courtCase.triggerStatus}
+            lockName="Triggers"
+          />
+        </LockedTagContainer>
+        <ButtonContainer id="buttons">
           <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
             <SecondaryLinkButton
               href={reallocatePath}

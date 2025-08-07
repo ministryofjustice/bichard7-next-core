@@ -21,6 +21,14 @@ const CaseListButtons = styled.div`
 
 const CourtCaseListPane = styled.div`
   overflow: auto;
+
+  table {
+    tbody {
+      tr td:last-child {
+        padding-right: 5px;
+      }
+    }
+  }
 `
 
 export { ButtonMenu, CaseListButtons, CourtCaseListPane, StyledAppliedFilters }
