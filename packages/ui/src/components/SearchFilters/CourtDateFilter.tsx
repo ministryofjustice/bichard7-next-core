@@ -50,6 +50,7 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
             dataAriaControls={"conditional-date-range"}
             defaultChecked={!!dateRange?.from && !!dateRange.to}
             label={"Date range"}
+            secondaryInputDetail={"If selected, input date range:"}
             onChange={() => dispatch({ method: "remove", type: "caseAge", value: undefined })}
           />
           <div className="govuk-radios__conditional" id="conditional-date-range">
@@ -64,6 +65,7 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
             dataAriaControls={"conditional-case-age"}
             defaultChecked={caseAges && caseAges.length > 0 ? true : false}
             label={"Case Received"}
+            secondaryInputDetail={"If selected, choose case age from list:"}
             onChange={() => dispatch({ method: "remove", type: "caseAge", value: undefined })}
           />
           <div className="govuk-radios__conditional" id="conditional-case-age">
