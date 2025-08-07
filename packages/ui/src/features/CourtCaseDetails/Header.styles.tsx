@@ -74,7 +74,7 @@ const ButtonContainer = styled.div`
   gap: 0.75rem;
 
   a {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
   @media (max-width: ${breakpoints.compact}) {
