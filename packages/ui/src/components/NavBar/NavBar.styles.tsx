@@ -6,7 +6,8 @@ const MojNavContainer = styled.div`
   padding: 0 40px;
 
   @media (max-width: ${breakpoints.regular}) {
-    padding: 0;
+    padding: 0 30px;
+    margin: 0 0 10px 0;
   }
 `
 
