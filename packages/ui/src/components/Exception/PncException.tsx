@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import Accordion from "../Accordion"
+import { Accordion } from "../Accordion"
 import Badge, { BadgeColours } from "../Badge"
 import { ExceptionRow } from "./Exception.styles"
 import { InsetText, InsetTextHeading } from "./PncException.styles"

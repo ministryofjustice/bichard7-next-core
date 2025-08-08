@@ -2,7 +2,7 @@ import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import styled from "styled-components"
 import { breakpoints } from "types/breakpoints"
-import { gdsLightGrey, lightGrey } from "utils/colours"
+import { gdsLightGrey, gdsYellow, lightGrey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
   display: flex;
@@ -29,6 +29,22 @@ const CaseDetailHeaderRow = styled.div`
 
   @media (min-width: ${breakpoints.spacious}) {
     flex-wrap: nowrap;
+  }
+
+  .govuk-accordion__summary-box {
+    visibility: hidden;
+    cursor: pointer;
+    margin-bottom: 10px;
+
+    @media (min-resolution: 144dpi) and (max-width: ${breakpoints.compact}) {
+      visibility: visible;
+
+      &:focus-visible,
+      &:focus {
+        background-color: ${gdsYellow};
+        border-color: ${gdsYellow};
+      }
+    }
   }
 `
 

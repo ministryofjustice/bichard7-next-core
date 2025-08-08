@@ -95,6 +95,26 @@ Cypress.Commands.add("toBeUnauthorized", (url: string) => {
   }
 })
 
+Cypress.Commands.add("setDevicePixelRatio", (scaleFactor) => {
+  cy.wrap(
+    Cypress.automation("remote:debugger:protocol", {
+      command: "Emulation.setDeviceMetricsOverride",
+      params: {
+        deviceScaleFactor: scaleFactor,
+        width: Cypress.config("viewportWidth"),
+        height: Cypress.config("viewportHeight"),
+        mobile: false
+      }
+    })
+  )
+})
+
+Cypress.Commands.add("resetDeviceMetrics", () => {
+  Cypress.automation("remote:debugger:protocol", {
+    command: "Emulation.clearDeviceMetricsOverride"
+  })
+})
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
@@ -104,6 +124,8 @@ declare global {
       loginAs(type: string): Chainable<Element>
       checkCsrf(url: string): Chainable<Element>
       toBeUnauthorized(url: string): Chainable<Element>
+      setDevicePixelRatio(scaleFactor: number): void
+      resetDeviceMetrics(): void
     }
   }
 }

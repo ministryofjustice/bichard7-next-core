@@ -1,8 +1,8 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import CourtCase from "services/entities/CourtCase"
 import dummyAho from "../../../../test/test-data/error_list_aho.json"
 import { TestTrigger } from "../../../../test/utils/manageTriggers"
 import { loginAndVisit } from "../../../support/helpers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("View Court Case Details Summary Box", () => {
   const trigger: TestTrigger = {
@@ -37,6 +37,10 @@ describe("View Court Case Details Summary Box", () => {
     cy.clearCookies()
   })
 
+  after(() => {
+    cy.resetDeviceMetrics()
+  })
+
   it("displays the required fields", () => {
     insertCaseWithTriggerAndException()
     loginAndVisit("/bichard/court-cases/0")
@@ -64,5 +68,53 @@ describe("View Court Case Details Summary Box", () => {
 
     cy.contains("Hearing date")
     cy.contains("11/01/2008")
+  })
+
+  it("doesn't show the hide/show element when not zoomed in and 1280px", () => {
+    insertCaseWithTriggerAndException()
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.get(".govuk-accordion__summary-box").should("not.be.visible")
+  })
+
+  it("doesn't show the hide/show element when not zoomed in and 786px", () => {
+    insertCaseWithTriggerAndException()
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.viewport(768, 1024)
+
+    cy.get(".govuk-accordion__summary-box").should("not.be.visible")
+  })
+
+  it("does show the hide/show element when zoomed in and viewed at 768px", () => {
+    insertCaseWithTriggerAndException()
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.viewport(768, 1024)
+    cy.setDevicePixelRatio(2)
+
+    cy.get(".govuk-accordion__summary-box").should("be.visible")
+    cy.get("aside").should("have.length", 1)
+    cy.get(".govuk-accordion__summary-box").click()
+
+    cy.get("aside").should("have.length", 0)
+  })
+
+  it("when the window grows the summary should reappear", () => {
+    insertCaseWithTriggerAndException()
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.viewport(768, 1024)
+    cy.setDevicePixelRatio(2)
+
+    cy.get(".govuk-accordion__summary-box").should("be.visible")
+    cy.get("aside").should("have.length", 1)
+    cy.get(".govuk-accordion__summary-box").click()
+    cy.get("aside").should("have.length", 0)
+
+    cy.viewport(1000, 1024) // Trigger the resize event
+    cy.resetDeviceMetrics()
+
+    cy.get("aside").should("have.length", 1)
   })
 })
