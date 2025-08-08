@@ -13,17 +13,18 @@ const CaseDetailHeaderContainer = styled.div`
   z-index: 9;
   padding: 0.63rem 0.63rem 0.63rem 0.63rem;
 `
+
 const CaseDetailHeaderRow = styled.div`
   display: flex;
   flex-wrap: wrap;
 
+  h2.govuk-heading-m {
+    font-size: 1.5rem;
+    line-height: 1.31579;
+  }
+
   @media (max-width: ${breakpoints.compact}) {
     display: initial;
-
-    h2.govuk-heading-m {
-      font-size: 1.1875rem;
-      line-height: 1.31579;
-    }
   }
 
   @media (min-width: ${breakpoints.spacious}) {
