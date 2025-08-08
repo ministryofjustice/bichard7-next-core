@@ -8,6 +8,7 @@ interface Props {
   checked?: boolean
   value?: string
   label: string
+  secondaryInputDetail?: string
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -19,6 +20,7 @@ const RadioButton: React.FC<Props> = ({
   checked,
   value,
   label,
+  secondaryInputDetail,
   onChange
 }: Props) => {
   return (
@@ -36,6 +38,7 @@ const RadioButton: React.FC<Props> = ({
       />
       <label className="govuk-label govuk-radios__label" htmlFor={id}>
         {label}
+        <span className="govuk-visually-hidden">{secondaryInputDetail}</span>
       </label>
     </div>
   )
