@@ -114,7 +114,7 @@ const TriggersList = ({ onNavigate }: Props) => {
       <ConditionalRender isRendered={hasTriggers}>
         <LockStatus>
           <LockStatusTag
-            isRendered={triggers.length > 0}
+            isRendered={triggers.length > 0 && courtCase.triggerStatus !== null}
             resolutionStatus={courtCase.triggerStatus}
             lockName="Triggers"
           />

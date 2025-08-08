@@ -15,7 +15,12 @@ const insertTrigger = (status = "Unresolved") => {
   })
 }
 
-const insertDummyCourtCases = ( params: {errorLockedByUsername?: string,  triggerLockedByUsername?: string, errorStatus?: string, triggerStatus?: string} ) => {
+const insertDummyCourtCases = (params: {
+  errorLockedByUsername?: string | null
+  triggerLockedByUsername?: string | null
+  errorStatus?: string | null
+  triggerStatus?: string | null
+}) => {
   cy.task("insertCourtCasesWithFields", [
     {
       errorLockedByUsername: params.errorLockedByUsername,
@@ -32,6 +37,7 @@ const insertDummyCourtCases = ( params: {errorLockedByUsername?: string,  trigge
 describe("Lock court cases", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
+    cy.task("clearTriggers")
   })
 
   it("should lock a case when a user views a case details page", () => {
@@ -49,18 +55,58 @@ describe("Lock court cases", () => {
     cy.get("#exceptions-locked-tag-lockee").should("contain.text", "Locked to you")
   })
 
-  it("should not lock a case that is already locked to another user", () => {
+  describe("when a case that is already locked to another user", () => {
     const existingUserLock = "BichardForce04"
-    insertDummyCourtCases({ errorLockedByUsername: existingUserLock, triggerLockedByUsername: existingUserLock })
 
-    loginAndVisit()
-    cy.findByText("NAME Defendant").click()
+    it("when error and trigger status exists", () => {
+      insertDummyCourtCases({
+        errorLockedByUsername: existingUserLock,
+        triggerLockedByUsername: existingUserLock,
+        errorStatus: "Unresolved",
+        triggerStatus: "Unresolved"
+      })
 
-    cy.get(".view-only-badge").should("exist")
-    cy.get(".triggers-locked-tag").should("exist")
-    cy.get("#triggers-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
-    cy.get(".exceptions-locked-tag").should("exist")
-    cy.get("#exceptions-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
+      loginAndVisit()
+      cy.findByText("NAME Defendant").click()
+
+      cy.get(".view-only-badge").should("exist")
+      cy.get(".triggers-locked-tag").should("exist")
+      cy.get("#triggers-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
+      cy.get(".exceptions-locked-tag").should("exist")
+      cy.get("#exceptions-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
+    })
+
+    it("when error status exists and trigger status is null", () => {
+      insertDummyCourtCases({ errorLockedByUsername: existingUserLock, errorStatus: "Unresolved" })
+
+      loginAndVisit()
+      cy.findByText("NAME Defendant").click()
+
+      cy.get(".view-only-badge").should("exist")
+      cy.get(".triggers-locked-tag").should("not.exist")
+      cy.get("#triggers-locked-tag-lockee").should("not.exist")
+      cy.get(".exceptions-locked-tag").should("exist")
+      cy.get("#exceptions-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
+    })
+
+    it("when trigger status exists and error status is null", () => {
+      insertDummyCourtCases({
+        errorLockedByUsername: null,
+        triggerLockedByUsername: existingUserLock,
+        errorStatus: null,
+        triggerStatus: "Unresolved"
+      })
+      insertTrigger()
+
+      loginAndVisit()
+      cy.findByText("NAME Defendant").click()
+
+      cy.get(".view-only-badge").should("exist")
+      cy.get(".triggers-locked-tag").should("exist")
+      cy.get("#triggers-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
+      cy.get(".exceptions-locked-tag").should("not.exist")
+      cy.get("#exceptions-locked-tag-lockee").should("not.exist")
+    })
   })
 
   it("should not lock exceptions when a trigger handler clicks into a case", () => {
@@ -137,5 +183,3 @@ describe("Lock court cases", () => {
     cy.get(".triggers-locked-tag").should("not.exist")
   })
 })
-
-export {}

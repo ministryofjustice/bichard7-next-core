@@ -91,12 +91,12 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </CaseDetailsHeader>
         <LockedTagContainer id="locked-tag-container">
           <LockStatusTag
-            isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
+            isRendered={currentUser.hasAccessTo[Permission.Exceptions] && courtCase.errorStatus !== null}
             resolutionStatus={courtCase.errorStatus}
             lockName="Exceptions"
           />
           <LockStatusTag
-            isRendered={currentUser.hasAccessTo[Permission.Triggers]}
+            isRendered={currentUser.hasAccessTo[Permission.Triggers] && courtCase.triggerStatus !== null}
             resolutionStatus={courtCase.triggerStatus}
             lockName="Triggers"
           />
