@@ -15,7 +15,7 @@ export const CourtCaseDetailsTabs = ({ activeTab, onTabClick }: CourtCaseDetails
   const tabDetails = getTabDetails(courtCase.aho.Exceptions, amendments, savedAmendments)
 
   return (
-    <Tabs className={`govuk-grid-column-two-thirds moj-sub-navigation nav`} aria-label="Sub navigation">
+    <Tabs className="govuk-grid-column-two-thirds moj-sub-navigation nav" aria-label="Sub navigation">
       <ul className="moj-sub-navigation__list">
         {tabDetails.map((tab) => {
           return (

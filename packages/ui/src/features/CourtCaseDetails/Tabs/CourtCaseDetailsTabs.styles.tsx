@@ -3,7 +3,7 @@ import styled from "styled-components"
 const Tabs = styled.div`
   padding: 0;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1211px) {
     width: 100%;
   }
 `
