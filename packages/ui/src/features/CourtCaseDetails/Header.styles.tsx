@@ -35,7 +35,7 @@ const CaseDetailHeaderRow = styled.div`
     cursor: pointer;
     margin-bottom: 10px;
 
-    @media (min-resolution: 144dpi) and (max-width: 768px) {
+    @media (min-resolution: 144dpi) and (max-width: ${breakpoints.compact}) {
       visibility: visible;
 
       &:focus-visible,
