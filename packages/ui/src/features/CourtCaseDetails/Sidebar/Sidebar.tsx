@@ -80,7 +80,7 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
               >
                 <a
                   id={"triggers-tab"}
-                  className="govuk-tabs__tab govuk-heading-s"
+                  className="govuk-tabs__tab"
                   href="#triggers"
                   onClick={(e) => handleTabClicked(e, SidebarTab.Triggers)}
                   role="tab"
@@ -101,7 +101,7 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
               >
                 <a
                   id={"exceptions-tab"}
-                  className="govuk-tabs__tab govuk-heading-s"
+                  className="govuk-tabs__tab"
                   href="#exceptions"
                   onClick={(e) => handleTabClicked(e, SidebarTab.Exceptions)}
                   role="tab"
@@ -121,7 +121,7 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
             >
               <a
                 id={"pnc-details-tab"}
-                className="govuk-tabs__tab govuk-heading-s"
+                className="govuk-tabs__tab"
                 href="#pnc-details"
                 onClick={(e) => handleTabClicked(e, SidebarTab.Pnc)}
                 role="tab"

@@ -18,8 +18,7 @@ const TabHeaders = styled.ul`
 
   li > a {
     cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
+    text-decoration: underline;
   }
 
   .govuk-tabs__list-item {
@@ -28,6 +27,9 @@ const TabHeaders = styled.ul`
 
   .govuk-tabs__list-item--selected {
     margin-bottom: 0;
+    a {
+      font-weight: bold;
+    }
   }
 `
 
