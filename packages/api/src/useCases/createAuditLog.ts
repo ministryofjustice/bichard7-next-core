@@ -34,7 +34,7 @@ const createAuditLog = async (
   const fetchByHashResult = await auditLogGateway.fetchByHash(auditLog.messageHash)
 
   if (isError(fetchByHashResult)) {
-    logger?.error("Error validating message hash", fetchByHashResult)
+    logger?.error("Error validating message hash: %o", fetchByHashResult)
     return fetchByHashResult
   } else if (fetchByHashResult.length) {
     dynamoAuditLog.status = AuditLogStatus.Duplicate
@@ -49,7 +49,7 @@ const createAuditLog = async (
       return new ConflictError(`A message with Id ${auditLog.messageId} already exists in the database`)
     }
 
-    logger?.error("Error creating audit log", result.message)
+    logger?.error("Error creating audit log: %s", result.message)
     return result
   }
 }
