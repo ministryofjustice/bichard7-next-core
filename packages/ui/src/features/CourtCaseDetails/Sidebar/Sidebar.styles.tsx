@@ -21,6 +21,14 @@ const TabHeaders = styled.ul`
     font-weight: bold;
     text-decoration: none;
   }
+
+  .govuk-tabs__list-item {
+    margin-bottom: 5px;
+  }
+
+  .govuk-tabs__list-item--selected {
+    margin-bottom: 0;
+  }
 `
 
 export { SidebarContainer, TabHeaders }
