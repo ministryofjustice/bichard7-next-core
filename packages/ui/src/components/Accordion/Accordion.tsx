@@ -1,4 +1,4 @@
-import { useState } from "react"
+import useContentToggle from "hooks/useContentToggle"
 import {
   AccordionButton,
   AccordionContent,
@@ -14,9 +14,7 @@ type Props = {
 }
 
 const Accordion = ({ id, heading, children }: Props) => {
-  const [isContentVisible, setIsContentVisible] = useState(false)
-
-  const toggleContentVisibility = () => setIsContentVisible((previousValue) => !previousValue)
+  const { isContentVisible, toggleContentVisibility } = useContentToggle(false)
 
   return (
     <div id={id} className="govuk-accordion__section b7-accordion">

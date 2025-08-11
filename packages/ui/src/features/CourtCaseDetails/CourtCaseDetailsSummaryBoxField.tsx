@@ -1,3 +1,4 @@
+import { mergeClassNames } from "helpers/mergeClassNames"
 import { SummaryBoxDetail, SummaryBoxLabel, SummaryBoxValue } from "./CourtCaseDetailsSummaryBoxField.styles"
 
 interface CourtCaseDetailsSummaryBoxFieldProps {
@@ -7,14 +8,8 @@ interface CourtCaseDetailsSummaryBoxFieldProps {
 }
 
 const CourtCaseDetailsSummaryBoxField = ({ label, value, courtName = false }: CourtCaseDetailsSummaryBoxFieldProps) => {
-  const classNames = ["detail"]
-
-  if (courtName) {
-    classNames.push("detail__court-name")
-  }
-
   return (
-    <SummaryBoxDetail className={classNames.join(" ")}>
+    <SummaryBoxDetail className={mergeClassNames("detail", courtName ? "detail__court-name" : undefined)}>
       <SummaryBoxLabel>
         <b>{label}</b>
       </SummaryBoxLabel>
