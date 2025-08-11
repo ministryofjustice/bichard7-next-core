@@ -358,4 +358,22 @@ describe("recalculateTriggers", () => {
       expect(result.triggersToDelete).toEqual(expectedTriggersToDelete)
     }
   )
+
+  it("should not delete the trigger when triggerItemIdentity is null and offenceSequenceNumber is not present", () => {
+    const existingTriggers = [
+      { triggerId: dummyId, triggerItemIdentity: null, triggerCode: TriggerCode.TRPR0002, status: "Unresolved" },
+      { triggerId: dummyId, triggerItemIdentity: 1, triggerCode: REALLOCATE_CASE_TRIGGER_CODE, status: "Unresolved" }
+    ] as unknown as TriggerEntity[]
+    const newTriggers = [{ code: TriggerCode.TRPR0002 }]
+
+    const result = recalculateTriggers(existingTriggers, newTriggers)
+
+    expect(result.triggersToAdd).toHaveLength(0)
+    expect(result.triggersToDelete).toEqual([
+      {
+        code: "TRPR0028",
+        offenceSequenceNumber: 1
+      }
+    ])
+  })
 })

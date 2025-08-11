@@ -21,7 +21,7 @@ const containsTrigger = (triggers: Trigger[], trigger?: Trigger): boolean => {
 const asTrigger = (triggerEntity: PartialTriggerEntity): Trigger => {
   return {
     code: triggerEntity.triggerCode,
-    offenceSequenceNumber: triggerEntity.triggerItemIdentity
+    offenceSequenceNumber: triggerEntity.triggerItemIdentity ?? undefined
   } as Trigger
 }
 
