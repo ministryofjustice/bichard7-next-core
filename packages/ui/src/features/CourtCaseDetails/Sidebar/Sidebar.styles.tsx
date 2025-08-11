@@ -16,6 +16,10 @@ const TabHeaders = styled.ul`
     flex: 1;
   }
 
+  li:last-child {
+    margin-right: 0;
+  }
+
   li > a {
     cursor: pointer;
     text-decoration: underline;
