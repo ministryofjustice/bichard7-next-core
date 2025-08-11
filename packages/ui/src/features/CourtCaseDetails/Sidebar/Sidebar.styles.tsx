@@ -3,6 +3,16 @@ import styled from "styled-components"
 const SidebarContainer = styled.div`
   margin-top: -41px;
 
+  .govuk-tabs__panel {
+    border: 1px solid #b1b4b6;
+    border-top: none;
+    padding: 30px 20px;
+  }
+
+  .govuk-tabs__panel--hidden {
+    display: none;
+  }
+
   #pnc-details {
     padding: 0;
   }
@@ -13,6 +23,7 @@ const TabHeaders = styled.ul`
   flex-wrap: nowrap;
   line-height: 1.3157894737;
   border-bottom: 1px solid #b1b4b6;
+  margin-bottom: 0;
 
   li {
     flex: 1;
