@@ -56,7 +56,7 @@ process.on("SIGTERM", signalHandler)
 process.on("SIGQUIT", signalHandler)
 
 process.on("exit", (code) => {
-  logger.info("Exiting gracefully with code: ", code)
+  logger.info("Exiting gracefully with code: %d", code)
 })
 
 taskManager.startPolling()
