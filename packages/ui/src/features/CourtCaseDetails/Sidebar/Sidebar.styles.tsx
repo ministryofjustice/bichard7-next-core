@@ -1,10 +1,11 @@
 import styled from "styled-components"
+import { gdsMidGrey } from "../../../utils/colours"
 
 const SidebarContainer = styled.div`
   margin-top: -41px;
 
   .govuk-tabs__panel {
-    border: 1px solid #b1b4b6;
+    border: 1px solid ${gdsMidGrey};
     border-top: none;
     padding: 30px 20px;
   }
@@ -22,7 +23,7 @@ const TabHeaders = styled.ul`
   display: flex;
   flex-wrap: nowrap;
   line-height: 1.3157894737;
-  border-bottom: 1px solid #b1b4b6;
+  border-bottom: 1px solid ${gdsMidGrey};
   margin-bottom: 0;
 
   li {
@@ -65,7 +66,7 @@ const TabHeaders = styled.ul`
     margin-bottom: 0;
     margin-top: 0;
     padding: 14px 19px 16px;
-    border: 1px solid #b1b4b6;
+    border: 1px solid ${gdsMidGrey};
     border-bottom: none;
 
     a {
