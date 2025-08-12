@@ -97,6 +97,7 @@ const ButtonContainer = styled.div`
   @media (max-width: ${breakpoints.compact}) {
     .govuk-button {
       font-size: 1rem;
+      width: auto;
     }
   }
 
