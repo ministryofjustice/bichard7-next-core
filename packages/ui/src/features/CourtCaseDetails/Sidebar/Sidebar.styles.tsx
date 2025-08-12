@@ -9,6 +9,11 @@ const SidebarContainer = styled.div`
     text-decoration: none;
   }
 
+  .govuk-button {
+    width: auto;
+    font-size: 1.1875rem;
+  }
+
   #pnc-details {
     padding: 0;
   }
