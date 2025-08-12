@@ -10,9 +10,12 @@ const checkCasesOrder = (expectedOrder: number[]) => {
 }
 
 const checkPtiurnOrder = (expectedOrder: string[]) => {
-  cy.get("tbody td:nth-child(5)").each((element, index) => {
-    cy.wrap(element).should("have.text", expectedOrder[index])
-  })
+  cy.get("tbody td:nth-child(5)")
+    .should("have.length", expectedOrder.length)
+    .should((elems) => {
+      const actualOrder = elems.toArray().map((el) => el.innerText)
+      expect(actualOrder).to.deep.equal(expectedOrder)
+    })
 }
 
 describe("Sorting cases", () => {
@@ -128,11 +131,10 @@ describe("Sorting cases", () => {
 
     // Sort ascending by PTIURN
     cy.get("#ptiurn-sort").find(".unorderedArrow").click()
-
     checkPtiurnOrder(ascending)
 
     // Sort descending by PTIURN
-    cy.get("#ptiurn-sort").click()
+    cy.get("#ptiurn-sort").find(".upArrow").click()
     checkPtiurnOrder(descending)
   })
 })
