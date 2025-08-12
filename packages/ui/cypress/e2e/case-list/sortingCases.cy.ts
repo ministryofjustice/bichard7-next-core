@@ -1,15 +1,21 @@
 import { loginAndVisit } from "../../support/helpers"
 
 const checkCasesOrder = (expectedOrder: number[]) => {
-  cy.get("tbody td:nth-child(5)").each((element, index) => {
-    cy.wrap(element).should("have.text", `Case0000${expectedOrder[index]}`)
-  })
+  cy.get("tbody td:nth-child(5)")
+    .should("have.length", expectedOrder.length)
+    .should((elems) => {
+      const actualOrder = elems.toArray().map((el) => el.innerText)
+      expect(actualOrder).to.deep.equal(expectedOrder.map((item) => `Case0000${item}`))
+    })
 }
 
 const checkPtiurnOrder = (expectedOrder: string[]) => {
-  cy.get("tbody td:nth-child(5)").each((element, index) => {
-    cy.wrap(element).should("have.text", expectedOrder[index])
-  })
+  cy.get("tbody td:nth-child(5)")
+    .should("have.length", expectedOrder.length)
+    .should((elems) => {
+      const actualOrder = elems.toArray().map((el) => el.innerText)
+      expect(actualOrder).to.deep.equal(expectedOrder)
+    })
 }
 
 describe("Sorting cases", () => {
@@ -77,6 +83,7 @@ describe("Sorting cases", () => {
     ])
 
     loginAndVisit()
+
     // Sort ascending by defendant name
     cy.get("#defendant-name-sort").click()
 
@@ -124,11 +131,10 @@ describe("Sorting cases", () => {
 
     // Sort ascending by PTIURN
     cy.get("#ptiurn-sort").find(".unorderedArrow").click()
-
     checkPtiurnOrder(ascending)
 
     // Sort descending by PTIURN
-    cy.get("#ptiurn-sort").click()
+    cy.get("#ptiurn-sort").find(".upArrow").click()
     checkPtiurnOrder(descending)
   })
 })
