@@ -2,6 +2,7 @@ import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
+import { LockReason } from "types/LockReason"
 import { formatReasonCodes } from "utils/formatReasons/reasonCodes"
 import getResolutionStatus from "../../../utils/getResolutionStatus"
 import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
@@ -46,6 +47,13 @@ const CourtCaseListEntry: React.FC<Props> = ({
     formattedReasonCodes
   )
 
+  let lockReason: LockReason
+  if (exceptionsCells) {
+    lockReason = LockReason.Exceptions
+  } else {
+    lockReason = LockReason.Triggers
+  }
+
   const reasonCell = exceptionsCells?.ReasonCell ?? triggerCells?.ReasonCell
   const extraReasonCell = exceptionsCells?.ReasonCell ? triggerCells?.ReasonCell : undefined
   const resolutionStatus = getResolutionStatus(courtCase)
@@ -57,6 +65,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
         courtCase={courtCase}
         reasonCell={reasonCell}
         lockTag={exceptionsCells?.LockTag ?? triggerCells?.LockTag}
+        lockReason={lockReason}
         previousPath={previousPath}
       />
       {renderExtraReasons && (
