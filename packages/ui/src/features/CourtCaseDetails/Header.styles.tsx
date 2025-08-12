@@ -32,12 +32,12 @@ const CaseDetailHeaderRow = styled.div`
   }
 
   .govuk-accordion__summary-box {
-    visibility: hidden;
+    display: none;
     cursor: pointer;
     margin-bottom: 10px;
 
     @media (min-resolution: 144dpi) and (max-width: ${breakpoints.compact}) {
-      visibility: visible;
+      display: block;
 
       &:focus-visible,
       &:focus {
