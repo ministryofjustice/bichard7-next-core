@@ -1,9 +1,12 @@
 import { loginAndVisit } from "../../support/helpers"
 
 const checkCasesOrder = (expectedOrder: number[]) => {
-  cy.get("tbody td:nth-child(5)").each((element, index) => {
-    cy.wrap(element).should("have.text", `Case0000${expectedOrder[index]}`)
-  })
+  cy.get("tbody td:nth-child(5)")
+    .should("have.length", expectedOrder.length)
+    .should((elems) => {
+      const actualOrder = elems.toArray().map((el) => el.innerText)
+      expect(actualOrder).to.deep.equal(expectedOrder.map((item) => `Case0000${item}`))
+    })
 }
 
 const checkPtiurnOrder = (expectedOrder: string[]) => {
@@ -77,6 +80,7 @@ describe("Sorting cases", () => {
     ])
 
     loginAndVisit()
+
     // Sort ascending by defendant name
     cy.get("#defendant-name-sort").click()
 
