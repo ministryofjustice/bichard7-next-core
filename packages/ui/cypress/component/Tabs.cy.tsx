@@ -16,4 +16,83 @@ describe("Tabs", () => {
     cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
     cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
   })
+
+  it("Tabs can be toggled with a mouse click", () => {
+    cy.mount(
+      <Tabs defaultValue="tab1">
+        <TabHeaders>
+          <TabHeader value="tab1">{"Tab 1"}</TabHeader>
+          <TabHeader value="tab2">{"Tab 2"}</TabHeader>
+          <TabHeader value="tab3">{"Tab 3"}</TabHeader>
+        </TabHeaders>
+      </Tabs>
+    )
+
+    cy.get("#tab2-tab").click()
+    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+
+    cy.get("#tab3-tab").click()
+    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+
+    cy.get("#tab1-tab").click()
+    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+  })
+
+  it("Tabs can be toggled with arrow keys", () => {
+    cy.mount(
+      <Tabs defaultValue="tab1">
+        <TabHeaders>
+          <TabHeader value="tab1">{"Tab 1"}</TabHeader>
+          <TabHeader value="tab2">{"Tab 2"}</TabHeader>
+          <TabHeader value="tab3">{"Tab 3"}</TabHeader>
+        </TabHeaders>
+      </Tabs>
+    )
+
+    // Navigate to the right
+
+    cy.get("#tab1-tab").focus()
+    cy.get("#tab1-tab").type("{rightarrow}")
+    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+
+    cy.get("#tab2-tab").focus()
+    cy.get("#tab2-tab").type("{rightarrow}")
+    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+
+    cy.get("#tab3-tab").focus()
+    cy.get("#tab3-tab").type("{rightarrow}")
+    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+
+    // Navigate to the left
+
+    cy.get("#tab3-tab").focus()
+    cy.get("#tab3-tab").type("{leftarrow}")
+    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+
+    cy.get("#tab2-tab").focus()
+    cy.get("#tab2-tab").type("{leftarrow}")
+    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+
+    cy.get("#tab1-tab").focus()
+    cy.get("#tab1-tab").type("{leftarrow}")
+    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
+  })
 })
