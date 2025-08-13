@@ -70,15 +70,7 @@ const LockedTagContainer = styled.div`
   flex: 1 1 auto;
   margin-left: auto;
   gap: 2.5rem;
-  justify-content: end;
-
-  @media (max-width: ${breakpoints.compact}) {
-    justify-content: unset;
-
-    .govuk-button {
-      font-size: 1rem;
-    }
-  }
+  justify-content: start;
 
   @media (min-width: ${breakpoints.spacious}) {
     justify-content: unset;
