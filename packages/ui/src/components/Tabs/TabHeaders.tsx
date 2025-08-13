@@ -13,10 +13,9 @@ export function TabHeaders({ className, children }: ComponentProps<"ul">): JSX.E
 
 export interface TabHeadersProps extends ComponentProps<"li"> {
   value: string
-  isSelected: boolean
 }
 
-export function TabHeader({ value, isSelected, className, children }: TabHeadersProps): JSX.Element {
+export function TabHeader({ value, className, children }: TabHeadersProps): JSX.Element {
   const { activeTab, setActiveTab } = useTabsContext()
   const isActive = activeTab == value
 
@@ -47,7 +46,7 @@ export function TabHeader({ value, isSelected, className, children }: TabHeaders
     <li
       className={mergeClassNames(
         "tab govuk-tabs__list-item",
-        isSelected ? "govuk-tabs__list-item--selected" : "",
+        isActive ? "govuk-tabs__list-item--selected" : "",
         className
       )}
       role="presentation"
@@ -60,7 +59,7 @@ export function TabHeader({ value, isSelected, className, children }: TabHeaders
         role="tab"
         aria-controls={value}
         aria-selected={isActive}
-        tabIndex={isSelected ? 0 : -1}
+        tabIndex={isActive ? 0 : -1}
         onKeyDown={(e) => handleOnKeyDown(e)}
       >
         {children}
