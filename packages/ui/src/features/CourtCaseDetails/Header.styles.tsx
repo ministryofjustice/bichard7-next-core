@@ -23,7 +23,7 @@ const CaseDetailHeaderRow = styled.div`
     line-height: 1.31579;
   }
 
-  @media (max-width: ${breakpoints.compact}) {
+  @media (max-width: ${breakpoints.regular}) {
     display: initial;
   }
 
