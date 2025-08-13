@@ -72,6 +72,9 @@ const LockedTagContainer = styled.div`
   gap: 2.5rem;
   justify-content: start;
 
+  @media (min-width: ${breakpoints.regular}) {
+    justify-content: end;
+  }
   @media (min-width: ${breakpoints.spacious}) {
     justify-content: unset;
   }
