@@ -118,4 +118,22 @@ describe("Tabs", () => {
     tabShouldBeInactive(2)
     tabShouldBeInactive(3)
   })
+
+  it("Calls the onTabsChanged callback", () => {
+    const onTabChanged = cy.spy().as("onTabChanged")
+
+    cy.mount(
+      <Tabs defaultValue="tab1" onTabChanged={onTabChanged}>
+        <TabHeaders>
+          <TabHeader value="tab1">{"Tab 1"}</TabHeader>
+          <TabHeader value="tab2">{"Tab 2"}</TabHeader>
+        </TabHeaders>
+        <TabPanel value="tab1">{"Tab 1 content"}</TabPanel>
+        <TabPanel value="tab2">{"Tab 2 content"}</TabPanel>
+      </Tabs>
+    )
+
+    cy.get("#tab2-tab").click()
+    cy.get("@onTabChanged").should("be.called")
+  })
 })
