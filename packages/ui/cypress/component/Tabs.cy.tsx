@@ -1,6 +1,16 @@
 import { TabHeader, TabHeaders, TabPanel, Tabs } from "../../src/components/Tabs"
 
 describe("Tabs", () => {
+  function tabShouldBeActive(tabNumber: number) {
+    cy.get(`#tab${tabNumber}-tab`).parent().should("have.class", "govuk-tabs__list-item--selected")
+    cy.get(`#tab${tabNumber}-panel`).should("be.visible")
+  }
+
+  function tabShouldBeInactive(tabNumber: number) {
+    cy.get(`#tab${tabNumber}-tab`).parent().should("not.have.class", "govuk-tabs__list-item--selected")
+    cy.get(`#tab${tabNumber}-panel`).should("not.be.visible")
+  }
+
   it("Shows only the default tab", () => {
     cy.mount(
       <Tabs defaultValue="tab1">
@@ -15,12 +25,9 @@ describe("Tabs", () => {
       </Tabs>
     )
 
-    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeActive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeInactive(3)
   })
 
   it("Tabs can be toggled with a mouse click", () => {
@@ -38,28 +45,19 @@ describe("Tabs", () => {
     )
 
     cy.get("#tab2-tab").click()
-    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("not.be.visible")
-    cy.get("#tab2-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeInactive(1)
+    tabShouldBeActive(2)
+    tabShouldBeInactive(3)
 
     cy.get("#tab3-tab").click()
-    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("not.be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("be.visible")
+    tabShouldBeInactive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeActive(3)
 
     cy.get("#tab1-tab").click()
-    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeActive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeInactive(3)
   })
 
   it("Tabs can be toggled with arrow keys", () => {
@@ -80,62 +78,44 @@ describe("Tabs", () => {
 
     cy.get("#tab1-tab").focus()
     cy.get("#tab1-tab").type("{rightarrow}")
-    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("not.be.visible")
-    cy.get("#tab2-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeInactive(1)
+    tabShouldBeActive(2)
+    tabShouldBeInactive(3)
 
     cy.get("#tab2-tab").focus()
     cy.get("#tab2-tab").type("{rightarrow}")
-    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("not.be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("be.visible")
+    tabShouldBeInactive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeActive(3)
 
     // Check that going left when already on last tab doesn't do anything
     cy.get("#tab3-tab").focus()
     cy.get("#tab3-tab").type("{rightarrow}")
     cy.get("#tab3-tab").should("be.focused")
-    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("not.be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("be.visible")
+    tabShouldBeInactive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeActive(3)
 
     // Navigate to the left
 
     cy.get("#tab3-tab").focus()
     cy.get("#tab3-tab").type("{leftarrow}")
-    cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("not.be.visible")
-    cy.get("#tab2-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeInactive(1)
+    tabShouldBeActive(2)
+    tabShouldBeInactive(3)
 
     cy.get("#tab2-tab").focus()
     cy.get("#tab2-tab").type("{leftarrow}")
-    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeActive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeInactive(3)
 
     // Check that going left when already on last tab doesn't do anything
     cy.get("#tab1-tab").focus()
     cy.get("#tab1-tab").type("{leftarrow}")
     cy.get("#tab1-tab").should("be.focused")
-    cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab1-panel").should("be.visible")
-    cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab2-panel").should("not.be.visible")
-    cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get("#tab3-panel").should("not.be.visible")
+    tabShouldBeActive(1)
+    tabShouldBeInactive(2)
+    tabShouldBeInactive(3)
   })
 })
