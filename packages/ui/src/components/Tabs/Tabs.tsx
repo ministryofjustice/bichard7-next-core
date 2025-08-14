@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react"
-import { createContext, useContext, useState } from "react"
+import { createContext, useCallback, useContext, useMemo, useState } from "react"
 import { StyledTabs } from "./Tabs.styles"
 import { mergeClassNames } from "../../helpers/mergeClassNames"
 
@@ -27,18 +27,26 @@ export interface TabsProps extends ComponentProps<"div"> {
 export function Tabs({ defaultValue, className, children, onTabChanged }: TabsProps) {
   const [activeTab, setActiveTab] = useState(defaultValue)
 
+  const handleSetActiveTab = useCallback(
+    (tab: string) => {
+      setActiveTab(tab)
+      if (onTabChanged) {
+        onTabChanged(tab)
+      }
+    },
+    [onTabChanged]
+  )
+
+  const tabsContextValue = useMemo(
+    () => ({
+      activeTab,
+      setActiveTab: handleSetActiveTab
+    }),
+    [activeTab, handleSetActiveTab]
+  )
+
   return (
-    <TabsContext
-      value={{
-        activeTab,
-        setActiveTab: (tab) => {
-          setActiveTab(tab)
-          if (onTabChanged) {
-            onTabChanged(tab)
-          }
-        }
-      }}
-    >
+    <TabsContext value={tabsContextValue}>
       <StyledTabs className={mergeClassNames("govuk-tabs", className)}>{children}</StyledTabs>
     </TabsContext>
   )
