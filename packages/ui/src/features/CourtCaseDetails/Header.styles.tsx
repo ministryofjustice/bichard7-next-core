@@ -23,7 +23,7 @@ const CaseDetailHeaderRow = styled.div`
     line-height: 1.31579;
   }
 
-  @media (max-width: ${breakpoints.compact}) {
+  @media (max-width: ${breakpoints.regular}) {
     display: initial;
   }
 
@@ -32,12 +32,12 @@ const CaseDetailHeaderRow = styled.div`
   }
 
   .govuk-accordion__summary-box {
-    visibility: hidden;
+    display: none;
     cursor: pointer;
     margin-bottom: 10px;
 
     @media (min-resolution: 144dpi) and (max-width: ${breakpoints.compact}) {
-      visibility: visible;
+      display: block;
 
       &:focus-visible,
       &:focus {
@@ -70,16 +70,11 @@ const LockedTagContainer = styled.div`
   flex: 1 1 auto;
   margin-left: auto;
   gap: 2.5rem;
-  justify-content: end;
+  justify-content: start;
 
-  @media (max-width: ${breakpoints.compact}) {
-    justify-content: unset;
-
-    .govuk-button {
-      font-size: 1rem;
-    }
+  @media (min-width: ${breakpoints.regular}) {
+    justify-content: end;
   }
-
   @media (min-width: ${breakpoints.spacious}) {
     justify-content: unset;
   }
@@ -97,6 +92,7 @@ const ButtonContainer = styled.div`
   @media (max-width: ${breakpoints.compact}) {
     .govuk-button {
       font-size: 1rem;
+      width: auto;
     }
   }
 
