@@ -4,7 +4,6 @@ import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow/CaseDetai
 import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"
 
 interface ExtraReasonRowProps {
-  isLocked: boolean
   reasonCell?: React.ReactNode
   lockTag?: React.ReactNode
   resolutionStatus: ResolutionStatus
