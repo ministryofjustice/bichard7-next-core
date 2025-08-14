@@ -1,13 +1,10 @@
-import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
-import Image from "next/image"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { LockReason } from "types/LockReason"
 import { displayedDateFormat } from "utils/date/formattedDate"
-import { LOCKED_ICON_URL } from "utils/icons"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
 
@@ -19,17 +16,8 @@ interface CaseDetailsRowProps {
   previousPath: string | null
 }
 
-export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, lockReason, previousPath }: CaseDetailsRowProps) => {
-  const {
-    notes,
-    errorLockedByUsername,
-    defendantName,
-    errorId,
-    courtDate,
-    courtName,
-    ptiurn,
-    triggerLockedByUsername
-  } = courtCase
+export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }: CaseDetailsRowProps) => {
+  const { notes, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
@@ -39,22 +27,9 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, lockReason, pre
     previousPathWebSafe = `?previousPath=${encodeURIComponent(previousPath)}`
   }
 
-  let renderLock = false
-  if (
-    (lockReason === LockReason.Exceptions && !!errorLockedByUsername) ||
-    (lockReason === LockReason.Triggers && !!triggerLockedByUsername)
-  ) {
-    renderLock = true
-  }
-
   return (
     <>
       <tr className="govuk-table__row caseDetailsRow">
-        <td className="govuk-table__cell">
-          <ConditionalRender isRendered={renderLock}>
-            <Image src={LOCKED_ICON_URL} priority width={20} height={20} alt="Lock icon" />
-          </ConditionalRender>
-        </td>
         <td className="govuk-table__cell">
           <a href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name govuk-link">
             {defendantName}
