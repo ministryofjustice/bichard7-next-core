@@ -3,7 +3,6 @@ import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseD
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
-import { LockReason } from "types/LockReason"
 import { displayedDateFormat } from "utils/date/formattedDate"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
@@ -12,7 +11,6 @@ interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase
   reasonCell?: React.ReactNode | string
   lockTag?: React.ReactNode
-  lockReason?: LockReason
   previousPath: string | null
 }
 
