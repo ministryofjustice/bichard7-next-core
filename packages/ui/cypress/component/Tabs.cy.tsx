@@ -3,12 +3,12 @@ import { TabHeader, TabHeaders, TabPanel, Tabs } from "../../src/components/Tabs
 describe("Tabs", () => {
   function tabShouldBeActive(tabNumber: number) {
     cy.get(`#tab${tabNumber}-tab`).parent().should("have.class", "govuk-tabs__list-item--selected")
-    cy.get(`#tab${tabNumber}-panel`).should("be.visible")
+    cy.get(`#tab${tabNumber}-tab-panel`).should("be.visible")
   }
 
   function tabShouldBeInactive(tabNumber: number) {
     cy.get(`#tab${tabNumber}-tab`).parent().should("not.have.class", "govuk-tabs__list-item--selected")
-    cy.get(`#tab${tabNumber}-panel`).should("not.be.visible")
+    cy.get(`#tab${tabNumber}-tab-panel`).should("not.be.visible")
   }
 
   it("Shows only the default tab", () => {
