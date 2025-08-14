@@ -1,16 +1,15 @@
-import { useState, useCallback } from "react"
+import { useCallback } from "react"
 import Permission from "@moj-bichard7/common/types/Permission"
 import ConditionalRender from "components/ConditionalRender"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import type NavigationHandler from "types/NavigationHandler"
-
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import ExceptionsList from "./ExceptionsList"
 import PncDetails from "./PncDetails/PncDetails"
 import { SidebarContainer } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
-import { Tabs, TabHeaders, TabHeader, TabPanel } from "../../../components/Tabs"
+import { Tabs, TabHeaders, TabHeader, TabPanel } from "components/Tabs"
 
 const SidebarTab = {
   Exceptions: "exceptions",
@@ -27,6 +26,8 @@ interface Props {
 const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
+  const { fetchNewCsrfToken } = useRefreshCsrfToken()
+  const onTabChanged = useCallback(() => fetchNewCsrfToken(), [fetchNewCsrfToken])
 
   let defaultTab = SidebarTab.Pnc
   if (currentUser.hasAccessTo[Permission.Triggers] && courtCase.triggerCount > 0) {
@@ -34,11 +35,6 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
   } else if (currentUser.hasAccessTo[Permission.Exceptions]) {
     defaultTab = SidebarTab.Exceptions
   }
-
-  const [activeTab, setActiveTab] = useState(defaultTab)
-  const onTabChanged = useCallback((tab: string) => setActiveTab(tab), [setActiveTab])
-
-  useRefreshCsrfToken({ dependency: activeTab })
 
   return (
     <SidebarContainer className="side-bar case-details-sidebar">
