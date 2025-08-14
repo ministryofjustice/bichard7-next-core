@@ -6,7 +6,7 @@ export const SidebarContainer = styled.div`
   #pnc-details-tab-panel {
     padding: 0;
   }
-  
+
   .govuk-button {
     width: auto;
     font-size: 1.1875rem;
