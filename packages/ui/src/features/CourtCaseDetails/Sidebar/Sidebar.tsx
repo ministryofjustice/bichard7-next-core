@@ -54,12 +54,12 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
             <TabHeader value={SidebarTab.Pnc}>{"PNC Details"}</TabHeader>
           </TabHeaders>
           <ConditionalRender isRendered={currentUser.hasAccessTo[Permission.Triggers]}>
-            <TabPanel value={SidebarTab.Triggers}>
+            <TabPanel value={SidebarTab.Triggers} className="moj-tab-panel-triggers tab-panel-triggers">
               <TriggersList onNavigate={onNavigate} />
             </TabPanel>
           </ConditionalRender>
           <ConditionalRender isRendered={currentUser.hasAccessTo[Permission.Exceptions]}>
-            <TabPanel value={SidebarTab.Exceptions}>
+            <TabPanel value={SidebarTab.Exceptions} className="moj-tab-panel-exceptions">
               <ExceptionsList
                 onNavigate={onNavigate}
                 canResolveAndSubmit={canResolveAndSubmit}
@@ -67,7 +67,7 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
               />
             </TabPanel>
           </ConditionalRender>
-          <TabPanel value={SidebarTab.Pnc}>
+          <TabPanel value={SidebarTab.Pnc} className="moj-tab-panel-pnc-details">
             <PncDetails />
           </TabPanel>
         </Tabs>
