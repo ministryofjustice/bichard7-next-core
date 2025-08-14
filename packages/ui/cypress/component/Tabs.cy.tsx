@@ -96,8 +96,10 @@ describe("Tabs", () => {
     cy.get("#tab3-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
     cy.get("#tab3-panel").should("be.visible")
 
+    // Check that going left when already on last tab doesn't do anything
     cy.get("#tab3-tab").focus()
     cy.get("#tab3-tab").type("{rightarrow}")
+    cy.get("#tab3-tab").should("be.focused")
     cy.get("#tab1-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
     cy.get("#tab1-panel").should("not.be.visible")
     cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
@@ -125,8 +127,10 @@ describe("Tabs", () => {
     cy.get("#tab3-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
     cy.get("#tab3-panel").should("not.be.visible")
 
+    // Check that going left when already on last tab doesn't do anything
     cy.get("#tab1-tab").focus()
     cy.get("#tab1-tab").type("{leftarrow}")
+    cy.get("#tab1-tab").should("be.focused")
     cy.get("#tab1-tab").parent().should("have.class", "govuk-tabs__list-item--selected")
     cy.get("#tab1-panel").should("be.visible")
     cy.get("#tab2-tab").parent().should("not.have.class", "govuk-tabs__list-item--selected")
