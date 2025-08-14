@@ -11,11 +11,11 @@ export function TabHeaders({ className, children }: ComponentProps<"ul">): JSX.E
   )
 }
 
-export interface TabHeadersProps extends ComponentProps<"li"> {
+export interface TabHeaderProps extends ComponentProps<"li"> {
   value: string
 }
 
-export function TabHeader({ value, className, children }: TabHeadersProps): JSX.Element {
+export function TabHeader({ value, className, children }: TabHeaderProps): JSX.Element {
   const { activeTab, setActiveTab } = useTabsContext()
   const isActive = activeTab == value
 
