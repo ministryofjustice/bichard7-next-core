@@ -12,7 +12,7 @@ describe("when viewing case-details sidebar", () => {
   it("displays the pnc-details tab", () => {
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".case-details-sidebar #pnc-details").should("exist")
+    cy.get(".case-details-sidebar #pnc-details-tab-panel").should("exist")
   })
 
   it("displays pnc-details panel when tab clicked", () => {
@@ -20,6 +20,6 @@ describe("when viewing case-details sidebar", () => {
 
     cy.get("#pnc-details-tab").click()
 
-    cy.get(".case-details-sidebar #pnc-details").should("be.visible")
+    cy.get(".case-details-sidebar #pnc-details-tab-panel").should("be.visible")
   })
 })

@@ -7,21 +7,23 @@ interface RefreshCsrfTokenProps {
   dependency: unknown
 }
 
-const useRefreshCsrfToken = ({ dependency }: RefreshCsrfTokenProps) => {
+const useRefreshCsrfToken = (props?: RefreshCsrfTokenProps) => {
   const { updateCsrfToken } = useCsrfToken()
   const firstLoad = useFirstLoad()
 
-  const fetchNewCsrfTokenCallback = useCallback(() => {
+  const fetchNewCsrfToken = useCallback(() => {
     axios.get("/bichard/api/refresh-csrf-token").then((response) => updateCsrfToken(response.data.csrfToken as string))
-  }, [dependency])
+  }, [updateCsrfToken])
 
   useEffect(() => {
     if (firstLoad) {
       return
     }
 
-    fetchNewCsrfTokenCallback()
-  }, [fetchNewCsrfTokenCallback])
+    fetchNewCsrfToken()
+  }, [props?.dependency, fetchNewCsrfToken])
+
+  return { fetchNewCsrfToken }
 }
 
 export default useRefreshCsrfToken
