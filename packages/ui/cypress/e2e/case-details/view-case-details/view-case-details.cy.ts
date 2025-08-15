@@ -641,7 +641,7 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("#triggers span").contains("Complete").should("exist")
+    cy.get("#triggers-tab-panel span").contains("Complete").should("exist")
   })
 
   canReallocateTestData.forEach(
