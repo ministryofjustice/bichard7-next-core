@@ -1,7 +1,7 @@
-import type { ComponentProps } from "react"
+import type { ComponentProps, JSX } from "react"
 import { createContext, useCallback, useContext, useMemo, useState } from "react"
 import { StyledTabs } from "./Tabs.styles"
-import { mergeClassNames } from "../../helpers/mergeClassNames"
+import { mergeClassNames } from "helpers/mergeClassNames"
 
 const TabsContext = createContext<{
   activeTab: string | null
@@ -24,7 +24,7 @@ export interface TabsProps extends ComponentProps<"div"> {
   onTabChanged?: (tab: string) => void
 }
 
-export function Tabs({ defaultValue, className, children, onTabChanged }: TabsProps) {
+export const Tabs = ({ defaultValue, className, children, onTabChanged }: TabsProps): JSX.Element => {
   const [activeTab, setActiveTab] = useState(defaultValue)
 
   const handleSetActiveTab = useCallback(

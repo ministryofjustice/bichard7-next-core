@@ -1,9 +1,9 @@
+import type { ComponentProps, JSX, KeyboardEvent, SyntheticEvent } from "react"
 import { StyledTabHeaders } from "./TabHeaders.styles"
-import { ComponentProps, JSX, KeyboardEvent, SyntheticEvent } from "react"
-import { mergeClassNames } from "../../helpers/mergeClassNames"
+import { mergeClassNames } from "helpers/mergeClassNames"
 import { useTabsContext } from "./Tabs"
 
-export function TabHeaders({ className, children }: ComponentProps<"ul">): JSX.Element {
+export const TabHeaders = ({ className, children }: ComponentProps<"ul">): JSX.Element => {
   return (
     <StyledTabHeaders className={mergeClassNames("govuk-tabs__list tab-list", className)} role="tablist">
       {children}
@@ -15,7 +15,7 @@ export interface TabHeaderProps extends ComponentProps<"li"> {
   value: string
 }
 
-export function TabHeader({ value, className, children }: TabHeaderProps): JSX.Element {
+export const TabHeader = ({ value, className, children }: TabHeaderProps): JSX.Element => {
   const { activeTab, setActiveTab } = useTabsContext()
   const isActive = activeTab == value
 

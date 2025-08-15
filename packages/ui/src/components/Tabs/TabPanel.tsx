@@ -1,12 +1,12 @@
-import type { ComponentProps } from "react"
-import { mergeClassNames } from "../../helpers/mergeClassNames"
+import type { ComponentProps, JSX } from "react"
+import { mergeClassNames } from "helpers/mergeClassNames"
 import { useTabsContext } from "./Tabs"
 
 export interface TabPanelProps extends ComponentProps<"section"> {
   value: string
 }
 
-export function TabPanel({ value, className, children }: TabPanelProps) {
+export const TabPanel = ({ value, className, children }: TabPanelProps): JSX.Element => {
   const { activeTab } = useTabsContext()
   const isActive = activeTab == value
 
