@@ -15,6 +15,7 @@ export function TabPanel({ value, className, children }: TabPanelProps) {
       id={`${value}-tab-panel`}
       className={mergeClassNames("govuk-tabs__panel", isActive ? "" : "govuk-tabs__panel--hidden", className)}
       role="tabpanel"
+      aria-labelledby={`${value}-tab`}
     >
       {children}
     </section>

@@ -57,7 +57,7 @@ export function TabHeader({ value, className, children }: TabHeaderProps): JSX.E
         href={`#${value}`}
         onClick={(e) => handleTabClicked(e, value)}
         role="tab"
-        aria-controls={value}
+        aria-controls={`${value}-tab-panel`}
         aria-selected={isActive}
         tabIndex={isActive ? 0 : -1}
         onKeyDown={(e) => handleOnKeyDown(e)}
