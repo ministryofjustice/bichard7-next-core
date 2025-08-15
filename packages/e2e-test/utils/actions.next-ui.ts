@@ -653,7 +653,7 @@ export const reloadUntilStringNotPresent = async function (this: Bichard, conten
 }
 
 export const checkOffenceDataError = async function (this: Bichard, value: string, _key: string) {
-  const found = await reloadUntilContentInSelector(this.browser.page, value, "#exceptions")
+  const found = await reloadUntilContentInSelector(this.browser.page, value, "#exceptions-tab-panel")
   expect(found).toBeTruthy()
 }
 
