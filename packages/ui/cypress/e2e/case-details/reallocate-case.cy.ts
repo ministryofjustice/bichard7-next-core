@@ -405,9 +405,9 @@ describe("Case details", () => {
     loginAndVisit("BichardForce03")
     cy.findByText("NAME Defendant").click()
 
-    cy.get("#triggers").contains("PR10").should("exist")
-    cy.get("#triggers").contains("PR04 / Offence 1").should("exist")
-    cy.get("#triggers").contains("PR04 / Offence 3").should("exist")
+    cy.get("#triggers-tab-panel").contains("PR10").should("exist")
+    cy.get("#triggers-tab-panel").contains("PR04 / Offence 1").should("exist")
+    cy.get("#triggers-tab-panel").contains("PR04 / Offence 3").should("exist")
   })
 })
 

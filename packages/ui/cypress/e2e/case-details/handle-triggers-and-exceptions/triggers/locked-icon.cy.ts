@@ -18,8 +18,8 @@ describe("Locked icon", () => {
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })
     cy.visit(caseURL)
-    cy.get("section#triggers").find(".triggers-locked-tag").should("exist")
-    cy.get("section#exceptions").find(".exceptions-locked-tag").should("exist")
+    cy.get("section#triggers-tab-panel").find(".triggers-locked-tag").should("exist")
+    cy.get("section#exceptions-tab-panel").find(".exceptions-locked-tag").should("exist")
   })
 
   it("Should display the resolution status if the triggers or exceptions are resolved", () => {
@@ -33,8 +33,8 @@ describe("Locked icon", () => {
     ])
     cy.task("insertTriggers", { caseId: 0, triggers: resolvedTriggers })
     cy.visit(caseURL)
-    cy.get("section#triggers").find(".triggers-resolved-tag").should("exist")
-    cy.get("section#exceptions").find(".exceptions-resolved-tag").should("exist")
+    cy.get("section#triggers-tab-panel").find(".triggers-resolved-tag").should("exist")
+    cy.get("section#exceptions-tab-panel").find(".exceptions-resolved-tag").should("exist")
   })
 
   it("Should display the submitted status when exceptions are submitted", () => {
@@ -46,7 +46,7 @@ describe("Locked icon", () => {
       }
     ])
     cy.visit(caseURL)
-    cy.get("section#exceptions").find(".exceptions-submitted-tag").should("exist")
+    cy.get("section#exceptions-tab-panel").find(".exceptions-submitted-tag").should("exist")
   })
 
   it("Should display a lock icon when someone else has the triggers locked", () => {
@@ -74,7 +74,7 @@ describe("Locked icon", () => {
     cy.visit(caseURL)
     cy.get("#triggers-locked-tag-lockee").should("contain.text", "Bichard Test User Force 04")
     cy.get("#triggers-locked-tag-lockee").should("not.contain.text", "GeneralHandler")
-    cy.get("#triggers").should("contain.text", "Bichard Test User Force 04")
-    cy.get("#triggers").should("not.contain.text", "GeneralHandler")
+    cy.get("#triggers-tab-panel").should("contain.text", "Bichard Test User Force 04")
+    cy.get("#triggers-tab-panel").should("not.contain.text", "GeneralHandler")
   })
 })
