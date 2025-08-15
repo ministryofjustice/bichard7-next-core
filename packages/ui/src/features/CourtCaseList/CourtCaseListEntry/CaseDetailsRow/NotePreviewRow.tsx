@@ -24,7 +24,6 @@ export const NotePreviewRow = ({ notes, className, numberOfNotes, previewState }
   return (
     <tr className={classes.join(" ")}>
       <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" />
       <td className="govuk-table__cell" colSpan={2}>
         <NotePreview latestNote={mostRecentUserNote} numberOfNotes={numberOfNotes} ariaHidden={!previewState} />
       </td>
