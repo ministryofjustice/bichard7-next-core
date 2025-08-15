@@ -2,8 +2,8 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { PncOperation } from "../../types/PncOperation"
-import ResultClass from "../../types/ResultClass"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseOperationsException"

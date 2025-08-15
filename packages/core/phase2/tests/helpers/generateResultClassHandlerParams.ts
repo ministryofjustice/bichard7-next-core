@@ -1,8 +1,8 @@
 import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { ResultClassHandlerParams } from "../../lib/generateOperations/resultClassHandlers/ResultClassHandler"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
-import ResultClass from "../../../types/ResultClass"
 
 type Params = {
   areAllResultsOnPnc: boolean

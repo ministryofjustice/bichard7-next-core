@@ -1,6 +1,7 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "../../../types/ResultClass"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 
 const acceptedResultClasses = [

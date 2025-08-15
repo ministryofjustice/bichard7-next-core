@@ -1,6 +1,11 @@
 import type { z } from "zod"
 
-import type { ahoExceptionSchema, exceptionPathSchema, exceptionSchema, pncExceptionSchema } from "../schemas/exception"
+import type {
+  ahoExceptionSchema,
+  exceptionPathSchema,
+  exceptionSchema,
+  pncExceptionSchema
+} from "@moj-bichard7/common/schemas/exception"
 
 export type AhoException = z.infer<typeof ahoExceptionSchema>
 export type ExceptionPath = z.infer<typeof exceptionPathSchema>

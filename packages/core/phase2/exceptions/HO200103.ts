@@ -4,8 +4,8 @@ import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcom
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import ResultClass from "../../types/ResultClass"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
 const HO200103: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {

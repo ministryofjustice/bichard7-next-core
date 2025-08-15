@@ -1,4 +1,4 @@
-import ResultClass from "../../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
 import HO200101 from "./HO200101"
 

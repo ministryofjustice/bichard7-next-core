@@ -7,10 +7,10 @@ import type { AnnotatedHearingOutcome, Offence, Result } from "../types/Annotate
 import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
 import { parsePncUpdateDataSetXml } from "../lib/parse/parsePncUpdateDataSetXml"
-import ResultClass from "../types/ResultClass"
 import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"

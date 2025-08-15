@@ -22,7 +22,7 @@ import type {
   resultSchema,
   unvalidatedHearingOutcomeSchema,
   urgentSchema
-} from "../schemas/unvalidatedHearingOutcome"
+} from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 
 export type Address = z.infer<typeof addressSchema>
 export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>

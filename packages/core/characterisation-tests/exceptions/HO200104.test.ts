@@ -1,6 +1,6 @@
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 
-import ResultClass from "../../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { offenceResultClassPath } from "../helpers/errorPaths"
 import generatePhase2Message from "../helpers/generatePhase2Message"
 import { processPhase2Message } from "../helpers/processMessage"

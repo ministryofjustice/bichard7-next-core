@@ -6,9 +6,9 @@ import type {
   pncDisposalSchema,
   pncOffenceSchema,
   pncPenaltyCaseSchema
-} from "../schemas/pncQueryResult"
+} from "@moj-bichard7/common/schemas/pncQueryResult"
 
-import { pncQueryResultSchema } from "../schemas/pncQueryResult"
+import { pncQueryResultSchema } from "@moj-bichard7/common/schemas/pncQueryResult"
 
 export type PncAdjudication = z.infer<typeof pncAdjudicationSchema>
 export type PncCourtCase = z.infer<typeof pncCourtCaseSchema>
