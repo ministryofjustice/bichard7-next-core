@@ -80,11 +80,11 @@ export const clickTab = (tab: CaseDetailsTab) => {
 }
 
 export const confirmCaseDisplayed = (PTIURN: string) => {
-  cy.get("tbody tr td:nth-child(5)").contains(PTIURN).should("exist")
+  cy.get("tbody tr td:nth-child(4)").contains(PTIURN).should("exist")
 }
 
 export const confirmCaseNotDisplayed = (PTIURN: string) => {
-  cy.get("tbody tr td:nth-child(5)").contains(PTIURN).should("not.exist")
+  cy.get("tbody tr td:nth-child(4)").contains(PTIURN).should("not.exist")
 }
 
 export const confirmReasonDisplayed = (reason: string) => {
