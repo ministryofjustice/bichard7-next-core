@@ -31,7 +31,7 @@ describe("Offence matching HO100203", () => {
   })
 
   it("should explain what to with a HO100203 exception", () => {
-    cy.get("#exceptions .exception-details").should(
+    cy.get("#exceptions-tab-panel .exception-details").should(
       "have.text",
       "HO100203 - Go back to old Bichard, fix it and resubmit. Bad Court Case Reference Number format"
     )
