@@ -1,7 +1,7 @@
 import { loginAndVisit } from "../../support/helpers"
 
 const checkCasesOrder = (expectedOrder: number[]) => {
-  cy.get("tbody td:nth-child(5)")
+  cy.get("tbody td:nth-child(4)")
     .should("have.length", expectedOrder.length)
     .should((elems) => {
       const actualOrder = elems.toArray().map((el) => el.innerText)
@@ -10,7 +10,7 @@ const checkCasesOrder = (expectedOrder: number[]) => {
 }
 
 const checkPtiurnOrder = (expectedOrder: string[]) => {
-  cy.get("tbody td:nth-child(5)")
+  cy.get("tbody td:nth-child(4)")
     .should("have.length", expectedOrder.length)
     .should((elems) => {
       const actualOrder = elems.toArray().map((el) => el.innerText)
@@ -57,14 +57,14 @@ describe("Sorting cases", () => {
     cy.get("#court-name-sort").find(".unorderedArrow").click()
     cy.get("#court-name-sort").get(".upArrow").should("exist")
 
-    cy.get("tr.caseDetailsRow").first().get("td:nth-child(4)").contains("AAAA")
-    cy.get("tr.caseDetailsRow").last().get("td:nth-child(4)").contains("DDDD")
+    cy.get("tr.caseDetailsRow").first().get("td:nth-child(3)").contains("AAAA")
+    cy.get("tr.caseDetailsRow").last().get("td:nth-child(3)").contains("DDDD")
 
     cy.get("#court-name-sort").click()
     cy.get("#court-name-sort").get(".downArrow").should("exist")
 
-    cy.get("tr.caseDetailsRow").first().get("td:nth-child(4)").contains("DDDD")
-    cy.get("tr.caseDetailsRow").last().get("td:nth-child(4)").contains("AAAA")
+    cy.get("tr.caseDetailsRow").first().get("td:nth-child(3)").contains("DDDD")
+    cy.get("tr.caseDetailsRow").last().get("td:nth-child(3)").contains("AAAA")
   })
 
   it("Should use court date as a secondary sort when sorting by other fields", () => {
