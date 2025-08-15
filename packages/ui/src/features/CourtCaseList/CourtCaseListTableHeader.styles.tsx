@@ -8,6 +8,10 @@ const HeaderCell = styled.th`
   height: 100%;
   vertical-align: bottom;
   border-color: var(--border-input);
+
+  &:first-of-type {
+    padding-left: 10px;
+  }
 `
 
 const HeaderButton = styled.button`

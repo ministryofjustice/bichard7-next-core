@@ -25,7 +25,10 @@ const CourtCaseListPane = styled.div`
   table {
     tbody {
       tr td:last-child {
-        padding-right: 5px;
+        padding-right: 10px;
+      }
+      tr td:first-child {
+        padding-left: 10px;
       }
     }
   }
