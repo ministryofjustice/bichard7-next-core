@@ -10,8 +10,8 @@ export const ahoExceptionSchema = z.object({
 
 export const pncExceptionSchema = z.object({
   code: z.nativeEnum(ExceptionCode),
-  path: exceptionPathSchema,
-  message: z.string()
+  message: z.string(),
+  path: exceptionPathSchema
 })
 
 export const exceptionSchema = z.union([pncExceptionSchema, ahoExceptionSchema])

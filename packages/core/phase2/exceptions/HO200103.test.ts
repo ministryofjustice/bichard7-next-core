@@ -2,8 +2,8 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import errorPaths from "../../lib/exceptions/errorPaths"
-import ResultClass from "../../types/ResultClass"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200103 from "./HO200103"
 

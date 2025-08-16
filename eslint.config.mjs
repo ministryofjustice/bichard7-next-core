@@ -176,7 +176,7 @@ export default [
     }
   },
   {
-    files: ["packages/core/**/*"],
+    files: ["packages/core/**/*", "packages/common/schemas/*"],
 
     rules: {
       "perfectionist/sort-objects": "off"

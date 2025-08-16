@@ -48,7 +48,7 @@ import {
   yesNo
 } from "@moj-bichard7-developers/bichard7-next-data"
 
-import type { SpiPlea } from "../../types/Plea"
+import type { SpiPlea } from "@moj-bichard7/common/types/Plea"
 
 interface DataLookupResult {
   cjsCode: string

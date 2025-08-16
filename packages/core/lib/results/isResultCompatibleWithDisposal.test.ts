@@ -1,6 +1,7 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "../../types/ResultClass"
 import isResultCompatibleWithDisposal from "./isResultCompatibleWithDisposal"
 
 describe("isResultCompatibleWithDisposal", () => {

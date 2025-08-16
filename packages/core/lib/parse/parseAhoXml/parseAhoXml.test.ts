@@ -1,7 +1,7 @@
 import fs from "fs"
 import "jest-xml-matcher"
 
-import { unvalidatedHearingOutcomeSchema } from "../../../schemas/unvalidatedHearingOutcome"
+import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import parseAhoXml from "./parseAhoXml"
 
 describe("parseAhoXml", () => {

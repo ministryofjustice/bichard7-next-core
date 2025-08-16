@@ -4,8 +4,8 @@ import type { Offence, OffenceReason, Result } from "../../../../types/Annotated
 import type { Operation, PncUpdateDataset } from "../../../../types/PncUpdateDataset"
 import type NormalDisposalPncUpdateRequest from "../../../types/NormalDisposalPncUpdateRequest"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { PncOperation } from "../../../../types/PncOperation"
-import ResultClass from "../../../../types/ResultClass"
 import normalDisposalGenerator from "./normalDisposalGenerator"
 
 const createPncUpdateDataset = () => {

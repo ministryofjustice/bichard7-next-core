@@ -2,10 +2,10 @@ import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import areOrganisationUnitsEqual from "../../../../lib/areOrganisationUnitsEqual"
 import isRecordableOffence from "../../../../lib/offences/isRecordableOffence"
 import isRecordableResult from "../../../../lib/results/isRecordableResult"
-import ResultClass from "../../../../types/ResultClass"
 
 const noAdjudicationResultClasses = [
   ResultClass.ADJOURNMENT,

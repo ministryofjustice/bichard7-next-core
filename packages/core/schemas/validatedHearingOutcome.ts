@@ -1,6 +1,26 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { z } from "zod"
 
+import toArray from "@moj-bichard7/common/schemas/toArray"
+import {
+  alcoholLevelSchema,
+  amountSpecifiedInResultSchema,
+  caseSchema,
+  courtReferenceSchema,
+  criminalProsecutionReferenceSchema,
+  defendantDetailSchema,
+  defendantOrOffenderSchema,
+  hearingDefendantSchema,
+  hearingSchema,
+  numberSpecifiedInResultSchema,
+  offenceSchema,
+  organisationUnitSchema,
+  personNameSchema,
+  resultQualifierVariableSchema,
+  resultSchema,
+  unvalidatedHearingOutcomeSchema,
+  urgentSchema
+} from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import {
   invalid,
   validateActualOffenceDateCode,
@@ -23,26 +43,6 @@ import {
   validateVerdict,
   validateYesNo
 } from "./ahoValidations"
-import toArray from "./toArray"
-import {
-  alcoholLevelSchema,
-  amountSpecifiedInResultSchema,
-  caseSchema,
-  courtReferenceSchema,
-  criminalProsecutionReferenceSchema,
-  defendantDetailSchema,
-  defendantOrOffenderSchema,
-  hearingDefendantSchema,
-  hearingSchema,
-  numberSpecifiedInResultSchema,
-  offenceSchema,
-  organisationUnitSchema,
-  personNameSchema,
-  resultQualifierVariableSchema,
-  resultSchema,
-  unvalidatedHearingOutcomeSchema,
-  urgentSchema
-} from "./unvalidatedHearingOutcome"
 
 export const validTimeSchema = z.string().regex(/(([0-1][0-9])|([2][0-3])):[0-5][0-9]/, ExceptionCode.HO100103)
 

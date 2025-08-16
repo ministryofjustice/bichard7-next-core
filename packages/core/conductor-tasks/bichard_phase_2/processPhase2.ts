@@ -13,11 +13,11 @@ import { z } from "zod"
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
+import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import phase2 from "../../phase2/phase2"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
-import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 
 const s3Config = createS3Config()

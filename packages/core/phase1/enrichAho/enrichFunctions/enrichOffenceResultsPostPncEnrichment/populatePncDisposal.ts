@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
-import ResultClass from "../../../../types/ResultClass"
 
 const victimSurchargeCrestCodes = [
   "COM",

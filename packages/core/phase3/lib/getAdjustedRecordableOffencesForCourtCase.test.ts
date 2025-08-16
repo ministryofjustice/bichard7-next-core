@@ -1,6 +1,6 @@
 import type { Offence, Result } from "../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "../../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import getAdjustedRecordableOffencesForCourtCase from "./getAdjustedRecordableOffencesForCourtCase"
 
 describe("getAdjustedRecordableOffencesForCourtCase", () => {

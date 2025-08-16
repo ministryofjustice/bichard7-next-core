@@ -1,9 +1,9 @@
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
 
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
 import { PncOperation } from "../../../types/PncOperation"
-import ResultClass from "../../../types/ResultClass"
 import createOperation from "./createOperation"
 
 const generateOperationData = (result: Result): OperationData<PncOperation.REMAND> | undefined => {
