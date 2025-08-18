@@ -1,6 +1,4 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { z } from "zod"
-
 import toArray from "@moj-bichard7/common/schemas/toArray"
 import {
   alcoholLevelSchema,
@@ -21,6 +19,8 @@ import {
   unvalidatedHearingOutcomeSchema,
   urgentSchema
 } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
+import { z } from "zod"
+
 import {
   invalid,
   validateActualOffenceDateCode,

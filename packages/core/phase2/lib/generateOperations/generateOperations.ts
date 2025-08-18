@@ -1,7 +1,8 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import isRecordableOffence from "../../../lib/offences/isRecordableOffence"
 import isRecordableResult from "../../../lib/results/isRecordableResult"
 import { PncOperation } from "../../../types/PncOperation"

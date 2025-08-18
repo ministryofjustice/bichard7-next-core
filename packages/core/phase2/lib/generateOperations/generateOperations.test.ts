@@ -1,6 +1,7 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { PncOperation } from "../../../types/PncOperation"
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 import generateOperations from "./generateOperations"

@@ -1,5 +1,6 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import fs from "fs"
 import MockDate from "mockdate"
 
@@ -7,7 +8,6 @@ import type { AnnotatedHearingOutcome, Offence, Result } from "../types/Annotate
 import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
 import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
 import { parsePncUpdateDataSetXml } from "../lib/parse/parsePncUpdateDataSetXml"

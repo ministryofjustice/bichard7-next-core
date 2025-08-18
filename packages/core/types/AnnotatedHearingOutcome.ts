@@ -1,5 +1,3 @@
-import type { z } from "zod"
-
 import type {
   addressSchema,
   amountSpecifiedInResultSchema,
@@ -23,6 +21,7 @@ import type {
   unvalidatedHearingOutcomeSchema,
   urgentSchema
 } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
+import type { z } from "zod"
 
 export type Address = z.infer<typeof addressSchema>
 export type AmountSpecifiedInResult = z.infer<typeof amountSpecifiedInResultSchema>

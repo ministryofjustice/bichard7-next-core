@@ -1,7 +1,7 @@
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
+import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
-import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import { triggerSchema } from "../../schemas/trigger"
 import { Phase1ResultType } from "../types/Phase1Result"
 

@@ -1,10 +1,10 @@
 import { isError } from "@moj-bichard7/common/types/Result"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import type { Offence, OffenceReason, Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { Operation, PncUpdateDataset } from "../../../../types/PncUpdateDataset"
 import type NormalDisposalPncUpdateRequest from "../../../types/NormalDisposalPncUpdateRequest"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { PncOperation } from "../../../../types/PncOperation"
 import normalDisposalGenerator from "./normalDisposalGenerator"
 

@@ -20,6 +20,7 @@ import type {
   YesNo
 } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { SpiPlea } from "@moj-bichard7/common/types/Plea"
 
 import {
   actualOffenceDate,
@@ -47,8 +48,6 @@ import {
   verdict,
   yesNo
 } from "@moj-bichard7-developers/bichard7-next-data"
-
-import type { SpiPlea } from "@moj-bichard7/common/types/Plea"
 
 interface DataLookupResult {
   cjsCode: string

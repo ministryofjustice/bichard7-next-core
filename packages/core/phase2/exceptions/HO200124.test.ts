@@ -1,8 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"

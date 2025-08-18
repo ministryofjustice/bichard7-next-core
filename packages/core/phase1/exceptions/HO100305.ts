@@ -1,9 +1,9 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import errorPaths from "../../lib/exceptions/errorPaths"
 import isCaseRecordable from "../../lib/isCaseRecordable"
 import nonRecordableResultCodes from "../../lib/offences/nonRecordableResultCodes"

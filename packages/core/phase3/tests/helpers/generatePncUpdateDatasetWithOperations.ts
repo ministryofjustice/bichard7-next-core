@@ -1,7 +1,7 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Offence, OffenceReason, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 type AhoOptions = { croNumber?: string; penaltyNoticeCaseReferenceNumber?: string }
 

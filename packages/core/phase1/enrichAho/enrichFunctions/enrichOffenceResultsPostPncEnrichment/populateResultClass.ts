@@ -1,6 +1,7 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Result } from "../../../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import isAdjourned from "../../../lib/result/isAdjourned"
 import isWarrantIssued from "../../../lib/result/isWarrantIssued"
 import isNotGuiltyVerdict from "./isNotGuiltyVerdict"

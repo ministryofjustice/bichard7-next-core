@@ -1,7 +1,6 @@
-import { z } from "zod"
-
 import toArray from "@moj-bichard7/common/schemas/toArray"
 import { SpiPlea } from "@moj-bichard7/common/types/Plea"
+import { z } from "zod"
 
 export const spiPleaSchema = z.nativeEnum(SpiPlea)
 

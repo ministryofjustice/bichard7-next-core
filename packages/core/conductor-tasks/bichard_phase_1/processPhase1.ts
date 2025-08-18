@@ -6,6 +6,7 @@ import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskD
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -13,7 +14,6 @@ import postgres from "postgres"
 
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
-import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import getTriggersCount from "../../lib/database/getTriggersCount"
 import createPncApiConfig from "../../lib/pnc/createPncApiConfig"

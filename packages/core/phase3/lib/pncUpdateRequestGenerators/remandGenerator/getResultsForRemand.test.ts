@@ -1,8 +1,9 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
 import type { PncOperation } from "../../../../types/PncOperation"
 import type { Operation } from "../../../../types/PncUpdateDataset"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import getResultsForRemand from "./getResultsForRemand"
 
 const createOffence = (options: {

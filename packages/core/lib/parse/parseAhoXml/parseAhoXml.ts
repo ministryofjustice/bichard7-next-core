@@ -1,8 +1,9 @@
+import type { CjsPlea } from "@moj-bichard7/common/types/Plea"
+import type ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import { isError } from "@moj-bichard7/common/types/Result"
 import { XMLParser } from "fast-xml-parser"
 
-import type { CjsPlea } from "@moj-bichard7/common/types/Plea"
-import type ResultClass from "@moj-bichard7/common/types/ResultClass"
 import type {
   AhoXml,
   Br7Case,

@@ -1,7 +1,8 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Offence } from "../../../types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import { generateArrestHearingsAdjudicationsAndDisposals } from "./generateArrestHearingsAdjudicationsAndDisposals"
 
 describe("generateArrestHearingsAdjudicationsAndDisposals", () => {

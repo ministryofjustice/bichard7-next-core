@@ -1,6 +1,7 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import isRecordableResult from "./isRecordableResult"
 
 const isResultClassCompatible = (resultClass?: ResultClass) =>

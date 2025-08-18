@@ -1,7 +1,8 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { Result } from "../../../types/AnnotatedHearingOutcome"
 import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
 import { PncOperation } from "../../../types/PncOperation"
 import createOperation from "./createOperation"

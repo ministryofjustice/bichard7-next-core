@@ -1,5 +1,3 @@
-import type { z } from "zod"
-
 import type {
   pncAdjudicationSchema,
   pncCourtCaseSchema,
@@ -7,6 +5,7 @@ import type {
   pncOffenceSchema,
   pncPenaltyCaseSchema
 } from "@moj-bichard7/common/schemas/pncQueryResult"
+import type { z } from "zod"
 
 import { pncQueryResultSchema } from "@moj-bichard7/common/schemas/pncQueryResult"
 

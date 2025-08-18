@@ -1,7 +1,8 @@
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { PncOperation } from "../../types/PncOperation"
 import type { Operation } from "../../types/PncUpdateDataset"
 
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import MessageType from "../types/MessageType"
 import generateMessage from "./generateMessage"
 

@@ -1,7 +1,8 @@
+import type { SpiPlea } from "@moj-bichard7/common/types/Plea"
+
 import { readFileSync } from "fs"
 import nunjucks from "nunjucks"
 
-import type { SpiPlea } from "@moj-bichard7/common/types/Plea"
 import type { SpiVerdict } from "../../../types/Verdict"
 
 export type GenerateMessageOptions = {
