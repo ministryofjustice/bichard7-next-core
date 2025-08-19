@@ -45,7 +45,6 @@
     "@ministryofjustice/frontend": "^5.1.5",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.294",
     "axios": "^1.11.0",
-    "babel-plugin-transform-typescript-metadata": "^0.3.2",
     "cookie": "^1.0.2",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
@@ -70,8 +69,6 @@
     "typeorm": "^0.3.25"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.3",
-    "@babel/plugin-proposal-decorators": "^7.28.0",
     "@faker-js/faker": "^9.9.0",
     "@jest/globals": "^30.0.5",
     "@next/bundle-analyzer": "^15.4.6",
@@ -97,8 +94,6 @@
     "@types/styled-components": "^5.1.34",
     "aws-sdk": "^2.1692.0",
     "axe-core": "^4.10.3",
-    "babel-loader": "^10.0.0",
-    "babel-plugin-styled-components": "^2.1.4",
     "concurrently": "^9.2.0",
     "cypress": "^14.5.4",
     "cypress-axe": "^1.6.0",
