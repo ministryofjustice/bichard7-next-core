@@ -57,7 +57,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -89,7 +89,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.864.0",
+    "@aws-sdk/client-dynamodb": "^3.868.0",
     "@aws-sdk/client-s3": "^3.864.0",
     "@io-orkes/conductor-javascript": "^2.1.4",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.294",
