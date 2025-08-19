@@ -4,7 +4,7 @@ import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/cr
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import logger from "@moj-bichard7/common/utils/logger"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import { randomUUID } from "crypto"
 import ahoFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"

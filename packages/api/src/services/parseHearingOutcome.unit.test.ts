@@ -1,9 +1,9 @@
+import * as parseAnnotatedPncUpdateDatasetXmlModule from "@moj-bichard7/common/aho/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import * as parsePncUpdateDataSetXmlModule from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import * as parseAhoXmlModule from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import fs from "fs"
 import path from "path"
 
-import * as parseAnnotatedPncUpdateDatasetXmlModule from "../../../core/common/aho/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
-import * as parsePncUpdateDataSetXmlModule from "../../../core/common/aho/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import dummyAho from "../tests/fixtures/AnnotatedHO1.json"
 import FakeLogger from "../tests/helpers/fakeLogger"
 import parseHearingOutcome from "./parseHearingOutcome"
