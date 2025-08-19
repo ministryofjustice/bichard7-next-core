@@ -1,5 +1,5 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
 
 import createPncDisposalByFirstAndSecondDurations from "./createPncDisposalByFirstAndSecondDurations"
 import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"

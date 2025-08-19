@@ -1,5 +1,5 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { AmendmentKeys, Amendments } from "types/Amendments"
 import amendAsn from "utils/amendments/amendAsn/amendAsn"
 import amendCourtCaseReference from "utils/amendments/amendCourtCaseReference/amendCourtCaseReference"

@@ -1,8 +1,9 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import fs from "fs"
 import merge from "lodash.merge"
 
-import type { PncUpdateDataset } from "../../../../types/PncUpdateDataset"
 import type { PartialPncUpdateDataset } from "../../helpers/PartialPncUpdateDataset"
 
 const generateFakePncUpdateDataset = (overrides: PartialPncUpdateDataset = { PncOperations: [] }): PncUpdateDataset => {

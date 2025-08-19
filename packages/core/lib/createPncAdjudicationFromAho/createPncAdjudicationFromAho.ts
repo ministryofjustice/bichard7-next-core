@@ -1,7 +1,8 @@
-import type { Result } from "../../types/AnnotatedHearingOutcome"
-import type { PncAdjudication } from "../../types/PncQueryResult"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncAdjudication } from "@moj-bichard7/common/types/PncQueryResult"
 
-import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "../dataLookup"
+import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
+
 import isRecordableResult from "../results/isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
 

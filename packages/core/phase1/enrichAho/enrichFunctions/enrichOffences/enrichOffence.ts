@@ -1,6 +1,5 @@
 import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-
-import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const clearData = (offence: Offence): void => {
   offence.OffenceCategory = undefined

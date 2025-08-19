@@ -1,4 +1,4 @@
-import type { PncOffence } from "../../../../types/PncQueryResult"
+import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
 
 import resultCodeIsFinal from "../../../../lib/results/resultCodeIsFinal"
 

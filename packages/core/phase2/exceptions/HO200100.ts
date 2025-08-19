@@ -1,11 +1,12 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import errorPaths from "../../lib/exceptions/errorPaths"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
 const HO200100: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {

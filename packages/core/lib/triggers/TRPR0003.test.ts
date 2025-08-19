@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generator from "./TRPR0003"

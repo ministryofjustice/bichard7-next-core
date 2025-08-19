@@ -1,7 +1,8 @@
-import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
-import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import transformSpiToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
+
 import generateMessage from "../../tests/helpers/generateMessage"
 import generateMockAho from "../../tests/helpers/generateMockAho"
 import enrichForceOwner from "./enrichForceOwner"

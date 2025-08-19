@@ -1,9 +1,9 @@
+import type { PncException } from "@moj-bichard7/common/types/Exception"
+import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+
+import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { PncException } from "../../../types/Exception"
-import type { PncQueryResult } from "../../../types/PncQueryResult"
-
-import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
 import { PncApiError } from "../../../lib/pnc/PncGateway"
 
 /*

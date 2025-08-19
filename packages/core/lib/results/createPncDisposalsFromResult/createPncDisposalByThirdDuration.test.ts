@@ -1,4 +1,4 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
 import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"

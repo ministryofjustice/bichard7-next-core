@@ -2,7 +2,7 @@ import "../../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "mq"
 
 import * as putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
 import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"

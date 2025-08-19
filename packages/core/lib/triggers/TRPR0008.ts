@@ -1,7 +1,8 @@
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { CjsPlea } from "@moj-bichard7/common/types/Plea"
 
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import { CjsVerdict } from "../../types/Verdict"

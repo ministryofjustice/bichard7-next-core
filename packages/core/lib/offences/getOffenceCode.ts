@@ -1,4 +1,4 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const getOffenceCode = (offence: Offence): string | undefined => {
   const offenceReason = offence.CriminalProsecutionReference.OffenceReason

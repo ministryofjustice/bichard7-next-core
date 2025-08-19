@@ -1,4 +1,4 @@
-import { PncOffence } from "@moj-bichard7/core/types/PncQueryResult"
+import { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CsrfTokenContext } from "context/CsrfTokenContext"
 import OffenceMatcher from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/Matcher/OffenceMatcher"

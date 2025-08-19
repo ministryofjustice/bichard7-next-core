@@ -1,7 +1,7 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import { PncOperation } from "../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 const hasCompletedDisposal = (pncUpdateDataset: PncUpdateDataset, offence: Offence) =>
   pncUpdateDataset.PncOperations.some(

@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "jest --maxWorkers=80% --testNamePattern=",
+    "test:update": "jest -u",
     "update-deps": "ncu -u && npm install"
   },
   "repository": {
@@ -42,6 +43,7 @@
     "@stomp/stompjs": "^7.1.1",
     "@types/nodemailer": "^6.4.17",
     "axios": "^1.11.0",
+    "fast-xml-parser": "^5.2.5",
     "nodemailer": "^7.0.5",
     "pg-promise": "^11.15.0",
     "pino": "^9.8.0",
@@ -49,7 +51,8 @@
     "promise-poller": "^1.9.1",
     "stompit": "^1.0.0",
     "ws": "^8.18.3",
-    "zod": "3.25.76"
+    "zod": "3.25.76",
+    "zod-validation-error": "^3.5.3"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

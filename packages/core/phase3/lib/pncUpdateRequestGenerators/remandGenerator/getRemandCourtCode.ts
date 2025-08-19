@@ -1,4 +1,4 @@
-import type { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Hearing, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import isDatedWarrantIssued from "../../../../lib/isDatedWarrantIssued"
 import getPncCourtCode, { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../getPncCourtCode"

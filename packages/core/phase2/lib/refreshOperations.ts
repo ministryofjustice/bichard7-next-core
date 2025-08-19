@@ -1,6 +1,7 @@
-import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import { PncOperation } from "../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import areRemandOperationsEqual from "./areRemandOperationsEqual"
 
 const isDuplicateOperation = (existingOperations: Operation[], newRemandOperation: Operation<PncOperation.REMAND>) =>

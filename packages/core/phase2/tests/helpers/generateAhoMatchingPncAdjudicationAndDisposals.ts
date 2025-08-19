@@ -1,5 +1,5 @@
-import type { Hearing, Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
+import type { Hearing, Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
 
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 

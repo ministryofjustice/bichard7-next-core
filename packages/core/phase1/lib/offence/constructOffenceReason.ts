@@ -1,6 +1,7 @@
-import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+import type { OffenceReason } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
+import { lookupOffenceByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
+
 import { getLocalOffenceReason, getNationalOffenceReason } from "./getOffenceReason"
 import regexTestNationalOffenceCode from "./regexTestNationalOffenceCode"
 

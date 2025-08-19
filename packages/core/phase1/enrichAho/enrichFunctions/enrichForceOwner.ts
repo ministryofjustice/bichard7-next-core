@@ -1,9 +1,10 @@
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import { lookupOrganisationUnitByCode } from "@moj-bichard7/common/aho/dataLookup/index"
 import logger from "@moj-bichard7/common/utils/logger"
 
-import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
-import { lookupOrganisationUnitByCode } from "../../../lib/dataLookup"
 import isAsnValid from "../../lib/isAsnValid"
 
 // prettier-ignore

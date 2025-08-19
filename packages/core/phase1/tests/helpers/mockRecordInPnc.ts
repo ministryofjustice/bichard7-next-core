@@ -1,12 +1,12 @@
+import type { PncCourtCase, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
+
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 import merge from "lodash.merge"
 
-import type { PncCourtCase, PncQueryResult } from "../../../types/PncQueryResult"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
-
 import { toPNCDate } from "../../../lib/dates"
-import { parseAhoXml } from "../../../lib/parse/parseAhoXml"
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
 import reformatDate from "../../tests/helpers/reformatDate"
 import addMockToPnc from "./addMockToPnc"
 import clearMocksInPnc from "./clearMocksInPnc"

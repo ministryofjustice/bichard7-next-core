@@ -1,9 +1,9 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 
 import { randomUUID } from "crypto"
 import merge from "lodash.merge"
 
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../../../types/Trigger"
 import type Phase1Result from "../../types/Phase1Result"
 import type { PartialAho } from "./PartialAho"

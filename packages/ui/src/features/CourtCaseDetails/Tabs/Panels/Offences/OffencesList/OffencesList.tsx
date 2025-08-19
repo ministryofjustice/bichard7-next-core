@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import { ScreenReaderOnly, TableHeader } from "./OffencesList.styles"

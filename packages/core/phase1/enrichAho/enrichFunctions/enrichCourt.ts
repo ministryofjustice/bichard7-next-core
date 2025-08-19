@@ -1,7 +1,11 @@
+import getCourtDetails from "@moj-bichard7/common/aho/dataLookup/getCourtDetails"
+import {
+  lookupOrganisationUnitByCode,
+  lookupOrganisationUnitByThirdLevelPsaCode
+} from "@moj-bichard7/common/aho/dataLookup/index"
+
 import type { EnrichAhoFunction } from "../../types/EnrichAhoFunction"
 
-import { lookupOrganisationUnitByCode, lookupOrganisationUnitByThirdLevelPsaCode } from "../../../lib/dataLookup"
-import getCourtDetails from "../../../lib/dataLookup/getCourtDetails"
 import populateOrganisationUnitFields from "../../lib/organisationUnit/populateOrganisationUnitFields"
 
 const enrichCourt: EnrichAhoFunction = (hearingOutcome) => {

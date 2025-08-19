@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Urgent } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Urgent } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import generateMockAho from "../../tests/helpers/generateMockAho"
 import enrichCase from "./enrichCase"

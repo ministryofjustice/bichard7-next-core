@@ -1,7 +1,7 @@
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
 
-import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "../../../types/PncQueryResult"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import generateAhoFromOffenceList from "../../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import createDisposalsFromOffence from "./createDisposalsFromOffence"

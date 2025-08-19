@@ -1,10 +1,10 @@
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { Operation, OperationData } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
-import type { Operation, OperationData } from "../../../types/PncUpdateDataset"
-
 import isUndatedWarrantIssued from "../../../lib/isUndatedWarrantIssued"
-import { PncOperation } from "../../../types/PncOperation"
 import createOperation from "./createOperation"
 
 const generateOperationData = (result: Result): OperationData<PncOperation.REMAND> | undefined => {

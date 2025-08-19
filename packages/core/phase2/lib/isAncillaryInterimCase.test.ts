@@ -1,4 +1,4 @@
-import type { HearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+import type { HearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import isAncillaryInterimCase from "./isAncillaryInterimCase"
 

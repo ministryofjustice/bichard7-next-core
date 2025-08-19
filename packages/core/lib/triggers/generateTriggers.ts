@@ -1,6 +1,7 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data//dist/types/TriggerCode"
 
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator, TriggerGeneratorOptions } from "../../types/TriggerGenerator"
 

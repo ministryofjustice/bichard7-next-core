@@ -1,9 +1,10 @@
-import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import lookupOrganisationUnitByCode from "../../lib/dataLookup/lookupOrganisationUnitByCode"
+import lookupOrganisationUnitByCode from "@moj-bichard7/common/aho/dataLookup/lookupOrganisationUnitByCode"
+
 import getPncCourtCode from "./getPncCourtCode"
 
-jest.mock("../../lib/dataLookup/lookupOrganisationUnitByCode")
+jest.mock("@moj-bichard7/common/aho/dataLookup/lookupOrganisationUnitByCode")
 
 describe("getPncCourtCode", () => {
   it("Should return an empty string if organisationUnitCode is null or undefined", () => {

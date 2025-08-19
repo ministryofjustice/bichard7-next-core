@@ -1,10 +1,16 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type {
+  AhoXml,
+  Br7TextString,
+  Br7TypeTextString,
+  GenericAhoXml,
+  GenericAhoXmlValue
+} from "@moj-bichard7/common/types/AhoXml"
+import type Exception from "@moj-bichard7/common/types/Exception"
 
-import type { AhoXml, Br7TextString, Br7TypeTextString, GenericAhoXml, GenericAhoXmlValue } from "../../../types/AhoXml"
-import type Exception from "../../../types/Exception"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 
 import Phase from "../../../types/Phase"
-import errorPaths from "../../exceptions/errorPaths"
 import isPncException from "../../exceptions/isPncException"
 import addAhoErrors from "./addAhoErrors"
 

@@ -1,7 +1,7 @@
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type { Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { Result } from "@moj-bichard7/common/types/Result"
 
-import type { PncOperation } from "../../types/PncOperation"
-import type { Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequest from "./PncUpdateRequest"
 
 type PncUpdateRequestGenerator<T extends PncOperation> = (

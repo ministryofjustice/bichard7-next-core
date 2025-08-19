@@ -1,9 +1,10 @@
+import type {
+  AmountSpecifiedInResult,
+  NumberSpecifiedInResult
+} from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { z } from "zod"
-
-import type { AmountSpecifiedInResult, NumberSpecifiedInResult } from "../types/AnnotatedHearingOutcome"
-
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -21,7 +22,9 @@ import {
   lookupVehicleCodeByCjsCode,
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
-} from "../lib/dataLookup"
+} from "@moj-bichard7/common/aho/dataLookup/index"
+import { z } from "zod"
+
 import { isAsnFormatValid, isAsnOrganisationUnitValid } from "../phase1/lib/isAsnValid"
 
 const invalid = () => false

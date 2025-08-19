@@ -1,8 +1,8 @@
-import ResultClass from "@moj-bichard7/common/types/ResultClass"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../../../types/PncOperation"
-import type { Operation } from "../../../../types/PncUpdateDataset"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import areOrganisationUnitsEqual from "../../../../lib/areOrganisationUnitsEqual"
 import isRecordableOffence from "../../../../lib/offences/isRecordableOffence"

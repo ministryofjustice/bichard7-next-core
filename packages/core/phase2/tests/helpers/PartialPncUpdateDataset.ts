@@ -1,6 +1,5 @@
+import type pncUpdateDatasetSchema from "@moj-bichard7/common/schemas/pncUpdateDataset"
 import type { z } from "zod"
-
-import type pncUpdateDatasetSchema from "../../../schemas/pncUpdateDataset"
 
 export type PartialPncUpdateDataset = DeepPartial<PncUpdateDataset>
 

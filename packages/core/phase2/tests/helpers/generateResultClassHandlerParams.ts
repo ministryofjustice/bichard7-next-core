@@ -1,6 +1,7 @@
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
 import type { ResultClassHandlerParams } from "../../lib/generateOperations/resultClassHandlers/ResultClassHandler"
 
 import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"

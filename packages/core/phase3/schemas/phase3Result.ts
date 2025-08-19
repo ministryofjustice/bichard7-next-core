@@ -1,7 +1,7 @@
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
+import pncUpdateDatasetSchema from "@moj-bichard7/common/schemas/pncUpdateDataset"
 import { z } from "zod"
 
-import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
 import { triggerSchema } from "../../schemas/trigger"
 import { Phase3ResultType } from "../types/Phase3Result"
 

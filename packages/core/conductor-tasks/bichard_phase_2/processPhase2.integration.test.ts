@@ -1,5 +1,7 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -7,12 +9,11 @@ import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
-import { randomUUID } from "crypto"
 import "jest-xml-matcher"
+import { randomUUID } from "crypto"
 import postgres from "postgres"
 
 import type Phase2Result from "../../phase2/types/Phase2Result"
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
 
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"

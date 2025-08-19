@@ -1,4 +1,5 @@
-import type { CriminalProsecutionReference, OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+import type { CriminalProsecutionReference, OffenceReason } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type { ParsedAsn } from "../../types/ParsedAsn"
 
 const formatOuCode = (

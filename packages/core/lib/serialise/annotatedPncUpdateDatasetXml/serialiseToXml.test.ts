@@ -1,9 +1,9 @@
+import type AnnotatedPncUpdateDataset from "@moj-bichard7/common/types/AnnotatedPncUpdateDataset"
+
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/common/aho/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import fs from "fs"
 import "jest-xml-matcher"
 
-import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
-
-import parseAnnotatedPncUpdateDatasetXml from "../../parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
 import serialiseToXml from "./serialiseToXml"
 
 describe("serialiseToXml", () => {

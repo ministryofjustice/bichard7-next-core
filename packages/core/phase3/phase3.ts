@@ -1,8 +1,9 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import EventCode from "@moj-bichard7/common/types/EventCode"
 
 import type AuditLogger from "../types/AuditLogger"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
-import type { PncUpdateDataset } from "../types/PncUpdateDataset"
 import type Phase3Result from "./types/Phase3Result"
 
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"

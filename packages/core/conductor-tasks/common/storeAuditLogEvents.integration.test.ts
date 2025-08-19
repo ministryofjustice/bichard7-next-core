@@ -1,11 +1,12 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { MockServer } from "jest-mock-server"
 
 import type Phase1Result from "../../phase1/types/Phase1Result"
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import storeAuditLogEvents from "./storeAuditLogEvents"

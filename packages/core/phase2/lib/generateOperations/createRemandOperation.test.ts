@@ -1,6 +1,7 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { PncOperation } from "../../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import createRemandOperation from "./createRemandOperation"
 
 describe("createRemandOperation", () => {

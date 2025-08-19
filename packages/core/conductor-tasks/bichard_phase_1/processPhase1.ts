@@ -1,4 +1,5 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
@@ -11,8 +12,6 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
-
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import getTriggersCount from "../../lib/database/getTriggersCount"

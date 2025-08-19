@@ -1,8 +1,8 @@
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-
-import { PncOperation } from "../../../../types/PncOperation"
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"

@@ -1,24 +1,23 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import pncUpdateDatasetSchema from "@moj-bichard7/common/schemas/pncUpdateDataset"
 import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { z } from "zod"
-
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import phase2 from "../../phase2/phase2"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
-import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"

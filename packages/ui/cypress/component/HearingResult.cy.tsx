@@ -3,7 +3,7 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import Permission from "@moj-bichard7/common/types/Permission"
 import { CjsPlea } from "@moj-bichard7/common/types/Plea"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
-import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"

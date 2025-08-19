@@ -1,8 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 
 import type PncUpdateRequest from "../types/PncUpdateRequest"
 
-import errorPaths from "../../lib/exceptions/errorPaths"
 import { PncApiError } from "../../lib/pnc/PncGateway"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"

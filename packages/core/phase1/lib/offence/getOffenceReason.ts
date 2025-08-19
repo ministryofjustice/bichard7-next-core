@@ -1,6 +1,7 @@
-import type { OffenceReason } from "../../../types/AnnotatedHearingOutcome"
+import type { OffenceReason } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { COMMON_LAWS, INDICTMENT } from "../../../lib/offences/offenceTypes"
+import { COMMON_LAWS, INDICTMENT } from "@moj-bichard7/common/aho/offences/offenceTypes"
+
 import { isCommonLaw, isIndictment } from "./isOffenceType"
 
 const createReasonProp = (offenceCode: string): { Reason: string } => ({

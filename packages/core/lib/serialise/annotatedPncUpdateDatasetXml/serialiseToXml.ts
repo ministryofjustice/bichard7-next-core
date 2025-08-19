@@ -1,5 +1,6 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type AnnotatedPncUpdateDatasetXml from "../../../types/AnnotatedPncUpdateDatasetXml"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
 import type { PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
 
 import generateXml from "../../../lib/serialise/generateXml"
