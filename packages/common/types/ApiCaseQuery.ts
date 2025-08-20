@@ -53,6 +53,7 @@ export const ApiCaseQuerySchema = z.object({
   resolvedByUsername: z.string().optional(),
   resolvedFrom: dateLikeToDate.optional().describe("Format: '2025-03-13'"),
   resolvedTo: dateLikeToDate.optional().describe("Format: '2025-03-13'"),
+  showCasesWithDateDifference: z.boolean().optional(),
   to: dateLikeToDate.optional().describe("Format: '2025-03-13'")
 })
 
