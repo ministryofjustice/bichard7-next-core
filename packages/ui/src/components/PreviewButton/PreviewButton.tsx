@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react"
 import { StyledPreviewButton } from "./PreviewButton.styles"
-import { mergeClassNames } from "../helpers/mergeClassNames"
+import { mergeClassNames } from "../../helpers/mergeClassNames"
 
 interface PreviewButtonProps {
   showPreview: boolean
@@ -11,7 +11,7 @@ interface PreviewButtonProps {
   ariaControls: string
 }
 
-const PreviewButton = ({
+export const PreviewButton = ({
   showPreview,
   onClick,
   previewLabel,
@@ -41,5 +41,3 @@ const PreviewButton = ({
     </StyledPreviewButton>
   )
 }
-
-export default PreviewButton
