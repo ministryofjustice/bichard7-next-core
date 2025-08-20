@@ -6,8 +6,8 @@ import { useBeforeunload } from "hooks/useBeforeunload"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import { useRouter } from "next/router"
 import { useCallback, useState } from "react"
-import { validCaseDetailsTabs } from "types/CaseDetailsTab"
-import { updateTabLink } from "../../utils/updateTabLink"
+import { updateTabLink } from "utils/updateTabLink"
+import { isValidCaseDetailsTab } from "utils/tabDetails/isValidCaseDetailsTab"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
 import TriggersAndExceptions from "./Sidebar/Sidebar"
 import { CourtCaseDetailsPanel } from "./Tabs/CourtCaseDetailsPanels"
@@ -20,12 +20,6 @@ import { Offences } from "./Tabs/Panels/Offences/Offences"
 
 interface Props {
   canResolveAndSubmit: boolean
-}
-
-const validTabsSet = new Set<string>(validCaseDetailsTabs)
-
-const isValidCaseDetailsTab = (tab: string): tab is CaseDetailsTab => {
-  return validTabsSet.has(tab)
 }
 
 const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
