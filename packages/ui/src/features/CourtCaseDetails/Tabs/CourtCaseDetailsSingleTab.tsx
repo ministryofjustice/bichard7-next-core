@@ -1,6 +1,7 @@
+import type { CaseDetailsTab } from "types/CaseDetailsTab"
+
 import { useCourtCase } from "context/CourtCaseContext"
 import { useRouter } from "next/router"
-import CaseDetailsTab from "types/CaseDetailsTab"
 import { CHECKMARK_ICON_URL } from "utils/icons"
 import type { TabDetails } from "utils/tabDetails/getTabDetails"
 import { updateTabLink } from "../../../utils/updateTabLink"
