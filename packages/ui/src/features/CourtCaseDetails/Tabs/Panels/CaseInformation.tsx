@@ -1,4 +1,4 @@
-import { Case } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Case } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { Card } from "components/Card"
 import formatForce from "utils/formatForce"
 import { InfoRow } from "./InfoRow"

@@ -1,10 +1,11 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import transformSpiToAnnotatedHearingOutcome from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
 import merge from "lodash.merge"
 
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type { GenerateMessageOptions } from "../../tests/helpers/generateMessage"
 
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
-import transformSpiToAnnotatedHearingOutcome from "../../../lib/parse/transformSpiToAho"
 import generateMessage from "../../tests/helpers/generateMessage"
 
 const generateMockAho = (overrides: GenerateMessageOptions = { offences: [] }): AnnotatedHearingOutcome => {

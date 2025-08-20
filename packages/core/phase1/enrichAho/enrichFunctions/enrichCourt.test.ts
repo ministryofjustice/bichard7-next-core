@@ -1,7 +1,7 @@
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import transformSpiToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
 import { readFileSync } from "fs"
 
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
-import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
 import enrichCourt from "./enrichCourt"
 
 const message = readFileSync("phase1/tests/fixtures/input-message-001.xml", "utf-8")

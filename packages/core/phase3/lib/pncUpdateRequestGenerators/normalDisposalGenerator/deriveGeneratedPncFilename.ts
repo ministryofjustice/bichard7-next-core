@@ -1,4 +1,4 @@
-import type { HearingDefendant } from "../../../../types/AnnotatedHearingOutcome"
+import type { HearingDefendant } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import { GENERATED_PNC_FILENAME_MAX_LENGTH } from "../../../../phase1/enrichAho/enrichFunctions/enrichDefendant/enrichDefendant"
 

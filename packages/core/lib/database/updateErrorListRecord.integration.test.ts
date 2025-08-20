@@ -1,4 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import MockDate from "mockdate"
 import postgres from "postgres"
@@ -9,7 +10,6 @@ import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
 import ResolutionStatus from "../../types/ResolutionStatus"
-import errorPaths from "../exceptions/errorPaths"
 import insertErrorListRecord from "./insertErrorListRecord"
 import updateErrorListRecord from "./updateErrorListRecord"
 

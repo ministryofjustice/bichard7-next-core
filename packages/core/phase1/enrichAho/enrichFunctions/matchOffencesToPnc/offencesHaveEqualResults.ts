@@ -1,8 +1,7 @@
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import nonRecordableResultCodes from "@moj-bichard7/common/aho/offences/nonRecordableResultCodes"
 import isEqual from "lodash.isequal"
-
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-
-import nonRecordableResultCodes from "../../../../lib/offences/nonRecordableResultCodes"
 
 const disposalTextResultCodes = [1100, 3008, 3025, 3041, 3106, 3047]
 

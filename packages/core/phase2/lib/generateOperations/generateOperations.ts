@@ -1,11 +1,13 @@
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import { type Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type { ResultClassHandler } from "./resultClassHandlers/ResultClassHandler"
 
 import isRecordableOffence from "../../../lib/offences/isRecordableOffence"
 import isRecordableResult from "../../../lib/results/isRecordableResult"
-import { PncOperation } from "../../../types/PncOperation"
-import { type Operation } from "../../../types/PncUpdateDataset"
-import ResultClass from "../../../types/ResultClass"
 import deduplicateOperations from "./deduplicateOperations"
 import filterDisposalsAddedInCourt from "./filterDisposalsAddedInCourt"
 import { handleAdjournment } from "./resultClassHandlers/handleAdjournment"

@@ -1,6 +1,6 @@
-import type { Result, ResultQualifierVariable } from "../../../../types/AnnotatedHearingOutcome"
+import type { Result, ResultQualifierVariable } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupResultQualifierCodeByCjsCode } from "../../../../lib/dataLookup"
+import { lookupResultQualifierCodeByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 
 const resultQualifierIsBailCondition = (qualifier: ResultQualifierVariable): boolean =>
   qualifier.Code >= "JD" && qualifier.Code <= "JZ"

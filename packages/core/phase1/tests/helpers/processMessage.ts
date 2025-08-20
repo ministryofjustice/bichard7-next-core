@@ -1,15 +1,16 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { ResultedCaseMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
+
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import transformSpiToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
+import extractExceptionsFromAho from "@moj-bichard7/common/aho/parseAhoXml/extractExceptionsFromXml"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { randomUUID } from "crypto"
 import promisePoller from "promise-poller"
 
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-import type { ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
 import type Phase1Result from "../../types/Phase1Result"
 
 import CoreAuditLogger from "../../../lib/auditLog/CoreAuditLogger"
-import extractExceptionsFromAho from "../../../lib/parse/parseAhoXml/extractExceptionsFromXml"
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
-import transformSpiToAho from "../../../lib/parse/transformSpiToAho"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import phase1Handler from "../../phase1"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"

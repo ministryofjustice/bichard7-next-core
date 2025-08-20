@@ -1,9 +1,9 @@
-import fs from "fs"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
 import "jest-xml-matcher"
+import fs from "fs"
 
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
-
-import { parsePncUpdateDataSetXml } from "../../parse/parsePncUpdateDataSetXml"
 import serialiseToXml from "./serialiseToXml"
 
 describe("serialiseToXml", () => {

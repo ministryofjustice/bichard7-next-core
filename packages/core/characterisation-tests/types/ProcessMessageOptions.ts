@@ -1,5 +1,6 @@
+import type { ResultedCaseMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
+
 import type Phase from "../../types/Phase"
-import type { ResultedCaseMessageParsedXml } from "../../types/SpiResult"
 
 export type ProcessMessageOptions = {
   expectRecord?: boolean

@@ -3,7 +3,7 @@ import type {
   Offence,
   Result,
   ResultQualifierVariable
-} from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+} from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import cloneDeep from "lodash.clonedeep"
 import amendAsn from "utils/amendments/amendAsn"
 import amendCourtCaseReference from "utils/amendments/amendCourtCaseReference"

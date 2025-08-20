@@ -1,5 +1,5 @@
-import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "@moj-bichard7/core/types/PncQueryResult"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
 import HO100310 from "../../../cypress/fixtures/HO100310.json"
 import HO100332 from "../../../cypress/fixtures/HO100332.json"
 import type { DisplayFullCourtCase } from "../../types/display/CourtCases"

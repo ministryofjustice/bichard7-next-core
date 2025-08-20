@@ -1,5 +1,5 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type Exception from "../../types/Exception"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
 
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import Phase from "../../types/Phase"

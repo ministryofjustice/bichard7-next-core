@@ -1,10 +1,11 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
 
-import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import type Exception from "../../../../types/Exception"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
+
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
-import errorPaths from "../../../../lib/exceptions/errorPaths"
 import isCcrValid from "../../../lib/isCcrValid"
 import isSequenceValid from "../../../lib/isSequenceValid"
 import { CaseType } from "./annotatePncMatch"

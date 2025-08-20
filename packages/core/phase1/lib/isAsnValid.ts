@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import Asn from "../../lib/Asn"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"

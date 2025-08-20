@@ -1,8 +1,8 @@
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
+import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
 import { triggerSchema } from "../../schemas/trigger"
-import { unvalidatedHearingOutcomeSchema } from "../../schemas/unvalidatedHearingOutcome"
 import { Phase1ResultType } from "../types/Phase1Result"
 
 export const phase1ResultSchema = z.object({

@@ -1,6 +1,6 @@
-import { isError } from "@moj-bichard7/common/types/Result"
+import type { Hearing, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import type { Hearing, Result } from "../../../../types/AnnotatedHearingOutcome"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 import getPncCourtCode from "../../getPncCourtCode"
 import getPsaCourtCode from "./getPsaCourtCode"

@@ -1,8 +1,7 @@
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/types/ExceptionCode"
+import type { PncException } from "@moj-bichard7/common/types/Exception"
 
-import type { PncException } from "../../types/Exception"
-
-import errorPaths from "./errorPaths"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 
 export type PncErrorRangesForException = {
   code: ExceptionCode

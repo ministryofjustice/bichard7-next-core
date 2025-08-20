@@ -1,12 +1,12 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
-import { PncOperation } from "../../types/PncOperation"
-import errorPaths from "../exceptions/errorPaths"
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
 
 describe("convertResultToErrorListRecord", () => {

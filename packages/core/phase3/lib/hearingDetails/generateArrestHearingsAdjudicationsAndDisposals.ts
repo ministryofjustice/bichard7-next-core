@@ -1,4 +1,5 @@
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../types/HearingDetails"
 
 import isResultCompatibleWithDisposal from "../../../lib/results/isResultCompatibleWithDisposal"

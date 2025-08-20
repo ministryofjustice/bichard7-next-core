@@ -1,6 +1,7 @@
-import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { PncOperation } from "../../../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import { handleAdjournmentPostJudgement } from "./handleAdjournmentPostJudgement"
 

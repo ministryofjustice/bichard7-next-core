@@ -1,11 +1,11 @@
+import type { Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import parsePncUpdateDataSetXml from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import fs from "fs"
 import path from "path"
 
-import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
-
-import parsePncUpdateDataSetXml from "../../../lib/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
-import { PncOperation } from "../../../types/PncOperation"
 import disposalUpdatedGenerator from "./disposalUpdatedGenerator"
 
 describe("disposalUpdatedGenerator", () => {

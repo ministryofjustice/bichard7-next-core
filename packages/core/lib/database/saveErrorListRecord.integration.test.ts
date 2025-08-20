@@ -1,5 +1,6 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import postgres from "postgres"
 
@@ -7,7 +8,6 @@ import type ErrorListRecord from "../../types/ErrorListRecord"
 import type ErrorListTriggerRecord from "../../types/ErrorListTriggerRecord"
 
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
-import errorPaths from "../exceptions/errorPaths"
 import saveErrorListRecord from "./saveErrorListRecord"
 
 const dbConfig = createDbConfig()

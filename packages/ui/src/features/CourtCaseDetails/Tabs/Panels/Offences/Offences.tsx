@@ -1,4 +1,4 @@
-import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import { Exception } from "types/exceptions"
 import { OffenceDetails } from "./Offence/OffenceDetails"

@@ -1,10 +1,11 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type Exception from "@moj-bichard7/common/types/Exception"
+import type { ExceptionPath } from "@moj-bichard7/common/types/Exception"
 
-import type Exception from "../../types/Exception"
-import type { ExceptionPath } from "../../types/Exception"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "@moj-bichard7/common/aho/dataLookup/index"
+
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../lib/dataLookup"
 import findException from "../lib/findException"
 import isOrganisationUnitValid from "../lib/isOrganisationUnitValid"
 

@@ -1,19 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
 import type { AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
-import type { Result } from "@moj-bichard7/common/types/Result"
-
-import completed from "@moj-bichard7/common/conductor/helpers/completed"
-import failed from "@moj-bichard7/common/conductor/helpers/failed"
-import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
-import createS3Config from "@moj-bichard7/common/s3/createS3Config"
-import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
-import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
-import EventCode from "@moj-bichard7/common/types/EventCode"
-import { isError } from "@moj-bichard7/common/types/Result"
-import logger from "@moj-bichard7/common/utils/logger"
-import { randomUUID } from "crypto"
-import { z } from "zod"
 
 import {
   extractIncomingMessage,
@@ -21,8 +8,20 @@ import {
   getCorrelationId,
   getDataStreamContent,
   getSystemId
-} from "../../lib/parse/transformSpiToAho/extractIncomingMessageData"
-import transformIncomingMessageToAho from "../../lib/parse/transformSpiToAho/transformIncomingMessageToAho"
+} from "@moj-bichard7/common/aho/parse/transformSpiToAho/extractIncomingMessageData"
+import transformIncomingMessageToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/transformIncomingMessageToAho"
+import completed from "@moj-bichard7/common/conductor/helpers/completed"
+import failed from "@moj-bichard7/common/conductor/helpers/failed"
+import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputDataValidator"
+import createS3Config from "@moj-bichard7/common/s3/createS3Config"
+import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
+import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isError, type Result } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
+import { randomUUID } from "crypto"
+import { z } from "zod"
+
 import parseS3Path from "../../phase1/lib/parseS3Path"
 
 const incomingBucket = process.env.INCOMING_BUCKET_NAME

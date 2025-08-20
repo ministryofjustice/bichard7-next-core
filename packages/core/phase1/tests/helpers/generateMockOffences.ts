@@ -1,7 +1,7 @@
-import type { Offence, Result } from "../../../types/AnnotatedHearingOutcome"
-import type { PncOffence } from "../../../types/PncQueryResult"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
 
-import parsePncDate from "../../../lib/parse/parsePncDate"
+import parsePncDate from "@moj-bichard7/common/aho/parseAhoXml/parsePncDate"
 
 export type CreateHoOffenceOptions = {
   actOrSource?: string

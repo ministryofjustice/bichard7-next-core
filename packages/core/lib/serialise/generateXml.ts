@@ -1,6 +1,8 @@
+import {
+  encodeAttributeEntitiesProcessor,
+  encodeTagEntitiesProcessor
+} from "@moj-bichard7/common/aho/parseAhoXml/encoding"
 import { XMLBuilder, type XmlBuilderOptions } from "fast-xml-parser"
-
-import { encodeAttributeEntitiesProcessor, encodeTagEntitiesProcessor } from "../encoding"
 
 const defaultOptions: Partial<XmlBuilderOptions> = {
   ignoreAttributes: false,

@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
 import { Card } from "components/Card"
 import ConditionalRender from "components/ConditionalRender"

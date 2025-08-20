@@ -1,5 +1,5 @@
 import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import WarningIcon from "components/WarningIcon"
 import { useCourtCase } from "context/CourtCaseContext"
 import Image from "next/image"

@@ -1,11 +1,12 @@
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../../../types/PncOperation"
-import type { Operation } from "../../../../types/PncUpdateDataset"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import areOrganisationUnitsEqual from "../../../../lib/areOrganisationUnitsEqual"
 import isRecordableOffence from "../../../../lib/offences/isRecordableOffence"
 import isRecordableResult from "../../../../lib/results/isRecordableResult"
-import ResultClass from "../../../../types/ResultClass"
 
 const noAdjudicationResultClasses = [
   ResultClass.ADJOURNMENT,

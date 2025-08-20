@@ -1,10 +1,10 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import fs from "fs"
 import MockDate from "mockdate"
 import path from "path"
 
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
-
-import { parseAhoXml } from "../../parse/parseAhoXml"
 import serialiseToXml from "./serialiseToXml"
 
 const getAho = (filePath: string): AnnotatedHearingOutcome => {

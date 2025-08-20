@@ -1,7 +1,8 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type Phase1Result from "../phase1/types/Phase1Result"
 import type Phase2Result from "../phase2/types/Phase2Result"
 import type Phase3Result from "../phase3/types/Phase3Result"
-import type { AnnotatedHearingOutcome } from "./AnnotatedHearingOutcome"
 
 type PhaseResult = Phase1Result | Phase2Result | Phase3Result
 

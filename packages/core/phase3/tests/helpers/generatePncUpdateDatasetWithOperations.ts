@@ -1,7 +1,7 @@
-import type { Offence, OffenceReason, Result } from "../../../types/AnnotatedHearingOutcome"
-import type { Operation, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Offence, OffenceReason, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import ResultClass from "../../../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 type AhoOptions = { croNumber?: string; penaltyNoticeCaseReferenceNumber?: string }
 

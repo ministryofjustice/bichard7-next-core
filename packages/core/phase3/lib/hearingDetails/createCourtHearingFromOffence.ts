@@ -1,4 +1,5 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type { PncUpdateCourtHearing } from "../../types/HearingDetails"
 
 import getOffenceCode from "../../../lib/offences/getOffenceCode"

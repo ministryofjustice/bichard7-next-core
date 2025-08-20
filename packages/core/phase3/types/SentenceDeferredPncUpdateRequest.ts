@@ -1,4 +1,5 @@
-import type { PncOperation } from "../../types/PncOperation"
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import type { PncUpdateCourtHearingAndDisposal } from "./HearingDetails"
 
 type SentenceDeferredPncUpdateRequest = {

@@ -1,5 +1,5 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../types/PncQueryResult"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
 
 import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
 

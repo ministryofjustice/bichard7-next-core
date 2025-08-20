@@ -1,11 +1,13 @@
-import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type PhaseResult from "../../types/PhaseResult"
 
 import { QualityCheckStatus } from "../../types/ErrorListRecord"
 import Phase from "../../types/Phase"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
-import { isPncUpdateDataset } from "../../types/PncUpdateDataset"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import serialiseToAhoXml from "../serialise/ahoXml/serialiseToXml"
 import serialiseToAnnotatedPncUpdateDatasetXml from "../serialise/annotatedPncUpdateDatasetXml/serialiseToXml"

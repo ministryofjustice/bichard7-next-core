@@ -1,4 +1,4 @@
-import type Exception from "../../types/Exception"
+import type Exception from "@moj-bichard7/common/types/Exception"
 
 const generateExceptionsNoteText = (exceptions: Exception[]): null | string => {
   if (exceptions.length === 0) {

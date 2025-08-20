@@ -1,4 +1,5 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type { PncUpdateAdjudication } from "../../types/HearingDetails"
 
 import createPncAdjudicationFromAho from "../../../lib/createPncAdjudicationFromAho/createPncAdjudicationFromAho"
