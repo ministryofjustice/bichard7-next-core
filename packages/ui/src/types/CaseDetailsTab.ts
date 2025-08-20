@@ -1,9 +1,11 @@
-type CaseDetailsTab = "Defendant" | "Hearing" | "Case" | "Offences" | "Notes"
+const validTabsArray = ["Defendant", "Hearing", "Case", "Offences", "Notes"] as const
 
-const validTabsArray: CaseDetailsTab[] = ["Defendant", "Hearing", "Case", "Offences", "Notes"]
+type CaseDetailsTab = (typeof validTabsArray)[number]
 
-export const isValidCaseDetailsTabArray = (tab: string): tab is CaseDetailsTab => {
-  return (validTabsArray as string[]).includes(tab)
+const validTabsSet = new Set<string>(validTabsArray)
+
+export const isValidCaseDetailsTab = (tab: string): tab is CaseDetailsTab => {
+  return validTabsSet.has(tab)
 }
 
 export default CaseDetailsTab

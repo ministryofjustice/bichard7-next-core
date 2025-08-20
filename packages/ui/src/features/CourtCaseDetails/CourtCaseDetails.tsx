@@ -4,7 +4,7 @@ import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import { useRouter } from "next/router"
 import { useCallback, useState } from "react"
 import type CaseDetailsTab from "types/CaseDetailsTab"
-import { isValidCaseDetailsTabArray } from "types/CaseDetailsTab"
+import { isValidCaseDetailsTab } from "types/CaseDetailsTab"
 import type NavigationHandler from "types/NavigationHandler"
 import { updateTabLink } from "../../utils/updateTabLink"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
@@ -29,7 +29,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
   const queryTab = `${urlQueryTab?.charAt(0).toUpperCase()}${urlQueryTab?.slice(1)}`
   let tab: CaseDetailsTab | undefined
 
-  if (isValidCaseDetailsTabArray(queryTab)) {
+  if (isValidCaseDetailsTab(queryTab)) {
     tab = queryTab
   }
 
