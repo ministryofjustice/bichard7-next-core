@@ -63,5 +63,22 @@ export default async function ({ auditLogGateway, database }: Gateways) {
     })
   })
 
+  fastify.addHook("onResponse", (request, reply) => {
+    request.log.info(
+      {
+        request: {
+          requestMethod: request.method,
+          requestParams: request.params,
+          url: request.url
+        },
+        response: {
+          responseTime: reply.elapsedTime,
+          statusCode: reply.statusCode
+        }
+      },
+      "request completed"
+    )
+  })
+
   return fastify
 }
