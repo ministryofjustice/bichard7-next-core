@@ -1,23 +1,6 @@
-import { Dispatch, SetStateAction } from "react"
+import type { Dispatch, SetStateAction } from "react"
 import { StyledPreviewButton } from "./PreviewButton.styles"
-
-const Preview = (props: { label: string }) => {
-  return (
-    <>
-      <span className="govuk-accordion-nav__chevron govuk-accordion-nav__chevron--down"></span>
-      <span className="govuk-accordion__show-all-text">{props.label}</span>
-    </>
-  )
-}
-
-const Hide = (props: { label: string }) => {
-  return (
-    <>
-      <span className="govuk-accordion-nav__chevron"></span>
-      <span className="govuk-accordion__show-all-text">{props.label}</span>
-    </>
-  )
-}
+import { mergeClassNames } from "../helpers/mergeClassNames"
 
 interface PreviewButtonProps {
   showPreview: boolean
@@ -36,17 +19,25 @@ const PreviewButton = ({
   className,
   ariaControls
 }: PreviewButtonProps) => {
+  const label = showPreview ? previewLabel : (hideLabel ?? "Hide")
+
   return (
     <StyledPreviewButton
       type="button"
-      className={"preview-button govuk-accordion__show-all" + (className ? ` ${className}` : "")}
+      className={mergeClassNames("preview-button govuk-accordion__show-all", className)}
       onClick={() => {
         onClick(!showPreview)
       }}
       aria-expanded={!showPreview}
       aria-controls={ariaControls}
     >
-      {showPreview ? <Preview label={previewLabel} /> : <Hide label={hideLabel ?? "Hide"} />}
+      <span
+        className={mergeClassNames(
+          "govuk-accordion-nav__chevron",
+          showPreview ? "govuk-accordion-nav__chevron--down" : undefined
+        )}
+      ></span>
+      <span className="govuk-accordion__show-all-text">{label}</span>
     </StyledPreviewButton>
   )
 }
