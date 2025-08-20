@@ -1,5 +1,5 @@
 import type SurveyFeedback from "services/entities/SurveyFeedback"
-import type CaseDetailsTab from "types/CaseDetailsTab"
+import type { CaseDetailsTab } from "types/CaseDetailsTab"
 import type CourtCase from "../../src/services/entities/CourtCase"
 import users from "../fixtures/users"
 

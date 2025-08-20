@@ -1,5 +1,6 @@
+import type { CaseDetailsTab } from "types/CaseDetailsTab"
+
 import { useCourtCase } from "context/CourtCaseContext"
-import type CaseDetailsTab from "types/CaseDetailsTab"
 import getTabDetails from "utils/tabDetails/getTabDetails"
 import { CourtCaseDetailsSingleTab } from "./CourtCaseDetailsSingleTab"
 import { Tabs } from "./CourtCaseDetailsTabs.styles"

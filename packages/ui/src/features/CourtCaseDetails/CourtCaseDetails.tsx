@@ -1,12 +1,13 @@
+import type { CaseDetailsTab } from "types/CaseDetailsTab"
+import type NavigationHandler from "types/NavigationHandler"
+
 import { useCourtCase } from "context/CourtCaseContext"
 import { useBeforeunload } from "hooks/useBeforeunload"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import { useRouter } from "next/router"
 import { useCallback, useState } from "react"
-import type CaseDetailsTab from "types/CaseDetailsTab"
-import { isValidCaseDetailsTabArray } from "types/CaseDetailsTab"
-import type NavigationHandler from "types/NavigationHandler"
-import { updateTabLink } from "../../utils/updateTabLink"
+import { updateTabLink } from "utils/updateTabLink"
+import { isValidCaseDetailsTab } from "utils/tabDetails/isValidCaseDetailsTab"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
 import TriggersAndExceptions from "./Sidebar/Sidebar"
 import { CourtCaseDetailsPanel } from "./Tabs/CourtCaseDetailsPanels"
@@ -29,7 +30,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
   const queryTab = `${urlQueryTab?.charAt(0).toUpperCase()}${urlQueryTab?.slice(1)}`
   let tab: CaseDetailsTab | undefined
 
-  if (isValidCaseDetailsTabArray(queryTab)) {
+  if (isValidCaseDetailsTab(queryTab)) {
     tab = queryTab
   }
 
