@@ -3,8 +3,7 @@ import { useBeforeunload } from "hooks/useBeforeunload"
 import useRefreshCsrfToken from "hooks/useRefreshCsrfToken"
 import { useRouter } from "next/router"
 import { useCallback, useState } from "react"
-import type CaseDetailsTab from "types/CaseDetailsTab"
-import { isValidCaseDetailsTab } from "types/CaseDetailsTab"
+import type CaseDetailsTab, { validCaseDetailsTabs } from "types/CaseDetailsTab"
 import type NavigationHandler from "types/NavigationHandler"
 import { updateTabLink } from "../../utils/updateTabLink"
 import { PanelsGridCol, PanelsGridRow, SideBar } from "./CourtCaseDetails.styles"
@@ -19,6 +18,12 @@ import { Offences } from "./Tabs/Panels/Offences/Offences"
 
 interface Props {
   canResolveAndSubmit: boolean
+}
+
+const validTabsSet = new Set<string>(validCaseDetailsTabs)
+
+const isValidCaseDetailsTab = (tab: string): tab is CaseDetailsTab => {
+  return validTabsSet.has(tab)
 }
 
 const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
