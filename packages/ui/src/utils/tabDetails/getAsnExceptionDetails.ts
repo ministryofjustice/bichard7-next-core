@@ -2,7 +2,7 @@ import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
 import isAsnFormatValid from "utils/exceptions/isAsnFormatValid"
 import isAsnException from "utils/exceptions/isException/isAsnException"
-import type { ExceptionDetails } from "./getTabDetails"
+import type { ExceptionDetails } from "types/TabDetails"
 
 const getAsnExceptionDetails = (
   exceptions: Exception[],
