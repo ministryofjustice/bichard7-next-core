@@ -1,4 +1,4 @@
-import PreviewButton from "../../src/components/PreviewButton"
+import PreviewButton from "components/PreviewButton"
 
 describe("PreviewButton", () => {
   it("shows the preview button with a down pointing chevron when hidden", () => {
