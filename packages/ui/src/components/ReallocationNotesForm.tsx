@@ -4,12 +4,10 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import Link from "next/link"
 import { FormEventHandler, useState } from "react"
-//import getForcesForReallocation from "services/getForcesForReallocation"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
 import { NoteTextArea } from "./NoteTextArea"
-//import { NewForceOwner } from "./ReallocationNotesForm.styles"
 import { NewForceOwnerField } from "./EditableFields/NewForceOwnerField"
 
 interface Props {
@@ -20,7 +18,6 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const { courtCase } = useCourtCase()
   const currentForce = forces.find((force) => force.code === courtCase.orgForPoliceFilter?.substring(0, 2))
-  //const forcesForReallocation = getForcesForReallocation(currentForce?.code)
   const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
@@ -44,14 +41,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
           <label className="govuk-label govuk-label--s" htmlFor="force">
             {"New force owner"}
           </label>
-          <NewForceOwnerField result="" />
-          {/*<NewForceOwner className="govuk-select" name="force" id="force">*/}
-          {/*  {forcesForReallocation.map(({ code, name }) => (*/}
-          {/*    <option key={code} value={code}>*/}
-          {/*      {`${code} - ${name}`}*/}
-          {/*    </option>*/}
-          {/*  ))}*/}
-          {/*</NewForceOwner>*/}
+          <NewForceOwnerField />
         </div>
 
         <NoteTextArea

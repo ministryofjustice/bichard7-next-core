@@ -4,10 +4,8 @@ import { useCallback, useEffect, useState } from "react"
 import ForceOwnerApiResponse from "../types/ForceOwnerApiResponse"
 import { isError } from "../types/Result"
 import { ListWrapper } from "./OrganisationUnitTypeahead.styles"
-//import forceOwnerApiResponse from "../types/ForceOwnerApiResponse"
 
 interface Props {
-  //value?: forceOwnerApiResponse
   value?: string
   setForceOwners?: (ForceOwnerApiResponse: ForceOwnerApiResponse) => void
 }
@@ -42,9 +40,6 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ value, setForceOwners }: Props) 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
     items: inputItems,
 
-    //onInputValueChange: ({ inputValue }) => {
-    //inputValue
-    //},
     initialInputValue: value,
     itemToString: (item) => item?.forceCode ?? ""
   })
@@ -57,13 +52,13 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ value, setForceOwners }: Props) 
     return () => clearTimeout(delayDebounceFn)
   }, [fetchItems, inputValue])
 
-  const toReturn = (
+  return (
     <div>
       <input
         {...getInputProps({
           className: "govuk-input",
-          id: "new-force-owner",
-          name: "new-force-owner",
+          id: "force",
+          name: "force",
           value
         })}
       />
@@ -86,8 +81,6 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ value, setForceOwners }: Props) 
       </ListWrapper>
     </div>
   )
-
-  return toReturn
 }
 
 export default ForceOwnerTypeahead

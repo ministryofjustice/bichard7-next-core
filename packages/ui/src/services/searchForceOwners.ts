@@ -1,4 +1,5 @@
-import { forces } from "@moj-bichard7-developers/bichard7-next-data"
+import { forces } from "@moj-bichard7-developers/bichard7-next-data/"
+import { forceCodesForReallocation } from "./getForcesForReallocation"
 import { sortBy } from "lodash"
 import type { Force } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 
@@ -11,9 +12,7 @@ export const getForceName = (force: Force) =>
 
 export const getForceOwnerCodeAndName = (force: Force) => `${getForceCode(force)} ${getForceName(force)}`
 
-// do we need any kind of filtering?
-const forceOwners: Force[] = forces.filter((force) => force.name !== "")
-
+const forceOwners: Force[] = forces.filter((force) => forceCodesForReallocation.includes(force.code))
 const sortedForceOwners = sortBy(forceOwners, (force) => force.code)
 
 const searchForceOwners = (keyword: string): Force[] => {
