@@ -1,5 +1,6 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type Exception from "../../types/Exception"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
+
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import HO200100 from "./HO200100"

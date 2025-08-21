@@ -1,7 +1,8 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../types/AuditLogger"
 import type PncGatewayInterface from "../types/PncGatewayInterface"
 import type Phase1Result from "./types/Phase1Result"

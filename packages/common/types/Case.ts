@@ -1,6 +1,6 @@
-import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/core/schemas/unvalidatedHearingOutcome"
 import { z } from "zod"
 
+import { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
 import { CaseAge } from "./CaseAge"
 import { NoteDtoSchema, NoteRowSchema, NoteSchema } from "./Note"
 import { TriggerDtoSchema, TriggerRowSchema, TriggerSchema } from "./Trigger"

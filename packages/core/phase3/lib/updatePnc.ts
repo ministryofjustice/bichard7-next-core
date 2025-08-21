@@ -1,7 +1,8 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequest from "../types/PncUpdateRequest"
 
 import generatePncUpdateExceptionFromMessage, {

@@ -1,4 +1,4 @@
-import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"

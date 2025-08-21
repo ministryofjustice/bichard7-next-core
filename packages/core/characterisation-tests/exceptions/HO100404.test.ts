@@ -1,8 +1,8 @@
+import { asnPath } from "@moj-bichard7/common/aho/asnPath"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 
 import type Phase3Result from "../../phase3/types/Phase3Result"
 
-import { asnPath } from "../helpers/errorPaths"
 import generatePhase3Message from "../helpers/generatePhase3Message"
 import { processPhase3Message } from "../helpers/processMessage"
 

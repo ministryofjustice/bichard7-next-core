@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "../../../types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const safeSubstring = (input: string, start: number, end: number): null | string =>
   input.length >= end ? input.substring(start, end) : null

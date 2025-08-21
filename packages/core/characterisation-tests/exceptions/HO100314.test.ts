@@ -1,6 +1,6 @@
+import { asnPath } from "@moj-bichard7/common/aho/asnPath"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 
-import { asnPath } from "../helpers/errorPaths"
 import generateSpiMessage from "../helpers/generateSpiMessage"
 import { processPhase1Message } from "../helpers/processMessage"
 

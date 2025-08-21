@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { useCourtCase } from "context/CourtCaseContext"
 import { Exception } from "types/exceptions"
 import getExceptionMessage from "utils/offenceMatcher/getExceptionMessage"

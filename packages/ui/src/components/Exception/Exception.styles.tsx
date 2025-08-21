@@ -1,6 +1,8 @@
 import styled from "styled-components"
 
 const ExceptionRow = styled.div`
+  font-size: var(--case-details-default-font-size);
+
   &:not(:last-child) {
     margin-bottom: 1.25rem;
   }

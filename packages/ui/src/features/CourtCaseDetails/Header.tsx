@@ -8,7 +8,9 @@ import { usePreviousPath } from "context/PreviousPathContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
-import { useState } from "react"
+import { AccordionToggle } from "components/Card/Card.styles"
+import useContentToggle from "hooks/useContentToggle"
+import { useEffect, useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { LinkButton } from "../../components/Buttons/LinkButton"
@@ -49,6 +51,9 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
   const { courtCase } = useCourtCase()
   const previousPath = usePreviousPath()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(0)
+
+  const { isContentVisible, toggleContentVisibility, setIsContentVisible } = useContentToggle(true)
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
@@ -73,6 +78,24 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
     setIsSubmitting(true)
   }
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth)
+      }
+
+      window.addEventListener("resize", handleResize)
+
+      if (windowWidth > 768) {
+        setIsContentVisible(true)
+      }
+
+      return () => {
+        window.removeEventListener("resize", handleResize)
+      }
+    }
+  }, [setIsContentVisible, windowWidth])
+
   return (
     <CaseDetailHeaderContainer id="case-detail-header">
       <CaseDetailHeaderRow id="case-detail-header-row">
@@ -88,20 +111,35 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
               className="govuk-!-static-margin-left-5 view-only-badge moj-badge--large"
             />
           </h2>
-          <LockedTagContainer id="locked-tag-container">
-            <LockStatusTag
-              isRendered={currentUser.hasAccessTo[Permission.Exceptions]}
-              resolutionStatus={courtCase.errorStatus}
-              lockName="Exceptions"
-            />
-            <LockStatusTag
-              isRendered={currentUser.hasAccessTo[Permission.Triggers]}
-              resolutionStatus={courtCase.triggerStatus}
-              lockName="Triggers"
-            />
-          </LockedTagContainer>
+          <AccordionToggle
+            className={"govuk-accordion__summary-box"}
+            onClick={toggleContentVisibility}
+            aria-expanded={isContentVisible}
+            aria-live={"polite"}
+            aria-label={"Show/Hide summary"}
+            tabIndex={0}
+          >
+            <span className="govuk-accordion__section-toggle-focus">
+              <span
+                className={`govuk-accordion-nav__chevron ${!isContentVisible ? "govuk-accordion-nav__chevron--down" : ""}`}
+              ></span>
+              <span className="govuk-accordion__section-toggle-text">{isContentVisible ? "Hide" : "Show"}</span>
+            </span>
+          </AccordionToggle>
         </CaseDetailsHeader>
-        <ButtonContainer>
+        <LockedTagContainer id="locked-tag-container">
+          <LockStatusTag
+            isRendered={currentUser.hasAccessTo[Permission.Exceptions] && courtCase.errorStatus !== null}
+            resolutionStatus={courtCase.errorStatus}
+            lockName="Exceptions"
+          />
+          <LockStatusTag
+            isRendered={currentUser.hasAccessTo[Permission.Triggers] && courtCase.triggerStatus !== null}
+            resolutionStatus={courtCase.triggerStatus}
+            lockName="Triggers"
+          />
+        </LockedTagContainer>
+        <ButtonContainer id="buttons">
           <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
             <SecondaryLinkButton
               href={reallocatePath}
@@ -130,7 +168,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
         </ButtonContainer>
       </CaseDetailHeaderRow>
 
-      <CourtCaseDetailsSummaryBox />
+      {isContentVisible && <CourtCaseDetailsSummaryBox />}
     </CaseDetailHeaderContainer>
   )
 }

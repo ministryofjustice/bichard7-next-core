@@ -1,5 +1,5 @@
-import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOffence } from "../../../../types/PncQueryResult"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
 
 export const datesMatchExactly = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
   if (hoOffence.ActualOffenceStartDate.StartDate.toISOString() !== pncOffence.offence.startDate.toISOString()) {

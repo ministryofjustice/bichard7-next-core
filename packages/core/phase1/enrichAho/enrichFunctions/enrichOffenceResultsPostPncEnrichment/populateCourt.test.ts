@@ -1,11 +1,11 @@
-jest.mock("../../../../lib/dataLookup")
-jest.mock("../../../../lib/dataLookup/getCourtDetails")
+jest.mock("@moj-bichard7/common/aho/dataLookup/index")
+jest.mock("@moj-bichard7/common/aho/dataLookup/getCourtDetails")
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { AnnotatedHearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import getCourtDetails from "@moj-bichard7/common/aho/dataLookup/getCourtDetails"
+import { lookupOrganisationUnitByCode } from "@moj-bichard7/common/aho/dataLookup/index"
 
-import { lookupOrganisationUnitByCode } from "../../../../lib/dataLookup"
-import getCourtDetails from "../../../../lib/dataLookup/getCourtDetails"
 import populateCourt from "./populateCourt"
 
 const mockedLookupOrganisationUnitByCode = lookupOrganisationUnitByCode as jest.MockedFunction<

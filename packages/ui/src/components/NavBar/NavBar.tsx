@@ -33,20 +33,16 @@ const NavItem: React.FC<NavItemProps> = ({ name, link, newTab }: NavItemProps) =
 
 const NavBar: React.FC<NavBarProps> = ({ hasAccessToUserManagement, hasAccessToReports }) => {
   return (
-    <div className="moj-primary-navigation" role="navigation">
-      <MojNavContainer className={`moj-primary-navigation__container`}>
-        <div className="moj-primary-navigation__nav">
-          <nav className="moj-primary-navigation" aria-label="Primary navigation">
-            <ul className="moj-primary-navigation__list">
-              <NavItem name={"Case list"} link={NavLink.CaseList} />
-              {hasAccessToReports && <NavItem name={"Reports"} link={NavLink.Reports} />}
-              {hasAccessToUserManagement && <NavItem name={"User management"} link={NavLink.UserManagement} />}
-              <NavItem name={"Help"} link={NavLink.Help} newTab />
-            </ul>
-          </nav>
-        </div>
-      </MojNavContainer>
-    </div>
+    <MojNavContainer className={`moj-primary-navigation moj-primary-navigation__container`} role="navigation">
+      <nav className="moj-primary-navigation__nav" aria-label="Primary navigation">
+        <ul className="moj-primary-navigation__list">
+          <NavItem name={"Case list"} link={NavLink.CaseList} />
+          {hasAccessToReports && <NavItem name={"Reports"} link={NavLink.Reports} />}
+          {hasAccessToUserManagement && <NavItem name={"User management"} link={NavLink.UserManagement} />}
+          <NavItem name={"Help"} link={NavLink.Help} newTab />
+        </ul>
+      </nav>
+    </MojNavContainer>
   )
 }
 

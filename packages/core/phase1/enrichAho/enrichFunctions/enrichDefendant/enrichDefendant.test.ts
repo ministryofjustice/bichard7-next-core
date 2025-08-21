@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, HearingDefendant } from "../../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, HearingDefendant } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import generateMockAho from "../../../tests/helpers/generateMockAho"
 import enrichDefendant from "./enrichDefendant"

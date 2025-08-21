@@ -1,5 +1,5 @@
-import type { PncOperation } from "../../types/PncOperation"
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import areOrganisationUnitsEqual from "../../lib/areOrganisationUnitsEqual"
 

@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import TRPR0010 from "./TRPR0010"
 const generateMockAho = (hearingDefendent: {

@@ -11,3 +11,9 @@ export const ScreenReaderOnly = styled.span`
   width: 1px;
   white-space: nowrap;
 `
+
+export const TableHeader = styled.thead`
+  th {
+    font-size: var(--case-details-default-font-size);
+  }
+`

@@ -1,4 +1,4 @@
-import type { OrganisationUnitCodes } from "../types/AnnotatedHearingOutcome"
+import type { OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import areOrganisationUnitsEqual from "./areOrganisationUnitsEqual"
 

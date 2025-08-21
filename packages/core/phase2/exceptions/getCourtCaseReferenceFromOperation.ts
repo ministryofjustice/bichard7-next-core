@@ -1,6 +1,6 @@
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import { PncOperation } from "../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 export const courtCaseSpecificOperations = [
   PncOperation.SENTENCE_DEFERRED,

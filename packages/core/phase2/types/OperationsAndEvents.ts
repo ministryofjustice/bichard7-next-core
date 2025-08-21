@@ -1,6 +1,5 @@
 import type EventCode from "@moj-bichard7/common/types/EventCode"
-
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 type OperationsAndEvents = {
   events?: EventCode[]

@@ -1,6 +1,7 @@
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import type { ResultClassHandler } from "./ResultClassHandler"
 
-import { PncOperation } from "../../../../types/PncOperation"
 import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
 import areAnyPncDisposalsWithType from "../../areAnyPncDisposalsWithType"
 import createOperation from "../createOperation"

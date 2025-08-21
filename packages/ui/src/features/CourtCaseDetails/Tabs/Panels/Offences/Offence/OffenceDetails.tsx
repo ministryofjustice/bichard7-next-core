@@ -2,7 +2,7 @@ import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/da
 import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
-import type { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { Card } from "components/Card"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
@@ -168,6 +168,9 @@ export const OffenceDetails = ({
         <InfoRow label="Committed on bail" value={getCommittedOnBail(offence.CommittedOnBail)} />
         <InfoRow label="Notifiable to Home Office" value={getYesOrNo(offence.NotifiableToHOindicator)} />
         <InfoRow label="Home Office classification" value={offence.HomeOfficeClassification} />
+        <ConditionalRender isRendered={offence.AddedByTheCourt !== undefined}>
+          <InfoRow label="Added by the Court" value={getYesOrNo(offence.AddedByTheCourt)} />
+        </ConditionalRender>
       </Card>
 
       <div className="offence-results">

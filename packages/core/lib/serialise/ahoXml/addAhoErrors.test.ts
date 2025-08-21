@@ -1,6 +1,6 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type { AhoXml, Br7Result } from "@moj-bichard7/common/types/AhoXml"
 
-import type { AhoXml, Br7Result } from "../../../types/AhoXml"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
 import Phase from "../../../types/Phase"
 import addAhoErrors from "./addAhoErrors"

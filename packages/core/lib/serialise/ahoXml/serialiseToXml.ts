@@ -1,5 +1,4 @@
 import type { CjsCodeAndDescription } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-
 import type {
   Adj,
   AhoXml,
@@ -20,7 +19,7 @@ import type {
   Cxe01,
   DISList,
   DsDefendantOrOffender
-} from "../../../types/AhoXml"
+} from "@moj-bichard7/common/types/AhoXml"
 import type {
   AnnotatedHearingOutcome,
   Case,
@@ -34,13 +33,17 @@ import type {
   OrganisationUnitCodes,
   Result,
   Urgent
-} from "../../../types/AnnotatedHearingOutcome"
-import type Exception from "../../../types/Exception"
-import type { PncException } from "../../../types/Exception"
-import type { PncAdjudication, PncDisposal, PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+} from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
+import type { PncException } from "@moj-bichard7/common/types/Exception"
+import type {
+  PncAdjudication,
+  PncDisposal,
+  PncOffence,
+  PncQueryResult
+} from "@moj-bichard7/common/types/PncQueryResult"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import { toISODate, toPNCDate } from "../../../lib/dates"
 import {
   lookupAlcoholLevelMethodByCjsCode,
   lookupCourtTypeByCjsCode,
@@ -52,7 +55,9 @@ import {
   lookupPleaStatusByCjsCode,
   lookupRemandStatusByCjsCode,
   lookupVerdictByCjsCode
-} from "../../dataLookup"
+} from "@moj-bichard7/common/aho/dataLookup/index"
+
+import { toISODate, toPNCDate } from "../../dates"
 import generateXml from "../generateXml"
 import { addExceptionsToAhoXml, addExceptionsToPncUpdateDatasetXml } from "./addExceptionsToAhoXml"
 import addFalseHasErrorAttributesToAhoXml from "./addFalseHasErrorAttributesToAhoXml"

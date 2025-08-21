@@ -1,11 +1,11 @@
-import { isError } from "@moj-bichard7/common/types/Result"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../../../types/PncOperation"
-import type { Operation } from "../../../../types/PncUpdateDataset"
+import { isError } from "@moj-bichard7/common/types/Result"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import generatePncUpdateDatasetFromOffenceList from "../../../../phase2/tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
-import ResultClass from "../../../../types/ResultClass"
 import remandGenerator from "./remandGenerator"
 
 const createPncUpdateDataset = () => {

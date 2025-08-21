@@ -1,4 +1,4 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import getOffenceCode from "../../../lib/offences/getOffenceCode"
 

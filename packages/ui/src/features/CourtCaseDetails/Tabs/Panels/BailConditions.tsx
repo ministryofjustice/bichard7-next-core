@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { Card } from "components/Card"
 import ConditionalRender from "../../../../components/ConditionalRender"
 import { InfoRow } from "./InfoRow"

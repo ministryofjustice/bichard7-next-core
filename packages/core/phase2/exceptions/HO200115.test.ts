@@ -1,7 +1,8 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "../../types/PncQueryResult"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
 
-import ResultClass from "../../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200115 from "./HO200115"

@@ -1,22 +1,21 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import pncUpdateDatasetSchema from "@moj-bichard7/common/schemas/pncUpdateDataset"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
-
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
 import PncGateway from "../../lib/pnc/PncGateway"
 import phase3 from "../../phase3/phase3"
-import pncUpdateDatasetSchema from "../../schemas/pncUpdateDataset"
 
 const pncApiConfig = createPncApiConfig()
 const s3Config = createS3Config()

@@ -2,12 +2,14 @@ import "jest-xml-matcher"
 
 import "../tests/helpers/setEnvironmentVariables"
 
+import type { PncException } from "@moj-bichard7/common/types/Exception"
+
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
+import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import type { ParseIncomingMessageResult } from "../tests/helpers/parseIncomingMessage"
 import type { Phase3E2eComparison } from "../tests/types/ComparisonFile"
-import type { PncException } from "../types/Exception"
 import type Phase3Result from "./types/Phase3Result"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
@@ -22,7 +24,6 @@ import normaliseXml from "../tests/helpers/comparison/normaliseXml"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
 import sortTriggers from "../tests/helpers/sortTriggers"
-import { isPncUpdateDataset } from "../types/PncUpdateDataset"
 import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "./lib/updatePnc"
 import phase3 from "./phase3"

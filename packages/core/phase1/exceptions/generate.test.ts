@@ -1,5 +1,6 @@
-import parseSpiResult from "../../lib/parse/parseSpiResult"
-import transformSpiToAho from "../../lib/parse/transformSpiToAho"
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import transformSpiToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
+
 import generateExceptions from "../exceptions/generate"
 import generateMessage from "../tests/helpers/generateMessage"
 

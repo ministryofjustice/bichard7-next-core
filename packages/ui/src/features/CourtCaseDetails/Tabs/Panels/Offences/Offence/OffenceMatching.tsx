@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"

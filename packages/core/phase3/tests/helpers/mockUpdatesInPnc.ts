@@ -1,7 +1,7 @@
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/common/aho/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import parseAnnotatedPncUpdateDatasetXml from "../../../lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
-import { parsePncUpdateDataSetXml } from "../../../lib/parse/parsePncUpdateDataSetXml"
 import getMessageType from "../../../phase1/lib/getMessageType"
 import addMockToPnc from "../../../phase1/tests/helpers/addMockToPnc"
 import clearMocksInPnc from "../../../phase1/tests/helpers/clearMocksInPnc"

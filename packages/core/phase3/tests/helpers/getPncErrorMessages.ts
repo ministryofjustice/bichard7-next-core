@@ -1,5 +1,5 @@
-import type AnnotatedPncUpdateDataset from "../../../types/AnnotatedPncUpdateDataset"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type AnnotatedPncUpdateDataset from "@moj-bichard7/common/types/AnnotatedPncUpdateDataset"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 const getPncErrorMessages = (message: AnnotatedPncUpdateDataset | PncUpdateDataset): string[] => {
   const exceptions =

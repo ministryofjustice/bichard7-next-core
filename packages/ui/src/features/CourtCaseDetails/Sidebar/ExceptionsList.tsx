@@ -80,7 +80,7 @@ const ExceptionsList = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Prop
       </ConditionalRender>
       <ButtonContainer className={"buttonContainer"}>
         <LockStatusTag
-          isRendered={courtCase.aho.Exceptions.length > 0}
+          isRendered={courtCase.aho.Exceptions.length > 0 && courtCase.errorStatus !== null}
           resolutionStatus={courtCase.errorStatus}
           lockName="Exceptions"
         />

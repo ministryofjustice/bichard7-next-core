@@ -1,4 +1,5 @@
-import type { SpiPlea } from "../../types/Plea"
+import type { SpiPlea } from "@moj-bichard7/common/types/Plea"
+
 import type { SpiVerdict } from "../../types/Verdict"
 
 import generateMessage from "./generateMessage"

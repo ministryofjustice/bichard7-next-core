@@ -4,6 +4,7 @@ import { loginAndVisit } from "../../../support/helpers"
 describe("View court case details header", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
+    cy.task("clearTriggers")
   })
 
   it("should have a leave and lock button that returns to the case list when the case is locked", () => {
@@ -191,6 +192,7 @@ describe("View court case details header", () => {
           {
             errorLockedByUsername: "GeneralHandler",
             triggerLockedByUsername: "GeneralHandler",
+            triggerStatus: "Unresolved",
             orgForPoliceFilter: "01"
           }
         ])
@@ -207,6 +209,7 @@ describe("View court case details header", () => {
           {
             errorLockedByUsername: "GeneralHandler",
             triggerLockedByUsername: "TriggerHandler",
+            triggerStatus: "Unresolved",
             orgForPoliceFilter: "01"
           }
         ])
@@ -225,6 +228,7 @@ describe("View court case details header", () => {
           {
             errorLockedByUsername: "TriggerHandler",
             triggerLockedByUsername: "TriggerHandler",
+            triggerStatus: "Unresolved",
             orgForPoliceFilter: "01"
           }
         ])
@@ -244,6 +248,7 @@ describe("View court case details header", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             triggerLockedByUsername: "TriggerHandler",
+            triggerStatus: "Unresolved",
             orgForPoliceFilter: "01"
           }
         ])
@@ -259,6 +264,7 @@ describe("View court case details header", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             triggerLockedByUsername: "GeneralHandler",
+            triggerStatus: "Unresolved",
             orgForPoliceFilter: "01"
           }
         ])

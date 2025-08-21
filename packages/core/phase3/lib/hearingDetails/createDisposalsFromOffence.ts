@@ -1,5 +1,6 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "../../../types/PncQueryResult"
+import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
+
 import type { PncUpdateDisposal } from "../../types/HearingDetails"
 
 import { createPncDisposalsFromResult } from "../../../lib/results/createPncDisposalsFromResult"

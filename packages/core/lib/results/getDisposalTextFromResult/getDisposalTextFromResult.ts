@@ -1,6 +1,7 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupDurationUnitByCjsCode } from "../../dataLookup"
+import { lookupDurationUnitByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
+
 import disqualifiedFromKeepingDisposalText from "./disqualifiedFromKeepingDisposalText"
 import exclusionOrderDisposalText from "./exclusionOrderDisposalText"
 import exclusionRequirementsDisposalText from "./exclusionRequirementsDisposalText"

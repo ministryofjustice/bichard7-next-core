@@ -1,8 +1,8 @@
+import type Exception from "@moj-bichard7/common/types/Exception"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 
-import type Exception from "../../types/Exception"
-
-import errorPaths from "../exceptions/errorPaths"
 import generateExceptionsNoteText from "./generateExceptionsNoteText"
 
 const mockExceptions: Exception[] = [

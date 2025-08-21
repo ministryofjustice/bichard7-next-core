@@ -1,11 +1,3 @@
-import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
-import axios from "axios"
-import https from "https"
-
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
-import type PncApiConfig from "../../types/PncApiConfig"
-import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../types/PncApiResult"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type {
   PncAdjudication,
   PncCourtCase,
@@ -13,10 +5,19 @@ import type {
   PncOffence,
   PncPenaltyCase,
   PncQueryResult
-} from "../../types/PncQueryResult"
+} from "@moj-bichard7/common/types/PncQueryResult"
+
+import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import axios from "axios"
+import https from "https"
+
+import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
+import type PncApiConfig from "../../types/PncApiConfig"
+import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../types/PncApiResult"
+import type PncGatewayInterface from "../../types/PncGatewayInterface"
 
 import { pncApiResultSchema } from "../../schemas/pncApiResult"
-import { PncOperation } from "../../types/PncOperation"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 

@@ -1,10 +1,11 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 
 import type Phase1Result from "../../phase1/types/Phase1Result"
 import type Phase2Result from "../../phase2/types/Phase2Result"
 import type Phase3Result from "../../phase3/types/Phase3Result"
 import type PncUpdateRequestError from "../../phase3/types/PncUpdateRequestError"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type { ProcessMessageOptions } from "../types/ProcessMessageOptions"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"

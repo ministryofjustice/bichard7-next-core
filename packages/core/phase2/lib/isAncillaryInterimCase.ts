@@ -1,4 +1,4 @@
-import type { HearingOutcome, Result } from "../../types/AnnotatedHearingOutcome"
+import type { HearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const noCjsResultCode = 1000
 const ancillaryInterimResultRegex = /Hearing on .*? confirmed\./s

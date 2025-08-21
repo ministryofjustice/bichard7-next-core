@@ -1,7 +1,7 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
+import type { ExceptionDetails } from "types/TabDetails"
 import getOffenceMatchingExceptions from "utils/offenceMatcher/getOffenceMatchingExceptions"
-import type { ExceptionDetails } from "./getTabDetails"
 
 const getOffencesMatchedExceptionsDetails = (exceptions: Exception[], amendments: Amendments): ExceptionDetails => {
   const offencesMatchedExceptionsCount = getOffenceMatchingExceptions(exceptions).length

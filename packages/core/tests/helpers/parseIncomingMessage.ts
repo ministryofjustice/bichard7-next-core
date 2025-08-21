@@ -1,10 +1,11 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../types/PncUpdateDataset"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import { parseAhoXml } from "../../lib/parse/parseAhoXml"
-import { parsePncUpdateDataSetXml } from "../../lib/parse/parsePncUpdateDataSetXml"
-import parseSpiResult from "../../lib/parse/parseSpiResult"
-import transformSpiToAho from "../../lib/parse/transformSpiToAho"
+import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
+import transformSpiToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
+import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
+
 import getMessageType from "../../phase1/lib/getMessageType"
 
 export type ParseIncomingMessageResult = HearingOutcomeResult | PncUpdateDatasetResult | SPIResultsResult

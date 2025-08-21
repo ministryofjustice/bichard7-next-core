@@ -1,6 +1,6 @@
-import isEqual from "lodash.isequal"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Operation } from "../../../types/PncUpdateDataset"
+import isEqual from "lodash.isequal"
 
 const deduplicateOperations = (operations: Operation[]): Operation[] =>
   operations.reduce((deduplicatedOperations: Operation[], operation) => {

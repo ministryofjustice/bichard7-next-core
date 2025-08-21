@@ -1,7 +1,8 @@
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupOrganisationUnitByCode } from "../../../../lib/dataLookup"
-import getCourtDetails from "../../../../lib/dataLookup/getCourtDetails"
+import getCourtDetails from "@moj-bichard7/common/aho/dataLookup/getCourtDetails"
+import { lookupOrganisationUnitByCode } from "@moj-bichard7/common/aho/dataLookup/index"
+
 import populateOrganisationUnitFields from "../../../lib/organisationUnit/populateOrganisationUnitFields"
 import populateSourceOrganisation from "./populateSourceOrganisation"
 

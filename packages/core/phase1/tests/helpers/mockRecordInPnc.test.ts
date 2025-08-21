@@ -1,4 +1,4 @@
-import type { PncQueryResult } from "../../../types/PncQueryResult"
+import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
 
 import { mockEnquiryFromPncResult } from "../../tests/helpers/mockRecordInPnc"
 

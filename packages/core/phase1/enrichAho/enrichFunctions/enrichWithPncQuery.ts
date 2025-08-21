@@ -1,12 +1,13 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncCourtCase, PncOffence, PncPenaltyCase } from "@moj-bichard7/common/types/PncQueryResult"
+
+import { lookupOffenceByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { AnnotatedHearingOutcome } from "../../../types/AnnotatedHearingOutcome"
 import type AuditLogger from "../../../types/AuditLogger"
 import type PncGatewayInterface from "../../../types/PncGatewayInterface"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "../../../types/PncQueryResult"
 
-import { lookupOffenceByCjsCode } from "../../../lib/dataLookup"
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 import isDummyAsn from "../../../lib/isDummyAsn"
 import generatePncEnquiryExceptionFromMessage, {

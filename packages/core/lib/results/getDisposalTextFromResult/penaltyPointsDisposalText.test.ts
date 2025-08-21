@@ -1,4 +1,4 @@
-import type { Result } from "../../../types/AnnotatedHearingOutcome"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import penaltyPointsDisposalText from "./penaltyPointsDisposalText"
 

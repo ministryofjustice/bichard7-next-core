@@ -1,4 +1,5 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type AuditLogger from "../../types/AuditLogger"
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
 import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"

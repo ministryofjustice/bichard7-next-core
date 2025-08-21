@@ -1,7 +1,8 @@
+import type { PncException } from "@moj-bichard7/common/types/Exception"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
 import type { PncErrorRangesForException } from "../../lib/exceptions/generatePncExceptionFromMessage"
-import type { PncException } from "../../types/Exception"
 
 import generatePncExceptionFromMessage, {
   getPncErrorCodeFromMessage

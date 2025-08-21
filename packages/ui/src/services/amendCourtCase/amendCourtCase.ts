@@ -1,6 +1,6 @@
 import serialiseToAhoXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import serialiseToPncUpdateDatasetXml from "@moj-bichard7/core/lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import { isPncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import getCourtCase from "services/getCourtCase"
 import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"

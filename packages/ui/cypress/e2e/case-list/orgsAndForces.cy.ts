@@ -9,7 +9,7 @@ describe("How orgs and forces are presented", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     loginAndVisit()
 
-    cy.get("tr").not(":first").get("td:nth-child(5)").contains(`Case00000`)
+    cy.get("tr").not(":first").get("td:nth-child(4)").contains(`Case00000`)
   })
 
   it("Should only display cases that are in the users visible forces or visible courts", () => {
@@ -67,9 +67,9 @@ describe("How orgs and forces are presented", () => {
 
     loginAndVisit()
 
-    cy.get("tr").not(":first").get("td:nth-child(5)").contains("Case00000")
-    cy.get("tr").not(":first").get("td:nth-child(5)").contains("Case00001")
-    cy.get("tr").not(":first").get("td:nth-child(5)").contains("Case00002")
-    cy.get("tr").not(":first").get("td:nth-child(5)").contains("Case00003")
+    cy.get("tr").not(":first").get("td:nth-child(4)").contains("Case00000")
+    cy.get("tr").not(":first").get("td:nth-child(4)").contains("Case00001")
+    cy.get("tr").not(":first").get("td:nth-child(4)").contains("Case00002")
+    cy.get("tr").not(":first").get("td:nth-child(4)").contains("Case00003")
   })
 })

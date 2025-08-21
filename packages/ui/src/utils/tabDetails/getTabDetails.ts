@@ -1,5 +1,6 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
+import type { TabDetails } from "types/TabDetails"
 import getNumberOfIneditableOffenceExceptions from "../exceptions/getNumberOfOffenceExceptions"
 import hasNextHearingDateExceptions from "../exceptions/hasNextHearingDateExceptions"
 import hasNextHearingLocationException from "../exceptions/hasNextHearingLocationException"
@@ -8,17 +9,6 @@ import getAsnExceptionDetails from "./getAsnExceptionDetails"
 import getNextHearingDateExceptionsDetails from "./getNextHearingDateExceptionsDetails"
 import getNextHearingLocationExceptionsDetails from "./getNextHearingLocationExceptionsDetails"
 import getOffencesMatchedExceptionsDetails from "./getOffencesMatchedExceptionsDetails"
-
-export type TabDetails = {
-  name: "Defendant" | "Hearing" | "Case" | "Offences" | "Notes"
-  exceptionsCount: number
-  exceptionsResolved: boolean
-}
-
-export type ExceptionDetails = {
-  ExceptionsCount: number
-  ExceptionsResolved: boolean
-}
 
 const getTabDetails = (
   exceptions: Exception[],

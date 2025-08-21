@@ -1,7 +1,8 @@
+import type { OffenceReason } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
-import type { OffenceReason } from "../../types/AnnotatedHearingOutcome"
-import type Exception from "../../types/Exception"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import getOffenceCode from "../../lib/offences/getOffenceCode"
