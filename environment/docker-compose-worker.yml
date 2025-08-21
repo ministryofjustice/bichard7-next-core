@@ -23,6 +23,7 @@ services:
       AUDIT_LOG_API_URL: https://api:9443
       AUDIT_LOG_API_KEY: ${AUDIT_LOG_API_KEY}
       AUDIT_LOG_API_BASE_PATH: v1/audit-logs
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}
