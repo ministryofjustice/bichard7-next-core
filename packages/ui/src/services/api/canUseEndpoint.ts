@@ -1,4 +1,4 @@
-import { ALLOWED_FORCES_UI, USE_API, USE_API_CASE_ENDPOINT, USE_API_CASES_INDEX_ENDPOINT } from "config"
+import { FORCES_WITH_API_ENABLED, USE_API, USE_API_CASE_ENDPOINT, USE_API_CASES_INDEX_ENDPOINT } from "config"
 
 export enum ApiEndpoints {
   CaseDetails = "CaseDetails",
@@ -6,7 +6,7 @@ export enum ApiEndpoints {
 }
 
 export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boolean => {
-  if (!USE_API || !hasAllowedForce(forces)) {
+  if (!USE_API || !forces.some((force) => FORCES_WITH_API_ENABLED.has(force))) {
     return false
   }
 
@@ -18,8 +18,4 @@ export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boo
     default:
       return false
   }
-}
-
-function hasAllowedForce(forces: string[]): boolean {
-  return forces.some((force) => ALLOWED_FORCES_UI.includes(force))
 }
