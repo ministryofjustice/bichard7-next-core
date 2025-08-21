@@ -92,7 +92,7 @@ describe("canUseEndpoint", () => {
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06"])).toBe(false)
   })
 
-  it("returns false when FORCES_WITH_API_ENABLED does not include multiple forces", () => {
+  it("returns false when none of the visible forces are enabled", () => {
     mockUseApiModule(true, true, true, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
