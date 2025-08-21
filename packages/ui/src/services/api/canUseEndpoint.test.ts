@@ -109,4 +109,13 @@ describe("canUseEndpoint", () => {
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["06", "07", "01"])).toBe(true)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06", "07", "01"])).toBe(true)
   })
+
+  it("returns false when empty array of FORCES_WITH_API_ENABLED", () => {
+    mockUseApiModule(true, true, true, new Set<string>())
+
+    const { canUseApiEndpoint } = require("./canUseEndpoint")
+
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["06", "07", "01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06", "07", "01"])).toBe(false)
+  })
 })
