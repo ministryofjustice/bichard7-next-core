@@ -36,8 +36,6 @@ services:
       SMTP_PORT: 1025
       SMTP_TLS: "false"
       SMTP_DEBUG: "true"
-      PHASE_2_QUEUE_NAME: ${PHASE_2_QUEUE_NAME}
-      PHASE_3_QUEUE_NAME: ${PHASE_3_QUEUE_NAME}
     depends_on:
       audit-log-api:
         condition: service_healthy
