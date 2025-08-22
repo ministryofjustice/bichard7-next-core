@@ -48,6 +48,8 @@ aws ssm get-parameter \
 
 echo "Creating VPN Config"
 sed -i.bak '/client1.domain.tld.crt/,$d' $OVPN_FILENAME
+sed -i '' '/cert \.\/client\.crt/d' $OVPN_FILENAME
+sed -i '' '/key \.\/client\.key/d' $OVPN_FILENAME
 
 if [[ ! -z "${VPN_ENDPOINT}" ]]; then
   sed -r -i.bak "s/([\s\S]*remote )(.*)( 443[\s\S]*)/\1${VPN_ENDPOINT}\3/" $OVPN_FILENAME
