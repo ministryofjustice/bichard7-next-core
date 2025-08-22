@@ -1,4 +1,4 @@
-import type CaseDetailsTab from "types/CaseDetailsTab"
+import type { CaseDetailsTab } from "types/CaseDetailsTab"
 
 export interface ExceptionPathDetailsResult {
   field: string
