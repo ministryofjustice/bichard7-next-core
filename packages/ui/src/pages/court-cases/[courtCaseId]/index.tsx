@@ -48,14 +48,11 @@ import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackFo
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
-const useApi = canUseApiEndpoint(ApiEndpoints.CaseDetails)
-
 const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
     ? courtCase.triggers.filter((t) => t.status === "Unresolved").length === triggerToResolve.length
     : true
   const exceptionsResolved = user.hasAccessTo[Permission.Exceptions] ? courtCase.errorStatus !== "Unresolved" : true
-
   return triggersResolved && exceptionsResolved
 }
 
@@ -78,6 +75,8 @@ export const getServerSideProps = withMultipleServerSideProps(
     const dataSource = await getDataSource()
 
     const loadLockedBy = true
+
+    const useApi = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
 
     let courtCase
     if (!useApi) {

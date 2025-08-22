@@ -68,8 +68,6 @@ type Props = {
   caseResolvedDateRange: SerializedDateRange | null
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
 
-const useApi = canUseApiEndpoint(ApiEndpoints.CaseList)
-
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
@@ -118,6 +116,8 @@ export const getServerSideProps = withMultipleServerSideProps(
     let courtCases: CourtCase[] = []
     let totalCases: number
     let apiCases: CaseIndexDto[] = []
+
+    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces)
 
     if (useApi) {
       const jwt = req.cookies[".AUTH"] as string
