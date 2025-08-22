@@ -197,7 +197,7 @@ services:
       - 5002:4000
 
   localstack:
-    image: localstack/localstack:4.0.3
+    image: localstack/localstack:4.7.0
     ports:
       - 4566:4566
     volumes:

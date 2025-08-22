@@ -2,17 +2,18 @@ import "jest-xml-matcher"
 
 import "../tests/helpers/setEnvironmentVariables"
 
+import type Exception from "@moj-bichard7/common/types/Exception"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { extractExceptionsFromXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import "jest-xml-matcher"
 
 import type { OldPhase1Comparison } from "../tests/types/ComparisonFile"
-import type Exception from "../types/Exception"
 import type Phase1Result from "./types/Phase1Result"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
-import { extractExceptionsFromXml } from "../lib/parse/parseAhoXml"
 import serialiseToXml from "../lib/serialise/ahoXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
 import { clearDatabase, disconnectDb, sql } from "../tests/helpers/comparison/ComparisonTestDbHelpers"

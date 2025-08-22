@@ -64,6 +64,10 @@ const DefaultException = ({ path, code, onNavigate }: Props) => {
             target="_blank"
           >
             {"More information"}
+            <span className="govuk-visually-hidden">
+              {" For "}
+              {code}
+            </span>
           </a>
         </div>
       </ExceptionRowHelp>

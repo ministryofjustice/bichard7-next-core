@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const bichardThirdLevelCode = "YZ"
 

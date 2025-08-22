@@ -1,6 +1,7 @@
+import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+
 import type { PncApiError } from "../lib/pnc/PncGateway"
 import type PncUpdateRequest from "../phase3/types/PncUpdateRequest"
-import type { PncQueryResult } from "./PncQueryResult"
 
 interface PncGatewayInterface {
   query: (asn: string, correlationId: string) => Promise<PncApiError | PncQueryResult | undefined>

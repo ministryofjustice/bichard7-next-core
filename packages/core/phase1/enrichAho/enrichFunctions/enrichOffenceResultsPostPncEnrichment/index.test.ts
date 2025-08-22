@@ -3,7 +3,7 @@ jest.mock("./populateResultClass")
 jest.mock("./populatePncDisposal")
 jest.mock("../../../../lib/isCaseRecordable")
 
-import type { AnnotatedHearingOutcome, Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import isCaseRecordable from "../../../../lib/isCaseRecordable"
 import enrichOffenceResultsPostPncEnrichment from "./index"

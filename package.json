@@ -20,7 +20,7 @@
     "bichard-legacy-debug:phase-3": "ENABLE_PHASE_2=false ENABLE_PHASE_3=true npm run bichard-legacy-debug",
     "build": "npm run build --ws",
     "build:core": "npm run build -w packages/common && npm run build -w packages/core && npm run build -w packages/conductor && npm run build -w packages/message-forwarder",
-    "build:api": "npm run build -w packages/common && npm run build -w packages/core && npm run build:api -w packages/common && npm run build -w packages/api",
+    "build:api": "npm run build -w packages/common && npm run build -w packages/api",
     "build:ui": "npm run build -w packages/common && npm run build -w packages/core && npm run build -w packages/ui",
     "build:e2e-test": "npm run build -w packages/common && npm run build -w packages/e2e-test",
     "build-message-forwarder:phase-1": "docker compose --project-name bichard -f environment/docker-compose.yml build phase-1-message-forwarder",

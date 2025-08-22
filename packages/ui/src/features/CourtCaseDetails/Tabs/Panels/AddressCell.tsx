@@ -1,4 +1,4 @@
-import { Address } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Address } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import ConditionalRender from "components/ConditionalRender"
 
 interface AddressProps {

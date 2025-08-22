@@ -1,4 +1,5 @@
-import { PncOperation } from "../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import MessageType from "../types/MessageType"
 import generateMessage from "./generateMessage"
 

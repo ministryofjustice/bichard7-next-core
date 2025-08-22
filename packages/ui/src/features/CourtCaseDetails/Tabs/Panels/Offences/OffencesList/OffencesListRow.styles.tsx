@@ -4,4 +4,10 @@ const IconContainer = styled.div`
   line-height: 11px;
 `
 
-export { IconContainer }
+const TableRow = styled.tr`
+  td {
+    font-size: var(--case-details-default-font-size);
+  }
+`
+
+export { IconContainer, TableRow }

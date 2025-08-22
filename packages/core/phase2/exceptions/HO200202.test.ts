@@ -1,4 +1,4 @@
-import type { Offence } from "../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200202 from "./HO200202"

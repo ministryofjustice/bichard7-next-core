@@ -1,7 +1,8 @@
-import type { Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { PncOperation } from "../../../../types/PncOperation"
-import ResultClass from "../../../../types/ResultClass"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
 import { handleAdjournmentWithJudgement } from "./handleAdjournmentWithJudgement"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"

@@ -62,8 +62,8 @@ type TriggerElement = {
 }
 
 const getTriggersFromPage = async (world: Bichard): Promise<TriggerElement[]> => {
-  await world.browser.page.waitForSelector("section#triggers .moj-trigger-row")
-  const triggerRows = await world.browser.page.$$("section#triggers .moj-trigger-row")
+  await world.browser.page.waitForSelector("section#triggers-tab-panel .moj-trigger-row")
+  const triggerRows = await world.browser.page.$$("section#triggers-tab-panel .moj-trigger-row")
 
   const triggers = await Promise.all(
     triggerRows.map(async (row) => {
@@ -326,7 +326,7 @@ export const checkTriggerHasCompleted = async function (this: Bichard, triggerCo
 export const manuallyResolveRecord = async function (this: Bichard) {
   await this.browser.page.click("#exceptions-tab")
   await Promise.all([
-    await this.browser.page.click("section#exceptions a[href*='resolve']"),
+    await this.browser.page.click("section#exceptions-tab-panel a[href*='resolve']"),
     await this.browser.page.waitForNavigation()
   ])
 
@@ -342,7 +342,7 @@ export const exceptionResolutionStatus = async function (this: Bichard, resoluti
     `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
   const exceptionsPanelResolutionStatus = await this.browser.page.$$(
-    `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    `xpath/.//section[@id = "exceptions-tab-panel"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
 
   expect(headerResolutionStatus.length).toEqual(1)
@@ -360,7 +360,7 @@ export const exceptionResolutionStatusOnCaseDetails = async function (this: Bich
 
   await page.click("#exceptions-tab")
   const exceptionsPanelResolutionStatus = await page.$$(
-    `xpath/.//section[@id = "exceptions"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    `xpath/.//section[@id = "exceptions-tab-panel"]//div[contains(@class, "exceptions-${resolutionStatus.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
   )
   expect(exceptionsPanelResolutionStatus.length).toEqual(0)
 }
@@ -653,7 +653,7 @@ export const reloadUntilStringNotPresent = async function (this: Bichard, conten
 }
 
 export const checkOffenceDataError = async function (this: Bichard, value: string, _key: string) {
-  const found = await reloadUntilContentInSelector(this.browser.page, value, "#exceptions")
+  const found = await reloadUntilContentInSelector(this.browser.page, value, "#exceptions-tab-panel")
   expect(found).toBeTruthy()
 }
 
@@ -804,10 +804,10 @@ export const signOut = async function (this: Bichard) {
 }
 
 export const sameException = async function (this: Bichard, exception: string) {
-  await this.browser.page.waitForSelector("#exceptions")
+  await this.browser.page.waitForSelector("#exceptions-tab-panel")
 
   const [element] = await this.browser.page.$$(
-    `xpath/.//section[@id = "exceptions"]//*[contains(text(), "${exception}")]`
+    `xpath/.//section[@id = "exceptions-tab-panel"]//*[contains(text(), "${exception}")]`
   )
 
   expect(element).not.toBeUndefined()

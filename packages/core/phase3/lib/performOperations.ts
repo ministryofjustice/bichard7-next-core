@@ -1,13 +1,13 @@
+import type { AnyOperation, Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { PromiseResult, Result } from "@moj-bichard7/common/types/Result"
 
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncGatewayInterface from "../../types/PncGatewayInterface"
-import type { AnyOperation, Operation, PncUpdateDataset } from "../../types/PncUpdateDataset"
 import type PncUpdateRequest from "../types/PncUpdateRequest"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
 
-import { PncOperation } from "../../types/PncOperation"
 import PncUpdateRequestError from "../types/PncUpdateRequestError"
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
 import { normalDisposalGenerator } from "./pncUpdateRequestGenerators/normalDisposalGenerator"

@@ -1,9 +1,11 @@
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import type PncUpdateRequestError from "../types/PncUpdateRequestError"
 
 import { PncApiError } from "../../lib/pnc/PncGateway"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
-import { PncOperation } from "../../types/PncOperation"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
 import performOperations from "./performOperations"
 

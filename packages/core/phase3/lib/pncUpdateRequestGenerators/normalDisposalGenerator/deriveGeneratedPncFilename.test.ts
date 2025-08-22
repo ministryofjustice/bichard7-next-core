@@ -1,4 +1,4 @@
-import type { HearingDefendant } from "../../../../types/AnnotatedHearingOutcome"
+import type { HearingDefendant } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import deriveGeneratedPncFilename from "./deriveGeneratedPncFilename"
 

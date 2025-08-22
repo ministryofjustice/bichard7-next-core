@@ -1,6 +1,5 @@
+import type { AhoXml, Br7OrganisationUnit } from "@moj-bichard7/common/types/AhoXml"
 import type { XML } from "@moj-bichard7/common/types/Xml"
-
-import type { AhoXml, Br7OrganisationUnit } from "./AhoXml"
 
 export type OperationStatusXml = "C" | "F" | "N"
 

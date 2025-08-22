@@ -1,6 +1,7 @@
-import type { Offence, Result } from "../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import ResultClass from "../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "./checkRccSegmentApplicability"
 
 describe("checkRccSegmentApplicability", () => {

@@ -2,7 +2,7 @@ import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import styled from "styled-components"
 import { breakpoints } from "types/breakpoints"
-import { gdsLightGrey, lightGrey } from "utils/colours"
+import { gdsLightGrey, gdsYellow, lightGrey } from "utils/colours"
 
 const CaseDetailHeaderContainer = styled.div`
   display: flex;
@@ -13,31 +13,37 @@ const CaseDetailHeaderContainer = styled.div`
   z-index: 9;
   padding: 0.63rem 0.63rem 0.63rem 0.63rem;
 `
+
 const CaseDetailHeaderRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1.88rem;
-  width: 100%;
+  flex-wrap: wrap;
 
-  @media (max-width: ${breakpoints.compact}) {
-    h2.govuk-heading-m {
-      font-size: 1.1875rem;
-      line-height: 1.31579;
-    }
+  h2.govuk-heading-m {
+    font-size: 1.5rem;
+    line-height: 1.31579;
   }
 
-  @media (max-width: 1300px) {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
+  @media (max-width: ${breakpoints.regular}) {
+    display: initial;
+  }
 
-    #locked-tag-container {
-      margin-left: 0;
-    }
+  @media (min-width: ${breakpoints.spacious}) {
+    flex-wrap: nowrap;
+  }
 
-    #return-to-case-list {
-      margin-bottom: 0.63rem;
+  .govuk-accordion__summary-box {
+    display: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+
+    @media (min-resolution: 144dpi) and (max-width: ${breakpoints.compact}) {
+      display: block;
+
+      &:focus-visible,
+      &:focus {
+        background-color: ${gdsYellow};
+        border-color: ${gdsYellow};
+      }
     }
   }
 `
@@ -47,19 +53,10 @@ const CaseDetailsHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   flex: 1 1 auto;
-  min-width: 0;
 
-  @media (max-width: 1300px) {
-    width: 100%;
+  h2 {
+    margin-bottom: 10px;
   }
-`
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 0;
-  padding-top: 0.31rem;
-  gap: 0.75rem;
 
   @media (max-width: ${breakpoints.compact}) {
     .govuk-button {
@@ -70,11 +67,37 @@ const ButtonContainer = styled.div`
 
 const LockedTagContainer = styled.div`
   display: flex;
-  gap: 2.5rem;
+  flex: 1 1 auto;
   margin-left: auto;
+  gap: 2.5rem;
+  justify-content: start;
 
-  @media (max-width: ${breakpoints.regular}) {
-    gap: 1rem;
+  @media (min-width: ${breakpoints.regular}) {
+    justify-content: end;
+  }
+  @media (min-width: ${breakpoints.spacious}) {
+    justify-content: unset;
+  }
+`
+
+const ButtonContainer = styled.div`
+  display: flex;
+  flex: 1 1 100%;
+  gap: 0.75rem;
+
+  a {
+    margin-bottom: 15px;
+  }
+
+  @media (max-width: ${breakpoints.compact}) {
+    .govuk-button {
+      font-size: 1rem;
+      width: auto;
+    }
+  }
+
+  @media (min-width: ${breakpoints.spacious}) {
+    flex: unset;
   }
 `
 

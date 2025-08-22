@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { Amendments } from "types/Amendments"
 import { formatFormInputDateString } from "utils/date/formattedDate"
 

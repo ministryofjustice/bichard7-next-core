@@ -1,6 +1,8 @@
-import EventCode from "@moj-bichard7/common/types/EventCode"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import type { AnnotatedHearingOutcome } from "../types/AnnotatedHearingOutcome"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isPncUpdateDataset, type PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type AuditLogger from "../types/AuditLogger"
 import type Phase2Result from "./types/Phase2Result"
 
@@ -9,7 +11,6 @@ import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAt
 import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
-import { isPncUpdateDataset, type PncUpdateDataset } from "../types/PncUpdateDataset"
 import generateExceptions from "./exceptions/generateExceptions"
 import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import { generateOperations } from "./lib/generateOperations"

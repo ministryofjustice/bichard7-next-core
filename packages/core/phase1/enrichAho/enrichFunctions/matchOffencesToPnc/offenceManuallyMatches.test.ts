@@ -1,4 +1,5 @@
-import type { Offence } from "../../../../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type { PncOffenceWithCaseRef } from "./matchOffencesToPnc"
 
 import { offenceManuallyMatches } from "./offenceManuallyMatches"

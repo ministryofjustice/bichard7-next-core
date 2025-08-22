@@ -10,7 +10,7 @@ describe("HO100307", () => {
 
   it("should create an exception if the result code is invalid", async () => {
     const inputMessage = generateSpiMessage({
-      offences: [{ results: [{ code: 1001 }] }]
+      offences: [{ results: [{ code: 9991 }] }]
     })
 
     const {

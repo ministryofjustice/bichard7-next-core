@@ -1,7 +1,7 @@
 import type { Amendments } from "types/Amendments"
 import type { Exception } from "types/exceptions"
+import type { ExceptionDetails } from "types/TabDetails"
 import getNextHearingDateExceptions from "utils/exceptions/getNextHearingDateExceptions"
-import type { ExceptionDetails } from "./getTabDetails"
 
 const getNextHearingDateExceptionsDetails = (
   exceptions: Exception[],

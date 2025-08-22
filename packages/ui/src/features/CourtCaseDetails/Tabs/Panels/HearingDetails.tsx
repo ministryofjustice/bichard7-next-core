@@ -1,5 +1,5 @@
 import courtTypes from "@moj-bichard7-developers/bichard7-next-data/dist/data/court-type.json"
-import { Hearing } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Hearing } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { Card } from "components/Card"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { InfoRow } from "./InfoRow"

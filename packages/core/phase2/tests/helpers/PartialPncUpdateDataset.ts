@@ -1,6 +1,10 @@
+import type pncUpdateDatasetSchema from "@moj-bichard7/common/schemas/pncUpdateDataset"
 import type { z } from "zod"
 
-import pncUpdateDatasetSchema from "../../../schemas/pncUpdateDataset"
+export type PartialPncUpdateDataset = DeepPartial<PncUpdateDataset>
 
-const _partialPncUpdateDataset = pncUpdateDatasetSchema.deepPartial()
-export type PartialPncUpdateDataset = z.infer<typeof _partialPncUpdateDataset>
+type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K]
+}
+
+type PncUpdateDataset = z.output<typeof pncUpdateDatasetSchema>

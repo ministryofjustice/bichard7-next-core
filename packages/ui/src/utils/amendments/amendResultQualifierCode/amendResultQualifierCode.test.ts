@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import cloneDeep from "lodash.clonedeep"
 import type { Amendments } from "types/Amendments"
 import createDummyAho from "../../../../test/helpers/createDummyAho"

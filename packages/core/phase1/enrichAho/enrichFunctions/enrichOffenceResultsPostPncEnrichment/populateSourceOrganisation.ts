@@ -1,6 +1,7 @@
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupOrganisationUnitByThirdLevelPsaCode } from "../../../../lib/dataLookup"
+import { lookupOrganisationUnitByThirdLevelPsaCode } from "@moj-bichard7/common/aho/dataLookup/index"
+
 import populateOrganisationUnitFields from "../../../lib/organisationUnit/populateOrganisationUnitFields"
 
 const populateSourceOrganisation = (result: Result, hearingOutcome: AnnotatedHearingOutcome) => {

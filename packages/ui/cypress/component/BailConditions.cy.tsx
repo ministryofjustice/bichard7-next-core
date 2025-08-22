@@ -1,4 +1,4 @@
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { BailConditions } from "../../src/features/CourtCaseDetails/Tabs/Panels/BailConditions"
 
 describe("BailConditions", () => {

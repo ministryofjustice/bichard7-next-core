@@ -1,4 +1,4 @@
-import type { AhoXml } from "../../../types/AhoXml"
+import type { AhoXml } from "@moj-bichard7/common/types/AhoXml"
 
 // Sometimes, when generating the "updated XML" for the database, we include hasError elements
 const addFalseHasErrorAttributesToAhoXml = (aho: AhoXml): Error | void => {

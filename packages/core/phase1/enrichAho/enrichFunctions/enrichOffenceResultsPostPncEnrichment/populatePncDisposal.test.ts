@@ -1,8 +1,9 @@
-jest.mock("../../../../lib/dataLookup")
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+jest.mock("@moj-bichard7/common/aho/dataLookup/index")
+import type { AnnotatedHearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
-import ResultClass from "../../../../types/ResultClass"
+import { lookupPncDisposalByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import populatePncDisposal from "./populatePncDisposal"
 
 describe("populatePncDisposal", () => {

@@ -13,10 +13,10 @@ describe("Triggers and exceptions tabs", () => {
     loginAndVisit("NoGroups", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("not.exist")
-    cy.get(".case-details-sidebar #triggers").should("not.exist")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("not.exist")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("not.exist")
-    cy.get(".case-details-sidebar #exceptions").should("not.exist")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("not.exist")
   })
 
   it("should only show triggers to Trigger Handlers", () => {
@@ -34,22 +34,22 @@ describe("Triggers and exceptions tabs", () => {
     loginAndVisit("TriggerHandler", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("exist")
-    cy.get(".case-details-sidebar #triggers").should("exist")
-    cy.get(".case-details-sidebar #triggers").should("be.visible")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("be.visible")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("not.exist")
-    cy.get(".case-details-sidebar #exceptions").should("not.exist")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("not.exist")
   })
 
   it("should only show exceptions to Exception Handlers", () => {
     loginAndVisit("ExceptionHandler", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("not.exist")
-    cy.get(".case-details-sidebar #triggers").should("not.exist")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("not.exist")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("be.visible")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("be.visible")
   })
 
   it("should show both trigger and exceptions to General Handlers with triggers tab selected", () => {
@@ -57,12 +57,12 @@ describe("Triggers and exceptions tabs", () => {
     loginAndVisit("GeneralHandler", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("exist")
-    cy.get(".case-details-sidebar #triggers").should("exist")
-    cy.get(".case-details-sidebar #triggers").should("be.visible")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("be.visible")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("not.be.visible")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("not.be.visible")
   })
 
   it("should select exceptions tab by default when there aren't any triggers", () => {
@@ -79,12 +79,12 @@ describe("Triggers and exceptions tabs", () => {
     loginAndVisit("GeneralHandler", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("exist")
-    cy.get(".case-details-sidebar #triggers").should("exist")
-    cy.get(".case-details-sidebar #triggers").should("not.be.visible")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("not.be.visible")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("exist")
-    cy.get(".case-details-sidebar #exceptions").should("be.visible")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("be.visible")
   })
 
   it("will refresh CSRF token when clicking Trigger tab", () => {

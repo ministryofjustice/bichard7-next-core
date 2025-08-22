@@ -1,16 +1,16 @@
+import type { AnnotatedHearingOutcome, Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
+import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import fs from "fs"
 import MockDate from "mockdate"
 
-import type { AnnotatedHearingOutcome, Offence, Result } from "../types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "../types/PncQueryResult"
-import type { PncUpdateDataset } from "../types/PncUpdateDataset"
-
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
-import parseAhoXml from "../lib/parse/parseAhoXml/parseAhoXml"
-import { parsePncUpdateDataSetXml } from "../lib/parse/parsePncUpdateDataSetXml"
-import ResultClass from "../types/ResultClass"
 import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"

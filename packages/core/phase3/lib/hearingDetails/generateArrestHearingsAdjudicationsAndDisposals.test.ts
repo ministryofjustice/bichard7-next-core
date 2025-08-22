@@ -1,7 +1,8 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import ResultClass from "../../../types/ResultClass"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import { generateArrestHearingsAdjudicationsAndDisposals } from "./generateArrestHearingsAdjudicationsAndDisposals"
 
 describe("generateArrestHearingsAdjudicationsAndDisposals", () => {

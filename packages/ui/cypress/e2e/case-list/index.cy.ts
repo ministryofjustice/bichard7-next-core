@@ -127,7 +127,7 @@ describe("Case list", () => {
       cy.get(`label[for="resolved"]`).click()
       cy.get("#search").contains("Apply filters").click()
 
-      cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
+      cy.get("tr").not(":first").eq(0).get("td:nth-child(4)").contains(`Case00000`)
       cy.get("tr").not(":first").eq(1).contains("Resolved").should("exist")
       cy.get("tr").not(":first").should("have.length", 2)
     })
@@ -150,7 +150,7 @@ describe("Case list", () => {
       cy.get(`label[for="resolved"]`).click()
       cy.get("#search-bottom").contains("Apply filters").click()
 
-      cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
+      cy.get("tr").not(":first").eq(0).get("td:nth-child(4)").contains(`Case00000`)
       cy.get("tr").not(":first").eq(1).contains("Resolved").should("exist")
       cy.get("tr").not(":first").should("have.length", 2)
     })
@@ -166,13 +166,13 @@ describe("Case list", () => {
 
       cy.get("#search").contains("Apply filters").click()
 
-      cy.get("tr.caseDetailsRow").eq(0).find("td:nth-child(5)").contains(`Case00000`)
+      cy.get("tr.caseDetailsRow").eq(0).find("td:nth-child(4)").contains(`Case00000`)
       cy.get("tr.caseDetailsRow").eq(0).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
 
-      cy.get("tr.caseDetailsRow").eq(1).find("td:nth-child(5)").contains(`Case00001`)
+      cy.get("tr.caseDetailsRow").eq(1).find("td:nth-child(4)").contains(`Case00001`)
       cy.get("tr.caseDetailsRow").eq(1).next().should("not.exist") //extra resons row should not render
 
-      cy.get("tr.caseDetailsRow").eq(2).find("td:nth-child(5)").contains(`Case00002`)
+      cy.get("tr.caseDetailsRow").eq(2).find("td:nth-child(4)").contains(`Case00002`)
       cy.get("tr.caseDetailsRow").eq(2).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
     })
 
@@ -217,10 +217,10 @@ describe("Case list", () => {
 
       loginAndVisit()
 
-      cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").contains(`Case00000`)
-      cy.get("tr").not(":first").eq(0).get("td:nth-child(6)").should("be.empty")
-      cy.get("tr").not(":first").eq(1).get("td:nth-child(6)").contains(`1`).should("exist")
-      cy.get("tr").not(":first").eq(2).get("td:nth-child(6)").contains(`3`).should("exist")
+      cy.get("tr").not(":first").eq(0).get("td:nth-child(4)").contains(`Case00000`)
+      cy.get("tr").not(":first").eq(0).get("td:nth-child(5)").should("be.empty")
+      cy.get("tr").not(":first").eq(1).get("td:nth-child(5)").contains(`1`).should("exist")
+      cy.get("tr").not(":first").eq(2).get("td:nth-child(5)").contains(`3`).should("exist")
     })
 
     it("Should be able to navigate to the case details page and back", () => {
@@ -283,7 +283,7 @@ describe("Case list", () => {
 
       loginAndVisit()
 
-      cy.get("tr").not(":first").eq(1).get("td:nth-child(6)").contains(`1 note`).should("exist").trigger("click")
+      cy.get("tr").not(":first").eq(1).get("td:nth-child(5)").contains(`1 note`).should("exist").trigger("click")
       cy.contains(`Test note 1`).should("exist")
     })
 
@@ -546,6 +546,6 @@ describe("Case list", () => {
 
     loginAndVisit()
 
-    cy.get("tr").not(":first").get("td:nth-child(7)").find(".trigger-description").should("have.length", 2)
+    cy.get("tr").not(":first").get("td:nth-child(6)").find(".trigger-description").should("have.length", 2)
   })
 })

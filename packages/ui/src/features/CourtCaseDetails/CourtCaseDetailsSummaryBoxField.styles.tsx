@@ -2,6 +2,8 @@ import styled from "styled-components"
 import { breakpoints } from "types/breakpoints"
 
 const SummaryBoxDetail = styled.div`
+  font-size: var(--case-details-default-font-size);
+
   &.detail__court-name {
     grid-column: 1 / span 3;
   }

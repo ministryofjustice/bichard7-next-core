@@ -1,6 +1,6 @@
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
-import type Exception from "../../types/Exception"
-import type { ExceptionPath } from "../../types/Exception"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type Exception from "@moj-bichard7/common/types/Exception"
+import type { ExceptionPath } from "@moj-bichard7/common/types/Exception"
 
 import isPncException from "./isPncException"
 

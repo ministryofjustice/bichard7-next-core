@@ -1,8 +1,10 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
+
 import type CourtResultMatchingSummary from "../../../../tests/types/CourtResultMatchingSummary"
-import type { AnnotatedHearingOutcome } from "../../../../types/AnnotatedHearingOutcome"
 
 import matchOffencesToPnc from "."
-import errorPaths from "../../../../lib/exceptions/errorPaths"
 import summariseMatching from "../../../../tests/helpers/summariseMatching"
 
 type Adjudication = {

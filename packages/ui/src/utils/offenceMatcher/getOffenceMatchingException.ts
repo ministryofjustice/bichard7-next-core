@@ -1,5 +1,5 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import errorPaths from "@moj-bichard7/core/lib/exceptions/errorPaths"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import { isEqual } from "lodash"
 import type { Exception } from "types/exceptions"
 import { ExceptionBadgeType } from "../exceptions/exceptionBadgeType"

@@ -22,7 +22,6 @@ const CourtCaseListEntry: React.FC<Props> = ({
   triggerHasBeenRecentlyUnlocked,
   previousPath
 }: Props) => {
-  const { triggerLockedByUsername } = courtCase
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
 
@@ -61,7 +60,6 @@ const CourtCaseListEntry: React.FC<Props> = ({
       />
       {renderExtraReasons && (
         <ExtraReasonRow
-          isLocked={!!triggerLockedByUsername}
           resolutionStatus={resolutionStatus}
           reasonCell={extraReasonCell}
           lockTag={triggerCells?.LockTag}

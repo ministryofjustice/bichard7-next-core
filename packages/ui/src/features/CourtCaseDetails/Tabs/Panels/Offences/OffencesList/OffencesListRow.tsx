@@ -1,5 +1,5 @@
 import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
-import { Offence } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import WarningIcon from "components/WarningIcon"
 import { useCourtCase } from "context/CourtCaseContext"
 import Image from "next/image"
@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import getOffenceAlertsDetails from "utils/getOffenceAlertsDetails"
 import { CHECKMARK_ICON_URL } from "utils/icons"
-import { IconContainer } from "./OffencesListRow.styles"
+import { IconContainer, TableRow } from "./OffencesListRow.styles"
 
 interface OffencesListRowProps {
   offence: Offence
@@ -42,7 +42,7 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
   })
 
   return (
-    <tr className="govuk-table__row">
+    <TableRow className="govuk-table__row">
       <td className="govuk-table__cell">{courtCase.errorStatus !== "Resolved" && offenceAlertIcon}</td>
       <td className="govuk-table__cell">{offence.CourtOffenceSequenceNumber}</td>
       <td className="govuk-table__cell">{formatDisplayedDate(offence.ActualOffenceStartDate.StartDate).toString()}</td>
@@ -60,6 +60,6 @@ export const OffencesListRow = ({ offence, offenceIndex, onClick }: OffencesList
           {offence.OffenceTitle ?? "Offence code not found"}
         </a>
       </td>
-    </tr>
+    </TableRow>
   )
 }

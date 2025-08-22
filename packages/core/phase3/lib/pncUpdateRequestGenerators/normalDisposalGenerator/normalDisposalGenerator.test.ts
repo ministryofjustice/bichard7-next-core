@@ -1,11 +1,12 @@
-import { isError } from "@moj-bichard7/common/types/Result"
+import type { Offence, OffenceReason, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Offence, OffenceReason, Result } from "../../../../types/AnnotatedHearingOutcome"
-import type { Operation, PncUpdateDataset } from "../../../../types/PncUpdateDataset"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import { isError } from "@moj-bichard7/common/types/Result"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
+
 import type NormalDisposalPncUpdateRequest from "../../../types/NormalDisposalPncUpdateRequest"
 
-import { PncOperation } from "../../../../types/PncOperation"
-import ResultClass from "../../../../types/ResultClass"
 import normalDisposalGenerator from "./normalDisposalGenerator"
 
 const createPncUpdateDataset = () => {

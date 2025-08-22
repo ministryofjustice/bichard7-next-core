@@ -1,9 +1,10 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type Exception from "@moj-bichard7/common/types/Exception"
 
-import type Exception from "../../types/Exception"
+import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
+
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import errorPaths from "../../lib/exceptions/errorPaths"
 import isCaseRecordable from "../../lib/isCaseRecordable"
 import isAdjourned from "../lib/result/isAdjourned"
 

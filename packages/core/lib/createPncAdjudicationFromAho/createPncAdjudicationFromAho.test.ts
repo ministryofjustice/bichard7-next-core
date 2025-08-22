@@ -1,7 +1,7 @@
 jest.mock("./createPncAdjudication")
-import { verdict } from "@moj-bichard7-developers/bichard7-next-data"
+import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import type { Result } from "../../types/AnnotatedHearingOutcome"
+import { verdict } from "@moj-bichard7-developers/bichard7-next-data"
 
 import createPncAdjudication from "./createPncAdjudication"
 import createPncAdjudicationFromAho from "./createPncAdjudicationFromAho"

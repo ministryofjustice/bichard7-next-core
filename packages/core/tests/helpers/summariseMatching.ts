@@ -1,6 +1,7 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
-import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 import type CourtResultMatchingSummary from "../types/CourtResultMatchingSummary"
 
 import getOffenceCode from "../../lib/offences/getOffenceCode"

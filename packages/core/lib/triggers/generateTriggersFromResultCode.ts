@@ -1,4 +1,5 @@
-import type { AnnotatedHearingOutcome, Offence } from "../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
 import type { Trigger } from "../../types/Trigger"
 import type TriggerConfig from "../../types/TriggerConfig"
 

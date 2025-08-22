@@ -1,8 +1,10 @@
-import type { AhoXml } from "../../../types/AhoXml"
-import type { Operation, OperationStatus, PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { AhoXml } from "@moj-bichard7/common/types/AhoXml"
+import type { Operation, OperationStatus, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import type { OperationStatusXml, PncOperationXml, PncUpdateDatasetXml } from "../../../types/PncUpdateDatasetXml"
 
-import { PncOperation } from "../../../types/PncOperation"
 import { toISODate } from "../../dates"
 import { convertPncUpdateDatasetToXml, mapAhoOrgUnitToXml } from "../ahoXml/serialiseToXml"
 import generateXml from "../generateXml"

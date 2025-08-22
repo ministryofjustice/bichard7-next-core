@@ -16,15 +16,10 @@ COPY package*.json ./
 COPY tsconfig*.json ./
 COPY packages/api ./packages/api
 COPY packages/common ./packages/common
-COPY packages/core ./packages/core
 
 RUN npm ci --ignore-scripts && npm run build:api
 
 WORKDIR /core/packages/common
-
-RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
-
-WORKDIR /core/packages/core
 
 RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
 
@@ -47,11 +42,11 @@ WORKDIR /core/packages/api
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
 
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
-    usermod -a -G supervisor supervisor && \
-    chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
-    chmod g+r -R /certs/server.key /var/lib/nginx && \
-    chmod g+rw -R /core /run /var/log && \
-    npm config set cache /tmp/npm --global
+  usermod -a -G supervisor supervisor && \
+  chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
+  chmod g+r -R /certs/server.key /var/lib/nginx && \
+  chmod g+rw -R /core /run /var/log && \
+  npm config set cache /tmp/npm --global
 
 
 COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf

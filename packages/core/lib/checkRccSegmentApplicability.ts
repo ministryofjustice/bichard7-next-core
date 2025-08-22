@@ -1,4 +1,4 @@
-import type { Offence } from "../types/AnnotatedHearingOutcome"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import getRecordableOffencesForCourtCase from "./offences/getRecordableOffencesForCourtCase"
 import isResultCompatibleWithDisposal from "./results/isResultCompatibleWithDisposal"

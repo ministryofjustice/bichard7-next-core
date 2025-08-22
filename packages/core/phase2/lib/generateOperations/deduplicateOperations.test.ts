@@ -1,6 +1,7 @@
-import type { Operation, OperationStatus } from "../../../types/PncUpdateDataset"
+import type { Operation, OperationStatus } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import { PncOperation } from "../../../types/PncOperation"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+
 import deduplicateOperations from "./deduplicateOperations"
 
 const organisationUnitCode1 = {

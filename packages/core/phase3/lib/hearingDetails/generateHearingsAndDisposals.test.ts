@@ -1,5 +1,5 @@
-import type { Offence } from "../../../types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "../../../types/PncUpdateDataset"
+import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import { generateHearingsAndDisposals } from "./generateHearingsAndDisposals"
 

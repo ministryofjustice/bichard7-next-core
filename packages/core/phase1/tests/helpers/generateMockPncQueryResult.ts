@@ -1,9 +1,8 @@
+import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
+
+import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
 import merge from "lodash.merge"
-
-import type { PncOffence, PncQueryResult } from "../../../types/PncQueryResult"
-import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "../../../types/SpiResult"
-
-import parseSpiResult from "../../../lib/parse/parseSpiResult"
 
 type OffenceDates = {
   endDate?: Date

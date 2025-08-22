@@ -1,10 +1,10 @@
+import { lookupRemandStatusByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
+import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGenerator"
 
-import { lookupRemandStatusByCjsCode } from "../../../../lib/dataLookup"
 import formatDateSpecifiedInResult from "../../../../lib/results/createPncDisposalsFromResult/formatDateSpecifiedInResult"
-import { PncOperation } from "../../../../types/PncOperation"
 import addPaddingToBailCondition from "../../addPaddingToBailCondition"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
 import preProcessAsn from "../../preProcessAsn"

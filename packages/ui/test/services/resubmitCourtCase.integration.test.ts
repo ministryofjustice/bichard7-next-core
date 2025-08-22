@@ -1,6 +1,6 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { AUDIT_LOG_EVENT_SOURCE } from "config"
 import { readFileSync } from "fs"
 import CourtCase from "services/entities/CourtCase"

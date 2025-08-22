@@ -1,4 +1,4 @@
-import type { Offence, OrganisationUnitCodes } from "../../../../types/AnnotatedHearingOutcome"
+import type { Offence, OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const getNextResultSourceOrganisationFromOffences = (offences: Offence[]): OrganisationUnitCodes | undefined =>
   offences

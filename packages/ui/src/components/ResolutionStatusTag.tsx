@@ -27,13 +27,13 @@ const ResolutionStatusTag = ({ itemName, resolutionStatus, ...rest }: StatusTagP
       {...rest}
       className={`${itemName.toLowerCase()}-${resolutionStatus.toLowerCase()}-tag`}
     >
-      <span className="govuk-body">
+      <span>
         <b>{itemName}</b>
       </span>
 
       <ResolutionTag>
         <Image src={TICK_ICON_URL} width={18} height={18} alt="Check icon" />
-        <span className="govuk-body">{resolutionMessage}</span>
+        <span>{resolutionMessage}</span>
       </ResolutionTag>
     </ResolutionStatusTagContainer>
   )

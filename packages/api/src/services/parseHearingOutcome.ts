@@ -1,10 +1,10 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { FastifyBaseLogger } from "fastify"
 
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/common/aho/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
+import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import { isError } from "@moj-bichard7/common/types/Result"
-import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
-import parsePncUpdateDataSetXml from "@moj-bichard7/core/lib/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 
 const parseHearingOutcome = (hearingOutcome: string, logger: FastifyBaseLogger): AnnotatedHearingOutcome | Error => {
   const annotatedPncUpdateDataset = parseAnnotatedPncUpdateDatasetXml(hearingOutcome)

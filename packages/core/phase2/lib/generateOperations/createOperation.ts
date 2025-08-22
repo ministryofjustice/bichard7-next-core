@@ -1,4 +1,4 @@
-import type { Operation } from "../../../types/PncUpdateDataset"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 const createOperation = <T extends Operation["code"], K extends Operation<T>>(
   operationCode: T,

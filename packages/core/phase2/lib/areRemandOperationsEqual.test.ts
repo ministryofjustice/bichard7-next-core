@@ -1,6 +1,6 @@
-import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
-import type { PncOperation } from "../../types/PncOperation"
-import type { Operation } from "../../types/PncUpdateDataset"
+import type { OrganisationUnitCodes } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import areRemandOperationsEqual from "./areRemandOperationsEqual"
 

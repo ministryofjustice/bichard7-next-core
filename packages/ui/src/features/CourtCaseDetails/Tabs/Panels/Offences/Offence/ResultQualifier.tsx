@@ -1,5 +1,5 @@
 import ResultQualifierCodes from "@moj-bichard7-developers/bichard7-next-data/dist/data/result-qualifier-code.json"
-import { Result } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { InfoRow } from "../../InfoRow"
 
 interface QualifierProps {

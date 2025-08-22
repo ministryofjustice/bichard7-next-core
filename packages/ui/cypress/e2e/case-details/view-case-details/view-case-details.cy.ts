@@ -256,6 +256,7 @@ describe("View case details", () => {
     cy.contains("dt", "Offence location").siblings().contains("Kingston High Street")
     cy.contains("dt", "PNC sequence number").siblings().contains("001")
     cy.contains("dt", "Court offence sequence number").siblings().contains("1")
+    cy.contains("dt", "Added by the Court").siblings().contains("Yes")
     cy.contains("dt", "Plea").siblings().contains("NG (Not guilty)")
     cy.contains("dt", "Verdict").siblings().contains("G (Guilty)")
     cy.contains("dt", "Offence category").siblings().contains("CI (indictable)")
@@ -293,6 +294,7 @@ describe("View case details", () => {
     cy.contains("dt", "Offence location").siblings().contains("Kingston High Street")
     cy.contains("dt", "PNC sequence number").siblings().contains("002")
     cy.contains("dt", "Court offence sequence number").siblings().contains("3")
+    cy.contains("dt", "Added by the Court").siblings().contains("No")
     cy.contains("dt", "Plea").siblings().contains("NG (Not guilty)")
     cy.contains("dt", "Verdict").siblings().contains("G (Guilty)")
     cy.contains("dt", "Offence category").siblings().contains("CI (indictable)")
@@ -331,6 +333,7 @@ describe("View case details", () => {
     cy.contains("dt", "Offence location").siblings().contains("Kingston High Street")
     cy.contains("dt", "PNC sequence number").siblings().contains("003")
     cy.contains("dt", "Court offence sequence number").siblings().contains("5")
+    cy.contains("dt", "Added by the Court").should("not.exist")
     cy.contains("dt", "Plea").siblings().contains("NG (Not guilty)")
     cy.contains("dt", "Verdict").siblings().contains("G (Guilty)")
     cy.contains("dt", "Offence category").siblings().contains("CM (summary motoring)")
@@ -638,7 +641,7 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get("#triggers span").contains("Complete").should("exist")
+    cy.get("#triggers-tab-panel span").contains("Complete").should("exist")
   })
 
   canReallocateTestData.forEach(

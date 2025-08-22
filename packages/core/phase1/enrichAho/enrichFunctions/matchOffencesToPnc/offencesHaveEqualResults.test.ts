@@ -1,4 +1,4 @@
-import type { Offence, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import offencesHaveEqualResults from "./offencesHaveEqualResults"
 

@@ -1,4 +1,4 @@
-import { COMMON_LAWS, INDICTMENT } from "../../../lib/offences/offenceTypes"
+import { COMMON_LAWS, INDICTMENT } from "@moj-bichard7/common/aho/offences/offenceTypes"
 
 export default (nationalOffenceCode: { [x: string]: string }): boolean => {
   const regexes = [

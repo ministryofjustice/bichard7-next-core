@@ -1,8 +1,8 @@
-import parseAhoXml from "@moj-bichard7/core/lib/parse/parseAhoXml/parseAhoXml"
-import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/core/lib/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
-import parsePncUpdateDataSetXml from "@moj-bichard7/core/lib/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
-import type { PncUpdateDataset } from "@moj-bichard7/core/types/PncUpdateDataset"
+import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
+import parseAnnotatedPncUpdateDatasetXml from "@moj-bichard7/common/aho/parse/parseAnnotatedPncUpdateDatasetXml/parseAnnotatedPncUpdateDatasetXml"
+import parsePncUpdateDataSetXml from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import { isError } from "../types/Result"
 
 const parseHearingOutcome = (hearingOutcome: string): AnnotatedHearingOutcome | PncUpdateDataset | Error => {

@@ -1,7 +1,7 @@
 import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
-import { HearingDefendant } from "@moj-bichard7/core/types/AnnotatedHearingOutcome"
+import { HearingDefendant } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { format } from "date-fns"
 import { DisplayFullUser } from "types/display/Users"

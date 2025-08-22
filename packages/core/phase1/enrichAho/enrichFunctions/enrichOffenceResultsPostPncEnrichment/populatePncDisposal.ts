@@ -1,7 +1,7 @@
-import type { AnnotatedHearingOutcome, Result } from "../../../../types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { lookupPncDisposalByCjsCode } from "../../../../lib/dataLookup"
-import ResultClass from "../../../../types/ResultClass"
+import { lookupPncDisposalByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
+import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 const victimSurchargeCrestCodes = [
   "COM",
