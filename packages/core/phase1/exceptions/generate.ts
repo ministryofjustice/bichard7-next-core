@@ -23,7 +23,7 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   if (!parseResults.success) {
     generatedExceptions = parseResults.error.issues.map((issue) => ({
       code: getExceptionCodeFromZod(issue),
-      path: issue.path
+      path: issue.path.filter((p) => typeof p === "string" || typeof p === "number")
     }))
   }
 
