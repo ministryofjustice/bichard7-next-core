@@ -6,7 +6,6 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import z from "zod"
-import "zod-openapi/extend"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
