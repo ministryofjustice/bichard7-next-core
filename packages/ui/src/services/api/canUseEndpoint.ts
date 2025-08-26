@@ -6,7 +6,11 @@ export enum ApiEndpoints {
 }
 
 export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boolean => {
-  if (!USE_API || !forces.some((force) => FORCES_WITH_API_ENABLED.has(force))) {
+  if (!USE_API) {
+    return false
+  }
+
+  if (!forces.some((force) => FORCES_WITH_API_ENABLED.has(force))) {
     return false
   }
 
