@@ -25,11 +25,11 @@ type HandlerProps = { body: ResubmitBody; caseId: number; database: DatabaseGate
 const schema = {
   ...auth,
   body: bodySchema,
-  params: z.object({ caseId: z.string().openapi({ description: "Case ID" }) }),
+  params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
     [OK]: z
-      .object({ phase: z.number().gt(0).lte(3).openapi({ description: "Confirmation of the Phase" }) })
-      .openapi({ description: "Worked" }),
+      .object({ phase: z.number().gt(0).lte(3).meta({ description: "Confirmation of the Phase" }) })
+      .meta({ description: "Worked" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError
