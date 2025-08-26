@@ -28,7 +28,7 @@ const schema = {
   ...auth,
   querystring: AuditLogQueryParametersSchema,
   response: {
-    [OK]: OutputApiAuditLogSchema.array().openapi({ description: "No content" }),
+    [OK]: OutputApiAuditLogSchema.array().meta({ description: "No content" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError

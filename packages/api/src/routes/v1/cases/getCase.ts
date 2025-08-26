@@ -35,9 +35,9 @@ type HandlerProps = {
 
 const schema = {
   ...auth,
-  params: z.object({ caseId: z.string().openapi({ description: "Case ID" }) }),
+  params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: CaseDtoSchema.openapi({ description: "Case DTO" }),
+    [OK]: CaseDtoSchema.meta({ description: "Case DTO" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...notFoundError,
