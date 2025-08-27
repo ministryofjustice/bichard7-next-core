@@ -19,6 +19,7 @@ export enum OrderBy {
   courtDate = "courtDate",
   courtName = "courtName",
   defendantName = "defendantName",
+  messageReceivedAt = "messageReceivedAt",
   ptiurn = "ptiurn"
 }
 
