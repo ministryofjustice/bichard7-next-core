@@ -53,7 +53,7 @@ describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e"
     expect(caseMetadata.cases).toHaveLength(1)
     expect(caseMetadata.totalCases).toBe(1)
     expect(caseMetadata.returnCases).toBe(1)
-    expect(caseMetadata.cases[0].courtDate).toBe(differentCourtDate)
+    expect(caseMetadata.cases[0].courtDate).toStrictEqual(differentCourtDate)
   })
 
   it("will not filter cases with date differences when flag is false", async () => {
