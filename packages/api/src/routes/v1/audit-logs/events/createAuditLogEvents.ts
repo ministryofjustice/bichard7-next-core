@@ -34,9 +34,9 @@ const inputSchemaAsArray = inputSchema.transform((input) => {
 const schema = {
   ...auth,
   body: inputSchemaAsArray,
-  params: z.object({ correlationId: z.string().openapi({ description: "Correlation ID" }) }),
+  params: z.object({ correlationId: z.string().meta({ description: "Correlation ID" }) }),
   response: {
-    [CREATED]: z.null().openapi({ description: "No content" }),
+    [CREATED]: z.null().meta({ description: "No content" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError

@@ -32,7 +32,7 @@ const schema = {
   ...auth,
   body: InputApiAuditLogSchema,
   response: {
-    [CREATED]: z.null().openapi({ description: "No content" }),
+    [CREATED]: z.null().meta({ description: "No content" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError,

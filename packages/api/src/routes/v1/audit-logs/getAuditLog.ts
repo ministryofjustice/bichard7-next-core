@@ -35,10 +35,10 @@ type QueryString = z.infer<typeof QueryStringSchema>
 
 const schema = {
   ...auth,
-  params: z.object({ correlationId: z.string().openapi({ description: "Correlation ID" }) }),
+  params: z.object({ correlationId: z.string().meta({ description: "Correlation ID" }) }),
   querystring: QueryStringSchema,
   response: {
-    [OK]: OutputApiAuditLogSchema.openapi({ description: "No content" }),
+    [OK]: OutputApiAuditLogSchema.meta({ description: "No content" }),
     ...unauthorizedError,
     ...forbiddenError,
     ...internalServerError

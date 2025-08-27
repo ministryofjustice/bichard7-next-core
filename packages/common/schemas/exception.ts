@@ -4,12 +4,12 @@ import { z } from "zod"
 export const exceptionPathSchema = z.array(z.number().or(z.string()))
 
 export const ahoExceptionSchema = z.object({
-  code: z.nativeEnum(ExceptionCode),
+  code: z.enum(ExceptionCode),
   path: exceptionPathSchema
 })
 
 export const pncExceptionSchema = z.object({
-  code: z.nativeEnum(ExceptionCode),
+  code: z.enum(ExceptionCode),
   message: z.string(),
   path: exceptionPathSchema
 })
