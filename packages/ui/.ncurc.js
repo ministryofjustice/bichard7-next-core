@@ -2,8 +2,10 @@
   Pinned:
   - cookies-next
     - v5 contains breaking changes
+  - @faker-js/faker
+    - v10 has breaking change with Jest
 */
-const pinned = ["cookies-next"]
+const pinned = ["cookies-next", "@faker-js/faker"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 

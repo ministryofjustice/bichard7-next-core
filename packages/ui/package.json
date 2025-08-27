@@ -69,7 +69,7 @@
     "typeorm": "^0.3.26"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.0.0",
+    "@faker-js/faker": "^9.9.0",
     "@jest/globals": "^30.0.5",
     "@next/bundle-analyzer": "^15.5.0",
     "@next/eslint-plugin-next": "^15.5.0",
