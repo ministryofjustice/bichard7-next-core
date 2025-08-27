@@ -16,6 +16,7 @@ export type Filters = Pick<
   | "resolvedByUsername"
   | "resolvedFrom"
   | "resolvedTo"
+  | "showCasesWithDateDifference"
   | "to"
 >
 export type Pagination = Pick<ApiCaseQuery, "maxPerPage" | "pageNum">
