@@ -24,7 +24,7 @@ export const setupHooks = () => {
 
   Before(async function (context) {
     if (!context.gherkinDocument.uri) {
-      throw Error("Couldn't find feature URI")
+      throw Error("Couldn't get the feature URI")
     }
 
     this.featureUri = context.gherkinDocument.uri
@@ -40,7 +40,7 @@ export const setupHooks = () => {
       }
     }
 
-    const featureName = this.featureUri?.split("/").slice(-2)[0]
+    const featureName = this.featureUri.split("/").slice(-2)[0]
     this.outputDir = `./screenshots/${featureName}/${new Date().getTime()}`
     if (process.env.RECORD === "true") {
       fs.mkdirSync(this.outputDir, { recursive: true })
