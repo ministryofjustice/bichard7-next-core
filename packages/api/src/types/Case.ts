@@ -65,6 +65,7 @@ type CaseDataIndexRow =
   | "error_report"
   | "error_status"
   | "is_urgent"
+  | "msg_received_ts"
   | "notes"
   | "ptiurn"
   | "resolution_ts"

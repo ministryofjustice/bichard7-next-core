@@ -105,6 +105,7 @@ const fetchCases = async (
       el.error_locked_by_id,
       el.error_report,
       el.error_status,
+      el.msg_received_ts,
       el.ptiurn AS el_ptiurn,
       el.ptiurn,
       el.resolution_ts,
