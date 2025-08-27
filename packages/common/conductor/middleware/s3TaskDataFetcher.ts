@@ -37,6 +37,10 @@ const formatErrorMessages = (schema: string, error: z.ZodError): string[] =>
       return `${schema} parse error: Expected ${e.expected} for ${e.path.join(".")}`
     }
 
+    if (e.code === "invalid_value") {
+      return `${schema} parse error: Expected ${e.values.map((value) => `'${String(value)}'`).join(" | ")} for ${e.path.join(".")}`
+    }
+
     return `${schema} parse error. Schema mismatch`
   })
 
