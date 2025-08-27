@@ -11,7 +11,7 @@ const parser = new XMLParser()
 const mockEnquiryFromNcm = (
   bichard: Bichard,
   ncmFile: string,
-  options: PoliceApiRequestMockOptions
+  options?: PoliceApiRequestMockOptions
 ): PartialPoliceApiRequestMock => {
   let xmlData = fs.readFileSync(ncmFile, "utf8").toString()
   extractAllTags(bichard, xmlData)
@@ -55,10 +55,10 @@ const mockEnquiryFromNcm = (
           </CXE01>`
 
   return {
-    matchRegex: options.matchRegex || "CXE01",
+    matchRegex: options?.matchRegex || "CXE01",
     response,
-    expectedRequest: options.expectedRequest || "",
-    count: options.count || undefined
+    expectedRequest: options?.expectedRequest || "",
+    count: options?.count || undefined
   }
 }
 

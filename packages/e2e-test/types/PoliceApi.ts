@@ -5,8 +5,9 @@ export default interface PoliceApi {
   createValidRecord: (record: string) => Promise<void>
   mockMissingDataForTest: () => Promise<void>
   mockDataForTest: () => Promise<"pending" | undefined>
-  mockEnquiryFromNcm: (ncmFile: string, options: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
-  mockUpdate: (code: string, options: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
+  mockEnquiryFromNcm: (ncmFile: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
+  mockUpdate: (code: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
+  generateDummyUpdate(): PartialPoliceApiRequestMock
   clearMocks(): Promise<void>
   recordMocks(): Promise<void>
   recordRequests(): Promise<void>
