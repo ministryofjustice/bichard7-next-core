@@ -1,17 +1,6 @@
-import { Given, Then, When } from "@cucumber/cucumber"
 import * as legacy from "../utils/actions.legacy-ui"
 import { logInAs } from "../utils/auth"
 import { sendMessageForTest } from "../utils/message"
-import {
-  checkMocks,
-  createValidRecordInPNC,
-  mockMissingPncDataForTest,
-  mockPNCDataForTest,
-  noPncRequests,
-  noPncUpdates,
-  pncNotUpdated,
-  pncUpdateIncludes
-} from "../utils/pnc"
 import {
   accessReport,
   checkLiveStatusExceptionsReport,
@@ -26,13 +15,20 @@ import {
 
 import * as ui from "../utils/actions.next-ui"
 
+import { Given, Then, When } from "../helpers/stepsHelpers"
 import { checkAuditLogExists } from "../utils/auditLogging"
-import type Bichard from "../utils/world"
+import { delay } from "../utils/puppeteer-utils"
 
 export const setupLegacySteps = () => {
-  Given("the data for this test is in the PNC", mockPNCDataForTest)
-  Given("the data for this test is not in the PNC", mockMissingPncDataForTest)
-  Given("there is a valid record for {string} in the PNC", createValidRecordInPNC)
+  Given("the data for this test is in the PNC", function () {
+    return this.policeApi.mockDataForTest()
+  })
+  Given("the data for this test is not in the PNC", function () {
+    return this.policeApi.mockMissingDataForTest()
+  })
+  Given("there is a valid record for {string} in the PNC", function (record: string) {
+    return this.policeApi.createValidRecord(record)
+  })
   Given("I am logged in as {string}", logInAs)
   Given("I navigate to the list of reports", legacy.canSeeReports)
 
@@ -49,16 +45,13 @@ export const setupLegacySteps = () => {
   When("I access the {string} report", accessReport)
   When("I download the report", legacy.downloadCSV)
   When("I click the {string} tab", legacy.loadTab)
-  When("I return to the offence list", async function () {
-    await legacy.loadTab.apply(this as Bichard, ["Offences"])
+  When("I return to the offence list", function () {
+    return legacy.loadTab.apply(this, ["Offences"])
   })
   When("I resolve all of the triggers", legacy.resolveAllTriggers)
   When("I resolve the selected triggers", legacy.resolveSelectedTriggers)
-  When("I wait {string} seconds", async (delay) => {
-    await new Promise((resolve) => {
-      setTimeout(resolve, delay * 1000)
-    })
-  })
+  When("I wait {int} seconds", delay)
+  When("I wait {string} seconds", delay)
   When("I view offence {string}", legacy.viewOffence)
   When("I unlock the record and return to the list", legacy.returnToCaseListUnlock)
   When("I correct {string} to {string}", legacy.correctOffenceException)
@@ -81,7 +74,9 @@ export const setupLegacySteps = () => {
   Then("I reload until I don't see {string}", legacy.reloadUntilStringNotPresent)
   Then("the exception list should contain a record for {string}", legacy.findRecordFor)
   Then("the record for {string} should not have any PNC errors", legacy.checkNoPncErrors)
-  Then("the PNC updates the record", checkMocks)
+  Then("the PNC updates the record", function () {
+    return this.policeApi.checkMocks()
+  })
   Then("I can see exceptions", legacy.exceptionsAreVisible)
   Then("I can see triggers", legacy.triggersAreVisible)
   Then("I cannot make any changes", legacy.exceptionIsReadOnly)
@@ -105,7 +100,9 @@ export const setupLegacySteps = () => {
   Then("I am taken to a list of reports", legacy.canSeeReports)
   Then("I can add and remove members from my team", legacy.editTeam)
   Then("the {string} report will be downloaded as a CSV file", legacy.checkFileDownloaded)
-  Then("the PNC record has not been updated", pncNotUpdated)
+  Then("the PNC record has not been updated", function () {
+    return this.policeApi.expectNotUpdated()
+  })
   Then("I see trigger {string} for offence {string}", legacy.checkTriggerforOffence)
   Then("I see complete trigger {string} for offence {string}", legacy.checkCompleteTriggerforOffence)
   Then("I see trigger {string}", legacy.checkTrigger)
@@ -126,21 +123,27 @@ export const setupLegacySteps = () => {
   Then("I see {string} in the report", reportContains)
   Then("I do not see {string} in the report", reportDoesNotContain)
   Then("pending", () => "pending")
-  Then("the PNC update includes {string}", pncUpdateIncludes)
+  Then("the PNC update includes {string}", function (includesValue: string) {
+    return this.policeApi.expectUpdateIncludes(includesValue)
+  })
   Then("I see {string} for offence {string}", legacy.checkOffence)
   Then("there should only be {string} offences", legacy.checkTableRows)
   Then("there should only be {string} records", legacy.checkRecordRows)
-  Then("the audit log contains {string}", async function (eventType) {
-    await checkAuditLogExists(this as Bichard, eventType, true)
+  Then("the audit log contains {string}", function (eventType) {
+    return checkAuditLogExists(this, eventType, true)
   })
-  Then("{string} is not in the audit log", async function (eventType) {
-    await checkAuditLogExists(this as Bichard, eventType, false)
+  Then("{string} is not in the audit log", function (eventType) {
+    return checkAuditLogExists(this, eventType, false)
   })
   Then("the user performance summary report is correct", checkUserSummaryReport)
   Then("the Live Status Detail - Exceptions report is correct", checkLiveStatusExceptionsReport)
   Then("the Resolved Exceptions report is correct", checkResolvedExceptionsReport)
-  Then("no PNC requests have been made", noPncRequests)
-  Then("no PNC updates have been made", noPncUpdates)
+  Then("no PNC requests have been made", function () {
+    return this.policeApi.expectNoRequests()
+  })
+  Then("no PNC updates have been made", function () {
+    return this.policeApi.expectNoUpdates()
+  })
   Then("I should not see a button to switch to the alternate version of bichard", legacy.cannotSeeBichardSwitcher)
   Then("I see {string} in the {string} row of the alternate results table", ui.checkOffenceData)
   Then("the alternate exception list should contain a record for {string}", ui.findRecordFor)

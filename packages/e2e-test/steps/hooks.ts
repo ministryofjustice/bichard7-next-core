@@ -1,5 +1,6 @@
-import { After, Before, BeforeAll } from "@cucumber/cucumber"
+import { BeforeAll } from "@cucumber/cucumber"
 import fs from "fs"
+import { After, Before } from "../helpers/stepsHelpers"
 
 const recordComparisons = process.env.RECORD_COMPARISONS === "true"
 const comparisonOutDir = "comparisons"
@@ -22,6 +23,10 @@ export const setupHooks = () => {
   })
 
   Before(async function (context) {
+    if (!context.gherkinDocument.uri) {
+      throw Error("Couldn't find feature URI")
+    }
+
     this.featureUri = context.gherkinDocument.uri
 
     this.testId = extractTestId(this.featureUri)
@@ -35,7 +40,7 @@ export const setupHooks = () => {
       }
     }
 
-    const featureName = this.featureUri.split("/").slice(-2)[0]
+    const featureName = this.featureUri?.split("/").slice(-2)[0]
     this.outputDir = `./screenshots/${featureName}/${new Date().getTime()}`
     if (process.env.RECORD === "true") {
       fs.mkdirSync(this.outputDir, { recursive: true })
@@ -45,7 +50,7 @@ export const setupHooks = () => {
     if (!this.config.parallel) {
       await this.db.clearExceptions()
       if (!this.config.realPNC) {
-        await this.pnc.clearMocks()
+        await this.policeApi.clearMocks()
       }
     }
   })
@@ -56,8 +61,8 @@ export const setupHooks = () => {
     await this.browser.close()
     if (process.env.RECORD === "true") {
       if (!this.config.realPNC) {
-        await this.pnc.recordMocks()
-        await this.pnc.recordRequests()
+        await this.policeApi.recordMocks()
+        await this.policeApi.recordRequests()
       }
 
       await this.dumpData()
