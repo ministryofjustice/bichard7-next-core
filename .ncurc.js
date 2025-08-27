@@ -8,8 +8,6 @@ const semver = new RegExp(
     - v5 is a breaking change
   - @types/diff
     - changed the Change type to require extra values
-  - zod, fastify-zod-openapi, zod-openapi, zod-validation-error
-    - zod v4 has breaking changes and all of these related packages rely on the new version of zod
 
   Ignored:
   - bichard7-next-data-x.x.x
@@ -20,7 +18,7 @@ const semver = new RegExp(
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
 */
-const pinned = ["chalk", "@types/diff", "zod", "fastify-zod-openapi", "zod-openapi", "zod-validation-error"]
+const pinned = ["chalk", "@types/diff"]
 const ignored = [
   `bichard7-next-data-(${semver.source})`,
   "p-limit",
