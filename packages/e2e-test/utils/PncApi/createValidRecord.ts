@@ -9,8 +9,8 @@ const exportValidRecord = async (bichard: Bichard, pncHelper: PncHelper, recordI
 
   bichard.recordId = recordId
 
-  const specFolder = path.dirname(bichard.featureUri)
-  bichard.mocks = require(`../${specFolder}/${recordId.replace(/[ ]+/g, "_")}`)
+  const specFolder = path.resolve(path.dirname(bichard.featureUri))
+  bichard.mocks = (await import(`${specFolder}/${recordId.replace(/[ ]+/g, "_")}`)).default
 
   const mockPromises = bichard.mocks.map((mock) => pncHelper.addMock(mock.matchRegex, mock.response))
   const mockIds = await Promise.all(mockPromises)
