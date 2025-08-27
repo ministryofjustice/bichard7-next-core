@@ -10,10 +10,12 @@ export type AuditLogApiConfig = {
 
 const createApiConfig = (): AuditLogApiConfig => {
   const apiUrl = process.env.AUDIT_LOG_API_URL
-  const basePath = process.env.AUDIT_LOG_API_BASE_PATH ?? "messages"
+  let basePath = "messages"
   let apiKey = process.env.AUDIT_LOG_API_KEY
 
-  if (process.env.AUDIT_LOG_API_KEY === "jwt" && process.env.AUTH_JWT_SECRET) {
+  if (process.env.AUDIT_LOG_USE_JWT === "true" && process.env.AUTH_JWT_SECRET && process.env.AUDIT_LOG_API_BASE_PATH) {
+    basePath = process.env.AUDIT_LOG_API_BASE_PATH
+
     const jwt = jwtServiceGenerator(process.env.AUTH_JWT_SECRET, {
       emailAddress: "moj-bichard7@madetech.com",
       groups: [UserGroup.Service],

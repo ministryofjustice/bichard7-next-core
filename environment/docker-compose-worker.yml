@@ -21,7 +21,8 @@ services:
       MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
       MQ_URL: failover:(stomp://activemq:61613)
       AUDIT_LOG_API_URL: https://api:9443
-      AUDIT_LOG_API_KEY: ${AUDIT_LOG_API_KEY}
+      AUDIT_LOG_API_KEY: super_secret_key
+      AUDIT_LOG_USE_JWT: ${AUDIT_LOG_USE_JWT}
       AUDIT_LOG_API_BASE_PATH: v1/audit-logs
       AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
       DB_HOST: postgres
