@@ -1,6 +1,6 @@
 import type { Task as ConductorTask, ConductorWorker, TaskResult } from "@io-orkes/conductor-javascript"
 
-import { z, ZodIssueCode } from "zod"
+import { z } from "zod"
 
 import type Task from "../types/Task"
 
@@ -25,7 +25,7 @@ type TaskDataInputData<T> = {
 
 const inputDataSchema = z.object({
   lockId: z.string().optional(),
-  options: z.record(z.unknown()).optional(),
+  options: z.record(z.string(), z.unknown()).optional(),
   s3TaskDataPath: z.string()
 })
 
@@ -33,14 +33,19 @@ const lockKey = "lockedByWorkstream"
 
 const formatErrorMessages = (schema: string, error: z.ZodError): string[] =>
   error.issues.map((e) => {
-    if (e.code === ZodIssueCode.invalid_type) {
+    if (e.code === "invalid_type") {
       return `${schema} parse error: Expected ${e.expected} for ${e.path.join(".")}`
+    }
+
+    if (e.code === "invalid_value") {
+      const expected = e.values.map((value) => `'${String(value)}'`).join(" | ")
+      return `${schema} parse error: Expected ${expected} for ${e.path.join(".")}`
     }
 
     return `${schema} parse error. Schema mismatch`
   })
 
-const s3TaskDataFetcher = <T>(schema: z.ZodSchema, handler: Handler<TaskDataInputData<T>>): OriginalHandler => {
+const s3TaskDataFetcher = <T>(schema: z.ZodSchema<T>, handler: Handler<TaskDataInputData<T>>): OriginalHandler => {
   return async (task: ConductorTask) => {
     const inputParseResult = inputDataSchema.safeParse(task.inputData)
     if (!inputParseResult.success) {

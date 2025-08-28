@@ -75,6 +75,7 @@ const fetchCasesAndFilter = async (
     resolvedByUsername: query.resolvedByUsername,
     resolvedFrom: query.resolvedFrom,
     resolvedTo: query.resolvedTo,
+    showCasesWithDateDifference: query.showCasesWithDateDifference,
     to: query.to
   }
 
