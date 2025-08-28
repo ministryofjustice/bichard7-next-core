@@ -3,8 +3,7 @@ import type PncHelper from "../../types/PncHelper"
 import type PncMock from "../../types/PncMock"
 import type Bichard from "../world"
 
-const setupMockInPncEmulator = async (bichard: Bichard, pncHelper: PncHelper, specFolder: string): Promise<void> => {
-  // mock a response in the PNC
+const addMockToPncEmulator = async (bichard: Bichard, pncHelper: PncHelper, specFolder: string): Promise<void> => {
   const mocks = await import(resolve(`${specFolder}/mock-pnc-responses`))
   bichard.mocks = mocks.default(resolve(`${specFolder}/pnc-data.xml`), bichard) as PncMock[]
 
@@ -25,4 +24,4 @@ const setupMockInPncEmulator = async (bichard: Bichard, pncHelper: PncHelper, sp
   }
 }
 
-export default setupMockInPncEmulator
+export default addMockToPncEmulator

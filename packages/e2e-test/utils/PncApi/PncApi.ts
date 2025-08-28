@@ -5,6 +5,7 @@ import type PoliceApi from "../../types/PoliceApi"
 import type { PartialPoliceApiRequestMock, PoliceApiRequestMockOptions } from "../../types/PoliceApiRequestMock"
 import defaults from "../defaults"
 import type Bichard from "../world"
+import addMockToPncEmulator from "./addMockToPncEmulator"
 import { checkMocksForPncEmulator, checkMocksForRealPnc } from "./checkMocks"
 import createValidRecord from "./createValidRecord"
 import expectNotUpdated from "./expectNotUpdated"
@@ -13,7 +14,6 @@ import mockDataForTest from "./mockDataForTest"
 import mockEnquiryFromNcm from "./mockEnquiryFromNcm"
 import MockPNCHelper from "./pncHelpers/MockPNCHelper"
 import PNCTestTool from "./pncHelpers/PNCTestTool"
-import setupMockInPncEmulator from "./setupMockInPncEmulator"
 
 export default class PncApi implements PoliceApi {
   private readonly pncHelper: PncHelper
@@ -46,7 +46,7 @@ export default class PncApi implements PoliceApi {
   async mockMissingDataForTest(): Promise<void> {
     if (!this.bichard.config.realPNC) {
       const specFolder = path.dirname(this.bichard.featureUri)
-      await setupMockInPncEmulator(this.bichard, this.pncHelper, specFolder)
+      await addMockToPncEmulator(this.bichard, this.pncHelper, specFolder)
     }
   }
 

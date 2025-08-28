@@ -6,7 +6,6 @@ import type Bichard from "../world"
 
 const expectNotUpdated = async (bichard: Bichard, pncHelper: PncHelper, skipPNCValidation: boolean): Promise<void> => {
   // Wait 3 seconds to give the backend time to process
-
   await new Promise((resolve) => setTimeout(resolve, 3000))
   if (bichard.config.realPNC) {
     if (skipPNCValidation) {

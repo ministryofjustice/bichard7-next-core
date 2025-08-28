@@ -3,7 +3,7 @@ import path from "path"
 import type PncHelper from "../../types/PncHelper"
 import { extractAllTags } from "../tagProcessing"
 import type Bichard from "../world"
-import setupMockInPncEmulator from "./setupMockInPncEmulator"
+import addMockToPncEmulator from "./addMockToPncEmulator"
 
 const mockDataForTest = async (
   bichard: Bichard,
@@ -13,7 +13,7 @@ const mockDataForTest = async (
   const featureUri = bichard.featureUri
   const specFolder = path.dirname(`${process.cwd()}/${featureUri}`)
   if (!bichard.config.realPNC) {
-    await setupMockInPncEmulator(bichard, pncHelper, specFolder)
+    await addMockToPncEmulator(bichard, pncHelper, specFolder)
     return
   }
 
