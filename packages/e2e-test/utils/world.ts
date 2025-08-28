@@ -7,12 +7,13 @@ import AuditLogApiHelper from "../helpers/AuditLogApiHelper"
 import BrowserHelper from "../helpers/BrowserHelper"
 import BrowserHelperEdge from "../helpers/BrowserHelperEdge"
 import IncomingMessageBucket from "../helpers/IncomingMessageBucket"
-import MockPNCHelper from "../helpers/MockPNCHelper"
-import PNCTestTool from "../helpers/PNCTestTool"
 import PostgresHelper from "../helpers/PostgresHelper"
+import type PoliceApi from "../types/PoliceApi"
+import type PoliceApiRequestMock from "../types/PoliceApiRequestMock"
 import { config, type Config } from "./config"
 import defaults from "./defaults"
-import type { PncMock } from "./pnc"
+import { LedsApi } from "./LedsApi"
+import { PncApi } from "./PncApi"
 
 const ActualBrowserHelper = process.env.MS_EDGE === "true" ? BrowserHelperEdge : BrowserHelper
 
@@ -28,14 +29,15 @@ class Bichard extends World {
   db: PostgresHelper
   mq: ActiveMqHelper
   incomingMessageBucket: IncomingMessageBucket
-  pnc: PNCTestTool | MockPNCHelper
+  policeApi: PoliceApi
   browser: BrowserHelper
   auditLogApi: AuditLogApiHelper
   outputDir: string
   featureUri: string
   recordId: string
-  mocks: PncMock[]
+  mocks: PoliceApiRequestMock[]
   correlationIds: string[] = []
+  testId?: string
 
   constructor() {
     super({} as IWorldOptions)
@@ -71,17 +73,8 @@ class Bichard extends World {
       incomingMessageBucketName: process.env.S3_INCOMING_MESSAGE_BUCKET || defaults.incomingMessageBucket
     })
 
-    if (this.config.realPNC) {
-      this.pnc = new PNCTestTool({
-        baseUrl: process.env.PNC_TEST_TOOL ?? ""
-      })
-    } else {
-      this.pnc = new MockPNCHelper({
-        host: process.env.PNC_HOST || defaults.pncHost,
-        port: Number(process.env.PNC_PORT || defaults.pncPort),
-        world: this
-      })
-    }
+    this.policeApi =
+      process.env.USE_LEDS === "true" ? new LedsApi(this) : new PncApi(this, process.env.SKIP_PNC_VALIDATION === "true")
 
     this.browser = new ActualBrowserHelper({
       baseUrl: config.baseUrl,
