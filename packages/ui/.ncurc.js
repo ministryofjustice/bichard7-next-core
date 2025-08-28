@@ -4,8 +4,10 @@
     - v5 contains breaking changes
   - @faker-js/faker
     - v10 has breaking change with Jest
+  - cypress
+    - v15 doesn't play nice with TypeORM
 */
-const pinned = ["cookies-next", "@faker-js/faker"]
+const pinned = ["cookies-next", "@faker-js/faker", "cypress"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 
