@@ -14,7 +14,7 @@
     "start": "node dist/src/index.js",
     "start:dev": "DYNAMO_AWS_ACCESS_KEY_ID=SECRET DYNAMO_AWS_SECRET_ACCESS_KEY=SECRET nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --maxWorkers=80% --testRegex '\\.(?:unit)\\.test.ts$'",
-    "test:integration": "TZ=UTC jest --maxWorkers=80% --detectOpenHandles --testRegex '\\.(?:integration)\\.test.ts$'",
+    "test:integration": "jest --maxWorkers=80% --detectOpenHandles --testRegex '\\.(?:integration)\\.test.ts$'",
     "test:e2e": "jest --runInBand --workerThreads=true --detectOpenHandles --testRegex '\\.(?:e2e)\\.test.ts$'",
     "test:watch": "jest --maxWorkers=80% --detectOpenHandles --watch --testRegex '\\.(?:unit|integration)\\.test.ts$'",
     "test:e2e:watch": "jest --runInBand --workerThreads=true --detectOpenHandles --testRegex '\\.(?:e2e)\\.test.ts$' --watch",
