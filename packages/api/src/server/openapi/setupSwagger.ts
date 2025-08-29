@@ -1,5 +1,4 @@
 import type { FastifyInstance } from "fastify"
-import type { ZodOpenApiVersion } from "zod-openapi"
 
 import swagger from "@fastify/swagger"
 import swaggerUi from "@fastify/swagger-ui"
@@ -24,7 +23,7 @@ export default async function (fastify: FastifyInstance) {
         title: "Bichard API",
         version: "0.0.1"
       },
-      openapi: "3.1.0" satisfies ZodOpenApiVersion,
+      openapi: "3.1.0",
       servers: [],
       tags: [
         { description: "Audit Logs endpoints", name: "Audit Logs V1" },

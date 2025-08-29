@@ -359,6 +359,7 @@ services:
       ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
       API_URL: http://api:3321
       USE_API: ${USE_API:-false}
+      FORCES_WITH_API_ENABLED: ${FORCES_WITH_API_ENABLED:-''}
       USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
       USE_API_CASES_INDEX_ENDPOINT: ${USE_API_CASES_INDEX_ENDPOINT:-false}
     ports:

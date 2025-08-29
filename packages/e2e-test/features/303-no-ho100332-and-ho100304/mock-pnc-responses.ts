@@ -1,6 +1,6 @@
-import { dummyUpdate } from "../../utils/pncMocks"
+import type Bichard from "../../utils/world"
 
-export default () => [
+export default (_: string, { policeApi }: Bichard) => [
   {
     matchRegex: "CXE01",
     response: `<?XML VERSION="1.0" STANDALONE="YES"?>
@@ -20,5 +20,5 @@ export default () => [
   </CXE01>`,
     expectedRequest: ""
   },
-  dummyUpdate
+  policeApi.generateDummyUpdate()
 ]

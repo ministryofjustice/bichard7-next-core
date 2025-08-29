@@ -1,6 +1,6 @@
-import { mockUpdate } from "../../utils/pncMocks"
+import type Bichard from "../../utils/world"
 
-export default () => [
+export default (_: string, { policeApi }: Bichard) => [
   {
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
@@ -36,7 +36,7 @@ export default () => [
     expectedRequest: "",
     count: 1
   },
-  mockUpdate("CXU02", {
+  policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K21/4Y      TOSINGLECCR             </IDS><CCR>K21/2732/4L                    </CCR><COU>I2576                                                                       TOSINGLECCRX/MULTIPLECCR                              011120110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011120110000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><DIS>I3025Y999                  00            SEA MONKEY                                                      </DIS><CCH>K002              CJ88001 </CCH><ADJ>INOT GUILTY   GUILTY        011120110000 </ADJ><DIS>I1002M14                   00                                                                            </DIS><DIS>I3107                      00                                                                            </DIS>"
   })
