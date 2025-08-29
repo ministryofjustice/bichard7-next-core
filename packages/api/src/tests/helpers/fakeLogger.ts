@@ -6,6 +6,10 @@ export default class FakeLogger implements FastifyBaseLogger {
   level: LevelWithSilentOrString = "silent"
   silent: pino.LogFn
 
+  get msgPrefix(): string | undefined {
+    return undefined
+  }
+
   child() {
     return this as unknown as FastifyBaseLogger
   }

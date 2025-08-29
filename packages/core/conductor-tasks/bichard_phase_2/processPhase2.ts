@@ -20,7 +20,7 @@ import phase2 from "../../phase2/phase2"
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 
 const s3Config = createS3Config()
-const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME || "conductor-task-data"
 const lockKey: string = "lockedByWorkstream"
 const ahoOrPncUpdateDatasetSchema = z.union([pncUpdateDatasetSchema, unvalidatedHearingOutcomeSchema])
 
