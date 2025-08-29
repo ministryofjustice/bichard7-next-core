@@ -1,4 +1,4 @@
-import type { AuditLogApiConfig } from "./createApiConfig"
+import type { AuditLogApiConfig } from "../types/AuditLogApiConfig"
 
 import jwtServiceGenerator from "../jwtServiceGenerator"
 import { isError } from "../types/Result"

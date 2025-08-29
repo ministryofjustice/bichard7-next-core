@@ -1,10 +1,6 @@
-import { createJwt } from "./createJwt"
+import type { AuditLogApiConfig } from "../types/AuditLogApiConfig"
 
-export type AuditLogApiConfig = {
-  apiKey: string
-  apiUrl: string
-  basePath: string
-}
+import { createJwt } from "./createJwt"
 
 const environmentVariableMustBeSet = "environment variable must be set"
 
