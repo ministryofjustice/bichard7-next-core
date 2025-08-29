@@ -1,12 +1,7 @@
-import "zod-openapi/extend"
-
 import type { FastifyInstance } from "fastify"
 
 import { fastifyZodOpenApiPlugin, serializerCompiler, validatorCompiler } from "fastify-zod-openapi"
-import { z, ZodError } from "zod"
-import { extendZodWithOpenApi } from "zod-openapi"
-
-extendZodWithOpenApi(z)
+import { ZodError } from "zod"
 
 export default async function (fastify: FastifyInstance) {
   fastify.setValidatorCompiler(validatorCompiler)

@@ -4,9 +4,11 @@ import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
 import https from "https"
 import tls from "tls"
-import Poller from "../utils/Poller"
-import { isError } from "../utils/isError"
-import type { PncMock } from "../utils/pnc"
+import type PncHelper from "../../../types/PncHelper"
+import type PncMock from "../../../types/PncMock"
+import type PncRequestResponse from "../../../types/PncRequestResponse"
+import Poller from "../../Poller"
+import { isError } from "../../isError"
 
 tls.DEFAULT_MIN_VERSION = "TLSv1"
 
@@ -91,7 +93,7 @@ type PNCTestToolOptions = {
   baseUrl: string
 }
 
-class PNCTestTool {
+class PNCTestTool implements PncHelper {
   baseUrl: string
   options: PNCTestToolOptions
 
@@ -205,11 +207,11 @@ class PNCTestTool {
     }
   }
 
-  addMock(_matchRegex: string, _response: string, _count?: number) {
+  addMock(_matchRegex: string, _response: string, _count?: number): Promise<string> {
     throw new Error("addMock incorrectly called for PNCTestTool")
   }
 
-  awaitMockRequest = (_id: string, _timeout = 40000) => {
+  awaitMockRequest = (_id: string, _timeout: number) => {
     throw new Error("awaitMockRequest incorrectly called for PNCTestTool")
   }
 
@@ -217,8 +219,24 @@ class PNCTestTool {
     throw new Error("getMock incorrectly called for PNCTestTool")
   }
 
-  getRequests() {
+  getRequests(): Promise<PncRequestResponse[]> {
     throw new Error("getMock incorrectly called for PNCTestTool")
+  }
+
+  getMocks(): Promise<void> {
+    throw new Error("Method not implemented.")
+  }
+
+  clearMocks(): Promise<void> {
+    throw new Error("Method not implemented.")
+  }
+
+  recordRequests(): Promise<void> {
+    throw new Error("Method not implemented.")
+  }
+
+  recordMocks(): Promise<void> {
+    throw new Error("Method not implemented.")
   }
 }
 

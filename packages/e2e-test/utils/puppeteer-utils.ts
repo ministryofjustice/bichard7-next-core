@@ -88,7 +88,7 @@ export const waitForRecord = async (page: Page, reloadAttempts?: number) => {
   await reloadUntilSelector(page, ".resultsTable a.br7_exception_list_record_table_link", reloadAttempts)
 }
 
-export const delay = (seconds: number) =>
+export const delay = (seconds: number | string) =>
   new Promise((resolve) => {
-    setTimeout(resolve, seconds * 1000)
+    setTimeout(resolve, Number(seconds) * 1000)
   })
