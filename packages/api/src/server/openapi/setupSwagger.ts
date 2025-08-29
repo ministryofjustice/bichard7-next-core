@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import swagger from "@fastify/swagger"
 import swaggerUi from "@fastify/swagger-ui"
-import { fastifyZodOpenApiTransform } from "fastify-zod-openapi"
+import { fastifyZodOpenApiTransformers } from "fastify-zod-openapi"
 import path from "path"
 
 export default async function (fastify: FastifyInstance) {
@@ -32,7 +32,7 @@ export default async function (fastify: FastifyInstance) {
         { description: "Demo endpoints", name: "Demo V1" }
       ]
     },
-    transform: fastifyZodOpenApiTransform
+    ...fastifyZodOpenApiTransformers
   })
 
   await fastify.register(swaggerUi, {
