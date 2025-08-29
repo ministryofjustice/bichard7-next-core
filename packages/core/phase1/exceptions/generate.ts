@@ -1,18 +1,36 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type Exception from "@moj-bichard7/common/types/Exception"
-import type { ZodIssue } from "zod"
+import type { ZodError } from "zod"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
 import { validatedHearingOutcomeSchema } from "../../schemas/validatedHearingOutcome"
 import * as exceptions from "../exceptions/exceptions"
 
-const getExceptionCodeFromZod = (issue: ZodIssue): ExceptionCode => {
-  if (issue.message in ExceptionCode) {
-    return issue.message as ExceptionCode
-  }
+const getExceptionsFromZod = (error: ZodError): Exception[] => {
+  return error.issues.map((issue) => {
+    const path = issue.path.filter((p) => typeof p === "string" || typeof p === "number")
+    if (issue.message in ExceptionCode) {
+      return {
+        code: issue.message as ExceptionCode,
+        path
+      }
+    }
 
-  return issue.message === "Required" ? ExceptionCode.HO100101 : ExceptionCode.HO100100
+    if (issue.code === "invalid_type") {
+      if (issue.message.includes("undefined")) {
+        return {
+          code: ExceptionCode.HO100101,
+          path
+        }
+      }
+    }
+
+    return {
+      code: ExceptionCode.HO100100,
+      path
+    }
+  })
 }
 
 export default (aho: AnnotatedHearingOutcome): Exception[] => {
@@ -21,10 +39,7 @@ export default (aho: AnnotatedHearingOutcome): Exception[] => {
   const parseResults = validatedHearingOutcomeSchema.safeParse(aho)
 
   if (!parseResults.success) {
-    generatedExceptions = parseResults.error.issues.map((issue) => ({
-      code: getExceptionCodeFromZod(issue),
-      path: issue.path
-    }))
+    generatedExceptions = getExceptionsFromZod(parseResults.error)
   }
 
   generatedExceptions = Object.entries(exceptions)

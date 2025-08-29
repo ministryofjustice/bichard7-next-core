@@ -27,6 +27,16 @@ describe("getExceptions()", () => {
     })
   })
 
+  it("should raise a HO100201 if PTIURN is in the wrong format", () => {
+    const aho = generateAho() as any
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN = "wrong_value"
+    const result = generateExceptions(aho)
+    expect(result).toContainEqual({
+      code: "HO100201",
+      path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "PTIURN"]
+    })
+  })
+
   it("should raise a HO100101 if an attribute is required and missing", () => {
     const aho = generateAho() as any
     delete aho.AnnotatedHearingOutcome.HearingOutcome.Case.PTIURN

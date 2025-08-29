@@ -13,7 +13,7 @@ import { convertUserToDto } from "../../useCases/dto/convertUserToDto"
 const schema = {
   ...auth,
   response: {
-    [OK]: UserDtoSchema.openapi({ description: "Returns details of authorised user" }),
+    [OK]: UserDtoSchema.meta({ description: "Returns details of authorised user" }),
     ...unauthorizedError
   },
   tags: ["Demo V1"]

@@ -10,7 +10,7 @@ import { healthHandler } from "./handlers"
 
 const schema = {
   description: "Health endpoint",
-  response: { [OK]: z.string().openapi({ description: "Health check will return Ok" }) },
+  response: { [OK]: z.string().meta({ description: "Health check will return Ok" }) },
   security: [],
   tags: ["Health V1"]
 } satisfies FastifyZodOpenApiSchema

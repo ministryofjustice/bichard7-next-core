@@ -3,12 +3,12 @@
 set -ex
 
 JSON_SCHEMA_SCRIPT=$(cat <<-END
-import { zodToJsonSchema } from "zod-to-json-schema";
+import * as z from "zod";
 import { unvalidatedHearingOutcomeSchema } from "./packages/core/schemas/unvalidatedHearingOutcome";
 import { incomingMessageParsedXmlSchema } from "./packages/core/schemas/spiResult";
 const fs = require("fs");
-fs.writeFileSync("aho.schema.json", JSON.stringify(zodToJsonSchema(unvalidatedHearingOutcomeSchema)));
-fs.writeFileSync("spi.schema.json", JSON.stringify(zodToJsonSchema(incomingMessageParsedXmlSchema)));
+fs.writeFileSync("aho.schema.json", JSON.stringify(z.toJSONSchema(unvalidatedHearingOutcomeSchema)));
+fs.writeFileSync("spi.schema.json", JSON.stringify(z.toJSONSchema(incomingMessageParsedXmlSchema)));
 END
 )
 
