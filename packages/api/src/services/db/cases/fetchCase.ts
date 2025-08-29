@@ -31,6 +31,7 @@ export default async (
         el.error_report,
         el.error_status,
         el.is_urgent,
+        el.msg_received_ts,
         el.org_for_police_filter,
         el.phase,
         el.ptiurn,
