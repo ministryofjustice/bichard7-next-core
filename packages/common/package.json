@@ -38,10 +38,10 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.864.0",
+    "@aws-sdk/client-s3": "^3.873.0",
     "@io-orkes/conductor-javascript": "^2.1.4",
     "@stomp/stompjs": "^7.1.1",
-    "@types/nodemailer": "^7.0.0",
+    "@types/nodemailer": "^7.0.1",
     "axios": "^1.11.0",
     "fast-xml-parser": "^5.2.5",
     "jsonwebtoken": "^9.0.2",
@@ -60,7 +60,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
-    "eslint": "^9.33.0",
+    "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jest": "^29.0.1",

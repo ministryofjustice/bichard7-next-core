@@ -353,5 +353,11 @@ export default [
     rules: {
       "no-console": "off"
     }
+  },
+  {
+    files: ["packages/ui/next-env.d.ts"],
+    rules: {
+      "@typescript-eslint/triple-slash-reference": "off"
+    }
   }
 ]

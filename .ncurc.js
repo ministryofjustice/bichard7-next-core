@@ -8,6 +8,8 @@ const semver = new RegExp(
     - v5 is a breaking change
   - @types/diff
     - changed the Change type to require extra values
+  - @faker-js/faker
+    - v10 has breaking change with Jest
 
   Ignored:
   - bichard7-next-data-x.x.x
@@ -18,7 +20,7 @@ const semver = new RegExp(
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
 */
-const pinned = ["chalk", "@types/diff"]
+const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
   `bichard7-next-data-(${semver.source})`,
   "p-limit",
