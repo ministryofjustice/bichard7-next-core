@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`populateHearing should transform SPI Hearing to Hearing Outcome Hearing 1`] = `
 {
