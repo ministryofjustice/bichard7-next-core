@@ -40,7 +40,7 @@ export default class User {
   excludedTriggers!: string[]
 
   @Column({ name: "feature_flags", transformer: jsonTransformer, type: "jsonb" })
-  featureFlags!: Record<string, boolean>
+  featureFlags!: { useCourtDateReceivedDateMismatchFilter?: boolean } & Record<string, boolean>
 
   @OneToMany(() => Note, (note) => note.user)
   @JoinColumn({ name: "user_id" })
