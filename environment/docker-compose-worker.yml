@@ -53,3 +53,5 @@ services:
         condition: service_healthy
       worker:
         condition: service_started
+      leds:
+        condition: service_started
