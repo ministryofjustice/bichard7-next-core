@@ -27,14 +27,15 @@ describe("createJwt", () => {
     expect(() => createJwt(errorMessage)).toThrow(new Error(`AUDIT_LOG_API_BASE_PATH ${errorMessage}`))
   })
 
-  it("will error if AUTH_JWT_SECRET is undefined", () => {
+  it("will error if AUTH_JWT_SECRET is empty string (undefined)", () => {
     process.env.AUDIT_LOG_API_BASE_PATH = stubBasePath
+    process.env.AUTH_JWT_SECRET = ""
     const errorMessage = "error"
 
     expect(() => createJwt(errorMessage)).toThrow(new Error(`AUTH_JWT_SECRET ${errorMessage}`))
   })
 
-  it("will not error if AUTH_JWT_SECRET is undefined", () => {
+  it("will not error if AUTH_JWT_SECRET is defined", () => {
     process.env.AUDIT_LOG_API_BASE_PATH = stubBasePath
     process.env.AUTH_JWT_SECRET = stubJwtSecret
 
