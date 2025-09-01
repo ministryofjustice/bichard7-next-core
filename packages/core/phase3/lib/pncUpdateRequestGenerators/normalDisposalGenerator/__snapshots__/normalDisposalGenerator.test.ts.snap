@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`normalDisposalGenerator should not set ASN and arrests adjudications and disposals when there are no offences added by the court with results compatible with disposals 1`] = `
 {
