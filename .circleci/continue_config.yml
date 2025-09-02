@@ -168,6 +168,9 @@ commands:
       FORCES_WITH_API_ENABLED:
         default: ""
         type: string
+      FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED:
+        default: ""
+        type: string
       USE_API_CASE_ENDPOINT:
         default: false
         type: boolean
@@ -185,6 +188,7 @@ commands:
             ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
             USE_API="<<parameters.USE_API>>" \
             FORCES_WITH_API_ENABLED="<<parameters.FORCES_WITH_API_ENABLED>>" \
+            FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<<parameters.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED>>" \
             USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
             USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
@@ -695,6 +699,9 @@ jobs:
       forces-with-api-enabled:
         type: string
         default: ""
+      forces-with-court-date-received-date-mismatch-enabled:
+        type: string
+        default: ""
       api-case-details:
         type: boolean
         default: false
@@ -759,6 +766,7 @@ jobs:
           command: |
             USE_API="<< parameters.api >>" \
             FORCES_WITH_API_ENABLED="<< parameters.forces-with-api-enabled >>" \
+            FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<< parameters.forces-with-court-date-received-date-mismatch-enabled >>" \
             USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
             USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
@@ -795,6 +803,9 @@ jobs:
         type: boolean
         default: false
       forces-with-api-enabled:
+        type: string
+        default: ""
+      forces-with-court-date-received-date-mismatch-enabled:
         type: string
         default: ""
       api-case-details:
@@ -858,6 +869,7 @@ jobs:
           SKIP_IMAGES: "ui"
           USE_API: << parameters.api >>
           FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
+          FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
           USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
           USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
       - when:
@@ -994,6 +1006,7 @@ workflows:
           name: cypress_e2e_tests_api
           api: true
           forces-with-api-enabled: "01"
+          forces-with-court-date-received-date-mismatch-enabled: "01"
           api-case-details: true
           api-case-list: true
           requires:
@@ -1008,6 +1021,7 @@ workflows:
           name: cucumber_e2e_tests_api
           api: true
           forces-with-api-enabled: "01"
+          forces-with-court-date-received-date-mismatch-enabled: "01"
           api-case-details: true
           api-case-list: true
           requires:
