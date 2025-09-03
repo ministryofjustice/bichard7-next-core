@@ -1,6 +1,7 @@
 import z from "zod"
 
 export const requestHeadersSchema = z.object({
+  Accept: z.literal("application/json"),
   "X-Leds-Geolocation": z.string().optional(),
   "X-Leds-On-Behalf-Of": z.string().min(3).max(50).optional(),
   "X-Leds-Page-Title": z.string().max(150).optional(),
