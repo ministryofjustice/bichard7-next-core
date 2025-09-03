@@ -20,6 +20,7 @@ export type Config = {
   noUi: boolean
   messageEntryPoint: string
   realPNC: boolean
+  ledsBaseApiUrl: string
 }
 
 export const config: Config = {
@@ -30,5 +31,6 @@ export const config: Config = {
   authType: process.env.AUTH_TYPE || authType.userService,
   noUi: process.env.NO_UI === "true",
   messageEntryPoint: process.env.MESSAGE_ENTRY_POINT || "s3",
-  realPNC: process.env.REAL_PNC === "true"
+  realPNC: process.env.REAL_PNC === "true",
+  ledsBaseApiUrl: process.env.LEDS_BASE_API_URL || "http://localhost:1080/mockserver"
 }
