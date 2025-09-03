@@ -34,6 +34,7 @@ class Bichard extends World {
   auditLogApi: AuditLogApiHelper
   outputDir: string
   featureUri: string
+  specFolder: string
   recordId: string
   mocks: PoliceApiRequestMock[]
   correlationIds: string[] = []
