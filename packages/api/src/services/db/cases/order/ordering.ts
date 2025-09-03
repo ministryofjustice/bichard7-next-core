@@ -31,6 +31,10 @@ export const ordering = (sql: postgres.Sql, sortOrder: SortOrder): postgres.Pend
       return sql`el_defendant_name ASC, ${defaultOrder}`
     case `${OrderBy.defendantName} ${Order.desc}`:
       return sql`el_defendant_name DESC, ${defaultOrder}`
+    case `${OrderBy.messageReceivedAt} ${Order.asc}`:
+      return sql`el_msg_received_ts ASC, ${defaultOrder}`
+    case `${OrderBy.messageReceivedAt} ${Order.desc}`:
+      return sql`el_msg_received_ts DESC, ${defaultOrder}`
     case `${OrderBy.ptiurn} ${Order.desc}`:
       return sql`${defaultCourtDate}, el_ptiurn DESC`
     default:

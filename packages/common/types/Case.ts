@@ -109,6 +109,7 @@ export const CaseIndexDtoSchema = z.object({
   errorReport: z.string().optional(),
   errorStatus: z.string().nullable(),
   isUrgent: z.number().optional(),
+  messageReceivedAt: z.date().nullable(),
   noteCount: z.number().optional(),
   notes: z.array(NoteDtoSchema),
   ptiurn: z.string().nullable(),

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`updateErrorListRecord should clear trigger_resolved_ts and trigger_resolved_by when trigger is raised after resubmission 1`] = `
 {

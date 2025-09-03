@@ -49,6 +49,7 @@ describe("lockAndFetchCaseDto", () => {
       errorReport: "HO100304||br7:ArrestSummonsNumber",
       errorStatus: "Unresolved",
       isUrgent: 1,
+      messageReceivedAt: new Date("2025-05-23"),
       noteCount: undefined,
       notes: [],
       orgForPoliceFilter: "01",

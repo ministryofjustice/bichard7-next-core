@@ -1,6 +1,6 @@
-import { mockUpdate } from "../../utils/pncMocks"
+import type Bichard from "../../utils/world"
 
-export default () => [
+export default (_: string, { policeApi }: Bichard) => [
   {
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
@@ -20,17 +20,17 @@ export default () => [
     expectedRequest: "",
     count: 1
   },
-  mockUpdate("CXU02", {
+  policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><CCR>K09/0428/444E                  </CCR><COU>I2576                                                                       NOLAN/NIGEL                                           011020090000</COU><CRT>I2576                                                                       01112009</CRT><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   NOT GUILTY    011020090000 </ADJ><DIS>I2006                      00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY                         0000 </ADJ><DIS>I2059                      00                                                                            </DIS>",
     count: 1
   }),
-  mockUpdate("CXU02", {
+  policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><CCR>K09/0413/445H                  </CCR><COU>I2576                                                                       NOLAN/NIGEL                                           011020090000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I4011    01112009          00                                                                            </DIS>",
     count: 1
   }),
-  mockUpdate("CXU01", {
+  policeApi.mockUpdate("CXU01", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><ASR>K09/0000/00/20002F                     </ASR><REM>I01102009B    2576                                                                       011120092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
     count: 1
@@ -59,12 +59,12 @@ export default () => [
     expectedRequest: "",
     count: 1
   },
-  mockUpdate("CXU02", {
+  policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><CCR>K21/2732/1H                    </CCR><COU>I2576                                                                       NOLAN/NIGEL                                           011120090000</COU><CCH>K001              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        011120090000 </ADJ><DIS>I1002M9                    00                                                                            </DIS>",
     count: 1
   }),
-  mockUpdate("CXU04", {
+  policeApi.mockUpdate("CXU04", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><SUB>I2576                                                                       01112009D</SUB><CCR>K09/0413/445H                  </CCR><CCH>K001              TH68001 </CCH><DIS>I1002M10                   00                                                                            </DIS>",
     count: 1

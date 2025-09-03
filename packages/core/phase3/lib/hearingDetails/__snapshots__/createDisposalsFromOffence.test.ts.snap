@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`createDisposalsFromOffence ignores disposal 2063 when there was a disposal 2063 with result code 2060 1`] = `
 [
