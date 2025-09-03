@@ -19,7 +19,7 @@ import phase3 from "../../phase3/phase3"
 
 const pncApiConfig = createPncApiConfig()
 const s3Config = createS3Config()
-const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME ?? "conductor-task-data"
+const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME || "conductor-task-data"
 const lockKey: string = "lockedByWorkstream"
 
 const processPhase3: ConductorWorker = {
