@@ -6,6 +6,7 @@ import https from "https"
 import tls from "tls"
 import type PncHelper from "../../../types/PncHelper"
 import type PncMock from "../../../types/PncMock"
+import type { PncBichard } from "../../../types/PncMock"
 import type PncRequestResponse from "../../../types/PncRequestResponse"
 import Poller from "../../Poller"
 import { isError } from "../../isError"
@@ -91,25 +92,27 @@ const extractNameFromFiles = (specFolder: string) => {
 
 type PNCTestToolOptions = {
   baseUrl: string
+  bichard: PncBichard
 }
 
 class PNCTestTool implements PncHelper {
-  baseUrl: string
-  options: PNCTestToolOptions
+  private readonly baseUrl: string
+  private readonly specFolder: string
 
-  constructor(options: PNCTestToolOptions) {
+  constructor(private readonly options: PNCTestToolOptions) {
     this.options = options
     if (!options.baseUrl) {
       throw new Error("Error: PNC_TEST_TOOL environment variable is not set")
     }
 
     this.baseUrl = options.baseUrl
+    this.specFolder = this.options.bichard.specFolder
   }
 
-  async setupRecord(specFolder: string) {
+  async setupRecord() {
     let existingRecord: string | false
-    const ncmFile = `${specFolder}/pnc-data.xml`
-    const name = extractNameFromFiles(specFolder)
+    const ncmFile = `${this.specFolder}/pnc-data.xml`
+    const name = extractNameFromFiles(this.specFolder)
 
     // Check if it exists first
     existingRecord = await this.fetchRecord(name, "xml")
@@ -125,7 +128,7 @@ class PNCTestTool implements PncHelper {
       throw new Error("Could not fetch record from PNC")
     }
 
-    const beforePath = `${specFolder}/pnc-data.before.xml`
+    const beforePath = `${this.specFolder}/pnc-data.before.xml`
     if (updateExpectations) {
       fs.writeFileSync(beforePath, existingRecord)
       // Fetch the HTML version too for easier comparison
@@ -141,8 +144,8 @@ class PNCTestTool implements PncHelper {
     }
   }
 
-  async checkRecord(specFolder: string): Promise<boolean> {
-    const name = extractNameFromFiles(specFolder)
+  async checkRecord(): Promise<boolean> {
+    const name = extractNameFromFiles(this.specFolder)
 
     // Retrieve the record
     const record = await this.fetchRecord(name, "xml")
@@ -150,7 +153,7 @@ class PNCTestTool implements PncHelper {
       throw new Error("Could not fetch record from PNC")
     }
 
-    const afterPath = `${specFolder}/pnc-data.after.xml`
+    const afterPath = `${this.specFolder}/pnc-data.after.xml`
     if (updateExpectations) {
       fs.writeFileSync(afterPath, record)
       // Fetch the HTML version too for easier comparison
