@@ -19,7 +19,7 @@ const parser = new XMLParser()
 const generateRequestBody = (ncm: ParsedNcm): AsnQueryRequest => {
   return {
     asn: new Asn(ncm.NewCaseMessage.Case.Defendant.ProsecutorReference).toPncFormat(),
-    caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "result-unobtainable", "court-case"]
+    caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
   }
 }
 
