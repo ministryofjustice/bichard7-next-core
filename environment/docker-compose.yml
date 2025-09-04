@@ -132,7 +132,10 @@ services:
 
   api:
     image: api
-    profiles: ["b7-api"]
+    # Temp build until it gets merged into main and a new Docker Image is made.
+    build:
+      dockerfile: packages/api/Dockerfile
+      context: ..
     environment:
       DB_HOST: postgres
       DB_READER_HOST: postgres
@@ -376,6 +379,8 @@ services:
         condition: service_healthy
       db-seed:
         condition: service_started
+      api:
+        condition: service_healthy
 
   nginx-auth-proxy:
     image: nginx-auth-proxy

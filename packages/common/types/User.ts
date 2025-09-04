@@ -33,11 +33,11 @@ export const UserSchema = z.object({
 export const UserDtoSchema = z.object({
   email: z.string(),
   excludedTriggers: z.string().optional(),
-  featureFlags: z.record(z.string(), z.boolean()),
+  featureFlags: z.object({}).catchall(z.boolean()),
   forenames: z.string().nullable(),
   fullname: z.string().optional(),
   groups: z.array(z.enum(UserGroup)),
-  hasAccessTo: z.record(z.string(), z.boolean()),
+  hasAccessTo: z.object({}).catchall(z.boolean()),
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),

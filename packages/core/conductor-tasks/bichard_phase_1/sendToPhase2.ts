@@ -23,7 +23,7 @@ const s3Config = createS3Config()
 const conductorClient = createConductorClient()
 const phase2WorkflowName = "bichard_phase_2"
 
-const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
+const mqQueue = process.env.PHASE_2_QUEUE_NAME || "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
 
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!outgoingBucket) {

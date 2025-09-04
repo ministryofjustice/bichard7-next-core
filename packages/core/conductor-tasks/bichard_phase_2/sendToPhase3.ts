@@ -23,7 +23,7 @@ const s3Config = createS3Config()
 const conductorClient = createConductorClient()
 const phase3WorkflowName = "bichard_phase_3"
 
-const mqQueue = process.env.PHASE_3_QUEUE_NAME ?? "PNC_UPDATE_REQUEST_QUEUE"
+const mqQueue = process.env.PHASE_3_QUEUE_NAME || "PNC_UPDATE_REQUEST_QUEUE"
 
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!outgoingBucket) {
