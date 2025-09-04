@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { adjudicationSchema, courtSchema, dateStringSchema } from "./common"
+import { adjudicationSchema, courtSchema, dateStringSchema, pleaSchema } from "./common"
 
 export const adjudicationDetailsSchema = z.object({
   adjudicationId: z.string(),
@@ -28,7 +28,7 @@ export const offenceSchema = z.object({
   offenceStartDate: dateStringSchema,
   offenceEndDate: dateStringSchema.optional(),
   offenceDescription: z.array(z.string()),
-  plea: z.string(),
+  plea: pleaSchema,
   adjudications: z.array(adjudicationDetailsSchema),
   disposalResults: z.array(disposalResultSchema)
 })
