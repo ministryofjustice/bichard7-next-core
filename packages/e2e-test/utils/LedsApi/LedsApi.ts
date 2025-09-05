@@ -10,7 +10,7 @@ export default class LedsApi implements PoliceApi {
   readonly mockServerClient: MockServerClient
 
   constructor(private readonly bichard: LedsBichard) {
-    const mockServerUrl = new URL(this.bichard.config.ledsBaseApiUrl)
+    const mockServerUrl = new URL(this.bichard.config.ledsApiUrl)
     this.mockServerClient = mockServerClient(mockServerUrl.hostname, Number(mockServerUrl.port))
   }
 
