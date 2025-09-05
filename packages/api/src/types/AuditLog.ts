@@ -25,15 +25,15 @@ export const OutputApiAuditLogSchema = z.object({
   createdBy: z.string().optional(),
   events: z.array(ApiAuditLogEventSchema).optional(),
   externalCorrelationId: z.string().optional(),
-  externalId: z.string().optional().optional(),
+  externalId: z.string().optional(),
   forceOwner: z.number().optional(),
   messageHash: z.string().optional(),
   messageId: z.string().optional(),
   pncStatus: z.string().optional(),
   receivedDate: z.string().datetime().optional(),
-  s3Path: z.string().optional().optional(),
+  s3Path: z.string().optional(),
   status: z.string().optional(),
-  systemId: z.string().optional().optional(),
+  systemId: z.string().optional(),
   triggerStatus: z.string().optional()
 })
 
