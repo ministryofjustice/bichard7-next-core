@@ -1,4 +1,5 @@
 import { randomUUID } from "crypto"
+import type { PncBichard } from "../types/PncMock"
 import ASN from "./asn"
 import PTIURN from "./ptiurn"
 import type Bichard from "./world"
@@ -91,7 +92,7 @@ export const replaceAllTags = (world: Bichard, message: string, prefix = "") => 
   return resultMessage
 }
 
-export const updateExpectedRequest = function (expectedRequest: string, world: Bichard) {
+export const updateExpectedRequest = function (expectedRequest: string, world: PncBichard) {
   let result = expectedRequest
 
   for (let i = 0; i < world.currentTestFamilyNames.length; i += 1) {

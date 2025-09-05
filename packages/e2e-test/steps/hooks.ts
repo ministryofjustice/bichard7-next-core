@@ -1,5 +1,6 @@
 import { BeforeAll } from "@cucumber/cucumber"
 import fs from "fs"
+import path from "path"
 import { After, Before } from "../helpers/stepsHelpers"
 
 const recordComparisons = process.env.RECORD_COMPARISONS === "true"
@@ -27,7 +28,8 @@ export const setupHooks = () => {
       throw Error("Couldn't get the feature URI")
     }
 
-    this.featureUri = context.gherkinDocument.uri
+    this.featureUri = path.resolve(context.gherkinDocument.uri)
+    this.specFolder = path.dirname(this.featureUri)
 
     this.testId = extractTestId(this.featureUri)
     if (recordComparisons) {

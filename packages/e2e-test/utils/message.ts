@@ -1,7 +1,6 @@
 import { randomUUID } from "crypto"
 import { expect } from "expect"
 import fs from "fs"
-import path from "path"
 import { checkAuditLogRecordExists } from "./auditLogging"
 import convertMessageToNewFormat from "./convertMessageToNewFormat"
 import { isError } from "./isError"
@@ -44,7 +43,6 @@ const sendMsg = async function (world: Bichard, messagePath: string) {
 }
 
 export const sendMessageForTest = function (this: Bichard, messageFileName: string) {
-  const specFolder = path.dirname(this.featureUri)
-  const messagePath = `${specFolder}/${messageFileName}.xml`
+  const messagePath = `${this.specFolder}/${messageFileName}.xml`
   return sendMsg(this, messagePath)
 }

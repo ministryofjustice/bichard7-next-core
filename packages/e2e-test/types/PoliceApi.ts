@@ -1,10 +1,15 @@
-import type { PartialPoliceApiRequestMock, PoliceApiRequestMockOptions } from "./PoliceApiRequestMock"
+export type PoliceApiRequestMockOptions = {}
+
+export type PartialPoliceApiRequestMock = {}
+
+export type PoliceApiRequestMock = PartialPoliceApiRequestMock & {}
 
 export default interface PoliceApi {
+  mocks: PoliceApiRequestMock[]
   checkMocks: () => Promise<void>
   createValidRecord: (record: string) => Promise<void>
   mockMissingDataForTest: () => Promise<void>
-  mockDataForTest: () => Promise<"pending" | undefined>
+  mockDataForTest: () => Promise<void>
   mockEnquiryFromNcm: (ncmFile: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
   mockUpdate: (code: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
   generateDummyUpdate(): PartialPoliceApiRequestMock

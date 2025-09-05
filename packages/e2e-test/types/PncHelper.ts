@@ -10,8 +10,8 @@ interface PncHelper {
   recordRequests(): Promise<void>
   recordMocks(): Promise<void>
   awaitMockRequest(id: string, timeout: number): Promise<PncMock | Error>
-  setupRecord(_specFolder: string): Promise<void>
-  checkRecord(_specFolder: string): Promise<boolean>
+  setupRecord(): Promise<void>
+  checkRecord(): Promise<boolean>
 }
 
 export default PncHelper

@@ -1,27 +1,25 @@
 import expect from "expect"
 import fs from "fs"
-import path from "path"
 import type PncHelper from "../../types/PncHelper"
+import type { PncBichard } from "../../types/PncMock"
 import { isError } from "../isError"
 import Poller from "../Poller"
 import { updateExpectedRequest } from "../tagProcessing"
-import type Bichard from "../world"
 import fetchMocks from "./fetchMocks"
 
 const skipPncValidation = process.env.SKIP_PNC_VALIDATION === "true"
 
-const checkMocksForRealPnc = async (bichard: Bichard, pncHelper: PncHelper): Promise<void> => {
+const checkMocksForRealPnc = async (bichard: PncBichard, pncHelper: PncHelper): Promise<void> => {
   if (skipPncValidation) {
     return
   }
 
-  const specFolder = path.dirname(bichard.featureUri)
-  const action = (): Promise<boolean> => pncHelper.checkRecord(specFolder)
+  const action = (): Promise<boolean> => pncHelper.checkRecord()
 
   const condition = (result: boolean) => {
     if (result) {
-      const before = fs.readFileSync(`${specFolder}/pnc-data.before.xml`).toString().trim()
-      const after = fs.readFileSync(`${specFolder}/pnc-data.after.xml`).toString().trim()
+      const before = fs.readFileSync(`${bichard.specFolder}/pnc-data.before.xml`).toString().trim()
+      const after = fs.readFileSync(`${bichard.specFolder}/pnc-data.after.xml`).toString().trim()
       if (before === after) {
         return false
       }
@@ -44,12 +42,12 @@ const checkMocksForRealPnc = async (bichard: Bichard, pncHelper: PncHelper): Pro
   expect(result).toBeTruthy()
 }
 
-const checkMocksForPncEmulator = async (bichard: Bichard, pncHelper: PncHelper): Promise<void> => {
+const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelper): Promise<void> => {
   await fetchMocks(bichard, pncHelper)
-  expect(bichard.mocks.length).toBeGreaterThan(0)
+  expect(bichard.policeApi.mocks.length).toBeGreaterThan(0)
 
   let mockCount = 0
-  bichard.mocks.forEach((mock) => {
+  bichard.policeApi.mocks.forEach((mock) => {
     if (mock.expectedRequest !== "") {
       if (mock.requests.length === 0) {
         throw new Error(`Mock not called for ${mock.matchRegex}`)
@@ -77,7 +75,7 @@ const checkMocksForPncEmulator = async (bichard: Bichard, pncHelper: PncHelper):
     mockCount += 1
   })
 
-  expect(mockCount).toEqual(bichard.mocks.length)
+  expect(mockCount).toEqual(bichard.policeApi.mocks.length)
 }
 
 export { checkMocksForPncEmulator, checkMocksForRealPnc }

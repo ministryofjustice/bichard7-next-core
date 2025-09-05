@@ -1,13 +1,12 @@
-import { resolve } from "path"
 import type PncHelper from "../../types/PncHelper"
 import type PncMock from "../../types/PncMock"
-import type Bichard from "../world"
+import type { PncBichard } from "../../types/PncMock"
 
-const addMockToPncEmulator = async (bichard: Bichard, pncHelper: PncHelper, specFolder: string): Promise<void> => {
-  const mocks = await import(resolve(`${specFolder}/mock-pnc-responses`))
-  bichard.mocks = mocks.default(resolve(`${specFolder}/pnc-data.xml`), bichard) as PncMock[]
+const addMockToPncEmulator = async (bichard: PncBichard, pncHelper: PncHelper): Promise<void> => {
+  const mocks = await import(`${bichard.specFolder}/mock-pnc-responses`)
+  bichard.policeApi.mocks = mocks.default(`${bichard.specFolder}/pnc-data.xml`, bichard) as PncMock[]
 
-  for (const mock of bichard.mocks) {
+  for (const mock of bichard.policeApi.mocks) {
     if (bichard.config.parallel) {
       const asnID = bichard.currentProsecutorReference[0][1].substring(
         bichard.currentProsecutorReference[0][1].length - 7

@@ -8,8 +8,9 @@ import BrowserHelper from "../helpers/BrowserHelper"
 import BrowserHelperEdge from "../helpers/BrowserHelperEdge"
 import IncomingMessageBucket from "../helpers/IncomingMessageBucket"
 import PostgresHelper from "../helpers/PostgresHelper"
+import type { LedsBichard } from "../types/LedsMock"
+import type { PncBichard } from "../types/PncMock"
 import type PoliceApi from "../types/PoliceApi"
-import type PoliceApiRequestMock from "../types/PoliceApiRequestMock"
 import { config, type Config } from "./config"
 import defaults from "./defaults"
 import { LedsApi } from "./LedsApi"
@@ -34,8 +35,8 @@ class Bichard extends World {
   auditLogApi: AuditLogApiHelper
   outputDir: string
   featureUri: string
+  specFolder: string
   recordId: string
-  mocks: PoliceApiRequestMock[]
   correlationIds: string[] = []
   testId?: string
 
@@ -74,7 +75,9 @@ class Bichard extends World {
     })
 
     this.policeApi =
-      process.env.USE_LEDS === "true" ? new LedsApi(this) : new PncApi(this, process.env.SKIP_PNC_VALIDATION === "true")
+      process.env.USE_LEDS === "true"
+        ? new LedsApi(this as LedsBichard)
+        : new PncApi(this as PncBichard, process.env.SKIP_PNC_VALIDATION === "true")
 
     this.browser = new ActualBrowserHelper({
       baseUrl: config.baseUrl,
