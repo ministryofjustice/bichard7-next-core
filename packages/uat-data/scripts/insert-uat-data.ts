@@ -4,7 +4,7 @@ import IncomingMessageBucket from "@moj-bichard7/e2e-tests/helpers/IncomingMessa
 import ASN from "@moj-bichard7/e2e-tests/utils/asn"
 import defaults from "@moj-bichard7/e2e-tests/utils/defaults"
 import { generateUpdate } from "@moj-bichard7/e2e-tests/utils/PncApi/mockGenerators"
-import MockPNCHelper from "@moj-bichard7/e2e-tests/utils/PncApi/pncHelpers/MockPNCHelper"
+import { MockPNCHelper } from "@moj-bichard7/e2e-tests/utils/PncApi/pncHelpers"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import path from "path"
