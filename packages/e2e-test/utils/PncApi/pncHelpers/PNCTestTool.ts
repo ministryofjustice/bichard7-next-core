@@ -95,7 +95,7 @@ type PNCTestToolOptions = {
   bichard: PncBichard
 }
 
-class PNCTestTool implements PncHelper {
+export class PNCTestTool implements PncHelper {
   private readonly baseUrl: string
   private readonly specFolder: string
 
@@ -242,5 +242,3 @@ class PNCTestTool implements PncHelper {
     throw new Error("Method not implemented.")
   }
 }
-
-export default PNCTestTool

@@ -7,7 +7,11 @@ import extractDates from "../extractDates"
 
 const parser = new XMLParser()
 
-const generateEnquiryFromNcm = (bichard: PncBichard, ncmFile: string, options?: PncMockOptions): PartialPncMock => {
+export const generateEnquiryFromNcm = (
+  bichard: PncBichard,
+  ncmFile: string,
+  options?: PncMockOptions
+): PartialPncMock => {
   let xmlData = fs.readFileSync(ncmFile, "utf8").toString()
   extractAllTags(bichard, xmlData)
   if (bichard.config.parallel) {
@@ -56,5 +60,3 @@ const generateEnquiryFromNcm = (bichard: PncBichard, ncmFile: string, options?: 
     count: options?.count || undefined
   }
 }
-
-export default generateEnquiryFromNcm

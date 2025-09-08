@@ -5,7 +5,7 @@ import type PoliceApi from "../../types/PoliceApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
 import * as mockGenerators from "./mockGenerators"
 
-export default class LedsApi implements PoliceApi {
+export class LedsApi implements PoliceApi {
   mocks: LedsMock[] = []
   readonly mockServerClient: MockServerClient
 

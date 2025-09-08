@@ -65,7 +65,7 @@ const generateResponseBody = (ncm: ParsedNcm): AsnQueryResponse => {
   }
 }
 
-const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, options?: LedsMockOptions): LedsMock => {
+export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, options?: LedsMockOptions): LedsMock => {
   let xmlData = fs.readFileSync(ncmFile, "utf8").toString()
   extractAllTags(bichard, xmlData)
   if (bichard.config.parallel) {
@@ -89,5 +89,3 @@ const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, options?
     receivedRequests: []
   }
 }
-
-export default generateAsnQueryFromNcm

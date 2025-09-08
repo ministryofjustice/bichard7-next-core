@@ -11,10 +11,9 @@ import createValidRecord from "./createValidRecord"
 import expectNotUpdated from "./expectNotUpdated"
 import fetchMocks from "./fetchMocks"
 import { generateDummyUpdate, generateEnquiryFromNcm, generateUpdate } from "./mockGenerators"
-import MockPNCHelper from "./pncHelpers/MockPNCHelper"
-import PNCTestTool from "./pncHelpers/PNCTestTool"
+import { MockPNCHelper, PNCTestTool } from "./pncHelpers"
 
-export default class PncApi implements PoliceApi {
+export class PncApi implements PoliceApi {
   mocks: PncMock[] = []
 
   private readonly pncHelper: PncHelper

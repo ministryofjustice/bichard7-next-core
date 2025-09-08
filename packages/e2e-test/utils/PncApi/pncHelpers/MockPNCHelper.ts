@@ -12,7 +12,7 @@ type MockPNCHelperOptions = {
   port: number
 }
 
-class MockPNCHelper implements PncHelper {
+export class MockPNCHelper implements PncHelper {
   constructor(private options: MockPNCHelperOptions) {}
 
   async addMock(matchRegex: string, response: string, count: number | null = null): Promise<string> {
@@ -96,5 +96,3 @@ class MockPNCHelper implements PncHelper {
     throw new Error("checkRecord on MockPNCHelper should not be called")
   }
 }
-
-export default MockPNCHelper

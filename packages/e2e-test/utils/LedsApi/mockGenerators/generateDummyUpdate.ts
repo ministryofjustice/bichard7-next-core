@@ -5,7 +5,7 @@ import type { LedsMock } from "../../../types/LedsMock"
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
 
-const generateDummyUpdate = (): LedsMock => {
+export const generateDummyUpdate = (): LedsMock => {
   const request = createMockRequest({ path: "/people/.*" })
   const response = createMockResponse<UpdateResponse>(
     {
@@ -21,5 +21,3 @@ const generateDummyUpdate = (): LedsMock => {
     receivedRequests: []
   }
 }
-
-export default generateDummyUpdate
