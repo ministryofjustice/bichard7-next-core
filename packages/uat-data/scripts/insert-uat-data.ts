@@ -1,10 +1,10 @@
 import { fakerEN_GB as faker } from "@faker-js/faker"
 import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
 import IncomingMessageBucket from "@moj-bichard7/e2e-tests/helpers/IncomingMessageBucket"
-import MockPNCHelper from "@moj-bichard7/e2e-tests/helpers/MockPNCHelper"
 import ASN from "@moj-bichard7/e2e-tests/utils/asn"
 import defaults from "@moj-bichard7/e2e-tests/utils/defaults"
-import { mockUpdate } from "@moj-bichard7/e2e-tests/utils/pncMocks"
+import { generateUpdate } from "@moj-bichard7/e2e-tests/utils/PncApi/mockGenerators"
+import MockPNCHelper from "@moj-bichard7/e2e-tests/utils/PncApi/pncHelpers/MockPNCHelper"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import path from "path"
@@ -24,7 +24,7 @@ if (DEPLOY_NAME !== "uat") {
   process.exit(1)
 }
 
-const pnc = new MockPNCHelper({
+const pncHelper = new MockPNCHelper({
   host: process.env.PNC_HOST || defaults.pncHost,
   port: Number(process.env.PNC_PORT || defaults.pncPort)
 })
@@ -68,7 +68,7 @@ const seedScenario = async (scenario: string) => {
     .toString()
     .replace(/FAMILY_NAME/g, familyName.padEnd(24, " "))
 
-  await pnc.addMock(`CXE01.*${asn.slice(-7)}`, pncData)
+  await pncHelper.addMock(`CXE01.*${asn.slice(-7)}`, pncData)
 
   const incomingMessage = fs
     .readFileSync(`${SCENARIO_PATH}/${scenario}/incoming-message.xml`)
@@ -101,12 +101,12 @@ const seedScenario = async (scenario: string) => {
 }
 
 const updatePncEmulator = async () => {
-  await pnc.clearMocks()
+  await pncHelper.clearMocks()
 
   await Promise.all(
     mockUpdateCodes.map((code) => {
-      const updateData = mockUpdate(code)
-      return pnc.addMock(updateData.matchRegex, updateData.response)
+      const updateData = generateUpdate(code)
+      return pncHelper.addMock(updateData.matchRegex, updateData.response)
     })
   )
 }

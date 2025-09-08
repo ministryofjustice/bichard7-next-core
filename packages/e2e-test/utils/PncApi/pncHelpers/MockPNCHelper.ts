@@ -2,17 +2,17 @@ import axios from "axios"
 import { promises as fs } from "fs"
 import type PncHelper from "../../../types/PncHelper"
 import type PncMock from "../../../types/PncMock"
+import type { PncBichard } from "../../../types/PncMock"
 import type PncRequestResponse from "../../../types/PncRequestResponse"
 import Poller from "../../Poller"
-import type Bichard from "../../world"
 
 type MockPNCHelperOptions = {
-  world?: Bichard
+  bichard?: PncBichard
   host: string
   port: number
 }
 
-class MockPNCHelper implements PncHelper {
+export class MockPNCHelper implements PncHelper {
   constructor(private options: MockPNCHelperOptions) {}
 
   async addMock(matchRegex: string, response: string, count: number | null = null): Promise<string> {
@@ -80,21 +80,19 @@ class MockPNCHelper implements PncHelper {
 
   async recordRequests() {
     const requests = await this.getRequests()
-    await fs.writeFile(`${this.options.world?.outputDir}/requests.json`, JSON.stringify(requests))
+    await fs.writeFile(`${this.options.bichard?.outputDir}/requests.json`, JSON.stringify(requests))
   }
 
   async recordMocks() {
     const mocks = await this.getMocks()
-    await fs.writeFile(`${this.options.world?.outputDir}/mocks.json`, JSON.stringify(mocks))
+    await fs.writeFile(`${this.options.bichard?.outputDir}/mocks.json`, JSON.stringify(mocks))
   }
 
-  setupRecord(_specFolder: string): Promise<void> {
+  setupRecord(): Promise<void> {
     throw new Error("setupRecord on MockPNCHelper should not be called")
   }
 
-  checkRecord(_specFolder: string): Promise<boolean> {
+  checkRecord(): Promise<boolean> {
     throw new Error("checkRecord on MockPNCHelper should not be called")
   }
 }
-
-export default MockPNCHelper

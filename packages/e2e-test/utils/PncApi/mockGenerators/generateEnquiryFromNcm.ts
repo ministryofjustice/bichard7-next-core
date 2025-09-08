@@ -1,18 +1,17 @@
 import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
-import type ParsedNcm from "../../types/ParsedNcm"
-import type { PartialPoliceApiRequestMock, PoliceApiRequestMockOptions } from "../../types/PoliceApiRequestMock"
-import { extractAllTags, replaceAllTags } from "../tagProcessing"
-import type Bichard from "../world"
-import extractDates from "./extractDates"
+import type ParsedNcm from "../../../types/ParsedNcm"
+import type { PartialPncMock, PncBichard, PncMockOptions } from "../../../types/PncMock"
+import { extractAllTags, replaceAllTags } from "../../tagProcessing"
+import extractDates from "../extractDates"
 
 const parser = new XMLParser()
 
-const mockEnquiryFromNcm = (
-  bichard: Bichard,
+export const generateEnquiryFromNcm = (
+  bichard: PncBichard,
   ncmFile: string,
-  options?: PoliceApiRequestMockOptions
-): PartialPoliceApiRequestMock => {
+  options?: PncMockOptions
+): PartialPncMock => {
   let xmlData = fs.readFileSync(ncmFile, "utf8").toString()
   extractAllTags(bichard, xmlData)
   if (bichard.config.parallel) {
@@ -61,5 +60,3 @@ const mockEnquiryFromNcm = (
     count: options?.count || undefined
   }
 }
-
-export default mockEnquiryFromNcm
