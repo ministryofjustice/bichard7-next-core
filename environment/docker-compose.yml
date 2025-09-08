@@ -319,7 +319,7 @@ services:
     restart: on-failure
 
   leds:
-    image: mockserver/mockserver:5.14.0
+    image: mockserver/mockserver
     ports:
       - 1080:1080
 
