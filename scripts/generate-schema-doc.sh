@@ -3,7 +3,7 @@
 set -ex
 
 JSON_SCHEMA_SCRIPT=$(cat <<-END
-import * as z from "zod";
+import z from "zod";
 import { unvalidatedHearingOutcomeSchemaJson } from "./packages/common/schemas/unvalidatedHearingOutcomeJson";
 import { incomingMessageParsedXmlSchema } from "./packages/common/schemas/spiResult";
 const fs = require("fs");
