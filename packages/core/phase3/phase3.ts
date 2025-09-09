@@ -3,7 +3,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import EventCode from "@moj-bichard7/common/types/EventCode"
 
 import type AuditLogger from "../types/AuditLogger"
-import type PncGatewayInterface from "../types/PncGatewayInterface"
+import type PoliceGateway from "../types/PoliceGateway"
 import type Phase3Result from "./types/Phase3Result"
 
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
@@ -18,12 +18,12 @@ import PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 const phase3 = async (
   inputMessage: PncUpdateDataset,
-  pncGateway: PncGatewayInterface,
+  policeGateway: PoliceGateway,
   auditLogger: AuditLogger
 ): Promise<Phase3Result | PncUpdateRequestError> => {
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
-  const operationResult = await performOperations(inputMessage, pncGateway).catch((error) => error)
+  const operationResult = await performOperations(inputMessage, policeGateway).catch((error) => error)
   if (operationResult instanceof PncApiError) {
     auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
 

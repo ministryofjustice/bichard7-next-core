@@ -10,7 +10,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import MockDate from "mockdate"
 
 import type AuditLogger from "../../../types/AuditLogger"
-import type PncGatewayInterface from "../../../types/PncGatewayInterface"
+import type PoliceGateway from "../../../types/PoliceGateway"
 
 import CoreAuditLogger from "../../../lib/auditLog/CoreAuditLogger"
 import { PncApiError } from "../../../lib/pnc/PncGateway"
@@ -22,7 +22,7 @@ import enrichWithPncQuery from "./enrichWithPncQuery"
 describe("enrichWithQuery()", () => {
   let incomingMessage: string
   let aho: AnnotatedHearingOutcome
-  let pncGateway: PncGatewayInterface
+  let pncGateway: PoliceGateway
   let auditLogger: AuditLogger
   let response: PncQueryResult
   let isIgnored = false

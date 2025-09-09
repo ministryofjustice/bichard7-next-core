@@ -14,12 +14,10 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
+import createPoliceGateway from "../../lib/createPoliceGateway"
 import getTriggersCount from "../../lib/database/getTriggersCount"
-import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
-import PncGateway from "../../lib/pnc/PncGateway"
 import phase1 from "../../phase1/phase1"
 
-const pncApiConfig = createPncApiConfig()
 const dbConfig = createDbConfig()
 
 const s3Config = createS3Config()
@@ -30,13 +28,13 @@ const processPhase1: ConductorWorker = {
   taskDefName: "process_phase1",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedHearingOutcomeSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
-    const pncGateway = new PncGateway(pncApiConfig)
+    const policeGateway = createPoliceGateway()
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     const db = postgres(dbConfig)
 
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase1)
 
-    const result = await phase1(s3TaskData, pncGateway, auditLogger)
+    const result = await phase1(s3TaskData, policeGateway, auditLogger)
 
     const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
     const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
