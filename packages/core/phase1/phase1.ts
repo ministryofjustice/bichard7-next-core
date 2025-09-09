@@ -4,7 +4,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogger from "../types/AuditLogger"
-import type PncGatewayInterface from "../types/PncGatewayInterface"
+import type PoliceGateway from "../types/PoliceGateway"
 import type Phase1Result from "./types/Phase1Result"
 
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
@@ -19,7 +19,7 @@ import { Phase1ResultType } from "./types/Phase1Result"
 
 const phase1 = async (
   hearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGatewayInterface,
+  policeGateway: PoliceGateway,
   auditLogger: AuditLogger
 ): Promise<Phase1Result> => {
   const correlationId = hearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
@@ -39,7 +39,7 @@ const phase1 = async (
 
   const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
 
-  const enrichedHearingOutcome = await enrichAho(hearingOutcome, pncGateway, auditLogger, isIgnored)
+  const enrichedHearingOutcome = await enrichAho(hearingOutcome, policeGateway, auditLogger, isIgnored)
 
   auditLogger.info(
     EventCode.HearingOutcomeDetails,

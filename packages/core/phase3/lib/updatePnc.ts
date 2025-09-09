@@ -2,7 +2,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
+import type PoliceGateway from "../../types/PoliceGateway"
 import type PncUpdateRequest from "../types/PncUpdateRequest"
 
 import generatePncUpdateExceptionFromMessage, {
@@ -17,12 +17,12 @@ const delayForPncLockErrorRetry = () => new Promise((resolve) => setTimeout(reso
 const updatePnc = async (
   pncUpdateDataset: PncUpdateDataset,
   pncUpdateRequest: PncUpdateRequest,
-  pncGateway: PncGatewayInterface
+  policeGateway: PoliceGateway
 ) => {
   const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   for (let pncLockErrorRetries = 0; pncLockErrorRetries < MAXIMUM_PNC_LOCK_ERROR_RETRIES; pncLockErrorRetries++) {
-    const pncUpdateResult = await pncGateway.update(pncUpdateRequest, correlationId)
+    const pncUpdateResult = await policeGateway.update(pncUpdateRequest, correlationId)
 
     if (!isError(pncUpdateResult)) {
       return pncUpdateResult

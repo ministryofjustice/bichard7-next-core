@@ -15,7 +15,7 @@ import https from "https"
 import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
 import type PncApiConfig from "../../types/PncApiConfig"
 import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../types/PncApiResult"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
+import type PoliceGateway from "../../types/PoliceGateway"
 
 import { pncApiResultSchema } from "../../schemas/pncApiResult"
 
@@ -112,7 +112,7 @@ export class PncApiError extends Error {
   }
 }
 
-export default class PncGateway implements PncGatewayInterface {
+export default class PncGateway implements PoliceGateway {
   queryTime: Date | undefined
 
   constructor(private config: PncApiConfig) {}
