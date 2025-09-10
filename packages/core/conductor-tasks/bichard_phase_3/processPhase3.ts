@@ -13,11 +13,9 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
-import createPncApiConfig from "../../lib/pnc/createPncApiConfig"
-import PncGateway from "../../lib/pnc/PncGateway"
+import createPoliceGateway from "../../lib/createPoliceGateway"
 import phase3 from "../../phase3/phase3"
 
-const pncApiConfig = createPncApiConfig()
 const s3Config = createS3Config()
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME || "conductor-task-data"
 const lockKey: string = "lockedByWorkstream"
@@ -26,12 +24,12 @@ const processPhase3: ConductorWorker = {
   taskDefName: "process_phase3",
   execute: s3TaskDataFetcher<PncUpdateDataset>(pncUpdateDatasetSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
-    const pncGateway = new PncGateway(pncApiConfig)
+    const policeGateway = createPoliceGateway()
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase3)
 
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase3)
 
-    const result = await phase3(s3TaskData, pncGateway, auditLogger)
+    const result = await phase3(s3TaskData, policeGateway, auditLogger)
     if (isError(result)) {
       return failed("Unexpected failure processing phase 3", ...result.messages)
     }

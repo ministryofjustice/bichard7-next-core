@@ -41,16 +41,13 @@ describe("Getting Audit Logs", () => {
 
   beforeEach(async () => {
     await helper.dynamo.clearDynamo()
+    await testDynamoGateway.deleteAll(auditLogDynamoConfig.auditLogTableName, "messageId")
+    await testDynamoGateway.deleteAll(auditLogDynamoConfig.eventsTableName, "_id")
   })
 
   afterAll(async () => {
     await app.close()
     await helper.postgres.close()
-  })
-
-  beforeEach(async () => {
-    await testDynamoGateway.deleteAll(auditLogDynamoConfig.auditLogTableName, "messageId")
-    await testDynamoGateway.deleteAll(auditLogDynamoConfig.eventsTableName, "_id")
   })
 
   it("should return the audit log records", async () => {
@@ -364,7 +361,7 @@ describe("Getting Audit Logs", () => {
         ["fetchTopExceptions",   true,   () => `${url}?eventsFilter=topExceptionsReport&start=2000-01-01&end=2099-01-01`],
         ["fetchAutomation",      true,   () => `${url}?eventsFilter=automationReport&start=2000-01-01&end=2099-01-01`]
       ]
-    )("for %s", (x, descending, baseUrl) => {
+    )("for %s", (_x, descending, baseUrl) => {
       it("should limit the number of records", async () => {
         const auditLogs = await createMockAuditLogs(2)
         if (isError(auditLogs)) {

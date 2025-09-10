@@ -2,6 +2,7 @@ export type ParsedNcmOffence = {
   BaseOffenceDetails: {
     OffenceCode: string
     OffenceSequenceNumber: number
+    OffenceWording: string
     OffenceTiming: {
       OffenceStart: {
         OffenceDateStartDate: string
@@ -16,6 +17,9 @@ export type ParsedNcmOffence = {
 type ParsedNcm = {
   NewCaseMessage: {
     Case: {
+      InitialHearing: {
+        CourtHearingLocation: string
+      }
       Defendant: {
         ProsecutorReference: string
         PoliceIndividualDefendant: {

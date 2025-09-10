@@ -1,35 +1,36 @@
 import { expect } from "expect"
-import path from "path"
 import type PncHelper from "../../types/PncHelper"
+import type PncMock from "../../types/PncMock"
+import type { PartialPncMock, PncBichard, PncMockOptions } from "../../types/PncMock"
 import type PoliceApi from "../../types/PoliceApi"
-import type { PartialPoliceApiRequestMock, PoliceApiRequestMockOptions } from "../../types/PoliceApiRequestMock"
 import defaults from "../defaults"
-import type Bichard from "../world"
 import addMockToPncEmulator from "./addMockToPncEmulator"
+import addMockToPncTestTool from "./addMockToPncTestTool"
 import { checkMocksForPncEmulator, checkMocksForRealPnc } from "./checkMocks"
 import createValidRecord from "./createValidRecord"
 import expectNotUpdated from "./expectNotUpdated"
 import fetchMocks from "./fetchMocks"
-import mockDataForTest from "./mockDataForTest"
-import mockEnquiryFromNcm from "./mockEnquiryFromNcm"
-import MockPNCHelper from "./pncHelpers/MockPNCHelper"
-import PNCTestTool from "./pncHelpers/PNCTestTool"
+import { generateDummyUpdate, generateEnquiryFromNcm, generateUpdate } from "./mockGenerators"
+import { MockPNCHelper, PNCTestTool } from "./pncHelpers"
 
-export default class PncApi implements PoliceApi {
+export class PncApi implements PoliceApi {
+  mocks: PncMock[] = []
+
   private readonly pncHelper: PncHelper
 
   constructor(
-    private readonly bichard: Bichard,
+    private readonly bichard: PncBichard,
     private readonly skipPncValidation: boolean
   ) {
     this.pncHelper = this.bichard.config.realPNC
       ? new PNCTestTool({
-          baseUrl: process.env.PNC_TEST_TOOL ?? ""
+          baseUrl: process.env.PNC_TEST_TOOL ?? "",
+          bichard: this.bichard
         })
       : new MockPNCHelper({
           host: process.env.PNC_HOST || defaults.pncHost,
           port: Number(process.env.PNC_PORT || defaults.pncPort),
-          world: this.bichard
+          bichard: this.bichard
         })
   }
 
@@ -45,13 +46,16 @@ export default class PncApi implements PoliceApi {
 
   async mockMissingDataForTest(): Promise<void> {
     if (!this.bichard.config.realPNC) {
-      const specFolder = path.dirname(this.bichard.featureUri)
-      await addMockToPncEmulator(this.bichard, this.pncHelper, specFolder)
+      await addMockToPncEmulator(this.bichard, this.pncHelper)
     }
   }
 
-  mockDataForTest(): Promise<"pending" | undefined> {
-    return mockDataForTest(this.bichard, this.pncHelper, this.skipPncValidation)
+  mockDataForTest(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      return addMockToPncTestTool(this.bichard, this.pncHelper, this.skipPncValidation)
+    }
+
+    return addMockToPncEmulator(this.bichard, this.pncHelper)
   }
 
   async expectNoRequests(): Promise<void> {
@@ -83,39 +87,21 @@ export default class PncApi implements PoliceApi {
     }
 
     await fetchMocks(this.bichard, this.pncHelper)
-    const updateMocks = this.bichard.mocks.filter((mock) => mock.matchRegex.startsWith("CXU"))
+    const updateMocks = this.mocks.filter((mock) => mock.matchRegex.startsWith("CXU"))
     const checkedMocks = updateMocks.filter((mock) => mock.requests.length > 0 && mock.requests[0].includes(data))
     expect(checkedMocks.length).toEqual(1)
   }
 
-  mockEnquiryFromNcm(ncmFile: string, options?: PoliceApiRequestMockOptions): PartialPoliceApiRequestMock {
-    return mockEnquiryFromNcm(this.bichard, ncmFile, options)
+  mockEnquiryFromNcm(ncmFile: string, options?: PncMockOptions): PartialPncMock {
+    return generateEnquiryFromNcm(this.bichard, ncmFile, options)
   }
 
-  mockUpdate(code: string, options?: PoliceApiRequestMockOptions): PartialPoliceApiRequestMock {
-    const response = `<?XML VERSION="1.0" STANDALONE="YES"?>
-    <${code}>
-      <GMH>073GENL000001RNEWREMPNCA05A73000017300000120210415154673000001                                             09000${
-        Math.floor(Math.random() * 8999) + 1000
-      }</GMH>
-      <TXT>A0031-REMAND REPORT HAS BEEN PROCESSED SUCCESSFULLY - ID: 00/263503N </TXT>
-      <GMT>000003073GENL000001S</GMT>
-    </${code}>`
-
-    return {
-      matchRegex: options?.matchRegex || code,
-      response,
-      expectedRequest: options?.expectedRequest || "",
-      count: options?.count || undefined
-    }
+  mockUpdate(code: string, options?: PncMockOptions): PartialPncMock {
+    return generateUpdate(code, options)
   }
 
-  generateDummyUpdate(): PartialPoliceApiRequestMock {
-    return {
-      matchRegex: "CXU",
-      response: '<?XML VERSION="1.0" STANDALONE="YES"?><DUMMY></DUMMY>',
-      expectedRequest: ""
-    }
+  generateDummyUpdate(): PartialPncMock {
+    return generateDummyUpdate()
   }
 
   clearMocks(): Promise<void> {

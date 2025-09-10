@@ -1,1 +1,1 @@
-export { default as PncApi } from "./PncApi"
+export * from "./PncApi"

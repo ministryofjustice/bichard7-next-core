@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import type AuditLogger from "../../types/AuditLogger"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
+import type PoliceGateway from "../../types/PoliceGateway"
 import type { EnrichAhoFunction } from "../types/EnrichAhoFunction"
 
 import {
@@ -17,7 +17,7 @@ import {
 
 const enrichAho = async (
   hearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGatewayInterface,
+  policeGateway: PoliceGateway,
   auditLogger: AuditLogger,
   isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
@@ -31,7 +31,7 @@ const enrichAho = async (
 
   enrichSteps.reduce((aho, fn) => fn(aho), hearingOutcome)
 
-  await enrichWithPncQuery(hearingOutcome, pncGateway, auditLogger, isIgnored)
+  await enrichWithPncQuery(hearingOutcome, policeGateway, auditLogger, isIgnored)
   enrichOffenceResultsPostPncEnrichment(hearingOutcome)
   enrichForceOwner(hearingOutcome)
 
