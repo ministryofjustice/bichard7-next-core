@@ -1,7 +1,7 @@
-import User from "./entities/User"
+import User from "../../../services/entities/User"
 
 const mockUseApiModule = (forcesWithCourtDateReceivedDateMismatchEnabled: Set<string>) => {
-  jest.doMock("../config.ts", () => ({
+  jest.doMock("../../../config.ts", () => ({
     FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: forcesWithCourtDateReceivedDateMismatchEnabled
   }))
 }
