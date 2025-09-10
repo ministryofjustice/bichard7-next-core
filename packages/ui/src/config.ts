@@ -19,6 +19,9 @@ export const USE_API_CASES_INDEX_ENDPOINT = (process.env.USE_API_CASES_INDEX_END
 export const FORCES_WITH_API_ENABLED: Set<string> = new Set(
   (process.env.FORCES_WITH_API_ENABLED ?? "").split(",").filter(Boolean)
 )
+export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = new Set(
+  (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? "").split(",").filter(Boolean)
+)
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
 const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
