@@ -210,6 +210,26 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
+    // expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
+
+    /* eslint-disable perfectionist/sort-objects -- Don't need for this test */
+    expect(caseMetadata.caseAges).toStrictEqual({
+      [CaseAge.Today]: "2",
+      [CaseAge.Yesterday]: "0",
+      [CaseAge.TwoDaysAgo]: "0",
+      [CaseAge.ThreeDaysAgo]: "0",
+      [CaseAge.FourDaysAgo]: "0",
+      [CaseAge.FiveDaysAgo]: "0",
+      [CaseAge.SixDaysAgo]: "0",
+      [CaseAge.SevenDaysAgo]: "0",
+      [CaseAge.EightDaysAgo]: "0",
+      [CaseAge.NineDaysAgo]: "0",
+      [CaseAge.TenDaysAgo]: "0",
+      [CaseAge.ElevenDaysAgo]: "0",
+      [CaseAge.TwelveDaysAgo]: "0",
+      [CaseAge.ThirteenDaysAgo]: "0",
+      [CaseAge.FourteenDaysAgo]: "0",
+      [CaseAge.FifteenDaysAgoAndOlder]: "0"
+    })
   })
 })
