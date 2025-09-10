@@ -208,6 +208,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
       defaultQuery,
       userWithExcludedTrigger
     )) as CaseIndexMetadata
+    console.log(JSON.stringify(caseMetadata.caseAges, null, 2))
 
     expect(caseMetadata.cases).toHaveLength(2)
     // expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
