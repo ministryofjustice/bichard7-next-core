@@ -17,7 +17,7 @@ export const createTriggers = async (
   triggers: Partial<Trigger>[],
   username?: string
 ) => {
-  Promise.all(
+  await Promise.all(
     triggers.map(async (trigger, index) => {
       const triggerStatus = resolutionStatusFromDb(trigger.status ?? null)
 
