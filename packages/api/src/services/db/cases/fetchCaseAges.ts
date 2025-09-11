@@ -24,7 +24,7 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     const slaDateTo = formatFormInputDateString(CaseAgeOptions[key]().to)
 
     const countSql = database.connection`
-      COUNT (CASE WHEN court_date >= ${slaDateFrom} AND court_date <= ${slaDateTo} THEN 1 END) AS ${database.connection([key])}
+      COUNT (DISTINCT CASE WHEN el.court_date >= ${slaDateFrom} AND el.court_date <= ${slaDateTo} THEN el.error_id END) AS ${database.connection([key])}
     `
     queries.push(index + 1 === slaCaseAges.length ? countSql : database.connection`${countSql},`)
 
