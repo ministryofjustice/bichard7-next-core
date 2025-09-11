@@ -5,8 +5,8 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PoliceGateway from "../../types/PoliceGateway"
-import type PncUpdateRequest from "../types/PncUpdateRequest"
 import type PncUpdateRequestGenerator from "../types/PncUpdateRequestGenerator"
+import type PoliceUpdateRequest from "../types/PoliceUpdateRequest"
 
 import PncUpdateRequestError from "../types/PncUpdateRequestError"
 import disposalUpdatedGenerator from "./pncUpdateRequestGenerators/disposalUpdatedGenerator"
@@ -27,7 +27,7 @@ const pncUpdateRequestGenerator: { [T in PncOperation]: PncUpdateRequestGenerato
 const generatePncUpdateRequest = <T extends PncOperation>(
   pncUpdateDataset: PncUpdateDataset,
   operation: Operation<T>
-): Result<PncUpdateRequest> => {
+): Result<PoliceUpdateRequest> => {
   const pncUpdateRequest = pncUpdateRequestGenerator[operation.code as T](pncUpdateDataset, operation)
   if (isError(pncUpdateRequest)) {
     const index = pncUpdateDataset.PncOperations.indexOf(operation)
@@ -37,7 +37,7 @@ const generatePncUpdateRequest = <T extends PncOperation>(
   return pncUpdateRequest
 }
 
-type OperationWithPncUpdateRequest = { operation: AnyOperation; pncUpdateRequest: PncUpdateRequest }
+type OperationWithPncUpdateRequest = { operation: AnyOperation; pncUpdateRequest: PoliceUpdateRequest }
 
 const generatePncUpdateRequests = (
   pncUpdateDataset: PncUpdateDataset

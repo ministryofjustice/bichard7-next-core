@@ -1,5 +1,5 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
@@ -9,10 +9,10 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 const triggerCode = TriggerCode.TRPR0018
 
 const findMatchingPncOffence = (
-  pncQuery: PncQueryResult,
+  pncQuery: PoliceQueryResult,
   caseReference: string | undefined,
   offence: Offence
-): PncOffence | undefined => {
+): PoliceOffence | undefined => {
   let courtCaseReference = caseReference
   if (!courtCaseReference && offence.CourtCaseReferenceNumber) {
     courtCaseReference = offence.CourtCaseReferenceNumber
@@ -33,7 +33,7 @@ const findMatchingPncOffence = (
   }
 }
 
-const datesAreDifferent = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
+const datesAreDifferent = (hoOffence: Offence, pncOffence: PoliceOffence): boolean => {
   const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
   const pncStartDate = pncOffence.offence.startDate
   const startDatesMatch = hoStartDate.getTime() === pncStartDate.getTime()

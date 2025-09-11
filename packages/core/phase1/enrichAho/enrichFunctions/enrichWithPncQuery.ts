@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceCourtCase, PoliceOffence, PolicePenaltyCase } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { lookupOffenceByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -16,11 +16,11 @@ import generatePncEnquiryExceptionFromMessage, {
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
-const addTitle = (offence: PncOffence): void => {
+const addTitle = (offence: PoliceOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
 }
 
-const addTitleToCaseOffences = (cases: PncCourtCase[] | PncPenaltyCase[] | undefined) =>
+const addTitleToCaseOffences = (cases: PoliceCourtCase[] | PolicePenaltyCase[] | undefined) =>
   cases && cases.forEach((c) => c.offences.forEach(addTitle))
 
 const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {

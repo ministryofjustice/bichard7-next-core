@@ -13,7 +13,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
-import createPoliceGateway from "../../lib/createPoliceGateway"
+import createPoliceGateway from "../../lib/policeGateway/createPoliceGateway"
 import phase3 from "../../phase3/phase3"
 
 const s3Config = createS3Config()

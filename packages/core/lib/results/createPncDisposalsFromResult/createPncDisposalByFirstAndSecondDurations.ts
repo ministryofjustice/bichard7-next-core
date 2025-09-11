@@ -1,5 +1,5 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
 import createPncDisposal from "./createPncDisposal"
@@ -9,7 +9,7 @@ import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 
 export const maxDisposalTextLength = 64
 
-const createPncDisposalByFirstAndSecondDurations = (result: Result): PncDisposal => {
+const createPncDisposalByFirstAndSecondDurations = (result: Result): PoliceDisposal => {
   const durations = result.Duration ?? []
   const firstDuration = durations[0]
   const secondDuration = durations[1] && durations[1].DurationType === "Suspended" ? durations[1] : undefined

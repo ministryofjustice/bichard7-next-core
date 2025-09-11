@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import type { PncUpdateDisposal } from "../../types/HearingDetails"
 
@@ -9,7 +9,7 @@ import isRecordableResult from "../../../lib/results/isRecordableResult"
 import { PncUpdateType } from "../../types/HearingDetails"
 import getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie from "./getConvictionDateFromPncAdjudicationIfOffenceIsAdjournedSineDie"
 
-const toDisposal = (pncDisposal: PncDisposal): PncUpdateDisposal => ({
+const toDisposal = (pncDisposal: PoliceDisposal): PncUpdateDisposal => ({
   disposalType: pncDisposal.type?.toString() ?? "",
   disposalQuantity: pncDisposal.qtyUnitsFined ?? "",
   disposalQualifiers: pncDisposal.qualifiers ?? "",
@@ -22,8 +22,8 @@ const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offen
   const recordableResults = results.filter(isRecordableResult).sort((a, b) => a.CJSresultCode - b.CJSresultCode)
   const hasAdjournmentResult = results.some((result) => result.ResultClass?.includes("Adjournment"))
 
-  let pncDisposals: PncDisposal[] = []
-  let pncDisposalsFor2060Result: PncDisposal[] = []
+  let pncDisposals: PoliceDisposal[] = []
+  let pncDisposalsFor2060Result: PoliceDisposal[] = []
   let has2063Result = false
 
   for (const recordableResult of recordableResults) {

@@ -1,12 +1,12 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncAdjudication } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceAdjudication } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 
 import isRecordableResult from "../results/isRecordableResult"
 import createPncAdjudication from "./createPncAdjudication"
 
-const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): PncAdjudication | undefined => {
+const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): PoliceAdjudication | undefined => {
   const result = results.find(isRecordableResult) ?? results[0]
   if (!result) {
     return undefined

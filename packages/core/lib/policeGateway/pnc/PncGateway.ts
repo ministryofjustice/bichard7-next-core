@@ -1,28 +1,29 @@
 import type {
-  PncAdjudication,
-  PncCourtCase,
-  PncDisposal,
-  PncOffence,
-  PncPenaltyCase,
-  PncQueryResult
-} from "@moj-bichard7/common/types/PncQueryResult"
+  PoliceAdjudication,
+  PoliceCourtCase,
+  PoliceDisposal,
+  PoliceOffence,
+  PolicePenaltyCase,
+  PoliceQueryResult
+} from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import axios from "axios"
 import https from "https"
 
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
-import type PncApiConfig from "../../types/PncApiConfig"
-import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../types/PncApiResult"
-import type PoliceGateway from "../../types/PoliceGateway"
+import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
+import type PncApiConfig from "../../../types/PncApiConfig"
+import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../../types/PncApiResult"
+import type PoliceGateway from "../../../types/PoliceGateway"
 
-import { pncApiResultSchema } from "../../schemas/pncApiResult"
+import { pncApiResultSchema } from "../../../schemas/pncApiResult"
+import PoliceApiError from "../PoliceApiError"
 
 axios.defaults.transformResponse = [axiosDateTransformer]
 
-const transform = (apiResponse: PncApiResult): PncQueryResult => {
-  const getAdjudication = (offence: PncApiOffence): PncAdjudication | undefined => {
+const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
+  const getAdjudication = (offence: PncApiOffence): PoliceAdjudication | undefined => {
     if (
       offence.pleaStatus &&
       offence.numberOffencesTakenIntoAccount !== undefined &&
@@ -38,13 +39,13 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
     }
   }
 
-  const getDisposals = (offence: PncApiOffence): PncDisposal[] | undefined => {
+  const getDisposals = (offence: PncApiOffence): PoliceDisposal[] | undefined => {
     if (offence.disposals.length === 0) {
       return undefined
     }
 
     return offence.disposals.map(
-      (d: PncApiDisposal): PncDisposal => ({
+      (d: PncApiDisposal): PoliceDisposal => ({
         qtyDate: d.disposalQuantityDate,
         qtyDuration: d.disposalQuantityDuration,
         qtyMonetaryValue: d.disposalQuantityMonetaryValue,
@@ -56,7 +57,7 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
     )
   }
 
-  const getOffences = (o: PncApiOffence): PncOffence => ({
+  const getOffences = (o: PncApiOffence): PoliceOffence => ({
     offence: {
       acpoOffenceCode: o.acpoOffenceCode,
       cjsOffenceCode: o.cjsOffenceCode,
@@ -78,14 +79,14 @@ const transform = (apiResponse: PncApiResult): PncQueryResult => {
     checkName: apiResponse.pncCheckName,
     pncId: apiResponse.pncIdentifier,
     courtCases: apiResponse.courtCases.map(
-      (c): PncCourtCase => ({
+      (c): PoliceCourtCase => ({
         courtCaseReference: c.courtCaseRefNo,
         crimeOffenceReference: c.crimeOffenceRefNo,
         offences: c.offences.map(getOffences)
       })
     ),
     penaltyCases: apiResponse.penaltyCases.map(
-      (c): PncPenaltyCase => ({
+      (c): PolicePenaltyCase => ({
         penaltyCaseReference: c.penaltyCaseRefNo,
         offences: c.offences.map(getOffences)
       })
@@ -102,22 +103,12 @@ const lookupPathFromOperation = (operation: PncOperation): string =>
     [PncOperation.SENTENCE_DEFERRED]: "sentence-deferred"
   })[operation]
 
-export class PncApiError extends Error {
-  get messages() {
-    return this._messages
-  }
-
-  constructor(private _messages: string[]) {
-    super(_messages[0])
-  }
-}
-
 export default class PncGateway implements PoliceGateway {
   queryTime: Date | undefined
 
   constructor(private config: PncApiConfig) {}
 
-  query(asn: string, correlationId: string): Promise<PncApiError | PncQueryResult> {
+  query(asn: string, correlationId: string): Promise<PoliceApiError | PoliceQueryResult> {
     this.queryTime = new Date()
     return axios
       .get(`${this.config.url}/records/${asn}`, {
@@ -136,14 +127,14 @@ export default class PncGateway implements PoliceGateway {
       })
       .catch((e) => {
         if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
-          return new PncApiError(e.response?.data?.errors)
+          return new PoliceApiError(e.response?.data?.errors)
         }
 
-        return new PncApiError([e.message])
+        return new PoliceApiError([e.message])
       })
   }
 
-  update(request: PncUpdateRequest, correlationId: string): Promise<PncApiError | void> {
+  update(request: PoliceUpdateRequest, correlationId: string): Promise<PoliceApiError | void> {
     const path = lookupPathFromOperation(request.operation)
 
     return axios
@@ -158,15 +149,15 @@ export default class PncGateway implements PoliceGateway {
       })
       .then((result) => {
         if (result.status !== 204) {
-          return new PncApiError(["Error updating PNC"])
+          return new PoliceApiError(["Error updating PNC"])
         }
       })
       .catch((e) => {
         if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
-          return new PncApiError(e.response?.data?.errors)
+          return new PoliceApiError(e.response?.data?.errors)
         }
 
-        return new PncApiError([e.message])
+        return new PoliceApiError([e.message])
       })
   }
 }

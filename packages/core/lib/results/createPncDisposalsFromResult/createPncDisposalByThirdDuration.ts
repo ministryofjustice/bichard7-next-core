@@ -1,5 +1,5 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
 import createPncDisposal from "./createPncDisposal"
@@ -19,7 +19,7 @@ const getDateSpecifiedInResult = (result: Result) => {
 const createPncDisposalByThirdDuration = (
   result: Result,
   validatedDisposalText: string | undefined
-): PncDisposal | undefined => {
+): PoliceDisposal | undefined => {
   const thirdDuration = result.Duration?.[2]
   if (!thirdDuration) {
     return undefined

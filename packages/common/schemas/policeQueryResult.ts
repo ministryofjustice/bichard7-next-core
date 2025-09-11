@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { ahoDescription } from "./schemaDescription"
 
-export const pncDisposalSchema = z.object({
+export const policeDisposalSchema = z.object({
   qtyDate: z.string().optional(),
   qtyDuration: z.string().optional(),
   qtyMonetaryValue: z.string().optional(),
@@ -12,7 +12,7 @@ export const pncDisposalSchema = z.object({
   type: z.number().optional()
 })
 
-export const pncAdjudicationSchema = z.object({
+export const policeAdjudicationSchema = z.object({
   offenceTICNumber: z.number(),
   plea: z.string(),
   sentenceDate: z.coerce.date().optional(),
@@ -20,9 +20,9 @@ export const pncAdjudicationSchema = z.object({
   weedFlag: z.string().optional()
 })
 
-export const pncOffenceSchema = z.object({
-  adjudication: pncAdjudicationSchema.optional(),
-  disposals: z.array(pncDisposalSchema).optional(),
+export const policeOffenceSchema = z.object({
+  adjudication: policeAdjudicationSchema.optional(),
+  disposals: z.array(policeDisposalSchema).optional(),
   offence: z.object({
     acpoOffenceCode: z.string().optional(),
     cjsOffenceCode: z.string(),
@@ -37,22 +37,22 @@ export const pncOffenceSchema = z.object({
   })
 })
 
-export const pncCourtCaseSchema = z.object({
+export const policeCourtCaseSchema = z.object({
   courtCaseReference: z.string(),
   crimeOffenceReference: z.string().optional(),
-  offences: z.array(pncOffenceSchema)
+  offences: z.array(policeOffenceSchema)
 })
 
-export const pncPenaltyCaseSchema = z.object({
-  offences: z.array(pncOffenceSchema),
+export const policePenaltyCaseSchema = z.object({
+  offences: z.array(policeOffenceSchema),
   penaltyCaseReference: z.string()
 })
 
-export const pncQueryResultSchema = z.object({
+export const policeQueryResultSchema = z.object({
   checkName: z.string(),
-  courtCases: z.array(pncCourtCaseSchema).optional(),
+  courtCases: z.array(policeCourtCaseSchema).optional(),
   croNumber: z.string().optional(),
   forceStationCode: z.string().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.forceStationCode.$description),
-  penaltyCases: z.array(pncPenaltyCaseSchema).optional(),
+  penaltyCases: z.array(policePenaltyCaseSchema).optional(),
   pncId: z.string()
 })

@@ -7,7 +7,7 @@ import type Phase3Result from "./types/Phase3Result"
 import type PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
-import { PncApiError } from "../lib/pnc/PncGateway"
+import PoliceApiError from "../lib/policeGateway/PoliceApiError"
 import MockPncGateway from "../tests/helpers/MockPncGateway"
 import phase3 from "./phase3"
 import generatePncUpdateDatasetWithOperations from "./tests/helpers/generatePncUpdateDatasetWithOperations"
@@ -21,7 +21,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
   })
 
   it("returns exceptions when updating the PNC fails", async () => {
-    const pncGateway = new MockPncGateway([new PncApiError(["I0007: Some PNC error message"])])
+    const pncGateway = new MockPncGateway([new PoliceApiError(["I0007: Some PNC error message"])])
 
     const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
       {

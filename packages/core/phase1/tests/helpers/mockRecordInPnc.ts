@@ -1,4 +1,4 @@
-import type { PncCourtCase, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceCourtCase, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
 
 import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
@@ -108,7 +108,7 @@ const mockRecordInPnc = async (
   await addMockToPnc(enquiry.matchRegex, enquiry.response)
 }
 
-const generateOffenceXml = (courtCase: PncCourtCase): string[] =>
+const generateOffenceXml = (courtCase: PoliceCourtCase): string[] =>
   courtCase.offences.reduce((acc: string[], { offence, adjudication, disposals }) => {
     const sequenceNumber = offence.sequenceNumber.toString().padStart(3, "0")
     const acpoOffenceCode = offence.acpoOffenceCode?.padEnd(13, " ")
@@ -145,7 +145,7 @@ const formatCcr = (pncId: string): string => {
   return idSegments.join("/").padEnd(15, " ")
 }
 
-const mockEnquiryFromPncResult = (pncQueryResult: PncQueryResult): PncMock => {
+const mockEnquiryFromPncResult = (pncQueryResult: PoliceQueryResult): PncMock => {
   const pncCaseType = "court" // TODO: make this work with penalty cases too
   const pncCaseElem = pncCaseType === "court" ? "CCR" : "PCR"
   const splitPncId = pncQueryResult.pncId.split("/")

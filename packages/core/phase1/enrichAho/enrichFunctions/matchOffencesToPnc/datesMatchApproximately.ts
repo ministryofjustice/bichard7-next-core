@@ -1,7 +1,7 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-export const datesMatchApproximately = (hoOffence: Offence, pncOffence: PncOffence): boolean => {
+export const datesMatchApproximately = (hoOffence: Offence, pncOffence: PoliceOffence): boolean => {
   const hoStartDate = hoOffence.ActualOffenceStartDate.StartDate
   const pncStartDate = pncOffence.offence.startDate
   const startDatesAreEqual = hoStartDate.getTime() === pncStartDate.getTime()

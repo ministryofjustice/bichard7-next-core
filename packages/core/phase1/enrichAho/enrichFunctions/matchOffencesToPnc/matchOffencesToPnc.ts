@@ -1,10 +1,10 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type {
-  PncCourtCase,
-  PncOffence,
-  PncPenaltyCase,
-  PncQueryResult
-} from "@moj-bichard7/common/types/PncQueryResult"
+  PoliceCourtCase,
+  PoliceOffence,
+  PolicePenaltyCase,
+  PoliceQueryResult
+} from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
@@ -22,15 +22,18 @@ export type OffenceMatch = {
 export type PncOffenceWithCaseRef = {
   caseReference: string
   caseType: CaseType
-  pncOffence: PncOffence
+  pncOffence: PoliceOffence
 }
 
-const matchingCourtCases = (cases: PncCourtCase[], pncOffences: PncOffenceWithCaseRef[]): PncCourtCase[] =>
+const matchingCourtCases = (cases: PoliceCourtCase[], pncOffences: PncOffenceWithCaseRef[]): PoliceCourtCase[] =>
   cases.filter((courtCase) =>
     pncOffences.some((pncOffence) => pncOffence.caseReference === courtCase.courtCaseReference)
   )
 
-const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCourtCase | PncPenaltyCase | undefined => {
+const getCaseByReference = (
+  pncQuery: PoliceQueryResult,
+  reference: string
+): PoliceCourtCase | PolicePenaltyCase | undefined => {
   if (pncQuery.courtCases) {
     for (const courtCase of pncQuery.courtCases) {
       if (courtCase.courtCaseReference === reference) {
@@ -49,7 +52,7 @@ const getCaseByReference = (pncQuery: PncQueryResult, reference: string): PncCou
 }
 
 const getFirstMatchingCourtCaseWith2060Result = (
-  cases: PncCourtCase[],
+  cases: PoliceCourtCase[],
   offenceMatcher: OffenceMatcher
 ): string | undefined => {
   const matchedCases = matchingCourtCases(cases, offenceMatcher.matchedPncOffences)
@@ -66,7 +69,7 @@ const getFirstMatchingCourtCaseWith2060Result = (
 }
 
 const getFirstMatchingCourtCaseWithoutAdjudications = (
-  cases: PncCourtCase[],
+  cases: PoliceCourtCase[],
   offenceMatcher: OffenceMatcher
 ): string | undefined => {
   const matchedCases = matchingCourtCases(cases, offenceMatcher.matchedPncOffences)
@@ -76,7 +79,7 @@ const getFirstMatchingCourtCaseWithoutAdjudications = (
   return matchedCasesWithNoAdjudications[0]?.courtCaseReference
 }
 
-const getFirstMatchingCourtCase = (cases: PncCourtCase[], offenceMatcher: OffenceMatcher): string | undefined =>
+const getFirstMatchingCourtCase = (cases: PoliceCourtCase[], offenceMatcher: OffenceMatcher): string | undefined =>
   matchingCourtCases(cases, offenceMatcher.matchedPncOffences)[0]?.courtCaseReference
 
 export const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) => {
@@ -87,7 +90,7 @@ export const pushToArrayInMap = <K, V>(map: Map<K, V[]>, key: K, ...items: V[]) 
   map.get(key)!.push(...items)
 }
 
-const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
+const getCaseReference = (pncCase: PoliceCourtCase | PolicePenaltyCase): string => {
   if ("courtCaseReference" in pncCase) {
     return pncCase.courtCaseReference
   }
@@ -95,10 +98,12 @@ const getCaseReference = (pncCase: PncCourtCase | PncPenaltyCase): string => {
   return pncCase.penaltyCaseReference
 }
 
-const getCaseType = (pncCase: PncCourtCase | PncPenaltyCase): CaseType =>
+const getCaseType = (pncCase: PoliceCourtCase | PolicePenaltyCase): CaseType =>
   "courtCaseReference" in pncCase ? CaseType.court : CaseType.penalty
 
-export const flattenCases = (courtCases: PncCourtCase[] | PncPenaltyCase[] | undefined): PncOffenceWithCaseRef[] =>
+export const flattenCases = (
+  courtCases: PoliceCourtCase[] | PolicePenaltyCase[] | undefined
+): PncOffenceWithCaseRef[] =>
   courtCases
     ?.map((cc) =>
       cc.offences.map((o) => ({ pncOffence: o, caseReference: getCaseReference(cc), caseType: getCaseType(cc) }))
@@ -134,7 +139,7 @@ const matchOffencesToPnc = (aho: AnnotatedHearingOutcome): AnnotatedHearingOutco
     }
 
     return acc
-  }, new Set<PncCourtCase | PncPenaltyCase>())
+  }, new Set<PoliceCourtCase | PolicePenaltyCase>())
 
   const matchedCourtCases = Array.from(matchedCases.values()).filter(
     (matchedCase) => "courtCaseReference" in matchedCase

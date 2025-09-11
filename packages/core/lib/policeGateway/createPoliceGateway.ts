@@ -1,4 +1,4 @@
-import type PoliceGateway from "../types/PoliceGateway"
+import type PoliceGateway from "../../types/PoliceGateway"
 
 import LedsGateway from "./leds/LedsGateway"
 import createPncApiConfig from "./pnc/createPncApiConfig"

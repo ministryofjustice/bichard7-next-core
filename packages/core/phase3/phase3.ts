@@ -9,7 +9,7 @@ import type Phase3Result from "./types/Phase3Result"
 import generateExceptionLogAttributes from "../lib/auditLog/generateExceptionLogAttributes"
 import generatePncUpdatedLogAttributes from "../lib/auditLog/generatePncUpdatedLogAttributes"
 import generateTriggersLogAttributes from "../lib/auditLog/generateTriggersLogAttributes"
-import { PncApiError } from "../lib/pnc/PncGateway"
+import PoliceApiError from "../lib/policeGateway/PoliceApiError"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
 import performOperations from "./lib/performOperations"
@@ -24,7 +24,7 @@ const phase3 = async (
   const correlationId = inputMessage.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   const operationResult = await performOperations(inputMessage, policeGateway).catch((error) => error)
-  if (operationResult instanceof PncApiError) {
+  if (operationResult instanceof PoliceApiError) {
     auditLogger.info(EventCode.ExceptionsGenerated, generateExceptionLogAttributes(inputMessage))
 
     return {

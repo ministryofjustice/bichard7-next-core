@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+import type { PoliceOffence, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
@@ -205,11 +205,11 @@ describe("Bichard Core Phase 2 processing logic", () => {
                     text: "EXCLUDED FROM LOCATION"
                   }
                 ]
-              } as PncOffence
+              } as PoliceOffence
             ]
           }
         ]
-      } as PncQueryResult
+      } as PoliceQueryResult
 
       const result = phase2Handler(inputMessageWithException, auditLogger)
 

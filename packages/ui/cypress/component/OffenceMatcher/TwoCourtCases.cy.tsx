@@ -1,4 +1,4 @@
-import { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 import { CourtCaseContext } from "context/CourtCaseContext"
 import { CsrfTokenContext } from "context/CsrfTokenContext"
 import OffenceMatcher from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/Matcher/OffenceMatcher"
@@ -16,7 +16,7 @@ const candidates: Candidates[] = [
           cjsOffenceCode: "OF61016",
           sequenceNumber: 1
         }
-      } as PncOffence
+      } as PoliceOffence
     ]
   },
   {
@@ -27,7 +27,7 @@ const candidates: Candidates[] = [
           cjsOffenceCode: "OF61016",
           sequenceNumber: 2
         }
-      } as PncOffence
+      } as PoliceOffence
     ]
   }
 ]

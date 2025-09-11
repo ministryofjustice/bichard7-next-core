@@ -1,10 +1,10 @@
 import type { PncException } from "@moj-bichard7/common/types/Exception"
-import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import { PncApiError } from "../../../lib/pnc/PncGateway"
+import PoliceApiError from "../../../lib/policeGateway/PoliceApiError"
 
 /*
 Sample CXE element
@@ -27,7 +27,7 @@ Sample CXE element
 </CXE01>
 */
 
-export default (ahoXml: string): PncApiError | PncQueryResult => {
+export default (ahoXml: string): PoliceApiError | PoliceQueryResult => {
   const parsedAho = parseAhoXml(ahoXml)
 
   if (isError(parsedAho)) {
@@ -40,5 +40,5 @@ export default (ahoXml: string): PncApiError | PncQueryResult => {
 
   const errorMessages = parsedAho.Exceptions.filter((e) => "message" in e).map((e) => (e as PncException).message)
 
-  return new PncApiError(errorMessages)
+  return new PoliceApiError(errorMessages)
 }
