@@ -1,5 +1,5 @@
 import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
@@ -106,7 +106,7 @@ const generateAho = (
           ]
         }
       ]
-    } as unknown as PncQueryResult
+    } as unknown as PoliceQueryResult
   } else {
     aho.PncQuery = undefined
   }

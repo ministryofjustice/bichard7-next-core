@@ -1,12 +1,12 @@
 import type { Adj, AhoXmlPncOffence, Cxe01, Dis } from "../../types/AhoXml"
 import type {
-  PncAdjudication,
-  PncCourtCase,
-  PncDisposal,
-  PncOffence,
-  PncPenaltyCase,
-  PncQueryResult
-} from "../../types/PncQueryResult"
+  PoliceAdjudication,
+  PoliceCourtCase,
+  PoliceDisposal,
+  PoliceOffence,
+  PolicePenaltyCase,
+  PoliceQueryResult
+} from "../../types/PoliceQueryResult"
 
 import parsePncDate from "./parsePncDate"
 
@@ -53,7 +53,7 @@ const extractTimes = (offence: AhoXmlPncOffence): OffenceTimes => {
   return times
 }
 
-const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PncDisposal[] | undefined => {
+const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PoliceDisposal[] | undefined => {
   if (!dis) {
     return undefined
   }
@@ -70,7 +70,7 @@ const mapXmlDisposalsToAho = (dis: Dis | Dis[] | undefined): PncDisposal[] | und
   }))
 }
 
-const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undefined => {
+const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PoliceAdjudication | undefined => {
   if (!adj) {
     return undefined
   }
@@ -84,9 +84,9 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PncAdjudication | undef
   }
 }
 
-const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PncOffence[] =>
+const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PoliceOffence[] =>
   offences.map(
-    (offence): PncOffence => ({
+    (offence): PoliceOffence => ({
       adjudication: mapXmlAdjudicationsToAho(offence.ADJ),
       disposals: mapXmlDisposalsToAho(offence.DISList?.DIS),
       offence: {
@@ -103,8 +103,8 @@ const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PncOffence[] =>
   )
 
 const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
-  let courtCases: PncCourtCase[] | undefined
-  let penaltyCases: PncPenaltyCase[] | undefined
+  let courtCases: PoliceCourtCase[] | undefined
+  let penaltyCases: PolicePenaltyCase[] | undefined
   if (!cxe) {
     return undefined
   }
@@ -144,7 +144,7 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
   }
 
   const checkName = cxe.IDS["@_Checkname"]
-  const result: PncQueryResult = {
+  const result: PoliceQueryResult = {
     checkName,
     courtCases,
     forceStationCode: cxe.FSC["@_FSCode"],

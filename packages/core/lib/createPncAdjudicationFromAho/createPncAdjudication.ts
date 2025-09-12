@@ -1,4 +1,4 @@
-import type { PncAdjudication } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceAdjudication } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 const GUILTY_DISPOSALS = [1029, 1030]
 const NOT_GUILTY_DISPOSALS = [2006, 2050, 2051]
@@ -40,7 +40,7 @@ const createPncAdjudication = (
   verdict: string,
   dateOfHearing: Date,
   numberOfOffencesTIC: number
-): PncAdjudication => ({
+): PoliceAdjudication => ({
   verdict: preProcessVerdict(disposalType, verdict),
   sentenceDate: preProcessHearingDate(disposalType, dateOfHearing),
   offenceTICNumber: numberOfOffencesTIC,

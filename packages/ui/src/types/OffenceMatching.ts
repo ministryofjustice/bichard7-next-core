@@ -1,3 +1,3 @@
-import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-export type Candidates = { courtCaseReference: string; offences: PncOffence[] }
+export type Candidates = { courtCaseReference: string; offences: PoliceOffence[] }

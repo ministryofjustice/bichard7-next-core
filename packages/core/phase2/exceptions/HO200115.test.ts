@@ -1,5 +1,5 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
@@ -27,7 +27,7 @@ describe("HO200115", () => {
 
     aho.PncQuery = {
       courtCases: [{ courtCaseReference: "1", offences: [{ disposals: [{ type: 2007 }] }] }]
-    } as PncQueryResult
+    } as PoliceQueryResult
 
     const exceptions = HO200115(aho)
 

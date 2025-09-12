@@ -1,5 +1,5 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import type { CheckExceptionFn } from "./areResultsMatchingPncAdjudicationAndDisposals"
 
@@ -8,7 +8,7 @@ import isResultMatchingAPncDisposal from "./isResultMatchingAPncDisposal"
 
 const areResultsMatchingAPncDisposal = (
   offence: Offence,
-  disposals: PncDisposal[],
+  disposals: PoliceDisposal[],
   offenceIndex?: number,
   checkExceptionFn?: CheckExceptionFn
 ): boolean =>

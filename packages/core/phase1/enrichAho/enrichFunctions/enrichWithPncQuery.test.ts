@@ -1,5 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
@@ -13,7 +13,7 @@ import type AuditLogger from "../../../types/AuditLogger"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import CoreAuditLogger from "../../../lib/auditLog/CoreAuditLogger"
-import { PncApiError } from "../../../lib/pnc/PncGateway"
+import PoliceApiError from "../../../lib/policeGateway/PoliceApiError"
 import MockPncGateway from "../../../tests/helpers/MockPncGateway"
 import generateMessage from "../../tests/helpers/generateMessage"
 import generateMockPncQueryResult from "../../tests/helpers/generateMockPncQueryResult"
@@ -24,7 +24,7 @@ describe("enrichWithQuery()", () => {
   let aho: AnnotatedHearingOutcome
   let pncGateway: PoliceGateway
   let auditLogger: AuditLogger
-  let response: PncQueryResult
+  let response: PoliceQueryResult
   let isIgnored = false
   const mockedDate = new Date()
 
@@ -70,7 +70,7 @@ describe("enrichWithQuery()", () => {
   it("should not generate PNC exceptions when the AHO is ignored", async () => {
     isIgnored = true
     const errorMessages = ["I1009 PNC ERROR MESSAGE"]
-    pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+    pncGateway = new MockPncGateway(new PoliceApiError(errorMessages))
 
     const result = await enrichWithPncQuery(aho, pncGateway, auditLogger, isIgnored)
     const exceptions = result.Exceptions
@@ -81,7 +81,7 @@ describe("enrichWithQuery()", () => {
   describe("when the case is not recordable", () => {
     it("should generate PNC exceptions from PNC error messages when the error is not a 'not found' error", async () => {
       const errorMessages = ["I0013 - message 1", "I0208 - message 2"]
-      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+      pncGateway = new MockPncGateway(new PoliceApiError(errorMessages))
 
       const result = await enrichWithPncQuery(aho, pncGateway, auditLogger, isIgnored)
       const exceptions = result.Exceptions
@@ -101,7 +101,7 @@ describe("enrichWithQuery()", () => {
 
     it("should not generate PNC exceptions when there is a 'not found' error", async () => {
       const errorMessages = ["I1008 ARREST/SUMMONS REF ABC123 NOT FOUND"]
-      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+      pncGateway = new MockPncGateway(new PoliceApiError(errorMessages))
 
       const result = await enrichWithPncQuery(aho, pncGateway, auditLogger, isIgnored)
       const exceptions = result.Exceptions
@@ -117,7 +117,7 @@ describe("enrichWithQuery()", () => {
 
     it("should generate PNC exceptions when there is a 'not found' error", async () => {
       const errorMessages = ["I1008 ARREST/SUMMONS REF ABC123 NOT FOUND"]
-      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+      pncGateway = new MockPncGateway(new PoliceApiError(errorMessages))
 
       const result = await enrichWithPncQuery(aho, pncGateway, auditLogger, isIgnored)
       const exceptions = result.Exceptions
@@ -132,7 +132,7 @@ describe("enrichWithQuery()", () => {
 
     it("should generate PNC exceptions from PNC error messages when there is not a 'not found' error", async () => {
       const errorMessages = ["I0013 - message 1", "I0208 - message 2"]
-      pncGateway = new MockPncGateway(new PncApiError(errorMessages))
+      pncGateway = new MockPncGateway(new PoliceApiError(errorMessages))
 
       const result = await enrichWithPncQuery(aho, pncGateway, auditLogger, isIgnored)
       const exceptions = result.Exceptions
@@ -213,7 +213,7 @@ describe("enrichWithQuery()", () => {
   it("should log a failed PNC query", async () => {
     const auditLoggerSpy = jest.spyOn(auditLogger, "info")
     jest.spyOn(pncGateway, "query").mockImplementation(() => {
-      return Promise.resolve(new PncApiError(["PNC error", "PNC error 2"]))
+      return Promise.resolve(new PoliceApiError(["PNC error", "PNC error 2"]))
     })
 
     await enrichWithPncQuery(aho, pncGateway, auditLogger, isIgnored)

@@ -5,8 +5,8 @@ import "../tests/helpers/setEnvironmentVariables"
 import type { PncException } from "@moj-bichard7/common/types/Exception"
 
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
-import "jest-xml-matcher"
 import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+import "jest-xml-matcher"
 
 import type { ParseIncomingMessageResult } from "../tests/helpers/parseIncomingMessage"
 import type { Phase3E2eComparison } from "../tests/types/ComparisonFile"
@@ -14,7 +14,7 @@ import type Phase3Result from "./types/Phase3Result"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
-import { PncApiError } from "../lib/pnc/PncGateway"
+import PoliceApiError from "../lib/policeGateway/PoliceApiError"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
 import { clearDatabase, disconnectDb, insertRecords, sql } from "../tests/helpers/comparison/ComparisonTestDbHelpers"
@@ -62,7 +62,7 @@ describe("phase3", () => {
 
       pncExceptions = parsedOutgoingMessage.message?.Exceptions.filter((exception) => "message" in exception) ?? []
 
-      const mockPncResponses: (PncApiError | undefined)[] = []
+      const mockPncResponses: (PoliceApiError | undefined)[] = []
 
       const beforeOperations = getPncOperationsFromPncUpdateDataset(parsedIncomingMessage.message)
       const beforeUnattemptedOperations = beforeOperations.filter((operation) => operation.status !== "Completed")
@@ -76,12 +76,12 @@ describe("phase3", () => {
       mockPncResponses.push(...Array.from({ length: completedOperationCount }, () => undefined))
 
       if (pncExceptions.length > 0) {
-        const pncApiError = new PncApiError(pncExceptions.map((exception) => exception.message))
+        const policeApiError = new PoliceApiError(pncExceptions.map((exception) => exception.message))
 
-        mockPncResponses.push(pncApiError)
+        mockPncResponses.push(policeApiError)
 
         if (pncExceptions?.some(isPncLockError)) {
-          mockPncResponses.push(...Array.from({ length: MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1 }, () => pncApiError))
+          mockPncResponses.push(...Array.from({ length: MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1 }, () => policeApiError))
         }
       }
 

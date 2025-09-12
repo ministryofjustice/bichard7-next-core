@@ -14,8 +14,8 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
-import createPoliceGateway from "../../lib/createPoliceGateway"
 import getTriggersCount from "../../lib/database/getTriggersCount"
+import createPoliceGateway from "../../lib/policeGateway/createPoliceGateway"
 import phase1 from "../../phase1/phase1"
 
 const dbConfig = createDbConfig()

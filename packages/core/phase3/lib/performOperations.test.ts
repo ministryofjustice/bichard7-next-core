@@ -4,7 +4,7 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type PncUpdateRequestError from "../types/PncUpdateRequestError"
 
-import { PncApiError } from "../../lib/pnc/PncGateway"
+import PoliceApiError from "../../lib/policeGateway/PoliceApiError"
 import MockPncGateway from "../../tests/helpers/MockPncGateway"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
 import performOperations from "./performOperations"
@@ -66,7 +66,7 @@ describe("performOperations", () => {
   })
 
   it("fails an operation unsuccessfully updated by the PNC", async () => {
-    const pncGateway = new MockPncGateway([new PncApiError(["I0007: Some PNC error message"])])
+    const pncGateway = new MockPncGateway([new PoliceApiError(["I0007: Some PNC error message"])])
 
     const completedRemandOperation: Operation<PncOperation.REMAND> = { code: PncOperation.REMAND, status: "Completed" }
     const normalDisposalOperation: Operation<PncOperation.NORMAL_DISPOSAL> = {

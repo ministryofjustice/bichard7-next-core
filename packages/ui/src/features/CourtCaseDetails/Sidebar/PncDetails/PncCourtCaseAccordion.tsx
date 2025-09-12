@@ -1,4 +1,4 @@
-import type { PncCourtCase } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceCourtCase } from "@moj-bichard7/common/types/PoliceQueryResult"
 import ConditionalRender from "components/ConditionalRender"
 import { useState } from "react"
 import Disposal from "./Disposal"
@@ -16,7 +16,7 @@ import PncOffenceDetails from "./PncOffenceDetails"
 
 interface PncCourtCaseAccordionProps {
   index: number
-  pncCourtCase: PncCourtCase
+  pncCourtCase: PoliceCourtCase
 }
 
 const PncCourtCaseAccordion = ({

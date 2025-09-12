@@ -1,4 +1,4 @@
-import type { PncDisposal } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
@@ -36,7 +36,7 @@ const createPncDisposal = ({
   resultQualifiers,
   secondaryDurationLength,
   secondaryDurationUnit
-}: CreatePncDisposalRequest): PncDisposal => ({
+}: CreatePncDisposalRequest): PoliceDisposal => ({
   qtyDuration: durationUnit ? durationUnit + durationLength?.toString() : "",
   qtyMonetaryValue: amountSpecifiedInResult?.toString(),
   qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",

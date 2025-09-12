@@ -9,7 +9,7 @@ import type PncUpdateRequestError from "../../phase3/types/PncUpdateRequestError
 import type { ProcessMessageOptions } from "../types/ProcessMessageOptions"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
-import { PncApiError } from "../../lib/pnc/PncGateway"
+import PoliceApiError from "../../lib/policeGateway/PoliceApiError"
 import CorePhase1 from "../../phase1/phase1"
 import generateMockPncQueryResult from "../../phase1/tests/helpers/generateMockPncQueryResult"
 import CorePhase2 from "../../phase2/phase2"
@@ -31,7 +31,7 @@ const createMockPncGateway = (
 ) => {
   const mockPncResponse = recordable
     ? pncErrorMessage
-      ? new PncApiError([pncErrorMessage])
+      ? new PoliceApiError([pncErrorMessage])
       : generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
 

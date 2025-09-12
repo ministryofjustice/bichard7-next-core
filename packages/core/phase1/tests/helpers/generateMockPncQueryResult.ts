@@ -1,4 +1,4 @@
-import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 import type { OffenceParsedXml, ResultedCaseMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
 
 import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
@@ -25,7 +25,7 @@ export default (
   pncOverrides: Partial<ResultedCaseMessageParsedXml> = {},
   pncCaseType = "court",
   pncAdjudication = false
-): PncQueryResult => {
+): PoliceQueryResult => {
   const spi = merge(parseSpiResult(xml).DeliverRequest.Message.ResultedCaseMessage, pncOverrides)
 
   const spiCase = spi.Session.Case
@@ -35,7 +35,7 @@ export default (
       12
     ) ?? "CHECKNAME"
   const prosecutorRef = spiCase.Defendant.ProsecutorReference.slice(-8)
-  const offences = spiCase.Defendant.Offence.map((offence: OffenceParsedXml): PncOffence => {
+  const offences = spiCase.Defendant.Offence.map((offence: OffenceParsedXml): PoliceOffence => {
     const dates = extractDates(offence)
     return {
       offence: {
@@ -69,7 +69,7 @@ export default (
           ]
         }
 
-  const result: PncQueryResult = {
+  const result: PoliceQueryResult = {
     forceStationCode: spiCase.PTIURN.substring(0, 3),
     checkName,
     pncId: `2000/${prosecutorRef}`,
