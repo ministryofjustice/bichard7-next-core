@@ -2,7 +2,7 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type { ResultClassHandler } from "./ResultClassHandler"
 
-import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
+import areAllPoliceDisposalsWithType from "../../areAllPoliceDisposalsWithType"
 import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
 import createOperation from "../createOperation"
 
@@ -22,7 +22,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   }
 
   if (result.PNCAdjudicationExists) {
-    return resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)
+    return resubmitted || areAllPoliceDisposalsWithType(aho, offence, 2007)
       ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
       : []
   }

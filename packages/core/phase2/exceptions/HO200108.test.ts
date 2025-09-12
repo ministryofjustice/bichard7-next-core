@@ -5,7 +5,7 @@ import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
+import areAllPoliceDisposalsWithType from "../lib/areAllPoliceDisposalsWithType"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
 import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
@@ -13,11 +13,11 @@ import HO200108 from "./HO200108"
 
 jest.mock("../lib/hasUnmatchedPncOffences")
 jest.mock("../lib/areAllResultsOnPnc")
-jest.mock("../lib/areAllPncDisposalsWithType")
+jest.mock("../lib/areAllPoliceDisposalsWithType")
 
 const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
 const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
-const mockedAllPncDisposalsWithType = areAllPncDisposalsWithType as jest.Mock
+const mockedAllPncDisposalsWithType = areAllPoliceDisposalsWithType as jest.Mock
 
 describe("HO200108", () => {
   it("returns a HO200108 exception when ResultClass is JUDGEMENT_WITH_FINAL_RESULT or ADJOURNMENT_WITH_JUDGEMENT, offence and result are recordable, no fixed penalty, no pnc adjudication, doesn't satisfy conditions for exception HO200124, PNCDisposalType is 2060, and RCC check fails", () => {

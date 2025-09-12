@@ -2,7 +2,7 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type { ResultClassHandler } from "./ResultClassHandler"
 
-import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
+import areAllPoliceDisposalsWithType from "../../areAllPoliceDisposalsWithType"
 import areAnyPncDisposalsWithType from "../../areAnyPncDisposalsWithType"
 import createOperation from "../createOperation"
 
@@ -23,7 +23,7 @@ export const handleSentence: ResultClassHandler = ({ aho, offence, resubmitted, 
     return [createOperation(PncOperation.SENTENCE_DEFERRED, operationData)]
   }
 
-  if (resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)) {
+  if (resubmitted || areAllPoliceDisposalsWithType(aho, offence, 2007)) {
     return [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
   }
 
