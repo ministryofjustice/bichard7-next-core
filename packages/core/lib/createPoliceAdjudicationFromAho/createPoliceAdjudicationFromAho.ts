@@ -4,9 +4,9 @@ import type { PoliceAdjudication } from "@moj-bichard7/common/types/PoliceQueryR
 import { lookupPleaStatusByCjsCode, lookupVerdictByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 
 import isRecordableResult from "../results/isRecordableResult"
-import createPncAdjudication from "./createPncAdjudication"
+import createPoliceAdjudication from "./createPoliceAdjudication"
 
-const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): PoliceAdjudication | undefined => {
+const createPoliceAdjudicationFromAho = (results: Result[], hearingDate: Date): PoliceAdjudication | undefined => {
   const result = results.find(isRecordableResult) ?? results[0]
   if (!result) {
     return undefined
@@ -21,7 +21,7 @@ const createPncAdjudicationFromAho = (results: Result[], hearingDate: Date): Pol
     verdict = "GUILTY"
   }
 
-  return createPncAdjudication(result.PNCDisposalType, pleaStatus, verdict, hearingDate, numberOfOffencesTIC)
+  return createPoliceAdjudication(result.PNCDisposalType, pleaStatus, verdict, hearingDate, numberOfOffencesTIC)
 }
 
-export default createPncAdjudicationFromAho
+export default createPoliceAdjudicationFromAho

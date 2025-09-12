@@ -5,7 +5,7 @@ export type ResultClassHandler = (params: ResultClassHandlerParams) => Operation
 
 export type ResultClassHandlerParams = {
   aho: AnnotatedHearingOutcome
-  areAllResultsOnPnc: boolean
+  areAllResultsInPoliceCourtCase: boolean
   offence: Offence
   resubmitted: boolean
   result: Result

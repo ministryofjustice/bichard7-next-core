@@ -1,9 +1,9 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
-import createPncDisposalByThirdDuration from "./createPncDisposalByThirdDuration"
+import createPoliceDisposalByThirdDuration from "./createPoliceDisposalByThirdDuration"
 
-describe("createPncDisposalByThirdDuration", () => {
+describe("createPoliceDisposalByThirdDuration", () => {
   describe("when the result doesn't have a third duration", () => {
     it("returns undefined", () => {
       const hoResult = {
@@ -15,9 +15,9 @@ describe("createPncDisposalByThirdDuration", () => {
         AmountSpecifiedInResult: [{ Amount: 1 }, { Amount: 2 }]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
+      const disposal = createPoliceDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal).toBeUndefined()
+      expect(disposal).toBeUndefined()
     })
   })
 
@@ -44,16 +44,16 @@ describe("createPncDisposalByThirdDuration", () => {
         ]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
+      const disposal = createPoliceDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal).toBeDefined()
-      expect(pncDisposal?.qtyMonetaryValue).toBeUndefined()
+      expect(disposal).toBeDefined()
+      expect(disposal?.qtyMonetaryValue).toBeUndefined()
     })
 
-    it("returns a PNC disposal", () => {
-      const pncDisposal = createPncDisposalByThirdDuration(resultWithThirdDuration, "Validated disposal text")
+    it("returns a disposal", () => {
+      const disposal = createPoliceDisposalByThirdDuration(resultWithThirdDuration, "Validated disposal text")
 
-      expect(pncDisposal).toStrictEqual({
+      expect(disposal).toStrictEqual({
         qtyDate: "",
         qtyDuration: "H1",
         qtyMonetaryValue: `${amountForThirdDuration}`,
@@ -64,7 +64,7 @@ describe("createPncDisposalByThirdDuration", () => {
       })
     })
 
-    it("returns a PNC disposal with the second start date specified in the result", () => {
+    it("returns a disposal with the second start date specified in the result", () => {
       const hoResult = {
         ...resultWithThirdDuration,
         DateSpecifiedInResult: [
@@ -74,12 +74,12 @@ describe("createPncDisposalByThirdDuration", () => {
         ]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
+      const disposal = createPoliceDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal?.qtyDate).toBe("23032024")
+      expect(disposal?.qtyDate).toBe("23032024")
     })
 
-    it("returns a PNC disposal with the second end date specified in the result if no second start date", () => {
+    it("returns a disposal with the second end date specified in the result if no second start date", () => {
       const hoResult = {
         ...resultWithThirdDuration,
         DateSpecifiedInResult: [
@@ -89,9 +89,9 @@ describe("createPncDisposalByThirdDuration", () => {
         ]
       } as Result
 
-      const pncDisposal = createPncDisposalByThirdDuration(hoResult, "Validated disposal text")
+      const disposal = createPoliceDisposalByThirdDuration(hoResult, "Validated disposal text")
 
-      expect(pncDisposal?.qtyDate).toBe("10102024")
+      expect(disposal?.qtyDate).toBe("10102024")
     })
   })
 })

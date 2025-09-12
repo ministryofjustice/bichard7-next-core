@@ -1,12 +1,12 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import hasUnmatchedPncOffences from "./hasUnmatchedPncOffences"
+import hasUnmatchedPoliceOffences from "./hasUnmatchedPoliceOffences"
 
 const createAho = (params: {
   hoCourtCaseReference: string
   hoOffences: { ccr?: string; reasonSequence?: null | string }[]
-  pncCourtCases?: [{ courtCaseReference: string; offenceSequenceNumbers: number[] }]
-  pncQueryExists: boolean
+  policeCourtCases?: [{ courtCaseReference: string; offenceSequenceNumbers: number[] }]
+  policeQueryExists: boolean
 }) =>
   ({
     AnnotatedHearingOutcome: {
@@ -22,9 +22,9 @@ const createAho = (params: {
         }
       }
     },
-    PncQuery: params.pncQueryExists
+    PncQuery: params.policeQueryExists
       ? {
-          courtCases: params.pncCourtCases?.map(({ courtCaseReference, offenceSequenceNumbers }) => ({
+          courtCases: params.policeCourtCases?.map(({ courtCaseReference, offenceSequenceNumbers }) => ({
             courtCaseReference,
             offences: offenceSequenceNumbers.map((sequenceNumber) => ({
               offence: {
@@ -36,7 +36,7 @@ const createAho = (params: {
       : undefined
   }) as unknown as AnnotatedHearingOutcome
 
-describe("hasUnmatchedPncOffences", () => {
+describe("hasUnmatchedPoliceOffences", () => {
   it("should return false and use passed court case reference to match offences when passed court case reference has value", () => {
     const aho = createAho({
       hoCourtCaseReference: "123",
@@ -44,11 +44,11 @@ describe("hasUnmatchedPncOffences", () => {
         { reasonSequence: "1", ccr: "123" },
         { reasonSequence: "2", ccr: "123" }
       ],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(false)
   })
@@ -60,11 +60,11 @@ describe("hasUnmatchedPncOffences", () => {
         { reasonSequence: "1", ccr: undefined },
         { reasonSequence: "2", ccr: undefined }
       ],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho)
+    const result = hasUnmatchedPoliceOffences(aho)
 
     expect(result).toBe(false)
   })
@@ -76,11 +76,11 @@ describe("hasUnmatchedPncOffences", () => {
         { reasonSequence: "1", ccr: "123" },
         { reasonSequence: "2", ccr: "123" }
       ],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho)
+    const result = hasUnmatchedPoliceOffences(aho)
 
     expect(result).toBe(true)
   })
@@ -92,37 +92,37 @@ describe("hasUnmatchedPncOffences", () => {
         { reasonSequence: "1", ccr: "456" },
         { reasonSequence: "2", ccr: "123" }
       ],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(false)
   })
 
-  it("should return true when AHO offence reason sequence is null and PNC offence sequence number is 0", () => {
+  it("should return true when AHO offence reason sequence is null and police offence sequence number is 0", () => {
     const aho = createAho({
       hoCourtCaseReference: "123",
       hoOffences: [{ reasonSequence: null, ccr: "123" }],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [0, 1] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [0, 1] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(true)
   })
 
-  it("should return true when AHO offence reason sequence is undefined and PNC offence sequence number is 0", () => {
+  it("should return true when AHO offence reason sequence is undefined and police offence sequence number is 0", () => {
     const aho = createAho({
       hoCourtCaseReference: "123",
       hoOffences: [{ reasonSequence: undefined, ccr: "123" }],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [0, 1] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [0, 1] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(true)
   })
@@ -134,27 +134,27 @@ describe("hasUnmatchedPncOffences", () => {
         { reasonSequence: "1", ccr: "456" },
         { reasonSequence: "3", ccr: "123" }
       ],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(true)
   })
 
-  it("should return true when pncCourtCases is undefined", () => {
+  it("should return true when policeCourtCases is undefined", () => {
     const aho = createAho({
       hoCourtCaseReference: "123",
       hoOffences: [
         { reasonSequence: "1", ccr: "123" },
         { reasonSequence: "2", ccr: "123" }
       ],
-      pncCourtCases: undefined,
-      pncQueryExists: true
+      policeCourtCases: undefined,
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(true)
   })
@@ -166,11 +166,11 @@ describe("hasUnmatchedPncOffences", () => {
         { reasonSequence: "1", ccr: "123" },
         { reasonSequence: "2", ccr: "123" }
       ],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: false
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: false
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(true)
   })
@@ -179,11 +179,11 @@ describe("hasUnmatchedPncOffences", () => {
     const aho = createAho({
       hoCourtCaseReference: "123",
       hoOffences: [],
-      pncCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
-      pncQueryExists: true
+      policeCourtCases: [{ courtCaseReference: "123", offenceSequenceNumbers: [1, 2] }],
+      policeQueryExists: true
     })
 
-    const result = hasUnmatchedPncOffences(aho, "123")
+    const result = hasUnmatchedPoliceOffences(aho, "123")
 
     expect(result).toBe(true)
   })

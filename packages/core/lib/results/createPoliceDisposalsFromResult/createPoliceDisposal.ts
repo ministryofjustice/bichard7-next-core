@@ -14,7 +14,7 @@ const INCLUDE_QUALIFIERS_LIST = [
 const NO_DISPOSAL_DATE_LIST = [2059, 3050, 3105]
 const DISPOSAL_QUALIFIERS_FIELD_LENGTH = 12
 
-type CreatePncDisposalRequest = {
+type CreatePoliceDisposalRequest = {
   amountSpecifiedInResult?: number
   dateSpecifiedInResult?: Date
   disposalText?: string
@@ -26,7 +26,7 @@ type CreatePncDisposalRequest = {
   secondaryDurationUnit?: string
 }
 
-const createPncDisposal = ({
+const createPoliceDisposal = ({
   amountSpecifiedInResult,
   dateSpecifiedInResult,
   disposalText,
@@ -36,7 +36,7 @@ const createPncDisposal = ({
   resultQualifiers,
   secondaryDurationLength,
   secondaryDurationUnit
-}: CreatePncDisposalRequest): PoliceDisposal => ({
+}: CreatePoliceDisposalRequest): PoliceDisposal => ({
   qtyDuration: durationUnit ? durationUnit + durationLength?.toString() : "",
   qtyMonetaryValue: amountSpecifiedInResult?.toString(),
   qtyDate: dateSpecifiedInResult ? formatDateSpecifiedInResult(dateSpecifiedInResult, true) : "",
@@ -128,4 +128,4 @@ const preProcessDisposalQualifiers = (
   return disposalQualifier
 }
 
-export default createPncDisposal
+export default createPoliceDisposal

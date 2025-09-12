@@ -1,10 +1,10 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import isResultMatchingAPncDisposal from "./isResultMatchingAPncDisposal"
+import isResultMatchingAPoliceDisposal from "./isResultMatchingAPoliceDisposal"
 
-describe("isResultMatchingAPncDisposal", () => {
-  const pncDisposal: PncDisposal = {
+describe("isResultMatchingAPoliceDisposal", () => {
+  const policeDisposal: PoliceDisposal = {
     qtyDuration: "A4",
     qtyDate: "21052024",
     qtyMonetaryValue: "25000",
@@ -38,8 +38,8 @@ describe("isResultMatchingAPncDisposal", () => {
     ]
   } as Result
 
-  it("returns true when an AHO result matches a PNC disposal on all its matching fields", () => {
-    const result = isResultMatchingAPncDisposal(ahoResult, [pncDisposal])
+  it("returns true when an AHO result matches a disposal on all its matching fields", () => {
+    const result = isResultMatchingAPoliceDisposal(ahoResult, [policeDisposal])
 
     expect(result).toBe(true)
   })
@@ -47,28 +47,28 @@ describe("isResultMatchingAPncDisposal", () => {
   it("returns false when disposals list is empty", () => {
     const ahoResult = { ResultQualifierVariable: [] } as unknown as Result
 
-    const result = isResultMatchingAPncDisposal(ahoResult, [])
+    const result = isResultMatchingAPoliceDisposal(ahoResult, [])
 
     expect(result).toBe(false)
   })
 
-  it("returns false when an AHO result has a different type to the PNC disposal", () => {
+  it("returns false when an AHO result has a different type to the disposal", () => {
     const nonMatchingAhoResult = { ...ahoResult, PNCDisposalType: 1234 }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
 
-  it("returns false when an AHO result has different qualifiers to the PNC disposal", () => {
+  it("returns false when an AHO result has different qualifiers to the disposal", () => {
     const nonMatchingAhoResult = { ...ahoResult, ResultQualifierVariable: [{ Code: "XXX" }] }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
 
-  it("returns false when an AHO result has different dates to the PNC disposal", () => {
+  it("returns false when an AHO result has different dates to the disposal", () => {
     const nonMatchingAhoResult = {
       ...ahoResult,
       DateSpecifiedInResult: [
@@ -79,12 +79,12 @@ describe("isResultMatchingAPncDisposal", () => {
       ]
     }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
 
-  it("returns false when an AHO result has different monetary values to the PNC disposal", () => {
+  it("returns false when an AHO result has different monetary values to the disposal", () => {
     const nonMatchingAhoResult = {
       ...ahoResult,
       AmountSpecifiedInResult: [
@@ -95,12 +95,12 @@ describe("isResultMatchingAPncDisposal", () => {
       ]
     }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
 
-  it("returns false when an AHO result has different durations to the PNC disposal", () => {
+  it("returns false when an AHO result has different durations to the disposal", () => {
     const nonMatchingAhoResult = {
       ...ahoResult,
       Duration: [
@@ -112,7 +112,7 @@ describe("isResultMatchingAPncDisposal", () => {
       ]
     }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
@@ -123,18 +123,18 @@ describe("isResultMatchingAPncDisposal", () => {
       Duration: []
     }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
 
-  it("returns false when an AHO result has different text to the PNC disposal", () => {
+  it("returns false when an AHO result has different text to the disposal", () => {
     const nonMatchingAhoResult = {
       ...ahoResult,
       ResultVariableText: "SOMETHING DIFFERENT"
     }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
@@ -145,18 +145,18 @@ describe("isResultMatchingAPncDisposal", () => {
       ResultVariableText: undefined
     }
 
-    const result = isResultMatchingAPncDisposal(nonMatchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(nonMatchingAhoResult, [policeDisposal])
 
     expect(result).toBe(false)
   })
 
-  it("returns true when an AHO result has same text with case difference to the PNC disposal", () => {
+  it("returns true when an AHO result has same text with case difference to the disposal", () => {
     const matchingAhoResult = {
       ...ahoResult,
       ResultVariableText: ahoResult.ResultVariableText?.toUpperCase()
     }
 
-    const result = isResultMatchingAPncDisposal(matchingAhoResult, [pncDisposal])
+    const result = isResultMatchingAPoliceDisposal(matchingAhoResult, [policeDisposal])
 
     expect(result).toBe(true)
   })

@@ -1,8 +1,8 @@
 import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/generateAhoMatchingPncAdjudicationAndDisposals"
-import areAllPncDisposalsWithType from "./areAllPncDisposalsWithType"
+import areAllPoliceDisposalsWithType from "./areAllPoliceDisposalsWithType"
 
-describe("areAllPncDisposalsWithType", () => {
-  it("returns true when all PNC disposals match disposal type, offence CCR is undefined, and AHO CCR has value and matches PNC CCR", () => {
+describe("areAllPoliceDisposalsWithType", () => {
+  it("returns true when all disposals match disposal type, offence CCR is undefined, and AHO CCR has value and matches PNC CCR", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "2"
     aho.PncQuery!.courtCases![0].courtCaseReference = "2"
@@ -10,12 +10,12 @@ describe("areAllPncDisposalsWithType", () => {
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     offence.CourtCaseReferenceNumber = undefined
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(true)
   })
 
-  it("returns true when all PNC disposals match disposal type, AHO CCR is undefined, and offence CCR has value and matches PNC CCR", () => {
+  it("returns true when all disposals match disposal type, AHO CCR is undefined, and offence CCR has value and matches PNC CCR", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = undefined
     aho.PncQuery!.courtCases![0].courtCaseReference = "2"
@@ -23,43 +23,43 @@ describe("areAllPncDisposalsWithType", () => {
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
     offence.CourtCaseReferenceNumber = "2"
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(true)
   })
 
-  it("returns false when CCR matches but there is a non-matching PNC disposal", () => {
+  it("returns false when CCR matches but there is a non-matching disposal", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "2"
     aho.PncQuery!.courtCases![0].courtCaseReference = "2"
     aho.PncQuery!.courtCases![0].offences![0].disposals = [{ type: 2007 }, { type: 2068 }]
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when CCR matches but there are no PNC disposal", () => {
+  it("returns false when CCR matches but there are no disposal", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "2"
     aho.PncQuery!.courtCases![0].courtCaseReference = "2"
     aho.PncQuery!.courtCases![0].offences![0].disposals = []
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when CCR matches but PNC disposal is undefined", () => {
+  it("returns false when CCR matches but disposal is undefined", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "2"
     aho.PncQuery!.courtCases![0].courtCaseReference = "2"
     aho.PncQuery!.courtCases![0].offences![0].disposals = undefined
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
@@ -70,7 +70,7 @@ describe("areAllPncDisposalsWithType", () => {
     aho.PncQuery!.courtCases = undefined
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
@@ -81,19 +81,19 @@ describe("areAllPncDisposalsWithType", () => {
     aho.PncQuery = undefined
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when all PNC disposals are 2007 but CCR does not match", () => {
+  it("returns false when all disposals are 2007 but CCR does not match", () => {
     const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
     aho.AnnotatedHearingOutcome.HearingOutcome.Case.CourtCaseReferenceNumber = "3"
     aho.PncQuery!.courtCases![0].courtCaseReference = "2"
     aho.PncQuery!.courtCases![0].offences![0].disposals = [{ type: 2007 }, { type: 2007 }]
     const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
 
-    const result = areAllPncDisposalsWithType(aho, offence, 2007)
+    const result = areAllPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })

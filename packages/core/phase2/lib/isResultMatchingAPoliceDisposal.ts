@@ -1,14 +1,14 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import { createPncDisposalsFromResult } from "../../lib/results/createPncDisposalsFromResult"
+import { createPoliceDisposalsFromResult } from "../../lib/results/createPoliceDisposalsFromResult"
 
-const isResultMatchingAPncDisposal = (result: Result, pncDisposals: PoliceDisposal[]): boolean =>
-  createPncDisposalsFromResult(result).every((ahoDisposal) =>
-    pncDisposals.some((pncDisposal) => arePncDisposalsMatching(ahoDisposal, pncDisposal))
+const isResultMatchingAPoliceDisposal = (result: Result, policeDisposals: PoliceDisposal[]): boolean =>
+  createPoliceDisposalsFromResult(result).every((ahoDisposal) =>
+    policeDisposals.some((policeDisposal) => arePoliceDisposalsMatching(ahoDisposal, policeDisposal))
   )
 
-const arePncDisposalsMatching = (firstDisposal: PoliceDisposal, secondDisposal: PoliceDisposal): boolean =>
+const arePoliceDisposalsMatching = (firstDisposal: PoliceDisposal, secondDisposal: PoliceDisposal): boolean =>
   firstDisposal.type === secondDisposal.type &&
   areStringsEqual(firstDisposal.qtyDuration, secondDisposal.qtyDuration) &&
   areStringsEqual(firstDisposal.qtyDate, secondDisposal.qtyDate) &&
@@ -20,4 +20,4 @@ const arePncDisposalsMatching = (firstDisposal: PoliceDisposal, secondDisposal: 
 const areStringsEqual = (firstObject: string | undefined, secondObject: string | undefined) =>
   (!firstObject && !secondObject) || firstObject === secondObject
 
-export default isResultMatchingAPncDisposal
+export default isResultMatchingAPoliceDisposal

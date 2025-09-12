@@ -11,12 +11,12 @@ import fs from "fs"
 import MockDate from "mockdate"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "./lib/areAllResultsInPoliceCourtCase"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 
-jest.mock("./lib/areAllResultsOnPnc")
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+jest.mock("./lib/areAllResultsInPoliceCourtCase")
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()

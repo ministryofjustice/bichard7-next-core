@@ -4,7 +4,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import type { PncUpdateArrestHearing } from "../../types/HearingDetails"
 
 import getOffenceCode from "../../../lib/offences/getOffenceCode"
-import formatDateSpecifiedInResult from "../../../lib/results/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import formatDateSpecifiedInResult from "../../../lib/results/createPoliceDisposalsFromResult/formatDateSpecifiedInResult"
 import { PncUpdateType } from "../../types/HearingDetails"
 import getForceStationCode from "../getForceStationCode"
 import { preProcessOffenceReasonSequence } from "./preProcessOffenceReasonSequence"

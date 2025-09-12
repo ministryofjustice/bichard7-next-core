@@ -8,15 +8,15 @@ import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import areAllPncDisposalsWithType from "../lib/areAllPncDisposalsWithType"
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllPoliceDisposalsWithType from "../lib/areAllPoliceDisposalsWithType"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
 const HO200101: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const resubmitted = isPncUpdateDataset(aho)
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-  if (fixedPenalty || resubmitted || areAllResultsOnPnc(aho)) {
+  if (fixedPenalty || resubmitted || areAllResultsInPoliceCourtCase(aho)) {
     return []
   }
 
@@ -24,7 +24,7 @@ const HO200101: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
     if (
       result.PNCAdjudicationExists &&
       result.ResultClass === ResultClass.ADJOURNMENT_WITH_JUDGEMENT &&
-      !areAllPncDisposalsWithType(aho, offence, 2007)
+      !areAllPoliceDisposalsWithType(aho, offence, 2007)
     ) {
       exceptions.push({
         code: ExceptionCode.HO200101,

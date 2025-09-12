@@ -1,13 +1,13 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
+import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import areResultsMatchAPncDisposal from "./areResultsMatchingAPncDisposal"
+import areResultsMatchAPoliceDisposal from "./areResultsMatchingAPoliceDisposal"
 
-describe("areResultsMatchingAPncDisposal", () => {
+describe("areResultsMatchingAPoliceDisposal", () => {
   const matchingResult = { PNCDisposalType: 2063, ResultQualifierVariable: [] }
   const nonMatchingResult = { PNCDisposalType: 2064, ResultQualifierVariable: [] }
   const unrecordableResult = { PNCDisposalType: 1000, ResultQualifierVariable: [] }
-  const pncDisposals = [
+  const policeDisposals = [
     {
       qtyDate: "",
       qtyDuration: "",
@@ -17,52 +17,52 @@ describe("areResultsMatchingAPncDisposal", () => {
       qualifiers: "",
       text: ""
     }
-  ] as PncDisposal[]
+  ] as PoliceDisposal[]
 
   it("returns true when only an unrecordable result", () => {
     const offence = { Result: [unrecordableResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(true)
   })
 
-  it("returns true when all results match a PNC disposal", () => {
+  it("returns true when all results match a disposal", () => {
     const offence = { Result: [matchingResult, matchingResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(true)
   })
 
-  it("returns true when an unrecordable result with a result that matches a PNC disposal", () => {
+  it("returns true when an unrecordable result with a result that matches a disposal", () => {
     const offence = { Result: [matchingResult, unrecordableResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(true)
   })
 
-  it("returns false when an unrecordable result with a result that doesn't match a PNC disposal", () => {
+  it("returns false when an unrecordable result with a result that doesn't match a disposal", () => {
     const offence = { Result: [nonMatchingResult, unrecordableResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when all results don't match a PNC disposal", () => {
+  it("returns false when all results don't match a disposal", () => {
     const offence = { Result: [nonMatchingResult, nonMatchingResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when a result that matches and doesn't match a PNC disposal", () => {
+  it("returns false when a result that matches and doesn't match a disposal", () => {
     const offence = { Result: [nonMatchingResult, matchingResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(false)
   })
@@ -70,7 +70,7 @@ describe("areResultsMatchingAPncDisposal", () => {
   it("returns false when a unrecordable result, matching result and non-matching result", () => {
     const offence = { Result: [nonMatchingResult, unrecordableResult, matchingResult] } as unknown as Offence
 
-    const result = areResultsMatchAPncDisposal(offence, pncDisposals)
+    const result = areResultsMatchAPoliceDisposal(offence, policeDisposals)
 
     expect(result).toBe(false)
   })
@@ -81,7 +81,7 @@ describe("areResultsMatchingAPncDisposal", () => {
     const checkExceptionFn = jest.fn()
     const offence = { Result: [matchingResult] } as unknown as Offence
 
-    areResultsMatchAPncDisposal(offence, pncDisposals, offenceIndex, checkExceptionFn)
+    areResultsMatchAPoliceDisposal(offence, policeDisposals, offenceIndex, checkExceptionFn)
 
     expect(checkExceptionFn).toHaveBeenNthCalledWith(1, matchingResult, offenceIndex, resultIndex)
   })
@@ -90,7 +90,7 @@ describe("areResultsMatchingAPncDisposal", () => {
     const checkExceptionFn = jest.fn()
     const offence = { Result: [matchingResult] } as unknown as Offence
 
-    areResultsMatchAPncDisposal(offence, pncDisposals, undefined, checkExceptionFn)
+    areResultsMatchAPoliceDisposal(offence, policeDisposals, undefined, checkExceptionFn)
 
     expect(checkExceptionFn).not.toHaveBeenCalled()
   })

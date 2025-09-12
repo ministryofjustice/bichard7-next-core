@@ -12,7 +12,7 @@ import addExceptionsToAho from "../lib/exceptions/addExceptionsToAho"
 import generateTriggers from "../lib/triggers/generateTriggers"
 import Phase from "../types/Phase"
 import generateExceptions from "./exceptions/generateExceptions"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "./lib/areAllResultsInPoliceCourtCase"
 import { generateOperations } from "./lib/generateOperations"
 import isAncillaryInterimCase from "./lib/isAncillaryInterimCase"
 import refreshOperations from "./lib/refreshOperations"
@@ -75,7 +75,7 @@ const phase2 = (inputMessage: AnnotatedHearingOutcome | PncUpdateDataset, auditL
     }
   }
 
-  const allResultsOnPnc = areAllResultsOnPnc(outputMessage)
+  const allResultsOnPnc = areAllResultsInPoliceCourtCase(outputMessage)
   if (allResultsOnPnc) {
     auditLogger.info(EventCode.IgnoredAlreadyOnPNC)
   }

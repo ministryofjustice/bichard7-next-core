@@ -1,12 +1,12 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import type { CheckExceptionFn } from "./areResultsMatchingPncAdjudicationAndDisposals"
+import type { CheckExceptionFn } from "./areResultsMatchingPoliceAdjudicationAndDisposals"
 
 import isRecordableResult from "../../lib/results/isRecordableResult"
-import isResultMatchingAPncDisposal from "./isResultMatchingAPncDisposal"
+import isResultMatchingAPoliceDisposal from "./isResultMatchingAPoliceDisposal"
 
-const areResultsMatchingAPncDisposal = (
+const areResultsMatchingAPoliceDisposal = (
   offence: Offence,
   disposals: PoliceDisposal[],
   offenceIndex?: number,
@@ -17,7 +17,7 @@ const areResultsMatchingAPncDisposal = (
       checkExceptionFn(result, offenceIndex, resultIndex)
     }
 
-    return !isRecordableResult(result) || isResultMatchingAPncDisposal(result, disposals)
+    return !isRecordableResult(result) || isResultMatchingAPoliceDisposal(result, disposals)
   })
 
-export default areResultsMatchingAPncDisposal
+export default areResultsMatchingAPoliceDisposal
