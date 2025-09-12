@@ -34,7 +34,7 @@ const preProcessHearingDate = (disposalType: number | undefined, hearingDate: Da
 const preProcessPleaStatus = (disposalType: number | undefined, pleaStatus: string): string =>
   disposalType && BLANK_PLEA_STATUS_CODES.includes(disposalType) ? "" : pleaStatus
 
-const createPncAdjudication = (
+const createPoliceAdjudication = (
   disposalType: number | undefined,
   pleaStatus: string,
   verdict: string,
@@ -47,4 +47,4 @@ const createPncAdjudication = (
   plea: preProcessPleaStatus(disposalType, pleaStatus)
 })
 
-export default createPncAdjudication
+export default createPoliceAdjudication

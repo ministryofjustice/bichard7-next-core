@@ -1,7 +1,7 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import createPncAdjudicationFromAho from "../../lib/createPncAdjudicationFromAho/createPncAdjudicationFromAho"
+import createPoliceAdjudicationFromAho from "../../lib/createPoliceAdjudicationFromAho/createPoliceAdjudicationFromAho"
 
 const areResultsMatchingPncAdjudication = (
   results: Result[],
@@ -9,7 +9,7 @@ const areResultsMatchingPncAdjudication = (
   offenceReasonSequence: string,
   pncOffence: PoliceOffence
 ): boolean => {
-  const hoAdjudication = createPncAdjudicationFromAho(results, hearingDate)
+  const hoAdjudication = createPoliceAdjudicationFromAho(results, hearingDate)
   const pncAdjudication = pncOffence.adjudication
   const pncOffenceSequence = pncOffence.offence.sequenceNumber.toString().padStart(3, "0")
 
