@@ -3,7 +3,7 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import type { ResultClassHandler } from "./ResultClassHandler"
 
 import areAllPoliceDisposalsWithType from "../../areAllPoliceDisposalsWithType"
-import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
+import hasUnmatchedPoliceOffences from "../../hasUnmatchedPoliceOffences"
 import createOperation from "../createOperation"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
@@ -27,7 +27,7 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       : []
   }
 
-  if (!areAllResultsOnPnc && hasUnmatchedPncOffences(aho, courtCaseReference) && !offence.AddedByTheCourt) {
+  if (!areAllResultsOnPnc && hasUnmatchedPoliceOffences(aho, courtCaseReference) && !offence.AddedByTheCourt) {
     return []
   }
 

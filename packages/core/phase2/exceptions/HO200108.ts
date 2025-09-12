@@ -9,7 +9,7 @@ import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import checkRccSegmentApplicability, { RccSegmentApplicability } from "../../lib/checkRccSegmentApplicability"
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
-import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
+import hasUnmatchedPoliceOffences from "../lib/hasUnmatchedPoliceOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
 const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
@@ -26,7 +26,7 @@ const HO200108: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
 
     if (
       result.PNCAdjudicationExists ||
-      (!allResultsOnPnc && hasUnmatchedPncOffences(aho, courtCaseReference) && !offence.AddedByTheCourt)
+      (!allResultsOnPnc && hasUnmatchedPoliceOffences(aho, courtCaseReference) && !offence.AddedByTheCourt)
     ) {
       return
     }

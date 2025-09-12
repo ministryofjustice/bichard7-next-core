@@ -8,7 +8,7 @@ import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
-import hasUnmatchedPncOffences from "../lib/hasUnmatchedPncOffences"
+import hasUnmatchedPoliceOffences from "../lib/hasUnmatchedPoliceOffences"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
 const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
@@ -30,7 +30,7 @@ const HO200124: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[]
     if (
       result.ResultClass &&
       [ResultClass.ADJOURNMENT_WITH_JUDGEMENT, ResultClass.JUDGEMENT_WITH_FINAL_RESULT].includes(result.ResultClass) &&
-      hasUnmatchedPncOffences(aho, courtCaseReference) &&
+      hasUnmatchedPoliceOffences(aho, courtCaseReference) &&
       !offence.AddedByTheCourt
     ) {
       const exception = {
