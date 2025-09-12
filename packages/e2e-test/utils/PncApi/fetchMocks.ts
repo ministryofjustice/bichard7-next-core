@@ -14,6 +14,8 @@ const fetchMocks = async (bichard: PncBichard, pncHelper: PncHelper): Promise<vo
       throw fetchedMock
     }
 
+    console.log(`Fetch mock requests for mock: ${mock.id}`)
+
     mock.requests = fetchedMock.requests || []
   }
 }
