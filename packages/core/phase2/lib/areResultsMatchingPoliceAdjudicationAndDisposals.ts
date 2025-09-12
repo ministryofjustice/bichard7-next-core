@@ -3,7 +3,7 @@ import type { AnnotatedHearingOutcome, Offence, Result } from "@moj-bichard7/com
 import findPncCourtCase from "../../lib/policeGateway/pnc/findPncCourtCase"
 import isRecordableResult from "../../lib/results/isRecordableResult"
 import areResultsMatchingAPoliceDisposal from "./areResultsMatchingAPoliceDisposal"
-import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudication"
+import areResultsMatchingPoliceAdjudication from "./areResultsMatchingPoliceAdjudication"
 
 export type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void
 
@@ -22,13 +22,13 @@ const areResultsMatchingPoliceAdjudicationAndDisposals = (
   return (
     !!aho.PncQuery?.pncId &&
     !!findPncCourtCase(aho, offence)?.offences.some(
-      (pncOffence) =>
-        areResultsMatchingPncAdjudication(
+      (policeOffence) =>
+        areResultsMatchingPoliceAdjudication(
           offence.Result,
           aho.AnnotatedHearingOutcome.HearingOutcome.Hearing.DateOfHearing,
           offenceReasonSequence,
-          pncOffence
-        ) && areResultsMatchingAPoliceDisposal(offence, pncOffence.disposals ?? [], offenceIndex, checkExceptionFn)
+          policeOffence
+        ) && areResultsMatchingAPoliceDisposal(offence, policeOffence.disposals ?? [], offenceIndex, checkExceptionFn)
     )
   )
 }
