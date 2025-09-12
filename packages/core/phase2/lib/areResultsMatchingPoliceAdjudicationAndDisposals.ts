@@ -7,7 +7,7 @@ import areResultsMatchingPncAdjudication from "./areResultsMatchingPncAdjudicati
 
 export type CheckExceptionFn = (result: Result, offenceIndex: number, resultIndex: number) => void
 
-const areResultsMatchingPncAdjudicationAndDisposals = (
+const areResultsMatchingPoliceAdjudicationAndDisposals = (
   aho: AnnotatedHearingOutcome,
   offence: Offence,
   offenceIndex?: number,
@@ -33,4 +33,4 @@ const areResultsMatchingPncAdjudicationAndDisposals = (
   )
 }
 
-export default areResultsMatchingPncAdjudicationAndDisposals
+export default areResultsMatchingPoliceAdjudicationAndDisposals

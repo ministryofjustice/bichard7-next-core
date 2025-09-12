@@ -1,7 +1,7 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import type { CheckExceptionFn } from "./areResultsMatchingPncAdjudicationAndDisposals"
+import type { CheckExceptionFn } from "./areResultsMatchingPoliceAdjudicationAndDisposals"
 
 import isRecordableResult from "../../lib/results/isRecordableResult"
 import isResultMatchingAPoliceDisposal from "./isResultMatchingAPoliceDisposal"
