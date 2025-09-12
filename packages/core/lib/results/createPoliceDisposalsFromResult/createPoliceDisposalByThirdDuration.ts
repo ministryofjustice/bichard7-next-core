@@ -16,7 +16,7 @@ const getDateSpecifiedInResult = (result: Result) => {
   return startDateSpecifiedInResult ?? endDateSpecifiedInResult
 }
 
-const createPncDisposalByThirdDuration = (
+const createPoliceDisposalByThirdDuration = (
   result: Result,
   validatedDisposalText: string | undefined
 ): PoliceDisposal | undefined => {
@@ -43,4 +43,4 @@ const createPncDisposalByThirdDuration = (
   return disposal
 }
 
-export default createPncDisposalByThirdDuration
+export default createPoliceDisposalByThirdDuration

@@ -2,7 +2,7 @@ import isDriverDisqualificationResult, { driverDisqualificationCodes } from "./i
 
 describe("isDriverDisqualificationResult", () => {
   it.each(driverDisqualificationCodes)(
-    "should return true when PNC disposal type is %i",
+    "should return true when a disposal type is %i",
     (driverDisqualificationCode) => {
       const result = isDriverDisqualificationResult(driverDisqualificationCode)
 
@@ -10,13 +10,13 @@ describe("isDriverDisqualificationResult", () => {
     }
   )
 
-  it("should return false when PNC disposal type is not in driver's disqualification codes list", () => {
+  it("should return false when a disposal type is not in driver's disqualification codes list", () => {
     const result = isDriverDisqualificationResult(9999)
 
     expect(result).toBe(false)
   })
 
-  it("should return false when PNC disposal type is undefined", () => {
+  it("should return false when a disposal type is undefined", () => {
     const result = isDriverDisqualificationResult(undefined)
 
     expect(result).toBe(false)

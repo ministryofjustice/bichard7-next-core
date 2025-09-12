@@ -1,1 +1,1 @@
-export { default as createPncDisposalsFromResult } from "./createPncDisposalsFromResult"
+export { default as createPoliceDisposalsFromResult } from "./createPoliceDisposalsFromResult"

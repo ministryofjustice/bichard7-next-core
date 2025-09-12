@@ -1,10 +1,10 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import { createPncDisposalsFromResult } from "../../lib/results/createPoliceDisposalsFromResult"
+import { createPoliceDisposalsFromResult } from "../../lib/results/createPoliceDisposalsFromResult"
 
 const isResultMatchingAPncDisposal = (result: Result, pncDisposals: PoliceDisposal[]): boolean =>
-  createPncDisposalsFromResult(result).every((ahoDisposal) =>
+  createPoliceDisposalsFromResult(result).every((ahoDisposal) =>
     pncDisposals.some((pncDisposal) => arePncDisposalsMatching(ahoDisposal, pncDisposal))
   )
 

@@ -5,7 +5,7 @@ import type { TriggerGenerator } from "../../types/TriggerGenerator"
 
 import Phase from "../../types/Phase"
 import forEachRecordableResult from "../offences/forEachRecordableResult"
-import { maxDisposalTextLength } from "../results/createPoliceDisposalsFromResult/createPncDisposalByFirstAndSecondDurations"
+import { maxDisposalTextLength } from "../results/createPoliceDisposalsFromResult/createPoliceDisposalByFirstAndSecondDurations"
 import { getDisposalTextFromResult } from "../results/getDisposalTextFromResult"
 
 const triggerCode = TriggerCode.TRPS0003

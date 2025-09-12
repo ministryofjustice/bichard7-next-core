@@ -9,7 +9,7 @@ import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
 
 export const maxDisposalTextLength = 64
 
-const createPncDisposalByFirstAndSecondDurations = (result: Result): PoliceDisposal => {
+const createPoliceDisposalByFirstAndSecondDurations = (result: Result): PoliceDisposal => {
   const durations = result.Duration ?? []
   const firstDuration = durations[0]
   const secondDuration = durations[1] && durations[1].DurationType === "Suspended" ? durations[1] : undefined
@@ -48,4 +48,4 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PoliceDispo
   return disposal
 }
 
-export default createPncDisposalByFirstAndSecondDurations
+export default createPoliceDisposalByFirstAndSecondDurations

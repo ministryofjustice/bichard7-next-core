@@ -3,7 +3,7 @@ import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResul
 
 import type { PncUpdateDisposal } from "../../types/HearingDetails"
 
-import { createPncDisposalsFromResult } from "../../../lib/results/createPoliceDisposalsFromResult"
+import { createPoliceDisposalsFromResult } from "../../../lib/results/createPoliceDisposalsFromResult"
 import createPoliceDisposal from "../../../lib/results/createPoliceDisposalsFromResult/createPoliceDisposal"
 import isRecordableResult from "../../../lib/results/isRecordableResult"
 import { PncUpdateType } from "../../types/HearingDetails"
@@ -27,7 +27,7 @@ const createDisposalsFromOffence = (aho: AnnotatedHearingOutcome, offence: Offen
   let has2063Result = false
 
   for (const recordableResult of recordableResults) {
-    const pncDisposalsFromResult = createPncDisposalsFromResult(recordableResult)
+    const pncDisposalsFromResult = createPoliceDisposalsFromResult(recordableResult)
     const { PNCDisposalType: disposalCode, CJSresultCode: resultCode } = recordableResult
 
     const isConverted2060To2063Result = disposalCode === 2063 && resultCode === 2060
