@@ -70,7 +70,7 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns disposal operation when offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
     mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
@@ -84,7 +84,7 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns disposal operation with data and added by the court when offence is added by the court and has no 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
     mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
@@ -107,7 +107,7 @@ describe("handleJudgementWithFinalResult", () => {
         Result: [{ PNCDisposalType: 4000 }],
         CourtCaseReferenceNumber: undefined
       } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
     mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
@@ -121,7 +121,7 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns no operations when offence is added by the court but has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
     mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 

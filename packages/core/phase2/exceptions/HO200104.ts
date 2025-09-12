@@ -9,22 +9,22 @@ import ResultClass from "@moj-bichard7/common/types/ResultClass"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import areAllPoliceDisposalsWithType from "../lib/areAllPoliceDisposalsWithType"
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
-import areAnyPncDisposalsWithType from "../lib/areAnyPncDisposalsWithType"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
+import areAnyPoliceDisposalsWithType from "../lib/areAnyPoliceDisposalsWithType"
 import checkResultClassExceptions from "./checkResultClassExceptions"
 
 const HO200104: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
   const resubmitted = isPncUpdateDataset(aho)
   const fixedPenalty = aho.AnnotatedHearingOutcome.HearingOutcome.Case.PenaltyNoticeCaseReferenceNumber
-  if (fixedPenalty || resubmitted || areAllResultsOnPnc(aho)) {
+  if (fixedPenalty || resubmitted || areAllResultsInPoliceCourtCase(aho)) {
     return []
   }
 
   checkResultClassExceptions(aho, (offence, result, offenceIndex, resultIndex) => {
     if (
       result.PNCAdjudicationExists &&
-      ((result.ResultClass === ResultClass.SENTENCE && areAnyPncDisposalsWithType(aho, offence, 2007)) ||
+      ((result.ResultClass === ResultClass.SENTENCE && areAnyPoliceDisposalsWithType(aho, offence, 2007)) ||
         result.ResultClass === ResultClass.JUDGEMENT_WITH_FINAL_RESULT) &&
       !areAllPoliceDisposalsWithType(aho, offence, 2007)
     ) {

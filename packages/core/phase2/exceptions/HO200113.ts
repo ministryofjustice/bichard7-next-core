@@ -8,14 +8,18 @@ import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import { generateOperationsFromOffenceResults } from "../lib/generateOperations/generateOperations"
 import getCourtCaseReferenceFromOperation from "./getCourtCaseReferenceFromOperation"
 
 const HO200113: ExceptionGenerator = (aho: AnnotatedHearingOutcome): Exception[] => {
   const exceptions: Exception[] = []
 
-  const operations = generateOperationsFromOffenceResults(aho, areAllResultsOnPnc(aho), isPncUpdateDataset(aho))
+  const operations = generateOperationsFromOffenceResults(
+    aho,
+    areAllResultsInPoliceCourtCase(aho),
+    isPncUpdateDataset(aho)
+  )
 
   const remandCcrs = operations
     .filter((operation) => operation.code === PncOperation.REMAND)

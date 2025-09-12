@@ -4,13 +4,13 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import checkClashingCourtCaseOperationsException from "./checkClashingCourtCaseOperationsException"
 
-jest.mock("../lib/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsInPoliceCourtCase")
 
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)
 
 describe("checkClashingCourtCaseOperationsException", () => {

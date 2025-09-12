@@ -50,7 +50,7 @@ describe("generateOperations", () => {
     { resultClass: ResultClass.JUDGEMENT_WITH_FINAL_RESULT, resultClassHandler: mockedHandleJudgementWithFinalResult },
     { resultClass: ResultClass.SENTENCE, resultClassHandler: mockedHandleSentence }
   ])("calls $resultClassHandler when offence result class is $resultClass", ({ resultClass, resultClassHandler }) => {
-    const areAllResultsOnPnc = false
+    const areAllResultsInPoliceCourtCase = false
     const aho = generateAhoFromOffenceList([
       {
         Result: [{ ResultClass: resultClass, PNCDisposalType: 1001 }]
@@ -64,7 +64,7 @@ describe("generateOperations", () => {
       }
     ])
 
-    const operations = generateOperations(aho, resubmitted, areAllResultsOnPnc)
+    const operations = generateOperations(aho, resubmitted, areAllResultsInPoliceCourtCase)
 
     expect(operations).toStrictEqual([
       {
@@ -87,7 +87,7 @@ describe("generateOperations", () => {
         },
         Exceptions: []
       },
-      areAllResultsOnPnc: false,
+      areAllResultsInPoliceCourtCase: false,
       offence: { Result: [{ PNCDisposalType: 1001, ResultClass: resultClass }] },
       resubmitted: false,
       result: { PNCDisposalType: 1001, ResultClass: resultClass }
@@ -95,7 +95,7 @@ describe("generateOperations", () => {
   })
 
   it("generates no operations for Unresulted result class", () => {
-    const areAllResultsOnPnc = false
+    const areAllResultsInPoliceCourtCase = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -113,13 +113,13 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operations = generateOperations(aho, resubmitted, areAllResultsOnPnc)
+    const operations = generateOperations(aho, resubmitted, areAllResultsInPoliceCourtCase)
 
     expect(operations).toStrictEqual([])
   })
 
   it("generates disposal operation when court case reference in offence added by the Court disposal matches court case reference in remand", () => {
-    const areAllResultsOnPnc = false
+    const areAllResultsInPoliceCourtCase = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -153,7 +153,7 @@ describe("generateOperations", () => {
       }
     ])
 
-    const operations = generateOperations(aho, resubmitted, areAllResultsOnPnc)
+    const operations = generateOperations(aho, resubmitted, areAllResultsInPoliceCourtCase)
 
     expect(operations).toStrictEqual([
       {
@@ -173,7 +173,7 @@ describe("generateOperations", () => {
   })
 
   it("returns no operations when there are no recordable offences", () => {
-    const areAllResultsOnPnc = false
+    const areAllResultsInPoliceCourtCase = false
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -192,13 +192,13 @@ describe("generateOperations", () => {
       }
     } as unknown as AnnotatedHearingOutcome
 
-    const operations = generateOperations(aho, resubmitted, areAllResultsOnPnc)
+    const operations = generateOperations(aho, resubmitted, areAllResultsInPoliceCourtCase)
 
     expect(operations).toHaveLength(0)
   })
 
   it("returns only remand operations when all results already on PNC", () => {
-    const areAllResultsOnPnc = true
+    const areAllResultsInPoliceCourtCase = true
     const aho = {
       Exceptions: [],
       AnnotatedHearingOutcome: {
@@ -223,7 +223,7 @@ describe("generateOperations", () => {
     mockedHandleSentence.mockReturnValue([{ code: PncOperation.PENALTY_HEARING }])
     mockedHandleAdjournment.mockReturnValue([{ code: PncOperation.REMAND }])
 
-    const operations = generateOperations(aho, resubmitted, areAllResultsOnPnc)
+    const operations = generateOperations(aho, resubmitted, areAllResultsInPoliceCourtCase)
 
     expect(operations).toStrictEqual([{ code: PncOperation.REMAND }])
   })

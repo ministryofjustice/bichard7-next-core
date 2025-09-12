@@ -2,10 +2,14 @@ import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/type
 
 import findPncCourtCase from "../../lib/policeGateway/pnc/findPncCourtCase"
 
-const areAnyPncDisposalsWithType = (aho: AnnotatedHearingOutcome, offence: Offence, disposalType: number): boolean => {
-  const matchingPncCourtCase = findPncCourtCase(aho, offence)
+const areAnyPoliceDisposalsWithType = (
+  aho: AnnotatedHearingOutcome,
+  offence: Offence,
+  disposalType: number
+): boolean => {
+  const matchingPoliceCourtCase = findPncCourtCase(aho, offence)
 
-  return !!matchingPncCourtCase?.offences?.some(
+  return !!matchingPoliceCourtCase?.offences?.some(
     (o) =>
       o.offence.sequenceNumber &&
       o.offence.sequenceNumber === Number(offence.CriminalProsecutionReference.OffenceReasonSequence) &&
@@ -13,4 +17,4 @@ const areAnyPncDisposalsWithType = (aho: AnnotatedHearingOutcome, offence: Offen
   )
 }
 
-export default areAnyPncDisposalsWithType
+export default areAnyPoliceDisposalsWithType

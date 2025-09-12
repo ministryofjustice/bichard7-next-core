@@ -5,16 +5,16 @@ import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import hasUnmatchedPoliceOffences from "../lib/hasUnmatchedPoliceOffences"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200124 from "./HO200124"
 
 jest.mock("../lib/hasUnmatchedPoliceOffences")
-jest.mock("../lib/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsInPoliceCourtCase")
 
 const mockedHasUnmatchedPoliceOffences = hasUnmatchedPoliceOffences as jest.Mock
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 
 describe("HO200124", () => {
   it("returns a HO200124 exception when all conditions are met (no fixed penalty, no PNC adjudication, result class is JUDGEMENT_WITH_FINAL_RESULT, all results are not on PNC, has unmatched offences, and offence not added by court)", () => {

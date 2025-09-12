@@ -9,7 +9,7 @@ import createOperation from "../createOperation"
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
   aho,
-  areAllResultsOnPnc,
+  areAllResultsInPoliceCourtCase,
   offence,
   result
 }) => {
@@ -27,7 +27,11 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
       : []
   }
 
-  if (!areAllResultsOnPnc && hasUnmatchedPoliceOffences(aho, courtCaseReference) && !offence.AddedByTheCourt) {
+  if (
+    !areAllResultsInPoliceCourtCase &&
+    hasUnmatchedPoliceOffences(aho, courtCaseReference) &&
+    !offence.AddedByTheCourt
+  ) {
     return []
   }
 

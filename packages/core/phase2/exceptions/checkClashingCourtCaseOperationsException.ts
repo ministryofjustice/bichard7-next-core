@@ -8,7 +8,7 @@ import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import isEqual from "lodash.isequal"
 
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import { generateOperationsFromOffenceResults } from "../lib/generateOperations/generateOperations"
 import getCourtCaseReferenceFromOperation, { courtCaseSpecificOperations } from "./getCourtCaseReferenceFromOperation"
 
@@ -19,7 +19,11 @@ const checkClashingCourtCaseOperationsException = (
 ) => {
   const exceptions: Exception[] = []
 
-  const operations = generateOperationsFromOffenceResults(aho, areAllResultsOnPnc(aho), isPncUpdateDataset(aho))
+  const operations = generateOperationsFromOffenceResults(
+    aho,
+    areAllResultsInPoliceCourtCase(aho),
+    isPncUpdateDataset(aho)
+  )
   const operationsWithCourtCase: Operation[] = operations.filter((operation) =>
     courtCaseSpecificOperations.includes(operation.code)
   )

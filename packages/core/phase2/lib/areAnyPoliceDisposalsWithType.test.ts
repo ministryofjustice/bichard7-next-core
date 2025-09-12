@@ -1,19 +1,19 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import areAnyPncDisposalsWithType from "./areAnyPncDisposalsWithType"
+import areAnyPoliceDisposalsWithType from "./areAnyPoliceDisposalsWithType"
 
 const generateAhoAndOffence = (
   hoCcr: string | undefined,
   hoOffence: { ccr?: string; reasonSequence?: string },
-  pncCourtCases: { ccr: string; offences?: { disposalTypes?: number[]; sequenceNumber: number }[] }[],
-  pncQueryExists: boolean
+  policeCourtCases: { ccr: string; offences?: { disposalTypes?: number[]; sequenceNumber: number }[] }[],
+  policeQueryExists: boolean
 ) => ({
   aho: {
     Exceptions: [],
     AnnotatedHearingOutcome: { HearingOutcome: { Case: { CourtCaseReferenceNumber: hoCcr } } },
-    PncQuery: pncQueryExists
+    PncQuery: policeQueryExists
       ? {
-          courtCases: pncCourtCases.map((courtCase) => ({
+          courtCases: policeCourtCases.map((courtCase) => ({
             courtCaseReference: courtCase.ccr,
             offences: courtCase.offences?.map((offence) => ({
               disposals: offence.disposalTypes?.map((type) => ({ type })),
@@ -29,16 +29,16 @@ const generateAhoAndOffence = (
   } as Offence
 })
 
-describe("areAnyPncDisposalsWithType", () => {
+describe("areAnyPoliceDisposalsWithType", () => {
   it("returns false when court case references and offence reason sequence are not set, PNC Query does not exist in AHO", () => {
     const { aho, offence } = generateAhoAndOffence(undefined, { ccr: undefined, reasonSequence: undefined }, [], false)
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns true when there is a matching PNC court case using the offence CCR containing a matching disposal type", () => {
+  it("returns true when there is a matching police court case using the offence CCR containing a matching disposal type", () => {
     const { aho, offence } = generateAhoAndOffence(
       "456",
       { ccr: "123", reasonSequence: "1" },
@@ -51,12 +51,12 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(true)
   })
 
-  it("returns true when there is a matching PNC court case using the AHO CCR containing a matching disposal type", () => {
+  it("returns true when there is a matching police court case using the AHO CCR containing a matching disposal type", () => {
     const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: undefined, reasonSequence: "1" },
@@ -69,12 +69,12 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(true)
   })
 
-  it("returns false when there is a matching PNC court case but no matching disposal type", () => {
+  it("returns false when there is a matching police court case but no matching disposal type", () => {
     const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "1" },
@@ -87,12 +87,12 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when there is a matching PNC court case but disposals is undefined", () => {
+  it("returns false when there is a matching police court case but disposals is undefined", () => {
     const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
@@ -105,12 +105,12 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when there is a matching PNC court case but no disposals", () => {
+  it("returns false when there is a matching police court case but no disposals", () => {
     const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
@@ -123,12 +123,12 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when there is a matching PNC court case but no offences", () => {
+  it("returns false when there is a matching police court case but no offences", () => {
     const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
@@ -141,12 +141,12 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })
 
-  it("returns false when there is a matching PNC court case but offences is undefined", () => {
+  it("returns false when there is a matching police court case but offences is undefined", () => {
     const { aho, offence } = generateAhoAndOffence(
       "123",
       { ccr: "123", reasonSequence: "2" },
@@ -159,7 +159,7 @@ describe("areAnyPncDisposalsWithType", () => {
       true
     )
 
-    const result = areAnyPncDisposalsWithType(aho, offence, 2007)
+    const result = areAnyPoliceDisposalsWithType(aho, offence, 2007)
 
     expect(result).toBe(false)
   })

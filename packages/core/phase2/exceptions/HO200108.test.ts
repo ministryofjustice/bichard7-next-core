@@ -6,17 +6,17 @@ import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import generateFakeAho from "../../phase1/tests/helpers/generateFakeAho"
 import areAllPoliceDisposalsWithType from "../lib/areAllPoliceDisposalsWithType"
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import hasUnmatchedPoliceOffences from "../lib/hasUnmatchedPoliceOffences"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200108 from "./HO200108"
 
 jest.mock("../lib/hasUnmatchedPoliceOffences")
-jest.mock("../lib/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsInPoliceCourtCase")
 jest.mock("../lib/areAllPoliceDisposalsWithType")
 
 const mockedHasUnmatchedPoliceOffences = hasUnmatchedPoliceOffences as jest.Mock
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 const mockedAllPncDisposalsWithType = areAllPoliceDisposalsWithType as jest.Mock
 
 describe("HO200108", () => {

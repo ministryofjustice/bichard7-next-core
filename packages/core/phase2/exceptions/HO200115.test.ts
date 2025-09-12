@@ -3,13 +3,13 @@ import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryRe
 
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200115 from "./HO200115"
 
-jest.mock("../lib/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsInPoliceCourtCase")
 
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)
 
 describe("HO200115", () => {
