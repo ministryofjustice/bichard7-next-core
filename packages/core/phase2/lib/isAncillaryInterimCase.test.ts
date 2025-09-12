@@ -37,7 +37,7 @@ describe("isAncillaryInterimCase", () => {
     expect(result).toBe(true)
   })
 
-  it("should return false when pncDisposal types are not 1000 (no CJS result code)", () => {
+  it("should return false when policeDisposal types are not 1000 (no CJS result code)", () => {
     const hearingOutcome = createHearingOutcome([
       {
         Result: [
@@ -62,7 +62,7 @@ describe("isAncillaryInterimCase", () => {
     expect(result).toBe(false)
   })
 
-  it("should return true when a case has an AINT result but PNC disposal type is undefined", () => {
+  it("should return true when a case has an AINT result but disposal type is undefined", () => {
     const hearingOutcome = createHearingOutcome([
       {
         Result: [
@@ -87,7 +87,7 @@ describe("isAncillaryInterimCase", () => {
     expect(result).toBe(false)
   })
 
-  it("should return true when a case has an AINT result but PNC disposal type is 1000 (No CJS result code)", () => {
+  it("should return true when a case has an AINT result but disposal type is 1000 (No CJS result code)", () => {
     const hearingOutcome = createHearingOutcome([
       {
         Result: [
