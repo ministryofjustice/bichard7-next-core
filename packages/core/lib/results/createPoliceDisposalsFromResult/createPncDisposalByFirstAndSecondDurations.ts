@@ -2,7 +2,7 @@ import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { getDisposalTextFromResult } from "../getDisposalTextFromResult"
-import createPncDisposal from "./createPncDisposal"
+import createPoliceDisposal from "./createPoliceDisposal"
 import getFirstDateSpecifiedInResult from "./getFirstDateSpecifiedInResult"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 import isDriverDisqualificationResult from "./isDriverDisqualificationResult"
@@ -33,7 +33,7 @@ const createPncDisposalByFirstAndSecondDurations = (result: Result): PoliceDispo
       ? `${disposalText.slice(0, maxDisposalTextLength - 1)}+`
       : disposalText
 
-  const disposal = createPncDisposal({
+  const disposal = createPoliceDisposal({
     amountSpecifiedInResult: validatedAmountInResult,
     dateSpecifiedInResult,
     disposalText: validatedDisposalText,

@@ -1,8 +1,8 @@
-import createPncDisposal from "./createPncDisposal"
+import createPoliceDisposal from "./createPoliceDisposal"
 
-describe("createPncDisposal", () => {
-  it("creates a PNC disposal", () => {
-    const pncDisposal = createPncDisposal({
+describe("createPoliceDisposal", () => {
+  it("creates a police disposal", () => {
+    const policeDisposal = createPoliceDisposal({
       amountSpecifiedInResult: 12000.99,
       dateSpecifiedInResult: new Date("2024-05-10"),
       disposalText: "disposal-text",
@@ -14,7 +14,7 @@ describe("createPncDisposal", () => {
       secondaryDurationUnit: "A"
     })
 
-    expect(pncDisposal).toEqual({
+    expect(policeDisposal).toEqual({
       qtyDate: "10052024",
       qtyDuration: "D123",
       qtyMonetaryValue: "12000.99",
@@ -27,7 +27,7 @@ describe("createPncDisposal", () => {
 
   describe("qtyUnitsFined", () => {
     it("returns a string in dnnnDDMMYYYYNNNNNNN.NNUU format", () => {
-      const { qtyUnitsFined } = createPncDisposal({
+      const { qtyUnitsFined } = createPoliceDisposal({
         amountSpecifiedInResult: 9999999.99,
         dateSpecifiedInResult: new Date("2024-05-10"),
         durationLength: 123,
@@ -40,7 +40,7 @@ describe("createPncDisposal", () => {
     })
 
     it("pads values to correct length", () => {
-      const { qtyUnitsFined } = createPncDisposal({
+      const { qtyUnitsFined } = createPoliceDisposal({
         amountSpecifiedInResult: 9.99,
         dateSpecifiedInResult: new Date("2024-05-10"),
         durationLength: 1,
@@ -53,14 +53,14 @@ describe("createPncDisposal", () => {
     })
 
     it("adds padding for missing values", () => {
-      const { qtyUnitsFined } = createPncDisposal({})
+      const { qtyUnitsFined } = createPoliceDisposal({})
 
       expect(qtyUnitsFined).toHaveLength(24)
       expect(qtyUnitsFined).toBe("                      00")
     })
 
     it("uses PNC representation of life sentence", () => {
-      const { qtyUnitsFined } = createPncDisposal({
+      const { qtyUnitsFined } = createPoliceDisposal({
         amountSpecifiedInResult: 0,
         dateSpecifiedInResult: new Date("2024-05-10"),
         durationLength: 1,
@@ -73,7 +73,7 @@ describe("createPncDisposal", () => {
     })
 
     it("leaves disposalQuantity blank if unit is session", () => {
-      const { qtyUnitsFined } = createPncDisposal({
+      const { qtyUnitsFined } = createPoliceDisposal({
         amountSpecifiedInResult: 0,
         dateSpecifiedInResult: new Date("2024-05-10"),
         durationLength: 1,
@@ -86,7 +86,7 @@ describe("createPncDisposal", () => {
     })
 
     it("leaves disposalQuantity blank if unit is empty string", () => {
-      const { qtyUnitsFined } = createPncDisposal({
+      const { qtyUnitsFined } = createPoliceDisposal({
         amountSpecifiedInResult: 0,
         dateSpecifiedInResult: new Date("2024-05-10"),
         durationLength: 1,
@@ -99,7 +99,7 @@ describe("createPncDisposal", () => {
     })
 
     it("leaves date blank if disposal type is on no disposal date list", () => {
-      const { qtyUnitsFined } = createPncDisposal({
+      const { qtyUnitsFined } = createPoliceDisposal({
         amountSpecifiedInResult: 0,
         dateSpecifiedInResult: new Date("2024-05-10"),
         durationLength: 123,
@@ -114,7 +114,7 @@ describe("createPncDisposal", () => {
 
   describe("qualifiers", () => {
     it("returns a string in qqQQqqQQDDDD format", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["C", "E", "C", "F"],
         secondaryDurationLength: 123,
@@ -126,7 +126,7 @@ describe("createPncDisposal", () => {
     })
 
     it("returns an empty string when no qualifiers", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: []
       })
@@ -135,7 +135,7 @@ describe("createPncDisposal", () => {
     })
 
     it("returns an empty string when only qualifier is not in allowed list", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["CV"]
       })
@@ -144,7 +144,7 @@ describe("createPncDisposal", () => {
     })
 
     it("omits qualifiers not in allowed list and appends S", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["B", "B", "B", "B"],
         secondaryDurationLength: 123,
@@ -156,7 +156,7 @@ describe("createPncDisposal", () => {
     })
 
     it("uses PNC representation of life sentence", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["C", "C", "C", "C"],
         secondaryDurationLength: 123,
@@ -168,7 +168,7 @@ describe("createPncDisposal", () => {
     })
 
     it("adds S qualifiers to the end", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["S", "C", "C", "C"],
         secondaryDurationLength: 123,
@@ -179,7 +179,7 @@ describe("createPncDisposal", () => {
     })
 
     it("removes trailing whitespace when a single qualifier", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["F"],
         secondaryDurationLength: undefined,
@@ -190,7 +190,7 @@ describe("createPncDisposal", () => {
     })
 
     it("adds S qualifier when there's a secondary duration and qualifier is less than or equal to 6", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["C", "C", "C"],
         secondaryDurationLength: 123,
@@ -201,7 +201,7 @@ describe("createPncDisposal", () => {
     })
 
     it("adds padding for when fewer than three qualifiers", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["C"],
         secondaryDurationLength: 123,
@@ -212,7 +212,7 @@ describe("createPncDisposal", () => {
     })
 
     it("doesn't add padding for when multiple double character qualifiers", () => {
-      const { qualifiers } = createPncDisposal({
+      const { qualifiers } = createPoliceDisposal({
         pncDisposalType: 1234,
         resultQualifiers: ["YW", "YV", "YU"],
         secondaryDurationLength: 123,

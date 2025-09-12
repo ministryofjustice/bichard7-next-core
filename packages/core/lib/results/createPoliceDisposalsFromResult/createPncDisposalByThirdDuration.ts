@@ -2,7 +2,7 @@ import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceDisposal } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import DateSpecifiedInResultSequence from "../../../types/DateSpecifiedInResultSequence"
-import createPncDisposal from "./createPncDisposal"
+import createPoliceDisposal from "./createPoliceDisposal"
 import isAmountSpecifiedInResultValid from "./isAmountSpecifiedInResultValid"
 
 const getDateSpecifiedInResult = (result: Result) => {
@@ -30,7 +30,7 @@ const createPncDisposalByThirdDuration = (
     ? thirdAmountInResult
     : undefined
 
-  const disposal = createPncDisposal({
+  const disposal = createPoliceDisposal({
     amountSpecifiedInResult: validatedThirdAmountInResult,
     dateSpecifiedInResult: getDateSpecifiedInResult(result),
     disposalText: validatedDisposalText,
