@@ -698,6 +698,9 @@ jobs:
       forces-with-court-date-received-date-mismatch-enabled:
         type: string
         default: ""
+      forces-with-trigger-and-exception-quality-auditing-enabled:
+        type: string
+        default: ""
       api-case-details:
         type: boolean
         default: false
@@ -763,6 +766,7 @@ jobs:
             USE_API="<< parameters.api >>" \
             FORCES_WITH_API_ENABLED="<< parameters.forces-with-api-enabled >>" \
             FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<< parameters.forces-with-court-date-received-date-mismatch-enabled >>" \
+            FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<< parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>" \
             USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
             USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
@@ -802,6 +806,9 @@ jobs:
         type: string
         default: ""
       forces-with-court-date-received-date-mismatch-enabled:
+        type: string
+        default: ""
+      forces-with-trigger-and-exception-quality-auditing-enabled:
         type: string
         default: ""
       api-case-details:
@@ -866,6 +873,7 @@ jobs:
           USE_API: << parameters.api >>
           FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
           FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
+          FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
           USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
           USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
       - when:
@@ -1003,6 +1011,7 @@ workflows:
           api: true
           forces-with-api-enabled: "01"
           forces-with-court-date-received-date-mismatch-enabled: "01"
+          forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
           requires:
@@ -1018,6 +1027,7 @@ workflows:
           api: true
           forces-with-api-enabled: "01"
           forces-with-court-date-received-date-mismatch-enabled: "01"
+          forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
           requires:
