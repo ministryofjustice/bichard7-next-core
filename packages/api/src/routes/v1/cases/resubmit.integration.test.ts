@@ -4,7 +4,7 @@ import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+import { BAD_GATEWAY, FORBIDDEN, NOT_FOUND, OK } from "http-status"
 
 import build from "../../../app"
 import canCaseBeResubmitted from "../../../services/db/cases/canCaseBeResubmitted"
@@ -96,7 +96,7 @@ describe("resubmit", () => {
       ;[encodedJwt, user] = generateJwtForStaticUser(groups)
     })
 
-    test("case doesn't belong to same force as user", async () => {
+    it("case doesn't belong to same force as user", async () => {
       await createUser(testDatabaseGateway, {
         groups,
         jwtId: user.jwtId,
@@ -109,21 +109,21 @@ describe("resubmit", () => {
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    test("case is locked to a different user", async () => {
+    it("case is locked to a different user", async () => {
       await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
       await createCase(testDatabaseGateway, { errorId: 100, errorLockedById: "another-user" })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    test("case does not exist", async () => {
+    it("case does not exist", async () => {
       await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
       await createCase(testDatabaseGateway, { errorId: 101 })
 
-      await assertStatusCode(encodedJwt, BAD_REQUEST)
+      await assertStatusCode(encodedJwt, NOT_FOUND)
     })
 
-    test("case is resolved", async () => {
+    it("case is resolved", async () => {
       await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
       await createCase(testDatabaseGateway, {
         errorId: 100,
@@ -136,14 +136,14 @@ describe("resubmit", () => {
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    test("case is already submitted", async () => {
+    it("case is already submitted", async () => {
       await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
       await createCase(testDatabaseGateway, { errorId: 100, errorStatus: ResolutionStatusNumber.Submitted })
 
       await assertStatusCode(encodedJwt, FORBIDDEN)
     })
 
-    test("DB fails", async () => {
+    it("DB fails", async () => {
       await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })
       await createCase(testDatabaseGateway, { errorId: 100 })
       const error = new Error("AggregateError")

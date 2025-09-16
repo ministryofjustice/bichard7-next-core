@@ -4,7 +4,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+import { BAD_GATEWAY, FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
@@ -14,6 +14,8 @@ import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
 import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
 
 const bodySchema = z.object({ phase: z.number().gt(0).lte(3) })
@@ -64,20 +66,25 @@ const handler = async ({ body, caseId, database, reply, user }: HandlerProps) =>
   // - in theory this should either be 502 or 504
 
   const canResubmitCase = await canUserResubmitCase(database.readonly, user, caseId)
-  if (!canResubmitCase) {
-    return reply.code(FORBIDDEN).send()
-  }
 
-  if (!isError(canResubmitCase)) {
+  if (!isError(canResubmitCase) && canResubmitCase) {
     return reply.code(OK).send({ phase: body.phase })
   }
 
   reply.log.error(canResubmitCase)
-  if (handleDisconnectedError(canResubmitCase)) {
-    return reply.code(BAD_GATEWAY).send()
-  }
 
-  return reply.code(BAD_REQUEST).send()
+  switch (true) {
+    case canResubmitCase instanceof NotFoundError:
+      return reply.code(NOT_FOUND).send()
+    case canResubmitCase instanceof UnprocessableEntityError:
+      return reply
+        .code(UNPROCESSABLE_ENTITY)
+        .send({ code: `${UNPROCESSABLE_ENTITY}`, message: canResubmitCase.message, statusCode: UNPROCESSABLE_ENTITY })
+    case handleDisconnectedError(canResubmitCase):
+      return reply.code(BAD_GATEWAY).send()
+    default:
+      return reply.code(FORBIDDEN).send()
+  }
 }
 
 const route = async (fastify: FastifyInstance) => {
