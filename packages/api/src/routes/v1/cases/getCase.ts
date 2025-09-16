@@ -11,6 +11,7 @@ import z from "zod"
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
+import { jsonResponse } from "../../../server/openapi/jsonResponse"
 import auth from "../../../server/schemas/auth"
 import {
   forbiddenError,
@@ -37,12 +38,12 @@ const schema = {
   ...auth,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: CaseDtoSchema.meta({ description: "Case DTO" }),
-    ...unauthorizedError,
-    ...forbiddenError,
-    ...notFoundError,
-    ...unprocessableEntityError,
-    ...internalServerError
+    [OK]: jsonResponse("Case DTO", CaseDtoSchema.meta({ description: "Case DTO" })),
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...notFoundError(),
+    ...unprocessableEntityError(),
+    ...internalServerError()
   },
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
