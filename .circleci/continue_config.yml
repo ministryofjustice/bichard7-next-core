@@ -171,6 +171,9 @@ commands:
       FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED:
         default: ""
         type: string
+      FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED:
+        default: ""
+        type: string
       USE_API_CASE_ENDPOINT:
         default: false
         type: boolean
@@ -189,6 +192,7 @@ commands:
             USE_API="<<parameters.USE_API>>" \
             FORCES_WITH_API_ENABLED="<<parameters.FORCES_WITH_API_ENABLED>>" \
             FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<<parameters.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED>>" \
+            FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<<parameters.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED>>" \
             USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
             USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
