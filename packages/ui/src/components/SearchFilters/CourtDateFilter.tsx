@@ -1,5 +1,6 @@
 import DateInput from "components/CustomDateInput/DateInput"
 import RadioButton from "components/Radios/RadioButton"
+import { FormGroup } from "components/FormGroup"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import type { Dispatch } from "react"
 import { SerializedDateRange } from "types/CaseListQueryParams"
@@ -40,7 +41,7 @@ const labelForCaseAge = (namedCaseAge: string, caseAgeCounts: Record<string, num
 const caseAgeId = (caseAge: string): string => `case-age-${caseAge.toLowerCase().replace(/ /g, "-")}`
 
 const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, dateRange }: Props) => (
-  <div className={"govuk-form-group"}>
+  <FormGroup>
     <ExpandingFilters filterName={"Court date"} classNames="filters-court-date">
       <fieldset className="govuk-fieldset">
         <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
@@ -104,6 +105,6 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
         </div>
       </fieldset>
     </ExpandingFilters>
-  </div>
+  </FormGroup>
 )
 export default CourtDateFilter
