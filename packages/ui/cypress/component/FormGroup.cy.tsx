@@ -21,7 +21,7 @@ describe("FormGroup", () => {
 
   it("shows error state", () => {
     cy.mount(
-      <FormGroup id={"my-form-group"} showError>
+      <FormGroup id={"my-form-group"} showError={true}>
         {"Text"}
       </FormGroup>
     )

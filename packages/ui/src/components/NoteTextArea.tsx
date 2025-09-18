@@ -30,7 +30,7 @@ export const NoteTextArea = ({
   maxLength = MAX_NOTE_LENGTH
 }: Props) => {
   return (
-    <FormGroup id={id} showError>
+    <FormGroup id={id} showError={showError}>
       <label className={`govuk-label ${labelSize}`} htmlFor={`id-${name}`}>
         {labelText}
       </label>
