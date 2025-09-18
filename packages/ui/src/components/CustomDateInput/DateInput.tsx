@@ -56,12 +56,10 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
 
   return (
     <FormGroup>
-      <>
-        <label className="govuk-body" htmlFor={`date-${dateType}`}>
-          {formatLabelText(dateType)}
-          {renderSameDateButton && SameDateButton}
-        </label>
-      </>
+      <label className="govuk-body" htmlFor={`date-${dateType}`}>
+        {formatLabelText(dateType)}
+        {renderSameDateButton && SameDateButton}
+      </label>
       <input
         className="govuk-input"
         type="date"
