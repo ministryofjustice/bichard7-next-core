@@ -62,6 +62,7 @@ describe("retrieve a case", () => {
       errorId: 1,
       errorLockedByUserFullName: "Forename1 Surname1",
       errorLockedByUsername: "User 1",
+      errorQualityChecked: null,
       errorReport: "HO100304||br7:ArrestSummonsNumber",
       errorStatus: "Unresolved",
       isUrgent: 1,
@@ -74,6 +75,7 @@ describe("retrieve a case", () => {
       triggerCount: 1,
       triggerLockedByUserFullName: "Forename1 Surname1",
       triggerLockedByUsername: "User 1",
+      triggerQualityChecked: null,
       triggers: [],
       triggerStatus: "Unresolved",
       updatedHearingOutcome: null
