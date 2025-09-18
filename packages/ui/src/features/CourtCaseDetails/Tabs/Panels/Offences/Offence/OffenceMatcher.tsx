@@ -1,4 +1,5 @@
 import AutoSave from "components/EditableFields/AutoSave"
+import { Select } from "components/Select"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCallback, useEffect, useState } from "react"
 import offenceAlreadySelected from "utils/offenceMatcher/offenceAlreadySelected"
@@ -54,10 +55,12 @@ const OffenceMatcher = ({ offenceIndex, candidates, isCaseLockedToCurrentUser }:
   if (isCaseLockedToCurrentUser) {
     return (
       <>
-        <select className="govuk-select offence-matcher" onChange={onSelectionChanged} value={selectedValue}>
-          <option disabled hidden value="">
-            {"Select an offence"}
-          </option>
+        <Select
+          className="offence-matcher"
+          onChange={onSelectionChanged}
+          value={selectedValue}
+          placeholder={"Select an offence"}
+        >
           {candidates?.map((c) => {
             return (
               <optgroup key={c.courtCaseReference} label={c.courtCaseReference}>
@@ -82,7 +85,7 @@ const OffenceMatcher = ({ offenceIndex, candidates, isCaseLockedToCurrentUser }:
             )
           })}
           <option value="0">{"Added in court"}</option>
-        </select>
+        </Select>
         <AutoSave
           key={selectedValue}
           setChanged={setOffenceMatcherChanged}
