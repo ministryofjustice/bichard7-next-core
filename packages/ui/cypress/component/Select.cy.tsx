@@ -71,7 +71,7 @@ describe("Select", () => {
 
   it("shows error state", () => {
     cy.mount(
-      <Select showError>
+      <Select showError={true}>
         <option value="value1">{"Value 1"}</option>
         <option value="value2">{"Value 2"}</option>
       </Select>
