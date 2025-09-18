@@ -5,14 +5,14 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { Filters, Pagination, SortOrder } from "../../types/CaseIndexQuerystring"
-import type { DatabaseConnection } from "../../types/DatabaseGateway"
+import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import { fetchCaseAges } from "../../services/db/cases/fetchCaseAges"
-import fetchCases from "../../services/db/cases/fetchCases"
-import fetchNotes from "../../services/db/cases/fetchNotes"
-import fetchTriggers from "../../services/db/cases/fetchTriggers"
-import { convertTriggerToDto } from "../dto/convertTriggerToDto"
+import { fetchCaseAges } from "../../../services/db/cases/fetchCaseAges"
+import fetchCases from "../../../services/db/cases/fetchCases"
+import fetchNotes from "../../../services/db/cases/fetchNotes"
+import fetchTriggers from "../../../services/db/cases/fetchTriggers"
+import { convertTriggerToDto } from "../../dto/convertTriggerToDto"
 
 const assignNotesAndTriggers = async (
   database: DatabaseConnection,

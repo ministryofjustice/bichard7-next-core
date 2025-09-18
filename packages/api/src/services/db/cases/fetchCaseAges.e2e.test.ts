@@ -13,7 +13,7 @@ import { createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
-import fetchCasesAndFilter from "../../../useCases/cases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../useCases/cases/getCase/fetchCasesAndFilter"
 import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
 const defaultQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }

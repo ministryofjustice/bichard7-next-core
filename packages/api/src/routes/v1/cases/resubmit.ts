@@ -16,7 +16,7 @@ import useZod from "../../../server/useZod"
 import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
+import canUserResubmitCase from "../../../useCases/cases/resubmit/canUserResubmitCase"
 
 const bodySchema = z.object({ phase: z.number().gt(0).lte(3) })
 

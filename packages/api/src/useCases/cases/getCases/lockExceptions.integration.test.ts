@@ -4,11 +4,11 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
+import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 
-import { createCase } from "../../tests/helpers/caseHelper"
-import { createUser } from "../../tests/helpers/userHelper"
-import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { lockExceptions } from "./lockExceptions"
 
 const testDatabaseGateway = new End2EndPostgres()
