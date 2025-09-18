@@ -4,6 +4,8 @@ import {
 } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { DisplayNote } from "types/display/Notes"
 import { NotePreview } from "./NotePreviewButton"
+import { TableRow, TableCell } from "components/Table"
+import { mergeClassNames } from "helpers/mergeClassNames"
 
 interface NotePreviewRowProps {
   notes: DisplayNote[]
@@ -15,19 +17,14 @@ interface NotePreviewRowProps {
 export const NotePreviewRow = ({ notes, className, numberOfNotes, previewState }: NotePreviewRowProps) => {
   const userNotes = filterUserNotes(notes)
   const mostRecentUserNote = getMostRecentNote(userNotes)
-  const classes = ["govuk-table__row", "note-preview-row"]
-
-  if (className) {
-    classes.push(className)
-  }
 
   return (
-    <tr className={classes.join(" ")}>
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell" colSpan={2}>
+    <TableRow className={mergeClassNames("note-preview-row", className)}>
+      <TableCell />
+      <TableCell colSpan={2}>
         <NotePreview latestNote={mostRecentUserNote} numberOfNotes={numberOfNotes} ariaHidden={!previewState} />
-      </td>
-      <td className="govuk-table__cell" />
-    </tr>
+      </TableCell>
+      <TableCell />
+    </TableRow>
   )
 }
