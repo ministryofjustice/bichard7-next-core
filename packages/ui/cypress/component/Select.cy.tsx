@@ -68,4 +68,15 @@ describe("Select", () => {
     cy.get("select option").should("have.length", 3)
     cy.get("select option:first-child").should("have.value", "").should("contain.text", "Select a value")
   })
+
+  it("shows error state", () => {
+    cy.mount(
+      <Select showError>
+        <option value="value1">{"Value 1"}</option>
+        <option value="value2">{"Value 2"}</option>
+      </Select>
+    )
+
+    cy.get("select").should("have.class", "govuk-select").should("have.class", "govuk-select--error")
+  })
 })
