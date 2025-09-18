@@ -9,6 +9,7 @@ import z from "zod"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
+import { jsonResponse } from "../../../server/openapi/jsonResponse"
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
@@ -26,12 +27,15 @@ const schema = {
   body: bodySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: z
-      .object({ phase: z.number().gt(0).lte(3).meta({ description: "Confirmation of the Phase" }) })
-      .meta({ description: "Worked" }),
-    ...unauthorizedError,
-    ...forbiddenError,
-    ...internalServerError
+    [OK]: jsonResponse(
+      "Successful Resubmit",
+      z
+        .object({ phase: z.number().gt(0).lte(3).meta({ description: "Confirmation of the Phase" }) })
+        .meta({ description: "Successful Resubmit" })
+    ),
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...internalServerError()
   },
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
