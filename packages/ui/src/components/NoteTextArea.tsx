@@ -1,5 +1,7 @@
 import { MAX_NOTE_LENGTH } from "config"
 import type { ComponentProps, FormEvent } from "react"
+import { FormEvent } from "react"
+import { FormGroup } from "components/FormGroup"
 import { Label } from "components/Label"
 
 interface Props {
@@ -30,7 +32,7 @@ export const NoteTextArea = ({
   maxLength = MAX_NOTE_LENGTH
 }: Props) => {
   return (
-    <div id={id} className={"govuk-form-group" + (showError ? " govuk-form-group--error" : "")}>
+    <FormGroup id={id} showError={showError}>
       <Label size={labelSize} htmlFor={`id-${name}`}>
         {labelText}
       </Label>
@@ -59,6 +61,6 @@ export const NoteTextArea = ({
       ) : (
         ""
       )}
-    </div>
+    </FormGroup>
   )
 }

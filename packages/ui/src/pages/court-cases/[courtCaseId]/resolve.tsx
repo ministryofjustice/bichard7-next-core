@@ -1,5 +1,6 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import { Button } from "components/Buttons/Button"
+import { FormGroup } from "components/FormGroup"
 import ButtonsGroup from "components/ButtonsGroup"
 import ConditionalRender from "components/ConditionalRender"
 import { Label } from "components/Label"
@@ -165,7 +166,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
         <ConditionalRender isRendered={!lockedByAnotherUser}>
           <Form method="POST" action="#" csrfToken={csrfToken} onSubmit={handleSubmit}>
             <fieldset className="govuk-fieldset">
-              <div className={"govuk-form-group"}>
+              <FormGroup>
                 <Label size={"m"}>{"Select a reason"}</Label>
                 <select className="govuk-select" name="reason">
                   {Object.keys(ResolutionReasons).map((reason) => {
@@ -176,7 +177,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                     )
                   })}
                 </select>
-              </div>
+              </FormGroup>
 
               <NoteTextArea
                 labelText={"Resolution Details"}
