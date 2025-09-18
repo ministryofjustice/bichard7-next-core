@@ -1,8 +1,9 @@
 import DateInput from "components/CustomDateInput/DateInput"
 import RadioButton from "components/Radios/RadioButton"
+import { Label } from "components/Label"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import type { Dispatch } from "react"
-import { SerializedDateRange } from "types/CaseListQueryParams"
+import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -92,9 +93,9 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
                           dispatch({ method: event.currentTarget.checked ? "add" : "remove", type: "caseAge", value })
                         }}
                       ></input>
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor={caseAgeId(namedCaseAge)}>
+                      <Label className="govuk-checkboxes__label" htmlFor={caseAgeId(namedCaseAge)}>
                         {labelForCaseAge(namedCaseAge, caseAgeCounts)}
-                      </label>
+                      </Label>
                     </div>
                   </CaseAgeContainer>
                 ))}
