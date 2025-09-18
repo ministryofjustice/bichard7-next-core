@@ -79,4 +79,15 @@ describe("Select", () => {
 
     cy.get("select").should("have.class", "govuk-select").should("have.class", "govuk-select--error")
   })
+
+  it("does not show error state", () => {
+    cy.mount(
+      <Select showError={false}>
+        <option value="value1">{"Value 1"}</option>
+        <option value="value2">{"Value 2"}</option>
+      </Select>
+    )
+
+    cy.get("select").should("have.class", "govuk-select").should("not.have.class", "govuk-select--error")
+  })
 })
