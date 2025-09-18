@@ -56,6 +56,7 @@ export const convertCaseToCaseIndexDto = (
     ? null
     : caseRowForDto.error_locked_by_fullname,
   errorLockedByUsername: caseRowForDto.error_locked_by_id,
+  errorQualityChecked: caseRowForDto.error_quality_checked,
   errorReport: caseRowForDto.error_report,
   errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
   isUrgent: caseRowForDto.is_urgent,
@@ -71,6 +72,7 @@ export const convertCaseToCaseIndexDto = (
     ? null
     : caseRowForDto.trigger_locked_by_fullname,
   triggerLockedByUsername: caseRowForDto.trigger_locked_by_id,
+  triggerQualityChecked: caseRowForDto.trigger_quality_checked,
   triggers: caseRowForDto.triggers ? caseRowForDto.triggers.map(convertTriggerRowToDto) : [],
   triggerStatus: resolutionStatusFromDb(caseRowForDto.trigger_status)
 })
