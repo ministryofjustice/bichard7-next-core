@@ -27,4 +27,15 @@ describe("FormGroup", () => {
     )
     cy.get("div#my-form-group").should("have.class", "govuk-form-group").should("have.class", "govuk-form-group--error")
   })
+
+  it("does not show error state", () => {
+    cy.mount(
+      <FormGroup id={"my-form-group"} showError={false}>
+        {"Text"}
+      </FormGroup>
+    )
+    cy.get("div#my-form-group")
+      .should("have.class", "govuk-form-group")
+      .should("not.have.class", "govuk-form-group--error")
+  })
 })
