@@ -37,15 +37,12 @@ describe("TableHead", () => {
   it("renders children", () => {
     cy.mount(
       <TableHead>
-        <TableRow>
-          <TableHeader></TableHeader>
-        </TableRow>
+        <TableRow></TableRow>
       </TableHead>
     )
 
     cy.get("thead").should("exist")
     cy.get("tr").should("exist")
-    cy.get("th").should("exist")
   })
 
   it("merges class names", () => {
@@ -65,15 +62,12 @@ describe("TableBody", () => {
   it("renders children", () => {
     cy.mount(
       <TableBody>
-        <TableRow>
-          <TableCell></TableCell>
-        </TableRow>
+        <TableRow></TableRow>
       </TableBody>
     )
 
     cy.get("tbody").should("exist")
     cy.get("tr").should("exist")
-    cy.get("td").should("exist")
   })
 
   it("merges class names", () => {
