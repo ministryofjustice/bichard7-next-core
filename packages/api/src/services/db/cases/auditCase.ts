@@ -30,7 +30,7 @@ export default async (
   const setClause = updates.reduce((acc, fragment, i) => (i === 0 ? fragment : sql`${acc}, ${fragment}`), sql``)
 
   const result = await database.connection`
-    UPDATE br7own.error_list el
+    UPDATE br7own.error_list
       SET
         ${setClause}
       WHERE
