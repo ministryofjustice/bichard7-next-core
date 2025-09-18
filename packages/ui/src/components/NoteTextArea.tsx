@@ -1,6 +1,5 @@
 import { MAX_NOTE_LENGTH } from "config"
 import type { ComponentProps, FormEvent } from "react"
-import { FormEvent } from "react"
 import { FormGroup } from "components/FormGroup"
 import { Label } from "components/Label"
 
