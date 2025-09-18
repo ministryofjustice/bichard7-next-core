@@ -42,7 +42,7 @@
     "@io-orkes/conductor-javascript": "^2.1.5",
     "@stomp/stompjs": "^7.1.1",
     "@types/nodemailer": "^7.0.1",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "fast-xml-parser": "^5.2.5",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.6",
