@@ -1,14 +1,20 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
+import type { Case, CaseDto } from "@moj-bichard7/common/types/Case"
+import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
+import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import auditCase from "./auditCase"
+import fetchCase from "./fetchCase"
 
 const testDatabaseGateway = new End2EndPostgres()
+const testLogger = jest.fn() as unknown as FastifyBaseLogger
 
 let caseObj: Case
+let user: User
 
 describe("auditCase", () => {
   beforeEach(async () => {
@@ -19,6 +25,8 @@ describe("auditCase", () => {
       errorId: 1,
       orgForPoliceFilter: "02"
     })
+
+    user = await createUser(testDatabaseGateway)
   })
 
   afterAll(async () => {
@@ -30,6 +38,9 @@ describe("auditCase", () => {
 
     expect(isError(result)).toBe(false)
     expect(result).toBe(true)
+
+    const updatedResult = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    expect(updatedResult.errorQualityChecked).toBe(1)
   })
 
   it("updates only triggerQuality when provided", async () => {
@@ -37,6 +48,9 @@ describe("auditCase", () => {
 
     expect(isError(result)).toBe(false)
     expect(result).toBe(true)
+
+    const updatedResult = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    expect(updatedResult.triggerQualityChecked).toBe(2)
   })
 
   it("updates both errorQuality and triggerQuality when provided both", async () => {
@@ -47,6 +61,10 @@ describe("auditCase", () => {
 
     expect(isError(result)).toBe(false)
     expect(result).toBe(true)
+
+    const updatedResult = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    expect(updatedResult.errorQualityChecked).toBe(1)
+    expect(updatedResult.triggerQualityChecked).toBe(2)
   })
 
   it("returns false when neither of the quality is provided", async () => {
