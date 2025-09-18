@@ -27,7 +27,7 @@ export default async (
     return Error("Neither errorQuality nor triggerQuality is provided")
   }
 
-  const setClause = updates.reduce((acc, fragment, i) => (i === 0 ? fragment : sql`${acc}, ${fragment}`))
+  const setClause = updates.reduce((acc, fragment, i) => (i === 0 ? fragment : sql`${acc}, ${fragment}`), sql``)
 
   const result = await database.connection`
     UPDATE br7own.error_list el
