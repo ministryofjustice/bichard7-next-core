@@ -1,10 +1,12 @@
-import { Dispatch } from "react"
-import { SerializedDateRange } from "types/CaseListQueryParams"
-import { FilterAction } from "types/CourtCaseFilter"
+import type { Dispatch } from "react"
+import type { SerializedDateRange } from "types/CaseListQueryParams"
+import type { FilterAction } from "types/CourtCaseFilter"
 import { SmallButton } from "./DateInput.styles"
+import { FormGroup } from "components/FormGroup"
 
 type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
 type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
+
 interface Props {
   dateType: DateType
   dispatch: Dispatch<FilterAction>
@@ -53,7 +55,7 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
   )
 
   return (
-    <div className="govuk-form-group">
+    <FormGroup>
       <>
         <label className="govuk-body" htmlFor={`date-${dateType}`}>
           {formatLabelText(dateType)}
@@ -70,7 +72,7 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
           dispatch({ method: "add", type: actionType, value: event.target.value })
         }}
       />
-    </div>
+    </FormGroup>
   )
 }
 

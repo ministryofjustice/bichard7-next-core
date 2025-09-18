@@ -8,6 +8,7 @@ import getForcesForReallocation from "services/getForcesForReallocation"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
+import { FormGroup } from "components/FormGroup"
 import { NoteTextArea } from "./NoteTextArea"
 import { NewForceOwner } from "./ReallocationNotesForm.styles"
 
@@ -34,12 +35,12 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""} onSubmit={handleSubmit}>
       <fieldset className="govuk-fieldset">
-        <div className="govuk-form-group">
+        <FormGroup>
           <label className="govuk-label govuk-label--s">{"Current force owner"}</label>
           <span className="govuk-body-m">{`${currentForce?.code} - ${currentForce?.name}`}</span>
-        </div>
+        </FormGroup>
 
-        <div className="govuk-form-group">
+        <FormGroup>
           <label className="govuk-label govuk-label--s" htmlFor="force">
             {"New force owner"}
           </label>
@@ -50,7 +51,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
               </option>
             ))}
           </NewForceOwner>
-        </div>
+        </FormGroup>
 
         <NoteTextArea
           handleOnNoteChange={handleOnNoteChange}
