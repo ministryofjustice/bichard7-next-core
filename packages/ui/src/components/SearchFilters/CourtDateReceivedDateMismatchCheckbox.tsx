@@ -18,7 +18,7 @@ export const CourtDateReceivedDateMismatchCheckbox = ({
   const checkboxId = id || `checkbox-${value}`
 
   return (
-    <div className="govuk-checkboxes__item">
+    <div className="govuk-checkboxes__item govuk-checkboxes--small">
       <input
         className="govuk-checkboxes__input"
         id={checkboxId}

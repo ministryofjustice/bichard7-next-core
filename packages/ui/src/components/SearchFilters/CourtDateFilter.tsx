@@ -8,7 +8,7 @@ import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { mapCaseAges } from "utils/validators/validateCaseAges"
 import { CaseAgeContainer, ScrollableCaseAgesContainer } from "./DateFilter.styles"
-import { CourtDateReceivedDateMismatchCheckbox } from "./CourtDateReceivedDateMismatchCheckbox"
+import CourtDateReceivedDateMismatchCheckbox from "./CourtDateReceivedDateMismatchCheckbox"
 
 interface Props {
   caseAges?: string[]
@@ -102,14 +102,14 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
               </div>
             </ScrollableCaseAgesContainer>
           </div>
+          <CourtDateReceivedDateMismatchCheckbox
+            id={"include"}
+            value={dateRange?.to}
+            label={"Include cases where date received is different"}
+          ></CourtDateReceivedDateMismatchCheckbox>
         </div>
       </fieldset>
     </ExpandingFilters>
-    <CourtDateReceivedDateMismatchCheckbox
-      id={"include"}
-      value={dateRange?.to}
-      label={"Include cases where date received is different"}
-    ></CourtDateReceivedDateMismatchCheckbox>
   </div>
 )
 export default CourtDateFilter
