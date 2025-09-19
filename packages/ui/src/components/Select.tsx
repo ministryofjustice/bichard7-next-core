@@ -10,7 +10,7 @@ export const Select = ({ placeholder, showError, className, children, ...props }
   return (
     <select {...props} className={mergeClassNames("govuk-select", showError ? "govuk-select--error" : "", className)}>
       {placeholder ? (
-        <option disabled hidden value="">
+        <option disabled hidden selected value="">
           {placeholder}
         </option>
       ) : null}
