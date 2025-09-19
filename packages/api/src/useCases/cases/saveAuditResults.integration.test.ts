@@ -57,10 +57,10 @@ describe("saveAuditResults", () => {
   })
 
   it("returns an error when the database update fails", async () => {
-    mockedAuditCase.mockResolvedValue(Error("Dummy error"))
+    mockedAuditCase.mockResolvedValue(false)
 
     const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality)
 
-    expect((result as Error).message).toBe("Dummy error")
+    expect((result as Error).message).toBe("Audit results could not be saved")
   })
 })
