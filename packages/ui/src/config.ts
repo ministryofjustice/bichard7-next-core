@@ -20,7 +20,7 @@ export const FORCES_WITH_API_ENABLED: Set<string> = new Set(
   (process.env.FORCES_WITH_API_ENABLED ?? "").split(",").filter(Boolean)
 )
 export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = new Set(
-  (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? "01").split(",").filter(Boolean)
+  (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? "001").split(",").filter(Boolean)
 )
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
