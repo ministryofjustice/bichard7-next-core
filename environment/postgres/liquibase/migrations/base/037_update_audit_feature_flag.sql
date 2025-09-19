@@ -5,4 +5,4 @@
 -- This is so we can test the feature
 UPDATE br7own.users
 SET feature_flags = jsonb_set(feature_flags, '{useTriggerAndExceptionQualityAuditingEnabled}', 'true', true)
-WHERE email LIKE '%@madetech.com';
+WHERE email LIKE '%@madetech.com' OR email LIKE '%@example.com';;
