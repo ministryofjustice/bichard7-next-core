@@ -29,6 +29,7 @@ type Props = CaseListQueryParams & {
   caseAgeCounts: Record<string, number>
   dateRange: SerializedDateRange | null
   caseResolvedDateRange: SerializedDateRange | null
+  canUseCourtDateReceivedDateMismatchFilters: boolean
 }
 
 const CourtCaseFilter: React.FC<Props> = ({
@@ -45,7 +46,8 @@ const CourtCaseFilter: React.FC<Props> = ({
   order,
   orderBy,
   resolvedByUsername,
-  caseResolvedDateRange
+  caseResolvedDateRange,
+  canUseCourtDateReceivedDateMismatchFilters
 }) => {
   const lockedStateValue = lockedState ?? LockedState.All
   const initialFilterState: Filter = {
@@ -134,6 +136,7 @@ const CourtCaseFilter: React.FC<Props> = ({
             caseAgeCounts={caseAgeCounts}
             dispatch={dispatch}
             dateRange={{ from: state.dateFrom.value, to: state.dateTo.value }}
+            canUseCourtDateReceivedDateMismatchFilters={canUseCourtDateReceivedDateMismatchFilters}
           />
           <Divider />
 

@@ -9,16 +9,14 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import { mapCaseAges } from "utils/validators/validateCaseAges"
 import { CaseAgeContainer, ScrollableCaseAgesContainer } from "./DateFilter.styles"
 import CourtDateReceivedDateMismatchCheckbox from "./CourtDateReceivedDateMismatchCheckbox"
-// import Permission from "@moj-bichard7/common/types/Permission"
-// import ConditionalRender from "components/ConditionalRender"
-// import { useCurrentUser } from "../../context/CurrentUserContext"
-// import { canUseCourtDateReceivedDateMismatchFilters } from "../../features/flags/canUseCourtDateReceivedDateMismatchFilters"
+import ConditionalRender from "components/ConditionalRender"
 
 interface Props {
   caseAges?: string[]
   caseAgeCounts: Record<string, number>
   dispatch: Dispatch<FilterAction>
   dateRange: SerializedDateRange | undefined
+  canUseCourtDateReceivedDateMismatchFilters: boolean
 }
 
 const getCaseAgeWithFormattedDate = (namedCaseAge: string): string => {
@@ -44,9 +42,13 @@ const labelForCaseAge = (namedCaseAge: string, caseAgeCounts: Record<string, num
 
 const caseAgeId = (caseAge: string): string => `case-age-${caseAge.toLowerCase().replace(/ /g, "-")}`
 
-// const currentUser = useCurrentUser()
-
-const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, dateRange }: Props) => (
+const CourtDateFilter: React.FC<Props> = ({
+  caseAges,
+  caseAgeCounts,
+  dispatch,
+  dateRange,
+  canUseCourtDateReceivedDateMismatchFilters
+}: Props) => (
   <div className={"govuk-form-group"}>
     <ExpandingFilters filterName={"Court date"} classNames="filters-court-date">
       <fieldset className="govuk-fieldset">
@@ -109,13 +111,13 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
             </ScrollableCaseAgesContainer>
           </div>
         </div>
-        {/*<ConditionalRender isRendered={canUseCourtDateReceivedDateMismatchFilters(currentUser)}>*/}
-        <CourtDateReceivedDateMismatchCheckbox
-          id={"include"}
-          value={dateRange?.to}
-          label={"Include cases where date received is different"}
-        ></CourtDateReceivedDateMismatchCheckbox>
-        {/*</ConditionalRender>*/}
+        <ConditionalRender isRendered={canUseCourtDateReceivedDateMismatchFilters}>
+          <CourtDateReceivedDateMismatchCheckbox
+            id={"include"}
+            value={dateRange?.to}
+            label={"Include cases where date received is different"}
+          ></CourtDateReceivedDateMismatchCheckbox>
+        </ConditionalRender>
       </fieldset>
     </ExpandingFilters>
   </div>
