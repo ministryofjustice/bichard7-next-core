@@ -4,6 +4,7 @@ import { FormGroup } from "components/FormGroup"
 import ButtonsGroup from "components/ButtonsGroup"
 import { Select } from "components/Select"
 import ConditionalRender from "components/ConditionalRender"
+import { Label } from "components/Label"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
@@ -167,7 +168,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
           <Form method="POST" action="#" csrfToken={csrfToken} onSubmit={handleSubmit}>
             <fieldset className="govuk-fieldset">
               <FormGroup>
-                <label className={`govuk-label govuk-label--m`}>{"Select a reason"}</label>
+                <Label size={"m"}>{"Select a reason"}</Label>
                 <Select name="reason">
                   {Object.keys(ResolutionReasons).map((reason) => {
                     return (

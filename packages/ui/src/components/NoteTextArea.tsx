@@ -1,6 +1,7 @@
 import { MAX_NOTE_LENGTH } from "config"
-import { FormEvent } from "react"
+import type { ComponentProps, FormEvent } from "react"
 import { FormGroup } from "components/FormGroup"
+import { Label } from "components/Label"
 
 interface Props {
   name: string
@@ -9,7 +10,7 @@ interface Props {
   noteRemainingLength?: number
   showError?: boolean
   hintText?: string
-  labelSize?: string
+  labelSize?: ComponentProps<typeof Label>["size"]
   errorMessage?: string
   id?: string
   defaultValue?: string
@@ -24,16 +25,16 @@ export const NoteTextArea = ({
   id,
   name,
   showError = false,
-  labelSize = "govuk-label--m",
+  labelSize = "m",
   errorMessage = "The note cannot be empty",
   defaultValue = "",
   maxLength = MAX_NOTE_LENGTH
 }: Props) => {
   return (
     <FormGroup id={id} showError={showError}>
-      <label className={`govuk-label ${labelSize}`} htmlFor={`id-${name}`}>
+      <Label size={labelSize} htmlFor={`id-${name}`}>
         {labelText}
-      </label>
+      </Label>
 
       {hintText ? <div className={"govuk-hint"}>{hintText}</div> : ""}
 
