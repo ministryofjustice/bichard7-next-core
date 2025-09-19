@@ -9,6 +9,10 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import { mapCaseAges } from "utils/validators/validateCaseAges"
 import { CaseAgeContainer, ScrollableCaseAgesContainer } from "./DateFilter.styles"
 import CourtDateReceivedDateMismatchCheckbox from "./CourtDateReceivedDateMismatchCheckbox"
+// import Permission from "@moj-bichard7/common/types/Permission"
+// import ConditionalRender from "components/ConditionalRender"
+// import { useCurrentUser } from "../../context/CurrentUserContext"
+// import { canUseCourtDateReceivedDateMismatchFilters } from "../../features/flags/canUseCourtDateReceivedDateMismatchFilters"
 
 interface Props {
   caseAges?: string[]
@@ -39,6 +43,8 @@ const labelForCaseAge = (namedCaseAge: string, caseAgeCounts: Record<string, num
 }
 
 const caseAgeId = (caseAge: string): string => `case-age-${caseAge.toLowerCase().replace(/ /g, "-")}`
+
+// const currentUser = useCurrentUser()
 
 const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, dateRange }: Props) => (
   <div className={"govuk-form-group"}>
@@ -102,12 +108,14 @@ const CourtDateFilter: React.FC<Props> = ({ caseAges, caseAgeCounts, dispatch, d
               </div>
             </ScrollableCaseAgesContainer>
           </div>
-          <CourtDateReceivedDateMismatchCheckbox
-            id={"include"}
-            value={dateRange?.to}
-            label={"Include cases where date received is different"}
-          ></CourtDateReceivedDateMismatchCheckbox>
         </div>
+        {/*<ConditionalRender isRendered={canUseCourtDateReceivedDateMismatchFilters(currentUser)}>*/}
+        <CourtDateReceivedDateMismatchCheckbox
+          id={"include"}
+          value={dateRange?.to}
+          label={"Include cases where date received is different"}
+        ></CourtDateReceivedDateMismatchCheckbox>
+        {/*</ConditionalRender>*/}
       </fieldset>
     </ExpandingFilters>
   </div>
