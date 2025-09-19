@@ -30,7 +30,11 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "generalhandler@example.com",
     password: hashedPassword,
-    groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
+    groups: [UserGroup.GeneralHandler, UserGroup.NewUI],
+    featureFlags: {
+      useCourtDateReceivedDateMismatchFiltersEnabled: true,
+      useTriggerAndExceptionQualityAuditingEnabled: true
+    }
   },
   "A really really really long.name": {
     username: "A really really really long.name",
