@@ -17,4 +17,13 @@ describe("ExceptionQualityDropdown", () => {
 
     cy.get("select").find(":selected").should("have.text", "Set Exception Quality")
   })
+
+  it("passes selected value to onChange", () => {
+    const onChangeSpy = cy.spy().as("onChange")
+    cy.mount(<ExceptionQualityDropdown onChange={onChangeSpy} />)
+
+    const selectedValue = Object.keys(exceptionQualityValues)[0]
+    cy.get("select").select(selectedValue)
+    cy.get("@onChange").should("have.been.calledOnceWith", Number(selectedValue))
+  })
 })
