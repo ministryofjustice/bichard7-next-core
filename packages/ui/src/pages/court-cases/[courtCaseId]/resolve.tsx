@@ -2,6 +2,7 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { Button } from "components/Buttons/Button"
 import { FormGroup } from "components/FormGroup"
 import ButtonsGroup from "components/ButtonsGroup"
+import { Select } from "components/Select"
 import ConditionalRender from "components/ConditionalRender"
 import { Label } from "components/Label"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
@@ -168,7 +169,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
             <fieldset className="govuk-fieldset">
               <FormGroup>
                 <Label size={"m"}>{"Select a reason"}</Label>
-                <select className="govuk-select" name="reason">
+                <Select name="reason">
                   {Object.keys(ResolutionReasons).map((reason) => {
                     return (
                       <option selected={selectedReason === reason} key={reason} value={reason}>
@@ -176,7 +177,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
                       </option>
                     )
                   })}
-                </select>
+                </Select>
               </FormGroup>
 
               <NoteTextArea
