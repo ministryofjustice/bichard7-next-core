@@ -2,6 +2,7 @@ import { ResolutionStatus } from "types/ResolutionStatus"
 import ResolutionStatusBadge from "../tags/ResolutionStatusBadge"
 import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow/CaseDetailsRow.styles"
 import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"
+import { TableCell } from "components/Table"
 
 interface ExtraReasonRowProps {
   reasonCell?: React.ReactNode
@@ -11,15 +12,15 @@ interface ExtraReasonRowProps {
 
 export const ExtraReasonRow = ({ reasonCell, lockTag, resolutionStatus }: ExtraReasonRowProps) => {
   return (
-    <StyledExtraReasonRow className={"govuk-table__row extraReasonRow"}>
-      <td className="govuk-table__cell resolutionStatusBadgeCell">
+    <StyledExtraReasonRow className={"extraReasonRow"}>
+      <TableCell className="resolutionStatusBadgeCell">
         <CaseListResolutionStatusBadgeWrapper>
           <ResolutionStatusBadge resolutionStatus={resolutionStatus} />
         </CaseListResolutionStatusBadgeWrapper>
-      </td>
-      <td className="govuk-table__cell" />
-      <td className="govuk-table__cell extraReasonCell">{reasonCell || ""}</td>
-      <td className="govuk-table__cell">{lockTag || ""}</td>
+      </TableCell>
+      <TableCell />
+      <TableCell className="extraReasonCell">{reasonCell || ""}</TableCell>
+      <TableCell>{lockTag || ""}</TableCell>
     </StyledExtraReasonRow>
   )
 }
