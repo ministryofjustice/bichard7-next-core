@@ -2,7 +2,7 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-type AuditQuality = {
+export type AuditQuality = {
   errorQuality?: number
   triggerQuality?: number
 }
