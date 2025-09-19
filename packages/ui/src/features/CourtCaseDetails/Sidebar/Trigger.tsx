@@ -3,6 +3,7 @@ import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
 import { Preview } from "components/Preview"
 import PreviewButton from "components/PreviewButton"
+import { Label } from "components/Label"
 import { ChangeEvent, SyntheticEvent, useState } from "react"
 import { DisplayTrigger } from "types/display/Triggers"
 import getTriggerDefinition from "utils/getTriggerDefinition"
@@ -70,9 +71,9 @@ const Trigger = ({ trigger, onClick, selectedTriggerIds, setTriggerSelection, di
                     checked={selectedTriggerIds.includes(trigger.triggerId)}
                     onChange={setTriggerSelection}
                   ></input>
-                  <label className="govuk-label govuk-checkboxes__label" htmlFor={checkBoxId}>
+                  <Label className="govuk-checkboxes__label" htmlFor={checkBoxId}>
                     {}
-                  </label>
+                  </Label>
                 </div>
               </div>
             </ConditionalRender>

@@ -1,4 +1,5 @@
 import type { ChangeEvent } from "react"
+import { Label } from "components/Label"
 
 interface Props {
   name: string
@@ -36,10 +37,10 @@ const RadioButton: React.FC<Props> = ({
         checked={checked}
         onChange={onChange}
       />
-      <label className="govuk-label govuk-radios__label" htmlFor={id}>
+      <Label className="govuk-radios__label" htmlFor={id}>
         {label}
         <span className="govuk-visually-hidden">{secondaryInputDetail}</span>
-      </label>
+      </Label>
     </div>
   )
 }
