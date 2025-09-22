@@ -17,7 +17,6 @@ export const ButtonContainer = styled.div`
   justify-content: flex-end;
 
   button {
-    flex-grow: 0;
-    width: 150px;
+    width: auto;
   }
 `
