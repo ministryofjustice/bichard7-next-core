@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { FormGroup } from "components/FormGroup"
 
-export const DropdownContainer = styled(FormGroup)`
+export const DropdownFormGroup = styled(FormGroup)`
   display: flex;
   gap: 1rem;
 `
