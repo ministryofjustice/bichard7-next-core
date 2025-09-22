@@ -4,7 +4,7 @@ import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { BAD_GATEWAY, FORBIDDEN, NOT_FOUND, OK } from "http-status"
+import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND } from "http-status"
 
 import build from "../../../app"
 import canCaseBeResubmitted from "../../../services/db/cases/canCaseBeResubmitted"
@@ -21,7 +21,6 @@ const mockedCanCaseBeResubmitted = canCaseBeResubmitted as jest.Mock
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
-    body: { phase: 1 },
     headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "POST",
     url: V1.CaseResubmit.replace(":caseId", "100")
@@ -83,7 +82,7 @@ describe("resubmit", () => {
       await createUser(testDatabaseGateway, { groups: [role], jwtId: user.jwtId, username: user.username })
       await createCase(testDatabaseGateway, { errorId: 100, errorLockedById: user.username })
 
-      await assertStatusCode(encodedJwt, OK)
+      await assertStatusCode(encodedJwt, ACCEPTED)
     }
   )
 
@@ -154,7 +153,4 @@ describe("resubmit", () => {
       await assertStatusCode(encodedJwt, BAD_GATEWAY)
     })
   })
-
-  it.skip("202 s3 upload successful", () => {})
-  it.skip("502 s3 upload failed", () => {})
 })

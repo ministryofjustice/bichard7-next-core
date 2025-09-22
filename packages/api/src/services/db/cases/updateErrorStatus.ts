@@ -12,7 +12,7 @@ export default async function updateErrorStatus(
   databaseConnection: WritableDatabaseConnection,
   caseId: number,
   resolutionStatus: ResolutionStatus
-): PromiseResult<boolean> {
+): PromiseResult<string> {
   const resolutionStatusNum = resolutionStatusCodeByText(resolutionStatus)
 
   if (!resolutionStatusNum) {
@@ -32,5 +32,9 @@ export default async function updateErrorStatus(
 
   const caseRow = result[0] as CaseRow
 
-  return caseRow.error_status === resolutionStatusNum
+  if (caseRow.error_status === resolutionStatusNum) {
+    return caseRow.message_id
+  }
+
+  return new Error(`Case didn't update with resolution status ${resolutionStatusNum}, Case ID: ${caseId}`)
 }

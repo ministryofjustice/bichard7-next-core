@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { FORBIDDEN, NOT_FOUND, OK } from "http-status"
+import { ACCEPTED, FORBIDDEN, NOT_FOUND } from "http-status"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
@@ -93,13 +93,15 @@ describe("/v1/cases/:caseId/resubmit e2e", () => {
     expect(response.status).toBe(FORBIDDEN)
   })
 
-  it("will receive a 200 error if there's a case found and the case is locked by the user", async () => {
+  it("will receive a 202 if there's a case found and the case is locked by the user", async () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
-    await createCase(helper.postgres, { errorLockedById: user.username })
+    const caseObj = await createCase(helper.postgres, { errorLockedById: user.username })
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
-    expect(response.status).toBe(OK)
-    expect(await response.json()).toEqual({ phase: 1 })
+    expect(response.status).toBe(ACCEPTED)
+
+    const responseJson = await response.json()
+    expect(responseJson).toHaveProperty("messageId", caseObj.messageId)
   })
 })

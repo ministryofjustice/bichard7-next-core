@@ -1,3 +1,4 @@
+import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
@@ -42,6 +43,24 @@ describe("resubmitCase", () => {
       throw result
     }
 
-    expect(result).toBe(true)
+    expect(result.messageId).toBe(caseObj.messageId)
+  })
+
+  it("creates a Conductor Workflow", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler] })
+    const caseObj = await createCase(testDatabaseGateway, { errorLockedById: user.username })
+
+    const result = await resubmitCase(testDatabaseGateway.writable, user, caseObj.errorId)
+
+    if (isError(result)) {
+      throw result
+    }
+
+    const response = await waitForWorkflows({ query: { correlationId: result.messageId } })
+
+    expect(response).toBeDefined()
+    expect(response[0].workflowType).toBe("resubmit")
+    expect(response[0].workflowId).toBe(result.workflowId)
+    expect(response[0].correlationId).toBe(result.messageId)
   })
 })
