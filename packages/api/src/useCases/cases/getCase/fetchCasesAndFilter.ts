@@ -23,34 +23,34 @@ const assignNotesAndTriggers = async (
   const caseIds = cases.map((caseData) => caseData.errorId)
   const notes = await fetchNotes(database, caseIds)
   if (isError(notes)) {
-    return Error(`Error while fetching notes for case ids ${caseIds}: ${notes.message}`)
+    return new Error(`Error while fetching notes for case ids ${caseIds}: ${notes.message}`)
   }
 
   const triggers = await fetchTriggers(database, user, caseIds, filters)
   if (isError(triggers)) {
-    return Error(`Error while fetching triggers for case ids ${caseIds}: ${triggers.message}`)
+    return new Error(`Error while fetching triggers for case ids ${caseIds}: ${triggers.message}`)
   }
 
-  cases.forEach((caseData) => {
+  for (const caseData of cases) {
     const matchedNotes = notes.filter((note) => note.errorId === caseData.errorId)
     const matchedTriggers = triggers.filter((trigger) => trigger.errorId === caseData.errorId)
 
-    matchedNotes.forEach((note) => {
+    for (const note of matchedNotes) {
       if (!caseData.notes) {
         caseData.notes = []
       }
 
       caseData.notes.push(note)
-    })
+    }
 
-    matchedTriggers.map(convertTriggerToDto).forEach((trigger) => {
+    for (const trigger of matchedTriggers.map(convertTriggerToDto)) {
       if (!caseData.triggers) {
         caseData.triggers = []
       }
 
       caseData.triggers.push(trigger)
-    })
-  })
+    }
+  }
 }
 
 const fetchCasesAndFilter = async (
@@ -103,7 +103,7 @@ const fetchCasesAndFilter = async (
 
   const assignNotesAndTriggersResult = await assignNotesAndTriggers(database, user, cases, filters)
   if (isError(assignNotesAndTriggersResult)) {
-    return Error(`Failed to assign notes and triggers: ${assignNotesAndTriggersResult.message}`)
+    return new Error(`Failed to assign notes and triggers: ${assignNotesAndTriggersResult.message}`)
   }
 
   return {

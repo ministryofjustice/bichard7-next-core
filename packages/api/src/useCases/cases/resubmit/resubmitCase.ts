@@ -20,7 +20,7 @@ export const resubmitCase = async (
   user: User,
   caseId: number
 ): PromiseResult<ResubmitCaseResult> => {
-  const transactionResult = databaseConnection
+  return databaseConnection
     .transaction(async (transaction) => {
       const canUserResubmitCaseResult = await canUserResubmitCase(transaction, user, caseId)
 
@@ -55,10 +55,4 @@ export const resubmitCase = async (
       } satisfies ResubmitCaseResult
     })
     .catch((error: Error) => error)
-
-  if (isError(transactionResult)) {
-    return transactionResult
-  }
-
-  return transactionResult
 }
