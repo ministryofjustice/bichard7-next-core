@@ -8,12 +8,17 @@ const triggerQualityDropdownValues = Object.entries(triggerQualityValues).sort((
 
 export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
   return (
-    <Select {...props} placeholder={"Set Trigger Quality"} name={"trigger-quality"}>
-      {triggerQualityDropdownValues.map(([displayAs, value]) => (
-        <option key={value} value={value}>
-          {displayAs}
-        </option>
-      ))}
-    </Select>
+    <>
+      <label className={"govuk-visually-hidden"} htmlFor={"trigger-quality"}>
+        {"Set Trigger Quality"}
+      </label>
+      <Select {...props} placeholder={"Set Trigger Quality"} name={"trigger-quality"}>
+        {triggerQualityDropdownValues.map(([displayAs, value]) => (
+          <option key={value} value={value}>
+            {displayAs}
+          </option>
+        ))}
+      </Select>
+    </>
   )
 }

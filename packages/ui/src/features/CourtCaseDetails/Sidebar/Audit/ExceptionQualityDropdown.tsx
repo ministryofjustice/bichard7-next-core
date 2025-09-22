@@ -8,12 +8,17 @@ const exceptionQualityDropdownValues = Object.entries(exceptionQualityValues).so
 
 export const ExceptionQualityDropdown = (props: ExceptionQualityDropdownProps) => {
   return (
-    <Select {...props} placeholder={"Set Exception Quality"} name={"exception-quality"}>
-      {exceptionQualityDropdownValues.map(([displayAs, value]) => (
-        <option key={value} value={value}>
-          {displayAs}
-        </option>
-      ))}
-    </Select>
+    <>
+      <label className={"govuk-visually-hidden"} htmlFor={"exception-quality"}>
+        {"Set Exception Quality"}
+      </label>
+      <Select {...props} placeholder={"Set Exception Quality"} name={"exception-quality"}>
+        {exceptionQualityDropdownValues.map(([displayAs, value]) => (
+          <option key={value} value={value}>
+            {displayAs}
+          </option>
+        ))}
+      </Select>
+    </>
   )
 }
