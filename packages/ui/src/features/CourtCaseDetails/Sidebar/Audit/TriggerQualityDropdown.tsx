@@ -8,7 +8,7 @@ const triggerQualityDropdownValues = Object.entries(triggerQualityValues).sort((
 
 export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
   return (
-    <Select {...props} placeholder={"Set Trigger Quality"}>
+    <Select {...props} placeholder={"Set Trigger Quality"} name={"trigger-quality"}>
       {triggerQualityDropdownValues.map(([displayAs, value]) => (
         <option key={value} value={value}>
           {displayAs}
