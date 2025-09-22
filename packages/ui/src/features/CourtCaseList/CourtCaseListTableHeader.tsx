@@ -3,6 +3,7 @@ import ColumnOrderIcons from "features/CourtCaseFilters/ColumnOrderIcons"
 import { useRouter } from "next/router"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { HeaderButton, HeaderCell } from "./CourtCaseListTableHeader.styles"
+import { TableRow } from "components/Table"
 
 interface CourtCaseListTableHeaderProps {
   order: QueryOrder
@@ -39,7 +40,7 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
   }
 
   return (
-    <tr className="govuk-table__row">
+    <TableRow>
       <HeaderCell className={className} style={{ width: "178px" }}>
         <HeaderButton
           className={"table-column-header-button"}
@@ -101,6 +102,6 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
       <HeaderCell className={className}>
         <ColumnHeading aria-sort="none">{"Locked by"}</ColumnHeading>
       </HeaderCell>
-    </tr>
+    </TableRow>
   )
 }

@@ -8,6 +8,7 @@ import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
 import { generateExceptionComponents } from "./CourtCaseListEntryCells/generateExceptionComponents"
 import { generateTriggerComponents } from "./CourtCaseListEntryCells/generateTriggerComponents"
 import { ExtraReasonRow } from "./ExtraReasonRow"
+import { TableBody } from "components/Table"
 
 interface Props {
   courtCase: DisplayPartialCourtCase
@@ -51,7 +52,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
   const renderExtraReasons = resolutionStatus !== ResolutionStatus.Unresolved || extraReasonCell
 
   return (
-    <tbody className="govuk-table__body caseListEntry">
+    <TableBody className="caseListEntry">
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={reasonCell}
@@ -65,7 +66,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
           lockTag={triggerCells?.LockTag}
         />
       )}
-    </tbody>
+    </TableBody>
   )
 }
 

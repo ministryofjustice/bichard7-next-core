@@ -1,3 +1,5 @@
+import { FormGroup } from "components/FormGroup"
+
 interface RadioGroupsProps extends React.ComponentProps<"div"> {
   children: React.ReactNode
   legendText: string
@@ -6,18 +8,8 @@ interface RadioGroupsProps extends React.ComponentProps<"div"> {
 }
 
 export const RadioGroups = ({ children, legendText, errorMessage, hasError, ...divProps }: RadioGroupsProps) => {
-  const classNames = divProps?.className?.split(" ") ?? []
-
-  if (!classNames.includes("govuk-form-group")) {
-    classNames.push("govuk-form-group")
-  }
-
-  if (hasError) {
-    classNames.push("govuk-form-group--error")
-  }
-
   return (
-    <div {...divProps} className={classNames.join(" ")}>
+    <FormGroup {...divProps} showError={hasError}>
       <fieldset className="govuk-fieldset">
         <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{legendText}</legend>
         {hasError ? (
@@ -29,6 +21,6 @@ export const RadioGroups = ({ children, legendText, errorMessage, hasError, ...d
         )}
         {children}
       </fieldset>
-    </div>
+    </FormGroup>
   )
 }

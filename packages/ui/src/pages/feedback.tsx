@@ -1,4 +1,5 @@
 import { Button } from "components/Buttons/Button"
+import { FormGroup } from "components/FormGroup"
 import Layout from "components/Layout"
 import { NoteTextArea } from "components/NoteTextArea"
 import RadioButton from "components/Radios/RadioButton"
@@ -204,7 +205,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             handleOnNoteChange={handleFeedbackOnChange}
             noteRemainingLength={remainingFeedbackLength}
             labelText={"Tell us why you gave this rating"}
-            labelSize={"govuk-label--s"}
+            labelSize={"s"}
             id={"feedback"}
             defaultValue={fields?.feedback.value}
             showError={fields?.feedback.hasError}
@@ -213,9 +214,9 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
             errorMessage={"Input message into the text box"}
           />
 
-          <div className={"govuk-form-group"}>
+          <FormGroup>
             <Button type="submit">{"Send feedback and continue"}</Button>
-          </div>
+          </FormGroup>
         </Form>
       </Layout>
     </CurrentUserContext.Provider>

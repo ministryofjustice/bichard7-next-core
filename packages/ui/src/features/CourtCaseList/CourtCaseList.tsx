@@ -5,6 +5,7 @@ import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import CourtCaseListEntry from "./CourtCaseListEntry/CourtCaseListEntry"
 import { CourtCaseListTableHeader } from "./CourtCaseListTableHeader"
+import { Table, TableHead } from "components/Table"
 
 interface Props {
   courtCases: DisplayPartialCourtCase[]
@@ -51,13 +52,13 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
   ) : (
     <>
       <div aria-live="polite" aria-atomic="true" ref={announcerRef} className="govuk-visually-hidden"></div>
-      <table className="govuk-table cases-list">
+      <Table className="cases-list">
         <caption>
           <span className="govuk-visually-hidden">{"Column headers with buttons are sortable."}</span>
         </caption>
-        <thead className="govuk-table__head">
+        <TableHead>
           <CourtCaseListTableHeader order={order} />
-        </thead>
+        </TableHead>
         {courtCases.map((courtCase) => (
           <CourtCaseListEntry
             courtCase={courtCase}
@@ -67,7 +68,7 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
             previousPath={queryString}
           />
         ))}
-      </table>
+      </Table>
     </>
   )
 }

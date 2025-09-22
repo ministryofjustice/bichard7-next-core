@@ -46,6 +46,7 @@ describe("lockAndFetchCaseDto", () => {
       errorId: 1,
       errorLockedByUserFullName: "Forename1 Surname1",
       errorLockedByUsername: "User1",
+      errorQualityChecked: null,
       errorReport: "HO100304||br7:ArrestSummonsNumber",
       errorStatus: "Unresolved",
       isUrgent: 1,
@@ -59,6 +60,7 @@ describe("lockAndFetchCaseDto", () => {
       triggerCount: 1,
       triggerLockedByUserFullName: "Forename1 Surname1",
       triggerLockedByUsername: "User1",
+      triggerQualityChecked: null,
       triggers: [],
       triggerStatus: "Unresolved",
       updatedHearingOutcome: null

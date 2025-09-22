@@ -1,6 +1,8 @@
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
+import { Label } from "components/Label"
 import type { Dispatch } from "react"
 import { Reason } from "types/CaseListQueryParams"
+import { FormGroup } from "components/FormGroup"
 import type { FilterAction } from "types/CourtCaseFilter"
 
 interface Props {
@@ -11,7 +13,7 @@ interface Props {
 
 const ReasonFilter: React.FC<Props> = ({ reason, reasonOptions, dispatch }: Props) => {
   return (
-    <div className={"govuk-form-group reasons"}>
+    <FormGroup className={"reasons"}>
       <ExpandingFilters filterName={"Reason"} classNames="filters-reason">
         <fieldset className="govuk-fieldset">
           <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
@@ -29,15 +31,15 @@ const ReasonFilter: React.FC<Props> = ({ reason, reasonOptions, dispatch }: Prop
                     dispatch({ method: event.currentTarget.checked ? "add" : "remove", type: "reason", value })
                   }}
                 ></input>
-                <label className="govuk-label govuk-radios__label" htmlFor={`${reasonOption.toLowerCase()}-reason`}>
+                <Label className="govuk-radios__label" htmlFor={`${reasonOption.toLowerCase()}-reason`}>
                   {reasonOption}
-                </label>
+                </Label>
               </div>
             ))}
           </div>
         </fieldset>
       </ExpandingFilters>
-    </div>
+    </FormGroup>
   )
 }
 

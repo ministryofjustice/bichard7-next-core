@@ -1,4 +1,5 @@
 import DateInput from "components/CustomDateInput/DateInput"
+import { FormGroup } from "components/FormGroup"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import type { Dispatch } from "react"
 import { SerializedDateRange } from "types/CaseListQueryParams"
@@ -10,7 +11,7 @@ interface Props {
 }
 
 const ResolvedDateFilter: React.FC<Props> = ({ dispatch, dateRange: caseResolvedDateRange }: Props) => (
-  <div className={"govuk-form-group"}>
+  <FormGroup>
     <ExpandingFilters filterName={"Case resolved date"} classNames="filters-case-resolved-date">
       <fieldset className="govuk-fieldset">
         <div id="conditional-resolved-date-range">
@@ -29,6 +30,6 @@ const ResolvedDateFilter: React.FC<Props> = ({ dispatch, dateRange: caseResolved
         </div>
       </fieldset>
     </ExpandingFilters>
-  </div>
+  </FormGroup>
 )
 export default ResolvedDateFilter
