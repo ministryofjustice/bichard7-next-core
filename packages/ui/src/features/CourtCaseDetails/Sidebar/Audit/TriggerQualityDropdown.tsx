@@ -1,24 +1,14 @@
-import { triggerQualityValues, type TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
+import type { ComponentProps } from "react"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { Select } from "components/Select"
 
-export type TriggerQualityDropdownProps = {
-  value?: TriggerQuality | null
-  onChange?: (value: TriggerQuality | null) => void
-}
+export type TriggerQualityDropdownProps = ComponentProps<typeof Select>
 
 const triggerQualityDropdownValues = Object.entries(triggerQualityValues).sort((a, b) => a[1] - b[1])
 
-export const TriggerQualityDropdown = ({ value, onChange }: TriggerQualityDropdownProps) => {
+export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
   return (
-    <Select
-      placeholder={"Set Trigger Quality"}
-      value={value ?? undefined}
-      onChange={(e) => {
-        if (onChange) {
-          onChange(Number(e.target.value) as unknown as TriggerQuality)
-        }
-      }}
-    >
+    <Select {...props} placeholder={"Set Trigger Quality"}>
       {triggerQualityDropdownValues.map(([displayAs, value]) => (
         <option key={value} value={value}>
           {displayAs}

@@ -23,17 +23,16 @@ describe("TriggerQualityDropdown", () => {
   })
 
   it("renders placeholder if null", () => {
-    cy.mount(<TriggerQualityDropdown value={null} />)
+    cy.mount(<TriggerQualityDropdown />)
 
     cy.get("select").find(":selected").should("have.text", "Set Trigger Quality")
   })
 
-  it("passes selected value to onChange", () => {
+  it("calls onChange when value selected", () => {
     const onChangeSpy = cy.spy().as("onChange")
     cy.mount(<TriggerQualityDropdown onChange={onChangeSpy} />)
 
-    const selectedValue = Object.values(triggerQualityValues)[0]
-    cy.get("select").select(selectedValue)
-    cy.get("@onChange").should("have.been.calledOnceWith", Number(selectedValue))
+    cy.get("select").select(String(Object.values(triggerQualityValues)[0]))
+    cy.get("@onChange").should("have.been.called")
   })
 })

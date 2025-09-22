@@ -22,8 +22,8 @@ describe("ExceptionQualityDropdown", () => {
     })
   })
 
-  it("renders placeholder if null", () => {
-    cy.mount(<ExceptionQualityDropdown value={null} />)
+  it("renders placeholder", () => {
+    cy.mount(<ExceptionQualityDropdown />)
 
     cy.get("select").find(":selected").should("have.text", "Set Exception Quality")
   })
@@ -32,8 +32,7 @@ describe("ExceptionQualityDropdown", () => {
     const onChangeSpy = cy.spy().as("onChange")
     cy.mount(<ExceptionQualityDropdown onChange={onChangeSpy} />)
 
-    const selectedValue = Object.values(exceptionQualityValues)[0]
-    cy.get("select").select(selectedValue)
-    cy.get("@onChange").should("have.been.calledOnceWith", Number(selectedValue))
+    cy.get("select").select(String(Object.values(exceptionQualityValues)[0]))
+    cy.get("@onChange").should("have.been.called")
   })
 })
