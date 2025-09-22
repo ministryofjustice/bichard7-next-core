@@ -1,9 +1,9 @@
 import z from "zod"
 
 export const triggerQualityValues = {
-  Fail: 2,
+  Fail: 3,
   "Not Checked": 1,
-  "Partial Pass (Not all Triggers)": 6,
+  "Partial Pass (Not all Triggers)": 4,
   Pass: 2
 } as const
 
