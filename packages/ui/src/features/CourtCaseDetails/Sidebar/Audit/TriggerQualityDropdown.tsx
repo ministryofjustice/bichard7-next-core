@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react"
 import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { Select } from "components/Select"
+import { FormGroup } from "components/FormGroup"
 
 export type TriggerQualityDropdownProps = ComponentProps<typeof Select>
 
@@ -8,7 +9,7 @@ const triggerQualityDropdownValues = Object.entries(triggerQualityValues).sort((
 
 export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
   return (
-    <>
+    <FormGroup>
       <label className={"govuk-visually-hidden"} htmlFor={"trigger-quality"}>
         {"Set Trigger Quality"}
       </label>
@@ -19,6 +20,6 @@ export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
           </option>
         ))}
       </Select>
-    </>
+    </FormGroup>
   )
 }
