@@ -17,9 +17,7 @@
       "asyncComplete": false
     }
   ],
-  "inputParameters": [
-    "messageId"
-  ],
+  "inputParameters": ["messageId"],
   "outputParameters": {},
   "schemaVersion": 2,
   "restartable": true,
