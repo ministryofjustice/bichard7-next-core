@@ -486,8 +486,9 @@ jobs:
       - node_install
       - install_dependencies
       - build_api
-      - start_services:
-          SERVICES: db-seed localstack conductor
+      - run:
+          name: Boot Dependencies
+          command: npm run conductor
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
