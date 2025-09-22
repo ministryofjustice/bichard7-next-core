@@ -4,70 +4,62 @@ import type { DateRange } from "@moj-bichard7/common/types/DateRange"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { subDays } from "date-fns"
 
+const dateHelper = (days: number): Date => subDays(new Date(), days)
+
+const formatDateRange = (date: Date): DateRange => {
+  return { from: date, to: date }
+}
+
 export const CaseAgeOptions: Record<string, () => DateRange> = {
   [CaseAge.Today]: () => {
     const today = new Date()
-    return { from: today, to: today }
+    return formatDateRange(today)
   },
   [CaseAge.Yesterday]: () => {
-    const yesterday = subDays(new Date(), 1)
-    return { from: yesterday, to: yesterday }
+    return formatDateRange(dateHelper(1))
   },
   [CaseAge.TwoDaysAgo]: () => {
-    const day2 = subDays(new Date(), 2)
-    return { from: day2, to: day2 }
+    return formatDateRange(dateHelper(2))
   },
   [CaseAge.ThreeDaysAgo]: () => {
-    const day3 = subDays(new Date(), 3)
-    return { from: day3, to: day3 }
+    return formatDateRange(dateHelper(3))
   },
   [CaseAge.FourDaysAgo]: () => {
-    const day4 = subDays(new Date(), 4)
-    return { from: day4, to: day4 }
+    return formatDateRange(dateHelper(4))
   },
   [CaseAge.FiveDaysAgo]: () => {
-    const day5 = subDays(new Date(), 5)
-    return { from: day5, to: day5 }
+    return formatDateRange(dateHelper(5))
   },
   [CaseAge.SixDaysAgo]: () => {
-    const day6 = subDays(new Date(), 6)
-    return { from: day6, to: day6 }
+    return formatDateRange(dateHelper(6))
   },
   [CaseAge.SevenDaysAgo]: () => {
-    const day7 = subDays(new Date(), 7)
-    return { from: day7, to: day7 }
+    return formatDateRange(dateHelper(7))
   },
   [CaseAge.EightDaysAgo]: () => {
-    const day8 = subDays(new Date(), 8)
-    return { from: day8, to: day8 }
+    return formatDateRange(dateHelper(8))
   },
   [CaseAge.NineDaysAgo]: () => {
-    const day9 = subDays(new Date(), 9)
-    return { from: day9, to: day9 }
+    return formatDateRange(dateHelper(9))
   },
   [CaseAge.TenDaysAgo]: () => {
-    const day10 = subDays(new Date(), 10)
-    return { from: day10, to: day10 }
+    return formatDateRange(dateHelper(10))
   },
   [CaseAge.ElevenDaysAgo]: () => {
-    const day11 = subDays(new Date(), 11)
-    return { from: day11, to: day11 }
+    return formatDateRange(dateHelper(11))
   },
   [CaseAge.TwelveDaysAgo]: () => {
-    const day12 = subDays(new Date(), 12)
-    return { from: day12, to: day12 }
+    return formatDateRange(dateHelper(12))
   },
   [CaseAge.ThirteenDaysAgo]: () => {
-    const day13 = subDays(new Date(), 13)
-    return { from: day13, to: day13 }
+    return formatDateRange(dateHelper(13))
   },
   [CaseAge.FourteenDaysAgo]: () => {
-    const day14 = subDays(new Date(), 14)
-    return { from: day14, to: day14 }
+    return formatDateRange(dateHelper(14))
   },
   [CaseAge.FifteenDaysAgoAndOlder]: () => {
     const unixEpoch = new Date(0)
-    const day15 = subDays(new Date(), 15)
+    const day15 = dateHelper(15)
     return { from: unixEpoch, to: day15 }
   }
 }
