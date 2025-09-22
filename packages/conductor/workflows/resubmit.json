@@ -1,0 +1,33 @@
+{
+  "createTime": 1758269877463,
+  "updateTime": 1758271543666,
+  "name": "resubmit",
+  "description": "Case Resubmission",
+  "version": 3,
+  "tasks": [
+    {
+      "name": "test_task",
+      "taskReferenceName": "test_task",
+      "inputParameters": {
+        "messageId": "${workflow.input.messageId}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    }
+  ],
+  "inputParameters": [
+    "messageId"
+  ],
+  "outputParameters": {},
+  "schemaVersion": 2,
+  "restartable": true,
+  "workflowStatusListenerEnabled": false,
+  "timeoutPolicy": "ALERT_ONLY",
+  "timeoutSeconds": 0,
+  "variables": {},
+  "inputTemplate": {},
+  "enforceSchema": true,
+  "metadata": {}
+}
