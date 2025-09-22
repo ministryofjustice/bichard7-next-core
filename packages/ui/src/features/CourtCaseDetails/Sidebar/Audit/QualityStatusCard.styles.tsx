@@ -18,5 +18,6 @@ export const ButtonContainer = styled.div`
 
   button {
     width: auto;
+    margin-bottom: 15px;
   }
 `
