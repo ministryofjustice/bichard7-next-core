@@ -1,5 +1,6 @@
 import { ExceptionQualityDropdown } from "features/CourtCaseDetails/Sidebar/Audit/ExceptionQualityDropdown"
 import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import "../../../styles/globals.scss"
 
 describe("ExceptionQualityDropdown", () => {
   it("mounts", () => {

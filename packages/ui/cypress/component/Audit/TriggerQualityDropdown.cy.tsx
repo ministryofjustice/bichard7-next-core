@@ -1,5 +1,6 @@
 import { TriggerQualityDropdown } from "features/CourtCaseDetails/Sidebar/Audit/TriggerQualityDropdown"
 import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
+import "../../../styles/globals.scss"
 
 describe("TriggerQualityDropdown", () => {
   it("mounts", () => {
