@@ -7,6 +7,7 @@ import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
+import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
 
 export const QualityStatusCard = () => {
   const { csrfToken } = useCsrfToken()
@@ -25,19 +26,24 @@ export const QualityStatusCard = () => {
     <Card heading={"Set quality status"}>
       <Form method="POST" action="#" csrfToken={csrfToken || ""} onSubmit={handleSubmit}>
         <fieldset className="govuk-fieldset">
-          <TriggerQualityDropdown />
-          <ExceptionQualityDropdown />
+          <DropdownContainer>
+            <TriggerQualityDropdown />
+            <ExceptionQualityDropdown />
+          </DropdownContainer>
 
           <NoteTextArea
             handleOnNoteChange={handleOnNoteChange}
             noteRemainingLength={noteRemainingLength}
             labelText={"Add a new note (optional)"}
+            labelSize={"s"}
             name={"quality-status-note"}
           />
 
-          <Button id="quality-status-submit" type="submit" disabled={isSubmitting}>
-            {"Submit Audit"}
-          </Button>
+          <ButtonContainer>
+            <Button id="quality-status-submit" type="submit" disabled={isSubmitting}>
+              {"Submit Audit"}
+            </Button>
+          </ButtonContainer>
         </fieldset>
       </Form>
     </Card>
