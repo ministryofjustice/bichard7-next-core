@@ -11,29 +11,22 @@ import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
 import { DisplayFullCourtCase } from "../../../../types/display/CourtCases"
+import { useFormStatus } from "react-dom"
 
 export const QualityStatusCard = () => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
 
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<Error | null>(null)
   const [triggerQualityHasError, setTriggerQualityHasError] = useState(false)
   const [exceptionQualityHasError, setExceptionQualityHasError] = useState(false)
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault()
-
-    if (isSubmitting) {
-      return
-    }
-
+  const handleSubmit = async (formData: FormData) => {
     setSubmitError(null)
     setTriggerQualityHasError(false)
     setExceptionQualityHasError(false)
 
-    const formData = new FormData(e.currentTarget)
     const triggerQuality = Number(formData.get("trigger-quality"))
     const exceptionQuality = Number(formData.get("exception-quality"))
     const note = formData.get("quality-status-note")
@@ -49,7 +42,6 @@ export const QualityStatusCard = () => {
     }
 
     if (!hasErrors) {
-      setIsSubmitting(true)
       try {
         const response = await axios.put(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
           csrfToken,
@@ -64,8 +56,6 @@ export const QualityStatusCard = () => {
         updateCsrfToken(response.data.csrfToken as string)
       } catch (error) {
         setSubmitError(error as Error)
-      } finally {
-        setIsSubmitting(false)
       }
     }
   }
@@ -77,7 +67,7 @@ export const QualityStatusCard = () => {
 
   return (
     <Card heading={"Set quality status"}>
-      <form onSubmit={handleSubmit} aria-describedby="quality-status-form-error">
+      <form action={handleSubmit} aria-describedby="quality-status-form-error">
         {submitError ? (
           <p id="quality-status-form-error" className="govuk-error-message" role="alert">
             {"Audit has failed, please refresh"}
@@ -112,12 +102,20 @@ export const QualityStatusCard = () => {
           />
 
           <ButtonContainer>
-            <Button id="quality-status-submit" type="submit" disabled={isSubmitting}>
-              {"Submit Audit"}
-            </Button>
+            <SubmitButton />
           </ButtonContainer>
         </fieldset>
       </form>
     </Card>
+  )
+}
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus()
+
+  return (
+    <Button id="quality-status-submit" type="submit" disabled={pending}>
+      {"Submit Audit"}
+    </Button>
   )
 }
