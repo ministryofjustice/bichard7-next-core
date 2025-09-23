@@ -29,7 +29,6 @@ export const QualityStatusCard = () => {
       return
     }
 
-    setIsSubmitting(true)
     setSubmitError(null)
     setTriggerQualityHasError(false)
     setExceptionQualityHasError(false)
@@ -50,6 +49,7 @@ export const QualityStatusCard = () => {
     }
 
     if (!hasErrors) {
+      setIsSubmitting(true)
       try {
         const response = await axios.put(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
           csrfToken,
@@ -64,10 +64,10 @@ export const QualityStatusCard = () => {
         updateCsrfToken(response.data.csrfToken as string)
       } catch (error) {
         setSubmitError(error as Error)
+      } finally {
+        setIsSubmitting(false)
       }
     }
-
-    setIsSubmitting(false)
   }
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)

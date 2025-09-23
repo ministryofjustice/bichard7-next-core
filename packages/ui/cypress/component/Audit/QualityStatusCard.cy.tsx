@@ -24,6 +24,7 @@ describe("QualityStatusCard", () => {
 
   it("posts form content to the correct URL", () => {
     cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
       statusCode: 200,
       body: {}
     }).as("auditCase")
@@ -42,6 +43,7 @@ describe("QualityStatusCard", () => {
     cy.get("select[name='exception-quality']").select("6")
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
+    cy.get("button#quality-status-submit").should("be.disabled")
 
     cy.wait("@auditCase").then(({ request }) => {
       expect(request.method).to.equal("PUT")
@@ -49,6 +51,8 @@ describe("QualityStatusCard", () => {
       expect(request.body.data.triggerQuality).to.equal(2)
       expect(request.body.data.exceptionQuality).to.equal(6)
       expect(request.body.data.note).to.equal("Test notes")
+
+      cy.get("button#quality-status-submit").should("not.be.disabled")
     })
   })
 
