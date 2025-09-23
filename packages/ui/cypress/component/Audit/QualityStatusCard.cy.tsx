@@ -22,7 +22,7 @@ describe("QualityStatusCard", () => {
     )
   })
 
-  it("posts form content to the correct URL", () => {
+  it("sends data to the correct URL", () => {
     cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
