@@ -1,4 +1,4 @@
-import { useState, type FormEventHandler } from "react"
+import { useState, type FormEventHandler, useActionState } from "react"
 import axios from "axios"
 import { useRouter } from "next/router"
 import { Card } from "components/Card"
@@ -13,19 +13,28 @@ import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
 import { DisplayFullCourtCase } from "../../../../types/display/CourtCases"
 import { useFormStatus } from "react-dom"
 
+const initialFormState = {
+  submitError: null as Error | null,
+  triggerQualityHasError: false,
+  exceptionQualityHasError: false
+}
+
 export const QualityStatusCard = () => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
 
-  const [submitError, setSubmitError] = useState<Error | null>(null)
-  const [triggerQualityHasError, setTriggerQualityHasError] = useState(false)
-  const [exceptionQualityHasError, setExceptionQualityHasError] = useState(false)
+  const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
+  const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
+    setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
+  }
 
-  const handleSubmit = async (formData: FormData) => {
-    setSubmitError(null)
-    setTriggerQualityHasError(false)
-    setExceptionQualityHasError(false)
+  const submit = async (_: typeof initialFormState, formData: FormData) => {
+    const newState: typeof initialFormState = {
+      submitError: null,
+      triggerQualityHasError: false,
+      exceptionQualityHasError: false
+    }
 
     const triggerQuality = Number(formData.get("trigger-quality"))
     const exceptionQuality = Number(formData.get("exception-quality"))
@@ -34,41 +43,41 @@ export const QualityStatusCard = () => {
     let hasErrors = false
     if (triggerQuality <= 1) {
       hasErrors = true
-      setTriggerQualityHasError(true)
+      newState.triggerQualityHasError = true
     }
     if (exceptionQuality <= 1) {
       hasErrors = true
-      setExceptionQualityHasError(true)
+      newState.exceptionQualityHasError = true
+    }
+    if (hasErrors) {
+      return newState
     }
 
-    if (!hasErrors) {
-      try {
-        const response = await axios.put(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
-          csrfToken,
-          data: {
-            triggerQuality,
-            exceptionQuality,
-            note
-          }
-        })
+    try {
+      const response = await axios.put(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+        csrfToken,
+        data: {
+          triggerQuality,
+          exceptionQuality,
+          note
+        }
+      })
 
-        updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
-        updateCsrfToken(response.data.csrfToken as string)
-      } catch (error) {
-        setSubmitError(error as Error)
-      }
+      updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
+      updateCsrfToken(response.data.csrfToken as string)
+    } catch (error) {
+      newState.submitError = error as Error
     }
+
+    return newState
   }
 
-  const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
-  const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
-    setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
-  }
+  const [actionResult, submitAction] = useActionState(submit, initialFormState)
 
   return (
     <Card heading={"Set quality status"}>
-      <form action={handleSubmit} aria-describedby="quality-status-form-error">
-        {submitError ? (
+      <form action={submitAction} aria-describedby="quality-status-form-error">
+        {actionResult.submitError ? (
           <p id="quality-status-form-error" className="govuk-error-message" role="alert">
             {"Audit has failed, please refresh"}
           </p>
@@ -76,20 +85,20 @@ export const QualityStatusCard = () => {
         <fieldset className="govuk-fieldset">
           <DropdownContainer>
             <TriggerQualityDropdown
-              showError={triggerQualityHasError}
-              onChange={(e) => {
-                if (Number(e.target.value) > 1) {
-                  setTriggerQualityHasError(false)
-                }
-              }}
+              showError={actionResult.triggerQualityHasError}
+              // onChange={(e) => {
+              //   if (Number(e.target.value) > 1) {
+              //     setTriggerQualityHasError(false)
+              //   }
+              // }}
             />
             <ExceptionQualityDropdown
-              showError={exceptionQualityHasError}
-              onChange={(e) => {
-                if (Number(e.target.value) > 1) {
-                  setExceptionQualityHasError(false)
-                }
-              }}
+              showError={actionResult.exceptionQualityHasError}
+              // onChange={(e) => {
+              //   if (Number(e.target.value) > 1) {
+              //     setExceptionQualityHasError(false)
+              //   }
+              // }}
             />
           </DropdownContainer>
 
