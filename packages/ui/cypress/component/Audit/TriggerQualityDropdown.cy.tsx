@@ -29,11 +29,16 @@ describe("TriggerQualityDropdown", () => {
     cy.get("select").find(":selected").should("have.text", "Set Trigger Quality")
   })
 
-  it("calls onChange when value selected", () => {
-    const onChangeSpy = cy.spy().as("onChange")
-    cy.mount(<TriggerQualityDropdown onChange={onChangeSpy} />)
+  it("shows error message when showError is true", () => {
+    cy.mount(<TriggerQualityDropdown showError={true} />)
 
-    cy.get("select").select(String(Object.values(triggerQualityValues)[0]))
-    cy.get("@onChange").should("have.been.called")
+    cy.get("#trigger-quality-error").should("be.visible")
+  })
+
+  it("doesnt show error message when showError is false", () => {
+    cy.mount(<TriggerQualityDropdown showError={false} />)
+
+    cy.get("select") // Add so component mounted before checking for errors
+    cy.get("#trigger-quality-error").should("not.exist")
   })
 })

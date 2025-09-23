@@ -29,11 +29,16 @@ describe("ExceptionQualityDropdown", () => {
     cy.get("select").find(":selected").should("have.text", "Set Exception Quality")
   })
 
-  it("passes selected value to onChange", () => {
-    const onChangeSpy = cy.spy().as("onChange")
-    cy.mount(<ExceptionQualityDropdown onChange={onChangeSpy} />)
+  it("shows error message when showError is true", () => {
+    cy.mount(<ExceptionQualityDropdown showError={true} />)
 
-    cy.get("select").select(String(Object.values(exceptionQualityValues)[0]))
-    cy.get("@onChange").should("have.been.called")
+    cy.get("#exception-quality-error").should("be.visible")
+  })
+
+  it("doesnt show error message when showError is false", () => {
+    cy.mount(<ExceptionQualityDropdown showError={false} />)
+
+    cy.get("select") // Add so component mounted before checking for errors
+    cy.get("#exception-quality-error").should("not.exist")
   })
 })
