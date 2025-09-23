@@ -59,7 +59,7 @@ describe("Select", () => {
 
   it("renders placeholder", () => {
     cy.mount(
-      <Select value="" placeholder="Select a value">
+      <Select placeholder="Select a value">
         <option value="value1">{"Value 1"}</option>
         <option value="value2">{"Value 2"}</option>
       </Select>
