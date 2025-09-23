@@ -1,4 +1,5 @@
 import { useState, type FormEventHandler, useActionState } from "react"
+import { useFormStatus } from "react-dom"
 import axios from "axios"
 import { useRouter } from "next/router"
 import { Card } from "components/Card"
@@ -7,11 +8,10 @@ import { Button } from "components/Buttons/Button"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCourtCase } from "context/CourtCaseContext"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
-import { DisplayFullCourtCase } from "../../../../types/display/CourtCases"
-import { useFormStatus } from "react-dom"
 
 const initialFormState = {
   submitError: null as Error | null,
@@ -72,36 +72,21 @@ export const QualityStatusCard = () => {
     return newState
   }
 
-  const [actionResult, submitAction] = useActionState(submit, initialFormState)
+  const [submitResult, submitAction] = useActionState(submit, initialFormState)
 
   return (
     <Card heading={"Set quality status"}>
       <form action={submitAction} aria-describedby="quality-status-form-error">
-        {actionResult.submitError ? (
+        {submitResult.submitError ? (
           <p id="quality-status-form-error" className="govuk-error-message" role="alert">
             {"Audit has failed, please refresh"}
           </p>
         ) : null}
         <fieldset className="govuk-fieldset">
           <DropdownContainer>
-            <TriggerQualityDropdown
-              showError={actionResult.triggerQualityHasError}
-              // onChange={(e) => {
-              //   if (Number(e.target.value) > 1) {
-              //     setTriggerQualityHasError(false)
-              //   }
-              // }}
-            />
-            <ExceptionQualityDropdown
-              showError={actionResult.exceptionQualityHasError}
-              // onChange={(e) => {
-              //   if (Number(e.target.value) > 1) {
-              //     setExceptionQualityHasError(false)
-              //   }
-              // }}
-            />
+            <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />
+            <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
           </DropdownContainer>
-
           <NoteTextArea
             handleOnNoteChange={handleOnNoteChange}
             noteRemainingLength={noteRemainingLength}
@@ -109,7 +94,6 @@ export const QualityStatusCard = () => {
             labelSize={"s"}
             name={"quality-status-note"}
           />
-
           <ButtonContainer>
             <SubmitButton />
           </ButtonContainer>
