@@ -1,12 +1,12 @@
 import type { Case, CaseDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import auditCase from "../../services/db/cases/auditCase"
 import fetchCase from "../../services/db/cases/fetchCase"
 import { createCase } from "../../tests/helpers/caseHelper"
+import FakeLogger from "../../tests/helpers/fakeLogger"
 import { createUser } from "../../tests/helpers/userHelper"
 import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
 import saveAuditResults from "./saveAuditResults"
@@ -14,7 +14,7 @@ import saveAuditResults from "./saveAuditResults"
 jest.mock("../../services/db/cases/auditCase")
 
 const testDatabaseGateway = new End2EndPostgres()
-const testLogger = jest.fn() as unknown as FastifyBaseLogger
+const logger = new FakeLogger()
 
 const mockedAuditCase = auditCase as jest.Mock
 
@@ -41,11 +41,15 @@ describe("saveAuditResults", () => {
     await testDatabaseGateway.close()
   })
 
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
   it("saves auditResults successfully", async () => {
     const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality)
     expect(isError(result)).toBe(false)
 
-    const updatedResult = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    const updatedResult = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
     expect(updatedResult.errorQualityChecked).toBe(1)
     expect(updatedResult.triggerQualityChecked).toBe(2)
   })
