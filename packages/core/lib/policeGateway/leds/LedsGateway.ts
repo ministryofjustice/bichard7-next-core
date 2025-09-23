@@ -9,5 +9,7 @@ export default class LedsGateway implements PoliceGateway {
   query: (asn: string, correlationId: string) => Promise<PoliceApiError | PoliceQueryResult | undefined>
   queryTime: Date | undefined
   update: (request: PoliceUpdateRequest, correlationId: string) => Promise<PoliceApiError | void>
-  constructor(private config: LedsApiConfig) {}
+  constructor(private readonly config: LedsApiConfig) {
+    console.log(this.config)
+  }
 }
