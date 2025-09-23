@@ -4,12 +4,12 @@ import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
-import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import selectMessageId from "../../services/db/cases/selectMessageId"
-import createAuditLogEvents from "../createAuditLogEvents"
+import selectMessageId from "../../../services/db/cases/selectMessageId"
+import createAuditLogEvents from "../../createAuditLogEvents"
 import { lockExceptions } from "./lockExceptions"
 import { lockTriggers } from "./lockTriggers"
 

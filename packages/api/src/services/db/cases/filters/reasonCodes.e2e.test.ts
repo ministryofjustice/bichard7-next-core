@@ -12,7 +12,7 @@ import { createExceptionOnCase } from "../../../../tests/helpers/exceptionHelper
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
-import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../../useCases/cases/getCase/fetchCasesAndFilter"
 import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 describe("fetchCasesAndFilter filtering by reason codes e2e", () => {

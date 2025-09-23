@@ -15,6 +15,7 @@ import storeAuditLogEvents from "@moj-bichard7/core/conductor-tasks/common/store
 import alertCommonPlatform from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/alertCommonPlatform"
 import convertSpiToAho from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/convertSpiToAho"
 import createAuditLogRecord from "@moj-bichard7/core/conductor-tasks/incomingMessageHandler/createAuditLogRecord"
+import testTask from "@moj-bichard7/core/conductor-tasks/resubmit/test_task"
 
 import { captureWorkerExceptions } from "./captureWorkerExceptions"
 import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
@@ -34,7 +35,8 @@ const tasks = [
   processPhase3,
   sendToPhase2,
   sendToPhase3,
-  storeAuditLogEvents
+  storeAuditLogEvents,
+  testTask
 ]
   .map(captureWorkerExceptions)
   .map(configureWorker)

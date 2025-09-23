@@ -1,6 +1,8 @@
-import { ChangeEvent, Dispatch, useEffect, useRef } from "react"
-import { FilterAction } from "types/CourtCaseFilter"
+import { useEffect, useRef } from "react"
+import type { ChangeEvent, Dispatch } from "react"
+import type { FilterAction } from "types/CourtCaseFilter"
 import { IndeterminateCheckboxWrapper } from "./IndeterminateCheckbox.styles"
+import { Label } from "./Label"
 
 interface IndeterminateCheckboxProps {
   id: string
@@ -50,9 +52,9 @@ const IndeterminateCheckbox = ({
               })
             }}
           ></input>
-          <label className="govuk-label govuk-checkboxes__label" htmlFor={id}>
+          <Label className="govuk-checkboxes__label" htmlFor={id}>
             {labelText}
-          </label>
+          </Label>
         </IndeterminateCheckboxWrapper>
       </div>
     </div>

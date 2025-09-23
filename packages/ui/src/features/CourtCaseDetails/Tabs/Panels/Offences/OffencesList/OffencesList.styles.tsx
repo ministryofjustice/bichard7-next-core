@@ -1,4 +1,5 @@
 import styled from "styled-components"
+import { TableHead } from "components/Table"
 
 export const ScreenReaderOnly = styled.span`
   border: 0;
@@ -12,7 +13,7 @@ export const ScreenReaderOnly = styled.span`
   white-space: nowrap;
 `
 
-export const TableHeader = styled.thead`
+export const StyledTableHead = styled(TableHead)`
   th {
     font-size: var(--case-details-default-font-size);
   }

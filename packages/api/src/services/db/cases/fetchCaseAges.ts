@@ -9,7 +9,7 @@ import { format, isValid } from "date-fns"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
-import { CaseAgeOptions } from "../../../useCases/cases/caseAgeOptions"
+import { CaseAgeOptions } from "../../../useCases/cases/getCase/caseAgeOptions"
 import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import { organisationUnitSql } from "../organisationUnitSql"
 

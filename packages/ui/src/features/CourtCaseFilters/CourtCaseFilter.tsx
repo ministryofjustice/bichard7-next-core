@@ -1,5 +1,6 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import { Button } from "components/Buttons/Button"
+import { FormGroup } from "components/FormGroup"
 import ConditionalRender from "components/ConditionalRender"
 import CaseStateFilter from "components/SearchFilters/CaseStateFilter"
 import LockedFilter, { lockedStateShortLabels } from "components/SearchFilters/LockedFilter"
@@ -100,7 +101,7 @@ const CourtCaseFilter: React.FC<Props> = ({
           <input type="hidden" id="order" name="order" value={order || ""} />
           <input type="hidden" id="orderBy" name="orderBy" value={orderBy || ""} />
 
-          <div className={"govuk-form-group"}>
+          <FormGroup>
             <h2 className="govuk-heading-m">{"Search"}</h2>
             <div>
               <ReasonCodeFilter value={state.reasonCodes} dispatch={dispatch} />
@@ -113,7 +114,7 @@ const CourtCaseFilter: React.FC<Props> = ({
               <TextFilter label="Court name" id="courtName" value={state.courtNameSearch.value} dispatch={dispatch} />
               <TextFilter label="PTIURN" id="ptiurn" value={state.ptiurnSearch.value} dispatch={dispatch} />
             </div>
-          </div>
+          </FormGroup>
 
           <CaseStateFilter
             dispatch={dispatch}

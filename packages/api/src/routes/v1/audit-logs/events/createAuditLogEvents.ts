@@ -17,6 +17,7 @@ import { ApiAuditLogEventSchema } from "../../../../types/AuditLogEvent"
 import ConflictError from "../../../../types/errors/ConflictError"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import createAuditLogEvents from "../../../../useCases/createAuditLogEvents"
+
 type HandlerProps = {
   auditLogEvents: ApiAuditLogEvent[]
   auditLogGateway: AuditLogDynamoGateway
@@ -37,9 +38,9 @@ const schema = {
   params: z.object({ correlationId: z.string().meta({ description: "Correlation ID" }) }),
   response: {
     [CREATED]: z.null().meta({ description: "No content" }),
-    ...unauthorizedError,
-    ...forbiddenError,
-    ...internalServerError
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...internalServerError()
   },
   tags: ["Audit Logs V1"]
 } satisfies FastifyZodOpenApiSchema

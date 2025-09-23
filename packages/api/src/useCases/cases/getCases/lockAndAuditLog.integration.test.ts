@@ -3,23 +3,23 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import type { OutputApiAuditLog } from "../../types/AuditLog"
+import type { OutputApiAuditLog } from "../../../types/AuditLog"
 
-import lockException from "../../services/db/cases/lockException"
-import lockTrigger from "../../services/db/cases/lockTrigger"
-import { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
-import { createCase } from "../../tests/helpers/caseHelper"
-import auditLogDynamoConfig from "../../tests/helpers/dynamoDbConfig"
-import { createUser } from "../../tests/helpers/userHelper"
-import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
-import TestDynamoGateway from "../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
-import createAuditLogEvents from "../createAuditLogEvents"
-import FetchById from "../fetchAuditLogs/FetchById"
+import lockException from "../../../services/db/cases/lockException"
+import lockTrigger from "../../../services/db/cases/lockTrigger"
+import { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
+import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
+import createAuditLogEvents from "../../createAuditLogEvents"
+import FetchById from "../../fetchAuditLogs/FetchById"
 import { lockAndAuditLog } from "./lockAndAuditLog"
 
-jest.mock("../../services/db/cases/lockException")
-jest.mock("../../services/db/cases/lockTrigger")
-jest.mock("../createAuditLogEvents")
+jest.mock("../../../services/db/cases/lockException")
+jest.mock("../../../services/db/cases/lockTrigger")
+jest.mock("../../createAuditLogEvents")
 
 const mockedLockException = lockException as jest.Mock
 const mockedLockTrigger = lockTrigger as jest.Mock
@@ -32,9 +32,9 @@ describe("lockAndAuditLog", () => {
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
     await testDynamoGateway.clearDynamo()
-    mockedLockException.mockImplementation(jest.requireActual("../../services/db/cases/lockException").default)
-    mockedLockTrigger.mockImplementation(jest.requireActual("../../services/db/cases/lockTrigger").default)
-    mockedCreateAuditLogEvents.mockImplementation(jest.requireActual("../createAuditLogEvents").default)
+    mockedLockException.mockImplementation(jest.requireActual("../../../services/db/cases/lockException").default)
+    mockedLockTrigger.mockImplementation(jest.requireActual("../../../services/db/cases/lockTrigger").default)
+    mockedCreateAuditLogEvents.mockImplementation(jest.requireActual("../../createAuditLogEvents").default)
   })
 
   afterEach(() => {

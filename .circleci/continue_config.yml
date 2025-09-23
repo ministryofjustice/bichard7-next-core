@@ -171,6 +171,9 @@ commands:
       FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED:
         default: ""
         type: string
+      FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED:
+        default: ""
+        type: string
       USE_API_CASE_ENDPOINT:
         default: false
         type: boolean
@@ -189,6 +192,7 @@ commands:
             USE_API="<<parameters.USE_API>>" \
             FORCES_WITH_API_ENABLED="<<parameters.FORCES_WITH_API_ENABLED>>" \
             FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<<parameters.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED>>" \
+            FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<<parameters.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED>>" \
             USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
             USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
@@ -335,7 +339,7 @@ jobs:
       - install_dependencies
       - build_core
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -372,7 +376,7 @@ jobs:
       - install_dependencies
       - build_core
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -435,7 +439,7 @@ jobs:
       - install_dependencies
       - build_e2e_tests
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
@@ -482,8 +486,11 @@ jobs:
       - node_install
       - install_dependencies
       - build_api
-      - start_services:
-          SERVICES: db-seed localstack
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - run:
+          name: Boot Dependencies
+          command: npm run conductor
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
@@ -698,6 +705,9 @@ jobs:
       forces-with-court-date-received-date-mismatch-enabled:
         type: string
         default: ""
+      forces-with-trigger-and-exception-quality-auditing-enabled:
+        type: string
+        default: ""
       api-case-details:
         type: boolean
         default: false
@@ -763,6 +773,7 @@ jobs:
             USE_API="<< parameters.api >>" \
             FORCES_WITH_API_ENABLED="<< parameters.forces-with-api-enabled >>" \
             FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<< parameters.forces-with-court-date-received-date-mismatch-enabled >>" \
+            FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<< parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>" \
             USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
             USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
@@ -802,6 +813,9 @@ jobs:
         type: string
         default: ""
       forces-with-court-date-received-date-mismatch-enabled:
+        type: string
+        default: ""
+      forces-with-trigger-and-exception-quality-auditing-enabled:
         type: string
         default: ""
       api-case-details:
@@ -857,6 +871,8 @@ jobs:
             equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
+      - fetch_images:
+          images: nginx-nodejs-20-2023-supervisord
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
@@ -866,14 +882,9 @@ jobs:
           USE_API: << parameters.api >>
           FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
           FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
+          FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
           USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
           USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
-      - when:
-          condition:
-            equal: [true, << parameters.api >>]
-          steps:
-            run:
-              command: npm run api
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
@@ -1003,6 +1014,7 @@ workflows:
           api: true
           forces-with-api-enabled: "01"
           forces-with-court-date-received-date-mismatch-enabled: "01"
+          forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
           requires:
@@ -1018,6 +1030,7 @@ workflows:
           api: true
           forces-with-api-enabled: "01"
           forces-with-court-date-received-date-mismatch-enabled: "01"
+          forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
           requires:

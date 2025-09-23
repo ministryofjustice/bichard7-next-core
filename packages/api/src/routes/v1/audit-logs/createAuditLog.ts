@@ -33,10 +33,10 @@ const schema = {
   body: InputApiAuditLogSchema,
   response: {
     [CREATED]: OutputApiAuditLogSchema.meta({ description: "Created Audit Log" }),
-    ...unauthorizedError,
-    ...forbiddenError,
-    ...internalServerError,
-    ...conflictError
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...internalServerError(),
+    ...conflictError()
   },
   tags: ["Audit Logs V1"]
 } satisfies FastifyZodOpenApiSchema

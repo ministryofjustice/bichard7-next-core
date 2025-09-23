@@ -7,11 +7,11 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
-import type { DatabaseConnection } from "../../types/DatabaseGateway"
+import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import lockTrigger from "../../services/db/cases/lockTrigger"
-import buildAuditLogEvent from "../auditLog/buildAuditLogEvent"
+import lockTrigger from "../../../services/db/cases/lockTrigger"
+import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
 export const lockTriggers = async (
   writableSql: DatabaseConnection,

@@ -1,5 +1,6 @@
 import type { Dispatch } from "react"
 import type { FilterAction } from "types/CourtCaseFilter"
+import { Label } from "components/Label"
 
 interface Props {
   label: string
@@ -10,7 +11,7 @@ interface Props {
 
 const TextFilter: React.FC<Props> = ({ label, id, value, dispatch }: Props) => {
   return (
-    <label className="govuk-label govuk-label--s govuk-!-font-weight-regular" htmlFor={id}>
+    <Label className="govuk-!-font-weight-regular" size={"s"} htmlFor={id}>
       {label}
       <div className="govuk-input__wrapper">
         <div className="govuk-input__prefix" aria-hidden="true">
@@ -40,7 +41,7 @@ const TextFilter: React.FC<Props> = ({ label, id, value, dispatch }: Props) => {
           }}
         />
       </div>
-    </label>
+    </Label>
   )
 }
 

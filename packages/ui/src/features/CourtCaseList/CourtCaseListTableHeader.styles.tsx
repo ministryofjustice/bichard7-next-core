@@ -1,10 +1,8 @@
 import styled from "styled-components"
 import { blue } from "utils/colours"
+import { TableHeader } from "components/Table"
 
-const HeaderCellAlt = styled.th`
-  border-color: var(--border-input);
-`
-const HeaderCell = styled.th`
+const HeaderCell = styled(TableHeader)`
   height: 100%;
   vertical-align: bottom;
   border-color: var(--border-input);
@@ -33,4 +31,4 @@ const HeaderButton = styled.button`
   }
 `
 
-export { HeaderButton, HeaderCell, HeaderCellAlt }
+export { HeaderButton, HeaderCell }

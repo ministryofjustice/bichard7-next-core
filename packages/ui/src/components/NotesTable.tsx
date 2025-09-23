@@ -1,4 +1,5 @@
 import DateTime from "components/DateTime"
+import { TableHead, TableBody, TableRow, TableHeader, TableCell } from "components/Table"
 import { DisplayNote } from "types/display/Notes"
 import { StyledNotesTable } from "./NotesTable.styles"
 
@@ -9,29 +10,22 @@ interface Props {
 
 export const NotesTable = ({ notes, displayForce }: Props) => {
   return (
-    <StyledNotesTable className={"govuk-table notes-table"}>
-      <thead className="govuk-table__head">
-        <tr className="govuk-table__row">
-          <th scope="col" className="govuk-table__header">
-            {"User"}
-          </th>
-          <th scope="col" className="govuk-table__header">
-            {"Time"}
-          </th>
-          <th scope="col" className="govuk-table__header">
-            {"Note"}
-          </th>
-        </tr>
-      </thead>
-
-      <tbody className="govuk-table__body">
+    <StyledNotesTable className={"notes-table"}>
+      <TableHead>
+        <TableRow>
+          <TableHeader scope="col">{"User"}</TableHeader>
+          <TableHeader scope="col">{"Time"}</TableHeader>
+          <TableHeader scope="col">{"Note"}</TableHeader>
+        </TableRow>
+      </TableHead>
+      <TableBody>
         {notes.map((note, index) => {
           const userName = note.userFullName
           const userForces = `(${note.user?.visibleForces.slice(0, 3).join(", ")})`
 
           return (
-            <tr className="govuk-table__row" key={`${note.userId}-${index}`}>
-              <td className="govuk-table__cell">
+            <TableRow key={`${note.userId}-${index}`}>
+              <TableCell>
                 <span>{userName}</span>
                 {displayForce && (
                   <>
@@ -39,17 +33,15 @@ export const NotesTable = ({ notes, displayForce }: Props) => {
                     <span>{userForces}</span>
                   </>
                 )}
-              </td>
-              <td className="govuk-table__cell">
+              </TableCell>
+              <TableCell>
                 <DateTime date={note.createdAt} />
-              </td>
-              <td className="govuk-table__cell" style={{ whiteSpace: "pre-wrap" }}>
-                {note.noteText}
-              </td>
-            </tr>
+              </TableCell>
+              <TableCell style={{ whiteSpace: "pre-wrap" }}>{note.noteText}</TableCell>
+            </TableRow>
           )
         })}
-      </tbody>
+      </TableBody>
     </StyledNotesTable>
   )
 }

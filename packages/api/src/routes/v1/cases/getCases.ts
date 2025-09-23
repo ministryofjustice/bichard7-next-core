@@ -11,6 +11,7 @@ import { INTERNAL_SERVER_ERROR, OK } from "http-status"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
+import { jsonResponse } from "../../../server/openapi/jsonResponse"
 import auth from "../../../server/schemas/auth"
 import {
   forbiddenError,
@@ -20,7 +21,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchCasesAndFilter from "../../../useCases/cases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../useCases/cases/getCase/fetchCasesAndFilter"
 
 type HandlerProps = {
   database: DatabaseGateway
@@ -33,12 +34,12 @@ const schema = {
   ...auth,
   querystring: ApiCaseQuerySchema,
   response: {
-    [OK]: CaseIndexMetadataSchema,
-    ...unauthorizedError,
-    ...forbiddenError,
-    ...notFoundError,
-    ...unprocessableEntityError,
-    ...internalServerError
+    [OK]: jsonResponse("Case Index Metadata", CaseIndexMetadataSchema),
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...notFoundError(),
+    ...unprocessableEntityError(),
+    ...internalServerError()
   },
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
