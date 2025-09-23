@@ -85,8 +85,22 @@ export const QualityStatusCard = () => {
         ) : null}
         <fieldset className="govuk-fieldset">
           <DropdownContainer>
-            <TriggerQualityDropdown showError={triggerQualityHasError} />
-            <ExceptionQualityDropdown showError={exceptionQualityHasError} />
+            <TriggerQualityDropdown
+              showError={triggerQualityHasError}
+              onChange={(e) => {
+                if (Number(e.target.value) > 1) {
+                  setTriggerQualityHasError(false)
+                }
+              }}
+            />
+            <ExceptionQualityDropdown
+              showError={exceptionQualityHasError}
+              onChange={(e) => {
+                if (Number(e.target.value) > 1) {
+                  setExceptionQualityHasError(false)
+                }
+              }}
+            />
           </DropdownContainer>
 
           <NoteTextArea
