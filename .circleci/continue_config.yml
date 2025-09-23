@@ -339,7 +339,7 @@ jobs:
       - install_dependencies
       - build_core
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -376,7 +376,7 @@ jobs:
       - install_dependencies
       - build_core
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Checkout the audit logging repo
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -439,7 +439,7 @@ jobs:
       - install_dependencies
       - build_e2e_tests
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
@@ -486,6 +486,8 @@ jobs:
       - node_install
       - install_dependencies
       - build_api
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Boot Dependencies
           command: npm run conductor
@@ -869,6 +871,8 @@ jobs:
             equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
+      - fetch_images:
+          images: nginx-nodejs-20-2023-supervisord
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
@@ -881,12 +885,6 @@ jobs:
           FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
           USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
           USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
-      - when:
-          condition:
-            equal: [true, << parameters.api >>]
-          steps:
-            run:
-              command: npm run api
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
