@@ -43,6 +43,7 @@ describe("QualityStatusCard", () => {
     cy.get("select[name='exception-quality']").select("6")
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
+
     cy.get("button#quality-status-submit").should("be.disabled")
 
     cy.wait("@auditCase").then(({ request }) => {
@@ -51,9 +52,9 @@ describe("QualityStatusCard", () => {
       expect(request.body.data.triggerQuality).to.equal(2)
       expect(request.body.data.exceptionQuality).to.equal(6)
       expect(request.body.data.note).to.equal("Test notes")
-
-      cy.get("button#quality-status-submit").should("not.be.disabled")
     })
+
+    cy.get("button#quality-status-submit").should("not.be.disabled")
   })
 
   it("show validation issues if values not entered", () => {
