@@ -57,7 +57,7 @@ describe("QualityStatusCard", () => {
     cy.get("button#quality-status-submit").should("not.be.disabled")
   })
 
-  it("show validation issues if values not entered", () => {
+  it("shows validation issues if values not entered", () => {
     cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
       "auditCase"
     )
@@ -79,7 +79,7 @@ describe("QualityStatusCard", () => {
     cy.get("@auditCase").should("not.exist")
   })
 
-  it("show error if API call returns an error", () => {
+  it("shows error if API call returns an error", () => {
     cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       statusCode: 500,
       body: {}
