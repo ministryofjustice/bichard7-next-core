@@ -46,6 +46,8 @@ describe("saveAuditResults", () => {
   })
 
   it("saves auditResults successfully", async () => {
+    jest.restoreAllMocks()
+
     const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality)
     expect(isError(result)).toBe(false)
 
