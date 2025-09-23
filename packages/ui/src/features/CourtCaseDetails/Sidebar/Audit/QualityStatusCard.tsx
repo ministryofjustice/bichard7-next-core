@@ -10,6 +10,7 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
+import axios from "axios"
 
 export const QualityStatusCard = () => {
   const { csrfToken } = useCsrfToken()
@@ -17,8 +18,24 @@ export const QualityStatusCard = () => {
   const router = useRouter()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const handleSubmit = () => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+
+    if (isSubmitting) {
+      return
+    }
+
     setIsSubmitting(true)
+
+    const formData = new FormData(e.currentTarget)
+    axios.post(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+      csrfToken,
+      data: {
+        triggerQuality: Number(formData.get("trigger-quality")),
+        exceptionQuality: Number(formData.get("exception-quality")),
+        note: formData.get("quality-status-note")
+      }
+    })
   }
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
