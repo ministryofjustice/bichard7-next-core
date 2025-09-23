@@ -4,7 +4,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { BAD_GATEWAY, BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
@@ -14,23 +14,20 @@ import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
 import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
-import canUserResubmitCase from "../../../useCases/canUserResubmitCase"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
+import { resubmitCase } from "../../../useCases/cases/resubmit/resubmitCase"
 
-const bodySchema = z.object({ phase: z.number().gt(0).lte(3) })
-
-export type ResubmitBody = z.infer<typeof bodySchema>
-
-type HandlerProps = { body: ResubmitBody; caseId: number; database: DatabaseGateway; reply: FastifyReply; user: User }
+type HandlerProps = { caseId: number; database: DatabaseGateway; reply: FastifyReply; user: User }
 
 const schema = {
   ...auth,
-  body: bodySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: jsonResponse(
+    [ACCEPTED]: jsonResponse(
       "Successful Resubmit",
       z
-        .object({ phase: z.number().gt(0).lte(3).meta({ description: "Confirmation of the Phase" }) })
+        .object({ messageId: z.uuid().meta({ description: "Confirmation of the Message ID" }) })
         .meta({ description: "Successful Resubmit" })
     ),
     ...unauthorizedError(),
@@ -40,50 +37,32 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, database, reply, user }: HandlerProps) => {
-  // validate the request
-  // - user must have one of the following roles:
-  //   - Exception handler
-  //   - General handler
-  //   - Supervisor
-  //   - Allocator
-  // - case is in the same force as the user (not sure if needed)
-  // - exception lock owner is the user requesting resubmission
-  // - case must be unresolved
-  //
-  // ReceivedResubmittedHearingOutcome audit log event
-  //
-  // success - 202
-  // invalid = 403
-  //
-  // start resubmission workflow
-  // - pull case from DB
-  // - stream updated_msg to S3 file in incoming message bucket
-  //
-  // upload failed = 500
-  // - in theory this should either be 502 or 504
+const handler = async ({ caseId, database, reply, user }: HandlerProps) => {
+  const result = await resubmitCase(database.writable, user, caseId)
 
-  const canResubmitCase = await canUserResubmitCase(database.readonly, user, caseId)
-  if (!canResubmitCase) {
-    return reply.code(FORBIDDEN).send()
+  if (!isError(result)) {
+    return reply.code(ACCEPTED).send({ messageId: result.messageId })
   }
 
-  if (!isError(canResubmitCase)) {
-    return reply.code(OK).send({ phase: body.phase })
-  }
+  reply.log.error(result)
 
-  reply.log.error(canResubmitCase)
-  if (handleDisconnectedError(canResubmitCase)) {
-    return reply.code(BAD_GATEWAY).send()
+  switch (true) {
+    case result instanceof NotFoundError:
+      return reply.code(NOT_FOUND).send()
+    case result instanceof UnprocessableEntityError:
+      return reply
+        .code(UNPROCESSABLE_ENTITY)
+        .send({ code: `${UNPROCESSABLE_ENTITY}`, message: result.message, statusCode: UNPROCESSABLE_ENTITY })
+    case handleDisconnectedError(result):
+      return reply.code(BAD_GATEWAY).send()
+    default:
+      return reply.code(FORBIDDEN).send()
   }
-
-  return reply.code(BAD_REQUEST).send()
 }
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.CaseResubmit, { schema }, async (req, reply) => {
     await handler({
-      body: req.body,
       caseId: Number(req.params.caseId),
       database: req.database,
       reply,

@@ -16,7 +16,7 @@ import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2End
 import { sortStringAsc } from "../../../../tests/helpers/sort"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
-import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../../useCases/cases/getCase/fetchCasesAndFilter"
 import { resolutionStatusCodeByText, ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 type CreateReasonCaseProps = {
