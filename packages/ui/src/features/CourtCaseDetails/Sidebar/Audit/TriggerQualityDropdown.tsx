@@ -13,13 +13,24 @@ export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
       <label className={"govuk-visually-hidden"} htmlFor={"trigger-quality"}>
         {"Set Trigger Quality"}
       </label>
-      <Select {...props} placeholder={"Set Trigger Quality"} name={"trigger-quality"}>
+      <Select
+        {...props}
+        placeholder={"Set Trigger Quality"}
+        name={"trigger-quality"}
+        aria-invalid={props.showError}
+        aria-describedby="trigger-quality-error"
+      >
         {triggerQualityDropdownValues.map(([displayAs, value]) => (
           <option key={value} value={value}>
             {displayAs}
           </option>
         ))}
       </Select>
+      {props.showError ? (
+        <p id="trigger-quality-error" className="govuk-error-message govuk-!-margin-top-1">
+          <span className="govuk-visually-hidden">{"Error:"}</span> {"Must be set"}
+        </p>
+      ) : null}
     </FormGroup>
   )
 }

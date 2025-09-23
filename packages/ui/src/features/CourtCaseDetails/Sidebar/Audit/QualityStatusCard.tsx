@@ -1,7 +1,7 @@
 import { useState, type FormEventHandler } from "react"
+import axios from "axios"
 import { useRouter } from "next/router"
 import { Card } from "components/Card"
-import Form from "components/Form"
 import { NoteTextArea } from "components/NoteTextArea"
 import { Button } from "components/Buttons/Button"
 import { MAX_NOTE_LENGTH } from "config"
@@ -10,15 +10,19 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
-import axios from "axios"
+import { DisplayFullCourtCase } from "../../../../types/display/CourtCases"
 
 export const QualityStatusCard = () => {
-  const { csrfToken } = useCsrfToken()
-  const { courtCase } = useCourtCase()
+  const { csrfToken, updateCsrfToken } = useCsrfToken()
+  const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const [submitError, setSubmitError] = useState<Error | null>(null)
+  const [triggerQualityHasError, setTriggerQualityHasError] = useState(false)
+  const [exceptionQualityHasError, setExceptionQualityHasError] = useState(false)
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
     if (isSubmitting) {
@@ -26,16 +30,44 @@ export const QualityStatusCard = () => {
     }
 
     setIsSubmitting(true)
+    setSubmitError(null)
+    setTriggerQualityHasError(false)
+    setExceptionQualityHasError(false)
 
     const formData = new FormData(e.currentTarget)
-    axios.post(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
-      csrfToken,
-      data: {
-        triggerQuality: Number(formData.get("trigger-quality")),
-        exceptionQuality: Number(formData.get("exception-quality")),
-        note: formData.get("quality-status-note")
+    const triggerQuality = Number(formData.get("trigger-quality"))
+    const exceptionQuality = Number(formData.get("exception-quality"))
+    const note = formData.get("quality-status-note")
+
+    let hasErrors = false
+    if (triggerQuality <= 1) {
+      hasErrors = true
+      setTriggerQualityHasError(true)
+    }
+    if (exceptionQuality <= 1) {
+      hasErrors = true
+      setExceptionQualityHasError(true)
+    }
+
+    if (!hasErrors) {
+      try {
+        const response = await axios.put(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+          csrfToken,
+          data: {
+            triggerQuality,
+            exceptionQuality,
+            note
+          }
+        })
+
+        updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
+        updateCsrfToken(response.data.csrfToken as string)
+      } catch (error) {
+        setSubmitError(error as Error)
       }
-    })
+    }
+
+    setIsSubmitting(false)
   }
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
@@ -45,16 +77,16 @@ export const QualityStatusCard = () => {
 
   return (
     <Card heading={"Set quality status"}>
-      <Form
-        method="POST"
-        action={`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`}
-        csrfToken={csrfToken || ""}
-        onSubmit={handleSubmit}
-      >
+      <form onSubmit={handleSubmit} aria-describedby="quality-status-form-error">
+        {submitError ? (
+          <p id="quality-status-form-error" className="govuk-error-message" role="alert">
+            {"Audit has failed, please refresh"}
+          </p>
+        ) : null}
         <fieldset className="govuk-fieldset">
           <DropdownContainer>
-            <TriggerQualityDropdown />
-            <ExceptionQualityDropdown />
+            <TriggerQualityDropdown showError={triggerQualityHasError} />
+            <ExceptionQualityDropdown showError={exceptionQualityHasError} />
           </DropdownContainer>
 
           <NoteTextArea
@@ -71,7 +103,7 @@ export const QualityStatusCard = () => {
             </Button>
           </ButtonContainer>
         </fieldset>
-      </Form>
+      </form>
     </Card>
   )
 }

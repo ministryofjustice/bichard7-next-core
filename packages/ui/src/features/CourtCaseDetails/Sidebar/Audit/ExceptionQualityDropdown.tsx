@@ -13,13 +13,24 @@ export const ExceptionQualityDropdown = (props: ExceptionQualityDropdownProps) =
       <label className={"govuk-visually-hidden"} htmlFor={"exception-quality"}>
         {"Set Exception Quality"}
       </label>
-      <Select {...props} placeholder={"Set Exception Quality"} name={"exception-quality"}>
+      <Select
+        {...props}
+        placeholder={"Set Exception Quality"}
+        name={"exception-quality"}
+        aria-invalid={props.showError}
+        aria-describedby="exception-quality-error"
+      >
         {exceptionQualityDropdownValues.map(([displayAs, value]) => (
           <option key={value} value={value}>
             {displayAs}
           </option>
         ))}
       </Select>
+      {props.showError ? (
+        <p id="exception-quality-error" className="govuk-error-message govuk-!-margin-top-1">
+          <span className="govuk-visually-hidden">{"Error:"}</span> {"Must be set"}
+        </p>
+      ) : null}
     </FormGroup>
   )
 }
