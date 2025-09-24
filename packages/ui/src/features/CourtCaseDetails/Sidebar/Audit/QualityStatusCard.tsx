@@ -19,6 +19,8 @@ const initialFormState = {
   exceptionQualityHasError: false
 }
 
+type FormState = typeof initialFormState
+
 export const QualityStatusCard = () => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
@@ -29,8 +31,8 @@ export const QualityStatusCard = () => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
 
-  const submit = async (_: typeof initialFormState, formData: FormData) => {
-    const newState: typeof initialFormState = {
+  const submit = async (_: FormState, formData: FormData) => {
+    const newState: FormState = {
       submitError: null,
       triggerQualityHasError: false,
       exceptionQualityHasError: false
