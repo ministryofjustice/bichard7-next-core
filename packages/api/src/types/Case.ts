@@ -62,6 +62,7 @@ type CaseDataIndexRow =
   | "defendant_name"
   | "error_id"
   | "error_locked_by_id"
+  | "error_quality_checked"
   | "error_report"
   | "error_status"
   | "is_urgent"
@@ -71,6 +72,7 @@ type CaseDataIndexRow =
   | "resolution_ts"
   | "trigger_count"
   | "trigger_locked_by_id"
+  | "trigger_quality_checked"
   | "trigger_status"
   | "triggers"
 

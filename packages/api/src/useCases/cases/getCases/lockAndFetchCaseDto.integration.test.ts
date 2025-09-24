@@ -3,13 +3,13 @@ import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import { testAhoJsonObj, testAhoXml } from "../../tests/helpers/ahoHelper"
-import { createCase } from "../../tests/helpers/caseHelper"
-import auditLogDynamoConfig from "../../tests/helpers/dynamoDbConfig"
-import FakeLogger from "../../tests/helpers/fakeLogger"
-import { createUser } from "../../tests/helpers/userHelper"
-import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
-import TestDynamoGateway from "../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
+import { testAhoJsonObj, testAhoXml } from "../../../tests/helpers/ahoHelper"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
+import FakeLogger from "../../../tests/helpers/fakeLogger"
+import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import lockAndFetchCaseDto from "./lockAndFetchCaseDto"
 
 const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
@@ -46,6 +46,7 @@ describe("lockAndFetchCaseDto", () => {
       errorId: 1,
       errorLockedByUserFullName: "Forename1 Surname1",
       errorLockedByUsername: "User1",
+      errorQualityChecked: null,
       errorReport: "HO100304||br7:ArrestSummonsNumber",
       errorStatus: "Unresolved",
       isUrgent: 1,
@@ -59,6 +60,7 @@ describe("lockAndFetchCaseDto", () => {
       triggerCount: 1,
       triggerLockedByUserFullName: "Forename1 Surname1",
       triggerLockedByUsername: "User1",
+      triggerQualityChecked: null,
       triggers: [],
       triggerStatus: "Unresolved",
       updatedHearingOutcome: null

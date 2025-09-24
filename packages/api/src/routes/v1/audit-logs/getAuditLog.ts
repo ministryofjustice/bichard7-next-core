@@ -39,9 +39,9 @@ const schema = {
   querystring: QueryStringSchema,
   response: {
     [OK]: OutputApiAuditLogSchema.meta({ description: "No content" }),
-    ...unauthorizedError,
-    ...forbiddenError,
-    ...internalServerError
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...internalServerError()
   },
   tags: ["Audit Logs V1"]
 } satisfies FastifyZodOpenApiSchema

@@ -1,8 +1,10 @@
 import DateInput from "components/CustomDateInput/DateInput"
 import RadioButton from "components/Radios/RadioButton"
+import { Label } from "components/Label"
+import { FormGroup } from "components/FormGroup"
 import ExpandingFilters from "features/CourtCaseFilters/ExpandingFilters"
 import type { Dispatch } from "react"
-import { SerializedDateRange } from "types/CaseListQueryParams"
+import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
 import { CaseAgeOptions } from "utils/caseAgeOptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -49,7 +51,7 @@ const CourtDateFilter: React.FC<Props> = ({
   dateRange,
   canUseCourtDateReceivedDateMismatchFilters
 }: Props) => (
-  <div className={"govuk-form-group"}>
+  <FormGroup>
     <ExpandingFilters filterName={"Court date"} classNames="filters-court-date">
       <fieldset className="govuk-fieldset">
         <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
@@ -101,9 +103,9 @@ const CourtDateFilter: React.FC<Props> = ({
                           dispatch({ method: event.currentTarget.checked ? "add" : "remove", type: "caseAge", value })
                         }}
                       ></input>
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor={caseAgeId(namedCaseAge)}>
+                      <Label className="govuk-checkboxes__label" htmlFor={caseAgeId(namedCaseAge)}>
                         {labelForCaseAge(namedCaseAge, caseAgeCounts)}
-                      </label>
+                      </Label>
                     </div>
                   </CaseAgeContainer>
                 ))}
@@ -120,6 +122,6 @@ const CourtDateFilter: React.FC<Props> = ({
         </ConditionalRender>
       </fieldset>
     </ExpandingFilters>
-  </div>
+  </FormGroup>
 )
 export default CourtDateFilter

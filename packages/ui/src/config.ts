@@ -22,6 +22,9 @@ export const FORCES_WITH_API_ENABLED: Set<string> = new Set(
 export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = new Set(
   (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? "001").split(",").filter(Boolean)
 )
+export const FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: Set<string> = new Set(
+  (process.env.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED ?? "").split(",").filter(Boolean)
+)
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
 const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"

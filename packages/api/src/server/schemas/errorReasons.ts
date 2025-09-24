@@ -1,24 +1,47 @@
 import { CONFLICT, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, UNAUTHORIZED, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
-export const unauthorizedError = {
-  [UNAUTHORIZED]: z.null().meta({ description: "You have entered the wrong security headers" })
+const errorResponse = (error: number, description: string) => {
+  return {
+    [error]: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            code: z.string(),
+            message: z.string(),
+            statusCode: z.number()
+          })
+        }
+      },
+      description
+    }
+  }
 }
 
-export const forbiddenError = { [FORBIDDEN]: z.null().meta({ description: "Invalid" }) }
-
-export const internalServerError = { [INTERNAL_SERVER_ERROR]: z.null().meta({ description: "Something broke" }) }
-
-const errorSchema = z.object({
-  code: z.string(),
-  message: z.string(),
-  statusCode: z.number()
-})
-
-export const conflictError = { [CONFLICT]: errorSchema.meta({ description: "Conflict when creating resource" }) }
-
-export const unprocessableEntityError = {
-  [UNPROCESSABLE_ENTITY]: errorSchema.meta({ description: "Error when processing the request" })
+export const unauthorizedError = () => {
+  return {
+    [UNAUTHORIZED]: { description: "You have entered the wrong security headers" }
+  }
 }
 
-export const notFoundError = { [NOT_FOUND]: z.null().meta({ description: "Not Found" }) }
+export const forbiddenError = () => {
+  return {
+    [FORBIDDEN]: { description: "Invalid" }
+  }
+}
+
+export const notFoundError = () => {
+  return {
+    [NOT_FOUND]: { description: "Not Found" }
+  }
+}
+
+export const conflictError = () => errorResponse(CONFLICT, "Conflict when creating resource")
+
+export const unprocessableEntityError = () => errorResponse(UNPROCESSABLE_ENTITY, "Error when processing the request")
+
+export const internalServerError = () => {
+  return {
+    [INTERNAL_SERVER_ERROR]: { description: "Something broke" }
+  }
+}
