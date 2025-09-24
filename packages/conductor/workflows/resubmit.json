@@ -15,6 +15,34 @@
       "startDelay": 0,
       "optional": false,
       "asyncComplete": false
+    },
+    {
+      "name": "process_resubmit",
+      "taskReferenceName": "process_resubmit",
+      "inputParameters": {
+        "messageId": "${workflow.input.messageId}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "begin_processing",
+      "taskReferenceName": "begin_processing",
+      "inputParameters": {
+        "startWorkflow": {
+          "correlationId": "${workflow.correlationId}",
+          "input": {
+            "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+          },
+          "name": "bichard_phase_1"
+        }
+      },
+      "type": "START_WORKFLOW",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
     }
   ],
   "inputParameters": ["messageId"],
