@@ -1,0 +1,8 @@
+{
+  "name": "process_resubmit",
+  "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 25,
+  "asyncComplete": false,
+  "inputKeys": ["messageId"],
+  "outputKeys": ["s3TaskDataPath"]
+}
