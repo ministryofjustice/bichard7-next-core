@@ -6,8 +6,17 @@ import { MockNextRouter } from "../../support/MockNextRouter"
 import "../../../styles/globals.scss"
 
 const courtCase = {
-  errorId: 1
+  errorId: 1,
+  triggerQualityChecked: null,
+  errorQualityChecked: null
 } as unknown as DisplayFullCourtCase
+
+const newCsrfToken = "123"
+const newCourtCase = {
+  ...courtCase,
+  triggerQualityChecked: 2,
+  errorQualityChecked: 6
+}
 
 describe("QualityStatusCard", () => {
   it("mounts", () => {
@@ -26,7 +35,10 @@ describe("QualityStatusCard", () => {
     cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
-      body: {}
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
     }).as("auditCase")
 
     cy.mount(
@@ -39,8 +51,8 @@ describe("QualityStatusCard", () => {
       </MockNextRouter>
     )
 
-    cy.get("select[name='trigger-quality']").select("2")
-    cy.get("select[name='exception-quality']").select("6")
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
@@ -49,11 +61,82 @@ describe("QualityStatusCard", () => {
     cy.wait("@auditCase").then(({ request }) => {
       expect(request.method).to.equal("PUT")
       expect(request.body.csrfToken).to.equal("ABC")
-      expect(request.body.data.triggerQuality).to.equal(2)
-      expect(request.body.data.exceptionQuality).to.equal(6)
+      expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
+      expect(request.body.data.exceptionQuality).to.equal(newCourtCase.errorQualityChecked)
       expect(request.body.data.note).to.equal("Test notes")
     })
 
+    cy.get("button#quality-status-submit").should("not.be.disabled")
+  })
+
+  it("updates court case and CSRF token after submit", () => {
+    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    const updateCourtCaseSpy = cy.spy().as("updateCourtCase")
+    const updateCrsfTokenSpy = cy.spy().as("updateCrsfToken")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, updateCourtCaseSpy]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, updateCrsfTokenSpy]}>
+            <QualityStatusCard />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase")
+    cy.get("@updateCourtCase")
+      .should("have.been.calledOnce")
+      .then(() => {
+        expect(updateCourtCaseSpy.getCall(0).args[0]()).to.deep.equal({ courtCase: newCourtCase })
+      })
+    cy.get("@updateCrsfToken")
+      .should("have.been.calledOnce")
+      .then(() => {
+        expect(updateCrsfTokenSpy.getCall(0).args[0]()).to.deep.equal({ csrfToken: newCsrfToken })
+      })
+  })
+
+  it("correctly disables the button and re-enables it", () => {
+    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusCard />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("button#quality-status-submit").should("be.disabled")
+    cy.wait("@auditCase")
     cy.get("button#quality-status-submit").should("not.be.disabled")
   })
 
