@@ -24,7 +24,7 @@ const sql = postgres({
 
 describe("check db", () => {
   beforeEach(async () => {
-    await sql`DELETE FROM br7own.error_list`
+    await sql`TRUNCATE br7own.error_list RESTART IDENTITY CASCADE`
   })
 
   it("with a case submitted error status and is locked", async () => {
