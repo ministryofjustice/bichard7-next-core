@@ -22,8 +22,8 @@ import saveAuditResults from "../../../useCases/cases/saveAuditResults"
 
 const bodySchema = z
   .object({
-    errorQuality: z.number().int().min(0).max(100).optional(),
-    triggerQuality: z.number().int().min(0).max(100).optional()
+    errorQuality: z.number().int().min(0).max(10).optional(),
+    triggerQuality: z.number().int().min(0).max(10).optional()
   })
   .refine((data) => data.errorQuality !== undefined || data.triggerQuality !== undefined, {
     message: "At least one of errorQuality or triggerQuality must be provided"

@@ -51,9 +51,9 @@ describe("saveAuditResults", () => {
     const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality)
     expect(isError(result)).toBe(false)
 
-    const updatedResult = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
-    expect(updatedResult.errorQualityChecked).toBe(1)
-    expect(updatedResult.triggerQualityChecked).toBe(2)
+    const updatedCase = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
+    expect(updatedCase.errorQualityChecked).toBe(1)
+    expect(updatedCase.triggerQualityChecked).toBe(2)
   })
 
   it("returns an error when no audit quality is provided", async () => {
