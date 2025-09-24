@@ -1,8 +1,8 @@
 {
-  "name": "test_task",
+  "name": "check_db",
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "asyncComplete": false,
   "inputKeys": ["messageId"],
-  "outputKeys": []
+  "outputKeys": ["messageId"]
 }

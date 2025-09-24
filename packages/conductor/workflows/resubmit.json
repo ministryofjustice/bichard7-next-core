@@ -6,8 +6,8 @@
   "version": 3,
   "tasks": [
     {
-      "name": "test_task",
-      "taskReferenceName": "test_task",
+      "name": "check_db",
+      "taskReferenceName": "check_db",
       "inputParameters": {
         "messageId": "${workflow.input.messageId}"
       },
