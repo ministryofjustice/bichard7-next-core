@@ -62,6 +62,12 @@ describe("saveAuditResults", () => {
     expect((result as Error).message).toBe("Neither errorQuality nor triggerQuality is provided")
   })
 
+  it("returns an error when case is not found", async () => {
+    const result = await saveAuditResults(testDatabaseGateway.writable, 2, { errorQuality: 1, triggerQuality: 2 })
+
+    expect((result as Error).message).toBe("Case with id 2 not found")
+  })
+
   it("returns an error when the database update fails", async () => {
     mockedAuditCase.mockResolvedValue(false)
 
