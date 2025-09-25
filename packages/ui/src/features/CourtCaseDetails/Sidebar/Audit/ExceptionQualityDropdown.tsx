@@ -5,7 +5,7 @@ import { FormGroup } from "components/FormGroup"
 
 export type ExceptionQualityDropdownProps = ComponentProps<typeof Select>
 
-const exceptionQualityDropdownValues = Object.entries(exceptionQualityValues).sort((a, b) => a[1] - b[1])
+const exceptionQualityDropdownValues = Object.entries(exceptionQualityValues)
 
 export const ExceptionQualityDropdown = (props: ExceptionQualityDropdownProps) => {
   return (
@@ -20,7 +20,7 @@ export const ExceptionQualityDropdown = (props: ExceptionQualityDropdownProps) =
         aria-invalid={props.showError}
         aria-describedby="exception-quality-error"
       >
-        {exceptionQualityDropdownValues.map(([displayAs, value]) => (
+        {exceptionQualityDropdownValues.map(([value, displayAs]) => (
           <option key={value} value={value}>
             {displayAs}
           </option>

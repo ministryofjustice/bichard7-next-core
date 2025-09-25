@@ -5,7 +5,7 @@ import { FormGroup } from "components/FormGroup"
 
 export type TriggerQualityDropdownProps = ComponentProps<typeof Select>
 
-const triggerQualityDropdownValues = Object.entries(triggerQualityValues).sort((a, b) => a[1] - b[1])
+const triggerQualityDropdownValues = Object.entries(triggerQualityValues)
 
 export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
   return (
@@ -20,7 +20,7 @@ export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
         aria-invalid={props.showError}
         aria-describedby="trigger-quality-error"
       >
-        {triggerQualityDropdownValues.map(([displayAs, value]) => (
+        {triggerQualityDropdownValues.map(([value, displayAs]) => (
           <option key={value} value={value}>
             {displayAs}
           </option>

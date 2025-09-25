@@ -1,12 +1,14 @@
 import z from "zod"
 
 export const exceptionQualityValues = {
-  "Manual Disposal Fail": 6,
-  "Not Checked": 1,
-  "Remand Pass": 7,
-  "Report Fail": 8
+  1: "Not Checked",
+  6: "Manual Disposal Fail",
+  7: "Remand Pass",
+  8: "Report Fail"
 } as const
 
-export const ExceptionQualitySchema = z.union(Object.values(exceptionQualityValues).map((value) => z.literal(value)))
+const exceptionQualityKeys = Object.keys(exceptionQualityValues).map(Number) as (keyof typeof exceptionQualityValues)[]
+
+export const ExceptionQualitySchema = z.union(exceptionQualityKeys.map((value) => z.literal(value)))
 
 export type ExceptionQuality = z.infer<typeof ExceptionQualitySchema>
