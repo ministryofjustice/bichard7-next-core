@@ -4,5 +4,5 @@
   "responseTimeoutSeconds": 25,
   "asyncComplete": false,
   "inputKeys": ["messageId"],
-  "outputKeys": ["s3TaskDataPath"]
+  "outputKeys": ["currentPhase", "s3TaskDataPath"]
 }

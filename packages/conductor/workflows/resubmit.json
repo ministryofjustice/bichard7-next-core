@@ -28,21 +28,48 @@
       "asyncComplete": false
     },
     {
-      "name": "begin_processing",
-      "taskReferenceName": "begin_processing",
+      "name": "switch_on_phase",
+      "taskReferenceName": "switch_on_phase",
+      "type": "SWITCH",
       "inputParameters": {
-        "startWorkflow": {
-          "correlationId": "${workflow.correlationId}",
-          "input": {
-            "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
-          },
-          "name": "bichard_phase_1"
-        }
+        "phase": "${process_resubmit.output.currentPhase}"
       },
-      "type": "START_WORKFLOW",
-      "startDelay": 0,
-      "optional": false,
-      "asyncComplete": false
+      "evaluatorType": "value-param",
+      "expression": "phase",
+      "decisionCases": {
+        "1": [
+          {
+            "name": "start_bichard_phase_1",
+            "taskReferenceName": "start_bichard_phase_1",
+            "type": "START_WORKFLOW",
+            "inputParameters": {
+              "startWorkflow": {
+                "name": "bichard_phase_1",
+                "correlationId": "${workflow.correlationId}",
+                "input": {
+                  "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+                }
+              }
+            }
+          }
+        ],
+        "2": [
+          {
+            "name": "start_bichard_phase_2",
+            "taskReferenceName": "start_bichard_phase_2",
+            "type": "START_WORKFLOW",
+            "inputParameters": {
+              "startWorkflow": {
+                "name": "bichard_phase_2",
+                "correlationId": "${workflow.correlationId}",
+                "input": {
+                  "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   ],
   "inputParameters": ["messageId"],
