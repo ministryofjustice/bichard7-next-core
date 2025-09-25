@@ -19,6 +19,7 @@ import {
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import saveAuditResults from "../../../useCases/cases/saveAuditResults"
 
 const bodySchema = z
@@ -68,7 +69,7 @@ const handler = async ({ body, caseId, database, reply }: HandlerProps) => {
   switch (true) {
     case result instanceof NotFoundError:
       return reply.code(NOT_FOUND).send()
-    case result instanceof unprocessableEntityError:
+    case result instanceof UnprocessableEntityError:
       return reply
         .code(UNPROCESSABLE_ENTITY)
         .send({ code: `${UNPROCESSABLE_ENTITY}`, message: result.message, statusCode: UNPROCESSABLE_ENTITY })
