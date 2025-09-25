@@ -33,6 +33,7 @@ describe("ExceptionQualityDropdown", () => {
     cy.mount(<ExceptionQualityDropdown showError={true} />)
 
     cy.get("#exception-quality-error").should("be.visible")
+    cy.get("select").should("have.attr", "aria-describedby", "exception-quality-error")
   })
 
   it("doesnt show error message when showError is false", () => {
@@ -40,5 +41,6 @@ describe("ExceptionQualityDropdown", () => {
 
     cy.get("select") // Add so component mounted before checking for errors
     cy.get("#exception-quality-error").should("not.exist")
+    cy.get("select").should("not.have.attr", "aria-describedby")
   })
 })

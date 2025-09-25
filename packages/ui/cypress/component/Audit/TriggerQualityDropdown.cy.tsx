@@ -33,6 +33,7 @@ describe("TriggerQualityDropdown", () => {
     cy.mount(<TriggerQualityDropdown showError={true} />)
 
     cy.get("#trigger-quality-error").should("be.visible")
+    cy.get("select").should("have.attr", "aria-describedby", "trigger-quality-error")
   })
 
   it("doesnt show error message when showError is false", () => {
@@ -40,5 +41,6 @@ describe("TriggerQualityDropdown", () => {
 
     cy.get("select") // Add so component mounted before checking for errors
     cy.get("#trigger-quality-error").should("not.exist")
+    cy.get("select").should("not.have.attr", "aria-describedby")
   })
 })

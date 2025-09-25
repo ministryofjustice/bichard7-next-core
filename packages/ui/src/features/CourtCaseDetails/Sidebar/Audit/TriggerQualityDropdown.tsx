@@ -18,7 +18,7 @@ export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
         placeholder={"Set Trigger Quality"}
         name={"trigger-quality"}
         aria-invalid={props.showError}
-        aria-describedby="trigger-quality-error"
+        aria-describedby={props.showError ? "trigger-quality-error" : undefined}
       >
         {triggerQualityDropdownValues.map(([value, displayAs]) => (
           <option key={value} value={value}>

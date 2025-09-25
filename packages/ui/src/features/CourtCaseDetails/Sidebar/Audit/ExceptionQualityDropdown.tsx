@@ -18,7 +18,7 @@ export const ExceptionQualityDropdown = (props: ExceptionQualityDropdownProps) =
         placeholder={"Set Exception Quality"}
         name={"exception-quality"}
         aria-invalid={props.showError}
-        aria-describedby="exception-quality-error"
+        aria-describedby={props.showError ? "exception-quality-error" : undefined}
       >
         {exceptionQualityDropdownValues.map(([value, displayAs]) => (
           <option key={value} value={value}>
