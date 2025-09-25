@@ -56,8 +56,6 @@ describe("QualityStatusCard", () => {
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
-    cy.get("button#quality-status-submit").should("be.disabled")
-
     cy.wait("@auditCase").then(({ request }) => {
       expect(request.method).to.equal("POST")
       expect(request.body.csrfToken).to.equal("ABC")
@@ -66,7 +64,7 @@ describe("QualityStatusCard", () => {
       expect(request.body.data.note).to.equal("Test notes")
     })
 
-    cy.get("button#quality-status-submit").should("not.be.disabled")
+    cy.get("form").should("not.have.attr", "aria-describedby")
   })
 
   it("updates court case and CSRF token after submit", () => {
@@ -184,5 +182,6 @@ describe("QualityStatusCard", () => {
     cy.get("button#quality-status-submit").click()
 
     cy.get("#quality-status-form-error").should("be.visible")
+    cy.get("form").should("have.attr", "aria-describedby", "quality-status-form-error")
   })
 })

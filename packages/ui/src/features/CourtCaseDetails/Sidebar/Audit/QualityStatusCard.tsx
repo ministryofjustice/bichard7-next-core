@@ -78,7 +78,7 @@ export const QualityStatusCard = () => {
 
   return (
     <Card heading={"Set quality status"}>
-      <form action={submitAction} aria-describedby="quality-status-form-error">
+      <form action={submitAction} aria-describedby={submitResult.submitError ? "quality-status-form-error" : undefined}>
         {submitResult.submitError ? (
           <p id="quality-status-form-error" className="govuk-error-message" role="alert">
             {"Audit has failed, please refresh"}
