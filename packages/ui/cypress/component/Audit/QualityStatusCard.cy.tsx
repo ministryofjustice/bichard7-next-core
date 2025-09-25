@@ -32,7 +32,7 @@ describe("QualityStatusCard", () => {
   })
 
   it("sends data to the correct URL", () => {
-    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
       body: {
@@ -59,7 +59,7 @@ describe("QualityStatusCard", () => {
     cy.get("button#quality-status-submit").should("be.disabled")
 
     cy.wait("@auditCase").then(({ request }) => {
-      expect(request.method).to.equal("PUT")
+      expect(request.method).to.equal("POST")
       expect(request.body.csrfToken).to.equal("ABC")
       expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
       expect(request.body.data.exceptionQuality).to.equal(newCourtCase.errorQualityChecked)
@@ -70,7 +70,7 @@ describe("QualityStatusCard", () => {
   })
 
   it("updates court case and CSRF token after submit", () => {
-    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
       body: {
@@ -111,7 +111,7 @@ describe("QualityStatusCard", () => {
   })
 
   it("correctly disables the button and re-enables it", () => {
-    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
       body: {
@@ -141,7 +141,7 @@ describe("QualityStatusCard", () => {
   })
 
   it("shows validation issues if values not entered", () => {
-    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
       "auditCase"
     )
 
@@ -163,7 +163,7 @@ describe("QualityStatusCard", () => {
   })
 
   it("shows error if API call returns an error", () => {
-    cy.intercept("PUT", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
       statusCode: 500,
       body: {}
     })
