@@ -1,6 +1,6 @@
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { type FastifyInstance } from "fastify"
-import { BAD_REQUEST, OK, UNPROCESSABLE_ENTITY } from "http-status"
+import { BAD_REQUEST, NOT_FOUND, OK } from "http-status"
 
 import build from "../../../app"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
@@ -55,7 +55,7 @@ describe("saveAuditResults", () => {
     expect(response.statusCode).toBe(BAD_REQUEST)
   })
 
-  it("returns 422 Unprocessable Entity when there's no case found", async () => {
+  it("returns 404 Not Found when there's no case found", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
 
     const response = await app.inject({
@@ -65,6 +65,6 @@ describe("saveAuditResults", () => {
       url: V1.CaseAudit.replace(":caseId", "2")
     })
 
-    expect(response.statusCode).toBe(UNPROCESSABLE_ENTITY)
+    expect(response.statusCode).toBe(NOT_FOUND)
   })
 })

@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { BAD_REQUEST, OK, UNPROCESSABLE_ENTITY } from "http-status"
+import { BAD_REQUEST, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
@@ -58,12 +58,12 @@ describe("/V1/cases/:caseId/audit", () => {
     expect(response.status).toBe(BAD_REQUEST)
   })
 
-  it("receives 422 Unprocessable Entity when there's no case found", async () => {
+  it("receives 404 Not Found when there's no case found", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
     await createCase(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "2")}`, defaultRequest(encodedJwt))
 
-    expect(response.status).toBe(UNPROCESSABLE_ENTITY)
+    expect(response.status).toBe(NOT_FOUND)
   })
 })

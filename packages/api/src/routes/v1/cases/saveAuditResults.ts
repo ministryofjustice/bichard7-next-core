@@ -3,7 +3,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { INTERNAL_SERVER_ERROR, OK, UNPROCESSABLE_ENTITY } from "http-status"
+import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
@@ -18,6 +18,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
 import saveAuditResults from "../../../useCases/cases/saveAuditResults"
 
 const bodySchema = z
@@ -31,7 +32,7 @@ const bodySchema = z
 
 type AuditResultsBody = z.infer<typeof bodySchema>
 
-type handlerProps = { body: AuditResultsBody; caseId: number; database: DatabaseGateway; reply: FastifyReply }
+type HandlerProps = { body: AuditResultsBody; caseId: number; database: DatabaseGateway; reply: FastifyReply }
 
 const schema = {
   ...auth,
@@ -53,8 +54,10 @@ const schema = {
   tags: ["Case V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, database, reply }: handlerProps) => {
+const handler = async ({ body, caseId, database, reply }: HandlerProps) => {
   const result = await saveAuditResults(database.writable, caseId, body)
+
+  console.log("===>", result)
 
   if (!isError(result)) {
     return reply.code(OK).send({ success: true })
@@ -62,12 +65,13 @@ const handler = async ({ body, caseId, database, reply }: handlerProps) => {
 
   reply.log.error(result)
 
-  switch (result.message) {
-    case "Audit results could not be saved":
+  switch (true) {
+    case result instanceof NotFoundError:
+      return reply.code(NOT_FOUND).send()
+    case result instanceof unprocessableEntityError:
       return reply
         .code(UNPROCESSABLE_ENTITY)
         .send({ code: `${UNPROCESSABLE_ENTITY}`, message: result.message, statusCode: UNPROCESSABLE_ENTITY })
-
     default:
       return reply
         .code(INTERNAL_SERVER_ERROR)
