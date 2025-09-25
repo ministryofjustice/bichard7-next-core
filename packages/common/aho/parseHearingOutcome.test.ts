@@ -43,7 +43,7 @@ describe("parseHearingOutcome", () => {
 
   it("Should call parseAnnotatedPncUpdateDatasetXml when the XML is an AnnotatedPncUpdateDataset", () => {
     const annotatedPncUpdateDataset = fs
-      .readFileSync(path.resolve(__dirname, "./parse/fixtures/AnnotatedPNCUpdateDataset.xml"))
+      .readFileSync(path.resolve(__dirname, "./parse/fixtures/AnnotatedPncUpdateDataset.xml"))
       .toString()
 
     const mockResult = {
