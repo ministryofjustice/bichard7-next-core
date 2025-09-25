@@ -58,8 +58,6 @@ const schema = {
 const handler = async ({ body, caseId, database, reply }: HandlerProps) => {
   const result = await saveAuditResults(database.writable, caseId, body)
 
-  console.log("===>", result)
-
   if (!isError(result)) {
     return reply.code(OK).send({ success: true })
   }
