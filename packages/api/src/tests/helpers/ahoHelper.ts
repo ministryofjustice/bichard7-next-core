@@ -1,6 +1,7 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import parseHearingOutcome from "../../services/parseHearingOutcome"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
+
 import dummyAho from "../fixtures/AnnotatedHO1.json"
 import FakeLogger from "./fakeLogger"
 

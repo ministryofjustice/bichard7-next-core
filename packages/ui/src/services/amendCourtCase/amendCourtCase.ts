@@ -10,10 +10,11 @@ import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import getSystemNotes from "utils/amendments/getSystemNotes"
 import createForceOwner from "utils/createForceOwner"
-import parseHearingOutcome from "utils/parseHearingOutcome"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const amendCourtCase = async (
   dataSource: DataSource | EntityManager,
@@ -25,10 +26,12 @@ const amendCourtCase = async (
     return new Error("Exception is locked by another user")
   }
 
-  const aho = parseHearingOutcome(courtCase.updatedHearingOutcome ?? courtCase.hearingOutcome)
-  if (isError(aho)) {
-    return aho
+  const ahoResult = parseHearingOutcome(courtCase.updatedHearingOutcome ?? courtCase.hearingOutcome)
+  if (isError(ahoResult)) {
+    return ahoResult
   }
+
+  const aho = ahoResult as AnnotatedHearingOutcome
 
   const ahoForceOwner = aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner
   if (ahoForceOwner === undefined || !ahoForceOwner.OrganisationUnitCode) {

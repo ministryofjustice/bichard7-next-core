@@ -1,14 +1,15 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { CaseDto, CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty, isError, sortBy } from "lodash"
 
 import type { CaseRowForDto, CaseRowForIndexDto } from "../../types/Case"
 
-import parseHearingOutcome from "../../services/parseHearingOutcome"
 import { convertNoteToDto } from "./convertNoteToDto"
 import { ResolutionStatus, resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
 import { convertTriggerRowToDto } from "./convertTriggerRowToDto"
@@ -30,12 +31,12 @@ export const convertCaseToCaseDto = (
 
   return {
     ...convertCaseToCaseIndexDto(caseRowForDto, user),
-    aho,
+    aho: aho as AnnotatedHearingOutcome,
     courtCode: caseRowForDto.court_code,
     courtReference: caseRowForDto.court_reference,
     orgForPoliceFilter: caseRowForDto.org_for_police_filter.trim(),
     phase: caseRowForDto.phase,
-    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : updatedAhoResult
+    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : (updatedAhoResult as AnnotatedHearingOutcome)
   }
 }
 

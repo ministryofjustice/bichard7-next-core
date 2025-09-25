@@ -3,13 +3,14 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { retryTransaction } from "services/retryTransaction"
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
-import parseHearingOutcome from "utils/parseHearingOutcome"
 import { AUDIT_LOG_EVENT_SOURCE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
 import amendCourtCase from "../amendCourtCase"
 import type User from "../entities/User"
@@ -40,10 +41,12 @@ const reallocateCourtCaseToForceTransaction = async (
       throw new Error("Failed to reallocate: Case not found")
     }
 
-    const aho = parseHearingOutcome(courtCase.hearingOutcome)
-    if (isError(aho)) {
-      throw aho
+    const ahoResult = parseHearingOutcome(courtCase.hearingOutcome)
+    if (isError(ahoResult)) {
+      throw ahoResult
     }
+
+    const aho = ahoResult as AnnotatedHearingOutcome
 
     const isCaseRecordableOnPnc = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
     const hasNoExceptionsOrAllResolved = !courtCase.errorStatus || courtCase.errorStatus === "Resolved"
@@ -78,10 +81,14 @@ const reallocateCourtCaseToForceTransaction = async (
       throw amendedCourtCase
     }
 
-    const updatedAho = parseHearingOutcome(amendedCourtCase.updatedHearingOutcome ?? amendedCourtCase.hearingOutcome)
-    if (isError(updatedAho)) {
-      throw updatedAho
+    const updatedAhoResult = parseHearingOutcome(
+      amendedCourtCase.updatedHearingOutcome ?? amendedCourtCase.hearingOutcome
+    )
+    if (isError(updatedAhoResult)) {
+      throw updatedAhoResult
     }
+
+    const updatedAho = updatedAhoResult as AnnotatedHearingOutcome
 
     const updateCourtCaseResult = await updateCourtCase(
       entityManager,
