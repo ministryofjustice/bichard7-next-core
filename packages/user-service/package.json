@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "COOKIES_SECURE=false BASE_URL=http://localhost:3000 next dev",
     "build": "next build",
-    "build:docker": "../../scripts/build-user-service-docker.sh",
+    "build:docker": "cd ../.. && bash scripts/build-user-service-docker.sh",
     "install:assets": "./scripts/copy-govuk-frontend-assets.sh",
     "install:hooks": "./scripts/install-git-hooks.sh",
     "start": "COOKIES_SECURE=false next start",
