@@ -1,9 +1,6 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type AnnotatedPncUpdateDataset from "@moj-bichard7/common/types/AnnotatedPncUpdateDataset"
 import type { CaseRow } from "@moj-bichard7/common/types/Case"
-import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Sql } from "postgres"
 
@@ -29,38 +26,50 @@ const inputDataSchema = z.object({
 })
 type InputData = z.infer<typeof inputDataSchema>
 
-type ProcessResubmit = {
-  message: AnnotatedHearingOutcome | AnnotatedPncUpdateDataset | PncUpdateDataset
+type ResubmitResult = {
   phase: number
+  s3TaskDataPath: string
 }
 
-const updatedAho = async (sql: Sql, messageId: string): PromiseResult<ProcessResubmit> => {
+const handleCaseResubmission = async (sql: Sql, messageId: string): PromiseResult<ResubmitResult> => {
   const [caseRow] = (await sql`SELECT * FROM br7own.error_list el WHERE el.message_id = ${messageId}`) as CaseRow[]
 
-  await insertErrorListNotes(sql, caseRow.error_id, [
-    `${caseRow.error_locked_by_id}: Portal Action: Resubmitted Message.`
-  ])
+  if (caseRow.updated_msg === null) {
+    return new Error("Missing updated_msg")
+  }
 
-  await sql`
+  const note = await insertErrorListNotes(sql, caseRow.error_id, [
+    `${caseRow.error_locked_by_id}: Portal Action: Resubmitted Message.`
+  ]).catch((error: Error) => error)
+
+  if (isError(note)) {
+    return note
+  }
+
+  const setErrorUnlocked = await sql`
     UPDATE br7own.error_list
     SET error_locked_by_id = null
     WHERE error_id = ${caseRow.error_id}
-  `
+  `.catch((error: Error) => error)
 
-  const [updatedCaseRow] =
-    (await sql`SELECT * FROM br7own.error_list el WHERE el.message_id = ${messageId}`) as CaseRow[]
-
-  if (updatedCaseRow.updated_msg === null) {
-    throw new Error("Missing updated_msg")
+  if (isError(setErrorUnlocked)) {
+    return setErrorUnlocked
   }
 
-  const message = parseHearingOutcome(updatedCaseRow.updated_msg)
+  const message = parseHearingOutcome(caseRow.updated_msg)
 
   if (isError(message)) {
-    throw message
+    return message
   }
 
-  return { message, phase: updatedCaseRow.phase }
+  const s3TaskDataPath = `${messageId}.json`
+  const s3Result = await putFileToS3(JSON.stringify(message), s3TaskDataPath, taskDataBucket, s3Config)
+
+  if (isError(s3Result)) {
+    return s3Result
+  }
+
+  return { phase: caseRow.phase, s3TaskDataPath }
 }
 
 const processResubmit: ConductorWorker = {
@@ -69,24 +78,15 @@ const processResubmit: ConductorWorker = {
     const { messageId } = task.inputData
     const db = postgres(dbConfig)
 
-    const result = await db
-      .begin("read write", async (sql): PromiseResult<ProcessResubmit> => {
-        return await updatedAho(sql, messageId)
-      })
-      .catch((error: Error) => error)
+    const result = await db.begin("read write", async (sql): PromiseResult<ResubmitResult> => {
+      return await handleCaseResubmission(sql, messageId)
+    })
 
     if (isError(result)) {
       return failed(`${result.name}: ${result.message}`)
     }
 
-    const s3TaskDataPath = `${messageId}.json`
-    const s3Result = await putFileToS3(JSON.stringify(result.message), s3TaskDataPath, taskDataBucket, s3Config)
-
-    if (isError(s3Result)) {
-      return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3Result.message)
-    }
-
-    return completed({ currentPhase: result.phase, s3TaskDataPath })
+    return completed({ currentPhase: result.phase, s3TaskDataPath: result.s3TaskDataPath })
   })
 }
 

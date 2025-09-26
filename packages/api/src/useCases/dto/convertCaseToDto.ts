@@ -1,4 +1,3 @@
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { CaseDto, CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
@@ -31,12 +30,12 @@ export const convertCaseToCaseDto = (
 
   return {
     ...convertCaseToCaseIndexDto(caseRowForDto, user),
-    aho: aho as AnnotatedHearingOutcome,
+    aho: JSON.parse(JSON.stringify(aho)),
     courtCode: caseRowForDto.court_code,
     courtReference: caseRowForDto.court_reference,
     orgForPoliceFilter: caseRowForDto.org_for_police_filter.trim(),
     phase: caseRowForDto.phase,
-    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : (updatedAhoResult as AnnotatedHearingOutcome)
+    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : JSON.parse(JSON.stringify(updatedAhoResult))
   }
 }
 
