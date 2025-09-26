@@ -28,6 +28,8 @@ Packages:
 - [message-forwarder](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/message-forwarder)
 - [uat-data](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/uat-data)
 - [ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui)
+- [user-service](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/user-service)
+
 
 ## Quickstart
 
@@ -56,8 +58,8 @@ following out and run `make build` in each repository:
   - Make command is `SKIP_GOSS=true make build` for this repo
 - [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
   - Make command is `make build-api-server build-event-handler-server` for this repo
-- [User Service](https://github.com/ministryofjustice/bichard7-next-user-service)
-  - Make command is `make build` for this repo
+- [User Service](packages/user-service)
+  - Navigate to packages/user-service and run `make build`
 - [UI](packages/ui)
   - Navigate to packages/ui and run `make build`
 
@@ -101,12 +103,12 @@ npm run destroy
 
 ### Building on an M1 Mac
 
-We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore it is necessary to build the relevant images yourself.
+We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore, it is necessary to build the relevant images yourself.
 
 1. In the [bichard7-next-infrastructure-docker-images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/) repository, run `make build-local` to just build the required images
 1. Follow the instructions in the [bichard7-next](https://github.com/ministryofjustice/bichard7-next/#building-liberty-on-arm) repository to build the Bichard Open Liberty image
-1. In the [bichard7-next-user-service](https://github.com/ministryofjustice/bichard7-next-user-service/) repository run `make build`
-1. In the [bichard7-next-ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-ui-docker.sh`
+1. In the [user-service](packages/user-service) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-user-service-docker.sh`
+1. In the [ui](packages/ui) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-ui-docker.sh`
 
 ## Running Packages locally
 
