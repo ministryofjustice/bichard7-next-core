@@ -36,7 +36,7 @@ describe("canUseCourtDateReceivedDateMismatchFilters", () => {
 
     const user = new User()
     user.featureFlags = { useCourtDateReceivedDateMismatchFiltersEnabled: true }
-    user.visibleForces = ["06"]
+    user.visibleForces = ["006"]
 
     expect(canUseCourtDateReceivedDateMismatchFilters(user)).toBe(false)
   })
@@ -48,7 +48,7 @@ describe("canUseCourtDateReceivedDateMismatchFilters", () => {
 
     const user = new User()
     user.featureFlags = { useCourtDateReceivedDateMismatchFiltersEnabled: true }
-    user.visibleForces = ["06", "07"]
+    user.visibleForces = ["006", "007"]
 
     expect(canUseCourtDateReceivedDateMismatchFilters(user)).toBe(false)
   })
@@ -60,7 +60,7 @@ describe("canUseCourtDateReceivedDateMismatchFilters", () => {
 
     const user = new User()
     user.featureFlags = { useCourtDateReceivedDateMismatchFiltersEnabled: true }
-    user.visibleForces = ["06", "07", "01"]
+    user.visibleForces = ["006", "007", "001"]
 
     expect(canUseCourtDateReceivedDateMismatchFilters(user)).toBe(true)
   })
@@ -72,7 +72,7 @@ describe("canUseCourtDateReceivedDateMismatchFilters", () => {
 
     const user = new User()
     user.featureFlags = { useCourtDateReceivedDateMismatchFiltersEnabled: true }
-    user.visibleForces = ["06", "07", "01"]
+    user.visibleForces = ["006", "007", "001"]
 
     expect(canUseCourtDateReceivedDateMismatchFilters(user)).toBe(false)
   })
