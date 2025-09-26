@@ -1,9 +1,9 @@
 import config from "lib/config"
-import Database from "types/Database"
-import PaginatedResult from "types/PaginatedResult"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PaginatedResult from "types/PaginatedResult"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
-import ServiceMessage from "types/ServiceMessage"
+import type ServiceMessage from "types/ServiceMessage"
 
 export default async (connection: Database, page: number): PromiseResult<PaginatedResult<ServiceMessage[]>> => {
   const serviceMessagesQuery = `

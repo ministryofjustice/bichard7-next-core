@@ -1,6 +1,6 @@
-import { GetServerSidePropsContext } from "next"
-import QueryString from "qs"
-import { ParsedUrlQuery } from "querystring"
+import type { GetServerSidePropsContext } from "next"
+import type QueryString from "qs"
+import type { ParsedUrlQuery } from "querystring"
 
 type CsrfServerSidePropsContext = GetServerSidePropsContext<ParsedUrlQuery> & {
   formData: QueryString.ParsedQs

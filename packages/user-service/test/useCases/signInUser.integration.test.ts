@@ -1,7 +1,8 @@
-import { IncomingMessage, ServerResponse } from "http"
-import Database from "types/Database"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
+import type Database from "types/Database"
 import { isError } from "types/Result"
-import User from "types/User"
+import type User from "types/User"
 import createUser from "useCases/createUser"
 import signInUser from "useCases/signInUser"
 import groups from "../../testFixtures/database/data/groups"
@@ -73,6 +74,6 @@ describe("SigninUser", () => {
         AND jwt_id IS NOT NULL
     `
     const queryResult = await connection.oneOrNone(checkDbQuery, { username: user.username })
-    expect(queryResult).not.toBe(null)
+    expect(queryResult).not.toBeNull()
   })
 })

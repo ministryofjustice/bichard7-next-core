@@ -1,6 +1,6 @@
-import Database from "types/Database"
+import type Database from "types/Database"
 import { isError } from "types/Result"
-import User from "types/User"
+import type User from "types/User"
 import createUser from "useCases/createUser"
 import getUserByUsername from "useCases/getUserByUsername"
 import groups from "../../testFixtures/database/data/groups"
@@ -43,7 +43,7 @@ describe("DeleteUserUseCase", () => {
     const selectedGroup = selectedGroups[0]
     const user = users[0]
 
-    const expectedError = new Error(`Username Bichard01 already exists.`)
+    const expectedError = new Error("Username Bichard01 already exists.")
 
     const createUserDetails = {
       username: user.username,
@@ -90,7 +90,7 @@ describe("DeleteUserUseCase", () => {
       excludedTriggers: "TRPR0001,"
     }
 
-    const expectedError = new Error(`Email address bichard01@example.com already exists.`)
+    const expectedError = new Error("Email address bichard01@example.com already exists.")
     const result = await createUser(connection, { id: currentUserId, username: "Bichard01" }, createUserDetails)
     expect(isError(result)).toBe(true)
     const actualError = <Error>result

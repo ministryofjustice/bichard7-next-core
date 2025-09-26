@@ -1,5 +1,5 @@
-import { AuthenticationTokenPayload } from "lib/token/authenticationToken"
-import UserGroup from "types/UserGroup"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import type UserGroup from "types/UserGroup"
 import hasUserAccessToUrl from "useCases/hasUserAccessToUrl"
 
 interface TestData {

@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import config from "lib/config"
 
 const request = <IncomingMessage>{ url: "/login" }

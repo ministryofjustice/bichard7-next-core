@@ -295,7 +295,6 @@ const editUser = ({
           {user && (
             <Form method="post" csrfToken={csrfToken}>
               <UserForm
-                /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...user}
                 usernameError={usernameError}
                 forenamesError={forenamesError}

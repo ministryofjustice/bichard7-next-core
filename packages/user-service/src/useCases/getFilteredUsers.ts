@@ -1,8 +1,8 @@
 import config from "lib/config"
-import Database from "types/Database"
-import PaginatedResult from "types/PaginatedResult"
-import PromiseResult from "types/PromiseResult"
-import User from "types/User"
+import type Database from "types/Database"
+import type PaginatedResult from "types/PaginatedResult"
+import type PromiseResult from "types/PromiseResult"
+import type User from "types/User"
 
 const getFilteredUsers = async (
   connection: Database,
@@ -14,7 +14,7 @@ const getFilteredUsers = async (
   let users = []
   if (visibleForces !== "" || isSuperUser) {
     const forces = visibleForces.split(",")
-    /* eslint-disable @typescript-eslint/naming-convention */
+
     const forceWhere = forces.map((code) => `visible_forces ~ '\\y${code}\\y'`).join(" OR ")
     const getFilteredUsersQuery = `
       SELECT

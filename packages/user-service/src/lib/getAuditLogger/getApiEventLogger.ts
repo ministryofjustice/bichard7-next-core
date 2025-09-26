@@ -1,7 +1,7 @@
 import axios from "axios"
 import type { UserServiceConfig } from "lib/config"
 import type { GetServerSidePropsContext } from "next"
-import { EventLogger } from "types/AuditLogger"
+import type { EventLogger } from "types/AuditLogger"
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import logger from "utils/logger"

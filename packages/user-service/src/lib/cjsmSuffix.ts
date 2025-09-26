@@ -32,6 +32,7 @@ const removeCjsmSuffix = (emailAddress: string): string => {
       return lowerEmail.replace(cjsmDomain, domain)
     }
   }
+
   return lowerEmail.replace(".cjsm.net", "")
 }
 

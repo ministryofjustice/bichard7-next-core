@@ -1,11 +1,11 @@
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage, ServerResponse } from "http"
 import config from "lib/config"
 import { removeTokenId } from "lib/token/authenticationToken"
-import Database from "types/Database"
+import type Database from "types/Database"
 import { isError } from "types/Result"
 import removeCookie from "utils/removeCookie"
 import logger from "utils/logger"
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
 import getAuthenticationPayloadFromCookie from "middleware/withAuthentication/getAuthenticationPayloadFromCookie"
 
 export default async (

@@ -1,12 +1,11 @@
-/* eslint-disable import/first */
 jest.mock("lib/parseFormData")
 
 import { serialize } from "cookie"
 import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
 import verifyCsrfToken from "middleware/withCsrf/verifyCsrfToken"
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import parseFormData from "lib/parseFormData"
-import QueryString from "qs"
+import type QueryString from "qs"
 import config from "lib/config"
 
 const createRequest = (cookie: string) => {

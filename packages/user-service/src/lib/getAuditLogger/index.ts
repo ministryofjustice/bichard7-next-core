@@ -1,12 +1,12 @@
-import { GetServerSidePropsContext } from "next"
-import AuditLogger, { EventLogger } from "types/AuditLogger"
-import { UserServiceConfig } from "../config"
+import type { GetServerSidePropsContext } from "next"
+import type { EventLogger } from "types/AuditLogger"
+import type AuditLogger from "types/AuditLogger"
+import type { UserServiceConfig } from "../config"
 import getConsoleEventLogger from "./getConsoleEventLogger"
 import getApiEventLogger from "./getApiEventLogger"
 import getErrorLogger from "./getErrorLogger"
 
 export default (context: GetServerSidePropsContext, config: UserServiceConfig): AuditLogger => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let { auditLogger } = context as unknown as { auditLogger: AuditLogger }
 
   if (auditLogger) {

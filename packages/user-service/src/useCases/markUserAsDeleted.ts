@@ -1,5 +1,5 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 
 export default (db: Database, emailAddress: string, currentUserId: number): PromiseResult<void> => {
   const query = `

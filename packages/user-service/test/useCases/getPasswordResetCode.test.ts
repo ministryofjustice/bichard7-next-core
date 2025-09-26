@@ -1,4 +1,4 @@
-import Database from "types/Database"
+import type Database from "types/Database"
 import { isError } from "types/Result"
 import getPasswordResetCode from "useCases/getPasswordResetCode"
 

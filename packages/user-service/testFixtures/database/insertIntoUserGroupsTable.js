@@ -3,7 +3,6 @@ import getTestConnection from "../getTestConnection"
 const insertIntoUserGroupsTable = (userEmailAddress, groups) => {
   const connection = getTestConnection()
 
-  /* eslint-disable no-useless-escape */
   const insertQuery = `
     INSERT INTO 
       br7own.users_groups(

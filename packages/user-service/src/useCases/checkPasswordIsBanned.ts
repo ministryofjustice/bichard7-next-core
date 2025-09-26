@@ -1,5 +1,5 @@
 import bannedPasswords from "lib/bannedPasswords"
-import { Result } from "types/Result"
+import type { Result } from "types/Result"
 
 const bannedPasswordsDictionary = Object.assign({}, ...bannedPasswords.split("\n").map((word) => ({ [word]: true })))
 

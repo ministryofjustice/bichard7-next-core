@@ -1,6 +1,5 @@
 import getColumnComponents from "components/Table/getColumnComponents"
 
-// eslint-disable-next-line react/destructuring-assignment
 const DummyElement = (props: { field: string }) => <div>{props.field}</div>
 
 it("should return 2 properties when there are 2 elements", () => {

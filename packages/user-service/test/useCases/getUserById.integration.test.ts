@@ -1,8 +1,8 @@
-import User from "types/User"
+import type User from "types/User"
 import { isError } from "types/Result"
 import getUserById from "useCases/getUserById"
 import createUser from "useCases/createUser"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoUsersTable from "../../testFixtures/database/insertIntoUsersTable"
@@ -127,7 +127,7 @@ describe("getUserById", () => {
     if (actualUser.groups) {
       expect(actualUser.groups[0].id).toBe(selectedGroup.id)
     } else {
-      expect(actualUser.groups).not.toBeUndefined()
+      expect(actualUser.groups).toBeDefined()
     }
   })
 })

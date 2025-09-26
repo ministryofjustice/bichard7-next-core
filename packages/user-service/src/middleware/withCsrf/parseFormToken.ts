@@ -1,6 +1,6 @@
 import config from "lib/config"
-import QueryString from "qs"
-import { Result } from "types/Result"
+import type QueryString from "qs"
+import type { Result } from "types/Result"
 import { unsign } from "cookie-signature"
 
 export interface ParseFormTokenResult {
@@ -11,7 +11,6 @@ export interface ParseFormTokenResult {
 export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> => {
   const { tokenName, formSecret } = config.csrf
 
-  // eslint-disable-next-line no-prototype-builtins
   if (!formData.hasOwnProperty(tokenName)) {
     return Error("Token not found in the form data.")
   }
@@ -21,6 +20,7 @@ export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> =>
   if (!formToken) {
     return Error("Token is empty in the form data.")
   }
+
   const unsignedFormToken = unsign(formToken, formSecret)
 
   if (!unsignedFormToken) {

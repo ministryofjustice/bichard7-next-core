@@ -1,6 +1,7 @@
 import config from "lib/config"
-import { AuthenticationTokenPayload, decodeAuthenticationToken } from "lib/token/authenticationToken"
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import { decodeAuthenticationToken } from "lib/token/authenticationToken"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
 import { isSuccess } from "types/Result"
 
 export default ({ cookies }: { cookies: NextApiRequestCookies }): AuthenticationTokenPayload | null => {

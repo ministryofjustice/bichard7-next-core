@@ -1,4 +1,4 @@
-import Database from "types/Database"
+import type Database from "types/Database"
 import config from "./config"
 import createSingletonConnection from "./createSingletonConnection"
 

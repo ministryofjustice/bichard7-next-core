@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-import AuditLogger from "types/AuditLogger"
+import type AuditLogger from "types/AuditLogger"
 
 const fakeAuditLogger: AuditLogger = {
   logEvent: (_action, _attributes) => Promise.resolve(),

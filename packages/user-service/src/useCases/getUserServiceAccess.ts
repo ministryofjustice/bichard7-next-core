@@ -1,5 +1,5 @@
-import { AuthenticationTokenPayload } from "lib/token/authenticationToken"
-import UserGroup from "types/UserGroup"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import type UserGroup from "types/UserGroup"
 
 export interface UserServiceAccess {
   hasAccessToBichard: boolean

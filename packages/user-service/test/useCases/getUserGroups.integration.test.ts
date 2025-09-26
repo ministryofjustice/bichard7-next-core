@@ -1,6 +1,6 @@
 import { isError } from "types/Result"
-import { UserGroupResult } from "types/UserGroup"
-import Database from "types/Database"
+import type { UserGroupResult } from "types/UserGroup"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import groups from "../../testFixtures/database/data/groups"
@@ -41,10 +41,10 @@ describe("getUserSpecificGroups", () => {
     const groupsResult = (await getUserSpecificGroups(connection, username)) as UserGroupResult[]
     let selectedGroups = await selectFromTable("groups", undefined, undefined, "id")
     selectedGroups = selectedGroups.filter((g) => g.name.includes("GeneralHandler"))
-    expect(selectedGroups.length).toBe(1)
+    expect(selectedGroups).toHaveLength(1)
 
     expect(isError(groupsResult)).toBe(false)
-    expect(groupsResult.length).toBe(selectedGroups.length)
+    expect(groupsResult).toHaveLength(selectedGroups.length)
 
     for (let i = 0; i < groupsResult.length; i++) {
       expect(groupsResult[i].id).toBe(selectedGroups[i].id)
@@ -64,10 +64,10 @@ describe("getUserSpecificGroups", () => {
     const groupsResult = (await getUserHierarchyGroups(connection, username)) as UserGroupResult[]
     let selectedGroups = await selectFromTable("groups", undefined, undefined, "id")
     selectedGroups = selectedGroups.filter((g) => g.name.includes("Handler"))
-    expect(selectedGroups.length).toBe(3)
+    expect(selectedGroups).toHaveLength(3)
 
     expect(isError(groupsResult)).toBe(false)
-    expect(groupsResult.length).toBe(selectedGroups.length)
+    expect(groupsResult).toHaveLength(selectedGroups.length)
 
     for (let i = 0; i < groupsResult.length; i++) {
       expect(groupsResult[i].id).toBe(selectedGroups[i].id)

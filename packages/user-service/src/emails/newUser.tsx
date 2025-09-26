@@ -29,7 +29,6 @@ ${url}
 `
 
 export default function generateNewUserEmail(props: Props): EmailContent {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   const htmlEmail = <NewUserEmail {...props} />
 
   return {

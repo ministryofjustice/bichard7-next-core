@@ -32,7 +32,6 @@ ${url}
 `
 
 export default function generatePasswordResetEmail(props: Props): EmailContent {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   const htmlEmail = <PasswordResetEmail {...props} />
 
   return {

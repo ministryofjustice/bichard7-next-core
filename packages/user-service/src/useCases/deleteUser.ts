@@ -1,7 +1,7 @@
-import User from "types/User"
-import Database from "types/Database"
+import type User from "types/User"
+import type Database from "types/Database"
 import { isError } from "types/Result"
-import AuditLogger from "types/AuditLogger"
+import type AuditLogger from "types/AuditLogger"
 import markUserAsDeleted from "./markUserAsDeleted"
 import AuditLogEvent from "types/AuditLogEvent"
 

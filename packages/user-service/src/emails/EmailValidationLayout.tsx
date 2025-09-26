@@ -75,7 +75,6 @@ const EmailLayout = ({ paragraphs, title, code }: EmailLayoutProps) => (
     <Title>{title}</Title>
 
     {paragraphs.map((paragraph, i) => (
-      // eslint-disable-next-line react/no-array-index-key
       <Paragraph key={i}>{paragraph}</Paragraph>
     ))}
     <CodeBox>{code}</CodeBox>

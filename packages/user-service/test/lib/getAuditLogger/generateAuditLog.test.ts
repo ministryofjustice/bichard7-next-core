@@ -1,7 +1,7 @@
 import generateAuditLog from "lib/getAuditLogger/generateAuditLog"
-import { GetServerSidePropsContext } from "next"
+import type { GetServerSidePropsContext } from "next"
 import AuditLogEvent from "types/AuditLogEvent"
-import User from "types/User"
+import type User from "types/User"
 
 const dummyRequest = { socket: { remoteAddress: "dummyRemoteAddress" }, url: "/dummyUrl" }
 
@@ -26,7 +26,6 @@ it("should generate audit log when current user exists", () => {
   expect(auditLog.username).toBe(user.username)
   expect(auditLog.attributes).toBeDefined()
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { attribute1, attribute2 } = auditLog.attributes!
   expect(attribute1).toBe("test")
   expect(attribute2).toBe(true)
@@ -53,7 +52,6 @@ it("should generate audit log and get username from user object in attributes", 
   expect(auditLog.username).toBe("dummy 2")
   expect(auditLog.attributes).toBeDefined()
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { attribute1, attribute2 } = auditLog.attributes!
   expect(attribute1).toBe("test")
   expect(attribute2).toBe(true)
@@ -75,7 +73,6 @@ it("should generate audit log when current user and user object in attributes do
   expect(auditLog.username).toBe("Anonymous")
   expect(auditLog.attributes).toBeDefined()
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { attribute1, attribute2 } = auditLog.attributes!
   expect(attribute1).toBe("test")
   expect(attribute2).toBe(true)
@@ -87,7 +84,6 @@ it("should remove unsafe attributes", () => {
     user: { name: "test User", password: "secret", migratedPassword: "secret" }
   })
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const { user } = auditLog.attributes! as { user: { name: string; password?: string; migratedPassword?: string } }
 
   expect(user.name).toBeDefined()

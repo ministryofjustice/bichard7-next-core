@@ -1,6 +1,6 @@
 import config from "lib/config"
 import getEmailer from "lib/getEmailer"
-import PromiseResult from "types/PromiseResult"
+import type PromiseResult from "types/PromiseResult"
 import logger from "utils/logger"
 
 const postFeedback = (feedback: string, currentUserEmail?: string): PromiseResult<void> => {
@@ -20,7 +20,7 @@ const postFeedback = (feedback: string, currentUserEmail?: string): PromiseResul
       to: sendFeedbackTo,
       ...emailContent
     })
-    .then(() => logger.info(`Feedback successfully sent`))
+    .then(() => logger.info("Feedback successfully sent"))
     .catch((error: Error) => {
       logger.error({ error: error }, "Error sending email")
       return error

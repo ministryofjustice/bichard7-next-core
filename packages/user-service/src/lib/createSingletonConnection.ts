@@ -1,7 +1,7 @@
 import pgPromise from "pg-promise"
-import Database from "types/Database"
+import type Database from "types/Database"
 import logger from "utils/logger"
-import DatabaseConfig from "./DatabaseConfig"
+import type DatabaseConfig from "./DatabaseConfig"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

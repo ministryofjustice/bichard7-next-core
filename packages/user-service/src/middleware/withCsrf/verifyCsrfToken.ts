@@ -1,6 +1,6 @@
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import parseFormData from "lib/parseFormData"
-import QueryString from "qs"
+import type QueryString from "qs"
 import { isError } from "types/Result"
 import parseFormToken from "./parseFormToken"
 import parseCookieToken from "./parseCookieToken"

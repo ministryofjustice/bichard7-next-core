@@ -1,7 +1,8 @@
-import config, { UserServiceConfig } from "lib/config"
+import type { UserServiceConfig } from "lib/config"
+import config from "lib/config"
 import getAuditLogger from "lib/getAuditLogger"
-import { GetServerSidePropsContext } from "next"
-import AuditLogger from "types/AuditLogger"
+import type { GetServerSidePropsContext } from "next"
+import type AuditLogger from "types/AuditLogger"
 import { isError } from "types/Result"
 
 it("should throw error when unknown logger type is set in config", () => {

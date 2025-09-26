@@ -1,5 +1,5 @@
 import { isError } from "types/Result"
-import Database from "types/Database"
+import type Database from "types/Database"
 import isUserWithinGroup from "useCases/isUserWithinGroup"
 import getUserByEmailAddress from "useCases/getUserByEmailAddress"
 import getTestConnection from "../../testFixtures/getTestConnection"

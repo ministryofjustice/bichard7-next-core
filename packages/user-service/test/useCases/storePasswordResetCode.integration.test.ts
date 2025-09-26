@@ -1,6 +1,6 @@
 import { isError } from "types/Result"
 import storePasswordResetCode from "useCases/storePasswordResetCode"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoTable from "../../testFixtures/database/insertIntoUsersTable"

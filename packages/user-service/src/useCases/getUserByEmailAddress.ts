@@ -1,8 +1,7 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
-import User from "types/User"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
+import type User from "types/User"
 
-/* eslint-disable require-await */
 export default async (db: Database, emailAddress: string): PromiseResult<User | null> => {
   const query = `
       SELECT

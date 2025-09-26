@@ -1,5 +1,5 @@
-import { ServerResponse } from "http"
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type { ServerResponse } from "http"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
 
 export default (response: ServerResponse, cookies: NextApiRequestCookies, cookieName: string) => {
   const newCookies: string[] = []

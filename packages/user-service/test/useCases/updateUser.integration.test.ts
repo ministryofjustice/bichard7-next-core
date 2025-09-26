@@ -1,7 +1,7 @@
 import { isError } from "types/Result"
 import updateUser from "useCases/updateUser"
 import createUser from "useCases/createUser"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoGroupsTable from "../../testFixtures/database/insertIntoGroupsTable"

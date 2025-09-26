@@ -1,5 +1,5 @@
-import { IncomingMessage } from "http"
-import User from "types/User"
+import type { IncomingMessage } from "http"
+import type User from "types/User"
 import { getCaseDetailsCookieName } from "./getCaseDetailsCookieName"
 
 const courtCaseDetailsRedirect = (req: IncomingMessage, currentUser: Partial<User> | undefined): string => {

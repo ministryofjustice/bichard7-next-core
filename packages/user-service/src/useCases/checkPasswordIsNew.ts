@@ -1,8 +1,8 @@
 import { verifyPassword } from "lib/argon2"
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
-import Task from "types/Task"
+import type Task from "types/Task"
 
 type passwordHistory = {
   password_hash: string

@@ -1,4 +1,4 @@
-import { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
 import getUserServiceAccess from "useCases/getUserServiceAccess"
 
 it("should say that user has access to Bichard and the reports service when user has one of the Bichard's user groups", () => {

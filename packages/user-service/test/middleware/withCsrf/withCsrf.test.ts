@@ -1,16 +1,16 @@
-/* eslint-disable import/first */
 jest.mock("middleware/withCsrf/verifyCsrfToken")
 jest.mock("middleware/withCsrf/generateCsrfToken")
 
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
 import { withCsrf } from "middleware"
 import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
 import verifyCsrfToken from "middleware/withCsrf/verifyCsrfToken"
-import { GetServerSidePropsContext } from "next"
-import QueryString from "qs"
-import { ParsedUrlQuery } from "querystring"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
-import KeyValuePair from "types/KeyValuePair"
+import type { GetServerSidePropsContext } from "next"
+import type QueryString from "qs"
+import type { ParsedUrlQuery } from "querystring"
+import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+import type KeyValuePair from "types/KeyValuePair"
 
 it("should include form data and CSRF token in the context", async () => {
   const mockedVerifyCsrfToken = verifyCsrfToken as jest.MockedFunction<typeof verifyCsrfToken>

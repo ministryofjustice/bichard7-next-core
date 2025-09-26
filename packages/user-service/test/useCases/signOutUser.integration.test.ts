@@ -2,12 +2,13 @@
  * @jest-environment node
  */
 
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
 import config from "lib/config"
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
-import Database from "types/Database"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type Database from "types/Database"
 import { isError } from "types/Result"
-import User from "types/User"
+import type User from "types/User"
 import { signInUser, signOutUser } from "useCases"
 import createUser from "useCases/createUser"
 import groups from "../../testFixtures/database/data/groups"
@@ -81,7 +82,7 @@ describe("SignoutUser", () => {
     `
 
     let queryResult = await connection.oneOrNone(checkDbQuery, { username: user.username })
-    expect(queryResult).not.toBe(null)
+    expect(queryResult).not.toBeNull()
 
     const request = <IncomingMessage & { cookies: NextApiRequestCookies }>{ method: "GET" }
     request.cookies = { [config.authenticationCookieName]: authenticationToken as string }
@@ -93,6 +94,6 @@ describe("SignoutUser", () => {
     expect(cookieValues).toHaveLength(1)
 
     queryResult = await connection.oneOrNone(checkDbQuery, { username: user.username })
-    expect(queryResult).toBe(null)
+    expect(queryResult).toBeNull()
   })
 })

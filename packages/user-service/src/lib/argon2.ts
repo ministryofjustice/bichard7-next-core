@@ -1,4 +1,5 @@
-import { argon2id, hash, Options, verify } from "argon2"
+import type { Options } from "argon2"
+import { argon2id, hash, verify } from "argon2"
 import logger from "utils/logger"
 import config from "./config"
 

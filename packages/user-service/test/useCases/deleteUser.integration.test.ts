@@ -1,5 +1,5 @@
 import deleteUser from "useCases/deleteUser"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoUsersTable from "../../testFixtures/database/insertIntoUsersTable"

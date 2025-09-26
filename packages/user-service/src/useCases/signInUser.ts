@@ -1,13 +1,13 @@
-import { ServerResponse } from "http"
+import type { ServerResponse } from "http"
 import config from "lib/config"
 import { generateAuthenticationToken, storeTokenId } from "lib/token/authenticationToken"
 import setCookie from "utils/setCookie"
 import { v4 as uuidv4 } from "uuid"
 import { isError } from "types/Result"
-import Database from "types/Database"
+import type Database from "types/Database"
 import logger from "utils/logger"
 import updateUserLastLogin from "./updateUserLastLogin"
-import UserAuthBichard from "types/UserAuthBichard"
+import type UserAuthBichard from "types/UserAuthBichard"
 
 export default async (
   connection: Database,

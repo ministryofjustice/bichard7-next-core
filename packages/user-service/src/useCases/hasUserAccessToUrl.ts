@@ -1,4 +1,4 @@
-import { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
 import getUserServiceAccess from "./getUserServiceAccess"
 
 const userManagementUrlExpression = /^\/users\/users.*/

@@ -1,6 +1,6 @@
 import config from "lib/config"
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 
 const validateUserVerificationCode = async (
@@ -11,6 +11,7 @@ const validateUserVerificationCode = async (
   if (!verificationCode || verificationCode.length !== config.verificationCodeLength) {
     return new Error("Invalid Verification Code ")
   }
+
   const query = `
     SELECT *
     FROM br7own.users

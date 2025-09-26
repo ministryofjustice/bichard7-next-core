@@ -4,9 +4,9 @@
 
 import { isError } from "types/Result"
 import { resetPassword } from "useCases"
-import { ResetPasswordOptions } from "useCases/resetPassword"
+import type { ResetPasswordOptions } from "useCases/resetPassword"
 import { hashPassword, verifyPassword } from "lib/argon2"
-import Database from "types/Database"
+import type Database from "types/Database"
 import storeVerificationCode from "useCases/storeVerificationCode"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
@@ -57,7 +57,7 @@ describe("resetPassword", () => {
     expect(result).toBeUndefined()
 
     const actualUser = await connection.oneOrNone(
-      `SELECT username, password FROM br7own.users WHERE LOWER(email) = LOWER($\{email\})`,
+      "SELECT username, password FROM br7own.users WHERE LOWER(email) = LOWER($\{email\})",
       {
         email: emailAddress
       }
@@ -91,7 +91,7 @@ describe("resetPassword", () => {
 
     const resetResult = await resetPassword(connection, fakeAuditLogger, resetPasswordOptions)
     expect(isError(resetResult)).toBe(false)
-    expect(resetResult).not.toBe(undefined)
+    expect(resetResult).toBeDefined()
     expect(resetResult).toBe("Cannot use previously used password.")
   })
 
@@ -113,7 +113,7 @@ describe("resetPassword", () => {
 
     const resetResult = await resetPassword(connection, fakeAuditLogger, resetPasswordOptions)
     expect(isError(resetResult)).toBe(false)
-    expect(resetResult).not.toBe(undefined)
+    expect(resetResult).toBeDefined()
     expect(resetResult).toBe("Password is too easy to guess.")
   })
 

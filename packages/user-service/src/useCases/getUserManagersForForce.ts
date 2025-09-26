@@ -1,12 +1,12 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
-import User from "types/User"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
+import type User from "types/User"
 
 export default async (connection: Database, visibleForces: string | undefined): PromiseResult<Partial<User>[]> => {
   let users = []
   if (visibleForces != undefined && visibleForces !== "") {
     const forces = visibleForces.split(",")
-    /* eslint-disable @typescript-eslint/naming-convention */
+
     const forceWhere = forces.map((code) => `visible_forces ~ '\\y${code}\\y'`).join(" OR ")
     const getFilteredUsersQuery = `
       SELECT

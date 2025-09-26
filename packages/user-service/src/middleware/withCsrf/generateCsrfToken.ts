@@ -1,7 +1,7 @@
 import { sign } from "cookie-signature"
 import Tokens from "csrf"
-import { IncomingMessage } from "http"
-import { UserServiceConfig } from "lib/config"
+import type { IncomingMessage } from "http"
+import type { UserServiceConfig } from "lib/config"
 
 interface GenerateCsrfTokenResult {
   formToken: string

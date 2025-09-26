@@ -1,4 +1,4 @@
-import { GetServerSidePropsResult, Redirect } from "next"
+import type { GetServerSidePropsResult, Redirect } from "next"
 
 export default <Props>(path: string, props?: Partial<Redirect>): GetServerSidePropsResult<Props> => {
   return {

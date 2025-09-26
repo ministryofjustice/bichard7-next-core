@@ -2,8 +2,8 @@ import generateEmailChangedEmail from "emails/emailChanged"
 import { addCjsmSuffix } from "lib/cjsmSuffix"
 import config from "lib/config"
 import getEmailer from "lib/getEmailer"
-import PromiseResult from "types/PromiseResult"
-import User from "types/User"
+import type PromiseResult from "types/PromiseResult"
+import type User from "types/User"
 import logger from "utils/logger"
 
 export default async (

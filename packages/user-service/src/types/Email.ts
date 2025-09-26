@@ -1,4 +1,4 @@
-import EmailContent from "./EmailContent"
+import type EmailContent from "./EmailContent"
 
 export default interface Email extends EmailContent {
   from: string

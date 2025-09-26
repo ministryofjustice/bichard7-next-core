@@ -1,5 +1,5 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 
 const resetUserVerificationCode = async (connection: Database, emailAddress: string): PromiseResult<void> => {
   const updateUserQuery = `

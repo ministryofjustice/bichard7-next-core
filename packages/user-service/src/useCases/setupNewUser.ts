@@ -2,12 +2,12 @@ import UserCreatedNotification from "emails/UserCreatedNotification"
 import { addCjsmSuffix } from "lib/cjsmSuffix"
 import config from "lib/config"
 import getEmailer from "lib/getEmailer"
-import AuditLogger from "types/AuditLogger"
-import Database from "types/Database"
+import type AuditLogger from "types/AuditLogger"
+import type Database from "types/Database"
 import AuditLogEvent from "types/AuditLogEvent"
-import PromiseResult from "types/PromiseResult"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
-import User from "types/User"
+import type User from "types/User"
 import logger from "utils/logger"
 import createNewUserEmail from "./createNewUserEmail"
 import createUser from "./createUser"
@@ -50,6 +50,7 @@ export default async (
     logger.error(groupsForCurrentUser)
     return groupsForCurrentUser
   }
+
   const groupsForNewUser = groupsForCurrentUser.filter((group: any) => userCreateDetails[group.name] === "yes")
 
   emailer
@@ -75,4 +76,3 @@ export default async (
       return error
     })
 }
-/* eslint-disable @typescript-eslint/no-explicit-any */

@@ -1,5 +1,5 @@
 import { type SerializeOptions, serialize } from "cookie"
-import { ServerResponse } from "http"
+import type { ServerResponse } from "http"
 import config from "lib/config"
 
 const cookieOptions: SerializeOptions = {

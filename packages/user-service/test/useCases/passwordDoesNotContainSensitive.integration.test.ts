@@ -1,4 +1,4 @@
-import Database from "types/Database"
+import type Database from "types/Database"
 import passwordDoesNotContainSensitive from "useCases/passwordDoesNotContainSensitive"
 import { isError } from "types/Result"
 import insertIntoUsersTable from "../../testFixtures/database/insertIntoUsersTable"
@@ -42,6 +42,6 @@ describe("passwordDoesNotContainSensitive", () => {
   it("should return undefined if it is fine", async () => {
     await insertIntoUsersTable(users)
     const result = await passwordDoesNotContainSensitive(connection, "ValidPassword", "bichard01@example.com")
-    expect(result).toBe(undefined)
+    expect(result).toBeUndefined()
   })
 })

@@ -1,6 +1,6 @@
 import generatePasswordChangedEmail from "emails/passwordChanged"
-import EmailContent from "types/EmailContent"
-import User from "types/User"
+import type EmailContent from "types/EmailContent"
+import type User from "types/User"
 
 export default (user: User, baseUrl: string): EmailContent => {
   const url = new URL("/login", baseUrl)

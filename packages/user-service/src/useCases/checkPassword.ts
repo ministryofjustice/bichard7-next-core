@@ -1,6 +1,6 @@
 import { verifyPassword } from "lib/argon2"
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import logger from "utils/logger"
 

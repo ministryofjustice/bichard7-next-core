@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import SuccessBanner from "components/SuccessBanner"
 import { render } from "@testing-library/react"
 

@@ -1,9 +1,9 @@
-import { ITask } from "pg-promise"
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type { ITask } from "pg-promise"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
-import User from "types/User"
-import { UserGroupResult } from "types/UserGroup"
+import type User from "types/User"
+import type { UserGroupResult } from "types/UserGroup"
 import logger from "utils/logger"
 import isEmailUnique from "./IsEmailUnique"
 import getUserHierarchyGroups from "./getUserHierarchyGroups"
@@ -85,6 +85,7 @@ export default async (
       tmpUserDetails[key] = value
     }
   }
+
   userDetails = tmpUserDetails
 
   const isUsernameUniqueResult = await isUsernameUnique(connection, userDetails.username as string)
@@ -104,10 +105,12 @@ export default async (
         logger.error(insertUserResult)
         return Error("Could not insert record into users table")
       }
+
       const groups = await getUserHierarchyGroups(connection, currentUser.username ?? "")
       if (isError(groups)) {
         return groups
       }
+
       const filteredGroups = groups.filter((group) => userDetails[group.name] === "yes")
       const userDetailsWithGroups = { ...userDetails, groups: filteredGroups }
       if (currentUser.id && userDetailsWithGroups.groups && userDetailsWithGroups.groups.length > 0) {

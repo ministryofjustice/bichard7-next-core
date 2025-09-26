@@ -281,7 +281,6 @@ const NewUser = ({
 
           <Form method="post" csrfToken={csrfToken}>
             <UserForm
-              // eslint-disable-next-line react/jsx-props-no-spreading
               {...userDetails}
               usernameError={usernameError}
               forenamesError={forenamesError}

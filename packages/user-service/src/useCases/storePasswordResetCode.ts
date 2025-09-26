@@ -1,5 +1,5 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 
 export default async (
@@ -19,6 +19,7 @@ export default async (
       WHERE LOEWR(email) = LOWER($2) AND deleted_at IS NULL
     `
   }
+
   const result = await connection.result(updateUserQuery, [passwordResetCode, emailAddress]).catch((error) => error)
   if (isError(result)) {
     return result

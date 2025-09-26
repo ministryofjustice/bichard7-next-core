@@ -1,7 +1,7 @@
-import Database from "types/Database"
-import User from "types/User"
+import type Database from "types/Database"
+import type User from "types/User"
 import { isError } from "types/Result"
-import PromiseResult from "types/PromiseResult"
+import type PromiseResult from "types/PromiseResult"
 import getUserSpecificGroups from "./getUserSpecificGroups"
 
 const getUserById = async (connection: Database, id: number): PromiseResult<Partial<User>> => {

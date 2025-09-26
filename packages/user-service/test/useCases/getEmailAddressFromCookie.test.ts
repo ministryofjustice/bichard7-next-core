@@ -2,9 +2,10 @@
  * @jest-environment node
  */
 
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
 import config from "lib/config"
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
 import { getEmailAddressFromCookie, storeEmailAddressInCookie } from "useCases"
 
 it("should return the email address from the cookie", () => {

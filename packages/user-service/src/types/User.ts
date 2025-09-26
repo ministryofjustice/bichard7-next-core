@@ -1,4 +1,4 @@
-import { UserGroupResult } from "./UserGroup"
+import type { UserGroupResult } from "./UserGroup"
 import type FeatureFlags from "./FeatureFlags"
 
 interface User {

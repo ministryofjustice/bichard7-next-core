@@ -1,5 +1,5 @@
 import { isError } from "types/Result"
-import Database from "types/Database"
+import type Database from "types/Database"
 import updateUserLastLogin from "useCases/updateUserLastLogin"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"

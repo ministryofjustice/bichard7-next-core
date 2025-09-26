@@ -3,7 +3,7 @@ import logger from "utils/logger"
 import { isError } from "types/Result"
 import type { GetServerSidePropsContext } from "next"
 import type PromiseResult from "types/PromiseResult"
-import { EventLogger } from "types/AuditLogger"
+import type { EventLogger } from "types/AuditLogger"
 
 const getConsoleEventLogger =
   (context: GetServerSidePropsContext): EventLogger =>

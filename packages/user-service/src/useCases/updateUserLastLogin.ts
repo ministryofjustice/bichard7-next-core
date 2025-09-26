@@ -1,7 +1,7 @@
-import Database from "types/Database"
-import Task from "types/Task"
+import type Database from "types/Database"
+import type Task from "types/Task"
 import { isError } from "types/Result"
-import PromiseResult from "types/PromiseResult"
+import type PromiseResult from "types/PromiseResult"
 
 export default async (connection: Database | Task, userName: string): PromiseResult<void> => {
   const updateUserQuery = `

@@ -1,7 +1,7 @@
-import { GetServerSidePropsContext } from "next"
+import type { GetServerSidePropsContext } from "next"
 import AuditLog from "types/AuditLog"
-import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import KeyValuePair from "types/KeyValuePair"
+import type AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import type KeyValuePair from "types/KeyValuePair"
 
 type AttributesWithUser = { user?: { username?: string } }
 
@@ -11,12 +11,14 @@ const filterAttributes = (
   if (!attrs) {
     return attrs
   }
+
   if (attrs.user && typeof attrs.user === "object") {
     const user = attrs.user as { password?: string; migratedPassword?: string; emailVerificationCode?: string }
     user.password = undefined
     user.migratedPassword = undefined
     user.emailVerificationCode = undefined
   }
+
   return attrs
 }
 

@@ -1,4 +1,5 @@
-import { AuthenticationTokenPayload, decodeAuthenticationToken } from "lib/token/authenticationToken"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import { decodeAuthenticationToken } from "lib/token/authenticationToken"
 import getAuthenticationPayloadFromCookie from "middleware/withAuthentication/getAuthenticationPayloadFromCookie"
 
 jest.mock("lib/token/authenticationToken")

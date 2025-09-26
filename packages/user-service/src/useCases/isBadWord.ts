@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const badWordsCollection = require("badwords-list")
 
 const badWordsDictionary = badWordsCollection.object

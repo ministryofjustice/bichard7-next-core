@@ -1,7 +1,8 @@
 import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
-import parseFormToken, { ParseFormTokenResult } from "middleware/withCsrf/parseFormToken"
-import { IncomingMessage } from "http"
-import QueryString from "qs"
+import type { ParseFormTokenResult } from "middleware/withCsrf/parseFormToken"
+import parseFormToken from "middleware/withCsrf/parseFormToken"
+import type { IncomingMessage } from "http"
+import type QueryString from "qs"
 import { isError } from "types/Result"
 import config from "lib/config"
 

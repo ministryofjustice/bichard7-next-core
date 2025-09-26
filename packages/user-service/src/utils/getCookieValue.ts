@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { NextApiRequestCookies } from "next/dist/server/api-utils"
+import type { NextApiRequestCookies } from "next/dist/server/api-utils"
 
 export default (cookies: NextApiRequestCookies, cookieName: string) => {
   if (cookies[cookieName] !== undefined) {
@@ -7,10 +7,12 @@ export default (cookies: NextApiRequestCookies, cookieName: string) => {
     if (jwtToken === undefined) {
       return undefined
     }
+
     const result = jwt.decode(jwtToken)
     if (result !== null && typeof result !== "string") {
       return result
     }
   }
+
   return undefined
 }

@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import User from "types/User"
+import type User from "types/User"
 import createPasswordChangedEmail from "useCases/createPasswordChangedEmail"
 
 it("should generate the email content", () => {

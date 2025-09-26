@@ -9,12 +9,11 @@ const App = ({ Component, pageProps }: AppProps) => {
         " js-enabled" + ("noModule" in HTMLScriptElement.prototype ? " govuk-frontend-supported" : "")
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const GovUkFrontend = require("govuk-frontend")
     GovUkFrontend.initAll()
   }, [])
 
-  // eslint-disable-next-line react/jsx-props-no-spreading
   return <Component {...pageProps} />
 }
 

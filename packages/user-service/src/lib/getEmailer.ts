@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer"
 import config from "lib/config"
-import Email from "types/Email"
-import Emailer from "types/Emailer"
+import type Email from "types/Email"
+import type Emailer from "types/Emailer"
 import logger from "utils/logger"
 
 const getSmtpMailer = (): Emailer =>
@@ -16,7 +16,6 @@ const getSmtpMailer = (): Emailer =>
   })
 
 const getConsoleMailer = (): Emailer => ({
-  // eslint-disable-next-line require-await
   sendMail: async (email: Email) => {
     logger.info({
       from: email.from,

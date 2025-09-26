@@ -1,7 +1,7 @@
 import type AuditLogEvent from "./AuditLogEvent"
 import type KeyValuePair from "./KeyValuePair"
 import type PromiseResult from "./PromiseResult"
-import { Result } from "./Result"
+import type { Result } from "./Result"
 
 type EventLogger = (event: AuditLogEvent, attributes?: KeyValuePair<string, unknown>) => PromiseResult<void>
 

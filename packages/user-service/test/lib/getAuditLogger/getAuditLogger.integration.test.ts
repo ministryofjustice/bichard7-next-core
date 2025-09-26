@@ -1,6 +1,6 @@
-import { UserServiceConfig } from "lib/config"
+import type { UserServiceConfig } from "lib/config"
 import getAuditLogger from "lib/getAuditLogger"
-import { GetServerSidePropsContext } from "next"
+import type { GetServerSidePropsContext } from "next"
 import AuditLogEvent from "types/AuditLogEvent"
 import { isError } from "types/Result"
 

@@ -1,5 +1,5 @@
 import { isError } from "types/Result"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoTable from "../../testFixtures/database/insertIntoUsersTable"
@@ -45,7 +45,7 @@ describe("getFilteredUsers", () => {
       return
     }
 
-    expect(result01.length).toBe(2)
+    expect(result01).toHaveLength(2)
   })
 
   it("should return correct users from the database with multiple force codes", async () => {
@@ -72,7 +72,7 @@ describe("getFilteredUsers", () => {
       return
     }
 
-    expect(result01.length).toBe(2)
+    expect(result01).toHaveLength(2)
   })
 
   it("should return every user if no force is provided", async () => {
@@ -99,7 +99,7 @@ describe("getFilteredUsers", () => {
       return
     }
 
-    expect(result01.length).toBe(0)
+    expect(result01).toHaveLength(0)
   })
 
   it("should return all users when flag is set", async () => {
@@ -161,7 +161,7 @@ describe("getFilteredUsers", () => {
       return
     }
 
-    expect(userListResult.length).toBe(3)
+    expect(userListResult).toHaveLength(3)
 
     userListResult = await getUserManagersForForce(connection, "003,007")
     expect(isError(userListResult)).toBe(false)
@@ -171,6 +171,6 @@ describe("getFilteredUsers", () => {
       return
     }
 
-    expect(userListResult.length).toBe(7)
+    expect(userListResult).toHaveLength(7)
   })
 })

@@ -1,4 +1,4 @@
-import { ParsedUrlQuery } from "querystring"
+import type { ParsedUrlQuery } from "querystring"
 
 export const isValidRedirectPath = (redirect: string): boolean => {
   const containsOnlyStandardChars = /^[a-z\/._-]+$/i.test(redirect)

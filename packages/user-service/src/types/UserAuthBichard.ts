@@ -1,4 +1,4 @@
-import UserGroup from "./UserGroup"
+import type UserGroup from "./UserGroup"
 
 interface UserAuthBichard {
   id: number

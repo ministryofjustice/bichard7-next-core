@@ -5,7 +5,7 @@
 import { isError } from "types/Result"
 import getEmailer from "lib/getEmailer"
 import sendPasswordChangedEmail from "useCases/sendPasswordChangedEmail"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoTable from "../../testFixtures/database/insertIntoUsersTable"
@@ -76,7 +76,7 @@ describe("sendPasswordChangedEmail", () => {
 
     const expectedError = Error("Expected error message")
     const mockedGetEmailer = getEmailer as jest.MockedFunction<typeof getEmailer>
-    // eslint-disable-next-line require-await
+
     const mockedSendMail = jest.fn().mockImplementation(async () => {
       throw expectedError
     })

@@ -1,7 +1,7 @@
-import { AuthenticationTokenPayload } from "lib/token/authenticationToken"
-import { GetServerSidePropsContext } from "next"
-import { ParsedUrlQuery } from "querystring"
-import User from "./User"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import type { GetServerSidePropsContext } from "next"
+import type { ParsedUrlQuery } from "querystring"
+import type User from "./User"
 
 type AuthenticationServerSidePropsContext = GetServerSidePropsContext<ParsedUrlQuery> & {
   currentUser?: Partial<User>

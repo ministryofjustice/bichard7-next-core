@@ -37,7 +37,6 @@ ${statusMessage(status)}
 `
 
 export default function generateEmailChangedEmail(props: Props): EmailContent {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   const htmlEmail = <EmailChangedEmail {...props} />
 
   return {

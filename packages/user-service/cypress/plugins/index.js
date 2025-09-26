@@ -1,5 +1,3 @@
-/* eslint-disable import/first */
-/* eslint-disable import/order */
 /// <reference types="cypress" />
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
@@ -22,7 +20,7 @@ import serviceMessages from "../../testFixtures/database/data/serviceMessages"
 /**
  * @type {Cypress.PluginConfig}
  */
-// eslint-disable-next-line no-unused-vars
+
 module.exports = (on, config) => {
   const pgp = pgPromise()
   const db = pgp("postgres://bichard:password@localhost:5432/bichard")

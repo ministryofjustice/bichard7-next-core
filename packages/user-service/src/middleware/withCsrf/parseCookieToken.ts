@@ -1,8 +1,9 @@
 import { parse } from "cookie"
 import { unsign } from "cookie-signature"
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import config from "lib/config"
-import { isError, Result } from "types/Result"
+import type { Result } from "types/Result"
+import { isError } from "types/Result"
 
 export default (request: IncomingMessage, cookieName: string): Result<string> => {
   if (!request.headers.cookie) {

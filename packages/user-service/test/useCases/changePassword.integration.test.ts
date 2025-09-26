@@ -4,7 +4,7 @@
 
 import { isError } from "types/Result"
 import { changePassword } from "useCases"
-import Database from "types/Database"
+import type Database from "types/Database"
 import { verifyPassword } from "lib/argon2"
 import insertIntoTable from "../../testFixtures/database/insertIntoUsersTable"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"

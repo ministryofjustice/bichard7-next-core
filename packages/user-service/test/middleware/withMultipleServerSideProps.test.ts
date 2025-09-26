@@ -1,7 +1,7 @@
 import { withMultipleServerSideProps } from "middleware"
-import { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
-import { ParsedUrlQuery } from "querystring"
-import KeyValuePair from "types/KeyValuePair"
+import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
+import type { ParsedUrlQuery } from "querystring"
+import type KeyValuePair from "types/KeyValuePair"
 
 let functionInvokeLog: KeyValuePair<string, unknown> = {}
 let functionInvokeIndex = 0

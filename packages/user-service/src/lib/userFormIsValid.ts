@@ -1,5 +1,5 @@
-import KeyValuePair from "types/KeyValuePair"
-import User from "types/User"
+import type KeyValuePair from "types/KeyValuePair"
+import type User from "types/User"
 
 interface ValidationResult {
   usernameError: string | false

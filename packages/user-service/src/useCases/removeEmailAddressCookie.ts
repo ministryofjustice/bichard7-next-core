@@ -1,5 +1,5 @@
-import { ServerResponse } from "http"
-import { UserServiceConfig } from "lib/config"
+import type { ServerResponse } from "http"
+import type { UserServiceConfig } from "lib/config"
 import setCookie from "utils/setCookie"
 
 export default (response: ServerResponse, config: UserServiceConfig): void => {

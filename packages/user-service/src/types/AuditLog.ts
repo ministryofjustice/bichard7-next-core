@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid"
-import KeyValuePair from "./KeyValuePair"
+import type KeyValuePair from "./KeyValuePair"
 
 export default class AuditLog {
   public readonly auditLogId: string

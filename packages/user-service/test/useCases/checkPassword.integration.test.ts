@@ -1,5 +1,5 @@
 import checkPassword from "useCases/checkPassword"
-import Database from "types/Database"
+import type Database from "types/Database"
 import insertIntoTable from "../../testFixtures/database/insertIntoUsersTable"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import getTestConnection from "../../testFixtures/getTestConnection"

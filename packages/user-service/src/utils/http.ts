@@ -1,4 +1,4 @@
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 
 export const isPost = (request: IncomingMessage) => {
   return request.method === "POST"

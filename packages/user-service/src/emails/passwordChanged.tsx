@@ -33,7 +33,6 @@ ${url}
 `
 
 export default function generatePasswordChangedEmail(props: Props): EmailContent {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   const htmlEmail = <PasswordChangedEmail {...props} />
 
   return {

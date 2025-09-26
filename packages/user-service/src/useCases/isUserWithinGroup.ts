@@ -1,5 +1,5 @@
-import Database from "types/Database"
-import UserGroup from "types/UserGroup"
+import type Database from "types/Database"
+import type UserGroup from "types/UserGroup"
 
 export default async (connection: Database, userId: number, groupName: UserGroup): Promise<boolean> => {
   const query = `

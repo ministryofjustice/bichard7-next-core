@@ -1,5 +1,5 @@
 import userFormIsValid from "lib/userFormIsValid"
-import User from "types/User"
+import type User from "types/User"
 
 describe("userFormIsValid", () => {
   it("should return false when username is empty", () => {

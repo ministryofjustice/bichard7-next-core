@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { render } from "@testing-library/react"
 import { Summary, SummaryItem } from "components/Summary"
 

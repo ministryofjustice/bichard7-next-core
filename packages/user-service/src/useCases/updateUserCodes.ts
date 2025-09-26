@@ -1,4 +1,4 @@
-import QueryString from "qs"
+import type QueryString from "qs"
 
 const updateUserCodes = (
   listOfCodes: { id: string; name: string }[],
@@ -11,6 +11,7 @@ const updateUserCodes = (
       if (include) {
         return `${typeOfCodes}${code.id}` in formData
       }
+
       return !(`${typeOfCodes}${code.id}` in formData)
     })
     .map((code) => code.id)

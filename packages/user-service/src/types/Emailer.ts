@@ -1,4 +1,4 @@
-import Email from "./Email"
+import type Email from "./Email"
 
 export default interface Emailer {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

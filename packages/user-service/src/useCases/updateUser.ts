@@ -1,10 +1,10 @@
-import AuditLogger from "types/AuditLogger"
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
-import User from "types/User"
-import { ITask } from "pg-promise"
+import type AuditLogger from "types/AuditLogger"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
+import type User from "types/User"
+import type { ITask } from "pg-promise"
 import { isError } from "types/Result"
-import { UserGroupResult } from "types/UserGroup"
+import type { UserGroupResult } from "types/UserGroup"
 import logger from "utils/logger"
 import AuditLogEvent from "types/AuditLogEvent"
 
@@ -76,6 +76,7 @@ const updateUser = async (
       tmpUserDetails[key] = value
     }
   }
+
   userDetails = tmpUserDetails
 
   const result = await connection.tx(async (task: ITask<unknown>): PromiseResult<void> => {
@@ -89,6 +90,7 @@ const updateUser = async (
     if (isError(updateUserResult)) {
       return Error("Could not update user")
     }
+
     const deleteUserGroupsResult = await deleteFromUsersGroups(task, userId)
     if (isError(deleteUserGroupsResult)) {
       logger.error(deleteUserGroupsResult)

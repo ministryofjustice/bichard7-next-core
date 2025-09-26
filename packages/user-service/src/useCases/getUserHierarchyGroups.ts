@@ -1,6 +1,6 @@
-import Database from "types/Database"
-import { UserGroupResult } from "types/UserGroup"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type { UserGroupResult } from "types/UserGroup"
+import type PromiseResult from "types/PromiseResult"
 
 const getUserHierarchyGroups = (connection: Database, username: string): PromiseResult<UserGroupResult[]> => {
   const getUserGroupsQuery = `

@@ -1,6 +1,6 @@
-import Database from "types/Database"
+import type Database from "types/Database"
 import { isError } from "types/Result"
-import User from "types/User"
+import type User from "types/User"
 import createUser from "useCases/createUser"
 import getUserByUsername from "useCases/getUserByUsername"
 import groups from "../../testFixtures/database/data/groups"
@@ -111,6 +111,6 @@ describe("getUserByUsername", () => {
     expect(isError(userResult)).toBe(false)
 
     const actualUser = userResult as User
-    expect(actualUser.groups.length).toBe(10)
+    expect(actualUser.groups).toHaveLength(10)
   })
 })

@@ -28,7 +28,6 @@ If you didn't request this email, you can safely ignore it.
 `
 
 export default function generateLoginEmail(props: Props): EmailContent {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   const htmlEmail = <LoginEmail {...props} />
 
   return {

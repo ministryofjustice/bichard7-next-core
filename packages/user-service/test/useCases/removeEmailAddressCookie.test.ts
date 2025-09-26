@@ -2,7 +2,8 @@
  * @jest-environment node
  */
 
-import { IncomingMessage, ServerResponse } from "http"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
 import config from "lib/config"
 import { removeEmailAddressCookie } from "useCases"
 

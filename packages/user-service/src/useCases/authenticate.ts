@@ -1,17 +1,17 @@
-import { ITask } from "pg-promise"
+import type { ITask } from "pg-promise"
 import config from "lib/config"
-import Database from "types/Database"
-import AuditLogger from "types/AuditLogger"
+import type Database from "types/Database"
+import type AuditLogger from "types/AuditLogger"
 import { verifySsha } from "lib/ssha"
 import { verifyPassword } from "lib/argon2"
-import PromiseResult from "types/PromiseResult"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import resetUserVerificationCode from "./resetUserVerificationCode"
 import updatePassword from "./updatePassword"
 import getFailedPasswordAttempts from "./getFailedPasswordAttempts"
 import setFailedPasswordAttempts from "./setFailedPasswordAttempts"
-import UserAuthBichard from "types/UserAuthBichard"
-import UserGroup from "types/UserGroup"
+import type UserAuthBichard from "types/UserAuthBichard"
+import type UserGroup from "types/UserGroup"
 import AuditLogEvent from "types/AuditLogEvent"
 
 const fetchGroups = async (task: ITask<unknown>, emailAddress: string): Promise<UserGroup[]> => {
@@ -57,6 +57,7 @@ const getUserWithInterval = async (task: ITask<unknown>, params: unknown[]): Pro
   if (user.visible_courts) {
     inclusionList = inclusionList.concat(user.visible_courts.split(/[, ]/))
   }
+
   if (user.visible_forces) {
     inclusionList = inclusionList.concat(user.visible_forces.split(/[, ]/))
   }
@@ -152,13 +153,14 @@ const authenticate = async (
       if (attemptsSoFar + 1 >= config.maxPasswordFailedAttempts) {
         await resetUserVerificationCode(connection, emailAddress)
       }
+
       await setFailedPasswordAttempts(connection, emailAddress, attemptsSoFar + 1)
     }
 
     return invalidCredentialsError
   } catch (error) {
     if (error instanceof Error && error.message === "No data returned from the query.") {
-      return new Error(`User not found`)
+      return new Error("User not found")
     }
 
     return error as Error

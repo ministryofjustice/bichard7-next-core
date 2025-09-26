@@ -1,7 +1,7 @@
 import type { StringValue } from "ms"
-import Argon2Config from "types/Argon2Config"
-import CsrfConfig from "types/CsrfConfig"
-import DatabaseConfig from "./DatabaseConfig"
+import type Argon2Config from "types/Argon2Config"
+import type CsrfConfig from "types/CsrfConfig"
+import type DatabaseConfig from "./DatabaseConfig"
 
 interface SmtpConfig {
   host: string

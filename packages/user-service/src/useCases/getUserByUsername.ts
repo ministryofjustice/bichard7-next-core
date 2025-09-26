@@ -1,7 +1,7 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
-import User from "types/User"
+import type User from "types/User"
 import getUserSpecificGroups from "./getUserSpecificGroups"
 
 export default async (connection: Database, username: string): PromiseResult<User | null> => {

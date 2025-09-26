@@ -1,8 +1,8 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 
 export default async (connection: Database, username: string): PromiseResult<void> => {
-  const query = `SELECT COUNT(1) FROM br7own.users WHERE LOWER(username) = LOWER($1)`
+  const query = "SELECT COUNT(1) FROM br7own.users WHERE LOWER(username) = LOWER($1)"
   const result = await connection.any(query, [username])
 
   if (result.length === 1 && result[0].count === "1") {

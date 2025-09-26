@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken"
-import { Result } from "types/Result"
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type { Result } from "types/Result"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import config from "../config"
-import UserGroup from "../../types/UserGroup"
-import UserAuthBichard from "types/UserAuthBichard"
+import type UserGroup from "../../types/UserGroup"
+import type UserAuthBichard from "types/UserAuthBichard"
 
 const signOptions: jwt.SignOptions = { issuer: config.tokenIssuer }
 const verifyOptions: jwt.VerifyOptions = { issuer: config.tokenIssuer }
@@ -31,7 +31,7 @@ export function generateAuthenticationToken(user: Partial<UserAuthBichard>, uniq
     exclusionList: user.exclusionList as string[],
     inclusionList: user.inclusionList as string[],
     emailAddress: user.emailAddress as string,
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+
     groups: user.groups as UserGroup[],
     id: uniqueId
   }

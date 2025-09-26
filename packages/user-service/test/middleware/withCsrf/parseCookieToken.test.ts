@@ -1,4 +1,4 @@
-import { IncomingMessage } from "http"
+import type { IncomingMessage } from "http"
 import parseCookieToken from "middleware/withCsrf/parseCookieToken"
 import { isError } from "types/Result"
 

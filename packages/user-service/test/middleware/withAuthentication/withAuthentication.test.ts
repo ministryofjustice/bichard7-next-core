@@ -1,16 +1,17 @@
-/* eslint-disable import/first */
 jest.mock("middleware/withAuthentication/getAuthenticationPayloadFromCookie")
 jest.mock("useCases/getUserByEmailAddress")
 jest.mock("lib/token/authenticationToken")
 
-import { IncomingMessage, ServerResponse } from "http"
-import { AuthenticationTokenPayload, isTokenIdValid } from "lib/token/authenticationToken"
+import type { IncomingMessage } from "http"
+import { ServerResponse } from "http"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import { isTokenIdValid } from "lib/token/authenticationToken"
 import { withAuthentication } from "middleware"
 import getAuthenticationPayloadFromCookie from "middleware/withAuthentication/getAuthenticationPayloadFromCookie"
-import { GetServerSidePropsContext } from "next"
-import { ParsedUrlQuery } from "querystring"
-import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import User from "types/User"
+import type { GetServerSidePropsContext } from "next"
+import type { ParsedUrlQuery } from "querystring"
+import type AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import type User from "types/User"
 import getUserByEmailAddress from "useCases/getUserByEmailAddress"
 
 it("should include current user in the context when successfully get the user", async () => {
@@ -150,7 +151,7 @@ it("should set httpsRedirectCookie to false", async () => {
     expect(username).toBe(expectedUser.username)
 
     const cookieValues = response.getHeader("Set-Cookie") as string[]
-    expect(cookieValues).not.toBeDefined()
+    expect(cookieValues).toBeUndefined()
 
     expect(httpsRedirectCookie).toBe(false)
 
@@ -243,7 +244,7 @@ it("should set httpsRedirectCookie to false and the cookie not set", async () =>
     expect(username).toBe(expectedUser.username)
 
     const cookieValues = response.getHeader("Set-Cookie") as string[]
-    expect(cookieValues).not.toBeDefined()
+    expect(cookieValues).toBeUndefined()
 
     expect(httpsRedirectCookie).toBe(false)
 

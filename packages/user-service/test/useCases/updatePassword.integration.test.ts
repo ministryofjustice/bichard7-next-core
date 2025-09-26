@@ -1,7 +1,7 @@
 import { isError } from "types/Result"
 import updatePassword from "useCases/updatePassword"
 import { hashPassword } from "lib/argon2"
-import Database from "types/Database"
+import type Database from "types/Database"
 import getTestConnection from "../../testFixtures/getTestConnection"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoTable from "../../testFixtures/database/insertIntoUsersTable"

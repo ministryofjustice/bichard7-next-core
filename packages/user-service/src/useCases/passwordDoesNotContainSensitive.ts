@@ -1,5 +1,5 @@
-import Database from "types/Database"
-import PromiseResult from "types/PromiseResult"
+import type Database from "types/Database"
+import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import getUserByEmailAddress from "./getUserByEmailAddress"
 
@@ -8,9 +8,11 @@ export default async (connection: Database, password: string, emailAddress: stri
   if (user === null) {
     return Error("Cannot find user")
   }
+
   if (isError(user)) {
     return user
   }
+
   const firstEmailSection = emailAddress.split("@")[0]
   const forenames = user.forenames.split(" ")
   const surnames = user.surname.split(" ")
@@ -19,5 +21,6 @@ export default async (connection: Database, password: string, emailAddress: stri
   if (allSensitiveWords.some((word) => password.includes(word))) {
     return Error("Password contains personal information.")
   }
+
   return undefined
 }

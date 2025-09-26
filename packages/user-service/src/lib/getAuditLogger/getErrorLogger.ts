@@ -1,7 +1,8 @@
-import { GetServerSidePropsContext } from "next"
-import { ErrorLogger } from "types/AuditLogger"
+import type { GetServerSidePropsContext } from "next"
+import type { ErrorLogger } from "types/AuditLogger"
 import type KeyValuePair from "types/KeyValuePair"
-import { isError, Result } from "types/Result"
+import type { Result } from "types/Result"
+import { isError } from "types/Result"
 import logger from "utils/logger"
 import generateAuditLog from "./generateAuditLog"
 

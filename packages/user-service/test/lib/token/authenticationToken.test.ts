@@ -1,16 +1,12 @@
 import jwt from "jsonwebtoken"
 import { v4 as uuidv4 } from "uuid"
 import config from "lib/config"
-import {
-  AuthenticationTokenPayload,
-  decodeAuthenticationToken,
-  generateAuthenticationToken,
-  storeTokenId
-} from "lib/token/authenticationToken"
+import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
+import { decodeAuthenticationToken, generateAuthenticationToken, storeTokenId } from "lib/token/authenticationToken"
 import { isError } from "types/Result"
-import User from "types/User"
-import UserCredentials from "types/UserCredentials"
-import Database from "types/Database"
+import type User from "types/User"
+import type UserCredentials from "types/UserCredentials"
+import type Database from "types/Database"
 
 const user: User & UserCredentials = {
   id: 1,
