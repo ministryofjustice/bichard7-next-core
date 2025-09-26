@@ -34,9 +34,6 @@ describe("createNote", () => {
     expect(result).toBe(true)
 
     const insertedNotes = (await fetchNotes(testDatabaseGateway.readonly, [caseObj.errorId])) as Note[]
-    console.log(insertedNotes[0])
-
-    console.log(typeof insertedNotes[0].userId)
 
     expect(insertedNotes[0].noteText).toBe(testNote)
     expect(insertedNotes[0].userId).toBe(userId)
