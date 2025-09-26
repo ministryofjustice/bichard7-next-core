@@ -85,8 +85,7 @@ describe("process_resubmit", () => {
     const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
 
     expect(result.status).toBe("FAILED")
-    expect(result.logs?.map((l) => l.log)).toContain(`Could not put file to S3: ${caseDb.message_id}.json`)
-    expect(result.logs?.map((l) => l.log)).toContain("Mock error")
+    expect(result.logs?.map((l) => l.log)).toContain(`Error: Could not put file to S3: ${caseDb.message_id}.json`)
   })
 
   it("completes the task", async () => {

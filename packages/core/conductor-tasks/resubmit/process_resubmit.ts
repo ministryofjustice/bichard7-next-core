@@ -1,6 +1,5 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import type Task from "@moj-bichard7/common/conductor/types/Task"
-import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { Sql } from "postgres"
 
@@ -32,7 +31,19 @@ type ResubmitResult = {
 }
 
 const handleCaseResubmission = async (sql: Sql, messageId: string): PromiseResult<ResubmitResult> => {
-  const [caseRow] = (await sql`SELECT * FROM br7own.error_list el WHERE el.message_id = ${messageId}`) as CaseRow[]
+  const caseRowResult = await sql`SELECT * FROM br7own.error_list el WHERE el.message_id = ${messageId}`.catch(
+    (error: Error) => error
+  )
+
+  if (isError(caseRowResult)) {
+    return caseRowResult
+  }
+
+  if (!caseRowResult[0]) {
+    return new Error(`Couldn't find Case with messageId: ${messageId}`)
+  }
+
+  const caseRow = caseRowResult[0]
 
   if (caseRow.updated_msg === null) {
     return new Error("Missing updated_msg")
@@ -66,7 +77,7 @@ const handleCaseResubmission = async (sql: Sql, messageId: string): PromiseResul
   const s3Result = await putFileToS3(JSON.stringify(message), s3TaskDataPath, taskDataBucket, s3Config)
 
   if (isError(s3Result)) {
-    return s3Result
+    return new Error(`Could not put file to S3: ${s3TaskDataPath}`)
   }
 
   return { phase: caseRow.phase, s3TaskDataPath }
