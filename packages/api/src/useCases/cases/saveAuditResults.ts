@@ -13,17 +13,18 @@ const saveAuditResults = async (
   caseId: number,
   auditQuality: AuditQuality
 ): PromiseResult<void> => {
-  const auditResultsSaved = await auditCase(database, caseId, auditQuality)
+  return database.transaction(async (transactionDb) => {
+    const auditResultsSaved = await auditCase(transactionDb, caseId, auditQuality)
+    if (isError(auditResultsSaved)) {
+      return auditResultsSaved
+    }
 
-  if (isError(auditResultsSaved)) {
-    return auditResultsSaved
-  }
+    if (!auditResultsSaved) {
+      return new UnprocessableEntityError("Audit results could not be saved")
+    }
 
-  if (!auditResultsSaved) {
-    return new UnprocessableEntityError("Audit results could not be saved")
-  }
-
-  return
+    return
+  })
 }
 
 export default saveAuditResults
