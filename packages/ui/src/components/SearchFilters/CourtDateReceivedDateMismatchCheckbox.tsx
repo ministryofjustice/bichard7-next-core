@@ -1,5 +1,3 @@
-import { CourtDateReceivedDateMismatchCheckboxLabel } from "./CourtDateReceivedDateMismatchCheckbox.styles"
-
 interface CheckboxProps extends React.ComponentProps<"input"> {
   label: string
 }
@@ -9,15 +7,10 @@ export const CourtDateReceivedDateMismatchCheckbox = ({ id, value, label }: Chec
 
   return (
     <div className="govuk-checkboxes__item govuk-checkboxes--small">
-      <input
-        className="govuk-checkboxes__input"
-        id={checkboxId}
-        type="checkbox"
-        // value={value}
-      />
-      <CourtDateReceivedDateMismatchCheckboxLabel className="govuk-label govuk-checkboxes__label" htmlFor={checkboxId}>
+      <input className="govuk-checkboxes__input" id={checkboxId} type="checkbox" />
+      <label className="govuk-label govuk-checkboxes__label govuk-!-padding-right-0" htmlFor={checkboxId}>
         {label}
-      </CourtDateReceivedDateMismatchCheckboxLabel>
+      </label>
     </div>
   )
 }
