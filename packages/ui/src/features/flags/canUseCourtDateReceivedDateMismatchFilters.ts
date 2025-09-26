@@ -6,5 +6,7 @@ export const canUseCourtDateReceivedDateMismatchFilters = ({ featureFlags, visib
     return false
   }
 
-  return visibleForces.some((force) => FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED.has(force))
+  return visibleForces
+    .map((force) => force.replace(/^0(\d+)/, "$1"))
+    .some((force) => FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED.has(force))
 }
