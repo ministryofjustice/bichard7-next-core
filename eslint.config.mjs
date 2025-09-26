@@ -210,7 +210,7 @@ export default [
     files: ["packages/ui/**/*.js", "packages/user-service/**/*.js"]
   })),
   {
-    files: ["packages/ui/**/*.js", "packages/user-service/**/*"],
+    files: ["packages/ui/**/*.js", "packages/user-service/**/*.js"],
 
     rules: {
       "@typescript-eslint/no-var-requires": "off",
@@ -333,7 +333,7 @@ export default [
     }
   },
   {
-    files: ["packages/ui/**/*.test.*"],
+    files: ["packages/ui/**/*.test.*", "packages/user-service/**/*.test.*"],
 
     rules: {
       "@typescript-eslint/no-explicit-any": "off"
