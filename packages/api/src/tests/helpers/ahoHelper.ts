@@ -1,4 +1,4 @@
-import type { AnnotatedHearingOutcome } from "../../../../core/common/types/AnnotatedHearingOutcome"
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import parseHearingOutcome from "../../services/parseHearingOutcome"
 import dummyAho from "../fixtures/AnnotatedHO1.json"

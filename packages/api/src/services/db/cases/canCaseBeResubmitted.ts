@@ -24,9 +24,7 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
     `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(
-      `Error while checking if case can be resubmitted for case id ${caseId} and user ${user.username}: ${result.message}`
-    )
+    return result
   }
 
   if (!result || result.length === 0) {

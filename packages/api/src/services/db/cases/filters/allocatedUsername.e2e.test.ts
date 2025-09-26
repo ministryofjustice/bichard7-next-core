@@ -9,7 +9,7 @@ import { sortBy } from "lodash"
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
-import fetchCasesAndFilter from "../../../../useCases/cases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../../useCases/cases/getCase/fetchCasesAndFilter"
 
 describe("fetchCasesAndFilter filtering by allocated to username e2e", () => {
   let helper: SetupAppEnd2EndHelper
