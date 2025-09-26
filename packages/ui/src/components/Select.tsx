@@ -7,8 +7,18 @@ export interface SelectProps extends ComponentProps<"select"> {
 }
 
 export const Select = ({ placeholder, showError, className, children, ...props }: SelectProps) => {
+  const isControlled = "value" in props
+  const selectProps = { ...props }
+
+  if (placeholder && !isControlled) {
+    selectProps.defaultValue = props.defaultValue ?? ""
+  }
+
   return (
-    <select {...props} className={mergeClassNames("govuk-select", showError ? "govuk-select--error" : "", className)}>
+    <select
+      {...selectProps}
+      className={mergeClassNames("govuk-select", showError ? "govuk-select--error" : "", className)}
+    >
       {placeholder ? (
         <option disabled hidden value="">
           {placeholder}
