@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render component 1`] = `
+<div>
+  <div
+    class="govuk-summary-list__row"
+  >
+    <dt
+      class="govuk-summary-list__key"
+      data-test="summary-item_undefined_label"
+    >
+      Label name
+    </dt>
+    <dd
+      class="govuk-summary-list__value"
+      data-test="summary-item_undefined_value"
+    >
+      Label value
+    </dd>
+  </div>
+</div>
+`;

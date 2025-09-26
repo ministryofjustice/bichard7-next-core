@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should not render custom column when custom column field name does not exist 1`] = `
+<div>
+  <table
+    class="govuk-table"
+  >
+    <caption
+      class="govuk-table__caption govuk-table__caption--m"
+    >
+      Testing Table
+    </caption>
+    <thead
+      class="govuk-table__head"
+    >
+      <tr
+        class="govuk-table__row"
+      >
+        <th
+          class="govuk-table__header"
+          scope="col"
+        >
+          First Column
+        </th>
+        <th
+          class="govuk-table__header"
+          scope="col"
+        >
+          Second Column
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="govuk-table__body"
+    >
+      <tr
+        class="govuk-table__row"
+      >
+        <td
+          class="govuk-table__cell"
+        >
+          Column 1 value
+        </td>
+        <td
+          class="govuk-table__cell"
+        />
+      </tr>
+      <tr
+        class="govuk-table__row"
+      >
+        <td
+          class="govuk-table__cell"
+        />
+        <td
+          class="govuk-table__cell"
+        >
+          Column 2 value
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`should render custom column when custom column field name exists 1`] = `
+<div>
+  <table
+    class="govuk-table"
+  >
+    <caption
+      class="govuk-table__caption govuk-table__caption--m"
+    >
+      Testing Table
+    </caption>
+    <thead
+      class="govuk-table__head"
+    >
+      <tr
+        class="govuk-table__row"
+      >
+        <th
+          class="govuk-table__header"
+          scope="col"
+        >
+          First Column
+        </th>
+        <th
+          class="govuk-table__header"
+          scope="col"
+        >
+          Second Column
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="govuk-table__body"
+    >
+      <tr
+        class="govuk-table__row"
+      >
+        <td
+          class="govuk-table__cell"
+        >
+          <div>
+            Custom column for field column1
+          </div>
+        </td>
+        <td
+          class="govuk-table__cell"
+        />
+      </tr>
+      <tr
+        class="govuk-table__row"
+      >
+        <td
+          class="govuk-table__cell"
+        >
+          <div>
+            Custom column for field column1
+          </div>
+        </td>
+        <td
+          class="govuk-table__cell"
+        >
+          Column 2 value
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`should render text column when no specific column type provided 1`] = `
+<div>
+  <table
+    class="govuk-table"
+  >
+    <caption
+      class="govuk-table__caption govuk-table__caption--m"
+    >
+      Testing Table
+    </caption>
+    <thead
+      class="govuk-table__head"
+    >
+      <tr
+        class="govuk-table__row"
+      >
+        <th
+          class="govuk-table__header"
+          scope="col"
+        >
+          First Column
+        </th>
+        <th
+          class="govuk-table__header"
+          scope="col"
+        >
+          Second Column
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="govuk-table__body"
+    >
+      <tr
+        class="govuk-table__row"
+      >
+        <td
+          class="govuk-table__cell"
+        >
+          Column 1 value
+        </td>
+        <td
+          class="govuk-table__cell"
+        />
+      </tr>
+      <tr
+        class="govuk-table__row"
+      >
+        <td
+          class="govuk-table__cell"
+        />
+        <td
+          class="govuk-table__cell"
+        >
+          Column 2 value
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

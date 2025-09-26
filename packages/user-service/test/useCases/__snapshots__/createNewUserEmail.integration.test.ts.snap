@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`AccountSetup should generate the email subject and body to request user to setup password 1`] = `"Finish Bichard account setup"`;
+
+exports[`AccountSetup should generate the email subject and body to request user to setup password 2`] = `
+"Hi Bichard User 02 Surname 02,
+
+In order to finish setting up your Bichard account, you must create a password. You can do this by clicking the link below.
+
+http://localhost:3000/login/reset-password
+"
+`;
+
+exports[`AccountSetup should generate the email subject and body to request user to setup password 3`] = `"<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title>Finish setting up your Bichard account</title></head><body><table style="background-color:#f3f2f1;margin:0;padding:30px;width:100%"><tr></tr><tr><td style="background-color:#ffffff;border:1px solid;border-color:#b1b4b6;clear:both;display:block !important;margin:0 auto;max-width:600px !important;padding:30px;vertical-align:top" valign="top" width="600"><h1 style="color:#0b0c0c;font-family:Arial, sans-serif;font-size:48px;line-height:50px;margin-bottom:50px">Finish setting up your Bichard account</h1><p style="color:#0b0c0c;font-family:Arial, sans-serif;font-size:19px;line-height:25px;margin-bottom:20px">Hi Bichard User 02 Surname 02,</p><p style="color:#0b0c0c;font-family:Arial, sans-serif;font-size:19px;line-height:25px;margin-bottom:20px">In order to finish setting up your Bichard account, you need to verify your email address and create a password. You can do this by clicking the button below.</p><a href="http://localhost:3000/login/reset-password" style="background-color:#00703c;color:#ffffff;cursor:pointer;display:inline-block;font-family:Arial, sans-serif;font-size:19px;line-height:19px;padding:8px 10px 7px 10px;text-align:center;text-decoration:none">Create password</a><p style="color:#505a5f;font-family:Arial, sans-serif;font-size:14px;line-height:16px;margin-bottom:16px;margin-top:50px">If you’re having trouble clicking the button, copy and paste the URL below into your web browser:</p><p style="color:#505a5f;font-family:Arial, sans-serif;font-size:14px;line-height:16px;margin-bottom:16px;margin:0"><a href="http://localhost:3000/login/reset-password" style="color:#505a5f;font-family:Arial, sans-serif;font-size:14px;line-height:16px;margin-bottom:16px">http://localhost:3000/login/reset-password</a></p></td></tr><tr></tr></table></body></html>"`;

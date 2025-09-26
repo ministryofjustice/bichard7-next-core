@@ -1,0 +1,8 @@
+.*
+Dockerfile
+README.md
+cypress
+cypress.json
+jest.config.ts
+node_modules
+test
