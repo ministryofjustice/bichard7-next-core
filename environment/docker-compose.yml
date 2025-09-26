@@ -147,6 +147,7 @@ services:
       DYNAMO_AWS_ACCESS_KEY_ID: S3RVER
       DYNAMO_AWS_SECRET_ACCESS_KEY: S3RVER
       AWS_URL: http://localstack:4566
+      CONDUCTOR_URL: http://conductor:4000/api
     healthcheck:
       test: curl --insecure --fail https://localhost:9443/v1/health
       interval: 2s

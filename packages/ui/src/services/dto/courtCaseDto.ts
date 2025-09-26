@@ -2,7 +2,7 @@ import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermission
 import { sortBy } from "lodash"
 import type CourtCase from "services/entities/CourtCase"
 import type { DisplayFullCourtCase, DisplayPartialCourtCase } from "types/display/CourtCases"
-import parseHearingOutcome from "utils/parseHearingOutcome"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import type User from "../entities/User"
 import { noteToDisplayNoteDto } from "./noteDto"
 import { triggerToDisplayTriggerDto } from "./triggerDto"

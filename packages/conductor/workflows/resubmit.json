@@ -6,8 +6,8 @@
   "version": 3,
   "tasks": [
     {
-      "name": "test_task",
-      "taskReferenceName": "test_task",
+      "name": "check_db",
+      "taskReferenceName": "check_db",
       "inputParameters": {
         "messageId": "${workflow.input.messageId}"
       },
@@ -15,6 +15,61 @@
       "startDelay": 0,
       "optional": false,
       "asyncComplete": false
+    },
+    {
+      "name": "process_resubmit",
+      "taskReferenceName": "process_resubmit",
+      "inputParameters": {
+        "messageId": "${workflow.input.messageId}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false
+    },
+    {
+      "name": "switch_on_phase",
+      "taskReferenceName": "switch_on_phase",
+      "type": "SWITCH",
+      "inputParameters": {
+        "phase": "${process_resubmit.output.currentPhase}"
+      },
+      "evaluatorType": "value-param",
+      "expression": "phase",
+      "decisionCases": {
+        "1": [
+          {
+            "name": "start_bichard_phase_1",
+            "taskReferenceName": "start_bichard_phase_1",
+            "type": "START_WORKFLOW",
+            "inputParameters": {
+              "startWorkflow": {
+                "name": "bichard_phase_1",
+                "correlationId": "${workflow.correlationId}",
+                "input": {
+                  "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+                }
+              }
+            }
+          }
+        ],
+        "2": [
+          {
+            "name": "start_bichard_phase_2",
+            "taskReferenceName": "start_bichard_phase_2",
+            "type": "START_WORKFLOW",
+            "inputParameters": {
+              "startWorkflow": {
+                "name": "bichard_phase_2",
+                "correlationId": "${workflow.correlationId}",
+                "input": {
+                  "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+                }
+              }
+            }
+          }
+        ]
+      }
     }
   ],
   "inputParameters": ["messageId"],
