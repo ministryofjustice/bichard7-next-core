@@ -4,23 +4,19 @@ import "../../../styles/globals.scss"
 
 describe("ExceptionQualityDropdown", () => {
   it("mounts", () => {
-    cy.mount(<ExceptionQualityDropdown value={1} />)
+    cy.mount(<ExceptionQualityDropdown />)
   })
 
   it("renders options", () => {
-    cy.mount(<ExceptionQualityDropdown value={1} />)
+    cy.mount(<ExceptionQualityDropdown />)
 
-    cy.get("option").should("have.length", Object.keys(exceptionQualityValues).length + 1)
+    cy.get("option").should("have.length", Object.keys(exceptionQualityValues).length)
   })
 
-  it("renders options in order", () => {
-    cy.mount(<ExceptionQualityDropdown value={1} />)
+  it("doesn't render not checked option", () => {
+    cy.mount(<ExceptionQualityDropdown />)
 
-    cy.get("option").then((options) => {
-      const values = options.toArray().map((option) => Number(option.value))
-      const sortedValues = [...values].sort((a, b) => a - b)
-      expect(values).to.deep.equal(sortedValues)
-    })
+    cy.get("select").find("option[value='1']").should("not.exist")
   })
 
   it("renders placeholder", () => {

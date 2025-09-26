@@ -5,7 +5,7 @@ import { FormGroup } from "components/FormGroup"
 
 export type ExceptionQualityDropdownProps = ComponentProps<typeof Select>
 
-const exceptionQualityDropdownValues = Object.entries(exceptionQualityValues)
+const exceptionQualityDropdownValues = Object.entries(exceptionQualityValues).filter(([value]) => Number(value) !== 1)
 
 export const ExceptionQualityDropdown = (props: ExceptionQualityDropdownProps) => {
   return (

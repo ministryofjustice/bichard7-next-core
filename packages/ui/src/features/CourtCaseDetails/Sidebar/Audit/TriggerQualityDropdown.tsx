@@ -5,7 +5,7 @@ import { FormGroup } from "components/FormGroup"
 
 export type TriggerQualityDropdownProps = ComponentProps<typeof Select>
 
-const triggerQualityDropdownValues = Object.entries(triggerQualityValues)
+const triggerQualityDropdownValues = Object.entries(triggerQualityValues).filter(([value]) => Number(value) !== 1)
 
 export const TriggerQualityDropdown = (props: TriggerQualityDropdownProps) => {
   return (

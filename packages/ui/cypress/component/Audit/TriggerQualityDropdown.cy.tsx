@@ -4,23 +4,19 @@ import "../../../styles/globals.scss"
 
 describe("TriggerQualityDropdown", () => {
   it("mounts", () => {
-    cy.mount(<TriggerQualityDropdown value={1} />)
+    cy.mount(<TriggerQualityDropdown />)
   })
 
   it("renders options", () => {
-    cy.mount(<TriggerQualityDropdown value={1} />)
+    cy.mount(<TriggerQualityDropdown />)
 
-    cy.get("option").should("have.length", Object.keys(triggerQualityValues).length + 1)
+    cy.get("option").should("have.length", Object.keys(triggerQualityValues).length)
   })
 
-  it("renders options in order", () => {
-    cy.mount(<TriggerQualityDropdown value={1} />)
+  it("doesn't render not checked option", () => {
+    cy.mount(<TriggerQualityDropdown />)
 
-    cy.get("option").then((options) => {
-      const values = options.toArray().map((option) => Number(option.value))
-      const sortedValues = [...values].sort((a, b) => a - b)
-      expect(values).to.deep.equal(sortedValues)
-    })
+    cy.get("select").find("option[value='1']").should("not.exist")
   })
 
   it("renders placeholder if null", () => {
