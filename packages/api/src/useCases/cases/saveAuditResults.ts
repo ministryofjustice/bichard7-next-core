@@ -6,6 +6,7 @@ import type { AuditQuality } from "../../services/db/cases/auditCase"
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import auditCase from "../../services/db/cases/auditCase"
+import { UnprocessableEntityError } from "../../types/errors/UnprocessableEntityError"
 
 const saveAuditResults = async (
   database: WritableDatabaseConnection,
@@ -19,7 +20,7 @@ const saveAuditResults = async (
   }
 
   if (!auditResultsSaved) {
-    return new Error("Audit results could not be saved")
+    return new UnprocessableEntityError("Audit results could not be saved")
   }
 
   return

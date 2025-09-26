@@ -74,9 +74,10 @@ describe("auditCase", () => {
     expect((result as Error).message).toBe("Neither errorQuality nor triggerQuality is provided")
   })
 
-  it("returns false when caseId doesn't exists", async () => {
-    const result = await auditCase(testDatabaseGateway.writable, 2, {})
+  it("returns error when caseId doesn't exists", async () => {
+    const result = await auditCase(testDatabaseGateway.writable, 2, { errorQuality: 1, triggerQuality: 2 })
 
     expect(isError(result)).toBe(true)
+    expect((result as Error).message).toBe("Case with id 2 not found")
   })
 })
