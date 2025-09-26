@@ -14,7 +14,6 @@ import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcom
 import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const amendCourtCase = async (
   dataSource: DataSource | EntityManager,
@@ -31,19 +30,17 @@ const amendCourtCase = async (
     return ahoResult
   }
 
-  const aho = ahoResult as AnnotatedHearingOutcome
-
-  const ahoForceOwner = aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner
+  const ahoForceOwner = ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner
   if (ahoForceOwner === undefined || !ahoForceOwner.OrganisationUnitCode) {
     const organisationUnitCodes = createForceOwner(courtCase.orgForPoliceFilter || "")
     if (isError(organisationUnitCodes)) {
       return organisationUnitCodes
     }
 
-    aho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
+    ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
   }
 
-  const updatedAho = applyAmendmentsToAho(amendments, aho)
+  const updatedAho = applyAmendmentsToAho(amendments, ahoResult)
   if (isError(updatedAho)) {
     return updatedAho
   }

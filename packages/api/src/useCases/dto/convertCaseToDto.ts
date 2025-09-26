@@ -30,12 +30,12 @@ export const convertCaseToCaseDto = (
 
   return {
     ...convertCaseToCaseIndexDto(caseRowForDto, user),
-    aho: JSON.parse(JSON.stringify(aho)),
+    aho,
     courtCode: caseRowForDto.court_code,
     courtReference: caseRowForDto.court_reference,
     orgForPoliceFilter: caseRowForDto.org_for_police_filter.trim(),
     phase: caseRowForDto.phase,
-    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : JSON.parse(JSON.stringify(updatedAhoResult))
+    updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : updatedAhoResult
   }
 }
 

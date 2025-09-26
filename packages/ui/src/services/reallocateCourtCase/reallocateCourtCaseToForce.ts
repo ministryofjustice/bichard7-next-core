@@ -6,7 +6,6 @@ import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
-import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { retryTransaction } from "services/retryTransaction"
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
@@ -46,16 +45,14 @@ const reallocateCourtCaseToForceTransaction = async (
       throw ahoResult
     }
 
-    const aho = ahoResult as AnnotatedHearingOutcome
-
-    const isCaseRecordableOnPnc = !!aho.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
+    const isCaseRecordableOnPnc = !!ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
     const hasNoExceptionsOrAllResolved = !courtCase.errorStatus || courtCase.errorStatus === "Resolved"
     const triggersPhase =
       courtCase.phase === Phase.PNC_UPDATE && isCaseRecordableOnPnc && hasNoExceptionsOrAllResolved
         ? Phase.PNC_UPDATE
         : Phase.HEARING_OUTCOME
 
-    const triggers = generateTriggers(aho, triggersPhase)
+    const triggers = generateTriggers(ahoResult, triggersPhase)
 
     if (hasNoExceptionsOrAllResolved) {
       triggers.push({ code: REALLOCATE_CASE_TRIGGER_CODE } as Trigger)
@@ -88,12 +85,10 @@ const reallocateCourtCaseToForceTransaction = async (
       throw updatedAhoResult
     }
 
-    const updatedAho = updatedAhoResult as AnnotatedHearingOutcome
-
     const updateCourtCaseResult = await updateCourtCase(
       entityManager,
       courtCase,
-      updatedAho,
+      updatedAhoResult,
       triggersToAdd.length > 0 || triggersToDelete.length > 0
     )
 
@@ -101,7 +96,7 @@ const reallocateCourtCaseToForceTransaction = async (
       throw updateCourtCaseResult
     }
 
-    const newForceCode = updatedAho.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
+    const newForceCode = updatedAhoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
     const addNoteResult = await insertNotes(entityManager, [
       {
         noteText: `${user.username}: Case reallocated to new force owner: ${newForceCode}`,
