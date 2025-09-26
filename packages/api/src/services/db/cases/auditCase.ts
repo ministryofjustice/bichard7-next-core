@@ -2,6 +2,8 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { NotFoundError } from "../../../types/errors/NotFoundError"
+
 export type AuditQuality = {
   errorQuality?: number
   triggerQuality?: number
@@ -41,5 +43,9 @@ export default async (
     return Error(`Couldn't update audit quality for case id ${caseId}: ${result.message}`)
   }
 
-  return result.count > 0
+  if (result.count === 0) {
+    return new NotFoundError(`Case with id ${caseId} not found`)
+  }
+
+  return true
 }
