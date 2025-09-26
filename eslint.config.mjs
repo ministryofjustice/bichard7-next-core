@@ -186,7 +186,7 @@ export default [
     }
   },
   {
-    files: ["packages/api/**/*.ts"],
+    files: ["packages/api/**/*.ts", "packages/user-service/testFixtures/**/*.js"],
 
     rules: {
       "require-await": "off"
