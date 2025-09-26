@@ -36,3 +36,6 @@ packages/help/.jekyll-cache
 packages/help/.jekyll-metadata
 packages/help/vendor
 .DS_Store
+
+# Next.js build output
+.next

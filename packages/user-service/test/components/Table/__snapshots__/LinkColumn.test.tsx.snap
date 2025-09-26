@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render component when attributes are correctly set 1`] = `
+<div>
+  <a
+    class="govuk-link"
+    href="http://DummyURL"
+  >
+    http://DummyURL
+  </a>
+</div>
+`;
+
+exports[`should throw error when item is not set 1`] = `
+<div>
+  Error while rendering LinkColumn component. Item must have value.
+</div>
+`;

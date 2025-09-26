@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render error summary list component 1`] = `
+<div>
+  <ul
+    class="govuk-list govuk-error-summary__list"
+  >
+    <li>
+      <a
+        href="#field1"
+      >
+        Error 1
+      </a>
+    </li>
+  </ul>
+</div>
+`;

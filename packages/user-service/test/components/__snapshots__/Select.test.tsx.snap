@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render select component correctly 1`] = `
+<div>
+  <div
+    class="govuk-form-group"
+  >
+    <label
+      class="govuk-label govuk-!-padding-top-2"
+      for="test-id"
+    >
+      test-select-label
+    </label>
+    <select
+      class="govuk-select"
+      id="test-id"
+      name="test-id"
+    >
+      <option
+        value="test-id-01"
+      >
+        test-name-01
+      </option>
+      <option
+        value="test-id-02"
+      >
+        test-name-02
+      </option>
+      <option
+        value="test-id-03"
+      >
+        test-name-03
+      </option>
+    </select>
+  </div>
+</div>
+`;
