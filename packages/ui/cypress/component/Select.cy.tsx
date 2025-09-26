@@ -57,9 +57,9 @@ describe("Select", () => {
     cy.get("@onChangeSpy").should("have.been.called")
   })
 
-  it("renders placeholder", () => {
+  it("renders placeholder when no value passed in", () => {
     cy.mount(
-      <Select value="" placeholder="Select a value">
+      <Select placeholder="Select a value">
         <option value="value1">{"Value 1"}</option>
         <option value="value2">{"Value 2"}</option>
       </Select>
@@ -67,6 +67,20 @@ describe("Select", () => {
 
     cy.get("select option").should("have.length", 3)
     cy.get("select option:first-child").should("have.value", "").should("contain.text", "Select a value")
+    cy.get("select").find(":selected").should("have.text", "Select a value")
+  })
+
+  it("renders placeholder when empty value passed in", () => {
+    cy.mount(
+      <Select value={""} placeholder="Select a value">
+        <option value="value1">{"Value 1"}</option>
+        <option value="value2">{"Value 2"}</option>
+      </Select>
+    )
+
+    cy.get("select option").should("have.length", 3)
+    cy.get("select option:first-child").should("have.value", "").should("contain.text", "Select a value")
+    cy.get("select").find(":selected").should("have.text", "Select a value")
   })
 
   it("shows error state", () => {
