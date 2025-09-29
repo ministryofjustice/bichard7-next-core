@@ -1,50 +1,54 @@
+#########################################################
 ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-
-# Build user-service app
-
-FROM ${BUILD_IMAGE} AS app_builder
+FROM ${BUILD_IMAGE} AS builder
+ENV NEXT_TELEMETRY_DISABLED=1
 
 LABEL maintainer="CJSE"
 
-WORKDIR /src/user-service
+WORKDIR /core
 
-COPY ./package*.json ./
-COPY ./scripts/ ./scripts/
-COPY ./public/ ./public/
+RUN yum groupinstall -y "Development Tools"
 
-RUN yum groupinstall -y "Development Tools" && \
-    npm install && \
-    npm run install:assets
+COPY package*.json ./
+COPY tsconfig*.json ./
+COPY packages/ ./packages
 
-COPY . ./
+RUN npm ci --ignore-scripts
+RUN npm run install:assets -w packages/user-service
 
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build
+RUN npm run build:user-service
 
-# Run user-service app
+RUN npm prune --omit=dev --workspaces --include-root
 
+#########################################################
 FROM ${BUILD_IMAGE} AS runner
-
-RUN useradd nextjs && \
-    groupadd nodejs && \
-    usermod -a -G nodejs nextjs && \
-    npm config set cache /tmp/npm --global
-
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
 WORKDIR /app
-COPY ./package*.json ./
 
-COPY --from=app_builder /src/user-service/next.config.js ./
-COPY --from=app_builder /src/user-service/node_modules node_modules
-COPY --from=app_builder --chown=nextjs:nodejs /src/user-service/public ./public
-COPY --from=app_builder --chown=nextjs:nodejs /src/user-service/.next ./.next
+# Set up a non-root user for supervisor and its child processes - nextjs, nginx
+RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
+    usermod -a -G supervisor supervisor && \
+    chgrp supervisor -R /app /certs /run /var/log /var/lib/nginx && \
+    chmod g+r -R /certs/server.key /var/lib/nginx && \
+    chmod g+rw -R /app /run /var/log && \
+    npm config set cache /tmp/npm --global
 
-COPY docker/conf/nginx.conf /etc/nginx/nginx.conf
-COPY docker/conf/supervisord.conf /etc/supervisord.conf
+# Extract standalone build to working directory
+COPY --from=builder /core/packages/user-service/.next/standalone .
+
+# Copy assets
+COPY --from=builder /core/packages/user-service/public ./packages/user-service/public
+COPY --from=builder /core/packages/user-service/.next/static ./packages/user-service/.next/static
+
+RUN chmod -R 755 ./packages/user-service/public
+
+COPY --from=builder /core/packages/user-service/docker/conf/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /core/packages/user-service/docker/conf/supervisord.conf /etc/supervisord.conf
 
 EXPOSE 80
 EXPOSE 443
 
+USER supervisor
 CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]

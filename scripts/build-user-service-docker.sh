@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 NOCACHE=${NOCACHE:-"false"}
 
@@ -27,7 +27,7 @@ function pull_and_build_from_aws() {
 
   set -e
 
-  echo "Building user-service docker image on `date`"
+  echo "Building ${DOCKER_OUTPUT_TAG} docker image on `date`"
 
   if [[ -z "${AWS_ACCOUNT_ID}" ]]; then
       AWS_ACCOUNT_ID=$FETCHED_AWS_ACCOUNT_ID
@@ -64,9 +64,10 @@ function pull_and_build_from_aws() {
     export GOSS_PATH="/usr/local/bin/goss"
 
     ## Run goss tests
-    GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 "${DOCKER_OUTPUT_TAG}:latest"
+    GOSS_FILES_PATH=packages/user-service dgoss run "${DOCKER_OUTPUT_TAG}:latest"
+
     docker tag \
-        user-service:latest \
+        ${DOCKER_OUTPUT_TAG}:latest \
         ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_OUTPUT_TAG}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME}
 
     echo "Push docker image on `date`"
@@ -93,10 +94,10 @@ if [[ "$(has_local_image)" -gt 0 ]]; then
   if [ $(arch) = "arm64" ]
   then
       echo "Building for ARM"
-      docker build --no-cache=$NOCACHE --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
+      docker build --no-cache=$NOCACHE -f packages/user-service/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
   else
       echo "Building regular image"
-      docker build --no-cache=$NOCACHE --no-cache=$NOCACHE -t ${DOCKER_OUTPUT_TAG}:latest .
+      docker build --no-cache=$NOCACHE -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
   fi
 else
   pull_and_build_from_aws
