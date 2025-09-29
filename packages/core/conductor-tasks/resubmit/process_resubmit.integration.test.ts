@@ -85,7 +85,7 @@ describe("process_resubmit", () => {
     const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
 
     expect(result.status).toBe("FAILED")
-    expect(result.logs?.map((l) => l.log)).toContain(`Error: Could not put file to S3: ${caseDb.message_id}.json`)
+    expect(result.logs?.map((l) => l.log)).toContain("Error: Mock error")
   })
 
   it("completes the task", async () => {
@@ -95,6 +95,22 @@ describe("process_resubmit", () => {
 
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
+  })
+
+  it("if the transaction fails, it will not create a note", async () => {
+    const caseDb = await setupCase(sql)
+    mockPutFileToS3.default = () => {
+      return Promise.resolve(new Error("Mock error"))
+    }
+
+    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+
+    expect(result.status).toBe("FAILED")
+
+    const notes =
+      (await sql`SELECT * FROM br7own.error_list_notes eln WHERE eln.error_id = ${caseDb.error_id}`) as NoteRow[]
+
+    expect(notes).toHaveLength(0)
   })
 
   it("creates notes", async () => {
