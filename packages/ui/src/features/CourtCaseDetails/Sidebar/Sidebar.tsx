@@ -10,6 +10,7 @@ import PncDetails from "./PncDetails/PncDetails"
 import { SidebarContainer } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
 import { Tabs, TabHeaders, TabHeader, TabPanel } from "components/Tabs"
+import { QualityStatusCard } from "./Audit/QualityStatusCard"
 
 const SidebarTab = {
   Exceptions: "exceptions",
@@ -68,6 +69,8 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
           </TabPanel>
         </Tabs>
       </ConditionalRender>
+
+      <QualityStatusCard></QualityStatusCard>
     </SidebarContainer>
   )
 }
