@@ -37,7 +37,10 @@ const EmailBase = ({ children, title }: EmailBaseProps) => (
       <title>{title}</title>
     </head>
     <body>
-      <table style={{ backgroundColor: outerBackgroundColour, margin: "0", padding: "30px", width: "100%" }}>
+      <table
+        role={"presentation"}
+        style={{ backgroundColor: outerBackgroundColour, margin: "0", padding: "30px", width: "100%" }}
+      >
         <tr />
         <tr>
           <td
