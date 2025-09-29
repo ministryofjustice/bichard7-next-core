@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   basePath: "/users",
   poweredByHeader: false,
   output: "standalone",
@@ -23,3 +24,5 @@ module.exports = {
     ]
   }
 }
+
+module.exports = nextConfig
