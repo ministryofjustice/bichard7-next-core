@@ -6,5 +6,7 @@ export const canUseTriggerAndExceptionQualityAuditing = ({ featureFlags, visible
     return false
   }
 
-  return visibleForces.some((force) => FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED.has(force))
+  return visibleForces
+    .map((force) => force.replace(/^0(\d+)/, "$1"))
+    .some((force) => FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED.has(force))
 }
