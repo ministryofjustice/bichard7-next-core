@@ -1,4 +1,4 @@
-import { cloneElement } from "react"
+import { cloneElement, type JSX } from "react"
 import KeyValuePair from "types/KeyValuePair"
 
 interface Props {

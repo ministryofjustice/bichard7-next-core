@@ -1,6 +1,7 @@
+import type { JSX } from "react"
 import ReactDOMServer from "react-dom/server"
-import EmailContent from "types/EmailContent"
-import User from "types/User"
+import type EmailContent from "types/EmailContent"
+import type User from "types/User"
 import EmailLayout from "./EmailLayout"
 
 type Status = "old" | "new"

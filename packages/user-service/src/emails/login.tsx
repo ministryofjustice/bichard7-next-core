@@ -1,5 +1,6 @@
+import type { JSX } from "react"
 import ReactDOMServer from "react-dom/server"
-import EmailContent from "types/EmailContent"
+import type EmailContent from "types/EmailContent"
 import EmailValidationLayout from "./EmailValidationLayout"
 
 interface Props {
