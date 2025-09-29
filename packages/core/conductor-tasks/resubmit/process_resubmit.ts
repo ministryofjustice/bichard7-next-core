@@ -9,11 +9,15 @@ import inputDataValidator from "@moj-bichard7/common/conductor/middleware/inputD
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
 import { z } from "zod"
 
+import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
 import insertErrorListNotes from "../../lib/database/insertErrorListNotes"
+import Phase from "../../types/Phase"
 
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME || "conductor-task-data"
 
@@ -30,7 +34,11 @@ type ResubmitResult = {
   s3TaskDataPath: string
 }
 
-const handleCaseResubmission = async (sql: Sql, messageId: string): Promise<ResubmitResult> => {
+const handleCaseResubmission = async (
+  sql: Sql,
+  messageId: string,
+  auditLogger: CoreAuditLogger
+): PromiseResult<ResubmitResult> => {
   const caseRowResult = await sql`SELECT * FROM br7own.error_list el WHERE el.message_id = ${messageId}`
 
   if (!caseRowResult[0]) {
@@ -53,6 +61,8 @@ const handleCaseResubmission = async (sql: Sql, messageId: string): Promise<Resu
     WHERE error_id = ${caseRow.error_id}
   `
 
+  auditLogger.info(EventCode.ExceptionsUnlocked, { user: caseRow.error_locked_by_id })
+
   const message = parseHearingOutcome(caseRow.updated_msg)
 
   if (isError(message)) {
@@ -66,6 +76,13 @@ const handleCaseResubmission = async (sql: Sql, messageId: string): Promise<Resu
     throw s3Result
   }
 
+  auditLogger.info(
+    caseRow.phase === Phase.HEARING_OUTCOME
+      ? EventCode.HearingOutcomeResubmittedPhase1
+      : EventCode.HearingOutcomeResubmittedPhase2,
+    { user: caseRow.error_locked_by_id }
+  )
+
   return { phase: caseRow.phase, s3TaskDataPath }
 }
 
@@ -74,10 +91,11 @@ const processResubmit: ConductorWorker = {
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { messageId } = task.inputData
     const db = postgres(dbConfig)
+    const auditLogger = new CoreAuditLogger(AuditLogEventSource.CoreResubmit)
 
     const result = await db
       .begin("read write", async (sql): PromiseResult<ResubmitResult> => {
-        return await handleCaseResubmission(sql, messageId)
+        return await handleCaseResubmission(sql, messageId, auditLogger)
       })
       .catch((error: Error) => error)
 
@@ -85,7 +103,11 @@ const processResubmit: ConductorWorker = {
       return failed(`${result.name}: ${result.message}`)
     }
 
-    return completed({ currentPhase: result.phase, s3TaskDataPath: result.s3TaskDataPath })
+    return completed({
+      currentPhase: result.phase,
+      s3TaskDataPath: result.s3TaskDataPath,
+      auditLogEvents: auditLogger.getEvents()
+    })
   })
 }
 
