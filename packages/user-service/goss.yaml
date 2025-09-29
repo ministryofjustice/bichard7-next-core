@@ -2,26 +2,32 @@ file:
   /certs:
     exists: true
     owner: root
-    group: root
+    group: supervisor
     filetype: directory
     contains: []
+    mode: "0755" # u=rwx,go=rx
   /certs/server.crt:
     exists: true
     owner: root
-    group: root
-    size: 2378
+    group: supervisor
+    size:
+      and:
+        - gt: 2377
+        - lt: 2395
     filetype: file
     contains: []
+    mode: "0644" # u=rw,go=r
   /certs/server.key:
     exists: true
     owner: root
-    group: root
+    group: supervisor
     filetype: file
     size:
       and:
         - lt: 3300
         - gt: 3267
     contains: []
+    mode: "0640" # u=rw,g=r
   /etc/nginx/nginx.conf:
     exists: true
     owner: root
