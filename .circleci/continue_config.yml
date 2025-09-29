@@ -707,7 +707,7 @@ jobs:
         default: "01"
       forces-with-trigger-and-exception-quality-auditing-enabled:
         type: string
-        default: ""
+        default: "01"
       api-case-details:
         type: boolean
         default: false
