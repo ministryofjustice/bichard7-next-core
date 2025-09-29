@@ -14,7 +14,7 @@ const saveAuditResults = async (
   caseId: number,
   auditQuality: AuditQuality,
   userId: string,
-  note: string
+  note: string | undefined
 ): PromiseResult<void> => {
   return database.transaction(async (transactionDb) => {
     const auditResultsSaved = await auditCase(transactionDb, caseId, auditQuality)
