@@ -36,7 +36,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
 
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["06"]
+    user.visibleForces = ["006"]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
@@ -48,7 +48,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
 
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["06", "07"]
+    user.visibleForces = ["006", "007"]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
@@ -60,7 +60,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
 
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["06", "07", "01"]
+    user.visibleForces = ["006", "007", "001"]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(true)
   })
@@ -72,7 +72,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
 
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["06", "07", "01"]
+    user.visibleForces = ["006", "007", "001"]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
