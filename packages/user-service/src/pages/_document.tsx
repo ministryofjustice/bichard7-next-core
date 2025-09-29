@@ -1,9 +1,9 @@
-import { addBasePath } from "next/dist/client/add-base-path"
 import Document, { DocumentContext, DocumentInitialProps, Head, Html, Main, NextScript } from "next/document"
 import { JssProvider, SheetsRegistry, createGenerateId } from "react-jss"
 import { ServerStyleSheet } from "styled-components"
 import generateCsp from "utils/generateCsp"
 import generateNonce from "utils/generateNonce"
+import { basePath } from "../../next.config"
 
 const GovUkMetadata = () => (
   <>
@@ -16,28 +16,28 @@ const GovUkMetadata = () => (
     <link
       rel="shortcut icon"
       sizes="16x16 32x32 48x48"
-      href={addBasePath("/govuk_assets/images/favicon.ico")}
+      href={`${basePath}/govuk_assets/images/favicon.ico`}
       type="image/x-icon"
     />
-    <link rel="mask-icon" href={addBasePath("/govuk_assets/images/govuk-mask-icon.svg")} color="#0b0c0c" />
+    <link rel="mask-icon" href={`${basePath}/govuk_assets/images/govuk-mask-icon.svg`} color="#0b0c0c" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href={addBasePath("/govuk_assets/images/govuk-apple-touch-icon-180x180.png")}
+      href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-180x180.png`}
     />
     <link
       rel="apple-touch-icon"
       sizes="167x167"
-      href={addBasePath("/govuk_assets/images/govuk-apple-touch-icon-167x167.png")}
+      href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-167x167.png`}
     />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href={addBasePath("/govuk_assets/images/govuk-apple-touch-icon-152x152.png")}
+      href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon-152x152.png`}
     />
-    <link rel="apple-touch-icon" href={addBasePath("/govuk_assets/images/govuk-apple-touch-icon.png")} />
+    <link rel="apple-touch-icon" href={`${basePath}/govuk_assets/images/govuk-apple-touch-icon.png`} />
 
-    <meta property="og:image" content={addBasePath("/govuk_assets/images/govuk-opengraph-image.png")} />
+    <meta property="og:image" content={`${basePath}/govuk_assets/images/govuk-opengraph-image.png`} />
   </>
 )
 
