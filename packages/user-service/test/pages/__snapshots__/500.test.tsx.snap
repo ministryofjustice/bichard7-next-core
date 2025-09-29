@@ -216,9 +216,5 @@ exports[`should render the component and match the snapshot 1`] = `
       </div>
     </div>
   </footer>
-  <script
-    async=""
-    src="/js/grabScreenSize.js"
-  />
 </div>
 `;
