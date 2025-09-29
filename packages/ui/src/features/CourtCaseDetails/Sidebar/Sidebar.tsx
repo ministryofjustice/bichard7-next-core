@@ -11,6 +11,7 @@ import { SidebarContainer } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
 import { Tabs, TabHeaders, TabHeader, TabPanel } from "components/Tabs"
 import { QualityStatusCard } from "./Audit/QualityStatusCard"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 const SidebarTab = {
   Exceptions: "exceptions",
@@ -75,7 +76,12 @@ const Sidebar = ({
           </TabPanel>
         </Tabs>
       </ConditionalRender>
-      <ConditionalRender isRendered={canUseTriggerAndExceptionQualityAuditing}>
+      <ConditionalRender
+        isRendered={
+          canUseTriggerAndExceptionQualityAuditing &&
+          (currentUser.groups.includes(UserGroup.Audit) || currentUser.groups.includes(UserGroup.AuditLoggingManager))
+        }
+      >
         <QualityStatusCard></QualityStatusCard>
       </ConditionalRender>
     </SidebarContainer>
