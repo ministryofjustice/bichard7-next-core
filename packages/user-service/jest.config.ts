@@ -4,7 +4,7 @@ import { TextEncoder } from "util"
 const config: Config.InitialOptions = {
   preset: "ts-jest",
   transform: {
-    "\\.[jt]sx?$": "babel-jest"
+    "\\.[jt]sx?$": "@swc/jest"
   },
   globals: {
     "ts-jest": {

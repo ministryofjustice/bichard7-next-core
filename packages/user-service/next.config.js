@@ -7,6 +7,9 @@ const nextConfig = {
   sassOptions: {
     quietDeps: true
   },
+  compiler: {
+    styledComponents: true
+  },
   async redirects() {
     return [
       {
