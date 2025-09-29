@@ -90,6 +90,17 @@ describe("saveAuditResults", () => {
         saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
       ).rejects.toThrow("Audit results could not be saved")
     })
+
+    it("Rolls back audit results when note insertion fails", async () => {
+      mockedInsertNote.mockResolvedValue(false)
+      await expect(
+        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
+      ).rejects.toThrow("Audit note could not be saved")
+
+      const updatedCase = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
+      expect(updatedCase.errorQualityChecked).toBeNull()
+      expect(updatedCase.triggerQualityChecked).toBeNull()
+    })
   })
 
   describe("when saving note", () => {
@@ -117,12 +128,22 @@ describe("saveAuditResults", () => {
       ).rejects.toThrow("DB insert failed")
     })
 
-    it("returns an error when database update fails", async () => {
+    it("throws an error when database update fails", async () => {
       mockedInsertNote.mockResolvedValue(false)
 
       await expect(
         saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
       ).rejects.toThrow("Audit note could not be saved")
+    })
+
+    it("rolls back note insertion when audit quality update fails", async () => {
+      mockedAuditCase.mockResolvedValue(false)
+      await expect(
+        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
+      ).rejects.toThrow("Audit results could not be saved")
+
+      const insertedNotes = (await fetchNotes(testDatabaseGateway.readonly, [caseObj.errorId])) as Note[]
+      expect(insertedNotes).toHaveLength(0)
     })
   })
 })
