@@ -21,10 +21,16 @@ const SidebarTab = {
 interface Props {
   onNavigate: NavigationHandler
   canResolveAndSubmit: boolean
+  canUseTriggerAndExceptionQualityAuditing: boolean
   stopLeavingFn: (newValue: boolean) => void
 }
 
-const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
+const Sidebar = ({
+  onNavigate,
+  canResolveAndSubmit,
+  canUseTriggerAndExceptionQualityAuditing,
+  stopLeavingFn
+}: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
   const { fetchNewCsrfToken } = useRefreshCsrfToken()
@@ -69,8 +75,9 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
           </TabPanel>
         </Tabs>
       </ConditionalRender>
-
-      <QualityStatusCard></QualityStatusCard>
+      <ConditionalRender isRendered={canUseTriggerAndExceptionQualityAuditing}>
+        <QualityStatusCard></QualityStatusCard>
+      </ConditionalRender>
     </SidebarContainer>
   )
 }
