@@ -33,7 +33,7 @@ const getConsoleEventLogger =
       })
     } catch (error) {
       logger.error(error)
-      return Promise.resolve(isError(error) ? error : Error("Error writing to log"))
+      return Promise.resolve(isError(error) ? error : new Error("Error writing to log"))
     }
 
     return Promise.resolve()

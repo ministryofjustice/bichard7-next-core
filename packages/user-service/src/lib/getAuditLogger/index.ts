@@ -6,7 +6,7 @@ import getConsoleEventLogger from "./getConsoleEventLogger"
 import getApiEventLogger from "./getApiEventLogger"
 import getErrorLogger from "./getErrorLogger"
 
-export default (context: GetServerSidePropsContext, config: UserServiceConfig): AuditLogger => {
+const getAuditLogger = (context: GetServerSidePropsContext, config: UserServiceConfig): AuditLogger => {
   let { auditLogger } = context as unknown as { auditLogger: AuditLogger }
 
   if (auditLogger) {
@@ -29,3 +29,5 @@ export default (context: GetServerSidePropsContext, config: UserServiceConfig): 
 
   return auditLogger
 }
+
+export default getAuditLogger

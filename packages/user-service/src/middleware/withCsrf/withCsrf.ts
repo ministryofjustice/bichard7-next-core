@@ -7,12 +7,10 @@ import generateCsrfToken from "./generateCsrfToken"
 import verifyCsrfToken from "./verifyCsrfToken"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default <Props extends { [key: string]: any }>(
+const withCsrf = <Props extends { [key: string]: any }>(
   getServerSidePropsFunction: GetServerSideProps<Props>
 ): GetServerSideProps<Props> => {
-  const result: GetServerSideProps<Props> = async (
-    context: GetServerSidePropsContext<ParsedUrlQuery>
-  ): Promise<GetServerSidePropsResult<Props>> => {
+  return async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
     const { req, res } = context
     const { isValid, formData } = await verifyCsrfToken(req)
 
@@ -30,6 +28,6 @@ export default <Props extends { [key: string]: any }>(
 
     return getServerSidePropsFunction({ ...context, formData, csrfToken: formToken } as CsrfServerSidePropsContext)
   }
-
-  return result
 }
+
+export default withCsrf

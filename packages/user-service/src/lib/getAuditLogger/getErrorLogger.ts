@@ -34,7 +34,7 @@ const getErrorLogger =
       })
     } catch (e) {
       logger.error(e)
-      return isError(e) ? e : Error("Error writing to log")
+      return isError(e) ? e : new Error("Error writing to log")
     }
 
     if (error) {

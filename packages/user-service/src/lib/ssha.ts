@@ -3,16 +3,14 @@ import logger from "utils/logger"
 
 const bufferConcat = (list: Buffer[]) => {
   let bufferLength = 0
-  for (let i = 0; i < list.length; i++) {
-    const buf = list[i]
+  for (const buf of list) {
     bufferLength += buf.length
   }
 
   const buffer = Buffer.alloc(bufferLength)
   let position = 0
 
-  for (let i = 0; i < list.length; i++) {
-    const buf = list[i]
+  for (const buf of list) {
     buf.copy(buffer, position)
     position += buf.length
   }
@@ -41,7 +39,7 @@ const createSsha = (secret: string, salt?: Buffer | string): string => {
 }
 
 const verifySsha = (secret: string, sshaHash: string): boolean => {
-  if (!sshaHash.match(/^\{SSHA\}/i)) {
+  if (!sshaHash.match(/^\{SSHA}/i)) {
     logger.error("Hash scheme not supported. Only {SSHA} is supported.")
     return false
   }

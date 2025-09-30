@@ -10,7 +10,7 @@ const unauthenticated = (res: NextApiResponse) => res.status(401).json({ authent
 const unauthorised = (res: NextApiResponse) => res.status(403).json({ authenticated: true, authorised: false })
 const allowed = (res: NextApiResponse) => res.status(200).json({ authenticated: true, authorised: true })
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const auth = async (req: NextApiRequest, res: NextApiResponse) => {
   const authToken = getAuthenticationPayloadFromCookie(req)
   const connection = getConnection()
 
@@ -37,3 +37,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   return unauthenticated(res)
 }
+
+export default auth

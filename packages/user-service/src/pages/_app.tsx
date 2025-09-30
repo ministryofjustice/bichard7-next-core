@@ -4,7 +4,7 @@ import "../styles/globals.scss"
 
 const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
-    if (document.body.className.indexOf("js-enabled") < 0) {
+    if (!document.body.className.includes("js-enabled")) {
       document.body.className +=
         " js-enabled" + ("noModule" in HTMLScriptElement.prototype ? " govuk-frontend-supported" : "")
     }

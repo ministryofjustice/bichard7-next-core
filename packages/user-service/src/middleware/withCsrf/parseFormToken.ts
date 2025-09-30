@@ -8,7 +8,7 @@ export interface ParseFormTokenResult {
   formToken: string
 }
 
-export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> => {
+const parseFormToken = (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> => {
   const { tokenName, formSecret } = config.csrf
 
   if (!formData.hasOwnProperty(tokenName)) {
@@ -42,3 +42,5 @@ export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> =>
 
   return { cookieName, formToken: csrfFormToken }
 }
+
+export default parseFormToken

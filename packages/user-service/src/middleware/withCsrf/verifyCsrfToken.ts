@@ -10,7 +10,7 @@ interface VerifyCsrfTokenResult {
   formData: QueryString.ParsedQs
 }
 
-export default async (request: IncomingMessage): Promise<VerifyCsrfTokenResult> => {
+const verifyCsrfToken = async (request: IncomingMessage): Promise<VerifyCsrfTokenResult> => {
   const formData = await parseFormData(request)
 
   if (request.method === "GET") {
@@ -35,3 +35,5 @@ export default async (request: IncomingMessage): Promise<VerifyCsrfTokenResult> 
 
   return { isValid, formData }
 }
+
+export default verifyCsrfToken

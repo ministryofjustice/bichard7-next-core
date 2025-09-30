@@ -14,8 +14,8 @@ const addCjsmSuffix = (emailAddress: string): string => {
     return lowerEmail
   }
 
-  for (let i = 0; i < cjsmDomainExceptions.length; i++) {
-    const { domain, cjsmDomain } = cjsmDomainExceptions[i]
+  for (const exception of cjsmDomainExceptions) {
+    const { domain, cjsmDomain } = exception
     if (lowerEmail.endsWith(domain)) {
       return lowerEmail.replace(domain, cjsmDomain)
     }
@@ -26,8 +26,9 @@ const addCjsmSuffix = (emailAddress: string): string => {
 
 const removeCjsmSuffix = (emailAddress: string): string => {
   const lowerEmail = emailAddress.toLowerCase()
-  for (let i = 0; i < cjsmDomainExceptions.length; i++) {
-    const { domain, cjsmDomain } = cjsmDomainExceptions[i]
+
+  for (const exception of cjsmDomainExceptions) {
+    const { domain, cjsmDomain } = exception
     if (lowerEmail.endsWith(cjsmDomain)) {
       return lowerEmail.replace(cjsmDomain, domain)
     }
