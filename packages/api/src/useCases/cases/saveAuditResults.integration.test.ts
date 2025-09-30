@@ -72,30 +72,51 @@ describe("saveAuditResults", () => {
     })
 
     it("throws an error when no audit quality is provided", async () => {
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, userId, testNote)
-      ).rejects.toThrow("Neither errorQuality nor triggerQuality is provided")
+      const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, userId, testNote)
+
+      expect(isError(result)).toBe(true)
+      expect((result as Error).message).toBe("Neither errorQuality nor triggerQuality is provided")
     })
 
     it("throws an error when case is not found", async () => {
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, 2, { errorQuality: 1, triggerQuality: 2 }, userId, testNote)
-      ).rejects.toThrow("Case with id 2 not found")
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        2,
+        { errorQuality: 1, triggerQuality: 2 },
+        userId,
+        testNote
+      )
+
+      expect(isError(result)).toBe(true)
+      expect((result as Error).message).toBe("Case with id 2 not found")
     })
 
     it("throws an error when the database update fails", async () => {
       mockedAuditCase.mockResolvedValue(false)
 
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
-      ).rejects.toThrow("Audit results could not be saved")
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        caseObj.errorId,
+        mockAuditQuality,
+        userId,
+        testNote
+      )
+
+      expect(isError(result)).toBe(true)
+      expect((result as Error).message).toBe("Audit results could not be saved")
     })
 
     it("Rolls back audit results when note insertion fails", async () => {
       mockedInsertNote.mockResolvedValue(false)
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
-      ).rejects.toThrow("Audit note could not be saved")
+
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        caseObj.errorId,
+        mockAuditQuality,
+        userId,
+        testNote
+      )
+      expect(isError(result)).toBe(true)
 
       const updatedCase = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
       expect(updatedCase.errorQualityChecked).toBeNull()
@@ -123,24 +144,45 @@ describe("saveAuditResults", () => {
     it("throws an error when insertNote throws", async () => {
       mockedInsertNote.mockResolvedValue(new Error("DB insert failed"))
 
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
-      ).rejects.toThrow("DB insert failed")
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        caseObj.errorId,
+        mockAuditQuality,
+        userId,
+        testNote
+      )
+
+      expect(isError(result)).toBe(true)
+      expect((result as Error).message).toBe("DB insert failed")
     })
 
     it("throws an error when database update fails", async () => {
       mockedInsertNote.mockResolvedValue(false)
 
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
-      ).rejects.toThrow("Audit note could not be saved")
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        caseObj.errorId,
+        mockAuditQuality,
+        userId,
+        testNote
+      )
+
+      expect(isError(result)).toBe(true)
+      expect((result as Error).message).toBe("Audit note could not be saved")
     })
 
     it("rolls back note insertion when audit quality update fails", async () => {
       mockedAuditCase.mockResolvedValue(false)
-      await expect(
-        saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, mockAuditQuality, userId, testNote)
-      ).rejects.toThrow("Audit results could not be saved")
+
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        caseObj.errorId,
+        mockAuditQuality,
+        userId,
+        testNote
+      )
+      expect(isError(result)).toBe(true)
+      expect((result as Error).message).toBe("Audit results could not be saved")
 
       const insertedNotes = (await fetchNotes(testDatabaseGateway.readonly, [caseObj.errorId])) as Note[]
       expect(insertedNotes).toHaveLength(0)
