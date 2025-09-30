@@ -82,7 +82,7 @@ const Sidebar = ({
           (currentUser.groups.includes(UserGroup.Audit) || currentUser.groups.includes(UserGroup.AuditLoggingManager))
         }
       >
-        <QualityStatusCard></QualityStatusCard>
+        <QualityStatusCard />
       </ConditionalRender>
     </SidebarContainer>
   )
