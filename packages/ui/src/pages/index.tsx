@@ -50,6 +50,7 @@ import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
+import { canUseCourtDateReceivedDateMismatchFilters } from "../features/flags/canUseCourtDateReceivedDateMismatchFilters"
 
 type Props = {
   build: string | null
@@ -65,6 +66,7 @@ type Props = {
   caseDetailsCookieName: string
   totalCases: number
   user: DisplayFullUser
+  canUseCourtDateReceivedDateMismatchFilters: boolean
   caseResolvedDateRange: SerializedDateRange | null
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
 
@@ -191,6 +193,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     // Remove courtDateRange from the props because the dates don't serialise
     const { courtDateRange: _, resolvedDateRange: __, ...caseListQueryProps } = caseListQueryParams
+
     return {
       props: {
         build: process.env.NEXT_PUBLIC_BUILD || null,
@@ -214,6 +217,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         caseDetailsCookieName,
         totalCases,
         user: userToDisplayFullUserDto(currentUser),
+        canUseCourtDateReceivedDateMismatchFilters: canUseCourtDateReceivedDateMismatchFilters(currentUser),
         caseResolvedDateRange: caseListQueryParams.resolvedDateRange
           ? {
               from: formatFormInputDateString(caseListQueryParams.resolvedDateRange.from),
@@ -231,6 +235,7 @@ const Home: NextPage<Props> = (props) => {
   const {
     csrfToken,
     user,
+    canUseCourtDateReceivedDateMismatchFilters,
     courtCases,
     totalCases,
     queryStringCookieName,
@@ -282,7 +287,12 @@ const Home: NextPage<Props> = (props) => {
         <CurrentUserContext.Provider value={currentUserContext}>
           <Layout bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}>
             <CourtCaseWrapper
-              filter={<CourtCaseFilter {...searchParams} />}
+              filter={
+                <CourtCaseFilter
+                  canUseCourtDateReceivedDateMismatchFilters={canUseCourtDateReceivedDateMismatchFilters}
+                  {...searchParams}
+                />
+              }
               appliedFilters={<AppliedFilters filters={{ ...searchParams }} />}
               courtCaseList={<CourtCaseList courtCases={courtCases} order={oppositeOrder} />}
               paginationTop={
