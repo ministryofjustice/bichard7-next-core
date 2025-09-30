@@ -76,10 +76,19 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const loadLockedBy = true
 
-    const useApi = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
+    const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
+    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
+
+    let apiGateway: BichardApiV1 | undefined = undefined
+
+    if (useApiForCaseDetails || useApiForCaseResubmit) {
+      const jwt = req.cookies[".AUTH"] as string
+      const apiClient = new ApiClient(jwt)
+      apiGateway = new BichardApiV1(apiClient)
+    }
 
     let courtCase
-    if (!useApi) {
+    if (!useApiForCaseDetails) {
       courtCase = await getCourtCaseByOrganisationUnit(dataSource, +courtCaseId, currentUser, loadLockedBy)
 
       if (isError(courtCase)) {
@@ -132,18 +141,33 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isPost(req) && resubmitCase === "true") {
-      const { amendments } = formData as { amendments: string }
+      if (useApiForCaseResubmit && apiGateway) {
+        logger.info("[API] Using API to resubmit")
+        const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
-      const resubmitCourtCaseResult = await resubmitCourtCase(
-        dataSource,
-        mqGateway,
-        JSON.parse(amendments),
-        +courtCaseId,
-        currentUser
-      )
+        if (isError(resubmitResult)) {
+          const error = resubmitResult
+          if (/404/.test(error.message)) {
+            return {
+              notFound: true
+            }
+          }
+          throw error
+        }
+      } else {
+        const { amendments } = formData as { amendments: string }
 
-      if (isError(resubmitCourtCaseResult)) {
-        throw resubmitCourtCaseResult
+        const resubmitCourtCaseResult = await resubmitCourtCase(
+          dataSource,
+          mqGateway,
+          JSON.parse(amendments),
+          +courtCaseId,
+          currentUser
+        )
+
+        if (isError(resubmitCourtCaseResult)) {
+          throw resubmitCourtCaseResult
+        }
       }
     }
 
@@ -167,7 +191,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req) && lock === "false") {
       lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
     } else if (
-      !useApi &&
+      !useApiForCaseDetails &&
       (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
     ) {
       lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
@@ -178,7 +202,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     // Fetch the record from the database after updates
-    if (!useApi) {
+    if (!useApiForCaseDetails) {
       courtCase = await getCourtCaseByOrganisationUnit(dataSource, +courtCaseId, currentUser, loadLockedBy)
 
       if (isError(courtCase)) {
@@ -200,11 +224,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     let apiCase: DisplayFullCourtCase | Error | undefined
 
-    if (useApi) {
-      const jwt = req.cookies[".AUTH"] as string
-      const apiClient = new ApiClient(jwt)
-      const apiGateway = new BichardApiV1(apiClient)
-
+    if (useApiForCaseDetails && apiGateway) {
       logger.info("[API] Using API to fetch case details")
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
 
@@ -221,7 +241,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     logRenderTime(startTime, "caseView")
 
-    const caseDto = useApi
+    const caseDto = useApiForCaseDetails
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
