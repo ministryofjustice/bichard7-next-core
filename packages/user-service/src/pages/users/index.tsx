@@ -61,7 +61,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
 
       if (page) {
-        pageNumber = parseInt(page, 10)
+        pageNumber = Number.parseInt(page, 10)
       }
 
       switch (action) {

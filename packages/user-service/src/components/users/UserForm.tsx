@@ -30,7 +30,7 @@ interface Props {
 export const listOfForces = forces
   .map(({ code, name }) => ({ id: code, name: name }))
   .filter((x: { id: string; name: string }) => x.id[0] !== "B" && x.id[0] !== "C")
-  .map(({ id, name }) => ({ id: parseInt(id, 10).toString().padStart(3, "0"), name }))
+  .map(({ id, name }) => ({ id: Number.parseInt(id, 10).toString().padStart(3, "0"), name }))
   .sort((x: { id: string; name: string }, y: { id: string; name: string }) => (x.id > y.id ? 1 : -1))
 
 export const listOfTriggers = triggerDefinitions.map(({ code, description }) => ({ id: code, name: description }))

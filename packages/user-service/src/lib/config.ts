@@ -67,12 +67,12 @@ const getConfig = (): UserServiceConfig => ({
   cookiesSecureOption: (process.env.COOKIES_SECURE ?? "true") === "true",
   debugMode: "false",
   emailFrom: `Bichard7 <${process.env.EMAIL_FROM ?? "bichard@cjse.org"}>`,
-  emailVerificationExpiresIn: parseInt(process.env.EMAIL_VERIFICATION_EXPIRY ?? "30", 10),
-  incorrectDelay: parseInt(process.env.INCORRECT_DELAY ?? "10", 10),
+  emailVerificationExpiresIn: Number.parseInt(process.env.EMAIL_VERIFICATION_EXPIRY ?? "30", 10),
+  incorrectDelay: Number.parseInt(process.env.INCORRECT_DELAY ?? "10", 10),
   passwordMinLength: 8,
   rememberEmailAddressCookieName: "LOGIN_EMAIL",
-  rememberEmailAddressMaxAgeInMinutes: parseInt(process.env.REMEMBER_EMAIL_MAX_AGE ?? "1440", 10),
-  serviceMessagesStaleDays: parseInt(process.env.SERVICE_MESSAGES_STALE_DAYS ?? "30", 10),
+  rememberEmailAddressMaxAgeInMinutes: Number.parseInt(process.env.REMEMBER_EMAIL_MAX_AGE ?? "1440", 10),
+  serviceMessagesStaleDays: Number.parseInt(process.env.SERVICE_MESSAGES_STALE_DAYS ?? "30", 10),
   supportEmail: process.env.SUPPORT_EMAIL ?? "moj-bichard7@madetech.com",
   supportCJSMEmail: process.env.SUPPORT_CJSM_EMAIL ?? "moj-bichard7@madetech.cjsm.net",
   suggestedPasswordNumWords: 3,
@@ -96,14 +96,14 @@ const getConfig = (): UserServiceConfig => ({
     user: process.env.DB_USER ?? process.env.DB_AUTH_USER ?? "bichard",
     password: process.env.DB_PASSWORD ?? process.env.DB_AUTH_PASSWORD ?? "password",
     database: process.env.DB_DATABASE ?? process.env.DB_AUTH_DATABASE ?? "bichard",
-    port: parseInt(process.env.DB_PORT ?? process.env.DB_AUTH_PORT ?? "5432", 10),
+    port: Number.parseInt(process.env.DB_PORT ?? process.env.DB_AUTH_PORT ?? "5432", 10),
     ssl: (process.env.DB_SSL ?? process.env.DB_AUTH_SSL) === "true"
   },
   smtp: {
     host: process.env.SMTP_HOST ?? "console",
     user: process.env.SMTP_USER ?? "bichard",
     password: process.env.SMTP_PASSWORD ?? "password",
-    port: parseInt(process.env.SMTP_PORT ?? "587", 10),
+    port: Number.parseInt(process.env.SMTP_PORT ?? "587", 10),
     tls: process.env.SMTP_TLS === "true"
   }
 })

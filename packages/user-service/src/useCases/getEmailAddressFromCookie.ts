@@ -26,7 +26,7 @@ export default ({ cookies }: { cookies: NextApiRequestCookies }, config: UserSer
     return null
   }
 
-  const expiryDate = new Date(parseInt(cookieValueParts[0], 10))
+  const expiryDate = new Date(Number.parseInt(cookieValueParts[0], 10))
 
   if (expiryDate < new Date()) {
     return null

@@ -81,7 +81,7 @@ const updateUser = async (
 
   const result = await connection.tx(async (task: ITask<unknown>): PromiseResult<void> => {
     const selectedGroups: number[] = userDetails.groups
-      ? userDetails.groups.map((group: UserGroupResult) => parseInt(group.id, 10))
+      ? userDetails.groups.map((group: UserGroupResult) => Number.parseInt(group.id, 10))
       : []
     const userId = userDetails.id as number
     const currentUserId = currentUser.id as number

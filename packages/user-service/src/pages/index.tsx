@@ -39,7 +39,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     const { page } = query as { page: string }
-    const pageNumber = page ? parseInt(page, 10) : 0
+    const pageNumber = page ? Number.parseInt(page, 10) : 0
 
     const { hasAccessToBichard, hasAccessToUserManagement, hasAccessToNewBichard } =
       getUserServiceAccess(authentication)

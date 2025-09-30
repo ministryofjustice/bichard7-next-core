@@ -7,15 +7,13 @@ let functionInvokeLog: KeyValuePair<string, unknown> = {}
 let functionInvokeIndex = 0
 
 const createServerSidePropsFunction = (functionName: string) => {
-  return <Props>(getServerSidePropsFunction: GetServerSideProps<Props>): GetServerSideProps<Props> => {
-    const result: GetServerSideProps<Props> = (
-      context: GetServerSidePropsContext<ParsedUrlQuery>
-    ): Promise<GetServerSidePropsResult<Props>> => {
+  return <Props extends { [key: string]: any }>(
+    getServerSidePropsFunction: GetServerSideProps<Props>
+  ): GetServerSideProps<Props> => {
+    return (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
       functionInvokeLog[functionName] = ++functionInvokeIndex
       return getServerSidePropsFunction(context)
     }
-
-    return result
   }
 }
 

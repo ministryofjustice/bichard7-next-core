@@ -33,7 +33,7 @@ export default async (connection: Database, page: number): PromiseResult<Paginat
   }
 
   const result = (serviceMessages || []) as ServiceMessage[]
-  const totalElements = parseInt(serviceMessages[0]?.allMessages || 0, 10)
+  const totalElements = Number.parseInt(serviceMessages[0]?.allMessages || 0, 10)
 
   return { result, totalElements }
 }
