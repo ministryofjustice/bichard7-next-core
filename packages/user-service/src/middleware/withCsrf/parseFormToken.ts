@@ -12,19 +12,19 @@ export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> =>
   const { tokenName, formSecret } = config.csrf
 
   if (!formData.hasOwnProperty(tokenName)) {
-    return Error("Token not found in the form data.")
+    return new Error("Token not found in the form data.")
   }
 
   const formToken = formData[tokenName]?.toString()
 
   if (!formToken) {
-    return Error("Token is empty in the form data.")
+    return new Error("Token is empty in the form data.")
   }
 
   const unsignedFormToken = unsign(formToken, formSecret)
 
   if (!unsignedFormToken) {
-    return Error("Invalid form token format.")
+    return new Error("Invalid form token format.")
   }
 
   const formTokenParts = unsignedFormToken.split("=")
@@ -35,7 +35,7 @@ export default (formData: QueryString.ParsedQs): Result<ParseFormTokenResult> =>
   const formTokenExpiryDate = new Date(Number(formTokenValueParts[0]))
 
   if (formTokenExpiryDate < new Date()) {
-    return Error("Expired form token.")
+    return new Error("Expired form token.")
   }
 
   const csrfFormToken = formTokenValueParts.splice(1).join(".")

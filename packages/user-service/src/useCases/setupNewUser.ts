@@ -38,7 +38,7 @@ export default async (
 
   if (isError(createNewUserEmailResult)) {
     auditLogger.logError("Error creating new user email", { user: userCreateDetails }, createNewUserEmailResult)
-    return Error("Server error. Please try again later.")
+    return new Error("Server error. Please try again later.")
   }
 
   const email = createNewUserEmailResult

@@ -56,7 +56,7 @@ const updateUserTable = async (task: ITask<unknown>, userDetails: Partial<User>)
 
   if (isError(result) || result.rowCount === 0) {
     logger.error(result)
-    return Error("Could not update user")
+    return new Error("Could not update user")
   }
 
   return undefined
@@ -88,20 +88,20 @@ const updateUser = async (
     const updateUserResult = await updateUserTable(task, userDetails)
 
     if (isError(updateUserResult)) {
-      return Error("Could not update user")
+      return new Error("Could not update user")
     }
 
     const deleteUserGroupsResult = await deleteFromUsersGroups(task, userId)
     if (isError(deleteUserGroupsResult)) {
       logger.error(deleteUserGroupsResult)
-      return Error("Could not delete groups")
+      return new Error("Could not delete groups")
     }
 
     if (selectedGroups.length !== 0) {
       const updateUserGroupsResult = await updateUsersGroup(task, userId, currentUserId, selectedGroups)
       if (isError(updateUserGroupsResult)) {
         logger.error(updateUserGroupsResult)
-        return Error("Could not insert groups")
+        return new Error("Could not insert groups")
       }
     }
 

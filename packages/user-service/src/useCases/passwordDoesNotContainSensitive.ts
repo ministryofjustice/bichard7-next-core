@@ -6,7 +6,7 @@ import getUserByEmailAddress from "./getUserByEmailAddress"
 export default async (connection: Database, password: string, emailAddress: string): PromiseResult<void> => {
   const user = await getUserByEmailAddress(connection, emailAddress)
   if (user === null) {
-    return Error("Cannot find user")
+    return new Error("Cannot find user")
   }
 
   if (isError(user)) {
@@ -19,7 +19,7 @@ export default async (connection: Database, password: string, emailAddress: stri
 
   const allSensitiveWords = [...forenames, ...surnames, firstEmailSection, user.username]
   if (allSensitiveWords.some((word) => password.includes(word))) {
-    return Error("Password contains personal information.")
+    return new Error("Password contains personal information.")
   }
 
   return undefined

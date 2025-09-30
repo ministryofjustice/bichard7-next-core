@@ -44,11 +44,11 @@ export default async (
 
   if (isError(passwordMatch)) {
     logger.error(passwordMatch)
-    return Error("Server error. Please try again later.")
+    return new Error("Server error. Please try again later.")
   }
 
   if (!passwordMatch) {
-    return Error("Your current password is incorrect.")
+    return new Error("Your current password is incorrect.")
   }
 
   const getUserResult = await getUserLoginDetailsByEmailAddress(connection, emailAddress)
@@ -67,14 +67,14 @@ export default async (
       const checkPasswordIsNewResult = await checkPasswordIsNew(taskConnection, getUserResult.id, newPassword)
 
       if (isError(checkPasswordIsNewResult)) {
-        return Error("Cannot use previously used password.")
+        return new Error("Cannot use previously used password.")
       }
 
       const updatePasswordResult = await updatePassword(taskConnection, emailAddress, newPassword)
 
       if (isError(updatePasswordResult)) {
         logger.error(updatePasswordResult)
-        return Error("Server error. Please try again later.")
+        return new Error("Server error. Please try again later.")
       }
 
       await auditLogger.logEvent(AuditLogEvent.passwordUpdated)

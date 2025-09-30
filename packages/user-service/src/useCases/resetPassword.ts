@@ -35,7 +35,7 @@ export default async (
   }
 
   if (passwordResetCode !== userPasswordResetCode) {
-    return Error("Password reset code does not match")
+    return new Error("Password reset code does not match")
   }
 
   const validatePasswordSensitveResult = await passwordDoesNotContainSensitive(connection, newPassword, emailAddress)

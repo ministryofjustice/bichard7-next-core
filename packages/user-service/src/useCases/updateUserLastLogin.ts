@@ -18,7 +18,7 @@ export default async (connection: Database | Task, userName: string): PromiseRes
   }
 
   if (result.rowCount === 0) {
-    return Error("User not found.")
+    return new Error("User not found.")
   }
 
   return undefined

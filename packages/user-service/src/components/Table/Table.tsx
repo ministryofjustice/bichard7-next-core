@@ -14,7 +14,7 @@ type Props = {
   children?: ReactNode
 }
 
-const Table = ({ tableTitle, tableHeaders, tableData, children }: Props) => {
+export const Table = ({ tableTitle, tableHeaders, tableData, children }: Props) => {
   const columnComponents = getColumnComponents(children)
 
   return (
@@ -42,5 +42,3 @@ const Table = ({ tableTitle, tableHeaders, tableData, children }: Props) => {
     </table>
   )
 }
-
-export default Table

@@ -1,2 +1,1 @@
-import PhaseBanner from "./PhaseBanner"
-export default PhaseBanner
+export { default } from "./PhaseBanner"

@@ -26,7 +26,7 @@ export default async (
   }
 
   if (result.rowCount === 0) {
-    return Error("User not found")
+    return new Error("User not found")
   }
 
   return undefined

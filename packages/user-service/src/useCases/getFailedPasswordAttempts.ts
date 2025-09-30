@@ -16,7 +16,7 @@ export default async (connection: Database, emailAddress: string): PromiseResult
   }
 
   if (!result) {
-    return Error("User not found")
+    return new Error("User not found")
   }
 
   return result.failedPasswordAttempts

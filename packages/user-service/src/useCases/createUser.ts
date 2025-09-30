@@ -103,7 +103,7 @@ export default async (
       const insertUserResult = await insertUser(task, userDetails)
       if (isError(insertUserResult)) {
         logger.error(insertUserResult)
-        return Error("Could not insert record into users table")
+        return new Error("Could not insert record into users table")
       }
 
       const groups = await getUserHierarchyGroups(connection, currentUser.username ?? "")
@@ -124,7 +124,7 @@ export default async (
 
   if (isError(createUserResult)) {
     logger.error(createUserResult)
-    return Error("Could not create user")
+    return new Error("Could not create user")
   }
 
   return undefined

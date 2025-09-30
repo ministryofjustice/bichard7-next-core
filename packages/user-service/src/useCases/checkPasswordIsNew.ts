@@ -26,7 +26,7 @@ const checkPasswordIsNew = async (
     const comparedResults = await Promise.all(filteredRows)
 
     if (comparedResults.some((item) => item === true)) {
-      return Error("Cannot save previously used password.")
+      return new Error("Cannot save previously used password.")
     }
   } catch (error) {
     return isError(error) ? error : Error("Error verifying password")

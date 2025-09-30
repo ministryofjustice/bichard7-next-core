@@ -47,7 +47,7 @@ const getApiEventLogger =
       })
 
       if (apiResult.status !== HttpStatus.Created) {
-        return Error(`Could not log event. API returned ${apiResult.status}. ${apiResult.data}`)
+        return new Error(`Could not log event. API returned ${apiResult.status}. ${apiResult.data}`)
       }
     } catch (error) {
       logger.error(error)

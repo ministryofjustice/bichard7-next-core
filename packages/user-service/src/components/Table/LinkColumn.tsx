@@ -7,7 +7,8 @@ interface Props {
   item?: KeyValuePair<string, string>
   "data-test"?: string
 }
-const LinkColumn = ({ field, href, item, "data-test": dataTest }: Props) => {
+
+export const LinkColumn = ({ field, href, item, "data-test": dataTest }: Props) => {
   if (!item) {
     return <>{"Error while rendering LinkColumn component. Item must have value."}</>
   }
@@ -18,5 +19,3 @@ const LinkColumn = ({ field, href, item, "data-test": dataTest }: Props) => {
     </Link>
   )
 }
-
-export default LinkColumn

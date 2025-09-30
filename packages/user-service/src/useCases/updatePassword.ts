@@ -23,7 +23,7 @@ export default async (connection: Database | Task, emailAddress: string, newPass
   }
 
   if (result.rowCount === 0) {
-    return Error("User not found.")
+    return new Error("User not found.")
   }
 
   return undefined
