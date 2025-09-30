@@ -8,6 +8,7 @@ import { setCookie } from "cookies-next"
 import { OptionsType } from "cookies-next/lib/types"
 import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
 import Header from "features/CourtCaseDetails/Header"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -44,7 +45,6 @@ import logger from "utils/logger"
 import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
-import { canUseTriggerAndExceptionQualityAuditing } from "../../../features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
