@@ -28,6 +28,19 @@
       "asyncComplete": false
     },
     {
+      "name": "store_audit_log_events",
+      "taskReferenceName": "store_audit_log_events",
+      "inputParameters": {
+        "correlationId": "${workflow.correlationId}",
+        "auditLogEvents": "${process_resubmit.output.auditLogEvents}"
+      },
+      "type": "SIMPLE",
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false,
+      "permissive": false
+    },
+    {
       "name": "switch_on_phase",
       "taskReferenceName": "switch_on_phase",
       "type": "SWITCH",
