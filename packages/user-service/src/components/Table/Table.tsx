@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import KeyValuePair from "types/KeyValuePair"
-import getColumnComponents from "./getColumnComponents"
+import { getColumnComponents } from "./getColumnComponents"
 import TableColumn from "./TableColumn"
 
 export type TableHeader = [string, string]
