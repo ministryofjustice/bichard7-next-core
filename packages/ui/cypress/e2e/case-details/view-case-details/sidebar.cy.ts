@@ -85,7 +85,7 @@ describe("sidebar", () => {
     })
 
     it("Should not show qualityStatusCard when user groups are incorrect", () => {
-      loginAndVisit("UserWithoutAuditGroups", "/bichard/court-cases/0")
+      loginAndVisit("/bichard/court-cases/0")
 
       cy.get("ul.moj-sub-navigation__list").should("exist")
       cy.get('[name="quality-status-note"]').should("not.exist")
