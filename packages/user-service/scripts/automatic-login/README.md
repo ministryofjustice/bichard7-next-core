@@ -21,7 +21,7 @@ $ LOGIN_URL="http://localhost:3000/users/login" npm start
 The script uses the following environment variables for configuration:
 
 | Variable       | Default       | Description                                                       |
-|----------------|---------------|-------------------------------------------------------------------|
+| -------------- | ------------- | ----------------------------------------------------------------- |
 | `$DB_HOST`     | `"localhost"` | The hostname of the database server                               |
 | `$DB_PORT`     | `5432`        | The port number to connect to the database on                     |
 | `$DB_DATABASE` | `"bichard"`   | The name of the database to connect to                            |
