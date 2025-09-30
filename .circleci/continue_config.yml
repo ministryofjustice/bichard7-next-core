@@ -201,6 +201,32 @@ commands:
             USE_API_CASE_RESUBMIT_ENDPOINT="<<parameters.USE_API_CASE_RESUBMIT_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
+ui_params: &ui_params
+  ms-edge:
+    type: boolean
+    default: false
+  api:
+    type: boolean
+    default: false
+  forces-with-api-enabled:
+    type: string
+    default: ""
+  forces-with-court-date-received-date-mismatch-enabled:
+    type: string
+    default: ""
+  forces-with-trigger-and-exception-quality-auditing-enabled:
+    type: string
+    default: ""
+  api-case-details:
+    type: boolean
+    default: false
+  api-case-list:
+    type: boolean
+    default: false
+  api-case-resubmit:
+    type: boolean
+    default: false
+
 jobs:
   lint_and_build:
     machine:
@@ -689,32 +715,6 @@ jobs:
           path: ~/project/packages/ui/cypress/videos
       - store_artifacts:
           path: ~/project/packages/ui/cypress/screenshots
-
-  ui_params: &ui_params
-    ms-edge:
-      type: boolean
-      default: false
-    api:
-      type: boolean
-      default: false
-    forces-with-api-enabled:
-      type: string
-      default: ""
-    forces-with-court-date-received-date-mismatch-enabled:
-      type: string
-      default: ""
-    forces-with-trigger-and-exception-quality-auditing-enabled:
-      type: string
-      default: ""
-    api-case-details:
-      type: boolean
-      default: false
-    api-case-list:
-      type: boolean
-      default: false
-    api-case-resubmit:
-      type: boolean
-      default: false
 
   cypress_e2e_tests:
     machine:
