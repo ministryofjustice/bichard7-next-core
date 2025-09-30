@@ -1,6 +1,8 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
+import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 
 import type { AuditQuality } from "../../services/db/cases/auditCase"
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
@@ -9,6 +11,13 @@ import auditCase from "../../services/db/cases/auditCase"
 import insertNote from "../../services/db/cases/insertNote"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../types/errors/UnprocessableEntityError"
+
+const formatNote = (triggerQuality?: number, errorQuality?: number, note?: string): string => {
+  const triggerQualityChecked = triggerQualityValues[(triggerQuality ?? 1) as keyof typeof triggerQualityValues]
+  const errorQualityChecked = exceptionQualityValues[(errorQuality ?? 1) as keyof typeof exceptionQualityValues]
+
+  return `Trigger quality: ${triggerQualityChecked}. Exception quality: ${errorQualityChecked}. ${note ?? ""}`
+}
 
 const saveAuditResults = async (
   database: WritableDatabaseConnection,
@@ -29,7 +38,7 @@ const saveAuditResults = async (
         throw new UnprocessableEntityError("Audit results could not be saved")
       }
 
-      const errorListNote = `Trigger quality: ${auditQuality.triggerQuality}. Exception quality: ${auditQuality.errorQuality}. ${note}`
+      const errorListNote = formatNote(auditQuality.triggerQuality, auditQuality.errorQuality, note)
       const noteSaved = await insertNote(transactionDb, caseId, errorListNote, userId)
 
       if (isError(noteSaved)) {

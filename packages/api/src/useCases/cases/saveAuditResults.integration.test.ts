@@ -28,7 +28,7 @@ let user: User
 
 describe("saveAuditResults", () => {
   const userId = "testUser"
-  const mockAuditQuality = { errorQuality: 1, triggerQuality: 2 }
+  const mockAuditQuality = { errorQuality: 6, triggerQuality: 2 }
   const testNote = "This is the test note"
 
   beforeEach(async () => {
@@ -67,7 +67,7 @@ describe("saveAuditResults", () => {
       expect(isError(result)).toBe(false)
 
       const updatedCase = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
-      expect(updatedCase.errorQualityChecked).toBe(1)
+      expect(updatedCase.errorQualityChecked).toBe(6)
       expect(updatedCase.triggerQualityChecked).toBe(2)
     })
 
@@ -126,7 +126,7 @@ describe("saveAuditResults", () => {
 
   describe("when saving note", () => {
     it("saves note successfully", async () => {
-      const expectedNoteText = "Trigger quality: 2. Exception quality: 1. This is the test note"
+      const expectedNoteText = "Trigger quality: Pass. Exception quality: Manual Disposal Fail. This is the test note"
       const result = await saveAuditResults(
         testDatabaseGateway.writable,
         caseObj.errorId,
