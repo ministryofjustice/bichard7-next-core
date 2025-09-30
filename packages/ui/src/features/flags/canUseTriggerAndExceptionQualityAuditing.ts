@@ -1,8 +1,14 @@
 import { FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED } from "config"
 import type User from "../../services/entities/User"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-export const canUseTriggerAndExceptionQualityAuditing = ({ featureFlags, visibleForces }: User): boolean => {
+export const canUseTriggerAndExceptionQualityAuditing = ({ featureFlags, visibleForces, groups }: User): boolean => {
   if (!featureFlags.useTriggerAndExceptionQualityAuditingEnabled) {
+    return false
+  }
+
+  const hasRequiredGroup = groups.includes(UserGroup.Audit) || groups.includes(UserGroup.AuditLoggingManager)
+  if (!hasRequiredGroup) {
     return false
   }
 
