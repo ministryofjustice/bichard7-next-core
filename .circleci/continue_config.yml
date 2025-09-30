@@ -180,6 +180,9 @@ commands:
       USE_API_CASES_INDEX_ENDPOINT:
         default: false
         type: boolean
+      USE_API_CASE_RESUBMIT_ENDPOINT:
+        default: false
+        type: boolean
     steps:
       - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
       - build_core_images
@@ -195,6 +198,7 @@ commands:
             FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<<parameters.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED>>" \
             USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
             USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
+            USE_API_CASE_RESUBMIT_ENDPOINT="<<parameters.USE_API_CASE_RESUBMIT_ENDPOINT>>" \
             .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
 
 jobs:
@@ -686,6 +690,32 @@ jobs:
       - store_artifacts:
           path: ~/project/packages/ui/cypress/screenshots
 
+  ui_params: &ui_params
+    ms-edge:
+      type: boolean
+      default: false
+    api:
+      type: boolean
+      default: false
+    forces-with-api-enabled:
+      type: string
+      default: ""
+    forces-with-court-date-received-date-mismatch-enabled:
+      type: string
+      default: ""
+    forces-with-trigger-and-exception-quality-auditing-enabled:
+      type: string
+      default: ""
+    api-case-details:
+      type: boolean
+      default: false
+    api-case-list:
+      type: boolean
+      default: false
+    api-case-resubmit:
+      type: boolean
+      default: false
+
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
@@ -693,27 +723,7 @@ jobs:
     resource_class: large
     parallelism: 10
     parameters:
-      ms-edge:
-        type: boolean
-        default: false
-      api:
-        type: boolean
-        default: false
-      forces-with-api-enabled:
-        type: string
-        default: ""
-      forces-with-court-date-received-date-mismatch-enabled:
-        type: string
-        default: "01"
-      forces-with-trigger-and-exception-quality-auditing-enabled:
-        type: string
-        default: ""
-      api-case-details:
-        type: boolean
-        default: false
-      api-case-list:
-        type: boolean
-        default: false
+      <<: *ui_params
     steps:
       - unless:
           condition:
@@ -776,13 +786,14 @@ jobs:
             FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<< parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>" \
             USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
             USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
+            USE_API_CASE_RESUBMIT_ENDPOINT="<< parameters.api-case-resubmit >>" \
             bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
             equal: [true, << parameters.api >>]
           steps:
             run:
-              command: npm run api
+              command: npm run conductor
       - run:
           name: Run UI tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -803,27 +814,7 @@ jobs:
     resource_class: large
     parallelism: 10
     parameters:
-      ms-edge:
-        type: boolean
-        default: false
-      api:
-        type: boolean
-        default: false
-      forces-with-api-enabled:
-        type: string
-        default: ""
-      forces-with-court-date-received-date-mismatch-enabled:
-        type: string
-        default: ""
-      forces-with-trigger-and-exception-quality-auditing-enabled:
-        type: string
-        default: ""
-      api-case-details:
-        type: boolean
-        default: false
-      api-case-list:
-        type: boolean
-        default: false
+      <<: *ui_params
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -885,6 +876,7 @@ jobs:
           FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
           USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
           USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
+          USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
@@ -1017,6 +1009,7 @@ workflows:
           forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
+          api-case-resubmit: true
           requires:
             - build-ui
             - build_api_docker_image
@@ -1033,6 +1026,7 @@ workflows:
           forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
+          api-case-resubmit: true
           requires:
             - build-ui
             - build_api_docker_image
