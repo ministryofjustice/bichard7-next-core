@@ -2,13 +2,13 @@ import styled from "styled-components"
 
 export const DropdownContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
   gap: 1rem;
 
   .govuk-form-group {
     flex: 1;
     select {
       width: 100%;
+      min-width: unset;
     }
   }
 `
