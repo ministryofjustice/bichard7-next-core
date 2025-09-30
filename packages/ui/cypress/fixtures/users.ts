@@ -56,7 +56,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "Supervisor",
     email: "auditSupervisor@example.com",
     password: hashedPassword,
-    groups: [UserGroup.Audit, UserGroup.AuditLoggingManager],
+    groups: [UserGroup.Audit, UserGroup.AuditLoggingManager, UserGroup.NewUI],
     featureFlags: {
       useCourtDateReceivedDateMismatchFiltersEnabled: true,
       useTriggerAndExceptionQualityAuditingEnabled: true
