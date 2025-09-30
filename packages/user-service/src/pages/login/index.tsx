@@ -233,7 +233,7 @@ const handleRememberedEmailStage = async (
   return logInUser(connection, context, user)
 }
 
-const handlePost = (
+const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
 ): Promise<GetServerSidePropsResult<Props>> => {
@@ -253,7 +253,7 @@ const handlePost = (
     return handleRememberedEmailStage(context, serviceMessages, connection)
   }
 
-  return Promise.resolve(createRedirectResponse("/500"))
+  return createRedirectResponse("/500")
 }
 
 const handleGet = (
@@ -302,8 +302,9 @@ export const getServerSideProps = withMultipleServerSideProps(
     const { req, currentUser } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
 
     if (currentUser) {
-      return Promise.resolve(createRedirectResponse("/"))
+      return createRedirectResponse("/")
     }
+
     const connection = getConnection()
     let serviceMessagesResult = await getServiceMessages(connection, 0)
 
@@ -317,10 +318,10 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isGet(req)) {
-      return Promise.resolve(handleGet(context, serviceMessagesResult.result))
+      return handleGet(context, serviceMessagesResult.result)
     }
 
-    return Promise.resolve(createRedirectResponse("/400"))
+    return createRedirectResponse("/400")
   }
 )
 

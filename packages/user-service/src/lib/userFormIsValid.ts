@@ -10,7 +10,7 @@ interface ValidationResult {
 }
 
 const userFormIsValid = (
-  { username, forenames, surname, emailAddress }: Partial<User> | Partial<User>,
+  { username, forenames, surname, emailAddress }: Partial<User>,
   isEdit: boolean
 ): ValidationResult => {
   const validationResult = {

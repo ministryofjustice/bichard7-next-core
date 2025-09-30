@@ -75,7 +75,7 @@ const handleEmailStage = async (
     suggestPassword: "true"
   })
 
-  return Promise.resolve({
+  return {
     props: {
       csrfToken,
       emailAddress: normalisedEmail,
@@ -84,7 +84,7 @@ const handleEmailStage = async (
       suggestedPasswordUrl,
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
     }
-  })
+  }
 }
 
 const handleValidateCodeStage = async (
@@ -189,7 +189,7 @@ const handleValidateCodeStage = async (
   }
 }
 
-const handlePost = (
+const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
 ): Promise<GetServerSidePropsResult<Props>> => {
@@ -205,7 +205,7 @@ const handlePost = (
     return handleValidateCodeStage(context, serviceMessages, connection)
   }
 
-  return Promise.resolve(createRedirectResponse("/500"))
+  return createRedirectResponse("/500")
 }
 
 const handleGet = (
@@ -264,10 +264,10 @@ export const getServerSideProps = withCsrf(
     }
 
     if (isGet(req)) {
-      return Promise.resolve(handleGet(context, serviceMessagesResult.result))
+      return handleGet(context, serviceMessagesResult.result)
     }
 
-    return Promise.resolve(createRedirectResponse("/400"))
+    return createRedirectResponse("/400")
   }
 )
 
