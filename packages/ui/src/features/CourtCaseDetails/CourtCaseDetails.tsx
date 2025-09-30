@@ -117,5 +117,4 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit, canUseTriggerA
     </PanelsGridRow>
   )
 }
-
 export default CourtCaseDetails
