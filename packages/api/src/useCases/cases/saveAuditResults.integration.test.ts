@@ -4,6 +4,8 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
+import type { AuditQuality } from "../../services/db/cases/auditCase"
+
 import auditCase from "../../services/db/cases/auditCase"
 import fetchCase from "../../services/db/cases/fetchCase"
 import fetchNotes from "../../services/db/cases/fetchNotes"
@@ -28,7 +30,7 @@ let user: User
 
 describe("saveAuditResults", () => {
   const userId = "testUser"
-  const mockAuditQuality = { errorQuality: 6, triggerQuality: 2 }
+  const mockAuditQuality: AuditQuality = { errorQuality: 6, triggerQuality: 2 }
   const testNote = "This is the test note"
 
   beforeEach(async () => {

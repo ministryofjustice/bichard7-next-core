@@ -1,4 +1,6 @@
+import type { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 
 import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -12,9 +14,9 @@ import insertNote from "../../services/db/cases/insertNote"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../types/errors/UnprocessableEntityError"
 
-const formatNote = (triggerQuality?: number, errorQuality?: number, note?: string): string => {
-  const triggerQualityChecked = triggerQualityValues[(triggerQuality ?? 1) as keyof typeof triggerQualityValues]
-  const errorQualityChecked = exceptionQualityValues[(errorQuality ?? 1) as keyof typeof exceptionQualityValues]
+const formatNote = (triggerQuality?: TriggerQuality, errorQuality?: ExceptionQuality, note?: string): string => {
+  const triggerQualityChecked = triggerQualityValues[triggerQuality ?? 1]
+  const errorQualityChecked = exceptionQualityValues[errorQuality ?? 1]
 
   return `Trigger quality: ${triggerQualityChecked}. Exception quality: ${errorQualityChecked}. ${note ?? ""}`
 }

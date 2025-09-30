@@ -3,7 +3,9 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ExceptionQualitySchema } from "@moj-bichard7/common/types/ExceptionQuality"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { TriggerQualitySchema } from "@moj-bichard7/common/types/TriggerQuality"
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
@@ -25,9 +27,9 @@ import saveAuditResults from "../../../useCases/cases/saveAuditResults"
 
 const bodySchema = z
   .object({
-    errorQuality: z.number().int().min(0).max(10).optional(),
+    errorQuality: ExceptionQualitySchema.optional(),
     note: z.string().optional(),
-    triggerQuality: z.number().int().min(0).max(10).optional()
+    triggerQuality: TriggerQualitySchema.optional()
   })
   .refine((data) => data.errorQuality !== undefined || data.triggerQuality !== undefined, {
     message: "At least one of errorQuality or triggerQuality must be provided"
