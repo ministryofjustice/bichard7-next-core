@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render the component and match the snapshot when there are messages 1`] = `
+<div>
+  <div
+    class="top-padding-0-2-5 govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-full"
+    >
+      <p
+        class="govuk-body govuk-!-font-size-16 service-message-0-2-16"
+      >
+        <time
+          aria-label="time"
+          class="govuk-!-font-weight-bold govuk-!-font-size-14"
+          title="28 September 2021 10:12"
+        >
+          28 September 2021
+        </time>
+        <br />
+        Message 1
+      </p>
+    </div>
+  </div>
+  <div
+    class="top-padding-0-2-5 govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-full"
+    >
+      <p
+        class="govuk-body govuk-!-font-size-16 service-message-0-2-16"
+      >
+        <time
+          aria-label="time"
+          class="govuk-!-font-weight-bold govuk-!-font-size-14"
+          title="29 September 2021 11:14"
+        >
+          29 September 2021
+        </time>
+        <br />
+        Message 2
+      </p>
+    </div>
+  </div>
+  <div
+    class="top-padding-0-2-5 govuk-grid-row"
+  >
+    <div
+      class="govuk-grid-column-full"
+    >
+      <p
+        class="govuk-body govuk-!-font-size-16 service-message-0-2-16"
+      >
+        <time
+          aria-label="time"
+          class="govuk-!-font-weight-bold govuk-!-font-size-14"
+          title="10 October 2021 16:30"
+        >
+          10 October 2021
+        </time>
+        <br />
+        Message 3
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`should render the component and match the snapshot when there are no messages 1`] = `
+<div>
+  <p
+    class="govuk-body"
+  >
+    There are no service messages to display.
+  </p>
+</div>
+`;
