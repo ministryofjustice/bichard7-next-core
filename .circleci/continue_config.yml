@@ -151,56 +151,6 @@ commands:
             <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
 
-  start_bichard7_legacy:
-    parameters:
-      ENABLE_PHASE_2:
-        default: "true"
-        type: string
-      ENABLE_PHASE_3:
-        default: "true"
-        type: string
-      SKIP_IMAGES:
-        default: ""
-        type: string
-      USE_API:
-        default: false
-        type: boolean
-      FORCES_WITH_API_ENABLED:
-        default: ""
-        type: string
-      FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED:
-        default: ""
-        type: string
-      FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED:
-        default: ""
-        type: string
-      USE_API_CASE_ENDPOINT:
-        default: false
-        type: boolean
-      USE_API_CASES_INDEX_ENDPOINT:
-        default: false
-        type: boolean
-      USE_API_CASE_RESUBMIT_ENDPOINT:
-        default: false
-        type: boolean
-    steps:
-      - run: bash .circleci/scripts/fetch-docker-images.sh nodejs-20-2023 # required for message-forwarder in core
-      - build_core_images
-      - build_audit_logging_images
-      - run:
-          name: Start bichard7 legacy
-          command: |
-            ENABLE_PHASE_2=<<parameters.ENABLE_PHASE_2>> \
-            ENABLE_PHASE_3=<<parameters.ENABLE_PHASE_3>> \
-            USE_API="<<parameters.USE_API>>" \
-            FORCES_WITH_API_ENABLED="<<parameters.FORCES_WITH_API_ENABLED>>" \
-            FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<<parameters.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED>>" \
-            FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<<parameters.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED>>" \
-            USE_API_CASE_ENDPOINT="<<parameters.USE_API_CASE_ENDPOINT>>" \
-            USE_API_CASES_INDEX_ENDPOINT="<<parameters.USE_API_CASES_INDEX_ENDPOINT>>" \
-            USE_API_CASE_RESUBMIT_ENDPOINT="<<parameters.USE_API_CASE_RESUBMIT_ENDPOINT>>" \
-            .circleci/scripts/run-infrastructure.sh '<< parameters.SKIP_IMAGES >>' all-legacy
-
 ui_params: &ui_params
   ms-edge:
     type: boolean
@@ -226,6 +176,15 @@ ui_params: &ui_params
   api-case-resubmit:
     type: boolean
     default: false
+
+ui_envs: &ui_envs
+  USE_API: << parameters.api >>
+  FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
+  FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
+  FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
+  USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
+  USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
+  USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
 
 jobs:
   lint_and_build:
@@ -779,15 +738,9 @@ jobs:
           command: ./.circleci/scripts/ui-scripts/install-cypress.sh
       - run:
           name: Building infrastructure
-          command: |
-            USE_API="<< parameters.api >>" \
-            FORCES_WITH_API_ENABLED="<< parameters.forces-with-api-enabled >>" \
-            FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED="<< parameters.forces-with-court-date-received-date-mismatch-enabled >>" \
-            FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED="<< parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>" \
-            USE_API_CASE_ENDPOINT="<< parameters.api-case-details >>" \
-            USE_API_CASES_INDEX_ENDPOINT="<< parameters.api-case-list >>" \
-            USE_API_CASE_RESUBMIT_ENDPOINT="<< parameters.api-case-resubmit >>" \
-            bash .circleci/scripts/run-infrastructure.sh ui ui
+          environment:
+            <<: *ui_envs
+          command: bash .circleci/scripts/run-infrastructure.sh ui ui
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -863,27 +816,25 @@ jobs:
           steps:
             - install_ms_edge
       - fetch_images:
-          images: nginx-nodejs-20-2023-supervisord
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - build_core_images
+      - build_audit_logging_images
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
           command: "npm run install-browsers"
-      - start_bichard7_legacy:
-          SKIP_IMAGES: "ui"
-          USE_API: << parameters.api >>
-          FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
-          FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
-          FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
-          USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
-          USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
-          USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
+      - run:
+          name: Building infrastructure
+          environment:
+             <<: *ui_envs
+          command: bash .circleci/scripts/run-infrastructure.sh ui all
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
           environment:
             RECORD: "true"
             NEXTUI: "true"
-            MESSAGE_ENTRY_POINT: "mq"
+            MESSAGE_ENTRY_POINT: "s3"
             MS_EDGE: "<< parameters.ms-edge >>"
           command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
