@@ -1,7 +1,7 @@
 import { type TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { randomUUID } from "crypto"
 import { addDays } from "date-fns"
-import { v4 as uuid } from "uuid"
 
 import type { DynamoAuditLog, InternalDynamoAuditLog } from "../../../../types/AuditLog"
 import type {
@@ -634,7 +634,11 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
         return compressedEvent
       }
 
-      const eventToInsert: InternalDynamoAuditLogEvent = { ...compressedEvent, _id: uuid(), _messageId: messageId }
+      const eventToInsert: InternalDynamoAuditLogEvent = {
+        ...compressedEvent,
+        _id: randomUUID(),
+        _messageId: messageId
+      }
       dynamoUpdates.push({
         Put: {
           ConditionExpression: "attribute_not_exists(#id)",
@@ -658,7 +662,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
         return compressedEvent
       }
 
-      const eventToInsert: InternalDynamoAuditLogUserEvent = { ...compressedEvent, _id: uuid() }
+      const eventToInsert: InternalDynamoAuditLogUserEvent = { ...compressedEvent, _id: randomUUID() }
       dynamoUpdates.push({
         Put: {
           ConditionExpression: "attribute_not_exists(#id)",
