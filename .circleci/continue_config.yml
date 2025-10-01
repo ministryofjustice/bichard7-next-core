@@ -163,10 +163,10 @@ ui_params: &ui_params
     default: ""
   forces-with-court-date-received-date-mismatch-enabled:
     type: string
-    default: ""
+    default: "01"
   forces-with-trigger-and-exception-quality-auditing-enabled:
     type: string
-    default: ""
+    default: "01"
   api-case-details:
     type: boolean
     default: false
@@ -956,8 +956,6 @@ workflows:
           name: cypress_e2e_tests_api
           api: true
           forces-with-api-enabled: "01"
-          forces-with-court-date-received-date-mismatch-enabled: "01"
-          forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
           api-case-resubmit: true
@@ -973,8 +971,6 @@ workflows:
           name: cucumber_e2e_tests_api
           api: true
           forces-with-api-enabled: "01"
-          forces-with-court-date-received-date-mismatch-enabled: "01"
-          forces-with-trigger-and-exception-quality-auditing-enabled: "01"
           api-case-details: true
           api-case-list: true
           api-case-resubmit: true
