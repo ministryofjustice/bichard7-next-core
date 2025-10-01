@@ -1,9 +1,12 @@
+import { DynamoDBClient, QueryCommand, QueryCommandInput } from "@aws-sdk/client-dynamodb"
+import { unmarshall } from "@aws-sdk/util-dynamodb"
 import { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { getDateString } from "./common"
-import { DynamoDBClient, QueryCommand, QueryCommandInput } from "@aws-sdk/client-dynamodb"
-import { unmarshall } from "@aws-sdk/util-dynamodb"
+import { extractPncErrorsFromEvent, PncError } from "./extractPncErrors"
+
+type PncErrorsResult = { pncErrors: PncError[]; totalEvents: number }
 
 const log = (...params: unknown[]) => {
   const logContent = [new Date().toISOString(), " - ", ...params]
@@ -21,9 +24,15 @@ const generateDates = (start: Date, end: Date): Date[] => {
   return dates
 }
 
-const fetchEvents = async (dynamo: DynamoDBClient, eventsTableName: string, startDate: Date, endDate: Date) => {
+const fetchPncErrorEvents = async (
+  dynamo: DynamoDBClient,
+  eventsTableName: string,
+  startDate: Date,
+  endDate: Date
+): Promise<PncErrorsResult | Error> => {
   let lastEvaluatedKey
-  let events: AuditLogEvent[] = []
+  let pncErrors: PncError[] = []
+  let totalEvents = 0
 
   while (true) {
     const query: QueryCommandInput = {
@@ -50,31 +59,35 @@ const fetchEvents = async (dynamo: DynamoDBClient, eventsTableName: string, star
     }
 
     if (!eventsResult.Items || eventsResult.Items.length === 0) {
-      return events
+      return { pncErrors, totalEvents }
     }
 
+    totalEvents += eventsResult.Items?.length ?? 0
     lastEvaluatedKey = eventsResult?.LastEvaluatedKey
-    const fetchedEvents = eventsResult.Items.map((item) => unmarshall(item)) as AuditLogEvent[]
-    events = events.concat(fetchedEvents)
+    const fetchedPncErrors = eventsResult.Items.map((item) =>
+      extractPncErrorsFromEvent(unmarshall(item) as AuditLogEvent)
+    ).filter(({ pncErrorMessage }) => !!pncErrorMessage)
+    pncErrors = pncErrors.concat(fetchedPncErrors)
 
-    console.log(`Fetched events: ${fetchedEvents.length} - Current date: ${lastEvaluatedKey?.timestamp?.S}`)
+    console.log(`Fetched events: ${fetchedPncErrors.length} - Current date: ${lastEvaluatedKey?.timestamp?.S}`)
 
     if (!eventsResult?.LastEvaluatedKey) {
-      console.log(`\nTotal number of audit log events: ${events.length}`)
+      console.log(`\nTotal number of audit log events: ${pncErrors.length}`)
 
-      return events
+      return { pncErrors, totalEvents }
     }
   }
 }
 
-const getPncResponseReceivedEvents = async (
+const fetchPncErrors = async (
   dynamo: DynamoDBClient,
   eventsTableName: string,
   startDate: Date,
   endDate: Date
-): Promise<AuditLogEvent[] | Error> => {
+): Promise<PncErrorsResult | Error> => {
   log(`Getting messages for the period between ${getDateString(startDate)} and ${getDateString(endDate)}`)
-  const allEvents: AuditLogEvent[] = []
+  const allPncErrors: PncError[] = []
+  let totalEvents = 0
   console.log(`Fetching messages and events between ${startDate.toISOString()} and ${endDate.toISOString()}...`)
   const dates = generateDates(startDate, endDate)
   const totalDates = dates.length
@@ -88,12 +101,21 @@ const getPncResponseReceivedEvents = async (
 
       const endDate = new Date(date)
       endDate.setDate(endDate.getDate() + 1)
-      const events = await fetchEvents(dynamo, eventsTableName, date, endDate)
-      if (isError(events)) {
-        throw events
-      }
+      while (true) {
+        const eventsResult = await fetchPncErrorEvents(dynamo, eventsTableName, date, endDate)
+        if (isError(eventsResult)) {
+          if (eventsResult.name === "ThrottlingException") {
+            console.log("ThrottlingException - Waiting 5 seconds (", date, ")")
+            await new Promise((resolve) => setTimeout(resolve, 5_000))
+            continue
+          }
+          throw eventsResult
+        }
 
-      allEvents.push(...events)
+        totalEvents += eventsResult.totalEvents
+        allPncErrors.push(...eventsResult.pncErrors)
+        break
+      }
     }
   }
 
@@ -112,7 +134,7 @@ const getPncResponseReceivedEvents = async (
       .concat(reporter())
   )
 
-  return allEvents.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1))
+  return { pncErrors: allPncErrors.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1)), totalEvents }
 }
 
-export default getPncResponseReceivedEvents
+export default fetchPncErrors
