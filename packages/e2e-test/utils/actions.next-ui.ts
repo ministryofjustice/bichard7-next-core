@@ -155,7 +155,9 @@ export const checkOffence = function (offenceCode: string, offenceId: string) {
 export const openRecordFor = async function (this: Bichard, name: string) {
   await waitForRecord(name, this.browser.page)
 
-  const [link] = await this.browser.page.$$(`xpath/.//table/tbody/tr/*/a[contains(.,"${name}")]`)
+  const links = await this.browser.page.$$(`xpath/.//table/tbody/tr/*/a[contains(.,"${name}")]`)
+
+  const link = links[links.length - 1]
 
   await Promise.all([link.click(), this.browser.page.waitForNavigation()])
 }
