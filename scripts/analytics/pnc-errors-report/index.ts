@@ -12,16 +12,29 @@
  * e.g.
  * aws-vault exec qsolution-production -- npx ts-node -T ./scripts/analytics/pnc-errors-report/index.ts 2023-10-01 2023-11-01
  *
+ * e.g. To only use the PNC error code to generate the report (excluding the error message)
+ * aws-vault exec qsolution-production -- npx ts-node -T ./scripts/analytics/pnc-errors-report/index.ts 2023-10-01 2023-11-01 --only-code
+ *
  */
 
-import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
-import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
 import { Lambda } from "@aws-sdk/client-lambda"
-import { getDateString, pncErrorsFilePath } from "./common"
-import getPncResponseReceivedEvents from "./getPncResponseReceivedEvents"
-import extractPncErrors from "./extractPncErrors"
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
+import { isError } from "@moj-bichard7/e2e-tests/utils/isError"
 import analysePncErrors from "./analysePncErrors"
+import { getDateString } from "./common"
+import { PncError } from "./extractPncErrors"
+import fetchPncErrors from "./fetchPncErrors"
+
+export type PncErrorsResult = {
+  dateRange: { startDate: string; endDate: string }
+  total: {
+    responses: number
+    successes: number
+    errors: number
+  }
+  pncErrors: PncError[]
+}
 
 const fs = require("fs")
 const WORKSPACE = process.env.WORKSPACE ?? "production"
@@ -52,39 +65,31 @@ const setup = async () => {
   dynamo = DynamoDBDocumentClient.from(service)
 }
 
-const getPncErrors = async () => {
-  const startDate = new Date(process.argv.slice(-2)[0])
-  const endDate = new Date(process.argv.slice(-1)[0])
+const getPncErrors = async (): Promise<PncErrorsResult> => {
+  const endDateArgIndex = process.argv.slice(-1)[0]?.startsWith("20") ? -1 : -2
+  const startDate = new Date(process.argv.slice(endDateArgIndex - 1)[0])
+  const endDate = new Date(process.argv.slice(endDateArgIndex)[0])
 
-  const pncResponseReceivedEvents = await getPncResponseReceivedEvents(dynamo, eventsTableName, startDate, endDate)
-  if (isError(pncResponseReceivedEvents)) {
-    throw pncResponseReceivedEvents
+  const pncErrorsResult = await fetchPncErrors(dynamo, eventsTableName, startDate, endDate)
+  if (isError(pncErrorsResult)) {
+    throw pncErrorsResult
   }
 
-  const pncErrors = extractPncErrors(pncResponseReceivedEvents)
-
-  fs.writeFileSync(
-    pncErrorsFilePath,
-    JSON.stringify(
-      {
-        dateRange: { startDate: getDateString(startDate), endDate: getDateString(endDate) },
-        total: {
-          responses: pncResponseReceivedEvents.length,
-          successes: pncResponseReceivedEvents.length - pncErrors.length,
-          errors: pncErrors.length
-        },
-        pncErrors
-      },
-      null,
-      2
-    )
-  )
+  return {
+    dateRange: { startDate: getDateString(startDate), endDate: getDateString(endDate) },
+    total: {
+      responses: pncErrorsResult.totalEvents,
+      successes: pncErrorsResult.totalEvents - pncErrorsResult.pncErrors.length,
+      errors: pncErrorsResult.pncErrors.length
+    },
+    pncErrors: pncErrorsResult.pncErrors
+  }
 }
 
 const main = async () => {
   await setup()
-  await getPncErrors()
-  analysePncErrors()
+  const errors = await getPncErrors()
+  analysePncErrors(errors)
 }
 
 main()
