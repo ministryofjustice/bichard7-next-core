@@ -34,7 +34,9 @@ export const QualityStatusCard = () => {
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
 
-  const auditQualitySet = courtCase.errorQualityChecked !== 1 || courtCase.triggerQualityChecked !== 1
+  const auditQualitySet = [courtCase.errorQualityChecked, courtCase.triggerQualityChecked].some(
+    (value) => value !== null && value !== 1
+  )
   const exceptionQuality = exceptionQualityChecked(courtCase.errorQualityChecked)
   const triggerQuality = triggerQualityChecked(courtCase.triggerQualityChecked)
 

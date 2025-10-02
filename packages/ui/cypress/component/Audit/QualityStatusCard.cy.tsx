@@ -1,9 +1,9 @@
-import { QualityStatusCard } from "features/CourtCaseDetails/Sidebar/Audit/QualityStatusCard"
-import { CsrfTokenContext } from "context/CsrfTokenContext"
 import { CourtCaseContext } from "context/CourtCaseContext"
+import { CsrfTokenContext } from "context/CsrfTokenContext"
+import { QualityStatusCard } from "features/CourtCaseDetails/Sidebar/Audit/QualityStatusCard"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
-import { MockNextRouter } from "../../support/MockNextRouter"
 import "../../../styles/globals.scss"
+import { MockNextRouter } from "../../support/MockNextRouter"
 
 const courtCase = {
   errorId: 1,
@@ -183,5 +183,31 @@ describe("QualityStatusCard", () => {
 
     cy.get("#quality-status-form-error").should("be.visible")
     cy.get("form").should("have.attr", "aria-describedby", "quality-status-form-error")
+  })
+
+  it("Does not show form elements when audit quality has already set", () => {
+    const courtCase = {
+      errorId: 1,
+      triggerQualityChecked: 2,
+      errorQualityChecked: 6
+    } as unknown as DisplayFullCourtCase
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusCard />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.contains("Trigger Quality:").should("be.visible")
+    cy.contains("Exception Quality:").should("be.visible")
+
+    cy.get("select[name='trigger-quality']").should("not.exist")
+    cy.get("select[name='exception-quality']").should("not.exist")
+    cy.get("textarea[name='quality-status-note']").should("not.exist")
+    cy.get("button#quality-status-submit").should("not.exist")
   })
 })
