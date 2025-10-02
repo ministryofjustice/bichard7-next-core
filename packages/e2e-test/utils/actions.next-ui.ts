@@ -633,6 +633,9 @@ export const submitRecord = async function (this: Bichard) {
   await Promise.all([page.click("#submit"), page.waitForNavigation()])
   await Promise.all([page.click("#confirm-submit"), page.waitForNavigation()])
   await Promise.all([page.click("#leave-and-unlock, #return-to-case-list"), page.waitForNavigation()])
+
+  const found = await reloadUntilContentInSelector(this.browser.page, "Submitted", "table.cases-list > tbody", 2)
+  expect(found).toBeFalsy()
 }
 
 export const submitRecordAndStayOnPage = async function (this: Bichard) {
@@ -670,9 +673,7 @@ export const checkRecordStatus = async function (
   await Promise.all([filterRecords(this, resolvedType, recordType), page.waitForNavigation()])
   expect(await this.browser.elementText("table.cases-list")).toMatch(recordName)
 
-  await resetFilters(this.browser)
-
-  await page.waitForFunction(() => !document.querySelector("#clear-filters"), { polling: "mutation" })
+  await Promise.all([resetFilters(this.browser), page.waitForNavigation()])
 }
 
 export const checkRecordNotStatus = async function (
