@@ -49,6 +49,19 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
       useTriggerAndExceptionQualityAuditingEnabled: false
     }
   },
+  AuditSupervisor: {
+    username: "AuditSupervisor",
+    visibleForces: ["001"],
+    forenames: "Audit",
+    surname: "Supervisor",
+    email: "auditSupervisor@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.Audit, UserGroup.AuditLoggingManager, UserGroup.NewUI],
+    featureFlags: {
+      useCourtDateReceivedDateMismatchFiltersEnabled: true,
+      useTriggerAndExceptionQualityAuditingEnabled: true
+    }
+  },
   "A really really really long.name": {
     username: "A really really really long.name",
     visibleForces: ["01"],

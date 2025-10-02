@@ -20,9 +20,10 @@ import { Offences } from "./Tabs/Panels/Offences/Offences"
 
 interface Props {
   canResolveAndSubmit: boolean
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
-const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
+const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit, canUseTriggerAndExceptionQualityAuditing }) => {
   const router = useRouter()
   const { query } = router
 
@@ -109,11 +110,11 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit }) => {
         <TriggersAndExceptions
           onNavigate={handleNavigation}
           canResolveAndSubmit={canResolveAndSubmit}
+          canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
           stopLeavingFn={stopLeavingFn}
         />
       </SideBar>
     </PanelsGridRow>
   )
 }
-
 export default CourtCaseDetails

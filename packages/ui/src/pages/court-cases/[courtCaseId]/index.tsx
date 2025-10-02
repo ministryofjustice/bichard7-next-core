@@ -8,6 +8,7 @@ import { setCookie } from "cookies-next"
 import { OptionsType } from "cookies-next/lib/types"
 import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
 import Header from "features/CourtCaseDetails/Header"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -254,6 +255,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         courtCase: caseDto,
         canReallocate: canReallocate(currentUser.username, caseDto),
         canResolveAndSubmit: canResolveOrSubmit(currentUser, caseDto),
+        canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0))
       }
     }
@@ -265,6 +267,7 @@ interface Props {
   courtCase: DisplayFullCourtCase
   canReallocate: boolean
   canResolveAndSubmit: boolean
+  canUseTriggerAndExceptionQualityAuditing: boolean
   csrfToken: string
   displaySwitchingSurveyFeedback: boolean
   previousPath: string
@@ -276,6 +279,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   user,
   canReallocate,
   canResolveAndSubmit,
+  canUseTriggerAndExceptionQualityAuditing,
   displaySwitchingSurveyFeedback,
   csrfToken,
   previousPath,
@@ -310,7 +314,10 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 }}
               >
                 <Header canReallocate={canReallocate} />
-                <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
+                <CourtCaseDetails
+                  canResolveAndSubmit={canResolveAndSubmit}
+                  canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
+                />
               </Layout>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>

@@ -10,6 +10,7 @@ import PncDetails from "./PncDetails/PncDetails"
 import { SidebarContainer } from "./Sidebar.styles"
 import TriggersList from "./TriggersList"
 import { Tabs, TabHeaders, TabHeader, TabPanel } from "components/Tabs"
+import { QualityStatusCard } from "./Audit/QualityStatusCard"
 
 const SidebarTab = {
   Exceptions: "exceptions",
@@ -20,10 +21,16 @@ const SidebarTab = {
 interface Props {
   onNavigate: NavigationHandler
   canResolveAndSubmit: boolean
+  canUseTriggerAndExceptionQualityAuditing: boolean
   stopLeavingFn: (newValue: boolean) => void
 }
 
-const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
+const Sidebar = ({
+  onNavigate,
+  canResolveAndSubmit,
+  canUseTriggerAndExceptionQualityAuditing,
+  stopLeavingFn
+}: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
   const { fetchNewCsrfToken } = useRefreshCsrfToken()
@@ -67,6 +74,9 @@ const Sidebar = ({ onNavigate, canResolveAndSubmit, stopLeavingFn }: Props) => {
             <PncDetails />
           </TabPanel>
         </Tabs>
+      </ConditionalRender>
+      <ConditionalRender isRendered={canUseTriggerAndExceptionQualityAuditing}>
+        <QualityStatusCard />
       </ConditionalRender>
     </SidebarContainer>
   )
