@@ -1,17 +1,19 @@
-import { useState, type FormEventHandler, useActionState } from "react"
-import { useFormStatus } from "react-dom"
+import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import axios from "axios"
-import { useRouter } from "next/router"
+import { Button } from "components/Buttons/Button"
 import { Card } from "components/Card"
 import { NoteTextArea } from "components/NoteTextArea"
-import { Button } from "components/Buttons/Button"
 import { MAX_NOTE_LENGTH } from "config"
-import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCourtCase } from "context/CourtCaseContext"
+import { useCsrfToken } from "context/CsrfTokenContext"
+import { useRouter } from "next/router"
+import { useActionState, useState, type FormEventHandler } from "react"
+import { useFormStatus } from "react-dom"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
-import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
-import { DropdownContainer, ButtonContainer } from "./QualityStatusCard.styles"
+import { ButtonContainer, DropdownContainer } from "./QualityStatusCard.styles"
+import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 
 const initialFormState = {
   submitError: null as Error | null,
@@ -19,12 +21,22 @@ const initialFormState = {
   exceptionQualityHasError: false
 }
 
+const exceptionQualityChecked = (value: number | undefined | null) =>
+  exceptionQualityValues[(value ?? 1) as keyof typeof exceptionQualityValues]
+
+const triggerQualityChecked = (value: number | undefined | null) =>
+  triggerQualityValues[(value ?? 1) as keyof typeof triggerQualityValues]
+
 type FormState = typeof initialFormState
 
 export const QualityStatusCard = () => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
+
+  const auditQualitySet = courtCase.errorQualityChecked !== 1 || courtCase.triggerQualityChecked !== 1
+  const exceptionQuality = exceptionQualityChecked(courtCase.errorQualityChecked)
+  const triggerQuality = triggerQualityChecked(courtCase.triggerQualityChecked)
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
@@ -77,7 +89,7 @@ export const QualityStatusCard = () => {
   const [submitResult, submitAction] = useActionState(submit, initialFormState)
 
   return (
-    <Card heading={"Set quality status"}>
+    <Card heading={auditQualitySet ? "Quality status" : "Set quality status"}>
       <form action={submitAction} aria-describedby={submitResult.submitError ? "quality-status-form-error" : undefined}>
         {submitResult.submitError ? (
           <p id="quality-status-form-error" className="govuk-error-message" role="alert">
@@ -85,25 +97,50 @@ export const QualityStatusCard = () => {
           </p>
         ) : null}
         <fieldset className="govuk-fieldset">
-          <DropdownContainer>
-            <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />
-            <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
-          </DropdownContainer>
-          <NoteTextArea
-            handleOnNoteChange={handleOnNoteChange}
-            noteRemainingLength={noteRemainingLength}
-            labelText={"Add a new note (optional)"}
-            labelSize={"s"}
-            name={"quality-status-note"}
-          />
-          <ButtonContainer>
-            <SubmitButton />
-          </ButtonContainer>
+          {auditQualitySet ? (
+            <QualityStatus triggerQuality={triggerQuality} exceptionQuality={exceptionQuality} />
+          ) : (
+            <>
+              <DropdownContainer>
+                <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />
+                <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
+              </DropdownContainer>
+              <NoteTextArea
+                handleOnNoteChange={handleOnNoteChange}
+                noteRemainingLength={noteRemainingLength}
+                labelText={"Add a new note (optional)"}
+                labelSize={"s"}
+                name={"quality-status-note"}
+              />
+              <ButtonContainer>
+                <SubmitButton />
+              </ButtonContainer>
+            </>
+          )}
         </fieldset>
       </form>
     </Card>
   )
 }
+
+const QualityStatus = ({
+  triggerQuality,
+  exceptionQuality
+}: {
+  triggerQuality?: string
+  exceptionQuality?: string
+}) => (
+  <div>
+    <p>
+      <b>{"Trigger Quality: "}</b>
+      {triggerQuality}
+    </p>
+    <p>
+      <b>{"Exception Quality: "}</b>
+      {exceptionQuality}
+    </p>
+  </div>
+)
 
 const SubmitButton = () => {
   const { pending } = useFormStatus()
