@@ -1,8 +1,8 @@
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { sortBy } from "lodash"
 import type CourtCase from "services/entities/CourtCase"
 import type { DisplayFullCourtCase, DisplayPartialCourtCase } from "types/display/CourtCases"
-import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import type User from "../entities/User"
 import { noteToDisplayNoteDto } from "./noteDto"
 import { triggerToDisplayTriggerDto } from "./triggerDto"
@@ -19,6 +19,7 @@ export const courtCaseToDisplayPartialCourtCaseDto = (
     errorLockedByUsername: courtCase.errorLockedByUsername,
     errorReport: courtCase.errorReport,
     errorStatus: courtCase.errorStatus ?? null,
+    errorQualityChecked: courtCase.errorQualityChecked ?? null,
     canUserEditExceptions:
       courtCase.errorLockedByUsername === currentUser?.username &&
       hasAccessToExceptions(currentUser) &&
@@ -31,6 +32,7 @@ export const courtCaseToDisplayPartialCourtCaseDto = (
     triggers: courtCase.triggers.map(triggerToDisplayTriggerDto),
     triggerStatus: courtCase.triggerStatus ?? null,
     triggerCount: courtCase.triggerCount,
+    triggerQualityChecked: courtCase.triggerQualityChecked ?? null,
     defendantName: courtCase.defendantName
   }
 
