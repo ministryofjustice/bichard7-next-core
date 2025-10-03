@@ -146,3 +146,29 @@ export function expandFilterSection(sectionToBeExpanded: string, optionToBeExpan
 export function removeFilterTagWhilstSearchPanelIsHidden(filterTag: string) {
   cy.get(".moj-filter-tags a.moj-filter__tag").contains(filterTag).click({ force: true })
 }
+
+export const refreshUntilNotePresent = (noteText: string, maxRetries = 3) => {
+  const notesTableSelector = "table.notes-table"
+  let attempts = 0
+
+  const checkForNote = () => {
+    cy.get("body").then(($body) => {
+      const hasTable = $body.find(notesTableSelector).length > 0
+      const tableHasNote = hasTable && $body.find(notesTableSelector).text().includes(noteText)
+
+      if (tableHasNote) {
+        cy.get(notesTableSelector).contains(noteText).should("exist")
+      } else if (attempts < maxRetries) {
+        attempts++
+        cy.url().then((url) => {
+          cy.visit(url)
+          checkForNote()
+        })
+      } else {
+        throw new Error(`Note "${noteText}" not found after ${maxRetries} retries`)
+      }
+    })
+  }
+
+  checkForNote()
+}

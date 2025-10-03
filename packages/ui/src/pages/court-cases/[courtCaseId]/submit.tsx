@@ -1,4 +1,3 @@
-import Permission from "@moj-bichard7/common/types/Permission"
 import Banner from "components/Banner"
 import { Button } from "components/Buttons/Button"
 import ButtonsGroup from "components/ButtonsGroup"
@@ -18,21 +17,14 @@ import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
-import { createMqConfig, StompitMqGateway } from "services/mq"
-import resubmitCourtCase from "services/resubmitCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import { isError } from "types/Result"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
 import amendmentsHaveChanged from "utils/amendmentsHaveChanged"
-import { isPost } from "utils/http"
-import redirectTo from "utils/redirectTo"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
 import forbidden from "../../../utils/forbidden"
-
-const mqGatewayConfig = createMqConfig()
-const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
 const hasAmendments = (amendments: string | undefined): boolean =>
   !!amendments && Object.keys(JSON.parse(amendments ?? "{}")).length > 0
@@ -41,10 +33,9 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, res, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { currentUser, query, res, csrfToken } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
 
-    const { confirm } = query
     const { courtCaseId, previousPath } = query as {
       courtCaseId: string
       previousPath: string
@@ -75,44 +66,10 @@ export const getServerSideProps = withMultipleServerSideProps(
       amendments: "{}"
     }
 
-    if (isPost(req)) {
-      const { amendments } = formData as { amendments: string }
-      props.amendments = amendments
-
-      return { props }
-    } else {
-      redirectTo(previousPath ?? `/court-cases/${courtCase.errorId}`)
-    }
-
-    if (isPost(req) && confirm) {
-      const { amendments } = formData as { amendments: string }
-
-      const resubmitCourtCaseResult = await resubmitCourtCase(
-        dataSource,
-        mqGateway,
-        JSON.parse(amendments),
-        +courtCaseId,
-        currentUser
-      )
-
-      if (isError(resubmitCourtCaseResult)) {
-        throw resubmitCourtCaseResult
-      }
-
-      let redirectUrl = `/court-cases/${courtCase.errorId}`
-
-      if (previousPath) {
-        redirectUrl += `?previousPath=${encodeURIComponent(previousPath)}`
-      }
-
-      if (!currentUser.hasAccessTo[Permission.Triggers] || courtCase.triggerStatus !== "Unresolved") {
-        return redirectTo("/")
-      }
-      return redirectTo(redirectUrl)
-    }
     return { props }
   }
 )
+
 interface Props {
   user: DisplayFullUser
   courtCase: DisplayFullCourtCase

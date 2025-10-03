@@ -1,7 +1,8 @@
 import { API_LOCATION } from "config"
 
 export enum HttpMethod {
-  GET = "GET"
+  GET = "GET",
+  POST = "POST"
 }
 
 class ApiClient {
@@ -20,12 +21,23 @@ class ApiClient {
     return new Error(`Error: ${response.status} - ${response.statusText}`)
   }
 
-  async useFetch(route: string, method: HttpMethod): Promise<Response> {
+  async post<T>(route: string, data?: string | Record<string, unknown>): Promise<Error | T> {
+    const response = await this.useFetch(route, HttpMethod.POST, data)
+
+    if (response.ok) {
+      return await response.json()
+    }
+
+    return new Error(`Error: ${response.status} - ${response.statusText}`)
+  }
+
+  async useFetch(route: string, method: HttpMethod, body?: string | Record<string, unknown>): Promise<Response> {
     return await fetch(`${API_LOCATION}${route}`, {
       headers: {
         Authorization: `Bearer ${this.jwt}`
       },
-      method
+      method,
+      body: body ? JSON.stringify(body) : undefined
     })
   }
 }
