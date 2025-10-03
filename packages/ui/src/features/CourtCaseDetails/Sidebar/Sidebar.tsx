@@ -23,13 +23,15 @@ interface Props {
   canResolveAndSubmit: boolean
   canUseTriggerAndExceptionQualityAuditing: boolean
   stopLeavingFn: (newValue: boolean) => void
+  allIssuesCleared: boolean
 }
 
 const Sidebar = ({
   onNavigate,
   canResolveAndSubmit,
   canUseTriggerAndExceptionQualityAuditing,
-  stopLeavingFn
+  stopLeavingFn,
+  allIssuesCleared
 }: Props) => {
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
@@ -75,7 +77,7 @@ const Sidebar = ({
           </TabPanel>
         </Tabs>
       </ConditionalRender>
-      <ConditionalRender isRendered={canUseTriggerAndExceptionQualityAuditing}>
+      <ConditionalRender isRendered={canUseTriggerAndExceptionQualityAuditing && allIssuesCleared}>
         <QualityStatusCard />
       </ConditionalRender>
     </SidebarContainer>

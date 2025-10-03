@@ -236,7 +236,8 @@ export const getServerSideProps = withMultipleServerSideProps(
         canReallocate: canReallocate(currentUser.username, caseDto),
         canResolveAndSubmit: canResolveOrSubmit(currentUser, caseDto),
         canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
-        displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0))
+        displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
+        allIssuesCleared: allIssuesCleared(courtCase as CourtCase, triggersToResolve, currentUser)
       }
     }
   }
@@ -252,6 +253,7 @@ interface Props {
   displaySwitchingSurveyFeedback: boolean
   previousPath: string
   caseDetailsCookieName: string
+  allIssuesCleared: boolean
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({
@@ -263,7 +265,8 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   displaySwitchingSurveyFeedback,
   csrfToken,
   previousPath,
-  caseDetailsCookieName
+  caseDetailsCookieName,
+  allIssuesCleared
 }: Props) => {
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -297,6 +300,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 <CourtCaseDetails
                   canResolveAndSubmit={canResolveAndSubmit}
                   canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
+                  allIssuesCleared={allIssuesCleared}
                 />
               </Layout>
             </PreviousPathContext.Provider>
