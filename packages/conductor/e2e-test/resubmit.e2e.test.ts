@@ -58,8 +58,8 @@ describe("resubmit", () => {
     await db`TRUNCATE br7own.error_list RESTART IDENTITY CASCADE`
   })
 
-  afterAll(() => {
-    db.end()
+  afterAll(async () => {
+    await db.end()
   })
 
   it("successfully runs the resubmit workflow", async () => {
