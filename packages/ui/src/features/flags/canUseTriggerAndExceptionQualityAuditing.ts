@@ -7,8 +7,7 @@ export const canUseTriggerAndExceptionQualityAuditing = ({ featureFlags, visible
     return false
   }
 
-  const hasRequiredGroup = groups.includes(UserGroup.Audit) || groups.includes(UserGroup.AuditLoggingManager)
-  if (!hasRequiredGroup) {
+  if (!groups.includes(UserGroup.Supervisor)) {
     return false
   }
 

@@ -26,7 +26,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: false }
     user.visibleForces = [...enabledForces]
-    user.groups = [UserGroup.Audit]
+    user.groups = [UserGroup.Supervisor]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
@@ -39,7 +39,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
     user.visibleForces = ["006"]
-    user.groups = [UserGroup.Audit]
+    user.groups = [UserGroup.Supervisor]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
@@ -52,7 +52,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
     user.visibleForces = ["006", "007"]
-    user.groups = [UserGroup.Audit]
+    user.groups = [UserGroup.Supervisor]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
@@ -65,7 +65,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
     user.visibleForces = ["006", "007", "001"]
-    user.groups = [UserGroup.Audit]
+    user.groups = [UserGroup.Supervisor]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(true)
   })
@@ -78,12 +78,12 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
     user.visibleForces = ["006", "007", "001"]
-    user.groups = [UserGroup.Audit]
+    user.groups = [UserGroup.Supervisor]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
 
-  it("returns false when user groups does not include Audit or AuditLoggingManager", () => {
+  it("returns false when user groups does not include Supervisor", () => {
     mockUseApiModule(enabledForces)
 
     const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
@@ -95,7 +95,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
 
-  it("returns true when user groups includes Audit or AuditLoggingManager", () => {
+  it("returns true when user groups includes Supervisor", () => {
     mockUseApiModule(enabledForces)
 
     const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
@@ -103,7 +103,7 @@ describe("canUseTriggerAndExceptionQualityAuditing", () => {
     const user = new User()
     user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
     user.visibleForces = ["006", "007", "001"]
-    user.groups = [UserGroup.Audit, UserGroup.AuditLoggingManager]
+    user.groups = [UserGroup.Supervisor]
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(true)
   })
