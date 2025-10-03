@@ -68,7 +68,7 @@ describe("sidebar", () => {
   })
 
   describe("quality status card", () => {
-    it("Should show qualityStatusCard when feature flags enabled and user has audit groups", () => {
+    it("Should show qualityStatusCard when feature flags enabled and user is a supervisor", () => {
       loginAndVisit("Supervisor", "/bichard/court-cases/0")
       cy.get('[name="quality-status-note"]').should("exist")
       cy.get('[name="trigger-quality"]').should("exist")
