@@ -139,4 +139,25 @@ describe("BichardApiV1", () => {
       expect(result).toEqual(new Error("Error"))
     })
   })
+
+  describe("#resubmitCase", () => {
+    it("calls apiClient#post with a route", async () => {
+      const endpoint = V1.CaseResubmit.replace(":caseId", `${caseId}`)
+
+      jest.spyOn(client, "post").mockResolvedValue("works")
+
+      await gateway.resubmitCase(caseId)
+
+      expect(client.post).toHaveBeenCalledWith(endpoint)
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+
+      const result = await gateway.fetchCase(caseId)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
+    })
+  })
 })
