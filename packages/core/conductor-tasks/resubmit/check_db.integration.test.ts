@@ -41,7 +41,7 @@ describe("check db", () => {
     const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id } })
 
     expect(result.status).toBe("COMPLETED")
-    expect(result.outputData).toHaveProperty("messageId", caseDb.message_id)
+    expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
   })
 
   it("will fail if the case is not submitted status", async () => {
