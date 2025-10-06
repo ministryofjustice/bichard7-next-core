@@ -160,4 +160,25 @@ describe("BichardApiV1", () => {
       expect(result).toEqual(new Error("Error"))
     })
   })
+
+  describe("#saveAuditResults", () => {
+    it("calls apiClient#post with a route", async () => {
+      const endpoint = V1.CaseAudit.replace(":caseId", `${caseId}`)
+
+      jest.spyOn(client, "post").mockResolvedValue("works")
+
+      await gateway.saveAuditResults(caseId)
+
+      expect(client.post).toHaveBeenCalledWith(endpoint)
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "post").mockResolvedValue(new Error("Save failed"))
+
+      const result = await gateway.saveAuditResults(caseId)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Save failed"))
+    })
+  })
 })
