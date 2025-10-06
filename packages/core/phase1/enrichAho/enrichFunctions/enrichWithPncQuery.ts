@@ -65,7 +65,7 @@ export default async (
 
   const requestStartTime = new Date()
 
-  const pncResult = await policeGateway.query(asn, correlationId)
+  const pncResult = await policeGateway.query(asn, correlationId, annotatedHearingOutcome)
 
   const auditLogAttributes = {
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
