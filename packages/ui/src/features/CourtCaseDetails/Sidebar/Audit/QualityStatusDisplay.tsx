@@ -1,16 +1,13 @@
-import { ExceptionQuality, exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
-import { TriggerQuality, triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
+import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { Card } from "components/Card"
 import { useCourtCase } from "context/CourtCaseContext"
-
-const exceptionQualityChecked = (value: ExceptionQuality | null) => exceptionQualityValues[value ?? 1]
-const triggerQualityChecked = (value: TriggerQuality | null) => triggerQualityValues[value ?? 1]
 
 export const QualityStatusDisplay = () => {
   const { courtCase } = useCourtCase()
 
-  const exceptionQuality = exceptionQualityChecked(courtCase.errorQualityChecked)
-  const triggerQuality = triggerQualityChecked(courtCase.triggerQualityChecked)
+  const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
+  const triggerQuality = triggerQualityValues[courtCase.triggerQualityChecked ?? 1]
 
   return (
     <Card heading={"Quality status"}>
