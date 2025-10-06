@@ -1,6 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import bannerFirstShownDate from "utils/bannerFirstShownDate"
 
+const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
+
 export const MAX_NOTE_LENGTH = 2000
 export const MAX_FEEDBACK_LENGTH = 2000
 export const AUDIT_LOG_API_URL = process.env.AUDIT_LOG_API_URL ?? "http://localhost:7010"
@@ -21,14 +23,17 @@ export const FORCES_WITH_API_ENABLED: Set<string> = new Set(
   (process.env.FORCES_WITH_API_ENABLED ?? "").split(",").filter(Boolean)
 )
 export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = new Set(
-  (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? "").split(",").filter(Boolean)
+  (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? (isProduction ? "" : "01"))
+    .split(",")
+    .filter(Boolean)
 )
 export const FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: Set<string> = new Set(
-  (process.env.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED ?? "").split(",").filter(Boolean)
+  (process.env.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED ?? (isProduction ? "" : "01"))
+    .split(",")
+    .filter(Boolean)
 )
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
-const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
 
 if (isProduction && formSecret === "OliverTwist2") {
   throw new Error("ENV is production and CSRF is set to default value")

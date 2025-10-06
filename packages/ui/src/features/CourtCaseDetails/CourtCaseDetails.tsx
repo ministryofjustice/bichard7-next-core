@@ -21,9 +21,14 @@ import { Offences } from "./Tabs/Panels/Offences/Offences"
 interface Props {
   canResolveAndSubmit: boolean
   canUseTriggerAndExceptionQualityAuditing: boolean
+  allIssuesCleared: boolean
 }
 
-const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit, canUseTriggerAndExceptionQualityAuditing }) => {
+const CourtCaseDetails: React.FC<Props> = ({
+  canResolveAndSubmit,
+  canUseTriggerAndExceptionQualityAuditing,
+  allIssuesCleared
+}) => {
   const router = useRouter()
   const { query } = router
 
@@ -112,6 +117,7 @@ const CourtCaseDetails: React.FC<Props> = ({ canResolveAndSubmit, canUseTriggerA
           canResolveAndSubmit={canResolveAndSubmit}
           canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
           stopLeavingFn={stopLeavingFn}
+          allIssuesCleared={allIssuesCleared}
         />
       </SideBar>
     </PanelsGridRow>

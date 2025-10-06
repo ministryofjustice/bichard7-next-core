@@ -3,11 +3,11 @@ import { loginAndVisit } from "../../../support/helpers"
 describe("sidebar", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
   })
 
   describe("sidebar-tabs", () => {
     beforeEach(() => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
       loginAndVisit("/bichard/court-cases/0")
     })
 
@@ -69,13 +69,16 @@ describe("sidebar", () => {
 
   describe("quality status card", () => {
     it("Should show qualityStatusCard when feature flags enabled and user is a supervisor", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved" }])
       loginAndVisit("Supervisor", "/bichard/court-cases/0")
+
       cy.get('[name="quality-status-note"]').should("exist")
       cy.get('[name="trigger-quality"]').should("exist")
       cy.get('[name="exception-quality"]').should("exist")
     })
 
     it("Should not show qualityStatusCard when feature flags disabled", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved" }])
       loginAndVisit("UserMissingFeatureFlags", "/bichard/court-cases/0")
 
       cy.get("ul.moj-sub-navigation__list").should("exist")
@@ -85,7 +88,18 @@ describe("sidebar", () => {
     })
 
     it("Should not show qualityStatusCard when user groups are incorrect", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved" }])
       loginAndVisit("/bichard/court-cases/0")
+
+      cy.get("ul.moj-sub-navigation__list").should("exist")
+      cy.get('[name="quality-status-note"]').should("not.exist")
+      cy.get('[name="trigger-quality"]').should("not.exist")
+      cy.get('[name="exception-quality"]').should("not.exist")
+    })
+
+    it("Should not show qualityStatusCard when case is unresolved", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Unresolved" }])
+      loginAndVisit("Supervisor", "/bichard/court-cases/0")
 
       cy.get("ul.moj-sub-navigation__list").should("exist")
       cy.get('[name="quality-status-note"]').should("not.exist")
