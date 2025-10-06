@@ -23,8 +23,6 @@ import IndexSearcher from "../DynamoGateway/IndexSearcher"
 import AuditLogDynamoGateway, { getEventsPageLimit } from "./AuditLogDynamoGateway"
 import { compress, decompress } from "./compression"
 
-jest.setTimeout(20000)
-
 const gateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 const testGateway = new TestDynamoGateway(auditLogDynamoConfig)
 const primaryKey = "messageId"
@@ -40,7 +38,7 @@ describe("AuditLogDynamoGateway", () => {
     MockDate.reset()
     await testGateway.deleteAll(auditLogDynamoConfig.auditLogTableName, primaryKey)
     await testGateway.deleteAll(auditLogDynamoConfig.eventsTableName, "_id")
-  })
+  }, 15_000)
 
   describe("create()", () => {
     it("should insert the given message", async () => {
