@@ -1,6 +1,12 @@
 import { z } from "zod"
 
-import { adjudicationSchema, courtSchema, dateStringSchema, pleaSchema } from "./common"
+import {
+  adjudicationSchema,
+  disposalResultSchema as baseDisposalResultSchema,
+  baseOffenceSchema,
+  courtSchema,
+  dateStringSchema
+} from "./common"
 
 export const adjudicationDetailsSchema = z.object({
   adjudicationId: z.string(),
@@ -14,23 +20,17 @@ export const disposalDurationSchema = z.object({
   count: z.number()
 })
 
-export const disposalResultSchema = z.object({
+export const disposalResultSchema = baseDisposalResultSchema.extend({
   disposalId: z.string(),
-  disposalCode: z.number(),
-  disposalEffectiveDate: dateStringSchema.optional(),
-  disposalDuration: disposalDurationSchema.optional()
+  chargeAppearanceNumber: z.number().optional()
 })
 
-export const offenceSchema = z.object({
+export const offenceSchema = baseOffenceSchema.extend({
+  adjudications: adjudicationDetailsSchema.array().optional(),
   offenceId: z.string(),
-  courtOffenceSequenceNumber: z.number(),
-  cjsOffenceCode: z.string(),
+  offenceDescription: z.array(z.string().min(1).max(54)).min(1).max(2).optional(),
   offenceStartDate: dateStringSchema,
-  offenceEndDate: dateStringSchema.optional(),
-  offenceDescription: z.array(z.string()),
-  plea: pleaSchema,
-  adjudications: z.array(adjudicationDetailsSchema),
-  disposalResults: z.array(disposalResultSchema)
+  disposalResults: disposalResultSchema.array().optional()
 })
 
 export const disposalSchema = z.object({
