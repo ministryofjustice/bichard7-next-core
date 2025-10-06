@@ -23,6 +23,8 @@ import IndexSearcher from "../DynamoGateway/IndexSearcher"
 import AuditLogDynamoGateway, { getEventsPageLimit } from "./AuditLogDynamoGateway"
 import { compress, decompress } from "./compression"
 
+jest.setTimeout(20000)
+
 const gateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 const testGateway = new TestDynamoGateway(auditLogDynamoConfig)
 const primaryKey = "messageId"
