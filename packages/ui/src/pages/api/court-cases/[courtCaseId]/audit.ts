@@ -31,12 +31,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   }
 
   let apiGateway: BichardApiV1 | undefined = undefined
-
-  if (USE_API) {
-    const jwt = req.cookies[".AUTH"] as string
-    const apiClient = new ApiClient(jwt)
-    apiGateway = new BichardApiV1(apiClient)
-  }
+  const jwt = req.cookies[".AUTH"] as string
+  const apiClient = new ApiClient(jwt)
+  apiGateway = new BichardApiV1(apiClient)
 
   const auditResults = apiGateway?.saveAuditResults(Number(courtCaseId))
 
