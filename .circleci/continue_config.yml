@@ -675,6 +675,35 @@ jobs:
       - store_artifacts:
           path: ~/project/packages/ui/cypress/screenshots
 
+  test_user_service:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.user-service-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - node_install
+      - install_dependencies
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - build_audit_logging_images
+      - start_services:
+          SERVICES: localstack audit-log-api
+      - run:
+          name: Run unit tests against user service code
+          command: nvm use && npm run -w packages/user-service test:unit
+      - run:
+          name: Run integration tests against user service code
+          command: nvm use && npm run -w packages/user-service test:integration
+
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
@@ -933,6 +962,7 @@ workflows:
       - test_conductor
       - test_core
       - test_ui
+      - test_user_service
       - characterisation_test
       - comparison_test
 
