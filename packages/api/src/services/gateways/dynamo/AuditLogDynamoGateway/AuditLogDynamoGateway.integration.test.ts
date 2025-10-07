@@ -38,7 +38,7 @@ describe("AuditLogDynamoGateway", () => {
     MockDate.reset()
     await testGateway.deleteAll(auditLogDynamoConfig.auditLogTableName, primaryKey)
     await testGateway.deleteAll(auditLogDynamoConfig.eventsTableName, "_id")
-  })
+  }, 15_000)
 
   describe("create()", () => {
     it("should insert the given message", async () => {
