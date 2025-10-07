@@ -76,6 +76,7 @@ describe("Next hearing location", () => {
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 
@@ -102,14 +103,17 @@ describe("Next hearing location", () => {
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("button").contains("Next offence").click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B63AD00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("button").contains("Next offence").click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("C42BS00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 

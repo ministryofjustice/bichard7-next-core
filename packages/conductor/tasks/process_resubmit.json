@@ -3,6 +3,6 @@
   "timeoutSeconds": 30,
   "responseTimeoutSeconds": 25,
   "asyncComplete": false,
-  "inputKeys": ["messageId"],
-  "outputKeys": ["currentPhase", "s3TaskDataPath"]
+  "inputKeys": ["s3TaskDataPath"],
+  "outputKeys": ["auditLogEvents", "currentPhase", "s3TaskDataPath"]
 }

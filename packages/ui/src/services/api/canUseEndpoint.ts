@@ -1,8 +1,15 @@
-import { FORCES_WITH_API_ENABLED, USE_API, USE_API_CASE_ENDPOINT, USE_API_CASES_INDEX_ENDPOINT } from "config"
+import {
+  FORCES_WITH_API_ENABLED,
+  USE_API,
+  USE_API_CASE_ENDPOINT,
+  USE_API_CASES_INDEX_ENDPOINT,
+  USE_API_CASE_RESUBMIT_ENDPOINT
+} from "config"
 
 export enum ApiEndpoints {
   CaseDetails = "CaseDetails",
-  CaseList = "CaseList"
+  CaseList = "CaseList",
+  CaseResubmit = "CaseResubmit"
 }
 
 export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boolean => {
@@ -19,6 +26,8 @@ export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boo
       return USE_API_CASE_ENDPOINT
     case ApiEndpoints.CaseList:
       return USE_API_CASES_INDEX_ENDPOINT
+    case ApiEndpoints.CaseResubmit:
+      return USE_API_CASE_RESUBMIT_ENDPOINT
     default:
       return false
   }

@@ -34,20 +34,36 @@ const sql = postgres({
 })
 
 describe("process_resubmit", () => {
+  beforeAll(() => {
+    process.env.TASK_DATA_BUCKET_NAME = bucket
+  })
+
   beforeEach(async () => {
     await sql`TRUNCATE br7own.error_list RESTART IDENTITY CASCADE`
 
     mockPutFileToS3.default = putFileToS3
   })
 
+  afterAll(async () => {
+    await sql.end()
+  })
+
   it("will fail if there's no matching message ID", async () => {
-    const result = await processResubmit.execute({ inputData: { messageId: randomUUID() } })
+    const messageId = randomUUID()
+    const s3Data = { errorLockedByUsername: "bob", messageId }
+    const s3TaskDataPath = `${messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("FAILED")
   })
 
   it("will fail if there is no Updated AHO", async () => {
     const caseDb = await setupCase(sql)
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
     await sql`
       UPDATE br7own.error_list
@@ -55,7 +71,7 @@ describe("process_resubmit", () => {
       WHERE error_id = ${caseDb.error_id}
     `
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("FAILED")
     expect(result.logs?.map((l) => l.log)).toContain("Error: Missing updated_msg")
@@ -63,6 +79,9 @@ describe("process_resubmit", () => {
 
   it("will fail if the Updated AHO is not XML", async () => {
     const caseDb = await setupCase(sql)
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
     await sql`
       UPDATE br7own.error_list
@@ -70,7 +89,7 @@ describe("process_resubmit", () => {
       WHERE error_id = ${caseDb.error_id}
     `
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("FAILED")
     expect(result.logs?.map((l) => l.log)).toContain("Error: Could not parse AHO XML")
@@ -78,11 +97,15 @@ describe("process_resubmit", () => {
 
   it("will fail if there is a S3 error", async () => {
     const caseDb = await setupCase(sql)
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
+
     mockPutFileToS3.default = () => {
       return Promise.resolve(new Error("Mock error"))
     }
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("FAILED")
     expect(result.logs?.map((l) => l.log)).toContain("Error: Mock error")
@@ -90,8 +113,11 @@ describe("process_resubmit", () => {
 
   it("completes the task", async () => {
     const caseDb = await setupCase(sql)
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
@@ -99,11 +125,15 @@ describe("process_resubmit", () => {
 
   it("if the transaction fails, it will not create a note", async () => {
     const caseDb = await setupCase(sql)
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
+
     mockPutFileToS3.default = () => {
       return Promise.resolve(new Error("Mock error"))
     }
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("FAILED")
 
@@ -115,8 +145,11 @@ describe("process_resubmit", () => {
 
   it("creates notes", async () => {
     const caseDb = await setupCase(sql)
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
     const notes =
       (await sql`SELECT * FROM br7own.error_list_notes eln WHERE eln.error_id = ${caseDb.error_id} ORDER BY eln.create_ts DESC`) as NoteRow[]
 
@@ -127,9 +160,11 @@ describe("process_resubmit", () => {
 
   it("uploads the Updated AHO to S3", async () => {
     const caseDb = await setupCase(sql)
-    const s3TaskDataPath = `${caseDb.message_id}.json`
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
-    const result = await processResubmit.execute({ inputData: { messageId: caseDb.message_id } })
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
 
     expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("s3TaskDataPath", s3TaskDataPath)

@@ -8,6 +8,7 @@ export const DropdownContainer = styled.div`
     flex: 1;
     select {
       width: 100%;
+      min-width: unset;
     }
   }
 `

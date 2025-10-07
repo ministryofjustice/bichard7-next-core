@@ -4,12 +4,14 @@ const mockUseApiModule = (
   useApi: boolean,
   useApiCaseEndpoint: boolean,
   useApiCaseIndexEndpoint: boolean,
+  useApiCaseResubmitEndpoint: boolean,
   forcesWithApiEnabled: Set<string>
 ) => {
   jest.doMock("../../config.ts", () => ({
     USE_API: useApi,
     USE_API_CASE_ENDPOINT: useApiCaseEndpoint,
     USE_API_CASES_INDEX_ENDPOINT: useApiCaseIndexEndpoint,
+    USE_API_CASE_RESUBMIT_ENDPOINT: useApiCaseResubmitEndpoint,
     FORCES_WITH_API_ENABLED: forcesWithApiEnabled
   }))
 }
@@ -26,7 +28,7 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns false when USE_API is disabled", () => {
-    mockUseApiModule(false, true, false, enabledForces)
+    mockUseApiModule(false, true, false, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -34,7 +36,7 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns true when USE_API_CASE_ENDPOINT is enabled", () => {
-    mockUseApiModule(true, true, false, enabledForces)
+    mockUseApiModule(true, true, false, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -42,15 +44,23 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns true when USE_API_CASES_INDEX_ENDPOINT is enabled", () => {
-    mockUseApiModule(true, false, true, enabledForces)
+    mockUseApiModule(true, false, true, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(true)
   })
 
+  it("returns true when USE_API_CASE_RESUBMIT_ENDPOINT is enabled", () => {
+    mockUseApiModule(true, false, false, true, enabledForces)
+
+    const { canUseApiEndpoint } = require("./canUseEndpoint")
+
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["01"])).toBe(true)
+  })
+
   it("returns false when USE_API_CASE_ENDPOINT is disabled", () => {
-    mockUseApiModule(true, false, true, enabledForces)
+    mockUseApiModule(true, false, true, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -58,15 +68,23 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns false when USE_API_CASES_INDEX_ENDPOINT is disabled", () => {
-    mockUseApiModule(true, true, false, enabledForces)
+    mockUseApiModule(true, true, false, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(false)
   })
 
+  it("returns true when USE_API_CASE_RESUBMIT_ENDPOINT is disabled", () => {
+    mockUseApiModule(true, true, true, false, enabledForces)
+
+    const { canUseApiEndpoint } = require("./canUseEndpoint")
+
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["01"])).toBe(false)
+  })
+
   it("returns false when both USE_API_CASE_ENDPOINT and USE_API_CASES_INDEX_ENDPOINT are disabled", () => {
-    mockUseApiModule(true, false, false, enabledForces)
+    mockUseApiModule(true, false, false, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -74,8 +92,8 @@ describe("canUseEndpoint", () => {
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(false)
   })
 
-  it("returns false when USE_API is disabled, and USE_API_CASE_ENDPOINT, USE_API_CASES_INDEX_ENDPOINT are enabled", () => {
-    mockUseApiModule(false, true, true, enabledForces)
+  it("returns false when USE_API is disabled, and all other flags are enabled", () => {
+    mockUseApiModule(false, true, true, true, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -84,7 +102,7 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns false when FORCES_WITH_API_ENABLED does not include force", () => {
-    mockUseApiModule(true, true, true, enabledForces)
+    mockUseApiModule(true, true, true, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -93,7 +111,7 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns false when none of the visible forces are enabled", () => {
-    mockUseApiModule(true, true, true, enabledForces)
+    mockUseApiModule(true, true, true, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -102,7 +120,7 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns true when FORCES_WITH_API_ENABLED includes at least one enabled force", () => {
-    mockUseApiModule(true, true, true, enabledForces)
+    mockUseApiModule(true, true, true, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
@@ -111,7 +129,7 @@ describe("canUseEndpoint", () => {
   })
 
   it("returns false when empty array of FORCES_WITH_API_ENABLED", () => {
-    mockUseApiModule(true, true, true, new Set<string>())
+    mockUseApiModule(true, true, true, false, new Set<string>())
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 

@@ -17,59 +17,117 @@
       "asyncComplete": false
     },
     {
-      "name": "process_resubmit",
-      "taskReferenceName": "process_resubmit",
+      "name": "lock_s3_file",
+      "taskReferenceName": "lock_s3_file",
       "inputParameters": {
-        "messageId": "${workflow.input.messageId}"
+        "bucketId": "task-data",
+        "fileName": "${check_db.output.s3TaskDataPath}",
+        "lockId": "${workflow.workflowId}"
       },
       "type": "SIMPLE",
       "startDelay": 0,
       "optional": false,
-      "asyncComplete": false
+      "asyncComplete": false,
+      "permissive": false
     },
     {
-      "name": "switch_on_phase",
-      "taskReferenceName": "switch_on_phase",
-      "type": "SWITCH",
+      "name": "check_lock",
+      "taskReferenceName": "check_lock",
       "inputParameters": {
-        "phase": "${process_resubmit.output.currentPhase}"
+        "lockState": "${lock_s3_file.output.lockState}"
       },
+      "type": "SWITCH",
       "evaluatorType": "value-param",
-      "expression": "phase",
+      "expression": "lockState",
       "decisionCases": {
-        "1": [
+        "failure": [
           {
-            "name": "start_bichard_phase_1",
-            "taskReferenceName": "start_bichard_phase_1",
-            "type": "START_WORKFLOW",
+            "name": "terminate",
+            "taskReferenceName": "terminate",
             "inputParameters": {
-              "startWorkflow": {
-                "name": "bichard_phase_1",
-                "correlationId": "${workflow.correlationId}",
-                "input": {
-                  "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
-                }
-              }
-            }
-          }
-        ],
-        "2": [
-          {
-            "name": "start_bichard_phase_2",
-            "taskReferenceName": "start_bichard_phase_2",
-            "type": "START_WORKFLOW",
-            "inputParameters": {
-              "startWorkflow": {
-                "name": "bichard_phase_2",
-                "correlationId": "${workflow.correlationId}",
-                "input": {
-                  "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
-                }
-              }
-            }
+              "terminationStatus": "COMPLETED",
+              "workflowOutput": ""
+            },
+            "type": "TERMINATE",
+            "startDelay": 0,
+            "optional": false
           }
         ]
-      }
+      },
+      "defaultCase": [
+        {
+          "name": "process_resubmit",
+          "taskReferenceName": "process_resubmit",
+          "inputParameters": {
+            "s3TaskDataPath": "${check_db.output.s3TaskDataPath}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false
+        },
+        {
+          "name": "store_audit_log_events",
+          "taskReferenceName": "store_audit_log_events",
+          "inputParameters": {
+            "correlationId": "${workflow.correlationId}",
+            "auditLogEvents": "${process_resubmit.output.auditLogEvents}"
+          },
+          "type": "SIMPLE",
+          "startDelay": 0,
+          "optional": false,
+          "asyncComplete": false,
+          "permissive": false
+        },
+        {
+          "name": "switch_on_phase",
+          "taskReferenceName": "switch_on_phase",
+          "type": "SWITCH",
+          "inputParameters": {
+            "phase": "${process_resubmit.output.currentPhase}"
+          },
+          "evaluatorType": "value-param",
+          "expression": "phase",
+          "decisionCases": {
+            "1": [
+              {
+                "name": "start_bichard_phase_1",
+                "taskReferenceName": "start_bichard_phase_1",
+                "type": "START_WORKFLOW",
+                "inputParameters": {
+                  "startWorkflow": {
+                    "name": "bichard_phase_1",
+                    "correlationId": "${workflow.correlationId}",
+                    "input": {
+                      "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+                    }
+                  }
+                }
+              }
+            ],
+            "2": [
+              {
+                "name": "start_bichard_phase_2",
+                "taskReferenceName": "start_bichard_phase_2",
+                "type": "START_WORKFLOW",
+                "inputParameters": {
+                  "startWorkflow": {
+                    "name": "bichard_phase_2",
+                    "correlationId": "${workflow.correlationId}",
+                    "input": {
+                      "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "startDelay": 0,
+      "optional": false,
+      "asyncComplete": false,
+      "permissive": false
     }
   ],
   "inputParameters": ["messageId"],

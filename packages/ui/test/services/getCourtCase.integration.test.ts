@@ -23,7 +23,7 @@ describe("get court case", () => {
     await dataSource.destroy()
   })
 
-  it("Should amend the court case", async () => {
+  it("Should return the court case", async () => {
     const inputCourtCase = await getDummyCourtCase({
       errorLockedByUsername: null,
       triggerLockedByUsername: null,

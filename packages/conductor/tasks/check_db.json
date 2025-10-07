@@ -4,5 +4,5 @@
   "responseTimeoutSeconds": 25,
   "asyncComplete": false,
   "inputKeys": ["messageId"],
-  "outputKeys": ["messageId"]
+  "outputKeys": ["s3TaskDataPath"]
 }
