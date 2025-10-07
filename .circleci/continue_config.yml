@@ -906,6 +906,9 @@ parameters:
   ui-changes:
     type: boolean
     default: false
+  user-service-changes:
+    type: boolean
+    default: false
   e2e-test-changes:
     type: boolean
     default: false
