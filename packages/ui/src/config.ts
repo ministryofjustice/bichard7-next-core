@@ -1,7 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import bannerFirstShownDate from "utils/bannerFirstShownDate"
 
-const toBoolean = (val: number | string): boolean => val === "true" || val === "1"
+const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
 const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
 
