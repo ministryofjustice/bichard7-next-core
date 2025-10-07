@@ -21,4 +21,8 @@ export default class BichardApiV1 implements BichardApiGateway {
   async fetchCases(apiCaseQuery: ApiCaseQuery): Promise<CaseIndexMetadata | Error> {
     return await this.apiClient.get<CaseIndexMetadata>(`${V1.Cases}?${generateUrlSearchParams(apiCaseQuery)}`)
   }
+
+  async resubmitCase(caseId: number): Promise<Error> {
+    return await this.apiClient.post(V1.CaseResubmit.replace(":caseId", `${caseId}`))
+  }
 }

@@ -1,7 +1,13 @@
 import dummyAho from "../../../../../test/test-data/HO100102_1.json"
 import multipleExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
 import nextHearingLocationExceptions from "../../../../../test/test-data/NextHearingLocationExceptions.json"
-import { clickTab, loginAndVisit, submitAndConfirmExceptions, verifyUpdatedMessage } from "../../../../support/helpers"
+import {
+  clickTab,
+  loginAndVisit,
+  submitAndConfirmExceptions,
+  verifyUpdatedMessage,
+  refreshUntilNotePresent
+} from "../../../../support/helpers"
 
 describe("NextHearingLocation", () => {
   beforeEach(() => {
@@ -61,7 +67,8 @@ describe("NextHearingLocation", () => {
     cy.contains("dt", "Next hearing location").siblings().get(".moj-badge").contains("Initial Value")
     cy.get("#next-hearing-location").should("not.have.value", "B@1EF$1")
     cy.get("#next-hearing-location").clear()
-    cy.get("#next-hearing-location").type("B01EF01")
+    cy.get("#next-hearing-location").type("B01EF00", { delay: 100 })
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 
@@ -72,8 +79,8 @@ describe("NextHearingLocation", () => {
     cy.contains("Notes").click()
     const dateTimeRegex = /\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/
     cy.contains(dateTimeRegex)
-    cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextSourceOrganisation. New Value: B01EF01")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextSourceOrganisation. New Value: B01EF00")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -85,7 +92,7 @@ describe("NextHearingLocation", () => {
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "B@1EF$1")
     cy.contains("dt", "Next hearing location").siblings().get(".moj-badge").contains("Initial Value")
-    cy.contains("dt", "Next hearing location").siblings().should("include.text", "B01EF01")
+    cy.contains("dt", "Next hearing location").siblings().should("include.text", "B01EF00")
     cy.contains("dt", "Next hearing location").siblings().get(".moj-badge").contains("Correction")
   })
 
@@ -108,6 +115,7 @@ describe("NextHearingLocation", () => {
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "B46AM03")
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B46DB00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 
@@ -119,7 +127,7 @@ describe("NextHearingLocation", () => {
     const dateTimeRegex = /\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/
     cy.contains(dateTimeRegex)
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextSourceOrganisation. New Value: B46DB00")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -156,6 +164,7 @@ describe("NextHearingLocation", () => {
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "")
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 
@@ -167,7 +176,7 @@ describe("NextHearingLocation", () => {
     const dateTimeRegex = /\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/
     cy.contains(dateTimeRegex)
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextSourceOrganisation. New Value: B01EF00")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -223,12 +232,14 @@ describe("NextHearingLocation", () => {
     cy.get(".govuk-link").contains("Offence with HO100300 - Organisation not recognised").click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B21XA00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
@@ -237,6 +248,7 @@ describe("NextHearingLocation", () => {
       .click()
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B46DB00")
+    cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 
@@ -245,7 +257,7 @@ describe("NextHearingLocation", () => {
     cy.contains(dateTimeRegex)
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextSourceOrganisation. New Value: B01EF00")
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextSourceOrganisation. New Value: B46DB00")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },

@@ -2,6 +2,7 @@ import AsnExceptionHO100206 from "../../../../test/test-data/HO100206.json"
 import multipleExceptions from "../../../../test/test-data/MultipleExceptions.json"
 import nextHearingDateExceptions from "../../../../test/test-data/NextHearingDateExceptions.json"
 import nextHearingLocationExceptions from "../../../../test/test-data/NextHearingLocationExceptions.json"
+import { refreshUntilNotePresent } from "../../../support/helpers"
 
 describe("Court cases - Submit exceptions", () => {
   beforeEach(() => {
@@ -42,7 +43,7 @@ describe("Court cases - Submit exceptions", () => {
 
     cy.contains("Notes").click()
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextHearingDate. New Value: 2024-12-12")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
   })
 
   it("Should be able to resubmit a case when no updates made on editable field", () => {
@@ -95,18 +96,21 @@ describe("Court cases - Submit exceptions", () => {
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains(offenceTitle).click()
       cy.get(".hearing-result-1 #next-hearing-date").type("2024-01-01")
+      cy.get(".next-hearing-date-row .success-message").should("exist")
     }
 
     const insertNextHearingLocation = (offenceTitle: string): void => {
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains(offenceTitle).click()
       cy.get("#next-hearing-location").clear()
-      cy.get("#next-hearing-location").type("B01EF01")
+      cy.get("#next-hearing-location").type("B01EF00")
+      cy.get(".next-hearing-location-row .success-message").should("exist")
     }
 
     const insertAsn = (value: string): void => {
       cy.get("ul.moj-sub-navigation__list").contains("Defendant").click()
       cy.get("#asn").type(value)
+      cy.get(".asn-row .success-message").should("exist")
     }
 
     const insertCourtCase = (hearingOutcomeXml: string): void => {
@@ -120,6 +124,7 @@ describe("Court cases - Submit exceptions", () => {
         }
       ])
     }
+
     it("Should be enabled when multiple exceptions are raised and only some editable fields are updated", () => {
       insertCourtCase(multipleExceptions.hearingOutcomeXml)
 
@@ -133,8 +138,8 @@ describe("Court cases - Submit exceptions", () => {
       cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
       cy.get(".hearing-result-1 #next-hearing-date").clear()
 
-      cy.get("ul.moj-sub-navigation__list").contains("Defendant").click()
-      cy.get("#asn").type("1101ZD0100000448754K")
+      insertAsn("1101ZD0100000448754K")
+
       cy.get("button").contains("Submit exception(s)").should("be.enabled")
     })
 

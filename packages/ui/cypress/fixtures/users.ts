@@ -87,7 +87,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
   },
   Supervisor: {
     username: "Supervisor",
-    visibleForces: ["01"],
+    visibleForces: ["001"],
     forenames: "Supervisor",
     surname: "User",
     email: "supervisor@example.com",
