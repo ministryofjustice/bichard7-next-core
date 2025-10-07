@@ -5,8 +5,11 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { visibleCourtsSql } from "../visibleCourtsSql"
+import { visibleForcesSql } from "../visibleForcesSql"
 
 export interface CanCaseBeResubmittedResult {
+  caseInCourt: 0 | 1
   caseInForce: 0 | 1
   caseIsUnresolved: 0 | 1
   lockedByUser: 0 | 1
@@ -16,7 +19,8 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
   const result = await database.connection<CanCaseBeResubmittedResult[]>`
       SELECT
         (el.error_locked_by_id = ${user.username})::INTEGER as "lockedByUser",
-        (br7own.force_code(el.org_for_police_filter) = ANY((${user.visibleForces}::SMALLINT[])))::INTEGER as "caseInForce",
+        (${visibleForcesSql(database, user.visibleForces)})::INTEGER as "caseInForce",
+        (${visibleCourtsSql(database, user.visibleCourts)})::INTEGER as "caseInCourt",
         (el.error_status = 1)::INTEGER as "caseIsUnresolved"
       FROM br7own.error_list el
       WHERE
@@ -32,5 +36,5 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
   }
 
   const caseData = result[0]
-  return !!caseData.lockedByUser && !!caseData.caseInForce && !!caseData.caseIsUnresolved
+  return !!caseData.lockedByUser && (!!caseData.caseInForce || !!caseData.caseInCourt) && !!caseData.caseIsUnresolved
 }
