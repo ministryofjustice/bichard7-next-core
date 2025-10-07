@@ -5,9 +5,9 @@ import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
 import { isError } from "types/Result"
-import { USE_API } from "../../../../config"
 import BichardApiV1 from "../../../../services/api/BichardApiV1"
 import ApiClient from "../../../../services/api/ApiClient"
+import { ApiEndpoints, canUseApiEndpoint } from "../../../../services/api/canUseEndpoint"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const allowedMethods = ["PATCH", "PUT", "POST"]
@@ -43,8 +43,10 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
+  const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
+
   let finalCourtCase
-  if (!USE_API) {
+  if (!useApiForCaseDetails) {
     const courtCase = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: +courtCaseId } })
 
     if (isError(courtCase)) {
