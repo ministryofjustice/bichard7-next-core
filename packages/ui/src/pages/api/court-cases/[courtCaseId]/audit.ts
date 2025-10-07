@@ -35,32 +35,44 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const apiClient = new ApiClient(jwt)
   apiGateway = new BichardApiV1(apiClient)
 
-  const auditResults = apiGateway?.saveAuditResults(Number(courtCaseId))
+  const auditResults = await apiGateway?.saveAuditResults(Number(courtCaseId))
 
   if (isError(auditResults)) {
-    throw auditResults
+    response.status(500).json({ error: "Failed to save audit results" })
+    response.end()
+    return
   }
 
-  let courtCase
+  let finalCourtCase
   if (!USE_API) {
-    courtCase = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: +courtCaseId } })
+    const courtCase = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: +courtCaseId } })
 
     if (isError(courtCase)) {
       throw courtCase
     }
 
     if (!courtCase) {
-      return {
-        notFound: true
-      }
+      res.status(404).json({ error: "Case not found." })
+      res.end()
+      return
     }
+
+    finalCourtCase = courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser)
   } else {
-    apiGateway?.fetchCase(Number(courtCaseId))
+    finalCourtCase = await apiGateway?.fetchCase(Number(courtCaseId))
+
+    if (isError(finalCourtCase)) {
+      throw finalCourtCase
+    }
+
+    if (!finalCourtCase) {
+      res.status(404).json({ error: "Case not found." })
+      res.end()
+      return
+    }
   }
 
-  const updatedCourtCase = courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
-
   res.status(200)
-  res.json({ courtCase: updatedCourtCase, csrfToken: generateCsrfToken(request) })
+  res.json({ courtCase: finalCourtCase, csrfToken: generateCsrfToken(request) })
   res.end()
 }
