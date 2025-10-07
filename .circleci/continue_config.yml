@@ -696,7 +696,7 @@ jobs:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - start_services:
-          SERVICES: localstack audit-log-api
+          SERVICES: localstack postgres audit-log-api
       - run:
           name: Run unit tests against user service code
           command: nvm use && npm run -w packages/user-service test:unit
