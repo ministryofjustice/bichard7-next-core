@@ -35,7 +35,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const apiClient = new ApiClient(jwt)
   apiGateway = new BichardApiV1(apiClient)
 
-  const auditResults = await apiGateway?.saveAuditResults(Number(courtCaseId))
+  const auditResults = await apiGateway.saveAuditResults(Number(courtCaseId))
 
   if (isError(auditResults)) {
     response.status(500).json({ error: "Failed to save audit results" })
@@ -61,7 +61,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
     finalCourtCase = courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser)
   } else {
-    finalCourtCase = await apiGateway?.fetchCase(Number(courtCaseId))
+    finalCourtCase = await apiGateway.fetchCase(Number(courtCaseId))
 
     if (isError(finalCourtCase)) {
       throw finalCourtCase
