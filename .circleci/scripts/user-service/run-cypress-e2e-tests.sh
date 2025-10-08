@@ -7,7 +7,7 @@ if [[ $MS_EDGE == "true" ]]; then
   options+=" --browser edge"
 fi
 
-COMMAND='xargs -I {} npx concurrently --raw --kill-others --success first "npm run start" "npm run cypress:run:file {} '$options'"'
+COMMAND="xargs -I {} npx concurrently --raw --kill-others --success first \"npm run start\" \"npx cypress run ${options} --spec {}\""
 
 circleci tests glob "cypress/e2e/**/*.cy.js" \
   | circleci tests run \
