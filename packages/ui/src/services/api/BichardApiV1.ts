@@ -28,7 +28,7 @@ export default class BichardApiV1 implements BichardApiGateway {
 
   async saveAuditResults(
     caseId: number,
-    auditResults: { triggerQuality: number; exceptionQuality: number; note: string }
+    auditResults: { triggerQuality: number; errorQuality: number; note: string }
   ): Promise<Error> {
     return await this.apiClient.post(V1.CaseAudit.replace(":caseId", `${caseId}`), auditResults)
   }

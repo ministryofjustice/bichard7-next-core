@@ -11,6 +11,6 @@ export default interface BichardApiGateway {
   resubmitCase: (caseId: number) => Promise<Error>
   saveAuditResults: (
     caseId: number,
-    auditResults: { triggerQuality: number; exceptionQuality: number; note: string }
+    auditResults: { triggerQuality: number; errorQuality: number; note: string }
   ) => Promise<Error>
 }
