@@ -717,26 +717,26 @@ jobs:
           install-cypress: true
       - when:
           condition:
-            equal: [ true, << parameters.ms-edge >> ]
+            equal: [true, << parameters.ms-edge >>]
           steps:
             - install_ms_edge
-#      - run:
-#          name: Install Cypress in the background
-#          command: ./.circleci/scripts/install-cypress.sh 2>&1
-#          background: true
+      #      - run:
+      #          name: Install Cypress in the background
+      #          command: ./.circleci/scripts/install-cypress.sh 2>&1
+      #          background: true
       - run:
           name: Install GOV.UK Assets
           command: npm run install:assets -w packages/user-service
       - run:
           name: Build the user service
           command: npm run build -w packages/user-service
-#      - run:
-#          name: Wait for Cypress installation to finish
-#          command: until [ -f cypressInstalled ]; do sleep 1; done
-#          no_output_timeout: 5m
-#      - run:
-#          name: Retrying installing Cypress
-#          command: ./.circleci/scripts/install-cypress.sh
+      #      - run:
+      #          name: Wait for Cypress installation to finish
+      #          command: until [ -f cypressInstalled ]; do sleep 1; done
+      #          no_output_timeout: 5m
+      #      - run:
+      #          name: Retrying installing Cypress
+      #          command: ./.circleci/scripts/install-cypress.sh
       - start_services:
           SERVICES: db-seed audit-log-api
       - run:
