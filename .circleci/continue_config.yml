@@ -696,6 +696,7 @@ jobs:
     parameters:
       ms-edge:
         type: boolean
+        default: false
     steps:
       - unless:
           condition:
