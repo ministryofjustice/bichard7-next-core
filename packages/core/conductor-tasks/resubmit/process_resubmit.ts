@@ -26,7 +26,7 @@ const s3Config = createS3Config()
 
 const inputDataSchema = z.object({
   errorLockedByUsername: z.string(),
-  messageId: z.uuid()
+  messageId: z.string().or(z.uuid())
 })
 type InputData = z.infer<typeof inputDataSchema>
 
