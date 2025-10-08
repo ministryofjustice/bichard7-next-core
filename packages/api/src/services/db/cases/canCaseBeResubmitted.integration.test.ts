@@ -79,4 +79,18 @@ describe("canCaseBeResubmitted", () => {
 
     expect(result).toBe(true)
   })
+
+  it("returns true if user is not in a visible force but is in visible courts", async () => {
+    const user = await createUser(testDatabaseGateway, { visibleCourts: ["B01,B41ME00"], visibleForces: ["01"] })
+    const caseObj = await createCase(testDatabaseGateway, {
+      courtCode: "B01EF01",
+      errorLockedById: user.username,
+      errorStatus: ResolutionStatusNumber.Unresolved,
+      orgForPoliceFilter: "04CA"
+    })
+
+    const result = await canCaseBeResubmitted(testDatabaseGateway.readonly, user, caseObj.errorId)
+
+    expect(result).toBe(true)
+  })
 })

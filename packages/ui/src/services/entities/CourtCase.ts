@@ -1,4 +1,6 @@
+import { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm"
 import type { ResolutionStatus } from "types/ResolutionStatus"
@@ -27,10 +29,10 @@ export default class CourtCase {
   triggerStatus?: ResolutionStatus | null
 
   @Column({ name: "error_quality_checked", type: "int4", nullable: true })
-  errorQualityChecked!: number | null
+  errorQualityChecked!: ExceptionQuality | null
 
   @Column({ name: "trigger_quality_checked", type: "int4", nullable: true })
-  triggerQualityChecked!: number | null
+  triggerQualityChecked!: TriggerQuality | null
 
   @Column({ name: "trigger_count" })
   triggerCount!: number

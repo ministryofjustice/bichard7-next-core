@@ -329,13 +329,7 @@ jobs:
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
-      - run:
-          name: Checkout the audit logging repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - run:
-          name: Build the audit logging images
-          working_directory: ~/bichard7-next-audit-logging
-          command: make build-api-server build-event-handler-server
+      - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
           environment:
@@ -366,13 +360,7 @@ jobs:
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
-      - run:
-          name: Checkout the audit logging repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - run:
-          name: Build the audit logging images
-          working_directory: ~/bichard7-next-audit-logging
-          command: make build-api-server build-event-handler-server
+      - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
@@ -432,13 +420,7 @@ jobs:
       - run:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
-      - run:
-          name: Checkout the audit logging repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - run:
-          name: Build the audit logging images
-          working_directory: ~/bichard7-next-audit-logging
-          command: make build-api-server build-event-handler-server
+      - build_audit_logging_images
       - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
@@ -477,6 +459,7 @@ jobs:
       - build_api
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - build_audit_logging_images
       - run:
           name: Boot Dependencies
           command: npm run conductor
