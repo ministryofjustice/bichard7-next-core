@@ -49,7 +49,7 @@ import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackFo
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
-const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
+const allIssuesCleared = (courtCase: CourtCase | DisplayFullCourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
     ? courtCase.triggers.filter((t) => t.status === "Unresolved").length === triggerToResolve.length
     : true
@@ -257,7 +257,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         canResolveAndSubmit: canResolveOrSubmit(currentUser, caseDto),
         canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
-        allIssuesCleared: allIssuesCleared(courtCase as CourtCase, triggersToResolve, currentUser)
+        allIssuesCleared: allIssuesCleared(caseDto, triggersToResolve, currentUser)
       }
     }
   }
