@@ -7,4 +7,7 @@ if [[ $MS_EDGE == "true" ]]; then
   options+=" --browser edge"
 fi
 
-circleci tests glob "cypress/e2e/**/*.cy.js" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
+circleci tests glob "cypress/e2e/**/*.cy.js" \
+  | circleci tests run \
+      --command="xargs -I {} npx concurrently --raw --kill-others --success first \"npm run start\" \"npm run cypress:run:file {} ${options}\"" \
+      --split-by=timings

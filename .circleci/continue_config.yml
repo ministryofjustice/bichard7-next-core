@@ -731,9 +731,6 @@ jobs:
           name: Build the user service
           command: npm run build -w packages/user-service
       - run:
-          name: Start the user service
-          command: npm run start -w packages/user-service
-      - run:
           name: Wait for Cypress installation to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
           no_output_timeout: 5m
