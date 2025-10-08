@@ -726,7 +726,7 @@ jobs:
           name: Retrying installing Cypress
           command: ./.circleci/scripts/install-cypress.sh
       - start_services:
-          SERVICES: db-seed
+          SERVICES: db-seed audit-log-api
       - run:
           name: Run e2e tests against user service code
           command: npm run test:e2e -w packages/user-service
