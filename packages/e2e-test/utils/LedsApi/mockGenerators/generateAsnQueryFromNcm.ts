@@ -28,12 +28,12 @@ const mapOffences = (ncm: ParsedNcm): AsnQueryResponseOffence[] => {
   const offences = Array.isArray(offenceObject) ? offenceObject : [offenceObject]
 
   return offences.map((offence) => ({
-    offenceId: randomUUID(),
+    offenceId: randomUUID() as string,
     courtOffenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
     cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
     offenceStartDate: offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate,
     offenceEndDate: offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndDate,
-    offenceDescription: [offence.BaseOffenceDetails.OffenceWording],
+    offenceDescription: [offence.BaseOffenceDetails.OffenceWording.substring(0, 54)],
     plea: "Not Known",
     adjudications: [],
     disposalResults: []
@@ -57,7 +57,7 @@ const generateResponseBody = (ncm: ParsedNcm): AsnQueryResponse => {
         caseStatusMarker: "impending-prosecution-detail",
         court: {
           courtIdentityType: "code",
-          courtCode: ncm.NewCaseMessage.Case.InitialHearing.CourtHearingLocation
+          courtCode: "0000"
         },
         offences: mapOffences(ncm)
       }
@@ -79,7 +79,8 @@ export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, o
     body: generateRequestBody(ncm)
   })
 
-  const response = createMockResponse(generateResponseBody(ncm), HttpStatusCode.Ok)
+  const mockResponse = generateResponseBody(ncm)
+  const response = createMockResponse(mockResponse, HttpStatusCode.Ok)
 
   return {
     id: randomUUID(),
