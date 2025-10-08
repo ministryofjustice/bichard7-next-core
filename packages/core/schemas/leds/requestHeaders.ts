@@ -13,6 +13,5 @@ export const requestHeadersSchema = z.object({
   "X-Leds-Justification": z.string().min(3).max(250),
   "X-Leds-Reason": z.string(),
   "X-Leds-Session-Id": z.string(),
-  "X-Leds-System-Name": z.string().min(3).max(250),
-  "X-Leds-Transaction-Id": z.string()
+  "X-Leds-System-Name": z.string().min(3).max(250)
 })

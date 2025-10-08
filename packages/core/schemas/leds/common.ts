@@ -14,11 +14,14 @@ export const forceStationCodeSchema = z
 export const courtSchema = z.discriminatedUnion("courtIdentityType", [
   z.object({
     courtIdentityType: z.literal("code"),
-    courtCode: z.string()
+    courtCode: z
+      .string()
+      .max(4)
+      .regex(/^[0-9]{4}$/)
   }),
   z.object({
-    courtIdentityType: z.literal("text"),
-    courtName: z.string()
+    courtIdentityType: z.literal("name"),
+    courtName: z.string().min(1).max(71)
   })
 ])
 
@@ -37,43 +40,41 @@ const disposalDurationSchema = z.object({
   count: z.number()
 })
 
+const disposalFineSchema = z.object({
+  amount: z.number(),
+  units: z.number().optional()
+})
+
 export const disposalResultSchema = z.object({
-  disposalCode: z.string(),
+  disposalCode: z.number(),
   disposalDuration: disposalDurationSchema.optional(),
-  disposalFine: z
-    .object({
-      amount: z.number(),
-      units: z.number().optional()
-    })
-    .optional(),
+  disposalFine: disposalFineSchema.optional(),
   disposalEffectiveDate: dateStringSchema.optional(),
-  disposalQualifies: z.array(z.string()).max(4).optional(),
+  disposalQualifies: z.array(z.string().min(1).max(2)).max(4).optional(),
   disposalQualifierDuration: disposalDurationSchema.optional(),
   disposalText: z.string().optional()
 })
 
 export const baseOffenceSchema = z.object({
-  courtOffenceSequenceNumber: z.string(),
+  courtOffenceSequenceNumber: z.number(),
   npccOffenceCode: z
     .string()
     .regex(/^([0-9]{1,3}\.){1,2}[0-9]{1,3}(\.[0-9]{1,3})?$/)
     .optional(),
-  cjsOffenceCode: z.string().length(7).optional(),
+  cjsOffenceCode: z.string().max(8),
   roleQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   plea: pleaSchema.optional(),
-  adjudication: adjudicationSchema.optional(),
   dateOfSentence: dateStringSchema.optional(),
   offenceTic: z.number().optional(),
   offenceStartTime: timeStringSchema.optional(),
   offenceEndDate: dateStringSchema.optional(),
   offenceEndTime: timeStringSchema.optional(),
-  disposalResults: z.array(disposalResultSchema).optional()
+  disposalResults: disposalResultSchema.array().optional()
 })
 
-export const offenceSchema = baseOffenceSchema.extend(
-  z.object({
-    offenceStartDate: dateStringSchema.optional(),
-    offenceId: z.string()
-  })
-)
+export const offenceSchema = baseOffenceSchema.extend({
+  adjudication: adjudicationSchema.optional(),
+  offenceStartDate: dateStringSchema.optional(),
+  offenceId: z.string()
+})

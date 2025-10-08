@@ -1,0 +1,47 @@
+{
+  "personId": "4e9a94f1-36fe-4bea-9618-d9994c08ce51",
+  "personUrn": "2000/0410769X",
+  "reportId": "ceeb4def-5457-484d-9f3f-e2b2fdffc2ce",
+  "asn": "1101ZD0100000448754K",
+  "ownerCode": "01ZD",
+  "disposals": [
+    {
+      "courtCaseId": "0b2c46f1-d7f9-4460-9ee7-63e4fe53cb0c",
+      "courtCaseReference": "97/1626/008395Q",
+      "caseStatusMarker": "impending-prosecution-detail",
+      "court": { "courtIdentityType": "code", "courtCode": "0000" },
+      "offences": [
+        {
+          "offenceId": "d7905ea1-5d84-494e-8320-e4b4984329e5",
+          "courtOffenceSequenceNumber": 1,
+          "cjsOffenceCode": "SX03001A",
+          "offenceStartDate": "2010-11-28",
+          "offenceDescription": ["Attempt to rape a girl aged 13 / 14 / 15 / years of ag"],
+          "plea": "Not Known",
+          "adjudications": [],
+          "disposalResults": []
+        },
+        {
+          "offenceId": "d17847fb-e285-4814-99ff-93986961966a",
+          "courtOffenceSequenceNumber": 2,
+          "cjsOffenceCode": "SX03001",
+          "offenceStartDate": "2010-11-28",
+          "offenceDescription": ["Rape of a Female"],
+          "plea": "Not Known",
+          "adjudications": [],
+          "disposalResults": []
+        },
+        {
+          "offenceId": "601a2afa-9675-49a5-9a6c-7128f3a7fb83",
+          "courtOffenceSequenceNumber": 3,
+          "cjsOffenceCode": "RT88191",
+          "offenceStartDate": "2010-11-28",
+          "offenceDescription": ["Use a motor vehicle without third party insurance."],
+          "plea": "Not Known",
+          "adjudications": [],
+          "disposalResults": []
+        }
+      ]
+    }
+  ]
+}
