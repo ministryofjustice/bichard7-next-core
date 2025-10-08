@@ -636,7 +636,7 @@ jobs:
             - install_ms_edge
       - run:
           name: Install Cypress
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
+          command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - run:
           name: Wait for cypress install to finish
@@ -644,7 +644,7 @@ jobs:
           no_output_timeout: 10m
       - run:
           name: Retrying installing Cypress
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh
+          command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Run UI component tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
@@ -686,6 +686,56 @@ jobs:
       - run:
           name: Run integration tests against user service code
           command: nvm use && npm run -w packages/user-service test:integration
+
+  test_user_service_e2e:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: large
+    parallelism: 4
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.user-service-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
+      - attach_workspace:
+          at: .
+      - set_locale
+      - node_install
+      - install_dependencies:
+          install-cypress: true
+      - run:
+          name: Install Cypress in the background
+          command: ./.circleci/scripts/install-cypress.sh 2>&1
+          background: true
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run install:assets -w packages/user-service
+      - run:
+          name: Wait for Cypress installation to finish
+          command: until [ -f cypressInstalled ]; do sleep 1; done
+          no_output_timeout: 5m
+      - run:
+          name: Retrying installing Cypress
+          command: ./.circleci/scripts/install-cypress.sh
+      - start_services:
+          SERVICES: db-seed
+      - run:
+          name: Run e2e tests against user service code
+          command: npm run test:e2e -w packages/user-service
+      - store_test_results:
+          path: ~/project/packages/user-service/cypress/results
+      - store_artifacts:
+          path: ~/project/packages/user-service/cypress/videos
+      - store_artifacts:
+          path: ~/project/packages/user-service/cypress/screenshots
 
   cypress_e2e_tests:
     machine:
@@ -736,7 +786,7 @@ jobs:
           steps:
             - install_ms_edge
       - run:
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
+          command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - fetch_images:
           images: nodejs-20-2023 user-service nginx-auth-proxy
@@ -747,7 +797,7 @@ jobs:
           no_output_timeout: 10m
       - run:
           name: Retrying installing Cypress
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh
+          command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Building infrastructure
           environment:
@@ -946,6 +996,7 @@ workflows:
       - test_core
       - test_ui
       - test_user_service
+      - test_user_service_e2e
       - characterisation_test
       - comparison_test
 

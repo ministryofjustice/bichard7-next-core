@@ -22,7 +22,7 @@
     "test:unit:update": "npm run test:unit -- -u",
     "test:integration": "jest --testPathPatterns=\"integration\" --runInBand",
     "test:integration:update": "npm run test:integration -- -u",
-    "test:ui": "./scripts/run-test-ui.sh",
+    "test:e2e": "./scripts/run-test-ui.sh",
     "update-deps": "ncu -u && npm install"
   },
   "dependencies": {
