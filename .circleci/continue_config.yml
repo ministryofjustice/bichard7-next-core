@@ -711,6 +711,11 @@ jobs:
       - node_install
       - install_dependencies:
           install-cypress: true
+      - when:
+          condition:
+            equal: [ true, << parameters.ms-edge >> ]
+          steps:
+            - install_ms_edge
       - run:
           name: Install Cypress in the background
           command: ./.circleci/scripts/install-cypress.sh 2>&1
@@ -718,6 +723,9 @@ jobs:
       - run:
           name: Install GOV.UK Assets
           command: npm run install:assets -w packages/user-service
+      - run:
+          name: Build the user service
+          command: npm run build -w packages/user-service
       - run:
           name: Wait for Cypress installation to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
@@ -729,7 +737,7 @@ jobs:
           SERVICES: db-seed audit-log-api
       - run:
           name: Run e2e tests against user service code
-          command: npm run test:e2e -w packages/user-service
+          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
       - store_test_results:
           path: ~/project/packages/user-service/cypress/results
       - store_artifacts:
@@ -1072,3 +1080,7 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+      - test_user_service_e2e:
+          <<: *merge_queue_only
+          name: test_user_service_e2e_ms_edge
+          ms-edge: true
