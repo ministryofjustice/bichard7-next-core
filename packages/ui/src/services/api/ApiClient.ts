@@ -34,7 +34,8 @@ class ApiClient {
   async useFetch(route: string, method: HttpMethod, body?: string | Record<string, unknown>): Promise<Response> {
     return await fetch(`${API_LOCATION}${route}`, {
       headers: {
-        Authorization: `Bearer ${this.jwt}`
+        Authorization: `Bearer ${this.jwt}`,
+        "Content-Type": "application/json"
       },
       method,
       body: body ? JSON.stringify(body) : undefined
