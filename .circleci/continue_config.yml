@@ -693,6 +693,9 @@ jobs:
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     parallelism: 4
+    parameters:
+      ms-edge:
+        type: boolean
     steps:
       - unless:
           condition:
@@ -726,6 +729,9 @@ jobs:
       - run:
           name: Build the user service
           command: npm run build -w packages/user-service
+      - run:
+          name: Start the user service
+          command: npm run start -w packages/user-service
       - run:
           name: Wait for Cypress installation to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
