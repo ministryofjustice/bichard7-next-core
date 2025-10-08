@@ -90,6 +90,7 @@ describe("canUseResubmitCase", () => {
     it("returns false if user force is not the same as the case force", async () => {
       const user = await createUser(testDatabaseGateway, {
         groups: [UserGroup.GeneralHandler],
+        visibleCourts: [],
         visibleForces: ["02"]
       })
       const caseObj = await createCase(testDatabaseGateway, {
