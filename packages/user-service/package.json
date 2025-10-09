@@ -6,7 +6,7 @@
     "predev": "./scripts/symlink-node-modules.sh",
     "dev": "COOKIES_SECURE=false BASE_URL=http://localhost:3000 next dev",
     "prebuild": "./scripts/symlink-node-modules.sh",
-    "build": "next build",
+    "build": "next build --turbo",
     "build:docker": "cd ../.. && bash scripts/build-user-service-docker.sh",
     "preinstall:assets": "./scripts/symlink-node-modules.sh",
     "install:assets": "./scripts/copy-govuk-frontend-assets.sh && ./scripts/copy-moj-frontend-assets.sh",
