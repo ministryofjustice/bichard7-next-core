@@ -1,10 +1,10 @@
-@import "variables.scss";
+@use "variables.scss" as vars;
 
 form {
   & > fieldset {
     width: 66%;
 
-    @media only screen and (max-width: $b7-landscape-tablet-width) {
+    @media only screen and (max-width: vars.$b7-landscape-tablet-width) {
       width: 100%;
     }
 
@@ -26,5 +26,5 @@ form {
 }
 
 .govuk-input, .govuk-textarea {
-  background-color: $b7-white-color;
+  background-color: vars.$b7-white-color;
 }

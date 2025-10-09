@@ -1,6 +1,6 @@
-@import "variables";
+@use "variables" as vars;
 
 body {
-  font-family: $b7-font-family;
-  font-size: $b7-default-font-size;
+  font-family: vars.$b7-font-family;
+  font-size: vars.$b7-default-font-size;
 }

@@ -28,18 +28,19 @@ $b7-colours: (
     "blue": #005BBB
 );
 
-@use "node_modules/govuk-frontend/dist/govuk/all" as * with (
+@use "node_modules/govuk-frontend/dist/govuk/index" as * with (
   $govuk-assets-path: "/users/govuk_assets/",
   $govuk-colours: map.merge($govuk-default-colours, $b7-colours),
 );
+
 @forward "node_modules/@ministryofjustice/frontend/moj/all" with (
   $moj-assets-path: "/users/moj_assets/",
   $govuk-colours: map.merge($govuk-default-colours, $b7-colours),
 );
 
-@import "page";
-@import "form";
-@import "components";
+@use "page";
+@use "form";
+@use "components";
 
 .align-right {
   margin-left: auto;
