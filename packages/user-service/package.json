@@ -24,7 +24,8 @@
     "test:integration:update": "npm run test:integration -- -u",
     "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\"",
     "update-deps": "ncu -u && npm install",
-    "compile:sass": "sass --load-path ./ ./src/styles/globals.scss ./src/styles/globals.css"
+    "compile:sass": "sass --load-path ./ ./src/styles/globals.scss ./src/styles/globals.css",
+    "fix:css": "sed -i '' 's/calc(var(0.75em) \\* 2)/1.5em/g' ./src/styles/globals.css"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^5.1.5",
