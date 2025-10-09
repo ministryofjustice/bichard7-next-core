@@ -1,6 +1,6 @@
 import { AppProps } from "next/app"
 import { useEffect } from "react"
-import "../styles/globals.scss"
+import "../styles/globals.css"
 
 const App = ({ Component, pageProps }: AppProps) => {
   useEffect(() => {
