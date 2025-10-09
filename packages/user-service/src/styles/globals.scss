@@ -22,6 +22,7 @@ $govuk-default-colours: (
     "light-green": #85994b,
     "turquoise": #28a197
 );
+
 $b7-colours: (
     "white": #FAFAFA,
     "black": #222,
@@ -50,7 +51,7 @@ $b7-colours: (
   cursor: not-allowed;
   opacity: 0.5;
   text-decoration: underline;
-  font-family: "Verdana" sans-serif;
+  font-family: "Verdana", sans-serif;
   font-size: 1em;
   text-align: left;
   color: blue;
