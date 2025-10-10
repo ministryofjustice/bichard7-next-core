@@ -1,25 +1,27 @@
 @startuml
 set separator none
-title Bichard - Message Transfer Lambda - Components
+title Bichard - Event Handler Step Function - Components
 
-top to bottom direction
+left to right direction
 
 !include <C4/C4>
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-System(ExISS, "ExISS", $descr="", $tags="", $link="")
-Container(Bichard.IncomingMessageHandlerStepFunction, "Incoming Message Handler Step Function", $techn="", $descr="", $tags="", $link="")
+ContainerQueue(Bichard.ActiveMQ, "Active MQ", $techn="Active MQ", $descr="", $tags="", $link="")
+Container(Bichard.AuditLogAPI, "Audit Log API", $techn="Typescript", $descr="", $tags="", $link="")
 
-Container_Boundary("Bichard.MessageTransferLambda_boundary", "Message Transfer Lambda", $tags="") {
-  ComponentQueue(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "External Incoming S3 bucket", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.MessageTransferLambda.Transferlambda, "Transfer lambda", $techn="", $descr="", $tags="", $link="")
+Container_Boundary("Bichard.EventHandlerStepFunction_boundary", "Event Handler Step Function", $tags="") {
+  Component(Bichard.EventHandlerStepFunction.MQPoller, "MQ Poller", $techn="", $descr="Typescript", $tags="", $link="")
+  ComponentQueue(Bichard.EventHandlerStepFunction.EventS3bucket, "Event S3 bucket", $techn="", $descr="", $tags="", $link="")
+  Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", $techn="Typescript", $descr="", $tags="", $link="")
 }
 
-Rel(ExISS, Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "", $techn="", $tags="", $link="")
-Rel(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, Bichard.MessageTransferLambda.Transferlambda, "", $techn="", $tags="", $link="")
-Rel(Bichard.MessageTransferLambda.Transferlambda, Bichard.IncomingMessageHandlerStepFunction, "", $techn="", $tags="", $link="")
+Rel(Bichard.ActiveMQ, Bichard.EventHandlerStepFunction.MQPoller, "", $techn="", $tags="", $link="")
+Rel(Bichard.EventHandlerStepFunction.MQPoller, Bichard.EventHandlerStepFunction.EventS3bucket, "", $techn="", $tags="", $link="")
+Rel(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunction.WritetoAuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLogAPI, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

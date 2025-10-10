@@ -7,35 +7,44 @@ left to right direction
 !include <C4/C4>
 !include <C4/C4_Context>
 
-AddBoundaryTag("CJSE", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
-Boundary(group_1, "CJSE", $tags="CJSE") {
-  System(Bichard, "Bichard", $descr="", $tags="", $link="")
-  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
-  System(ExISS, "ExISS", $descr="", $tags="", $link="")
+AddBoundaryTag("CJIT (Criminal Justice IT)", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
+Boundary(group_1, "CJIT (Criminal Justice IT)", $tags="CJIT (Criminal Justice IT)") {
+  System(CJSM, "CJSM", $descr="Criminal Justice Secure Mail", $tags="", $link="")
 }
 
-AddBoundaryTag("HMCTS", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
-Boundary(group_2, "HMCTS", $tags="HMCTS") {
+AddBoundaryTag("CJSE (Criminal Justice System Exchange)", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
+Boundary(group_2, "CJSE (Criminal Justice System Exchange)", $tags="CJSE (Criminal Justice System Exchange)") {
+  System(PSNProxy, "PSN Proxy", $descr="Q-Solution", $tags="", $link="")
+  System(ExISS, "ExISS", $descr="Exchange Integrated Shared Services", $tags="", $link="")
+  System(Bichard, "Bichard", $descr="", $tags="", $link="")
+}
+
+AddBoundaryTag("HMCTS (HM's Courts and Tribunals Service)", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
+Boundary(group_3, "HMCTS (HM's Courts and Tribunals Service)", $tags="HMCTS (HM's Courts and Tribunals Service)") {
   System(CommonPlatform, "Common Platform", $descr="", $tags="", $link="")
   System(Libra, "Libra", $descr="", $tags="", $link="")
 }
 
-AddBoundaryTag("Home Office - Police", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
-Boundary(group_3, "Home Office - Police", $tags="Home Office - Police") {
-  System(PoliceNationalComputer, "Police National Computer", $descr="", $tags="", $link="")
+AddBoundaryTag("Home Office", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
+Boundary(group_4, "Home Office", $tags="Home Office") {
+  System(PNC, "PNC", $descr="Police National Computer", $tags="", $link="")
+  System(LEDS, "LEDS", $descr="Law Enforcement Data System", $tags="", $link="")
+  System(NIAM, "NIAM", $descr="National Identity Access Management service", $tags="", $link="")
 }
 
 Person(PoliceUser, "Police User", $descr="", $tags="", $link="")
-System(CJSM, "CJSM", $descr="", $tags="", $link="")
 
-Rel(PoliceUser, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
+Rel(Bichard, NIAM, "via Internet", $techn="Gets auth token to access LEDS API", $tags="", $link="")
+Rel(Bichard, LEDS, "", $techn="Encrypted via mTLS", $tags="", $link="")
+Rel(PoliceUser, PNC, "Uses", $techn="", $tags="", $link="")
+Rel(PoliceUser, LEDS, "Uses", $techn="", $tags="", $link="")
 Rel(PoliceUser, Bichard, "Uses", $techn="", $tags="", $link="")
 Rel(CJSM, PoliceUser, "Gets email", $techn="", $tags="", $link="")
 Rel(CommonPlatform, ExISS, "Sends result of a court case", $techn="", $tags="", $link="")
 Rel(Libra, ExISS, "Sends result of a court case", $techn="", $tags="", $link="")
-Rel(PSNProxy, PoliceNationalComputer, "Uses", $techn="", $tags="", $link="")
+Rel(PSNProxy, PNC, "Uses", $techn="", $tags="", $link="")
 Rel(Bichard, PSNProxy, "", $techn="", $tags="", $link="")
-Rel(Bichard, CJSM, "Sends verification code", $techn="", $tags="", $link="")
+Rel(Bichard, CJSM, "via Internet", $techn="Sends verification code / Notifies the Common Platform about invalid incoming messages", $tags="", $link="")
 Rel(ExISS, Bichard, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)

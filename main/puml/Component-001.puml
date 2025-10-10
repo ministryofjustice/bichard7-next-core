@@ -9,31 +9,36 @@ top to bottom direction
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
+Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="Typescript", $descr="", $tags="", $link="")
 ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
-Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="")
-Container(Bichard.PNCAPI, "PNC API", $techn="", $descr="", $tags="", $link="")
+Container(Bichard.EmailSystem, "Email System", $techn="Postfix", $descr="", $tags="", $link="")
+Container(Bichard.PNCAPI, "PNC API", $techn="Java EE", $descr="", $tags="", $link="")
+Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
 
 Container_Boundary("Bichard.Conductor_boundary", "Conductor", $tags="") {
   AddBoundaryTag("Core Worker", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
   Boundary(group_1, "Core Worker", $tags="Core Worker") {
-    Component(Bichard.Conductor.Phase1Queue, "Phase 1 Queue", $techn="TypeScript", $descr="", $tags="", $link="")
-    Component(Bichard.Conductor.Phase2Queue, "Phase 2 Queue", $techn="TypeScript", $descr="", $tags="", $link="")
-    Component(Bichard.Conductor.Phase3Queue, "Phase 3 Queue", $techn="TypeScript", $descr="", $tags="", $link="")
+    Component(Bichard.Conductor.IncomingMessageHandler, "Incoming Message Handler", $techn="Typescript", $descr="", $tags="", $link="")
+    Component(Bichard.Conductor.Phase1, "Phase 1", $techn="TypeScript", $descr="", $tags="", $link="")
+    Component(Bichard.Conductor.Phase2, "Phase 2", $techn="TypeScript", $descr="", $tags="", $link="")
+    Component(Bichard.Conductor.Phase3, "Phase 3", $techn="TypeScript", $descr="", $tags="", $link="")
   }
 
 }
 
-Rel(Bichard.Conductor.Phase1Queue, Bichard.Conductor.Phase1Queue, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase1Queue, Bichard.Conductor.Phase2Queue, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase2Queue, Bichard.Conductor.Phase2Queue, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase2Queue, Bichard.Conductor.Phase3Queue, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase1Queue, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase2Queue, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase3Queue, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase3Queue, Bichard.PNCAPI, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase1Queue, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase2Queue, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
-Rel(Bichard.Conductor.Phase3Queue, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.MessageTransferLambda, Bichard.Conductor.IncomingMessageHandler, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.IncomingMessageHandler, Bichard.Conductor.Phase1, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1, Bichard.Conductor.Phase2, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase2, Bichard.Conductor.Phase3, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1, Bichard.PNCAPI, "Queries PNC by ASN", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase3, Bichard.PNCAPI, "Updates PNC", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase1, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase2, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.Phase3, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
+Rel(Bichard.Conductor.IncomingMessageHandler, Bichard.EmailSystem, "Alert Common Platform", $techn="When incoming message format is invalid, Common Platform is notified via email", $tags="", $link="")
+Rel(Bichard.BichardAPI, Bichard.Conductor.Phase1, "Resubmits court case", $techn="", $tags="", $link="")
+Rel(Bichard.BichardAPI, Bichard.Conductor.Phase2, "Resubmits court case", $techn="", $tags="", $link="")
+Rel(Bichard.BichardAPI, Bichard.BichardDatabase, "Reads from / Writes to", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

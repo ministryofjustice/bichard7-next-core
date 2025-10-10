@@ -1,32 +1,29 @@
 @startuml
 set separator none
-title Bichard - Incoming Message Handler Step Function - Components
+title Bichard - Message Transfer Lambda - Components
 
-left to right direction
+top to bottom direction
 
 !include <C4/C4>
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="", $descr="", $tags="", $link="")
-Container(Bichard.ActiveMQ, "Active MQ", $techn="Active MQ", $descr="", $tags="", $link="")
-Container(Bichard.AuditLog, "Audit Log", $techn="", $descr="", $tags="", $link="")
+System(ExISS, "ExISS", $descr="Exchange Integrated Shared Services", $tags="", $link="")
+Container(Bichard.Conductor, "Conductor", $techn="", $descr="", $tags="", $link="")
 
-Container_Boundary("Bichard.IncomingMessageHandlerStepFunction_boundary", "Incoming Message Handler Step Function", $tags="") {
-  ComponentQueue(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "Internal Incoming S3 bucket", $techn="", $descr="Blah blah", $tags="", $link="")
-  Component(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "Store Message", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "Send to Bichard", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "Record Sent to Bichard", $techn="", $descr="", $tags="", $link="")
+Container_Boundary("Bichard.MessageTransferLambda_boundary", "Message Transfer Lambda", $tags="") {
+  ComponentQueue(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "External Incoming S3 bucket", $techn="", $descr="", $tags="", $link="")
+  Component(Bichard.MessageTransferLambda.Transferlambda, "Transfer lambda", $techn="", $descr="", $tags="", $link="")
+  ComponentQueue(Bichard.MessageTransferLambda.InternalIncomingS3bucket, "Internal Incoming S3 bucket", $techn="", $descr="", $tags="", $link="")
+  ComponentQueue(Bichard.MessageTransferLambda.SQSqueue, "SQS queue", $techn="", $descr="", $tags="", $link="")
 }
 
-Rel(Bichard.MessageTransferLambda, Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, "", $techn="", $tags="", $link="")
-Rel(Bichard.IncomingMessageHandlerStepFunction.InternalIncomingS3bucket, Bichard.IncomingMessageHandlerStepFunction.StoreMessage, "", $techn="", $tags="", $link="")
-Rel(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.AuditLog, "", $techn="", $tags="", $link="")
-Rel(Bichard.IncomingMessageHandlerStepFunction.StoreMessage, Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, "", $techn="", $tags="", $link="")
-Rel(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.ActiveMQ, "", $techn="", $tags="", $link="")
-Rel(Bichard.IncomingMessageHandlerStepFunction.SendtoBichard, Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, "", $techn="", $tags="", $link="")
-Rel(Bichard.IncomingMessageHandlerStepFunction.RecordSenttoBichard, Bichard.AuditLog, "", $techn="", $tags="", $link="")
+Rel(Bichard.MessageTransferLambda.SQSqueue, Bichard.Conductor, "", $techn="", $tags="", $link="")
+Rel(ExISS, Bichard.MessageTransferLambda.ExternalIncomingS3bucket, "", $techn="", $tags="", $link="")
+Rel(Bichard.MessageTransferLambda.ExternalIncomingS3bucket, Bichard.MessageTransferLambda.Transferlambda, "", $techn="", $tags="", $link="")
+Rel(Bichard.MessageTransferLambda.Transferlambda, Bichard.MessageTransferLambda.InternalIncomingS3bucket, "", $techn="", $tags="", $link="")
+Rel(Bichard.MessageTransferLambda.InternalIncomingS3bucket, Bichard.MessageTransferLambda.SQSqueue, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
 @enduml

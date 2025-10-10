@@ -35,7 +35,7 @@
         </ul>
         <p class="menu-label">Software systems</p>
         <ul class="menu-list has-site-branding">
-          <li><a href="../" class="is-active">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../libra/" class="">Libra</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../police-national-computer/" class="">Police National Computer</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+          <li><a href="../" class="is-active">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../leds/" class="">LEDS</a><a href="../../libra/" class="">Libra</a><a href="../../niam/" class="">NIAM</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../pnc/" class="">PNC</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
         </ul>
       </aside>
       <div class="container is-fluid">
@@ -46,7 +46,7 @@
             <li><a href="../" class="">Info</a></li>
             <li><a href="../context/" class="">Context views</a></li>
             <li><a href="../container/" class="">Container views</a></li>
-            <li><a href="../component/audit-log/" class="">Component views</a></li>
+            <li><a href="../component/conductor/" class="">Component views</a></li>
             <li class="is-active"><a href="./" class="is-active">Dependencies</a></li>
           </ul>
         </div>
@@ -80,8 +80,18 @@
             <tbody>
               <tr>
                 <td class="has-text-weight-bold"><a href="../../cjsm/" class="">CJSM</a></td>
-                <td><span class="">Sends verification code</span></td>
+                <td><span class="">via Internet</span></td>
+                <td><span class="">Sends verification code / Notifies the Common Platform about invalid incoming messages</span></td>
+              </tr>
+              <tr>
+                <td class="has-text-weight-bold"><a href="../../leds/" class="">LEDS</a></td>
                 <td><span class=""></span></td>
+                <td><span class="">Encrypted via mTLS</span></td>
+              </tr>
+              <tr>
+                <td class="has-text-weight-bold"><a href="../../niam/" class="">NIAM</a></td>
+                <td><span class="">via Internet</span></td>
+                <td><span class="">Gets auth token to access LEDS API</span></td>
               </tr>
               <tr>
                 <td class="has-text-weight-bold"><a href="../../pagerduty/" class="">PagerDuty</a></td>
