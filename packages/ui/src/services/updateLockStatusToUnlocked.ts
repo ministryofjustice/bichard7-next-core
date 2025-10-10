@@ -60,8 +60,9 @@ const updateLockStatusToUnlocked = async (
   courtCase: CourtCase,
   user: User,
   unlockReason: UnlockReason,
-  events: AuditLogEvent[]
-): Promise<UpdateResult | Error> => {
+  events: AuditLogEvent[],
+  usingApiResubmit: boolean = false
+): Promise<UpdateResult | Error | undefined> => {
   const shouldUnlockExceptions =
     user.hasAccessTo[Permission.Exceptions] &&
     (unlockReason === UnlockReason.TriggerAndException || unlockReason === UnlockReason.Exception)
@@ -81,6 +82,10 @@ const updateLockStatusToUnlocked = async (
     (user.hasAccessTo[Permission.Exceptions] && courtCase.errorLockedByUsername) ||
     (user.hasAccessTo[Permission.Triggers] && courtCase.triggerLockedByUsername)
 
+  if (!anyLockUserHasPermissionToUnlock && usingApiResubmit) {
+    return undefined
+  }
+
   if (!anyLockUserHasPermissionToUnlock) {
     return new Error("Case is not locked")
   }
@@ -92,11 +97,19 @@ const updateLockStatusToUnlocked = async (
     result = await unlock("Exception", courtCaseRepository, courtCase.errorId, user, events)
   }
 
+  if (isError(result)) {
+    return result
+  }
+
   if (shouldUnlockTriggers && !!courtCase.triggerLockedByUsername) {
     result = await unlock("Trigger", courtCaseRepository, courtCase.errorId, user, events)
   }
 
-  return result ?? new Error("Failed to unlock case")
+  if (isError(result)) {
+    return result
+  }
+
+  return result
 }
 
 export default updateLockStatusToUnlocked
