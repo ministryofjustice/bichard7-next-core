@@ -481,6 +481,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
@@ -554,6 +555,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
@@ -636,7 +638,7 @@ jobs:
             - install_ms_edge
       - run:
           name: Install Cypress
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
+          command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - run:
           name: Wait for cypress install to finish
@@ -644,7 +646,7 @@ jobs:
           no_output_timeout: 10m
       - run:
           name: Retrying installing Cypress
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh
+          command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Run UI component tests
           command: MS_EDGE="<< parameters.ms-edge >>" bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
@@ -657,6 +659,116 @@ jobs:
           path: ~/project/packages/ui/cypress/videos
       - store_artifacts:
           path: ~/project/packages/ui/cypress/screenshots
+
+  test_user_service:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.user-service-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_locale
+      - node_install
+      - install_dependencies
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - build_audit_logging_images
+      - start_services:
+          SERVICES: db-seed audit-log-api
+      - run:
+          name: Run unit tests against user service code
+          command: nvm use && npm run -w packages/user-service test:unit
+      - run:
+          name: Run integration tests against user service code
+          command: nvm use && npm run -w packages/user-service test:integration
+
+  test_user_service_e2e:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: large
+    parallelism: 4
+    parameters:
+      ms-edge:
+        type: boolean
+        default: false
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.user-service-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run:
+          name: Check for tests
+          command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
+      - attach_workspace:
+          at: .
+      - set_locale
+      - node_install
+      - install_dependencies:
+          install-cypress: true
+      - when:
+          condition:
+            equal: [true, << parameters.ms-edge >>]
+          steps:
+            - install_ms_edge
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run -w packages/user-service install:assets
+      - run:
+          name: Build the user service
+          command: npm run -w packages/user-service build
+      - start_services:
+          SERVICES: db-seed audit-log-api
+      - run:
+          name: Run e2e tests against user service code
+          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
+      - store_test_results:
+          path: ~/project/packages/user-service/cypress/results
+      - store_artifacts:
+          path: ~/project/packages/user-service/cypress/videos
+      - store_artifacts:
+          path: ~/project/packages/user-service/cypress/screenshots
+
+  build_user_service_docker_image:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.e2e-test-changes >>
+              - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.api-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: ./scripts/build-user-service-docker.sh
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save -o "images/user-service:latest" "user-service:latest"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
 
   cypress_e2e_tests:
     machine:
@@ -672,6 +784,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - and:
@@ -689,6 +802,10 @@ jobs:
           name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -707,10 +824,10 @@ jobs:
           steps:
             - install_ms_edge
       - run:
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh 2>&1
+          command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - fetch_images:
-          images: nodejs-20-2023 user-service nginx-auth-proxy
+          images: nodejs-20-2023 nginx-auth-proxy
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -718,7 +835,7 @@ jobs:
           no_output_timeout: 10m
       - run:
           name: Retrying installing Cypress
-          command: ./.circleci/scripts/ui-scripts/install-cypress.sh
+          command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Building infrastructure
           environment:
@@ -764,6 +881,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
@@ -779,15 +897,19 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - when:
           condition:
             equal: [true, << parameters.api >>]
           steps:
             - run:
-                name: Load api
+                name: Load api image
                 command: |
                   docker image load < "images/api:latest"
       - setup_ui
@@ -833,6 +955,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
           steps:
@@ -841,16 +964,20 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - setup_ui
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
       - build_audit_logging_images
       - fetch_images:
-          images: user-service nginx-auth-proxy
+          images: nginx-auth-proxy
       - build_core
       - run:
           command: npm run ui
@@ -889,6 +1016,9 @@ parameters:
   ui-changes:
     type: boolean
     default: false
+  user-service-changes:
+    type: boolean
+    default: false
   e2e-test-changes:
     type: boolean
     default: false
@@ -913,6 +1043,8 @@ workflows:
       - test_conductor
       - test_core
       - test_ui
+      - test_user_service
+      - test_user_service_e2e
       - characterisation_test
       - comparison_test
 
@@ -926,6 +1058,12 @@ workflows:
           requires:
             - test_ui
 
+      - build_user_service_docker_image:
+          name: build_user_service_docker_image
+          requires:
+            - test_user_service
+            - test_user_service_e2e
+
       - build_api_docker_image:
           name: build_api_docker_image
           requires:
@@ -935,6 +1073,7 @@ workflows:
           name: cypress_e2e_tests
           requires:
             - build-ui
+            - build_user_service_docker_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -944,12 +1083,14 @@ workflows:
           api-case-resubmit: true
           requires:
             - build-ui
+            - build_user_service_docker_image
             - build_api_docker_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           requires:
             - build-ui
+            - build_user_service_docker_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -959,10 +1100,13 @@ workflows:
           api-case-resubmit: true
           requires:
             - build-ui
+            - build_user_service_docker_image
             - build_api_docker_image
+
       - zap_scanner:
           requires:
             - build-ui
+            - build_user_service_docker_image
 
       - e2e_test:
           next-ui: false
@@ -972,6 +1116,10 @@ workflows:
           requires:
             - lint_and_build
 
+      - test_user_service_e2e:
+          <<: *merge_queue_only
+          name: test_user_service_e2e_ms_edge
+          ms-edge: true
       - cypress_component_test:
           <<: *merge_queue_only
           name: cypress_component_test_ms_edge
@@ -982,9 +1130,11 @@ workflows:
           ms-edge: true
           requires:
             - build-ui
+            - build_user_service_docker_image
       - cucumber_e2e_tests:
           <<: *merge_queue_only
           name: cucumber_e2e_tests_ms_edge
           ms-edge: true
           requires:
             - build-ui
+            - build_user_service_docker_image

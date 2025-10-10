@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render summary component and its items 1`] = `
+<div>
+  <a
+    class="govuk-back-link"
+    data-test="back-link"
+    href="/dummy-path-1/dummy-path-2"
+  >
+    Back
+  </a>
+</div>
+`;
