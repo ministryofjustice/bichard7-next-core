@@ -275,14 +275,6 @@ workspace "Bichard" {
     phaseOne -> phaseTwo
     phaseTwo -> phaseThree
 
-    incomingMessageHandler -> bichardApi
-    phaseOne -> bichardApi
-    phaseTwo -> bichardApi
-    phaseThree -> bichardApi
-
-    bichardApi -> phaseOne "Resubmits to Phase 1"
-    bichardApi -> phaseTwo "Resubmits to Phase 2"
-
     phaseOne -> pncApi "Queries PNC by ASN"
     phaseThree -> pncApi "Updates PNC"
 
@@ -291,6 +283,9 @@ workspace "Bichard" {
     phaseThree -> database
 
     incomingMessageHandler -> emailSystem "Alert Common Platform" "When incoming message format is invalid, Common Platform is notified via email"
+
+    bichardApi -> phaseOne "Resubmits to Phase 1"
+    bichardApi -> phaseTwo "Resubmits to Phase 2"
 
     # LEDS proxy
     ledsProxyLambda -> ledsTgw "" "Encrypted via mTLS"
