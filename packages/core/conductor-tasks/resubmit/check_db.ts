@@ -19,7 +19,7 @@ const s3Config = createS3Config()
 const dbConfig = createDbConfig()
 
 const inputDataSchema = z.object({
-  messageId: z.uuid()
+  messageId: z.string().or(z.uuid())
 })
 type InputData = z.infer<typeof inputDataSchema>
 

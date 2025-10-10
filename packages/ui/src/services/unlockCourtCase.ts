@@ -48,7 +48,7 @@ const unlockCourtCase = async (
   courtCaseId: number,
   user: User,
   unlockReason: UnlockReason
-): Promise<UpdateResult | Error> => {
+): Promise<UpdateResult | Error | undefined> => {
   return await retryTransaction(unlockCourtCaseTransaction, dataSource, courtCaseId, user, unlockReason)
 }
 
