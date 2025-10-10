@@ -284,8 +284,8 @@ workspace "Bichard" {
 
     incomingMessageHandler -> emailSystem "Alert Common Platform" "When incoming message format is invalid, Common Platform is notified via email"
 
-    bichardApi -> phaseOne "Resubmits to Phase 1"
-    bichardApi -> phaseTwo "Resubmits to Phase 2"
+    bichardApi -> phaseOne "Resubmits court case"
+    bichardApi -> phaseTwo "Resubmits court case"
 
     # LEDS proxy
     ledsProxyLambda -> ledsTgw "" "Encrypted via mTLS"
