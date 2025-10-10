@@ -31,14 +31,22 @@ class ApiClient {
     return new Error(`Error: ${response.status} - ${response.statusText}`)
   }
 
-  async useFetch(route: string, method: HttpMethod, body?: string | Record<string, unknown>): Promise<Response> {
+  async useFetch(route: string, method: HttpMethod, bodyContent?: string | Record<string, unknown>): Promise<Response> {
+    let body: string | Record<string, unknown> | undefined = undefined
+
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${this.jwt}`
+    }
+
+    if (bodyContent) {
+      headers["Content-Type"] = "application/json"
+      body = JSON.stringify(bodyContent)
+    }
+
     return await fetch(`${API_LOCATION}${route}`, {
-      headers: {
-        Authorization: `Bearer ${this.jwt}`,
-        "Content-Type": "application/json"
-      },
+      headers,
       method,
-      body: body ? JSON.stringify(body) : undefined
+      body
     })
   }
 }
