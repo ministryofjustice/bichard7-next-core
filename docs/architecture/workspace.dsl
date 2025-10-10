@@ -5,107 +5,117 @@ workspace "Bichard" {
   model {
     !include lib/users.dsl
 
-    !include lib/hmcts.dsl
+    !include lib/ministry-of-justice.dsl
     !include lib/home-office.dsl
     !include lib/external.dsl
 
-    cjsm = softwareSystem "CJSM" {
-      tags "Existing System"
-    }
-
-
-
-    group "CJSE" {
+    group "CJSE (Criminal Justice System Exchange)" {
       qsolution = softwareSystem "PSN Proxy" "Q-Solution" "Nginx" {
-        tags "Existing System"
+        tags "Ministry of Justice" "CJSE" "Existing System"
       }
 
-      exiss = softwareSystem "ExISS" {
-        tags "Existing System"
+      exiss = softwareSystem "ExISS" "Exchange Integrated Shared Services" {
+        tags "Ministry of Justice" "CJSE" "Existing System"
       }
 
       bichard = softwareSystem "Bichard" {
+        tags "Ministry of Justice" "CJSE"
+
         dynamoDB =  container "DynamoDB" {
-          tags "Existing System"
+          tags "Database"
         }
 
-        beanconnect = container "Beanconnect"
+        beanconnect = container "Beanconnect" "Acts as a bridge between Java EE applications (Enterprise JavaBeans or servlets) and SAP backend systems" {
+          tags "Existing System" "ECS"
+        }
 
-        messageTransfer = container "Message Transfer Lambda" {
+        messageTransfer = container "Message Transfer Lambda" "" "Typescript" {
+          tags "Lambda"
+
           incomingS3Bucket = component "External Incoming S3 bucket" {
-            tags "Queue"
+            tags "S3" "Queue"
           }
 
           transferProcess = component "Transfer lambda" {
             tags "Lambda"
           }
 
-          # sqs = component "SQS event" {
-          #   tags "Existing System"
-          # }
-        }
+          internalIncomingS3Bucket = component "Internal Incoming S3 bucket" {
+            tags "S3" "Queue"
+          }
 
-        incomingMessageHandler = container "Incoming Message Handler Step Function" {
-          internalIncomingS3Bucket = component "Internal Incoming S3 bucket" "Blah blah" {
+          sqs = component "SQS queue" {
             tags "Queue"
           }
-
-          storeMessage = component "Store Message" {
-            tags "Lambda"
-          }
-
-          sendToBichard = component "Send to Bichard" {
-            tags "Lambda"
-          }
-
-          recordSentToBichard = component "Record Sent to Bichard" {
-            tags "Lambda"
-          }
         }
-
-        eventLambda = container "Event Lambda"
 
         eventHandler = container "Event Handler Step Function" {
-          eventS3Bucket = component "Event S3 bucket" {
-            tags "Queue"
+          tags "Step Function"
+
+          eventHandlerMqPoller = component "MQ Poller" "Typescript" {
+            tags "Lambda" "Event Source Mapping"
           }
 
-          writeToAuditLog = component "Write to Audit Log" {
+          eventHandlerS3Bucket = component "Event S3 bucket" {
+            tags "S3" "Queue"
+          }
+
+          eventHandlerWriteToAuditLog = component "Write to Audit Log" "" "Typescript" {
             tags "Lambda"
           }
         }
 
-        activeMQ = container "Active MQ" "" "Active MQ"
+        activeMQ = container "Active MQ" "" "Active MQ" {
+          tags "Existing System" "Queue"
+        }
 
         nginxAuthProxy = container "Nginx Auth Proxy" "" "Nginx" {
           url "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Nginx_Auth_Proxy"
+          tags "ECS" "Proxy"
         }
 
         database = container "Bichard Database" "" "PostgreSQL" "Database" {
-          tags "Existing System"
+          tags "Existing System" "Database"
         }
 
         emailSystem = container "Email System" "" "Postfix" {
           url "https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/tree/main/Postfix"
+          tags "ECS"
+        }
+
+        auditLogApi = container "Audit Log API" "" "Typescript" {
+          tags "API"
+
+          auditLogApiGateway = component "Audit Log API Gateway" "" "API Gateway"
+          auditLogApiLambdas = component "Audit Log API Lambdas" "" "Typescript"
+        }
+
+        messageForwarder = container "Message Forwarder" "Polls and forwards MQ messages to old Bichard queues or conductor" "Typescript" {
+          tags "Lambda" "Event Source Mapping"
         }
 
         bichardJavaApplication = container "Bichard Java Application" "" "Java EE"{
-          tags "Existing System"
+          tags "ECS" "Web Browser" "Existing System"
+        }
+
+        pncApi = container "PNC API" "" "Java EE" {
+          tags "ECS" "API" "Existing System"
         }
 
         bichardUserService = container "Bichard User Service" "An application to provide user authentication and user management" "Next.js, TypeScript & React" {
           url "https://github.com/ministryofjustice/bichard7-next-user-service"
-          tags "Web Browser"
+          tags "ECS" "Web Browser"
         }
 
-        auditLogApi = container "Audit Log" {
-          tags "API"
+        staticFileService = container "Static File Service" {
+          s3WebProxy = component "S3 Web Proxy" "Web server for serving files stored in an S3 bucket" {
+            tags "ECS" "Web Browser"
+          }
 
-          auditLogApiGateway = component "Audit Log API Gateway"
-          auditLogApiLambda = component "Audit Log API Lambda"
+          staticFilesS3Bucket = component "Static Files S3 Bucket" {
+            tags "S3"
+          }
         }
-
-        staticFileService = container "Static File Service"
 
         reportingService = container "Reporting" {
           automationReport = component "Automation Report" {
@@ -129,43 +139,57 @@ workspace "Bichard" {
             tags "Lambda"
           }
           sns = component "SNS" {
-            tags "SNS"
+            tags "SNS" "Queue"
           }
         }
 
         ####### Hybrid
-        pncApi = container "PNC API" {
-          tags "API"
-        }
-
         bichardUI = container "Bichard UI" "A new way of interacting with Bichard, complying with Gov.uk standards" "TypeScript & React" "Web Browser" {
           url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui"
-          tags "Web Browser"
-        }
-
-        bichardNextCore = container "Bichard Next Core" "The code to replace the processing logic of Bichard7" "Next.js, TypeScript" {
-          url "https://github.com/ministryofjustice/bichard7-next-core"
+          tags "ECS" "Web Browser"
         }
 
         conductor = container "Conductor" {
           url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor"
 
           group "Core Worker" {
-            phaseOne = component "Phase 1 Queue" "" "TypeScript"
-            phaseTwo = component "Phase 2 Queue" "" "TypeScript"
-            phaseThree = component "Phase 3 Queue" "" "TypeScript"
+            incomingMessageHandler = component "Incoming Message Handler" "" "Typescript" {
+              tags "Workflow"
+            }
+            phaseOne = component "Phase 1" "" "TypeScript" {
+              tags "Workflow"
+            }
+            phaseTwo = component "Phase 2" "" "TypeScript" {
+              tags "Workflow"
+            }
+            phaseThree = component "Phase 3" "" "TypeScript" {
+              tags "Workflow"
+            }
           }
         }
 
-        bichardAPI = container "Bichard API" "An API to remove DB actions from UI and to be Audit Logs" "TypeScript, Fastify & Zod" "API" {
+        bichardApi = container "Bichard API" "An API to remove DB actions from UI and to be Audit Logs" "TypeScript, Fastify & Zod" "API" {
           url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api"
-          tags "API"
+          tags "ECS" "API"
+        }
+
+        ledsProxy = container "LEDS Proxy" {
+          tags "VPC" "Proxy"
+
+          ledsProxyLambda = component "Proxy Lambda" {
+            tags "Lambda"
+          }
+
+          ledsTgw = component "LEDS Transit Gateway" "Access to LEDS environment is via a Transit Gateway managed by the LEDS team" {
+            tags "Transit Gateway" "TGW"
+          }
         }
       }
     }
 
     # Relationships between people and software systems
     policeUser -> pnc "Uses"
+    policeUser -> leds "Uses"
     policeUser -> nginxAuthProxy "Uses"
     cjsm -> policeUser "Gets email"
 
@@ -174,52 +198,57 @@ workspace "Bichard" {
     libra -> exiss "Sends result of a court case"
     qsolution -> pnc "Uses"
 
-    bichardJavaApplication -> beanconnect
+    bichardJavaApplication -> pncApi
 
     beanconnect -> qsolution
 
     # Relationships to/from components
-    emailSystem -> cjsm "Sends verification code"
+    emailSystem -> cjsm "via Internet" "Sends verification code / Notifies the Common Platform about invalid incoming messages"
     bichardUserService -> emailSystem "Sends verification code"
 
     nginxAuthProxy -> bichardJavaApplication
     nginxAuthProxy -> bichardUserService "Uses"
-    nginxAuthProxy -> staticFileService
+    nginxAuthProxy -> s3WebProxy "" "Fetches reports and help pages"
 
     bichardUserService -> database "Reads from / Writes to"
     bichardJavaApplication -> database "Reads from / Writes to"
-    bichardAPI -> database "Reads from / Writes to"
+    bichardApi -> database "Reads from / Writes to"
 
     exiss -> incomingS3Bucket
     incomingS3Bucket -> transferProcess
     transferProcess -> internalIncomingS3Bucket
-    internalIncomingS3Bucket -> storeMessage
-    storeMessage -> auditLogApi
-    storeMessage -> sendToBichard
-    sendToBichard -> activeMQ
-    sendToBichard -> recordSentToBichard
-    recordSentToBichard -> auditLogApi
-
-    activeMQ -> eventLambda
-    eventLambda -> eventS3Bucket
-    eventS3Bucket -> writeToAuditLog
-    writeToAuditLog -> auditLogApi
+    internalIncomingS3Bucket -> sqs
 
     activeMQ -> bichardJavaApplication
     bichardJavaApplication -> activeMQ
 
-    # Audit Logger
-    auditLogApiGateway -> auditLogApiLambda
-    auditLogApiLambda -> dynamoDB
+    # Event handler
+    activeMQ -> eventHandlerMqPoller
+    eventHandlerMqPoller -> eventHandlerS3Bucket
+    eventHandlerS3Bucket -> eventHandlerWriteToAuditLog
+    eventHandlerWriteToAuditLog -> auditLogApiGateway
+
+    # Aduit log API
+    auditLogApiGateway -> auditLogApiLambdas
+    auditLogApiLambdas -> dynamoDB
+    auditLogApiLambdas -> database
+
+    # Message forwarder
+    activeMQ -> messageForwarder
+    messageForwarder -> activeMQ
+    messageForwarder -> conductor
+
+    # Bichard API
+    bichardApi -> dynamoDB
+    bichardApi -> ledsProxyLambda "Encrypted via HTTPS"
+    bichardApi -> niam "via Internet" "Gets auth token to access LEDS API"
 
     # Reporting
-    automationReport -> auditLogApi
-    commonPlatformReport -> auditLogApi
-    automationReport -> staticFileService
-    topExceptionsReport -> staticFileService
-    commonPlatformReport -> emailSystem
+    automationReport -> bichardApi
     MPSReport -> database
-    topExceptionsReport -> auditLogApi
+    topExceptionsReport -> bichardApi
+    automationReport -> staticFilesS3Bucket "" "Stores generated reports in the S3 bucket"
+    topExceptionsReport -> staticFilesS3Bucket  "" "Stores generated reports in the S3 bucket"
 
     # Monitoring
     cloudWatchMetrics -> sns
@@ -231,81 +260,75 @@ workspace "Bichard" {
     ####### Hybrid
     nginxAuthProxy -> bichardUI
     bichardUI -> database
-    bichardUI -> bichardAPI
+    bichardUI -> bichardApi
     bichardUI -> auditLogApi
+    bichardUI -> activeMQ "Resubmits to Phase 1 or 2 via Message Forwarder"
 
-    bichardAPI -> dynamoDB
-
-    bichardNextCore -> auditLogApi
-    bichardNextCore -> database "Reads from and writes to"
-    bichardNextCore -> pncApi
     pncApi -> beanconnect
-    pncApi -> qsolution
 
     conductor -> database
     messageTransfer -> conductor
 
     # Inside conductor
-    phaseOne -> phaseOne
+    sqs -> incomingMessageHandler
+    incomingMessageHandler -> phaseOne
     phaseOne -> phaseTwo
-    phaseTwo -> phaseTwo
     phaseTwo -> phaseThree
 
-    phaseOne -> auditLogApi
-    phaseTwo -> auditLogApi
-    phaseThree -> auditLogApi
-
-    phaseThree -> pncApi
+    phaseOne -> pncApi "Queries PNC by ASN"
+    phaseThree -> pncApi "Updates PNC"
 
     phaseOne -> database
     phaseTwo -> database
     phaseThree -> database
+
+    incomingMessageHandler -> emailSystem "Alert Common Platform" "When incoming message format is invalid, Common Platform is notified via email"
+
+    bichardApi -> phaseOne "Resubmits court case"
+    bichardApi -> phaseTwo "Resubmits court case"
+
+    # LEDS proxy
+    ledsProxyLambda -> ledsTgw "" "Encrypted via mTLS"
+    ledsTgw -> leds "" "Encrypted via mTLS"
+
+    # Static file service
+    s3WebProxy -> staticFilesS3Bucket
   }
 
   views {
     systemLandscape "SystemLandscape" {
-      include *
+      include * pnc
       exclude slack pagerDuty
       autoLayout lr
     }
 
     systemContext bichard "BichardSystemContext" {
-      include *
+      include * pnc
       exclude slack pagerDuty
       autoLayout lr
     }
 
     container bichard "OldBichard" {
-      include *
-      exclude slack pagerDuty bichardUI bichardNextCore conductor pncApi bichardAPI
+      include * pnc
+      exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
       autoLayout
       title "Old Bichard"
     }
 
     container bichard "HybridBichard" {
-      include *
-      exclude slack pagerDuty activeMQ eventHandler eventLambda bichardNextCore beanconnect incomingMessageHandler
+      include * pnc
+      exclude slack pagerDuty
+      autoLayout
       title "Hybrid Bichard"
     }
 
     component conductor {
       include *
-      # autoLayout lr
-    }
-
-    component incomingMessageHandler {
-      include *
-      autoLayout lr
     }
 
     component messageTransfer {
       include *
       autoLayout
-    }
-
-    component auditLogApi {
-      include *
-      autoLayout lr
     }
 
     component eventHandler {
@@ -315,6 +338,16 @@ workspace "Bichard" {
 
     component reportingService {
       include *
+      autoLayout lr
+    }
+
+    component staticFileService {
+      include *
+      autoLayout lr
+    }
+
+    component ledsProxy {
+      include * niam
       autoLayout lr
     }
 
@@ -357,6 +390,16 @@ workspace "Bichard" {
 
       element "Existing System" {
         background #999999
+        color #ffffff
+      }
+
+      element "Ministry of Justice" {
+        background #999777
+        color #ffffff
+      }
+
+      element "Home Office" {
+        background #879977
         color #ffffff
       }
     }
