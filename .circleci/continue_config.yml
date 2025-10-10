@@ -481,6 +481,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
@@ -554,6 +555,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
@@ -748,12 +750,12 @@ jobs:
           condition:
             or:
               - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
-              - << pipeline.parameters.user-service-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -782,9 +784,9 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.user-service-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
                   - equal: [true, << parameters.api >>]
@@ -879,6 +881,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
@@ -894,15 +897,19 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - when:
           condition:
             equal: [true, << parameters.api >>]
           steps:
             - run:
-                name: Load api
+                name: Load api image
                 command: |
                   docker image load < "images/api:latest"
       - setup_ui
@@ -1109,6 +1116,10 @@ workflows:
           requires:
             - lint_and_build
 
+      - test_user_service_e2e:
+          <<: *merge_queue_only
+          name: test_user_service_e2e_ms_edge
+          ms-edge: true
       - cypress_component_test:
           <<: *merge_queue_only
           name: cypress_component_test_ms_edge
@@ -1127,7 +1138,3 @@ workflows:
           requires:
             - build-ui
             - build_user_service_docker_image
-      - test_user_service_e2e:
-          <<: *merge_queue_only
-          name: test_user_service_e2e_ms_edge
-          ms-edge: true
