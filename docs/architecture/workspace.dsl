@@ -168,7 +168,7 @@ workspace "Bichard" {
           }
         }
 
-        bichardAPI = container "Bichard API" "An API to remove DB actions from UI and to be Audit Logs" "TypeScript, Fastify & Zod" "API" {
+        bichardApi = container "Bichard API" "An API to remove DB actions from UI and to be Audit Logs" "TypeScript, Fastify & Zod" "API" {
           url "https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api"
           tags "ECS" "API"
         }
@@ -212,7 +212,7 @@ workspace "Bichard" {
 
     bichardUserService -> database "Reads from / Writes to"
     bichardJavaApplication -> database "Reads from / Writes to"
-    bichardAPI -> database "Reads from / Writes to"
+    bichardApi -> database "Reads from / Writes to"
 
     exiss -> incomingS3Bucket
     incomingS3Bucket -> transferProcess
@@ -239,14 +239,14 @@ workspace "Bichard" {
     messageForwarder -> conductor
 
     # Bichard API
-    bichardAPI -> dynamoDB
-    bichardAPI -> ledsProxyLambda "Encrypted via HTTPS"
-    bichardAPI -> niam "via Internet" "Gets auth token to access LEDS API"
+    bichardApi -> dynamoDB
+    bichardApi -> ledsProxyLambda "Encrypted via HTTPS"
+    bichardApi -> niam "via Internet" "Gets auth token to access LEDS API"
 
     # Reporting
-    automationReport -> bichardAPI
+    automationReport -> bichardApi
     MPSReport -> database
-    topExceptionsReport -> bichardAPI
+    topExceptionsReport -> bichardApi
     automationReport -> staticFilesS3Bucket "" "Stores generated reports in the S3 bucket"
     topExceptionsReport -> staticFilesS3Bucket  "" "Stores generated reports in the S3 bucket"
 
@@ -260,7 +260,9 @@ workspace "Bichard" {
     ####### Hybrid
     nginxAuthProxy -> bichardUI
     bichardUI -> database
-    bichardUI -> bichardAPI
+    bichardUI -> bichardApi
+    bichardUI -> auditLogApi
+    bichardUI -> activeMQ "Resubmits to Phase 1 or 2 via Message Forwarder"
 
     pncApi -> beanconnect
 
@@ -273,13 +275,13 @@ workspace "Bichard" {
     phaseOne -> phaseTwo
     phaseTwo -> phaseThree
 
-    incomingMessageHandler -> bichardAPI
-    phaseOne -> bichardAPI
-    phaseTwo -> bichardAPI
-    phaseThree -> bichardAPI
+    incomingMessageHandler -> bichardApi
+    phaseOne -> bichardApi
+    phaseTwo -> bichardApi
+    phaseThree -> bichardApi
 
-    bichardAPI -> phaseOne "Resubmits to Phase 1"
-    bichardAPI -> phaseTwo "Resubmits to Phase 2"
+    bichardApi -> phaseOne "Resubmits to Phase 1"
+    bichardApi -> phaseTwo "Resubmits to Phase 2"
 
     phaseOne -> pncApi "Queries PNC by ASN"
     phaseThree -> pncApi "Updates PNC"
@@ -313,7 +315,7 @@ workspace "Bichard" {
 
     container bichard "OldBichard" {
       include * pnc
-      exclude slack pagerDuty bichardUI conductor bichardAPI ledsProxy
+      exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
       autoLayout
       title "Old Bichard"
     }
