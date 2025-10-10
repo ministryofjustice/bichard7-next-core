@@ -1,0 +1,14 @@
+{
+  "name": "bichard7-automated-login-test",
+  "version": "1.0.0",
+  "description": "Automatically attempt to login as a number of users",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "pg-promise": "^11.5.5",
+    "puppeteer": "^23.11.1"
+  }
+}

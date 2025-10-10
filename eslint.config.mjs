@@ -32,7 +32,10 @@ export default [
       "packages/e2e-test/scripts",
       "packages/ui/cypress.config.ts",
       "packages/ui/next.config.js",
-      "packages/ui/.next/*"
+      "packages/ui/.next/*",
+      "packages/user-service/.next/*",
+      "packages/user-service/cypress.config.js",
+      "packages/user-service/next.config.js"
     ]
   },
   {
@@ -183,7 +186,7 @@ export default [
     }
   },
   {
-    files: ["packages/api/**/*.ts"],
+    files: ["packages/api/**/*.ts", "packages/user-service/testFixtures/**/*.js"],
 
     rules: {
       "require-await": "off"
@@ -191,10 +194,10 @@ export default [
   },
   ...compat.extends("plugin:@next/next/recommended").map((config) => ({
     ...config,
-    files: ["packages/ui/**/*"]
+    files: ["packages/ui/**/*", "packages/user-service/**/*"]
   })),
   {
-    files: ["packages/ui/**/*"],
+    files: ["packages/ui/**/*", "packages/user-service/**/*"],
 
     languageOptions: {
       parserOptions: {
@@ -204,10 +207,10 @@ export default [
   },
   ...compat.extends("prettier", "plugin:prettier/recommended").map((config) => ({
     ...config,
-    files: ["packages/ui/**/*.js"]
+    files: ["packages/ui/**/*.js", "packages/user-service/**/*.js"]
   })),
   {
-    files: ["packages/ui/**/*.js"],
+    files: ["packages/ui/**/*.js", "packages/user-service/**/*.js"],
 
     rules: {
       "@typescript-eslint/no-var-requires": "off",
@@ -217,7 +220,7 @@ export default [
     }
   },
   {
-    files: ["packages/ui/**/*.ts"],
+    files: ["packages/ui/**/*.ts", "packages/user-service/**/*.ts"],
 
     rules: {
       "require-await": "off",
@@ -228,10 +231,10 @@ export default [
     .extends("next", "plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
     .map((config) => ({
       ...config,
-      files: ["packages/ui/**/*.tsx"]
+      files: ["packages/ui/**/*.tsx", "packages/user-service/**/*.tsx"]
     })),
   {
-    files: ["packages/ui/**/*.tsx"],
+    files: ["packages/ui/**/*.tsx", "packages/user-service/**/*.tsx"],
 
     plugins: {
       "@typescript-eslint": typescriptEslint
@@ -303,11 +306,22 @@ export default [
   },
   {
     files: [
-      "packages/ui/**/_*.{ts,tsx}",
-      "packages/ui/src/{emails,pages}/**/*.{ts,tsx}",
-      "packages/ui/**/*.config.{js,ts}",
+      "packages/ui/**/_*.ts",
+      "packages/ui/**/_*.tsx",
+      "packages/ui/src/pages/**/*.ts",
+      "packages/ui/src/pages/**/*.tsx",
+      "packages/ui/**/*.config.js",
+      "packages/ui/**/*.config.ts",
       "packages/ui/test/helpers/**/*.ts",
-      "packages/ui/cypress/**/*.ts"
+      "packages/ui/cypress/**/*.ts",
+      "packages/user-service/**/_*.ts",
+      "packages/user-service/**/_*.tsx",
+      "packages/user-service/src/pages/**/*.ts",
+      "packages/user-service/src/pages/**/*.tsx",
+      "packages/user-service/**/*.config.js",
+      "packages/user-service/**/*.config.ts",
+      "packages/user-service/test/helpers/**/*.ts",
+      "packages/user-service/cypress/**/*.ts"
     ],
 
     languageOptions: {
@@ -319,7 +333,7 @@ export default [
     }
   },
   {
-    files: ["packages/ui/**/*.test.*"],
+    files: ["packages/ui/**/*.test.*", "packages/user-service/**/*.test.*"],
 
     rules: {
       "@typescript-eslint/no-explicit-any": "off"
@@ -327,10 +341,10 @@ export default [
   },
   ...compat.extends("plugin:cypress/recommended").map((config) => ({
     ...config,
-    files: ["packages/ui/cypress/**/*"]
+    files: ["packages/ui/cypress/**/*", "packages/user-service/cypress/**/*"]
   })),
   {
-    files: ["packages/ui/cypress/**/*"],
+    files: ["packages/ui/cypress/**/*", "packages/user-service/cypress/**/*"],
 
     plugins: {
       mocha
@@ -348,14 +362,14 @@ export default [
     }
   },
   {
-    files: ["packages/ui/.ncurc.js"],
+    files: ["packages/ui/.ncurc.js", "packages/user-service/.ncurc.js"],
 
     rules: {
       "no-console": "off"
     }
   },
   {
-    files: ["packages/ui/next-env.d.ts"],
+    files: ["packages/ui/next-env.d.ts", "packages/user-service/next-env.d.ts"],
     rules: {
       "@typescript-eslint/triple-slash-reference": "off"
     }
