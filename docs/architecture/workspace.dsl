@@ -324,7 +324,6 @@ workspace "Bichard" {
 
     component conductor {
       include *
-      autoLayout lr
     }
 
     component messageTransfer {
