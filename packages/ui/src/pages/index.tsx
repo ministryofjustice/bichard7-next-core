@@ -80,6 +80,9 @@ export const getServerSideProps = withMultipleServerSideProps(
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
     const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
 
+    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces)
+    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
+
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 
     const caseListQueryParams = extractSearchParamsFromQuery(searchQueryParams, currentUser)
@@ -91,14 +94,26 @@ export const getServerSideProps = withMultipleServerSideProps(
     const dataSource = await getDataSource()
 
     if (isPost(req) && typeof unlockException === "string") {
-      const lockResult = await unlockCourtCase(dataSource, +unlockException, currentUser, UnlockReason.Exception)
+      const lockResult = await unlockCourtCase(
+        dataSource,
+        +unlockException,
+        currentUser,
+        UnlockReason.Exception,
+        useApiForCaseResubmit
+      )
       if (isError(lockResult)) {
         throw lockResult
       }
     }
 
     if (isPost(req) && typeof unlockTrigger === "string") {
-      const lockResult = await unlockCourtCase(dataSource, +unlockTrigger, currentUser, UnlockReason.Trigger)
+      const lockResult = await unlockCourtCase(
+        dataSource,
+        +unlockTrigger,
+        currentUser,
+        UnlockReason.Trigger,
+        useApiForCaseResubmit
+      )
       if (isError(lockResult)) {
         throw lockResult
       }
@@ -118,8 +133,6 @@ export const getServerSideProps = withMultipleServerSideProps(
     let courtCases: CourtCase[] = []
     let totalCases: number
     let apiCases: CaseIndexDto[] = []
-
-    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces)
 
     if (useApi) {
       const jwt = req.cookies[".AUTH"] as string
