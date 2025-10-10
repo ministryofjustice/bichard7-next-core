@@ -784,6 +784,7 @@ jobs:
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
                   - equal: [true, << parameters.api >>]
@@ -799,6 +800,10 @@ jobs:
           name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -820,7 +825,7 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - fetch_images:
-          images: nodejs-20-2023 user-service nginx-auth-proxy
+          images: nodejs-20-2023 nginx-auth-proxy
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -943,6 +948,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
           steps:
@@ -951,16 +957,20 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Load image
+          name: Load ui image
           command: |
             docker image load < "images/ui:latest"
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - setup_ui
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
       - build_audit_logging_images
       - fetch_images:
-          images: user-service nginx-auth-proxy
+          images: nginx-auth-proxy
       - build_core
       - run:
           command: npm run ui
@@ -1089,6 +1099,7 @@ workflows:
       - zap_scanner:
           requires:
             - build-ui
+            - build_user_service_docker_image
 
       - e2e_test:
           next-ui: false
