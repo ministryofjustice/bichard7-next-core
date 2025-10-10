@@ -7,7 +7,7 @@ if [[ $MS_EDGE == "true" ]]; then
   options+=" --browser edge"
 fi
 
-if [[ $api == "true" ]]; then
+if [[ $API == "true" ]]; then
   circleci tests glob "cypress/e2e/**/*.cy.ts" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
 else
   circleci tests glob "cypress/e2e/**/!(*.api).cy.ts" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
