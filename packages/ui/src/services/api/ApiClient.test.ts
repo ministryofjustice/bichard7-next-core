@@ -61,7 +61,7 @@ describe("apiClient get", () => {
 
     const result = await apiClient.post("/v1/cases/1")
 
-    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "GET")
+    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "POST", undefined)
 
     expect(isError(result)).toBe(false)
     expect(result).toEqual(testCase)
@@ -74,9 +74,9 @@ describe("apiClient get", () => {
       .spyOn(apiClient, "useFetch")
       .mockResolvedValue({ ok: true, json: async () => Promise.resolve(testCase) } as Response)
 
-    const result = await apiClient.post("/v1/cases/1", { test: "thing", obj: { hello: "world" } })
+    const result = await apiClient.post("/v1/cases/1", { 1: "thing", obj: { hello: "world" } })
 
-    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "GET")
+    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "POST", { 1: "thing", obj: { hello: "world" } })
 
     expect(isError(result)).toBe(false)
     expect(result).toEqual(testCase)

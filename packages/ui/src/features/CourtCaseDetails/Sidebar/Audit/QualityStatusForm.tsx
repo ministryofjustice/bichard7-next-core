@@ -39,7 +39,7 @@ export const QualityStatusForm = () => {
     }
 
     const triggerQuality = Number(formData.get("trigger-quality"))
-    const exceptionQuality = Number(formData.get("exception-quality"))
+    const errorQuality = Number(formData.get("exception-quality"))
     const note = formData.get("quality-status-note")
 
     let hasErrors = false
@@ -47,7 +47,7 @@ export const QualityStatusForm = () => {
       hasErrors = true
       newState.triggerQualityHasError = true
     }
-    if (exceptionQuality <= 1) {
+    if (errorQuality <= 1) {
       hasErrors = true
       newState.exceptionQualityHasError = true
     }
@@ -56,11 +56,11 @@ export const QualityStatusForm = () => {
     }
 
     try {
-      const response = await axios.post(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+      const response = await axios.post(`${router.basePath}/api/court-cases/${courtCase.errorId}/audit`, {
         csrfToken,
         data: {
           triggerQuality,
-          exceptionQuality,
+          errorQuality,
           note
         }
       })

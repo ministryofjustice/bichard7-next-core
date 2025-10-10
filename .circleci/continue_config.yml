@@ -732,7 +732,7 @@ jobs:
               command: npm run conductor
       - run:
           name: Run UI tests
-          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
+          command: MS_EDGE="<< parameters.ms-edge >>" API="<< parameters.api >>" bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
           environment:
             UI_IS_HTTPS: true
             TZ: "Europe/London"

@@ -25,4 +25,11 @@ export default class BichardApiV1 implements BichardApiGateway {
   async resubmitCase(caseId: number): Promise<Error> {
     return await this.apiClient.post(V1.CaseResubmit.replace(":caseId", `${caseId}`))
   }
+
+  async saveAuditResults(
+    caseId: number,
+    auditResults: { triggerQuality: number; errorQuality: number; note: string }
+  ): Promise<Error> {
+    return await this.apiClient.post(V1.CaseAudit.replace(":caseId", `${caseId}`), auditResults)
+  }
 }
