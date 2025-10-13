@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+echo "Skipping images: $SKIP_IMAGES"
+
 LEGACY=${LEGACY:-"false"}
 NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
