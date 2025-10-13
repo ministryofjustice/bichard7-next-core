@@ -1,0 +1,17 @@
+---
+port:
+  tcp:80:
+    listening: true
+    ip:
+      - 0.0.0.0
+  tcp:443:
+    listening: true
+    ip:
+      - 0.0.0.0
+process:
+  nginx:
+    running: true
+http:
+  https://localhost/users/login:
+    status: 200
+    allow-insecure: true
