@@ -1,6 +1,6 @@
 ---
 port:
-  tcp:80:
+  tcp:8080:
     listening: true
     ip:
       - 0.0.0.0
