@@ -25,7 +25,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const { courtCaseId } = req.query
 
   if (!courtCaseId) {
-    res.status(404)
+    res.status(400)
     res.end()
     return
   }
@@ -34,7 +34,14 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
   const apiClient = new ApiClient(jwt)
   const apiGateway = new BichardApiV1(apiClient)
 
-  const auditResults = await apiGateway.saveAuditResults(Number(courtCaseId), req.body.data)
+  const { triggerQuality, exceptionQuality, note } = req.body.data
+  const auditResultsData = {
+    triggerQuality,
+    errorQuality: exceptionQuality,
+    note
+  }
+
+  const auditResults = await apiGateway.saveAuditResults(Number(courtCaseId), auditResultsData)
 
   if (isError(auditResults)) {
     response.status(500).json({ error: "Failed to save audit results" })
@@ -46,7 +53,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 
   let finalCourtCase
   if (!useApiForCaseDetails) {
-    const courtCase = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: +courtCaseId } })
+    const courtCase = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: Number(courtCaseId) } })
 
     if (isError(courtCase)) {
       throw courtCase

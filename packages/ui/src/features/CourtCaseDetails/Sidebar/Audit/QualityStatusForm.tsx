@@ -39,7 +39,7 @@ export const QualityStatusForm = () => {
     }
 
     const triggerQuality = Number(formData.get("trigger-quality"))
-    const errorQuality = Number(formData.get("exception-quality"))
+    const exceptionQuality = Number(formData.get("exception-quality"))
     const note = formData.get("quality-status-note")
 
     let hasErrors = false
@@ -47,7 +47,7 @@ export const QualityStatusForm = () => {
       hasErrors = true
       newState.triggerQualityHasError = true
     }
-    if (errorQuality <= 1) {
+    if (exceptionQuality <= 1) {
       hasErrors = true
       newState.exceptionQualityHasError = true
     }
@@ -60,7 +60,7 @@ export const QualityStatusForm = () => {
         csrfToken,
         data: {
           triggerQuality,
-          errorQuality,
+          exceptionQuality,
           note
         }
       })
