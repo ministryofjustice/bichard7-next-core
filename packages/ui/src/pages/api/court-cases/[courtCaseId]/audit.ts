@@ -5,8 +5,8 @@ import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import CourtCase from "services/entities/CourtCase"
 import getDataSource from "services/getDataSource"
 import { isError } from "types/Result"
-import BichardApiV1 from "../../../../services/api/BichardApiV1"
 import ApiClient from "../../../../services/api/ApiClient"
+import BichardApiV1 from "../../../../services/api/BichardApiV1"
 import { ApiEndpoints, canUseApiEndpoint } from "../../../../services/api/canUseEndpoint"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
@@ -30,10 +30,9 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
-  let apiGateway: BichardApiV1 | undefined = undefined
   const jwt = req.cookies[".AUTH"] as string
   const apiClient = new ApiClient(jwt)
-  apiGateway = new BichardApiV1(apiClient)
+  const apiGateway = new BichardApiV1(apiClient)
 
   const auditResults = await apiGateway.saveAuditResults(Number(courtCaseId), req.body.data)
 
