@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render form component and its children 1`] = `
+<div>
+  <form
+    method="POST"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="Dummy-CSRF-Token"
+    />
+    <input
+      type="text"
+    />
+  </form>
+</div>
+`;

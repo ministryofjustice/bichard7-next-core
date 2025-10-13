@@ -6,6 +6,7 @@ env:
     "NODE_OPTIONS": "--max_old_space_size=4096"
   exported-variables:
     - UI_HASH
+    - USER_SERVICE_HASH
 
 phases:
   install:
@@ -20,4 +21,5 @@ phases:
       - ./scripts/build-api-docker.sh
       - ./scripts/build-message-forwarder-docker.sh
       - ./scripts/build-ui-docker.sh
+      - ./scripts/build-user-service-docker.sh
 ---

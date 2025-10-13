@@ -1,0 +1,117 @@
+file:
+  /certs:
+    exists: true
+    owner: root
+    group: supervisor
+    filetype: directory
+    contains: []
+    mode: "0755" # u=rwx,go=rx
+  /certs/server.crt:
+    exists: true
+    owner: root
+    group: supervisor
+    size:
+      and:
+        - gt: 2377
+        - lt: 2395
+    filetype: file
+    contains: []
+    mode: "0644" # u=rw,go=r
+  /certs/server.key:
+    exists: true
+    owner: root
+    group: supervisor
+    filetype: file
+    size:
+      and:
+        - lt: 3300
+        - gt: 3267
+    contains: []
+    mode: "0640" # u=rw,g=r
+  /etc/nginx/nginx.conf:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /etc/passwd:
+    exists: true
+    mode: "0644"
+    size: 983
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /etc/supervisord.conf:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /tmp/openssl.cnf:
+    exists: false
+    contains: []
+package:
+  nginx:
+    installed: true
+  shadow-utils:
+    installed: true
+port:
+  tcp:80:
+    listening: true
+    ip:
+      - 0.0.0.0
+  tcp:443:
+    listening: true
+    ip:
+      - 0.0.0.0
+user:
+  dbus:
+    exists: true
+    uid: 81
+    gid: 81
+    groups:
+      - dbus
+    home: /
+    shell: /sbin/nologin
+  nginx:
+    exists: true
+    uid: 998
+    gid: 998
+    groups:
+      - nginx
+    home: /var/lib/nginx
+    shell: /sbin/nologin
+  nobody:
+    exists: true
+    uid: 65534
+    gid: 65534
+    groups:
+      - nobody
+    home: /
+    shell: /sbin/nologin
+  node:
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+      - node
+    home: /home/node
+    shell: /bin/bash
+  systemd-network:
+    exists: true
+    uid: 192
+    gid: 192
+    groups:
+      - systemd-network
+    home: /
+    shell: /usr/sbin/nologin
+process:
+  nginx:
+    running: true
+  supervisord:
+    running: true
+http:
+  https://localhost/users/login:
+    status: 200
+    allow-insecure: true

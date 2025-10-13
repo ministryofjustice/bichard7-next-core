@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render text input component 1`] = `
+<div>
+  <div
+    class="govuk-form-group custom-class-name"
+  >
+    <label
+      class="govuk-label"
+      for="inputName"
+    >
+      Input label
+       *
+    </label>
+    <div
+      class="govuk-hint"
+      id="inputName-hint"
+    >
+      Input hint
+    </div>
+    <input
+      aria-describedby="inputName-hint "
+      class="govuk-input govuk-input--width-5"
+      data-test="text-input_inputName"
+      disabled=""
+      id="inputId"
+      name="inputName"
+      readonly=""
+      type="email"
+      value="Input Value"
+    />
+  </div>
+</div>
+`;
