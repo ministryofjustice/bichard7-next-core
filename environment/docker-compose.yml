@@ -340,7 +340,7 @@ services:
       SMTP_TLS: "false"
       SMTP_DEBUG: "true"
     healthcheck:
-      test: (echo >/dev/tcp/localhost/3000) && (echo >/dev/tcp/localhost/9443)
+      test: curl -f -L --insecure https://localhost:9443/users/api/health
       interval: 2s
       timeout: 2s
       retries: 10
