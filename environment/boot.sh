@@ -21,6 +21,7 @@ for image in "${IMAGES[@]}"; do
   found=false
   for skip_image in "${SKIP_IMAGES[@]}"; do
     if [[ "$image" == "$skip_image" ]]; then
+      echo "Skipping $image..."
       found=true
       break
     fi
