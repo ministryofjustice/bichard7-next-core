@@ -32,7 +32,7 @@ describe("QualityStatusForm", () => {
   })
 
   it("sends data to the correct URL", () => {
-    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
       body: {
@@ -68,7 +68,7 @@ describe("QualityStatusForm", () => {
   })
 
   it("updates court case and CSRF token after submit", () => {
-    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
       body: {
@@ -109,7 +109,7 @@ describe("QualityStatusForm", () => {
   })
 
   it("correctly disables the button and re-enables it", () => {
-    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
       delay: 200,
       statusCode: 200,
       body: {

@@ -56,7 +56,7 @@ export const QualityStatusForm = () => {
     }
 
     try {
-      const response = await axios.post(`${router.basePath}/bichard/api/court-cases/${courtCase.errorId}/audit`, {
+      const response = await axios.post(`${router.basePath}/api/court-cases/${courtCase.errorId}/audit`, {
         csrfToken,
         data: {
           triggerQuality,
