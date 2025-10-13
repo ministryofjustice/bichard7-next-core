@@ -60,7 +60,7 @@ describe("QualityStatusForm", () => {
       expect(request.method).to.equal("POST")
       expect(request.body.csrfToken).to.equal("ABC")
       expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
-      expect(request.body.data.errorQuality).to.equal(newCourtCase.errorQualityChecked)
+      expect(request.body.data.exceptionQuality).to.equal(newCourtCase.errorQualityChecked)
       expect(request.body.data.note).to.equal("Test notes")
     })
 
