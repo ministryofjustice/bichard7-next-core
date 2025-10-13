@@ -4,7 +4,7 @@ import formatDateSpecifiedInResult from "./formatDateSpecifiedInResult"
 
 const DURATION_UNIT_LIFE = "L"
 const DURATION_UNIT_SESSION = "S"
-const PNC_REPRESENTATION_OF_LIFE = "Y999"
+export const PNC_REPRESENTATION_OF_LIFE = "Y999"
 const NO_QUALIFIERS_LIST = [2059]
 // prettier-ignore
 const INCLUDE_QUALIFIERS_LIST = [
@@ -12,7 +12,7 @@ const INCLUDE_QUALIFIERS_LIST = [
   "GS",  "HA",  "HB", "HC",  "HD",  "K",  "Q",  "V",  "YU",  "YV",  "YW"
 ]
 const NO_DISPOSAL_DATE_LIST = [2059, 3050, 3105]
-const DISPOSAL_QUALIFIERS_FIELD_LENGTH = 12
+export const DISPOSAL_QUALIFIERS_FIELD_LENGTH = 12
 
 type CreatePoliceDisposalRequest = {
   amountSpecifiedInResult?: number

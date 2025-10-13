@@ -190,7 +190,13 @@ export const getServerSideProps = withMultipleServerSideProps(
     let lockResult: UpdateResult | Error | undefined
 
     if (isPost(req) && lock === "false") {
-      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
+      lockResult = await unlockCourtCase(
+        dataSource,
+        +courtCaseId,
+        currentUser,
+        UnlockReason.TriggerAndException,
+        useApiForCaseResubmit
+      )
     } else if (
       !useApiForCaseDetails &&
       (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])

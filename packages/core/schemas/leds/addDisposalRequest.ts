@@ -1,6 +1,7 @@
 import z from "zod"
 
 import {
+  adjudicationSchema,
   baseOffenceSchema,
   checkNameSchema,
   courtCaseReferenceSchema,
@@ -24,21 +25,20 @@ export const defendantSchema = z.discriminatedUnion("defendantType", [
   })
 ])
 
-const arrestOffenceSchema = baseOffenceSchema.extend(
-  z.object({
-    offenceStartDate: dateStringSchema,
-    offenceDescription: z.string().optional(),
-    committedOnBail: z.boolean(),
-    locationFsCode: z.string(),
-    locationText: z.string().optional(),
-    locationAddress: z
-      .object({
-        addressLines: z.array(z.string()).optional(),
-        postcode: z.string().optional()
-      })
-      .optional()
-  })
-)
+const arrestOffenceSchema = baseOffenceSchema.extend({
+  offenceStartDate: dateStringSchema,
+  adjudication: adjudicationSchema.optional(),
+  offenceDescription: z.string().optional(),
+  committedOnBail: z.boolean(),
+  locationFsCode: z.string(),
+  locationText: z.string().optional(),
+  locationAddress: z
+    .object({
+      addressLines: z.array(z.string()).optional(),
+      postcode: z.string().optional()
+    })
+    .optional()
+})
 
 const additionalArrestOffencesSchema = z.object({
   asn: z.string(),
@@ -66,6 +66,6 @@ export const addDisposalRequestSchema = z.object({
       text: z.string().optional()
     })
     .optional(),
-  offences: z.array(offenceSchema).optional(),
+  offences: offenceSchema.array().optional(),
   additionalArrestOffences: additionalArrestOffencesSchema.array().optional()
 })

@@ -11,6 +11,7 @@ node_modules
 dist
 
 docs/architecture/.structurizr
+docs/architecture/workspace.json
 docs/schema
 
 # Ignore top level core and common directories

@@ -12,7 +12,8 @@ const unlockCourtCaseTransaction = async (
   dataSource: DataSource,
   courtCaseId: number,
   user: User,
-  unlockReason: UnlockReason
+  unlockReason: UnlockReason,
+  usingApiResubmit?: boolean
 ) => {
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
@@ -27,7 +28,14 @@ const unlockCourtCaseTransaction = async (
       throw new Error("Failed to unlock: Case not found")
     }
 
-    const unlockResult = await updateLockStatusToUnlocked(entityManager, courtCase, user, unlockReason, events)
+    const unlockResult = await updateLockStatusToUnlocked(
+      entityManager,
+      courtCase,
+      user,
+      unlockReason,
+      events,
+      usingApiResubmit
+    )
 
     if (isError(unlockResult)) {
       throw unlockResult
@@ -47,9 +55,17 @@ const unlockCourtCase = async (
   dataSource: DataSource,
   courtCaseId: number,
   user: User,
-  unlockReason: UnlockReason
-): Promise<UpdateResult | Error> => {
-  return await retryTransaction(unlockCourtCaseTransaction, dataSource, courtCaseId, user, unlockReason)
+  unlockReason: UnlockReason,
+  usingApiResubmit?: boolean
+): Promise<UpdateResult | Error | undefined> => {
+  return await retryTransaction(
+    unlockCourtCaseTransaction,
+    dataSource,
+    courtCaseId,
+    user,
+    unlockReason,
+    usingApiResubmit
+  )
 }
 
 export default unlockCourtCase

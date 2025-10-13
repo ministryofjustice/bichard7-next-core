@@ -27,7 +27,7 @@ const schema = {
     [ACCEPTED]: jsonResponse(
       "Successful Resubmit",
       z
-        .object({ messageId: z.uuid().meta({ description: "Confirmation of the Message ID" }) })
+        .object({ messageId: z.string().or(z.uuid()).meta({ description: "Confirmation of the Message ID" }) })
         .meta({ description: "Successful Resubmit" })
     ),
     ...unauthorizedError(),
