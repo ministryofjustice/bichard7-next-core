@@ -14,7 +14,9 @@
       "type": "SIMPLE",
       "startDelay": 0,
       "optional": false,
-      "asyncComplete": false
+      "asyncComplete": false,
+      "retryLogic": "FIXED",
+      "retryCount": 0
     },
     {
       "name": "lock_s3_file",
@@ -64,7 +66,9 @@
           "type": "SIMPLE",
           "startDelay": 0,
           "optional": false,
-          "asyncComplete": false
+          "asyncComplete": false,
+          "retryLogic": "FIXED",
+          "retryCount": 0
         },
         {
           "name": "store_audit_log_events",
