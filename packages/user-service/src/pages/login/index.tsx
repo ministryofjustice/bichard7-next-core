@@ -62,7 +62,8 @@ const handleInitialLoginStage = async (
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  const { formData, csrfToken, httpsRedirectCookie } = context as CsrfServerSidePropsContext &
+    AuthenticationServerSidePropsContext
   const { emailAddress, password } = formData as { emailAddress: string; password: string }
 
   if (!emailAddress.match(/\S+@\S+\.\S+/)) {
@@ -88,7 +89,6 @@ const handleInitialLoginStage = async (
         props: {
           emailAddress: normalisedEmail,
           csrfToken,
-          loginStage: "initialLogin",
           tooManyPasswordAttempts: true,
           serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
         }
@@ -124,7 +124,8 @@ const handleInitialLoginStage = async (
       csrfToken,
       emailAddress: normalisedEmail,
       loginStage: "validateCode",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+      httpsRedirectCookie
     }
   }
 }
