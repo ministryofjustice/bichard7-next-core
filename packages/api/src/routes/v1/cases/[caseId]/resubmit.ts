@@ -7,16 +7,16 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
-import type DatabaseGateway from "../../../types/DatabaseGateway"
+import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { jsonResponse } from "../../../server/openapi/jsonResponse"
-import auth from "../../../server/schemas/auth"
-import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
-import useZod from "../../../server/useZod"
-import handleDisconnectedError from "../../../services/db/handleDisconnectedError"
-import { NotFoundError } from "../../../types/errors/NotFoundError"
-import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import { resubmitCase } from "../../../useCases/cases/resubmit/resubmitCase"
+import { jsonResponse } from "../../../../server/openapi/jsonResponse"
+import auth from "../../../../server/schemas/auth"
+import { forbiddenError, internalServerError, unauthorizedError } from "../../../../server/schemas/errorReasons"
+import useZod from "../../../../server/useZod"
+import handleDisconnectedError from "../../../../services/db/handleDisconnectedError"
+import { NotFoundError } from "../../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
+import { resubmitCase } from "../../../../useCases/cases/resubmit/resubmitCase"
 
 type HandlerProps = { caseId: number; database: DatabaseGateway; reply: FastifyReply; user: User }
 

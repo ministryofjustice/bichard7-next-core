@@ -9,21 +9,21 @@ import { TriggerQualitySchema } from "@moj-bichard7/common/types/TriggerQuality"
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
-import type DatabaseGateway from "../../../types/DatabaseGateway"
+import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { jsonResponse } from "../../../server/openapi/jsonResponse"
-import auth from "../../../server/schemas/auth"
+import { jsonResponse } from "../../../../server/openapi/jsonResponse"
+import auth from "../../../../server/schemas/auth"
 import {
   forbiddenError,
   internalServerError,
   notFoundError,
   unauthorizedError,
   unprocessableEntityError
-} from "../../../server/schemas/errorReasons"
-import useZod from "../../../server/useZod"
-import { NotFoundError } from "../../../types/errors/NotFoundError"
-import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import saveAuditResults from "../../../useCases/cases/saveAuditResults"
+} from "../../../../server/schemas/errorReasons"
+import useZod from "../../../../server/useZod"
+import { NotFoundError } from "../../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
+import saveAuditResults from "../../../../useCases/cases/saveAuditResults"
 
 const bodySchema = z
   .object({
@@ -62,7 +62,7 @@ const schema = {
     ...unprocessableEntityError(),
     ...internalServerError()
   },
-  tags: ["Case V1"]
+  tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ body, caseId, database, reply, user }: HandlerProps) => {
