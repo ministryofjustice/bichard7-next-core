@@ -6,16 +6,16 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND } from "http-status"
 
-import build from "../../../app"
-import canCaseBeResubmitted from "../../../services/db/cases/canCaseBeResubmitted"
-import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
-import { createCase } from "../../../tests/helpers/caseHelper"
-import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
-import { createUser, generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
-import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
+import build from "../../../../app"
+import canCaseBeResubmitted from "../../../../services/db/cases/canCaseBeResubmitted"
+import AuditLogDynamoGateway from "../../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
+import { createCase } from "../../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
+import { createUser, generateJwtForStaticUser } from "../../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
+import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
-jest.mock("../../../services/db/cases/canCaseBeResubmitted")
+jest.mock("../../../../services/db/cases/canCaseBeResubmitted")
 
 const mockedCanCaseBeResubmitted = canCaseBeResubmitted as jest.Mock
 
@@ -39,7 +39,7 @@ describe("resubmit", () => {
 
   beforeEach(async () => {
     mockedCanCaseBeResubmitted.mockImplementation(
-      jest.requireActual("../../../services/db/cases/canCaseBeResubmitted").default
+      jest.requireActual("../../../../services/db/cases/canCaseBeResubmitted").default
     )
     await testDatabaseGateway.clearDb()
   })

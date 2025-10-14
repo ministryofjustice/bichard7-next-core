@@ -3,13 +3,13 @@ import type { FastifyInstance, InjectOptions } from "fastify"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { NOT_FOUND, OK } from "http-status"
 
-import build from "../../../app"
-import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
-import { testAhoJsonStr } from "../../../tests/helpers/ahoHelper"
-import { createCase } from "../../../tests/helpers/caseHelper"
-import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
-import { createUser, generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
-import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import build from "../../../../app"
+import AuditLogDynamoGateway from "../../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
+import { testAhoJsonStr } from "../../../../tests/helpers/ahoHelper"
+import { createCase } from "../../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
+import { createUser, generateJwtForStaticUser } from "../../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
 
 const defaultInjectParams = (jwt: string, caseId: string): InjectOptions => {
   return {

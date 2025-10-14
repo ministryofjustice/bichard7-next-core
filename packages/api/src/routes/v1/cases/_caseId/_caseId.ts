@@ -8,22 +8,22 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
-import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
-import type DatabaseGateway from "../../../types/DatabaseGateway"
+import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
+import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { jsonResponse } from "../../../server/openapi/jsonResponse"
-import auth from "../../../server/schemas/auth"
+import { jsonResponse } from "../../../../server/openapi/jsonResponse"
+import auth from "../../../../server/schemas/auth"
 import {
   forbiddenError,
   internalServerError,
   notFoundError,
   unauthorizedError,
   unprocessableEntityError
-} from "../../../server/schemas/errorReasons"
-import useZod from "../../../server/useZod"
-import { NotFoundError } from "../../../types/errors/NotFoundError"
-import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import lockAndFetchCaseDto from "../../../useCases/cases/getCase/lockAndFetchCaseDto"
+} from "../../../../server/schemas/errorReasons"
+import useZod from "../../../../server/useZod"
+import { NotFoundError } from "../../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
+import lockAndFetchCaseDto from "../../../../useCases/cases/getCase/lockAndFetchCaseDto"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway

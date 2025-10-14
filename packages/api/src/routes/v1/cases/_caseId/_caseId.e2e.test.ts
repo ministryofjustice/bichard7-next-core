@@ -9,14 +9,19 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import { OK } from "http-status"
 
-import type { OutputApiAuditLog } from "../../../types/AuditLog"
+import type { OutputApiAuditLog } from "../../../../types/AuditLog"
 
-import { testAhoJsonStr, testAhoXml } from "../../../tests/helpers/ahoHelper"
-import { createCase } from "../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUser, createUserAndJwtToken, createUsers, generateJwtForUser } from "../../../tests/helpers/userHelper"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
-import FetchById from "../../../useCases/fetchAuditLogs/FetchById"
+import { testAhoJsonStr, testAhoXml } from "../../../../tests/helpers/ahoHelper"
+import { createCase } from "../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import {
+  createUser,
+  createUserAndJwtToken,
+  createUsers,
+  generateJwtForUser
+} from "../../../../tests/helpers/userHelper"
+import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
+import FetchById from "../../../../useCases/fetchAuditLogs/FetchById"
 
 describe("/v1/case e2e", () => {
   const endpoint = V1.Case
