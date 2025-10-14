@@ -41,7 +41,7 @@ import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
 
-const authenticationErrorMessage = "Error authenticating the reqest"
+const authenticationErrorMessage = "Error authenticating the request"
 
 const getNotYourEmailLink = (query: ParsedUrlQuery): string => {
   let redirectParams: { [key: string]: string } = {}
@@ -57,14 +57,13 @@ const getNotYourEmailLink = (query: ParsedUrlQuery): string => {
   })
 }
 
-const handleEmailStage = async (
+const handleInitialLoginStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken, httpsRedirectCookie } = context as CsrfServerSidePropsContext &
-    AuthenticationServerSidePropsContext
-  const { emailAddress } = formData as { emailAddress: string }
+  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  const { emailAddress, password } = formData as { emailAddress: string; password: string }
 
   if (!emailAddress.match(/\S+@\S+\.\S+/)) {
     return {
@@ -76,8 +75,35 @@ const handleEmailStage = async (
       }
     }
   }
-
   const normalisedEmail = removeCjsmSuffix(emailAddress)
+  const auditLogger = getAuditLogger(context, config)
+
+  const user = await authenticate(connection, auditLogger, normalisedEmail, password, null)
+
+  if (isError(user)) {
+    logger.error(`Error logging in user [${normalisedEmail}]: ${user.message}`)
+    const attemptsSoFar = await getFailedPasswordAttempts(connection, normalisedEmail)
+    if (!isError(attemptsSoFar) && attemptsSoFar >= config.maxPasswordFailedAttempts) {
+      return {
+        props: {
+          emailAddress: normalisedEmail,
+          csrfToken,
+          loginStage: "initialLogin",
+          tooManyPasswordAttempts: true,
+          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        }
+      }
+    }
+    return {
+      props: {
+        invalidCredentials: true,
+        emailAddress: normalisedEmail,
+        csrfToken,
+        loginStage: "initialLogin",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
   const sent = await sendVerificationCodeEmail(connection, normalisedEmail, "login")
 
   if (isError(sent)) {
@@ -87,6 +113,7 @@ const handleEmailStage = async (
         csrfToken,
         emailAddress: normalisedEmail,
         sendingError: true,
+        loginStage: "initialLogin",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
@@ -97,8 +124,7 @@ const handleEmailStage = async (
       csrfToken,
       emailAddress: normalisedEmail,
       loginStage: "validateCode",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-      httpsRedirectCookie
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
     }
   }
 }
@@ -153,26 +179,13 @@ const handleValidateCodeStage = async (
   const user = await authenticate(connection, auditLogger, emailAddress, password, validationCode)
 
   if (isError(user)) {
-    logger.error(`Error logging in user [${emailAddress}]: ${user.message}`)
-    const attemptsSoFar = await getFailedPasswordAttempts(connection, emailAddress)
-    if (!isError(attemptsSoFar) && attemptsSoFar >= config.maxPasswordFailedAttempts) {
-      return {
-        props: {
-          emailAddress,
-          csrfToken,
-          loginStage: "email",
-          tooManyPasswordAttempts: true,
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-        }
-      }
-    }
+    logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
     return {
       props: {
-        invalidCredentials: true,
+        invalidCode: true,
         emailAddress,
         csrfToken,
         loginStage: "validateCode",
-        validationCode,
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
@@ -241,8 +254,8 @@ const handlePost = async (
   const { loginStage } = formData
   const connection = getConnection()
 
-  if (loginStage === "email") {
-    return handleEmailStage(context, serviceMessages, connection)
+  if (loginStage === "initialLogin") {
+    return handleInitialLoginStage(context, serviceMessages, connection)
   }
 
   if (loginStage === "validateCode") {
@@ -288,7 +301,7 @@ const handleGet = (
   return {
     props: {
       csrfToken,
-      loginStage: "email",
+      loginStage: "initialLogin",
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
       httpsRedirectCookie
     }
@@ -333,6 +346,7 @@ interface Props {
   loginStage?: string
   invalidCredentials?: boolean
   validationCode?: string
+  invalidCode?: true
   tooManyPasswordAttempts?: boolean
   notYourEmailAddressUrl?: string
   serviceMessages: ServiceMessage[]
@@ -378,6 +392,7 @@ const Index = ({
   loginStage,
   validationCode,
   invalidCredentials,
+  // invalidCode,
   tooManyPasswordAttempts,
   notYourEmailAddressUrl,
   serviceMessages,
@@ -443,7 +458,7 @@ const Index = ({
               </ErrorSummary>
             )}
 
-            {loginStage === "email" && (
+            {loginStage === "initialLogin" && (
               <Form method="post" csrfToken={csrfToken}>
                 <input type="hidden" name="loginStage" value="email" />
                 <TextInput
@@ -454,6 +469,7 @@ const Index = ({
                   error={emailError}
                   value={emailAddress}
                 />
+                <TextInput name="password" label="Password" type="password" />
                 <Button>{"Sign in"}</Button>
               </Form>
             )}
@@ -472,7 +488,6 @@ const Index = ({
                   value={validationCode}
                   optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
                 />
-                <TextInput name="password" label="Password" type="password" />
                 <RememberForm checked={false} />
                 <Button>{"Sign in"}</Button>
               </Form>
