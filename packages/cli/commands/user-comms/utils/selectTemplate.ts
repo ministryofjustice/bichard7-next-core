@@ -10,11 +10,15 @@ export const selectTemplate = async () => {
         description: "Notify users of upcoming scheduled maintenance"
       },
       {
+        name: "PNC Maintenance Completed",
+        value: "PNC maintenance completed",
+        description: "Notify users of completed PNC maintenance"
+      },
+      {
         name: "PNC Maintenance Window Extended",
         value: "PNC maintenance extended",
         description: "Notify users that the maintenance window has been extended"
       },
-
       {
         name: "Outage Notification",
         value: "Outage",
