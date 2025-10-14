@@ -197,11 +197,22 @@ export default [
     files: ["packages/ui/**/*", "packages/user-service/**/*"]
   })),
   {
-    files: ["packages/ui/**/*", "packages/user-service/**/*"],
+    files: ["packages/ui/**/*"],
 
     languageOptions: {
       parserOptions: {
-        project: ["./tsconfig.json"]
+        project: "./packages/ui/tsconfig.json",
+        tsconfigRootDir: __dirname
+      }
+    }
+  },
+  {
+    files: ["packages/user-service/**/*"],
+
+    languageOptions: {
+      parserOptions: {
+        project: "./packages/user-service/tsconfig.json",
+        tsconfigRootDir: __dirname
       }
     }
   },
@@ -234,7 +245,7 @@ export default [
       files: ["packages/ui/**/*.tsx", "packages/user-service/**/*.tsx"]
     })),
   {
-    files: ["packages/ui/**/*.tsx", "packages/user-service/**/*.tsx"],
+    files: ["packages/ui/**/*.tsx"],
 
     plugins: {
       "@typescript-eslint": typescriptEslint
@@ -249,7 +260,80 @@ export default [
           sourceType: "module"
         },
 
-        project: ["./tsconfig.json"]
+        project: "./packages/ui/tsconfig.json",
+        tsconfigRootDir: __dirname
+      }
+    },
+
+    rules: {
+      curly: ["error", "all"],
+      "no-console": "off",
+      "no-plusplus": "off",
+      "no-useless-escape": "off",
+      "require-await": "off",
+      "import/first": "error",
+      "import/no-cycle": "error",
+      "import/no-anonymous-default-export": "off",
+      "import/prefer-default-export": "off",
+      "prettier/prettier": ["error"],
+
+      "react/jsx-curly-brace-presence": [
+        "error",
+        {
+          props: "ignore",
+          children: "always"
+        }
+      ],
+
+      "react/require-default-props": ["off"],
+      "@next/next/no-html-link-for-pages": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+
+      "@typescript-eslint/naming-convention": [
+        "warn",
+        {
+          selector: "variableLike",
+          format: ["StrictPascalCase", "strictCamelCase", "UPPER_CASE"],
+
+          filter: {
+            regex: "^_+$",
+            match: false
+          },
+
+          leadingUnderscore: "allow"
+        }
+      ],
+
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_+$",
+          varsIgnorePattern: "^_+$"
+        }
+      ],
+
+      "@typescript-eslint/no-duplicate-enum-values": "off"
+    }
+  },
+  {
+    files: ["packages/user-service/**/*.tsx"],
+
+    plugins: {
+      "@typescript-eslint": typescriptEslint
+    },
+
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: "script",
+
+      parserOptions: {
+        parserOptions: {
+          sourceType: "module"
+        },
+
+        project: "./packages/user-service/tsconfig.json",
+        tsconfigRootDir: __dirname
       }
     },
 
