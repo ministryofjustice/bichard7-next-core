@@ -414,7 +414,16 @@ const Index = ({
       <Layout>
         <GridRow>
           <GridColumn width="two-thirds">
-            <h1 className="govuk-heading-xl">{"Sign in to Bichard 7"}</h1>
+            <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
+            <Paragraph>{"Sign in using your Bichard7 account email address and password."}</Paragraph>
+            <Paragraph>
+              {"Your User Manager can help if you do not know your Bichard7 account email address."}
+            </Paragraph>
+            <Paragraph className="govuk-!-padding-bottom-2">
+              {
+                "If your account is recognised you will receive a security code by email to complete the sign in process."
+              }
+            </Paragraph>
 
             <ErrorSummary title="There is a problem" show={!!sendingError}>
               <p>
@@ -461,16 +470,18 @@ const Index = ({
 
             {loginStage === "initialLogin" && (
               <Form method="post" csrfToken={csrfToken}>
-                <input type="hidden" name="loginStage" value="email" />
+                <input type="hidden" name="loginStage" value="initialLogin" />
                 <TextInput
                   id="email"
                   name="emailAddress"
                   label="Email address"
+                  labelSize="s"
+                  hint="Enter your Bichard7 account email address"
                   type="email"
                   error={emailError}
                   value={emailAddress}
                 />
-                <TextInput name="password" label="Password" type="password" />
+                <TextInput name="password" label="Password" labelSize="s" type="password" hint="Enter your password" />
                 <Button>{"Sign in"}</Button>
               </Form>
             )}
