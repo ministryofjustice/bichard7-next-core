@@ -21,7 +21,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import fetchCasesAndFilter from "../../../useCases/cases/getCase/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../useCases/cases/getCases/fetchCasesAndFilter"
 
 type HandlerProps = {
   database: DatabaseGateway
