@@ -1,18 +1,18 @@
+import { bold } from "cli-color"
 import { Command } from "commander"
-import { prepareComms } from "./utils/prepareComms"
-import { selectTemplate } from "./utils/selectTemplate"
-import { selectOutageType } from "./utils/selectOutageType"
-import type { Content, Template } from "./utils/userCommsTypes"
-import { templateTypes } from "./utils/userCommsTypes"
-import { pncMaintenance } from "./utils/pncMaintenance"
-import { pncMaintenanceExtended } from "./utils/pncMaintenanceExtended"
 import nunjucks from "nunjucks"
-import sendUserComms from "./utils/sendUserComms"
-import awsVault from "../../utils/awsVault"
 import type { Environment } from "../../config"
 import { env } from "../../config"
-import { bold } from "cli-color"
+import awsVault from "../../utils/awsVault"
 import testDbConnection from "../../utils/testDbConnection"
+import { pncMaintenance } from "./utils/pncMaintenance"
+import { pncMaintenanceExtended } from "./utils/pncMaintenanceExtended"
+import { prepareComms } from "./utils/prepareComms"
+import { selectOutageType } from "./utils/selectOutageType"
+import { selectTemplate } from "./utils/selectTemplate"
+import sendUserComms from "./utils/sendUserComms"
+import type { Content, Template } from "./utils/userCommsTypes"
+import { templateTypes } from "./utils/userCommsTypes"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 
@@ -48,6 +48,7 @@ export function userComms(): Command {
 
     const templateMap: Record<string, Template> = {
       "PNC maintenance": templateTypes.PNC_MAINTENANCE,
+      "PNC maintenance completed": templateTypes.PNC_MAINTENANCE_COMPLETED,
       "PNC maintenance extended": templateTypes.EXTENDED_PNC_MAINTENANCE,
       Outage: templateTypes.OUTAGE,
       "Outage Resolved": templateTypes.OUTAGE_RESOLVED
@@ -60,7 +61,7 @@ export function userComms(): Command {
       return
     }
 
-    let inputedContent: Content
+    let inputedContent: Content | undefined = undefined
     switch (selectedTemplate) {
       case "Outage":
         inputedContent = await selectOutageType(selectedTemplate)
@@ -76,9 +77,6 @@ export function userComms(): Command {
       case "PNC maintenance extended":
         inputedContent = await pncMaintenanceExtended()
         break
-      default:
-        console.error("Invalid template selection")
-        return
     }
 
     const { parsedUsers, templateContent } = await prepareComms(inputedContent, templateData, dbHostname)

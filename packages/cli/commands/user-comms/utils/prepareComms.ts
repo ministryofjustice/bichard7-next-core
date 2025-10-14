@@ -18,7 +18,7 @@ const getDbPassword =
 const getDbUser =
   "aws ssm get-parameter --name \"/cjse-production-bichard-7/rds/db/user\" --with-decryption --output json | jq -r '.Parameter.Value'"
 
-export const prepareComms = async (content: Content, templateData: Template, dbHost: string) => {
+export const prepareComms = async (content: Content | undefined, templateData: Template, dbHost: string) => {
   const template = templateData.templateFile
   const templatePath = path.join(__dirname, "../templates", template)
   const templateContent = fs.readFileSync(templatePath, "utf-8")
