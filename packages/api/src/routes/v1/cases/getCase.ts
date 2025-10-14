@@ -23,7 +23,7 @@ import {
 import useZod from "../../../server/useZod"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import lockAndFetchCaseDto from "../../../useCases/cases/getCases/lockAndFetchCaseDto"
+import lockAndFetchCaseDto from "../../../useCases/cases/getCase/lockAndFetchCaseDto"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
