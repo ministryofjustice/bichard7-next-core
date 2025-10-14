@@ -47,8 +47,8 @@ RUN chmod -R 755 ./packages/user-service/public
 COPY --from=builder /core/packages/user-service/docker/conf/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder /core/packages/user-service/docker/conf/supervisord.conf /etc/supervisord.conf
 
+EXPOSE 443
 EXPOSE 8080
 EXPOSE 9443
 
-USER supervisor
 CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]
