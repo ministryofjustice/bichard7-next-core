@@ -1,6 +1,6 @@
 Hello {{ firstName | default("{first-name}") }},
 
-We regret to inform you that the planned PNC maintenance has been unexpectedly extended until {{ extendedTimeFrame }}.
+We regret to inform you that the planned PNC maintenance has been extended for {{ extendedTimeFrame }}.
 
 Please note that this is an estimated completion time. We apologise for the inconvenience and appreciate your patience.
 
