@@ -934,7 +934,7 @@ jobs:
           name: Building infrastructure
           environment:
             <<: *ui_envs
-          command: bash .circleci/scripts/run-infrastructure.sh ui,user-service all
+          command: bash .circleci/scripts/run-infrastructure.sh ui all
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
