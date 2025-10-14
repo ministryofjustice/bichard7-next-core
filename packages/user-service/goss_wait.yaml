@@ -8,6 +8,14 @@ port:
     listening: true
     ip:
       - 0.0.0.0
+  tcp:8080:
+    listening: true
+    ip:
+      - 0.0.0.0
+  tcp:9443:
+    listening: true
+    ip:
+      - 0.0.0.0
 process:
   nginx:
     running: true

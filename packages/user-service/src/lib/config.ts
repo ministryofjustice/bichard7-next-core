@@ -110,5 +110,11 @@ const getConfig = (): UserServiceConfig => ({
 
 const config = getConfig()
 
+const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
+
+if (isProduction && (config.csrf.cookieSecret === "OliverTwist1" || config.csrf.formSecret === "OliverTwist2")) {
+  throw new Error("ENV is production and CSRF secrets are set to default value")
+}
+
 export { getConfig }
 export default config

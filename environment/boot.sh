@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+echo "Skipping images: $SKIP_IMAGES"
+
 LEGACY=${LEGACY:-"false"}
 NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
@@ -13,7 +15,7 @@ SERVICES=$@
 
 PLATFORM=$(uname -m)
 if [ $PLATFORM != "arm64" ]; then
-    IMAGES+=(bichard7-liberty conductor nginx-auth-proxy ui user-service)
+    IMAGES+=(bichard7-liberty conductor nginx-auth-proxy ui)
 fi
 
 FILTERED_IMAGES=()
@@ -21,6 +23,7 @@ for image in "${IMAGES[@]}"; do
   found=false
   for skip_image in "${SKIP_IMAGES[@]}"; do
     if [[ "$image" == "$skip_image" ]]; then
+      echo "Skipping $image..."
       found=true
       break
     fi
