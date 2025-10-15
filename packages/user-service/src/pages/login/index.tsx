@@ -40,6 +40,7 @@ import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
 import validateUserVerificationCode from "../../useCases/validateUserVerificationCode"
+import NotReceivedEmail from "../../components/NotReceivedEmail"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -359,7 +360,7 @@ type RememberProps = {
   checked: boolean
 }
 const RememberForm = ({ checked }: RememberProps) => (
-  <div className="govuk-form-group">
+  <div className="govuk-form-group govuk-!-padding-top-4">
     <fieldset className="govuk-fieldset" aria-describedby="waste-hint">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Sign in without a code next time"}</legend>
       <div className="govuk-checkboxes" data-module="govuk-checkboxes">
@@ -495,6 +496,16 @@ const Index = ({
                   error={invalidCredentialsError}
                 />
                 <Button>{"Sign in"}</Button>
+                <Paragraph>
+                  <Link href="/login/reset-password" data-test="reset-password">
+                    {"I have forgotten my password"}
+                  </Link>
+                </Paragraph>
+                <Paragraph>
+                  {"If you need help with anything else, you can "}
+                  <ContactLink>{"contact support"}</ContactLink>
+                  {"."}
+                </Paragraph>
               </Form>
             )}
 
@@ -506,8 +517,7 @@ const Index = ({
                 </Paragraph>
                 <Paragraph>{`The email contains your security code.`}</Paragraph>
                 <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
-                <Paragraph>{`The code will expire after 30 minutes.`}</Paragraph>
-                {/*<NotReceivedEmail sendAgainUrl="/login" />*/}
+                <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
                 <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
                 <input type="hidden" name="loginStage" value="validateCode" />
                 <TextInput
@@ -522,6 +532,7 @@ const Index = ({
                 />
                 <RememberForm checked={false} />
                 <Button>{"Sign in"}</Button>
+                <NotReceivedEmail sendAgainUrl="/login" />
               </Form>
             )}
 
@@ -547,16 +558,6 @@ const Index = ({
                 <Button>{"Sign in"}</Button>
               </Form>
             )}
-            <Paragraph>
-              <Link href="/login/reset-password" data-test="reset-password">
-                {"I have forgotten my password"}
-              </Link>
-            </Paragraph>
-            <Paragraph>
-              {"If you need help with anything else, you can "}
-              <ContactLink>{"contact support"}</ContactLink>
-              {"."}
-            </Paragraph>
           </GridColumn>
           <GridColumn width="one-third">
             <ServiceMessages messages={serviceMessages} />
