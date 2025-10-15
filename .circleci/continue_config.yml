@@ -649,8 +649,9 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Run UI component tests
-          command: MS_EDGE="<< parameters.ms-edge >>" bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
+          command: bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
           environment:
+            MS_EDGE: "<< parameters.ms-edge >>"
             UI_IS_HTTPS: true
             TZ: "Europe/London"
       - store_test_results:
@@ -732,7 +733,9 @@ jobs:
           SERVICES: db-seed
       - run:
           name: Run e2e tests against user service code
-          command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
+          command: bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
+          environment:
+            MS_EDGE: "<< parameters.ms-edge >>"
       - store_test_results:
           path: ~/project/packages/user-service/cypress/results
       - store_artifacts:
@@ -851,8 +854,8 @@ jobs:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
           environment:
-            MS_EDGE: << parameters.ms-edge >>
-            API: << parameters.api >>
+            MS_EDGE: "<< parameters.ms-edge >>"
+            API: "<< parameters.api >>"
             UI_IS_HTTPS: true
             TZ: "Europe/London"
       - store_test_results:
