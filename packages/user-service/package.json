@@ -53,7 +53,6 @@
     "react-dom": "^19.2.0",
     "react-jss": "^10.10.0",
     "styled-components": "^6.1.19",
-    "uuid": "^13.0.0",
     "word-list": "^3.1.0"
   },
   "devDependencies": {
@@ -71,7 +70,6 @@
     "@types/random-words": "^1.2.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@types/uuid": "^11.0.0",
     "concurrently": "^9.2.1",
     "cypress": "^15.4.0",
     "jest": "^30.2.0",

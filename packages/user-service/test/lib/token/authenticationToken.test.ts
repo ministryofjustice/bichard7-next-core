@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import { v4 as uuidv4 } from "uuid"
 import config from "lib/config"
 import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
 import { decodeAuthenticationToken, generateAuthenticationToken, storeTokenId } from "lib/token/authenticationToken"
@@ -7,6 +6,7 @@ import { isError } from "types/Result"
 import type User from "types/User"
 import type UserCredentials from "types/UserCredentials"
 import type Database from "types/Database"
+import { randomUUID } from "node:crypto"
 
 const user: User & UserCredentials = {
   id: 1,
@@ -27,12 +27,12 @@ const user: User & UserCredentials = {
 
 describe("generateAuthenticationToken()", () => {
   it("should return a string that looks like a token", () => {
-    const result = generateAuthenticationToken(user, uuidv4())
+    const result = generateAuthenticationToken(user, randomUUID())
     expect(result).toEqual(expect.stringMatching(/^[a-z0-9]+\.[a-z0-9]+\.[a-z0-9_-]+$/i))
   })
 
   it("should return a token that can be successfully decoded and verified", () => {
-    const token = generateAuthenticationToken(user, uuidv4())
+    const token = generateAuthenticationToken(user, randomUUID())
     const payload = jwt.verify(token, config.tokenSecret, { issuer: config.tokenIssuer })
 
     const expectedPayload = {
@@ -47,7 +47,7 @@ describe("generateAuthenticationToken()", () => {
   })
 
   it("should return a token only containing the minimum information", () => {
-    const token = generateAuthenticationToken(user, uuidv4())
+    const token = generateAuthenticationToken(user, randomUUID())
     const payload = jwt.decode(token)
 
     expect(payload).not.toHaveProperty("endorsedBy")
@@ -61,7 +61,7 @@ describe("generateAuthenticationToken()", () => {
 
 describe("decodePasswordResetToken()", () => {
   it("should return decoded token when payload is provided", () => {
-    const token = generateAuthenticationToken(user, uuidv4()) as string
+    const token = generateAuthenticationToken(user, randomUUID()) as string
     const result = decodeAuthenticationToken(token)
 
     expect(result).toBeDefined()
@@ -96,7 +96,7 @@ describe("storeTokenId()", () => {
       throw expectedError
     })
 
-    const result = await storeTokenId(database, 3, uuidv4())
+    const result = await storeTokenId(database, 3, randomUUID())
 
     expect(isError(result)).toBe(true)
 
