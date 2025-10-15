@@ -8,7 +8,9 @@ if [[ $MS_EDGE == "true" ]]; then
 fi
 
 if [[ $API == "true" ]]; then
+  echo "Running tests..."
   circleci tests glob "cypress/e2e/**/*.cy.ts" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
 else
+  echo "Running tests (excluding API)..."
   circleci tests glob "cypress/e2e/**/!(*.api).cy.ts" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
 fi
