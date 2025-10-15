@@ -7,7 +7,6 @@ import GridColumn from "components/GridColumn"
 import GridRow from "components/GridRow"
 import Layout from "components/Layout"
 import Link from "components/Link"
-import NotReceivedEmail from "components/NotReceivedEmail"
 import Paragraph from "components/Paragraph"
 import ServiceMessages from "components/ServiceMessages"
 import TextInput from "components/TextInput"
@@ -40,6 +39,7 @@ import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
+import validateUserVerificationCode from "../../useCases/validateUserVerificationCode"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -97,6 +97,7 @@ const handleInitialLoginStage = async (
     return {
       props: {
         invalidCredentials: true,
+        invalidCredentialsError: "Incorrect email address or password",
         emailAddress: normalisedEmail,
         csrfToken,
         loginStage: "initialLogin",
@@ -170,14 +171,12 @@ const handleValidateCodeStage = async (
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress, validationCode, password } = formData as {
+  const { emailAddress, validationCode } = formData as {
     emailAddress: string
     validationCode: string
-    password: string
   }
 
-  const auditLogger = getAuditLogger(context, config)
-  const user = await authenticate(connection, auditLogger, emailAddress, password, validationCode)
+  const user = await validateUserVerificationCode(connection, emailAddress, validationCode)
 
   if (isError(user)) {
     logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
@@ -235,6 +234,7 @@ const handleRememberedEmailStage = async (
     return {
       props: {
         invalidCredentials: true,
+        invalidCredentialsError: "Incorrect email address or password",
         csrfToken,
         emailAddress,
         notYourEmailAddressUrl,
@@ -346,6 +346,7 @@ interface Props {
   sendingError?: boolean
   loginStage?: string
   invalidCredentials?: boolean
+  invalidCredentialsError?: string
   validationCode?: string
   invalidCode?: true
   tooManyPasswordAttempts?: boolean
@@ -360,12 +361,7 @@ type RememberProps = {
 const RememberForm = ({ checked }: RememberProps) => (
   <div className="govuk-form-group">
     <fieldset className="govuk-fieldset" aria-describedby="waste-hint">
-      <legend className="govuk-fieldset__legend">{"Do you want your email address to be remembered?"}</legend>
-      <div className="govuk-hint">
-        {
-          "You will not be asked to verify your email address for 24 hours when signing in on this device. Do not choose 'Yes' if you do not trust this device."
-        }
-      </div>
+      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Sign in without a code next time"}</legend>
       <div className="govuk-checkboxes" data-module="govuk-checkboxes">
         <div className="govuk-checkboxes__item">
           <input
@@ -377,8 +373,17 @@ const RememberForm = ({ checked }: RememberProps) => (
             defaultChecked={checked}
           />
           <label className="govuk-label govuk-checkboxes__label" htmlFor="rememberEmailYes">
-            {"Yes, remember my email address."}
+            {"I trust this device. I don't want to sign in with a code again today."}
           </label>
+        </div>
+        <div className="govuk-warning-text">
+          <span className="govuk-warning-text__icon" aria-hidden="true">
+            {"!"}
+          </span>
+          <strong className="govuk-warning-text__text">
+            <span className="govuk-visually-hidden">{"Warning"}</span>
+            {"Don't use this option if you are using a public or shared device."}
+          </strong>
         </div>
       </div>
     </fieldset>
@@ -393,6 +398,7 @@ const Index = ({
   loginStage,
   validationCode,
   invalidCredentials,
+  invalidCredentialsError,
   // invalidCode,
   tooManyPasswordAttempts,
   notYourEmailAddressUrl,
@@ -414,17 +420,27 @@ const Index = ({
       <Layout>
         <GridRow>
           <GridColumn width="two-thirds">
-            <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
-            <Paragraph>{"Sign in using your Bichard7 account email address and password."}</Paragraph>
-            <Paragraph>
-              {"Your User Manager can help if you do not know your Bichard7 account email address."}
-            </Paragraph>
-            <Paragraph className="govuk-!-padding-bottom-2">
-              {
-                "If your account is recognised you will receive a security code by email to complete the sign in process."
-              }
-            </Paragraph>
-
+            {invalidCredentials && (
+              <ErrorSummary title="There is a problem" show={invalidCredentials}>
+                <ErrorSummaryList
+                  items={[
+                    { id: "password", error: "Incorrect email address or password" },
+                    {
+                      error: (
+                        <>
+                          {"Please wait "}
+                          <b>
+                            {config.incorrectDelay}
+                            {" seconds"}
+                          </b>
+                          {" before trying again."}
+                        </>
+                      )
+                    }
+                  ]}
+                />
+              </ErrorSummary>
+            )}
             <ErrorSummary title="There is a problem" show={!!sendingError}>
               <p>
                 {"There is a problem signing in "}
@@ -446,30 +462,19 @@ const Index = ({
               <p>{"Too many incorrect password attempts. Please try signing in again."}</p>
             </ErrorSummary>
 
-            {invalidCredentials && (
-              <ErrorSummary title="Your details do not match" show={invalidCredentials}>
-                <ErrorSummaryList
-                  items={[
-                    { id: "password", error: "Enter a valid code and password combination." },
-                    {
-                      error: (
-                        <>
-                          {"Please wait "}
-                          <b>
-                            {config.incorrectDelay}
-                            {" seconds"}
-                          </b>
-                          {" before trying again."}
-                        </>
-                      )
-                    }
-                  ]}
-                />
-              </ErrorSummary>
-            )}
+            <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
 
             {loginStage === "initialLogin" && (
               <Form method="post" csrfToken={csrfToken}>
+                <Paragraph>{"Sign in using your Bichard7 account email address and password."}</Paragraph>
+                <Paragraph>
+                  {"Your User Manager can help if you do not know your Bichard7 account email address."}
+                </Paragraph>
+                <Paragraph className="govuk-!-padding-bottom-2">
+                  {
+                    "If your account is recognised you will receive a security code by email to complete the sign in process."
+                  }
+                </Paragraph>
                 <input type="hidden" name="loginStage" value="initialLogin" />
                 <TextInput
                   id="email"
@@ -478,24 +483,39 @@ const Index = ({
                   labelSize="s"
                   hint="Enter your Bichard7 account email address"
                   type="email"
-                  error={emailError}
+                  error={emailError || invalidCredentialsError}
                   value={emailAddress}
                 />
-                <TextInput name="password" label="Password" labelSize="s" type="password" hint="Enter your password" />
+                <TextInput
+                  name="password"
+                  label="Password"
+                  labelSize="s"
+                  type="password"
+                  hint="Enter your password"
+                  error={invalidCredentialsError}
+                />
                 <Button>{"Sign in"}</Button>
               </Form>
             )}
 
             {loginStage === "validateCode" && (
               <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>{"If an account was found we will have sent you an email."}</Paragraph>
-                <NotReceivedEmail sendAgainUrl="/login" />
+                <Paragraph>
+                  {`We have sent an email to: `}
+                  <b>{emailAddress}</b>
+                </Paragraph>
+                <Paragraph>{`The email contains your security code.`}</Paragraph>
+                <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
+                <Paragraph>{`The code will expire after 30 minutes.`}</Paragraph>
+                {/*<NotReceivedEmail sendAgainUrl="/login" />*/}
                 <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
                 <input type="hidden" name="loginStage" value="validateCode" />
                 <TextInput
                   id="validationCode"
                   name="validationCode"
-                  label="Enter the 6 character code from the email"
+                  label="Security code"
+                  labelSize="s"
+                  hint="Enter the security code"
                   type="text"
                   value={validationCode}
                   optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
