@@ -41,6 +41,7 @@ import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
 import validateUserVerificationCode from "../../useCases/validateUserVerificationCode"
 import NotReceivedEmail from "../../components/NotReceivedEmail"
+import LoginCredentialsFormGroup from "../../components/Login/LoginCredentialsFormGroup"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -421,27 +422,6 @@ const Index = ({
       <Layout>
         <GridRow>
           <GridColumn width="two-thirds">
-            {invalidCredentials && (
-              <ErrorSummary title="There is a problem" show={invalidCredentials}>
-                <ErrorSummaryList
-                  items={[
-                    { id: "password", error: "Incorrect email address or password" },
-                    {
-                      error: (
-                        <>
-                          {"Please wait "}
-                          <b>
-                            {config.incorrectDelay}
-                            {" seconds"}
-                          </b>
-                          {" before trying again."}
-                        </>
-                      )
-                    }
-                  ]}
-                />
-              </ErrorSummary>
-            )}
             <ErrorSummary title="There is a problem" show={!!sendingError}>
               <p>
                 {"There is a problem signing in "}
@@ -463,6 +443,28 @@ const Index = ({
               <p>{"Too many incorrect password attempts. Please try signing in again."}</p>
             </ErrorSummary>
 
+            {invalidCredentials && (
+              <ErrorSummary title="There is a problem" show={invalidCredentials}>
+                <ErrorSummaryList
+                  items={[
+                    { id: "password", error: "Incorrect email address or password" },
+                    {
+                      error: (
+                        <>
+                          {"Please wait "}
+                          <b>
+                            {config.incorrectDelay}
+                            {" seconds"}
+                          </b>
+                          {" before trying again."}
+                        </>
+                      )
+                    }
+                  ]}
+                />
+              </ErrorSummary>
+            )}
+
             <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
 
             {loginStage === "initialLogin" && (
@@ -477,34 +479,18 @@ const Index = ({
                   }
                 </Paragraph>
                 <input type="hidden" name="loginStage" value="initialLogin" />
-                <TextInput
-                  id="email"
-                  name="emailAddress"
-                  label="Email address"
-                  labelSize="s"
-                  hint="Enter your Bichard7 account email address"
-                  type="email"
-                  error={emailError || invalidCredentialsError}
-                  value={emailAddress}
-                />
-                <TextInput
-                  name="password"
-                  label="Password"
-                  labelSize="s"
-                  type="password"
-                  hint="Enter your password"
-                  error={invalidCredentialsError}
+                <LoginCredentialsFormGroup
+                  invalidCredentialsError={invalidCredentialsError}
+                  emailError={emailError}
+                  emailAddress={emailAddress}
                 />
                 <Button>{"Sign in"}</Button>
                 <Paragraph>
+                  {"You can "}
                   <Link href="/login/reset-password" data-test="reset-password">
-                    {"I have forgotten my password"}
+                    {"change your password"}
                   </Link>
-                </Paragraph>
-                <Paragraph>
-                  {"If you need help with anything else, you can "}
-                  <ContactLink>{"contact support"}</ContactLink>
-                  {"."}
+                  {" if you have forgotten it."}
                 </Paragraph>
               </Form>
             )}
