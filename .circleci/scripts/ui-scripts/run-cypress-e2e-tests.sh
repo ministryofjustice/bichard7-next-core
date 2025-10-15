@@ -3,16 +3,15 @@ cd ~/project/packages/ui
 
 CYPRESS_OPTS="--config baseUrl=https://localhost:4443 --reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
 
-if [[ $MS_EDGE == "true" ]]; then
+if [[ $MS_EDGE == "1" ]]; then
+  echo "Using Microsoft Edge"
   CYPRESS_OPTS+=" --browser edge"
 fi
 
 TEST_PATTERN="cypress/e2e/**/*.cy.ts"
 CYPRESS_CMD="xargs npx cypress run $CYPRESS_OPTS --spec"
 
-echo "API: $API"
-
-if [[ $API == "true" ]]; then
+if [[ $API == "1" ]]; then
   echo "Running tests (including API)..."
   circleci tests glob "$TEST_PATTERN" | circleci tests run --command="$CYPRESS_CMD" --split-by=timings
 else
