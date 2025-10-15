@@ -10,6 +10,8 @@ fi
 TEST_PATTERN="cypress/e2e/**/*.cy.ts"
 CYPRESS_CMD="xargs npx cypress run $CYPRESS_OPTS --spec"
 
+echo "API: $API"
+
 if [[ $API == "true" ]]; then
   echo "Running tests (including API)..."
   circleci tests glob "$TEST_PATTERN" | circleci tests run --command="$CYPRESS_CMD" --split-by=timings
