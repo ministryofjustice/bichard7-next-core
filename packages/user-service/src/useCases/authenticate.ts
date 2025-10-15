@@ -29,7 +29,7 @@ const fetchGroups = async (task: ITask<unknown>, emailAddress: string): Promise<
   return groups
 }
 
-const getUserWithInterval = async (task: ITask<unknown>, params: unknown[]): Promise<UserAuthBichard> => {
+export const getUserWithInterval = async (task: ITask<unknown>, params: unknown[]): Promise<UserAuthBichard> => {
   const getUserQuery = `
   SELECT
     id,
@@ -78,7 +78,7 @@ const getUserWithInterval = async (task: ITask<unknown>, params: unknown[]): Pro
   }
 }
 
-const updateUserLoginTimestamp = async (task: ITask<unknown>, emailAddress: string) => {
+export const updateUserLoginTimestamp = async (task: ITask<unknown>, emailAddress: string) => {
   const updateUserQuery = `
       UPDATE br7own.users
       SET last_login_attempt = NOW()
