@@ -51,9 +51,9 @@
     "mockdate": "^3.0.5",
     "nodemon": "^3.1.10",
     "pino": "^10.0.0",
-    "pino-pretty": "^13.1.1",
+    "pino-pretty": "^13.1.2",
     "tiny-glob": "^0.2.9",
-    "ts-jest": "^29.4.4",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.6",
@@ -61,11 +61,11 @@
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.902.0",
+    "@aws-sdk/lib-dynamodb": "^3.910.0",
     "@fastify/autoload": "6.3.1",
     "@fastify/swagger": "^9.5.2",
     "@fastify/swagger-ui": "^5.2.3",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.304",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.306",
     "date-fns": "^4.1.0",
     "fastify": "^5.6.1",
     "fastify-zod-openapi": "^5.5.0",
@@ -74,6 +74,6 @@
     "lodash": "^4.17.21",
     "postgres": "^3.4.7",
     "qs": "^6.14.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   }
 }
