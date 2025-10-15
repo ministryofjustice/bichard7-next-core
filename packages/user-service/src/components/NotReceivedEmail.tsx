@@ -17,6 +17,10 @@ const NotReceivedEmail = ({ sendAgainUrl }: Props) => {
             {"use a different email address."}
           </Link>
         </p>
+        <p>
+          {"If you don't know your email address, contact the member of your team responsible for managing Bichard7"}
+          {"accounts."}
+        </p>
       </Details>
     </>
   )
