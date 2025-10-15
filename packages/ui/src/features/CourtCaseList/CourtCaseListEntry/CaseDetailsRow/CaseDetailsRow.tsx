@@ -1,5 +1,8 @@
+import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
+import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
-import { TableRow, TableCell } from "components/Table"
+import { TableCell, TableRow } from "components/Table"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -13,10 +16,18 @@ interface CaseDetailsRowProps {
   reasonCell?: React.ReactNode | string
   lockTag?: React.ReactNode
   previousPath: string | null
+  displayAuditQuality: boolean
 }
 
-export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }: CaseDetailsRowProps) => {
-  const { notes, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
+export const CaseDetailsRow = ({
+  courtCase,
+  reasonCell,
+  lockTag,
+  previousPath,
+  displayAuditQuality
+}: CaseDetailsRowProps) => {
+  const { notes, defendantName, errorId, courtDate, courtName, ptiurn, errorQualityChecked, triggerQualityChecked } =
+    courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
@@ -25,6 +36,9 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
   if (previousPath) {
     previousPathWebSafe = `?previousPath=${encodeURIComponent(previousPath)}`
   }
+
+  const exceptionQuality = exceptionQualityValues[errorQualityChecked ?? 1]
+  const triggerQuality = triggerQualityValues[triggerQualityChecked ?? 1]
 
   return (
     <>
@@ -44,6 +58,12 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
         </TableCell>
         <TableCell className="resonCell">{reasonCell}</TableCell>
         <TableCell>{lockTag}</TableCell>
+        <ConditionalRender isRendered={displayAuditQuality}>
+          <TableCell>
+            <div>{`Trigger: ${triggerQuality}`}</div>
+            <div>{`Exception: ${exceptionQuality}`}</div>
+          </TableCell>
+        </ConditionalRender>
       </TableRow>
       {notes.length > 0 && !showPreview && (
         <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
