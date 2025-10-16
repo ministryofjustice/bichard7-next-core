@@ -5,12 +5,14 @@ interface LoginCredentialsFormGroupProps {
   invalidCredentialsError?: string
   emailError?: string
   emailAddress?: string
+  passwordError?: string
 }
 
 const LoginCredentialsFormGroup = ({
   invalidCredentialsError,
   emailError,
-  emailAddress
+  emailAddress,
+  passwordError
 }: LoginCredentialsFormGroupProps) => {
   const hasError = !!invalidCredentialsError
   const formGroupClasses = `govuk-form-group ${hasError ? "govuk-form-group--error" : ""}`
@@ -34,7 +36,7 @@ const LoginCredentialsFormGroup = ({
         value={emailAddress}
       />
 
-      <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" />
+      <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" error={passwordError} />
     </div>
   )
 }

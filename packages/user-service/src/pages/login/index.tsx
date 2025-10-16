@@ -69,12 +69,38 @@ const handleInitialLoginStage = async (
     AuthenticationServerSidePropsContext
   const { emailAddress, password } = formData as { emailAddress: string; password: string }
 
-  if (!emailAddress.match(/\S+@\S+\.\S+/)) {
+  if (!emailAddress.match(/\S+@\S+\.\S+/) && password) {
     return {
       props: {
         csrfToken,
         emailAddress,
-        emailError: "Enter a valid email address",
+        emailError: "Enter your email address",
+        loginStage: "initialLogin",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  if (emailAddress.match(/\S+@\S+\.\S+/) && !password) {
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        passwordError: "Enter a password",
+        loginStage: "initialLogin",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  if (!emailAddress.match(/\S+@\S+\.\S+/) && !password) {
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        emailError: "Enter your email address",
+        passwordError: "Enter a password",
+        loginStage: "initialLogin",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
@@ -345,6 +371,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 interface Props {
   emailAddress?: string
   emailError?: string
+  passwordError?: string
   csrfToken: string
   sendingError?: boolean
   loginStage?: string
@@ -396,6 +423,7 @@ const RememberForm = ({ checked }: RememberProps) => (
 const Index = ({
   emailAddress,
   emailError,
+  passwordError,
   csrfToken,
   sendingError,
   loginStage,
@@ -436,8 +464,21 @@ const Index = ({
               </p>
             </ErrorSummary>
 
-            <ErrorSummary title="There is a problem" show={!!emailError}>
+            <ErrorSummary title="There is a problem" show={!!emailError && !passwordError}>
               <ErrorSummaryList items={[{ id: "email", error: emailError }]} />
+            </ErrorSummary>
+
+            <ErrorSummary title="There is a problem" show={!emailError && !!passwordError}>
+              <ErrorSummaryList items={[{ id: "password", error: passwordError }]} />
+            </ErrorSummary>
+
+            <ErrorSummary title="There is a problem" show={!!emailError && !!passwordError}>
+              <ErrorSummaryList
+                items={[
+                  { id: "email", error: emailError },
+                  { id: "password", error: passwordError }
+                ]}
+              />
             </ErrorSummary>
 
             <ErrorSummary title="There is a problem" show={!!tooManyPasswordAttempts}>
@@ -481,6 +522,7 @@ const Index = ({
                   invalidCredentialsError={invalidCredentialsError}
                   emailError={emailError}
                   emailAddress={emailAddress}
+                  passwordError={passwordError}
                 />
                 <Button>{"Sign in"}</Button>
                 <Details summary={"Help signing in"}>
