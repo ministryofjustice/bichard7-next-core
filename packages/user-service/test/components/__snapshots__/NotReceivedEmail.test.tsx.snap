@@ -2,14 +2,6 @@
 
 exports[`should render the component and match the snapshot 1`] = `
 <div>
-  <p
-    class="govuk-body"
-  >
-    You need to use the exact email address for your account in the Bichard system. If you're having problems receiving the email, please 
-    <b>
-      try using the older PNN version of your email address.
-    </b>
-  </p>
   <details
     class="govuk-details"
     data-module="govuk-details"
@@ -20,34 +12,32 @@ exports[`should render the component and match the snapshot 1`] = `
       <span
         class="govuk-details__summary-text"
       >
-        I still have not received the email
+        Problem with the code?
       </span>
     </summary>
     <div
       class="govuk-details__text"
     >
       <p>
-        The email may take a few minutes to arrive.
-      </p>
-      <p>
-        Check your spam or junk folder – if it still has not arrived, you can 
+        We can 
         <a
           class="govuk-link"
           href="http://localhost/send-again-url"
         >
-          ask for it to be sent again
+          send the code again
         </a>
-        . Make sure you have entered your email address correctly.
-      </p>
-      <p>
-        If you no longer have access to your email address you will need to 
+         or you can 
         <a
           class="govuk-link"
-          href="/faq"
+          data-test="not-you-link"
+          href="http://localhost/send-again-url"
         >
-          contact us
+          use a different email address.
         </a>
-        .
+      </p>
+      <p>
+        If you don't know your email address, contact the member of your team responsible for managing Bichard7
+        accounts.
       </p>
     </div>
   </details>
