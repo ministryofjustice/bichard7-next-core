@@ -69,39 +69,36 @@ const handleInitialLoginStage = async (
     AuthenticationServerSidePropsContext
   const { emailAddress, password } = formData as { emailAddress: string; password: string }
 
-  if (!emailAddress.match(/\S+@\S+\.\S+/) && password) {
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        emailError: "Enter your email address",
-        loginStage: "initialLogin",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
+  const emailIsValid = !!emailAddress.match(/\S+@\S+\.\S+/)
+  const hasEmail = !!emailAddress
+  const hasPassword = !!password
+
+  let emailError: string | undefined
+  let passwordError: string | undefined
+
+  if (!hasEmail) {
+    emailError = "Enter your email address"
+  } else if (!emailIsValid) {
+    emailError = "Enter an email address in the correct format, for example name@example.com"
   }
 
-  if (emailAddress.match(/\S+@\S+\.\S+/) && !password) {
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        passwordError: "Enter a password",
-        loginStage: "initialLogin",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
+  if (!hasPassword) {
+    passwordError = "Enter a password"
   }
 
-  if (!emailAddress.match(/\S+@\S+\.\S+/) && !password) {
+  if (emailError || passwordError) {
+    const errorProps = {
+      csrfToken,
+      emailAddress,
+      loginStage: "initialLogin",
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+    }
+
     return {
       props: {
-        csrfToken,
-        emailAddress,
-        emailError: "Enter your email address",
-        passwordError: "Enter a password",
-        loginStage: "initialLogin",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        ...errorProps,
+        ...(emailError && { emailError }),
+        ...(passwordError && { passwordError })
       }
     }
   }
@@ -370,8 +367,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
 interface Props {
   emailAddress?: string
-  emailError?: string
-  passwordError?: string
+  emailError?: string | undefined
+  passwordError?: string | undefined
   csrfToken: string
   sendingError?: boolean
   loginStage?: string
@@ -443,6 +440,15 @@ const Index = ({
       window.location.host === "psnportal.bichard7.pnn.police.uk") &&
     httpsRedirectCookie
 
+  const validationErrors: { id: string; error: string }[] = []
+  if (emailError) {
+    validationErrors.push({ id: "email", error: emailError })
+  }
+  if (passwordError) {
+    validationErrors.push({ id: "password", error: passwordError })
+  }
+  const showValidationErrors = validationErrors.length > 0
+
   return (
     <>
       <Head>
@@ -464,21 +470,8 @@ const Index = ({
               </p>
             </ErrorSummary>
 
-            <ErrorSummary title="There is a problem" show={!!emailError && !passwordError}>
-              <ErrorSummaryList items={[{ id: "email", error: emailError }]} />
-            </ErrorSummary>
-
-            <ErrorSummary title="There is a problem" show={!emailError && !!passwordError}>
-              <ErrorSummaryList items={[{ id: "password", error: passwordError }]} />
-            </ErrorSummary>
-
-            <ErrorSummary title="There is a problem" show={!!emailError && !!passwordError}>
-              <ErrorSummaryList
-                items={[
-                  { id: "email", error: emailError },
-                  { id: "password", error: passwordError }
-                ]}
-              />
+            <ErrorSummary title="There is a problem" show={showValidationErrors}>
+              <ErrorSummaryList items={validationErrors} />
             </ErrorSummary>
 
             <ErrorSummary title="There is a problem" show={!!tooManyPasswordAttempts}>
