@@ -202,13 +202,25 @@ const handleValidateCodeStage = async (
     validationCode: string
   }
 
+  if (!validationCode) {
+    return {
+      props: {
+        invalidCodeError: "Enter a security code",
+        emailAddress,
+        csrfToken,
+        loginStage: "validateCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
   const user = await validateUserVerificationCode(connection, emailAddress, validationCode)
 
   if (isError(user)) {
     logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
     return {
       props: {
-        invalidCode: true,
+        invalidCodeError: "Incorrect security code",
         emailAddress,
         csrfToken,
         loginStage: "validateCode",
@@ -375,7 +387,7 @@ interface Props {
   invalidCredentials?: boolean
   invalidCredentialsError?: string
   validationCode?: string
-  invalidCode?: true
+  invalidCodeError?: string
   tooManyPasswordAttempts?: boolean
   notYourEmailAddressUrl?: string
   serviceMessages: ServiceMessage[]
@@ -427,7 +439,7 @@ const Index = ({
   validationCode,
   invalidCredentials,
   invalidCredentialsError,
-  // invalidCode,
+  invalidCodeError,
   tooManyPasswordAttempts,
   notYourEmailAddressUrl,
   serviceMessages,
@@ -446,6 +458,9 @@ const Index = ({
   }
   if (passwordError) {
     validationErrors.push({ id: "password", error: passwordError })
+  }
+  if (invalidCodeError) {
+    validationErrors.push({ id: "password", error: invalidCodeError })
   }
   const showValidationErrors = validationErrors.length > 0
 
@@ -556,6 +571,7 @@ const Index = ({
                   hint="Enter the security code"
                   type="text"
                   value={validationCode}
+                  error={invalidCodeError}
                   optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
                 />
                 <RememberForm checked={false} />
