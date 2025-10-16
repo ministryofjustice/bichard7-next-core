@@ -16,6 +16,7 @@ const LoginCredentialsFormGroup = ({
 }: LoginCredentialsFormGroupProps) => {
   const hasError = !!invalidCredentialsError
   const formGroupClasses = `govuk-form-group ${hasError ? "govuk-form-group--error" : ""}`
+  const width = "30"
 
   return (
     <div className={formGroupClasses}>
@@ -34,9 +35,17 @@ const LoginCredentialsFormGroup = ({
         type="email"
         error={emailError}
         value={emailAddress}
+        width={width}
       />
 
-      <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" error={passwordError} />
+      <PasswordInput
+        name="password"
+        label="Password"
+        labelSize="s"
+        hint="Enter your password"
+        error={passwordError}
+        width={width}
+      />
     </div>
   )
 }
