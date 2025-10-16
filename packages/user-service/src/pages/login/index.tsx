@@ -42,6 +42,7 @@ import logger from "utils/logger"
 import validateUserVerificationCode from "../../useCases/validateUserVerificationCode"
 import NotReceivedEmail from "../../components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "../../components/Login/LoginCredentialsFormGroup"
+import Details from "../../components/Details"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -469,13 +470,10 @@ const Index = ({
 
             {loginStage === "initialLogin" && (
               <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>{"Sign in using your Bichard7 account email address and password."}</Paragraph>
-                <Paragraph>
-                  {"Your User Manager can help if you do not know your Bichard7 account email address."}
-                </Paragraph>
+                <Paragraph>{"To sign in you need the email address and password for your Bichard7 account."}</Paragraph>
                 <Paragraph className="govuk-!-padding-bottom-2">
                   {
-                    "If your account is recognised you will receive a security code by email to complete the sign in process."
+                    "If your email address is registered to a Bichard7 account you will receive a security code by email."
                   }
                 </Paragraph>
                 <input type="hidden" name="loginStage" value="initialLogin" />
@@ -485,13 +483,22 @@ const Index = ({
                   emailAddress={emailAddress}
                 />
                 <Button>{"Sign in"}</Button>
-                <Paragraph>
-                  {"You can "}
-                  <Link href="/login/reset-password" data-test="reset-password">
-                    {"change your password"}
-                  </Link>
-                  {" if you have forgotten it."}
-                </Paragraph>
+                <Details summary={"Help signing in"}>
+                  <>
+                    <Paragraph>
+                      {
+                        "If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts."
+                      }
+                    </Paragraph>
+                    <Paragraph>
+                      {"You can "}
+                      <Link href="/login/reset-password" data-test="reset-password">
+                        {"change your password"}
+                      </Link>
+                      {" if you have forgotten it."}
+                    </Paragraph>
+                  </>
+                </Details>
               </Form>
             )}
 
