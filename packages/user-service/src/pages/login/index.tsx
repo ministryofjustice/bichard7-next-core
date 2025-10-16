@@ -534,7 +534,7 @@ const Index = ({
                   passwordError={passwordError}
                 />
                 <Button>{"Sign in"}</Button>
-                <Details summary={"Help signing in"}>
+                <Details summary={"Help signing in"} data-test="helpSigningIn">
                   <>
                     <Paragraph>
                       {
