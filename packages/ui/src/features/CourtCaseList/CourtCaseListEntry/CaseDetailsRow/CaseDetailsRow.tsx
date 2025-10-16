@@ -1,5 +1,3 @@
-import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
-import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
 import { TableCell, TableRow } from "components/Table"
@@ -8,6 +6,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
+import { AuditQualityColumn } from "../AuditQualityColumn"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
 
@@ -37,9 +36,6 @@ export const CaseDetailsRow = ({
     previousPathWebSafe = `?previousPath=${encodeURIComponent(previousPath)}`
   }
 
-  const exceptionQuality = exceptionQualityValues[errorQualityChecked ?? 1]
-  const triggerQuality = triggerQualityValues[triggerQualityChecked ?? 1]
-
   return (
     <>
       <TableRow className="caseDetailsRow">
@@ -59,10 +55,12 @@ export const CaseDetailsRow = ({
         <TableCell className="resonCell">{reasonCell}</TableCell>
         <TableCell>{lockTag}</TableCell>
         <ConditionalRender isRendered={displayAuditQuality}>
-          <TableCell>
-            <div>{`Trigger: ${triggerQuality}`}</div>
-            <div>{`Exception: ${exceptionQuality}`}</div>
-          </TableCell>
+          <AuditQualityColumn
+            errorQualityChecked={errorQualityChecked}
+            triggerQualityChecked={triggerQualityChecked}
+            hasExceptions={courtCase.errorReport !== ""}
+            hasTriggers={courtCase.triggerCount > 0}
+          />
         </ConditionalRender>
       </TableRow>
       {notes.length > 0 && !showPreview && (
