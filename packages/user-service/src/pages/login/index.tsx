@@ -116,6 +116,7 @@ const handleInitialLoginStage = async (
           emailAddress: normalisedEmail,
           csrfToken,
           tooManyPasswordAttempts: true,
+          loginStage: "initialLogin",
           serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
         }
       }
