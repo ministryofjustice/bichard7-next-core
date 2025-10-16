@@ -1,4 +1,5 @@
 import TextInput from "components/TextInput"
+import PasswordInput from "./PasswordInput"
 
 interface LoginCredentialsFormGroupProps {
   invalidCredentialsError?: string
@@ -32,7 +33,8 @@ const LoginCredentialsFormGroup = ({
         error={emailError}
         value={emailAddress}
       />
-      <TextInput name="password" label="Password" labelSize="s" type="password" hint="Enter your password" />
+
+      <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" />
     </div>
   )
 }
