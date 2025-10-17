@@ -28,7 +28,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -49,7 +49,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -88,7 +88,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, updateCourtCaseSpy]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, updateCrsfTokenSpy]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -126,7 +126,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -151,7 +151,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -174,7 +174,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -205,7 +205,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={false} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -240,7 +240,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={false} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>

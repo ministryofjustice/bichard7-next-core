@@ -3,7 +3,12 @@ import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { Card } from "components/Card"
 import { useCourtCase } from "context/CourtCaseContext"
 
-export const QualityStatusDisplay = () => {
+interface Props {
+  hasExceptions: boolean
+  hasTriggers: boolean
+}
+
+export const QualityStatusDisplay = ({ hasTriggers, hasExceptions }: Props) => {
   const { courtCase } = useCourtCase()
 
   const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
@@ -11,14 +16,18 @@ export const QualityStatusDisplay = () => {
 
   return (
     <Card heading={"Quality status"}>
-      <p>
-        <b>{"Trigger Quality: "}</b>
-        {triggerQuality}
-      </p>
-      <p>
-        <b>{"Exception Quality: "}</b>
-        {exceptionQuality}
-      </p>
+      {hasTriggers && (
+        <p>
+          <b>{"Trigger Quality: "}</b>
+          {triggerQuality}
+        </p>
+      )}
+      {hasExceptions && (
+        <p>
+          <b>{"Exception Quality: "}</b>
+          {exceptionQuality}
+        </p>
+      )}
     </Card>
   )
 }

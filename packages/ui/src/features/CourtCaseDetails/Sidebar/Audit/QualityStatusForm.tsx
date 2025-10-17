@@ -21,13 +21,15 @@ const initialFormState = {
 
 type FormState = typeof initialFormState
 
-export const QualityStatusForm = () => {
+interface Props {
+  hasExceptions: boolean
+  hasTriggers: boolean
+}
+
+export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
-
-  const hasExceptions = courtCase.aho.Exceptions.length > 0
-  const hasTriggers = courtCase.triggerCount > 0
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
