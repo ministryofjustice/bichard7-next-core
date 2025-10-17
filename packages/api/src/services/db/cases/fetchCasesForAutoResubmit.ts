@@ -2,16 +2,15 @@ import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { PNC_ERRORS } from "../../../useCases/cases/resubmit/hasPncConnectionException"
 import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
 const MAX_RESUBMISSIONS = 100
-const PNC_ERRORS = [ExceptionCode.HO100302, ExceptionCode.HO100404]
 
 export const fetchCasesForAutoResubmit = async (
   databaseConnection: DatabaseConnection,
