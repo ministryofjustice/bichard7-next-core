@@ -26,6 +26,9 @@ export const QualityStatusForm = () => {
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
 
+  const hasExceptions = courtCase.aho.Exceptions.length > 0
+  const hasTriggers = courtCase.triggerCount > 0
+
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
@@ -38,16 +41,16 @@ export const QualityStatusForm = () => {
       exceptionQualityHasError: false
     }
 
-    const triggerQuality = Number(formData.get("trigger-quality"))
-    const exceptionQuality = Number(formData.get("exception-quality"))
+    const triggerQuality = hasTriggers ? Number(formData.get("trigger-quality")) : 1
+    const exceptionQuality = hasExceptions ? Number(formData.get("exception-quality")) : 1
     const note = formData.get("quality-status-note")
 
     let hasErrors = false
-    if (triggerQuality <= 1) {
+    if (hasTriggers && triggerQuality <= 1) {
       hasErrors = true
       newState.triggerQualityHasError = true
     }
-    if (exceptionQuality <= 1) {
+    if (hasExceptions && exceptionQuality <= 1) {
       hasErrors = true
       newState.exceptionQualityHasError = true
     }
@@ -86,8 +89,8 @@ export const QualityStatusForm = () => {
         ) : null}
         <fieldset className="govuk-fieldset">
           <DropdownContainer>
-            <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />
-            <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
+            {hasTriggers && <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />}
+            {hasExceptions && <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />}
           </DropdownContainer>
           <NoteTextArea
             handleOnNoteChange={handleOnNoteChange}
