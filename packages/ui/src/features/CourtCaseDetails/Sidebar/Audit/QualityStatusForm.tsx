@@ -36,6 +36,8 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
 
+  const qualityNotChecked = 1
+
   const submit = async (_: FormState, formData: FormData) => {
     const newState: FormState = {
       submitError: null,
@@ -43,8 +45,8 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
       exceptionQualityHasError: false
     }
 
-    const triggerQuality = hasTriggers ? Number(formData.get("trigger-quality")) : 1
-    const exceptionQuality = hasExceptions ? Number(formData.get("exception-quality")) : 1
+    const triggerQuality = hasTriggers ? Number(formData.get("trigger-quality")) : qualityNotChecked
+    const exceptionQuality = hasExceptions ? Number(formData.get("exception-quality")) : qualityNotChecked
     const note = formData.get("quality-status-note")
 
     let hasErrors = false
