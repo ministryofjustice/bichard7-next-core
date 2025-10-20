@@ -20,14 +20,10 @@ It's used to manage the processing of messages from the Courts to the Police, an
 
 ### Viewing Conductor in a deployed environment
 
-We have a script ([open-conductor.sh](./scripts/open-conductor.sh)) that will retrieve the password for Conductor in a
-deployed environment from AWS, save it to your clipboard, and then automatically open Conductor in your browser.
-
-To view Conductor in one of our deployed environments, run the script with the AWS Vault profile for that environment:
+To view Conductor in one of our deployed environments, you can then use the b7 CLI tool to open the Conductor UI. You can replace `--prod` with any of the other environments (`--e2e`, `--uat`, `--preprod`).
 
 ```bash
-aws-vault exec <AWS_VAULT_PROFILE> -- npm run conductor:open
-# E.g. aws-vault exec qsolution-production -- npm run conductor:open
+b7 conductor open --prod
 ```
 
 ### Running Conductor locally
