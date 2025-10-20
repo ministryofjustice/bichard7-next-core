@@ -3,9 +3,9 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { isServiceUser } from "@moj-bichard7/common/utils/userPermissions"
 
-import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { PNC_ERRORS } from "../../../useCases/cases/resubmit/hasPncConnectionException"
 import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
@@ -13,17 +13,17 @@ import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionS
 const MAX_RESUBMISSIONS = 100
 
 export const fetchCasesForAutoResubmit = async (
-  databaseConnection: DatabaseConnection,
+  databaseConnection: WritableDatabaseConnection,
   user: User
 ): PromiseResult<CaseRow[]> => {
-  if (!user.groups.includes(UserGroup.Service)) {
+  if (!isServiceUser(user)) {
     return new Error("Not a Service User")
   }
 
   const results = await databaseConnection.connection<CaseRow[]>`
-    SELECT * 
+    SELECT *
     FROM br7own.error_list el
-    WHERE 
+    WHERE
       el.total_pnc_failure_resubmissions < ${MAX_RESUBMISSIONS} 
       AND el.error_locked_by_id IS NULL
       AND el.error_status = ${ResolutionStatusNumber.Unresolved}

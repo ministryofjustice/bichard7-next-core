@@ -5,7 +5,7 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import { isServiceUser, userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
@@ -17,9 +17,10 @@ export const lockExceptions = async (
   database: WritableDatabaseConnection,
   user: User,
   caseId: number,
-  auditLogEvents: ApiAuditLogEvent[]
+  auditLogEvents: ApiAuditLogEvent[],
+  eventSource: string = "Bichard New UI"
 ): PromiseResult<void> => {
-  if (!userAccess(user)[Permission.Exceptions]) {
+  if (!(userAccess(user)[Permission.Exceptions] || isServiceUser(user))) {
     return
   }
 
@@ -30,7 +31,7 @@ export const lockExceptions = async (
 
   if (exceptionLockedResult) {
     auditLogEvents.push(
-      buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, "Bichard New UI", {
+      buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, eventSource, {
         auditLogVersion: 2,
         user: user.username
       })

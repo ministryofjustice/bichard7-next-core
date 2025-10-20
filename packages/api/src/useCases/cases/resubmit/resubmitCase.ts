@@ -25,17 +25,17 @@ export const resubmitCase = async (
       const canUserResubmitCaseResult = await canUserResubmitCase(transaction, user, caseId)
 
       if (isError(canUserResubmitCaseResult)) {
-        return canUserResubmitCaseResult
+        throw canUserResubmitCaseResult
       }
 
       if (!canUserResubmitCaseResult) {
-        return new Error("User can't resubmit")
+        throw new Error("User can't resubmit")
       }
 
       const result = await updateErrorStatus(transaction, caseId, ResolutionStatus.Submitted)
 
       if (isError(result)) {
-        return result
+        throw result
       }
 
       const conductorClient = createConductorClient()
@@ -46,7 +46,7 @@ export const resubmitCase = async (
         .catch((error: Error) => error)
 
       if (isError(conductorResult)) {
-        return conductorResult
+        throw conductorResult
       }
 
       return {
