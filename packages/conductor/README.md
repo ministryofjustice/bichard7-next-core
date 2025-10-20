@@ -20,11 +20,17 @@ It's used to manage the processing of messages from the Courts to the Police, an
 
 ### Viewing Conductor in a deployed environment
 
-To view Conductor in one of our deployed environments, you can then use the b7 CLI tool to open the Conductor UI. You can replace `--prod` with any of the other environments (`--e2e`, `--uat`, `--preprod`).
+To view Conductor in one of our deployed environments, you can then use the [b7 CLI](../cli) tool to open the Conductor UI.
+
+First you must make sure:
+
+1. You are connected the correct VPN
+2. Dev security groups have been enabled
 
 ```bash
 b7 conductor open --prod
 ```
+You can replace `--prod` with any of the other environments (`--e2e`, `--uat`, `--preprod`).
 
 ### Running Conductor locally
 
