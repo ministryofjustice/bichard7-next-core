@@ -30,6 +30,7 @@ First you must make sure:
 ```bash
 b7 conductor open --prod
 ```
+
 You can replace `--prod` with any of the other environments (`--e2e`, `--uat`, `--preprod`).
 
 ### Running Conductor locally
