@@ -9,7 +9,7 @@ interface Props {
   hasTriggers: boolean
 }
 
-export const AuditQualityRow = ({ errorQualityChecked, triggerQualityChecked, hasExceptions, hasTriggers }: Props) => {
+export const AuditQualityCell = ({ errorQualityChecked, triggerQualityChecked, hasExceptions, hasTriggers }: Props) => {
   const exceptionQuality = exceptionQualityValues[errorQualityChecked ?? 1]
   const triggerQuality = triggerQualityValues[triggerQualityChecked ?? 1]
 

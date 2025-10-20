@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
-import { AuditQualityRow } from "../AuditQualityRow"
+import { AuditQualityCell } from "../AuditQualityCell"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
 
@@ -55,7 +55,7 @@ export const CaseDetailsRow = ({
         <TableCell className="resonCell">{reasonCell}</TableCell>
         <TableCell>{lockTag}</TableCell>
         <ConditionalRender isRendered={displayAuditQuality}>
-          <AuditQualityRow
+          <AuditQualityCell
             errorQualityChecked={errorQualityChecked}
             triggerQualityChecked={triggerQualityChecked}
             hasExceptions={courtCase.errorReport !== ""}
