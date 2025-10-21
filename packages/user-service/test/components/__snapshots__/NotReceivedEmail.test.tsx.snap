@@ -22,7 +22,8 @@ exports[`should render the component and match the snapshot 1`] = `
         We can 
         <a
           class="govuk-link"
-          href="http://localhost/send-again-url"
+          data-test="send-code-again-link"
+          href="http://localhost/send-again-url?notYou=false&action=sendCodeAgain"
         >
           send the code again
         </a>
@@ -30,7 +31,7 @@ exports[`should render the component and match the snapshot 1`] = `
         <a
           class="govuk-link"
           data-test="not-you-link"
-          href="http://localhost/send-again-url"
+          href="http://localhost/send-again-url?notYou=true"
         >
           use a different email address.
         </a>
