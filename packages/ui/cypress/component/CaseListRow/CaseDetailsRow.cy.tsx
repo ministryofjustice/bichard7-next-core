@@ -15,7 +15,13 @@ describe("CaseDetailsRow", () => {
   it("shows the court name", () => {
     cy.mount(
       <MockNextRouter>
-        <CaseDetailsRow courtCase={courtCase} reasonCell={undefined} lockTag={undefined} previousPath={null} />
+        <CaseDetailsRow
+          courtCase={courtCase}
+          reasonCell={undefined}
+          lockTag={undefined}
+          previousPath={null}
+          displayAuditQuality={false}
+        />
       </MockNextRouter>
     )
 
