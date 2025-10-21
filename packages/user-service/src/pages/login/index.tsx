@@ -43,6 +43,10 @@ import validateUserVerificationCode from "../../useCases/validateUserVerificatio
 import NotReceivedEmail from "../../components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "../../components/Login/LoginCredentialsFormGroup"
 import Details from "../../components/Details"
+import resetUserVerificationCode from "../../useCases/resetUserVerificationCode"
+import storeInProgressEmailAddressInCookie from "../../useCases/storeInProgressEmailAddressInCookie"
+import getInProgressEmailAddressFromCookie from "../../useCases/getInProgressEmailAddressFromCookie"
+import removeInProgressEmailAddressCookie from "../../useCases/removeInProgressEmailAddressCookie"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -147,6 +151,9 @@ const handleInitialLoginStage = async (
     }
   }
 
+  const { res } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  storeInProgressEmailAddressInCookie(res, config, normalisedEmail)
+
   return {
     props: {
       csrfToken,
@@ -164,11 +171,14 @@ const logInUser = async (
   user: UserAuthBichard
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { res, req, formData, query } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+
+  removeInProgressEmailAddressCookie(res, config)
+
   const { rememberEmailAddress } = formData as {
     rememberEmailAddress: string
   }
-  const authToken = await signInUser(connection, res, user)
 
+  const authToken = await signInUser(connection, res, user)
   if (isError(authToken)) {
     logger.error(authToken)
     throw new Error(authenticationErrorMessage)
@@ -286,6 +296,54 @@ const handleRememberedEmailStage = async (
   return logInUser(connection, context, user)
 }
 
+const handleResetSecurityCodeStage = async (
+  context: GetServerSidePropsContext<ParsedUrlQuery>,
+  serviceMessages: ServiceMessage[],
+  connection: Database
+): Promise<GetServerSidePropsResult<Props>> => {
+  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  const { emailAddress } = formData as { emailAddress: string }
+
+  const reset = await resetUserVerificationCode(connection, emailAddress)
+
+  if (isError(reset)) {
+    logger.error(`Error resetting code for user [${emailAddress}]: ${reset.message}`)
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        sendingError: true,
+        loginStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  const sent = await sendVerificationCodeEmail(connection, emailAddress, "login")
+
+  if (isError(sent)) {
+    logger.error(sent)
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        sendingError: true,
+        loginStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  return {
+    props: {
+      csrfToken,
+      emailAddress,
+      loginStage: "validateCode",
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+    }
+  }
+}
+
 const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
@@ -306,34 +364,55 @@ const handlePost = async (
     return handleRememberedEmailStage(context, serviceMessages, connection)
   }
 
+  if (loginStage === "resetSecurityCode") {
+    return handleResetSecurityCodeStage(context, serviceMessages, connection)
+  }
+
   return createRedirectResponse("/500")
 }
 
-const handleGet = (
+const handleGet = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
-): GetServerSidePropsResult<Props> => {
+): Promise<GetServerSidePropsResult<Props>> => {
   const { csrfToken, query, req, res, httpsRedirectCookie } = context as CsrfServerSidePropsContext &
     AuthenticationServerSidePropsContext
-  const { notYou } = query as { notYou: string }
+  const { notYou, action } = query as { notYou: string; action?: string }
+
+  if (action === "sendCodeAgain") {
+    const emailAddress = getInProgressEmailAddressFromCookie(req, config)
+    if (!emailAddress) {
+      return createRedirectResponse("/login")
+    }
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        loginStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        httpsRedirectCookie
+      }
+    }
+  }
 
   if (notYou === "true") {
     removeEmailAddressCookie(res, config)
-  } else {
-    const emailAddress = getEmailAddressFromCookie(req, config)
+    removeInProgressEmailAddressCookie(res, config)
+  }
 
+  const emailAddress = getEmailAddressFromCookie(req, config)
+
+  if (emailAddress) {
     const notYourEmailAddressUrl = getNotYourEmailLink(query)
 
-    if (emailAddress) {
-      return {
-        props: {
-          csrfToken,
-          emailAddress,
-          notYourEmailAddressUrl,
-          loginStage: "rememberedEmail",
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-          httpsRedirectCookie
-        }
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        notYourEmailAddressUrl,
+        loginStage: "rememberedEmail",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        httpsRedirectCookie
       }
     }
   }
@@ -371,7 +450,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isGet(req)) {
-      return handleGet(context, serviceMessagesResult.result)
+      return await handleGet(context, serviceMessagesResult.result)
     }
 
     return createRedirectResponse("/400")
@@ -416,7 +495,7 @@ const RememberForm = ({ checked }: RememberProps) => (
             {"I trust this device. I don't want to sign in with a code again today."}
           </label>
         </div>
-        <div className="govuk-warning-text">
+        <div className="govuk-warning-text govuk-!-margin-bottom-0">
           <span className="govuk-warning-text__icon" aria-hidden="true">
             {"!"}
           </span>
@@ -516,92 +595,120 @@ const Index = ({
               </ErrorSummary>
             )}
 
-            <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
-
             {loginStage === "initialLogin" && (
-              <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>{"To sign in you need the email address and password for your Bichard7 account."}</Paragraph>
-                <Paragraph className="govuk-!-padding-bottom-2">
-                  {
-                    "If your email address is registered to a Bichard7 account you will receive a security code by email."
-                  }
-                </Paragraph>
-                <input type="hidden" name="loginStage" value="initialLogin" />
-                <LoginCredentialsFormGroup
-                  invalidCredentialsError={invalidCredentialsError}
-                  emailError={emailError}
-                  emailAddress={emailAddress}
-                  passwordError={passwordError}
-                />
-                <Button>{"Sign in"}</Button>
-                <Details summary={"Help signing in"} data-test="helpSigningIn">
-                  <>
-                    <Paragraph>
-                      {
-                        "If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts."
-                      }
-                    </Paragraph>
-                    <Paragraph>
-                      {"You can "}
-                      <Link href="/login/reset-password" data-test="reset-password">
-                        {"change your password"}
-                      </Link>
-                      {" if you have forgotten it."}
-                    </Paragraph>
-                  </>
-                </Details>
-              </Form>
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
+                  <Paragraph>
+                    {"To sign in you need the email address and password for your Bichard7 account."}
+                  </Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-2">
+                    {
+                      "If your email address is registered to a Bichard7 account you will receive a security code by email."
+                    }
+                  </Paragraph>
+                  <input type="hidden" name="loginStage" value="initialLogin" />
+                  <LoginCredentialsFormGroup
+                    invalidCredentialsError={invalidCredentialsError}
+                    emailError={emailError}
+                    emailAddress={emailAddress}
+                    passwordError={passwordError}
+                  />
+                  <Button>{"Sign in"}</Button>
+                  <Details summary={"Help signing in"} data-test="helpSigningIn">
+                    <>
+                      <Paragraph>
+                        {
+                          "If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts."
+                        }
+                      </Paragraph>
+                      <Paragraph>
+                        {"You can "}
+                        <Link href="/login/reset-password" data-test="reset-password">
+                          {"change your password"}
+                        </Link>
+                        {" if you have forgotten it."}
+                      </Paragraph>
+                    </>
+                  </Details>
+                </Form>
+              </>
             )}
 
             {loginStage === "validateCode" && (
-              <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>
-                  {`We have sent an email to: `}
-                  <b>{emailAddress}</b>
-                </Paragraph>
-                <Paragraph>{`The email contains your security code.`}</Paragraph>
-                <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
-                <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
-                <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                <input type="hidden" name="loginStage" value="validateCode" />
-                <TextInput
-                  id="validationCode"
-                  name="validationCode"
-                  label="Security code"
-                  labelSize="s"
-                  hint="Enter the security code"
-                  type="text"
-                  value={validationCode}
-                  error={invalidCodeError}
-                  optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
-                />
-                <RememberForm checked={false} />
-                <Button>{"Sign in"}</Button>
-                <NotReceivedEmail sendAgainUrl="/login" />
-              </Form>
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Check your email"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
+                  <Paragraph>
+                    {`We have sent an email to: `}
+                    <b>{emailAddress}</b>
+                  </Paragraph>
+                  <Paragraph>{`The email contains your security code.`}</Paragraph>
+                  <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
+                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
+                  <input type="hidden" name="loginStage" value="validateCode" />
+                  <TextInput
+                    id="validationCode"
+                    name="validationCode"
+                    label="Security code"
+                    labelSize="s"
+                    hint="Enter the security code"
+                    type="text"
+                    value={validationCode}
+                    error={invalidCodeError}
+                    optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
+                  />
+                  <RememberForm checked={false} />
+                  <Button>{"Sign in"}</Button>
+                  <NotReceivedEmail sendAgainUrl="/login" />
+                </Form>
+              </>
             )}
 
             {loginStage === "rememberedEmail" && (
-              <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>
-                  {"You are signing in as "}
-                  <b>{emailAddress}</b>
-                  {"."}
-                </Paragraph>
-                {notYourEmailAddressUrl && (
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
                   <Paragraph>
-                    {"If this is not your account, you can "}
-                    <Link href={notYourEmailAddressUrl} data-test="not-you-link">
-                      {"sign in with a different email address"}
-                    </Link>
+                    {"You are signing in as "}
+                    <b>{emailAddress}</b>
                     {"."}
                   </Paragraph>
-                )}
-                <input type="hidden" name="loginStage" value="rememberedEmail" />
-                <TextInput name="password" label="Password" type="password" />
-                <RememberForm checked />
-                <Button>{"Sign in"}</Button>
-              </Form>
+                  {notYourEmailAddressUrl && (
+                    <Paragraph>
+                      {"If this is not your account, you can "}
+                      <Link href={notYourEmailAddressUrl} data-test="not-you-link">
+                        {"sign in with a different email address"}
+                      </Link>
+                      {"."}
+                    </Paragraph>
+                  )}
+                  <input type="hidden" name="loginStage" value="rememberedEmail" />
+                  <TextInput name="password" label="Password" type="password" />
+                  <RememberForm checked />
+                  <Button>{"Sign in"}</Button>
+                </Form>
+              </>
+            )}
+
+            {loginStage === "resetSecurityCode" && (
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Get a security code"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
+                  <Paragraph>
+                    {"We will send a code to: "}
+                    <b>{emailAddress}</b>
+                  </Paragraph>
+                  <Paragraph>
+                    {`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}
+                  </Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
+                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
+                  <input type="hidden" name="loginStage" value="resetSecurityCode" />
+                  <Button data-test="get-security-code-button">{"Get security code"}</Button>
+                </Form>
+              </>
             )}
           </GridColumn>
           <GridColumn width="one-third">
