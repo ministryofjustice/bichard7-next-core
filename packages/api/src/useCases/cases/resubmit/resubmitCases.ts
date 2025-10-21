@@ -20,6 +20,7 @@ type BulkResubmit = Record<string, Error | ResubmitDetails>
 type ResubmitDetails = {
   errorId: number
   events: ApiAuditLogEvent[]
+  workflowId?: string
 }
 
 const lockCasesAndAuditLog = async (
@@ -96,6 +97,8 @@ export const resubmitCases = async (
 
       if (isError(resubmitResult)) {
         bulkResubmit[messageId] = resubmitResult
+      } else {
+        bulkResubmit[messageId] = { ...bulkResubmit[messageId], workflowId: resubmitResult.workflowId }
       }
     }
   }
