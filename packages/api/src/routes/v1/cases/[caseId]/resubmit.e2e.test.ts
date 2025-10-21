@@ -11,7 +11,7 @@ import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResoluti
 
 const defaultRequest = (jwt: string) => {
   return {
-    headers: { Authorization: `Bearer ${jwt}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${jwt}` },
     method: "POST"
   }
 }
