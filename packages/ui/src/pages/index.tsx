@@ -11,6 +11,7 @@ import AppliedFilters from "features/CourtCaseFilters/AppliedFilters"
 import CourtCaseFilter from "features/CourtCaseFilters/CourtCaseFilter"
 import CourtCaseWrapper from "features/CourtCaseFilters/CourtCaseFilterWrapper"
 import CourtCaseList from "features/CourtCaseList/CourtCaseList"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { isEqual } from "lodash"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -47,10 +48,10 @@ import { logCaseListRenderTime } from "utils/logging"
 import { calculateLastPossiblePageNumber } from "utils/pagination/calculateLastPossiblePageNumber"
 import redirectTo from "utils/redirectTo"
 import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
+import { canUseCourtDateReceivedDateMismatchFilters } from "../features/flags/canUseCourtDateReceivedDateMismatchFilters"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
-import { canUseCourtDateReceivedDateMismatchFilters } from "../features/flags/canUseCourtDateReceivedDateMismatchFilters"
 
 type Props = {
   build: string | null
@@ -68,6 +69,7 @@ type Props = {
   user: DisplayFullUser
   canUseCourtDateReceivedDateMismatchFilters: boolean
   caseResolvedDateRange: SerializedDateRange | null
+  canUseTriggerAndExceptionQualityAuditing: boolean
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -237,6 +239,7 @@ export const getServerSideProps = withMultipleServerSideProps(
               to: formatFormInputDateString(caseListQueryParams.resolvedDateRange.to)
             }
           : null,
+        canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
         ...caseListQueryProps
       }
     }
@@ -257,6 +260,7 @@ const Home: NextPage<Props> = (props) => {
     environment,
     build,
     oppositeOrder,
+    canUseTriggerAndExceptionQualityAuditing,
     ...searchParams
   } = props
 
@@ -290,6 +294,8 @@ const Home: NextPage<Props> = (props) => {
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
+  const displayAuditQuality = canUseTriggerAndExceptionQualityAuditing && searchParams.caseState == "Resolved"
+
   return (
     <>
       <Head>
@@ -307,7 +313,13 @@ const Home: NextPage<Props> = (props) => {
                 />
               }
               appliedFilters={<AppliedFilters filters={{ ...searchParams }} />}
-              courtCaseList={<CourtCaseList courtCases={courtCases} order={oppositeOrder} />}
+              courtCaseList={
+                <CourtCaseList
+                  courtCases={courtCases}
+                  order={oppositeOrder}
+                  displayAuditQuality={displayAuditQuality}
+                />
+              }
               paginationTop={
                 <Pagination
                   pageNum={searchParams.page}

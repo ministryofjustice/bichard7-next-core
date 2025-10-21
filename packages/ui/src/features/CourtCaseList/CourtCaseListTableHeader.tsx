@@ -1,15 +1,17 @@
+import ConditionalRender from "components/ConditionalRender"
+import { TableRow } from "components/Table"
 import ColumnHeading from "features/CourtCaseFilters/ColumnHeading"
 import ColumnOrderIcons from "features/CourtCaseFilters/ColumnOrderIcons"
 import { useRouter } from "next/router"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { HeaderButton, HeaderCell } from "./CourtCaseListTableHeader.styles"
-import { TableRow } from "components/Table"
 
 interface CourtCaseListTableHeaderProps {
   order: QueryOrder
+  displayAuditQuality: boolean
 }
 
-export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProps) => {
+export const CourtCaseListTableHeader = ({ order, displayAuditQuality }: CourtCaseListTableHeaderProps) => {
   const router = useRouter()
   const { query } = router
   const orderByParams = (orderBy: string) => `?${new URLSearchParams({ ...query, orderBy, order })}`
@@ -102,6 +104,11 @@ export const CourtCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
       <HeaderCell className={className}>
         <ColumnHeading aria-sort="none">{"Locked by"}</ColumnHeading>
       </HeaderCell>
+      <ConditionalRender isRendered={displayAuditQuality}>
+        <HeaderCell className={className}>
+          <ColumnHeading aria-sort="none">{"Quality status"}</ColumnHeading>
+        </HeaderCell>
+      </ConditionalRender>
     </TableRow>
   )
 }
