@@ -32,11 +32,11 @@ describe("Authentication API endpoint", () => {
 
     cy.visit("/login")
     cy.get("input[type=email]").type(emailAddress)
+    cy.get("input#password").type(password)
     cy.get("button[type=submit]").click()
     cy.get("input#validationCode").should("exist")
     cy.task("getVerificationCode", emailAddress).then((verificationCode) => {
       cy.get("input#validationCode").type(verificationCode)
-      cy.get("input#password").type(password)
       cy.get("button[type=submit]").click()
     })
 
