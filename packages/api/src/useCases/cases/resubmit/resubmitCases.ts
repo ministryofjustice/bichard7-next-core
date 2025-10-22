@@ -10,8 +10,10 @@ import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { fetchCasesForAutoResubmit } from "../../../services/db/cases/fetchCasesForAutoResubmit"
+import incrementPncFailureResubmission from "../../../services/db/cases/incrementPncFailureResubmissions"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { lockExceptions } from "../getCase/lockExceptions"
+import { unlockExceptions } from "../getCase/unlockExceptions"
 import { hasPncConnectionException } from "./hasPncConnectionException"
 import { resubmitCase } from "./resubmitCase"
 
@@ -22,6 +24,8 @@ type ResubmitDetails = {
   events: ApiAuditLogEvent[]
   workflowId?: string
 }
+
+const EVENT_SOURCE = "Bichard API Auto Resubmit"
 
 const lockCasesAndAuditLog = async (
   databaseConnection: WritableDatabaseConnection,
@@ -41,7 +45,7 @@ const lockCasesAndAuditLog = async (
       user,
       caseRow.error_id,
       resubmitDetails.events,
-      "Bichard API Auto Resubmit"
+      EVENT_SOURCE
     )
 
     if (isError(lockExceptionsResult)) {
@@ -59,6 +63,22 @@ const lockCasesAndAuditLog = async (
         throw auditLogEventsResult
       }
     }
+  }
+}
+
+const unlockCaseAndAuditLog = async (
+  databaseConnection: WritableDatabaseConnection,
+  auditLogGateway: AuditLogDynamoGateway,
+  user: User,
+  messageId: string,
+  caseId: number
+): Promise<void> => {
+  const events: ApiAuditLogEvent[] = []
+
+  await unlockExceptions(databaseConnection, user, caseId, events, EVENT_SOURCE)
+
+  if (events.length > 0) {
+    await createAuditLogEvents(events, messageId, auditLogGateway)
   }
 }
 
@@ -93,10 +113,19 @@ export const resubmitCases = async (
 
   for (const [messageId, resubmitDetails] of Object.entries(lockAndAuditLogResult)) {
     if (!(resubmitDetails instanceof Error)) {
+      const updateResult = await incrementPncFailureResubmission(databaseConnection, resubmitDetails.errorId)
+
+      if (isError(updateResult)) {
+        bulkResubmit[messageId] = updateResult
+        await unlockCaseAndAuditLog(databaseConnection, auditLogGateway, user, messageId, resubmitDetails.errorId)
+        continue
+      }
+
       const resubmitResult = await resubmitCase(databaseConnection, user, resubmitDetails.errorId)
 
       if (isError(resubmitResult)) {
         bulkResubmit[messageId] = resubmitResult
+        await unlockCaseAndAuditLog(databaseConnection, auditLogGateway, user, messageId, resubmitDetails.errorId)
       } else {
         bulkResubmit[messageId] = { ...bulkResubmit[messageId], workflowId: resubmitResult.workflowId }
       }
