@@ -2,6 +2,7 @@ import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 type RemandPncUpdateRequest = {
   operation: PncOperation.REMAND
+  personId: string
   request: {
     arrestSummonsNumber: string
     bailConditions: string[]

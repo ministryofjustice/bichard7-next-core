@@ -2,7 +2,7 @@ import z from "zod"
 
 import { checkNameSchema, courtSchema, dateStringSchema, forceStationCodeSchema } from "./common"
 
-const appearanceResultSchema = z.enum([
+export const appearanceResultSchema = z.enum([
   "remanded-on-bail",
   "remanded-in-custody",
   "adjourned",
