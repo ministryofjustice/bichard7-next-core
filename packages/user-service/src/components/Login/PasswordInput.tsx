@@ -1,6 +1,6 @@
 interface Props {
   label?: string
-  labelSize?: string
+  labelSize?: "s" | "m" | "l"
   name: string
   hint?: string
   className?: string
@@ -35,7 +35,7 @@ const PasswordInput = ({
 
   const hasError = error && !readOnly
 
-  const labelClassName = `govuk-label--${labelSize || "s"}`
+  const labelClassName = labelSize ? `govuk-label--${labelSize}` : ""
 
   const formGroupClasses = `govuk-form-group${className ? ` ${className}` : ""}${hasError ? " govuk-form-group--error" : ""} govuk-password-input`
   const inputId = id || name
