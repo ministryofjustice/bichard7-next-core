@@ -8,7 +8,7 @@ import { Reason, ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuer
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
-import fetchCasesAndFilter from "../../../../useCases/cases/getCase/fetchCasesAndFilter"
+import fetchCasesAndFilter from "../../../../useCases/cases/getCases/fetchCasesAndFilter"
 import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {

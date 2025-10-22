@@ -326,6 +326,9 @@ services:
 
   user-service:
     image: user-service
+    build:
+      dockerfile: packages/user-service/Dockerfile
+      context: ..
     environment:
       BASE_URL: https://localhost:4443/users
       DB_HOST: postgres
@@ -340,7 +343,7 @@ services:
       SMTP_TLS: "false"
       SMTP_DEBUG: "true"
     healthcheck:
-      test: (echo >/dev/tcp/localhost/3000) && (echo >/dev/tcp/localhost/443)
+      test: curl -f -L --insecure https://localhost:9443/users/api/health
       interval: 2s
       timeout: 2s
       retries: 10
@@ -402,7 +405,7 @@ services:
       CJSE_NGINX_PROXYSSLVERIFY: "off"
       CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
       CJSE_NGINX_UI_DOMAIN: ui:9443
-      CJSE_NGINX_USERSERVICE_DOMAIN: user-service
+      CJSE_NGINX_USERSERVICE_DOMAIN: user-service:9443
     healthcheck:
       test: curl --insecure --fail https://localhost:4443/elb-status
       interval: 2s

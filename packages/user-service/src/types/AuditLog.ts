@@ -1,5 +1,5 @@
-import { v4 as uuid } from "uuid"
 import type KeyValuePair from "./KeyValuePair"
+import { randomUUID } from "node:crypto"
 
 export default class AuditLog {
   public readonly auditLogId: string
@@ -14,7 +14,7 @@ export default class AuditLog {
     public readonly requestUri: string,
     public readonly attributes?: KeyValuePair<string, unknown>
   ) {
-    this.auditLogId = uuid()
+    this.auditLogId = randomUUID()
     this.timestamp = new Date()
   }
 }

@@ -1,6 +1,6 @@
 Hello {{ firstName | default("{first-name}") }},
 
-As a part of ongoing work to maintain and improve Bichard 7 and the PNC, there will be an impact on service during the following window:
+As a part of ongoing work to maintain and improve Bichard7 and the PNC, there will be an impact on service during the following window:
 
 {% for window in maintenanceWindows %}
 - {{ window.date }} {{ window.startTime }} - {{ window.endTime }}
@@ -12,4 +12,4 @@ We apologise for the inconvenience and appreciate your patience.
 
 Thank you,
 
-The Bichard 7 Support team
+The Bichard7 Support team

@@ -49,6 +49,7 @@ COPY --from=builder /core/packages/user-service/docker/conf/supervisord.conf /et
 
 EXPOSE 80
 EXPOSE 443
+EXPOSE 8080
+EXPOSE 9443
 
-USER supervisor
 CMD [ "supervisord", "-c", "/etc/supervisord.conf" ]

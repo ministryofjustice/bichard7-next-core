@@ -729,7 +729,7 @@ jobs:
           name: Build the user service
           command: npm run -w packages/user-service build
       - start_services:
-          SERVICES: db-seed audit-log-api
+          SERVICES: db-seed
       - run:
           name: Run e2e tests against user service code
           command: MS_EDGE="<< parameters.ms-edge >>" bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
