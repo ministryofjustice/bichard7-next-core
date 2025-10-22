@@ -6,6 +6,7 @@ exports[`should render radioItem component 1`] = `
     class="govuk-radios__item"
   >
     <input
+      checked=""
       class="govuk-radios__input"
       id="testRadio"
       name="testRadio"
