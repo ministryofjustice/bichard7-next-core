@@ -8,6 +8,7 @@ exports[`should render the component and match the snapshot 1`] = `
   >
     <summary
       class="govuk-details__summary"
+      data-test="problem-with-code"
     >
       <span
         class="govuk-details__summary-text"
