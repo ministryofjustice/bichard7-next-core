@@ -338,6 +338,7 @@ export interface IDS {
   "@_Checkname": string
   "@_CRONumber": string
   "@_IntfcUpdateType": string
+  "@_PersonId"?: string
   "@_PNCID": string
 }
 

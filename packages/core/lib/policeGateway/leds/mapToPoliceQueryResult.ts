@@ -96,6 +96,7 @@ const mapToPoliceQueryResult = (ledsQueryResponse: LedsAsnQueryResponse, checkNa
   return {
     forceStationCode: ledsQueryResponse.ownerCode,
     checkName,
+    personId: ledsQueryResponse.personId,
     pncId: ledsQueryResponse.personUrn,
     courtCases: mapToPoliceCourtCases(ledsQueryResponse.disposals),
     croNumber: undefined,
