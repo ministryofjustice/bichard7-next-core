@@ -401,6 +401,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.env-changes >>
               - << pipeline.parameters.message-forwarder-changes >>
+              - << pipeline.parameters.user-service-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -421,6 +422,10 @@ jobs:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
       - build_audit_logging_images
+      - run:
+          name: Load user-service image
+          command: |
+            docker image load < "images/user-service:latest"
       - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
@@ -1119,7 +1124,7 @@ workflows:
           phase3-core-canary-ratio: "1.0"
           ms-edge: false
           requires:
-            - lint_and_build
+            - build_user_service_docker_image
 
       - test_user_service_e2e:
           <<: *merge_queue_only
