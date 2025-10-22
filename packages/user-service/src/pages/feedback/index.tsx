@@ -29,9 +29,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       AuthenticationServerSidePropsContext
 
     if (isPost(req)) {
-      const { feedback } = formData as { feedback: string; satistactionRating: string }
-      console.log(formData)
-      const feedbackResult = await postFeedback(feedback, currentUser?.emailAddress)
+      const { feedback, satisfactionRating } = formData as { feedback: string; satisfactionRating: string }
+
+      const feedbackResult = await postFeedback(feedback, satisfactionRating, currentUser?.emailAddress)
       if (isError(feedbackResult)) {
         return {
           props: {
