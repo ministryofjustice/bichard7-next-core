@@ -28,6 +28,23 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     if (isPost(req)) {
       const { feedback, rating } = formData as { feedback: string; rating: string }
+      const ratingHasError = !rating
+      const feedbackHasError = !feedback
+
+      if (ratingHasError || feedbackHasError) {
+        return {
+          props: {
+            csrfToken,
+            errorMessage: "",
+            successMessage: "",
+            currentUser,
+            fields: {
+              feedback: { hasError: feedbackHasError, value: feedback ?? null },
+              rating: { hasError: ratingHasError, value: rating ?? null }
+            }
+          }
+        }
+      }
 
       const feedbackResult = await postFeedback(feedback, rating)
       if (isError(feedbackResult)) {
@@ -45,11 +62,7 @@ export const getServerSideProps = withMultipleServerSideProps(
           csrfToken,
           errorMessage: "",
           successMessage: "Feedback submitted successfully",
-          currentUser,
-          fields: {
-            feedback: { hasError: !feedback, value: feedback ?? null },
-            rating: { hasError: !rating, value: rating ?? null }
-          }
+          currentUser
         }
       }
     }
@@ -92,9 +105,23 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
       </Head>
       <Layout user={currentUser}>
         <div className={`${classes["top-padding"]}`}>
-          <ErrorSummary title="There is a problem" show={!!errorMessage}>
-            {errorMessage}
-          </ErrorSummary>
+          {(fields?.rating.hasError || fields?.feedback.hasError || !!errorMessage) && (
+            <ErrorSummary title="There is a problem" show>
+              <ul className="govuk-list govuk-error-summary__list">
+                {fields?.rating.hasError && (
+                  <li>
+                    <a href="#rating-1">{"Tell us how you feel about using Bichard7"}</a>
+                  </li>
+                )}
+                {fields?.feedback.hasError && (
+                  <li>
+                    <a href="#feedback">{"Provide feedback"}</a>
+                  </li>
+                )}
+                {!!errorMessage && <li>{errorMessage}</li>}
+              </ul>
+            </ErrorSummary>
+          )}
 
           {successMessage && <SuccessBanner>{successMessage}</SuccessBanner>}
 
@@ -115,7 +142,7 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
             </div>
 
             <div className={`govuk-form-group ${fields?.rating.hasError ? "govuk-form-group--error" : ""}`}>
-              <fieldset className="govuk-fieldset">
+              <fieldset className="govuk-fieldset" id="rating">
                 <legend className="govuk-fieldset__legend govuk-!-font-weight-bold">
                   {"Overall, how did you feel about using Bichard7 today?"}
                 </legend>
@@ -167,10 +194,10 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
               </fieldset>
             </div>
             <div className={`govuk-form-group ${fields?.feedback.hasError ? "govuk-form-group--error" : ""}`}>
-              <div id="feedback-hint" className="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5">
+              <legend className="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5">
                 {"Tell us how we can improve Bichard7"}
-              </div>
-              <div id="email-hint" className="govuk-hint">
+              </legend>
+              <div id="feedback-hint" className="govuk-hint">
                 {
                   "Do not include any personal or case information, for example your name, email address, force or case details"
                 }
