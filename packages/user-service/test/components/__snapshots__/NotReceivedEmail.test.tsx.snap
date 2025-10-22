@@ -38,8 +38,7 @@ exports[`should render the component and match the snapshot 1`] = `
         </a>
       </p>
       <p>
-        If you don't know your email address, contact the member of your team responsible for managing Bichard7
-        accounts.
+        If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts.
       </p>
     </div>
   </details>
