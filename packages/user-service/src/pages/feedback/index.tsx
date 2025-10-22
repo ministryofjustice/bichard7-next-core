@@ -27,9 +27,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       AuthenticationServerSidePropsContext
 
     if (isPost(req)) {
-      const { feedback, satisfactionRating } = formData as { feedback: string; satisfactionRating: string }
+      const { feedback, rating } = formData as { feedback: string; rating: string }
 
-      const feedbackResult = await postFeedback(feedback, satisfactionRating)
+      const feedbackResult = await postFeedback(feedback, rating)
       if (isError(feedbackResult)) {
         return {
           props: {
@@ -45,7 +45,11 @@ export const getServerSideProps = withMultipleServerSideProps(
           csrfToken,
           errorMessage: "",
           successMessage: "Feedback submitted successfully",
-          currentUser
+          currentUser,
+          fields: {
+            feedback: { hasError: !feedback, value: feedback ?? null },
+            rating: { hasError: !rating, value: rating ?? null }
+          }
         }
       }
     }
@@ -66,9 +70,19 @@ interface Props {
   errorMessage: string
   successMessage: string
   currentUser?: Partial<User>
+  fields?: {
+    feedback: {
+      hasError: boolean
+      value: string
+    }
+    rating: {
+      hasError: boolean
+      value: string
+    }
+  }
 }
 
-const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage }: Props) => {
+const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, fields }: Props) => {
   const classes = useCustomStyles()
 
   return (
@@ -100,57 +114,82 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage }:
               </Paragraph>
             </div>
 
-            <fieldset className="govuk-fieldset">
-              <legend className="govuk-fieldset__legend govuk-!-font-weight-bold">
-                {"Overall, how did you feel about using Bichard7 today?"}
-              </legend>
+            <div className={`govuk-form-group ${fields?.rating.hasError ? "govuk-form-group--error" : ""}`}>
+              <fieldset className="govuk-fieldset">
+                <legend className="govuk-fieldset__legend govuk-!-font-weight-bold">
+                  {"Overall, how did you feel about using Bichard7 today?"}
+                </legend>
+                <div id="email-hint" className="govuk-hint">
+                  {"Select one"}
+                </div>
+                {fields?.rating.hasError && (
+                  <p id="radioEmpty-error" className="govuk-error-message">
+                    <span className="govuk-visually-hidden">{"Error:"}</span> {"Select one option"}
+                  </p>
+                )}
+                <div className="govuk-radios" data-module="govuk-radios">
+                  <RadioItem
+                    value="very-satisfied"
+                    id="rating-1"
+                    name="rating"
+                    text="Very satisfied"
+                    defaultChecked={fields?.rating.value === "very-satisfied"}
+                  />
+                  <RadioItem
+                    value="satisfied"
+                    id="rating-2"
+                    name="rating"
+                    text="Satisfied"
+                    defaultChecked={fields?.rating.value === "satisfied"}
+                  />
+                  <RadioItem
+                    value="neither-satisfied-or-dissatisfied"
+                    id="rating-3"
+                    name="rating"
+                    text="Neither satisfied or dissatisfied"
+                    defaultChecked={fields?.rating.value === "neither-satisfied-or-dissatisfied"}
+                  />
+                  <RadioItem
+                    value="dissatisfied"
+                    id="rating-4"
+                    name="rating"
+                    text="Dissatisfied"
+                    defaultChecked={fields?.rating.value === "dissatisfied"}
+                  />
+                  <RadioItem
+                    value="very-dissatisfied"
+                    id="rating-5"
+                    name="rating"
+                    text="Very dissatisfied"
+                    defaultChecked={fields?.rating.value === "very-dissatisfied"}
+                  />
+                </div>
+              </fieldset>
+            </div>
+            <div className={`govuk-form-group ${fields?.feedback.hasError ? "govuk-form-group--error" : ""}`}>
+              <div id="feedback-hint" className="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5">
+                {"Tell us how we can improve Bichard7"}
+              </div>
               <div id="email-hint" className="govuk-hint">
-                {"Select one"}
+                {
+                  "Do not include any personal or case information, for example your name, email address, force or case details"
+                }
               </div>
-              <div className="govuk-radios" data-module="govuk-radios">
-                <RadioItem
-                  value="very-satisfied"
-                  id="satisfactionRating-1"
-                  name="satisfactionRating"
-                  text="Very satisfied"
-                />
-                <RadioItem value="satisfied" id="satisfactionRating-2" name="satisfactionRating" text="Satisfied" />
-                <RadioItem
-                  value="neither-satisfied-or-dissatisfied"
-                  id="satisfactionRating-3"
-                  name="satisfactionRating"
-                  text="Neither satisfied or dissatisfied"
-                />
-                <RadioItem
-                  value="neither-satisfied-or-dissatisfied"
-                  id="satisfactionRating-4"
-                  name="satisfactionRating"
-                  text="Dissatisfied"
-                />
-                <RadioItem
-                  value="very-dissatisfied"
-                  id="satisfactionRating-5"
-                  name="satisfactionRating"
-                  text="Very dissatisfied"
-                />
-              </div>
-            </fieldset>
+              {fields?.feedback.hasError && (
+                <p id="feedback-error" className="govuk-error-message">
+                  <span className="govuk-visually-hidden">{"Error:"}</span> {"Provide feedback"}
+                </p>
+              )}
+              <textarea
+                className={`govuk-textarea ${fields?.feedback.hasError ? "govuk-textarea--error" : ""}`}
+                id="feedback"
+                name="feedback"
+                rows={5}
+                aria-describedby="feedback-hint"
+                defaultValue={fields?.feedback.value || ""}
+              ></textarea>
+            </div>
 
-            <div id="feedback-hint" className="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5">
-              {"Tell us how we can improve Bichard7"}
-            </div>
-            <div id="email-hint" className="govuk-hint">
-              {
-                "Do not include any personal or case information, for example your name, email address, force or case details"
-              }
-            </div>
-            <textarea
-              className="govuk-textarea"
-              id="feedback"
-              name="feedback"
-              rows={5}
-              aria-describedby="feedback-hint"
-            ></textarea>
             <Button noDoubleClick>{"Send feedback"}</Button>
           </Form>
 
