@@ -1,6 +1,5 @@
 import BackLink from "components/BackLink"
 import Button from "components/Button"
-import ContactLink from "components/ContactLink"
 import { ErrorSummary } from "components/ErrorSummary"
 import Form from "components/Form"
 import Layout from "components/Layout"
@@ -8,7 +7,6 @@ import Link from "components/Link"
 import Paragraph from "components/Paragraph"
 import { RadioItem } from "components/RadioItem"
 import SuccessBanner from "components/SuccessBanner"
-import config from "lib/config"
 import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
@@ -91,13 +89,14 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage }:
           </h3>
 
           <Form method="post" csrfToken={csrfToken}>
-            <div id="contact-support" className="govuk-label">
+            <div id="contact-support" className="govuk-label govuk-!-padding-bottom-7">
+              <Paragraph>{"Tell us about your experience of using Bichard7 to help us improve the service."}</Paragraph>
+              <Paragraph>{"Your responses are anonymous and are used to make future improvements."}</Paragraph>
+              <Paragraph>{"We do not reply to feedback."}</Paragraph>
               <Paragraph>
-                {"Please keep in mind that if you are experiencing any issues, you should either check our "}
-                <ContactLink>{"FAQ page"}</ContactLink>
-                {" or "}
-                <Link href={`mailto:${config.supportEmail}`}>{"contact support"}</Link>
-                {". Any issues raised via this page will not be handled."}
+                {"For account issues or support use the "}
+                <Link href="#">{"help guide (opens in new tab)"}</Link>
+                {"."}
               </Paragraph>
             </div>
 
@@ -137,8 +136,13 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage }:
               </div>
             </fieldset>
 
-            <div id="feedback-hint" className="govuk-label">
-              {"What improvements would you like to see?"}
+            <div id="feedback-hint" className="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5">
+              {"Tell us how we can improve Bichard7"}
+            </div>
+            <div id="email-hint" className="govuk-hint">
+              {
+                "Do not include any personal or case information, for example your name, email address, force or case details"
+              }
             </div>
             <textarea
               className="govuk-textarea"
