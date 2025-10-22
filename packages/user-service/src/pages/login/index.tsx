@@ -527,7 +527,6 @@ const Index = ({
   serviceMessages,
   httpsRedirectCookie
 }: Props) => {
-  console.log("Login Stage:", loginStage, "Email Address:", emailAddress)
   const upgradeToHttps =
     typeof window !== "undefined" &&
     !window.location.protocol.includes("https") &&
