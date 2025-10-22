@@ -31,7 +31,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req)) {
       const { feedback, satisfactionRating } = formData as { feedback: string; satisfactionRating: string }
 
-      const feedbackResult = await postFeedback(feedback, satisfactionRating, currentUser?.emailAddress)
+      const feedbackResult = await postFeedback(feedback, satisfactionRating)
       if (isError(feedbackResult)) {
         return {
           props: {
