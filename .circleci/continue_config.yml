@@ -1126,6 +1126,7 @@ workflows:
           phase3-core-canary-ratio: "1.0"
           ms-edge: false
           requires:
+            - lint_and_build
             - build_user_service_docker_image
 
       - test_user_service_e2e:
