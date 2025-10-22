@@ -25,12 +25,16 @@ const validateUserVerificationCode = async (
       return u
     })
 
+    if (user.loginTooSoon) {
+      return new Error("User has tried to log in too soon")
+    }
+
     if (user.deletedAt) {
       return new Error("User is deleted")
     }
 
     const isVerified = verificationCode === user.emailVerificationCode
-    const isCurrent = user.emailVerificationCurrent // True if generated time is > NOW() - INTERVAL
+    const isCurrent = user.emailVerificationCurrent
 
     if (isVerified && isCurrent) {
       return user
