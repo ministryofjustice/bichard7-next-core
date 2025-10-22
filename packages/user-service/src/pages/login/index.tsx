@@ -380,14 +380,14 @@ const handleGet = async (
   const { notYou, action } = query as { notYou: string; action?: string }
 
   if (action === "sendCodeAgain") {
-    const emailAddress = getInProgressEmailAddressFromCookie(req, config)
-    if (!emailAddress) {
+    const inProgressEmailAddress = getInProgressEmailAddressFromCookie(req, config)
+    if (!inProgressEmailAddress) {
       return createRedirectResponse("/login")
     }
     return {
       props: {
         csrfToken,
-        emailAddress,
+        emailAddress: inProgressEmailAddress,
         loginStage: "resetSecurityCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
         httpsRedirectCookie
@@ -395,12 +395,14 @@ const handleGet = async (
     }
   }
 
+  let emailAddress = getEmailAddressFromCookie(req, config) // Get current email
+
   if (notYou === "true") {
     removeEmailAddressCookie(res, config)
     removeInProgressEmailAddressCookie(res, config)
-  }
 
-  const emailAddress = getEmailAddressFromCookie(req, config)
+    emailAddress = null
+  }
 
   if (emailAddress) {
     const notYourEmailAddressUrl = getNotYourEmailLink(query)
@@ -525,6 +527,7 @@ const Index = ({
   serviceMessages,
   httpsRedirectCookie
 }: Props) => {
+  console.log("Login Stage:", loginStage, "Email Address:", emailAddress)
   const upgradeToHttps =
     typeof window !== "undefined" &&
     !window.location.protocol.includes("https") &&
