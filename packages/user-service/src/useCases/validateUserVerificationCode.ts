@@ -25,10 +25,6 @@ const validateUserVerificationCode = async (
       return u
     })
 
-    if (user.loginTooSoon) {
-      return new Error("User has tried to log in too soon")
-    }
-
     if (user.deletedAt) {
       return new Error("User is deleted")
     }

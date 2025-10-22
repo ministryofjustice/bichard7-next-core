@@ -34,11 +34,12 @@ describe("Logging In", () => {
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Enter a password")
   })
 
-  it("should show an error email is entered but not a password", () => {
+  it("should show an error if email is entered but not a password", () => {
     cy.visit("/login")
     cy.get("input[type=email]").type(user.email)
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Enter a password")
+    cy.get('[data-test="error-summary"]').should("not.contain", "Enter your email address")
   })
 
   it("should show an error if password is entered but no email", () => {
@@ -46,6 +47,7 @@ describe("Logging In", () => {
     cy.get("input[type=password]").type(user.password)
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Enter your email address")
+    cy.get('[data-test="error-summary"]').should("not.contain", "Enter a password")
   })
 
   it("should show error if the entered email address does not belong to a user", () => {
