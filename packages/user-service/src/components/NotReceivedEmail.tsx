@@ -8,7 +8,7 @@ interface Props {
 const NotReceivedEmail = ({ sendAgainUrl }: Props) => {
   return (
     <>
-      <Details summary={"Problem with the code?"}>
+      <Details summary={"Problem with the code?"} data-test="problem-with-code">
         <p>
           {"We can "}
           <Link href={`${sendAgainUrl}?notYou=false&action=sendCodeAgain`} data-test="send-code-again-link">

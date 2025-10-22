@@ -709,7 +709,7 @@ const Index = ({
                   <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
                   <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
                   <input type="hidden" name="loginStage" value="resetSecurityCode" />
-                  <Button data-test="get-security-code-button">{"Get security code"}</Button>
+                  <Button id="security-code-button">{"Get security code"}</Button>
                 </Form>
               </>
             )}

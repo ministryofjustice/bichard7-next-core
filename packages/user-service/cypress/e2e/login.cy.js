@@ -313,4 +313,25 @@ describe("Logging In", () => {
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("Too many incorrect password attempts")
   })
+
+  it("allows user to resend security code if they did not receive it", () => {
+    const emailAddress = user.email
+    const password = "password"
+
+    cy.visit("/login")
+    cy.get("input[type=email]").type(emailAddress)
+    cy.get("input#password").type(password)
+    cy.get("button[type=submit]").click()
+    cy.get("input#validationCode").should("exist")
+    cy.get('[data-test="problem-with-code"]').click()
+    cy.get('[data-test="send-code-again-link"]').click()
+    cy.get("h1").should("be.visible").contains("Get a security code")
+    cy.get("button[type=submit]").click()
+    cy.get("input#validationCode").should("exist")
+    cy.task("getVerificationCode", emailAddress).then((verificationCode) => {
+      cy.get("input#validationCode").type(verificationCode)
+      cy.get("button[type=submit]").click()
+      cy.url().should("match", /\/users/)
+    })
+  })
 })
