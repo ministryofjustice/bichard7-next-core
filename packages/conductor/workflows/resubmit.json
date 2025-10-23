@@ -135,7 +135,7 @@
       "permissive": false
     }
   ],
-  "inputParameters": ["autoResubmit","messageId"],
+  "inputParameters": ["autoResubmit", "messageId"],
   "outputParameters": {},
   "schemaVersion": 2,
   "restartable": true,
