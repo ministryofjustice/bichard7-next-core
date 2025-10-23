@@ -218,7 +218,7 @@ describe("QualityStatusForm", () => {
 
     cy.wait("@auditCase").then(({ request }) => {
       expect(request.method).to.equal("POST")
-      expect(request.body.data.triggerQuality).to.equal(1)
+      expect(request.body.data.triggerQuality).to.equal(undefined)
       expect(request.body.data.exceptionQuality).to.equal(newCourtCase.errorQualityChecked)
     })
   })
@@ -254,7 +254,7 @@ describe("QualityStatusForm", () => {
     cy.wait("@auditCase").then(({ request }) => {
       expect(request.method).to.equal("POST")
       expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
-      expect(request.body.data.exceptionQuality).to.equal(1)
+      expect(request.body.data.exceptionQuality).to.equal(undefined)
     })
   })
 })
