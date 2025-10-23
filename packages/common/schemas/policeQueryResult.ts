@@ -55,5 +55,6 @@ export const policeQueryResultSchema = z.object({
   forceStationCode: z.string().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.forceStationCode.$description),
   penaltyCases: z.array(policePenaltyCaseSchema).optional(),
   pncId: z.string(),
-  personId: z.string().optional()
+  personId: z.string().optional(),
+  reportId: z.string().optional()
 })
