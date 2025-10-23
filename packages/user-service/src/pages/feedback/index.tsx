@@ -136,7 +136,7 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
               <Paragraph>{"We do not reply to feedback."}</Paragraph>
               <Paragraph>
                 {"For account issues or support use the "}
-                <Link href="#">{"help guide (opens in new tab)"}</Link>
+                <Link href="/faq">{"help guide (opens in new tab)"}</Link>
                 {"."}
               </Paragraph>
             </div>
