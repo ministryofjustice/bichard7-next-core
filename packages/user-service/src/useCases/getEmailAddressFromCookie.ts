@@ -1,25 +1,15 @@
 import { unsign } from "cookie-signature"
 import type { UserServiceConfig } from "lib/config"
 import type { NextApiRequestCookies } from "next/dist/server/api-utils"
-import type { EmailAddressCookieType } from "../types/EmailAddressCookieType"
+import type { EmailAddressCookieType } from "types/EmailAddressCookieType"
+import { getEmailAddressCookieConfig } from "./getEmailAddressCookieConfig"
 
 export default (
   { cookies }: { cookies: NextApiRequestCookies },
   config: UserServiceConfig,
   emailAddressCookieType: EmailAddressCookieType
 ): string | null => {
-  let cookieName: string | null = null
-  if (emailAddressCookieType === "REMEMBER") {
-    cookieName = config.rememberEmailAddressCookieName
-  } else if (emailAddressCookieType === "IN_PROGRESS") {
-    cookieName = config.inProgressEmailAddressCookieName
-  }
-
-  if (!cookieName) {
-    return null
-  }
-
-  const { cookieSecret } = config
+  const { cookieName } = getEmailAddressCookieConfig(config, emailAddressCookieType)
   const cookieValue = cookies[cookieName]
   if (!cookieValue) {
     return null
@@ -27,7 +17,7 @@ export default (
 
   let unsignedCookieValue: string | boolean
   try {
-    unsignedCookieValue = unsign(cookieValue, cookieSecret)
+    unsignedCookieValue = unsign(cookieValue, config.cookieSecret)
   } catch {
     return null
   }

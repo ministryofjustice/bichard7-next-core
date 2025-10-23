@@ -3,6 +3,7 @@ import type { ServerResponse } from "http"
 import type { UserServiceConfig } from "lib/config"
 import setCookie from "utils/setCookie"
 import type { EmailAddressCookieType } from "../types/EmailAddressCookieType"
+import { getEmailAddressCookieConfig } from "./getEmailAddressCookieConfig"
 
 export default (
   response: ServerResponse,
@@ -10,19 +11,7 @@ export default (
   emailAddress: string,
   emailAddressCookieType: EmailAddressCookieType
 ): void => {
-  let cookieName: string | null = null
-  let maxAgeInMinutes: number | null = null
-  if (emailAddressCookieType === "REMEMBER") {
-    cookieName = config.rememberEmailAddressCookieName
-    maxAgeInMinutes = config.rememberEmailAddressMaxAgeInMinutes
-  } else if (emailAddressCookieType === "IN_PROGRESS") {
-    cookieName = config.inProgressEmailAddressCookieName
-    maxAgeInMinutes = config.inProgressEmailAddressMaxAgeInMinutes
-  }
-
-  if (!cookieName || maxAgeInMinutes === null) {
-    throw new Error("Could not set email address cookie")
-  }
+  const { cookieName, maxAgeInMinutes } = getEmailAddressCookieConfig(config, emailAddressCookieType)
 
   const expiryDate = new Date()
   expiryDate.setMinutes(expiryDate.getMinutes() + maxAgeInMinutes)
