@@ -9,5 +9,12 @@ export const QualityStatusCard = () => {
     (value) => value !== null && value !== 1
   )
 
-  return auditQualitySet ? <QualityStatusDisplay /> : <QualityStatusForm />
+  const hasExceptions = courtCase.aho.Exceptions.length > 0
+  const hasTriggers = courtCase.triggerCount > 0
+
+  return auditQualitySet ? (
+    <QualityStatusDisplay hasExceptions={hasExceptions} hasTriggers={hasTriggers} />
+  ) : (
+    <QualityStatusForm hasExceptions={hasExceptions} hasTriggers={hasTriggers} />
+  )
 }
