@@ -6,6 +6,7 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import type ApiClient from "./ApiClient"
 import { generateUrlSearchParams } from "./generateUrlSearchParams"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
+import type PromiseResult from "types/PromiseResult"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -29,7 +30,11 @@ export default class BichardApiV1 implements BichardApiGateway {
   async saveAuditResults(
     caseId: number,
     auditResults: { triggerQuality: number; errorQuality: number; note: string }
-  ): Promise<Error> {
-    return await this.apiClient.post(V1.CaseAudit.replace(":caseId", `${caseId}`), auditResults)
+  ): PromiseResult<Error> {
+    try {
+      return await this.apiClient.post(V1.CaseAudit.replace(":caseId", `${caseId}`), auditResults)
+    } catch (error) {
+      return error as Error
+    }
   }
 }
