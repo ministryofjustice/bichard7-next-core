@@ -1,4 +1,3 @@
-import BackLink from "components/BackLink"
 import Button from "components/Button"
 import { ErrorSummary } from "components/ErrorSummary"
 import Form from "components/Form"
@@ -221,8 +220,6 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
 
             <Button noDoubleClick>{"Send feedback"}</Button>
           </Form>
-
-          <BackLink href="/" />
         </div>
       </Layout>
     </>
