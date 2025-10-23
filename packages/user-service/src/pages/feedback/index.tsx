@@ -5,7 +5,6 @@ import Layout from "components/Layout"
 import Link from "components/Link"
 import Paragraph from "components/Paragraph"
 import { RadioItem } from "components/RadioItem"
-import SuccessBanner from "components/SuccessBanner"
 import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
@@ -16,6 +15,7 @@ import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import { isError } from "types/Result"
 import User from "types/User"
 import postFeedback from "useCases/postFeedback"
+import createRedirectResponse from "utils/createRedirectResponse"
 import { isPost } from "utils/http"
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -35,7 +35,6 @@ export const getServerSideProps = withMultipleServerSideProps(
           props: {
             csrfToken,
             errorMessage: "",
-            successMessage: "",
             currentUser,
             fields: {
               feedback: { hasError: feedbackHasError, value: feedback ?? null },
@@ -51,26 +50,18 @@ export const getServerSideProps = withMultipleServerSideProps(
           props: {
             csrfToken,
             errorMessage: feedbackResult.message,
-            successMessage: "",
             currentUser
           }
         }
       }
-      return {
-        props: {
-          csrfToken,
-          errorMessage: "",
-          successMessage: "Feedback submitted successfully",
-          currentUser
-        }
-      }
+
+      return createRedirectResponse("feedback/confirmation")
     }
 
     return {
       props: {
         csrfToken,
         errorMessage: "",
-        successMessage: "",
         currentUser
       }
     }
@@ -80,7 +71,6 @@ export const getServerSideProps = withMultipleServerSideProps(
 interface Props {
   csrfToken: string
   errorMessage: string
-  successMessage: string
   currentUser?: Partial<User>
   fields?: {
     feedback: {
@@ -94,7 +84,7 @@ interface Props {
   }
 }
 
-const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, fields }: Props) => {
+const ShareFeedback = ({ csrfToken, currentUser, errorMessage, fields }: Props) => {
   const classes = useCustomStyles()
   const hasErrors = fields?.rating.hasError || fields?.feedback.hasError || !!errorMessage
 
@@ -123,11 +113,7 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
             </ErrorSummary>
           )}
 
-          {successMessage && <SuccessBanner>{successMessage}</SuccessBanner>}
-
-          <h3 data-test="check-email" className="govuk-heading-xl">
-            {"Share your feedback"}
-          </h3>
+          <h3 className="govuk-heading-xl">{"Share your feedback"}</h3>
 
           <Form method="post" csrfToken={csrfToken}>
             <div id="contact-support" className="govuk-label govuk-!-padding-bottom-7">
