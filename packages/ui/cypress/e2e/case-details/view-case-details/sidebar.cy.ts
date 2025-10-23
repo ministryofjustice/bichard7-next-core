@@ -69,7 +69,7 @@ describe("sidebar", () => {
 
   describe("quality status card", () => {
     it("Should show qualityStatusCard when feature flags enabled and user is a supervisor", () => {
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved" }])
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved", triggerCount: 1 }])
       loginAndVisit("Supervisor", "/bichard/court-cases/0")
 
       cy.get('[name="quality-status-note"]').should("exist")
