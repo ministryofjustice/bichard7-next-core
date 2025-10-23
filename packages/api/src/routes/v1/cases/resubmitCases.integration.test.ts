@@ -3,13 +3,10 @@ import type { InjectOptions } from "fastify"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import EventCategory from "@moj-bichard7/common/types/EventCategory"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { ACCEPTED, FORBIDDEN } from "http-status"
 
-import type { OutputApiAuditLog } from "../../../types/AuditLog"
 import type { ResubmitCases } from "./resubmitCases"
 
 import build from "../../../app"
@@ -20,7 +17,6 @@ import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import FetchById from "../../../useCases/fetchAuditLogs/FetchById"
 
 const defaultInjectParams = (jwt: string): InjectOptions => {
   return {
@@ -111,31 +107,5 @@ describe("/v1/cases/resubmit integration", () => {
     expect(json[cases[0].messageId]).not.toBeInstanceOf(Error)
     expect(json[cases[0].messageId]).toHaveProperty("errorId", cases[0].errorId)
     expect(json[cases[0].messageId]).toHaveProperty("workflowId")
-  })
-
-  it("will Audit Log", async () => {
-    const [encodedJwt] = generateJwtForStaticUser([UserGroup.Service])
-    const cases = await createCases(testDatabaseGateway, 1, {
-      0: {
-        aho: HO100404.hearingOutcomeXml,
-        errorCount: 1,
-        errorReport: "HO100404||br7:ArrestSummonsNumber",
-        messageId: randomUUID()
-      }
-    })
-
-    const result = await app.inject(defaultInjectParams(encodedJwt))
-
-    expect(result.statusCode).toBe(ACCEPTED)
-
-    const auditLogJson = await new FetchById(auditLogGateway, cases[0].messageId).fetch()
-    const auditLogObj = auditLogJson as OutputApiAuditLog
-    expect(auditLogObj.events).toHaveLength(1)
-
-    const auditLogEvent = auditLogObj.events?.[0]
-    expect(auditLogEvent?.category).toBe(EventCategory.information)
-    expect(auditLogEvent?.eventCode).toBe(EventCode.ExceptionsLocked)
-    expect(auditLogEvent?.eventSource).toBe("Bichard API Auto Resubmit")
-    expect(auditLogEvent?.user).toBe("service.user")
   })
 })

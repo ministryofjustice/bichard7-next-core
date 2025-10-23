@@ -50,7 +50,7 @@ describe("process_resubmit", () => {
 
   it("will fail if there's no matching message ID", async () => {
     const messageId = randomUUID()
-    const s3Data = { errorLockedByUsername: "bob", messageId }
+    const s3Data = { errorLockedByUsername: "bob", messageId, events: [], autoResubmit: false }
     const s3TaskDataPath = `${messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -61,7 +61,7 @@ describe("process_resubmit", () => {
 
   it("will fail if there is no Updated AHO", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -79,7 +79,7 @@ describe("process_resubmit", () => {
 
   it("will fail if the Updated AHO is not XML", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -97,7 +97,7 @@ describe("process_resubmit", () => {
 
   it("will fail if there is a S3 error", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -113,7 +113,7 @@ describe("process_resubmit", () => {
 
   it("completes the task", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -125,7 +125,7 @@ describe("process_resubmit", () => {
 
   it("if the transaction fails, it will not create a note", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -145,7 +145,7 @@ describe("process_resubmit", () => {
 
   it("creates notes", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -160,7 +160,7 @@ describe("process_resubmit", () => {
 
   it("uploads the Updated AHO to S3", async () => {
     const caseDb = await setupCase(sql)
-    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id }
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
 
@@ -177,5 +177,19 @@ describe("process_resubmit", () => {
     const parsedUpdatedFile = JSON.parse(updatedFile, dateReviver)
     expect(parsedUpdatedFile).toHaveProperty("AnnotatedHearingOutcome")
     expect(parsedUpdatedFile).toHaveProperty("Exceptions")
+  })
+
+  describe("with auto resubmit", () => {
+    it("completes the task", async () => {
+      const caseDb = await setupCase(sql)
+      const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: true }
+      const s3TaskDataPath = `${s3Data.messageId}.json`
+      await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
+
+      const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
+    })
   })
 })

@@ -4,6 +4,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
+import { minimalUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { resubmitCase } from "./resubmitCase"
 
@@ -62,5 +63,25 @@ describe("resubmitCase", () => {
     expect(response[0].workflowType).toBe("resubmit")
     expect(response[0].workflowId).toBe(result.workflowId)
     expect(response[0].correlationId).toBe(result.messageId)
+  })
+
+  describe("with auto resubmit", () => {
+    it("creates a Conductor Workflow", async () => {
+      const user = minimalUser([UserGroup.Service], "service.user")
+      const caseObj = await createCase(testDatabaseGateway)
+
+      const result = await resubmitCase(testDatabaseGateway.writable, user, caseObj.errorId, true)
+
+      if (isError(result)) {
+        throw result
+      }
+
+      const response = await waitForWorkflows({ query: { correlationId: result.messageId } })
+
+      expect(response).toBeDefined()
+      expect(response[0].workflowType).toBe("resubmit")
+      expect(response[0].workflowId).toBe(result.workflowId)
+      expect(response[0].correlationId).toBe(result.messageId)
+    })
   })
 })

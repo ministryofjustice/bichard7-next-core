@@ -8,7 +8,6 @@ import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, UNPROCESSABLE_ENTITY } from "http-sta
 import { randomUUID } from "node:crypto"
 import z from "zod"
 
-import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
 import { jsonResponse } from "../../../server/openapi/jsonResponse"
@@ -19,7 +18,6 @@ import handleDisconnectedError from "../../../services/db/handleDisconnectedErro
 import { resubmitCases } from "../../../useCases/cases/resubmit/resubmitCases"
 
 type HandlerProps = {
-  auditLogGateway: AuditLogDynamoGateway
   database: DatabaseGateway
   reply: FastifyReply
   user: User
@@ -57,8 +55,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ auditLogGateway, database, reply, user }: HandlerProps) => {
-  const resubmittedCases = await resubmitCases(database.writable, user, auditLogGateway)
+const handler = async ({ database, reply, user }: HandlerProps) => {
+  const resubmittedCases = await resubmitCases(database.writable, user)
 
   if (!isError(resubmittedCases)) {
     return reply.code(ACCEPTED).send(resubmittedCases)
@@ -81,7 +79,6 @@ const handler = async ({ auditLogGateway, database, reply, user }: HandlerProps)
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.CasesResubmit, { schema }, async (req, reply) => {
     await handler({
-      auditLogGateway: req.auditLogGateway,
       database: req.database,
       reply,
       user: req.user

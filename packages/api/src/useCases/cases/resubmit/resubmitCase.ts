@@ -6,8 +6,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import updateErrorStatus from "../../../services/db/cases/updateErrorStatus"
-import { ResolutionStatus } from "../../dto/convertResolutionStatus"
+import selectMessageId from "../../../services/db/cases/selectMessageId"
 import canUserResubmitCase from "./canUserResubmitCase"
 
 type ResubmitCaseResult = {
@@ -18,7 +17,8 @@ type ResubmitCaseResult = {
 export const resubmitCase = async (
   databaseConnection: WritableDatabaseConnection,
   user: User,
-  caseId: number
+  caseId: number,
+  autoResubmit: boolean = false
 ): PromiseResult<ResubmitCaseResult> => {
   return databaseConnection
     .transaction(async (transaction) => {
@@ -32,7 +32,7 @@ export const resubmitCase = async (
         throw new Error("User can't resubmit")
       }
 
-      const result = await updateErrorStatus(transaction, caseId, ResolutionStatus.Submitted)
+      const result = await selectMessageId(transaction, user, caseId)
 
       if (isError(result)) {
         throw result
@@ -40,9 +40,10 @@ export const resubmitCase = async (
 
       const conductorClient = createConductorClient()
       const resubmitWorkflowName = "resubmit"
+      const workflowParams = { autoResubmit, messageId: result }
 
       const conductorResult = await conductorClient.workflowResource
-        .startWorkflow1(resubmitWorkflowName, { messageId: result }, undefined, result)
+        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, result)
         .catch((error: Error) => error)
 
       if (isError(conductorResult)) {

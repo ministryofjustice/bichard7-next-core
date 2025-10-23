@@ -18,10 +18,11 @@ export interface CanCaseBeResubmittedResult {
 
 export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<boolean> => {
   const isSystemUser = isServiceUser(user)
+  const lockedUserSql = database.connection`el.error_locked_by_id = ${user.username}`
 
   const result = await database.connection<CanCaseBeResubmittedResult[]>`
       SELECT
-        (el.error_locked_by_id = ${user.username})::INTEGER as "lockedByUser",
+        (${isSystemUser ? "1" : lockedUserSql})::INTEGER as "lockedByUser",
         (${isSystemUser ? "1" : visibleForcesSql(database, user.visibleForces)})::INTEGER as "caseInForce",
         (${isSystemUser ? "1" : visibleCourtsSql(database, user.visibleCourts)})::INTEGER as "caseInCourt",
         (el.error_status = 1)::INTEGER as "caseIsUnresolved"
