@@ -340,6 +340,7 @@ export interface IDS {
   "@_IntfcUpdateType": string
   "@_PersonId"?: string
   "@_PNCID": string
+  "@_ReportId"?: string
 }
 
 export interface IndictmentOffenceCode {
