@@ -35,8 +35,12 @@ import React from "react"
 import GridRow from "components/GridRow"
 import BulletList from "components/BulletList"
 import validateUserVerificationCode from "useCases/validateUserVerificationCode"
-import resetUserVerificationCode from "../../useCases/resetUserVerificationCode"
+import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import ContactLink from "components/ContactLink"
+import { removeEmailAddressCookie } from "useCases"
+import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
+import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
+import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -83,6 +87,9 @@ const handleEmailStage = async (
     }
   }
 
+  const { res } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  storeInProgressEmailAddressInCookie(res, config, normalisedEmail)
+
   return {
     props: {
       csrfToken,
@@ -115,7 +122,7 @@ const handleValidateCodeStage = async (
       props: {
         emailAddress,
         validationCode,
-        validationCodeError, // You'll need to add this to your Props interface too
+        validationCodeError,
         csrfToken,
         resetStage: "validateCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
@@ -283,6 +290,7 @@ const handleResetSecurityCodeStage = async (
       csrfToken,
       emailAddress,
       resetStage: "validateCode",
+      validationCode: "",
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
     }
   }
@@ -318,30 +326,28 @@ const handleGet = (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
 ): GetServerSidePropsResult<Props> => {
-  const { csrfToken, query } = context as CsrfServerSidePropsContext
-  const { email } = query as { email: string; notYou?: string; action?: string }
-  //
-  // if (action === "sendCodeAgain") {
-  //   const inProgressEmailAddress = getInProgressEmailAddressFromCookie(req, config)
-  //   if (!inProgressEmailAddress) {
-  //     return createRedirectResponse("/login")
-  //   }
-  //   return {
-  //     props: {
-  //       csrfToken,
-  //       emailAddress: inProgressEmailAddress,
-  //       resetStage: "resetSecurityCode",
-  //       serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-  //     }
-  //   }
-  // }
-  //
-  // if (notYou === "true") {
-  //   removeEmailAddressCookie(res, config)
-  //   removeInProgressEmailAddressCookie(res, config)
-  //
-  //   emailAddress = null
-  // }
+  const { csrfToken, query, req, res } = context as CsrfServerSidePropsContext
+  const { email, notYou, action } = query as { email: string; notYou?: string; action?: string }
+
+  if (action === "sendCodeAgain") {
+    const inProgressEmailAddress = getInProgressEmailAddressFromCookie(req, config)
+    if (!inProgressEmailAddress) {
+      return createRedirectResponse("/login/reset-password")
+    }
+    return {
+      props: {
+        csrfToken,
+        emailAddress: inProgressEmailAddress,
+        resetStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  if (notYou === "true") {
+    removeEmailAddressCookie(res, config)
+    removeInProgressEmailAddressCookie(res, config)
+  }
 
   if (email) {
     return {
@@ -569,6 +575,25 @@ const ForgotPassword = ({
                   />
                   <Button noDoubleClick>{"Save password"}</Button>
                 </Form>
+              )}
+
+              {resetStage === "resetSecurityCode" && (
+                <>
+                  <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Get a security code"}</h1>
+                  <Form method="post" csrfToken={csrfToken}>
+                    <Paragraph>
+                      {"We will send a code to: "}
+                      <b>{emailAddress}</b>
+                    </Paragraph>
+                    <Paragraph>
+                      {`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}
+                    </Paragraph>
+                    <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
+                    <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
+                    <input type="hidden" name="resetStage" value="resetSecurityCode" />
+                    <Button id="security-code-button">{"Get security code"}</Button>
+                  </Form>
+                </>
               )}
             </GridColumn>
             <GridColumn width="one-third">
