@@ -5,6 +5,8 @@ import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiReques
 
 export type LedsMockOptions = PoliceApiRequestMockOptions & {
   count?: number
+  personId?: string
+  reportId?: string
 }
 
 export type LedsMock = PartialPoliceApiRequestMock &
