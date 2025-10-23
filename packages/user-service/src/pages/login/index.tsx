@@ -44,7 +44,6 @@ import NotReceivedEmail from "components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
-import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -170,7 +169,7 @@ const logInUser = async (
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { res, req, formData, query } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
 
-  removeInProgressEmailAddressCookie(res, config)
+  removeEmailAddressCookie(res, config, "IN_PROGRESS")
 
   const { rememberEmailAddress } = formData as {
     rememberEmailAddress: string
@@ -189,7 +188,7 @@ const logInUser = async (
       storeEmailAddressInCookie(res, config, user.emailAddress, "REMEMBER")
     }
   } else {
-    removeEmailAddressCookie(res, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
   }
 
   const redirectPath = getRedirectPath(query)
@@ -396,8 +395,8 @@ const handleGet = async (
   let emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER") // Get current email
 
   if (notYou === "true") {
-    removeEmailAddressCookie(res, config)
-    removeInProgressEmailAddressCookie(res, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
+    removeEmailAddressCookie(res, config, "IN_PROGRESS")
 
     emailAddress = null
   }
