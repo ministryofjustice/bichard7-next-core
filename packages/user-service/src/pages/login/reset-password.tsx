@@ -45,12 +45,23 @@ const handleEmailStage = async (
   const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
   const { emailAddress } = formData as { emailAddress: string }
 
-  if (!emailAddress.match(/\S+@\S+\.\S+/)) {
+  const emailIsValid = !!emailAddress.match(/\S+@\S+\.\S+/)
+  const hasEmail = !!emailAddress
+
+  let emailError: string | undefined
+
+  if (!hasEmail) {
+    emailError = "Enter your email address"
+  } else if (!emailIsValid) {
+    emailError = "Enter an email address in the correct format, for example name@example.com"
+  }
+
+  if (emailError) {
     return {
       props: {
         csrfToken,
         emailAddress,
-        emailError: "Enter a valid email address",
+        emailError,
         resetStage: "email",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
@@ -330,8 +341,6 @@ const ForgotPassword = ({
             <GridColumn width="two-thirds">
               <BackLink href="/" />
 
-              <h1 className="govuk-heading-xl">{"Reset password"}</h1>
-
               <ErrorSummary title={errorSummaryTitle} show={invalidPassword || passwordsMismatch || !!passwordInsecure}>
                 <ErrorSummaryList
                   items={[
@@ -343,17 +352,33 @@ const ForgotPassword = ({
               </ErrorSummary>
 
               <ErrorSummary title="There is a problem" show={!!emailError}>
-                <ErrorSummaryList
-                  items={[{ id: "email", error: "Please check you have entered your email address correctly." }]}
-                />
+                <ErrorSummaryList items={[{ id: "email", error: emailError }]} />
               </ErrorSummary>
 
               {resetStage === "email" && (
                 <Form method="post" csrfToken={csrfToken}>
-                  <Paragraph>{"We will email you a code to reset your password."}</Paragraph>
-                  <TextInput id="email" name="emailAddress" label="Email address" type="email" error={emailError} />
+                  <h1 className="govuk-heading-xl">{"Confirm your email address"}</h1>
+                  <Paragraph>{"We need to confirm your email address is registered to a Bichard7 account."}</Paragraph>
+                  <Paragraph>
+                    {
+                      "If your email address is registered to a Bichard7 account you will receive a security code by email."
+                    }
+                  </Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-4">
+                    {
+                      "If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts."
+                    }
+                  </Paragraph>
+                  <TextInput
+                    id="email"
+                    name="emailAddress"
+                    label="Email address"
+                    hint="Enter the email address for your Bichard7 account"
+                    type="email"
+                    error={emailError}
+                  />
                   <input type="hidden" name="resetStage" value="email" />
-                  <Button noDoubleClick>{"Send the code"}</Button>
+                  <Button noDoubleClick>{"Next"}</Button>
                 </Form>
               )}
 
