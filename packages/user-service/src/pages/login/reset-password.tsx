@@ -21,10 +21,7 @@ import Database from "types/Database"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import Link from "components/Link"
 import getAuditLogger from "lib/getAuditLogger"
-import SuggestPassword from "components/SuggestPassword"
-import addQueryParams from "utils/addQueryParams"
 import logger from "utils/logger"
-import generateRandomPassword from "useCases/generateRandomPassword"
 import passwordSecurityCheck from "useCases/passwordSecurityCheck"
 import resetPassword, { ResetPasswordOptions } from "useCases/resetPassword"
 import SuccessBanner from "components/SuccessBanner"
@@ -36,6 +33,7 @@ import Paragraph from "components/Paragraph"
 import GridColumn from "components/GridColumn"
 import React from "react"
 import GridRow from "components/GridRow"
+import BulletList from "components/BulletList"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -81,10 +79,6 @@ const handleEmailStage = async (
       }
     }
   }
-  const suggestedPasswordUrl = addQueryParams("/login/reset-password", {
-    email: emailAddress,
-    suggestPassword: "true"
-  })
 
   return {
     props: {
@@ -92,7 +86,6 @@ const handleEmailStage = async (
       emailAddress: normalisedEmail,
       resetStage: "validateCode",
       validationCode: "",
-      suggestedPasswordUrl,
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
     }
   }
@@ -110,10 +103,6 @@ const handleValidateCodeStage = async (
     newPassword: string
     confirmPassword: string
   }
-  const suggestedPasswordUrl = addQueryParams("/login/reset-password", {
-    email: emailAddress,
-    suggestPassword: "true"
-  })
 
   if (!newPassword) {
     return {
@@ -122,8 +111,6 @@ const handleValidateCodeStage = async (
         validationCode,
         invalidPassword: true,
         csrfToken,
-        suggestedPassword: "",
-        suggestedPasswordUrl,
         resetStage: "validateCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
@@ -137,8 +124,6 @@ const handleValidateCodeStage = async (
         validationCode,
         passwordsMismatch: true,
         csrfToken,
-        suggestedPassword: "",
-        suggestedPasswordUrl,
         resetStage: "validateCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
@@ -155,8 +140,6 @@ const handleValidateCodeStage = async (
         passwordInsecure: true,
         passwordInsecureMessage: passwordCheckResult.message,
         csrfToken,
-        suggestedPassword: "",
-        suggestedPasswordUrl,
         resetStage: "validateCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
@@ -183,8 +166,6 @@ const handleValidateCodeStage = async (
         passwordInsecure: true,
         passwordInsecureMessage: resetPasswordResult,
         csrfToken,
-        suggestedPassword: "",
-        suggestedPasswordUrl,
         resetStage: "validateCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
@@ -224,17 +205,7 @@ const handleGet = (
   serviceMessages: ServiceMessage[]
 ): GetServerSidePropsResult<Props> => {
   const { csrfToken, query } = context as CsrfServerSidePropsContext
-  const { email, suggestPassword } = query as { email: string; suggestPassword: string }
-  let suggestedPassword = ""
-
-  const suggestedPasswordUrl = addQueryParams("/login/reset-password", {
-    email,
-    suggestPassword: "true"
-  })
-
-  if (suggestPassword === "true") {
-    suggestedPassword = generateRandomPassword()
-  }
+  const { email } = query as { email: string; suggestPassword: string }
 
   if (email) {
     return {
@@ -243,8 +214,6 @@ const handleGet = (
         emailAddress: email,
         resetStage: "validateCode",
         validationCode: "",
-        suggestedPassword,
-        suggestedPasswordUrl,
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
@@ -292,8 +261,6 @@ interface Props {
   invalidPassword?: boolean
   passwordInsecure?: boolean
   passwordInsecureMessage?: string
-  suggestedPassword?: string
-  suggestedPasswordUrl?: string
   serviceMessages: ServiceMessage[]
 }
 
@@ -307,8 +274,6 @@ const ForgotPassword = ({
   invalidPassword,
   passwordInsecure,
   passwordInsecureMessage,
-  suggestedPassword,
-  suggestedPasswordUrl,
   serviceMessages
 }: Props) => {
   const passwordMismatchError = "Passwords do not match"
@@ -384,26 +349,60 @@ const ForgotPassword = ({
 
               {resetStage === "validateCode" && (
                 <Form method="post" csrfToken={csrfToken}>
-                  <Paragraph>{"If an account was found we will have sent you an email."}</Paragraph>
+                  <h1 className="govuk-heading-xl">{"Check your email"}</h1>
+                  <Paragraph>
+                    {"We have sent a code to:"} <b>{emailAddress}</b>
+                  </Paragraph>
+                  <Paragraph>{`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes`}</Paragraph>
                   <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
                   <input type="hidden" name="resetStage" value="validateCode" />
-                  <NotReceivedEmail sendAgainUrl="/login/reset-password" />
                   <TextInput
                     id="validationCode"
                     name="validationCode"
-                    label="Enter the 6 character code from the email"
+                    label="Security Code"
+                    hint="Enter the security code"
                     type="text"
                     value={validationCode}
                   />
-                  <TextInput name="newPassword" label="New password" type="password" error={newPasswordError} />
+                  <NotReceivedEmail sendAgainUrl="/login/reset-password" />
+                  <Button noDoubleClick>{"Next"}</Button>
+                </Form>
+              )}
+
+              {resetStage === "newPassword" && (
+                <Form method="post" csrfToken={csrfToken}>
+                  <h1 className="govuk-heading-xl">{"Create your new password"}</h1>
+                  <Paragraph>{"Your password must have 8 characters or more."}</Paragraph>
+                  <Paragraph>
+                    {"You can choose to include numbers, symbols, uppercase and lowercase letters."}
+                  </Paragraph>
+                  <BulletList
+                    heading="Do not include:"
+                    items={[
+                      "personal information such as your name, last name or email address",
+                      "things people know about you such as pets names, favourite brands or sports teams",
+                      "passwords that are commonly used or easily guessed. For example 12345678 or password"
+                    ]}
+                  ></BulletList>
+                  <Paragraph>{"You can't use a password you have used before."}</Paragraph>
+                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
+                  <input type="hidden" name="resetStage" value="newPassword" />
+                  <TextInput
+                    name="newPassword"
+                    label="New password"
+                    hint="Enter your new password"
+                    type="password"
+                    error={newPasswordError}
+                  />
                   <TextInput
                     name="confirmPassword"
-                    label="Confirm new password"
+                    label="Confirm password"
+                    hint="Re-type your password"
                     type="password"
                     error={passwordsMismatch && passwordMismatchError}
                   />
-                  <Button noDoubleClick>{"Reset password"}</Button>
-                  <SuggestPassword suggestedPassword={suggestedPassword} suggestedPasswordUrl={suggestedPasswordUrl} />
+                  <Button noDoubleClick>{"Save password"}</Button>
                 </Form>
               )}
             </GridColumn>
