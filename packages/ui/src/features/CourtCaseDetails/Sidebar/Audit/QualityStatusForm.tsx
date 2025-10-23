@@ -21,7 +21,12 @@ const initialFormState = {
 
 type FormState = typeof initialFormState
 
-export const QualityStatusForm = () => {
+interface Props {
+  hasExceptions: boolean
+  hasTriggers: boolean
+}
+
+export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
@@ -38,16 +43,16 @@ export const QualityStatusForm = () => {
       exceptionQualityHasError: false
     }
 
-    const triggerQuality = Number(formData.get("trigger-quality"))
-    const exceptionQuality = Number(formData.get("exception-quality"))
+    const triggerQuality = hasTriggers ? Number(formData.get("trigger-quality")) : undefined
+    const exceptionQuality = hasExceptions ? Number(formData.get("exception-quality")) : undefined
     const note = formData.get("quality-status-note")
 
     let hasErrors = false
-    if (triggerQuality <= 1) {
+    if (triggerQuality !== undefined && triggerQuality <= 1) {
       hasErrors = true
       newState.triggerQualityHasError = true
     }
-    if (exceptionQuality <= 1) {
+    if (exceptionQuality !== undefined && exceptionQuality <= 1) {
       hasErrors = true
       newState.exceptionQualityHasError = true
     }
@@ -86,8 +91,8 @@ export const QualityStatusForm = () => {
         ) : null}
         <fieldset className="govuk-fieldset">
           <DropdownContainer>
-            <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />
-            <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
+            {hasTriggers && <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />}
+            {hasExceptions && <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />}
           </DropdownContainer>
           <NoteTextArea
             handleOnNoteChange={handleOnNoteChange}
