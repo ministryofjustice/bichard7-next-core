@@ -461,8 +461,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
 interface Props {
   emailAddress?: string
-  emailError?: string | undefined
-  passwordError?: string | undefined
+  emailError?: string
+  passwordError?: string
   csrfToken: string
   sendingError?: boolean
   loginStage?: string
