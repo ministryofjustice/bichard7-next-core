@@ -44,8 +44,6 @@ import NotReceivedEmail from "components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
-import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
-import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
 import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
 
 const authenticationErrorMessage = "Error authenticating the request"
@@ -152,7 +150,7 @@ const handleInitialLoginStage = async (
   }
 
   const { res } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  storeInProgressEmailAddressInCookie(res, config, normalisedEmail)
+  storeEmailAddressInCookie(res, config, normalisedEmail, "IN_PROGRESS")
 
   return {
     props: {
@@ -380,7 +378,7 @@ const handleGet = async (
   const { notYou, action } = query as { notYou: string; action?: string }
 
   if (action === "sendCodeAgain") {
-    const inProgressEmailAddress = getInProgressEmailAddressFromCookie(req, config)
+    const inProgressEmailAddress = getEmailAddressFromCookie(req, config, "IN_PROGRESS")
     if (!inProgressEmailAddress) {
       return createRedirectResponse("/login")
     }
