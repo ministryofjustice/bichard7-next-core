@@ -103,7 +103,7 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
       <Head>
         <title>{"Share feedback"}</title>
       </Head>
-      <Layout user={currentUser}>
+      <Layout user={currentUser} showPhaseBanner={false}>
         <div className={`${classes["top-padding"]}`}>
           {hasErrors && (
             <ErrorSummary title="There is a problem" show>
