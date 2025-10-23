@@ -185,10 +185,10 @@ const logInUser = async (
   }
 
   if (rememberEmailAddress) {
-    const emailAddressFromCookie = getEmailAddressFromCookie(req, config)
+    const emailAddressFromCookie = getEmailAddressFromCookie(req, config, "REMEMBER")
 
     if (!emailAddressFromCookie || emailAddressFromCookie !== user.emailAddress) {
-      storeEmailAddressInCookie(res, config, user.emailAddress)
+      storeEmailAddressInCookie(res, config, user.emailAddress, "REMEMBER")
     }
   } else {
     removeEmailAddressCookie(res, config)
@@ -256,7 +256,7 @@ const handleRememberedEmailStage = async (
     rememberEmailAddress: string
   }
 
-  const emailAddress = getEmailAddressFromCookie(req, config)
+  const emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER")
   if (!emailAddress) {
     return createRedirectResponse("/users/login")
   }
@@ -395,7 +395,7 @@ const handleGet = async (
     }
   }
 
-  let emailAddress = getEmailAddressFromCookie(req, config) // Get current email
+  let emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER") // Get current email
 
   if (notYou === "true") {
     removeEmailAddressCookie(res, config)
