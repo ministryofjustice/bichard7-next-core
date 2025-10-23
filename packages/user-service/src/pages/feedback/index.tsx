@@ -97,6 +97,7 @@ interface Props {
 
 const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, fields }: Props) => {
   const classes = useCustomStyles()
+  const hasErrors = fields?.rating.hasError || fields?.feedback.hasError || !!errorMessage
 
   return (
     <>
@@ -105,12 +106,12 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
       </Head>
       <Layout user={currentUser}>
         <div className={`${classes["top-padding"]}`}>
-          {(fields?.rating.hasError || fields?.feedback.hasError || !!errorMessage) && (
+          {hasErrors && (
             <ErrorSummary title="There is a problem" show>
               <ul className="govuk-list govuk-error-summary__list">
                 {fields?.rating.hasError && (
                   <li>
-                    <a href="#rating-1">{"Tell us how you feel about using Bichard7"}</a>
+                    <a href="#rating-1">{"Select  how you feel about using Bichard7"}</a>
                   </li>
                 )}
                 {fields?.feedback.hasError && (
@@ -151,7 +152,8 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, successMessage, f
                 </div>
                 {fields?.rating.hasError && (
                   <p id="radioEmpty-error" className="govuk-error-message">
-                    <span className="govuk-visually-hidden">{"Error:"}</span> {"Select one option"}
+                    <span className="govuk-visually-hidden">{"Error:"}</span>{" "}
+                    {"Select  how you feel about using Bichard7"}
                   </p>
                 )}
                 <div className="govuk-radios" data-module="govuk-radios">
