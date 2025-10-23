@@ -40,14 +40,14 @@ const mapOffences = (ncm: ParsedNcm): AsnQueryResponseOffence[] => {
   }))
 }
 
-const generateResponseBody = (ncm: ParsedNcm): AsnQueryResponse => {
+const generateResponseBody = (ncm: ParsedNcm, options: LedsMockOptions): AsnQueryResponse => {
   const asn = ncm.NewCaseMessage.Case.Defendant.ProsecutorReference
   const forceStationCode = ncm.NewCaseMessage.Case.PTIURN.substring(0, 4)
 
   return {
-    personId: randomUUID(),
+    personId: options.personId ?? randomUUID(),
     personUrn: "2000/0410769X",
-    reportId: randomUUID(),
+    reportId: options.reportId ?? randomUUID(),
     asn,
     ownerCode: forceStationCode,
     disposals: [
@@ -65,7 +65,7 @@ const generateResponseBody = (ncm: ParsedNcm): AsnQueryResponse => {
   }
 }
 
-export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, options?: LedsMockOptions): LedsMock => {
+export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, options: LedsMockOptions): LedsMock => {
   let xmlData = fs.readFileSync(ncmFile, "utf8").toString()
   extractAllTags(bichard, xmlData)
   if (bichard.config.parallel) {
@@ -79,7 +79,7 @@ export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, o
     body: generateRequestBody(ncm)
   })
 
-  const mockResponse = generateResponseBody(ncm)
+  const mockResponse = generateResponseBody(ncm, options)
   const response = createMockResponse(mockResponse, HttpStatusCode.Ok)
 
   return {
