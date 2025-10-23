@@ -6,7 +6,7 @@ exports[`should render text input component 1`] = `
     class="govuk-form-group custom-class-name"
   >
     <label
-      class="govuk-label"
+      class="govuk-label "
       for="inputName"
     >
       Input label
