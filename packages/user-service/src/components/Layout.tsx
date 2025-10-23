@@ -12,7 +12,7 @@ interface Props {
   children: ReactNode
   user?: Partial<User>
   hasAccessTo?: UserServiceAccess
-  showPhaseBanner: boolean
+  showPhaseBanner?: boolean
 }
 
 /* eslint-disable jsx-a11y/alt-text, @next/next/no-img-element */
