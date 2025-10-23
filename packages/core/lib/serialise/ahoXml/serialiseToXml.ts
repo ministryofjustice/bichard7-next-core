@@ -494,7 +494,8 @@ const mapAhoCXE01ToXml = (pncQuery: PoliceQueryResult): Cxe01 => ({
     "@_Checkname": pncQuery.checkName,
     "@_IntfcUpdateType": "K",
     "@_PNCID": pncQuery.pncId,
-    ...(pncQuery.personId ? { "@_PersonId": pncQuery.personId } : {})
+    ...(pncQuery.personId ? { "@_PersonId": pncQuery.personId } : {}),
+    ...(pncQuery.reportId ? { "@_ReportId": pncQuery.reportId } : {})
   },
   CourtCases:
     pncQuery.courtCases && pncQuery.courtCases.length > 0

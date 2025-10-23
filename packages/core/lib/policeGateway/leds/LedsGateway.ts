@@ -86,9 +86,7 @@ export default class LedsGateway implements PoliceGateway {
 
     if (request.operation === PncOperation.REMAND) {
       requestBody = mapToRemandRequest(request.request)
-      const personId = request.personId
-      const reportId = request.request.arrestSummonsNumber.replace(/\//g, "")
-      endpoint = endpoints.remand(personId, reportId)
+      endpoint = endpoints.remand(request.personId, request.reportId)
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
     }
