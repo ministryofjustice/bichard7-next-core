@@ -31,19 +31,40 @@ const PasswordInput = ({
 }: Props) => {
   const hintElementId = `${name}-hint`
   const errorElementId = `${name}-error`
-  const widthClassName = width ? ` govuk-input--width-${width}` : ""
+  const inputId = id || name
 
   const hasError = error && !readOnly
 
-  const labelClassName = labelSize ? `govuk-label--${labelSize}` : ""
+  const formGroupClasses = [
+    "govuk-form-group",
+    "govuk-password-input",
+    className,
+    hasError ? "govuk-form-group--error" : null
+  ]
+    .filter(Boolean)
+    .join(" ")
 
-  const formGroupClasses = `govuk-form-group${className ? ` ${className}` : ""}${hasError ? " govuk-form-group--error" : ""} govuk-password-input`
-  const inputId = id || name
+  const widthClass = width ? `govuk-input--width-${width}` : null
 
+  const inputClasses = [
+    "govuk-input",
+    "govuk-password-input__input",
+    "govuk-js-password-input-input",
+    widthClass,
+    hasError ? "govuk-input--error" : null
+  ]
+    .filter(Boolean)
+    .join(" ")
+
+  const labelClassName = labelSize ? `govuk-label--${labelSize}` : null
+
+  const labelClasses = ["govuk-label", labelClassName].filter(Boolean).join(" ")
+
+  const ariaDescribedBy = [hint ? hintElementId : null, hasError ? errorElementId : null].filter(Boolean).join(" ")
   return (
     <div className={formGroupClasses} data-module="govuk-password-input">
       {label && (
-        <label className={`govuk-label ${labelClassName}`} htmlFor={name}>
+        <label className={labelClasses} htmlFor={name}>
           {label}
           {mandatory && " *"}
         </label>
@@ -62,7 +83,7 @@ const PasswordInput = ({
 
       <div className="govuk-input__wrapper govuk-password-input__wrapper">
         <input
-          className={`govuk-input govuk-password-input__input govuk-js-password-input-input${widthClassName}${hasError ? " govuk-input--error" : ""}`}
+          className={inputClasses}
           id={inputId}
           name={name}
           data-test={`password-input_${name}`}
@@ -73,7 +94,7 @@ const PasswordInput = ({
           autoComplete="current-password"
           autoCapitalize="none"
           spellCheck="false"
-          aria-describedby={`${hint ? hintElementId : ""} ${hasError ? errorElementId : ""}`}
+          aria-describedby={ariaDescribedBy}
           {...optionalProps}
         />
 
