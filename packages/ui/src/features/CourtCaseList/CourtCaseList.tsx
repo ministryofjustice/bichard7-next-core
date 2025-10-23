@@ -1,18 +1,19 @@
 import { RefreshButton } from "components/Buttons/RefreshButton"
+import { Table, TableHead } from "components/Table"
 import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import CourtCaseListEntry from "./CourtCaseListEntry/CourtCaseListEntry"
 import { CourtCaseListTableHeader } from "./CourtCaseListTableHeader"
-import { Table, TableHead } from "components/Table"
 
 interface Props {
   courtCases: DisplayPartialCourtCase[]
   order?: QueryOrder
+  displayAuditQuality: boolean
 }
 
-const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) => {
+const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc", displayAuditQuality }: Props) => {
   const { query, events } = useRouter()
   const announcerRef = useRef<HTMLDivElement>(null)
   const recentlyUnlockedExceptionId = query.unlockException
@@ -57,7 +58,7 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
           <span className="govuk-visually-hidden">{"Column headers with buttons are sortable."}</span>
         </caption>
         <TableHead>
-          <CourtCaseListTableHeader order={order} />
+          <CourtCaseListTableHeader order={order} displayAuditQuality={displayAuditQuality} />
         </TableHead>
         {courtCases.map((courtCase) => (
           <CourtCaseListEntry
@@ -66,6 +67,7 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
             triggerHasBeenRecentlyUnlocked={courtCase.errorId.toString() === recentlyUnlockedTriggerId}
             key={`court-case-${courtCase.errorId}`}
             previousPath={queryString}
+            displayAuditQuality={displayAuditQuality}
           />
         ))}
       </Table>

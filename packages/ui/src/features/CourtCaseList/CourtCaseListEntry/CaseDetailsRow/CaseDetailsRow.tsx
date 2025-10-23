@@ -1,10 +1,12 @@
+import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
-import { TableRow, TableCell } from "components/Table"
+import { TableCell, TableRow } from "components/Table"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
+import { AuditQualityCell } from "../AuditQualityCell"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
 
@@ -13,10 +15,18 @@ interface CaseDetailsRowProps {
   reasonCell?: React.ReactNode | string
   lockTag?: React.ReactNode
   previousPath: string | null
+  displayAuditQuality: boolean
 }
 
-export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }: CaseDetailsRowProps) => {
-  const { notes, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
+export const CaseDetailsRow = ({
+  courtCase,
+  reasonCell,
+  lockTag,
+  previousPath,
+  displayAuditQuality
+}: CaseDetailsRowProps) => {
+  const { notes, defendantName, errorId, courtDate, courtName, ptiurn, errorQualityChecked, triggerQualityChecked } =
+    courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
@@ -44,6 +54,14 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
         </TableCell>
         <TableCell className="resonCell">{reasonCell}</TableCell>
         <TableCell>{lockTag}</TableCell>
+        <ConditionalRender isRendered={displayAuditQuality}>
+          <AuditQualityCell
+            errorQualityChecked={errorQualityChecked}
+            triggerQualityChecked={triggerQualityChecked}
+            hasExceptions={courtCase.errorReport !== ""}
+            hasTriggers={courtCase.triggerCount > 0}
+          />
+        </ConditionalRender>
       </TableRow>
       {notes.length > 0 && !showPreview && (
         <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />

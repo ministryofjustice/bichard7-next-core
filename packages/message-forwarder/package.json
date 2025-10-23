@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@io-orkes/conductor-javascript": "^2.1.5",
-    "@stomp/stompjs": "^7.2.0",
+    "@stomp/stompjs": "^7.2.1",
     "node-fetch": "^3.3.2",
     "ws": "^8.18.3"
   }

@@ -1,4 +1,5 @@
 import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { TableBody } from "components/Table"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
@@ -8,20 +9,21 @@ import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
 import { generateExceptionComponents } from "./CourtCaseListEntryCells/generateExceptionComponents"
 import { generateTriggerComponents } from "./CourtCaseListEntryCells/generateTriggerComponents"
 import { ExtraReasonRow } from "./ExtraReasonRow"
-import { TableBody } from "components/Table"
 
 interface Props {
   courtCase: DisplayPartialCourtCase
   exceptionHasBeenRecentlyUnlocked: boolean
   triggerHasBeenRecentlyUnlocked: boolean
   previousPath: string | null
+  displayAuditQuality: boolean
 }
 
 const CourtCaseListEntry: React.FC<Props> = ({
   courtCase,
   exceptionHasBeenRecentlyUnlocked,
   triggerHasBeenRecentlyUnlocked,
-  previousPath
+  previousPath,
+  displayAuditQuality
 }: Props) => {
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
@@ -58,12 +60,14 @@ const CourtCaseListEntry: React.FC<Props> = ({
         reasonCell={reasonCell}
         lockTag={exceptionsCells?.LockTag ?? triggerCells?.LockTag}
         previousPath={previousPath}
+        displayAuditQuality={displayAuditQuality}
       />
       {renderExtraReasons && (
         <ExtraReasonRow
           resolutionStatus={resolutionStatus}
           reasonCell={extraReasonCell}
           lockTag={triggerCells?.LockTag}
+          displayAuditQuality={displayAuditQuality}
         />
       )}
     </TableBody>
