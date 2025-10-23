@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`BulletList should render null/nothing when the items array is empty 1`] = `<div />`;
+
+exports[`BulletList should render only the list items when no heading is provided 1`] = `
+<div>
+  <ul
+    class="govuk-list govuk-list--bullet"
+  >
+    <li>
+      A
+    </li>
+    <li>
+      B
+    </li>
+    <li>
+      C
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`BulletList should render the heading and list items and match the snapshot 1`] = `
+<div>
+  <p
+    class="govuk-body"
+  >
+    You can buy:
+  </p>
+  <ul
+    class="govuk-list govuk-list--bullet"
+  >
+    <li>
+      apples
+    </li>
+    <li>
+      oranges
+    </li>
+    <li>
+      pears
+    </li>
+  </ul>
+</div>
+`;
