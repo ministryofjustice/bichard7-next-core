@@ -5,6 +5,7 @@ import Layout from "components/Layout"
 import Link from "components/Link"
 import Paragraph from "components/Paragraph"
 import { RadioItem } from "components/RadioItem"
+import { TextAreaWithCharCount } from "components/TextAreaWithCharCount"
 import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
@@ -18,6 +19,8 @@ import postFeedback from "useCases/postFeedback"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isPost } from "utils/http"
 
+const feedbackCharLimit = 800
+
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
@@ -28,7 +31,9 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req)) {
       const { feedback, rating } = formData as { feedback: string; rating: string }
       const ratingHasError = !rating
-      const feedbackHasError = !feedback
+      const feedbackIsEmpty = !feedback
+      const feedbackIsOverCharLimit = feedback.length > feedbackCharLimit
+      const feedbackHasError = feedbackIsEmpty || feedbackIsOverCharLimit
 
       if (ratingHasError || feedbackHasError) {
         return {
@@ -37,7 +42,12 @@ export const getServerSideProps = withMultipleServerSideProps(
             errorMessage: "",
             currentUser,
             fields: {
-              feedback: { hasError: feedbackHasError, value: feedback ?? null },
+              feedback: {
+                isEmpty: feedbackIsEmpty,
+                isOverCharLimit: feedbackIsOverCharLimit,
+                hasError: feedbackHasError,
+                value: feedback ?? null
+              },
               rating: { hasError: ratingHasError, value: rating ?? null }
             }
           }
@@ -74,6 +84,8 @@ interface Props {
   currentUser?: Partial<User>
   fields?: {
     feedback: {
+      isEmpty: boolean
+      isOverCharLimit: boolean
       hasError: boolean
       value: string
     }
@@ -87,6 +99,8 @@ interface Props {
 const ShareFeedback = ({ csrfToken, currentUser, errorMessage, fields }: Props) => {
   const classes = useCustomStyles()
   const hasErrors = fields?.rating.hasError || fields?.feedback.hasError || !!errorMessage
+  const feedbackEmptyErrorMessage = "Provide feedback"
+  const feedbackOverCharLimitErrorMessage = `Feedback must be ${feedbackCharLimit} characters or less`
 
   return (
     <>
@@ -103,9 +117,14 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, fields }: Props) 
                     <a href="#rating-1">{"Select  how you feel about using Bichard7"}</a>
                   </li>
                 )}
-                {fields?.feedback.hasError && (
+                {fields?.feedback.isEmpty && (
                   <li>
-                    <a href="#feedback">{"Provide feedback"}</a>
+                    <a href="#feedback">{feedbackEmptyErrorMessage}</a>
+                  </li>
+                )}
+                {fields?.feedback.isOverCharLimit && (
+                  <li>
+                    <a href="#feedback">{feedbackOverCharLimitErrorMessage}</a>
                   </li>
                 )}
                 {!!errorMessage && <li>{errorMessage}</li>}
@@ -180,31 +199,19 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, fields }: Props) 
                 </div>
               </fieldset>
             </div>
-            <div className={`govuk-form-group ${fields?.feedback.hasError ? "govuk-form-group--error" : ""}`}>
-              <legend className="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5">
-                {"Tell us how we can improve Bichard7"}
-              </legend>
-              <div id="feedback-hint" className="govuk-hint">
-                {
-                  "Do not include any personal or case information, for example your name, email address, force or case details"
-                }
-              </div>
-              {fields?.feedback.hasError && (
-                <p id="feedback-error" className="govuk-error-message">
-                  <span className="govuk-visually-hidden">{"Error:"}</span> {"Provide feedback"}
-                </p>
-              )}
-              <textarea
-                className={`govuk-textarea ${fields?.feedback.hasError ? "govuk-textarea--error" : ""}`}
-                data-test="feedback-text-area"
-                id="feedback"
-                name="feedback"
-                rows={5}
-                aria-describedby="feedback-hint"
-                defaultValue={fields?.feedback.value || ""}
-              ></textarea>
-            </div>
 
+            <TextAreaWithCharCount
+              value={fields?.feedback.value}
+              id="feedback"
+              name="feedback"
+              label="Tell us how we can improve Bichard7"
+              hint="Do not include any personal or case information, for example your name, email address, force or case details"
+              charLimit={feedbackCharLimit}
+              isEmpty={fields?.feedback.isEmpty}
+              isOverCharLimit={fields?.feedback.isOverCharLimit}
+              emptyErrorMessage={feedbackEmptyErrorMessage}
+              charLimitErrorMessage={feedbackOverCharLimitErrorMessage}
+            />
             <Button noDoubleClick>{"Send feedback"}</Button>
           </Form>
         </div>
