@@ -546,7 +546,7 @@ const Index = ({
   return (
     <>
       <Head>
-        <title>{"Sign in to Bichard 7"}</title>
+        <title>{"Sign in to Bichard7"}</title>
       </Head>
       <Layout>
         <GridRow>
@@ -596,7 +596,7 @@ const Index = ({
 
             {loginStage === "initialLogin" && (
               <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard7"}</h1>
                 <Form method="post" csrfToken={csrfToken}>
                   <Paragraph>
                     {"To sign in you need the email address and password for your Bichard7 account."}
@@ -667,7 +667,7 @@ const Index = ({
 
             {loginStage === "rememberedEmail" && (
               <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard7"}</h1>
                 <Form method="post" csrfToken={csrfToken}>
                   <Paragraph>
                     {"You are signing in as "}
