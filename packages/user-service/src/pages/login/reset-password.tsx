@@ -24,7 +24,6 @@ import getAuditLogger from "lib/getAuditLogger"
 import logger from "utils/logger"
 import passwordSecurityCheck from "useCases/passwordSecurityCheck"
 import resetPassword, { ResetPasswordOptions } from "useCases/resetPassword"
-import NotReceivedEmail from "components/NotReceivedEmail"
 import ServiceMessages from "components/ServiceMessages"
 import ServiceMessage from "types/ServiceMessage"
 import getServiceMessages from "useCases/getServiceMessages"
@@ -41,6 +40,7 @@ import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddr
 import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
 import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
+import ValidateCodeForm from "components/Login/ValidateCodeForm"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -506,29 +506,15 @@ const ForgotPassword = ({
               )}
 
               {resetStage === "validateCode" && (
-                <Form method="post" csrfToken={csrfToken}>
-                  <h1 className="govuk-heading-xl">{"Check your email"}</h1>
-                  <Paragraph>
-                    {"We have sent a code to:"} <b>{emailAddress}</b>
-                  </Paragraph>
-                  <Paragraph>{`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
-                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes`}</Paragraph>
-                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                  <input type="hidden" name="resetStage" value="validateCode" />
-                  <TextInput
-                    id="validationCode"
-                    name="validationCode"
-                    label="Security Code"
-                    labelSize="s"
-                    hint="Enter the security code"
-                    type="text"
-                    width={textInputWidth}
-                    value={validationCode}
-                    error={validationCodeError}
-                  />
-                  <NotReceivedEmail sendAgainUrl="/login/reset-password" />
-                  <Button noDoubleClick>{"Next"}</Button>
-                </Form>
+                <ValidateCodeForm
+                  csrfToken={csrfToken}
+                  emailAddress={emailAddress}
+                  validationCode={validationCode}
+                  validationCodeError={validationCodeError}
+                  stageName="resetStage"
+                  stageValue="validateCode"
+                  sendAgainUrl="/login/reset-password"
+                />
               )}
 
               {resetStage === "newPassword" && (

@@ -40,13 +40,13 @@ import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
 import validateUserVerificationCode from "useCases/validateUserVerificationCode"
-import NotReceivedEmail from "components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
 import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
 import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
+import ValidateCodeForm from "components/Login/ValidateCodeForm"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -638,34 +638,17 @@ const Index = ({
             )}
 
             {loginStage === "validateCode" && (
-              <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Check your email"}</h1>
-                <Form method="post" csrfToken={csrfToken}>
-                  <Paragraph>
-                    {`We have sent an email to: `}
-                    <b>{emailAddress}</b>
-                  </Paragraph>
-                  <Paragraph>{`The email contains your security code.`}</Paragraph>
-                  <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
-                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
-                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                  <input type="hidden" name="loginStage" value="validateCode" />
-                  <TextInput
-                    id="validationCode"
-                    name="validationCode"
-                    label="Security code"
-                    labelSize="s"
-                    hint="Enter the security code"
-                    type="text"
-                    value={validationCode}
-                    error={invalidCodeError}
-                    optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
-                  />
-                  <RememberForm checked={false} />
-                  <Button>{"Sign in"}</Button>
-                  <NotReceivedEmail sendAgainUrl="/login" />
-                </Form>
-              </>
+              <ValidateCodeForm
+                csrfToken={csrfToken}
+                emailAddress={emailAddress}
+                validationCode={validationCode}
+                validationCodeError={invalidCodeError}
+                stageName="loginStage"
+                stageValue="validateCode"
+                sendAgainUrl="/login"
+                showRememberForm
+                RememberFormComponent={RememberForm}
+              />
             )}
 
             {loginStage === "rememberedEmail" && (
