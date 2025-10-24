@@ -47,7 +47,7 @@ describe("Reset password", () => {
     requestPasswordReset(emailAddress)
     inputValidationCode(emailAddress)
     resetPassword(emailAddress, newPassword)
-    cy.contains(/You can now sign in with your new password./i)
+    cy.contains(/Return to sign in page/i)
   })
 
   it("should not allow submission when passwords are too short", () => {
@@ -98,7 +98,7 @@ describe("Reset password", () => {
     requestPasswordReset(emailAddress)
     inputValidationCode(emailAddress)
     resetPassword(emailAddress, newPassword)
-    cy.contains(/You can now sign in with your new password./i)
+    cy.contains(/Return to sign in page/i)
 
     requestPasswordReset(emailAddress)
     cy.contains(/We have sent a code to:/i)

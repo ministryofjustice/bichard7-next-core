@@ -24,7 +24,6 @@ import getAuditLogger from "lib/getAuditLogger"
 import logger from "utils/logger"
 import passwordSecurityCheck from "useCases/passwordSecurityCheck"
 import resetPassword, { ResetPasswordOptions } from "useCases/resetPassword"
-import SuccessBanner from "components/SuccessBanner"
 import NotReceivedEmail from "components/NotReceivedEmail"
 import ServiceMessages from "components/ServiceMessages"
 import ServiceMessage from "types/ServiceMessage"
@@ -435,12 +434,11 @@ const ForgotPassword = ({
           <GridRow>
             <GridColumn width="two-thirds">
               <BackLink href="/" />
-
-              <SuccessBanner>
-                {`You can now `}
-                <Link href="/">{`sign in with your new password`}</Link>
-                {`.`}
-              </SuccessBanner>
+              <h1 className="govuk-heading-xl">{"Password changed"}</h1>
+              <Paragraph className="govuk-!-padding-bottom-4">
+                {"You have successfully changed your password."}
+              </Paragraph>
+              <Link className="govuk-button" href="/">{`Return to sign in page`}</Link>
             </GridColumn>
           </GridRow>
         ) : (
