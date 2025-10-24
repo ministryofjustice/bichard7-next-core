@@ -10,6 +10,5 @@ export { default as changePassword } from "./changePassword"
 export { default as storeEmailAddressInCookie } from "./storeEmailAddressInCookie"
 export { default as removeEmailAddressCookie } from "./removeEmailAddressCookie"
 export { default as getEmailAddressFromCookie } from "./getEmailAddressFromCookie"
-export { default as getUserGroups } from "./getUserHierarchyGroups"
 
 export default {}

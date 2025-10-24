@@ -1,5 +1,6 @@
 interface Props {
   label?: string
+  labelSize?: "s" | "m" | "l"
   name: string
   hint?: string
   className?: string
@@ -16,6 +17,7 @@ interface Props {
 
 const TextInput = ({
   label,
+  labelSize,
   hint,
   error,
   className,
@@ -33,11 +35,12 @@ const TextInput = ({
   const errorElementId = `${name}-error`
   const widthClassName = width ? ` govuk-input--width-${width}` : ""
   const hasError = error && !readOnly
+  const labelClassName = labelSize ? `govuk-label--${labelSize}` : ""
 
   return (
     <div className={`govuk-form-group${className ? ` ${className}` : ""}${hasError ? " govuk-form-group--error" : ""}`}>
       {label && (
-        <label className="govuk-label" htmlFor={name}>
+        <label className={`govuk-label ${labelClassName}`} htmlFor={name}>
           {label}
           {mandatory && " *"}
         </label>

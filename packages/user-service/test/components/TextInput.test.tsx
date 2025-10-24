@@ -11,6 +11,7 @@ it("should render text input component", () => {
       value="Input Value"
       error="Error message"
       label="Input label"
+      labelSize="s"
       className="custom-class-name"
       mandatory
       type="email"

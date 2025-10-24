@@ -10,6 +10,7 @@ describe("Reset password", () => {
 
   function requestPasswordReset(emailAddress) {
     cy.visit("/login")
+    cy.get('[data-test="helpSigningIn"]').click()
     cy.get("a[data-test='reset-password']").click()
     cy.contains(/reset password/i)
     cy.get("input[type=email]").type(emailAddress)
