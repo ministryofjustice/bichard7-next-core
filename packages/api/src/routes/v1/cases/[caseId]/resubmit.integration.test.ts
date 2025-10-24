@@ -28,8 +28,8 @@ const defaultInjectParams = (jwt: string): InjectOptions => {
 }
 
 describe("resubmit", () => {
-  const testDatabaseGateway = new End2EndPostgres()
   let app: FastifyInstance
+  const testDatabaseGateway = new End2EndPostgres()
   const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
   beforeAll(async () => {
