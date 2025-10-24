@@ -41,6 +41,7 @@ import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAd
 import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
+import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -546,22 +547,12 @@ const ForgotPassword = ({
               )}
 
               {resetStage === "resetSecurityCode" && (
-                <>
-                  <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Get a security code"}</h1>
-                  <Form method="post" csrfToken={csrfToken}>
-                    <Paragraph>
-                      {"We will send a code to: "}
-                      <b>{emailAddress}</b>
-                    </Paragraph>
-                    <Paragraph>
-                      {`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}
-                    </Paragraph>
-                    <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
-                    <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                    <input type="hidden" name="resetStage" value="resetSecurityCode" />
-                    <Button id="security-code-button">{"Get security code"}</Button>
-                  </Form>
-                </>
+                <ResendSecurityCodeForm
+                  csrfToken={csrfToken}
+                  emailAddress={emailAddress}
+                  stageName="resetStage"
+                  stageValue="resetSecurityCode"
+                />
               )}
             </GridColumn>
             <GridColumn width="one-third">

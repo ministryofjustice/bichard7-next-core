@@ -47,6 +47,8 @@ import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAd
 import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
 import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
+import ResendSecurityCodeForm from "../../components/Login/ResendSecurityCodeForm"
+import React from "react"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -678,22 +680,12 @@ const Index = ({
             )}
 
             {loginStage === "resetSecurityCode" && (
-              <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Get a security code"}</h1>
-                <Form method="post" csrfToken={csrfToken}>
-                  <Paragraph>
-                    {"We will send a code to: "}
-                    <b>{emailAddress}</b>
-                  </Paragraph>
-                  <Paragraph>
-                    {`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}
-                  </Paragraph>
-                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
-                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                  <input type="hidden" name="loginStage" value="resetSecurityCode" />
-                  <Button id="security-code-button">{"Get security code"}</Button>
-                </Form>
-              </>
+              <ResendSecurityCodeForm
+                csrfToken={csrfToken}
+                emailAddress={emailAddress}
+                stageName="loginStage"
+                stageValue="resetSecurityCode"
+              />
             )}
           </GridColumn>
           <GridColumn width="one-third">
