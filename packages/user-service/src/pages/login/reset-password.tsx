@@ -41,6 +41,7 @@ import { removeEmailAddressCookie } from "useCases"
 import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
 import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
 import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
+import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -170,44 +171,39 @@ const handleNewPasswordStage = async (
     confirmPassword: string
   }
 
+  let invalidPassword = false
+  let passwordsMismatch = false
+  let passwordInsecure = false
+  let passwordInsecureMessage: string | undefined
+
   if (!newPassword) {
-    return {
-      props: {
-        emailAddress,
-        validationCode,
-        invalidPassword: true,
-        csrfToken,
-        resetStage: "newPassword",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
+    invalidPassword = true
+  }
+
+  if (newPassword && newPassword !== confirmPassword) {
+    passwordsMismatch = true
+  }
+
+  if (!invalidPassword && !passwordsMismatch) {
+    const passwordCheckResult = passwordSecurityCheck(newPassword)
+    if (isError(passwordCheckResult)) {
+      logger.error(passwordCheckResult.message)
+      passwordInsecure = true
+      passwordInsecureMessage = passwordCheckResult.message
     }
   }
 
-  if (newPassword !== confirmPassword) {
+  if (invalidPassword || passwordsMismatch || passwordInsecure) {
     return {
       props: {
+        csrfToken,
         emailAddress,
         validationCode,
-        passwordsMismatch: true,
-        csrfToken,
         resetStage: "newPassword",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  const passwordCheckResult = passwordSecurityCheck(newPassword)
-  if (isError(passwordCheckResult)) {
-    logger.error(passwordCheckResult.message)
-    return {
-      props: {
-        emailAddress,
-        validationCode,
-        passwordInsecure: true,
-        passwordInsecureMessage: passwordCheckResult.message,
-        csrfToken,
-        resetStage: "newPassword",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        ...(invalidPassword && { invalidPassword: true }),
+        ...(passwordsMismatch && { passwordsMismatch: true }),
+        ...(passwordInsecure && { passwordInsecure: true, passwordInsecureMessage })
       }
     }
   }
@@ -219,6 +215,7 @@ const handleNewPasswordStage = async (
     newPassword
   }
   const resetPasswordResult = await resetPassword(connection, auditLogger, resetPasswordOptions)
+
   if (isError(resetPasswordResult)) {
     logger.error(`Error resetting password: ${resetPasswordResult}`)
     return createRedirectResponse("/500")
@@ -227,11 +224,11 @@ const handleNewPasswordStage = async (
   if (resetPasswordResult) {
     return {
       props: {
+        csrfToken,
         emailAddress,
         validationCode,
         passwordInsecure: true,
         passwordInsecureMessage: resetPasswordResult,
-        csrfToken,
         resetStage: "newPassword",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
@@ -422,13 +419,10 @@ const ForgotPassword = ({
   passwordInsecureMessage,
   serviceMessages
 }: Props) => {
-  const passwordMismatchError = "Passwords do not match"
+  const passwordMismatchError = "Passwords do not match. Enter passwords again."
   const newPasswordMissingError = "Enter a new password"
-  const newPasswordError =
-    (invalidPassword && newPasswordMissingError) ||
-    (passwordsMismatch && passwordMismatchError) ||
-    (passwordInsecure && passwordInsecureMessage)
-  const errorSummaryTitle = (passwordsMismatch && "Your passwords do not match") || "There is a problem"
+  const newPasswordError = (invalidPassword && newPasswordMissingError) || (passwordInsecure && passwordInsecureMessage)
+  const errorSummaryTitle = "There is a problem"
   const textInputWidth = "30"
 
   return (
@@ -458,7 +452,10 @@ const ForgotPassword = ({
                 <ErrorSummaryList
                   items={[
                     { id: "newPassword", error: invalidPassword && newPasswordMissingError },
-                    { id: "newPassword", error: passwordsMismatch && "Enter the same password twice" },
+                    {
+                      id: "newPassword",
+                      error: passwordsMismatch && passwordMismatchError
+                    },
                     { id: "newPassword", error: passwordInsecureMessage }
                   ]}
                 />
@@ -555,23 +552,10 @@ const ForgotPassword = ({
                   <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
                   <input id="validationCode" name="validationCode" type="hidden" value={validationCode} />
                   <input type="hidden" name="resetStage" value="newPassword" />
-                  <TextInput
-                    name="newPassword"
-                    label="New password"
-                    labelSize="s"
-                    hint="Enter your new password"
-                    type="password"
-                    width={textInputWidth}
-                    error={newPasswordError}
-                  />
-                  <TextInput
-                    name="confirmPassword"
-                    label="Confirm password"
-                    labelSize="s"
-                    hint="Re-type your password"
-                    type="password"
-                    width={textInputWidth}
-                    error={passwordsMismatch && passwordMismatchError}
+                  <ResetPasswordFormGroup
+                    passwordMismatch={passwordsMismatch}
+                    passwordsMismatchError={passwordMismatchError}
+                    newPasswordError={newPasswordError}
                   />
                   <Button noDoubleClick>{"Save password"}</Button>
                 </Form>
