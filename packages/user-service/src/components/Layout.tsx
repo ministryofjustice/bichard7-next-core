@@ -3,15 +3,16 @@ import Header from "components/Header"
 import { ReactNode } from "react"
 import User from "types/User"
 import { UserServiceAccess } from "useCases/getUserServiceAccess"
+import { basePath } from "../../next.config"
 import NavBar from "./NavBar"
 import PageTemplate from "./PageTemplate"
 import PhaseBanner from "./PhaseBanner"
-import { basePath } from "../../next.config"
 
 interface Props {
   children: ReactNode
   user?: Partial<User>
   hasAccessTo?: UserServiceAccess
+  showPhaseBanner?: boolean
 }
 
 /* eslint-disable jsx-a11y/alt-text, @next/next/no-img-element */
@@ -24,7 +25,7 @@ const FakeAssetForNoJsStatsGathering = () => (
 const ScreenSizeStats = () => <script src={`${basePath}/js/grabScreenSize.js`} async />
 
 /* eslint-enable jsx-a11y/alt-text, @next/next/no-img-element */
-const Layout = ({ children, user, hasAccessTo }: Props) => (
+const Layout = ({ children, user, hasAccessTo, showPhaseBanner = true }: Props) => (
   <>
     <FakeAssetForNoJsStatsGathering />
     <Header serviceName="Bichard7" userName={user?.username ?? ""} organisationName={"Ministry of Justice"} />
@@ -36,7 +37,7 @@ const Layout = ({ children, user, hasAccessTo }: Props) => (
     ) : undefined}
 
     <PageTemplate>
-      <PhaseBanner phase={"Beta"} />
+      {showPhaseBanner && <PhaseBanner phase={"Beta"} />}
 
       {children}
     </PageTemplate>
