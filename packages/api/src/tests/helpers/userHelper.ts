@@ -91,8 +91,5 @@ export const generateJwtForUser = (user: User) => {
   return generateTestJwtToken(user, user.jwtId)
 }
 
-export const minimalUser = (groups: UserGroup[] = [UserGroup.ExceptionHandler]): User =>
-  ({
-    groups,
-    username: "user1"
-  }) as User
+export const minimalUser = (groups: UserGroup[] = [UserGroup.ExceptionHandler], username: string = "user1"): User =>
+  ({ groups, username }) as User
