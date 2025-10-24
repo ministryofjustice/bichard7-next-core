@@ -28,17 +28,15 @@ describe("Authentication API endpoint", () => {
 
   it("should say user is not authenticated if failed to login", () => {
     const emailAddress = "bichard01@example.com"
-    const password = "wrongpassword"
+    const password = "password"
 
     cy.visit("/login")
     cy.get("input[type=email]").type(emailAddress)
+    cy.get("input#password").type(password)
     cy.get("button[type=submit]").click()
     cy.get("input#validationCode").should("exist")
-    cy.task("getVerificationCode", emailAddress).then((verificationCode) => {
-      cy.get("input#validationCode").type(verificationCode)
-      cy.get("input#password").type(password)
-      cy.get("button[type=submit]").click()
-    })
+    cy.get("input#validationCode").type("123456")
+    cy.get("button[type=submit]").click()
 
     cy.request({ url: "/api/auth", headers: { Referer: "/users/users" }, failOnStatusCode: false }).then((response) => {
       expect(response.status).to.eq(401)

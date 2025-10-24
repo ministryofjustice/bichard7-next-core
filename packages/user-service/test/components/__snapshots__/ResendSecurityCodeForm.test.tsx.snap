@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ResendSecurityCodeForm should render correctly for 'loginStage' 1`] = `
+<div>
+  <h1
+    class="govuk-heading-xl govuk-!-margin-bottom-7"
+  >
+    Get a security code
+  </h1>
+  <form
+    method="post"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="mock-csrf-token"
+    />
+    <p
+      class="govuk-body"
+    >
+      We will send a code to: 
+      <b>
+        bichard01@example.com
+      </b>
+    </p>
+    <p
+      class="govuk-body"
+    >
+      Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.
+    </p>
+    <p
+      class="govuk-body govuk-!-padding-bottom-4"
+    >
+      The code will expire after 30 minutes.
+    </p>
+    <input
+      id="email"
+      name="emailAddress"
+      type="hidden"
+      value="bichard01@example.com"
+    />
+    <input
+      name="loginStage"
+      type="hidden"
+      value="resetSecurityCode"
+    />
+    <button
+      class="govuk-button"
+      data-module="govuk-button"
+      id="security-code-button"
+      type="submit"
+    >
+      Get security code
+    </button>
+  </form>
+</div>
+`;
+
+exports[`ResendSecurityCodeForm should render correctly for 'resetStage' 1`] = `
+<div>
+  <h1
+    class="govuk-heading-xl govuk-!-margin-bottom-7"
+  >
+    Get a security code
+  </h1>
+  <form
+    method="post"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="mock-csrf-token"
+    />
+    <p
+      class="govuk-body"
+    >
+      We will send a code to: 
+      <b>
+        bichard01@example.com
+      </b>
+    </p>
+    <p
+      class="govuk-body"
+    >
+      Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.
+    </p>
+    <p
+      class="govuk-body govuk-!-padding-bottom-4"
+    >
+      The code will expire after 30 minutes.
+    </p>
+    <input
+      id="email"
+      name="emailAddress"
+      type="hidden"
+      value="bichard01@example.com"
+    />
+    <input
+      name="resetStage"
+      type="hidden"
+      value="resetSecurityCode"
+    />
+    <button
+      class="govuk-button"
+      data-module="govuk-button"
+      id="security-code-button"
+      type="submit"
+    >
+      Get security code
+    </button>
+  </form>
+</div>
+`;

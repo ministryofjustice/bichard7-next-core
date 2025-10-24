@@ -1,35 +1,49 @@
 import config from "lib/config"
 import type Database from "types/Database"
 import type PromiseResult from "types/PromiseResult"
-import { isError } from "types/Result"
+import type UserAuthBichard from "../types/UserAuthBichard"
+import type { ITask } from "pg-promise"
+import { getUserWithInterval, updateUserLoginTimestamp } from "./authenticate"
 
 const validateUserVerificationCode = async (
   connection: Database,
   emailAddress: string,
   verificationCode: string
-): PromiseResult<void> => {
+): PromiseResult<UserAuthBichard> => {
   if (!verificationCode || verificationCode.length !== config.verificationCodeLength) {
     return new Error("Invalid Verification Code ")
   }
 
-  const query = `
-    SELECT *
-    FROM br7own.users
-    WHERE LOWER(email) = LOWER($1)
-      AND password_reset_code = $2
-      AND deleted_at IS NULL
-    `
+  try {
+    const user = await connection.tx(async (task: ITask<unknown>) => {
+      const u = await getUserWithInterval(task, [
+        emailAddress,
+        config.incorrectDelay,
+        config.emailVerificationExpiresIn
+      ])
+      await updateUserLoginTimestamp(task, emailAddress)
+      return u
+    })
 
-  const result = await connection.result(query, [emailAddress, verificationCode])
-  if (isError(result)) {
-    return result
+    if (user.deletedAt) {
+      return new Error("User is deleted")
+    }
+
+    const isVerified = verificationCode === user.emailVerificationCode
+    const isCurrent = user.emailVerificationCurrent
+
+    if (isVerified && isCurrent) {
+      return user
+    }
+
+    return new Error("Invalid Verification Code or Code Expired")
+  } catch (error) {
+    if (error instanceof Error && error.message === "No data returned from the query.") {
+      return new Error("User not found.")
+    }
+
+    return error as Error
   }
-
-  if (result.rowCount === 0) {
-    return new Error("User not found.")
-  }
-
-  return undefined
 }
 
 export default validateUserVerificationCode

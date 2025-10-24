@@ -19,7 +19,9 @@ export default async (connection: Database, password: string, emailAddress: stri
 
   const allSensitiveWords = [...forenames, ...surnames, firstEmailSection, user.username]
   if (allSensitiveWords.some((word) => password.includes(word))) {
-    return new Error("Password contains personal information.")
+    return new Error(
+      "Password can't include identifiable information for example your name, last name or email address"
+    )
   }
 
   return undefined

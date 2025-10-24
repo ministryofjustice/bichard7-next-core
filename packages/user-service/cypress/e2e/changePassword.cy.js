@@ -25,11 +25,11 @@ describe("Change password", () => {
       cy.wait(10000)
       cy.get(".govuk-notification-banner__heading a[class=govuk-link]").click()
       cy.get("input[type=email]").type(emailAddress)
+      cy.get("input#password").type(newPassword)
       cy.get("button[type=submit]").click()
       cy.get("input#validationCode").should("exist")
       cy.task("getVerificationCode", emailAddress).then((verificationCode) => {
         cy.get("input#validationCode").type(verificationCode)
-        cy.get("input#password").type(newPassword)
         cy.get("button[type=submit]").click()
         cy.url().should("match", /\/users$/)
       })
@@ -43,7 +43,7 @@ describe("Change password", () => {
       cy.get("input[type=password][name=newPassword]").type("shorty")
       cy.get("input[type=password][name=confirmPassword]").type("shorty")
       cy.get("button[type=submit]").click()
-      cy.get('[data-test="error-summary"]').contains("Password is too short.")
+      cy.get('[data-test="error-summary"]').contains("Password must be 8 characters or more")
     })
 
     it("should not allow submission when password is empty", () => {
