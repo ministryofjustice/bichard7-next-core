@@ -6,7 +6,6 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import selectMessageId from "../../../services/db/cases/selectMessageId"
 import updateErrorStatus from "../../../services/db/cases/updateErrorStatus"
 import { ResolutionStatus } from "../../dto/convertResolutionStatus"
 import canUserResubmitCase from "./canUserResubmitCase"
@@ -40,18 +39,12 @@ export const resubmitCase = async (
         throw new Error("Case failed to be updated with Error Status Submitted")
       }
 
-      const result = await selectMessageId(transaction, user, caseId)
-
-      if (isError(result)) {
-        throw result
-      }
-
       const conductorClient = createConductorClient()
       const resubmitWorkflowName = "resubmit"
-      const workflowParams = { autoResubmit, messageId: result }
+      const workflowParams = { autoResubmit, messageId: updateErrorStatusResult }
 
       const conductorResult = await conductorClient.workflowResource
-        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, result)
+        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, updateErrorStatusResult)
         .catch((error: Error) => error)
 
       if (isError(conductorResult)) {
@@ -59,7 +52,7 @@ export const resubmitCase = async (
       }
 
       return {
-        messageId: result,
+        messageId: updateErrorStatusResult,
         workflowId: conductorResult
       } satisfies ResubmitCaseResult
     })
