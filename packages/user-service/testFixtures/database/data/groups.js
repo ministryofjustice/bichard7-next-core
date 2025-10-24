@@ -37,7 +37,7 @@ const groups = [
   },
   {
     name: "B7NewUI_grp",
-    friendly_name: "New UI"
+    friendly_name: "New Bichard UI"
   }
 ]
 

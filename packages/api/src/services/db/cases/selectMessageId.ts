@@ -19,7 +19,9 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
     `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(`Error while selecting message id for case id ${caseId} and user ${user.username}: ${result.message}`)
+    return new Error(
+      `Error while selecting message id for case id ${caseId} and user ${user.username}: ${result.message}`
+    )
   }
 
   if (!result || result.length === 0) {

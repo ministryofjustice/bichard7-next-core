@@ -10,10 +10,10 @@ import { isServiceUser, userAccess } from "@moj-bichard7/common/utils/userPermis
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import lockException from "../../../services/db/cases/lockException"
+import unlockException from "../../../services/db/cases/unlockException"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
-export const lockExceptions = async (
+export const unlockExceptions = async (
   database: WritableDatabaseConnection,
   user: User,
   caseId: number,
@@ -24,14 +24,14 @@ export const lockExceptions = async (
     return
   }
 
-  const exceptionLockedResult = await lockException(database, user, caseId)
-  if (isError(exceptionLockedResult)) {
-    return exceptionLockedResult
+  const exceptionUnlockedResult = await unlockException(database, user, caseId)
+  if (isError(exceptionUnlockedResult)) {
+    return exceptionUnlockedResult
   }
 
-  if (exceptionLockedResult) {
+  if (exceptionUnlockedResult) {
     auditLogEvents.push(
-      buildAuditLogEvent(EventCode.ExceptionsLocked, EventCategory.information, eventSource, {
+      buildAuditLogEvent(EventCode.ExceptionsUnlocked, EventCategory.information, eventSource, {
         auditLogVersion: 2,
         user: user.username
       })

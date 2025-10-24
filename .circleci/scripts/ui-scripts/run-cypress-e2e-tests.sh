@@ -1,14 +1,22 @@
 #!/bin/sh
 cd ~/project/packages/ui
 
-options="--config baseUrl=https://localhost:4443 --reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
+CYPRESS_OPTS="--config baseUrl=https://localhost:4443 --reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
 
-if [[ $MS_EDGE == "true" ]]; then
-  options+=" --browser edge"
+if [[ $MS_EDGE == "1" ]]; then
+  echo "Using Microsoft Edge"
+  CYPRESS_OPTS+=" --browser edge"
 fi
 
-if [[ $API == "true" ]]; then
-  circleci tests glob "cypress/e2e/**/*.cy.ts" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
+TEST_PATTERN="cypress/e2e/**/*.cy.ts"
+CYPRESS_CMD="xargs npx cypress run $CYPRESS_OPTS --spec"
+
+if [[ $API == "1" ]]; then
+  echo "Running tests (including API)..."
+  circleci tests glob "$TEST_PATTERN" | circleci tests run --command="$CYPRESS_CMD" --split-by=timings
 else
-  circleci tests glob "cypress/e2e/**/!(*.api).cy.ts" | circleci tests run --command="xargs npx cypress run ${options} --spec" --split-by=timings
+  echo "Running tests (excluding API)..."
+  circleci tests glob "$TEST_PATTERN" | \
+    grep -v '\.api\.cy\.ts$' | \
+    circleci tests run --command="$CYPRESS_CMD" --split-by=timings
 fi

@@ -18,39 +18,41 @@ type ResubmitCaseResult = {
 export const resubmitCase = async (
   databaseConnection: WritableDatabaseConnection,
   user: User,
-  caseId: number
+  caseId: number,
+  autoResubmit: boolean = false
 ): PromiseResult<ResubmitCaseResult> => {
   return databaseConnection
     .transaction(async (transaction) => {
       const canUserResubmitCaseResult = await canUserResubmitCase(transaction, user, caseId)
 
       if (isError(canUserResubmitCaseResult)) {
-        return canUserResubmitCaseResult
+        throw canUserResubmitCaseResult
       }
 
       if (!canUserResubmitCaseResult) {
-        return new Error("User can't resubmit")
+        throw new Error("User can't resubmit")
       }
 
-      const result = await updateErrorStatus(transaction, caseId, ResolutionStatus.Submitted)
+      const updateErrorStatusResult = await updateErrorStatus(transaction, caseId, ResolutionStatus.Submitted)
 
-      if (isError(result)) {
-        return result
+      if (isError(updateErrorStatusResult)) {
+        throw new Error("Case failed to be updated with Error Status Submitted")
       }
 
       const conductorClient = createConductorClient()
       const resubmitWorkflowName = "resubmit"
+      const workflowParams = { autoResubmit, messageId: updateErrorStatusResult }
 
       const conductorResult = await conductorClient.workflowResource
-        .startWorkflow1(resubmitWorkflowName, { messageId: result }, undefined, result)
+        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, updateErrorStatusResult)
         .catch((error: Error) => error)
 
       if (isError(conductorResult)) {
-        return conductorResult
+        throw conductorResult
       }
 
       return {
-        messageId: result,
+        messageId: updateErrorStatusResult,
         workflowId: conductorResult
       } satisfies ResubmitCaseResult
     })

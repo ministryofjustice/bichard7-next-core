@@ -8,7 +8,11 @@ import { MockNextRouter } from "../../support/MockNextRouter"
 const courtCase = {
   errorId: 1,
   triggerQualityChecked: null,
-  errorQualityChecked: null
+  errorQualityChecked: null,
+  aho: {
+    Exceptions: ["HO100301"]
+  },
+  triggerCount: 1
 } as unknown as DisplayFullCourtCase
 
 const newCsrfToken = "123"
@@ -24,7 +28,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -45,7 +49,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -84,7 +88,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, updateCourtCaseSpy]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, updateCrsfTokenSpy]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -122,7 +126,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -147,7 +151,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -170,7 +174,7 @@ describe("QualityStatusForm", () => {
       <MockNextRouter>
         <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
-            <QualityStatusForm />
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
           </CsrfTokenContext.Provider>
         </CourtCaseContext.Provider>
       </MockNextRouter>
@@ -183,5 +187,74 @@ describe("QualityStatusForm", () => {
 
     cy.get("#quality-status-form-error").should("be.visible")
     cy.get("form").should("have.attr", "aria-describedby", "quality-status-form-error")
+  })
+
+  it("renders only the exception quality dropdown when the case has exceptions but no triggers", () => {
+    courtCase.triggerCount = 0
+
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={false} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").should("not.exist")
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.data.triggerQuality).to.equal(undefined)
+      expect(request.body.data.exceptionQuality).to.equal(newCourtCase.errorQualityChecked)
+    })
+  })
+
+  it("renders only the triggers quality dropdown when the case has triggers but no exceptions", () => {
+    courtCase.aho.Exceptions = []
+    courtCase.triggerCount = 1
+
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={false} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("select[name='exception-quality']").should("not.exist")
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
+      expect(request.body.data.exceptionQuality).to.equal(undefined)
+    })
   })
 })

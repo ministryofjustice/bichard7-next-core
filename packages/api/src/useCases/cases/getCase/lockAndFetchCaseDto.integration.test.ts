@@ -1,3 +1,4 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
 
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -35,7 +36,7 @@ describe("lockAndFetchCaseDto", () => {
     const result = await lockAndFetchCaseDto(databaseGateway.writable, testDynamoGateway, user, caseObj.errorId, logger)
 
     expect(result).toEqual({
-      aho: testAhoJsonObj,
+      aho: testAhoJsonObj as AnnotatedHearingOutcome,
       asn: "1901ID0100000006148H",
       canUserEditExceptions: true,
       courtCode: "ABC",

@@ -28,20 +28,20 @@ const verifyJwt = async (database: DatabaseConnection, token: string): PromiseRe
   }
 
   if (decodedJwt.groups.includes(UserGroup.Service)) {
-    return { email: "none", username: "service.user" } as User
+    return { email: "none", groups: [UserGroup.Service], username: "service.user" } as User
   }
 
   const user = await fetchUserByUsername(database, decodedJwt.username)
 
   if (isError(user)) {
-    return Error(`JWT verification failed: ${user.message}`)
+    return new Error(`JWT verification failed: ${user.message}`)
   }
 
   if (decodedJwt.id === user.jwtId) {
     return user
   }
 
-  return Error("JWT verification failed: JWT ids do not match")
+  return new Error("JWT verification failed: JWT ids do not match")
 }
 
 export default verifyJwt

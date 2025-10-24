@@ -6,6 +6,7 @@ export const enum Endpoints {
   CaseAudit = "/cases/:caseId/audit",
   CaseResubmit = "/cases/:caseId/resubmit",
   Cases = "/cases",
+  CasesResubmit = "/cases/resubmit",
   Health = "/health",
   Me = "/me"
 }

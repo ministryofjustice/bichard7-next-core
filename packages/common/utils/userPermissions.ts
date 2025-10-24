@@ -26,9 +26,11 @@ const isSupervisor = (user: User): boolean => user.groups?.some((group) => group
 const isUserManager = (user: User): boolean =>
   user.groups?.some((group) => group === UserGroup.UserManager || group === UserGroup.SuperUserManager)
 
+const isServiceUser = (user: User): boolean => user.groups?.includes(UserGroup.Service)
+
 const userAccess = (user: User): { [key in Permission]: boolean } => {
   return {
-    [Permission.CanResubmit]: hasAccessToExceptions(user),
+    [Permission.CanResubmit]: hasAccessToExceptions(user) || isServiceUser(user),
     [Permission.CaseDetailsSidebar]: hasAccessToTriggers(user) || hasAccessToExceptions(user),
     [Permission.Exceptions]: hasAccessToExceptions(user),
     [Permission.ListAllCases]: isSupervisor(user),
@@ -39,4 +41,4 @@ const userAccess = (user: User): { [key in Permission]: boolean } => {
   }
 }
 
-export { hasAccessToExceptions, hasAccessToTriggers, isSupervisor, userAccess }
+export { hasAccessToExceptions, hasAccessToTriggers, isServiceUser, isSupervisor, userAccess }

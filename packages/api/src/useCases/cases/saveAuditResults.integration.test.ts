@@ -73,6 +73,23 @@ describe("saveAuditResults", () => {
       expect(updatedCase.triggerQualityChecked).toBe(2)
     })
 
+    it("handles partial audit submissions when one of them is undefined", async () => {
+      jest.restoreAllMocks()
+
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        caseObj.errorId,
+        { errorQuality: 6, triggerQuality: undefined },
+        userId,
+        testNote
+      )
+      expect(isError(result)).toBe(false)
+
+      const updatedCase = (await fetchCase(testDatabaseGateway.readonly, user, caseObj.errorId, logger)) as CaseDto
+      expect(updatedCase.errorQualityChecked).toBe(6)
+      expect(updatedCase.triggerQualityChecked).toBeNull()
+    })
+
     it("throws an error when no audit quality is provided", async () => {
       const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, userId, testNote)
 

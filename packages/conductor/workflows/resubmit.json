@@ -9,6 +9,7 @@
       "name": "check_db",
       "taskReferenceName": "check_db",
       "inputParameters": {
+        "autoResubmit": "${workflow.input.autoResubmit}",
         "messageId": "${workflow.input.messageId}"
       },
       "type": "SIMPLE",
@@ -134,7 +135,7 @@
       "permissive": false
     }
   ],
-  "inputParameters": ["messageId"],
+  "inputParameters": ["autoResubmit", "messageId"],
   "outputParameters": {},
   "schemaVersion": 2,
   "restartable": true,
