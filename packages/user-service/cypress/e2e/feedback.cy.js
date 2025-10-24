@@ -1,7 +1,7 @@
 describe("Feedback", () => {
   it("should display text area", () => {
     cy.visit("/feedback")
-    cy.get("[data-test='feedback-text-area'").should("exist")
+    cy.get("textarea[name='feedback']").should("exist")
   })
 
   it("should display rating options", () => {
