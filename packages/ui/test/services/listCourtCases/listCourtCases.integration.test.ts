@@ -1,4 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import postgres from "postgres"
 import "reflect-metadata"
 import Note from "services/entities/Note"
 import User from "services/entities/User"
@@ -8,6 +11,7 @@ import type { DataSource } from "typeorm"
 import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
 import type { ResolutionStatus } from "types/ResolutionStatus"
+import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
 import CourtCase from "../../../src/services/entities/CourtCase"
 import Trigger from "../../../src/services/entities/Trigger"
 import getDataSource from "../../../src/services/getDataSource"
@@ -23,10 +27,6 @@ import {
 import insertException from "../../utils/manageExceptions"
 import type { TestTrigger } from "../../utils/manageTriggers"
 import { insertTriggers } from "../../utils/manageTriggers"
-import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import postgres from "postgres"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
@@ -135,6 +135,24 @@ describe("listCourtCases", () => {
     expect(cases[0].notes).toHaveLength(1)
     expect(cases[1].notes).toHaveLength(3)
     expect(cases[2].notes).toHaveLength(3)
+  })
+
+  it("Should return errorQualityChecked and triggerQualityChecked on case list", async () => {
+    await insertCourtCasesWithFields(
+      Array.from(Array(10)).map(() => ({
+        orgForPoliceFilter: "36FPA1",
+        errorQualityChecked: 7,
+        triggerQualityChecked: 2
+      }))
+    )
+
+    const result = await listCourtCases(dataSource, { maxPageItems: 100 }, testUser)
+    expect(isError(result)).toBe(false)
+    const { result: cases } = result as ListCourtCaseResult
+
+    expect(cases[0].errorId).toBe(0)
+    expect(cases[0].errorQualityChecked).toBe(7)
+    expect(cases[0].triggerQualityChecked).toBe(2)
   })
 
   describe("Trigger exclusion", () => {

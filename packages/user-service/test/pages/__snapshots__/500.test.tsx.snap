@@ -90,7 +90,7 @@ exports[`should render the component and match the snapshot 1`] = `
             This is a new service – your 
             <a
               class="govuk-link"
-              href="/feedback?previousPath=null"
+              href="/feedback"
             >
               feedback
             </a>

@@ -57,7 +57,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^24.7.0",
+    "@types/node": "^24.7.2",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -83,16 +83,16 @@
     "promise-poller": "^1.9.1",
     "s3rver": "^3.7.1",
     "ts-command-line-args": "^2.5.1",
-    "ts-jest": "^29.4.4",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.902.0",
-    "@aws-sdk/client-s3": "^3.901.0",
+    "@aws-sdk/client-dynamodb": "^3.910.0",
+    "@aws-sdk/client-s3": "^3.910.0",
     "@io-orkes/conductor-javascript": "^2.1.5",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.304",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.306",
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1692.0",
     "axios": "^1.12.2",
@@ -106,7 +106,7 @@
     "postgres": "^3.4.7",
     "pretty-data": "github:vkiryukhin/pretty-data#22a34a534745714ea974f72db2e9bf7561b3fdc7",
     "stompit": "^1.0.0",
-    "zod": "^4.1.11",
+    "zod": "^4.1.12",
     "zod-validation-error": "^4.0.2"
   }
 }

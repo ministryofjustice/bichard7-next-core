@@ -2,9 +2,9 @@
   "name": "@moj-bichard7/conductor",
   "version": "2.0.0",
   "devDependencies": {
-    "@aws-sdk/client-sqs": "^3.901.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.304",
-    "@stomp/stompjs": "^7.2.0",
+    "@aws-sdk/client-sqs": "^3.910.0",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.306",
+    "@stomp/stompjs": "^7.2.1",
     "esbuild": "~0.25.0",
     "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
@@ -14,7 +14,7 @@
     "jest": "^30.2.0",
     "mailhog": "^4.16.0",
     "postgres": "^3.4.4g s",
-    "ts-jest": "^29.4.4",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "wait-for-expect": "^4.0.0",
@@ -57,12 +57,12 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.902.0",
-    "@aws-sdk/client-s3": "^3.901.0",
-    "@aws-sdk/lib-dynamodb": "^3.902.0",
+    "@aws-sdk/client-dynamodb": "^3.910.0",
+    "@aws-sdk/client-s3": "^3.910.0",
+    "@aws-sdk/lib-dynamodb": "^3.910.0",
     "@io-orkes/conductor-javascript": "^2.1.5",
     "axios": "^1.12.2",
     "lodash.ismatch": "^4.4.0",
-    "zod": "^4.1.11"
+    "zod": "^4.1.12"
   }
 }

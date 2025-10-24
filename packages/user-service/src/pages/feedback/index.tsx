@@ -18,23 +18,18 @@ import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import { isError } from "types/Result"
 import User from "types/User"
 import postFeedback from "useCases/postFeedback"
-import createRedirectResponse from "utils/createRedirectResponse"
 import { isPost } from "utils/http"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { req, formData, csrfToken, authentication, currentUser } = context as CsrfServerSidePropsContext &
+    const { req, formData, csrfToken, currentUser } = context as CsrfServerSidePropsContext &
       AuthenticationServerSidePropsContext
-
-    if (!currentUser || !authentication) {
-      return createRedirectResponse("/login")
-    }
 
     if (isPost(req)) {
       const { feedback } = formData as { feedback: string }
-      const feedbackResult = await postFeedback(feedback, currentUser.emailAddress)
+      const feedbackResult = await postFeedback(feedback, currentUser?.emailAddress)
       if (isError(feedbackResult)) {
         return {
           props: {

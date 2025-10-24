@@ -13,7 +13,8 @@ describe("Audit case", () => {
         hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
         updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
         errorCount: 1,
-        errorStatus: 2
+        errorStatus: 2,
+        triggerCount: 1
       }
     ])
 
