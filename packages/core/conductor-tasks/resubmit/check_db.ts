@@ -60,7 +60,7 @@ const autoResubmitHandler = async (
       error_locked_by_id = ${user},
       error_status = ${ResolutionStatus.SUBMITTED}
     WHERE message_id = ${messageId}
-  `
+  `.catch((error: Error) => error)
 
   if (isError(updateRow)) {
     throw new Error(`Failed to lock DB record for ${messageId}`)

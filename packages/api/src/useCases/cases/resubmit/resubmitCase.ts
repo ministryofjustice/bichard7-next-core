@@ -7,6 +7,8 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import selectMessageId from "../../../services/db/cases/selectMessageId"
+import updateErrorStatus from "../../../services/db/cases/updateErrorStatus"
+import { ResolutionStatus } from "../../dto/convertResolutionStatus"
 import canUserResubmitCase from "./canUserResubmitCase"
 
 type ResubmitCaseResult = {
@@ -30,6 +32,12 @@ export const resubmitCase = async (
 
       if (!canUserResubmitCaseResult) {
         throw new Error("User can't resubmit")
+      }
+
+      const updateErrorStatusResult = await updateErrorStatus(transaction, caseId, ResolutionStatus.Submitted)
+
+      if (isError(updateErrorStatusResult)) {
+        throw new Error("Case failed to be updated with Error Status Submitted")
       }
 
       const result = await selectMessageId(transaction, user, caseId)
