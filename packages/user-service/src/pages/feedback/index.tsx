@@ -196,6 +196,7 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, fields }: Props) 
               )}
               <textarea
                 className={`govuk-textarea ${fields?.feedback.hasError ? "govuk-textarea--error" : ""}`}
+                data-test="feedback-text-area"
                 id="feedback"
                 name="feedback"
                 rows={5}
