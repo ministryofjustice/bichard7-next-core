@@ -29,44 +29,30 @@ const inputDataSchema = z.object({
 })
 type InputData = z.infer<typeof inputDataSchema>
 
+const SERVICE_USERNAME = "service.user"
+
 const autoResubmitHandler = async (
   dbTransaction: TransactionSql,
-  messageId: string,
+  caseRow: CaseRow,
   auditLogger: CoreAuditLogger
 ): Promise<void> => {
-  const user = "service.user"
-
-  const caseRows = await dbTransaction<
-    CaseRow[]
-  >`SELECT el.error_locked_by_id, el.error_status FROM br7own.error_list el WHERE message_id = ${messageId}`
-
-  if (caseRows.length === 0) {
-    throw new Error(`Case not found: ${messageId}`)
-  }
-
-  const caseRow = caseRows[0]
-
   if (caseRow.error_locked_by_id) {
-    throw new Error(`Case is locked: ${messageId}`)
-  }
-
-  if (caseRow.error_status !== ResolutionStatus.UNRESOLVED) {
-    throw new Error(`Case is not Unresolved: ${messageId}`)
+    throw new Error(`Case is locked: ${caseRow.message_id}`)
   }
 
   const updateRow = await dbTransaction`
     UPDATE br7own.error_list
     SET
-      error_locked_by_id = ${user},
+      error_locked_by_id = ${SERVICE_USERNAME},
       error_status = ${ResolutionStatus.SUBMITTED}
-    WHERE message_id = ${messageId}
+    WHERE message_id = ${caseRow.message_id}
   `.catch((error: Error) => error)
 
   if (isError(updateRow)) {
-    throw new Error(`Failed to lock DB record for ${messageId}`)
+    throw new Error(`Failed to lock DB record for ${caseRow.message_id}`)
   }
 
-  auditLogger.info(EventCode.ExceptionsLocked, { user })
+  auditLogger.info(EventCode.ExceptionsLocked, { user: SERVICE_USERNAME })
 }
 
 const checkDb: ConductorWorker = {
@@ -78,24 +64,42 @@ const checkDb: ConductorWorker = {
 
     const result = await db
       .begin("read write", async (dbTransaction): PromiseResult<string> => {
-        if (autoResubmit) {
-          await autoResubmitHandler(dbTransaction, messageId, auditLogger)
-        }
-
-        const [caseRow] =
-          (await dbTransaction`SELECT * FROM br7own.error_list el WHERE el.message_id = ${messageId}`) as CaseRow[]
+        const [caseRow] = await dbTransaction<CaseRow[]>`
+          SELECT *
+          FROM br7own.error_list el
+          WHERE el.message_id = ${messageId} AND el.error_status = ${ResolutionStatus.UNRESOLVED}
+        `
 
         if (!caseRow) {
-          throw new Error(`Case not found: ${messageId}`)
+          throw new Error(`Case not found or haven't got the error status of unresolved: ${messageId}`)
         }
 
-        if (caseRow.error_status !== ResolutionStatus.SUBMITTED || !caseRow.error_locked_by_id) {
-          throw new Error("Case has wrong Error Status or has no lock")
+        if (caseRow.error_status !== ResolutionStatus.UNRESOLVED) {
+          throw new Error(`Case is not Unresolved: ${messageId}`)
+        }
+
+        if (autoResubmit) {
+          await autoResubmitHandler(dbTransaction, caseRow, auditLogger)
+        } else {
+          if (!caseRow.error_locked_by_id) {
+            throw new Error(`Case is not locked: ${caseRow.message_id}`)
+          }
+
+          const updatedRow = await dbTransaction`
+            UPDATE br7own.error_list
+            SET
+              error_status = ${ResolutionStatus.SUBMITTED}
+            WHERE message_id = ${messageId}
+          `.catch((error: Error) => error)
+
+          if (isError(updatedRow)) {
+            throw new Error(`Failed to update error status ${messageId}`)
+          }
         }
 
         const s3Data = JSON.stringify({
           messageId,
-          errorLockedByUsername: caseRow.error_locked_by_id,
+          errorLockedByUsername: autoResubmit ? SERVICE_USERNAME : caseRow.error_locked_by_id,
           events: auditLogger.getEvents(),
           autoResubmit
         })

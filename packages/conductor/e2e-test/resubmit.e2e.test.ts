@@ -32,7 +32,7 @@ const setupCase = async (
   messageId: string,
   phase: number = 1,
   errorLockedBy: null | string = "user.name",
-  errorStatus: number = 3
+  errorStatus: number = 1
 ): Promise<CaseRow> => {
   const ahoXml = fs
     .readFileSync(path.join(__dirname, "fixtures/AnnotatedHO1-with-exceptions.xml"))

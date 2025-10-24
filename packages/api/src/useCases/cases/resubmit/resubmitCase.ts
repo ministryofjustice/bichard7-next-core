@@ -6,8 +6,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import updateErrorStatus from "../../../services/db/cases/updateErrorStatus"
-import { ResolutionStatus } from "../../dto/convertResolutionStatus"
+import selectMessageId from "../../../services/db/cases/selectMessageId"
 import canUserResubmitCase from "./canUserResubmitCase"
 
 type ResubmitCaseResult = {
@@ -33,18 +32,18 @@ export const resubmitCase = async (
         throw new Error("User can't resubmit")
       }
 
-      const updateErrorStatusResult = await updateErrorStatus(transaction, caseId, ResolutionStatus.Submitted)
+      const messageId = await selectMessageId(transaction, user, caseId)
 
-      if (isError(updateErrorStatusResult)) {
-        throw new Error("Case failed to be updated with Error Status Submitted")
+      if (isError(messageId)) {
+        throw messageId
       }
 
       const conductorClient = createConductorClient()
       const resubmitWorkflowName = "resubmit"
-      const workflowParams = { autoResubmit, messageId: updateErrorStatusResult }
+      const workflowParams = { autoResubmit, messageId }
 
       const conductorResult = await conductorClient.workflowResource
-        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, updateErrorStatusResult)
+        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, messageId)
         .catch((error: Error) => error)
 
       if (isError(conductorResult)) {
@@ -52,7 +51,7 @@ export const resubmitCase = async (
       }
 
       return {
-        messageId: updateErrorStatusResult,
+        messageId,
         workflowId: conductorResult
       } satisfies ResubmitCaseResult
     })
