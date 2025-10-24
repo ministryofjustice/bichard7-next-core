@@ -7,7 +7,6 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { fetchCasesForAutoResubmit } from "../../../services/db/cases/fetchCasesForAutoResubmit"
-import { hasPncConnectionException } from "./hasPncConnectionException"
 import { resubmitCase } from "./resubmitCase"
 
 type BulkResubmit = Record<string, Error | ResubmitDetails>
@@ -35,7 +34,7 @@ export const resubmitCases = async (
     throw cases
   }
 
-  for (const caseRow of cases.filter(hasPncConnectionException)) {
+  for (const caseRow of cases) {
     const resubmitResult = await resubmitCase(databaseConnection, user, caseRow.error_id, AUTO_RESUBMIT)
 
     if (isError(resubmitResult)) {
