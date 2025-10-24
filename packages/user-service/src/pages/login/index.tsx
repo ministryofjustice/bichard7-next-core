@@ -44,6 +44,7 @@ import NotReceivedEmail from "components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
+import PasswordInput from "components/Login/PasswordInput"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -392,7 +393,7 @@ const handleGet = async (
     }
   }
 
-  let emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER") // Get current email
+  let emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER")
 
   if (notYou === "true") {
     removeEmailAddressCookie(res, config, "REMEMBER")
@@ -654,6 +655,7 @@ const Index = ({
                     labelSize="s"
                     hint="Enter the security code"
                     type="text"
+                    width="30"
                     value={validationCode}
                     error={invalidCodeError}
                     optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
@@ -684,7 +686,7 @@ const Index = ({
                     </Paragraph>
                   )}
                   <input type="hidden" name="loginStage" value="rememberedEmail" />
-                  <TextInput name="password" label="Password" type="password" />
+                  <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" width="30" />
                   <RememberForm checked />
                   <Button>{"Sign in"}</Button>
                 </Form>
