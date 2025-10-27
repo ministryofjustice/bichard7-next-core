@@ -32,7 +32,6 @@ import GridColumn from "components/GridColumn"
 import React from "react"
 import GridRow from "components/GridRow"
 import BulletList from "components/BulletList"
-import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import ContactLink from "components/ContactLink"
 import { getEmailAddressFromCookie, removeEmailAddressCookie, storeEmailAddressInCookie } from "useCases"
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
@@ -40,6 +39,7 @@ import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 import { handleValidateCode } from "lib/handleValidateCode"
 import UserAuthBichard from "../../types/UserAuthBichard"
+import { handleResetSecurityCode } from "../../lib/handleResetSecurityCode"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -222,48 +222,7 @@ const handleResetSecurityCodeStage = async (
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress } = formData as { emailAddress: string }
-
-  const reset = await resetUserVerificationCode(connection, emailAddress)
-
-  if (isError(reset)) {
-    logger.error(`Error resetting code for user [${emailAddress}]: ${reset.message}`)
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        sendingError: true,
-        resetStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  const sent = await sendVerificationCodeEmail(connection, emailAddress, "login")
-
-  if (isError(sent)) {
-    logger.error(sent)
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        sendingError: true,
-        resetStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  return {
-    props: {
-      csrfToken,
-      emailAddress,
-      resetStage: "validateCode",
-      validationCode: "",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-    }
-  }
+  return handleResetSecurityCode(context, serviceMessages, connection, "resetStage")
 }
 
 const handlePost = async (

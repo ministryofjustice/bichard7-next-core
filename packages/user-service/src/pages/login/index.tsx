@@ -41,11 +41,11 @@ import logger from "utils/logger"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
 import React from "react"
-import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import PasswordInput from "components/Login/PasswordInput"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 import { handleValidateCode } from "lib/handleValidateCode"
+import { handleResetSecurityCode } from "../../lib/handleResetSecurityCode"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -278,47 +278,7 @@ const handleResetSecurityCodeStage = async (
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress } = formData as { emailAddress: string }
-
-  const reset = await resetUserVerificationCode(connection, emailAddress)
-
-  if (isError(reset)) {
-    logger.error(`Error resetting code for user [${emailAddress}]: ${reset.message}`)
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        sendingError: true,
-        loginStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  const sent = await sendVerificationCodeEmail(connection, emailAddress, "login")
-
-  if (isError(sent)) {
-    logger.error(sent)
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        sendingError: true,
-        loginStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  return {
-    props: {
-      csrfToken,
-      emailAddress,
-      loginStage: "validateCode",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-    }
-  }
+  return handleResetSecurityCode(context, serviceMessages, connection, "loginStage")
 }
 
 const handlePost = async (
