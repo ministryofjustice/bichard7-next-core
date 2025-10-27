@@ -1,23 +1,21 @@
-interface Props {
-  value?: string
-  id: string
-  name: string
+interface Props extends React.ComponentProps<"textarea"> {
   label: string
   charLimit: number
   hint?: string
   hasError: boolean
-  errorMessage: string
+  errorMessage?: string
 }
 
 export const TextAreaWithCharCount = ({
-  value = "",
   id,
   name,
+  value = "",
   label,
   hint = "",
   charLimit,
   hasError,
-  errorMessage
+  errorMessage = "",
+  ...rest
 }: Props) => {
   return (
     <div
@@ -40,12 +38,12 @@ export const TextAreaWithCharCount = ({
       <textarea
         className={`govuk-textarea ${hasError ? "govuk-textarea--error" : ""} govuk-js-character-count`}
         id={id}
+        defaultValue={value}
         name={name}
         rows={5}
         aria-describedby={`${id}-info ${hasError ? `${id}-error` : ""}`}
-      >
-        {value}
-      </textarea>
+        {...rest}
+      ></textarea>
       <div id={`${id}-info`} className="govuk-hint govuk-character-count__message">
         {`You can enter up to ${charLimit} characters`}
       </div>
