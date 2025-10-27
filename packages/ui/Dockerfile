@@ -23,19 +23,11 @@ COPY packages/ui ./packages/ui
 COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 
-WORKDIR /core/packages/ui
-
-RUN npm run install:assets
+RUN npm run install:assets -w packages/ui
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Currently configured to run the standalone nextjs build
-#
-# next.config.js
-#   output: standalone
-RUN npm run build
-
-WORKDIR /core
+RUN npm run build:ui
 
 #########################################################
 FROM ${BUILD_IMAGE} AS runner
