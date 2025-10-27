@@ -30,8 +30,6 @@ COPY packages/user-service ./packages/user-service
 
 RUN npm run build:user-service
 
-RUN npm prune --omit=dev --workspaces --include-root
-
 #########################################################
 FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
