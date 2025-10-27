@@ -25,11 +25,11 @@ describe("Change password", () => {
       cy.wait(10000)
       cy.get(".govuk-notification-banner__heading a[class=govuk-link]").click()
       cy.get("input[type=email]").type(emailAddress)
+      cy.get("input#password").type(newPassword)
       cy.get("button[type=submit]").click()
       cy.get("input#validationCode").should("exist")
       cy.task("getVerificationCode", emailAddress).then((verificationCode) => {
         cy.get("input#validationCode").type(verificationCode)
-        cy.get("input#password").type(newPassword)
         cy.get("button[type=submit]").click()
         cy.url().should("match", /\/users$/)
       })

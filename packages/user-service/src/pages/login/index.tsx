@@ -7,7 +7,6 @@ import GridColumn from "components/GridColumn"
 import GridRow from "components/GridRow"
 import Layout from "components/Layout"
 import Link from "components/Link"
-import NotReceivedEmail from "components/NotReceivedEmail"
 import Paragraph from "components/Paragraph"
 import ServiceMessages from "components/ServiceMessages"
 import TextInput from "components/TextInput"
@@ -40,8 +39,14 @@ import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
+import validateUserVerificationCode from "useCases/validateUserVerificationCode"
+import NotReceivedEmail from "components/NotReceivedEmail"
+import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
+import Details from "components/Details"
+import resetUserVerificationCode from "useCases/resetUserVerificationCode"
+import PasswordInput from "components/Login/PasswordInput"
 
-const authenticationErrorMessage = "Error authenticating the reqest"
+const authenticationErrorMessage = "Error authenticating the request"
 
 const getNotYourEmailLink = (query: ParsedUrlQuery): string => {
   let redirectParams: { [key: string]: string } = {}
@@ -57,27 +62,78 @@ const getNotYourEmailLink = (query: ParsedUrlQuery): string => {
   })
 }
 
-const handleEmailStage = async (
+const handleInitialLoginStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { formData, csrfToken, httpsRedirectCookie } = context as CsrfServerSidePropsContext &
     AuthenticationServerSidePropsContext
-  const { emailAddress } = formData as { emailAddress: string }
+  const { emailAddress, password } = formData as { emailAddress: string; password: string }
 
-  if (!emailAddress.match(/\S+@\S+\.\S+/)) {
+  const emailIsValid = !!emailAddress.match(/\S+@\S+\.\S+/)
+  const hasEmail = !!emailAddress
+  const hasPassword = !!password
+
+  let emailError: string | undefined
+  let passwordError: string | undefined
+
+  if (!hasEmail) {
+    emailError = "Enter your email address"
+  } else if (!emailIsValid) {
+    emailError = "Enter an email address in the correct format, for example name@example.com"
+  }
+
+  if (!hasPassword) {
+    passwordError = "Enter a password"
+  }
+
+  if (emailError || passwordError) {
+    const errorProps = {
+      csrfToken,
+      emailAddress,
+      loginStage: "initialLogin",
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+    }
+
     return {
       props: {
+        ...errorProps,
+        ...(emailError && { emailError }),
+        ...(passwordError && { passwordError })
+      }
+    }
+  }
+  const normalisedEmail = removeCjsmSuffix(emailAddress)
+  const auditLogger = getAuditLogger(context, config)
+
+  const user = await authenticate(connection, auditLogger, normalisedEmail, password, null)
+
+  if (isError(user)) {
+    logger.error(`Error logging in user [${normalisedEmail}]: ${user.message}`)
+    const attemptsSoFar = await getFailedPasswordAttempts(connection, normalisedEmail)
+    if (!isError(attemptsSoFar) && attemptsSoFar >= config.maxPasswordFailedAttempts) {
+      return {
+        props: {
+          emailAddress: normalisedEmail,
+          csrfToken,
+          tooManyPasswordAttempts: true,
+          loginStage: "initialLogin",
+          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        }
+      }
+    }
+    return {
+      props: {
+        invalidCredentials: true,
+        invalidCredentialsError: "Incorrect email address or password",
+        emailAddress: normalisedEmail,
         csrfToken,
-        emailAddress,
-        emailError: "Enter a valid email address",
+        loginStage: "initialLogin",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
   }
-
-  const normalisedEmail = removeCjsmSuffix(emailAddress)
   const sent = await sendVerificationCodeEmail(connection, normalisedEmail, "login")
 
   if (isError(sent)) {
@@ -87,10 +143,14 @@ const handleEmailStage = async (
         csrfToken,
         emailAddress: normalisedEmail,
         sendingError: true,
+        loginStage: "initialLogin",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
   }
+
+  const { res } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  storeEmailAddressInCookie(res, config, normalisedEmail, "IN_PROGRESS")
 
   return {
     props: {
@@ -109,24 +169,27 @@ const logInUser = async (
   user: UserAuthBichard
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { res, req, formData, query } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+
+  removeEmailAddressCookie(res, config, "IN_PROGRESS")
+
   const { rememberEmailAddress } = formData as {
     rememberEmailAddress: string
   }
-  const authToken = await signInUser(connection, res, user)
 
+  const authToken = await signInUser(connection, res, user)
   if (isError(authToken)) {
     logger.error(authToken)
     throw new Error(authenticationErrorMessage)
   }
 
   if (rememberEmailAddress) {
-    const emailAddressFromCookie = getEmailAddressFromCookie(req, config)
+    const emailAddressFromCookie = getEmailAddressFromCookie(req, config, "REMEMBER")
 
     if (!emailAddressFromCookie || emailAddressFromCookie !== user.emailAddress) {
-      storeEmailAddressInCookie(res, config, user.emailAddress)
+      storeEmailAddressInCookie(res, config, user.emailAddress, "REMEMBER")
     }
   } else {
-    removeEmailAddressCookie(res, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
   }
 
   const redirectPath = getRedirectPath(query)
@@ -143,36 +206,33 @@ const handleValidateCodeStage = async (
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress, validationCode, password } = formData as {
+  const { emailAddress, validationCode } = formData as {
     emailAddress: string
     validationCode: string
-    password: string
   }
 
-  const auditLogger = getAuditLogger(context, config)
-  const user = await authenticate(connection, auditLogger, emailAddress, password, validationCode)
-
-  if (isError(user)) {
-    logger.error(`Error logging in user [${emailAddress}]: ${user.message}`)
-    const attemptsSoFar = await getFailedPasswordAttempts(connection, emailAddress)
-    if (!isError(attemptsSoFar) && attemptsSoFar >= config.maxPasswordFailedAttempts) {
-      return {
-        props: {
-          emailAddress,
-          csrfToken,
-          loginStage: "email",
-          tooManyPasswordAttempts: true,
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-        }
-      }
-    }
+  if (!validationCode) {
     return {
       props: {
-        invalidCredentials: true,
+        invalidCodeError: "Enter a security code",
         emailAddress,
         csrfToken,
         loginStage: "validateCode",
-        validationCode,
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  const user = await validateUserVerificationCode(connection, emailAddress, validationCode)
+
+  if (isError(user)) {
+    logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
+    return {
+      props: {
+        invalidCodeError: "Incorrect security code",
+        emailAddress,
+        csrfToken,
+        loginStage: "validateCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
     }
@@ -194,7 +254,7 @@ const handleRememberedEmailStage = async (
     rememberEmailAddress: string
   }
 
-  const emailAddress = getEmailAddressFromCookie(req, config)
+  const emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER")
   if (!emailAddress) {
     return createRedirectResponse("/users/login")
   }
@@ -221,6 +281,7 @@ const handleRememberedEmailStage = async (
     return {
       props: {
         invalidCredentials: true,
+        invalidCredentialsError: "Incorrect email address or password",
         csrfToken,
         emailAddress,
         notYourEmailAddressUrl,
@@ -233,6 +294,54 @@ const handleRememberedEmailStage = async (
   return logInUser(connection, context, user)
 }
 
+const handleResetSecurityCodeStage = async (
+  context: GetServerSidePropsContext<ParsedUrlQuery>,
+  serviceMessages: ServiceMessage[],
+  connection: Database
+): Promise<GetServerSidePropsResult<Props>> => {
+  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+  const { emailAddress } = formData as { emailAddress: string }
+
+  const reset = await resetUserVerificationCode(connection, emailAddress)
+
+  if (isError(reset)) {
+    logger.error(`Error resetting code for user [${emailAddress}]: ${reset.message}`)
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        sendingError: true,
+        loginStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  const sent = await sendVerificationCodeEmail(connection, emailAddress, "login")
+
+  if (isError(sent)) {
+    logger.error(sent)
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        sendingError: true,
+        loginStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      }
+    }
+  }
+
+  return {
+    props: {
+      csrfToken,
+      emailAddress,
+      loginStage: "validateCode",
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+    }
+  }
+}
+
 const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
@@ -241,8 +350,8 @@ const handlePost = async (
   const { loginStage } = formData
   const connection = getConnection()
 
-  if (loginStage === "email") {
-    return handleEmailStage(context, serviceMessages, connection)
+  if (loginStage === "initialLogin") {
+    return handleInitialLoginStage(context, serviceMessages, connection)
   }
 
   if (loginStage === "validateCode") {
@@ -253,34 +362,57 @@ const handlePost = async (
     return handleRememberedEmailStage(context, serviceMessages, connection)
   }
 
+  if (loginStage === "resetSecurityCode") {
+    return handleResetSecurityCodeStage(context, serviceMessages, connection)
+  }
+
   return createRedirectResponse("/500")
 }
 
-const handleGet = (
+const handleGet = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
-): GetServerSidePropsResult<Props> => {
+): Promise<GetServerSidePropsResult<Props>> => {
   const { csrfToken, query, req, res, httpsRedirectCookie } = context as CsrfServerSidePropsContext &
     AuthenticationServerSidePropsContext
-  const { notYou } = query as { notYou: string }
+  const { notYou, action } = query as { notYou: string; action?: string }
+
+  if (action === "sendCodeAgain") {
+    const inProgressEmailAddress = getEmailAddressFromCookie(req, config, "IN_PROGRESS")
+    if (!inProgressEmailAddress) {
+      return createRedirectResponse("/login")
+    }
+    return {
+      props: {
+        csrfToken,
+        emailAddress: inProgressEmailAddress,
+        loginStage: "resetSecurityCode",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        httpsRedirectCookie
+      }
+    }
+  }
+
+  let emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER")
 
   if (notYou === "true") {
-    removeEmailAddressCookie(res, config)
-  } else {
-    const emailAddress = getEmailAddressFromCookie(req, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
+    removeEmailAddressCookie(res, config, "IN_PROGRESS")
 
+    emailAddress = null
+  }
+
+  if (emailAddress) {
     const notYourEmailAddressUrl = getNotYourEmailLink(query)
 
-    if (emailAddress) {
-      return {
-        props: {
-          csrfToken,
-          emailAddress,
-          notYourEmailAddressUrl,
-          loginStage: "rememberedEmail",
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-          httpsRedirectCookie
-        }
+    return {
+      props: {
+        csrfToken,
+        emailAddress,
+        notYourEmailAddressUrl,
+        loginStage: "rememberedEmail",
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        httpsRedirectCookie
       }
     }
   }
@@ -288,7 +420,7 @@ const handleGet = (
   return {
     props: {
       csrfToken,
-      loginStage: "email",
+      loginStage: "initialLogin",
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
       httpsRedirectCookie
     }
@@ -318,7 +450,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isGet(req)) {
-      return handleGet(context, serviceMessagesResult.result)
+      return await handleGet(context, serviceMessagesResult.result)
     }
 
     return createRedirectResponse("/400")
@@ -328,11 +460,14 @@ export const getServerSideProps = withMultipleServerSideProps(
 interface Props {
   emailAddress?: string
   emailError?: string
+  passwordError?: string
   csrfToken: string
   sendingError?: boolean
   loginStage?: string
   invalidCredentials?: boolean
+  invalidCredentialsError?: string
   validationCode?: string
+  invalidCodeError?: string
   tooManyPasswordAttempts?: boolean
   notYourEmailAddressUrl?: string
   serviceMessages: ServiceMessage[]
@@ -343,14 +478,9 @@ type RememberProps = {
   checked: boolean
 }
 const RememberForm = ({ checked }: RememberProps) => (
-  <div className="govuk-form-group">
+  <div className="govuk-form-group govuk-!-padding-top-4">
     <fieldset className="govuk-fieldset" aria-describedby="waste-hint">
-      <legend className="govuk-fieldset__legend">{"Do you want your email address to be remembered?"}</legend>
-      <div className="govuk-hint">
-        {
-          "You will not be asked to verify your email address for 24 hours when signing in on this device. Do not choose 'Yes' if you do not trust this device."
-        }
-      </div>
+      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Sign in without a code next time"}</legend>
       <div className="govuk-checkboxes" data-module="govuk-checkboxes">
         <div className="govuk-checkboxes__item">
           <input
@@ -362,8 +492,17 @@ const RememberForm = ({ checked }: RememberProps) => (
             defaultChecked={checked}
           />
           <label className="govuk-label govuk-checkboxes__label" htmlFor="rememberEmailYes">
-            {"Yes, remember my email address."}
+            {"I trust this device. I don't want to sign in with a code again today."}
           </label>
+        </div>
+        <div className="govuk-warning-text govuk-!-margin-bottom-0">
+          <span className="govuk-warning-text__icon" aria-hidden="true">
+            {"!"}
+          </span>
+          <strong className="govuk-warning-text__text">
+            <span className="govuk-visually-hidden">{"Warning"}</span>
+            {"Don't use this option if you are using a public or shared device."}
+          </strong>
         </div>
       </div>
     </fieldset>
@@ -373,11 +512,14 @@ const RememberForm = ({ checked }: RememberProps) => (
 const Index = ({
   emailAddress,
   emailError,
+  passwordError,
   csrfToken,
   sendingError,
   loginStage,
   validationCode,
   invalidCredentials,
+  invalidCredentialsError,
+  invalidCodeError,
   tooManyPasswordAttempts,
   notYourEmailAddressUrl,
   serviceMessages,
@@ -390,16 +532,26 @@ const Index = ({
       window.location.host === "psnportal.bichard7.pnn.police.uk") &&
     httpsRedirectCookie
 
+  const validationErrors: { id: string; error: string }[] = []
+  if (emailError) {
+    validationErrors.push({ id: "email", error: emailError })
+  }
+  if (passwordError) {
+    validationErrors.push({ id: "password", error: passwordError })
+  }
+  if (invalidCodeError) {
+    validationErrors.push({ id: "password", error: invalidCodeError })
+  }
+  const showValidationErrors = validationErrors.length > 0
+
   return (
     <>
       <Head>
-        <title>{"Sign in to Bichard 7"}</title>
+        <title>{"Sign in to Bichard7"}</title>
       </Head>
       <Layout>
         <GridRow>
           <GridColumn width="two-thirds">
-            <h1 className="govuk-heading-xl">{"Sign in to Bichard 7"}</h1>
-
             <ErrorSummary title="There is a problem" show={!!sendingError}>
               <p>
                 {"There is a problem signing in "}
@@ -413,8 +565,8 @@ const Index = ({
               </p>
             </ErrorSummary>
 
-            <ErrorSummary title="There is a problem" show={!!emailError}>
-              <ErrorSummaryList items={[{ id: "email", error: emailError }]} />
+            <ErrorSummary title="There is a problem" show={showValidationErrors}>
+              <ErrorSummaryList items={validationErrors} />
             </ErrorSummary>
 
             <ErrorSummary title="There is a problem" show={!!tooManyPasswordAttempts}>
@@ -422,10 +574,10 @@ const Index = ({
             </ErrorSummary>
 
             {invalidCredentials && (
-              <ErrorSummary title="Your details do not match" show={invalidCredentials}>
+              <ErrorSummary title="There is a problem" show={invalidCredentials}>
                 <ErrorSummaryList
                   items={[
-                    { id: "password", error: "Enter a valid code and password combination." },
+                    { id: "password", error: "Incorrect email address or password" },
                     {
                       error: (
                         <>
@@ -443,73 +595,122 @@ const Index = ({
               </ErrorSummary>
             )}
 
-            {loginStage === "email" && (
-              <Form method="post" csrfToken={csrfToken}>
-                <input type="hidden" name="loginStage" value="email" />
-                <TextInput
-                  id="email"
-                  name="emailAddress"
-                  label="Email address"
-                  type="email"
-                  error={emailError}
-                  value={emailAddress}
-                />
-                <Button>{"Sign in"}</Button>
-              </Form>
+            {loginStage === "initialLogin" && (
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard7"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
+                  <Paragraph>
+                    {"To sign in you need the email address and password for your Bichard7 account."}
+                  </Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-2">
+                    {
+                      "If your email address is registered to a Bichard7 account you will receive a security code by email."
+                    }
+                  </Paragraph>
+                  <input type="hidden" name="loginStage" value="initialLogin" />
+                  <LoginCredentialsFormGroup
+                    invalidCredentialsError={invalidCredentialsError}
+                    emailError={emailError}
+                    emailAddress={emailAddress}
+                    passwordError={passwordError}
+                  />
+                  <Button>{"Sign in"}</Button>
+                  <Details summary={"Help signing in"} data-test="helpSigningIn">
+                    <>
+                      <Paragraph>
+                        {
+                          "If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts."
+                        }
+                      </Paragraph>
+                      <Paragraph>
+                        {"You can "}
+                        <Link href="/login/reset-password" data-test="reset-password">
+                          {"change your password"}
+                        </Link>
+                        {" if you have forgotten it."}
+                      </Paragraph>
+                    </>
+                  </Details>
+                </Form>
+              </>
             )}
 
             {loginStage === "validateCode" && (
-              <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>{"If an account was found we will have sent you an email."}</Paragraph>
-                <NotReceivedEmail sendAgainUrl="/login" />
-                <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                <input type="hidden" name="loginStage" value="validateCode" />
-                <TextInput
-                  id="validationCode"
-                  name="validationCode"
-                  label="Enter the 6 character code from the email"
-                  type="text"
-                  value={validationCode}
-                  optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
-                />
-                <TextInput name="password" label="Password" type="password" />
-                <RememberForm checked={false} />
-                <Button>{"Sign in"}</Button>
-              </Form>
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Check your email"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
+                  <Paragraph>
+                    {`We have sent an email to: `}
+                    <b>{emailAddress}</b>
+                  </Paragraph>
+                  <Paragraph>{`The email contains your security code.`}</Paragraph>
+                  <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
+                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
+                  <input type="hidden" name="loginStage" value="validateCode" />
+                  <TextInput
+                    id="validationCode"
+                    name="validationCode"
+                    label="Security code"
+                    labelSize="s"
+                    hint="Enter the security code"
+                    type="text"
+                    width="30"
+                    value={validationCode}
+                    error={invalidCodeError}
+                    optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
+                  />
+                  <RememberForm checked={false} />
+                  <Button>{"Sign in"}</Button>
+                  <NotReceivedEmail sendAgainUrl="/login" />
+                </Form>
+              </>
             )}
 
             {loginStage === "rememberedEmail" && (
-              <Form method="post" csrfToken={csrfToken}>
-                <Paragraph>
-                  {"You are signing in as "}
-                  <b>{emailAddress}</b>
-                  {"."}
-                </Paragraph>
-                {notYourEmailAddressUrl && (
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard7"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
                   <Paragraph>
-                    {"If this is not your account, you can "}
-                    <Link href={notYourEmailAddressUrl} data-test="not-you-link">
-                      {"sign in with a different email address"}
-                    </Link>
+                    {"You are signing in as "}
+                    <b>{emailAddress}</b>
                     {"."}
                   </Paragraph>
-                )}
-                <input type="hidden" name="loginStage" value="rememberedEmail" />
-                <TextInput name="password" label="Password" type="password" />
-                <RememberForm checked />
-                <Button>{"Sign in"}</Button>
-              </Form>
+                  {notYourEmailAddressUrl && (
+                    <Paragraph>
+                      {"If this is not your account, you can "}
+                      <Link href={notYourEmailAddressUrl} data-test="not-you-link">
+                        {"sign in with a different email address"}
+                      </Link>
+                      {"."}
+                    </Paragraph>
+                  )}
+                  <input type="hidden" name="loginStage" value="rememberedEmail" />
+                  <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" width="30" />
+                  <RememberForm checked />
+                  <Button>{"Sign in"}</Button>
+                </Form>
+              </>
             )}
-            <Paragraph>
-              <Link href="/login/reset-password" data-test="reset-password">
-                {"I have forgotten my password"}
-              </Link>
-            </Paragraph>
-            <Paragraph>
-              {"If you need help with anything else, you can "}
-              <ContactLink>{"contact support"}</ContactLink>
-              {"."}
-            </Paragraph>
+
+            {loginStage === "resetSecurityCode" && (
+              <>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Get a security code"}</h1>
+                <Form method="post" csrfToken={csrfToken}>
+                  <Paragraph>
+                    {"We will send a code to: "}
+                    <b>{emailAddress}</b>
+                  </Paragraph>
+                  <Paragraph>
+                    {`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}
+                  </Paragraph>
+                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
+                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
+                  <input type="hidden" name="loginStage" value="resetSecurityCode" />
+                  <Button id="security-code-button">{"Get security code"}</Button>
+                </Form>
+              </>
+            )}
           </GridColumn>
           <GridColumn width="one-third">
             <ServiceMessages messages={serviceMessages} />

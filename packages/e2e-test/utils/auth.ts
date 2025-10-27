@@ -54,15 +54,14 @@ const logInNormallyAs = async function (world: Bichard, name: string, sameWindow
   await page.waitForSelector("#email")
 
   await page.type("#email", emailAddress)
+  await page.type("#password", "password")
+
   await world.browser.clickAndWait("button[type='submit']")
 
   await page.waitForSelector("#validationCode")
-
   // Grab verification code from the database
   const verificationCode = await world.db.getEmailVerificationCode(emailAddress)
-
   await page.type("#validationCode", verificationCode)
-  await page.type("#password", "password")
   await world.browser.clickAndWait("button[type='submit']")
   await page.waitForSelector('xpath/.//*[contains(text(), "Welcome ")]')
 

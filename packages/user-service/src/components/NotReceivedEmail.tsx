@@ -1,7 +1,5 @@
-import ContactLink from "./ContactLink"
 import Details from "./Details"
 import Link from "./Link"
-import Paragraph from "./Paragraph"
 
 interface Props {
   sendAgainUrl: string
@@ -9,28 +7,23 @@ interface Props {
 
 const NotReceivedEmail = ({ sendAgainUrl }: Props) => {
   return (
-    <>
-      <Paragraph>
+    <Details summary={"Problem with the code?"} data-test="problem-with-code">
+      <p>
+        {"We can "}
+        <Link href={`${sendAgainUrl}?notYou=false&action=sendCodeAgain`} data-test="send-code-again-link">
+          {"send the code again"}
+        </Link>
+        {" or you can "}
+        <Link href={`${sendAgainUrl}?notYou=true`} data-test="not-you-link">
+          {"use a different email address."}
+        </Link>
+      </p>
+      <p>
         {
-          "You need to use the exact email address for your account in the Bichard system. If you're having problems receiving the email, please "
+          "If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts."
         }
-        <b>{"try using the older PNN version of your email address."}</b>
-      </Paragraph>
-
-      <Details summary={"I still have not received the email"}>
-        <p>{"The email may take a few minutes to arrive."}</p>
-        <p>
-          {"Check your spam or junk folder – if it still has not arrived, you can "}
-          <Link href={sendAgainUrl}>{"ask for it to be sent again"}</Link>
-          {". Make sure you have entered your email address correctly."}
-        </p>
-        <p>
-          {"If you no longer have access to your email address you will need to "}
-          <ContactLink>{"contact us"}</ContactLink>
-          {"."}
-        </p>
-      </Details>
-    </>
+      </p>
+    </Details>
   )
 }
 
