@@ -29,7 +29,7 @@ type ValidateStageConfig = {
   ) => Promise<GetServerSidePropsResult<Props>>
 }
 
-export const handleValidateCode = async (
+export const handleValidateCodeStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
   connection: Database,

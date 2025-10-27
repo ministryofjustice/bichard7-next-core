@@ -37,7 +37,7 @@ import { getEmailAddressFromCookie, removeEmailAddressCookie, storeEmailAddressI
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
-import { handleValidateCode } from "lib/handleValidateCode"
+import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
 import UserAuthBichard from "../../types/UserAuthBichard"
 import { handleResetSecurityCodeStage } from "../../lib/handleResetSecurityCodeStage"
 
@@ -98,37 +98,6 @@ const handleEmailStage = async (
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
     }
   }
-}
-
-const handleValidateCodeStage = (
-  context: GetServerSidePropsContext<ParsedUrlQuery>,
-  serviceMessages: ServiceMessage[],
-  connection: Database
-): Promise<GetServerSidePropsResult<Props>> => {
-  const { csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-
-  const resetPasswordOnSuccess = (
-    _connection: Database,
-    _context: GetServerSidePropsContext<ParsedUrlQuery>,
-    _user: UserAuthBichard,
-    emailAddress: string,
-    validationCode: string
-  ): Promise<GetServerSidePropsResult<Props>> => {
-    return Promise.resolve({
-      props: {
-        csrfToken,
-        emailAddress,
-        validationCode,
-        resetStage: "newPassword",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    })
-  }
-
-  return handleValidateCode(context, serviceMessages, connection, {
-    stageKey: "resetStage",
-    onSuccess: resetPasswordOnSuccess
-  })
 }
 
 const handleNewPasswordStage = async (
@@ -221,7 +190,7 @@ const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData } = context as CsrfServerSidePropsContext
+  const { formData, csrfToken } = context as CsrfServerSidePropsContext
   const { resetStage } = formData as { emailAddress: string; resetStage: string; validationCode: string }
   const connection = getConnection()
 
@@ -230,7 +199,28 @@ const handlePost = async (
   }
 
   if (resetStage === "validateCode") {
-    return handleValidateCodeStage(context, serviceMessages, connection)
+    const resetPasswordOnSuccess = (
+      _connection: Database,
+      _context: GetServerSidePropsContext<ParsedUrlQuery>,
+      _user: UserAuthBichard,
+      emailAddress: string,
+      validationCode: string
+    ): Promise<GetServerSidePropsResult<Props>> => {
+      return Promise.resolve({
+        props: {
+          csrfToken,
+          emailAddress,
+          validationCode,
+          resetStage: "newPassword",
+          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        }
+      })
+    }
+
+    return handleValidateCodeStage(context, serviceMessages, connection, {
+      stageKey: "resetStage",
+      onSuccess: resetPasswordOnSuccess
+    })
   }
 
   if (resetStage === "newPassword") {

@@ -44,7 +44,7 @@ import React from "react"
 import PasswordInput from "components/Login/PasswordInput"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
-import { handleValidateCode } from "lib/handleValidateCode"
+import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
 import { handleResetSecurityCodeStage } from "../../lib/handleResetSecurityCodeStage"
 
 const authenticationErrorMessage = "Error authenticating the request"
@@ -201,25 +201,6 @@ const logInUser = async (
   return createRedirectResponse("/")
 }
 
-const handleValidateCodeStage = (
-  context: GetServerSidePropsContext<ParsedUrlQuery>,
-  serviceMessages: ServiceMessage[],
-  connection: Database
-): Promise<GetServerSidePropsResult<Props>> => {
-  const loginOnSuccess = (
-    connection: Database,
-    context: GetServerSidePropsContext<ParsedUrlQuery>,
-    user: UserAuthBichard
-  ): Promise<GetServerSidePropsResult<Props>> => {
-    return logInUser(connection, context, user)
-  }
-
-  return handleValidateCode(context, serviceMessages, connection, {
-    stageKey: "loginStage",
-    onSuccess: loginOnSuccess
-  })
-}
-
 const handleRememberedEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
@@ -286,7 +267,18 @@ const handlePost = async (
   }
 
   if (loginStage === "validateCode") {
-    return handleValidateCodeStage(context, serviceMessages, connection)
+    const loginOnSuccess = (
+      connection: Database,
+      context: GetServerSidePropsContext<ParsedUrlQuery>,
+      user: UserAuthBichard
+    ): Promise<GetServerSidePropsResult<Props>> => {
+      return logInUser(connection, context, user)
+    }
+
+    return handleValidateCodeStage(context, serviceMessages, connection, {
+      stageKey: "loginStage",
+      onSuccess: loginOnSuccess
+    })
   }
 
   if (loginStage === "rememberedEmail") {

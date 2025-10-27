@@ -294,7 +294,7 @@ exports[`ValidateCodeForm should render correctly when a validationCodeError is 
       value="validateCode"
     />
     <div
-      class="govuk-form-group govuk-form-group--error"
+      class="govuk-form-group"
     >
       <label
         class="govuk-label govuk-label--s"
@@ -308,24 +308,11 @@ exports[`ValidateCodeForm should render correctly when a validationCodeError is 
       >
         Enter the security code
       </div>
-      <span
-        class="govuk-error-message"
-        data-test="text-input_validationCode-error"
-        id="validationCode-error"
-      >
-        <span
-          class="govuk-visually-hidden"
-        >
-          Error:
-        </span>
-         
-        Incorrect security code
-      </span>
       <input
         aria-autocomplete="none"
-        aria-describedby="validationCode-hint validationCode-error"
+        aria-describedby="validationCode-hint "
         autocomplete="off"
-        class="govuk-input govuk-input--width-30 govuk-input--error"
+        class="govuk-input govuk-input--width-30"
         data-test="text-input_validationCode"
         id="validationCode"
         name="validationCode"
