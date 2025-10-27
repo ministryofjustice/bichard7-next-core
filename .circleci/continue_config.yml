@@ -492,7 +492,7 @@ jobs:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
 
-  build_api_docker_image:
+  build_api_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -765,7 +765,7 @@ jobs:
       - store_artifacts:
           path: ~/project/packages/user-service/cypress/screenshots
 
-  build_user_service_docker_image:
+  build_user_service_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
