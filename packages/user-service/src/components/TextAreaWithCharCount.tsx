@@ -52,7 +52,7 @@ export const TextAreaWithCharCount = ({
         id={id}
         name={name}
         rows={5}
-        aria-describedby={`${id}-info ${id}-error`}
+        aria-describedby={`${id}-info ${hasError ? `${id}-error` : ""}`}
       >
         {value}
       </textarea>
