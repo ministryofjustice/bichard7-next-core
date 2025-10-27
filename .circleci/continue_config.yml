@@ -551,7 +551,7 @@ jobs:
           command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
           name: run Postgres function tests
 
-  build-ui:
+  build_ui_docker_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -1060,8 +1060,8 @@ workflows:
       - characterisation_test
       - comparison_test
 
-      - build-ui:
-          name: build-ui
+      - build_ui_docker_image:
+          name: build_ui_docker_image
           requires:
             - test_ui
       - cypress_component_test:
@@ -1084,7 +1084,7 @@ workflows:
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
@@ -1094,14 +1094,14 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
             - build_api_docker_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
@@ -1111,13 +1111,13 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
             - build_api_docker_image
 
       - zap_scanner:
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
 
       - e2e_test:
@@ -1142,12 +1142,12 @@ workflows:
           name: cypress_e2e_tests_ms_edge
           ms-edge: true
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
       - cucumber_e2e_tests:
           <<: *merge_queue_only
           name: cucumber_e2e_tests_ms_edge
           ms-edge: true
           requires:
-            - build-ui
+            - build_ui_docker_image
             - build_user_service_docker_image
