@@ -386,7 +386,7 @@ jobs:
           name: Test the workflows
           command: nvm use && npm run -w packages/message-forwarder test
 
-  e2e_test:
+  cucumber_e2e_legacy_tests:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -1111,7 +1111,7 @@ workflows:
             - build_ui_image
             - build_user_service_image
 
-      - e2e_test:
+      - cucumber_e2e_legacy_tests:
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
