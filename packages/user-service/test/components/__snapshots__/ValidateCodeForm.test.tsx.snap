@@ -32,7 +32,7 @@ exports[`ValidateCodeForm should render correctly for 'loginStage' (Sign in butt
     <p
       class="govuk-body govuk-!-padding-bottom-4"
     >
-      The code will expire after 30 minutes
+      The code will expire after 30 minutes.
     </p>
     <input
       id="email"
@@ -156,7 +156,7 @@ exports[`ValidateCodeForm should render correctly for 'resetStage' (Next button)
     <p
       class="govuk-body govuk-!-padding-bottom-4"
     >
-      The code will expire after 30 minutes
+      The code will expire after 30 minutes.
     </p>
     <input
       id="email"
@@ -280,7 +280,7 @@ exports[`ValidateCodeForm should render correctly when a validationCodeError is 
     <p
       class="govuk-body govuk-!-padding-bottom-4"
     >
-      The code will expire after 30 minutes
+      The code will expire after 30 minutes.
     </p>
     <input
       id="email"
@@ -404,7 +404,7 @@ exports[`ValidateCodeForm should render with custom button text if provided 1`] 
     <p
       class="govuk-body govuk-!-padding-bottom-4"
     >
-      The code will expire after 30 minutes
+      The code will expire after 30 minutes.
     </p>
     <input
       id="email"

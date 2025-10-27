@@ -41,7 +41,7 @@ const ValidateCodeForm: React.FC<ValidateCodeFormProps> = ({
         {"We have sent a code to:"} <b>{emailAddress}</b>
       </Paragraph>
       <Paragraph>{`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
-      <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes`}</Paragraph>
+      <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
       <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
       <input type="hidden" name={stageName} value={stageValue} />
       <TextInput
