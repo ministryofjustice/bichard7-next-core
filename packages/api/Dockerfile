@@ -1,9 +1,9 @@
 FROM nginx-nodejs-20-2023-supervisord:latest AS base
 
+LABEL maintainer="CJSE"
+
 #########################################################F
 FROM base AS deps
-
-LABEL maintainer="CJSE"
 
 WORKDIR /core
 

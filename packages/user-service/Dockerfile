@@ -1,10 +1,10 @@
 FROM nginx-nodejs-20-2023-supervisord:latest AS base
 
+LABEL maintainer="CJSE"
+
 #########################################################
 FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
-
-LABEL maintainer="CJSE"
 
 WORKDIR /core
 
