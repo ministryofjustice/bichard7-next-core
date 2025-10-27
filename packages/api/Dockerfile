@@ -1,13 +1,7 @@
 ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS builder
+FROM ${BUILD_IMAGE} AS deps
 
 LABEL maintainer="CJSE"
-
-RUN dnf update -y \
-  && dnf install -y findutils \
-  && rm -rf /var/log/* \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf
 
 WORKDIR /core
 
@@ -18,33 +12,43 @@ COPY packages/api/package.json ./packages/api/package.json
 
 RUN npm ci --ignore-scripts
 
+#########################################################
+FROM ${BUILD_IMAGE} AS builder
+
+WORKDIR /core
+
+COPY --from=deps ./core .
+
+RUN dnf update -y \
+  && dnf install -y findutils \
+  && rm -rf /var/log/* \
+  && dnf clean all \
+  && rm -rf /var/cache/dnf \
+
 COPY packages/common ./packages/common
 COPY packages/api ./packages/api
 
 RUN npm run build:api
 
-WORKDIR /core/packages/common
+# Remove all files apart from the dist and package.json
 
+WORKDIR /core/packages/common
 RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
 
 WORKDIR /core/packages/api
-
 RUN ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
 
 WORKDIR /core
-
 RUN npm prune --omit=dev --workspaces --include-root
 
 #########################################################
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} AS runner
 
-WORKDIR /
+WORKDIR /core
 
-COPY --from=builder /core /core
-
-WORKDIR /core/packages/api
-
-COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
+COPY --from=builder /core/packages ./packages
+COPY --from=builder /core/node_modules ./node_modules
+COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./packages/api/static
 
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
   usermod -a -G supervisor supervisor && \
