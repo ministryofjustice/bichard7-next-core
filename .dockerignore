@@ -4,6 +4,7 @@
 .husky
 .idea
 .vscode
+docs
 environment
 
 # Dependencies
