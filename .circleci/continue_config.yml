@@ -442,10 +442,7 @@ jobs:
       - build_audit_logging_images
       - attach_workspace:
           at: .
-      - run:
-          name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
+      - load_user_service_image
       - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
