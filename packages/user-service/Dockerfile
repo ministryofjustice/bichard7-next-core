@@ -11,9 +11,12 @@ RUN yum groupinstall -y "Development Tools"
 
 COPY package*.json ./
 COPY tsconfig*.json ./
-COPY packages/ ./packages
+COPY packages/user-service/package.json ./packages/user-service/package.json
 
 RUN npm ci --ignore-scripts
+
+COPY packages/ ./packages
+
 RUN npm run install:assets -w packages/user-service
 
 RUN npm run build:user-service
