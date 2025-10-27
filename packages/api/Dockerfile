@@ -19,26 +19,11 @@ WORKDIR /core
 
 COPY --from=deps ./core .
 
-RUN dnf update -y \
-  && dnf install -y findutils \
-  && rm -rf /var/log/* \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf \
-
 COPY packages/common ./packages/common
 COPY packages/api ./packages/api
 
 RUN npm run build:api
 
-# Remove all files apart from the dist and package.json
-
-WORKDIR /core/packages/common
-RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
-
-WORKDIR /core/packages/api
-RUN ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
-
-WORKDIR /core
 RUN npm prune --omit=dev --workspaces --include-root
 
 #########################################################
@@ -46,8 +31,13 @@ FROM ${BUILD_IMAGE} AS runner
 
 WORKDIR /core
 
-COPY --from=builder /core/packages ./packages
 COPY --from=builder /core/node_modules ./node_modules
+
+COPY --from=builder /core/packages/common/package.json ./packages/common/package.json
+COPY --from=builder /core/packages/common/dist ./packages/common/dist
+COPY --from=builder /core/packages/common/node_modules ./packages/common/node_modules
+
+COPY --from=builder /core/packages/api/dist ./packages/api/dist
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./packages/api/static
 
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
