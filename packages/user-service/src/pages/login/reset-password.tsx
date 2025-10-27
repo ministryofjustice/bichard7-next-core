@@ -39,7 +39,7 @@ import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 import { handleValidateCode } from "lib/handleValidateCode"
 import UserAuthBichard from "../../types/UserAuthBichard"
-import { handleResetSecurityCode } from "../../lib/handleResetSecurityCode"
+import { handleResetSecurityCodeStage } from "../../lib/handleResetSecurityCodeStage"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -217,14 +217,6 @@ const handleNewPasswordStage = async (
   }
 }
 
-const handleResetSecurityCodeStage = async (
-  context: GetServerSidePropsContext<ParsedUrlQuery>,
-  serviceMessages: ServiceMessage[],
-  connection: Database
-): Promise<GetServerSidePropsResult<Props>> => {
-  return handleResetSecurityCode(context, serviceMessages, connection, "resetStage")
-}
-
 const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
@@ -246,7 +238,7 @@ const handlePost = async (
   }
 
   if (resetStage === "resetSecurityCode") {
-    return handleResetSecurityCodeStage(context, serviceMessages, connection)
+    return handleResetSecurityCodeStage(context, serviceMessages, connection, "resetStage")
   }
   return createRedirectResponse("/500")
 }

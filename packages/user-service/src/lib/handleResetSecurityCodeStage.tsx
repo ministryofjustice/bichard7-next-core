@@ -18,7 +18,7 @@ interface Props {
   serviceMessages: ServiceMessage[]
 }
 
-export const handleResetSecurityCode = async (
+export const handleResetSecurityCodeStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
   connection: Database,

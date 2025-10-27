@@ -45,7 +45,7 @@ import PasswordInput from "components/Login/PasswordInput"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 import { handleValidateCode } from "lib/handleValidateCode"
-import { handleResetSecurityCode } from "../../lib/handleResetSecurityCode"
+import { handleResetSecurityCodeStage } from "../../lib/handleResetSecurityCodeStage"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -273,14 +273,6 @@ const handleRememberedEmailStage = async (
   return logInUser(connection, context, user)
 }
 
-const handleResetSecurityCodeStage = async (
-  context: GetServerSidePropsContext<ParsedUrlQuery>,
-  serviceMessages: ServiceMessage[],
-  connection: Database
-): Promise<GetServerSidePropsResult<Props>> => {
-  return handleResetSecurityCode(context, serviceMessages, connection, "loginStage")
-}
-
 const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
@@ -302,7 +294,7 @@ const handlePost = async (
   }
 
   if (loginStage === "resetSecurityCode") {
-    return handleResetSecurityCodeStage(context, serviceMessages, connection)
+    return handleResetSecurityCodeStage(context, serviceMessages, connection, "loginStage")
   }
 
   return createRedirectResponse("/500")
