@@ -32,13 +32,14 @@ import GridColumn from "components/GridColumn"
 import React from "react"
 import GridRow from "components/GridRow"
 import BulletList from "components/BulletList"
-import validateUserVerificationCode from "useCases/validateUserVerificationCode"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import ContactLink from "components/ContactLink"
 import { getEmailAddressFromCookie, removeEmailAddressCookie, storeEmailAddressInCookie } from "useCases"
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
+import { handleValidateCode } from "lib/handleValidateCode"
+import UserAuthBichard from "../../types/UserAuthBichard"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -99,60 +100,35 @@ const handleEmailStage = async (
   }
 }
 
-const handleValidateCodeStage = async (
+const handleValidateCodeStage = (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress, validationCode } = formData as {
-    emailAddress: string
+  const { csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+
+  const resetPasswordOnSuccess = (
+    _connection: Database,
+    _context: GetServerSidePropsContext<ParsedUrlQuery>,
+    _user: UserAuthBichard,
+    emailAddress: string,
     validationCode: string
-  }
-
-  let validationCodeError: string | undefined
-  if (!validationCode) {
-    validationCodeError = "Enter your security code"
-  }
-
-  if (validationCodeError) {
-    return {
+  ): Promise<GetServerSidePropsResult<Props>> => {
+    return Promise.resolve({
       props: {
+        csrfToken,
         emailAddress,
         validationCode,
-        validationCodeError,
-        csrfToken,
-        resetStage: "validateCode",
+        resetStage: "newPassword",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
       }
-    }
+    })
   }
 
-  const user = await validateUserVerificationCode(connection, emailAddress, validationCode)
-
-  if (isError(user)) {
-    logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
-    return {
-      props: {
-        emailAddress,
-        validationCode,
-        validationCodeError: "Incorrect security code",
-        csrfToken,
-        resetStage: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  return {
-    props: {
-      csrfToken,
-      emailAddress,
-      validationCode,
-      resetStage: "newPassword",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-    }
-  }
+  return handleValidateCode(context, serviceMessages, connection, {
+    stageKey: "resetStage",
+    onSuccess: resetPasswordOnSuccess
+  })
 }
 
 const handleNewPasswordStage = async (
@@ -394,7 +370,7 @@ interface Props {
   resetStage?: string
   emailAddress?: string
   validationCode?: string
-  validationCodeError?: string
+  invalidCodeError?: string
   passwordsMismatch?: boolean
   invalidPassword?: boolean
   passwordInsecure?: boolean
@@ -409,7 +385,7 @@ const ForgotPassword = ({
   resetStage,
   emailAddress,
   validationCode,
-  validationCodeError,
+  invalidCodeError,
   passwordsMismatch,
   invalidPassword,
   passwordInsecure,
@@ -461,8 +437,8 @@ const ForgotPassword = ({
                 <ErrorSummaryList items={[{ id: "email", error: emailError }]} />
               </ErrorSummary>
 
-              <ErrorSummary title="There is a problem" show={!!validationCodeError}>
-                <ErrorSummaryList items={[{ id: "validationCode", error: validationCodeError }]} />
+              <ErrorSummary title="There is a problem" show={!!invalidCodeError}>
+                <ErrorSummaryList items={[{ id: "validationCode", error: invalidCodeError }]} />
               </ErrorSummary>
 
               <ErrorSummary title="There is a problem" show={!!sendingError}>
@@ -508,7 +484,7 @@ const ForgotPassword = ({
                   csrfToken={csrfToken}
                   emailAddress={emailAddress}
                   validationCode={validationCode}
-                  validationCodeError={validationCodeError}
+                  invalidCodeError={invalidCodeError}
                   stageName="resetStage"
                   stageValue="validateCode"
                   sendAgainUrl="/login/reset-password"

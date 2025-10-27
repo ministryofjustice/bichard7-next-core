@@ -41,11 +41,11 @@ import logger from "utils/logger"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
 import React from "react"
-import validateUserVerificationCode from "useCases/validateUserVerificationCode"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import PasswordInput from "components/Login/PasswordInput"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
+import { handleValidateCode } from "lib/handleValidateCode"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -201,45 +201,23 @@ const logInUser = async (
   return createRedirectResponse("/")
 }
 
-const handleValidateCodeStage = async (
+const handleValidateCodeStage = (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
   connection: Database
 ): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress, validationCode } = formData as {
-    emailAddress: string
-    validationCode: string
+  const loginOnSuccess = (
+    connection: Database,
+    context: GetServerSidePropsContext<ParsedUrlQuery>,
+    user: UserAuthBichard
+  ): Promise<GetServerSidePropsResult<Props>> => {
+    return logInUser(connection, context, user)
   }
 
-  if (!validationCode) {
-    return {
-      props: {
-        invalidCodeError: "Enter a security code",
-        emailAddress,
-        csrfToken,
-        loginStage: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  const user = await validateUserVerificationCode(connection, emailAddress, validationCode)
-
-  if (isError(user)) {
-    logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
-    return {
-      props: {
-        invalidCodeError: "Incorrect security code",
-        emailAddress,
-        csrfToken,
-        loginStage: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  return logInUser(connection, context, user)
+  return handleValidateCode(context, serviceMessages, connection, {
+    stageKey: "loginStage",
+    onSuccess: loginOnSuccess
+  })
 }
 
 const handleRememberedEmailStage = async (
@@ -641,7 +619,7 @@ const Index = ({
                 csrfToken={csrfToken}
                 emailAddress={emailAddress}
                 validationCode={validationCode}
-                validationCodeError={invalidCodeError}
+                invalidCodeError={invalidCodeError}
                 stageName="loginStage"
                 stageValue="validateCode"
                 sendAgainUrl="/login"

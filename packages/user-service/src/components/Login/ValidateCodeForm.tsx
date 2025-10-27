@@ -9,7 +9,7 @@ interface ValidateCodeFormProps {
   csrfToken: string
   emailAddress: string | undefined
   validationCode: string | undefined
-  validationCodeError: string | undefined
+  invalidCodeError: string | undefined
   stageName: "loginStage" | "resetStage"
   stageValue: "validateCode"
   sendAgainUrl: string
@@ -22,7 +22,7 @@ const ValidateCodeForm: React.FC<ValidateCodeFormProps> = ({
   csrfToken,
   emailAddress,
   validationCode,
-  validationCodeError,
+  invalidCodeError,
   stageName,
   stageValue,
   sendAgainUrl,
@@ -53,7 +53,7 @@ const ValidateCodeForm: React.FC<ValidateCodeFormProps> = ({
         type="text"
         width={textInputWidth}
         value={validationCode}
-        error={validationCodeError}
+        error={invalidCodeError}
         optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
       />
       {showRememberForm && RememberFormComponent && <RememberFormComponent checked={false} />}
