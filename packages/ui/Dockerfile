@@ -12,10 +12,16 @@ RUN yum install jq -y
 # Copy in package info so we don't have to re-install packages for every code change
 COPY package.json .
 COPY package-lock.json .
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/common/package.json ./packages/common/package.json
+COPY packages/core/package.json ./packages/core/package.json
 COPY tsconfig*.json ./
-COPY packages/ ./packages/
 
 RUN npm ci --ignore-scripts
+
+COPY packages/ui ./packages/ui
+COPY packages/common ./packages/common
+COPY packages/core ./packages/core
 
 WORKDIR /core/packages/ui
 
