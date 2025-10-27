@@ -19,7 +19,7 @@ FROM base AS builder
 
 WORKDIR /core
 
-COPY --from=deps ./core .
+COPY --from=deps ./core ./
 
 COPY packages/common ./packages/common
 COPY packages/api ./packages/api
