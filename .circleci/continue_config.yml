@@ -137,22 +137,19 @@ commands:
     steps:
       - run:
           name: Load ui image
-          command: |
-            docker image load < "images/ui:latest"
+          command: docker image load < "images/ui:latest"
 
   load_user_service_image:
     steps:
       - run:
           name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
+          command: docker image load < "images/user-service:latest"
 
   load_api_image:
     steps:
       - run:
           name: Load api image
-          command: |
-            docker image load < "images/api:latest"
+          command: docker image load < "images/api:latest"
 
   start_services:
     parameters:
