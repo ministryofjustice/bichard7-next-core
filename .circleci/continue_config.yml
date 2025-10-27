@@ -1057,8 +1057,8 @@ workflows:
       - characterisation_test
       - comparison_test
 
-      - build_ui_docker_image:
-          name: build_ui_docker_image
+      - build_ui_image:
+          name: build_ui_image
           requires:
             - test_ui
       - cypress_component_test:
@@ -1067,22 +1067,22 @@ workflows:
           requires:
             - test_ui
 
-      - build_user_service_docker_image:
-          name: build_user_service_docker_image
+      - build_user_service_image:
+          name: build_user_service_image
           requires:
             - test_user_service
             - test_user_service_e2e
 
-      - build_api_docker_image:
-          name: build_api_docker_image
+      - build_api_image:
+          name: build_api_image
           requires:
             - test_api
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -1091,15 +1091,15 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
-            - build_api_docker_image
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -1108,14 +1108,14 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
-            - build_api_docker_image
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
 
       - zap_scanner:
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
 
       - e2e_test:
           next-ui: false
@@ -1124,7 +1124,7 @@ workflows:
           ms-edge: false
           requires:
             - lint_and_build
-            - build_user_service_docker_image
+            - build_user_service_image
 
       - test_user_service_e2e:
           <<: *merge_queue_only
@@ -1139,12 +1139,12 @@ workflows:
           name: cypress_e2e_tests_ms_edge
           ms-edge: true
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
       - cucumber_e2e_tests:
           <<: *merge_queue_only
           name: cucumber_e2e_tests_ms_edge
           ms-edge: true
           requires:
-            - build_ui_docker_image
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
