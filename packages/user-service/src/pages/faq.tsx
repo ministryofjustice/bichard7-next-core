@@ -1,5 +1,4 @@
-import Accordion from "components/Accordion"
-import AccordionItem from "components/AccordionItem"
+import BulletList from "components/BulletList"
 import GridColumn from "components/GridColumn"
 import GridRow from "components/GridRow"
 import Layout from "components/Layout"
@@ -13,21 +12,8 @@ import { isError } from "types/Result"
 import ServiceMessage from "types/ServiceMessage"
 import getServiceMessages from "useCases/getServiceMessages"
 import logger from "utils/logger"
-import faqJSON from "../faqs.json"
-
-interface faqJson {
-  lastUpdated: string
-  faqs: Array<faqElement>
-}
-
-interface faqElement {
-  id: string
-  question: string
-  answer: string
-}
 
 interface Props {
-  faqJson: faqJson
   serviceMessages: ServiceMessage[]
 }
 
@@ -42,45 +28,56 @@ export const getServerSideProps = async () => {
   }
   return {
     props: {
-      faqJson: faqJSON,
       serviceMessages
     }
   }
 }
 
-const faq = ({ faqJson, serviceMessages }: Props) => {
+const help = ({ serviceMessages }: Props) => {
   return (
     <>
       <Head>
-        <title>{"FAQ"}</title>
+        <title>{"Help"}</title>
       </Head>
 
       <Layout>
         <GridRow>
           <GridColumn width="two-thirds">
-            <h1 data-test="faq_heading" className="govuk-heading-xl">
-              {"Frequently Asked Questions"}
+            <h1 data-test="help_heading" className="govuk-heading-xl">
+              {"Help"}
             </h1>
-
+            <h2 data-test="help_sub_heading_1" className="govuk-heading-m">
+              {"Problems with your account"}
+            </h2>
+            <BulletList
+              heading="The member of your team responsible for managing Bichard7 accounts can help you with:"
+              items={[
+                "checking and changing the email address registered to your account",
+                "viewing and updating permissions on your account",
+                "setting up new user accounts",
+                "deleting user accounts"
+              ]}
+            />
             <Paragraph>
-              {
-                "Before contacting support, please check to see if your query is already answered by the information below."
-              }
+              {"If you have forgotten your password or need to update it, follow the on-screen instructions to "}
+              <Link href="/login/reset-password" data-test="reset-password">
+                {"change your password"}
+              </Link>
+              {"."}
             </Paragraph>
 
-            <Accordion>
-              {faqJson.faqs.map((faqItem) => (
-                <AccordionItem heading={faqItem.question} id={faqItem.id} key={faqItem.id} dataTest="faq-item">
-                  <Paragraph>{faqItem.answer}</Paragraph>
-                </AccordionItem>
-              ))}
-            </Accordion>
-
-            <h3 className="govuk-heading-m">{"Still need help?"}</h3>
+            <h2 data-test="help_sub_heading_2" className="govuk-heading-m">
+              {"Report something not working"}
+            </h2>
             <Paragraph>
-              {"If your query isn't answered by the above information, then you can "}
-              <Link href={`mailto:${config.supportEmail}`}>{"contact the Bichard team for support"}</Link>
+              {"To report something not working, contact the "}
+              <Link href={`mailto:${config.supportEmail}`}>{"Bichard7 support desk (opens in new tab)"}</Link>
               {"."}
+            </Paragraph>
+            <Paragraph>
+              {
+                "The support desk may contact you to resolve the problem or ask for more information about the problem. You will be contacted within 5 working days."
+              }
             </Paragraph>
           </GridColumn>
           <GridColumn width="one-third">
@@ -93,4 +90,4 @@ const faq = ({ faqJson, serviceMessages }: Props) => {
   )
 }
 
-export default faq
+export default help

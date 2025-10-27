@@ -2,12 +2,13 @@ describe("FAQ", () => {
   it("should display the FAQ title", () => {
     cy.visit("/faq")
 
-    cy.get("[data-test='faq_heading']").should("have.text", "Frequently Asked Questions")
+    cy.get("[data-test='help_heading']").should("have.text", "Help")
   })
 
-  it("should display the expected 6 questions and answers", () => {
+  it("should 2 subheadings", () => {
     cy.visit("/faq")
 
-    cy.get("[data-test='faq-item']").should("have.length", "6")
+    cy.get("[data-test='help_sub_heading_1']").should("have.text", "Problems with your account")
+    cy.get("[data-test='help_sub_heading_2']").should("have.text", "Report something not working")
   })
 })
