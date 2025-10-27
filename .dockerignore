@@ -3,6 +3,7 @@
 .husky
 environment
 node_modules
+**/node_modules
 **/*.test.*
 **/.eslintrc.js
 .gitignore
