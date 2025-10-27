@@ -133,19 +133,19 @@ commands:
           working_directory: ~/bichard7-next-audit-logging
           command: make build-api-server build-event-handler-server
 
-    load_ui_image:
-      steps:
-        - run:
-          name: Load ui image
-          command: |
-            docker image load < "images/ui:latest"
+  load_ui_image:
+    steps:
+      - run:
+        name: Load ui image
+        command: |
+          docker image load < "images/ui:latest"
 
-    load_user_service_image:
-      steps:
-        - run:
-          name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
+  load_user_service_image:
+    steps:
+      - run:
+        name: Load user-service image
+        command: |
+          docker image load < "images/user-service:latest"
 
     load_api_image:
       steps:
