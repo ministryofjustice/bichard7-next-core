@@ -35,10 +35,7 @@ import BulletList from "components/BulletList"
 import validateUserVerificationCode from "useCases/validateUserVerificationCode"
 import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import ContactLink from "components/ContactLink"
-import { removeEmailAddressCookie } from "useCases"
-import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
-import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
-import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
+import { getEmailAddressFromCookie, removeEmailAddressCookie, storeEmailAddressInCookie } from "useCases"
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
@@ -89,7 +86,7 @@ const handleEmailStage = async (
   }
 
   const { res } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  storeInProgressEmailAddressInCookie(res, config, normalisedEmail)
+  storeEmailAddressInCookie(res, config, normalisedEmail, "IN_PROGRESS")
 
   return {
     props: {
@@ -327,7 +324,7 @@ const handleGet = (
   const { email, notYou, action } = query as { email: string; notYou?: string; action?: string }
 
   if (action === "sendCodeAgain") {
-    const inProgressEmailAddress = getInProgressEmailAddressFromCookie(req, config)
+    const inProgressEmailAddress = getEmailAddressFromCookie(req, config, "IN_PROGRESS")
     if (!inProgressEmailAddress) {
       return createRedirectResponse("/login/reset-password")
     }
@@ -342,8 +339,8 @@ const handleGet = (
   }
 
   if (notYou === "true") {
-    removeEmailAddressCookie(res, config)
-    removeInProgressEmailAddressCookie(res, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
+    removeEmailAddressCookie(res, config, "IN_PROGRESS")
   }
 
   if (email) {
