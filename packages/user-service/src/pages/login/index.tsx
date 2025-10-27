@@ -9,7 +9,6 @@ import Layout from "components/Layout"
 import Link from "components/Link"
 import Paragraph from "components/Paragraph"
 import ServiceMessages from "components/ServiceMessages"
-import TextInput from "components/TextInput"
 import { removeCjsmSuffix } from "lib/cjsmSuffix"
 import config from "lib/config"
 import getAuditLogger from "lib/getAuditLogger"
@@ -39,16 +38,14 @@ import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
-import validateUserVerificationCode from "useCases/validateUserVerificationCode"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
-import resetUserVerificationCode from "useCases/resetUserVerificationCode"
-import storeInProgressEmailAddressInCookie from "useCases/storeInProgressEmailAddressInCookie"
-import getInProgressEmailAddressFromCookie from "useCases/getInProgressEmailAddressFromCookie"
-import removeInProgressEmailAddressCookie from "useCases/removeInProgressEmailAddressCookie"
-import ValidateCodeForm from "components/Login/ValidateCodeForm"
-import ResendSecurityCodeForm from "../../components/Login/ResendSecurityCodeForm"
 import React from "react"
+import validateUserVerificationCode from "useCases/validateUserVerificationCode"
+import resetUserVerificationCode from "useCases/resetUserVerificationCode"
+import PasswordInput from "components/Login/PasswordInput"
+import ValidateCodeForm from "components/Login/ValidateCodeForm"
+import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -154,7 +151,7 @@ const handleInitialLoginStage = async (
   }
 
   const { res } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  storeInProgressEmailAddressInCookie(res, config, normalisedEmail)
+  storeEmailAddressInCookie(res, config, normalisedEmail, "IN_PROGRESS")
 
   return {
     props: {
@@ -174,7 +171,7 @@ const logInUser = async (
 ): Promise<GetServerSidePropsResult<Props>> => {
   const { res, req, formData, query } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
 
-  removeInProgressEmailAddressCookie(res, config)
+  removeEmailAddressCookie(res, config, "IN_PROGRESS")
 
   const { rememberEmailAddress } = formData as {
     rememberEmailAddress: string
@@ -187,13 +184,13 @@ const logInUser = async (
   }
 
   if (rememberEmailAddress) {
-    const emailAddressFromCookie = getEmailAddressFromCookie(req, config)
+    const emailAddressFromCookie = getEmailAddressFromCookie(req, config, "REMEMBER")
 
     if (!emailAddressFromCookie || emailAddressFromCookie !== user.emailAddress) {
-      storeEmailAddressInCookie(res, config, user.emailAddress)
+      storeEmailAddressInCookie(res, config, user.emailAddress, "REMEMBER")
     }
   } else {
-    removeEmailAddressCookie(res, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
   }
 
   const redirectPath = getRedirectPath(query)
@@ -258,7 +255,7 @@ const handleRememberedEmailStage = async (
     rememberEmailAddress: string
   }
 
-  const emailAddress = getEmailAddressFromCookie(req, config)
+  const emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER")
   if (!emailAddress) {
     return createRedirectResponse("/users/login")
   }
@@ -382,7 +379,7 @@ const handleGet = async (
   const { notYou, action } = query as { notYou: string; action?: string }
 
   if (action === "sendCodeAgain") {
-    const inProgressEmailAddress = getInProgressEmailAddressFromCookie(req, config)
+    const inProgressEmailAddress = getEmailAddressFromCookie(req, config, "IN_PROGRESS")
     if (!inProgressEmailAddress) {
       return createRedirectResponse("/login")
     }
@@ -397,11 +394,11 @@ const handleGet = async (
     }
   }
 
-  let emailAddress = getEmailAddressFromCookie(req, config) // Get current email
+  let emailAddress = getEmailAddressFromCookie(req, config, "REMEMBER")
 
   if (notYou === "true") {
-    removeEmailAddressCookie(res, config)
-    removeInProgressEmailAddressCookie(res, config)
+    removeEmailAddressCookie(res, config, "REMEMBER")
+    removeEmailAddressCookie(res, config, "IN_PROGRESS")
 
     emailAddress = null
   }
@@ -551,7 +548,7 @@ const Index = ({
   return (
     <>
       <Head>
-        <title>{"Sign in to Bichard 7"}</title>
+        <title>{"Sign in to Bichard7"}</title>
       </Head>
       <Layout>
         <GridRow>
@@ -672,13 +669,12 @@ const Index = ({
                     </Paragraph>
                   )}
                   <input type="hidden" name="loginStage" value="rememberedEmail" />
-                  <TextInput name="password" label="Password" type="password" />
+                  <PasswordInput name="password" label="Password" labelSize="s" hint="Enter your password" width="30" />
                   <RememberForm checked />
                   <Button>{"Sign in"}</Button>
                 </Form>
               </>
             )}
-
             {loginStage === "resetSecurityCode" && (
               <ResendSecurityCodeForm
                 csrfToken={csrfToken}

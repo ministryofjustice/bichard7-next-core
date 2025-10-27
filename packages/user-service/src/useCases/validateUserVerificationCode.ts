@@ -11,7 +11,7 @@ const validateUserVerificationCode = async (
   verificationCode: string
 ): PromiseResult<UserAuthBichard> => {
   if (!verificationCode || verificationCode.length !== config.verificationCodeLength) {
-    return new Error("Invalid Verification Code ")
+    return new Error("Invalid Verification Code")
   }
 
   try {
