@@ -57,7 +57,7 @@ export const TextAreaWithCharCount = ({
         {value}
       </textarea>
       <div id={`${id}-info`} className="govuk-hint govuk-character-count__message">
-        {`You can enter up to 800 characters`}
+        {`You can enter up to ${charLimit} characters`}
       </div>
     </div>
   )
