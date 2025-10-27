@@ -5,15 +5,13 @@ it("should render text area with character count component", () => {
   const { container } = render(
     <TextAreaWithCharCount
       value="This is a test"
-      id="testRadio"
-      name="testRadio"
+      id="testTextAreaWithCharCount"
+      name="testTextAreaWithCharCount"
       hint="Test hint"
       label="Test label"
       charLimit={25}
-      isEmpty={false}
-      isOverCharLimit={false}
-      charLimitErrorMessage="Too many characters"
-      emptyErrorMessage="Empty text area"
+      hasError={false}
+      errorMessage="Test error"
     />
   )
   expect(container).toMatchSnapshot()
