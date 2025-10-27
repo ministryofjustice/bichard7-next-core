@@ -1,5 +1,7 @@
-ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS deps
+FROM nginx-nodejs-20-2023-supervisord:latest AS base
+
+#########################################################F
+FROM base AS deps
 
 LABEL maintainer="CJSE"
 
@@ -13,7 +15,7 @@ COPY packages/api/package.json ./packages/api/package.json
 RUN npm ci --ignore-scripts
 
 #########################################################
-FROM ${BUILD_IMAGE} AS builder
+FROM base AS builder
 
 WORKDIR /core
 
@@ -27,7 +29,7 @@ RUN npm run build:api
 RUN npm prune --omit=dev --workspaces --include-root
 
 #########################################################
-FROM ${BUILD_IMAGE} AS runner
+FROM base AS runner
 
 WORKDIR /core
 

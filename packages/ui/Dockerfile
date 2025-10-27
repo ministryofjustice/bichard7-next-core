@@ -1,6 +1,7 @@
+FROM nginx-nodejs-20-2023-supervisord:latest AS base
+
 #########################################################
-ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS deps
+FROM base AS deps
 
 LABEL maintainer="CJSE"
 
@@ -23,7 +24,7 @@ RUN npm ci --ignore-scripts
 RUN npm run install:assets -w packages/ui
 
 #########################################################
-FROM ${BUILD_IMAGE} AS builder
+FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
 
 WORKDIR /core
@@ -37,7 +38,7 @@ COPY packages/ui ./packages/ui
 RUN npm run build:ui
 
 #########################################################
-FROM ${BUILD_IMAGE} AS runner
+FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV TZ="Europe/London"

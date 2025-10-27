@@ -1,6 +1,7 @@
+FROM nginx-nodejs-20-2023-supervisord:latest AS base
+
 #########################################################
-ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS builder
+FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
 
 LABEL maintainer="CJSE"
@@ -24,7 +25,7 @@ RUN npm run build:user-service
 RUN npm prune --omit=dev --workspaces --include-root
 
 #########################################################
-FROM ${BUILD_IMAGE} AS runner
+FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
