@@ -23,8 +23,10 @@ exports[`should render text area with character count component 1`] = `
       Test hint
     </div>
     <textarea
-      aria-describedby="testRadio-info testRadio-error"
+      aria-describedby="testRadio-info "
+      charlimiterrormessage="Too many characters"
       class="govuk-textarea  govuk-js-character-count"
+      emptyerrormessage="Empty text area"
       id="testRadio"
       name="testRadio"
       rows="5"
@@ -35,7 +37,7 @@ exports[`should render text area with character count component 1`] = `
       class="govuk-hint govuk-character-count__message"
       id="testRadio-info"
     >
-      You can enter up to 800 characters
+      You can enter up to 25 characters
     </div>
   </div>
 </div>
