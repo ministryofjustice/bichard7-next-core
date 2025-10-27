@@ -572,7 +572,7 @@ jobs:
           command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
           name: run Postgres function tests
 
-  build_ui_docker_image:
+  build_ui_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
