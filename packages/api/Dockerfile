@@ -13,10 +13,15 @@ WORKDIR /core
 
 COPY package*.json ./
 COPY tsconfig*.json ./
-COPY packages/api ./packages/api
-COPY packages/common ./packages/common
+COPY packages/common/package.json ./packages/common/package.json
+COPY packages/api/package.json ./packages/api/package.json
 
-RUN npm ci --ignore-scripts && npm run build:api
+RUN npm ci --ignore-scripts
+
+COPY packages/common ./packages/common
+COPY packages/api ./packages/api
+
+RUN npm run build:api
 
 WORKDIR /core/packages/common
 
@@ -30,6 +35,7 @@ WORKDIR /core
 
 RUN npm prune --omit=dev --workspaces --include-root
 
+#########################################################
 FROM ${BUILD_IMAGE}
 
 WORKDIR /
@@ -46,7 +52,6 @@ RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
   chmod g+r -R /certs/server.key /var/lib/nginx && \
   chmod g+rw -R /core /run /var/log && \
   npm config set cache /tmp/npm --global
-
 
 COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf
 COPY packages/api/docker/conf/supervisord.conf /etc/supervisord.conf
