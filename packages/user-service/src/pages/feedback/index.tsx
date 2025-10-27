@@ -207,10 +207,14 @@ const ShareFeedback = ({ csrfToken, currentUser, errorMessage, fields }: Props) 
               label="Tell us how we can improve Bichard7"
               hint="Do not include any personal or case information, for example your name, email address, force or case details"
               charLimit={feedbackCharLimit}
-              isEmpty={fields?.feedback.isEmpty}
-              isOverCharLimit={fields?.feedback.isOverCharLimit}
-              emptyErrorMessage={feedbackEmptyErrorMessage}
-              charLimitErrorMessage={feedbackOverCharLimitErrorMessage}
+              hasError={hasErrors}
+              errorMessage={
+                fields?.feedback.isEmpty
+                  ? feedbackEmptyErrorMessage
+                  : fields?.feedback.isOverCharLimit
+                    ? feedbackOverCharLimitErrorMessage
+                    : ""
+              }
             />
             <Button noDoubleClick>{"Send feedback"}</Button>
           </Form>

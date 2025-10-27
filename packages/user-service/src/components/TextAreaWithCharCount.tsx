@@ -5,10 +5,8 @@ interface Props {
   label: string
   charLimit: number
   hint?: string
-  isEmpty?: boolean
-  emptyErrorMessage: string
-  isOverCharLimit?: boolean
-  charLimitErrorMessage: string
+  hasError: boolean
+  errorMessage: string
 }
 
 export const TextAreaWithCharCount = ({
@@ -18,12 +16,9 @@ export const TextAreaWithCharCount = ({
   label,
   hint = "",
   charLimit,
-  isEmpty = false,
-  isOverCharLimit = false,
-  charLimitErrorMessage,
-  emptyErrorMessage
+  hasError,
+  errorMessage
 }: Props) => {
-  const hasError = isEmpty || isOverCharLimit
   return (
     <div
       className={`govuk-form-group ${hasError ? "govuk-form-group--error" : ""} govuk-character-count`}
@@ -36,14 +31,9 @@ export const TextAreaWithCharCount = ({
         </label>
       </h3>
       <div className="govuk-hint">{hint}</div>
-      {isEmpty && (
-        <p id="feedback-error" className="govuk-error-message">
-          <span className="govuk-visually-hidden">{"Error:"}</span> {emptyErrorMessage}
-        </p>
-      )}
-      {isOverCharLimit && (
+      {hasError && (
         <p id={`${id}-error`} className="govuk-error-message">
-          <span className="govuk-visually-hidden">{"Error:"}</span> {charLimitErrorMessage}
+          <span className="govuk-visually-hidden">{"Error:"}</span> {errorMessage}
         </p>
       )}
 
