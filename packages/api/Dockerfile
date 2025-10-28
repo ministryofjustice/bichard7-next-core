@@ -38,7 +38,7 @@ RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
   chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
   chmod g+r -R /certs/server.key /var/lib/nginx && \
   chmod g+rw -R /core /run /var/log && \
-  npm config set cache /tmp/npm --global \
+  npm config set cache /tmp/npm --global
 
 COPY --from=builder /core/node_modules ./node_modules
 
