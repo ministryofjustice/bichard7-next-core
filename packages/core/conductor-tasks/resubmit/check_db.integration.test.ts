@@ -37,14 +37,6 @@ describe("check db", () => {
     const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
 
     expect(result.status).toBe("COMPLETED")
-  })
-
-  it("contains output data", async () => {
-    const caseDb = await setupCase(sql, ResolutionStatus.UNRESOLVED, "username")
-
-    const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
-
-    expect(result.status).toBe("COMPLETED")
     expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
   })
 
@@ -54,6 +46,7 @@ describe("check db", () => {
     const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
 
     expect(result.status).toBe("COMPLETED")
+    expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
   })
 
   it("will fail if the case doesn't have a lock", async () => {
