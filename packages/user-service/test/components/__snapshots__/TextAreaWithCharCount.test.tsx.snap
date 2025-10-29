@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render text area with character count component 1`] = `
+<div>
+  <div
+    class="govuk-form-group  govuk-character-count"
+    data-maxlength="25"
+    data-module="govuk-character-count"
+  >
+    <h3
+      class="govuk-label-wrapper"
+    >
+      <label
+        class="govuk-label govuk-!-font-weight-bold govuk-!-padding-top-5"
+        for="testTextAreaWithCharCount"
+      >
+        Test label
+      </label>
+    </h3>
+    <div
+      class="govuk-hint"
+    >
+      Test hint
+    </div>
+    <textarea
+      aria-describedby="testTextAreaWithCharCount-info "
+      class="govuk-textarea  govuk-js-character-count"
+      id="testTextAreaWithCharCount"
+      name="testTextAreaWithCharCount"
+      rows="5"
+    >
+      This is a test
+    </textarea>
+    <div
+      class="govuk-hint govuk-character-count__message"
+      id="testTextAreaWithCharCount-info"
+    >
+      You can enter up to 25 characters
+    </div>
+  </div>
+</div>
+`;
