@@ -1,9 +1,9 @@
-#########################################################
-ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS builder
-ENV NEXT_TELEMETRY_DISABLED=1
+FROM nginx-nodejs-20-2023-supervisord:latest AS base
 
 LABEL maintainer="CJSE"
+
+#########################################################
+FROM base AS deps
 
 WORKDIR /core
 
@@ -11,17 +11,27 @@ RUN yum groupinstall -y "Development Tools"
 
 COPY package*.json ./
 COPY tsconfig*.json ./
-COPY packages/ ./packages
+COPY packages/user-service/package.json ./packages/user-service/package.json
+COPY packages/user-service/scripts ./packages/user-service/scripts
 
-RUN npm ci --ignore-scripts
+RUN npm ci --ignore-scripts --no-audit
+
 RUN npm run install:assets -w packages/user-service
+
+#########################################################
+FROM base AS builder
+ENV NEXT_TELEMETRY_DISABLED=1
+
+WORKDIR /core
+
+COPY --from=deps ./core ./
+
+COPY packages/user-service ./packages/user-service
 
 RUN npm run build:user-service
 
-RUN npm prune --omit=dev --workspaces --include-root
-
 #########################################################
-FROM ${BUILD_IMAGE} AS runner
+FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 

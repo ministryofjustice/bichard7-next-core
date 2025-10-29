@@ -2,8 +2,6 @@
 
 set -ex
 
-NOCACHE=${NOCACHE:-"false"}
-
 readonly DOCKER_REFERENCE="nginx-nodejs-20-2023-supervisord"
 readonly DOCKER_OUTPUT_TAG="user-service"
 
@@ -46,10 +44,10 @@ function pull_and_build_from_aws() {
   if [ $(arch) = "arm64" ]
   then
     echo "Building for ARM"
-    docker build --no-cache=$NOCACHE --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/user-service/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/user-service/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
   else
     echo "Building regular image"
-    docker build --no-cache=$NOCACHE --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
   fi
 
   echo "Build complete"
@@ -94,10 +92,10 @@ if [[ "$(has_local_image)" -gt 0 ]]; then
   if [ $(arch) = "arm64" ]
   then
       echo "Building for ARM"
-      docker build --no-cache=$NOCACHE -f packages/user-service/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
+      docker build -f packages/user-service/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
   else
       echo "Building regular image"
-      docker build --no-cache=$NOCACHE -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
+      docker build -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
   fi
 else
   pull_and_build_from_aws
