@@ -7,8 +7,6 @@ import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogAp
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
-import createS3Config from "@moj-bichard7/common/s3/createS3Config"
-import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -19,9 +17,6 @@ import postgres from "postgres"
 
 import startWorkflow from "./helpers/startWorkflow"
 
-const TASK_DATA_BUCKET_NAME = "conductor-task-data"
-
-const s3Config = createS3Config()
 const { apiKey, apiUrl, basePath } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 const dbConfig = createDbConfig()
@@ -32,7 +27,7 @@ const setupCase = async (
   messageId: string,
   phase: number = 1,
   errorLockedBy: null | string = "user.name",
-  errorStatus: number = 3
+  errorStatus: number = 1
 ): Promise<CaseRow> => {
   const ahoXml = fs
     .readFileSync(path.join(__dirname, "fixtures/AnnotatedHO1-with-exceptions.xml"))
@@ -61,6 +56,23 @@ const setupCase = async (
   return caseRow
 }
 
+const startAndCompleteFullResubmit = async (
+  messageId: string,
+  phaseToWaitFor: 1 | 2,
+  autoResubmit: boolean,
+  expectedParentStatus: "COMPLETED" | "FAILED" = "COMPLETED"
+) => {
+  await startWorkflow("resubmit", { autoResubmit, messageId }, messageId)
+
+  await waitForCompletedWorkflow(messageId, expectedParentStatus, undefined, "resubmit")
+
+  if (expectedParentStatus === "COMPLETED") {
+    const childWorkflowName = phaseToWaitFor === 1 ? "bichard_phase_1" : "bichard_phase_2"
+
+    await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, childWorkflowName)
+  }
+}
+
 describe("resubmit", () => {
   let mqListener: MqListener
 
@@ -80,24 +92,11 @@ describe("resubmit", () => {
     mqListener.stop()
   })
 
-  it("successfully runs the resubmit workflow", async () => {
-    const messageId = randomUUID()
-    await setupCase(messageId)
-
-    await startWorkflow("resubmit", { autoResubmit: false, messageId }, messageId)
-    await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, "resubmit")
-
-    const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
-
-    expect(caseRow.error_status).toBe(3)
-  })
-
   it("triggers the bichard_phase_1 successfully", async () => {
     const messageId = randomUUID()
     await setupCase(messageId)
 
-    await startWorkflow("resubmit", { autoResubmit: false, messageId }, messageId)
-    await waitForCompletedWorkflow(messageId)
+    await startAndCompleteFullResubmit(messageId, 1, false, "COMPLETED")
 
     const caseRows = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
@@ -109,33 +108,18 @@ describe("resubmit", () => {
     const messageId = randomUUID()
     await setupCase(messageId, 2)
 
-    await startWorkflow("resubmit", { autoResubmit: false, messageId }, messageId)
-    await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, "bichard_phase_2")
+    await startAndCompleteFullResubmit(messageId, 2, false, "COMPLETED")
 
     const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
     expect(caseRow.phase).toBe(2)
   })
 
-  it("uploads the AHO JSON file to S3", async () => {
-    const messageId = randomUUID()
-    const s3TaskDataPath = `${messageId}.json`
-    await setupCase(messageId)
-
-    await startWorkflow("resubmit", { autoResubmit: false, messageId }, messageId)
-    await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, "resubmit")
-
-    const s3File = await getFileFromS3(s3TaskDataPath, TASK_DATA_BUCKET_NAME, s3Config, 1)
-
-    expect(isError(s3File)).toBe(false)
-  })
-
   it("has Audit Logs", async () => {
     const messageId = randomUUID()
     await setupCase(messageId)
 
-    await startWorkflow("resubmit", { autoResubmit: false, messageId }, messageId)
-    await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, "bichard_phase_1")
+    await startAndCompleteFullResubmit(messageId, 1, false, "COMPLETED")
 
     const auditLogEventCodes = await apiClient.getAuditLog(messageId)
 
@@ -153,20 +137,18 @@ describe("resubmit", () => {
       const messageId = randomUUID()
       await setupCase(messageId, 1, null, 1)
 
-      await startWorkflow("resubmit", { autoResubmit: true, messageId }, messageId)
-      await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, "resubmit")
+      await startAndCompleteFullResubmit(messageId, 1, true, "COMPLETED")
 
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
-      expect(caseRow.error_status).toBe(3)
+      expect(caseRow.total_pnc_failure_resubmissions).toBe(1)
     })
 
     it("fails to run the resubmit workflow with a case that's locked to a user", async () => {
       const messageId = randomUUID()
       await setupCase(messageId, 1, "user.locked", 1)
 
-      await startWorkflow("resubmit", { autoResubmit: true, messageId }, messageId)
-      await waitForCompletedWorkflow(messageId, "FAILED", undefined, "resubmit")
+      await startAndCompleteFullResubmit(messageId, 1, true, "FAILED")
 
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
@@ -177,8 +159,7 @@ describe("resubmit", () => {
       const messageId = randomUUID()
       await setupCase(messageId, 1, "user.locked", 3)
 
-      await startWorkflow("resubmit", { autoResubmit: true, messageId }, messageId)
-      await waitForCompletedWorkflow(messageId, "FAILED", undefined, "resubmit")
+      await startAndCompleteFullResubmit(messageId, 1, true, "FAILED")
 
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 

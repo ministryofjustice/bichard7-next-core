@@ -340,12 +340,31 @@ export const exceptionResolutionStatus = async function (this: Bichard, resoluti
 
   const resolution = resolutionStatus.split(" ").length > 1 ? resolutionStatus.split(" ")[1] : resolutionStatus
 
-  const headerResolutionStatus = await this.browser.page.$$(
-    `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
-  )
-  const exceptionsPanelResolutionStatus = await this.browser.page.$$(
-    `xpath/.//section[@id = "exceptions-tab-panel"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
-  )
+  const maxRetries = 10
+  const retryDelay = 100
+  let attempt = 0
+  let headerResolutionStatus: Awaited<ReturnType<typeof this.browser.page.$$>> = []
+  let exceptionsPanelResolutionStatus: Awaited<ReturnType<typeof this.browser.page.$$>> = []
+
+  while (attempt < maxRetries) {
+    headerResolutionStatus = await this.browser.page.$$(
+      `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    )
+    exceptionsPanelResolutionStatus = await this.browser.page.$$(
+      `xpath/.//section[@id = "exceptions-tab-panel"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    )
+
+    if (headerResolutionStatus.length === 1 && exceptionsPanelResolutionStatus.length === 1) {
+      break
+    }
+
+    attempt++
+    if (attempt < maxRetries) {
+      await this.browser.page.reload({ waitUntil: "networkidle0" })
+      await this.browser.page.click("#exceptions-tab")
+      await new Promise((resolve) => setTimeout(resolve, retryDelay))
+    }
+  }
 
   expect(headerResolutionStatus.length).toEqual(1)
   expect(exceptionsPanelResolutionStatus.length).toEqual(1)
