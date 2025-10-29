@@ -72,6 +72,62 @@ exports[`ValidateCodeForm should render correctly for 'loginStage' (Sign in butt
         value="123456"
       />
     </div>
+    <div
+      class="govuk-form-group govuk-!-padding-top-4"
+    >
+      <fieldset
+        aria-describedby="waste-hint"
+        class="govuk-fieldset"
+      >
+        <legend
+          class="govuk-fieldset__legend govuk-fieldset__legend--s"
+        >
+          Sign in without a code next time
+        </legend>
+        <div
+          class="govuk-checkboxes"
+          data-module="govuk-checkboxes"
+        >
+          <div
+            class="govuk-checkboxes__item"
+          >
+            <input
+              class="govuk-checkboxes__input"
+              id="rememberEmailYes"
+              name="rememberEmailAddress"
+              type="checkbox"
+              value="yes"
+            />
+            <label
+              class="govuk-label govuk-checkboxes__label"
+              for="rememberEmailYes"
+            >
+              I trust this device. I don't want to sign in with a code again today.
+            </label>
+          </div>
+          <div
+            class="govuk-warning-text govuk-!-margin-bottom-0"
+          >
+            <span
+              aria-hidden="true"
+              class="govuk-warning-text__icon"
+            >
+              !
+            </span>
+            <strong
+              class="govuk-warning-text__text"
+            >
+              <span
+                class="govuk-visually-hidden"
+              >
+                Warning
+              </span>
+              Don't use this option if you are using a public or shared device.
+            </strong>
+          </div>
+        </div>
+      </fieldset>
+    </div>
     <button
       class="govuk-button"
       data-module="govuk-button"
