@@ -762,6 +762,7 @@ jobs:
           condition:
             or:
               - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.env-changes >>
               - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.e2e-test-changes >>
