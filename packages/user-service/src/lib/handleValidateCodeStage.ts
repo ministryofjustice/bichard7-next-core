@@ -1,13 +1,13 @@
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
-import { ParsedUrlQuery } from "querystring"
-import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
-import Database from "types/Database"
+import type { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
+import type { ParsedUrlQuery } from "querystring"
+import type AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+import type Database from "types/Database"
 import { isError } from "types/Result"
-import ServiceMessage from "types/ServiceMessage"
+import type ServiceMessage from "types/ServiceMessage"
 import logger from "utils/logger"
 import validateUserVerificationCode from "useCases/validateUserVerificationCode"
-import UserAuthBichard from "../types/UserAuthBichard"
+import type UserAuthBichard from "../types/UserAuthBichard"
 
 interface Props {
   emailAddress?: string
