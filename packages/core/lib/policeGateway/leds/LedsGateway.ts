@@ -104,7 +104,7 @@ export default class LedsGateway implements PoliceGateway {
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {
         const errors = (apiResponse.response?.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
-          `ASN query failed with status code ${apiResponse.status}.`
+          `LEDS update failed with status code ${apiResponse.status}.`
         ]
         return new PoliceApiError(errors)
       }
