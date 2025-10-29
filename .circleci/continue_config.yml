@@ -944,7 +944,14 @@ jobs:
           name: Building infrastructure
           environment:
             <<: *ui_envs
-          command: bash .circleci/scripts/run-infrastructure.sh ui all
+          command: |
+            if [ "<< parameters.api >>" = "true" ]; then
+              echo "Running API-specific infrastructure build..."
+              bash .circleci/scripts/run-infrastructure.sh ui all-build-worker
+            else
+              echo "Running default infrastructure build..."
+              bash .circleci/scripts/run-infrastructure.sh ui all
+            fi
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test

@@ -31,16 +31,8 @@ describe("check db", () => {
     await sql.end()
   })
 
-  it("with a case submitted error status and is locked", async () => {
-    const caseDb = await setupCase(sql, ResolutionStatus.SUBMITTED, "username")
-
-    const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
-
-    expect(result.status).toBe("COMPLETED")
-  })
-
-  it("contains output data", async () => {
-    const caseDb = await setupCase(sql, ResolutionStatus.SUBMITTED, "username")
+  it("with a case Unresolved error status and is locked", async () => {
+    const caseDb = await setupCase(sql, ResolutionStatus.UNRESOLVED, "username")
 
     const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
 
@@ -48,16 +40,33 @@ describe("check db", () => {
     expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
   })
 
-  it("will fail if the case is not submitted status", async () => {
+  it("will complete if the case is not submitted status", async () => {
     const caseDb = await setupCase(sql, ResolutionStatus.UNRESOLVED, "username")
+
+    const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
+
+    expect(result.status).toBe("COMPLETED")
+    expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
+  })
+
+  it("will fail if the case doesn't have a lock", async () => {
+    const caseDb = await setupCase(sql, ResolutionStatus.UNRESOLVED, undefined)
 
     const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
 
     expect(result.status).toBe("FAILED")
   })
 
-  it("will fail if the case doesn't have a lock", async () => {
-    const caseDb = await setupCase(sql, ResolutionStatus.SUBMITTED, undefined)
+  it("will fail if the case has the submitted error status", async () => {
+    const caseDb = await setupCase(sql, ResolutionStatus.SUBMITTED, "user.name")
+
+    const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
+
+    expect(result.status).toBe("FAILED")
+  })
+
+  it("will fail if the case has the resolved error status", async () => {
+    const caseDb = await setupCase(sql, ResolutionStatus.RESOLVED, "user.name")
 
     const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: false } })
 
