@@ -3,8 +3,8 @@ import React from "react"
 
 interface resetPasswordFormGroupProps {
   passwordMismatch: boolean | undefined
-  passwordsMismatchError?: string
-  newPasswordError?: string | false | undefined
+  passwordsMismatchError: string
+  newPasswordError: string | false | undefined
 }
 
 const ResetPasswordFormGroup = ({
