@@ -65,6 +65,8 @@ exports[`mapToPoliceQueryResult should map LEDS ASN query response to police que
   "croNumber": undefined,
   "forceStationCode": "01ZD",
   "penaltyCases": undefined,
+  "personId": "4e9a94f1-36fe-4bea-9618-d9994c08ce51",
   "pncId": "2000/0410769X",
+  "reportId": "ceeb4def-5457-484d-9f3f-e2b2fdffc2ce",
 }
 `;
