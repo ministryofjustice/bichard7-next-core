@@ -18,7 +18,7 @@ COPY packages/common/package.json ./packages/common/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
 COPY packages/ui/scripts ./packages/ui/scripts
 
-RUN npm ci --ignore-scripts
+RUN npm ci --ignore-scripts --no-audit
 
 RUN npm run install:assets -w packages/ui
 

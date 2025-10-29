@@ -12,7 +12,7 @@ COPY tsconfig*.json ./
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/api/package.json ./packages/api/package.json
 
-RUN npm ci --ignore-scripts
+RUN npm ci --ignore-scripts --no-audit
 
 #########################################################
 FROM base AS builder
