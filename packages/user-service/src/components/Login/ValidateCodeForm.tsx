@@ -1,5 +1,6 @@
 import React from "react"
 import Form from "components/Form"
+import { RememberForm } from "components/Login/RememberForm"
 import Paragraph from "components/Paragraph"
 import TextInput from "components/TextInput"
 import NotReceivedEmail from "components/NotReceivedEmail"
@@ -27,7 +28,6 @@ const ValidateCodeForm: React.FC<ValidateCodeFormProps> = ({
   stageValue,
   sendAgainUrl,
   showRememberForm = false,
-  RememberFormComponent,
   buttonText
 }) => {
   const textInputWidth = "30"
@@ -56,7 +56,7 @@ const ValidateCodeForm: React.FC<ValidateCodeFormProps> = ({
         error={invalidCodeError}
         optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
       />
-      {showRememberForm && RememberFormComponent && <RememberFormComponent checked={false} />}
+      {showRememberForm && RememberForm && <RememberForm checked={false} />}
       <Button noDoubleClick>{finalButtonText}</Button>
       <NotReceivedEmail sendAgainUrl={sendAgainUrl} />
     </Form>
