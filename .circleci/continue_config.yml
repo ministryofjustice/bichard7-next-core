@@ -975,15 +975,11 @@ workflows:
       - test_conductor
       - test_core
       - test_ui
+      - test_ui_component
       - test_user_service
       - test_user_service_e2e
       - characterisation_test
       - comparison_test
-
-      - test_ui_component:
-          name: test_ui_component
-          requires:
-            - test_ui
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
