@@ -959,11 +959,11 @@ workflows:
   test-all:
     jobs:
       - lint_and_build
-        
+
       - build_ui_image
       - build_user_service_image
       - build_api_image
-      
+
       - test_message_forwarder
       - test_postgres
       - test_api
