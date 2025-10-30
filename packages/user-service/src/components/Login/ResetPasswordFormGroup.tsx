@@ -1,7 +1,7 @@
 import PasswordInput from "./PasswordInput"
 import React from "react"
 
-interface resetPasswordFormGroupProps {
+interface ResetPasswordFormGroupProps {
   passwordMismatch: boolean | undefined
   passwordsMismatchError: string
   newPasswordError: string | false | undefined
@@ -11,7 +11,7 @@ const ResetPasswordFormGroup = ({
   passwordMismatch,
   passwordsMismatchError,
   newPasswordError
-}: resetPasswordFormGroupProps) => {
+}: ResetPasswordFormGroupProps) => {
   const formGroupClasses = `govuk-form-group ${passwordMismatch ? "govuk-form-group--error" : ""}`
 
   const textInputWidth = "30"
