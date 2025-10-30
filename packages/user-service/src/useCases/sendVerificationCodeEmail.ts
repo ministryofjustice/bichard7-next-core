@@ -26,7 +26,7 @@ export default async (connection: Database, emailAddress: string, type: string):
   }
 
   let createVerificationEmailResult
-  if (type === "login") {
+  if (type === "loginStage") {
     createVerificationEmailResult = loginEmail({ code })
   } else {
     createVerificationEmailResult = resetPasswordEmail({ code })

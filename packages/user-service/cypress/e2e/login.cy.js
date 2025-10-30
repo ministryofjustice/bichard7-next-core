@@ -24,7 +24,7 @@ describe("Logging In", () => {
     cy.get("input[type=email]").type(user.email)
     cy.get("input[type=password]").type(user.password)
     cy.get("button[type=submit]").click()
-    cy.get("body").contains(/sent an email/i)
+    cy.get("body").contains(/sent a code/i)
   })
 
   it("should show an error if no email or password is entered", () => {

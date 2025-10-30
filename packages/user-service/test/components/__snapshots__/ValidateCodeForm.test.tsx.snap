@@ -1,0 +1,553 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ValidateCodeForm should render correctly for 'loginStage' (Sign in button) and show RememberForm 1`] = `
+<div>
+  <form
+    method="post"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="mock-csrf-token"
+    />
+    <h1
+      class="govuk-heading-xl"
+    >
+      Check your email
+    </h1>
+    <p
+      class="govuk-body"
+    >
+      We have sent a code to:
+       
+      <b>
+        bichard01@example.com
+      </b>
+    </p>
+    <p
+      class="govuk-body"
+    >
+      Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.
+    </p>
+    <p
+      class="govuk-body govuk-!-padding-bottom-4"
+    >
+      The code will expire after 30 minutes.
+    </p>
+    <input
+      id="email"
+      name="emailAddress"
+      type="hidden"
+      value="bichard01@example.com"
+    />
+    <input
+      name="loginStage"
+      type="hidden"
+      value="validateCode"
+    />
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="validationCode"
+      >
+        Security Code
+      </label>
+      <div
+        class="govuk-hint"
+        id="validationCode-hint"
+      >
+        Enter the security code
+      </div>
+      <input
+        aria-autocomplete="none"
+        aria-describedby="validationCode-hint "
+        autocomplete="off"
+        class="govuk-input govuk-input--width-30"
+        data-test="text-input_validationCode"
+        id="validationCode"
+        name="validationCode"
+        type="text"
+        value="123456"
+      />
+    </div>
+    <div
+      class="govuk-form-group govuk-!-padding-top-4"
+    >
+      <fieldset
+        aria-describedby="waste-hint"
+        class="govuk-fieldset"
+      >
+        <legend
+          class="govuk-fieldset__legend govuk-fieldset__legend--s"
+        >
+          Sign in without a code next time
+        </legend>
+        <div
+          class="govuk-checkboxes"
+          data-module="govuk-checkboxes"
+        >
+          <div
+            class="govuk-checkboxes__item"
+          >
+            <input
+              class="govuk-checkboxes__input"
+              id="rememberEmailYes"
+              name="rememberEmailAddress"
+              type="checkbox"
+              value="yes"
+            />
+            <label
+              class="govuk-label govuk-checkboxes__label"
+              for="rememberEmailYes"
+            >
+              I trust this device. I don't want to sign in with a code again today.
+            </label>
+          </div>
+          <div
+            class="govuk-warning-text govuk-!-margin-bottom-0"
+          >
+            <span
+              aria-hidden="true"
+              class="govuk-warning-text__icon"
+            >
+              !
+            </span>
+            <strong
+              class="govuk-warning-text__text"
+            >
+              <span
+                class="govuk-visually-hidden"
+              >
+                Warning
+              </span>
+              Don't use this option if you are using a public or shared device.
+            </strong>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <button
+      class="govuk-button"
+      data-module="govuk-button"
+      data-prevent-double-click="true"
+      type="submit"
+    >
+      Sign in
+    </button>
+    <details
+      class="govuk-details"
+      data-module="govuk-details"
+    >
+      <summary
+        class="govuk-details__summary"
+        data-test="problem-with-code"
+      >
+        <span
+          class="govuk-details__summary-text"
+        >
+          Problem with the code?
+        </span>
+      </summary>
+      <div
+        class="govuk-details__text"
+      >
+        <p>
+          We can 
+          <a
+            class="govuk-link"
+            data-test="send-code-again-link"
+            href="/send-code-again?notYou=false&action=sendCodeAgain"
+          >
+            send the code again
+          </a>
+           or you can 
+          <a
+            class="govuk-link"
+            data-test="not-you-link"
+            href="/send-code-again?notYou=true"
+          >
+            use a different email address.
+          </a>
+        </p>
+        <p>
+          If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts.
+        </p>
+      </div>
+    </details>
+  </form>
+</div>
+`;
+
+exports[`ValidateCodeForm should render correctly for 'resetStage' (Next button) with no error 1`] = `
+<div>
+  <form
+    method="post"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="mock-csrf-token"
+    />
+    <h1
+      class="govuk-heading-xl"
+    >
+      Check your email
+    </h1>
+    <p
+      class="govuk-body"
+    >
+      We have sent a code to:
+       
+      <b>
+        bichard01@example.com
+      </b>
+    </p>
+    <p
+      class="govuk-body"
+    >
+      Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.
+    </p>
+    <p
+      class="govuk-body govuk-!-padding-bottom-4"
+    >
+      The code will expire after 30 minutes.
+    </p>
+    <input
+      id="email"
+      name="emailAddress"
+      type="hidden"
+      value="bichard01@example.com"
+    />
+    <input
+      name="resetStage"
+      type="hidden"
+      value="validateCode"
+    />
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="validationCode"
+      >
+        Security Code
+      </label>
+      <div
+        class="govuk-hint"
+        id="validationCode-hint"
+      >
+        Enter the security code
+      </div>
+      <input
+        aria-autocomplete="none"
+        aria-describedby="validationCode-hint "
+        autocomplete="off"
+        class="govuk-input govuk-input--width-30"
+        data-test="text-input_validationCode"
+        id="validationCode"
+        name="validationCode"
+        type="text"
+        value="123456"
+      />
+    </div>
+    <button
+      class="govuk-button"
+      data-module="govuk-button"
+      data-prevent-double-click="true"
+      type="submit"
+    >
+      Next
+    </button>
+    <details
+      class="govuk-details"
+      data-module="govuk-details"
+    >
+      <summary
+        class="govuk-details__summary"
+        data-test="problem-with-code"
+      >
+        <span
+          class="govuk-details__summary-text"
+        >
+          Problem with the code?
+        </span>
+      </summary>
+      <div
+        class="govuk-details__text"
+      >
+        <p>
+          We can 
+          <a
+            class="govuk-link"
+            data-test="send-code-again-link"
+            href="/send-code-again?notYou=false&action=sendCodeAgain"
+          >
+            send the code again
+          </a>
+           or you can 
+          <a
+            class="govuk-link"
+            data-test="not-you-link"
+            href="/send-code-again?notYou=true"
+          >
+            use a different email address.
+          </a>
+        </p>
+        <p>
+          If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts.
+        </p>
+      </div>
+    </details>
+  </form>
+</div>
+`;
+
+exports[`ValidateCodeForm should render correctly when a validationCodeError is present 1`] = `
+<div>
+  <form
+    method="post"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="mock-csrf-token"
+    />
+    <h1
+      class="govuk-heading-xl"
+    >
+      Check your email
+    </h1>
+    <p
+      class="govuk-body"
+    >
+      We have sent a code to:
+       
+      <b>
+        bichard01@example.com
+      </b>
+    </p>
+    <p
+      class="govuk-body"
+    >
+      Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.
+    </p>
+    <p
+      class="govuk-body govuk-!-padding-bottom-4"
+    >
+      The code will expire after 30 minutes.
+    </p>
+    <input
+      id="email"
+      name="emailAddress"
+      type="hidden"
+      value="bichard01@example.com"
+    />
+    <input
+      name="resetStage"
+      type="hidden"
+      value="validateCode"
+    />
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="validationCode"
+      >
+        Security Code
+      </label>
+      <div
+        class="govuk-hint"
+        id="validationCode-hint"
+      >
+        Enter the security code
+      </div>
+      <input
+        aria-autocomplete="none"
+        aria-describedby="validationCode-hint "
+        autocomplete="off"
+        class="govuk-input govuk-input--width-30"
+        data-test="text-input_validationCode"
+        id="validationCode"
+        name="validationCode"
+        type="text"
+        value="123456"
+      />
+    </div>
+    <button
+      class="govuk-button"
+      data-module="govuk-button"
+      data-prevent-double-click="true"
+      type="submit"
+    >
+      Next
+    </button>
+    <details
+      class="govuk-details"
+      data-module="govuk-details"
+    >
+      <summary
+        class="govuk-details__summary"
+        data-test="problem-with-code"
+      >
+        <span
+          class="govuk-details__summary-text"
+        >
+          Problem with the code?
+        </span>
+      </summary>
+      <div
+        class="govuk-details__text"
+      >
+        <p>
+          We can 
+          <a
+            class="govuk-link"
+            data-test="send-code-again-link"
+            href="/send-code-again?notYou=false&action=sendCodeAgain"
+          >
+            send the code again
+          </a>
+           or you can 
+          <a
+            class="govuk-link"
+            data-test="not-you-link"
+            href="/send-code-again?notYou=true"
+          >
+            use a different email address.
+          </a>
+        </p>
+        <p>
+          If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts.
+        </p>
+      </div>
+    </details>
+  </form>
+</div>
+`;
+
+exports[`ValidateCodeForm should render with custom button text if provided 1`] = `
+<div>
+  <form
+    method="post"
+  >
+    <input
+      name="CSRFToken"
+      type="hidden"
+      value="mock-csrf-token"
+    />
+    <h1
+      class="govuk-heading-xl"
+    >
+      Check your email
+    </h1>
+    <p
+      class="govuk-body"
+    >
+      We have sent a code to:
+       
+      <b>
+        bichard01@example.com
+      </b>
+    </p>
+    <p
+      class="govuk-body"
+    >
+      Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.
+    </p>
+    <p
+      class="govuk-body govuk-!-padding-bottom-4"
+    >
+      The code will expire after 30 minutes.
+    </p>
+    <input
+      id="email"
+      name="emailAddress"
+      type="hidden"
+      value="bichard01@example.com"
+    />
+    <input
+      name="resetStage"
+      type="hidden"
+      value="validateCode"
+    />
+    <div
+      class="govuk-form-group"
+    >
+      <label
+        class="govuk-label govuk-label--s"
+        for="validationCode"
+      >
+        Security Code
+      </label>
+      <div
+        class="govuk-hint"
+        id="validationCode-hint"
+      >
+        Enter the security code
+      </div>
+      <input
+        aria-autocomplete="none"
+        aria-describedby="validationCode-hint "
+        autocomplete="off"
+        class="govuk-input govuk-input--width-30"
+        data-test="text-input_validationCode"
+        id="validationCode"
+        name="validationCode"
+        type="text"
+        value="123456"
+      />
+    </div>
+    <button
+      class="govuk-button"
+      data-module="govuk-button"
+      data-prevent-double-click="true"
+      type="submit"
+    >
+      Verify Code
+    </button>
+    <details
+      class="govuk-details"
+      data-module="govuk-details"
+    >
+      <summary
+        class="govuk-details__summary"
+        data-test="problem-with-code"
+      >
+        <span
+          class="govuk-details__summary-text"
+        >
+          Problem with the code?
+        </span>
+      </summary>
+      <div
+        class="govuk-details__text"
+      >
+        <p>
+          We can 
+          <a
+            class="govuk-link"
+            data-test="send-code-again-link"
+            href="/send-code-again?notYou=false&action=sendCodeAgain"
+          >
+            send the code again
+          </a>
+           or you can 
+          <a
+            class="govuk-link"
+            data-test="not-you-link"
+            href="/send-code-again?notYou=true"
+          >
+            use a different email address.
+          </a>
+        </p>
+        <p>
+          If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts.
+        </p>
+      </div>
+    </details>
+  </form>
+</div>
+`;
