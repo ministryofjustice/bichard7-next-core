@@ -8,10 +8,10 @@ describe("Forgot password", () => {
     cy.visit("/login")
     cy.get('[data-test="helpSigningIn"]').click()
     cy.get("a[data-test='reset-password']").click()
-    cy.get("body").contains(/reset password/i)
+    cy.get("body").contains(/We need to confirm your email address/i)
     cy.get("input[type=email]").type("bichard01@example.com")
     cy.get("button[type=submit]").click()
-    cy.get("body").contains(/sent you an email/i)
+    cy.get("body").contains(/We have sent a code to/i)
   })
 
   it("should not allow submission of something that isn't an email address", () => {

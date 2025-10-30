@@ -16,14 +16,14 @@ import AuditLogEvent from "types/AuditLogEvent"
 
 const fetchGroups = async (task: ITask<unknown>, emailAddress: string): Promise<UserGroup[]> => {
   const fetchGroupsQuery = `
-      SELECT g.name
-      FROM br7own.groups g
-      INNER JOIN br7own.users_groups ug
-        ON g.id = ug.group_id
-      INNER JOIN br7own.users u
-        ON ug.user_id = u.id
-      WHERE LOWER(u.email) = LOWER($1) AND u.deleted_at IS NULL
-    `
+    SELECT g.name
+    FROM br7own.groups g
+           INNER JOIN br7own.users_groups ug
+                      ON g.id = ug.group_id
+           INNER JOIN br7own.users u
+                      ON ug.user_id = u.id
+    WHERE LOWER(u.email) = LOWER($1) AND u.deleted_at IS NULL
+  `
   let groups = await task.any(fetchGroupsQuery, [emailAddress])
   groups = groups.map((group: { name: string }) => group.name.replace(/_grp$/, ""))
   return groups
@@ -31,25 +31,25 @@ const fetchGroups = async (task: ITask<unknown>, emailAddress: string): Promise<
 
 export const getUserWithInterval = async (task: ITask<unknown>, params: unknown[]): Promise<UserAuthBichard> => {
   const getUserQuery = `
-  SELECT
-    id,
-    username,
-    visible_courts,
-    visible_forces,
-    excluded_triggers,
-    endorsed_by,
-    org_serves,
-    forenames,
-    surname,
-    email,
-    password,
-    email_verification_code,
-    email_verification_generated > NOW() - INTERVAL '$3 minutes' as email_verification_current,
-    last_login_attempt is not null and last_login_attempt > NOW() - INTERVAL '$2 seconds' as login_too_soon,
-    migrated_password,
-    deleted_at
-  FROM br7own.users
-  WHERE LOWER(email) = LOWER($1)`
+    SELECT
+      id,
+      username,
+      visible_courts,
+      visible_forces,
+      excluded_triggers,
+      endorsed_by,
+      org_serves,
+      forenames,
+      surname,
+      email,
+      password,
+      email_verification_code,
+      email_verification_generated > NOW() - INTERVAL '$3 minutes' as email_verification_current,
+      last_login_attempt is not null and last_login_attempt > NOW() - INTERVAL '$2 seconds' as login_too_soon,
+      migrated_password,
+      deleted_at
+    FROM br7own.users
+    WHERE LOWER(email) = LOWER($1)`
 
   const user = await task.one(getUserQuery, params)
 
@@ -80,10 +80,10 @@ export const getUserWithInterval = async (task: ITask<unknown>, params: unknown[
 
 export const updateUserLoginTimestamp = async (task: ITask<unknown>, emailAddress: string) => {
   const updateUserQuery = `
-      UPDATE br7own.users
-      SET last_login_attempt = NOW()
-      WHERE LOWER(email) = LOWER($1)
-    `
+    UPDATE br7own.users
+    SET last_login_attempt = NOW()
+    WHERE LOWER(email) = LOWER($1)
+  `
 
   await task.none(updateUserQuery, [emailAddress])
 }

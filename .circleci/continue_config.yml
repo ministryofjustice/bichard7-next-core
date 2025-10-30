@@ -342,7 +342,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: large
+    resource_class: xlarge
     parallelism: 10
     parameters:
       next-ui:
@@ -456,6 +456,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - fetch_images:
+          images: nginx-nodejs-20-2023-supervisord
       - run: ./scripts/build-api-docker.sh
       - run:
           name: Save Docker image
@@ -720,7 +722,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: true
-    resource_class: large
+    resource_class: xlarge
     parallelism: 10
     parameters:
       <<: *ui_params
@@ -806,7 +808,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: large
+    resource_class: xlarge
     parallelism: 10
     parameters:
       <<: *ui_params
