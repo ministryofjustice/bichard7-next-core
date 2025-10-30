@@ -1,4 +1,5 @@
-FROM nginx-nodejs-20-2023-supervisord:latest AS base
+ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
+FROM ${BUILD_IMAGE} AS base
 
 LABEL maintainer="CJSE"
 
