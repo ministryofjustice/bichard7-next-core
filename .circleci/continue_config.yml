@@ -92,30 +92,9 @@ commands:
       - store_test_results:
           path: packages/e2e-test/test-results/results/report.xml
 
-  set_locale:
-    steps:
-      - run:
-          name: Set GB locale
-          command: bash .circleci/scripts/set-locale.sh
-
-  install_ms_edge:
-    steps:
-      - restore_cache:
-          keys:
-            - ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
-      - run:
-          name: Install MS Edge (dev)
-          command: bash .circleci/scripts/install-ms-edge-on-linux.sh
-      - save_cache:
-          key: ubuntu-package-cache-v1-{{ checksum ".circleci/scripts/install-ms-edge-on-linux.sh" }}
-          paths:
-            - ~/vendor/apt_cache
-            - ~/vendor/apt_lists
-
   setup_ui:
     steps:
       - node_install
-      - set_locale
 
   build_core_images:
     steps:
@@ -170,9 +149,6 @@ commands:
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
 
 ui_params: &ui_params
-  ms-edge:
-    type: boolean
-    default: false
   api:
     type: boolean
     default: false
@@ -211,7 +187,6 @@ jobs:
     resource_class: medium
     steps:
       - checkout
-      - set_locale
       - install_dependencies
       - run:
           name: Check the code for linting errors
@@ -233,7 +208,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - install_dependencies
       - build_core
       - fetch_images:
@@ -286,7 +260,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - install_dependencies
       - build_core
       - run:
@@ -318,7 +291,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - install_dependencies
       - build_core
       - run:
@@ -341,7 +313,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - node_install
       - install_dependencies
       - build_core
@@ -372,7 +343,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - node_install
       - install_dependencies
       - build_core
@@ -401,13 +371,10 @@ jobs:
       phase3-core-canary-ratio:
         type: enum
         enum: ["1.0", "0.0"]
-      ms-edge:
-        type: boolean
     environment:
       NEXTUI: << parameters.next-ui >>
       PHASE2_CORE_CANARY_RATIO: << parameters.phase2-core-canary-ratio >>
       PHASE3_CORE_CANARY_RATIO: << parameters.phase3-core-canary-ratio >>
-      MS_EDGE: << parameters.ms-edge >>
     steps:
       - unless:
           condition:
@@ -426,12 +393,6 @@ jobs:
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
-      - set_locale
-      - when:
-          condition:
-            equal: [true, << parameters.ms-edge >>]
-          steps:
-            - install_ms_edge
       - install_dependencies
       - build_e2e_tests
       - fetch_images:
@@ -475,7 +436,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - node_install
       - install_dependencies
       - build_api
@@ -536,7 +496,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - node_install
       - install_dependencies
       - build_core
@@ -558,7 +517,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -632,9 +590,6 @@ jobs:
     machine:
       image: ubuntu-2204:current
     resource_class: medium
-    parameters:
-      ms-edge:
-        type: boolean
     steps:
       - unless:
           condition:
@@ -653,11 +608,6 @@ jobs:
           name: Install GOV.UK Assets
           command: npm run -w packages/ui install:assets
       - build_core
-      - when:
-          condition:
-            equal: [true, << parameters.ms-edge >>]
-          steps:
-            - install_ms_edge
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
@@ -673,7 +623,6 @@ jobs:
           name: Run UI component tests
           command: bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
           environment:
-            MS_EDGE: "<< parameters.ms-edge >>"
             UI_IS_HTTPS: true
             TZ: "Europe/London"
       - store_test_results:
@@ -697,7 +646,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_locale
       - node_install
       - install_dependencies
       - fetch_images:
@@ -718,10 +666,6 @@ jobs:
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     parallelism: 4
-    parameters:
-      ms-edge:
-        type: boolean
-        default: false
     steps:
       - unless:
           condition:
@@ -736,15 +680,9 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
       - attach_workspace:
           at: .
-      - set_locale
       - node_install
       - install_dependencies:
           install-cypress: true
-      - when:
-          condition:
-            equal: [true, << parameters.ms-edge >>]
-          steps:
-            - install_ms_edge
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
@@ -756,8 +694,6 @@ jobs:
       - run:
           name: Run e2e tests against user service code
           command: bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
-          environment:
-            MS_EDGE: "<< parameters.ms-edge >>"
       - store_test_results:
           path: ~/project/packages/user-service/cypress/results
       - store_artifacts:
@@ -834,11 +770,6 @@ jobs:
       - install_dependencies:
           install-cypress: true
       - build_core
-      - when:
-          condition:
-            equal: [true, << parameters.ms-edge >>]
-          steps:
-            - install_ms_edge
       - run:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
@@ -867,7 +798,6 @@ jobs:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
           environment:
-            MS_EDGE: "<< parameters.ms-edge >>"
             API: "<< parameters.api >>"
             UI_IS_HTTPS: true
             TZ: "Europe/London"
@@ -892,7 +822,6 @@ jobs:
       WORKSPACE: local-next
       AUTH_TYPE: user-service
       TZ: "Europe/London"
-      MS_EDGE: << parameters.ms-edge >>
     steps:
       - unless:
           condition:
@@ -924,11 +853,6 @@ jobs:
       - setup_ui
       - install_dependencies
       - build_e2e_tests
-      - when:
-          condition:
-            equal: [true, << parameters.ms-edge >>]
-          steps:
-            - install_ms_edge
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_core_images
@@ -956,7 +880,6 @@ jobs:
             RECORD: "true"
             NEXTUI: "true"
             MESSAGE_ENTRY_POINT: "s3"
-            MS_EDGE: "<< parameters.ms-edge >>"
           command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
 
@@ -1036,12 +959,6 @@ parameters:
     type: boolean
     default: false
 
-merge_queue_only: &merge_queue_only
-  filters:
-    branches:
-      only:
-        - /^gh-readonly-queue\/main.*/
-
 workflows:
   test-all:
     jobs:
@@ -1063,7 +980,6 @@ workflows:
 
       - cypress_component_test:
           name: cypress_component_test
-          ms-edge: false
           requires:
             - test_ui
 
@@ -1110,30 +1026,6 @@ workflows:
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
-          ms-edge: false
           requires:
             - lint_and_build
-            - build_user_service_image
-
-      - test_user_service_e2e:
-          <<: *merge_queue_only
-          name: test_user_service_e2e_ms_edge
-          ms-edge: true
-      - cypress_component_test:
-          <<: *merge_queue_only
-          name: cypress_component_test_ms_edge
-          ms-edge: true
-      - cypress_e2e_tests:
-          <<: *merge_queue_only
-          name: cypress_e2e_tests_ms_edge
-          ms-edge: true
-          requires:
-            - build_ui_image
-            - build_user_service_image
-      - cucumber_e2e_tests:
-          <<: *merge_queue_only
-          name: cucumber_e2e_tests_ms_edge
-          ms-edge: true
-          requires:
-            - build_ui_image
-            - build_user_service_image
+            - build_user_service_docker_image

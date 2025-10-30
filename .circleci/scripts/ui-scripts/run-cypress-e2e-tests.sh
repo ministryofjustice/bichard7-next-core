@@ -3,11 +3,6 @@ cd ~/project/packages/ui
 
 CYPRESS_OPTS="--config baseUrl=https://localhost:4443 --reporter ../../node_modules/cypress-circleci-reporter --reporter-options resultsDir=./cypress/results"
 
-if [[ $MS_EDGE == "1" ]]; then
-  echo "Using Microsoft Edge"
-  CYPRESS_OPTS+=" --browser edge"
-fi
-
 TEST_PATTERN="cypress/e2e/**/*.cy.ts"
 CYPRESS_CMD="xargs npx cypress run $CYPRESS_OPTS --spec"
 
