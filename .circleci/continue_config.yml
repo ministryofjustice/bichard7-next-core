@@ -1056,13 +1056,9 @@ merge_queue_only: &merge_queue_only
 workflows:
   test-all:
     jobs:
-      - build-ui:
-          name: build-ui
-      - build_user_service_docker_image:
-          name: build_user_service_docker_image
-      - build_api_docker_image:
-          name: build_api_docker_image
-
+      - build-ui
+      - build_user_service_docker_image
+      - build_api_docker_image
       - lint_and_build
       - test_message_forwarder
       - test_postgres
