@@ -1056,6 +1056,13 @@ merge_queue_only: &merge_queue_only
 workflows:
   test-all:
     jobs:
+      - build-ui:
+          name: build-ui
+      - build_user_service_docker_image:
+          name: build_user_service_docker_image
+      - build_api_docker_image:
+          name: build_api_docker_image
+
       - lint_and_build
       - test_message_forwarder
       - test_postgres
@@ -1069,26 +1076,11 @@ workflows:
       - characterisation_test
       - comparison_test
 
-      - build-ui:
-          name: build-ui
-          requires:
-            - test_ui
       - cypress_component_test:
           name: cypress_component_test
           ms-edge: false
           requires:
             - test_ui
-
-      - build_user_service_docker_image:
-          name: build_user_service_docker_image
-          requires:
-            - test_user_service
-            - test_user_service_e2e
-
-      - build_api_docker_image:
-          name: build_api_docker_image
-          requires:
-            - test_api
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
