@@ -3,7 +3,6 @@
 TAGS=$1
 
 NEXTUI=${NEXTUI:-"false"}
-MS_EDGE=${MS_EDGE:-"false"}
 
 if [ "${NEXTUI}x" == "truex" ]; then
   TAGS="${TAGS} and @NextUI"
@@ -18,7 +17,6 @@ echo "Message entry point: $MESSAGE_ENTRY_POINT"
 echo "Next UI: $NEXTUI"
 echo "Phase 2 canary ratio: $PHASE2_CORE_CANARY_RATIO"
 echo "Phase 3 canary ratio: $PHASE3_CORE_CANARY_RATIO"
-echo "MS EDGE: $MS_EDGE"
 echo "---------------------------------------------"
 
 CMD="../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --publish-quiet --format @cucumber/pretty-formatter  --format junit:./test-results/results/report.xml --tags '${TAGS}'"
