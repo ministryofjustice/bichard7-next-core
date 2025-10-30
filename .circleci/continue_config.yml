@@ -1027,5 +1027,4 @@ workflows:
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
           requires:
-            - lint_and_build
             - build_user_service_docker_image
