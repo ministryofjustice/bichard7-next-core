@@ -92,10 +92,6 @@ commands:
       - store_test_results:
           path: packages/e2e-test/test-results/results/report.xml
 
-  setup_ui:
-    steps:
-      - node_install
-
   build_core_images:
     steps:
       - run:
@@ -571,7 +567,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - setup_ui
+      - node_install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
@@ -601,7 +597,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - setup_ui
+      - node_install
       - install_dependencies:
           install-cypress: true
       - run:
@@ -766,7 +762,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             - load_api_image
-      - setup_ui
+      - node_install
       - install_dependencies:
           install-cypress: true
       - build_core
@@ -850,7 +846,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             - load_api_image
-      - setup_ui
+      - node_install
       - install_dependencies
       - build_e2e_tests
       - fetch_images:
@@ -904,7 +900,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - setup_ui
+      - node_install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
