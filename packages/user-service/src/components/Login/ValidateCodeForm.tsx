@@ -15,7 +15,6 @@ interface ValidateCodeFormProps {
   stageValue: "validateCode"
   sendAgainUrl: string
   showRememberForm?: boolean
-  RememberFormComponent?: React.FC<{ checked: boolean }>
   buttonText?: string
 }
 
@@ -56,7 +55,7 @@ const ValidateCodeForm: React.FC<ValidateCodeFormProps> = ({
         error={invalidCodeError}
         optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
       />
-      {showRememberForm && RememberForm && <RememberForm checked={false} />}
+      {showRememberForm && <RememberForm checked={false} />}
       <Button noDoubleClick>{finalButtonText}</Button>
       <NotReceivedEmail sendAgainUrl={sendAgainUrl} />
     </Form>
