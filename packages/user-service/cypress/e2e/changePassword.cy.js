@@ -43,7 +43,7 @@ describe("Change password", () => {
       cy.get("input[type=password][name=newPassword]").type("shorty")
       cy.get("input[type=password][name=confirmPassword]").type("shorty")
       cy.get("button[type=submit]").click()
-      cy.get('[data-test="error-summary"]').contains("Password is too short.")
+      cy.get('[data-test="error-summary"]').contains("Password must be 8 characters or more")
     })
 
     it("should not allow submission when password is empty", () => {

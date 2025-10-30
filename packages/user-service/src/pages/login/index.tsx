@@ -9,7 +9,6 @@ import Layout from "components/Layout"
 import Link from "components/Link"
 import Paragraph from "components/Paragraph"
 import ServiceMessages from "components/ServiceMessages"
-import TextInput from "components/TextInput"
 import { removeCjsmSuffix } from "lib/cjsmSuffix"
 import config from "lib/config"
 import getAuditLogger from "lib/getAuditLogger"
@@ -39,12 +38,15 @@ import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
-import validateUserVerificationCode from "useCases/validateUserVerificationCode"
-import NotReceivedEmail from "components/NotReceivedEmail"
 import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
 import Details from "components/Details"
-import resetUserVerificationCode from "useCases/resetUserVerificationCode"
+import React from "react"
 import PasswordInput from "components/Login/PasswordInput"
+import ValidateCodeForm from "components/Login/ValidateCodeForm"
+import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
+import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
+import { handleResetSecurityCodeStage } from "lib/handleResetSecurityCodeStage"
+import { RememberForm } from "components/Login/RememberForm"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -200,47 +202,6 @@ const logInUser = async (
   return createRedirectResponse("/")
 }
 
-const handleValidateCodeStage = async (
-  context: GetServerSidePropsContext<ParsedUrlQuery>,
-  serviceMessages: ServiceMessage[],
-  connection: Database
-): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress, validationCode } = formData as {
-    emailAddress: string
-    validationCode: string
-  }
-
-  if (!validationCode) {
-    return {
-      props: {
-        invalidCodeError: "Enter a security code",
-        emailAddress,
-        csrfToken,
-        loginStage: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  const user = await validateUserVerificationCode(connection, emailAddress, validationCode)
-
-  if (isError(user)) {
-    logger.error(`Error validating code for user [${emailAddress}]: ${user.message}`)
-    return {
-      props: {
-        invalidCodeError: "Incorrect security code",
-        emailAddress,
-        csrfToken,
-        loginStage: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  return logInUser(connection, context, user)
-}
-
 const handleRememberedEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
@@ -294,54 +255,6 @@ const handleRememberedEmailStage = async (
   return logInUser(connection, context, user)
 }
 
-const handleResetSecurityCodeStage = async (
-  context: GetServerSidePropsContext<ParsedUrlQuery>,
-  serviceMessages: ServiceMessage[],
-  connection: Database
-): Promise<GetServerSidePropsResult<Props>> => {
-  const { formData, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
-  const { emailAddress } = formData as { emailAddress: string }
-
-  const reset = await resetUserVerificationCode(connection, emailAddress)
-
-  if (isError(reset)) {
-    logger.error(`Error resetting code for user [${emailAddress}]: ${reset.message}`)
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        sendingError: true,
-        loginStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  const sent = await sendVerificationCodeEmail(connection, emailAddress, "login")
-
-  if (isError(sent)) {
-    logger.error(sent)
-    return {
-      props: {
-        csrfToken,
-        emailAddress,
-        sendingError: true,
-        loginStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-      }
-    }
-  }
-
-  return {
-    props: {
-      csrfToken,
-      emailAddress,
-      loginStage: "validateCode",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
-    }
-  }
-}
-
 const handlePost = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[]
@@ -355,7 +268,18 @@ const handlePost = async (
   }
 
   if (loginStage === "validateCode") {
-    return handleValidateCodeStage(context, serviceMessages, connection)
+    const loginOnSuccess = (
+      connection: Database,
+      context: GetServerSidePropsContext<ParsedUrlQuery>,
+      user: UserAuthBichard
+    ): Promise<GetServerSidePropsResult<Props>> => {
+      return logInUser(connection, context, user)
+    }
+
+    return handleValidateCodeStage(context, serviceMessages, connection, {
+      stageKey: "loginStage",
+      onSuccess: loginOnSuccess
+    })
   }
 
   if (loginStage === "rememberedEmail") {
@@ -363,7 +287,7 @@ const handlePost = async (
   }
 
   if (loginStage === "resetSecurityCode") {
-    return handleResetSecurityCodeStage(context, serviceMessages, connection)
+    return handleResetSecurityCodeStage(context, serviceMessages, connection, "loginStage")
   }
 
   return createRedirectResponse("/500")
@@ -473,41 +397,6 @@ interface Props {
   serviceMessages: ServiceMessage[]
   httpsRedirectCookie?: boolean
 }
-
-type RememberProps = {
-  checked: boolean
-}
-const RememberForm = ({ checked }: RememberProps) => (
-  <div className="govuk-form-group govuk-!-padding-top-4">
-    <fieldset className="govuk-fieldset" aria-describedby="waste-hint">
-      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Sign in without a code next time"}</legend>
-      <div className="govuk-checkboxes" data-module="govuk-checkboxes">
-        <div className="govuk-checkboxes__item">
-          <input
-            className="govuk-checkboxes__input"
-            id="rememberEmailYes"
-            name="rememberEmailAddress"
-            type="checkbox"
-            value="yes"
-            defaultChecked={checked}
-          />
-          <label className="govuk-label govuk-checkboxes__label" htmlFor="rememberEmailYes">
-            {"I trust this device. I don't want to sign in with a code again today."}
-          </label>
-        </div>
-        <div className="govuk-warning-text govuk-!-margin-bottom-0">
-          <span className="govuk-warning-text__icon" aria-hidden="true">
-            {"!"}
-          </span>
-          <strong className="govuk-warning-text__text">
-            <span className="govuk-visually-hidden">{"Warning"}</span>
-            {"Don't use this option if you are using a public or shared device."}
-          </strong>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-)
 
 const Index = ({
   emailAddress,
@@ -636,40 +525,21 @@ const Index = ({
             )}
 
             {loginStage === "validateCode" && (
-              <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Check your email"}</h1>
-                <Form method="post" csrfToken={csrfToken}>
-                  <Paragraph>
-                    {`We have sent an email to: `}
-                    <b>{emailAddress}</b>
-                  </Paragraph>
-                  <Paragraph>{`The email contains your security code.`}</Paragraph>
-                  <Paragraph>{`Your email can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}</Paragraph>
-                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
-                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                  <input type="hidden" name="loginStage" value="validateCode" />
-                  <TextInput
-                    id="validationCode"
-                    name="validationCode"
-                    label="Security code"
-                    labelSize="s"
-                    hint="Enter the security code"
-                    type="text"
-                    width="30"
-                    value={validationCode}
-                    error={invalidCodeError}
-                    optionalProps={{ autocomplete: "off", "aria-autocomplete": "none" }}
-                  />
-                  <RememberForm checked={false} />
-                  <Button>{"Sign in"}</Button>
-                  <NotReceivedEmail sendAgainUrl="/login" />
-                </Form>
-              </>
+              <ValidateCodeForm
+                csrfToken={csrfToken}
+                emailAddress={emailAddress}
+                validationCode={validationCode}
+                invalidCodeError={invalidCodeError}
+                stageName="loginStage"
+                stageValue="validateCode"
+                sendAgainUrl="/login"
+                showRememberForm
+              />
             )}
 
             {loginStage === "rememberedEmail" && (
               <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard7"}</h1>
+                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Sign in to Bichard 7"}</h1>
                 <Form method="post" csrfToken={csrfToken}>
                   <Paragraph>
                     {"You are signing in as "}
@@ -692,24 +562,13 @@ const Index = ({
                 </Form>
               </>
             )}
-
             {loginStage === "resetSecurityCode" && (
-              <>
-                <h1 className="govuk-heading-xl govuk-!-margin-bottom-7">{"Get a security code"}</h1>
-                <Form method="post" csrfToken={csrfToken}>
-                  <Paragraph>
-                    {"We will send a code to: "}
-                    <b>{emailAddress}</b>
-                  </Paragraph>
-                  <Paragraph>
-                    {`Your code can take up to 5 minutes to arrive. Check your spam folder if you don't get an email.`}
-                  </Paragraph>
-                  <Paragraph className="govuk-!-padding-bottom-4">{`The code will expire after 30 minutes.`}</Paragraph>
-                  <input id="email" name="emailAddress" type="hidden" value={emailAddress} />
-                  <input type="hidden" name="loginStage" value="resetSecurityCode" />
-                  <Button id="security-code-button">{"Get security code"}</Button>
-                </Form>
-              </>
+              <ResendSecurityCodeForm
+                csrfToken={csrfToken}
+                emailAddress={emailAddress}
+                stageName="loginStage"
+                stageValue="resetSecurityCode"
+              />
             )}
           </GridColumn>
           <GridColumn width="one-third">

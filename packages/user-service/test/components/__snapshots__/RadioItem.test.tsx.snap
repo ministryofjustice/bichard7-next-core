@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render radioItem component 1`] = `
+<div>
+  <div
+    class="govuk-radios__item"
+  >
+    <input
+      checked=""
+      class="govuk-radios__input"
+      id="testRadio"
+      name="testRadio"
+      type="radio"
+      value="test"
+    />
+    <label
+      class="govuk-label govuk-radios__label"
+      for="testRadio"
+    >
+      This is a test
+    </label>
+  </div>
+</div>
+`;
