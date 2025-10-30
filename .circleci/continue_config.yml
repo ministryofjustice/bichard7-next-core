@@ -586,7 +586,7 @@ jobs:
           name: Run integration tests
           command: npm run -w packages/ui test:integration
 
-  cypress_component_test:
+  test_ui_component:
     machine:
       image: ubuntu-2204:current
     resource_class: medium
@@ -962,10 +962,12 @@ parameters:
 workflows:
   test-all:
     jobs:
+      - lint_and_build
+        
       - build_ui_image
       - build_user_service_image
       - build_api_image
-      - lint_and_build
+      
       - test_message_forwarder
       - test_postgres
       - test_api
@@ -978,8 +980,8 @@ workflows:
       - characterisation_test
       - comparison_test
 
-      - cypress_component_test:
-          name: cypress_component_test
+      - test_ui_component:
+          name: test_ui_component
           requires:
             - test_ui
 
@@ -1027,4 +1029,4 @@ workflows:
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
           requires:
-            - build_user_service_docker_image
+            - build_user_service_image
