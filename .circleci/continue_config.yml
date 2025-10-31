@@ -48,13 +48,13 @@ commands:
           steps:
             - run:
                 name: Install npm dependencies
-                command: npm i --workspaces --include-workspace-root
+                command: npm i --workspaces --include-workspace-root --no-audit
       - unless:
           condition: <<parameters.install-cypress>>
           steps:
             - run:
                 name: Install npm dependencies
-                command: CYPRESS_INSTALL_BINARY=0 npm i --workspaces --include-workspace-root
+                command: CYPRESS_INSTALL_BINARY=0 npm i --workspaces --include-workspace-root --no-audit
       - save_cache:
           key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
           paths: node_modules
@@ -409,7 +409,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: medium
+    resource_class: large
     steps:
       - unless:
           condition:
@@ -429,7 +429,7 @@ jobs:
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
-          command: npm run conductor
+          command: bash .circleci/scripts/run-infrastructure.sh '' conductor
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
@@ -770,7 +770,7 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - fetch_images:
-          images: nodejs-20-2023 nginx-auth-proxy
+          images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -789,7 +789,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             run:
-              command: npm run conductor
+              command: bash .circleci/scripts/run-infrastructure.sh api conductor
       - run:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -918,13 +918,14 @@ jobs:
       - setup_ui
       - install_dependencies
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
       - build_core
       - run:
-          command: npm run ui
+          name: Boot up infra
+          command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
       - run:
           name: Seed database
           command: DEPLOY_NAME=e2e-test npm run -w packages/ui seed-data
