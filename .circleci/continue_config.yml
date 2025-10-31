@@ -338,7 +338,7 @@ jobs:
 
   test_conductor:
     docker:
-      - image: cimg/aws:2025.10
+      - image: cimg/aws:2025.01.1
     resource_class: large
     steps:
       - unless:
@@ -371,7 +371,7 @@ jobs:
 
   test_message_forwarder:
     docker:
-      - image: cimg/aws:2025.10
+      - image: cimg/aws:2025.01.1
     resource_class: large
     steps:
       - unless:
@@ -556,6 +556,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node/install
       - run:
           name: Spin up the PostgreSQL database
