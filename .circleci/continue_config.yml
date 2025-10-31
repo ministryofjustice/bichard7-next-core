@@ -338,7 +338,7 @@ jobs:
 
   test_conductor:
     docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
+      - image: cimg/aws:2025.10
     resource_class: large
     steps:
       - unless:
@@ -353,7 +353,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-      - node_install
+      - node/install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -367,11 +367,11 @@ jobs:
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
       - run:
           name: Test the workflows
-          command: nvm use && npm run -w packages/conductor test
+          command: npm run -w packages/conductor test
 
   test_message_forwarder:
     docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
+      - image: cimg/aws:2025.10
     resource_class: large
     steps:
       - unless:
@@ -384,7 +384,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-      - node_install
+      - node/install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -395,7 +395,7 @@ jobs:
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
       - run:
           name: Test the workflows
-          command: nvm use && npm run -w packages/message-forwarder test
+          command: npm run -w packages/message-forwarder test
 
   cucumber_e2e_legacy_tests:
     machine:
