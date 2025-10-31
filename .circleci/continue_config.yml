@@ -55,17 +55,17 @@ commands:
   node_install:
     steps:
       - node/install
-#      - restore_cache:
-#          name: Restore nvm cache
-#          keys:
-#            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
-#            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-#      - run: nvm install
-#      - save_cache:
-#          name: Save nvm cache
-#          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-#          paths:
-#            - /opt/circleci/.nvm/.cache
+  #      - restore_cache:
+  #          name: Restore nvm cache
+  #          keys:
+  #            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
+  #            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+  #      - run: nvm install
+  #      - save_cache:
+  #          name: Save nvm cache
+  #          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+  #          paths:
+  #            - /opt/circleci/.nvm/.cache
 
   install_dependencies:
     description: Install the node dependencies for core
