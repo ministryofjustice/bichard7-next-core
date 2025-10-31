@@ -282,9 +282,8 @@ jobs:
           command: nvm use && npm run -w packages/core test:integration
 
   comparison_test:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -312,9 +311,8 @@ jobs:
           command: npm run -w packages/core test:compare:phase3
 
   characterisation_test:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -334,9 +332,8 @@ jobs:
           command: npm run test:characterisation -w packages/core
 
   test_conductor:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
     steps:
       - unless:
@@ -349,6 +346,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node_install
       - install_dependencies
       - build_core
@@ -366,9 +365,8 @@ jobs:
           command: nvm use && npm run -w packages/conductor test
 
   test_message_forwarder:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
     steps:
       - unless:
@@ -379,6 +377,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node_install
       - install_dependencies
       - build_core
@@ -457,9 +457,8 @@ jobs:
       - save_artifacts
 
   test_api:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -472,6 +471,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node_install
       - install_dependencies
       - build_api
@@ -519,9 +520,8 @@ jobs:
             - images
 
   test_common:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -540,9 +540,8 @@ jobs:
           command: npm run test -w packages/common
 
   test_postgres:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: false
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -591,9 +590,8 @@ jobs:
             - images
 
   test_ui:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
     steps:
       - unless:
@@ -607,6 +605,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node_install
       - install_dependencies
       - fetch_images:
@@ -623,8 +623,8 @@ jobs:
           command: npm run -w packages/ui test:integration
 
   test_ui_component:
-    machine:
-      image: ubuntu-2204:current
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -669,9 +669,8 @@ jobs:
           path: ~/project/packages/ui/cypress/screenshots
 
   test_user_service:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -682,6 +681,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node_install
       - install_dependencies
       - fetch_images:
@@ -697,9 +698,8 @@ jobs:
           command: nvm use && npm run -w packages/user-service test:integration
 
   test_user_service_e2e:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: large
     parallelism: 4
     steps:
@@ -711,6 +711,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
