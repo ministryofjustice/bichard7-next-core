@@ -301,7 +301,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install:
-          node_version: << pipeline.parameters.node-version >>
+          node-version: << pipeline.parameters.node-version >>
       - install_dependencies
       - build_core
       - run:
