@@ -230,7 +230,7 @@ jobs:
 
   test_core:
     docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
+      - image: 2025.01.1
     resource_class: medium
     steps:
       - unless:
@@ -244,6 +244,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      - node_install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -670,7 +671,7 @@ jobs:
 
   test_user_service:
     docker:
-      - image: cimg/node:<< pipeline.parameters.node-version >>
+      - image: cimg/aws:2025.01.1
     resource_class: medium
     steps:
       - unless:
@@ -683,6 +684,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      - node_install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
