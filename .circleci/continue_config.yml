@@ -54,8 +54,7 @@ commands:
 
   node_install:
     steps:
-      - node/install:
-          cache-key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+      - node/install
 #      - restore_cache:
 #          name: Restore nvm cache
 #          keys:
