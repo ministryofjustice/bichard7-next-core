@@ -1,0 +1,13 @@
+# Overrides for CircleCI to boost I/O performance
+# Mounts data in memory
+
+services:
+  postgres:
+    tmpfs:
+      - /var/lib/postgresql/data
+    volumes:
+      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+  localstack:
+    tmpfs:
+      - /var/lib/localstack
