@@ -533,7 +533,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
       - install_dependencies
       - build_core
       - run:
@@ -719,7 +718,6 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
       - attach_workspace:
           at: .
-      - node_install
       - install_dependencies:
           install-cypress: true
       - run:
