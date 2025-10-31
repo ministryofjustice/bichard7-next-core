@@ -218,7 +218,7 @@ ui_envs: &ui_envs
 jobs:
   lint_and_build:
     docker:
-      - image: cimg/node:<< parameters.node-version >>
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - checkout
