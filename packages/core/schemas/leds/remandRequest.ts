@@ -2,7 +2,7 @@ import z from "zod"
 
 import { checkNameSchema, courtSchema, dateStringSchema, forceStationCodeSchema } from "./common"
 
-const appearanceResultSchema = z.enum([
+export const appearanceResultSchema = z.enum([
   "remanded-on-bail",
   "remanded-in-custody",
   "adjourned",
@@ -12,13 +12,13 @@ const appearanceResultSchema = z.enum([
   "released-under-investigation"
 ])
 
-export const ledsNextAppearanceSchema = z.object({
+export const nextAppearanceSchema = z.object({
   date: dateStringSchema.optional(),
   forceStationCode: forceStationCodeSchema.optional(),
   court: courtSchema.optional()
 })
 
-export const ledsCurrentAppearanceSchema = z.object({
+export const currentAppearanceSchema = z.object({
   forceStationCode: forceStationCodeSchema.optional(),
   court: courtSchema.optional()
 })
@@ -51,8 +51,8 @@ export const remandRequestSchema = z.object({
   personUrn: z.string(),
   remandDate: dateStringSchema,
   appearanceResult: appearanceResultSchema,
-  currentAppearance: ledsCurrentAppearanceSchema.optional(),
-  nextAppearance: ledsNextAppearanceSchema.optional(),
+  currentAppearance: currentAppearanceSchema.optional(),
+  nextAppearance: nextAppearanceSchema.optional(),
   localAuthority: localAuthoritySchema.optional(),
   bailConditions: z.array(z.string().min(1).max(203))
 })

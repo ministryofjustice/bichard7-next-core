@@ -50,6 +50,8 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
 
   return {
     operation: PncOperation.REMAND,
+    personId: pncUpdateDataset.PncQuery?.personId ?? "",
+    reportId: pncUpdateDataset.PncQuery?.reportId ?? "",
     request: {
       ...generateBasePncUpdateRequest(pncUpdateDataset),
       arrestSummonsNumber,

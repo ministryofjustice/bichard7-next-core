@@ -149,7 +149,9 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     courtCases,
     forceStationCode: cxe.FSC["@_FSCode"],
     penaltyCases,
-    pncId: cxe.IDS["@_PNCID"]
+    pncId: cxe.IDS["@_PNCID"],
+    ...(cxe.IDS["@_PersonId"] ? { personId: cxe.IDS["@_PersonId"] } : {}),
+    ...(cxe.IDS["@_ReportId"] ? { reportId: cxe.IDS["@_ReportId"] } : {})
   }
   return result
 }
