@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  node: circleci/node@7.2.1
+
 parameters:
   docker-layer-caching:
     type: boolean
@@ -51,17 +54,19 @@ commands:
 
   node_install:
     steps:
-      - restore_cache:
-          name: Restore nvm cache
-          keys:
-            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
-            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-      - run: nvm install
-      - save_cache:
-          name: Save nvm cache
-          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-          paths:
-            - /opt/circleci/.nvm/.cache
+      - node/install:
+          cache-key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+#      - restore_cache:
+#          name: Restore nvm cache
+#          keys:
+#            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
+#            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+#      - run: nvm install
+#      - save_cache:
+#          name: Save nvm cache
+#          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+#          paths:
+#            - /opt/circleci/.nvm/.cache
 
   install_dependencies:
     description: Install the node dependencies for core
