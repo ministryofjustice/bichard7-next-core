@@ -90,7 +90,7 @@ services:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     healthcheck:
-      test: "pg_isready -U $${POSTGRES_USER}"
+      test: ["CMD-SHELL", "psql -U $${POSTGRES_USER} -d $${POSTGRES_DB} -c 'SELECT 1'"]
       interval: 2s
       timeout: 2s
       retries: 10
@@ -153,14 +153,14 @@ services:
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 120s
+      start_period: 30s
     ports:
       - 3333:9443
     depends_on:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       localstack:
         condition: service_healthy
 
@@ -189,13 +189,13 @@ services:
       localstack:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
     healthcheck:
       test: curl --insecure --fail https://localhost:5000/health
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 120s
+      start_period: 30s # Lowered from 120s
     ports:
       - 5001:5000
       - 5002:4000
@@ -269,7 +269,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       phase-1-message-forwarder:
         condition: service_started
       phase-2-message-forwarder:
@@ -352,7 +352,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       mail:
         condition: service_started
 
@@ -389,7 +389,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       api:
         condition: service_healthy
 
@@ -415,6 +415,7 @@ services:
     depends_on:
       bichard7-liberty:
         condition: service_healthy
+        required: false
       user-service:
         condition: service_healthy
       ui:
