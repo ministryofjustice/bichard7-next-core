@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@7.2.1
-
 parameters:
   docker-layer-caching:
     type: boolean
@@ -271,7 +268,7 @@ jobs:
       - run:
           name: Run Audit Logging API
           command: npm run audit-log
-      - node/install
+      - node_install
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
@@ -347,7 +344,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -377,7 +374,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -470,7 +467,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies
       - build_api
       - fetch_images:
@@ -530,7 +527,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies
       - build_core
       - run:
@@ -605,7 +602,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
@@ -635,7 +632,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies:
           install-cypress: true
       - run:
@@ -680,7 +677,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install
+      - node_install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -714,7 +711,7 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
       - attach_workspace:
           at: .
-      - node/install
+      - node_install
       - install_dependencies:
           install-cypress: true
       - run:
@@ -800,7 +797,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             - load_api_image
-      - node/install
+      - node_install
       - install_dependencies:
           install-cypress: true
       - build_core
@@ -884,7 +881,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             - load_api_image
-      - node/install
+      - node_install
       - install_dependencies
       - build_e2e_tests
       - fetch_images:
@@ -938,7 +935,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - node/install
+      - node_install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
