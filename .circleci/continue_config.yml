@@ -175,8 +175,8 @@ ui_envs: &ui_envs
 
 jobs:
   lint_and_build:
-    machine:
-      image: ubuntu-2204:current
+    docker:
+      image: cimg/node:<< parameters.node-version >>
     resource_class: medium
     steps:
       - checkout
@@ -915,6 +915,10 @@ jobs:
           command: npm run -w packages/ui zap
 
 parameters:
+  node-version:
+    type: string
+    default: "20.18.0"
+    description: "The Node.js version to use for the cimg/node image"
   docker-layer-caching:
     type: boolean
     default: false
