@@ -1,5 +1,43 @@
 version: 2.1
 
+parameters:
+  docker-layer-caching:
+    type: boolean
+    default: false
+  circleci-changes:
+    type: boolean
+    default: false
+  env-changes:
+    type: boolean
+    default: false
+  api-changes:
+    type: boolean
+    default: false
+  common-changes:
+    type: boolean
+    default: false
+  conductor-changes:
+    type: boolean
+    default: false
+  core-changes:
+    type: boolean
+    default: false
+  message-forwarder-changes:
+    type: boolean
+    default: false
+  ui-changes:
+    type: boolean
+    default: false
+  user-service-changes:
+    type: boolean
+    default: false
+  e2e-test-changes:
+    type: boolean
+    default: false
+  characterisation-test-changes:
+    type: boolean
+    default: false
+
 commands:
   fetch_images:
     parameters:
@@ -913,44 +951,6 @@ jobs:
       - run:
           name: Run ZAP scanner
           command: npm run -w packages/ui zap
-
-parameters:
-  docker-layer-caching:
-    type: boolean
-    default: false
-  circleci-changes:
-    type: boolean
-    default: false
-  env-changes:
-    type: boolean
-    default: false
-  api-changes:
-    type: boolean
-    default: false
-  common-changes:
-    type: boolean
-    default: false
-  conductor-changes:
-    type: boolean
-    default: false
-  core-changes:
-    type: boolean
-    default: false
-  message-forwarder-changes:
-    type: boolean
-    default: false
-  ui-changes:
-    type: boolean
-    default: false
-  user-service-changes:
-    type: boolean
-    default: false
-  e2e-test-changes:
-    type: boolean
-    default: false
-  characterisation-test-changes:
-    type: boolean
-    default: false
 
 workflows:
   test-all:
