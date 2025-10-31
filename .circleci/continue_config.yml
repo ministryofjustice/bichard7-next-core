@@ -247,8 +247,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-      - node/install:
-          node-version: << pipeline.parameters.node-version >>
+      - node/install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -300,8 +299,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install:
-          node-version: << pipeline.parameters.node-version >>
+      - node/install
       - install_dependencies
       - build_core
       - run:
@@ -613,8 +611,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-      - node/install:
-          node-version: << pipeline.parameters.node-version >>
+      - node/install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
