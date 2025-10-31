@@ -17,11 +17,9 @@
 			<ds:TimeOfHearing>10:00</ds:TimeOfHearing>
 			<ds:HearingLanguage Literal="Don't Know">D</ds:HearingLanguage>
 			<ds:HearingDocumentationLanguage Literal="Don't Know">D</ds:HearingDocumentationLanguage>
-			<ds:DefendantPresentAtHearing
-				Literal="Defendant was not present, but appeared by the presence of his/her barrister or solicitor">
-				A</ds:DefendantPresentAtHearing>
+			<ds:DefendantPresentAtHearing Literal="Defendant was not present, but appeared by the presence of his/her barrister or solicitor">A</ds:DefendantPresentAtHearing>
 			<br7:SourceReference>
-				<br7:DocumentName>SPI TRPR FOUR SEXOFFENCE</br7:DocumentName>
+				<br7:DocumentName>SPI TRPR  FOUR SEXOFFENCE</br7:DocumentName>
 				<br7:UniqueID>CID-8bc6ee0a-46ac-4a0e-b9be-b03e3b041415</br7:UniqueID>
 				<br7:DocumentType>SPI Case Result</br7:DocumentType>
 			</br7:SourceReference>
@@ -53,11 +51,11 @@
 				<br7:PNCCheckname>SEXOFFENCE</br7:PNCCheckname>
 				<br7:DefendantDetail>
 					<br7:PersonName>
-						<ds:Title>Mr and Mrs</ds:Title>
-						<ds:GivenName NameSequence="1">TRPR FOUR</ds:GivenName>
+						<ds:Title>Mr  and  Mrs</ds:Title>
+						<ds:GivenName NameSequence="1">TRPR  FOUR</ds:GivenName>
 						<ds:FamilyName NameSequence="1">SEXOFFENCE</ds:FamilyName>
 					</br7:PersonName>
-					<br7:GeneratedPNCFilename>SEXOFFENCE/TRPR FOUR</br7:GeneratedPNCFilename>
+					<br7:GeneratedPNCFilename>SEXOFFENCE/TRPR  FOUR</br7:GeneratedPNCFilename>
 					<br7:BirthDate>1948-11-11</br7:BirthDate>
 					<br7:Gender Literal="male">1</br7:Gender>
 				</br7:DefendantDetail>
@@ -98,10 +96,8 @@
 						<ds:StartDate>2010-11-28</ds:StartDate>
 					</ds:ActualOffenceStartDate>
 					<ds:LocationOfOffence>Kingston High Street</ds:LocationOfOffence>
-					<ds:OffenceTitle>Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA
-						2003</ds:OffenceTitle>
-					<ds:ActualOffenceWording>Attempt to rape a girl aged 13 / 14 / 15 / years of age
-						- SOA 2003.</ds:ActualOffenceWording>
+					<ds:OffenceTitle>Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003</ds:OffenceTitle>
+					<ds:ActualOffenceWording>Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.</ds:ActualOffenceWording>
 					<ds:RecordableOnPNCindicator Literal="Yes">Y</ds:RecordableOnPNCindicator>
 					<ds:NotifiableToHOindicator Literal="Yes">Y</ds:NotifiableToHOindicator>
 					<ds:HomeOfficeClassification>019/11</ds:HomeOfficeClassification>
@@ -224,8 +220,7 @@
 						<ds:StartDate>2010-11-28</ds:StartDate>
 					</ds:ActualOffenceStartDate>
 					<ds:LocationOfOffence>Kingston High Street</ds:LocationOfOffence>
-					<ds:OffenceTitle>Use a motor vehicle on a road / public place without third
-						party insurance</ds:OffenceTitle>
+					<ds:OffenceTitle>Use a motor vehicle on a road / public place without third party insurance</ds:OffenceTitle>
 					<ds:ActualOffenceWording>Use a motor vehicle without third party insurance.</ds:ActualOffenceWording>
 					<ds:RecordableOnPNCindicator Literal="No">N</ds:RecordableOnPNCindicator>
 					<ds:NotifiableToHOindicator Literal="No">N</ds:NotifiableToHOindicator>
@@ -261,44 +256,20 @@
 	</br7:HearingOutcome>
 	<br7:HasError>false</br7:HasError>
 	<CXE01>
-		<FSC FSCode="01ZD" IntfcUpdateType="K" />
-		<IDS CRONumber="" Checkname="SEXOFFENCE" IntfcUpdateType="K" PNCID="2000/0448754K" />
+		<FSC FSCode="01ZD" IntfcUpdateType="K"/>
+		<IDS CRONumber="" Checkname="SEXOFFENCE" IntfcUpdateType="K" PNCID="2000/0448754K"/>
 		<CourtCases>
 			<CourtCase>
-				<CCR CourtCaseRefNo="97/1626/008395Q" CrimeOffenceRefNo="" IntfcUpdateType="K" />
+				<CCR CourtCaseRefNo="97/1626/008395Q" CrimeOffenceRefNo="" IntfcUpdateType="K"/>
 				<Offences>
 					<Offence>
-						<COF OffenceId="OFFID1" ACPOOffenceCode="12:15:24:1"
-							CJSOffenceCode="SX03001A" IntfcUpdateType="K" OffEndDate=""
-							OffEndTime="" OffStartDate="28112010" OffStartTime="0000"
-							OffenceQualifier1="" OffenceQualifier2=""
-							OffenceTitle="Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003"
-							ReferenceNumber="001" />
-						<DISList>
-							<DIS DisposalId="DIS1" IntfcUpdateType="I" Type="1001" Text="DIS Text"></DIS>
-						</DISList>
+						<COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001A" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003" ReferenceNumber="001"/>
 					</Offence>
 					<Offence>
-						<COF OffenceId="OFFID2" ACPOOffenceCode="12:15:24:1"
-							CJSOffenceCode="SX03001" IntfcUpdateType="K" OffEndDate="" OffEndTime=""
-							OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1=""
-							OffenceQualifier2=""
-							OffenceTitle="Rape a girl aged 13 / 14 / 15 - SOA 2003"
-							ReferenceNumber="002" />
-						<DISList>
-							<DIS DisposalId="DIS2" IntfcUpdateType="I" Type="1001" Text="DIS Text"></DIS>
-						</DISList>
+						<COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Rape a girl aged 13 / 14 / 15 - SOA 2003" ReferenceNumber="002"/>
 					</Offence>
 					<Offence>
-						<COF OffenceId="OFFID3" ACPOOffenceCode="12:15:24:1"
-							CJSOffenceCode="RT88191" IntfcUpdateType="K" OffEndDate="" OffEndTime=""
-							OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1=""
-							OffenceQualifier2=""
-							OffenceTitle="Use a motor vehicle on a road / public place without third party insurance"
-							ReferenceNumber="003" />
-						<DISList>
-							<DIS DisposalId="DIS3" IntfcUpdateType="I" Type="1001" Text="DIS Text"></DIS>
-						</DISList>
+						<COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="RT88191" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Use a motor vehicle on a road / public place without third party insurance" ReferenceNumber="003"/>
 					</Offence>
 				</Offences>
 			</CourtCase>
