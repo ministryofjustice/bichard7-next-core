@@ -438,6 +438,7 @@ const mapOffenceADJ = (adjudication: PoliceAdjudication): Adj => ({
 
 const mapOffenceDIS = (disposals: PoliceDisposal[]): DISList => ({
   DIS: disposals.map((d) => ({
+    ...(d.disposalId ? { "@_DisposalId": d.disposalId } : {}),
     "@_IntfcUpdateType": "I",
     "@_QtyDate": d.qtyDate ?? "",
     "@_QtyDuration": d.qtyDuration ?? "",
@@ -471,6 +472,7 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
 const mapAhoPncOffencesToXml = (offences: PoliceOffence[]): AhoXmlPncOffence[] =>
   offences.map((offence) => ({
     COF: {
+      ...(offence.offence.offenceId ? { "@_OffenceId": offence.offence.offenceId } : {}),
       "@_ACPOOffenceCode": offence.offence.acpoOffenceCode ?? "",
       "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
       "@_IntfcUpdateType": "K",

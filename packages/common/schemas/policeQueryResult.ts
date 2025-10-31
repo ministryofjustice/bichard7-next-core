@@ -3,6 +3,7 @@ import { z } from "zod"
 import { ahoDescription } from "./schemaDescription"
 
 export const policeDisposalSchema = z.object({
+  disposalId: z.string().optional(),
   qtyDate: z.string().optional(),
   qtyDuration: z.string().optional(),
   qtyMonetaryValue: z.string().optional(),
@@ -24,6 +25,7 @@ export const policeOffenceSchema = z.object({
   adjudication: policeAdjudicationSchema.optional(),
   disposals: z.array(policeDisposalSchema).optional(),
   offence: z.object({
+    offenceId: z.string().optional(),
     acpoOffenceCode: z.string().optional(),
     cjsOffenceCode: z.string(),
     endDate: z.coerce.date().optional(),
