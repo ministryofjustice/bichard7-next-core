@@ -556,6 +556,14 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      # Step 1: Install the conversion tool (if not already installed)
+      - run:
+          name: Install dos2unix
+          command: sudo apt-get update && sudo apt-get install -y dos2unix
+      # Step 2: Convert the line endings of the failing script
+      - run:
+          name: Convert Script to Unix Line Endings
+          command: dos2unix ./environment/postgres/liquibase/update.sh
       - setup_remote_docker:
           docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - node/install
