@@ -229,9 +229,8 @@ jobs:
       - build_core
 
   test_core:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
     resource_class: medium
     steps:
       - unless:
@@ -243,6 +242,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - install_dependencies
       - build_core
       - fetch_images:
