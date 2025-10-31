@@ -1,10 +1,21 @@
 import type RemandPncUpdateRequest from "../../../phase3/types/RemandPncUpdateRequest"
-import type { ledsCurrentAppearance, ledsNextAppearance, RemandRequest } from "../../../types/leds/RemandRequest"
+import type {
+  AppearanceResult,
+  CurrentAppearance,
+  NextAppearance,
+  RemandRequest
+} from "../../../types/leds/RemandRequest"
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
-import { appearanceResultSchema } from "../../../schemas/leds/remandRequest"
 
-const mapToCurrentAppearance = (data: RemandPncUpdateRequest["request"]): ledsCurrentAppearance => {
+const remandStatusByPncCode: Record<string, AppearanceResult> = {
+  B: "remanded-on-bail",
+  O: "remanded-in-care",
+  A: "adjourned",
+  C: "remanded-in-custody"
+}
+
+const mapToCurrentAppearance = (data: RemandPncUpdateRequest["request"]): CurrentAppearance => {
   const { remandLocationCourt, courtNameType1 } = data
 
   return {
@@ -21,7 +32,7 @@ const mapToCurrentAppearance = (data: RemandPncUpdateRequest["request"]): ledsCu
   }
 }
 
-const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): ledsNextAppearance => {
+const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppearance => {
   const { nextHearingDate, psaCourtCode, courtNameType2 } = data
 
   return {
@@ -41,13 +52,14 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): ledsNextA
 
 const mapToRemandRequest = (request: RemandPncUpdateRequest["request"]): RemandRequest => {
   const { forceStationCode, pncCheckName, pncIdentifier, hearingDate, pncRemandStatus, bailConditions } = request
+  const appearanceResult = remandStatusByPncCode[pncRemandStatus]
 
   return {
     ownerCode: forceStationCode,
     checkname: pncCheckName ?? "",
     personUrn: pncIdentifier ?? "",
     remandDate: hearingDate,
-    appearanceResult: appearanceResultSchema.parse(pncRemandStatus),
+    appearanceResult: appearanceResult,
     bailConditions: bailConditions,
     currentAppearance: mapToCurrentAppearance(request),
     nextAppearance: mapToNextAppearance(request)
