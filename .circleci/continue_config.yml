@@ -176,6 +176,7 @@ jobs:
     resource_class: medium
     steps:
       - checkout
+      - node/install
       - node/install-packages
       - run:
           name: Check the code for linting errors
