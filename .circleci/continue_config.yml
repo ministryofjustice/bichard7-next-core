@@ -608,14 +608,14 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node_install_packages
-      - run:
-          name: Install GOV.UK Assets
-          command: npm run -w packages/ui install:assets
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
+      - node_install_packages
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run -w packages/ui install:assets
       - build_core
       - run:
           name: Wait for cypress install to finish
@@ -686,11 +686,11 @@ jobs:
       - attach_workspace:
           at: .
       - node/install
-      - node_install_packages
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
+      - node_install_packages
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
@@ -782,12 +782,12 @@ jobs:
           steps:
             - load_api_image
       - node/install
-      - node_install_packages
-      - build_core
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
+      - node_install_packages
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
