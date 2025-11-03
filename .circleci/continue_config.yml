@@ -785,6 +785,7 @@ jobs:
       - node_install_packages
       - build_core
       - run:
+          name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - fetch_images:
@@ -795,7 +796,7 @@ jobs:
           command: until [ -f cypressInstalled ]; do sleep 1; done
           no_output_timeout: 10m
       - run:
-          name: Retrying installing Cypress
+          name: Retrying Installing Cypress
           command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Building infrastructure
