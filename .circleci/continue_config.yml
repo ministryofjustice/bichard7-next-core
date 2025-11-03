@@ -686,11 +686,10 @@ jobs:
       - attach_workspace:
           at: .
       - node/install
+      - node_install_packages
       - run:
           name: Install Cypress
-          command: ./.circleci/scripts/install-cypress.sh 2>&1
-          background: true
-      - node_install_packages
+          command: cypress install
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
@@ -699,13 +698,6 @@ jobs:
           command: npm run -w packages/user-service build
       - start_services:
           SERVICES: db-seed
-      - run:
-          name: Wait for cypress install to finish
-          command: until [ -f cypressInstalled ]; do sleep 1; done
-          no_output_timeout: 10m
-      - run:
-          name: Retrying installing Cypress
-          command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Run e2e tests against user service code
           command: bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
