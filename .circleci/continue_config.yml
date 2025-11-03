@@ -179,7 +179,7 @@ jobs:
       - node/install-packages
       - run:
           name: Check the code for linting errors
-          command: npm run lint:ci
+          command: nvm use && npm run lint:ci
       - build_core
 
   test_core:
@@ -197,6 +197,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - node/install
       - node/install-packages
       - build_core
       - fetch_images:
@@ -226,7 +227,6 @@ jobs:
       - run:
           name: Run Audit Logging API
           command: npm run audit-log
-      - node/install
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
@@ -490,7 +490,7 @@ jobs:
       - build_core
       - run:
           name: Unit test common
-          command: npm run test -w packages/common
+          command: nvm use && npm run test -w packages/common
 
   test_postgres:
     machine:
@@ -570,10 +570,10 @@ jobs:
       - build_core
       - run:
           name: Run code-based unit tests
-          command: npm run -w packages/ui test:unit
+          command: nvm use && npm run -w packages/ui test:unit
       - run:
           name: Run integration tests
-          command: npm run -w packages/ui test:integration
+          command: nvm use && npm run -w packages/ui test:integration
 
   test_ui_component:
     machine:
