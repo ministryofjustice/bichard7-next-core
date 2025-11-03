@@ -754,7 +754,7 @@ jobs:
           steps:
             - load_api_image
       - node/install
-      - install_dependencies
+      - node/install-packages
       - build_core
       - run:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
