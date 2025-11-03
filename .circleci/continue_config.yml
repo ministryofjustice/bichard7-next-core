@@ -55,13 +55,15 @@ commands:
   node_install_packages:
     steps:
       - restore_cache:
+          name: Restore npm Cache
           keys:
             - v1-npm-deps-{{ checksum "package-lock.json" }}
             - v1-npm-deps-
       - run:
-          name: Install Dependencies (npm ci)
+          name: Install Node Packages
           command: npm ci --no-audit
       - save_cache:
+          name: Save npm Cache
           key: v1-npm-deps-{{ checksum "package-lock.json" }}
           paths:
             - ~/.npm
