@@ -689,7 +689,9 @@ jobs:
       - node_install_packages
       - run:
           name: Install Cypress
-          command: npx cypress install
+          command: |
+            cd packages/user-service
+            npx cypress install
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
