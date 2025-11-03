@@ -52,21 +52,6 @@ commands:
           name: "Fetch images: <<parameters.images>>"
           command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.images>>
 
-  node_install:
-    steps:
-      - node/install
-  #      - restore_cache:
-  #          name: Restore nvm cache
-  #          keys:
-  #            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
-  #            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-  #      - run: nvm install
-  #      - save_cache:
-  #          name: Save nvm cache
-  #          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-  #          paths:
-  #            - /opt/circleci/.nvm/.cache
-
   install_dependencies:
     description: Install the node dependencies for core
     parameters:
@@ -272,7 +257,7 @@ jobs:
       - run:
           name: Run Audit Logging API
           command: npm run audit-log
-      - node_install
+      - node/install
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
@@ -348,7 +333,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -378,7 +363,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies
       - build_core
       - fetch_images:
@@ -471,7 +456,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies
       - build_api
       - fetch_images:
@@ -531,7 +516,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies
       - build_core
       - run:
@@ -606,7 +591,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
@@ -636,7 +621,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies:
           install-cypress: true
       - run:
@@ -681,7 +666,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
+      - node/install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -715,7 +700,7 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
       - attach_workspace:
           at: .
-      - node_install
+      - node/install
       - install_dependencies:
           install-cypress: true
       - run:
@@ -801,7 +786,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             - load_api_image
-      - node_install
+      - node/install
       - install_dependencies:
           install-cypress: true
       - build_core
@@ -885,7 +870,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             - load_api_image
-      - node_install
+      - node/install
       - install_dependencies
       - build_e2e_tests
       - fetch_images:
@@ -939,7 +924,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - node_install
+      - node/install
       - install_dependencies
       - fetch_images:
           images: nodejs-20-2023
