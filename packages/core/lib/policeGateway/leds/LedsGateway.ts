@@ -8,6 +8,7 @@ import axios, { HttpStatusCode } from "axios"
 import https from "https"
 
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
+import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
 import type { AsnQueryRequest } from "../../../types/leds/AsnQueryRequest"
 import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
@@ -20,6 +21,7 @@ import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
+import mapToNormalDisposalRequest from "./mapToNormalDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import mapToRemandRequest from "./mapToRemandRequest"
 
@@ -82,11 +84,14 @@ export default class LedsGateway implements PoliceGateway {
 
   async update(request: PoliceUpdateRequest, correlationId: string): Promise<PoliceApiError | void> {
     let endpoint: string
-    let requestBody: RemandRequest
+    let requestBody: AddDisposalRequest | RemandRequest
 
     if (request.operation === PncOperation.REMAND && request.personId && request.reportId) {
       requestBody = mapToRemandRequest(request.request)
       endpoint = endpoints.remand(request.personId, request.reportId)
+    } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
+      requestBody = mapToNormalDisposalRequest(request.request)
+      endpoint = ""
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
     }
@@ -104,7 +109,7 @@ export default class LedsGateway implements PoliceGateway {
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {
         const errors = (apiResponse.response?.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
-          `LEDS update failed with status code ${apiResponse.status}.`
+          `ASN query failed with status code ${apiResponse.status}.`
         ]
         return new PoliceApiError(errors)
       }
