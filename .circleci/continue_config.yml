@@ -204,10 +204,8 @@ jobs:
     resource_class: medium
     steps:
       - checkout
-      - attach_workspace:
-          at: .
       - node/install
-#      - node_install_packages
+      - node_install_packages
       - run:
           name: Check the code for linting errors
           command: nvm use && npm run lint:ci
@@ -413,7 +411,7 @@ jobs:
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
-      - node_install_packages
+#      - node_install_packages
       - build_e2e_tests
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -794,7 +792,7 @@ jobs:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
-      - node_install_packages
+#      - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
@@ -874,7 +872,7 @@ jobs:
           steps:
             - load_api_image
       - node/install
-      - node_install_packages
+#      - node_install_packages
       - build_e2e_tests
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -928,7 +926,7 @@ jobs:
       - load_ui_image
       - load_user_service_image
       - node/install
-      - node_install_packages
+#      - node_install_packages
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -949,10 +947,7 @@ workflows:
   test-all:
     jobs:
       - install_node_packages
-
-      - lint_and_build:
-          requires:
-            - install_node_packages
+      - lint_and_build
 
       - build_ui_image
       - build_user_service_image
@@ -974,6 +969,7 @@ workflows:
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           requires:
+            - install_node_packages
             - build_ui_image
             - build_user_service_image
       - cypress_e2e_tests:
@@ -984,6 +980,7 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
+            - install_node_packages
             - build_ui_image
             - build_user_service_image
             - build_api_image
@@ -991,6 +988,7 @@ workflows:
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           requires:
+            - install_node_packages
             - build_ui_image
             - build_user_service_image
       - cucumber_e2e_tests:
@@ -1001,12 +999,14 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
+            - install_node_packages
             - build_ui_image
             - build_user_service_image
             - build_api_image
 
       - zap_scanner:
           requires:
+            - install_node_packages
             - build_ui_image
             - build_user_service_image
 
@@ -1015,4 +1015,5 @@ workflows:
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
           requires:
+            - install_node_packages
             - build_user_service_image
