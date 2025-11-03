@@ -111,8 +111,6 @@ describe("remandGenerator", () => {
 
       expect(result).toStrictEqual({
         operation: "NEWREM",
-        personId: "",
-        reportId: "",
         request: {
           ...expectedRequest,
           pncRemandStatus: "C",
@@ -132,8 +130,6 @@ describe("remandGenerator", () => {
 
     expect(result).toStrictEqual({
       operation: "NEWREM",
-      personId: "",
-      reportId: "",
       request: {
         ...expectedRequest,
         courtNameType1: "",
@@ -152,8 +148,6 @@ describe("remandGenerator", () => {
 
     expect(result).toStrictEqual({
       operation: "NEWREM",
-      personId: "",
-      reportId: "",
       request: {
         ...expectedRequest,
         remandLocationCourt: "9998",
@@ -173,8 +167,6 @@ describe("remandGenerator", () => {
 
     expect(result).toStrictEqual({
       operation: "NEWREM",
-      personId: "",
-      reportId: "",
       request: {
         ...expectedRequest,
         remandLocationCourt: "9998",

@@ -84,7 +84,7 @@ export default class LedsGateway implements PoliceGateway {
     let endpoint: string
     let requestBody: RemandRequest
 
-    if (request.operation === PncOperation.REMAND) {
+    if (request.operation === PncOperation.REMAND && request.personId && request.reportId) {
       requestBody = mapToRemandRequest(request.request)
       endpoint = endpoints.remand(request.personId, request.reportId)
     } else {
