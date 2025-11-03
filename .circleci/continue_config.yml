@@ -197,6 +197,13 @@ jobs:
           root: .
           paths:
             - node_modules
+            - packages/api/node_modules
+            - packages/common/node_modules
+            - packages/conductor/node_modules
+            - packages/core/node_modules
+            - packages/e2e-test/node_modules
+            - packages/ui/node_modules
+            - packages/user-service/node_modules
 
   lint_and_build:
     machine:
