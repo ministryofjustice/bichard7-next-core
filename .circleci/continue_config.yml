@@ -52,6 +52,20 @@ commands:
           name: "Fetch images: <<parameters.images>>"
           command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.images>>
 
+  node_install_packages:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-npm-deps-{{ checksum "package-lock.json" }}
+            - v1-npm-deps-
+      - run:
+          name: Install Dependencies (npm ci)
+          command: npm ci --no-audit
+      - save_cache:
+          key: v1-npm-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+
   build_core:
     steps:
       - run:
@@ -177,7 +191,7 @@ jobs:
     steps:
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - run:
           name: Check the code for linting errors
           command: nvm use && npm run lint:ci
@@ -199,7 +213,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-20-2023
@@ -250,7 +264,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install-packages
+      - node_install_packages
       - build_core
       - run:
           name: Spin up the PostgreSQL database
@@ -281,7 +295,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node/install-packages
+      - node_install_packages
       - build_core
       - run:
           name: Run tests against core code
@@ -304,7 +318,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -334,7 +348,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -383,7 +397,7 @@ jobs:
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
-      - node/install-packages
+      - node_install_packages
       - build_e2e_tests
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -427,7 +441,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_api
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -487,7 +501,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_core
       - run:
           name: Unit test common
@@ -562,7 +576,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - fetch_images:
           images: nodejs-20-2023
       - build_audit_logging_images
@@ -592,7 +606,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/ui install:assets
@@ -636,7 +650,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node/install
-      - node/install-packages
+      - node_install_packages
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -670,7 +684,7 @@ jobs:
       - attach_workspace:
           at: .
       - node/install
-      - node/install-packages
+      - node_install_packages
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
@@ -755,7 +769,7 @@ jobs:
           steps:
             - load_api_image
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_core
       - run:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
@@ -838,7 +852,7 @@ jobs:
           steps:
             - load_api_image
       - node/install
-      - node/install-packages
+      - node_install_packages
       - build_e2e_tests
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -892,7 +906,7 @@ jobs:
       - load_ui_image
       - load_user_service_image
       - node/install
-      - node/install-packages
+      - node_install_packages
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
