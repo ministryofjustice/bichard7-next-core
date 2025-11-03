@@ -192,7 +192,6 @@ jobs:
       resource_class: medium
     steps:
       - checkout
-      - node/install
       - node_install_packages
       - persist_to_workspace:
           root: .
@@ -952,7 +951,8 @@ workflows:
       - install_node_packages
 
       - lint_and_build:
-          requires: install_node_packages
+          requires:
+            - install_node_packages
 
       - build_ui_image
       - build_user_service_image
