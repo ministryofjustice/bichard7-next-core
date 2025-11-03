@@ -186,14 +186,29 @@ ui_envs: &ui_envs
   USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
 
 jobs:
+  install_node_packages:
+    machine:
+      image: ubuntu-2204:current
+      resource_class: medium
+    steps:
+      - checkout
+      - node/install
+      - node_install_packages
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+
   lint_and_build:
     machine:
       image: ubuntu-2204:current
     resource_class: medium
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - node/install
-      - node_install_packages
+#      - node_install_packages
       - run:
           name: Check the code for linting errors
           command: nvm use && npm run lint:ci
