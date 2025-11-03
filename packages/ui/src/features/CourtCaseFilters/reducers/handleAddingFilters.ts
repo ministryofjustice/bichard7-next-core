@@ -135,6 +135,11 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
       newState.reasonCodes = uniqBy(newState.reasonCodes, (reasonCode) => reasonCode.value)
       break
     }
+
+    case "courtDateReceivedDateMismatch": {
+      newState.courtDateReceivedDateMismatchFilter.value = action.value
+      break
+    }
   }
 }
 
