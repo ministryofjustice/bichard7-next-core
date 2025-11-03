@@ -2,6 +2,7 @@ import type {
   PoliceAdjudication,
   PoliceCourtCase,
   PoliceDisposal,
+  PoliceOffence,
   PoliceQueryResult
 } from "@moj-bichard7/common/types/PoliceQueryResult"
 
@@ -12,14 +13,14 @@ import type {
   DisposalResult as LedsDisposalResult,
   Offence as LedsOffence
 } from "../../../types/leds/AsnQueryResponse"
-import type { LedsPoliceOffence } from "../../../types/LedsPoliceOffence"
 
 import {
   DISPOSAL_QUALIFIERS_FIELD_LENGTH,
   PNC_REPRESENTATION_OF_LIFE
 } from "../../results/createPoliceDisposalsFromResult/createPoliceDisposal"
 
-const mapToPoliceOffence = (offence: LedsOffence): LedsPoliceOffence["offence"] => ({
+const mapToPoliceOffence = (offence: LedsOffence): PoliceOffence["offence"] => ({
+  offenceId: offence.offenceId,
   acpoOffenceCode: "12:15:24:1",
   cjsOffenceCode: offence.cjsOffenceCode,
   startDate: new Date(offence.offenceStartDate),
@@ -67,6 +68,7 @@ const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDispo
       convertDuration(disposalResult.disposalQualifierDuration)
 
     return {
+      disposalId: disposalResult.disposalId,
       qtyDate: disposalResult.disposalEffectiveDate,
       qtyDuration: convertDuration(disposalResult.disposalDuration),
       qtyMonetaryValue: disposalResult.disposalFine?.amount.toFixed(2),
@@ -77,9 +79,8 @@ const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDispo
     }
   })
 
-const mapToPoliceOffences = (offences: LedsOffence[]): LedsPoliceOffence[] =>
+const mapToPoliceOffences = (offences: LedsOffence[]): PoliceOffence[] =>
   offences.map((offence) => ({
-    offenceId: offence.offenceId,
     offence: mapToPoliceOffence(offence),
     adjudication: mapToPoliceAdjudication(offence),
     disposals: offence.disposalResults ? mapToPoliceDisposal(offence.disposalResults) : []
@@ -96,6 +97,8 @@ const mapToPoliceQueryResult = (ledsQueryResponse: LedsAsnQueryResponse, checkNa
   return {
     forceStationCode: ledsQueryResponse.ownerCode,
     checkName,
+    personId: ledsQueryResponse.personId,
+    reportId: ledsQueryResponse.reportId,
     pncId: ledsQueryResponse.personUrn,
     courtCases: mapToPoliceCourtCases(ledsQueryResponse.disposals),
     croNumber: undefined,
