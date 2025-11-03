@@ -1,6 +1,6 @@
 import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
-import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
+import type { Operation, PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
@@ -83,12 +83,20 @@ const expectedRequest = {
 
 describe("remandGenerator", () => {
   it("should generate remand request with all fields", () => {
-    const pncUpdateDataset = createPncUpdateDataset()
+    const pncUpdateDataset = {
+      ...createPncUpdateDataset(),
+      PncQuery: {
+        personId: "e5919e75-86ec-415b-806f-c424ce9f9da2",
+        reportId: "e8c7d5fc-0872-4074-8175-2c849273a1f7"
+      }
+    } as PncUpdateDataset
 
     const result = remandGenerator(pncUpdateDataset, operation)
 
     expect(result).toStrictEqual({
       operation: "NEWREM",
+      personId: "e5919e75-86ec-415b-806f-c424ce9f9da2",
+      reportId: "e8c7d5fc-0872-4074-8175-2c849273a1f7",
       request: expectedRequest
     })
   })

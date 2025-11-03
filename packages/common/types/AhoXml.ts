@@ -255,6 +255,7 @@ export interface Cof {
   "@_ACPOOffenceCode": string
   "@_CJSOffenceCode": string
   "@_IntfcUpdateType": string
+  "@_OffenceId"?: string
   "@_OffenceQualifier1": string
   "@_OffenceQualifier2": string
   "@_OffenceTitle": string
@@ -289,6 +290,7 @@ export interface Cxe01 {
 }
 
 export interface Dis {
+  "@_DisposalId"?: string
   "@_IntfcUpdateType": string
   "@_QtyDate"?: string
   "@_QtyDuration"?: string
@@ -338,7 +340,9 @@ export interface IDS {
   "@_Checkname": string
   "@_CRONumber": string
   "@_IntfcUpdateType": string
+  "@_PersonId"?: string
   "@_PNCID": string
+  "@_ReportId"?: string
 }
 
 export interface IndictmentOffenceCode {
