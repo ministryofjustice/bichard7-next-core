@@ -61,7 +61,7 @@ commands:
             - v1-npm-deps-
       - run:
           name: Install Node Packages
-          command: npm ci --no-audit
+          command: npm ci --ignore-scripts --no-audit
       - save_cache:
           name: Save npm Cache
           key: v1-npm-deps-{{ checksum "package-lock.json" }}
