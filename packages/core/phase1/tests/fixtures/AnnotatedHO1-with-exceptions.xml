@@ -263,14 +263,13 @@
 				<CCR CourtCaseRefNo="97/1626/008395Q" CrimeOffenceRefNo="" IntfcUpdateType="K"/>
 				<Offences>
 					<Offence>
-						<COF OffenceId="OFFID1" ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001A" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003" ReferenceNumber="001"/>
-						<DISList><DIS DisposalId="DIS1" IntfcUpdateType="I" Type="1001" Text="DIS Text"></DIS></DISList>
+						<COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001A" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Attempt to rape a girl aged 13 / 14 / 15 years of age - SOA 2003" ReferenceNumber="001"/>
 					</Offence>
 					<Offence>
-						<COF OffenceId="OFFID2" ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Rape a girl aged 13 / 14 / 15 - SOA 2003" ReferenceNumber="002"/>
+						<COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="SX03001" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Rape a girl aged 13 / 14 / 15 - SOA 2003" ReferenceNumber="002"/>
 					</Offence>
 					<Offence>
-						<COF OffenceId="OFFID3" ACPOOffenceCode="12:15:24:1" CJSOffenceCode="RT88191" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Use a motor vehicle on a road / public place without third party insurance" ReferenceNumber="003"/>
+						<COF ACPOOffenceCode="12:15:24:1" CJSOffenceCode="RT88191" IntfcUpdateType="K" OffEndDate="" OffEndTime="" OffStartDate="28112010" OffStartTime="0000" OffenceQualifier1="" OffenceQualifier2="" OffenceTitle="Use a motor vehicle on a road / public place without third party insurance" ReferenceNumber="003"/>
 					</Offence>
 				</Offences>
 			</CourtCase>
