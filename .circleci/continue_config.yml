@@ -793,6 +793,7 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - node_install_packages
+      - build_common
       - fetch_images:
           images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -926,6 +927,7 @@ jobs:
       - load_user_service_image
       - node/install
       - node_install_packages
+      - build_common
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
