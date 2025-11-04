@@ -74,6 +74,13 @@ commands:
           name: Build Common
           command: npm run build -w packages/common
 
+  build_core_package_only:
+    steps:
+      - build_common
+      - run:
+          name: Build Core
+          command: npm run build -w packages/core
+
   build_core:
     steps:
       - run:
@@ -222,7 +229,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_core
+      - build_common
       - fetch_images:
           images: nodejs-20-2023
       - run:
@@ -273,7 +280,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node_install_packages
-      - build_core
+      - build_common
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -304,7 +311,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node_install_packages
-      - build_core
+      - build_common
       - run:
           name: Run tests against core code
           command: npm run test:characterisation -w packages/core
@@ -327,7 +334,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_core
+      - build_core_package_only
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -357,7 +364,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_core
+      - build_core_package_only
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -510,7 +517,6 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      #      - build_core
       - run:
           name: Unit test common
           command: nvm use && npm run test -w packages/common
@@ -590,7 +596,7 @@ jobs:
       - build_audit_logging_images
       - start_services:
           SERVICES: activemq localstack db-seed audit-log-api
-      - build_core
+      - build_core_package_only
       - run:
           name: Run code-based unit tests
           command: nvm use && npm run -w packages/ui test:unit
@@ -622,7 +628,7 @@ jobs:
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/ui install:assets
-      - build_core
+      - build_core_package_only
       - run:
           name: Wait for cypress install to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
@@ -787,7 +793,6 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - node_install_packages
-      #      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -926,7 +931,6 @@ jobs:
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
-      #      - build_core
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
