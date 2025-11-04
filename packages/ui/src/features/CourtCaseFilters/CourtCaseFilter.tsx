@@ -70,7 +70,11 @@ const CourtCaseFilter: React.FC<Props> = ({
     resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {},
     resolvedFrom: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.from, state: "Applied" } : {},
     resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {},
-    courtDateReceivedDateMismatchFilter: { value: false, state: "Applied" }
+    courtDateReceivedDateMismatchFilter: {
+      value: false,
+      state: "Applied",
+      label: "Include cases where date received is different"
+    }
   }
   const [state, dispatch] = useReducer(filtersReducer, initialFilterState)
   const currentUser = useCurrentUser()

@@ -138,6 +138,7 @@ const handleAddingFilters = (newState: Filter, action: FilterAction) => {
 
     case "courtDateReceivedDateMismatch": {
       newState.courtDateReceivedDateMismatchFilter.value = action.value
+      newState.courtDateReceivedDateMismatchFilter.state = "Selected"
       break
     }
   }
