@@ -504,7 +504,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_core
+#      - build_core
       - run:
           name: Unit test common
           command: nvm use && npm run test -w packages/common
@@ -781,7 +781,7 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - node_install_packages
-      - build_core
+#      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -920,7 +920,7 @@ jobs:
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
-      - build_core
+#      - build_core
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
