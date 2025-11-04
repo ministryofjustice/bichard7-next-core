@@ -33,54 +33,48 @@ const mapDefendant = (generatedPNCFilename: string): Defendant =>
         defendantOrganisationName: ""
       }
 
+const parseDisposalQuantity = (quantity: string) => {
+  const durationCode = quantity.slice(0, 1).toLowerCase()
+  const count = Number(quantity.slice(1, 4).trim()) || 0
+  const day = quantity.slice(4, 6)
+  const month = quantity.slice(6, 8)
+  const year = quantity.slice(8, 12)
+  const amount = Number(quantity.slice(12)) || 0
+  const disposalEffectiveDate = year && month && day ? `${year}-${month}-${day}` : undefined
+
+  let units: "days" | "hours" | "life" | "months" | "weeks" | "years"
+
+  if (quantity.slice(1, 4) === "y999") {
+    units = "life"
+  } else {
+    const unitMap: Record<string, typeof units> = {
+      d: "days",
+      h: "hours",
+      m: "months",
+      w: "weeks",
+      y: "years"
+    }
+    units = unitMap[durationCode] ?? "years"
+  }
+
+  return { count, units, disposalEffectiveDate, amount }
+}
+
 const offences = (hearingsAdjudicationsAndDisposals: PncUpdateCourtHearingAdjudicationAndDisposal[]) => {
   const ordinary = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ORDINARY)
   const adjudication = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
   const disposals = hearingsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
 
   const disposalResults = disposals.map((disposal) => {
-    const disposalDurationCount = Number(disposal.disposalQuantity.slice(1, 4).trim())
-    const day = disposal.disposalQuantity.slice(4, 6)
-    const month = disposal.disposalQuantity.slice(6, 8)
-    const year = disposal.disposalQuantity.slice(8, 12)
-    const disposalEffectiveDate = `${year}-${month}-${day}`
-    const disposalFineAmount = Number(disposal.disposalQuantity.slice(12))
-
-    let disposalDurationUnits: "days" | "hours" | "life" | "months" | "weeks" | "years" = "years"
-    if (disposal.disposalQuantity.slice(1, 4) === "y999") {
-      disposalDurationUnits = "life"
-    } else {
-      switch (disposal.disposalQuantity.slice(0, 1).toLocaleLowerCase()) {
-        case "d":
-          disposalDurationUnits = "days"
-          break
-        case "h":
-          disposalDurationUnits = "hours"
-          break
-        case "m":
-          disposalDurationUnits = "months"
-          break
-        case "w":
-          disposalDurationUnits = "weeks"
-          break
-        case "y":
-          disposalDurationUnits = "years"
-          break
-      }
-    }
+    const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
 
     return {
       disposalCode: Number(disposal.disposalType),
       disposalQualifies: [disposal.disposalQualifiers ?? ""],
       disposalText: disposal.disposalText ?? undefined,
-      disposalDuration: {
-        count: disposalDurationCount,
-        units: disposalDurationUnits
-      },
+      disposalDuration: { count, units },
       disposalEffectiveDate,
-      disposalFine: {
-        amount: disposalFineAmount
-      }
+      disposalFine: { amount }
     }
   })
 
