@@ -11,7 +11,6 @@ WORKDIR /core
 RUN yum groupinstall -y "Development Tools"
 
 COPY package*.json ./
-COPY tsconfig*.json ./
 COPY packages/user-service/package.json ./packages/user-service/package.json
 COPY packages/user-service/scripts ./packages/user-service/scripts
 
@@ -27,6 +26,7 @@ WORKDIR /core
 
 COPY --from=deps ./core ./
 
+COPY tsconfig*.json ./
 COPY packages/user-service ./packages/user-service
 
 RUN npm run build:user-service
