@@ -8,9 +8,6 @@ FROM base AS deps
 
 WORKDIR /core
 
-# Currently needed for core postinstall script
-RUN yum install jq -y
-
 # Copy in package info so we don't have to re-install packages for every code change
 COPY package*.json ./
 COPY tsconfig*.json ./
