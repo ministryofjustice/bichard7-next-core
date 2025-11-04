@@ -403,7 +403,7 @@ jobs:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - node_install_packages
-      - build_e2e_tests
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
@@ -863,7 +863,7 @@ jobs:
             - load_api_image
       - node/install
       - node_install_packages
-      - build_e2e_tests
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_core_images
