@@ -35,12 +35,12 @@ export const pleaSchema = z.enum(["Not Known", "Guilty", "Not Guilty", "No Plea 
 
 export const adjudicationSchema = z.enum(["Guilty", "Not Guilty", "Non-Conviction", ""])
 
-const disposalDurationSchema = z.object({
+export const disposalDurationSchema = z.object({
   units: z.enum(["life", "years", "months", "weeks", "days", "hours"]),
   count: z.number()
 })
 
-const disposalFineSchema = z.object({
+export const disposalFineSchema = z.object({
   amount: z.number(),
   units: z.number().optional()
 })

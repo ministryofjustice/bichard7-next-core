@@ -1,5 +1,6 @@
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
+import type { Court, DateString, Defendant, DisposalDuration, DisposalFine } from "../../../types/leds/DisposalRequest"
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
@@ -9,7 +10,8 @@ describe("mapToNormalDisposalRequest", () => {
   const buildNormalDisposalRequest = (
     psaCourtCode?: string,
     generatedPNCFilename?: string,
-    pendingPsaCourtCode?: string
+    pendingPsaCourtCode?: string,
+    disposalQuantity = "D123100520240012000.9900"
   ): NormalDisposalPncUpdateRequest["request"] => {
     return {
       forceStationCode: "07A1",
@@ -39,7 +41,7 @@ describe("mapToNormalDisposalRequest", () => {
         },
         {
           disposalQualifiers: "Disposal qualifiers",
-          disposalQuantity: "Disposal quantity",
+          disposalQuantity,
           disposalText: "Disposal text",
           disposalType: "10",
           type: PncUpdateType.DISPOSAL
@@ -77,81 +79,92 @@ describe("mapToNormalDisposalRequest", () => {
     } as NormalDisposalPncUpdateRequest["request"]
   }
 
+  const buildExpectedLedsRequest = ({
+    court,
+    defendant,
+    carryForward,
+    disposalDuration = { units: "days", count: 123 },
+    disposalFine = { amount: 12000.99 },
+    disposalEffectiveDate = "2024-05-10"
+  }: {
+    carryForward?: Record<string, unknown>
+    court: Court
+    defendant: Defendant
+    disposalDuration?: DisposalDuration
+    disposalEffectiveDate?: DateString
+    disposalFine?: DisposalFine
+  }): AddDisposalRequest => ({
+    ownerCode: "07A1",
+    personUrn: "22/858J",
+    checkName: "Pnc check name",
+    courtCaseReference: "98/2048/633Y",
+    court,
+    dateOfConviction: "2025-08-12",
+    defendant,
+    carryForward,
+    referToCourtCase: { reference: "121212" },
+    offences: [
+      {
+        courtOffenceSequenceNumber: 1,
+        cjsOffenceCode: "Offence reason",
+        plea: "Not Known",
+        adjudication: "Non-Conviction",
+        dateOfSentence: "2025-08-14",
+        offenceTic: 3,
+        disposalResults: [
+          {
+            disposalCode: 10,
+            disposalDuration,
+            disposalFine,
+            disposalEffectiveDate,
+            disposalQualifies: ["Disposal qualifiers"],
+            disposalText: "Disposal text"
+          }
+        ],
+        offenceId: ""
+      }
+    ],
+    additionalArrestOffences: [
+      {
+        asn: "",
+        additionalOffences: [
+          {
+            courtOffenceSequenceNumber: 2,
+            cjsOffenceCode: "Offence reason",
+            committedOnBail: true,
+            plea: "Not Known",
+            adjudication: "Non-Conviction",
+            dateOfSentence: "2025-08-15",
+            offenceTic: 4,
+            offenceStartDate: "2025-08-16",
+            offenceStartTime: "14:30+02:00",
+            offenceEndDate: "2025-08-17",
+            offenceEndTime: "14:30+02:00",
+            disposalResults: [
+              {
+                disposalCode: 10,
+                disposalQualifies: ["Disposal qualifiers"],
+                disposalText: "Disposal text"
+              }
+            ],
+            locationFsCode: "Offence location FS code",
+            locationText: "Offence location"
+          }
+        ]
+      }
+    ]
+  })
+
   it("maps the normal disposal request to LEDS normal disposal request", () => {
     const request = buildNormalDisposalRequest(PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR, "individual", "1234")
-    const expectedLedsRequest = {
-      ownerCode: "07A1",
-      personUrn: "22/858J",
-      checkName: "Pnc check name",
-      courtCaseReference: "98/2048/633Y",
-      court: {
-        courtIdentityType: "name",
-        courtName: "Court house name"
-      },
-      dateOfConviction: "2025-08-12",
-      defendant: {
-        defendantType: "individual",
-        defendantFirstNames: [""],
-        defendantLastName: ""
-      },
+    const expectedLedsRequest = buildExpectedLedsRequest({
+      court: { courtIdentityType: "name", courtName: "Court house name" },
+      defendant: { defendantType: "individual", defendantFirstNames: [""], defendantLastName: "" },
       carryForward: {
         appearanceDate: "2025-08-13",
-        court: {
-          courtIdentityType: "code",
-          courtCode: "1234"
-        }
-      },
-      referToCourtCase: {
-        reference: "121212"
-      },
-      offences: [
-        {
-          courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "Offence reason",
-          plea: "Not Known",
-          adjudication: "Non-Conviction",
-          dateOfSentence: "2025-08-14",
-          offenceTic: 3,
-          disposalResults: [
-            {
-              disposalCode: 10,
-              disposalQualifies: ["Disposal qualifiers"],
-              disposalText: "Disposal text"
-            }
-          ],
-          offenceId: ""
-        }
-      ],
-      additionalArrestOffences: [
-        {
-          asn: "",
-          additionalOffences: [
-            {
-              courtOffenceSequenceNumber: 2,
-              cjsOffenceCode: "Offence reason",
-              committedOnBail: true,
-              plea: "Not Known",
-              adjudication: "Non-Conviction",
-              dateOfSentence: "2025-08-15",
-              offenceTic: 4,
-              offenceStartDate: "2025-08-16",
-              offenceStartTime: "14:30+02:00",
-              offenceEndDate: "2025-08-17",
-              offenceEndTime: "14:30+02:00",
-              disposalResults: [
-                {
-                  disposalCode: 10,
-                  disposalQualifies: ["Disposal qualifiers"],
-                  disposalText: "Disposal text"
-                }
-              ],
-              locationFsCode: "Offence location FS code",
-              locationText: "Offence location"
-            }
-          ]
-        }
-      ]
-    } as AddDisposalRequest
+        court: { courtIdentityType: "code", courtCode: "1234" }
+      }
+    })
 
     const ledsRequest = mapToNormalDisposalRequest(request)
 
@@ -160,72 +173,40 @@ describe("mapToNormalDisposalRequest", () => {
 
   it("produces a different LEDS request when psaCourtCode, generatedPNCFilename and pendingPsaCourtCode values differ", () => {
     const request = buildNormalDisposalRequest("1112", "organisation")
-    const expectedLedsRequest = {
-      ownerCode: "07A1",
-      personUrn: "22/858J",
-      checkName: "Pnc check name",
-      courtCaseReference: "98/2048/633Y",
-      court: {
-        courtIdentityType: "code",
-        courtCode: "1112"
+    const expectedLedsRequest = buildExpectedLedsRequest({
+      court: { courtIdentityType: "code", courtCode: "1112" },
+      defendant: { defendantType: "organisation", defendantOrganisationName: "" },
+      carryForward: undefined
+    })
+
+    const ledsRequest = mapToNormalDisposalRequest(request)
+
+    expect(ledsRequest).toEqual(expectedLedsRequest)
+  })
+
+  it("maps disposalDuration, disposalFine and disposalEffectiveDate from disposalQuantity", () => {
+    const request = buildNormalDisposalRequest(
+      PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR,
+      "individual",
+      "1234",
+      "d1  101220240000009.9900"
+    )
+    const expectedLedsRequest = buildExpectedLedsRequest({
+      court: { courtIdentityType: "name", courtName: "Court house name" },
+      defendant: { defendantType: "individual", defendantFirstNames: [""], defendantLastName: "" },
+      carryForward: {
+        appearanceDate: "2025-08-13",
+        court: { courtIdentityType: "code", courtCode: "1234" }
       },
-      dateOfConviction: "2025-08-12",
-      defendant: {
-        defendantType: "organisation",
-        defendantOrganisationName: ""
+      disposalDuration: {
+        units: "days",
+        count: 1
       },
-      carryForward: undefined,
-      referToCourtCase: {
-        reference: "121212"
+      disposalFine: {
+        amount: 9.99
       },
-      offences: [
-        {
-          courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "Offence reason",
-          plea: "Not Known",
-          adjudication: "Non-Conviction",
-          dateOfSentence: "2025-08-14",
-          offenceTic: 3,
-          disposalResults: [
-            {
-              disposalCode: 10,
-              disposalQualifies: ["Disposal qualifiers"],
-              disposalText: "Disposal text"
-            }
-          ],
-          offenceId: ""
-        }
-      ],
-      additionalArrestOffences: [
-        {
-          asn: "",
-          additionalOffences: [
-            {
-              courtOffenceSequenceNumber: 2,
-              cjsOffenceCode: "Offence reason",
-              committedOnBail: true,
-              plea: "Not Known",
-              adjudication: "Non-Conviction",
-              dateOfSentence: "2025-08-15",
-              offenceTic: 4,
-              offenceStartDate: "2025-08-16",
-              offenceStartTime: "14:30+02:00",
-              offenceEndDate: "2025-08-17",
-              offenceEndTime: "14:30+02:00",
-              disposalResults: [
-                {
-                  disposalCode: 10,
-                  disposalQualifies: ["Disposal qualifiers"],
-                  disposalText: "Disposal text"
-                }
-              ],
-              locationFsCode: "Offence location FS code",
-              locationText: "Offence location"
-            }
-          ]
-        }
-      ]
-    } as AddDisposalRequest
+      disposalEffectiveDate: "2024-12-10"
+    })
 
     const ledsRequest = mapToNormalDisposalRequest(request)
 
