@@ -8,8 +8,6 @@ FROM base AS deps
 
 WORKDIR /core
 
-RUN yum groupinstall -y "Development Tools"
-
 COPY package*.json ./
 COPY packages/user-service/package.json ./packages/user-service/package.json
 COPY packages/user-service/scripts ./packages/user-service/scripts
