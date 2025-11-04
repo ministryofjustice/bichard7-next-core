@@ -81,12 +81,6 @@ commands:
           name: Build Core
           command: npm run build -w packages/core
 
-  build_e2e_tests:
-    steps:
-      - run:
-          name: Build e2e tests
-          command: npm run build:e2e-test
-
   save_artifacts:
     steps:
       - run:
@@ -917,7 +911,7 @@ jobs:
       - load_user_service_image
       - node/install
       - node_install_packages
-      - build_common
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
