@@ -68,6 +68,12 @@ commands:
           paths:
             - ~/.npm
 
+  build_common:
+    steps:
+      - run:
+          name: Build Common
+          command: npm run build -w packages/common
+
   build_core:
     steps:
       - run:
@@ -444,7 +450,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_api
+      - build_common
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
