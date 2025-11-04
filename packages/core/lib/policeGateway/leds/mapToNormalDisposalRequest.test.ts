@@ -6,17 +6,21 @@ import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 import mapToNormalDisposalRequest from "./mapToNormalDisposalRequest"
 
 describe("mapToNormalDisposalRequest", () => {
-  it("maps the normal disposal request to LEDS normal disposal request", () => {
-    const request = {
+  const buildNormalDisposalRequest = (
+    psaCourtCode?: string,
+    generatedPNCFilename?: string,
+    pendingPsaCourtCode?: string
+  ): NormalDisposalPncUpdateRequest["request"] => {
+    return {
       forceStationCode: "07A1",
       pncIdentifier: "22/858J",
       pncCheckName: "Pnc check name",
       courtCaseReferenceNumber: "98/2048/633Y",
-      psaCourtCode: PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR,
+      psaCourtCode,
       courtHouseName: "Court house name",
       dateOfHearing: "2025-08-12",
-      generatedPNCFilename: "individual",
-      pendingPsaCourtCode: "1234",
+      generatedPNCFilename,
+      pendingPsaCourtCode,
       pendingCourtDate: "2025-08-13",
       pendingCourtHouseName: "Pending court house name",
       preTrialIssuesUniqueReferenceNumber: "121212",
@@ -71,7 +75,10 @@ describe("mapToNormalDisposalRequest", () => {
         }
       ]
     } as NormalDisposalPncUpdateRequest["request"]
+  }
 
+  it("maps the normal disposal request to LEDS normal disposal request", () => {
+    const request = buildNormalDisposalRequest(PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR, "individual", "1234")
     const expectedLedsRequest = {
       ownerCode: "07A1",
       personUrn: "22/858J",
@@ -94,6 +101,80 @@ describe("mapToNormalDisposalRequest", () => {
           courtCode: "1234"
         }
       },
+      referToCourtCase: {
+        reference: "121212"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "Offence reason",
+          plea: "Not Known",
+          adjudication: "Non-Conviction",
+          dateOfSentence: "2025-08-14",
+          offenceTic: 3,
+          disposalResults: [
+            {
+              disposalCode: 10,
+              disposalQualifies: ["Disposal qualifiers"],
+              disposalText: "Disposal text"
+            }
+          ],
+          offenceId: ""
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "Offence reason",
+              committedOnBail: true,
+              plea: "Not Known",
+              adjudication: "Non-Conviction",
+              dateOfSentence: "2025-08-15",
+              offenceTic: 4,
+              offenceStartDate: "2025-08-16",
+              offenceStartTime: "14:30+02:00",
+              offenceEndDate: "2025-08-17",
+              offenceEndTime: "14:30+02:00",
+              disposalResults: [
+                {
+                  disposalCode: 10,
+                  disposalQualifies: ["Disposal qualifiers"],
+                  disposalText: "Disposal text"
+                }
+              ],
+              locationFsCode: "Offence location FS code",
+              locationText: "Offence location"
+            }
+          ]
+        }
+      ]
+    } as AddDisposalRequest
+
+    const ledsRequest = mapToNormalDisposalRequest(request)
+
+    expect(ledsRequest).toEqual(expectedLedsRequest)
+  })
+
+  it("produces a different LEDS request when psaCourtCode, generatedPNCFilename and pendingPsaCourtCode values differ", () => {
+    const request = buildNormalDisposalRequest("1112", "organisation")
+    const expectedLedsRequest = {
+      ownerCode: "07A1",
+      personUrn: "22/858J",
+      checkName: "Pnc check name",
+      courtCaseReference: "98/2048/633Y",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "1112"
+      },
+      dateOfConviction: "2025-08-12",
+      defendant: {
+        defendantType: "organisation",
+        defendantOrganisationName: ""
+      },
+      carryForward: undefined,
       referToCourtCase: {
         reference: "121212"
       },
