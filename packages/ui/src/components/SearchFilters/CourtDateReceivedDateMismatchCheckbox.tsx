@@ -20,6 +20,7 @@ export const CourtDateReceivedDateMismatchCheckbox = ({
       <input
         className="govuk-checkboxes__input"
         id={checkboxId}
+        name="courtDateReceivedDateMismatch"
         type="checkbox"
         checked={value}
         onChange={(event: ChangeEvent<HTMLInputElement>) => {

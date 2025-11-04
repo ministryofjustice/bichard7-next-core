@@ -48,7 +48,8 @@ const CourtCaseFilter: React.FC<Props> = ({
   orderBy,
   resolvedByUsername,
   caseResolvedDateRange,
-  canUseCourtDateReceivedDateMismatchFilters
+  canUseCourtDateReceivedDateMismatchFilters,
+  courtDateReceivedDateMismatch
 }) => {
   const lockedStateValue = lockedState ?? LockedState.All
   const initialFilterState: Filter = {
@@ -71,7 +72,7 @@ const CourtCaseFilter: React.FC<Props> = ({
     resolvedFrom: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.from, state: "Applied" } : {},
     resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {},
     courtDateReceivedDateMismatchFilter: {
-      value: false,
+      value: courtDateReceivedDateMismatch ?? false,
       state: "Applied",
       label: "Include cases where date received is different"
     }
