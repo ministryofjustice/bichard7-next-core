@@ -418,6 +418,8 @@ jobs:
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
+      - attach_workspace:
+          at: .
 #      - node_install_packages
       - build_e2e_tests
       - fetch_images:
@@ -426,8 +428,6 @@ jobs:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
       - build_audit_logging_images
-      - attach_workspace:
-          at: .
       - load_user_service_image
       - run:
           name: Run the infrastructure
