@@ -1,7 +1,45 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.2.0
+  node: circleci/node@7.2.1
+
+parameters:
+  docker-layer-caching:
+    type: boolean
+    default: false
+  circleci-changes:
+    type: boolean
+    default: false
+  env-changes:
+    type: boolean
+    default: false
+  api-changes:
+    type: boolean
+    default: false
+  common-changes:
+    type: boolean
+    default: false
+  conductor-changes:
+    type: boolean
+    default: false
+  core-changes:
+    type: boolean
+    default: false
+  message-forwarder-changes:
+    type: boolean
+    default: false
+  ui-changes:
+    type: boolean
+    default: false
+  user-service-changes:
+    type: boolean
+    default: false
+  e2e-test-changes:
+    type: boolean
+    default: false
+  characterisation-test-changes:
+    type: boolean
+    default: false
 
 commands:
   fetch_images:
@@ -14,68 +52,34 @@ commands:
           name: "Fetch images: <<parameters.images>>"
           command: bash .circleci/scripts/fetch-docker-images.sh <<parameters.images>>
 
-  node_install:
+  node_install_packages:
     steps:
       - restore_cache:
-          name: Restore nvm cache
+          name: Restore npm Cache
           keys:
-            # Invalidate the cache based on architecture, the version of Node defined in `nvmrc`
-            - v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
-      - run: nvm install
+            - v1-npm-deps-{{ checksum "package-lock.json" }}
+            - v1-npm-deps-
+      - run:
+          name: Install Node Packages
+          command: npm ci --ignore-scripts --no-audit
       - save_cache:
-          name: Save nvm cache
-          key: v1-nvm-cache-{{ arch }}-{{ checksum ".nvmrc" }}
+          name: Save npm Cache
+          key: v1-npm-deps-{{ checksum "package-lock.json" }}
           paths:
-            - /opt/circleci/.nvm/.cache
+            - ~/.npm
 
-  install_dependencies:
-    description: Install the node dependencies for core
-    parameters:
-      install-cypress:
-        type: boolean
-        default: false
+  build_common:
     steps:
       - run:
-          name: Hash package-lock.json
-          command: bash .circleci/scripts/hash-package-lock.sh
-      - restore_cache:
-          name: Load node_modules from the cache if they haven't changed
-          keys:
-            - v1-npm-deps-{{ checksum "package-lock.json.md5" }}
-            - v1-npm-deps-
-      - when:
-          condition: <<parameters.install-cypress>>
-          steps:
-            - run:
-                name: Install npm dependencies
-                command: npm i --workspaces --include-workspace-root
-      - unless:
-          condition: <<parameters.install-cypress>>
-          steps:
-            - run:
-                name: Install npm dependencies
-                command: CYPRESS_INSTALL_BINARY=0 npm i --workspaces --include-workspace-root
-      - save_cache:
-          key: v1-npm-deps-{{ checksum "package-lock.json.md5" }}
-          paths: node_modules
+          name: Build Common
+          command: npm run build -w packages/common
 
   build_core:
     steps:
+      - build_common
       - run:
           name: Build Core
-          command: npm run build:core
-
-  build_api:
-    steps:
-      - run:
-          name: Build API
-          command: npm run build:api
-
-  build_e2e_tests:
-    steps:
-      - run:
-          name: Build e2e tests
-          command: npm run build:e2e-test
+          command: npm run build -w packages/core
 
   save_artifacts:
     steps:
@@ -92,10 +96,6 @@ commands:
       - store_test_results:
           path: packages/e2e-test/test-results/results/report.xml
 
-  setup_ui:
-    steps:
-      - node_install
-
   build_core_images:
     steps:
       - run:
@@ -111,6 +111,24 @@ commands:
           name: Build audit logging images
           working_directory: ~/bichard7-next-audit-logging
           command: make build-api-server build-event-handler-server
+
+  load_ui_image:
+    steps:
+      - run:
+          name: Load ui image
+          command: docker image load < "images/ui:latest"
+
+  load_user_service_image:
+    steps:
+      - run:
+          name: Load user-service image
+          command: docker image load < "images/user-service:latest"
+
+  load_api_image:
+    steps:
+      - run:
+          name: Load api image
+          command: docker image load < "images/api:latest"
 
   start_services:
     parameters:
@@ -169,11 +187,14 @@ jobs:
     resource_class: medium
     steps:
       - checkout
-      - install_dependencies
+      - node/install
+      - node_install_packages
       - run:
           name: Check the code for linting errors
-          command: npm run lint:ci
-      - build_core
+          command: nvm use && npm run lint:ci
+      - run:
+          name: Build Core Packages
+          command: npm run build:core
 
   test_core:
     machine:
@@ -190,8 +211,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - install_dependencies
-      - build_core
+      - node/install
+      - node_install_packages
+      - build_common
       - fetch_images:
           images: nodejs-20-2023
       - run:
@@ -219,7 +241,6 @@ jobs:
       - run:
           name: Run Audit Logging API
           command: npm run audit-log
-      - node_install
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
@@ -242,8 +263,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - install_dependencies
-      - build_core
+      - node_install_packages
+      - build_common
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -273,8 +294,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - install_dependencies
-      - build_core
+      - node_install_packages
+      - build_common
       - run:
           name: Run tests against core code
           command: npm run test:characterisation -w packages/core
@@ -295,8 +316,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
-      - install_dependencies
+      - node/install
+      - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -325,8 +346,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
-      - install_dependencies
+      - node/install
+      - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
@@ -338,7 +359,7 @@ jobs:
           name: Test the workflows
           command: nvm use && npm run -w packages/message-forwarder test
 
-  e2e_test:
+  cucumber_e2e_legacy_tests:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -375,8 +396,8 @@ jobs:
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
-      - install_dependencies
-      - build_e2e_tests
+      - node_install_packages
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
@@ -385,10 +406,7 @@ jobs:
       - build_audit_logging_images
       - attach_workspace:
           at: .
-      - run:
-          name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
+      - load_user_service_image
       - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
@@ -409,7 +427,7 @@ jobs:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
-    resource_class: medium
+    resource_class: large
     steps:
       - unless:
           condition:
@@ -421,15 +439,15 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
-      - install_dependencies
-      - build_api
+      - node/install
+      - node_install_packages
+      - build_common
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
-          command: npm run conductor
+          command: bash .circleci/scripts/run-infrastructure.sh '' conductor
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
@@ -437,7 +455,7 @@ jobs:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
 
-  build_api_docker_image:
+  build_api_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -456,8 +474,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - fetch_images:
-          images: nginx-nodejs-20-2023-supervisord
       - run: ./scripts/build-api-docker.sh
       - run:
           name: Save Docker image
@@ -483,12 +499,11 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
-      - install_dependencies
-      - build_core
+      - node/install
+      - node_install_packages
       - run:
           name: Unit test common
-          command: npm run test -w packages/common
+          command: nvm use && npm run test -w packages/common
 
   test_postgres:
     machine:
@@ -511,7 +526,7 @@ jobs:
           command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
           name: run Postgres function tests
 
-  build-ui:
+  build_ui_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -558,8 +573,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - setup_ui
-      - install_dependencies
+      - node/install
+      - node_install_packages
       - fetch_images:
           images: nodejs-20-2023
       - build_audit_logging_images
@@ -568,12 +583,12 @@ jobs:
       - build_core
       - run:
           name: Run code-based unit tests
-          command: npm run -w packages/ui test:unit
+          command: nvm use && npm run -w packages/ui test:unit
       - run:
           name: Run integration tests
-          command: npm run -w packages/ui test:integration
+          command: nvm use && npm run -w packages/ui test:integration
 
-  cypress_component_test:
+  test_ui_component:
     machine:
       image: ubuntu-2204:current
     resource_class: medium
@@ -588,17 +603,16 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - setup_ui
-      - install_dependencies:
-          install-cypress: true
-      - run:
-          name: Install GOV.UK Assets
-          command: npm run -w packages/ui install:assets
-      - build_core
+      - node/install
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
+      - node_install_packages
+      - run:
+          name: Install GOV.UK Assets
+          command: npm run -w packages/ui install:assets
+      - build_core
       - run:
           name: Wait for cypress install to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
@@ -633,8 +647,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - node_install
-      - install_dependencies
+      - node/install
+      - node_install_packages
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -667,9 +681,13 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
       - attach_workspace:
           at: .
-      - node_install
-      - install_dependencies:
-          install-cypress: true
+      - node/install
+      - node_install_packages
+      - run:
+          name: Install Cypress
+          command: |
+            cd packages/user-service
+            npx cypress install
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
@@ -688,7 +706,7 @@ jobs:
       - store_artifacts:
           path: ~/project/packages/user-service/cypress/screenshots
 
-  build_user_service_docker_image:
+  build_user_service_image:
     machine:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
@@ -704,6 +722,8 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
+              - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -746,38 +766,29 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
       - attach_workspace:
           at: .
-      - run:
-          name: Load ui image
-          command: |
-            docker image load < "images/ui:latest"
-      - run:
-          name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
+      - load_ui_image
+      - load_user_service_image
       - when:
           condition:
             equal: [true, << parameters.api >>]
           steps:
-            - run:
-                name: Load api image
-                command: |
-                  docker image load < "images/api:latest"
-      - setup_ui
-      - install_dependencies:
-          install-cypress: true
-      - build_core
+            - load_api_image
+      - node/install
       - run:
+          name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
+      - node_install_packages
+      - build_common
       - fetch_images:
-          images: nodejs-20-2023 nginx-auth-proxy
+          images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
           no_output_timeout: 10m
       - run:
-          name: Retrying installing Cypress
+          name: Retrying Installing Cypress
           command: ./.circleci/scripts/install-cypress.sh
       - run:
           name: Building infrastructure
@@ -789,7 +800,7 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             run:
-              command: npm run conductor
+              command: bash .circleci/scripts/run-infrastructure.sh api conductor
       - run:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -839,25 +850,16 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - attach_workspace:
           at: .
-      - run:
-          name: Load ui image
-          command: |
-            docker image load < "images/ui:latest"
-      - run:
-          name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
+      - load_ui_image
+      - load_user_service_image
       - when:
           condition:
             equal: [true, << parameters.api >>]
           steps:
-            - run:
-                name: Load api image
-                command: |
-                  docker image load < "images/api:latest"
-      - setup_ui
-      - install_dependencies
-      - build_e2e_tests
+            - load_api_image
+      - node/install
+      - node_install_packages
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_core_images
@@ -907,24 +909,19 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run:
-          name: Load ui image
-          command: |
-            docker image load < "images/ui:latest"
-      - run:
-          name: Load user-service image
-          command: |
-            docker image load < "images/user-service:latest"
-      - setup_ui
-      - install_dependencies
+      - load_ui_image
+      - load_user_service_image
+      - node/install
+      - node_install_packages
+      - build_core
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
-      - build_core
       - run:
-          command: npm run ui
+          name: Boot up infra
+          command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
       - run:
           name: Seed database
           command: DEPLOY_NAME=e2e-test npm run -w packages/ui seed-data
@@ -932,51 +929,15 @@ jobs:
           name: Run ZAP scanner
           command: npm run -w packages/ui zap
 
-parameters:
-  docker-layer-caching:
-    type: boolean
-    default: false
-  circleci-changes:
-    type: boolean
-    default: false
-  env-changes:
-    type: boolean
-    default: false
-  api-changes:
-    type: boolean
-    default: false
-  common-changes:
-    type: boolean
-    default: false
-  conductor-changes:
-    type: boolean
-    default: false
-  core-changes:
-    type: boolean
-    default: false
-  message-forwarder-changes:
-    type: boolean
-    default: false
-  ui-changes:
-    type: boolean
-    default: false
-  user-service-changes:
-    type: boolean
-    default: false
-  e2e-test-changes:
-    type: boolean
-    default: false
-  characterisation-test-changes:
-    type: boolean
-    default: false
-
 workflows:
   test-all:
     jobs:
-      - build-ui
-      - build_user_service_docker_image
-      - build_api_docker_image
       - lint_and_build
+
+      - build_ui_image
+      - build_user_service_image
+      - build_api_image
+
       - test_message_forwarder
       - test_postgres
       - test_api
@@ -984,21 +945,17 @@ workflows:
       - test_conductor
       - test_core
       - test_ui
+      - test_ui_component
       - test_user_service
       - test_user_service_e2e
       - characterisation_test
       - comparison_test
 
-      - cypress_component_test:
-          name: cypress_component_test
-          requires:
-            - test_ui
-
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           requires:
-            - build-ui
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -1007,15 +964,15 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
-            - build-ui
-            - build_user_service_docker_image
-            - build_api_docker_image
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           requires:
-            - build-ui
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -1024,19 +981,18 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
-            - build-ui
-            - build_user_service_docker_image
-            - build_api_docker_image
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
 
       - zap_scanner:
           requires:
-            - build-ui
-            - build_user_service_docker_image
+            - build_ui_image
+            - build_user_service_image
 
-      - e2e_test:
+      - cucumber_e2e_legacy_tests:
           next-ui: false
           phase2-core-canary-ratio: "1.0"
           phase3-core-canary-ratio: "1.0"
           requires:
-            - lint_and_build
-            - build_user_service_docker_image
+            - build_user_service_image
