@@ -10,7 +10,11 @@ import storeVerificationCode from "./storeVerificationCode"
 import loginEmail from "../emails/login"
 import resetPasswordEmail from "../emails/resetPassword"
 
-export default async (connection: Database, emailAddress: string, type: string): PromiseResult<void> => {
+export default async (
+  connection: Database,
+  emailAddress: string,
+  type: "loginStage" | "resetStage"
+): PromiseResult<void> => {
   const normalisedEmail = removeCjsmSuffix(emailAddress)
 
   const code = randomDigits(config.verificationCodeLength).join("")
