@@ -12,6 +12,7 @@ describe("CourtDateFilter", () => {
         dispatch={dispatch}
         dateRange={undefined}
         canUseCourtDateReceivedDateMismatchFilters={true}
+        courtDateReceivedDateMismatchFilter={false}
       />
     )
   })
@@ -23,6 +24,7 @@ describe("CourtDateFilter", () => {
         dispatch={dispatch}
         dateRange={undefined}
         canUseCourtDateReceivedDateMismatchFilters={true}
+        courtDateReceivedDateMismatchFilter={false}
       />
     )
 
@@ -36,6 +38,7 @@ describe("CourtDateFilter", () => {
         dispatch={dispatch}
         dateRange={undefined}
         canUseCourtDateReceivedDateMismatchFilters={false}
+        courtDateReceivedDateMismatchFilter={false}
       />
     )
 
