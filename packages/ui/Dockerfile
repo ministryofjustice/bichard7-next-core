@@ -8,12 +8,8 @@ FROM base AS deps
 
 WORKDIR /core
 
-# Currently needed for core postinstall script
-RUN yum install jq -y
-
 # Copy in package info so we don't have to re-install packages for every code change
 COPY package*.json ./
-COPY tsconfig*.json ./
 COPY packages/core/package.json ./packages/core/package.json
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
@@ -31,6 +27,7 @@ WORKDIR /core
 
 COPY --from=deps ./core ./
 
+COPY tsconfig*.json ./
 COPY packages/core ./packages/core
 COPY packages/common ./packages/common
 COPY packages/ui ./packages/ui

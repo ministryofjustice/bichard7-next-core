@@ -9,7 +9,6 @@ FROM base AS deps
 WORKDIR /core
 
 COPY package*.json ./
-COPY tsconfig*.json ./
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/api/package.json ./packages/api/package.json
 
@@ -22,6 +21,7 @@ WORKDIR /core
 
 COPY --from=deps ./core ./
 
+COPY tsconfig*.json ./
 COPY packages/common ./packages/common
 COPY packages/api ./packages/api
 
