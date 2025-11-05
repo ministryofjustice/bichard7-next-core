@@ -68,23 +68,18 @@ commands:
           paths:
             - ~/.npm
 
+  build_common:
+    steps:
+      - run:
+          name: Build Common
+          command: npm run build -w packages/common
+
   build_core:
     steps:
+      - build_common
       - run:
           name: Build Core
-          command: npm run build:core
-
-  build_api:
-    steps:
-      - run:
-          name: Build API
-          command: npm run build:api
-
-  build_e2e_tests:
-    steps:
-      - run:
-          name: Build e2e tests
-          command: npm run build:e2e-test
+          command: npm run build -w packages/core
 
   save_artifacts:
     steps:
@@ -197,7 +192,9 @@ jobs:
       - run:
           name: Check the code for linting errors
           command: nvm use && npm run lint:ci
-      - build_core
+      - run:
+          name: Build Core Packages
+          command: npm run build:core
 
   test_core:
     machine:
@@ -216,7 +213,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_core
+      - build_common
       - fetch_images:
           images: nodejs-20-2023
       - run:
@@ -267,7 +264,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node_install_packages
-      - build_core
+      - build_common
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -298,7 +295,7 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - node_install_packages
-      - build_core
+      - build_common
       - run:
           name: Run tests against core code
           command: npm run test:characterisation -w packages/core
@@ -400,7 +397,7 @@ jobs:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - node_install_packages
-      - build_e2e_tests
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
@@ -444,7 +441,7 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_api
+      - build_common
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -504,7 +501,6 @@ jobs:
       - checkout
       - node/install
       - node_install_packages
-      - build_core
       - run:
           name: Unit test common
           command: nvm use && npm run test -w packages/common
@@ -783,7 +779,7 @@ jobs:
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
       - node_install_packages
-      - build_core
+      - build_common
       - fetch_images:
           images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
@@ -863,7 +859,7 @@ jobs:
             - load_api_image
       - node/install
       - node_install_packages
-      - build_e2e_tests
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_core_images
@@ -917,12 +913,12 @@ jobs:
       - load_user_service_image
       - node/install
       - node_install_packages
+      - build_core
       - fetch_images:
           images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
-      - build_core
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
