@@ -19,6 +19,8 @@ const semver = new RegExp(
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
+  - eslint
+    - v38.0.0 Highest version that doesn't break linting
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
@@ -27,7 +29,8 @@ const ignored = [
   "esbuild",
   "@cucumber/cucumber",
   "@cucumber/pretty-formatter",
-  "http-status"
+  "http-status",
+  "eslint"
 ]
 
 module.exports = {

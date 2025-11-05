@@ -6,8 +6,10 @@
     - v10 has breaking change with Jest
   - cypress
     - v15 doesn't play nice with TypeORM
+  - eslint
+    - v38.0.0 Highest version that doesn't break linting
 */
-const pinned = ["cookies-next", "@faker-js/faker", "cypress"]
+const pinned = ["cookies-next", "@faker-js/faker", "cypress", "eslint"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 
