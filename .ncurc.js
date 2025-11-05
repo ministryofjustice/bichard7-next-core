@@ -21,6 +21,8 @@ const semver = new RegExp(
     - from tests repo migration, version was pinned to v9
   - eslint
     - v38.0.0 Highest version that doesn't break linting
+  - @io-orkes/conductor-javascript
+    - Breaking changes for how to use the Client, workflows etc
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
@@ -30,7 +32,8 @@ const ignored = [
   "@cucumber/cucumber",
   "@cucumber/pretty-formatter",
   "http-status",
-  "eslint"
+  "eslint",
+  "@io-orkes/conductor-javascript"
 ]
 
 module.exports = {
