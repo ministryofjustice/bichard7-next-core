@@ -837,7 +837,7 @@ describe("Filtering cases", () => {
       visitBasePath()
 
       cy.get("#case-age").should("exist")
-      cy.get("#case-show-date-received-mismatch").should("not.exist")
+      cy.get("#court-date-received-date-mismatch").should("not.exist")
     })
   })
 
