@@ -6,12 +6,14 @@
     - v10 has breaking change with Jest
   - cypress
     - v15 doesn't play nice with TypeORM
+  - next
+    - v16 doesn't load the sass files from @ministryofjustice/frontend
 
   Ignored:
   - eslint
     - v38.0.0 Highest version that doesn't break linting
 */
-const pinned = ["cookies-next", "@faker-js/faker", "cypress"]
+const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next"]
 const ignored = ["eslint"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 

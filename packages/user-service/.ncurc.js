@@ -8,7 +8,9 @@ const pinned = [
   "react",
   "react-dom",
   "@types/react",
-  "@types/react-dom"
+  "@types/react-dom",
+  "next",
+  "@next/eslint-plugin-next"
 ]
 const ignored = ["eslint"]
 const skipped = []
