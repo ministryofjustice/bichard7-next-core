@@ -48,7 +48,8 @@ const CourtCaseFilter: React.FC<Props> = ({
   orderBy,
   resolvedByUsername,
   caseResolvedDateRange,
-  canUseCourtDateReceivedDateMismatchFilters
+  canUseCourtDateReceivedDateMismatchFilters,
+  courtDateReceivedDateMismatch
 }) => {
   const lockedStateValue = lockedState ?? LockedState.All
   const initialFilterState: Filter = {
@@ -69,7 +70,12 @@ const CourtCaseFilter: React.FC<Props> = ({
     reasonFilter: reason !== null ? { value: reason, state: "Applied" } : {},
     resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {},
     resolvedFrom: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.from, state: "Applied" } : {},
-    resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {}
+    resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {},
+    courtDateReceivedDateMismatchFilter: {
+      value: courtDateReceivedDateMismatch ?? false,
+      state: "Applied",
+      label: "Include cases where date received is different"
+    }
   }
   const [state, dispatch] = useReducer(filtersReducer, initialFilterState)
   const currentUser = useCurrentUser()
@@ -138,6 +144,7 @@ const CourtCaseFilter: React.FC<Props> = ({
             dispatch={dispatch}
             dateRange={{ from: state.dateFrom.value, to: state.dateTo.value }}
             canUseCourtDateReceivedDateMismatchFilters={canUseCourtDateReceivedDateMismatchFilters}
+            courtDateReceivedDateMismatchFilter={state.courtDateReceivedDateMismatchFilter.value}
           />
           <Divider />
 
