@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 import type { AxiosError } from "axios"
 
@@ -82,16 +83,32 @@ export default class LedsGateway implements PoliceGateway {
     return mapToPoliceQueryResult(queryResponse.data, checkName)
   }
 
-  async update(request: PoliceUpdateRequest, correlationId: string): Promise<PoliceApiError | void> {
+  async update(
+    request: PoliceUpdateRequest,
+    correlationId: string,
+    pncUpdateDataset: PncUpdateDataset
+  ): Promise<PoliceApiError | void> {
     let endpoint: string
     let requestBody: AddDisposalRequest | RemandRequest
+    const personId = pncUpdateDataset.PncQuery?.personId
+    const reportId = pncUpdateDataset.PncQuery?.reportId
+    if (!personId || !reportId) {
+      return new PoliceApiError(["Failed to update LEDS due to missing data."])
+    }
 
-    if (request.operation === PncOperation.REMAND && request.personId && request.reportId) {
+    if (request.operation === PncOperation.REMAND) {
       requestBody = mapToRemandRequest(request.request)
-      endpoint = endpoints.remand(request.personId, request.reportId)
+      endpoint = endpoints.remand(personId, reportId)
     } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
+      const courtCaseId = pncUpdateDataset.PncQuery?.courtCases?.find(
+        (c) => c.courtCaseReference === request.request.courtCaseReferenceNumber
+      )?.courtCaseId
+      if (!courtCaseId) {
+        return new PoliceApiError(["Failed to update LEDS due to missing data."])
+      }
+
       requestBody = mapToNormalDisposalRequest(request.request)
-      endpoint = ""
+      endpoint = endpoints.addDisposal(personId, courtCaseId)
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
     }

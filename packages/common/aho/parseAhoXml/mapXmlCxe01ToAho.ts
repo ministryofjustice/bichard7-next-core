@@ -121,6 +121,7 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     }
 
     courtCases = cxe.CourtCases?.CourtCase.map((courtCase) => ({
+      courtCaseId: courtCase["@_CourtCaseId"],
       courtCaseReference: courtCase.CCR["@_CourtCaseRefNo"],
       offences: mapXmlOffencesToAho(courtCase.Offences.Offence as AhoXmlPncOffence[])
     }))
