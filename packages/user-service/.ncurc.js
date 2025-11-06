@@ -1,5 +1,4 @@
 const pinned = [
-  "eslint",
   "eslint-plugin",
   "eslint-plugin-cypress",
   "@typescript-eslint/eslint-plugin",
@@ -9,13 +8,20 @@ const pinned = [
   "react",
   "react-dom",
   "@types/react",
-  "@types/react-dom",
-  "eslint"
+  "@types/react-dom"
 ]
-const ignored = []
+const ignored = ["eslint"]
 const skipped = []
 
 module.exports = {
+  filter: (pkg) => {
+    if (ignored.some((ignore) => ignore === pkg)) {
+      return false
+    }
+
+    return true
+  },
+
   target: (pkg) => {
     if (pinned.some((pin) => pin === pkg)) {
       const res = "minor"

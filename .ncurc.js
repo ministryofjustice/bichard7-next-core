@@ -23,6 +23,8 @@ const semver = new RegExp(
     - v38.0.0 Highest version that doesn't break linting
   - @io-orkes/conductor-javascript
     - Breaking changes for how to use the Client, workflows etc
+  - @typescript-eslint/eslint-plugin
+    - Breaks dependency tree for eslint-config-next
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
@@ -33,7 +35,8 @@ const ignored = [
   "@cucumber/pretty-formatter",
   "http-status",
   "eslint",
-  "@io-orkes/conductor-javascript"
+  "@io-orkes/conductor-javascript",
+  "@typescript-eslint/eslint-plugin"
 ]
 
 module.exports = {
