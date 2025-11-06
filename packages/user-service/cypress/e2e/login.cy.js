@@ -286,13 +286,11 @@ describe("Logging In", () => {
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Incorrect email address or password")
 
     // second incorrect login attempt
-    cy.get("input[type=email]").type(user.email)
     cy.get("input#password").type("wrongPassword")
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Incorrect email address or password")
 
     // third incorrect login attempt
-    cy.get("input[type=email]").type(user.email)
     cy.get("input#password").type("wrongPassword")
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("Too many incorrect password attempts")
