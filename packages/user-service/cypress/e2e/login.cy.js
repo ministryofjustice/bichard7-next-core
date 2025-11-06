@@ -132,7 +132,7 @@ describe("Logging In", () => {
     // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
     // Need to wait 10 seconds after inputting an incorrect password
     /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(10000)
+    cy.wait(100)
     cy.get("input[type=password][name=password]").type(user.password)
     cy.get("button[type=submit]").click()
     cy.get("input#validationCode").should("exist")
@@ -253,7 +253,7 @@ describe("Logging In", () => {
     // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
     // Need to wait 10 seconds after inputting a correct password
     /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(10000)
+    cy.wait(100)
 
     cy.clearCookies()
     cy.login(emailAddress, password)
@@ -298,7 +298,7 @@ describe("Logging In", () => {
     // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
     // Need to wait 10 seconds after inputting an incorrect password
     /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(10000)
+    cy.wait(100)
 
     // second incorrect login attempt
     cy.get("input#password").type("wrongPassword")
@@ -308,7 +308,7 @@ describe("Logging In", () => {
     // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
     // Need to wait 10 seconds after inputting an incorrect password
     /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(10000)
+    cy.wait(100)
 
     // third incorrect login attempt
     cy.get("input#password").type("wrongPassword")
