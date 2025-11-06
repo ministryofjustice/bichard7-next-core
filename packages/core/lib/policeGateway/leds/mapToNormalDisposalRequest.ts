@@ -4,7 +4,7 @@ import type {
 } from "../../../phase3/types/HearingDetails"
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
-import type { Adjudication, Court, Defendant, Plea } from "../../../types/leds/DisposalRequest"
+import type { Adjudication, Court, Defendant, DisposalDurationUnit, Plea } from "../../../types/leds/DisposalRequest"
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
@@ -33,8 +33,9 @@ const mapDefendant = (generatedPNCFilename: string): Defendant =>
         defendantOrganisationName: ""
       }
 
-const parseDisposalQuantity = (quantity: string) => {
-  const durationCode = quantity.slice(0, 1).toLowerCase()
+const parseDisposalQuantity = (disposalQuantity: string) => {
+  const quantity = disposalQuantity.toLowerCase()
+  const durationCode = quantity.slice(0, 1)
   const count = Number(quantity.slice(1, 4).trim()) || 0
   const day = quantity.slice(4, 6)
   const month = quantity.slice(6, 8)
@@ -42,19 +43,19 @@ const parseDisposalQuantity = (quantity: string) => {
   const amount = Number(quantity.slice(12)) || 0
   const disposalEffectiveDate = year && month && day ? `${year}-${month}-${day}` : undefined
 
-  let units: "days" | "hours" | "life" | "months" | "weeks" | "years"
+  let units: DisposalDurationUnit
 
   if (quantity.slice(1, 4) === "y999") {
     units = "life"
   } else {
-    const unitMap: Record<string, typeof units> = {
+    const unitMap: Record<string, DisposalDurationUnit> = {
       d: "days",
       h: "hours",
       m: "months",
       w: "weeks",
       y: "years"
     }
-    units = unitMap[durationCode] ?? "years"
+    units = unitMap[durationCode]
   }
 
   return { count, units, disposalEffectiveDate, amount }
