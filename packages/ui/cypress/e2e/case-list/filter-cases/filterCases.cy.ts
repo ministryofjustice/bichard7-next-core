@@ -823,7 +823,7 @@ describe("Filtering cases", () => {
     it("Should show court date mismatch checkbox when feature flags enabled", () => {
       visitBasePath()
 
-      cy.get("#case-show-date-received-mismatch").should("exist")
+      cy.get("#court-date-received-date-mismatch").should("exist")
     })
   })
 
