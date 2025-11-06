@@ -332,7 +332,7 @@ services:
     environment:
       BASE_URL: https://localhost:4443/users
       DB_HOST: postgres
-      INCORRECT_DELAY: 0
+      NEXT_PUBLIC_INCORRECT_DELAY: 0
       TOKEN_EXPIRES_IN: 1 week
       TOKEN_ISSUER: Bichard
       TOKEN_SECRET: ${AUTH_JWT_SECRET}
