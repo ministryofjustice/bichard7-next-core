@@ -1,5 +1,6 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
+import { WorkflowResourceService } from "@io-orkes/conductor-javascript"
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -10,7 +11,6 @@ import fs from "fs"
 
 import type Phase1Result from "../../phase1/types/Phase1Result"
 
-import { WorkflowResourceService } from "../../../../node_modules/@io-orkes/conductor-javascript"
 import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
