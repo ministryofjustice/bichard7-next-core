@@ -145,6 +145,19 @@ const FilterChipSection: React.FC<Props> = ({
           value={dateRangeLabel}
         />
 
+        <FilterChipRow
+          chipLabel={state.courtDateReceivedDateMismatchFilter.label}
+          condition={
+            state.courtDateReceivedDateMismatchFilter.value &&
+            state.courtDateReceivedDateMismatchFilter.state === sectionState
+          }
+          dispatch={dispatch}
+          type="courtDateReceivedDateMismatch"
+          label=""
+          state={state.courtDateReceivedDateMismatchFilter.state ?? sectionState}
+          value={!state.courtDateReceivedDateMismatchFilter.value}
+        />
+
         <ConditionalRender
           isRendered={state.caseAgeFilter.filter((caseAgeFilter) => caseAgeFilter.state === sectionState).length > 0}
         >

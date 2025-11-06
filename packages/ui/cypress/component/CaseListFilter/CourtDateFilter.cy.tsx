@@ -12,6 +12,7 @@ describe("CourtDateFilter", () => {
         dispatch={dispatch}
         dateRange={undefined}
         canUseCourtDateReceivedDateMismatchFilters={true}
+        courtDateReceivedDateMismatchFilter={false}
       />
     )
   })
@@ -23,10 +24,11 @@ describe("CourtDateFilter", () => {
         dispatch={dispatch}
         dateRange={undefined}
         canUseCourtDateReceivedDateMismatchFilters={true}
+        courtDateReceivedDateMismatchFilter={true}
       />
     )
 
-    cy.get("#case-show-date-received-mismatch").should("exist")
+    cy.get("#court-date-received-date-mismatch").should("exist")
   })
 
   it("does not show date received mismatch checkbox when feature flag false", () => {
@@ -36,10 +38,11 @@ describe("CourtDateFilter", () => {
         dispatch={dispatch}
         dateRange={undefined}
         canUseCourtDateReceivedDateMismatchFilters={false}
+        courtDateReceivedDateMismatchFilter={false}
       />
     )
 
     cy.get("#case-age").should("exist")
-    cy.get("#case-show-date-received-mismatch").should("not.exist")
+    cy.get("#court-date-received-date-mismatch").should("not.exist")
   })
 })

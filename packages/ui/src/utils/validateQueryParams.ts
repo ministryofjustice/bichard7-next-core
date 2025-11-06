@@ -55,6 +55,9 @@ export const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser:
   const courtDateRange = caseAges || dateRange
   const resolvedDateRange = validateDateRange({ from: query.resolvedFrom, to: query.resolvedTo })
   const asn = validateQueryParams(query.asn) ? sanitise(query.asn) : null
+  const courtDateReceivedDateMismatch = validateQueryParams(query.courtDateReceivedDateMismatch)
+    ? query.courtDateReceivedDateMismatch === "on"
+    : false
 
   return {
     ...(defendantName && { defendantName: defendantName }),
@@ -62,6 +65,7 @@ export const extractSearchParamsFromQuery = (query: ParsedUrlQuery, currentUser:
     ...(reasonCodes && { reasonCodes: reasonCodes }),
     ...(ptiurn && { ptiurn }),
     ...(asn && { asn }),
+    ...(courtDateReceivedDateMismatch && { courtDateReceivedDateMismatch }),
     reason,
     maxPageItems: validateQueryParams(query.maxPageItems) ? +Number(query.maxPageItems) : defaults.maxPageItems,
     page: validateQueryParams(query.page) ? +Number(query.page) : 1,
