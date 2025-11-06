@@ -110,6 +110,7 @@
     "zod-validation-error": "^4.0.2"
   },
   "optionalDependencies": {
+    "@esbuild/linux-arm64": "^0.25.12",
     "@esbuild/linux-x64": "^0.25.12"
   }
 }

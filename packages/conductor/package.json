@@ -66,6 +66,7 @@
     "zod": "^4.1.12"
   },
   "optionalDependencies": {
+    "@esbuild/linux-arm64": "^0.25.12",
     "@esbuild/linux-x64": "^0.25.12"
   }
 }
