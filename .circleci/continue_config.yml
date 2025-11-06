@@ -677,7 +677,7 @@ jobs:
           name: Build the user service
           command: npm run -w packages/user-service build
           environment:
-            NEXT_PUBLIC_INCORRECT_DELAY: 0
+            INCORRECT_DELAY: 0
       - start_services:
           SERVICES: db-seed
       - run:

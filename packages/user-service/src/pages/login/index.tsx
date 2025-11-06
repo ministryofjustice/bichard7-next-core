@@ -1,5 +1,6 @@
 import Button from "components/Button"
 import ContactLink from "components/ContactLink"
+import Details from "components/Details"
 import { ErrorSummaryList } from "components/ErrorSummary"
 import ErrorSummary from "components/ErrorSummary/ErrorSummary"
 import Form from "components/Form"
@@ -7,6 +8,11 @@ import GridColumn from "components/GridColumn"
 import GridRow from "components/GridRow"
 import Layout from "components/Layout"
 import Link from "components/Link"
+import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
+import PasswordInput from "components/Login/PasswordInput"
+import { RememberForm } from "components/Login/RememberForm"
+import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
+import ValidateCodeForm from "components/Login/ValidateCodeForm"
 import Paragraph from "components/Paragraph"
 import ServiceMessages from "components/ServiceMessages"
 import { removeCjsmSuffix } from "lib/cjsmSuffix"
@@ -14,6 +20,8 @@ import config from "lib/config"
 import getAuditLogger from "lib/getAuditLogger"
 import getConnection from "lib/getConnection"
 import getRedirectPath from "lib/getRedirectPath"
+import { handleResetSecurityCodeStage } from "lib/handleResetSecurityCodeStage"
+import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
 import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
@@ -38,15 +46,6 @@ import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
-import LoginCredentialsFormGroup from "components/Login/LoginCredentialsFormGroup"
-import Details from "components/Details"
-import React from "react"
-import PasswordInput from "components/Login/PasswordInput"
-import ValidateCodeForm from "components/Login/ValidateCodeForm"
-import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
-import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
-import { handleResetSecurityCodeStage } from "lib/handleResetSecurityCodeStage"
-import { RememberForm } from "components/Login/RememberForm"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -102,7 +101,8 @@ const handleInitialLoginStage = async (
       props: {
         ...errorProps,
         ...(emailError && { emailError }),
-        ...(passwordError && { passwordError })
+        ...(passwordError && { passwordError }),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -121,7 +121,8 @@ const handleInitialLoginStage = async (
           csrfToken,
           tooManyPasswordAttempts: true,
           loginStage: "initialLogin",
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+          serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+          incorrectDelay: config.incorrectDelay
         }
       }
     }
@@ -132,7 +133,8 @@ const handleInitialLoginStage = async (
         emailAddress: normalisedEmail,
         csrfToken,
         loginStage: "initialLogin",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -146,7 +148,8 @@ const handleInitialLoginStage = async (
         emailAddress: normalisedEmail,
         sendingError: true,
         loginStage: "initialLogin",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -160,7 +163,8 @@ const handleInitialLoginStage = async (
       emailAddress: normalisedEmail,
       loginStage: "validateCode",
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-      httpsRedirectCookie
+      httpsRedirectCookie,
+      incorrectDelay: config.incorrectDelay
     }
   }
 }
@@ -235,7 +239,8 @@ const handleRememberedEmailStage = async (
           loginStage: "rememberedEmail",
           notYourEmailAddressUrl,
           tooManyPasswordAttempts: true,
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+          serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+          incorrectDelay: config.incorrectDelay
         }
       }
     }
@@ -247,7 +252,8 @@ const handleRememberedEmailStage = async (
         emailAddress,
         notYourEmailAddressUrl,
         loginStage: "rememberedEmail",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -312,7 +318,8 @@ const handleGet = async (
         emailAddress: inProgressEmailAddress,
         loginStage: "resetSecurityCode",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-        httpsRedirectCookie
+        httpsRedirectCookie,
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -336,7 +343,8 @@ const handleGet = async (
         notYourEmailAddressUrl,
         loginStage: "rememberedEmail",
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-        httpsRedirectCookie
+        httpsRedirectCookie,
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -346,7 +354,8 @@ const handleGet = async (
       csrfToken,
       loginStage: "initialLogin",
       serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
-      httpsRedirectCookie
+      httpsRedirectCookie,
+      incorrectDelay: config.incorrectDelay
     }
   }
 }
@@ -396,6 +405,7 @@ interface Props {
   notYourEmailAddressUrl?: string
   serviceMessages: ServiceMessage[]
   httpsRedirectCookie?: boolean
+  incorrectDelay: number
 }
 
 const Index = ({
@@ -412,7 +422,8 @@ const Index = ({
   tooManyPasswordAttempts,
   notYourEmailAddressUrl,
   serviceMessages,
-  httpsRedirectCookie
+  httpsRedirectCookie,
+  incorrectDelay
 }: Props) => {
   const upgradeToHttps =
     typeof window !== "undefined" &&
@@ -472,7 +483,7 @@ const Index = ({
                         <>
                           {"Please wait "}
                           <b>
-                            {config.incorrectDelay}
+                            {incorrectDelay}
                             {" seconds"}
                           </b>
                           {" before trying again."}

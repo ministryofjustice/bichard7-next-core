@@ -5,9 +5,10 @@ import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import type Database from "types/Database"
 import { isError } from "types/Result"
 import type ServiceMessage from "types/ServiceMessage"
+import resetUserVerificationCode from "useCases/resetUserVerificationCode"
 import sendVerificationCodeEmail from "useCases/sendVerificationCodeEmail"
 import logger from "utils/logger"
-import resetUserVerificationCode from "useCases/resetUserVerificationCode"
+import config from "./config"
 
 interface Props {
   emailAddress?: string
@@ -16,6 +17,7 @@ interface Props {
   loginStage?: string
   validationCode?: string
   serviceMessages: ServiceMessage[]
+  incorrectDelay: number
 }
 
 export const handleResetSecurityCodeStage = async (
@@ -37,7 +39,8 @@ export const handleResetSecurityCodeStage = async (
         emailAddress,
         sendingError: true,
         [stageKey]: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -52,7 +55,8 @@ export const handleResetSecurityCodeStage = async (
         emailAddress,
         sendingError: true,
         [stageKey]: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -63,7 +67,8 @@ export const handleResetSecurityCodeStage = async (
       emailAddress,
       [stageKey]: "validateCode",
       validationCode: "",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+      incorrectDelay: config.incorrectDelay
     }
   }
 }

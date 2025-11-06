@@ -70,7 +70,7 @@ const getConfig = (): UserServiceConfig => ({
   debugMode: "false",
   emailFrom: `Bichard7 <${process.env.EMAIL_FROM ?? "bichard@cjse.org"}>`,
   emailVerificationExpiresIn: Number.parseInt(process.env.EMAIL_VERIFICATION_EXPIRY ?? "30", 10),
-  incorrectDelay: Number.parseInt(process.env.NEXT_PUBLIC_INCORRECT_DELAY ?? "10", 10),
+  incorrectDelay: Number.parseInt(process.env.INCORRECT_DELAY ?? "10", 10),
   passwordMinLength: 8,
   rememberEmailAddressCookieName: "LOGIN_EMAIL",
   rememberEmailAddressMaxAgeInMinutes: Number.parseInt(process.env.REMEMBER_EMAIL_MAX_AGE ?? "1440", 10),
