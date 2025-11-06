@@ -129,10 +129,6 @@ describe("Logging In", () => {
     cy.get("input#password").type("wrongPassword")
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Incorrect email address or password")
-    // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
-    // Need to wait 10 seconds after inputting an incorrect password
-    /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(100)
     cy.get("input[type=password][name=password]").type(user.password)
     cy.get("button[type=submit]").click()
     cy.get("input#validationCode").should("exist")
@@ -250,11 +246,6 @@ describe("Logging In", () => {
       firstJwtId = u.jwt_id
     })
 
-    // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
-    // Need to wait 10 seconds after inputting a correct password
-    /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(100)
-
     cy.clearCookies()
     cy.login(emailAddress, password)
     cy.task("selectFromUsersTable", emailAddress).then((u) => {
@@ -287,30 +278,21 @@ describe("Logging In", () => {
 
   it("doesn't allow user to login after incorrectly inserting password 3 times", () => {
     cy.visit("/login")
+
+    // first incorrect login attempt
     cy.get("input[type=email]").type(user.email)
     cy.get("input#password").type("wrongPassword")
     cy.get("button[type=submit]").click()
-
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Incorrect email address or password")
 
-    // first incorrect login attempt
-
-    // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
-    // Need to wait 10 seconds after inputting an incorrect password
-    /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(100)
-
     // second incorrect login attempt
+    cy.get("input[type=email]").type(user.email)
     cy.get("input#password").type("wrongPassword")
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("a", "Incorrect email address or password")
 
-    // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
-    // Need to wait 10 seconds after inputting an incorrect password
-    /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-    cy.wait(100)
-
     // third incorrect login attempt
+    cy.get("input[type=email]").type(user.email)
     cy.get("input#password").type("wrongPassword")
     cy.get("button[type=submit]").click()
     cy.get('[data-test="error-summary"]').should("be.visible").contains("Too many incorrect password attempts")
