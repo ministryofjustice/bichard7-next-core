@@ -44,5 +44,8 @@
     "@stomp/stompjs": "^7.2.1",
     "node-fetch": "^3.3.2",
     "ws": "^8.18.3"
+  },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "^0.25.12"
   }
 }

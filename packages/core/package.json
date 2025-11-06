@@ -108,5 +108,8 @@
     "stompit": "^1.0.0",
     "zod": "^4.1.12",
     "zod-validation-error": "^4.0.2"
+  },
+  "optionalDependencies": {
+    "@esbuild/linux-x64": "^0.25.12"
   }
 }
