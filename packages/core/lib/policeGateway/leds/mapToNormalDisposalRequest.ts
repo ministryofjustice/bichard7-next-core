@@ -1,3 +1,5 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type {
   PncUpdateArrestHearingAdjudicationAndDisposal,
   PncUpdateCourtHearingAdjudicationAndDisposal
@@ -21,17 +23,25 @@ const mapCourt = (code: null | string, name: null | string): Court => {
       }
 }
 
-const mapDefendant = (generatedPNCFilename: string): Defendant =>
-  generatedPNCFilename === "individual"
-    ? {
-        defendantType: "individual",
-        defendantFirstNames: [""],
-        defendantLastName: ""
-      }
-    : {
-        defendantType: "organisation",
-        defendantOrganisationName: ""
-      }
+const mapDefendant = (pncUpdateDataset: PncUpdateDataset): Defendant => {
+  const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant
+  const defendantFirstNames = hearingDefendant.DefendantDetail?.PersonName.GivenName
+  const defendantLastName = hearingDefendant.DefendantDetail?.PersonName.FamilyName
+  const defendantOrganisationName = hearingDefendant.OrganisationName
+
+  if (defendantLastName !== undefined) {
+    return {
+      defendantType: "individual",
+      defendantFirstNames,
+      defendantLastName
+    }
+  }
+
+  return {
+    defendantType: "organisation",
+    defendantOrganisationName: defendantOrganisationName!
+  }
+}
 
 const parseDisposalQuantity = (disposalQuantity: string) => {
   const quantity = disposalQuantity.toLowerCase()
@@ -132,7 +142,10 @@ const additionalArrestOffences = (
   ]
 }
 
-const mapToNormalDisposalRequest = (request: NormalDisposalPncUpdateRequest["request"]): AddDisposalRequest => {
+const mapToNormalDisposalRequest = (
+  request: NormalDisposalPncUpdateRequest["request"],
+  pncUpdateDataset: PncUpdateDataset
+): AddDisposalRequest => {
   return {
     ownerCode: request.forceStationCode,
     personUrn: request.pncIdentifier ?? "",
@@ -140,7 +153,7 @@ const mapToNormalDisposalRequest = (request: NormalDisposalPncUpdateRequest["req
     courtCaseReference: request.courtCaseReferenceNumber,
     court: mapCourt(request.psaCourtCode, request.courtHouseName),
     dateOfConviction: request.dateOfHearing,
-    defendant: mapDefendant(request.generatedPNCFilename),
+    defendant: mapDefendant(pncUpdateDataset),
     carryForward: request.pendingPsaCourtCode
       ? {
           appearanceDate: request.pendingCourtDate ?? undefined,

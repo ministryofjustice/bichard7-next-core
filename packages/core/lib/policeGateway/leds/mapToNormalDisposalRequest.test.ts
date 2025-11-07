@@ -1,3 +1,5 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
 import type { Court, DateString, Defendant, DisposalDuration, DisposalFine } from "../../../types/leds/DisposalRequest"
@@ -9,7 +11,6 @@ import mapToNormalDisposalRequest from "./mapToNormalDisposalRequest"
 describe("mapToNormalDisposalRequest", () => {
   const buildNormalDisposalRequest = (
     psaCourtCode?: string,
-    generatedPNCFilename?: string,
     pendingPsaCourtCode?: string,
     disposalQuantity = "D123100520240012000.9900"
   ): NormalDisposalPncUpdateRequest["request"] => {
@@ -21,7 +22,7 @@ describe("mapToNormalDisposalRequest", () => {
       psaCourtCode,
       courtHouseName: "Court house name",
       dateOfHearing: "2025-08-12",
-      generatedPNCFilename,
+      generatedPNCFilename: "",
       pendingPsaCourtCode,
       pendingCourtDate: "2025-08-13",
       pendingCourtHouseName: "Pending court house name",
@@ -77,6 +78,26 @@ describe("mapToNormalDisposalRequest", () => {
         }
       ]
     } as NormalDisposalPncUpdateRequest["request"]
+  }
+
+  const buildPncUpdateDataset = (familyName?: string, givenName?: string[], organisationName?: string) => {
+    return {
+      AnnotatedHearingOutcome: {
+        HearingOutcome: {
+          Case: {
+            HearingDefendant: {
+              DefendantDetail: {
+                PersonName: {
+                  FamilyName: familyName,
+                  GivenName: givenName
+                }
+              },
+              OrganisationName: organisationName
+            }
+          }
+        }
+      }
+    } as PncUpdateDataset
   }
 
   const buildExpectedLedsRequest = ({
@@ -156,30 +177,32 @@ describe("mapToNormalDisposalRequest", () => {
   })
 
   it("maps the normal disposal request to LEDS normal disposal request", () => {
-    const request = buildNormalDisposalRequest(PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR, "individual", "1234")
+    const request = buildNormalDisposalRequest(PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR, "1234")
+    const pncUpdateDataset = buildPncUpdateDataset("Brown", ["Adam"])
     const expectedLedsRequest = buildExpectedLedsRequest({
       court: { courtIdentityType: "name", courtName: "Court house name" },
-      defendant: { defendantType: "individual", defendantFirstNames: [""], defendantLastName: "" },
+      defendant: { defendantType: "individual", defendantFirstNames: ["Adam"], defendantLastName: "Brown" },
       carryForward: {
         appearanceDate: "2025-08-13",
         court: { courtIdentityType: "code", courtCode: "1234" }
       }
     })
 
-    const ledsRequest = mapToNormalDisposalRequest(request)
+    const ledsRequest = mapToNormalDisposalRequest(request, pncUpdateDataset)
 
     expect(ledsRequest).toEqual(expectedLedsRequest)
   })
 
-  it("produces a different LEDS request when psaCourtCode, generatedPNCFilename and pendingPsaCourtCode values differ", () => {
-    const request = buildNormalDisposalRequest("1112", "organisation")
+  it("produces a different LEDS request when psaCourtCode, defendantOrganisation and pendingPsaCourtCode values differ", () => {
+    const request = buildNormalDisposalRequest("1112")
+    const pncUpdateDataset = buildPncUpdateDataset(undefined, undefined, "Org")
     const expectedLedsRequest = buildExpectedLedsRequest({
       court: { courtIdentityType: "code", courtCode: "1112" },
-      defendant: { defendantType: "organisation", defendantOrganisationName: "" },
+      defendant: { defendantType: "organisation", defendantOrganisationName: "Org" },
       carryForward: undefined
     })
 
-    const ledsRequest = mapToNormalDisposalRequest(request)
+    const ledsRequest = mapToNormalDisposalRequest(request, pncUpdateDataset)
 
     expect(ledsRequest).toEqual(expectedLedsRequest)
   })
@@ -187,13 +210,13 @@ describe("mapToNormalDisposalRequest", () => {
   it("maps disposalDuration, disposalFine and disposalEffectiveDate from disposalQuantity", () => {
     const request = buildNormalDisposalRequest(
       PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR,
-      "individual",
       "1234",
       "d1  101220240000009.9900"
     )
+    const pncUpdateDataset = buildPncUpdateDataset("Brown", ["Adam"])
     const expectedLedsRequest = buildExpectedLedsRequest({
       court: { courtIdentityType: "name", courtName: "Court house name" },
-      defendant: { defendantType: "individual", defendantFirstNames: [""], defendantLastName: "" },
+      defendant: { defendantType: "individual", defendantFirstNames: ["Adam"], defendantLastName: "Brown" },
       carryForward: {
         appearanceDate: "2025-08-13",
         court: { courtIdentityType: "code", courtCode: "1234" }
@@ -208,7 +231,7 @@ describe("mapToNormalDisposalRequest", () => {
       disposalEffectiveDate: "2024-12-10"
     })
 
-    const ledsRequest = mapToNormalDisposalRequest(request)
+    const ledsRequest = mapToNormalDisposalRequest(request, pncUpdateDataset)
 
     expect(ledsRequest).toEqual(expectedLedsRequest)
   })

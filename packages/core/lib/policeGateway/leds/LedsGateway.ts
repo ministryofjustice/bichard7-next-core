@@ -107,7 +107,7 @@ export default class LedsGateway implements PoliceGateway {
         return new PoliceApiError(["Failed to update LEDS due to missing data."])
       }
 
-      requestBody = mapToNormalDisposalRequest(request.request)
+      requestBody = mapToNormalDisposalRequest(request.request, pncUpdateDataset)
       endpoint = endpoints.addDisposal(personId, courtCaseId)
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
