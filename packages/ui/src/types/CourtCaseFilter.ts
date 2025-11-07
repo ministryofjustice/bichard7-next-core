@@ -18,6 +18,7 @@ export type FilterAction =
   | { method: "add"; type: "caseResolvedFrom"; value: string }
   | { method: "add"; type: "caseResolvedTo"; value: string }
   | { method: "remove"; type: "caseResolvedDateRange"; value: string }
+  | { method: FilterMethod; type: "courtDateReceivedDateMismatch"; value: boolean }
 
 export type FilterType =
   | "defendantName"
@@ -33,6 +34,7 @@ export type FilterType =
   | "caseState"
   | "resolvedByUsername"
   | "caseResolvedDateRange"
+  | "courtDateReceivedDateMismatch"
 
 export type FilterMethod = "add" | "remove"
 export type FilterMethodReasonCheckbox = "add" | "remove"
@@ -98,6 +100,11 @@ export type Filter = {
   resolvedTo: {
     value?: string
     state?: FilterState
+  }
+  courtDateReceivedDateMismatchFilter: {
+    value: boolean
+    state?: FilterState
+    label?: string
   }
 }
 

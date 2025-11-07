@@ -24,7 +24,9 @@ const anyFilterChips = (state: Filter, countOfState?: FilterState): boolean => {
     (!!state.reasonFilter && state.reasonFilter.value !== Reason.All && state.reasonFilter.state === countOfState) ||
     (!!state.lockedStateFilter &&
       state.lockedStateFilter.value !== LockedState.All &&
-      state.lockedStateFilter.state === countOfState)
+      state.lockedStateFilter.state === countOfState) ||
+    (state.courtDateReceivedDateMismatchFilter.value &&
+      state.courtDateReceivedDateMismatchFilter.state === countOfState)
   )
 }
 
