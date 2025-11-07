@@ -96,6 +96,21 @@ describe("mapToNormalDisposalRequest", () => {
             }
           }
         }
+      },
+      PncQuery: {
+        courtCases: [
+          {
+            courtCaseReference: "98/2048/633Y",
+            offences: [
+              {
+                offence: {
+                  sequenceNumber: 1,
+                  offenceId: "112233"
+                }
+              }
+            ]
+          }
+        ]
       }
     } as PncUpdateDataset
   }
@@ -142,7 +157,7 @@ describe("mapToNormalDisposalRequest", () => {
             disposalText: "Disposal text"
           }
         ],
-        offenceId: ""
+        offenceId: "112233"
       }
     ],
     additionalArrestOffences: [
