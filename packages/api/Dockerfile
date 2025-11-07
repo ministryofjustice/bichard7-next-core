@@ -36,9 +36,9 @@ WORKDIR /core
 
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
   usermod -a -G supervisor supervisor && \
-  chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
+  chgrp supervisor -R /certs /run /var/log /var/lib/nginx && \
   chmod g+r -R /certs/server.key /var/lib/nginx && \
-  chmod g+rw -R /core /run /var/log && \
+  chmod g+rw -R /run /var/log && \
   npm config set cache /tmp/npm --global
 
 COPY --from=builder /core/node_modules ./node_modules
@@ -48,7 +48,13 @@ COPY --from=builder /core/packages/common/dist ./packages/common/dist
 COPY --from=builder /core/packages/common/node_modules ./packages/common/node_modules
 
 COPY --from=builder /core/packages/api/dist ./packages/api/dist
-COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./packages/api/static
+
+WORKDIR /core/packages/api
+
+COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
+
+RUN chgrp supervisor -R /core && \
+    chmod g+rw -R /core
 
 COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf
 COPY packages/api/docker/conf/supervisord.conf /etc/supervisord.conf
