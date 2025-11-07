@@ -72,7 +72,7 @@ const parseDisposalQuantity = (disposalQuantity: string) => {
   return { count, units, disposalEffectiveDate, amount }
 }
 
-const findMatchingPncOffence = (
+const findOffenceId = (
   pncQuery: PoliceQueryResult,
   courtCaseReference: string | undefined,
   offenceSequenceNumber: string | undefined
@@ -93,7 +93,7 @@ const offences = (
   const adjudication = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
   const disposals = hearingsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
 
-  const offenceId = findMatchingPncOffence(
+  const offenceId = findOffenceId(
     pncUpdateDataset.PncQuery as PoliceQueryResult,
     courtCaseReferenceNumber,
     ordinary?.courtOffenceSequenceNumber
@@ -134,6 +134,7 @@ const additionalArrestOffences = (
   const arrest = arrestsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ARREST)
   const disposals = arrestsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
 
+  const committedOnBail = arrest?.committedOnBail.toLowerCase() === "y" ? true : false
   const disposalResults = disposals.map((disposal) => ({
     disposalCode: Number(disposal.disposalType),
     disposalQualifies: [disposal.disposalQualifiers ?? ""],
@@ -147,7 +148,7 @@ const additionalArrestOffences = (
         {
           courtOffenceSequenceNumber: Number(arrest?.courtOffenceSequenceNumber),
           cjsOffenceCode: arrest?.offenceReason ?? "",
-          committedOnBail: Boolean(arrest?.committedOnBail?.trim()),
+          committedOnBail,
           plea: adjudication?.pleaStatus as Plea,
           adjudication: adjudication?.verdict as Adjudication,
           dateOfSentence: adjudication?.hearingDate,
@@ -166,30 +167,36 @@ const additionalArrestOffences = (
 }
 
 const mapToNormalDisposalRequest = (
-  request: NormalDisposalPncUpdateRequest["request"],
+  pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): AddDisposalRequest => {
+  const carryForward = pncRequest.pendingPsaCourtCode
+    ? {
+        appearanceDate: pncRequest.pendingCourtDate ?? undefined,
+        court: mapCourt(pncRequest.pendingPsaCourtCode, pncRequest.pendingCourtHouseName)
+      }
+    : undefined
+
   return {
-    ownerCode: request.forceStationCode,
-    personUrn: request.pncIdentifier ?? "",
-    checkName: request.pncCheckName ?? "",
-    courtCaseReference: request.courtCaseReferenceNumber,
-    court: mapCourt(request.psaCourtCode, request.courtHouseName),
-    dateOfConviction: request.dateOfHearing,
+    ownerCode: pncRequest.forceStationCode,
+    personUrn: pncRequest.pncIdentifier ?? "",
+    checkName: pncRequest.pncCheckName ?? "",
+    courtCaseReference: pncRequest.courtCaseReferenceNumber,
+    court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
+    dateOfConviction: pncRequest.dateOfHearing,
     defendant: mapDefendant(pncUpdateDataset),
-    carryForward: request.pendingPsaCourtCode
-      ? {
-          appearanceDate: request.pendingCourtDate ?? undefined,
-          court: mapCourt(request.pendingPsaCourtCode, request.pendingCourtHouseName)
-        }
-      : undefined,
+    carryForward,
     referToCourtCase: {
-      reference: request.preTrialIssuesUniqueReferenceNumber ?? ""
+      reference: pncRequest.preTrialIssuesUniqueReferenceNumber ?? ""
     },
-    offences: offences(request.hearingsAdjudicationsAndDisposals, pncUpdateDataset, request.courtCaseReferenceNumber),
+    offences: offences(
+      pncRequest.hearingsAdjudicationsAndDisposals,
+      pncUpdateDataset,
+      pncRequest.courtCaseReferenceNumber
+    ),
     additionalArrestOffences: additionalArrestOffences(
-      request.arrestSummonsNumber,
-      request.arrestsAdjudicationsAndDisposals
+      pncRequest.arrestSummonsNumber,
+      pncRequest.arrestsAdjudicationsAndDisposals
     )
   }
 }
