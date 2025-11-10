@@ -393,7 +393,6 @@ exports[`parsePncUpdateDataSetXml converts XML from file PncUpdateDataSet-no-ope
     "checkName": "COLE",
     "courtCases": [
       {
-        "courtCaseId": undefined,
         "courtCaseReference": "23/1234/012345P",
         "offences": [
           {
@@ -885,7 +884,6 @@ exports[`parsePncUpdateDataSetXml converts XML from file PncUpdateDataSet-unexpe
     "checkName": "COLE",
     "courtCases": [
       {
-        "courtCaseId": undefined,
         "courtCaseReference": "23/1234/012345P",
         "offences": [
           {
@@ -1322,7 +1320,6 @@ exports[`parsePncUpdateDataSetXml converts XML from file PncUpdateDataSet-with-e
     "checkName": "COLE",
     "courtCases": [
       {
-        "courtCaseId": undefined,
         "courtCaseReference": "23/1234/012345P",
         "offences": [
           {
@@ -1814,7 +1811,6 @@ exports[`parsePncUpdateDataSetXml converts XML from file PncUpdateDataSet-with-o
     "checkName": "COLE",
     "courtCases": [
       {
-        "courtCaseId": undefined,
         "courtCaseReference": "23/1234/012345P",
         "offences": [
           {
@@ -2306,7 +2302,6 @@ exports[`parsePncUpdateDataSetXml converts XML from file PncUpdateDataSet-with-o
     "checkName": "COLE",
     "courtCases": [
       {
-        "courtCaseId": undefined,
         "courtCaseReference": "23/1234/012345P",
         "offences": [
           {
