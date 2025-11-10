@@ -3,6 +3,7 @@ import "./helpers/setEnvironmentVariables"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
+import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -26,7 +27,6 @@ import startWorkflow from "./helpers/startWorkflow"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
-const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const conductorClient = createConductorClient()
@@ -34,6 +34,8 @@ const conductorClient = createConductorClient()
 describe("bichard_phase_3 workflow", () => {
   let correlationId: string
   let s3TaskDataPath: string
+  const { apiKey, apiUrl, basePath } = createApiConfig()
+  const auditLogClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 
   afterAll(() => {
     db.end()

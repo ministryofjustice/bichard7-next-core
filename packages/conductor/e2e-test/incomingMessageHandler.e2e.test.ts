@@ -1,8 +1,7 @@
-process.env.S3_ENDPOINT = "http://localhost:4566"
-process.env.S3_AWS_ACCESS_KEY_ID = "test"
-process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
+import "./helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
+import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -14,10 +13,16 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 import mailhogClient from "mailhog"
 
+process.env.S3_ENDPOINT = "http://localhost:4566"
+process.env.S3_AWS_ACCESS_KEY_ID = "test"
+process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
+
 const mailhog = mailhogClient()
 
 const INCOMING_BUCKET_NAME = "incoming-messages"
 const s3Config = createS3Config()
+const { apiKey, apiUrl, basePath } = createApiConfig()
+const auditLogClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 
 describe("Incoming message handler", () => {
   beforeEach(() => {
@@ -48,8 +53,8 @@ describe("Incoming message handler", () => {
     expect(workflows).toHaveLength(1)
 
     // expect audit log and audit log event
-    const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const messages = await apiClient.getAuditLogs({
+
+    const messages = await auditLogClient.getAuditLogs({
       externalCorrelationId
     })
     expect(messages).toHaveLength(1)
@@ -111,11 +116,10 @@ describe("Incoming message handler", () => {
     expect(duplicateWorkflows[0]?.reasonForIncompletion).toMatch(/Workflow is COMPLETED by TERMINATE task/)
 
     // expect audit log and audit log event
-    const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const originalMessages = await apiClient.getAuditLogs({
+    const originalMessages = await auditLogClient.getAuditLogs({
       externalCorrelationId
     })
-    const duplicateMessages = await apiClient.getAuditLogs({
+    const duplicateMessages = await auditLogClient.getAuditLogs({
       externalCorrelationId: duplicateCorrelationId
     })
     expect(originalMessages).toHaveLength(1)
@@ -204,8 +208,7 @@ describe("Incoming message handler", () => {
     expect(workflows).toHaveLength(1)
 
     // expect audit log and audit log event
-    const apiClient = new AuditLogApiClient("http://localhost:7010", "test")
-    const messages = await apiClient.getAuditLogs({
+    const messages = await auditLogClient.getAuditLogs({
       externalCorrelationId
     })
     expect(messages).toHaveLength(1)

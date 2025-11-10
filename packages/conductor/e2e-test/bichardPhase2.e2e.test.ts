@@ -1,6 +1,7 @@
 import "./helpers/setEnvironmentVariables"
 
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
+import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
@@ -20,7 +21,6 @@ import startWorkflow from "./helpers/startWorkflow"
 
 const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
-const auditLogClient = new AuditLogApiClient("http://localhost:7010", "test")
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
 const mqConfig = createMqConfig()
@@ -29,6 +29,8 @@ describe("bichard_phase_2 workflow", () => {
   let mqListener: MqListener
   let correlationId: string
   let s3TaskDataPath: string
+  const { apiKey, apiUrl, basePath } = createApiConfig()
+  const auditLogClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 
   beforeAll(() => {
     mqListener = new MqListener(mqConfig)
