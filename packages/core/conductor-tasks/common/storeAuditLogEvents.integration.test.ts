@@ -1,10 +1,14 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { AuditLogApiRecordOutput } from "@moj-bichard7/common/types/AuditLogRecord"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
+import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
+import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { MockServer } from "jest-mock-server"
+import { randomUUID } from "node:crypto"
 
 import type Phase1Result from "../../phase1/types/Phase1Result"
 
@@ -27,19 +31,31 @@ const invalidAuditLogEvent = {
 }
 
 describe("storeAuditLogEvents", () => {
-  let auditLogApi: MockServer
+  let correlationId: string = ""
+  const { apiKey, apiUrl, basePath } = createApiConfig()
+  const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 
-  beforeAll(async () => {
-    process.env.AUDIT_LOG_API_URL = "http://localhost:11001"
-    process.env.AUDIT_LOG_API_KEY = "dummy"
+  beforeEach(async () => {
+    correlationId = randomUUID()
 
-    auditLogApi = new MockServer({ port: 11001 })
-    await auditLogApi.start()
+    await apiClient.createAuditLog({
+      caseId: "dummy",
+      createdBy: "system",
+      externalCorrelationId: correlationId,
+      isSanitised: 0,
+      messageId: correlationId,
+      messageHash: "dummy",
+      receivedDate: "2025-02-03T09:11Z"
+    })
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   it("should store multiple events in a single call to the API", async () => {
     const phase1Result: Phase1Result = {
-      correlationId: "dummy-id",
+      correlationId,
       auditLogEvents: [
         {
           eventCode: EventCode.AllTriggersResolved,
@@ -60,40 +76,43 @@ describe("storeAuditLogEvents", () => {
       hearingOutcome: {} as AnnotatedHearingOutcome,
       resultType: Phase1ResultType.success
     }
-    const mockApiCall = auditLogApi
-      .post(`/messages/${phase1Result.correlationId}/events`)
-      .mockImplementationOnce((ctx) => {
-        ctx.status = 204
-      })
 
     await storeAuditLogEvents.execute({
       inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
     })
-    expect(mockApiCall).toHaveBeenCalledTimes(1)
+
+    const auditLog = (await apiClient.getAuditLog(phase1Result.correlationId)) as AuditLogApiRecordOutput
+
+    expect(auditLog.events).toHaveLength(2)
+
     const expectedAuditLogEvents = phase1Result.auditLogEvents.map((e) => ({
       ...e,
       timestamp: e.timestamp.toISOString()
     }))
-    expect(mockApiCall.mock.calls[0][0].request).toHaveProperty("body", expectedAuditLogEvents)
+    expect(auditLog.events).toStrictEqual(expectedAuditLogEvents)
   })
 
   it("should return FAILED if it fails to write to the audit log", async () => {
+    const spy = jest
+      .spyOn(AuditLogApiClient.prototype, "createEvents")
+      .mockImplementation((): PromiseResult<void> => Promise.resolve(new Error("Eh?")))
+
     const phase1Result: Phase1Result = {
-      correlationId: "dummy-id",
+      correlationId,
       auditLogEvents: [dummyAuditLogEvent],
       triggers: [],
       hearingOutcome: {} as AnnotatedHearingOutcome,
       resultType: Phase1ResultType.success
     }
-    auditLogApi.post(`/messages/${phase1Result.correlationId}/events`).mockImplementationOnce((ctx) => {
-      ctx.status = 500
-    })
 
     const result = await storeAuditLogEvents.execute({
       inputData: { correlationId: phase1Result.correlationId, auditLogEvents: phase1Result.auditLogEvents }
     })
+    const auditLog = (await apiClient.getAuditLog(phase1Result.correlationId)) as AuditLogApiRecordOutput
 
     expect(result.status).toBe("FAILED")
+    expect(auditLog.events).toHaveLength(0)
+    expect(spy).toHaveBeenCalled()
   })
 
   it("should fail with terminal error if the correlation id is missing", async () => {
