@@ -6,7 +6,7 @@ import type { Court, DateString, Defendant, DisposalDuration, DisposalFine } fro
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
-import mapToNormalDisposalRequest from "./mapToNormalDisposalRequest"
+import mapToNormalDisposalRequest from "./mapToAddDisposalRequest"
 
 describe("mapToNormalDisposalRequest", () => {
   const buildNormalDisposalRequest = (
