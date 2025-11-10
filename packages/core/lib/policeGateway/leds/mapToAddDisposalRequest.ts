@@ -11,6 +11,8 @@ import type { Adjudication, Court, Defendant, DisposalDurationUnit, Plea } from 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 
+const toTitleCase = (text?: string) => (text || "").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+
 const mapCourt = (code: null | string, name: null | string): Court => {
   return code === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
     ? {
@@ -111,8 +113,8 @@ const offences = (
     {
       courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
       cjsOffenceCode: ordinary?.offenceReason ?? "",
-      plea: adjudication?.pleaStatus as Plea,
-      adjudication: adjudication?.verdict as Adjudication,
+      plea: toTitleCase(adjudication?.pleaStatus),
+      adjudication: toTitleCase(adjudication?.verdict),
       dateOfSentence: adjudication?.hearingDate,
       offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
       disposalResults,
