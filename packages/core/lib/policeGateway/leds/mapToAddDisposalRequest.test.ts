@@ -36,8 +36,8 @@ describe("mapToNormalDisposalRequest", () => {
         {
           hearingDate: "2025-08-14",
           numberOffencesTakenIntoAccount: "3",
-          pleaStatus: "Not Known",
-          verdict: "Non-Conviction",
+          pleaStatus: "NO PLEA TAKEN",
+          verdict: "NON-CONVICTION",
           type: PncUpdateType.ADJUDICATION
         },
         {
@@ -52,8 +52,8 @@ describe("mapToNormalDisposalRequest", () => {
         {
           hearingDate: "2025-08-15",
           numberOffencesTakenIntoAccount: "4",
-          pleaStatus: "Not Known",
-          verdict: "Non-Conviction",
+          pleaStatus: "RESISTED",
+          verdict: "NOT GUILTY",
           type: PncUpdateType.ADJUDICATION
         },
         {
@@ -143,7 +143,7 @@ describe("mapToNormalDisposalRequest", () => {
       {
         courtOffenceSequenceNumber: 1,
         cjsOffenceCode: "Offence reason",
-        plea: "Not Known",
+        plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
         offenceTic: 3,
@@ -168,8 +168,8 @@ describe("mapToNormalDisposalRequest", () => {
             courtOffenceSequenceNumber: 2,
             cjsOffenceCode: "Offence reason",
             committedOnBail: true,
-            plea: "Not Known",
-            adjudication: "Non-Conviction",
+            plea: "Resisted",
+            adjudication: "Not Guilty",
             dateOfSentence: "2025-08-15",
             offenceTic: 4,
             offenceStartDate: "2025-08-16",

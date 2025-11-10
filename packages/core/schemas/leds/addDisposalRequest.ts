@@ -40,7 +40,7 @@ const arrestOffenceSchema = baseOffenceSchema.extend({
     .optional()
 })
 
-const additionalArrestOffencesSchema = z.object({
+export const additionalArrestOffencesSchema = z.object({
   asn: z.string(),
   additionalOffences: z.array(arrestOffenceSchema)
 })

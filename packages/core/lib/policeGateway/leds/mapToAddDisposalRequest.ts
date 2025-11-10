@@ -6,12 +6,20 @@ import type {
 } from "../../../phase3/types/HearingDetails"
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
-import type { Adjudication, Court, Defendant, DisposalDurationUnit, Plea } from "../../../types/leds/DisposalRequest"
+import type {
+  AdditionalArrestOffences,
+  Adjudication,
+  Court,
+  Defendant,
+  DisposalDurationUnit,
+  Offence,
+  Plea
+} from "../../../types/leds/DisposalRequest"
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 
-const toTitleCase = (text?: string) => (text || "").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+const toTitleCase = (text?: string): string => (text || "").toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
 
 const mapCourt = (code: null | string, name: null | string): Court => {
   return code === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
@@ -85,11 +93,11 @@ const findOffenceId = (
   return offence?.offence.offenceId ?? ""
 }
 
-const offences = (
+const mapOffences = (
   hearingsAdjudicationsAndDisposals: PncUpdateCourtHearingAdjudicationAndDisposal[],
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReferenceNumber: string
-) => {
+): Offence[] => {
   const ordinary = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ORDINARY)
   const adjudication = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
   const disposals = hearingsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
@@ -113,8 +121,8 @@ const offences = (
     {
       courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
       cjsOffenceCode: ordinary?.offenceReason ?? "",
-      plea: toTitleCase(adjudication?.pleaStatus),
-      adjudication: toTitleCase(adjudication?.verdict),
+      plea: toTitleCase(adjudication?.pleaStatus) as Plea,
+      adjudication: toTitleCase(adjudication?.verdict) as Adjudication,
       dateOfSentence: adjudication?.hearingDate,
       offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
       disposalResults,
@@ -123,10 +131,10 @@ const offences = (
   ]
 }
 
-const additionalArrestOffences = (
+const mapAdditionalArrestOffences = (
   asn: null | string,
   arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[]
-) => {
+): AdditionalArrestOffences[] => {
   const adjudication = arrestsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
   const arrest = arrestsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ARREST)
   const disposals = arrestsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
@@ -146,8 +154,8 @@ const additionalArrestOffences = (
           courtOffenceSequenceNumber: Number(arrest?.courtOffenceSequenceNumber),
           cjsOffenceCode: arrest?.offenceReason ?? "",
           committedOnBail,
-          plea: adjudication?.pleaStatus as Plea,
-          adjudication: adjudication?.verdict as Adjudication,
+          plea: toTitleCase(adjudication?.pleaStatus) as Plea,
+          adjudication: toTitleCase(adjudication?.verdict) as Adjudication,
           dateOfSentence: adjudication?.hearingDate,
           offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
           offenceStartDate: arrest?.offenceStartDate ?? "",
@@ -186,12 +194,12 @@ const mapToNormalDisposalRequest = (
     referToCourtCase: {
       reference: pncRequest.preTrialIssuesUniqueReferenceNumber ?? ""
     },
-    offences: offences(
+    offences: mapOffences(
       pncRequest.hearingsAdjudicationsAndDisposals,
       pncUpdateDataset,
       pncRequest.courtCaseReferenceNumber
     ),
-    additionalArrestOffences: additionalArrestOffences(
+    additionalArrestOffences: mapAdditionalArrestOffences(
       pncRequest.arrestSummonsNumber,
       pncRequest.arrestsAdjudicationsAndDisposals
     )
