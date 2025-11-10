@@ -39,7 +39,7 @@ const mapDefendant = (pncUpdateDataset: PncUpdateDataset): Defendant => {
 
   return {
     defendantType: "organisation",
-    defendantOrganisationName: defendantOrganisationName!
+    defendantOrganisationName: defendantOrganisationName ?? ""
   }
 }
 
