@@ -397,6 +397,7 @@ exports[`parseAhoXml converts AnnotatedHO1 XML to Aho 1`] = `
     "checkName": "SEXOFFENCE",
     "courtCases": [
       {
+        "courtCaseId": undefined,
         "courtCaseReference": "97/1626/008395Q",
         "offences": [
           {
@@ -995,6 +996,7 @@ exports[`parseAhoXml converts AnnotatedHO2 XML to Aho 1`] = `
     "checkName": "SEXOFFENCE",
     "courtCases": [
       {
+        "courtCaseId": undefined,
         "courtCaseReference": "97/1626/008395Q",
         "offences": [
           {
@@ -1593,6 +1595,7 @@ exports[`parseAhoXml converts AnnotatedHO3-LEDS XML to Aho 1`] = `
     "checkName": "SEXOFFENCE",
     "courtCases": [
       {
+        "courtCaseId": undefined,
         "courtCaseReference": "97/1626/008395Q",
         "offences": [
           {

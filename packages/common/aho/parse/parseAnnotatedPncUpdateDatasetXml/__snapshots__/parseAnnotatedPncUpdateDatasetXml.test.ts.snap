@@ -293,6 +293,7 @@ exports[`parseAnnotatedPNCUpdateDatasetXml converts XML to AnnotatedPNCUpdateDat
         "checkName": "TRTHREE",
         "courtCases": [
           {
+            "courtCaseId": undefined,
             "courtCaseReference": "97/1626/008395Q",
             "offences": [
               {
