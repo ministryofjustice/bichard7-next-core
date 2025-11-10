@@ -73,7 +73,7 @@ const handleEmailStage = async (
   }
 
   const normalisedEmail = removeCjsmSuffix(emailAddress)
-  const sent = await sendVerificationCodeEmail(connection, normalisedEmail, "passwordReset")
+  const sent = await sendVerificationCodeEmail(connection, normalisedEmail, "resetStage")
 
   if (isError(sent)) {
     logger.error(sent)

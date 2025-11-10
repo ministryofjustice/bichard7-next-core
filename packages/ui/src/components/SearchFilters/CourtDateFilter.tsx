@@ -19,6 +19,7 @@ interface Props {
   dispatch: Dispatch<FilterAction>
   dateRange: SerializedDateRange | undefined
   canUseCourtDateReceivedDateMismatchFilters: boolean
+  courtDateReceivedDateMismatchFilter: boolean
 }
 
 const getCaseAgeWithFormattedDate = (namedCaseAge: string): string => {
@@ -49,7 +50,8 @@ const CourtDateFilter: React.FC<Props> = ({
   caseAgeCounts,
   dispatch,
   dateRange,
-  canUseCourtDateReceivedDateMismatchFilters
+  canUseCourtDateReceivedDateMismatchFilters,
+  courtDateReceivedDateMismatchFilter
 }: Props) => (
   <FormGroup>
     <ExpandingFilters filterName={"Court date"} classNames="filters-court-date">
@@ -115,9 +117,11 @@ const CourtDateFilter: React.FC<Props> = ({
         </div>
         <ConditionalRender isRendered={canUseCourtDateReceivedDateMismatchFilters}>
           <CourtDateReceivedDateMismatchCheckbox
-            id={"case-show-date-received-mismatch"}
+            id={"court-date-received-date-mismatch"}
             label={"Include cases where date received is different"}
-          ></CourtDateReceivedDateMismatchCheckbox>
+            dispatch={dispatch}
+            value={courtDateReceivedDateMismatchFilter}
+          />
         </ConditionalRender>
       </fieldset>
     </ExpandingFilters>

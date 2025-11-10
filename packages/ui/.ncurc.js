@@ -6,8 +6,12 @@
     - v10 has breaking change with Jest
   - cypress
     - v15 doesn't play nice with TypeORM
+  - next
+    - v16 doesn't load the sass files from @ministryofjustice/frontend
+
+  Ignored:
 */
-const pinned = ["cookies-next", "@faker-js/faker", "cypress"]
+const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next"]
 const ignored = []
 const skipped = [{ package: "next", version: "13.4.13" }]
 

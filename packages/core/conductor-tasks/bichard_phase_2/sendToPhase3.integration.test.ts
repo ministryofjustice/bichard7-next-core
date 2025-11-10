@@ -1,6 +1,7 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
-import { WorkflowResourceService } from "@io-orkes/conductor-javascript"
+import type { ConductorClient } from "@io-orkes/conductor-javascript"
+
 import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -15,7 +16,7 @@ import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import { default as sendToPhase3Fn } from "./sendToPhase3"
+import { default as sendToPhase3Fn, sendToPhase3Worker } from "./sendToPhase3"
 
 jest.mock("../../lib/mq/connectAndSendMessage")
 jest.mock("@moj-bichard7/common/s3/putFileToS3")
@@ -142,24 +143,28 @@ describe("sendToPhase3", () => {
     })
 
     it("should return failed status when it fails to start the Conductor workflow", async () => {
-      const spyStartWorkflow = jest
-        .spyOn(WorkflowResourceService.prototype, "startWorkflow1")
-        .mockRejectedValue(Error("Dummy Conductor error"))
+      const fakeConductorClient = {
+        workflowResource: {
+          startWorkflow1: jest.fn().mockRejectedValue(new Error("Dummy Conductor error"))
+        }
+      } as unknown as ConductorClient
+
+      const worker = sendToPhase3Worker(fakeConductorClient)
+
       const { phase2Result, parsedPhase2Result, s3TaskDataPath } = getPhase2Result()
 
       await createAuditLogRecord(parsedPhase2Result.correlationId)
       await putFileToS3(phase2Result, s3TaskDataPath, taskDataBucket!, s3Config)
 
-      const result = await sendToPhase3(phase3CoreCanaryRatio, { s3TaskDataPath })
+      const result = await worker.execute({
+        inputData: { s3TaskDataPath, options: { phase3CanaryRatio: phase3CoreCanaryRatio } }
+      })
 
       expect(result.status).toBe("FAILED")
       expect(result.logs?.map((log) => log.log)).toEqual([
         "Failed to start bichard_phase_3 workflow",
         "Dummy Conductor error"
       ])
-
-      spyStartWorkflow.mockReset()
-      jest.restoreAllMocks()
     })
   })
 
