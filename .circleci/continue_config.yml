@@ -242,6 +242,9 @@ jobs:
           name: Run Audit Logging API
           command: npm run audit-log
       - run:
+          name: Run the B7 API
+          command: npm run api
+      - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit
       - run:
