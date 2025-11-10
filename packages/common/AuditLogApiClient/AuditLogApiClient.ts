@@ -30,7 +30,7 @@ const httpsAgent = new https.Agent({
 
 export default class AuditLogApiClient {
   private get apiKeyHeader(): Record<string, string> {
-    if (this.apiKey.startsWith("Bearer ")) {
+    if (this.isB7Api()) {
       return { Authorization: this.apiKey }
     }
 
@@ -40,7 +40,6 @@ export default class AuditLogApiClient {
   private get baseUrl(): string {
     return `${this.apiUrl}/${this.basePath}`
   }
-
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
@@ -71,7 +70,7 @@ export default class AuditLogApiClient {
       .catch((error: AxiosError) => {
         const apiError = error.response?.data ? this.stringify(error.response?.data) : error.message
         if (/A message with Id [^ ]* already exists in the database/.test(apiError)) {
-          return new AlreadyExistsError()
+          return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
         }
 
         return new ApplicationError(`Error creating audit log: ${apiError}`, error)
@@ -191,7 +190,7 @@ export default class AuditLogApiClient {
         timeout: this.timeout
       })
       .then((response) => response.data)
-      .then((result) => result[0])
+      .then((result) => (this.isB7Api() ? result : result[0]))
       .catch((error: AxiosError) => {
         if (error.response?.status === HttpStatusCode.NotFound) {
           return undefined
@@ -320,6 +319,10 @@ export default class AuditLogApiClient {
           error
         )
       })
+  }
+
+  private isB7Api(): boolean {
+    return this.apiKey.startsWith("Bearer ")
   }
 
   private stringify(message: unknown): string {
