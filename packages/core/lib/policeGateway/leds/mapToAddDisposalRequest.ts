@@ -1,5 +1,4 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
-import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import type {
   PncUpdateArrestHearingAdjudicationAndDisposal,
@@ -73,12 +72,12 @@ const parseDisposalQuantity = (disposalQuantity: string) => {
 }
 
 const findOffenceId = (
-  pncQuery: PoliceQueryResult,
+  pncUpdateDataset: PncUpdateDataset,
   courtCaseReference: string | undefined,
   offenceSequenceNumber: string | undefined
 ): string => {
   const sequenceNumber = Number(offenceSequenceNumber)
-  const courtCase = pncQuery?.courtCases?.find((c) => c.courtCaseReference === courtCaseReference)
+  const courtCase = pncUpdateDataset.PncQuery?.courtCases?.find((c) => c.courtCaseReference === courtCaseReference)
   const offence = courtCase?.offences.find((o) => o.offence.sequenceNumber === sequenceNumber)
 
   return offence?.offence.offenceId ?? ""
@@ -93,11 +92,7 @@ const offences = (
   const adjudication = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
   const disposals = hearingsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
 
-  const offenceId = findOffenceId(
-    pncUpdateDataset.PncQuery as PoliceQueryResult,
-    courtCaseReferenceNumber,
-    ordinary?.courtOffenceSequenceNumber
-  )
+  const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
 
   const disposalResults = disposals.map((disposal) => {
     const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
