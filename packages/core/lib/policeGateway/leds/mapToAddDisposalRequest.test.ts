@@ -57,7 +57,7 @@ describe("mapToNormalDisposalRequest", () => {
           type: PncUpdateType.ADJUDICATION
         },
         {
-          committedOnBail: "true",
+          committedOnBail: "y",
           courtOffenceSequenceNumber: "2",
           locationOfOffence: "Offence location",
           offenceLocationFSCode: "Offence location FS code",

@@ -129,7 +129,7 @@ const additionalArrestOffences = (
   const arrest = arrestsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ARREST)
   const disposals = arrestsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
 
-  const committedOnBail = arrest?.committedOnBail.toLowerCase() === "y" ? true : false
+  const committedOnBail = arrest?.committedOnBail.toLowerCase() === "y"
   const disposalResults = disposals.map((disposal) => ({
     disposalCode: Number(disposal.disposalType),
     disposalQualifies: [disposal.disposalQualifiers ?? ""],
