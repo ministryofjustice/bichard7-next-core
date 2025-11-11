@@ -38,11 +38,11 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.922.0",
+    "@aws-sdk/client-s3": "^3.927.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@stomp/stompjs": "^7.2.1",
     "@types/nodemailer": "^7.0.3",
-    "axios": "^1.13.1",
+    "axios": "^1.13.2",
     "fast-xml-parser": "^5.3.1",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.10",
@@ -53,7 +53,7 @@
     "stompit": "^1.0.0",
     "ws": "^8.18.3",
     "zod": "^4.1.12",
-    "zod-validation-error": "^4.0.2"
+    "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
