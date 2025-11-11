@@ -118,7 +118,6 @@ const CourtDateFilter: React.FC<Props> = ({
         <ConditionalRender isRendered={canUseCourtDateReceivedDateMismatchFilters}>
           <CourtDateReceivedDateMismatchCheckbox
             id={"court-date-received-date-mismatch"}
-            label={"Include cases where date received is different"}
             dispatch={dispatch}
             value={courtDateReceivedDateMismatchFilter}
           />
