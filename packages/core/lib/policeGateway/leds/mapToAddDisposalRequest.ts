@@ -98,15 +98,21 @@ const mapOffences = (
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReferenceNumber: string
 ): Offence[] => {
-  const offenceGroups: PncUpdateCourtHearingAdjudicationAndDisposal[][] = []
+  const offenceGroups = hearingsAdjudicationsAndDisposals.reduce<PncUpdateCourtHearingAdjudicationAndDisposal[][]>(
+    (groups, item) => {
+      if (item.type === PncUpdateType.ORDINARY) {
+        groups.push([])
+      }
 
-  for (const item of hearingsAdjudicationsAndDisposals) {
-    if (item.type === PncUpdateType.ORDINARY) {
-      offenceGroups.push([])
-    }
+      if (groups.length === 0) {
+        groups.push([])
+      }
 
-    offenceGroups[offenceGroups.length - 1].push(item)
-  }
+      groups[groups.length - 1].push(item)
+      return groups
+    },
+    []
+  )
 
   const offences = offenceGroups.map((group) => {
     const ordinary = group.find((el) => el.type === PncUpdateType.ORDINARY)
@@ -147,6 +153,8 @@ const mapAdditionalArrestOffences = (
   asn: null | string,
   arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[]
 ): AdditionalArrestOffences[] => {
+  // const offenceGroups: PncUpdateCourtHearingAdjudicationAndDisposal[][] = []
+
   const adjudication = arrestsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
   const arrest = arrestsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ARREST)
   const disposals = arrestsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
