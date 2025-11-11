@@ -34,6 +34,10 @@ describe("insertErrorListNotes", () => {
     await db`DELETE FROM br7own.error_list_notes`
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   it("should insert the error list notes", async () => {
     const notes = ["Trigger codes: 1 x TRPR0001.", "Error codes: 1 x HO100100."]
     const phase1Result = generateMockPhase1Result()

@@ -17,6 +17,7 @@ import type Phase3Result from "../../phase3/types/Phase3Result"
 
 import generateFakePncUpdateDataset from "../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
 import processPhase3 from "./processPhase3"
+
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -47,8 +48,9 @@ describe("processPhase3", () => {
     process.env.TASK_DATA_BUCKET_NAME = bucket
   })
 
-  afterAll(() => {
-    pncApi.stop()
+  afterAll(async () => {
+    await pncApi.stop()
+    await sql.end()
   })
 
   beforeEach(async () => {
