@@ -13,10 +13,6 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 import mailhogClient from "mailhog"
 
-process.env.S3_ENDPOINT = "http://localhost:4566"
-process.env.S3_AWS_ACCESS_KEY_ID = "test"
-process.env.S3_AWS_SECRET_ACCESS_KEY = "test"
-
 const mailhog = mailhogClient()
 
 const INCOMING_BUCKET_NAME = "incoming-messages"

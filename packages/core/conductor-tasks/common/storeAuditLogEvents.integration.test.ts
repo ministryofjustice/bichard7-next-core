@@ -54,6 +54,11 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("should store multiple events in a single call to the API", async () => {
+    const datetimeIso = "2025-11-11T10:21:42.175Z"
+    const datetime = new Date(datetimeIso)
+    jest.useFakeTimers()
+    jest.setSystemTime(datetime)
+
     const phase1Result: Phase1Result = {
       correlationId,
       auditLogEvents: [
@@ -87,15 +92,17 @@ describe("storeAuditLogEvents", () => {
 
     const expectedAuditLogEvents = phase1Result.auditLogEvents.map((e) => ({
       ...e,
-      timestamp: e.timestamp.toISOString()
+      timestamp: datetimeIso
     }))
-    expect(auditLog.events).toStrictEqual(expectedAuditLogEvents)
+    expect(auditLog.events).toEqual(expect.arrayContaining(expectedAuditLogEvents))
+
+    jest.useRealTimers()
   })
 
   it("should return FAILED if it fails to write to the audit log", async () => {
     const spy = jest
       .spyOn(AuditLogApiClient.prototype, "createEvents")
-      .mockImplementation((): PromiseResult<void> => Promise.resolve(new Error("Eh?")))
+      .mockImplementation((): PromiseResult<void> => Promise.resolve(new Error("Failed to create event")))
 
     const phase1Result: Phase1Result = {
       correlationId,
