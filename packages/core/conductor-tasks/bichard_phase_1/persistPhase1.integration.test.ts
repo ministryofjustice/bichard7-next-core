@@ -10,6 +10,7 @@ import postgres from "postgres"
 
 import { test1PncResponse, test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
 import persistPhase1 from "./persistPhase1"
+
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -40,8 +41,9 @@ describe("persistPhase1", () => {
     process.env.TASK_DATA_BUCKET_NAME = bucket
   })
 
-  afterAll(() => {
-    pncApi.stop()
+  afterAll(async () => {
+    await pncApi.stop()
+    await sql.end()
   })
 
   beforeEach(async () => {

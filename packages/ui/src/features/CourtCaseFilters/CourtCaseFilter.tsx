@@ -74,7 +74,7 @@ const CourtCaseFilter: React.FC<Props> = ({
     courtDateReceivedDateMismatchFilter: {
       value: courtDateReceivedDateMismatch ?? false,
       state: "Applied",
-      label: "Include cases where date received is different"
+      label: "Cases where date received is different"
     }
   }
   const [state, dispatch] = useReducer(filtersReducer, initialFilterState)

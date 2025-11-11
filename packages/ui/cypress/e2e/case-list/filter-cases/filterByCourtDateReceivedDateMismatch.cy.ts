@@ -11,7 +11,7 @@ describe("Filtering cases by court date received date mismatch", () => {
     cy.visit("/bichard")
 
     cy.get("#court-date-received-date-mismatch").click()
-    cy.get(".moj-filter__tag").contains("Include cases where date received is different")
+    cy.get(".moj-filter__tag").contains("Cases where date received is different")
     cy.get("#court-date-received-date-mismatch").should("be.checked")
   })
 
@@ -19,11 +19,11 @@ describe("Filtering cases by court date received date mismatch", () => {
     cy.visit("/bichard")
 
     cy.get("#court-date-received-date-mismatch").click()
-    cy.get(".moj-filter__tag").contains("Include cases where date received is different")
+    cy.get(".moj-filter__tag").contains("Cases where date received is different")
     cy.get("#search").click()
     cy.get("#court-date-received-date-mismatch").should("be.checked")
     cy.get(".govuk-heading-m").contains("Applied filters")
-    cy.get(".moj-filter__tag").contains("Include cases where date received is different")
+    cy.get(".moj-filter__tag").contains("Cases where date received is different")
   })
 
   it("Should filter cases by court date received date mismatch", () => {

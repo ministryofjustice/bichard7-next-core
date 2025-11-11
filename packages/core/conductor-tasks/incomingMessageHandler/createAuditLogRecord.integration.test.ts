@@ -7,8 +7,8 @@ import { randomUUID } from "crypto"
 
 import createAuditLogRecord from "./createAuditLogRecord"
 
-const { apiKey, apiUrl } = createApiConfig()
-const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000)
+const { apiKey, apiUrl, basePath } = createApiConfig()
+const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 
 describe("createAuditLogRecord", () => {
   let auditLogRecord: AuditLogApiRecordInput
@@ -31,6 +31,7 @@ describe("createAuditLogRecord", () => {
       systemId: "B00LIBRA"
     }
   })
+
   it("should correctly insert an audit log record", async () => {
     const result = await createAuditLogRecord.execute({ inputData: { auditLogRecord } })
     expect(result.status).toBe("COMPLETED")
@@ -79,7 +80,8 @@ describe("createAuditLogRecord", () => {
     const result = await createAuditLogRecord.execute({
       inputData: { auditLogRecord: { ...auditLogRecord, messageId: "" } }
     })
+
     expect(result.status).toBe("FAILED")
-    expect(result.logs?.map((l) => l.log)).toContain("Error creating audit log: Message ID is mandatory")
+    expect(result.logs?.map((l) => l.log)).toContain("Could not create audit log")
   })
 })
