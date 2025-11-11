@@ -11,7 +11,7 @@ import listCourtCases from "../../../src/services/listCourtCases"
 import { isError } from "@moj-bichard7/common/types/Result"
 import type { ListCourtCaseResult } from "../../../src/types/ListCourtCasesResult"
 
-describe("listCourtCases", () => {
+describe("filterByCourtDateReceivedDateMistmatch", () => {
   let dataSource: DataSource
   const orgCode = "36FPA1"
   const forceCode = "036"
