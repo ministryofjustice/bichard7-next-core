@@ -46,7 +46,7 @@
     "ws": "^8.18.3"
   },
   "optionalDependencies": {
-    "@esbuild/linux-arm64": "^0.25.12",
-    "@esbuild/linux-x64": "^0.25.12"
+    "@esbuild/linux-arm64": "^0.27.0",
+    "@esbuild/linux-x64": "^0.27.0"
   }
 }

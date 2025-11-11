@@ -21,13 +21,13 @@
   "dependencies": {
     "cli-color": "^2.0.4",
     "commander": "^14.0.2",
-    "inquirer": "^12.10.0",
+    "inquirer": "^12.11.0",
     "notifications-node-client": "^8.2.1",
     "nunjucks": "^3.2.4",
     "pg": "^8.16.3"
   },
   "devDependencies": {
-    "@inquirer/prompts": "^7.9.0",
+    "@inquirer/prompts": "^7.10.0",
     "@types/cli-color": "^2.0.6",
     "@types/commander": "^2.12.5",
     "@types/inquirer": "^9.0.9",

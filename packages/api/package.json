@@ -61,13 +61,13 @@
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.922.0",
+    "@aws-sdk/lib-dynamodb": "^3.927.0",
     "@fastify/autoload": "6.3.1",
-    "@fastify/swagger": "^9.5.2",
+    "@fastify/swagger": "^9.6.0",
     "@fastify/swagger-ui": "^5.2.3",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.309",
     "date-fns": "^4.1.0",
-    "fastify": "^5.6.1",
+    "fastify": "^5.6.2",
     "fastify-zod-openapi": "^5.5.0",
     "http-status": "^1.8.1",
     "jsonwebtoken": "^9.0.2",
