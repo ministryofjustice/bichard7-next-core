@@ -5,6 +5,7 @@ exports[`mapToPoliceQueryResult should map LEDS ASN query response to police que
   "checkName": "dummy checkname",
   "courtCases": [
     {
+      "courtCaseId": "0b2c46f1-d7f9-4460-9ee7-63e4fe53cb0c",
       "courtCaseReference": "97/1626/008395Q",
       "crimeOffenceReference": undefined,
       "offences": [
