@@ -98,27 +98,37 @@ const mapOffences = (
   pncUpdateDataset: PncUpdateDataset,
   courtCaseReferenceNumber: string
 ): Offence[] => {
-  const ordinary = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ORDINARY)
-  const adjudication = hearingsAdjudicationsAndDisposals.find((item) => item.type === PncUpdateType.ADJUDICATION)
-  const disposals = hearingsAdjudicationsAndDisposals.filter((item) => item.type === PncUpdateType.DISPOSAL)
+  const offenceGroups: PncUpdateCourtHearingAdjudicationAndDisposal[][] = []
 
-  const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
+  for (const item of hearingsAdjudicationsAndDisposals) {
+    if (item.type === PncUpdateType.ORDINARY) {
+      offenceGroups.push([])
+    }
 
-  const disposalResults = disposals.map((disposal) => {
-    const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
+    offenceGroups[offenceGroups.length - 1].push(item)
+  }
+
+  const offences = offenceGroups.map((group) => {
+    const ordinary = group.find((el) => el.type === PncUpdateType.ORDINARY)
+    const adjudication = group.find((el) => el.type === PncUpdateType.ADJUDICATION)
+    const disposals = group.filter((el) => el.type === PncUpdateType.DISPOSAL)
+
+    const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
+
+    const disposalResults = disposals.map((disposal) => {
+      const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
+
+      return {
+        disposalCode: Number(disposal.disposalType),
+        disposalQualifies: [disposal.disposalQualifiers ?? ""],
+        disposalText: disposal.disposalText ?? undefined,
+        disposalDuration: { count, units },
+        disposalEffectiveDate,
+        disposalFine: { amount }
+      }
+    })
 
     return {
-      disposalCode: Number(disposal.disposalType),
-      disposalQualifies: [disposal.disposalQualifiers ?? ""],
-      disposalText: disposal.disposalText ?? undefined,
-      disposalDuration: { count, units },
-      disposalEffectiveDate,
-      disposalFine: { amount }
-    }
-  })
-
-  return [
-    {
       courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
       cjsOffenceCode: ordinary?.offenceReason ?? "",
       plea: toTitleCase(adjudication?.pleaStatus) as Plea,
@@ -128,7 +138,9 @@ const mapOffences = (
       disposalResults,
       offenceId
     }
-  ]
+  })
+
+  return offences
 }
 
 const mapAdditionalArrestOffences = (

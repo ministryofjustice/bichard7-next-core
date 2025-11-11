@@ -46,6 +46,39 @@ describe("mapToNormalDisposalRequest", () => {
           disposalText: "Disposal text",
           disposalType: "10",
           type: PncUpdateType.DISPOSAL
+        },
+        {
+          disposalQualifiers: "Disposal qualifiers",
+          disposalQuantity,
+          disposalText: "Disposal text",
+          disposalType: "10",
+          type: PncUpdateType.DISPOSAL
+        },
+        {
+          courtOffenceSequenceNumber: "1",
+          offenceReason: "Offence reason",
+          type: PncUpdateType.ORDINARY
+        },
+        {
+          hearingDate: "2025-08-14",
+          numberOffencesTakenIntoAccount: "3",
+          pleaStatus: "NO PLEA TAKEN",
+          verdict: "NON-CONVICTION",
+          type: PncUpdateType.ADJUDICATION
+        },
+        {
+          disposalQualifiers: "Disposal qualifiers",
+          disposalQuantity,
+          disposalText: "Disposal text",
+          disposalType: "10",
+          type: PncUpdateType.DISPOSAL
+        },
+        {
+          disposalQualifiers: "Disposal qualifiers",
+          disposalQuantity,
+          disposalText: "Disposal text",
+          disposalType: "10",
+          type: PncUpdateType.DISPOSAL
         }
       ],
       arrestsAdjudicationsAndDisposals: [
@@ -148,6 +181,41 @@ describe("mapToNormalDisposalRequest", () => {
         dateOfSentence: "2025-08-14",
         offenceTic: 3,
         disposalResults: [
+          {
+            disposalCode: 10,
+            disposalDuration,
+            disposalFine,
+            disposalEffectiveDate,
+            disposalQualifies: ["Disposal qualifiers"],
+            disposalText: "Disposal text"
+          },
+          {
+            disposalCode: 10,
+            disposalDuration,
+            disposalFine,
+            disposalEffectiveDate,
+            disposalQualifies: ["Disposal qualifiers"],
+            disposalText: "Disposal text"
+          }
+        ],
+        offenceId: "112233"
+      },
+      {
+        courtOffenceSequenceNumber: 1,
+        cjsOffenceCode: "Offence reason",
+        plea: "No Plea Taken",
+        adjudication: "Non-Conviction",
+        dateOfSentence: "2025-08-14",
+        offenceTic: 3,
+        disposalResults: [
+          {
+            disposalCode: 10,
+            disposalDuration,
+            disposalFine,
+            disposalEffectiveDate,
+            disposalQualifies: ["Disposal qualifiers"],
+            disposalText: "Disposal text"
+          },
           {
             disposalCode: 10,
             disposalDuration,
