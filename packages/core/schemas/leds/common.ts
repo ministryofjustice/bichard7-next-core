@@ -63,7 +63,7 @@ export const baseOffenceSchema = z.object({
     .string()
     .regex(/^([0-9]{1,3}\.){1,2}[0-9]{1,3}(\.[0-9]{1,3})?$/)
     .optional(),
-  cjsOffenceCode: z.string().max(8),
+  cjsOffenceCode: z.string().min(1).max(8),
   roleQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   plea: pleaSchema.optional(),
@@ -78,5 +78,5 @@ export const baseOffenceSchema = z.object({
 export const offenceSchema = baseOffenceSchema.extend({
   adjudication: adjudicationSchema.optional(),
   offenceStartDate: dateStringSchema.optional(),
-  offenceId: z.string()
+  offenceId: z.string().nonempty()
 })

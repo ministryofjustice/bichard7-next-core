@@ -16,6 +16,7 @@ import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
+import { addDisposalRequestSchema } from "../../../schemas/leds/addDisposalRequest"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
@@ -108,6 +109,7 @@ export default class LedsGateway implements PoliceGateway {
       }
 
       requestBody = mapToAddDisposalRequest(request.request, pncUpdateDataset)
+      addDisposalRequestSchema.safeParse(requestBody)
       endpoint = endpoints.addDisposal(personId, courtCaseId)
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
