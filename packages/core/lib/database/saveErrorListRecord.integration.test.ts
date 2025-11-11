@@ -38,6 +38,10 @@ describe("saveErrorListRecord", () => {
     await db`DELETE FROM br7own.error_list_notes`
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   it("should insert the appropriate resources", async () => {
     const phase1Result = generateMockPhase1Result({
       triggers: [{ code: TriggerCode.TRPR0001, offenceSequenceNumber: 1 }],

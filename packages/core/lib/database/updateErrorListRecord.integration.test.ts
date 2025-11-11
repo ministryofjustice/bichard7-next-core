@@ -49,6 +49,10 @@ describe("updateErrorListRecord", () => {
     MockDate.reset()
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   const testInputs = [
     { beforeStatus: null, exceptionsGenerated: false, expectedStatus: null },
     { beforeStatus: null, exceptionsGenerated: true, expectedStatus: ResolutionStatus.UNRESOLVED },
