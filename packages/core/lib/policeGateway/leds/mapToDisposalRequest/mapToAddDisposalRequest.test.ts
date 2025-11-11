@@ -1,11 +1,17 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
-import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
-import type { Court, DateString, Defendant, DisposalDuration, DisposalFine } from "../../../types/leds/DisposalRequest"
+import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
+import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalRequest"
+import type {
+  Court,
+  DateString,
+  Defendant,
+  DisposalDuration,
+  DisposalFine
+} from "../../../../types/leds/DisposalRequest"
 
-import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
-import { PncUpdateType } from "../../../phase3/types/HearingDetails"
+import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../phase3/lib/getPncCourtCode"
+import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
 import mapToNormalDisposalRequest from "./mapToAddDisposalRequest"
 
 describe("mapToNormalDisposalRequest", () => {

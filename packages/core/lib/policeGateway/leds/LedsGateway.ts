@@ -23,7 +23,7 @@ import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
-import mapToAddDisposalRequest from "./mapToAddDisposalRequest"
+import mapToAddDisposalRequest from "./mapToDisposalRequest/mapToAddDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import mapToRemandRequest from "./mapToRemandRequest"
 
@@ -93,6 +93,7 @@ export default class LedsGateway implements PoliceGateway {
     let requestBody: AddDisposalRequest | RemandRequest
     const personId = pncUpdateDataset.PncQuery?.personId
     const reportId = pncUpdateDataset.PncQuery?.reportId
+
     if (!personId || !reportId) {
       return new PoliceApiError(["Failed to update LEDS due to missing data."])
     }
@@ -104,6 +105,7 @@ export default class LedsGateway implements PoliceGateway {
       const courtCaseId = pncUpdateDataset.PncQuery?.courtCases?.find(
         (c) => c.courtCaseReference === request.request.courtCaseReferenceNumber
       )?.courtCaseId
+
       if (!courtCaseId) {
         return new PoliceApiError(["Failed to update LEDS due to missing data."])
       }
