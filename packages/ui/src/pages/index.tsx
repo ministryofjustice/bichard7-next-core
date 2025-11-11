@@ -261,6 +261,7 @@ const Home: NextPage<Props> = (props) => {
     build,
     oppositeOrder,
     canUseTriggerAndExceptionQualityAuditing,
+    courtDateReceivedDateMismatch,
     ...searchParams
   } = props
 
@@ -318,6 +319,7 @@ const Home: NextPage<Props> = (props) => {
                   courtCases={courtCases}
                   order={oppositeOrder}
                   displayAuditQuality={displayAuditQuality}
+                  courtDateReceivedDateMismatch={courtDateReceivedDateMismatch ?? false}
                 />
               }
               paginationTop={
