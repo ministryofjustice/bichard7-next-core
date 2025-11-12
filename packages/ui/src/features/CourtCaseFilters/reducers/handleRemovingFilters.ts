@@ -89,6 +89,11 @@ const handleRemovingFilters = (newState: Filter, action: FilterAction) => {
       })
       break
     }
+
+    case "courtDateReceivedDateMismatch": {
+      newState.courtDateReceivedDateMismatchFilter.value = false
+      break
+    }
   }
 }
 

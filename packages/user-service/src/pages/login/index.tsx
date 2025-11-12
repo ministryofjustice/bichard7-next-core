@@ -136,7 +136,7 @@ const handleInitialLoginStage = async (
       }
     }
   }
-  const sent = await sendVerificationCodeEmail(connection, normalisedEmail, "login")
+  const sent = await sendVerificationCodeEmail(connection, normalisedEmail, "loginStage")
 
   if (isError(sent)) {
     logger.error(sent)

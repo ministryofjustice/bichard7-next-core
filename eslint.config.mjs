@@ -280,7 +280,11 @@ export default [
     .extends("next", "plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
     .map((config) => ({
       ...config,
-      files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`])
+      files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
+      languageOptions: {
+        ...config.languageOptions,
+        parser: tsParser
+      }
     })),
   // TSX configs for Next.js packages
   ...nextPackages.map((pkg) => ({

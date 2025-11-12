@@ -39,4 +39,5 @@ export type CaseListQueryParams = {
   resolvedByUsername?: string
   resolvedDateRange?: DateRange
   asn?: string
+  courtDateReceivedDateMismatch?: boolean
 }

@@ -42,6 +42,10 @@ describe("fetchErrorListRecordId", () => {
     await db`DELETE FROM br7own.error_list`
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   it("should fetch the record ID by correlation ID", async () => {
     const errorRecord = generateErrorListRecord()
     const insertedRecordId = await db<ErrorListRecord[]>`INSERT INTO br7own.error_list ${db(
