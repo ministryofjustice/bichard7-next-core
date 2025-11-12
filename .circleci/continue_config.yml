@@ -194,7 +194,7 @@ jobs:
       - node_install_packages
       - run:
           name: Check the code for linting errors
-          command: nvm use && npm run lint:ci
+          command: npm run lint:ci
       - run:
           name: Build Core Packages
           command: npm run build:core
@@ -247,7 +247,7 @@ jobs:
 
   comparison_test:
     docker:
-      - image: cimg/aws:aws:2025.01.1
+      - image: cimg/aws:2025.01.1
     resource_class: medium
     steps:
       - unless:
@@ -499,7 +499,7 @@ jobs:
       - node_install_packages
       - run:
           name: Unit test common
-          command: nvm use && npm run test -w packages/common
+          command: npm run test -w packages/common
 
   test_postgres:
     docker:
