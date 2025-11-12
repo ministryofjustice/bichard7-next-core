@@ -457,7 +457,7 @@ jobs:
 
   build_api_image:
     docker:
-      - image: cimg/base:2025.10
+      - image: cimg/aws:2025.01.1
     resource_class: medium
     steps:
       - unless:
@@ -529,7 +529,7 @@ jobs:
 
   build_ui_image:
     docker:
-      - image: cimg/base:2025.10
+      - image: cimg/aws:2025.01.1
     resource_class: medium
     steps:
       - unless:
@@ -711,7 +711,7 @@ jobs:
 
   build_user_service_image:
     docker:
-      - image: cimg/base:2025.10
+      - image: cimg/aws:2025.01.1
     resource_class: medium
     steps:
       - unless:
