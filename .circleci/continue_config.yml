@@ -456,9 +456,8 @@ jobs:
           command: nvm use && npm run -w packages/api test:e2e
 
   build_api_image:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/base:2025.10
     resource_class: medium
     steps:
       - unless:
@@ -474,6 +473,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - run: ./scripts/build-api-docker.sh
       - run:
           name: Save Docker image
@@ -527,9 +528,8 @@ jobs:
           name: run Postgres function tests
 
   build_ui_image:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/base:2025.10
     resource_class: medium
     steps:
       - unless:
@@ -545,6 +545,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
@@ -708,9 +710,8 @@ jobs:
           path: ~/project/packages/user-service/cypress/screenshots
 
   build_user_service_image:
-    machine:
-      image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    docker:
+      - image: cimg/base:2025.10
     resource_class: medium
     steps:
       - unless:
@@ -729,6 +730,8 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
       - run: ./scripts/build-user-service-docker.sh
       - run:
           name: Save Docker image
