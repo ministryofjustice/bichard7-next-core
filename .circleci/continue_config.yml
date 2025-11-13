@@ -484,11 +484,12 @@ jobs:
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
+      - checkout
+      - fetch_images:
+          images: nodejs-20-2023
       - run:
           name: Clone bichard7-next-audit-logging
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - fetch_images:
-          images: nodejs-20-2023
       - run:
           name: Build audit logging images
           working_directory: ~/bichard7-next-audit-logging
