@@ -107,7 +107,13 @@ export default class LedsGateway implements PoliceGateway {
       }
 
       requestBody = mapToAddDisposalRequest(request.request, pncUpdateDataset)
-      addDisposalRequestSchema.safeParse(requestBody)
+
+      const validationResult = addDisposalRequestSchema.safeParse(requestBody)
+
+      if (!validationResult.success) {
+        return new PoliceApiError(["Failed to validate LEDS request."])
+      }
+
       endpoint = endpoints.addDisposal(personId, courtCaseId)
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
@@ -126,7 +132,7 @@ export default class LedsGateway implements PoliceGateway {
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {
         const errors = (apiResponse.response?.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
-          `ASN query failed with status code ${apiResponse.status}.`
+          `LEDS update failed with status code ${apiResponse.status}.`
         ]
         return new PoliceApiError(errors)
       }

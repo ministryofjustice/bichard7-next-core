@@ -22,6 +22,7 @@ const mapOffences = (
       }
 
       groups[groups.length - 1].push(item)
+
       return groups
     },
     []
