@@ -8,7 +8,7 @@ import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
 import mapOffences from "./mapOffences"
 
-const mapToNormalDisposalRequest = (
+const mapToAddDisposalRequest = (
   pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): AddDisposalRequest => {
@@ -43,4 +43,4 @@ const mapToNormalDisposalRequest = (
   }
 }
 
-export default mapToNormalDisposalRequest
+export default mapToAddDisposalRequest

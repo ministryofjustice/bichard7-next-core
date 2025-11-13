@@ -12,7 +12,7 @@ import type {
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../phase3/lib/getPncCourtCode"
 import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
-import mapToNormalDisposalRequest from "./mapToAddDisposalRequest"
+import mapToAddDisposalRequest from "./mapToAddDisposalRequest"
 
 describe("mapToNormalDisposalRequest", () => {
   const buildNormalDisposalRequest = (
@@ -326,7 +326,7 @@ describe("mapToNormalDisposalRequest", () => {
       }
     })
 
-    const ledsRequest = mapToNormalDisposalRequest(request, pncUpdateDataset)
+    const ledsRequest = mapToAddDisposalRequest(request, pncUpdateDataset)
 
     expect(ledsRequest).toEqual(expectedLedsRequest)
   })
@@ -340,7 +340,7 @@ describe("mapToNormalDisposalRequest", () => {
       carryForward: undefined
     })
 
-    const ledsRequest = mapToNormalDisposalRequest(request, pncUpdateDataset)
+    const ledsRequest = mapToAddDisposalRequest(request, pncUpdateDataset)
 
     expect(ledsRequest).toEqual(expectedLedsRequest)
   })
@@ -369,7 +369,7 @@ describe("mapToNormalDisposalRequest", () => {
       disposalEffectiveDate: "2024-12-10"
     })
 
-    const ledsRequest = mapToNormalDisposalRequest(request, pncUpdateDataset)
+    const ledsRequest = mapToAddDisposalRequest(request, pncUpdateDataset)
 
     expect(ledsRequest).toEqual(expectedLedsRequest)
   })
