@@ -27,7 +27,7 @@ const mapAdditionalArrestOffences = (
     const adjudication = group.find((el) => el.type === PncUpdateType.ADJUDICATION)
     const disposals = group.filter((el) => el.type === PncUpdateType.DISPOSAL)
 
-    const committedOnBail = arrest?.committedOnBail.toLowerCase() === "y"
+    const committedOnBail = arrest?.committedOnBail?.toLowerCase() === "y"
     const disposalResults = disposals.map((disposal) => ({
       disposalCode: Number(disposal.disposalType),
       disposalQualifies: [disposal.disposalQualifiers ?? ""],

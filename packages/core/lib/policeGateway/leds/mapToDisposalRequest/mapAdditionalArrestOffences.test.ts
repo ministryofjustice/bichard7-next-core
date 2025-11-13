@@ -119,4 +119,69 @@ describe("mapAdditionalArrestOffences", () => {
 
     expect(additionalOffences).toStrictEqual(expectedAdditionalOffences)
   })
+
+  it("handles null ASN", () => {
+    const arrestsAdjudicationsAndDisposals = [
+      {
+        committedOnBail: "n",
+        courtOffenceSequenceNumber: "1",
+        offenceReason: "Reason",
+        type: PncUpdateType.ARREST
+      }
+    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
+
+    const result = mapAdditionalArrestOffences(null, arrestsAdjudicationsAndDisposals)
+
+    expect(result[0].asn).toBe("")
+  })
+
+  it("handles missing adjudication and disposal", () => {
+    const arrestsAdjudicationsAndDisposals = [
+      {
+        committedOnBail: "y",
+        courtOffenceSequenceNumber: "3",
+        offenceReason: "Some offence",
+        type: PncUpdateType.ARREST
+      }
+    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
+
+    const result = mapAdditionalArrestOffences("ASN123", arrestsAdjudicationsAndDisposals)
+
+    expect(result[0].additionalOffences[0]).toMatchObject({
+      plea: "",
+      adjudication: "",
+      disposalResults: [],
+      committedOnBail: true
+    })
+  })
+
+  it("handles undefined committedOnBail", () => {
+    const arrestsAdjudicationsAndDisposals = [
+      { courtOffenceSequenceNumber: "1", offenceReason: "Test", type: PncUpdateType.ARREST }
+    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
+
+    const result = mapAdditionalArrestOffences("ASN", arrestsAdjudicationsAndDisposals)
+
+    expect(result[0].additionalOffences[0]).toMatchObject({
+      plea: "",
+      adjudication: "",
+      disposalResults: [],
+      committedOnBail: false
+    })
+  })
+
+  it("handles missing disposalQualifiers and disposalText", () => {
+    const arrestsAdjudicationsAndDisposals = [
+      { committedOnBail: "y", courtOffenceSequenceNumber: "1", type: PncUpdateType.ARREST },
+      { type: PncUpdateType.ADJUDICATION },
+      { disposalType: "20", type: PncUpdateType.DISPOSAL }
+    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
+
+    const result = mapAdditionalArrestOffences("ASN", arrestsAdjudicationsAndDisposals)
+    expect(result?.[0].additionalOffences?.[0].disposalResults?.[0]).toEqual({
+      disposalCode: 20,
+      disposalQualifies: [""],
+      disposalText: undefined
+    })
+  })
 })

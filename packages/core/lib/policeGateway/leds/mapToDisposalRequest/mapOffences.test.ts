@@ -156,4 +156,61 @@ describe("mapOffences", () => {
 
     expect(offences).toStrictEqual(expectedOffences)
   })
+
+  it("handles when there is no adjudication", () => {
+    const hearings = [
+      { courtOffenceSequenceNumber: "1", offenceReason: "Reason", type: PncUpdateType.ORDINARY }
+    ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
+
+    const dataset = {
+      PncQuery: {
+        courtCases: [{ courtCaseReference: "111", offences: [{ offence: { sequenceNumber: 1, offenceId: "XYZ" } }] }]
+      }
+    } as PncUpdateDataset
+
+    const offences = mapOffences(hearings, dataset, "111")
+
+    expect(offences[0]).toMatchObject({
+      courtOffenceSequenceNumber: 1,
+      plea: "",
+      adjudication: "",
+      disposalResults: [],
+      offenceId: "XYZ"
+    })
+  })
+
+  it("handles when there are no disposals", () => {
+    const hearings = [
+      { courtOffenceSequenceNumber: "1", offenceReason: "Reason", type: PncUpdateType.ORDINARY },
+      { hearingDate: "2025-01-01", pleaStatus: "GUILTY", verdict: "CONVICTION", type: PncUpdateType.ADJUDICATION }
+    ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
+
+    const dataset = {
+      PncQuery: {
+        courtCases: [{ courtCaseReference: "222", offences: [{ offence: { sequenceNumber: 1, offenceId: "ABC" } }] }]
+      }
+    } as PncUpdateDataset
+
+    const offences = mapOffences(hearings, dataset, "222")
+
+    expect(offences[0].disposalResults).toEqual([])
+  })
+
+  it("handles missing disposalQualifiers and disposalText", () => {
+    const hearings = [
+      { courtOffenceSequenceNumber: "1", offenceReason: "Reason", type: PncUpdateType.ORDINARY },
+      { type: PncUpdateType.DISPOSAL, disposalQuantity: "D001010120240000000.0000" }
+    ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
+
+    const dataset = {
+      PncQuery: {
+        courtCases: [{ courtCaseReference: "444", offences: [{ offence: { sequenceNumber: 1, offenceId: "QWE" } }] }]
+      }
+    } as PncUpdateDataset
+
+    const offences = mapOffences(hearings, dataset, "444")
+
+    expect(offences[0].disposalResults?.[0].disposalQualifies).toEqual([""])
+    expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
+  })
 })

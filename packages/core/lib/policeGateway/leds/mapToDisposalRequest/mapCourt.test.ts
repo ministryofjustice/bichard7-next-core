@@ -21,8 +21,22 @@ describe("mapCourt", () => {
 
     const court = mapCourt("dummyCourtCode", null)
 
-    console.log(court)
-
     expect(court).toStrictEqual(expectedCourt)
+  })
+
+  it("returns courtName as empty string when name is null and code is PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR", () => {
+    const court = mapCourt(PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR, null)
+    expect(court).toStrictEqual({
+      courtIdentityType: "name",
+      courtName: ""
+    })
+  })
+
+  it("returns courtCode as empty string when code is null", () => {
+    const court = mapCourt(null, "irrelevantName")
+    expect(court).toStrictEqual({
+      courtIdentityType: "code",
+      courtCode: ""
+    })
   })
 })
