@@ -232,15 +232,8 @@ jobs:
           name: Run Conductor
           command: npm run conductor-only
       - run:
-          name: Checkout the audit logging repo
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - run:
-          name: Build the audit logging API server
-          working_directory: ~/bichard7-next-audit-logging
-          command: make build-api-server
-      - run:
-          name: Run Audit Logging API
-          command: npm run audit-log
+          name: Run the B7 API
+          command: npm run api
       - run:
           name: Run unit tests against core code
           command: nvm use && npm run -w packages/core test:unit

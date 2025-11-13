@@ -61,6 +61,10 @@ describe("getTriggersCount", () => {
     await db`DELETE FROM br7own.error_list_triggers`
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   it("returns 1 when a trigger exist for a record", async () => {
     const errors = await db<ErrorListRecord[]>`INSERT INTO br7own.error_list ${db(errorListRecord)} RETURNING error_id`
     const errorListTriggersRecord = generateErrorListTriggerRecord(errors[0].error_id ?? 1)

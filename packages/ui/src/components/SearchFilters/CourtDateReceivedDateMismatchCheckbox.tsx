@@ -2,17 +2,11 @@ import type { ChangeEvent, Dispatch } from "react"
 import type { FilterAction } from "../../types/CourtCaseFilter"
 
 interface CheckboxProps extends Omit<React.ComponentProps<"input">, "value"> {
-  label: string
   dispatch: Dispatch<FilterAction>
   value: boolean
 }
 
-export const CourtDateReceivedDateMismatchCheckbox = ({
-  id,
-  value,
-  label,
-  dispatch
-}: CheckboxProps): React.ReactNode => {
+export const CourtDateReceivedDateMismatchCheckbox = ({ id, value, dispatch }: CheckboxProps): React.ReactNode => {
   const checkboxId = id || `checkbox-${value}`
 
   return (
@@ -32,7 +26,7 @@ export const CourtDateReceivedDateMismatchCheckbox = ({
         }}
       />
       <label className="govuk-label govuk-checkboxes__label govuk-!-padding-right-0" htmlFor={checkboxId}>
-        {label}
+        {"Cases where date received is different"}
       </label>
     </div>
   )
