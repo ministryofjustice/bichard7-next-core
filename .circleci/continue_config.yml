@@ -472,7 +472,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "api:latest" | gzip "images/api:latest"
+            docker image save "api:latest" | gzip > "images/api:latest"
       - persist_to_workspace:
           root: .
           paths:
@@ -726,7 +726,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "user-service:latest" | "images/user-service.tar.gz"
+            docker image save "user-service:latest" | gzip > "images/user-service.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
