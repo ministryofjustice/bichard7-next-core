@@ -23,7 +23,7 @@ import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
-import mapToAddDisposalRequest from "./mapToDisposalRequest/mapToAddDisposalRequest"
+import mapToAddDisposalRequest from "./mapToAddDisposalRequest/mapToAddDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import mapToRemandRequest from "./mapToRemandRequest"
 
