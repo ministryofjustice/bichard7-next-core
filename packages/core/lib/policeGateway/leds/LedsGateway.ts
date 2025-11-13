@@ -23,6 +23,7 @@ import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
+import { findCourtCaseId } from "./mapToAddDisposalRequest/findCourtCaseId"
 import mapToAddDisposalRequest from "./mapToAddDisposalRequest/mapToAddDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import mapToRemandRequest from "./mapToRemandRequest"
@@ -98,9 +99,7 @@ export default class LedsGateway implements PoliceGateway {
       requestBody = mapToRemandRequest(request.request)
       endpoint = endpoints.remand(personId, reportId)
     } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
-      const courtCaseId = pncUpdateDataset.PncQuery?.courtCases?.find(
-        (c) => c.courtCaseReference === request.request.courtCaseReferenceNumber
-      )?.courtCaseId
+      const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
 
       if (!courtCaseId) {
         return new PoliceApiError(["Failed to update LEDS due to missing data."])
