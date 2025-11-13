@@ -118,7 +118,7 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     const apiResponse = await axios
-      .post(endpoint, requestBody, {
+      .post(`${this.config.url}${endpoint}`, requestBody, {
         headers: generateRequestHeaders(correlationId),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
