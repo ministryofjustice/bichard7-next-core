@@ -116,7 +116,7 @@ commands:
     steps:
       - run:
           name: Load ui image
-          command: docker image load < "images/ui:latest"
+          command: docker image load < "images/ui.tar.gz"
 
   load_user_service_image:
     steps:
@@ -538,12 +538,15 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+#      - run:
+#          name: Install pigz
+#          command: sudo apt update && sudo apt install -y pigz
       - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save -o "images/ui:latest" "ui:latest"
+            docker image save "ui:latest" | gzip > "images/ui.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
