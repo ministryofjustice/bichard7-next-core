@@ -84,8 +84,8 @@ services:
       POSTGRES_DB: bichard
       POSTGRES_USER: bichard
       PGDATA: /var/lib/postgresql/data/pgdata
-#    volumes:
-#      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
+    #    volumes:
+    #      - ./postgres/schema.sql:/docker-entrypoint-initdb.d/init-db.sql
     ports:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
@@ -101,8 +101,8 @@ services:
     build:
       context: ./postgres/liquibase
       dockerfile: Dockerfile
-#    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
-#    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    #    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
+    #    volumes: ["./postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.migrations.properties"
       EXIT_AFTER_SCRIPT: "${EXIT_AFTER_SCRIPT:-false}"
@@ -122,8 +122,8 @@ services:
     build:
       context: ./postgres/liquibase
       dockerfile: Dockerfile
-#    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
-#    volumes: ["./postgres/liquibase:/liquibase/changelog"]
+    #    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
+    #    volumes: ["./postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.seeds.properties"
       EXIT_AFTER_SCRIPT: "${EXIT_AFTER_SCRIPT:-false}"
