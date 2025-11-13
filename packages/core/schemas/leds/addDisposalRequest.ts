@@ -17,11 +17,11 @@ export const defendantSchema = z.discriminatedUnion("defendantType", [
   z.object({
     defendantType: z.literal("individual"),
     defendantFirstNames: z.array(z.string()).optional(),
-    defendantLastName: z.string()
+    defendantLastName: z.string().nonempty()
   }),
   z.object({
     defendantType: z.literal("organisation"),
-    defendantOrganisationName: z.string()
+    defendantOrganisationName: z.string().nonempty()
   })
 ])
 
@@ -30,7 +30,7 @@ const arrestOffenceSchema = baseOffenceSchema.extend({
   adjudication: adjudicationSchema.optional(),
   offenceDescription: z.string().optional(),
   committedOnBail: z.boolean(),
-  locationFsCode: z.string(),
+  locationFsCode: z.string().nonempty(),
   locationText: z.string().optional(),
   locationAddress: z
     .object({
@@ -40,14 +40,14 @@ const arrestOffenceSchema = baseOffenceSchema.extend({
     .optional()
 })
 
-const additionalArrestOffencesSchema = z.object({
-  asn: z.string(),
+export const additionalArrestOffencesSchema = z.object({
+  asn: z.string().nonempty(),
   additionalOffences: z.array(arrestOffenceSchema)
 })
 
 export const addDisposalRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
-  personUrn: z.string(),
+  personUrn: z.string().nonempty(),
   checkName: checkNameSchema,
   courtCaseReference: courtCaseReferenceSchema,
   court: courtSchema.optional(),
@@ -62,7 +62,7 @@ export const addDisposalRequestSchema = z.object({
     .optional(),
   referToCourtCase: z
     .object({
-      reference: z.string(),
+      reference: z.string().nonempty(),
       text: z.string().optional()
     })
     .optional(),
