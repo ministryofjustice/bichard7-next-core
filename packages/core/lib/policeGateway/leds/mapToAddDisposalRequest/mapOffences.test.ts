@@ -1,80 +1,16 @@
-import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
-
 import type { PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
 
 import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
+import { buildNormalDisposalRequest } from "../../../../tests/fixtures/addDisposalRequests/buildNormalDisposalRequest"
+import { buildPncUpdateDataset } from "../../../../tests/fixtures/addDisposalRequests/buildPncUpdateDataset"
 import mapOffences from "./mapOffences"
 
 describe("mapOffences", () => {
+  const pncUpdateDataset = buildPncUpdateDataset()
+  const courtCaseReferenceNumber = "98/2048/633Y"
+
   it("maps offences", () => {
-    const hearingsAdjudicationsAndDisposals = [
-      {
-        courtOffenceSequenceNumber: "1",
-        offenceReason: "Offence reason",
-        type: PncUpdateType.ORDINARY
-      },
-      {
-        hearingDate: "2025-08-14",
-        numberOffencesTakenIntoAccount: "3",
-        pleaStatus: "NO PLEA TAKEN",
-        verdict: "NON-CONVICTION",
-        type: PncUpdateType.ADJUDICATION
-      },
-      {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity: "D123100520240012000.9900",
-        disposalText: "Disposal text",
-        disposalType: "10",
-        type: PncUpdateType.DISPOSAL
-      },
-      {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity: "D123100520240012000.9900",
-        disposalText: "Disposal text",
-        disposalType: "10",
-        type: PncUpdateType.DISPOSAL
-      },
-      {
-        courtOffenceSequenceNumber: "1",
-        offenceReason: "Offence reason",
-        type: PncUpdateType.ORDINARY
-      },
-      {
-        hearingDate: "2025-08-14",
-        numberOffencesTakenIntoAccount: "3",
-        pleaStatus: "NO PLEA TAKEN",
-        verdict: "NON-CONVICTION",
-        type: PncUpdateType.ADJUDICATION
-      },
-      {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity: "D123100520240012000.9900",
-        disposalText: "Disposal text",
-        disposalType: "10",
-        type: PncUpdateType.DISPOSAL
-      },
-      {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity: "D123100520240012000.9900",
-        disposalText: "Disposal text",
-        disposalType: "10",
-        type: PncUpdateType.DISPOSAL
-      }
-    ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
-
-    const pncUpdateDataset = {
-      PncQuery: {
-        courtCases: [
-          {
-            courtCaseReference: "1111",
-            offences: [{ offence: { sequenceNumber: 1, offenceId: "112233" } }]
-          }
-        ]
-      }
-    } as PncUpdateDataset
-
-    const courtCaseReferenceNumber = "1111"
-
+    const normalDisposalRequest = buildNormalDisposalRequest()
     const expectedOffences = [
       {
         courtOffenceSequenceNumber: 1,
@@ -152,7 +88,11 @@ describe("mapOffences", () => {
       }
     ]
 
-    const offences = mapOffences(hearingsAdjudicationsAndDisposals, pncUpdateDataset, courtCaseReferenceNumber)
+    const offences = mapOffences(
+      normalDisposalRequest.hearingsAdjudicationsAndDisposals,
+      pncUpdateDataset,
+      courtCaseReferenceNumber
+    )
 
     expect(offences).toStrictEqual(expectedOffences)
   })
@@ -162,20 +102,14 @@ describe("mapOffences", () => {
       { courtOffenceSequenceNumber: "1", offenceReason: "Reason", type: PncUpdateType.ORDINARY }
     ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
 
-    const dataset = {
-      PncQuery: {
-        courtCases: [{ courtCaseReference: "111", offences: [{ offence: { sequenceNumber: 1, offenceId: "XYZ" } }] }]
-      }
-    } as PncUpdateDataset
-
-    const offences = mapOffences(hearings, dataset, "111")
+    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
 
     expect(offences[0]).toMatchObject({
       courtOffenceSequenceNumber: 1,
       plea: "",
       adjudication: "",
       disposalResults: [],
-      offenceId: "XYZ"
+      offenceId: "112233"
     })
   })
 
@@ -185,13 +119,7 @@ describe("mapOffences", () => {
       { hearingDate: "2025-01-01", pleaStatus: "GUILTY", verdict: "CONVICTION", type: PncUpdateType.ADJUDICATION }
     ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
 
-    const dataset = {
-      PncQuery: {
-        courtCases: [{ courtCaseReference: "222", offences: [{ offence: { sequenceNumber: 1, offenceId: "ABC" } }] }]
-      }
-    } as PncUpdateDataset
-
-    const offences = mapOffences(hearings, dataset, "222")
+    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
 
     expect(offences[0].disposalResults).toEqual([])
   })
@@ -202,13 +130,7 @@ describe("mapOffences", () => {
       { type: PncUpdateType.DISPOSAL, disposalQuantity: "D001010120240000000.0000" }
     ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
 
-    const dataset = {
-      PncQuery: {
-        courtCases: [{ courtCaseReference: "444", offences: [{ offence: { sequenceNumber: 1, offenceId: "QWE" } }] }]
-      }
-    } as PncUpdateDataset
-
-    const offences = mapOffences(hearings, dataset, "444")
+    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
 
     expect(offences[0].disposalResults?.[0].disposalQualifies).toEqual([""])
     expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
