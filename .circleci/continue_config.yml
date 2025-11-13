@@ -538,15 +538,15 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-#      - run:
-#          name: Install pigz
-#          command: sudo apt update && sudo apt install -y pigz
+      - run:
+          name: Install pigz
+          command: sudo apt update && sudo apt install -y pigz
       - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "ui:latest" | gzip > "images/ui.tar.gz"
+            docker image save "ui:latest" | pigz > "images/ui.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
