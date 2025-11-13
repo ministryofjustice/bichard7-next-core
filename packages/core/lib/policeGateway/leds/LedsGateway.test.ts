@@ -34,16 +34,6 @@ describe("LedsGateway", () => {
       expect(ledsGateway.queryTime).toBeDefined()
     })
 
-    it("should return an error when aho is missing", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
-        data: ledsAsnQueryResponse
-      })
-
-      const result = (await ledsGateway.query("dummy-asn", "dummy-id")) as PoliceApiError
-
-      expect(result?.messages).toEqual(["Annotated hearing outcome is missing."])
-    })
-
     it("should return an error when api call fails", async () => {
       jest.spyOn(axios, "post").mockRejectedValue(Error("API call failed."))
 

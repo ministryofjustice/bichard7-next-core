@@ -9,7 +9,7 @@ interface PoliceGateway {
   query: (
     asn: string,
     correlationId: string,
-    aho?: AnnotatedHearingOutcome
+    aho: AnnotatedHearingOutcome
   ) => Promise<PoliceApiError | PoliceQueryResult | undefined>
   queryTime: Date | undefined
   update: (

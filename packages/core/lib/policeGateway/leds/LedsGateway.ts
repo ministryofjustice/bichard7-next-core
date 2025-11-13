@@ -35,12 +35,8 @@ export default class LedsGateway implements PoliceGateway {
   async query(
     asn: string,
     correlationId: string,
-    aho?: AnnotatedHearingOutcome
+    aho: AnnotatedHearingOutcome
   ): Promise<PoliceApiError | PoliceQueryResult | undefined> {
-    if (!aho) {
-      return new PoliceApiError(["Annotated hearing outcome is missing."])
-    }
-
     this.queryTime = new Date()
     const requestBody: AsnQueryRequest = {
       asn: new Asn(asn).toPncFormat(),
