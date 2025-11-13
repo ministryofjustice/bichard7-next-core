@@ -16,7 +16,7 @@ export const parseDisposalQuantity = (disposalQuantity: string) => {
     count = 1
     units = "life"
   } else {
-    count = Number(quantity.slice(1, 4).trim()) || 1
+    count = Number(quantity.slice(1, 4).trim()) || 0
     const unitMap: Record<string, DisposalDurationUnit> = {
       d: "days",
       h: "hours",

@@ -7,7 +7,7 @@ describe("parseDisposalQuantity", () => {
     ["d1  100520240000009.9900", 1, "days", "2024-05-10", 9.99],
     ["Y99910052024          00", 1, "life", "2024-05-10", 0],
     ["D123                  00", 123, "days", "", 0],
-    ["    10052024          00", 1, "", "2024-05-10", 0]
+    ["    10052024          00", 0, "", "2024-05-10", 0]
   ])(
     "parses %s into { count: %d, unit: %s, disposalEffectiveDate: %s, amount: %d }",
     (input, expectedCount, expectedUnits, expectedDate, expectedAmount) => {

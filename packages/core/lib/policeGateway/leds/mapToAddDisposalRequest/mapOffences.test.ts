@@ -135,4 +135,19 @@ describe("mapOffences", () => {
     expect(offences[0].disposalResults?.[0].disposalQualifies).toEqual([""])
     expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
   })
+
+  it("doesn't include disposalDuration if units is empty string", () => {
+    const psaCourtCode = ""
+    const pendingPsaCourtCode = ""
+    const disposalQuantity = "    10052024          00"
+    const normalDisposalRequest = buildNormalDisposalRequest(psaCourtCode, pendingPsaCourtCode, disposalQuantity)
+
+    const offences = mapOffences(
+      normalDisposalRequest.hearingsAdjudicationsAndDisposals,
+      pncUpdateDataset,
+      courtCaseReferenceNumber
+    )
+
+    expect(offences[0].disposalResults?.[0].disposalDuration).toBeUndefined()
+  })
 })
