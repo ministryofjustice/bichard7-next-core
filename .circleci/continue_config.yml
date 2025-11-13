@@ -122,13 +122,13 @@ commands:
     steps:
       - run:
           name: Load user-service image
-          command: docker image load < "images/user-service:latest"
+          command: docker image load < "images/user-service.tar.gz"
 
   load_api_image:
     steps:
       - run:
           name: Load api image
-          command: docker image load < "images/api:latest"
+          command: docker image load < "images/api.tar.gz"
 
   start_services:
     parameters:
@@ -472,7 +472,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save -o "images/api:latest" "api:latest"
+            docker image save "api:latest" | gzip "images/api:latest"
       - persist_to_workspace:
           root: .
           paths:
@@ -538,15 +538,12 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - run:
-          name: Install pigz
-          command: sudo apt update && sudo apt install -y pigz
       - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "ui:latest" | pigz > "images/ui.tar.gz"
+            docker image save "ui:latest" | gzip > "images/ui.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -729,7 +726,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save -o "images/user-service:latest" "user-service:latest"
+            docker image save "user-service:latest" | "images/user-service.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
