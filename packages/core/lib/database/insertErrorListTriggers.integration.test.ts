@@ -35,6 +35,10 @@ describe("insertErrorListTriggers", () => {
     await db`DELETE FROM br7own.error_list_triggers`
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   it("should insert the error list triggers", async () => {
     const phase1Result = generateMockPhase1Result({
       triggers: [{ code: TriggerCode.TRPR0001 }, { code: TriggerCode.TRPR0001, offenceSequenceNumber: 3 }]

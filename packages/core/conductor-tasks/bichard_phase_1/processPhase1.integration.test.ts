@@ -17,6 +17,7 @@ import type Phase1Result from "../../phase1/types/Phase1Result"
 import { test89PncResponse } from "../../phase1/tests/fixtures/mockPncApiResponses"
 import { Phase1ResultType } from "../../phase1/types/Phase1Result"
 import processPhase1 from "./processPhase1"
+
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -47,8 +48,9 @@ describe("processPhase1", () => {
     process.env.TASK_DATA_BUCKET_NAME = bucket
   })
 
-  afterAll(() => {
-    pncApi.stop()
+  afterAll(async () => {
+    await pncApi.stop()
+    await sql.end()
   })
 
   beforeEach(async () => {

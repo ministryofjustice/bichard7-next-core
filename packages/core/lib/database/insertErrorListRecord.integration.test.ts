@@ -27,6 +27,10 @@ describe("insertErrorListRecord", () => {
     await db`DELETE FROM br7own.error_list`
   })
 
+  afterAll(async () => {
+    await db.end()
+  })
+
   it("should insert the result into the error_list table", async () => {
     const result = generateMockPhase1Result()
     const recordId = await insertErrorListRecord(db, result)
