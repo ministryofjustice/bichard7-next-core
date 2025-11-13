@@ -1,0 +1,122 @@
+import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
+
+import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
+import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
+
+describe("mapAdditionalArrestOffences", () => {
+  it("maps additional arrest offences", () => {
+    const asn = "1101ZD01410836V"
+    const arrestsAdjudicationsAndDisposals = [
+      {
+        committedOnBail: "y",
+        courtOffenceSequenceNumber: "2",
+        locationOfOffence: "Offence location",
+        offenceLocationFSCode: "Offence location FS code",
+        offenceReason: "Offence reason",
+        offenceReasonSequence: "1",
+        offenceStartDate: "2025-08-16",
+        offenceStartTime: "14:30+02:00",
+        offenceEndDate: "2025-08-17",
+        offenceEndTime: "14:30+02:00",
+        type: PncUpdateType.ARREST
+      },
+      {
+        hearingDate: "2025-08-15",
+        numberOffencesTakenIntoAccount: "4",
+        pleaStatus: "RESISTED",
+        verdict: "NOT GUILTY",
+        type: PncUpdateType.ADJUDICATION
+      },
+      {
+        disposalQualifiers: "Disposal qualifiers",
+        disposalQuantity: "Disposal quantity",
+        disposalText: "Disposal text",
+        disposalType: "10",
+        type: PncUpdateType.DISPOSAL
+      },
+      {
+        committedOnBail: "y",
+        courtOffenceSequenceNumber: "2",
+        locationOfOffence: "Offence location",
+        offenceLocationFSCode: "Offence location FS code",
+        offenceReason: "Offence reason",
+        offenceReasonSequence: "1",
+        offenceStartDate: "2025-08-16",
+        offenceStartTime: "14:30+02:00",
+        offenceEndDate: "2025-08-17",
+        offenceEndTime: "14:30+02:00",
+        type: PncUpdateType.ARREST
+      },
+      {
+        hearingDate: "2025-08-15",
+        numberOffencesTakenIntoAccount: "4",
+        pleaStatus: "RESISTED",
+        verdict: "NOT GUILTY",
+        type: PncUpdateType.ADJUDICATION
+      },
+      {
+        disposalQualifiers: "Disposal qualifiers",
+        disposalQuantity: "Disposal quantity",
+        disposalText: "Disposal text",
+        disposalType: "10",
+        type: PncUpdateType.DISPOSAL
+      }
+    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
+
+    const expectedAdditionalOffences = [
+      {
+        asn: "1101ZD01410836V",
+        additionalOffences: [
+          {
+            courtOffenceSequenceNumber: 2,
+            cjsOffenceCode: "Offence reason",
+            committedOnBail: true,
+            plea: "Resisted",
+            adjudication: "Not Guilty",
+            dateOfSentence: "2025-08-15",
+            offenceTic: 4,
+            offenceStartDate: "2025-08-16",
+            offenceStartTime: "14:30+02:00",
+            offenceEndDate: "2025-08-17",
+            offenceEndTime: "14:30+02:00",
+            disposalResults: [
+              {
+                disposalCode: 10,
+                disposalQualifies: ["Disposal qualifiers"],
+                disposalText: "Disposal text"
+              }
+            ],
+            locationFsCode: "Offence location FS code",
+            locationText: "Offence location"
+          },
+          {
+            courtOffenceSequenceNumber: 2,
+            cjsOffenceCode: "Offence reason",
+            committedOnBail: true,
+            plea: "Resisted",
+            adjudication: "Not Guilty",
+            dateOfSentence: "2025-08-15",
+            offenceTic: 4,
+            offenceStartDate: "2025-08-16",
+            offenceStartTime: "14:30+02:00",
+            offenceEndDate: "2025-08-17",
+            offenceEndTime: "14:30+02:00",
+            disposalResults: [
+              {
+                disposalCode: 10,
+                disposalQualifies: ["Disposal qualifiers"],
+                disposalText: "Disposal text"
+              }
+            ],
+            locationFsCode: "Offence location FS code",
+            locationText: "Offence location"
+          }
+        ]
+      }
+    ]
+
+    const additionalOffences = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
+
+    expect(additionalOffences).toStrictEqual(expectedAdditionalOffences)
+  })
+})
