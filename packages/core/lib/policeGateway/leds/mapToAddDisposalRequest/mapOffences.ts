@@ -38,13 +38,11 @@ const mapOffences = (
     const disposalResults = disposals.map((disposal) => {
       const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
 
-      const disposalDuration = units ? { count, units } : {}
-
       return {
         disposalCode: Number(disposal.disposalType),
         disposalQualifies: [disposal.disposalQualifiers ?? ""],
         disposalText: disposal.disposalText ?? undefined,
-        ...disposalDuration,
+        ...(units && { disposalDuration: { count, units } }),
         disposalEffectiveDate,
         disposalFine: { amount }
       }
