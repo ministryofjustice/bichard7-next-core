@@ -478,6 +478,30 @@ jobs:
           paths:
             - images
 
+  build_audit_logging_images_job:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+    resource_class: medium
+    steps:
+      - run:
+          name: Clone bichard7-next-audit-logging
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
+      - run:
+          name: Build audit logging images
+          working_directory: ~/bichard7-next-audit-logging
+          command: make build-api-server build-event-handler-server
+      - run:
+          name: Save Docker images
+          command: |
+            mkdir -p images
+            docker image save -o "images/audit-log-api:latest" "audit-log-api:latest"
+            docker image save -o "images/event-handler:latest" "event-handler:latest"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
   test_common:
     machine:
       image: ubuntu-2204:current
@@ -931,6 +955,7 @@ workflows:
       - build_ui_image
       - build_user_service_image
       - build_api_image
+      - build_audit_logging_images_job
 
       - test_message_forwarder
       - test_postgres
