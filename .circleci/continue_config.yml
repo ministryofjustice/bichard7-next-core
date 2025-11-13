@@ -472,7 +472,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "api:latest" | gzip > "images/api:latest"
+            docker image save "api:latest" | gzip > "images/api.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
