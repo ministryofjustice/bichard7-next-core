@@ -33,8 +33,6 @@ const mapOffences = (
     const adjudication = group.find((el) => el.type === PncUpdateType.ADJUDICATION)
     const disposals = group.filter((el) => el.type === PncUpdateType.DISPOSAL)
 
-    const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
-
     const disposalResults = disposals.map((disposal) => {
       const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
 
@@ -47,14 +45,20 @@ const mapOffences = (
         disposalFine: { amount }
       }
     })
+    const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
+    const plea = adjudication?.pleaStatus ? (toTitleCase(adjudication?.pleaStatus) as Plea) : undefined
+    const adjudicationResult = adjudication?.verdict ? (toTitleCase(adjudication?.verdict) as Adjudication) : undefined
+    const offenceTic = adjudication?.numberOffencesTakenIntoAccount
+      ? Number(adjudication?.numberOffencesTakenIntoAccount)
+      : undefined
 
     return {
       courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
       cjsOffenceCode: ordinary?.offenceReason ?? "",
-      plea: toTitleCase(adjudication?.pleaStatus) as Plea,
-      adjudication: toTitleCase(adjudication?.verdict) as Adjudication,
+      plea,
+      adjudication: adjudicationResult,
       dateOfSentence: adjudication?.hearingDate,
-      offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
+      offenceTic,
       disposalResults,
       offenceId
     }

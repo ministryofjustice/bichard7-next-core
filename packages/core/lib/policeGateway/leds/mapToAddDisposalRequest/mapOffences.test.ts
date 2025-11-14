@@ -106,8 +106,9 @@ describe("mapOffences", () => {
 
     expect(offences[0]).toMatchObject({
       courtOffenceSequenceNumber: 1,
-      plea: "",
-      adjudication: "",
+      plea: undefined,
+      adjudication: undefined,
+      offenceTic: undefined,
       disposalResults: [],
       offenceId: "112233"
     })
