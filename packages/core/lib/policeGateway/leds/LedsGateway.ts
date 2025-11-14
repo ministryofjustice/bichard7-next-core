@@ -117,7 +117,10 @@ export default class LedsGateway implements PoliceGateway {
       }
 
       endpoint = endpoints.addDisposal(personId, courtCaseId)
-    } else if (request.operation === PncOperation.DISPOSAL_UPDATED) {
+    } else if (
+      request.operation === PncOperation.DISPOSAL_UPDATED ||
+      request.operation === PncOperation.SENTENCE_DEFERRED
+    ) {
       const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
 
       if (!courtCaseId) {
