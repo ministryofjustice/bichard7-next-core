@@ -19,6 +19,7 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { addDisposalRequestSchema } from "../../../schemas/leds/addDisposalRequest"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
+import { remandRequestSchema } from "../../../schemas/leds/remandRequest"
 import { subsequentDisposalResultsRequestSchema } from "../../../schemas/leds/subsequentDisposalResultsRequest"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
@@ -99,8 +100,13 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     if (request.operation === PncOperation.REMAND) {
-      requestBody = mapToRemandRequest(request.request)
       endpoint = endpoints.remand(personId, reportId)
+      requestBody = mapToRemandRequest(request.request)
+      const validationResult = remandRequestSchema.safeParse(requestBody)
+
+      if (!validationResult.success) {
+        return new PoliceApiError(["Failed to validate LEDS request."])
+      }
     } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
       const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
 
@@ -108,15 +114,13 @@ export default class LedsGateway implements PoliceGateway {
         return new PoliceApiError(["Failed to update LEDS due to missing data."])
       }
 
+      endpoint = endpoints.addDisposal(personId, courtCaseId)
       requestBody = mapToAddDisposalRequest(request.request, pncUpdateDataset)
-
       const validationResult = addDisposalRequestSchema.safeParse(requestBody)
 
       if (!validationResult.success) {
         return new PoliceApiError(["Failed to validate LEDS request."])
       }
-
-      endpoint = endpoints.addDisposal(personId, courtCaseId)
     } else if (
       request.operation === PncOperation.DISPOSAL_UPDATED ||
       request.operation === PncOperation.SENTENCE_DEFERRED
