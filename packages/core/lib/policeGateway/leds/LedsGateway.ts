@@ -14,10 +14,12 @@ import type { AsnQueryRequest } from "../../../types/leds/AsnQueryRequest"
 import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
+import type { SubsequentDisposalResultsRequest } from "../../../types/leds/SubsequentDisposalResultsRequest"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { addDisposalRequestSchema } from "../../../schemas/leds/addDisposalRequest"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
+import { subsequentDisposalResultsRequestSchema } from "../../../schemas/leds/subsequentDisposalResultsRequest"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
@@ -27,6 +29,7 @@ import { findCourtCaseId } from "./mapToAddDisposalRequest/findCourtCaseId"
 import mapToAddDisposalRequest from "./mapToAddDisposalRequest/mapToAddDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import mapToRemandRequest from "./mapToRemandRequest"
+import mapToSubsequentDisposalRequest from "./mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -87,7 +90,7 @@ export default class LedsGateway implements PoliceGateway {
     pncUpdateDataset: PncUpdateDataset
   ): Promise<PoliceApiError | void> {
     let endpoint: string
-    let requestBody: AddDisposalRequest | RemandRequest
+    let requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest
     const personId = pncUpdateDataset.PncQuery?.personId
     const reportId = pncUpdateDataset.PncQuery?.reportId
 
@@ -114,6 +117,22 @@ export default class LedsGateway implements PoliceGateway {
       }
 
       endpoint = endpoints.addDisposal(personId, courtCaseId)
+    } else if (request.operation === PncOperation.DISPOSAL_UPDATED) {
+      const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
+
+      if (!courtCaseId) {
+        return new PoliceApiError(["Failed to update LEDS due to missing data."])
+      }
+
+      requestBody = mapToSubsequentDisposalRequest(request.request, pncUpdateDataset)
+
+      const validationResult = subsequentDisposalResultsRequestSchema.safeParse(requestBody)
+
+      if (!validationResult.success) {
+        return new PoliceApiError(["Failed to validate LEDS request."])
+      }
+
+      endpoint = endpoints.subsequentDisposalResults(personId, courtCaseId)
     } else {
       return new PoliceApiError(["Invalid LEDS update operation."])
     }
