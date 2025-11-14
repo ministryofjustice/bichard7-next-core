@@ -7,6 +7,7 @@ export type LedsMockOptions = PoliceApiRequestMockOptions & {
   count?: number
   personId?: string
   reportId?: string
+  courtCaseId?: string
 }
 
 export type LedsMock = PartialPoliceApiRequestMock &
