@@ -12,12 +12,13 @@ export const buildNormalDisposalRequest = (
     pncIdentifier: "22/858J",
     pncCheckName: "Pnc check name",
     courtCaseReferenceNumber: "98/2048/633Y",
+    arrestSummonsNumber: "11/01ZD/01/1448754K",
     psaCourtCode,
     courtHouseName: "Court house name",
-    dateOfHearing: "2025-08-12",
+    dateOfHearing: "12082025",
     generatedPNCFilename: "",
     pendingPsaCourtCode,
-    pendingCourtDate: "2025-08-13",
+    pendingCourtDate: "13082025",
     pendingCourtHouseName: "Pending court house name",
     preTrialIssuesUniqueReferenceNumber: "121212",
     hearingsAdjudicationsAndDisposals: [
@@ -27,7 +28,7 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ORDINARY
       },
       {
-        hearingDate: "2025-08-14",
+        hearingDate: "14082025",
         numberOffencesTakenIntoAccount: "3",
         pleaStatus: "NO PLEA TAKEN",
         verdict: "NON-CONVICTION",
@@ -53,7 +54,7 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ORDINARY
       },
       {
-        hearingDate: "2025-08-14",
+        hearingDate: "14082025",
         numberOffencesTakenIntoAccount: "3",
         pleaStatus: "NO PLEA TAKEN",
         verdict: "NON-CONVICTION",
@@ -82,14 +83,14 @@ export const buildNormalDisposalRequest = (
         offenceLocationFSCode: "Offence location FS code",
         offenceReason: "Offence reason",
         offenceReasonSequence: "1",
-        offenceStartDate: "2025-08-16",
-        offenceStartTime: "14:30+02:00",
-        offenceEndDate: "2025-08-17",
-        offenceEndTime: "14:30+02:00",
+        offenceStartDate: "16082025",
+        offenceStartTime: "1430",
+        offenceEndDate: "17082025",
+        offenceEndTime: "1445",
         type: PncUpdateType.ARREST
       },
       {
-        hearingDate: "2025-08-15",
+        hearingDate: "15082025",
         numberOffencesTakenIntoAccount: "4",
         pleaStatus: "RESISTED",
         verdict: "NOT GUILTY",
@@ -109,14 +110,14 @@ export const buildNormalDisposalRequest = (
         offenceLocationFSCode: "Offence location FS code",
         offenceReason: "Offence reason",
         offenceReasonSequence: "1",
-        offenceStartDate: "2025-08-16",
-        offenceStartTime: "14:30+02:00",
-        offenceEndDate: "2025-08-17",
-        offenceEndTime: "14:30+02:00",
+        offenceStartDate: "16082025",
+        offenceStartTime: "1430",
+        offenceEndDate: "17082025",
+        offenceEndTime: "1445",
         type: PncUpdateType.ARREST
       },
       {
-        hearingDate: "2025-08-15",
+        hearingDate: "15082025",
         numberOffencesTakenIntoAccount: "4",
         pleaStatus: "RESISTED",
         verdict: "NOT GUILTY",

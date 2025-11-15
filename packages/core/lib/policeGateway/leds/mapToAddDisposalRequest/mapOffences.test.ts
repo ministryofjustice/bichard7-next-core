@@ -22,7 +22,7 @@ describe("mapOffences", () => {
         disposalResults: [
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -35,7 +35,7 @@ describe("mapOffences", () => {
           },
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -59,7 +59,7 @@ describe("mapOffences", () => {
         disposalResults: [
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -72,7 +72,7 @@ describe("mapOffences", () => {
           },
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -133,7 +133,7 @@ describe("mapOffences", () => {
 
     const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
 
-    expect(offences[0].disposalResults?.[0].disposalQualifies).toEqual([""])
+    expect(offences[0].disposalResults?.[0].disposalQualifiers).toEqual([""])
     expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
   })
 

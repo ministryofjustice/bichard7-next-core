@@ -6,6 +6,7 @@ import {
   type PncUpdateCourtHearingAdjudicationAndDisposal,
   PncUpdateType
 } from "../../../../phase3/types/HearingDetails"
+import convertPncDateTimeToLedsDateTime from "./convertPncDateTimeToLedsDateTime"
 import { findOffenceId } from "./findOffenceId"
 import { parseDisposalQuantity } from "./parseDisposalQuantity"
 import { toTitleCase } from "./toTitleCase"
@@ -38,7 +39,7 @@ const mapOffences = (
 
       return {
         disposalCode: Number(disposal.disposalType),
-        disposalQualifies: [disposal.disposalQualifiers ?? ""],
+        disposalQualifiers: [disposal.disposalQualifiers ?? ""],
         disposalText: disposal.disposalText ?? undefined,
         ...(units && { disposalDuration: { count, units } }),
         disposalEffectiveDate,
@@ -57,7 +58,9 @@ const mapOffences = (
       cjsOffenceCode: ordinary?.offenceReason ?? "",
       plea,
       adjudication: adjudicationResult,
-      dateOfSentence: adjudication?.hearingDate,
+      dateOfSentence: adjudication?.hearingDate
+        ? convertPncDateTimeToLedsDateTime(adjudication.hearingDate).date
+        : undefined,
       offenceTic,
       disposalResults,
       offenceId

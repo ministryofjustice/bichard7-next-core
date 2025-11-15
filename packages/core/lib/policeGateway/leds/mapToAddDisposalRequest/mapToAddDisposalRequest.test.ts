@@ -51,7 +51,7 @@ describe("mapToNormalDisposalRequest", () => {
             disposalDuration,
             disposalFine,
             disposalEffectiveDate,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text"
           },
           {
@@ -59,7 +59,7 @@ describe("mapToNormalDisposalRequest", () => {
             disposalDuration,
             disposalFine,
             disposalEffectiveDate,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text"
           }
         ],
@@ -78,7 +78,7 @@ describe("mapToNormalDisposalRequest", () => {
             disposalDuration,
             disposalFine,
             disposalEffectiveDate,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text"
           },
           {
@@ -86,7 +86,7 @@ describe("mapToNormalDisposalRequest", () => {
             disposalDuration,
             disposalFine,
             disposalEffectiveDate,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["Disposal qualifiers"],
             disposalText: "Disposal text"
           }
         ],
@@ -95,7 +95,7 @@ describe("mapToNormalDisposalRequest", () => {
     ],
     additionalArrestOffences: [
       {
-        asn: "",
+        asn: "11/01ZD/01/1448754K",
         additionalOffences: [
           {
             courtOffenceSequenceNumber: 2,
@@ -106,13 +106,13 @@ describe("mapToNormalDisposalRequest", () => {
             dateOfSentence: "2025-08-15",
             offenceTic: 4,
             offenceStartDate: "2025-08-16",
-            offenceStartTime: "14:30+02:00",
+            offenceStartTime: "14:30+01:00",
             offenceEndDate: "2025-08-17",
-            offenceEndTime: "14:30+02:00",
+            offenceEndTime: "14:45+01:00",
             disposalResults: [
               {
                 disposalCode: 10,
-                disposalQualifies: ["Disposal qualifiers"],
+                disposalQualifiers: ["Disposal qualifiers"],
                 disposalText: "Disposal text"
               }
             ],
@@ -128,13 +128,13 @@ describe("mapToNormalDisposalRequest", () => {
             dateOfSentence: "2025-08-15",
             offenceTic: 4,
             offenceStartDate: "2025-08-16",
-            offenceStartTime: "14:30+02:00",
+            offenceStartTime: "14:30+01:00",
             offenceEndDate: "2025-08-17",
-            offenceEndTime: "14:30+02:00",
+            offenceEndTime: "14:45+01:00",
             disposalResults: [
               {
                 disposalCode: 10,
-                disposalQualifies: ["Disposal qualifiers"],
+                disposalQualifiers: ["Disposal qualifiers"],
                 disposalText: "Disposal text"
               }
             ],

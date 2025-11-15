@@ -62,7 +62,7 @@ const convertDuration = (duration?: DisposalDuration): string | undefined => {
 
 const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDisposal[] =>
   disposalResults.map((disposalResult) => {
-    let qualifiers = disposalResult.disposalQualifies?.join("") ?? ""
+    let qualifiers = disposalResult.disposalQualifiers?.join("") ?? ""
     qualifiers +=
       " ".repeat(Math.max(0, DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4 - qualifiers.length)) +
       convertDuration(disposalResult.disposalQualifierDuration)

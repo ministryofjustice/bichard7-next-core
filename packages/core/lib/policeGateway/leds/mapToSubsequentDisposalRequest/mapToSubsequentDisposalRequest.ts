@@ -7,6 +7,7 @@ import type {
   SubsequentDisposalResultsRequest
 } from "../../../../types/leds/SubsequentDisposalResultsRequest"
 
+import convertPncDateTimeToLedsDateTime from "../mapToAddDisposalRequest/convertPncDateTimeToLedsDateTime"
 import mapCourt from "../mapToAddDisposalRequest/mapCourt"
 import mapOffences from "../mapToAddDisposalRequest/mapOffences"
 
@@ -20,7 +21,7 @@ const mapToSubsequentDisposalRequest = (
     checkName: pncRequest.pncCheckName ?? "",
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.courtCode, null),
-    appearanceDate: pncRequest.hearingDate,
+    appearanceDate: convertPncDateTimeToLedsDateTime(pncRequest.hearingDate).date,
     reasonForAppearance: pncRequest.hearingType as reasonForAppearance,
     offences: mapOffences(pncRequest.hearingDetails, pncUpdateDataset, pncRequest.courtCaseReferenceNumber)
   }

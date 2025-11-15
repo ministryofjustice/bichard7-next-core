@@ -10,7 +10,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
     forceStationCode: "07A1",
     courtCaseReferenceNumber: "98/2048/633Y",
     courtCode: "Court code",
-    hearingDate: "2025-08-12",
+    hearingDate: "12082025",
     hearingType: "Sentenced Deferred",
     pncCheckName: "Pnc check name",
     pncIdentifier: "22/858J",
@@ -21,7 +21,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
         type: PncUpdateType.ORDINARY
       },
       {
-        hearingDate: "2025-08-14",
+        hearingDate: "14082025",
         numberOffencesTakenIntoAccount: "3",
         pleaStatus: "NO PLEA TAKEN",
         verdict: "NON-CONVICTION",

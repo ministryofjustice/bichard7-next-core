@@ -31,7 +31,7 @@ describe("mapToSubsequentDisposalRequest", () => {
           disposalResults: [
             {
               disposalCode: 10,
-              disposalQualifies: ["Disposal qualifiers"],
+              disposalQualifiers: ["Disposal qualifiers"],
               disposalText: "Disposal text",
               disposalDuration: {
                 count: 123,
@@ -93,7 +93,7 @@ describe("mapToSubsequentDisposalRequest", () => {
           disposalResults: [
             {
               disposalCode: 10,
-              disposalQualifies: ["A"],
+              disposalQualifiers: ["A"],
               disposalText: "Disposal text",
               disposalDuration: {
                 count: 123,

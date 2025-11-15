@@ -4,10 +4,11 @@ import {
   type PncUpdateArrestHearingAdjudicationAndDisposal,
   PncUpdateType
 } from "../../../../phase3/types/HearingDetails"
+import convertPncDateTimeToLedsDateTime from "./convertPncDateTimeToLedsDateTime"
 import { toTitleCase } from "./toTitleCase"
 
 const mapAdditionalArrestOffences = (
-  asn: null | string,
+  asn: string,
   arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[]
 ): AdditionalArrestOffences[] => {
   const offenceGroups = arrestsAdjudicationsAndDisposals.reduce<PncUpdateArrestHearingAdjudicationAndDisposal[][]>(
@@ -30,9 +31,25 @@ const mapAdditionalArrestOffences = (
     const committedOnBail = arrest?.committedOnBail?.toLowerCase() === "y"
     const disposalResults = disposals.map((disposal) => ({
       disposalCode: Number(disposal.disposalType),
-      disposalQualifies: [disposal.disposalQualifiers ?? ""],
+      disposalQualifiers: [disposal.disposalQualifiers ?? ""],
       disposalText: disposal?.disposalText ?? undefined
     }))
+
+    let offenceStartDate = ""
+    let offenceStartTime = undefined
+    if (arrest?.offenceStartDate) {
+      const { date, time } = convertPncDateTimeToLedsDateTime(arrest.offenceStartDate, arrest.offenceStartTime)
+      offenceStartDate = date
+      offenceStartTime = time
+    }
+
+    let offenceEndDate = undefined
+    let offenceEndTime = undefined
+    if (arrest?.offenceEndDate) {
+      const { date, time } = convertPncDateTimeToLedsDateTime(arrest.offenceEndDate, arrest.offenceEndTime)
+      offenceEndDate = date
+      offenceEndTime = time
+    }
 
     return {
       courtOffenceSequenceNumber: Number(arrest?.courtOffenceSequenceNumber),
@@ -40,12 +57,14 @@ const mapAdditionalArrestOffences = (
       committedOnBail,
       plea: toTitleCase(adjudication?.pleaStatus) as Plea,
       adjudication: toTitleCase(adjudication?.verdict) as Adjudication,
-      dateOfSentence: adjudication?.hearingDate,
+      dateOfSentence: adjudication?.hearingDate
+        ? convertPncDateTimeToLedsDateTime(adjudication.hearingDate).date
+        : undefined,
       offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
-      offenceStartDate: arrest?.offenceStartDate ?? "",
-      offenceStartTime: arrest?.offenceStartTime,
-      offenceEndDate: arrest?.offenceEndDate,
-      offenceEndTime: arrest?.offenceEndTime,
+      offenceStartDate,
+      offenceStartTime,
+      offenceEndDate,
+      offenceEndTime,
       disposalResults,
       locationFsCode: arrest?.offenceLocationFSCode ?? "",
       locationText: arrest?.locationOfOffence
@@ -54,7 +73,7 @@ const mapAdditionalArrestOffences = (
 
   return [
     {
-      asn: asn ?? "",
+      asn,
       additionalOffences
     }
   ]
