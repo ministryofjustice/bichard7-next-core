@@ -1,4 +1,3 @@
-import { expect } from "expect"
 import type { AuditLog, AuditLogEvent } from "../helpers/AuditLogApiHelper"
 import { isError } from "./isError"
 import Poller from "./Poller"
@@ -84,11 +83,24 @@ export const checkAuditLogExists = async (context: Bichard, eventType: string, c
     throw new Error("Current correlation ID is false")
   }
 
-  const checkEventResult = await checkEventByExternalCorrelationId(
-    context,
-    context.currentCorrelationId,
-    eventType,
-    contains
-  )
-  expect(isError(checkEventResult)).toBeFalsy()
+  let attempts = 0
+  const maxNumberOfAttempts = 5
+  let checkEventResult: void
+
+  while (attempts <= maxNumberOfAttempts) {
+    checkEventResult = await checkEventByExternalCorrelationId(
+      context,
+      context.currentCorrelationId,
+      eventType,
+      contains
+    )
+    if (!isError(checkEventResult)) {
+      return checkEventResult
+    }
+
+    attempts++
+    await new Promise((resolve) => setTimeout(resolve, 500))
+  }
+
+  throw checkEventResult
 }
