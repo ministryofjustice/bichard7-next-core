@@ -39,7 +39,7 @@ const mapOffences = (
 
       return {
         disposalCode: Number(disposal.disposalType),
-        disposalQualifiers: [disposal.disposalQualifiers ?? ""],
+        disposalQualifiers: disposal.disposalQualifiers ? [disposal.disposalQualifiers] : [],
         disposalText: disposal.disposalText ?? undefined,
         ...(units && { disposalDuration: { count, units } }),
         disposalEffectiveDate,
