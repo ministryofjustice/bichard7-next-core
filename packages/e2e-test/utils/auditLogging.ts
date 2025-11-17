@@ -84,11 +84,11 @@ export const checkAuditLogExists = async (context: Bichard, eventType: string, c
     throw new Error("Current correlation ID is false")
   }
 
-  let attempts = 0
+  let attempt = 1
   const maxNumberOfAttempts = 5
   let checkEventResult: void
 
-  while (attempts <= maxNumberOfAttempts) {
+  while (attempt <= maxNumberOfAttempts) {
     checkEventResult = await checkEventByExternalCorrelationId(
       context,
       context.currentCorrelationId,
@@ -99,7 +99,8 @@ export const checkAuditLogExists = async (context: Bichard, eventType: string, c
       return checkEventResult
     }
 
-    attempts++
+    console.log(`checkAuditLogExists failed (Attempt ${attempt})`)
+    attempt++
     await new Promise((resolve) => setTimeout(resolve, 500))
   }
 
