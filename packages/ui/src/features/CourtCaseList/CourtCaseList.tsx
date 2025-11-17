@@ -64,7 +64,11 @@ const CourtCaseList: React.FC<Props> = ({
           <span className="govuk-visually-hidden">{"Column headers with buttons are sortable."}</span>
         </caption>
         <TableHead>
-          <CourtCaseListTableHeader order={order} displayAuditQuality={displayAuditQuality} />
+          <CourtCaseListTableHeader
+            order={order}
+            displayAuditQuality={displayAuditQuality}
+            courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
+          />
         </TableHead>
         {courtCases.map((courtCase) => (
           <CourtCaseListEntry

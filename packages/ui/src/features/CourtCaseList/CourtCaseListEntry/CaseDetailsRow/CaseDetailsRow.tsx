@@ -27,8 +27,17 @@ export const CaseDetailsRow = ({
   displayAuditQuality,
   courtDateReceivedDateMismatch
 }: CaseDetailsRowProps) => {
-  const { notes, defendantName, errorId, courtDate, courtName, ptiurn, errorQualityChecked, triggerQualityChecked } =
-    courtCase
+  const {
+    notes,
+    defendantName,
+    errorId,
+    courtDate,
+    courtName,
+    ptiurn,
+    errorQualityChecked,
+    triggerQualityChecked,
+    messageReceivedTimestamp
+  } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
@@ -51,7 +60,7 @@ export const CaseDetailsRow = ({
         </TableCell>
         <ConditionalRender isRendered={courtDateReceivedDateMismatch}>
           <TableCell rowSpan={showPreview ? 2 : 3}>
-            <DateTime date={courtDate} dateFormat={displayedDateFormat} />
+            <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
           </TableCell>
         </ConditionalRender>
         <TableCell rowSpan={showPreview ? 2 : 3}>{courtName}</TableCell>
