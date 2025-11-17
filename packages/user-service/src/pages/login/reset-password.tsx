@@ -1,45 +1,44 @@
-import Button from "components/Button"
-import Layout from "components/Layout"
-import Head from "next/head"
-import TextInput from "components/TextInput"
-import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import BackLink from "components/BackLink"
-import ErrorSummary from "components/ErrorSummary/ErrorSummary"
-import getConnection from "lib/getConnection"
-import { isError } from "types/Result"
-import createRedirectResponse from "utils/createRedirectResponse"
-import Form from "components/Form"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
-import { withCsrf } from "middleware"
-import { isGet, isPost } from "utils/http"
-import { ParsedUrlQuery } from "querystring"
-import { ErrorSummaryList } from "components/ErrorSummary"
-import config from "lib/config"
-import { removeCjsmSuffix } from "lib/cjsmSuffix"
-import sendVerificationCodeEmail from "useCases/sendVerificationCodeEmail"
-import Database from "types/Database"
-import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import Link from "components/Link"
-import getAuditLogger from "lib/getAuditLogger"
-import logger from "utils/logger"
-import passwordSecurityCheck from "useCases/passwordSecurityCheck"
-import resetPassword, { ResetPasswordOptions } from "useCases/resetPassword"
-import ServiceMessages from "components/ServiceMessages"
-import ServiceMessage from "types/ServiceMessage"
-import getServiceMessages from "useCases/getServiceMessages"
-import Paragraph from "components/Paragraph"
-import GridColumn from "components/GridColumn"
-import React from "react"
-import GridRow from "components/GridRow"
 import BulletList from "components/BulletList"
+import Button from "components/Button"
 import ContactLink from "components/ContactLink"
-import { getEmailAddressFromCookie, removeEmailAddressCookie, storeEmailAddressInCookie } from "useCases"
+import { ErrorSummaryList } from "components/ErrorSummary"
+import ErrorSummary from "components/ErrorSummary/ErrorSummary"
+import Form from "components/Form"
+import GridColumn from "components/GridColumn"
+import GridRow from "components/GridRow"
+import Layout from "components/Layout"
+import Link from "components/Link"
+import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
 import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 import ValidateCodeForm from "components/Login/ValidateCodeForm"
-import ResendSecurityCodeForm from "components/Login/ResendSecurityCodeForm"
+import Paragraph from "components/Paragraph"
+import ServiceMessages from "components/ServiceMessages"
+import TextInput from "components/TextInput"
+import { removeCjsmSuffix } from "lib/cjsmSuffix"
+import config from "lib/config"
+import getAuditLogger from "lib/getAuditLogger"
+import getConnection from "lib/getConnection"
 import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
-import UserAuthBichard from "../../types/UserAuthBichard"
+import { withCsrf } from "middleware"
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
+import Head from "next/head"
+import { ParsedUrlQuery } from "querystring"
+import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
+import Database from "types/Database"
+import { isError } from "types/Result"
+import ServiceMessage from "types/ServiceMessage"
+import { getEmailAddressFromCookie, removeEmailAddressCookie, storeEmailAddressInCookie } from "useCases"
+import getServiceMessages from "useCases/getServiceMessages"
+import passwordSecurityCheck from "useCases/passwordSecurityCheck"
+import resetPassword, { ResetPasswordOptions } from "useCases/resetPassword"
+import sendVerificationCodeEmail from "useCases/sendVerificationCodeEmail"
+import createRedirectResponse from "utils/createRedirectResponse"
+import { isGet, isPost } from "utils/http"
+import logger from "utils/logger"
 import { handleResetSecurityCodeStage } from "../../lib/handleResetSecurityCodeStage"
+import UserAuthBichard from "../../types/UserAuthBichard"
 
 const handleEmailStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
@@ -67,7 +66,8 @@ const handleEmailStage = async (
         emailAddress,
         emailError,
         resetStage: "email",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -81,7 +81,8 @@ const handleEmailStage = async (
       props: {
         csrfToken,
         emailAddress: normalisedEmail,
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -95,7 +96,8 @@ const handleEmailStage = async (
       emailAddress: normalisedEmail,
       resetStage: "validateCode",
       validationCode: "",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+      incorrectDelay: config.incorrectDelay
     }
   }
 }
@@ -145,7 +147,8 @@ const handleNewPasswordStage = async (
         serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
         ...(invalidPassword && { invalidPassword: true }),
         ...(passwordsMismatch && { passwordsMismatch: true }),
-        ...(passwordInsecure && { passwordInsecure: true, passwordInsecureMessage })
+        ...(passwordInsecure && { passwordInsecure: true, passwordInsecureMessage }),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -172,7 +175,8 @@ const handleNewPasswordStage = async (
         passwordInsecure: true,
         passwordInsecureMessage: resetPasswordResult,
         resetStage: "newPassword",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -181,7 +185,8 @@ const handleNewPasswordStage = async (
     props: {
       csrfToken,
       resetStage: "success",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+      incorrectDelay: config.incorrectDelay
     }
   }
 }
@@ -212,7 +217,8 @@ const handlePost = async (
           emailAddress,
           validationCode,
           resetStage: "newPassword",
-          serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+          serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+          incorrectDelay: config.incorrectDelay
         }
       })
     }
@@ -250,7 +256,8 @@ const handleGet = (
         csrfToken,
         emailAddress: inProgressEmailAddress,
         resetStage: "resetSecurityCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -267,7 +274,8 @@ const handleGet = (
         emailAddress: email,
         resetStage: "validateCode",
         validationCode: "",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -275,7 +283,8 @@ const handleGet = (
     props: {
       csrfToken,
       resetStage: "email",
-      serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+      serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+      incorrectDelay: config.incorrectDelay
     }
   }
 }
@@ -317,6 +326,7 @@ interface Props {
   passwordInsecure?: boolean
   passwordInsecureMessage?: string
   serviceMessages: ServiceMessage[]
+  incorrectDelay: number
 }
 
 const ForgotPassword = ({
