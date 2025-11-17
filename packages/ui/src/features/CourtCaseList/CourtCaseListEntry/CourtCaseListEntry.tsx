@@ -16,6 +16,7 @@ interface Props {
   triggerHasBeenRecentlyUnlocked: boolean
   previousPath: string | null
   displayAuditQuality: boolean
+  courtDateReceivedDateMismatch: boolean
 }
 
 const CourtCaseListEntry: React.FC<Props> = ({
@@ -23,7 +24,8 @@ const CourtCaseListEntry: React.FC<Props> = ({
   exceptionHasBeenRecentlyUnlocked,
   triggerHasBeenRecentlyUnlocked,
   previousPath,
-  displayAuditQuality
+  displayAuditQuality,
+  courtDateReceivedDateMismatch
 }: Props) => {
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
@@ -61,6 +63,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
         lockTag={exceptionsCells?.LockTag ?? triggerCells?.LockTag}
         previousPath={previousPath}
         displayAuditQuality={displayAuditQuality}
+        courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
       />
       {renderExtraReasons && (
         <ExtraReasonRow

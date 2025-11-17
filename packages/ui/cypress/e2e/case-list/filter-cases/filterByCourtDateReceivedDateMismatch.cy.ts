@@ -55,6 +55,9 @@ describe("Filtering cases by court date received date mismatch", () => {
     cy.get(".moj-scrollable-pane tbody tr").should("have.length", 2)
     cy.contains("Case00002")
     cy.contains("Case00003")
+    cy.get("#received-date-sort").contains("Received date")
+    cy.contains("16/10/2013")
+    cy.contains("26/03/2008")
   })
 })
 

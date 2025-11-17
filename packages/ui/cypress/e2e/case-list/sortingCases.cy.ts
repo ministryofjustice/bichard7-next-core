@@ -9,6 +9,15 @@ const checkCasesOrder = (expectedOrder: number[]) => {
     })
 }
 
+const checkCasesOrderWithReceivedDate = (expectedOrder: number[]) => {
+  cy.get("tbody td:nth-child(5)")
+    .should("have.length", expectedOrder.length)
+    .should((elems) => {
+      const actualOrder = elems.toArray().map((el) => el.innerText)
+      expect(actualOrder).to.deep.equal(expectedOrder.map((item) => `Case0000${item}`))
+    })
+}
+
 const checkPtiurnOrder = (expectedOrder: string[]) => {
   cy.get("tbody td:nth-child(4)")
     .should("have.length", expectedOrder.length)
@@ -136,5 +145,26 @@ describe("Sorting cases", () => {
     // Sort descending by PTIURN
     cy.get("#ptiurn-sort").find(".upArrow").click()
     checkPtiurnOrder(descending)
+  })
+
+  it("Should sort by received date", () => {
+    const receivedDates = [new Date("09/12/2021"), new Date("04/01/2022"), new Date("01/07/2020")]
+    cy.task("insertCourtCasesWithFields", [
+      ...receivedDates.map((receivedDate) => ({
+        messageReceivedTimestamp: receivedDate,
+        defendantName: "WAYNE Bruce",
+        orgForPoliceFilter: "011111"
+      }))
+    ])
+
+    loginAndVisit()
+    cy.get("#court-date-received-date-mismatch").click()
+    cy.get("#search").click()
+
+    cy.get("#received-date-sort").find(".unorderedArrow").click()
+    checkCasesOrderWithReceivedDate([2, 0, 1])
+
+    cy.get("#received-date-sort").find(".upArrow").click()
+    checkCasesOrderWithReceivedDate([1, 0, 2])
   })
 })
