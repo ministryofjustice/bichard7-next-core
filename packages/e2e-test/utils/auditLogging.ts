@@ -1,3 +1,4 @@
+import { expect } from "expect"
 import type { AuditLog, AuditLogEvent } from "../helpers/AuditLogApiHelper"
 import { isError } from "./isError"
 import Poller from "./Poller"
@@ -102,5 +103,5 @@ export const checkAuditLogExists = async (context: Bichard, eventType: string, c
     await new Promise((resolve) => setTimeout(resolve, 500))
   }
 
-  throw checkEventResult
+  expect(isError(checkEventResult)).toBeFalsy()
 }
