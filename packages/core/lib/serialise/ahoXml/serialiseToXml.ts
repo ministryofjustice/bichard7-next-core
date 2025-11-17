@@ -503,6 +503,7 @@ const mapAhoCXE01ToXml = (pncQuery: PoliceQueryResult): Cxe01 => ({
     pncQuery.courtCases && pncQuery.courtCases.length > 0
       ? {
           CourtCase: pncQuery.courtCases?.map((c) => ({
+            ...(c.courtCaseId ? { "@_CourtCaseId": c.courtCaseId } : {}),
             CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
             Offences: {
               Offence: mapAhoPncOffencesToXml(c.offences)

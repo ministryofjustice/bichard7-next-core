@@ -19,6 +19,7 @@ import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPha
 import { Phase2ResultType } from "../../phase2/types/Phase2Result"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import persistPhase2 from "./persistPhase2"
+
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
 
@@ -47,6 +48,10 @@ describe("persistPhase2", () => {
   beforeEach(async () => {
     await sql`DELETE FROM br7own.error_list`
     mockPutFileToS3.default = putFileToS3
+  })
+
+  afterAll(async () => {
+    await sql.end()
   })
 
   describe("When record exists in the database", () => {

@@ -80,11 +80,21 @@ interface Filters {
   reasonCodes?: string[]
   courtDateRange?: DateRange | DateRange[]
   resolvedByUsername?: string
+  courtDateReceivedDateMismatch?: boolean
 }
 
 const filters = (
   query: SelectQueryBuilder<CourtCase>,
-  { defendantName, courtName, ptiurn, asn, reasonCodes, courtDateRange, resolvedByUsername }: Filters
+  {
+    defendantName,
+    courtName,
+    ptiurn,
+    asn,
+    reasonCodes,
+    courtDateRange,
+    resolvedByUsername,
+    courtDateReceivedDateMismatch
+  }: Filters
 ): SelectQueryBuilder<CourtCase> => {
   // Filters
   if (defendantName) {
@@ -177,6 +187,10 @@ const filters = (
     )
   }
 
+  if (courtDateReceivedDateMismatch) {
+    query.andWhere("courtCase.courtDate <> DATE(courtCase.messageReceivedTimestamp)")
+  }
+
   return query
 }
 
@@ -243,7 +257,8 @@ const listCourtCases = async (
     reasonCodes,
     resolvedByUsername,
     resolvedDateRange,
-    asn
+    asn,
+    courtDateReceivedDateMismatch
   }: CaseListQueryParams,
   user: User,
   selectColumns: string[] = config.CaseListQuery
@@ -259,7 +274,16 @@ const listCourtCases = async (
 
   query = caseSortOrder(query, order, orderBy)
 
-  query = filters(query, { defendantName, courtName, ptiurn, asn, reasonCodes, courtDateRange, resolvedByUsername })
+  query = filters(query, {
+    defendantName,
+    courtName,
+    ptiurn,
+    asn,
+    reasonCodes,
+    courtDateRange,
+    resolvedByUsername,
+    courtDateReceivedDateMismatch
+  })
 
   // Existing filters
   query = filterByReasonAndResolutionStatus(query, user, reason, reasonCodes, caseState, resolvedByUsername)

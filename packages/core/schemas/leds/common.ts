@@ -35,12 +35,14 @@ export const pleaSchema = z.enum(["Not Known", "Guilty", "Not Guilty", "No Plea 
 
 export const adjudicationSchema = z.enum(["Guilty", "Not Guilty", "Non-Conviction", ""])
 
-const disposalDurationSchema = z.object({
-  units: z.enum(["life", "years", "months", "weeks", "days", "hours"]),
+export const disposalDurationUnitSchema = z.enum(["life", "years", "months", "weeks", "days", "hours"])
+
+export const disposalDurationSchema = z.object({
+  units: disposalDurationUnitSchema,
   count: z.number()
 })
 
-const disposalFineSchema = z.object({
+export const disposalFineSchema = z.object({
   amount: z.number(),
   units: z.number().optional()
 })
@@ -61,7 +63,7 @@ export const baseOffenceSchema = z.object({
     .string()
     .regex(/^([0-9]{1,3}\.){1,2}[0-9]{1,3}(\.[0-9]{1,3})?$/)
     .optional(),
-  cjsOffenceCode: z.string().max(8),
+  cjsOffenceCode: z.string().min(1).max(8),
   roleQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   plea: pleaSchema.optional(),
@@ -76,5 +78,5 @@ export const baseOffenceSchema = z.object({
 export const offenceSchema = baseOffenceSchema.extend({
   adjudication: adjudicationSchema.optional(),
   offenceStartDate: dateStringSchema.optional(),
-  offenceId: z.string()
+  offenceId: z.string().nonempty()
 })

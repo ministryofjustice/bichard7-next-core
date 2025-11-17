@@ -38,6 +38,10 @@ describe("persistPhase3", () => {
     mockPutFileToS3.default = putFileToS3
   })
 
+  afterAll(async () => {
+    await sql.end()
+  })
+
   it("should write triggers to the database if they are raised", async () => {
     const phase1Result = String(fs.readFileSync("phase3/tests/fixtures/input-message-001-phase3-result.json"))
     const s3TaskDataPath = "trigger.xml"

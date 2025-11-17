@@ -40,6 +40,7 @@ export const policeOffenceSchema = z.object({
 })
 
 export const policeCourtCaseSchema = z.object({
+  courtCaseId: z.string().optional(),
   courtCaseReference: z.string(),
   crimeOffenceReference: z.string().optional(),
   offences: z.array(policeOffenceSchema)

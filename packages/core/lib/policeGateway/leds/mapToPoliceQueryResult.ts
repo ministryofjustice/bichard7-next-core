@@ -88,6 +88,7 @@ const mapToPoliceOffences = (offences: LedsOffence[]): PoliceOffence[] =>
 
 const mapToPoliceCourtCases = (disposals: LedsDisposal[]): PoliceCourtCase[] =>
   disposals.map((disposal) => ({
+    courtCaseId: disposal.courtCaseId,
     courtCaseReference: disposal.courtCaseReference,
     offences: mapToPoliceOffences(disposal.offences),
     crimeOffenceReference: undefined
