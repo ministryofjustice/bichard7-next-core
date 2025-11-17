@@ -7,6 +7,7 @@ import type {
 } from "../../../types/leds/RemandRequest"
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
+import convertPncDateTimeToLedsDateTime from "./mapToAddDisposalRequest/convertPncDateTimeToLedsDateTime"
 
 const remandStatusByPncCode: Record<string, AppearanceResult> = {
   B: "remanded-on-bail",
@@ -36,7 +37,7 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
   const { nextHearingDate, psaCourtCode, courtNameType2 } = data
 
   return {
-    date: nextHearingDate,
+    date: convertPncDateTimeToLedsDateTime(nextHearingDate).date,
     court:
       psaCourtCode === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
         ? {
@@ -57,7 +58,7 @@ const mapToRemandRequest = (request: RemandPncUpdateRequest["request"]): RemandR
     ownerCode: forceStationCode,
     checkname: pncCheckName ?? "",
     personUrn: pncIdentifier ?? "",
-    remandDate: hearingDate,
+    remandDate: convertPncDateTimeToLedsDateTime(hearingDate).date,
     appearanceResult: remandStatusByPncCode[pncRemandStatus],
     bailConditions: bailConditions,
     currentAppearance: mapToCurrentAppearance(request),

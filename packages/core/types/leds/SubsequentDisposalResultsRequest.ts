@@ -5,5 +5,5 @@ import type {
   subsequentDisposalResultsRequestSchema
 } from "../../schemas/leds/subsequentDisposalResultsRequest"
 
-export type reasonForAppearance = z.infer<typeof reasonForAppearanceSchema>
+export type ReasonForAppearance = z.infer<typeof reasonForAppearanceSchema>
 export type SubsequentDisposalResultsRequest = z.infer<typeof subsequentDisposalResultsRequestSchema>

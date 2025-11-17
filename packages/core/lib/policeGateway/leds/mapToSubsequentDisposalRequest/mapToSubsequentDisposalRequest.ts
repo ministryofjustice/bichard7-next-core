@@ -3,13 +3,17 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import type DisposalUpdatedPncUpdateRequest from "../../../../phase3/types/DisposalUpdatedPncUpdateRequest"
 import type SentenceDeferredPncUpdateRequest from "../../../../phase3/types/SentenceDeferredPncUpdateRequest"
 import type {
-  reasonForAppearance,
+  ReasonForAppearance,
   SubsequentDisposalResultsRequest
 } from "../../../../types/leds/SubsequentDisposalResultsRequest"
 
 import convertPncDateTimeToLedsDateTime from "../mapToAddDisposalRequest/convertPncDateTimeToLedsDateTime"
-import mapCourt from "../mapToAddDisposalRequest/mapCourt"
 import mapOffences from "../mapToAddDisposalRequest/mapOffences"
+
+const reasonForAppearance: Record<string, ReasonForAppearance> = {
+  V: "Subsequently Varied",
+  D: "Sentenced Deferred"
+}
 
 const mapToSubsequentDisposalRequest = (
   pncRequest: DisposalUpdatedPncUpdateRequest["request"] | SentenceDeferredPncUpdateRequest["request"],
@@ -20,9 +24,12 @@ const mapToSubsequentDisposalRequest = (
     personUrn: pncRequest.pncIdentifier ?? "",
     checkName: pncRequest.pncCheckName ?? "",
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
-    court: mapCourt(pncRequest.courtCode, null),
+    court: {
+      courtIdentityType: "code",
+      courtCode: pncRequest.courtCode
+    },
     appearanceDate: convertPncDateTimeToLedsDateTime(pncRequest.hearingDate).date,
-    reasonForAppearance: pncRequest.hearingType as reasonForAppearance,
+    reasonForAppearance: reasonForAppearance[pncRequest.hearingType],
     offences: mapOffences(pncRequest.hearingDetails, pncUpdateDataset, pncRequest.courtCaseReferenceNumber)
   }
 }

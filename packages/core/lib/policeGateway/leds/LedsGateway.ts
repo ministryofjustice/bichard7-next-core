@@ -26,8 +26,8 @@ import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
+import { mapToAddDisposalRequest } from "./mapToAddDisposalRequest"
 import { findCourtCaseId } from "./mapToAddDisposalRequest/findCourtCaseId"
-import mapToAddDisposalRequest from "./mapToAddDisposalRequest/mapToAddDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import mapToRemandRequest from "./mapToRemandRequest"
 import mapToSubsequentDisposalRequest from "./mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
@@ -105,12 +105,14 @@ export default class LedsGateway implements PoliceGateway {
       const validationResult = remandRequestSchema.safeParse(requestBody)
 
       if (!validationResult.success) {
+        console.error(validationResult.error)
         return new PoliceApiError(["Failed to validate LEDS request."])
       }
     } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
       const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
 
       if (!courtCaseId) {
+        console.error("Couldn't find courtCaseId.")
         return new PoliceApiError(["Failed to update LEDS due to missing data."])
       }
 
@@ -119,6 +121,7 @@ export default class LedsGateway implements PoliceGateway {
       const validationResult = addDisposalRequestSchema.safeParse(requestBody)
 
       if (!validationResult.success) {
+        console.error(validationResult.error)
         return new PoliceApiError(["Failed to validate LEDS request."])
       }
     } else if (
@@ -128,6 +131,7 @@ export default class LedsGateway implements PoliceGateway {
       const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
 
       if (!courtCaseId) {
+        console.error("Couldn't find courtCaseId.")
         return new PoliceApiError(["Failed to update LEDS due to missing data."])
       }
 
@@ -136,6 +140,7 @@ export default class LedsGateway implements PoliceGateway {
       const validationResult = subsequentDisposalResultsRequestSchema.safeParse(requestBody)
 
       if (!validationResult.success) {
+        console.error(validationResult.error)
         return new PoliceApiError(["Failed to validate LEDS request."])
       }
 
@@ -163,6 +168,14 @@ export default class LedsGateway implements PoliceGateway {
       }
 
       return new PoliceApiError([apiResponse.message])
+    }
+
+    if (apiResponse.status !== HttpStatusCode.Ok) {
+      const errors = (apiResponse.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
+        `Update failed with status code ${apiResponse.status}.`
+      ]
+
+      return new PoliceApiError(errors)
     }
   }
 }
