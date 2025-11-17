@@ -1,0 +1,8 @@
+{
+  "name": "process_resubmit",
+  "timeoutSeconds": 30,
+  "responseTimeoutSeconds": 25,
+  "asyncComplete": false,
+  "inputKeys": ["s3TaskDataPath"],
+  "outputKeys": ["auditLogEvents", "currentPhase", "s3TaskDataPath"]
+}

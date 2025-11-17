@@ -8,7 +8,7 @@ import { isEmpty } from "lodash"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-import { CaseAgeOptions } from "../../../../useCases/cases/caseAgeOptions"
+import { CaseAgeOptions } from "../../../../useCases/cases/getCases/caseAgeOptions"
 
 export const filterByCaseAge = (
   database: DatabaseConnection,

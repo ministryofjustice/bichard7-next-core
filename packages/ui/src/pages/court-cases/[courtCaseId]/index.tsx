@@ -8,6 +8,7 @@ import { setCookie } from "cookies-next"
 import { OptionsType } from "cookies-next/lib/types"
 import CourtCaseDetails from "features/CourtCaseDetails/CourtCaseDetails"
 import Header from "features/CourtCaseDetails/Header"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -48,14 +49,11 @@ import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackFo
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
-const useApi = canUseApiEndpoint(ApiEndpoints.CaseDetails)
-
-const allIssuesCleared = (courtCase: CourtCase, triggerToResolve: number[], user: User) => {
+const allIssuesCleared = (courtCase: CourtCase | DisplayFullCourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
     ? courtCase.triggers.filter((t) => t.status === "Unresolved").length === triggerToResolve.length
     : true
   const exceptionsResolved = user.hasAccessTo[Permission.Exceptions] ? courtCase.errorStatus !== "Unresolved" : true
-
   return triggersResolved && exceptionsResolved
 }
 
@@ -79,8 +77,19 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const loadLockedBy = true
 
+    const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
+    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
+
+    let apiGateway: BichardApiV1 | undefined = undefined
+
+    if (useApiForCaseDetails || useApiForCaseResubmit) {
+      const jwt = req.cookies[".AUTH"] as string
+      const apiClient = new ApiClient(jwt)
+      apiGateway = new BichardApiV1(apiClient)
+    }
+
     let courtCase
-    if (!useApi) {
+    if (!useApiForCaseDetails) {
       courtCase = await getCourtCaseByOrganisationUnit(dataSource, +courtCaseId, currentUser, loadLockedBy)
 
       if (isError(courtCase)) {
@@ -133,18 +142,33 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isPost(req) && resubmitCase === "true") {
-      const { amendments } = formData as { amendments: string }
+      if (useApiForCaseResubmit && apiGateway) {
+        logger.info("[API] Using API to resubmit")
+        const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
-      const resubmitCourtCaseResult = await resubmitCourtCase(
-        dataSource,
-        mqGateway,
-        JSON.parse(amendments),
-        +courtCaseId,
-        currentUser
-      )
+        if (isError(resubmitResult)) {
+          const error = resubmitResult
+          if (/404/.test(error.message)) {
+            return {
+              notFound: true
+            }
+          }
+          throw error
+        }
+      } else {
+        const { amendments } = formData as { amendments: string }
 
-      if (isError(resubmitCourtCaseResult)) {
-        throw resubmitCourtCaseResult
+        const resubmitCourtCaseResult = await resubmitCourtCase(
+          dataSource,
+          mqGateway,
+          JSON.parse(amendments),
+          +courtCaseId,
+          currentUser
+        )
+
+        if (isError(resubmitCourtCaseResult)) {
+          throw resubmitCourtCaseResult
+        }
       }
     }
 
@@ -166,9 +190,15 @@ export const getServerSideProps = withMultipleServerSideProps(
     let lockResult: UpdateResult | Error | undefined
 
     if (isPost(req) && lock === "false") {
-      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
+      lockResult = await unlockCourtCase(
+        dataSource,
+        +courtCaseId,
+        currentUser,
+        UnlockReason.TriggerAndException,
+        useApiForCaseResubmit
+      )
     } else if (
-      !useApi &&
+      !useApiForCaseDetails &&
       (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
     ) {
       lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
@@ -179,7 +209,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     // Fetch the record from the database after updates
-    if (!useApi) {
+    if (!useApiForCaseDetails) {
       courtCase = await getCourtCaseByOrganisationUnit(dataSource, +courtCaseId, currentUser, loadLockedBy)
 
       if (isError(courtCase)) {
@@ -201,11 +231,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     let apiCase: DisplayFullCourtCase | Error | undefined
 
-    if (useApi) {
-      const jwt = req.cookies[".AUTH"] as string
-      const apiClient = new ApiClient(jwt)
-      const apiGateway = new BichardApiV1(apiClient)
-
+    if (useApiForCaseDetails && apiGateway) {
       logger.info("[API] Using API to fetch case details")
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
 
@@ -222,7 +248,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     logRenderTime(startTime, "caseView")
 
-    const caseDto = useApi
+    const caseDto = useApiForCaseDetails
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
@@ -235,7 +261,9 @@ export const getServerSideProps = withMultipleServerSideProps(
         courtCase: caseDto,
         canReallocate: canReallocate(currentUser.username, caseDto),
         canResolveAndSubmit: canResolveOrSubmit(currentUser, caseDto),
-        displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0))
+        canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
+        displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
+        allIssuesCleared: allIssuesCleared(caseDto, triggersToResolve, currentUser)
       }
     }
   }
@@ -246,10 +274,12 @@ interface Props {
   courtCase: DisplayFullCourtCase
   canReallocate: boolean
   canResolveAndSubmit: boolean
+  canUseTriggerAndExceptionQualityAuditing: boolean
   csrfToken: string
   displaySwitchingSurveyFeedback: boolean
   previousPath: string
   caseDetailsCookieName: string
+  allIssuesCleared: boolean
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({
@@ -257,10 +287,12 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   user,
   canReallocate,
   canResolveAndSubmit,
+  canUseTriggerAndExceptionQualityAuditing,
   displaySwitchingSurveyFeedback,
   csrfToken,
   previousPath,
-  caseDetailsCookieName
+  caseDetailsCookieName,
+  allIssuesCleared
 }: Props) => {
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -291,7 +323,11 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                 }}
               >
                 <Header canReallocate={canReallocate} />
-                <CourtCaseDetails canResolveAndSubmit={canResolveAndSubmit} />
+                <CourtCaseDetails
+                  canResolveAndSubmit={canResolveAndSubmit}
+                  canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
+                  allIssuesCleared={allIssuesCleared}
+                />
               </Layout>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>

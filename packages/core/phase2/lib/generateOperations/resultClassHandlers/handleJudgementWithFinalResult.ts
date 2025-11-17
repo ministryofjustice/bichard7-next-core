@@ -2,14 +2,14 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type { ResultClassHandler } from "./ResultClassHandler"
 
-import areAllPncDisposalsWithType from "../../areAllPncDisposalsWithType"
-import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
+import areAllPoliceDisposalsWithType from "../../areAllPoliceDisposalsWithType"
+import hasUnmatchedPoliceOffences from "../../hasUnmatchedPoliceOffences"
 import createOperation from "../createOperation"
 
 export const handleJudgementWithFinalResult: ResultClassHandler = ({
   resubmitted,
   aho,
-  areAllResultsOnPnc,
+  areAllResultsInPoliceCourtCase,
   offence,
   result
 }) => {
@@ -22,12 +22,16 @@ export const handleJudgementWithFinalResult: ResultClassHandler = ({
   }
 
   if (result.PNCAdjudicationExists) {
-    return resubmitted || areAllPncDisposalsWithType(aho, offence, 2007)
+    return resubmitted || areAllPoliceDisposalsWithType(aho, offence, 2007)
       ? [createOperation(PncOperation.DISPOSAL_UPDATED, operationData)]
       : []
   }
 
-  if (!areAllResultsOnPnc && hasUnmatchedPncOffences(aho, courtCaseReference) && !offence.AddedByTheCourt) {
+  if (
+    !areAllResultsInPoliceCourtCase &&
+    hasUnmatchedPoliceOffences(aho, courtCaseReference) &&
+    !offence.AddedByTheCourt
+  ) {
     return []
   }
 

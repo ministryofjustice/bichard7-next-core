@@ -1,5 +1,5 @@
 import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PncOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import parsePncDate from "@moj-bichard7/common/aho/parseAhoXml/parsePncDate"
 

@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`LedsGateway query should return police query result and update query time 1`] = `
+{
+  "checkName": "",
+  "courtCases": [
+    {
+      "courtCaseId": "0b2c46f1-d7f9-4460-9ee7-63e4fe53cb0c",
+      "courtCaseReference": "97/1626/008395Q",
+      "crimeOffenceReference": undefined,
+      "offences": [
+        {
+          "adjudication": undefined,
+          "disposals": [],
+          "offence": {
+            "acpoOffenceCode": "12:15:24:1",
+            "cjsOffenceCode": "SX03001A",
+            "endDate": undefined,
+            "endTime": undefined,
+            "offenceId": "d7905ea1-5d84-494e-8320-e4b4984329e5",
+            "qualifier1": undefined,
+            "qualifier2": undefined,
+            "sequenceNumber": 1,
+            "startDate": 2010-11-28T00:00:00.000Z,
+            "startTime": undefined,
+            "title": "Attempt to rape a girl aged 13 / 14 / 15 / years of ag",
+          },
+        },
+        {
+          "adjudication": undefined,
+          "disposals": [],
+          "offence": {
+            "acpoOffenceCode": "12:15:24:1",
+            "cjsOffenceCode": "SX03001",
+            "endDate": undefined,
+            "endTime": undefined,
+            "offenceId": "d17847fb-e285-4814-99ff-93986961966a",
+            "qualifier1": undefined,
+            "qualifier2": undefined,
+            "sequenceNumber": 2,
+            "startDate": 2010-11-28T00:00:00.000Z,
+            "startTime": undefined,
+            "title": "Rape of a Female",
+          },
+        },
+        {
+          "adjudication": undefined,
+          "disposals": [],
+          "offence": {
+            "acpoOffenceCode": "12:15:24:1",
+            "cjsOffenceCode": "RT88191",
+            "endDate": undefined,
+            "endTime": undefined,
+            "offenceId": "601a2afa-9675-49a5-9a6c-7128f3a7fb83",
+            "qualifier1": undefined,
+            "qualifier2": undefined,
+            "sequenceNumber": 3,
+            "startDate": 2010-11-28T00:00:00.000Z,
+            "startTime": undefined,
+            "title": "Use a motor vehicle without third party insurance.",
+          },
+        },
+      ],
+    },
+  ],
+  "croNumber": undefined,
+  "forceStationCode": "01ZD",
+  "penaltyCases": undefined,
+  "personId": "4e9a94f1-36fe-4bea-9618-d9994c08ce51",
+  "pncId": "2000/0410769X",
+  "reportId": "ceeb4def-5457-484d-9f3f-e2b2fdffc2ce",
+}
+`;

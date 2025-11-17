@@ -23,7 +23,7 @@ const s3Config = createS3Config()
 const conductorClient = createConductorClient()
 const phase2WorkflowName = "bichard_phase_2"
 
-const mqQueue = process.env.PHASE_2_QUEUE_NAME ?? "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
+const mqQueue = process.env.PHASE_2_QUEUE_NAME || "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
 
 const outgoingBucket = process.env.TASK_DATA_BUCKET_NAME
 if (!outgoingBucket) {
@@ -54,7 +54,7 @@ const getDestination = (phase2CanaryRatio?: number): Destination => {
   return Destination.MQ
 }
 
-const sendToPhase2: ConductorWorker = {
+export const sendToPhase2Worker = (client = conductorClient): ConductorWorker => ({
   taskDefName: "send_to_phase2",
   execute: s3TaskDataFetcher<Phase1Result>(phase1ResultSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, options } = task.inputData
@@ -90,7 +90,7 @@ const sendToPhase2: ConductorWorker = {
         return failed("Could not put file to S3", s3Result.message)
       }
 
-      const workflowId = await conductorClient.workflowResource
+      const workflowId = await client.workflowResource
         .startWorkflow1(phase2WorkflowName, { s3TaskDataPath: phase2S3TaskDataPath }, undefined, correlationId)
         .catch((e: Error) => e)
 
@@ -119,6 +119,6 @@ const sendToPhase2: ConductorWorker = {
 
     return completed({ auditLogEvents: [auditLog] }, `Sent to Phase 2 via ${destination}`)
   })
-}
+})
 
-export default sendToPhase2
+export default sendToPhase2Worker()

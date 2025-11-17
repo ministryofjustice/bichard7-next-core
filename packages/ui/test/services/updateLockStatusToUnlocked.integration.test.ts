@@ -434,7 +434,7 @@ describe("Unlock court case", () => {
       } as Partial<User> as User
 
       const events: AuditLogEvent[] = []
-      const result = await updateLockStatusToUnlocked(dataSource.manager, courtCase, user, unlockReason, events)
+      const result = await updateLockStatusToUnlocked(dataSource.manager, courtCase, user, unlockReason, events, false)
 
       if (expectError) {
         expect(isError(result)).toBe(true)
@@ -485,7 +485,8 @@ describe("Unlock court case", () => {
         lockedCourtCase,
         user,
         UnlockReason.TriggerAndException,
-        events
+        events,
+        false
       )
       expect(isError(result)).toBe(true)
 

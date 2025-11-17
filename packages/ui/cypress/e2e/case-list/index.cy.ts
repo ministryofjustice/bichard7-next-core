@@ -167,13 +167,23 @@ describe("Case list", () => {
       cy.get("#search").contains("Apply filters").click()
 
       cy.get("tr.caseDetailsRow").eq(0).find("td:nth-child(4)").contains(`Case00000`)
-      cy.get("tr.caseDetailsRow").eq(0).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
+      cy.get("tr.caseDetailsRow")
+        .eq(0)
+        .next()
+        .find("td.resolutionStatusBadgeCell")
+        .contains(`Submitted`)
+        .should("exist")
 
       cy.get("tr.caseDetailsRow").eq(1).find("td:nth-child(4)").contains(`Case00001`)
       cy.get("tr.caseDetailsRow").eq(1).next().should("not.exist") //extra resons row should not render
 
       cy.get("tr.caseDetailsRow").eq(2).find("td:nth-child(4)").contains(`Case00002`)
-      cy.get("tr.caseDetailsRow").eq(2).next().find("td.resolutionStatusBadgeCell").contains(`Submitted`).should("exist")
+      cy.get("tr.caseDetailsRow")
+        .eq(2)
+        .next()
+        .find("td.resolutionStatusBadgeCell")
+        .contains(`Submitted`)
+        .should("exist")
     })
 
     it("Should display the correct number of user-created notes on cases", () => {
@@ -326,7 +336,7 @@ describe("Case list", () => {
 
       confirmReasonDisplayed("HO100310 (2)")
       confirmReasonDisplayed("HO100322")
-      confirmReasonDisplayed("PR10 - Conditional bail");
+      confirmReasonDisplayed("PR10 - Conditional bail")
       confirmReasonDisplayed("PR15 - Personal details changed")
     })
 
@@ -547,5 +557,128 @@ describe("Case list", () => {
     loginAndVisit()
 
     cy.get("tr").not(":first").get("td:nth-child(6)").find(".trigger-description").should("have.length", 2)
+  })
+
+  context("audit quality status", () => {
+    it("displays exception and trigger quality for resolved cases when user is a supervisor", () => {
+      cy.task("insertCourtCasesWithFields", [
+        {
+          errorStatus: "Resolved",
+          resolutionTimestamp: new Date(),
+          errorResolvedBy: "GeneralHandler",
+          errorResolvedTimestamp: new Date(),
+          errorQualityChecked: 7,
+          triggerCount: 1,
+          triggerReason: ["TRPR0015"],
+          triggerStatus: "Resolved",
+          triggerQualityChecked: 2,
+          orgForPoliceFilter: "01"
+        },
+        { resolutionTimestamp: null, orgForPoliceFilter: "01" },
+        { resolutionTimestamp: null, orgForPoliceFilter: "01" }
+      ])
+
+      loginAndVisit("Supervisor")
+
+      cy.get(`label[for="resolved"]`).click()
+      cy.get("#search").contains("Apply filters").click()
+
+      cy.get("tr").eq(0).get("td:nth-child(8)").contains("Exceptions: Remand Pass")
+      cy.get("tr").eq(0).get("td:nth-child(8)").contains("Triggers: Pass")
+    })
+
+    it("Doesn't display exception and trigger quality for unresolved cases", () => {
+      cy.task("insertCourtCasesWithFields", [
+        { resolutionTimestamp: null, orgForPoliceFilter: "01" },
+        { resolutionTimestamp: null, orgForPoliceFilter: "01" }
+      ])
+
+      loginAndVisit("Supervisor")
+
+      cy.contains("Quality status").should("not.exist")
+      cy.contains("Exceptions:").should("not.exist")
+      cy.contains("Triggers:").should("not.exist")
+    })
+
+    it("Doesn't display exception and trigger quality when user is not a supervisor", () => {
+      cy.task("insertCourtCasesWithFields", [
+        {
+          errorStatus: "Resolved",
+          resolutionTimestamp: new Date(),
+          errorResolvedBy: "GeneralHandler",
+          errorResolvedTimestamp: new Date(),
+          errorQualityChecked: 7,
+          triggerCount: 1,
+          triggerReason: ["TRPR0015"],
+          triggerStatus: "Resolved",
+          triggerQualityChecked: 2,
+          orgForPoliceFilter: "01"
+        }
+      ])
+
+      loginAndVisit()
+
+      cy.get(`label[for="resolved"]`).click()
+      cy.get("#search").contains("Apply filters").click()
+
+      cy.contains("Exceptions:").should("not.exist")
+      cy.contains("Triggers:").should("not.exist")
+    })
+
+    it("Doesn't display exception quality when the case has only triggers", () => {
+      cy.task("insertCourtCasesWithFields", [
+        {
+          errorId: 0,
+          errorCount: 0,
+          errorReason: null,
+          errorStatus: null,
+          errorReport: "",
+          triggerCount: 1,
+          triggerReason: "TRPR0015",
+          triggerStatus: "Resolved",
+          triggerResolvedBy: "GeneralHandler",
+          triggerResolvedTimestamp: new Date(),
+          triggerQualityChecked: 2,
+          orgForPoliceFilter: "01",
+          triggers: [
+            {
+              createdAt: new Date(),
+              triggerCode: "TRPR0015",
+              errorId: 0,
+              status: "Resolved"
+            }
+          ]
+        }
+      ])
+
+      loginAndVisit("Supervisor")
+
+      cy.get(`label[for="resolved"]`).click()
+      cy.get("#search").contains("Apply filters").click()
+
+      cy.get("tr").eq(0).get("td:nth-child(8)").contains("Triggers: Pass")
+      cy.get("tr").eq(0).get("td:nth-child(8)").contains("Exceptions:").should("not.exist")
+    })
+
+    it("Doesn't display trigger quality when the case has only exceptions", () => {
+      cy.task("insertCourtCasesWithFields", [
+        {
+          errorStatus: "Resolved",
+          resolutionTimestamp: new Date(),
+          errorResolvedBy: "GeneralHandler",
+          errorResolvedTimestamp: new Date(),
+          errorQualityChecked: 7,
+          orgForPoliceFilter: "01"
+        }
+      ])
+
+      loginAndVisit("Supervisor")
+
+      cy.get(`label[for="resolved"]`).click()
+      cy.get("#search").contains("Apply filters").click()
+
+      cy.get("tr").eq(0).get("td:nth-child(8)").contains("Exceptions: Remand Pass").should("exist")
+      cy.get("tr").eq(0).get("td:nth-child(8)").contains("Triggers:").should("not.exist")
+    })
   })
 })

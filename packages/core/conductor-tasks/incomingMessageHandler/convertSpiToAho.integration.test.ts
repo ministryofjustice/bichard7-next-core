@@ -119,7 +119,7 @@ describe("convertSpiToAho", () => {
     expect(result.outputData).toHaveProperty("auditLogRecord", auditLogRecord)
     expect(result.outputData).toHaveProperty("errorReportData", {
       errorMessage:
-        'Validation error: Required at "ResultedCaseMessage.Session.Case.Defendant.Offence[2].BaseOffenceDetails.OffenceCode"',
+        'Validation error: Invalid input: expected string, received undefined at "ResultedCaseMessage.Session.Case.Defendant.Offence[2].BaseOffenceDetails.OffenceCode"',
       externalId,
       messageId: expect.any(String),
       ptiUrn: "01ZD0303208",

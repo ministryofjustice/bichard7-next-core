@@ -1,9 +1,12 @@
+import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
+import { TableCell, TableRow } from "components/Table"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
+import { AuditQualityCell } from "../AuditQualityCell"
 import { NotePreviewButton } from "./NotePreviewButton"
 import { NotePreviewRow } from "./NotePreviewRow"
 
@@ -12,10 +15,18 @@ interface CaseDetailsRowProps {
   reasonCell?: React.ReactNode | string
   lockTag?: React.ReactNode
   previousPath: string | null
+  displayAuditQuality: boolean
 }
 
-export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }: CaseDetailsRowProps) => {
-  const { notes, defendantName, errorId, courtDate, courtName, ptiurn } = courtCase
+export const CaseDetailsRow = ({
+  courtCase,
+  reasonCell,
+  lockTag,
+  previousPath,
+  displayAuditQuality
+}: CaseDetailsRowProps) => {
+  const { notes, defendantName, errorId, courtDate, courtName, ptiurn, errorQualityChecked, triggerQualityChecked } =
+    courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
@@ -27,27 +38,31 @@ export const CaseDetailsRow = ({ courtCase, reasonCell, lockTag, previousPath }:
 
   return (
     <>
-      <tr className="govuk-table__row caseDetailsRow">
-        <td className="govuk-table__cell">
+      <TableRow className="caseDetailsRow">
+        <TableCell>
           <a href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name govuk-link">
             {defendantName}
           </a>
-        </td>
-        <td className="govuk-table__cell" rowSpan={showPreview ? 2 : 3}>
+        </TableCell>
+        <TableCell rowSpan={showPreview ? 2 : 3}>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
-        </td>
-        <td className="govuk-table__cell" rowSpan={showPreview ? 2 : 3}>
-          {courtName}
-        </td>
-        <td className="govuk-table__cell" rowSpan={showPreview ? 2 : 3}>
-          {ptiurn}
-        </td>
-        <td className="govuk-table__cell">
+        </TableCell>
+        <TableCell rowSpan={showPreview ? 2 : 3}>{courtName}</TableCell>
+        <TableCell rowSpan={showPreview ? 2 : 3}>{ptiurn}</TableCell>
+        <TableCell>
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
-        </td>
-        <td className="govuk-table__cell resonCell">{reasonCell}</td>
-        <td className="govuk-table__cell">{lockTag}</td>
-      </tr>
+        </TableCell>
+        <TableCell className="resonCell">{reasonCell}</TableCell>
+        <TableCell>{lockTag}</TableCell>
+        <ConditionalRender isRendered={displayAuditQuality}>
+          <AuditQualityCell
+            errorQualityChecked={errorQualityChecked}
+            triggerQualityChecked={triggerQualityChecked}
+            hasExceptions={courtCase.errorReport !== ""}
+            hasTriggers={courtCase.triggerCount > 0}
+          />
+        </ConditionalRender>
+      </TableRow>
       {notes.length > 0 && !showPreview && (
         <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
       )}

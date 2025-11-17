@@ -41,4 +41,11 @@ describe("serialiseToXml", () => {
 
     expect(ahoXml).toMatchSnapshot()
   })
+
+  it("should generate AHO XML with LEDS fields", () => {
+    const hearingOutcome = getAho("phase1/tests/fixtures/AnnotatedHO1-with-leds-fields.xml")
+    const ahoXml = serialiseToXml(hearingOutcome)
+
+    expect(ahoXml).toMatchSnapshot()
+  })
 })

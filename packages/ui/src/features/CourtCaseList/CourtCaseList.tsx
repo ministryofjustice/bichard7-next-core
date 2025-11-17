@@ -1,4 +1,5 @@
 import { RefreshButton } from "components/Buttons/RefreshButton"
+import { Table, TableHead } from "components/Table"
 import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
@@ -9,9 +10,10 @@ import { CourtCaseListTableHeader } from "./CourtCaseListTableHeader"
 interface Props {
   courtCases: DisplayPartialCourtCase[]
   order?: QueryOrder
+  displayAuditQuality: boolean
 }
 
-const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) => {
+const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc", displayAuditQuality }: Props) => {
   const { query, events } = useRouter()
   const announcerRef = useRef<HTMLDivElement>(null)
   const recentlyUnlockedExceptionId = query.unlockException
@@ -51,13 +53,13 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
   ) : (
     <>
       <div aria-live="polite" aria-atomic="true" ref={announcerRef} className="govuk-visually-hidden"></div>
-      <table className="govuk-table cases-list">
+      <Table className="cases-list">
         <caption>
           <span className="govuk-visually-hidden">{"Column headers with buttons are sortable."}</span>
         </caption>
-        <thead className="govuk-table__head">
-          <CourtCaseListTableHeader order={order} />
-        </thead>
+        <TableHead>
+          <CourtCaseListTableHeader order={order} displayAuditQuality={displayAuditQuality} />
+        </TableHead>
         {courtCases.map((courtCase) => (
           <CourtCaseListEntry
             courtCase={courtCase}
@@ -65,9 +67,10 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc" }: Props) =>
             triggerHasBeenRecentlyUnlocked={courtCase.errorId.toString() === recentlyUnlockedTriggerId}
             key={`court-case-${courtCase.errorId}`}
             previousPath={queryString}
+            displayAuditQuality={displayAuditQuality}
           />
         ))}
-      </table>
+      </Table>
     </>
   )
 }

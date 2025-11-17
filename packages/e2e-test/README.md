@@ -53,10 +53,9 @@ For example, if you want to test a change in the Next UI:
 You can then run this command:
 
 ```bash
-MS_EDGE=true HEADLESS=false NEXTUI=true AWS_URL=http://localhost:4566 npm run test:file features/186*
+HEADLESS=false NEXTUI=true AWS_URL=http://localhost:4566 npm run test:file features/186*
 ```
 
-- `MS_EDGE` is what browser it runs the test with. By default it uses Chrome, you need to have download MS Edge to use this feature.
 - `HEADLESS` is whether or not we see the browser
 - `NEXTUI` is whether we the test in the new UI or the old UI
 - `features/186*` runs the feature we want

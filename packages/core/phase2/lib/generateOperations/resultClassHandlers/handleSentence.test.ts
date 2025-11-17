@@ -3,11 +3,11 @@ import type { Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearin
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
-import areAnyPncDisposalsWithType from "../../areAnyPncDisposalsWithType"
+import areAnyPoliceDisposalsWithType from "../../areAnyPoliceDisposalsWithType"
 import { handleSentence } from "./handleSentence"
 
-jest.mock("../../areAnyPncDisposalsWithType")
-const mockedAreAnyPncResults2007 = areAnyPncDisposalsWithType as jest.Mock
+jest.mock("../../areAnyPoliceDisposalsWithType")
+const mockedAreAnyPoliceResults2007 = areAnyPoliceDisposalsWithType as jest.Mock
 
 describe("handleSentence", () => {
   beforeEach(() => {
@@ -42,7 +42,7 @@ describe("handleSentence", () => {
       fixedPenalty: false,
       result: { PNCAdjudicationExists: true } as Result
     })
-    mockedAreAnyPncResults2007.mockReturnValue(false)
+    mockedAreAnyPoliceResults2007.mockReturnValue(false)
 
     const operations = handleSentence(params)
 
@@ -59,7 +59,7 @@ describe("handleSentence", () => {
         CourtCaseReferenceNumber: undefined
       } as Offence
     })
-    mockedAreAnyPncResults2007.mockReturnValue(false)
+    mockedAreAnyPoliceResults2007.mockReturnValue(false)
 
     const operations = handleSentence(params)
 
@@ -77,7 +77,7 @@ describe("handleSentence", () => {
       offenceIndex: 1,
       resultIndex: 1
     })
-    mockedAreAnyPncResults2007.mockReturnValue(true)
+    mockedAreAnyPoliceResults2007.mockReturnValue(true)
 
     const operations = handleSentence(params)
 
@@ -97,7 +97,7 @@ describe("handleSentence", () => {
       offenceIndex: 1,
       resultIndex: 1
     })
-    mockedAreAnyPncResults2007.mockReturnValue(true)
+    mockedAreAnyPoliceResults2007.mockReturnValue(true)
 
     const operations = handleSentence(params)
 

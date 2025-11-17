@@ -106,9 +106,11 @@ export const CaseIndexDtoSchema = z.object({
   errorId: z.number(),
   errorLockedByUserFullName: z.string().nullable().optional(),
   errorLockedByUsername: z.string().nullable(),
+  errorQualityChecked: z.number().nullable(),
   errorReport: z.string().optional(),
   errorStatus: z.string().nullable(),
   isUrgent: z.number().optional(),
+  messageReceivedAt: z.date().nullable(),
   noteCount: z.number().optional(),
   notes: z.array(NoteDtoSchema),
   ptiurn: z.string().nullable(),
@@ -116,6 +118,7 @@ export const CaseIndexDtoSchema = z.object({
   triggerCount: z.number().optional(),
   triggerLockedByUserFullName: z.string().nullable().optional(),
   triggerLockedByUsername: z.string().nullable(),
+  triggerQualityChecked: z.number().nullable(),
   triggers: z.array(TriggerDtoSchema),
   triggerStatus: z.string().nullable()
 })

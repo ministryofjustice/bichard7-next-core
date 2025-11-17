@@ -1,6 +1,6 @@
-import type { PncCourtCase, PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceCourtCase, PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-const createPNCCourtCase = (courtCaseReference: string, offences: PncOffence[] = []): PncCourtCase => ({
+const createPNCCourtCase = (courtCaseReference: string, offences: PoliceOffence[] = []): PoliceCourtCase => ({
   courtCaseReference,
   offences
 })

@@ -1,16 +1,30 @@
-export type AuditLogApiConfig = {
-  apiKey: string
-  apiUrl: string
-  basePath: string
-}
+import type { AuditLogApiConfig } from "../types/AuditLogApiConfig"
+
+import { createJwt } from "./createJwt"
+
+const environmentVariableMustBeSet = "environment variable must be set"
 
 const createApiConfig = (): AuditLogApiConfig => {
   const apiUrl = process.env.AUDIT_LOG_API_URL
-  const basePath = process.env.AUDIT_LOG_API_BASE_PATH ?? "messages"
-  const apiKey = process.env.AUDIT_LOG_API_KEY
+  let basePath: string | undefined
+  let apiKey: string | undefined
 
-  if (!apiUrl || !apiKey) {
-    throw new Error("AUDIT_LOG_API_URL and AUDIT_LOG_API_KEY environment variables must be set")
+  if (!apiUrl) {
+    throw new Error(`AUDIT_LOG_API_URL ${environmentVariableMustBeSet}`)
+  }
+
+  if (process.env.AUDIT_LOG_USE_JWT === "true") {
+    const jwtDetails = createJwt(environmentVariableMustBeSet)
+
+    basePath = jwtDetails.basePath
+    apiKey = jwtDetails.apiKey
+  } else {
+    basePath = "messages"
+    apiKey = process.env.AUDIT_LOG_API_KEY
+  }
+
+  if (!apiKey) {
+    throw new Error(`AUDIT_LOG_API_KEY ${environmentVariableMustBeSet}`)
   }
 
   return { apiKey, apiUrl, basePath }

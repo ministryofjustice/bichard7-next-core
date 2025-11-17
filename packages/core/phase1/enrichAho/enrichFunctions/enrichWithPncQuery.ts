@@ -1,12 +1,12 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncCourtCase, PncOffence, PncPenaltyCase } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceCourtCase, PoliceOffence, PolicePenaltyCase } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { lookupOffenceByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type AuditLogger from "../../../types/AuditLogger"
-import type PncGatewayInterface from "../../../types/PncGatewayInterface"
+import type PoliceGateway from "../../../types/PoliceGateway"
 
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 import isDummyAsn from "../../../lib/isDummyAsn"
@@ -16,11 +16,11 @@ import generatePncEnquiryExceptionFromMessage, {
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
 
-const addTitle = (offence: PncOffence): void => {
+const addTitle = (offence: PoliceOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
 }
 
-const addTitleToCaseOffences = (cases: PncCourtCase[] | PncPenaltyCase[] | undefined) =>
+const addTitleToCaseOffences = (cases: PoliceCourtCase[] | PolicePenaltyCase[] | undefined) =>
   cases && cases.forEach((c) => c.offences.forEach(addTitle))
 
 const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
@@ -49,7 +49,7 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
 
 export default async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
-  pncGateway: PncGatewayInterface,
+  policeGateway: PoliceGateway,
   auditLogger: AuditLogger,
   isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
@@ -65,7 +65,7 @@ export default async (
 
   const requestStartTime = new Date()
 
-  const pncResult = await pncGateway.query(asn, correlationId)
+  const pncResult = await policeGateway.query(asn, correlationId, annotatedHearingOutcome)
 
   const auditLogAttributes = {
     "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
@@ -88,7 +88,7 @@ export default async (
     annotatedHearingOutcome.PncQuery = pncResult
   }
 
-  annotatedHearingOutcome.PncQueryDate = pncGateway.queryTime
+  annotatedHearingOutcome.PncQueryDate = policeGateway.queryTime
 
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.courtCases)
   addTitleToCaseOffences(annotatedHearingOutcome.PncQuery?.penaltyCases)

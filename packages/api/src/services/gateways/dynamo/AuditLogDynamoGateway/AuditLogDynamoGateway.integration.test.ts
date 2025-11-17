@@ -38,7 +38,7 @@ describe("AuditLogDynamoGateway", () => {
     MockDate.reset()
     await testGateway.deleteAll(auditLogDynamoConfig.auditLogTableName, primaryKey)
     await testGateway.deleteAll(auditLogDynamoConfig.eventsTableName, "_id")
-  })
+  }, 15_000)
 
   describe("create()", () => {
     it("should insert the given message", async () => {
@@ -216,7 +216,7 @@ describe("AuditLogDynamoGateway", () => {
       const items = result as DynamoAuditLogEvent[]
       expect(items).toHaveLength(getEventsPageLimit)
       expect(items.map((item) => item.timestamp)).toStrictEqual(expectedEvents.map((event) => event.timestamp))
-    })
+    }, 15_000)
 
     it("should return error when it fails to get result from DynamoDB", async () => {
       await gateway.createManyUserEvents(generateAuditLogEvents(1))

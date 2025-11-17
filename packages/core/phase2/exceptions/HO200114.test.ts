@@ -2,13 +2,13 @@ import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome
 
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import generatePncUpdateDatasetFromOffenceList from "../tests/fixtures/helpers/generatePncUpdateDatasetFromOffenceList"
 import HO200114 from "./HO200114"
 
-jest.mock("../lib/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsInPoliceCourtCase")
 
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)
 
 describe("HO200114", () => {

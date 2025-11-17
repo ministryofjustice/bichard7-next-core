@@ -7,7 +7,12 @@ export const AuditLogEventCompressedValueSchema = z.object({ _compressedValue: z
 export type AuditLogEventCompressedValue = z.infer<typeof AuditLogEventCompressedValueSchema>
 
 // The uncompressed data structure for an attribute
-export const AuditLogEventAttributeValueSchema = z.union([z.boolean(), z.number(), z.string()])
+export const AuditLogEventAttributeValueSchema = z.union([
+  z.boolean(),
+  z.number(),
+  z.string(),
+  z.object({}).passthrough()
+])
 
 export type AuditLogEventDecompressedAttributeValue = z.infer<typeof AuditLogEventAttributeValueSchema>
 
@@ -20,12 +25,12 @@ export const InternalAuditLogEventAttributeValueSchema = z.union([
 export type InternalAuditLogEventAttributeValue = z.infer<typeof InternalAuditLogEventAttributeValueSchema>
 
 // The record of uncompressed attributes
-export const AuditLogEventAttributesSchema = z.record(AuditLogEventAttributeValueSchema)
+export const AuditLogEventAttributesSchema = z.record(z.any(), AuditLogEventAttributeValueSchema)
 
 export type AuditLogEventAttributes = z.infer<typeof AuditLogEventAttributesSchema>
 
 // The record of compressed or uncompressed attributes used in Dynamo
-export const InternalAuditLogEventAttributesSchema = z.record(InternalAuditLogEventAttributeValueSchema)
+export const InternalAuditLogEventAttributesSchema = z.record(z.any(), InternalAuditLogEventAttributeValueSchema)
 
 export type InternalAuditLogEventAttributes = z.infer<typeof InternalAuditLogEventAttributesSchema>
 

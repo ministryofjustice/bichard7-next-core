@@ -1,19 +1,66 @@
+# Directories
 .circleci
 .github
 .husky
+.idea
+.vscode
+docs
 environment
-node_modules
-**/*.test.*
-**/.eslintrc.js
-.gitignore
-.npmignore
-.nvmrc
-.prettierrc
-buildspec.yml
-**/jest.config
-LICENSE
-Makefile
-README.md
 
-# SWC cache
-.swc/
+# Dependencies
+node_modules
+**/node_modules
+
+# Build outputs
+**/dist
+**/.next
+**/.swc/
+
+# Configs
+eslint.config.mjs
+.eslintcache
+**/.eslintcache
+.prettierrc
+**/.prettierrc
+.prettierignore
+**/.prettierignore
+**/jest.config.js
+**/jest.config.ts
+**/cypress.config.js
+**/cypress.config.ts
+.ncurc.js
+**/.ncurs.js
+**/.stylelintrc.json
+**/hadolint.yml
+**/.pre-commit-config.yaml
+**/.browserslistrc
+**/nodemon.json
+
+# Tests
+**/*.test.*
+**/test
+**/textFixtures
+**/cypress
+**/goss.yaml
+**/goss_wait.yaml
+**/setupTests.ts
+
+# Misc
+.gitignore
+**/.gitignore
+.npmignore
+**/.npmignore
+.nvmrc
+buildspec.yml
+LICENSE
+**/LICENSE
+README.md
+**/README.md
+**/Makefile
+sonar-project.properties
+.editorconfig
+
+# Logs
+npm-debug.log
+logs
+*.log

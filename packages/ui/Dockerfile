@@ -1,38 +1,41 @@
-#########################################################
 ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS builder
+FROM ${BUILD_IMAGE} AS base
 
 LABEL maintainer="CJSE"
 
-WORKDIR /core
+#########################################################
+FROM base AS deps
 
-# Currently needed for core postinstall script
-RUN yum install jq -y
+WORKDIR /core
 
 # Copy in package info so we don't have to re-install packages for every code change
-COPY package.json .
-COPY package-lock.json .
-COPY tsconfig*.json ./
-COPY packages/ ./packages/
+COPY package*.json ./
+COPY packages/core/package.json ./packages/core/package.json
+COPY packages/common/package.json ./packages/common/package.json
+COPY packages/ui/package.json ./packages/ui/package.json
+COPY packages/ui/scripts ./packages/ui/scripts
 
-RUN npm ci --ignore-scripts && npm run build:core
+RUN npm ci --ignore-scripts --no-audit
 
-WORKDIR /core/packages/ui
+RUN npm run install:assets -w packages/ui
 
-RUN npm run install:assets
-
+#########################################################
+FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
-
-# Currently configured to run the standalone nextjs build
-#
-# next.config.js
-#   output: standalone
-RUN npm run build
 
 WORKDIR /core
 
+COPY --from=deps ./core ./
+
+COPY tsconfig*.json ./
+COPY packages/core ./packages/core
+COPY packages/common ./packages/common
+COPY packages/ui ./packages/ui
+
+RUN npm run build:ui
+
 #########################################################
-FROM ${BUILD_IMAGE} AS runner
+FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV TZ="Europe/London"
@@ -48,7 +51,7 @@ RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
     npm config set cache /tmp/npm --global
 
 # Extract standalone build to working directory
-COPY --from=builder /core/packages/ui/.next/standalone .
+COPY --from=builder /core/packages/ui/.next/standalone ./
 
 # Copy assets from builder
 COPY --from=builder /core/packages/ui/public ./packages/ui/public

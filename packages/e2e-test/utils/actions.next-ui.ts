@@ -155,7 +155,9 @@ export const checkOffence = function (offenceCode: string, offenceId: string) {
 export const openRecordFor = async function (this: Bichard, name: string) {
   await waitForRecord(name, this.browser.page)
 
-  const [link] = await this.browser.page.$$(`xpath/.//table/tbody/tr/*/a[contains(.,"${name}")]`)
+  const links = await this.browser.page.$$(`xpath/.//table/tbody/tr/*/a[contains(.,"${name}")]`)
+
+  const link = links[links.length - 1]
 
   await Promise.all([link.click(), this.browser.page.waitForNavigation()])
 }
@@ -338,12 +340,31 @@ export const exceptionResolutionStatus = async function (this: Bichard, resoluti
 
   const resolution = resolutionStatus.split(" ").length > 1 ? resolutionStatus.split(" ")[1] : resolutionStatus
 
-  const headerResolutionStatus = await this.browser.page.$$(
-    `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
-  )
-  const exceptionsPanelResolutionStatus = await this.browser.page.$$(
-    `xpath/.//section[@id = "exceptions-tab-panel"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
-  )
+  const maxRetries = 10
+  const retryDelay = 100
+  let attempt = 0
+  let headerResolutionStatus: Awaited<ReturnType<typeof this.browser.page.$$>> = []
+  let exceptionsPanelResolutionStatus: Awaited<ReturnType<typeof this.browser.page.$$>> = []
+
+  while (attempt < maxRetries) {
+    headerResolutionStatus = await this.browser.page.$$(
+      `xpath/.//div[@id = "case-detail-header"]//div[@id = "locked-tag-container"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    )
+    exceptionsPanelResolutionStatus = await this.browser.page.$$(
+      `xpath/.//section[@id = "exceptions-tab-panel"]//div[contains(@class, "exceptions-${resolution.toLowerCase()}-tag")]//span[text() = "${resolutionStatus}"]`
+    )
+
+    if (headerResolutionStatus.length === 1 && exceptionsPanelResolutionStatus.length === 1) {
+      break
+    }
+
+    attempt++
+    if (attempt < maxRetries) {
+      await this.browser.page.reload({ waitUntil: "networkidle0" })
+      await this.browser.page.click("#exceptions-tab")
+      await new Promise((resolve) => setTimeout(resolve, retryDelay))
+    }
+  }
 
   expect(headerResolutionStatus.length).toEqual(1)
   expect(exceptionsPanelResolutionStatus.length).toEqual(1)
@@ -631,6 +652,9 @@ export const submitRecord = async function (this: Bichard) {
   await Promise.all([page.click("#submit"), page.waitForNavigation()])
   await Promise.all([page.click("#confirm-submit"), page.waitForNavigation()])
   await Promise.all([page.click("#leave-and-unlock, #return-to-case-list"), page.waitForNavigation()])
+
+  const found = await reloadUntilContentInSelector(this.browser.page, "Submitted", "table.cases-list > tbody", 2)
+  expect(found).toBeFalsy()
 }
 
 export const submitRecordAndStayOnPage = async function (this: Bichard) {
@@ -668,9 +692,7 @@ export const checkRecordStatus = async function (
   await Promise.all([filterRecords(this, resolvedType, recordType), page.waitForNavigation()])
   expect(await this.browser.elementText("table.cases-list")).toMatch(recordName)
 
-  await resetFilters(this.browser)
-
-  await page.waitForFunction(() => !document.querySelector("#clear-filters"), { polling: "mutation" })
+  await Promise.all([resetFilters(this.browser), page.waitForNavigation()])
 }
 
 export const checkRecordNotStatus = async function (

@@ -1,7 +1,7 @@
 import { type TransactWriteCommandInput } from "@aws-sdk/lib-dynamodb"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { randomUUID } from "crypto"
 import { addDays } from "date-fns"
-import { v4 as uuid } from "uuid"
 
 import type { DynamoAuditLog, InternalDynamoAuditLog } from "../../../../types/AuditLog"
 import type {
@@ -590,12 +590,14 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
           if (typeof attributeValue === "object" && "_compressedValue" in attributeValue) {
             const compressedValue = attributeValue._compressedValue
 
-            const decompressedValue = await decompress(compressedValue)
-            if (isError(decompressedValue)) {
-              return decompressedValue
-            }
+            if (typeof compressedValue === "string") {
+              const decompressedValue = await decompress(compressedValue)
+              if (isError(decompressedValue)) {
+                return decompressedValue
+              }
 
-            decompressedAttributes[attributeKey] = decompressedValue
+              decompressedAttributes[attributeKey] = decompressedValue
+            }
           } else {
             decompressedAttributes[attributeKey] = attributeValue
           }
@@ -605,12 +607,16 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
 
     let decompressedEventXml: string | undefined = undefined
     if (eventXml && typeof eventXml === "object" && "_compressedValue" in eventXml) {
-      const decompressedValue = await decompress(eventXml._compressedValue)
-      if (isError(decompressedValue)) {
-        return decompressedValue
-      }
+      const compressedValue = eventXml._compressedValue
 
-      decompressedEventXml = decompressedValue
+      if (typeof compressedValue === "string") {
+        const decompressedValue = await decompress(compressedValue)
+        if (isError(decompressedValue)) {
+          return decompressedValue
+        }
+
+        decompressedEventXml = decompressedValue
+      }
     }
 
     return {
@@ -628,7 +634,11 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
         return compressedEvent
       }
 
-      const eventToInsert: InternalDynamoAuditLogEvent = { ...compressedEvent, _id: uuid(), _messageId: messageId }
+      const eventToInsert: InternalDynamoAuditLogEvent = {
+        ...compressedEvent,
+        _id: randomUUID(),
+        _messageId: messageId
+      }
       dynamoUpdates.push({
         Put: {
           ConditionExpression: "attribute_not_exists(#id)",
@@ -652,7 +662,7 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
         return compressedEvent
       }
 
-      const eventToInsert: InternalDynamoAuditLogUserEvent = { ...compressedEvent, _id: uuid() }
+      const eventToInsert: InternalDynamoAuditLogUserEvent = { ...compressedEvent, _id: randomUUID() }
       dynamoUpdates.push({
         Put: {
           ConditionExpression: "attribute_not_exists(#id)",

@@ -4,7 +4,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type PncUpdateRequestGenerator from "../../../types/PncUpdateRequestGenerator"
 
-import formatDateSpecifiedInResult from "../../../../lib/results/createPncDisposalsFromResult/formatDateSpecifiedInResult"
+import formatDateSpecifiedInResult from "../../../../lib/results/createPoliceDisposalsFromResult/formatDateSpecifiedInResult"
 import addPaddingToBailCondition from "../../addPaddingToBailCondition"
 import generateBasePncUpdateRequest from "../../generateBasePncUpdateRequest"
 import preProcessAsn from "../../preProcessAsn"
@@ -50,6 +50,8 @@ const remandGenerator: PncUpdateRequestGenerator<PncOperation.REMAND> = (pncUpda
 
   return {
     operation: PncOperation.REMAND,
+    ...(pncUpdateDataset.PncQuery?.personId ? { personId: pncUpdateDataset.PncQuery.personId } : {}),
+    ...(pncUpdateDataset.PncQuery?.reportId ? { reportId: pncUpdateDataset.PncQuery.reportId } : {}),
     request: {
       ...generateBasePncUpdateRequest(pncUpdateDataset),
       arrestSummonsNumber,

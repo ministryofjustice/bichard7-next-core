@@ -30,7 +30,24 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "generalhandler@example.com",
     password: hashedPassword,
-    groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
+    groups: [UserGroup.GeneralHandler, UserGroup.NewUI],
+    featureFlags: {
+      useCourtDateReceivedDateMismatchFiltersEnabled: true,
+      useTriggerAndExceptionQualityAuditingEnabled: true
+    }
+  },
+  UserMissingFeatureFlags: {
+    username: "UserMissingFeatureFlags",
+    visibleForces: ["001"],
+    forenames: "No Feature",
+    surname: "Flags",
+    email: "usermissingfeatureflags@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.GeneralHandler, UserGroup.NewUI],
+    featureFlags: {
+      useCourtDateReceivedDateMismatchFiltersEnabled: false,
+      useTriggerAndExceptionQualityAuditingEnabled: false
+    }
   },
   "A really really really long.name": {
     username: "A really really really long.name",
@@ -70,7 +87,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
   },
   Supervisor: {
     username: "Supervisor",
-    visibleForces: ["01"],
+    visibleForces: ["001"],
     forenames: "Supervisor",
     surname: "User",
     email: "supervisor@example.com",

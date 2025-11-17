@@ -4,7 +4,7 @@ import generateAhoMatchingPncAdjudicationAndDisposals from "../tests/helpers/gen
 import HO200101 from "./HO200101"
 
 type GenerateAhoInput = {
-  areAllResultsOnPnc: boolean
+  areAllResultsInPoliceCourtCase: boolean
   arePncResults2007: "All" | "None" | "One"
   fixedPenalty: boolean
   pncAdjudicationExists: boolean
@@ -15,7 +15,7 @@ const generateAho = ({
   resubmitted,
   fixedPenalty,
   pncAdjudicationExists,
-  areAllResultsOnPnc,
+  areAllResultsInPoliceCourtCase,
   arePncResults2007
 }: GenerateAhoInput) => {
   const aho = generateAhoMatchingPncAdjudicationAndDisposals({})
@@ -23,7 +23,7 @@ const generateAho = ({
   const offence = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0]
   offence.Result = [offence.Result[0]]
   offence.Result[0].PNCAdjudicationExists = pncAdjudicationExists
-  offence.Result[0].PNCDisposalType = areAllResultsOnPnc
+  offence.Result[0].PNCDisposalType = areAllResultsInPoliceCourtCase
     ? arePncResults2007 === "All"
       ? 2007
       : offence.Result[0].PNCDisposalType
@@ -43,52 +43,52 @@ const generateAho = ({
 
 // prettier-ignore
 const noExceptionScenarios: Partial<GenerateAhoInput>[] = [
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: true, arePncResults2007: "None" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "All" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "One" },
-  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsOnPnc: false, arePncResults2007: "None" }
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: true, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: true, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: true, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: true, arePncResults2007: "None" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "All" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "One" },
+  { resubmitted: false, fixedPenalty: false, pncAdjudicationExists: false, areAllResultsInPoliceCourtCase: false, arePncResults2007: "None" }
 ]
 
 describe("HO200101", () => {
@@ -97,7 +97,7 @@ describe("HO200101", () => {
       resubmitted: false,
       fixedPenalty: false,
       pncAdjudicationExists: true,
-      areAllResultsOnPnc: false,
+      areAllResultsInPoliceCourtCase: false,
       arePncResults2007: "None"
     })
 
@@ -126,7 +126,7 @@ describe("HO200101", () => {
       resubmitted: false,
       fixedPenalty: false,
       pncAdjudicationExists: true,
-      areAllResultsOnPnc: false,
+      areAllResultsInPoliceCourtCase: false,
       arePncResults2007: "None"
     })
 

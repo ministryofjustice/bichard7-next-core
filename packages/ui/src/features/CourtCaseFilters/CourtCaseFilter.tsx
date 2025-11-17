@@ -1,5 +1,6 @@
 import Permission from "@moj-bichard7/common/types/Permission"
 import { Button } from "components/Buttons/Button"
+import { FormGroup } from "components/FormGroup"
 import ConditionalRender from "components/ConditionalRender"
 import CaseStateFilter from "components/SearchFilters/CaseStateFilter"
 import LockedFilter, { lockedStateShortLabels } from "components/SearchFilters/LockedFilter"
@@ -29,6 +30,7 @@ type Props = CaseListQueryParams & {
   caseAgeCounts: Record<string, number>
   dateRange: SerializedDateRange | null
   caseResolvedDateRange: SerializedDateRange | null
+  canUseCourtDateReceivedDateMismatchFilters: boolean
 }
 
 const CourtCaseFilter: React.FC<Props> = ({
@@ -45,7 +47,9 @@ const CourtCaseFilter: React.FC<Props> = ({
   order,
   orderBy,
   resolvedByUsername,
-  caseResolvedDateRange
+  caseResolvedDateRange,
+  canUseCourtDateReceivedDateMismatchFilters,
+  courtDateReceivedDateMismatch
 }) => {
   const lockedStateValue = lockedState ?? LockedState.All
   const initialFilterState: Filter = {
@@ -66,7 +70,12 @@ const CourtCaseFilter: React.FC<Props> = ({
     reasonFilter: reason !== null ? { value: reason, state: "Applied" } : {},
     resolvedByUsernameFilter: resolvedByUsername !== null ? { value: resolvedByUsername, state: "Applied" } : {},
     resolvedFrom: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.from, state: "Applied" } : {},
-    resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {}
+    resolvedTo: caseResolvedDateRange !== null ? { value: caseResolvedDateRange.to, state: "Applied" } : {},
+    courtDateReceivedDateMismatchFilter: {
+      value: courtDateReceivedDateMismatch ?? false,
+      state: "Applied",
+      label: "Cases where date received is different"
+    }
   }
   const [state, dispatch] = useReducer(filtersReducer, initialFilterState)
   const currentUser = useCurrentUser()
@@ -100,7 +109,7 @@ const CourtCaseFilter: React.FC<Props> = ({
           <input type="hidden" id="order" name="order" value={order || ""} />
           <input type="hidden" id="orderBy" name="orderBy" value={orderBy || ""} />
 
-          <div className={"govuk-form-group"}>
+          <FormGroup>
             <h2 className="govuk-heading-m">{"Search"}</h2>
             <div>
               <ReasonCodeFilter value={state.reasonCodes} dispatch={dispatch} />
@@ -113,7 +122,7 @@ const CourtCaseFilter: React.FC<Props> = ({
               <TextFilter label="Court name" id="courtName" value={state.courtNameSearch.value} dispatch={dispatch} />
               <TextFilter label="PTIURN" id="ptiurn" value={state.ptiurnSearch.value} dispatch={dispatch} />
             </div>
-          </div>
+          </FormGroup>
 
           <CaseStateFilter
             dispatch={dispatch}
@@ -134,6 +143,8 @@ const CourtCaseFilter: React.FC<Props> = ({
             caseAgeCounts={caseAgeCounts}
             dispatch={dispatch}
             dateRange={{ from: state.dateFrom.value, to: state.dateTo.value }}
+            canUseCourtDateReceivedDateMismatchFilters={canUseCourtDateReceivedDateMismatchFilters}
+            courtDateReceivedDateMismatchFilter={state.courtDateReceivedDateMismatchFilter.value}
           />
           <Divider />
 

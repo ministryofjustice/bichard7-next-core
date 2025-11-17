@@ -1,6 +1,6 @@
-import { mockUpdate } from "../../utils/pncMocks"
+import type Bichard from "../../utils/world"
 
-export default () => [
+export default (_: string, { policeApi }: Bichard) => [
   {
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
@@ -19,7 +19,7 @@ export default () => [
     expectedRequest: "",
     count: 1
   },
-  mockUpdate("CXU02", {
+  policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><CCR>K21/2732/6N                    </CCR><COU>I2576                                                                       LEBOWSKI/JEFFREY                                      250920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>",
     count: 1
@@ -48,7 +48,7 @@ export default () => [
     expectedRequest: "",
     count: 1
   },
-  mockUpdate("CXU03", {
+  policeApi.mockUpdate("CXU03", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/6N                    </CCR><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000101.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000102.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000103.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS>",
     count: 1

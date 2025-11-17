@@ -3,7 +3,7 @@ import { z } from "zod"
 import { CjsPlea } from "../types/Plea"
 import ResultClass from "../types/ResultClass"
 import { exceptionSchema } from "./exception"
-import { pncQueryResultSchema } from "./pncQueryResult"
+import { policeQueryResultSchema } from "./policeQueryResult"
 import { ahoDescription, offenceDescription, organisationUnitDescription, resultDescription } from "./schemaDescription"
 import toArray from "./toArray"
 
@@ -346,7 +346,7 @@ export const unvalidatedHearingOutcomeSchema = z.object({
   AnnotatedHearingOutcome: z.object({
     HearingOutcome: hearingOutcomeSchema
   }),
-  PncQuery: pncQueryResultSchema.optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.$description),
+  PncQuery: policeQueryResultSchema.optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQuery.$description),
   PncQueryDate: z.coerce.date().optional().describe(ahoDescription.AnnotatedHearingOutcome.PncQueryDate.$description),
   Ignored: z.boolean().optional(),
   HasError: z.boolean().optional()

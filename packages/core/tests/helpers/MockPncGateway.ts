@@ -1,16 +1,16 @@
-import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import type PncUpdateRequest from "../../phase3/types/PncUpdateRequest"
-import type PncGatewayInterface from "../../types/PncGatewayInterface"
+import type PoliceUpdateRequest from "../../phase3/types/PoliceUpdateRequest"
+import type PoliceGateway from "../../types/PoliceGateway"
 
-import { PncApiError } from "../../lib/pnc/PncGateway"
+import PoliceApiError from "../../lib/policeGateway/PoliceApiError"
 
-export default class MockPncGateway implements PncGatewayInterface {
-  result: (PncApiError | PncQueryResult | undefined)[] = []
-  updates: PncUpdateRequest[] = []
+export default class MockPncGateway implements PoliceGateway {
+  result: (PoliceApiError | PoliceQueryResult | undefined)[] = []
+  updates: PoliceUpdateRequest[] = []
 
   constructor(
-    result: (PncApiError | PncQueryResult | undefined)[] | PncApiError | PncQueryResult | undefined,
+    result: (PoliceApiError | PoliceQueryResult | undefined)[] | PoliceApiError | PoliceQueryResult | undefined,
     public queryTime: Date | undefined = undefined
   ) {
     if (Array.isArray(result)) {
@@ -20,15 +20,15 @@ export default class MockPncGateway implements PncGatewayInterface {
     }
   }
 
-  query(_: string): Promise<PncApiError | PncQueryResult | undefined> {
+  query(_: string): Promise<PoliceApiError | PoliceQueryResult | undefined> {
     return Promise.resolve(this.getNextResult())
   }
 
-  update(request: PncUpdateRequest, _correlationId: string): Promise<PncApiError | void> {
+  update(request: PoliceUpdateRequest, _correlationId: string): Promise<PoliceApiError | void> {
     this.updates.push(request)
 
     const nextResult = this.getNextResult()
-    if (nextResult instanceof PncApiError) {
+    if (nextResult instanceof PoliceApiError) {
       return Promise.resolve(nextResult)
     }
 

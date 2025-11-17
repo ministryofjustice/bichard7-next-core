@@ -1,4 +1,5 @@
 import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { TableBody } from "components/Table"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
@@ -14,13 +15,15 @@ interface Props {
   exceptionHasBeenRecentlyUnlocked: boolean
   triggerHasBeenRecentlyUnlocked: boolean
   previousPath: string | null
+  displayAuditQuality: boolean
 }
 
 const CourtCaseListEntry: React.FC<Props> = ({
   courtCase,
   exceptionHasBeenRecentlyUnlocked,
   triggerHasBeenRecentlyUnlocked,
-  previousPath
+  previousPath,
+  displayAuditQuality
 }: Props) => {
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
@@ -51,21 +54,23 @@ const CourtCaseListEntry: React.FC<Props> = ({
   const renderExtraReasons = resolutionStatus !== ResolutionStatus.Unresolved || extraReasonCell
 
   return (
-    <tbody className="govuk-table__body caseListEntry">
+    <TableBody className="caseListEntry">
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={reasonCell}
         lockTag={exceptionsCells?.LockTag ?? triggerCells?.LockTag}
         previousPath={previousPath}
+        displayAuditQuality={displayAuditQuality}
       />
       {renderExtraReasons && (
         <ExtraReasonRow
           resolutionStatus={resolutionStatus}
           reasonCell={extraReasonCell}
           lockTag={triggerCells?.LockTag}
+          displayAuditQuality={displayAuditQuality}
         />
       )}
-    </tbody>
+    </TableBody>
   )
 }
 

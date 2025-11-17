@@ -11,6 +11,7 @@ import AppliedFilters from "features/CourtCaseFilters/AppliedFilters"
 import CourtCaseFilter from "features/CourtCaseFilters/CourtCaseFilter"
 import CourtCaseWrapper from "features/CourtCaseFilters/CourtCaseFilterWrapper"
 import CourtCaseList from "features/CourtCaseList/CourtCaseList"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { isEqual } from "lodash"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
@@ -47,6 +48,7 @@ import { logCaseListRenderTime } from "utils/logging"
 import { calculateLastPossiblePageNumber } from "utils/pagination/calculateLastPossiblePageNumber"
 import redirectTo from "utils/redirectTo"
 import { extractSearchParamsFromQuery } from "utils/validateQueryParams"
+import { canUseCourtDateReceivedDateMismatchFilters } from "../features/flags/canUseCourtDateReceivedDateMismatchFilters"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
@@ -65,10 +67,10 @@ type Props = {
   caseDetailsCookieName: string
   totalCases: number
   user: DisplayFullUser
+  canUseCourtDateReceivedDateMismatchFilters: boolean
   caseResolvedDateRange: SerializedDateRange | null
+  canUseTriggerAndExceptionQualityAuditing: boolean
 } & Omit<CaseListQueryParams, "allocatedToUserName" | "resolvedByUsername" | "courtDateRange" | "resolvedDateRange">
-
-const useApi = canUseApiEndpoint(ApiEndpoints.CaseList)
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -79,6 +81,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       AuthenticationServerSidePropsContext
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
     const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
+
+    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces)
+    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
 
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 
@@ -91,14 +96,26 @@ export const getServerSideProps = withMultipleServerSideProps(
     const dataSource = await getDataSource()
 
     if (isPost(req) && typeof unlockException === "string") {
-      const lockResult = await unlockCourtCase(dataSource, +unlockException, currentUser, UnlockReason.Exception)
+      const lockResult = await unlockCourtCase(
+        dataSource,
+        +unlockException,
+        currentUser,
+        UnlockReason.Exception,
+        useApiForCaseResubmit
+      )
       if (isError(lockResult)) {
         throw lockResult
       }
     }
 
     if (isPost(req) && typeof unlockTrigger === "string") {
-      const lockResult = await unlockCourtCase(dataSource, +unlockTrigger, currentUser, UnlockReason.Trigger)
+      const lockResult = await unlockCourtCase(
+        dataSource,
+        +unlockTrigger,
+        currentUser,
+        UnlockReason.Trigger,
+        useApiForCaseResubmit
+      )
       if (isError(lockResult)) {
         throw lockResult
       }
@@ -191,6 +208,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     // Remove courtDateRange from the props because the dates don't serialise
     const { courtDateRange: _, resolvedDateRange: __, ...caseListQueryProps } = caseListQueryParams
+
     return {
       props: {
         build: process.env.NEXT_PUBLIC_BUILD || null,
@@ -214,12 +232,14 @@ export const getServerSideProps = withMultipleServerSideProps(
         caseDetailsCookieName,
         totalCases,
         user: userToDisplayFullUserDto(currentUser),
+        canUseCourtDateReceivedDateMismatchFilters: canUseCourtDateReceivedDateMismatchFilters(currentUser),
         caseResolvedDateRange: caseListQueryParams.resolvedDateRange
           ? {
               from: formatFormInputDateString(caseListQueryParams.resolvedDateRange.from),
               to: formatFormInputDateString(caseListQueryParams.resolvedDateRange.to)
             }
           : null,
+        canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
         ...caseListQueryProps
       }
     }
@@ -231,6 +251,7 @@ const Home: NextPage<Props> = (props) => {
   const {
     csrfToken,
     user,
+    canUseCourtDateReceivedDateMismatchFilters,
     courtCases,
     totalCases,
     queryStringCookieName,
@@ -239,6 +260,7 @@ const Home: NextPage<Props> = (props) => {
     environment,
     build,
     oppositeOrder,
+    canUseTriggerAndExceptionQualityAuditing,
     ...searchParams
   } = props
 
@@ -272,6 +294,8 @@ const Home: NextPage<Props> = (props) => {
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
+  const displayAuditQuality = canUseTriggerAndExceptionQualityAuditing && searchParams.caseState == "Resolved"
+
   return (
     <>
       <Head>
@@ -282,9 +306,20 @@ const Home: NextPage<Props> = (props) => {
         <CurrentUserContext.Provider value={currentUserContext}>
           <Layout bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}>
             <CourtCaseWrapper
-              filter={<CourtCaseFilter {...searchParams} />}
+              filter={
+                <CourtCaseFilter
+                  canUseCourtDateReceivedDateMismatchFilters={canUseCourtDateReceivedDateMismatchFilters}
+                  {...searchParams}
+                />
+              }
               appliedFilters={<AppliedFilters filters={{ ...searchParams }} />}
-              courtCaseList={<CourtCaseList courtCases={courtCases} order={oppositeOrder} />}
+              courtCaseList={
+                <CourtCaseList
+                  courtCases={courtCases}
+                  order={oppositeOrder}
+                  displayAuditQuality={displayAuditQuality}
+                />
+              }
               paginationTop={
                 <Pagination
                   pageNum={searchParams.page}

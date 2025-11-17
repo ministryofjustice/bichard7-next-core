@@ -18,6 +18,62 @@ const compat = new FlatCompat({
   allConfig: js.configs.all
 })
 
+const createPackageConfig = (packageName, overrides = {}) => ({
+  files: [`packages/${packageName}/**/*`],
+  languageOptions: {
+    parserOptions: {
+      project: `./packages/${packageName}/tsconfig.json`,
+      tsconfigRootDir: __dirname
+    }
+  },
+  ...overrides
+})
+
+const nextPackages = ["ui", "user-service"]
+const nextJsTsxRules = {
+  curly: ["error", "all"],
+  "no-console": "off",
+  "no-plusplus": "off",
+  "no-useless-escape": "off",
+  "require-await": "off",
+  "import/first": "error",
+  "import/no-cycle": "error",
+  "import/no-anonymous-default-export": "off",
+  "import/prefer-default-export": "off",
+  "prettier/prettier": ["error"],
+  "react/jsx-curly-brace-presence": [
+    "error",
+    {
+      props: "ignore",
+      children: "always"
+    }
+  ],
+  "react/require-default-props": ["off"],
+  "@next/next/no-html-link-for-pages": "off",
+  "@typescript-eslint/ban-ts-comment": "off",
+  "@typescript-eslint/explicit-module-boundary-types": "off",
+  "@typescript-eslint/naming-convention": [
+    "warn",
+    {
+      selector: "variableLike",
+      format: ["StrictPascalCase", "strictCamelCase", "UPPER_CASE"],
+      filter: {
+        regex: "^_+$",
+        match: false
+      },
+      leadingUnderscore: "allow"
+    }
+  ],
+  "@typescript-eslint/no-unused-vars": [
+    "warn",
+    {
+      argsIgnorePattern: "^_+$",
+      varsIgnorePattern: "^_+$"
+    }
+  ],
+  "@typescript-eslint/no-duplicate-enum-values": "off"
+}
+
 export default [
   {
     ignores: [
@@ -32,7 +88,10 @@ export default [
       "packages/e2e-test/scripts",
       "packages/ui/cypress.config.ts",
       "packages/ui/next.config.js",
-      "packages/ui/.next/*"
+      "packages/ui/.next/*",
+      "packages/user-service/.next/*",
+      "packages/user-service/cypress.config.js",
+      "packages/user-service/next.config.js"
     ]
   },
   {
@@ -183,7 +242,7 @@ export default [
     }
   },
   {
-    files: ["packages/api/**/*.ts"],
+    files: ["packages/api/**/*.ts", "packages/user-service/testFixtures/**/*.js"],
 
     rules: {
       "require-await": "off"
@@ -191,23 +250,16 @@ export default [
   },
   ...compat.extends("plugin:@next/next/recommended").map((config) => ({
     ...config,
-    files: ["packages/ui/**/*"]
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`])
   })),
-  {
-    files: ["packages/ui/**/*"],
-
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.json"]
-      }
-    }
-  },
+  // Apply tsconfig for Next.js packages
+  ...nextPackages.map((pkg) => createPackageConfig(pkg)),
   ...compat.extends("prettier", "plugin:prettier/recommended").map((config) => ({
     ...config,
-    files: ["packages/ui/**/*.js"]
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.js`])
   })),
   {
-    files: ["packages/ui/**/*.js"],
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.js`]),
 
     rules: {
       "@typescript-eslint/no-var-requires": "off",
@@ -217,7 +269,7 @@ export default [
     }
   },
   {
-    files: ["packages/ui/**/*.ts"],
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.ts`]),
 
     rules: {
       "require-await": "off",
@@ -228,87 +280,42 @@ export default [
     .extends("next", "plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
     .map((config) => ({
       ...config,
-      files: ["packages/ui/**/*.tsx"]
+      files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
+      languageOptions: {
+        ...config.languageOptions,
+        parser: tsParser
+      }
     })),
-  {
-    files: ["packages/ui/**/*.tsx"],
-
+  // TSX configs for Next.js packages
+  ...nextPackages.map((pkg) => ({
+    files: [`packages/${pkg}/**/*.tsx`],
     plugins: {
       "@typescript-eslint": typescriptEslint
     },
-
     languageOptions: {
       ecmaVersion: 2020,
       sourceType: "script",
-
       parserOptions: {
         parserOptions: {
           sourceType: "module"
         },
-
-        project: ["./tsconfig.json"]
+        project: `./packages/${pkg}/tsconfig.json`,
+        tsconfigRootDir: __dirname
       }
     },
-
-    rules: {
-      curly: ["error", "all"],
-      "no-console": "off",
-      "no-plusplus": "off",
-      "no-useless-escape": "off",
-      "require-await": "off",
-      "import/first": "error",
-      "import/no-cycle": "error",
-      "import/no-anonymous-default-export": "off",
-      "import/prefer-default-export": "off",
-      "prettier/prettier": ["error"],
-
-      "react/jsx-curly-brace-presence": [
-        "error",
-        {
-          props: "ignore",
-          children: "always"
-        }
-      ],
-
-      "react/require-default-props": ["off"],
-      "@next/next/no-html-link-for-pages": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-
-      "@typescript-eslint/naming-convention": [
-        "warn",
-        {
-          selector: "variableLike",
-          format: ["StrictPascalCase", "strictCamelCase", "UPPER_CASE"],
-
-          filter: {
-            regex: "^_+$",
-            match: false
-          },
-
-          leadingUnderscore: "allow"
-        }
-      ],
-
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
-        {
-          argsIgnorePattern: "^_+$",
-          varsIgnorePattern: "^_+$"
-        }
-      ],
-
-      "@typescript-eslint/no-duplicate-enum-values": "off"
-    }
-  },
+    rules: nextJsTsxRules
+  })),
   {
-    files: [
-      "packages/ui/**/_*.{ts,tsx}",
-      "packages/ui/src/{emails,pages}/**/*.{ts,tsx}",
-      "packages/ui/**/*.config.{js,ts}",
-      "packages/ui/test/helpers/**/*.ts",
-      "packages/ui/cypress/**/*.ts"
-    ],
+    files: nextPackages.flatMap((pkg) => [
+      `packages/${pkg}/**/_*.ts`,
+      `packages/${pkg}/**/_*.tsx`,
+      `packages/${pkg}/src/pages/**/*.ts`,
+      `packages/${pkg}/src/pages/**/*.tsx`,
+      `packages/${pkg}/**/*.config.js`,
+      `packages/${pkg}/**/*.config.ts`,
+      `packages/${pkg}/test/helpers/**/*.ts`,
+      `packages/${pkg}/cypress/**/*.ts`
+    ]),
 
     languageOptions: {
       parser: tsParser
@@ -319,7 +326,7 @@ export default [
     }
   },
   {
-    files: ["packages/ui/**/*.test.*"],
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.test.*`]),
 
     rules: {
       "@typescript-eslint/no-explicit-any": "off"
@@ -327,10 +334,10 @@ export default [
   },
   ...compat.extends("plugin:cypress/recommended").map((config) => ({
     ...config,
-    files: ["packages/ui/cypress/**/*"]
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`])
   })),
   {
-    files: ["packages/ui/cypress/**/*"],
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`]),
 
     plugins: {
       mocha
@@ -348,10 +355,16 @@ export default [
     }
   },
   {
-    files: ["packages/ui/.ncurc.js"],
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/.ncurc.js`]),
 
     rules: {
       "no-console": "off"
+    }
+  },
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/next-env.d.ts`]),
+    rules: {
+      "@typescript-eslint/triple-slash-reference": "off"
     }
   }
 ]

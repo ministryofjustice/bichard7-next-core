@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render component when attributes are correctly set 1`] = `
+<div>
+  <div
+    aria-labelledby="govuk-notification-banner-title"
+    class="govuk-notification-banner govuk-notification-banner--success"
+    data-module="govuk-notification-banner"
+    role="alert"
+  >
+    <div
+      class="govuk-notification-banner__header"
+    >
+      <h2
+        class="govuk-notification-banner__title"
+        id="govuk-notification-banner-title"
+      >
+        Success
+      </h2>
+    </div>
+    <div
+      class="govuk-notification-banner__content"
+    >
+      <h3
+        class="govuk-notification-banner__heading"
+        data-test="success-banner_heading"
+      >
+        This is a success message
+      </h3>
+    </div>
+  </div>
+</div>
+`;

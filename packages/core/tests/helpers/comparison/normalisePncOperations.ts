@@ -1,6 +1,6 @@
-import type PncUpdateRequest from "../../../phase3/types/PncUpdateRequest"
+import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
 
-const normalisePncOperations = (operations: PncUpdateRequest[]) => {
+const normalisePncOperations = (operations: PoliceUpdateRequest[]) => {
   for (const operation of operations) {
     if (operation.request) {
       for (const value of Object.values(operation.request)) {

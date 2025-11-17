@@ -3,12 +3,12 @@ import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty, isError, sortBy } from "lodash"
 
 import type { CaseRowForDto, CaseRowForIndexDto } from "../../types/Case"
 
-import parseHearingOutcome from "../../services/parseHearingOutcome"
 import { convertNoteToDto } from "./convertNoteToDto"
 import { ResolutionStatus, resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
 import { convertTriggerRowToDto } from "./convertTriggerRowToDto"
@@ -56,9 +56,11 @@ export const convertCaseToCaseIndexDto = (
     ? null
     : caseRowForDto.error_locked_by_fullname,
   errorLockedByUsername: caseRowForDto.error_locked_by_id,
+  errorQualityChecked: caseRowForDto.error_quality_checked,
   errorReport: caseRowForDto.error_report,
   errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
   isUrgent: caseRowForDto.is_urgent,
+  messageReceivedAt: caseRowForDto.msg_received_ts,
   noteCount: (caseRowForDto as CaseRowForIndexDto).note_count
     ? Number((caseRowForDto as CaseRowForIndexDto).note_count)
     : undefined,
@@ -70,6 +72,7 @@ export const convertCaseToCaseIndexDto = (
     ? null
     : caseRowForDto.trigger_locked_by_fullname,
   triggerLockedByUsername: caseRowForDto.trigger_locked_by_id,
+  triggerQualityChecked: caseRowForDto.trigger_quality_checked,
   triggers: caseRowForDto.triggers ? caseRowForDto.triggers.map(convertTriggerRowToDto) : [],
   triggerStatus: resolutionStatusFromDb(caseRowForDto.trigger_status)
 })

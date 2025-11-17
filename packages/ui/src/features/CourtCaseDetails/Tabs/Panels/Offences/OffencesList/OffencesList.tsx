@@ -1,8 +1,8 @@
 import { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-
 import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
-import { ScreenReaderOnly, TableHeader } from "./OffencesList.styles"
+import { ScreenReaderOnly, StyledTableHead } from "./OffencesList.styles"
 import { OffencesListRow } from "./OffencesListRow"
+import { Table, TableBody, TableRow, TableHeader } from "components/Table"
 
 interface OffencesListProps {
   offences: Offence[]
@@ -13,28 +13,19 @@ export const OffencesList = ({ offences, setDetailedOffenceIndex }: OffencesList
   return (
     <div id={"offences"}>
       <h3 className="govuk-heading-m">{"Offences"}</h3>
-      <table className="govuk-table">
-        <TableHeader className="govuk-table__head">
-          <tr className="govuk-table__row">
-            <th scope="col" className="govuk-table__header">
+      <Table>
+        <StyledTableHead>
+          <TableRow>
+            <TableHeader scope="col">
               <ScreenReaderOnly className="sr-only">{"Exception icon"}</ScreenReaderOnly>
-            </th>
-            <th scope="col" className="govuk-table__header">
-              {"Offence number"}
-            </th>
-            <th scope="col" className="govuk-table__header">
-              {"Date"}
-            </th>
-            <th scope="col" className="govuk-table__header">
-              {"Code"}
-            </th>
-            <th scope="col" className="govuk-table__header">
-              {"Title"}
-            </th>
-          </tr>
-        </TableHeader>
-
-        <tbody className="govuk-table__body">
+            </TableHeader>
+            <TableHeader scope="col">{"Offence number"}</TableHeader>
+            <TableHeader scope="col">{"Date"}</TableHeader>
+            <TableHeader scope="col">{"Code"}</TableHeader>
+            <TableHeader scope="col">{"Title"}</TableHeader>
+          </TableRow>
+        </StyledTableHead>
+        <TableBody>
           {offences.length > 0 &&
             offences.map((offence, index) => (
               <OffencesListRow
@@ -44,8 +35,8 @@ export const OffencesList = ({ offences, setDetailedOffenceIndex }: OffencesList
                 onClick={() => setDetailedOffenceIndex(index + 1)}
               />
             ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   )
 }

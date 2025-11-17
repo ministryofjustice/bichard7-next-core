@@ -8,29 +8,29 @@ import refreshOperations from "./refreshOperations"
 const defaultOperations: Operation[] = [{ code: PncOperation.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }]
 
 describe("refreshOperations", () => {
-  it("adds PNC operations if no existing operations", () => {
-    const pncUpdateDataset = generateFakePncUpdateDataset()
+  it("adds police operations if no existing operations", () => {
+    const policeUpdateDataset = generateFakePncUpdateDataset()
 
-    const actualOperations = refreshOperations(pncUpdateDataset, defaultOperations)
+    const actualOperations = refreshOperations(policeUpdateDataset, defaultOperations)
 
     expect(actualOperations).toStrictEqual([
       { code: PncOperation.NORMAL_DISPOSAL, data: undefined, status: "NotAttempted" }
     ])
   })
 
-  it("adds no PNC operations if no existing and new operations", () => {
-    const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: [] })
+  it("adds no police operations if no existing and new operations", () => {
+    const policeUpdateDataset = generateFakePncUpdateDataset({ PncOperations: [] })
 
-    const actualOperations = refreshOperations(pncUpdateDataset, [])
+    const actualOperations = refreshOperations(policeUpdateDataset, [])
 
     expect(actualOperations).toStrictEqual([])
   })
 
-  describe("when there are existing PNC operations with NEWREM", () => {
+  describe("when there are existing police operations with NEWREM", () => {
     describe("and existing NEWREM operation status is completed", () => {
       it("keeps both new and existing operations when data does not match", () => {
         const operations: Operation[] = [{ code: PncOperation.REMAND, data: undefined, status: "NotAttempted" }]
-        const pncOperations = [
+        const policeOperations = [
           {
             status: "Completed",
             code: PncOperation.REMAND,
@@ -41,9 +41,9 @@ describe("refreshOperations", () => {
             code: PncOperation.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
-        const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
+        const policeUpdateDataset = generateFakePncUpdateDataset({ PncOperations: policeOperations })
 
-        const actualOperations = refreshOperations(pncUpdateDataset, operations)
+        const actualOperations = refreshOperations(policeUpdateDataset, operations)
 
         expect(actualOperations).toStrictEqual([
           {
@@ -58,7 +58,7 @@ describe("refreshOperations", () => {
 
       it("keeps only the existing operations when data does match", () => {
         const operations: Operation[] = [{ code: PncOperation.REMAND, data: undefined, status: "NotAttempted" }]
-        const pncOperations = [
+        const policeOperations = [
           {
             status: "Completed",
             code: PncOperation.REMAND
@@ -68,15 +68,15 @@ describe("refreshOperations", () => {
             code: PncOperation.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
-        const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
+        const policeUpdateDataset = generateFakePncUpdateDataset({ PncOperations: policeOperations })
 
-        const actualOperations = refreshOperations(pncUpdateDataset, operations)
+        const actualOperations = refreshOperations(policeUpdateDataset, operations)
 
-        expect(actualOperations).toStrictEqual(pncOperations)
+        expect(actualOperations).toStrictEqual(policeOperations)
       })
 
       it("keeps only the existing operations when no new operations", () => {
-        const pncOperations = [
+        const policeOperations = [
           {
             status: "Completed",
             code: PncOperation.REMAND,
@@ -87,9 +87,9 @@ describe("refreshOperations", () => {
             code: PncOperation.NORMAL_DISPOSAL
           } as unknown as Operation
         ]
-        const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
+        const policeUpdateDataset = generateFakePncUpdateDataset({ PncOperations: policeOperations })
 
-        const actualOperations = refreshOperations(pncUpdateDataset, [])
+        const actualOperations = refreshOperations(policeUpdateDataset, [])
 
         expect(actualOperations).toStrictEqual([
           {
@@ -103,7 +103,7 @@ describe("refreshOperations", () => {
     })
 
     it("removes the NEWREM operation if it hasn't been attempted", () => {
-      const pncOperations = [
+      const policeOperations = [
         {
           status: "NotAttempted",
           code: PncOperation.REMAND
@@ -113,15 +113,15 @@ describe("refreshOperations", () => {
           code: PncOperation.NORMAL_DISPOSAL
         } as unknown as Operation
       ]
-      const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
+      const policeUpdateDataset = generateFakePncUpdateDataset({ PncOperations: policeOperations })
 
-      const actualOperations = refreshOperations(pncUpdateDataset, defaultOperations)
+      const actualOperations = refreshOperations(policeUpdateDataset, defaultOperations)
 
-      expect(actualOperations).toStrictEqual([pncOperations[1]])
+      expect(actualOperations).toStrictEqual([policeOperations[1]])
     })
 
     it("removes the NEWREM operation if it has failed", () => {
-      const pncOperations = [
+      const policeOperations = [
         {
           status: "Completed",
           code: PncOperation.NORMAL_DISPOSAL
@@ -131,11 +131,11 @@ describe("refreshOperations", () => {
           code: PncOperation.REMAND
         } as unknown as Operation
       ]
-      const pncUpdateDataset = generateFakePncUpdateDataset({ PncOperations: pncOperations })
+      const policeUpdateDataset = generateFakePncUpdateDataset({ PncOperations: policeOperations })
 
-      const actualOperations = refreshOperations(pncUpdateDataset, defaultOperations)
+      const actualOperations = refreshOperations(policeUpdateDataset, defaultOperations)
 
-      expect(actualOperations).toStrictEqual([pncOperations[0]])
+      expect(actualOperations).toStrictEqual([policeOperations[0]])
     })
   })
 })

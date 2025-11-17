@@ -13,11 +13,11 @@ const runningWithProxy = (): boolean => {
 const login = ({ emailAddress, password }: { emailAddress: string; password: string }) => {
   cy.visit(!runningWithProxy() ? "https://localhost:4443/users" : "/users")
   cy.get("input[type=email]").type(emailAddress)
+  cy.get("input#password").type(password)
   cy.get("button[type=submit]").click()
   cy.get("input#validationCode").should("exist")
   cy.task("getVerificationCode", emailAddress).then((verificationCode) => {
     cy.get("input#validationCode").type(verificationCode as string)
-    cy.get("input#password").type(password)
     cy.get("button[type=submit]").click()
   })
 }

@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render fieldset component and its components 1`] = `
+<div>
+  <fieldset
+    class="govuk-fieldset"
+  >
+    <legend
+      class="govuk-fieldset__legend govuk-fieldset__legend--l"
+    >
+      <h1
+        class="govuk-fieldset__heading"
+      >
+        This is fieldset legend
+      </h1>
+    </legend>
+    <div
+      class="govuk-hint"
+    >
+      This is fieldset hint
+    </div>
+    <p>
+      Dummy text
+    </p>
+  </fieldset>
+</div>
+`;

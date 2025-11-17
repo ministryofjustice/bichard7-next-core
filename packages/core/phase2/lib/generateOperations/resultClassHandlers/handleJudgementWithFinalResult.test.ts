@@ -4,11 +4,11 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
 import generateResultClassHandlerParams from "../../../tests/helpers/generateResultClassHandlerParams"
-import hasUnmatchedPncOffences from "../../hasUnmatchedPncOffences"
+import hasUnmatchedPoliceOffences from "../../hasUnmatchedPoliceOffences"
 import { handleJudgementWithFinalResult } from "./handleJudgementWithFinalResult"
 
-jest.mock("../../hasUnmatchedPncOffences")
-const mockedHasUnmatchedPncOffences = hasUnmatchedPncOffences as jest.Mock
+jest.mock("../../hasUnmatchedPoliceOffences")
+const mockedHasUnmatchedPoliceOffences = hasUnmatchedPoliceOffences as jest.Mock
 
 describe("handleJudgementWithFinalResult", () => {
   beforeEach(() => {
@@ -70,9 +70,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns disposal operation when offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: false, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+    mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
     const operations = handleJudgementWithFinalResult(params)
 
@@ -84,9 +84,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns disposal operation with data and added by the court when offence is added by the court and has no 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 4000 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+    mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
     const operations = handleJudgementWithFinalResult(params)
 
@@ -107,9 +107,9 @@ describe("handleJudgementWithFinalResult", () => {
         Result: [{ PNCDisposalType: 4000 }],
         CourtCaseReferenceNumber: undefined
       } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+    mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
     const operations = handleJudgementWithFinalResult(params)
 
@@ -121,9 +121,9 @@ describe("handleJudgementWithFinalResult", () => {
   it("returns no operations when offence is added by the court but has a 2007 result code", () => {
     const params = generateResultClassHandlerParams({
       offence: { AddedByTheCourt: true, Result: [{ PNCDisposalType: 2007 }] } as Offence,
-      areAllResultsOnPnc: true
+      areAllResultsInPoliceCourtCase: true
     })
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+    mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
     const operations = handleJudgementWithFinalResult(params)
 
@@ -132,7 +132,7 @@ describe("handleJudgementWithFinalResult", () => {
 
   it("returns no operations when results are not on PNC, there are unmatched PNC offences, and the offence is not added by the court", () => {
     const params = generateResultClassHandlerParams({ result: { PNCDisposalType: 2060 } as Result })
-    mockedHasUnmatchedPncOffences.mockReturnValue(true)
+    mockedHasUnmatchedPoliceOffences.mockReturnValue(true)
 
     const operations = handleJudgementWithFinalResult(params)
 

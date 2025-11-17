@@ -1,0 +1,80 @@
+@import "variables";
+
+/* B7 Inset Text */
+.b7-inset-text {
+  display: block;
+  font-weight: 300;
+  font-size: 1rem;
+  padding: 0.9375rem 1.25rem;
+  background: var(--other-light-grey, $b7-light-grey-color);
+  box-shadow: 5px 0px 0px 0px $b7-dark-grey-color inset;
+
+  .b7-inset-text__heading {
+    display: block;
+    font-weight: 700;
+  }
+}
+
+/* B7 Accordion */
+.b7-accordion {
+  @extend .govuk-accordion__section;
+
+  .b7-accordion__content {
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .b7-accordion__header {
+    @extend .govuk-accordion__section-header;
+    margin-bottom: 0.5rem;
+
+    .b7-accordion__heading {
+      @extend .govuk-accordion__section-heading;
+
+      .b7-accordion__button {
+        @extend .govuk-accordion__section-button;
+
+        .b7-accordion__toggle {
+          @extend .govuk-accordion__section-toggle;
+
+          .b7-accordion__toggle-focus {
+            @extend .govuk-accordion__section-toggle-focus;
+
+            .b7-accordion-nav__chevron {
+              @extend .govuk-accordion-nav__chevron;
+            }
+
+            .b7-accordion-nav__chevron--down {
+              @extend .govuk-accordion-nav__chevron--down;
+            }
+
+            .b7-accordion__toggle-text {
+              @extend .govuk-accordion__section-toggle-text;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.js-enabled .b7-accordion .b7-accordion__header .b7-accordion__heading .b7-accordion__button,
+.b7-accordion .b7-accordion__header .b7-accordion__heading .js-enabled .b7-accordion__button {
+  padding: 0;
+  border: none;
+}
+
+.js-enabled .b7-accordion .b7-accordion__header .b7-accordion__heading .b7-accordion__button .b7-accordion__toggle,
+.b7-accordion .b7-accordion__header .b7-accordion__heading .b7-accordion__button .js-enabled .b7-accordion__toggle {
+  margin-bottom: 0;
+}
+
+/* MoJ badge */
+.moj-badge {
+  background-color: white;
+}
+
+.preview-button {
+  margin-Bottom: 0px;
+  white-space: nowrap;
+}

@@ -1,5 +1,5 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 import HO100310 from "../../../cypress/fixtures/HO100310.json"
 import HO100332 from "../../../cypress/fixtures/HO100332.json"
 import type { DisplayFullCourtCase } from "../../types/display/CourtCases"
@@ -13,7 +13,7 @@ describe("findCandidates", () => {
 
   describe("when there aren't any matches", () => {
     it("should return an empty offences array if offence codes do not match", () => {
-      const pncOffence = { offence: { cjsOffenceCode: "nonMatchingOffenceCode" } } as PncOffence
+      const pncOffence = { offence: { cjsOffenceCode: "nonMatchingOffenceCode" } } as PoliceOffence
       const offence = {
         CriminalProsecutionReference: {
           OffenceReason: { __type: "NationalOffenceReason", OffenceCode: { FullCode: "offenceCode" } }
@@ -48,7 +48,9 @@ describe("findCandidates", () => {
     })
 
     it("should return an empty offences array if offence codes match but dates do not match", () => {
-      const pncOffence = { offence: { cjsOffenceCode: "offenceCode", startDate: new Date("1990-01-01") } } as PncOffence
+      const pncOffence = {
+        offence: { cjsOffenceCode: "offenceCode", startDate: new Date("1990-01-01") }
+      } as PoliceOffence
       const offence = {
         ActualOffenceStartDate: { StartDate: new Date("1990-02-01") },
         CriminalProsecutionReference: {
@@ -82,7 +84,9 @@ describe("findCandidates", () => {
 
   describe("when there is one matching offence", () => {
     it("should return the matching offence if both offence codes and dates match", () => {
-      const pncOffence = { offence: { cjsOffenceCode: "offenceCode", startDate: new Date("1990-01-01") } } as PncOffence
+      const pncOffence = {
+        offence: { cjsOffenceCode: "offenceCode", startDate: new Date("1990-01-01") }
+      } as PoliceOffence
       const offence = {
         ActualOffenceStartDate: { StartDate: new Date("1990-01-01") },
         CriminalProsecutionReference: {
@@ -149,7 +153,9 @@ describe("findCandidates", () => {
 
   describe("When there are multiple matches", () => {
     it("should return both matching offences when the matches are on the same court case", () => {
-      const pncOffence = { offence: { cjsOffenceCode: "offenceCode", startDate: new Date("1990-01-01") } } as PncOffence
+      const pncOffence = {
+        offence: { cjsOffenceCode: "offenceCode", startDate: new Date("1990-01-01") }
+      } as PoliceOffence
       const offence = {
         ActualOffenceStartDate: { StartDate: new Date("1990-01-01") },
         CriminalProsecutionReference: {

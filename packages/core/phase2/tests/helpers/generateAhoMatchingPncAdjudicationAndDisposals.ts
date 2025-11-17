@@ -1,5 +1,5 @@
 import type { Hearing, Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import generateAhoFromOffenceList from "../../tests/fixtures/helpers/generateAhoFromOffenceList"
 
@@ -134,7 +134,7 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
                   text: "EXCLUDED FROM LOCATION"
                 }
               ]
-            } as PncOffence
+            } as PoliceOffence
           ]
   }
 
@@ -143,7 +143,7 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
     checkName: "",
     pncId: options.hasPncId === false ? undefined : "123",
     courtCases: [courtCase]
-  } as PncQueryResult
+  } as PoliceQueryResult
 
   if (options.hasAdditionalMatchingOffence) {
     pncQuery.courtCases?.push({
@@ -172,7 +172,7 @@ const generateAhoMatchingPncAdjudicationAndDisposals = (
               text: "EXCLUDED FROM LOCATION"
             }
           ]
-        } as PncOffence
+        } as PoliceOffence
       ]
     })
   }

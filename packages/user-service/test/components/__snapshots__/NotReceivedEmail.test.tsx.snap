@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`should render the component and match the snapshot 1`] = `
+<div>
+  <details
+    class="govuk-details"
+    data-module="govuk-details"
+  >
+    <summary
+      class="govuk-details__summary"
+      data-test="problem-with-code"
+    >
+      <span
+        class="govuk-details__summary-text"
+      >
+        Problem with the code?
+      </span>
+    </summary>
+    <div
+      class="govuk-details__text"
+    >
+      <p>
+        We can 
+        <a
+          class="govuk-link"
+          data-test="send-code-again-link"
+          href="http://localhost/send-again-url?notYou=false&action=sendCodeAgain"
+        >
+          send the code again
+        </a>
+         or you can 
+        <a
+          class="govuk-link"
+          data-test="not-you-link"
+          href="http://localhost/send-again-url?notYou=true"
+        >
+          use a different email address.
+        </a>
+      </p>
+      <p>
+        If you don't know your email address, contact the member of your team responsible for managing Bichard7 accounts.
+      </p>
+    </div>
+  </details>
+</div>
+`;

@@ -29,10 +29,17 @@ const httpsAgent = new https.Agent({
 })
 
 export default class AuditLogApiClient {
+  private get apiKeyHeader(): Record<string, string> {
+    if (this.isB7Api()) {
+      return { Authorization: this.apiKey }
+    }
+
+    return { "X-API-Key": this.apiKey }
+  }
+
   private get baseUrl(): string {
     return `${this.apiUrl}/${this.basePath}`
   }
-
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
@@ -45,8 +52,9 @@ export default class AuditLogApiClient {
       .post(this.baseUrl, this.stringify(auditLog), {
         headers: {
           "Content-Type": "application/json",
-          "X-API-Key": this.apiKey
+          ...this.apiKeyHeader
         },
+        httpsAgent,
         timeout: this.timeout,
         // The Audit Log API doesn't return JSON :facepalm:
         transformResponse: (res) => res
@@ -62,7 +70,7 @@ export default class AuditLogApiClient {
       .catch((error: AxiosError) => {
         const apiError = error.response?.data ? this.stringify(error.response?.data) : error.message
         if (/A message with Id [^ ]* already exists in the database/.test(apiError)) {
-          return new AlreadyExistsError()
+          return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
         }
 
         return new ApplicationError(`Error creating audit log: ${apiError}`, error)
@@ -73,7 +81,7 @@ export default class AuditLogApiClient {
     return axios
       .post(`${this.baseUrl}/${correlationId}/events`, event, {
         headers: {
-          "X-API-Key": this.apiKey
+          ...this.apiKeyHeader
         },
         httpsAgent,
         timeout: this.timeout,
@@ -109,7 +117,7 @@ export default class AuditLogApiClient {
     return axios
       .post(`${this.apiUrl}/users/${userName}/events`, event, {
         headers: {
-          "X-API-Key": this.apiKey
+          ...this.apiKeyHeader
         },
         httpsAgent,
         timeout: this.timeout
@@ -147,7 +155,8 @@ export default class AuditLogApiClient {
 
     return axios
       .get(url, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -176,11 +185,12 @@ export default class AuditLogApiClient {
 
     return axios
       .get(`${this.baseUrl}/${correlationId}${queryString}`, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
-      .then((result) => result[0])
+      .then((result) => (this.isB7Api() ? result : result[0]))
       .catch((error: AxiosError) => {
         if (error.response?.status === HttpStatusCode.NotFound) {
           return undefined
@@ -198,7 +208,8 @@ export default class AuditLogApiClient {
 
     return axios
       .get(url, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -229,7 +240,8 @@ export default class AuditLogApiClient {
 
     return axios
       .get(`${this.baseUrl}${queryString}`, {
-        headers: { "X-API-Key": this.apiKey },
+        headers: { ...this.apiKeyHeader },
+        httpsAgent,
         timeout: this.timeout
       })
       .then((response) => response.data)
@@ -252,7 +264,7 @@ export default class AuditLogApiClient {
         {},
         {
           headers: {
-            "X-API-Key": this.apiKey
+            ...this.apiKeyHeader
           },
           httpsAgent,
           timeout: this.timeout
@@ -283,7 +295,7 @@ export default class AuditLogApiClient {
         {},
         {
           headers: {
-            "X-API-Key": this.apiKey
+            ...this.apiKeyHeader
           },
           httpsAgent,
           timeout: this.timeout
@@ -307,6 +319,10 @@ export default class AuditLogApiClient {
           error
         )
       })
+  }
+
+  private isB7Api(): boolean {
+    return this.apiKey.startsWith("Bearer ")
   }
 
   private stringify(message: unknown): string {

@@ -58,7 +58,7 @@ describe("CreateAuditLogUseCase", () => {
 
     const result = await createAuditLog(expectedAuditLog, auditLogDynamoGateway, logger)
 
-    expect(result).toBeUndefined()
+    expect(result).toBeDefined()
 
     const actualAuditLog = await getAuditLog(expectedAuditLog.messageId)
     expect(actualAuditLog?.messageId).toBe(expectedAuditLog.messageId)
@@ -73,10 +73,10 @@ describe("CreateAuditLogUseCase", () => {
     duplicateAuditLog.messageHash = originalAuditLog.messageHash
 
     const originalResult = await createAuditLog(originalAuditLog, auditLogDynamoGateway, logger)
-    expect(originalResult).toBeUndefined()
+    expect(originalResult).toBeDefined()
 
     const duplicateResult = await createAuditLog(duplicateAuditLog, auditLogDynamoGateway, logger)
-    expect(duplicateResult).toBeUndefined()
+    expect(duplicateResult).toBeDefined()
 
     const originalAuditLogRecord = await getAuditLog(originalAuditLog.messageId)
     expect(originalAuditLogRecord?.messageId).toBe(originalAuditLog.messageId)

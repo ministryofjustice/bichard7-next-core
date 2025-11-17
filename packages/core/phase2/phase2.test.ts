@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome, Offence, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncOffence, PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+import type { PoliceOffence, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { parsePncUpdateDataSetXml } from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/index"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
@@ -11,12 +11,12 @@ import fs from "fs"
 import MockDate from "mockdate"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
-import areAllResultsOnPnc from "./lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "./lib/areAllResultsInPoliceCourtCase"
 import phase2Handler from "./phase2"
 import { Phase2ResultType } from "./types/Phase2Result"
 
-jest.mock("./lib/areAllResultsOnPnc")
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+jest.mock("./lib/areAllResultsInPoliceCourtCase")
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 
 describe("Bichard Core Phase 2 processing logic", () => {
   const inputAhoMessage = fs.readFileSync("phase2/tests/fixtures/AnnotatedHO1.xml").toString()
@@ -205,11 +205,11 @@ describe("Bichard Core Phase 2 processing logic", () => {
                     text: "EXCLUDED FROM LOCATION"
                   }
                 ]
-              } as PncOffence
+              } as PoliceOffence
             ]
           }
         ]
-      } as PncQueryResult
+      } as PoliceQueryResult
 
       const result = phase2Handler(inputMessageWithException, auditLogger)
 

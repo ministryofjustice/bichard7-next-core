@@ -1,8 +1,8 @@
-import type { PncOffence } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceOffence } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import resultCodeIsFinal from "../../../../lib/results/resultCodeIsFinal"
 
-const offenceHasFinalResult = (offence: PncOffence): boolean => {
+const offenceHasFinalResult = (offence: PoliceOffence): boolean => {
   return !!offence.disposals?.some((disposal) => disposal.type && resultCodeIsFinal(disposal.type))
 }
 

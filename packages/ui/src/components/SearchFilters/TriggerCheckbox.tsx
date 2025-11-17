@@ -1,9 +1,9 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
-import { ChangeEvent, Dispatch } from "react"
-import { FilterAction } from "types/CourtCaseFilter"
-import { TriggerCheckboxLabel } from "./TriggerCheckbox.styles"
+import type { ChangeEvent, Dispatch } from "react"
+import type { FilterAction } from "types/CourtCaseFilter"
+import { Label } from "components/Label"
 
 interface TriggerCheckboxProps {
   triggerCode: TriggerCode
@@ -30,9 +30,9 @@ const TriggerCheckbox = ({ triggerCode, selectedTrigger, dispatch }: TriggerChec
           })
         }}
       ></input>
-      <TriggerCheckboxLabel className="govuk-label govuk-checkboxes__label" htmlFor={triggerCode.toLowerCase()}>
+      <Label className="govuk-checkboxes__label govuk-!-padding-right-0" htmlFor={triggerCode.toLowerCase()}>
         {getTriggerWithDescription(triggerCode, true)}
-      </TriggerCheckboxLabel>
+      </Label>
     </div>
   )
 }

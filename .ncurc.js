@@ -8,8 +8,8 @@ const semver = new RegExp(
     - v5 is a breaking change
   - @types/diff
     - changed the Change type to require extra values
-  - zod, fastify-zod-openapi, zod-openapi, zod-validation-error
-    - zod v4 has breaking changes and all of these related packages rely on the new version of zod
+  - @faker-js/faker
+    - v10 has breaking change with Jest
 
   Ignored:
   - bichard7-next-data-x.x.x
@@ -19,15 +19,21 @@ const semver = new RegExp(
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
+  - @io-orkes/conductor-javascript
+    - Breaking changes for how to use the Client, workflows etc
+  - @typescript-eslint/eslint-plugin
+    - Breaks dependency tree for eslint-config-next
 */
-const pinned = ["chalk", "@types/diff", "zod", "fastify-zod-openapi", "zod-openapi", "zod-validation-error"]
+const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
   `bichard7-next-data-(${semver.source})`,
   "p-limit",
   "esbuild",
   "@cucumber/cucumber",
   "@cucumber/pretty-formatter",
-  "http-status"
+  "http-status",
+  "@io-orkes/conductor-javascript",
+  "@typescript-eslint/eslint-plugin"
 ]
 
 module.exports = {

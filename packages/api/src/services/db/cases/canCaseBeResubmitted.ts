@@ -1,22 +1,30 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { isServiceUser } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { visibleCourtsSql } from "../visibleCourtsSql"
+import { visibleForcesSql } from "../visibleForcesSql"
 
 export interface CanCaseBeResubmittedResult {
+  caseInCourt: 0 | 1
   caseInForce: 0 | 1
   caseIsUnresolved: 0 | 1
   lockedByUser: 0 | 1
 }
 
 export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<boolean> => {
+  const isSystemUser = isServiceUser(user)
+  const lockedUserSql = database.connection`el.error_locked_by_id = ${user.username}`
+
   const result = await database.connection<CanCaseBeResubmittedResult[]>`
       SELECT
-        (el.error_locked_by_id = ${user.username})::INTEGER as "lockedByUser",
-        (br7own.force_code(el.org_for_police_filter) = ANY((${user.visibleForces}::SMALLINT[])))::INTEGER as "caseInForce",
+        (${isSystemUser ? "1" : lockedUserSql})::INTEGER as "lockedByUser",
+        (${isSystemUser ? "1" : visibleForcesSql(database, user.visibleForces)})::INTEGER as "caseInForce",
+        (${isSystemUser ? "1" : visibleCourtsSql(database, user.visibleCourts)})::INTEGER as "caseInCourt",
         (el.error_status = 1)::INTEGER as "caseIsUnresolved"
       FROM br7own.error_list el
       WHERE
@@ -24,9 +32,7 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
     `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(
-      `Error while checking if case can be resubmitted for case id ${caseId} and user ${user.username}: ${result.message}`
-    )
+    return result
   }
 
   if (!result || result.length === 0) {
@@ -34,5 +40,5 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
   }
 
   const caseData = result[0]
-  return !!caseData.lockedByUser && !!caseData.caseInForce && !!caseData.caseIsUnresolved
+  return !!caseData.lockedByUser && (!!caseData.caseInForce || !!caseData.caseInCourt) && !!caseData.caseIsUnresolved
 }

@@ -1,10 +1,10 @@
-import { Given, Then, When } from "@cucumber/cucumber"
+import { Given, Then, When } from "../helpers/stepsHelpers"
 import * as legacy from "../utils/actions.legacy-ui"
 import * as ui from "../utils/actions.next-ui"
 import { checkAuditLogExists } from "../utils/auditLogging"
 import { logInAs, logInAsSameWindow } from "../utils/auth"
 import * as messages from "../utils/message"
-import * as pnc from "../utils/pnc"
+import { delay } from "../utils/puppeteer-utils"
 import * as reports from "../utils/reports"
 import type Bichard from "../utils/world"
 
@@ -12,45 +12,48 @@ export const setupNextSteps = () => {
   Given("I am logged in as {string}", logInAs)
   Given("I am logged in as {string} in the same window", logInAsSameWindow)
 
-  // Misc
-  When(
-    "I wait {int} seconds",
-    (delay) =>
-      new Promise((resolve) => {
-        setTimeout(resolve, delay * 1000)
-      })
-  )
-  // TODO: remove this and refactor reliant tests when
-  // old test suite is removed
-  When(
-    "I wait {string} seconds",
-    (delay) =>
-      new Promise((resolve) => {
-        setTimeout(resolve, delay * 1000)
-      })
-  )
+  // TODO: Remove this from the tests and refactor any dependent tests once the old test suite is retired.
+  // These steps are intended for debugging only.
+  When("I wait {int} seconds", delay)
+  When("I wait {string} seconds", delay)
   Then("pending", () => "pending")
 
   // Audit Logging
-  Then("the audit log contains {string}", async function (this: Bichard, eventType: string) {
-    await checkAuditLogExists(this, eventType, true)
+  Then("the audit log contains {string}", function (this: Bichard, eventType: string) {
+    return checkAuditLogExists(this, eventType, true)
   })
-  Then("{string} is not in the audit log", async function (this: Bichard, eventType: string) {
-    await checkAuditLogExists(this, eventType, false)
+  Then("{string} is not in the audit log", function (this: Bichard, eventType: string) {
+    return checkAuditLogExists(this, eventType, false)
   })
 
   // Messages
   When("{string} is received", messages.sendMessageForTest)
 
   // PNC Actions
-  Given("the data for this test is in the PNC", pnc.mockPNCDataForTest)
-  Given("the data for this test is not in the PNC", pnc.mockMissingPncDataForTest)
-  Given("there is a valid record for {string} in the PNC", pnc.createValidRecordInPNC)
-  Then("the PNC updates the record", pnc.checkMocks)
-  Then("the PNC record has not been updated", pnc.pncNotUpdated)
-  Then("the PNC update includes {string}", pnc.pncUpdateIncludes)
-  Then("no PNC requests have been made", pnc.noPncRequests)
-  Then("no PNC updates have been made", pnc.noPncUpdates)
+  Given("the data for this test is in the PNC", function () {
+    return this.policeApi.mockDataForTest()
+  })
+  Given("the data for this test is not in the PNC", function () {
+    return this.policeApi.mockMissingDataForTest()
+  })
+  Given("there is a valid record for {string} in the PNC", function (record: string) {
+    return this.policeApi.createValidRecord(record)
+  })
+  Then("the PNC updates the record", function () {
+    return this.policeApi.checkMocks()
+  })
+  Then("the PNC record has not been updated", function () {
+    return this.policeApi.expectNotUpdated()
+  })
+  Then("the PNC update includes {string}", function (includes: string) {
+    return this.policeApi.expectUpdateIncludes(includes)
+  })
+  Then("no PNC requests have been made", function () {
+    return this.policeApi.expectNoRequests()
+  })
+  Then("no PNC updates have been made", function () {
+    return this.policeApi.expectNoUpdates()
+  })
 
   // Report Actions
   When("I fake the data for the operational trigger report", reports.fakeTriggerReportData)
@@ -84,9 +87,9 @@ export const setupNextSteps = () => {
   When("I correct {string} to {string}", ui.correctOffenceException)
   When("I wait for {string} in the list of records", ui.waitForRecordStep)
   When("I see {int} record for {string}", ui.nRecordsForPerson)
-  When("I see {string} record for {string}", async function (this: Bichard, count: string, name: string) {
+  When("I see {string} record for {string}", function (this: Bichard, count: string, name: string) {
     const n = Number.parseInt(count, 10)
-    await ui.nRecordsForPerson.apply(this, [n, name])
+    return ui.nRecordsForPerson.apply(this, [n, name])
   })
   Then("the exception list should contain a record for {string}", ui.findRecordFor)
   Then("the record for {string} should not have any PNC errors", ui.checkNoPncErrors)

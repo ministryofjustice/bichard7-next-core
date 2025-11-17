@@ -1,15 +1,15 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-import type { PncQueryResult } from "@moj-bichard7/common/types/PncQueryResult"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import ResultClass from "@moj-bichard7/common/types/ResultClass"
 
-import areAllResultsOnPnc from "../lib/areAllResultsOnPnc"
+import areAllResultsInPoliceCourtCase from "../lib/areAllResultsInPoliceCourtCase"
 import generateAhoFromOffenceList from "../tests/fixtures/helpers/generateAhoFromOffenceList"
 import HO200115 from "./HO200115"
 
-jest.mock("../lib/areAllResultsOnPnc")
+jest.mock("../lib/areAllResultsInPoliceCourtCase")
 
-const mockedAreAllResultsOnPnc = areAllResultsOnPnc as jest.Mock
+const mockedAreAllResultsOnPnc = areAllResultsInPoliceCourtCase as jest.Mock
 mockedAreAllResultsOnPnc.mockReturnValue(true)
 
 describe("HO200115", () => {
@@ -27,7 +27,7 @@ describe("HO200115", () => {
 
     aho.PncQuery = {
       courtCases: [{ courtCaseReference: "1", offences: [{ disposals: [{ type: 2007 }] }] }]
-    } as PncQueryResult
+    } as PoliceQueryResult
 
     const exceptions = HO200115(aho)
 

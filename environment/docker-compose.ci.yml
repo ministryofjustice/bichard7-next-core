@@ -1,0 +1,11 @@
+# Overrides for CircleCI to boost I/O performance
+# Mounts data in memory
+
+services:
+  postgres:
+    tmpfs:
+      - /var/lib/postgresql/data
+
+  localstack:
+    tmpfs:
+      - /var/lib/localstack

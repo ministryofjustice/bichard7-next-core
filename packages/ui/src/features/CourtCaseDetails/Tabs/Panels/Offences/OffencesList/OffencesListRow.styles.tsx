@@ -1,13 +1,12 @@
 import styled from "styled-components"
+import { TableRow } from "components/Table"
 
-const IconContainer = styled.div`
+export const IconContainer = styled.div`
   line-height: 11px;
 `
 
-const TableRow = styled.tr`
+export const StyledTableRow = styled(TableRow)`
   td {
     font-size: var(--case-details-default-font-size);
   }
 `
-
-export { IconContainer, TableRow }

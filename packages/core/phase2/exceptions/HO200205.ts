@@ -7,7 +7,7 @@ import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 
 import forEachRecordableResult from "../../lib/offences/forEachRecordableResult"
-import isAmountSpecifiedInResultValid from "../../lib/results/createPncDisposalsFromResult/isAmountSpecifiedInResultValid"
+import isAmountSpecifiedInResultValid from "../../lib/results/createPoliceDisposalsFromResult/isAmountSpecifiedInResultValid"
 
 const firstAmountIndex = 0
 const thirdAmountIndex = 2

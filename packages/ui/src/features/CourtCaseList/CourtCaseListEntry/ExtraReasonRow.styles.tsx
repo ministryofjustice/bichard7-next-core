@@ -1,6 +1,7 @@
 import styled from "styled-components"
+import { TableRow } from "components/Table"
 
-const StyledExtraReasonRow = styled.tr`
+const StyledExtraReasonRow = styled(TableRow)`
   vertical-align: top;
 
   td {

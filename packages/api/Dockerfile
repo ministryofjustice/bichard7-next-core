@@ -1,53 +1,60 @@
 ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
-FROM ${BUILD_IMAGE} AS builder
+FROM ${BUILD_IMAGE} AS base
 
-RUN echo $NOTIIFCATION
 LABEL maintainer="CJSE"
 
-RUN dnf update -y \
-  && dnf install -y findutils \
-  && rm -rf /var/log/* \
-  && dnf clean all \
-  && rm -rf /var/cache/dnf
+#########################################################F
+FROM base AS deps
 
 WORKDIR /core
 
 COPY package*.json ./
-COPY tsconfig*.json ./
-COPY packages/api ./packages/api
-COPY packages/common ./packages/common
+COPY packages/common/package.json ./packages/common/package.json
+COPY packages/api/package.json ./packages/api/package.json
 
-RUN npm ci --ignore-scripts && npm run build:api
+RUN npm ci --ignore-scripts --no-audit
 
-WORKDIR /core/packages/common
-
-RUN ls | grep -v package.json | grep -v dist | xargs rm -rf
-
-WORKDIR /core/packages/api
-
-RUN ls | grep -v package.json | grep -v dist | grep -v node_modules | xargs rm -rf
+#########################################################
+FROM base AS builder
 
 WORKDIR /core
 
+COPY --from=deps ./core ./
+
+COPY tsconfig*.json ./
+COPY packages/common ./packages/common
+COPY packages/api ./packages/api
+
+RUN npm run build:api
+
 RUN npm prune --omit=dev --workspaces --include-root
 
-FROM ${BUILD_IMAGE}
+#########################################################
+FROM base AS runner
 
-WORKDIR /
+WORKDIR /core
 
-COPY --from=builder /core /core
+RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
+  usermod -a -G supervisor supervisor && \
+  chgrp supervisor -R /certs /run /var/log /var/lib/nginx && \
+  chmod g+r -R /certs/server.key /var/lib/nginx && \
+  chmod g+rw -R /run /var/log && \
+  npm config set cache /tmp/npm --global
+
+COPY --from=builder /core/node_modules ./node_modules
+
+COPY --from=builder /core/packages/common/package.json ./packages/common/package.json
+COPY --from=builder /core/packages/common/dist ./packages/common/dist
+COPY --from=builder /core/packages/common/node_modules ./packages/common/node_modules
+
+COPY --from=builder /core/packages/api/dist ./packages/api/dist
 
 WORKDIR /core/packages/api
 
 COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
 
-RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
-  usermod -a -G supervisor supervisor && \
-  chgrp supervisor -R /core /certs /run /var/log /var/lib/nginx && \
-  chmod g+r -R /certs/server.key /var/lib/nginx && \
-  chmod g+rw -R /core /run /var/log && \
-  npm config set cache /tmp/npm --global
-
+RUN chgrp supervisor -R /core && \
+    chmod g+rw -R /core
 
 COPY packages/api/docker/conf/nginx.conf /etc/nginx/nginx.conf
 COPY packages/api/docker/conf/supervisord.conf /etc/supervisord.conf

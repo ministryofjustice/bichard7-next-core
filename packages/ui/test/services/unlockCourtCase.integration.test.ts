@@ -105,7 +105,8 @@ describe("unlock court case", () => {
         expectedToCallWithCourtCase,
         user,
         UnlockReason.TriggerAndException,
-        expectedAuditLogEvents
+        expectedAuditLogEvents,
+        undefined
       )
       expect(storeMessageAuditLogEvents).toHaveBeenCalledTimes(1)
       expect(storeMessageAuditLogEvents).toHaveBeenCalledWith(lockedCourtCase.messageId, expectedAuditLogEvents)

@@ -1,6 +1,12 @@
 import nextHearingDateExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
 import dummyAho from "../../../../../test/test-data/error_list_aho.json"
-import { clickTab, loginAndVisit, submitAndConfirmExceptions, verifyUpdatedMessage } from "../../../../support/helpers"
+import {
+  clickTab,
+  loginAndVisit,
+  submitAndConfirmExceptions,
+  verifyUpdatedMessage,
+  refreshUntilNotePresent
+} from "../../../../support/helpers"
 
 describe("NextHearingDate", () => {
   beforeEach(() => {
@@ -94,6 +100,7 @@ describe("NextHearingDate", () => {
     cy.get(".govuk-link").contains("Offence with HO100102 - INCORRECTLY FORMATTED DATE EXCEPTION").click()
     cy.contains("dt", "Next hearing date").siblings().should("include.text", "false")
     cy.get(".hearing-result-1 #next-hearing-date").type("2024-01-01")
+    cy.get(".next-hearing-date-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
 
@@ -105,7 +112,7 @@ describe("NextHearingDate", () => {
     const dateTimeRegex = /\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/
     cy.contains(dateTimeRegex)
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextHearingDate. New Value: 2024-01-01")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -139,6 +146,8 @@ describe("NextHearingDate", () => {
       .click()
     cy.contains("dt", "Next hearing date").siblings().should("include.text", "")
     cy.get(".hearing-result-1 #next-hearing-date").type("2023-12-24")
+    cy.get(".next-hearing-date-row .success-message").should("exist")
+
     submitAndConfirmExceptions()
 
     cy.location().should((loc) => {
@@ -148,7 +157,7 @@ describe("NextHearingDate", () => {
     const dateTimeRegex = /\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2}/
     cy.contains(dateTimeRegex)
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextHearingDate. New Value: 2023-12-24")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
 
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
@@ -188,7 +197,7 @@ describe("NextHearingDate", () => {
     cy.contains(dateTimeRegex)
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextHearingDate. New Value: 2024-01-01")
     cy.contains("GeneralHandler: Portal Action: Update Applied. Element: nextHearingDate. New Value: 2023-12-24")
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
     verifyUpdatedMessage({
       expectedCourtCase: { errorId: 0, errorStatus: "Submitted" },
       updatedMessageNotHaveContent: ["<ds:NextHearingDate>false</ds:NextHearingDate>", "<ds:NextHearingDate />"],

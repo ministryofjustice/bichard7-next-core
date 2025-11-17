@@ -90,14 +90,14 @@ services:
       - 5432:5432
     command: postgres -c max_prepared_transactions=100 -c log_statement=all
     healthcheck:
-      test: "pg_isready -U $${POSTGRES_USER}"
+      test: ["CMD-SHELL", "psql -U $${POSTGRES_USER} -d $${POSTGRES_DB} -c 'SELECT 1'"]
       interval: 2s
       timeout: 2s
       retries: 10
       start_period: 20s
 
   db-migrate:
-    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.migrations.properties"
@@ -114,7 +114,7 @@ services:
       start_period: 20s
 
   db-seed:
-    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase}"
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.seeds.properties"
@@ -132,7 +132,9 @@ services:
 
   api:
     image: api
-    profiles: ["b7-api"]
+    build:
+      dockerfile: packages/api/Dockerfile
+      context: ..
     environment:
       DB_HOST: postgres
       DB_READER_HOST: postgres
@@ -144,19 +146,20 @@ services:
       DYNAMO_AWS_ACCESS_KEY_ID: S3RVER
       DYNAMO_AWS_SECRET_ACCESS_KEY: S3RVER
       AWS_URL: http://localstack:4566
+      CONDUCTOR_URL: http://conductor:4000/api
     healthcheck:
       test: curl --insecure --fail https://localhost:9443/v1/health
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 120s
+      start_period: 30s
     ports:
       - 3333:9443
     depends_on:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       localstack:
         condition: service_healthy
 
@@ -185,13 +188,13 @@ services:
       localstack:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
     healthcheck:
       test: curl --insecure --fail https://localhost:5000/health
       interval: 2s
       timeout: 2s
       retries: 10
-      start_period: 120s
+      start_period: 30s
     ports:
       - 5001:5000
       - 5002:4000
@@ -250,7 +253,6 @@ services:
       CONDUCTOR_API_URL: ${CONDUCTOR_API_URL:-http://conductor:4000}
       CONDUCTOR_USERNAME: ${DEFAULT_USER}
       CONDUCTOR_PASSWORD: ${DEFAULT_PASSWORD}
-      ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
     healthcheck:
       test: curl --insecure --fail https://localhost:9443/bichard-ui/Health
       interval: 2s
@@ -265,7 +267,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       phase-1-message-forwarder:
         condition: service_started
       phase-2-message-forwarder:
@@ -315,8 +317,16 @@ services:
       start_period: 180s
     restart: on-failure
 
+  leds:
+    image: mockserver/mockserver
+    ports:
+      - 1080:1080
+
   user-service:
     image: user-service
+    build:
+      dockerfile: packages/user-service/Dockerfile
+      context: ..
     environment:
       BASE_URL: https://localhost:4443/users
       DB_HOST: postgres
@@ -331,7 +341,7 @@ services:
       SMTP_TLS: "false"
       SMTP_DEBUG: "true"
     healthcheck:
-      test: (echo >/dev/tcp/localhost/3000) && (echo >/dev/tcp/localhost/443)
+      test: curl -f -L --insecure https://localhost:9443/users/api/health
       interval: 2s
       timeout: 2s
       retries: 10
@@ -340,7 +350,7 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
       mail:
         condition: service_started
 
@@ -356,11 +366,14 @@ services:
       PHASE_1_RESUBMIT_QUEUE_NAME: PHASE_1_RESUBMIT_QUEUE
       AUDIT_LOG_API_URL: http://audit-log-api:7010
       CONDUCTOR_API_URL: http://conductor:4000
-      ENABLE_CORE_PHASE1: ${ENABLE_CORE_PHASE1:-false} # set in boot.sh for npm run all-legacy
       API_URL: http://api:3321
       USE_API: ${USE_API:-false}
+      FORCES_WITH_API_ENABLED: ${FORCES_WITH_API_ENABLED:-''}
+      FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: ${FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED:-''}
+      FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: ${FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED:-''}
       USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
       USE_API_CASES_INDEX_ENDPOINT: ${USE_API_CASES_INDEX_ENDPOINT:-false}
+      USE_API_CASE_RESUBMIT_ENDPOINT: ${USE_API_CASE_RESUBMIT_ENDPOINT:-false}
     ports:
       - 4543:9443
     healthcheck:
@@ -373,7 +386,9 @@ services:
       postgres:
         condition: service_healthy
       db-seed:
-        condition: service_started
+        condition: service_healthy
+      api:
+        condition: service_healthy
 
   nginx-auth-proxy:
     image: nginx-auth-proxy
@@ -387,7 +402,7 @@ services:
       CJSE_NGINX_PROXYSSLVERIFY: "off"
       CJSE_NGINX_STATICSERVICE_DOMAIN: nginx-auth-proxy:4443/elb-status
       CJSE_NGINX_UI_DOMAIN: ui:9443
-      CJSE_NGINX_USERSERVICE_DOMAIN: user-service
+      CJSE_NGINX_USERSERVICE_DOMAIN: user-service:9443
     healthcheck:
       test: curl --insecure --fail https://localhost:4443/elb-status
       interval: 2s
@@ -397,6 +412,7 @@ services:
     depends_on:
       bichard7-liberty:
         condition: service_healthy
+        required: false
       user-service:
         condition: service_healthy
       ui:

@@ -20,13 +20,18 @@ services:
       MQ_USER: ${DEFAULT_USER}
       MQ_AUTH: '{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}'
       MQ_URL: failover:(stomp://activemq:61613)
-      AUDIT_LOG_API_URL: http://audit-log-api:7010
+      AUDIT_LOG_API_URL: https://api:9443
       AUDIT_LOG_API_KEY: super_secret_key
+      AUDIT_LOG_USE_JWT: ${AUDIT_LOG_USE_JWT}
+      AUDIT_LOG_API_BASE_PATH: v1/audit-logs
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
       DB_HOST: postgres
       PNC_API_URL: https://bichard7-liberty:9443/bichard-api/pnc
       PNC_API_KEY: ${PNC_API_KEY}
       PHASE2_CORE_CANARY_RATIO: ${PHASE2_CORE_CANARY_RATIO:-0}
       PHASE3_CORE_CANARY_RATIO: ${PHASE3_CORE_CANARY_RATIO:-0}
+      PHASE_2_QUEUE_NAME: ${PHASE_2_QUEUE_NAME:-HEARING_OUTCOME_PNC_UPDATE_QUEUE}
+      PHASE_3_QUEUE_NAME: ${PHASE_3_QUEUE_NAME:-PNC_UPDATE_REQUEST_QUEUE}
       NODE_ENV: ${NODE_ENV:-test}
       SMTP_HOST: mail
       SMTP_USER: ${DEFAULT_USER}
@@ -37,6 +42,8 @@ services:
     depends_on:
       audit-log-api:
         condition: service_healthy
+      api:
+        condition: service_healthy
 
   conductor:
     depends_on:
@@ -45,4 +52,6 @@ services:
       localstack:
         condition: service_healthy
       worker:
+        condition: service_started
+      leds:
         condition: service_started

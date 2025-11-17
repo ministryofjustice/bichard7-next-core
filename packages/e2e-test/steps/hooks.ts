@@ -1,5 +1,7 @@
-import { After, Before, BeforeAll } from "@cucumber/cucumber"
+import { BeforeAll } from "@cucumber/cucumber"
 import fs from "fs"
+import path from "path"
+import { After, Before } from "../helpers/stepsHelpers"
 
 const recordComparisons = process.env.RECORD_COMPARISONS === "true"
 const comparisonOutDir = "comparisons"
@@ -22,7 +24,12 @@ export const setupHooks = () => {
   })
 
   Before(async function (context) {
-    this.featureUri = context.gherkinDocument.uri
+    if (!context.gherkinDocument.uri) {
+      throw Error("Couldn't get the feature URI")
+    }
+
+    this.featureUri = path.resolve(context.gherkinDocument.uri)
+    this.specFolder = path.dirname(this.featureUri)
 
     this.testId = extractTestId(this.featureUri)
     if (recordComparisons) {
@@ -45,7 +52,7 @@ export const setupHooks = () => {
     if (!this.config.parallel) {
       await this.db.clearExceptions()
       if (!this.config.realPNC) {
-        await this.pnc.clearMocks()
+        await this.policeApi.clearMocks()
       }
     }
   })
@@ -56,8 +63,8 @@ export const setupHooks = () => {
     await this.browser.close()
     if (process.env.RECORD === "true") {
       if (!this.config.realPNC) {
-        await this.pnc.recordMocks()
-        await this.pnc.recordRequests()
+        await this.policeApi.recordMocks()
+        await this.policeApi.recordRequests()
       }
 
       await this.dumpData()

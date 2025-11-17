@@ -8,4 +8,9 @@ export default interface BichardApiGateway {
 
   fetchCase: (caseId: number) => Promise<DisplayFullCourtCase | Error>
   fetchCases: (apiCaseQuerystring: ApiCaseQuery) => Promise<CaseIndexMetadata | Error>
+  resubmitCase: (caseId: number) => Promise<Error>
+  saveAuditResults: (
+    caseId: number,
+    auditResults: { triggerQuality: number; errorQuality: number; note: string }
+  ) => Promise<Error>
 }

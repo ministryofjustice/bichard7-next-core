@@ -30,7 +30,7 @@ const resultClassHandlers: Record<ResultClass, ResultClassHandler> = {
 
 export const generateOperationsFromOffenceResults = (
   aho: AnnotatedHearingOutcome,
-  areAllResultsOnPnc: boolean,
+  areAllResultsInPoliceCourtCase: boolean,
   resubmitted: boolean
 ): Operation[] => {
   const operations = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.filter(
@@ -40,7 +40,13 @@ export const generateOperationsFromOffenceResults = (
       (result) =>
         (isRecordableResult(result) &&
           result.ResultClass &&
-          resultClassHandlers[result.ResultClass]?.({ aho, offence, result, resubmitted, areAllResultsOnPnc })) ||
+          resultClassHandlers[result.ResultClass]?.({
+            aho,
+            offence,
+            result,
+            resubmitted,
+            areAllResultsInPoliceCourtCase
+          })) ||
         []
     )
   )
@@ -51,12 +57,12 @@ export const generateOperationsFromOffenceResults = (
 const generateOperations = (
   aho: AnnotatedHearingOutcome,
   resubmitted: boolean,
-  areAllResultsOnPnc: boolean
+  areAllResultsInPoliceCourtCase: boolean
 ): Operation[] => {
-  const operations = generateOperationsFromOffenceResults(aho, areAllResultsOnPnc, resubmitted)
+  const operations = generateOperationsFromOffenceResults(aho, areAllResultsInPoliceCourtCase, resubmitted)
   const deduplicatedOperations = deduplicateOperations(operations)
 
-  const filteredOperations = areAllResultsOnPnc
+  const filteredOperations = areAllResultsInPoliceCourtCase
     ? deduplicatedOperations.filter((operation) => operation.code === PncOperation.REMAND)
     : deduplicatedOperations
 
