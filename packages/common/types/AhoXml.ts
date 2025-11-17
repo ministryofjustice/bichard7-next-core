@@ -273,6 +273,7 @@ export interface CommonLawOffenceCode {
 }
 
 export interface CourtCase {
+  "@_CourtCaseId"?: string
   CCR: Ccr
   Offences: Offences
 }

@@ -1,9 +1,16 @@
+import axios from "axios"
+import https from "node:https"
+
 import { API_LOCATION } from "config"
 
 export enum HttpMethod {
   GET = "GET",
   POST = "POST"
 }
+
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+})
 
 class ApiClient {
   readonly jwt: string
@@ -13,41 +20,35 @@ class ApiClient {
   }
 
   async get<T>(route: string): Promise<Error | T> {
-    const response = await this.useFetch(route, HttpMethod.GET)
-    if (response.ok) {
-      return await response.json()
-    }
-
-    return new Error(`Error: ${response.status} - ${response.statusText}`)
+    return await this.callApi(route, HttpMethod.GET)
   }
 
   async post<T>(route: string, data?: string | Record<string, unknown>): Promise<Error | T> {
-    const response = await this.useFetch(route, HttpMethod.POST, data)
-
-    if (response.ok) {
-      return await response.json()
-    }
-
-    return new Error(`Error: ${response.status} - ${response.statusText}`)
+    return await this.callApi(route, HttpMethod.POST, data)
   }
 
-  async useFetch(route: string, method: HttpMethod, bodyContent?: string | Record<string, unknown>): Promise<Response> {
-    let body: string | Record<string, unknown> | undefined = undefined
-
+  async callApi<T>(
+    route: string,
+    method: HttpMethod,
+    bodyContent: string | Record<string, unknown> = {}
+  ): Promise<Error | T> {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`
     }
 
-    if (bodyContent) {
-      headers["Content-Type"] = "application/json"
-      body = JSON.stringify(bodyContent)
+    const response = await axios({
+      url: `${API_LOCATION}${route}`,
+      method,
+      headers,
+      data: method === HttpMethod.GET ? undefined : bodyContent,
+      httpsAgent
+    })
+
+    if (response.status >= 200 && response.status < 300) {
+      return response.data
     }
 
-    return await fetch(`${API_LOCATION}${route}`, {
-      headers,
-      method,
-      body
-    })
+    return new Error(`Error: ${response.status} - ${response.statusText}`)
   }
 }
 

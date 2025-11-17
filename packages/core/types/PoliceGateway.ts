@@ -1,4 +1,5 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import type PoliceApiError from "../lib/policeGateway/PoliceApiError"
@@ -8,10 +9,14 @@ interface PoliceGateway {
   query: (
     asn: string,
     correlationId: string,
-    aho?: AnnotatedHearingOutcome
+    aho: AnnotatedHearingOutcome
   ) => Promise<PoliceApiError | PoliceQueryResult | undefined>
   queryTime: Date | undefined
-  update: (request: PoliceUpdateRequest, correlationId: string) => Promise<PoliceApiError | void>
+  update: (
+    request: PoliceUpdateRequest,
+    correlationId: string,
+    pncUpdateDataset: PncUpdateDataset
+  ) => Promise<PoliceApiError | void>
 }
 
 export default PoliceGateway

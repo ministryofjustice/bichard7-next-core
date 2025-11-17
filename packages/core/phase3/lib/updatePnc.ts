@@ -22,7 +22,7 @@ const updatePnc = async (
   const correlationId = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Hearing.SourceReference.UniqueID
 
   for (let pncLockErrorRetries = 0; pncLockErrorRetries < MAXIMUM_PNC_LOCK_ERROR_RETRIES; pncLockErrorRetries++) {
-    const pncUpdateResult = await policeGateway.update(pncUpdateRequest, correlationId)
+    const pncUpdateResult = await policeGateway.update(pncUpdateRequest, correlationId, pncUpdateDataset)
 
     if (!isError(pncUpdateResult)) {
       return pncUpdateResult
