@@ -3,13 +3,14 @@ import type { AuditLog, AuditLogEvent } from "../helpers/AuditLogApiHelper"
 import { isError } from "./isError"
 import Poller from "./Poller"
 import type Bichard from "./world"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 export const checkEventByExternalCorrelationId = async (
   context: Bichard,
   externalCorrelationId: string,
   eventType: string,
   contains: boolean
-) => {
+): PromiseResult<void> => {
   const { auditLogApi } = context
   const getMessages = () => auditLogApi.getMessageByExternalCorrelationId(externalCorrelationId)
 
@@ -53,7 +54,7 @@ export const checkEventByExternalCorrelationId = async (
     `
   }
 
-  throw new Error(`${result.message}${eventsFoundMessage}`)
+  return new Error(`${result.message}${eventsFoundMessage}`)
 }
 
 export const checkAuditLogRecordExists = async (context: Bichard, correlationId: string) => {
@@ -86,7 +87,7 @@ export const checkAuditLogExists = async (context: Bichard, eventType: string, c
 
   let attempt = 1
   const maxNumberOfAttempts = 5
-  let checkEventResult: void
+  let checkEventResult
 
   while (attempt <= maxNumberOfAttempts) {
     checkEventResult = await checkEventByExternalCorrelationId(
