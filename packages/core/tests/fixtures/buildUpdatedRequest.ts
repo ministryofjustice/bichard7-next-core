@@ -9,7 +9,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
     croNumber: "111",
     forceStationCode: "07A1",
     courtCaseReferenceNumber: "98/2048/633Y",
-    courtCode: "Court code",
+    courtCode: "0001",
     hearingDate: "12082025",
     hearingType: "D",
     pncCheckName: "Pnc check name",
@@ -17,7 +17,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
     hearingDetails: [
       {
         courtOffenceSequenceNumber: "1",
-        offenceReason: "Offence reason",
+        offenceReason: "00112233",
         type: PncUpdateType.ORDINARY
       },
       {
@@ -28,7 +28,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
+        disposalQualifiers: "B",
         disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",

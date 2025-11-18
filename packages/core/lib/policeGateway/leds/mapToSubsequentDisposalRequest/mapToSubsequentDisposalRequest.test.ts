@@ -16,14 +16,14 @@ describe("mapToSubsequentDisposalRequest", () => {
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
-        courtCode: "Court code"
+        courtCode: "0001"
       },
       appearanceDate: "2025-08-12",
       reasonForAppearance: "Sentenced Deferred",
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "Offence reason",
+          cjsOffenceCode: "00112233",
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
@@ -31,7 +31,7 @@ describe("mapToSubsequentDisposalRequest", () => {
           disposalResults: [
             {
               disposalCode: 10,
-              disposalQualifiers: ["Disposal qualifiers"],
+              disposalQualifiers: ["B"],
               disposalText: "Disposal text",
               disposalDuration: {
                 count: 123,
@@ -58,7 +58,7 @@ describe("mapToSubsequentDisposalRequest", () => {
       hearingDetails: [
         {
           courtOffenceSequenceNumber: "1",
-          offenceReason: "Offence reason",
+          offenceReason: "00112233",
           type: PncUpdateType.ORDINARY
         },
         {
@@ -78,14 +78,14 @@ describe("mapToSubsequentDisposalRequest", () => {
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
-        courtCode: "Court code"
+        courtCode: "0001"
       },
       appearanceDate: "2025-08-12",
       reasonForAppearance: "Sentenced Deferred",
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "Offence reason",
+          cjsOffenceCode: "00112233",
           plea: undefined,
           adjudication: undefined,
           dateOfSentence: undefined,

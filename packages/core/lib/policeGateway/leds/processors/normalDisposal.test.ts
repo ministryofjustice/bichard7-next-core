@@ -24,7 +24,9 @@ describe("normalDisposal", () => {
     const result = normalDisposal(request, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain("mapToRemandRequest called with a non-remand request")
+    expect((result as PoliceApiError).messages).toContain(
+      "mapToRemandRequest called with a non-normal-disposal request"
+    )
   })
 
   it("returns error when courtCaseId is not found", () => {
