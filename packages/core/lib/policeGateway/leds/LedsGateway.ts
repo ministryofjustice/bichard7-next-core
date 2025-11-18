@@ -17,20 +17,16 @@ import type { RemandRequest } from "../../../types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "../../../types/leds/SubsequentDisposalResultsRequest"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
-import { addDisposalRequestSchema } from "../../../schemas/leds/addDisposalRequest"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
-import { remandRequestSchema } from "../../../schemas/leds/remandRequest"
-import { subsequentDisposalResultsRequestSchema } from "../../../schemas/leds/subsequentDisposalResultsRequest"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
-import { mapToAddDisposalRequest } from "./mapToAddDisposalRequest"
-import { findCourtCaseId } from "./mapToAddDisposalRequest/findCourtCaseId"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
-import mapToRemandRequest from "./mapToRemandRequest"
-import mapToSubsequentDisposalRequest from "./mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
+import { normalDisposal } from "./processors/normalDisposal"
+import { remand } from "./processors/remand"
+import { subsequentDisposal } from "./processors/subsequentDisposal"
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -90,8 +86,6 @@ export default class LedsGateway implements PoliceGateway {
     correlationId: string,
     pncUpdateDataset: PncUpdateDataset
   ): Promise<PoliceApiError | void> {
-    let endpoint: string
-    let requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest
     const personId = pncUpdateDataset.PncQuery?.personId
     const reportId = pncUpdateDataset.PncQuery?.reportId
 
@@ -99,55 +93,30 @@ export default class LedsGateway implements PoliceGateway {
       return new PoliceApiError(["Failed to update LEDS due to missing data."])
     }
 
-    if (request.operation === PncOperation.REMAND) {
-      endpoint = endpoints.remand(personId, reportId)
-      requestBody = mapToRemandRequest(request.request)
-      const validationResult = remandRequestSchema.safeParse(requestBody)
+    let result:
+      | PoliceApiError
+      | { endpoint: string; requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest }
 
-      if (!validationResult.success) {
-        console.error(validationResult.error)
-        return new PoliceApiError(["Failed to validate LEDS request."])
-      }
-    } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
-      const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
-
-      if (!courtCaseId) {
-        console.error("Couldn't find courtCaseId.")
-        return new PoliceApiError(["Failed to update LEDS due to missing data."])
-      }
-
-      endpoint = endpoints.addDisposal(personId, courtCaseId)
-      requestBody = mapToAddDisposalRequest(request.request, pncUpdateDataset)
-      const validationResult = addDisposalRequestSchema.safeParse(requestBody)
-
-      if (!validationResult.success) {
-        console.error(validationResult.error)
-        return new PoliceApiError(["Failed to validate LEDS request."])
-      }
-    } else if (
-      request.operation === PncOperation.DISPOSAL_UPDATED ||
-      request.operation === PncOperation.SENTENCE_DEFERRED
-    ) {
-      const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
-
-      if (!courtCaseId) {
-        console.error("Couldn't find courtCaseId.")
-        return new PoliceApiError(["Failed to update LEDS due to missing data."])
-      }
-
-      requestBody = mapToSubsequentDisposalRequest(request.request, pncUpdateDataset)
-
-      const validationResult = subsequentDisposalResultsRequestSchema.safeParse(requestBody)
-
-      if (!validationResult.success) {
-        console.error(validationResult.error)
-        return new PoliceApiError(["Failed to validate LEDS request."])
-      }
-
-      endpoint = endpoints.subsequentDisposalResults(personId, courtCaseId)
-    } else {
-      return new PoliceApiError(["Invalid LEDS update operation."])
+    switch (request.operation) {
+      case PncOperation.DISPOSAL_UPDATED:
+      case PncOperation.SENTENCE_DEFERRED:
+        result = subsequentDisposal(request, personId, pncUpdateDataset)
+        break
+      case PncOperation.NORMAL_DISPOSAL:
+        result = normalDisposal(request, personId, pncUpdateDataset)
+        break
+      case PncOperation.REMAND:
+        result = remand(request, personId, reportId)
+        break
+      default:
+        return new PoliceApiError(["Invalid LEDS update operation."])
     }
+
+    if (result instanceof PoliceApiError) {
+      return result
+    }
+
+    const { endpoint, requestBody } = result
 
     const apiResponse = await axios
       .post(`${this.config.url}${endpoint}`, requestBody, {
