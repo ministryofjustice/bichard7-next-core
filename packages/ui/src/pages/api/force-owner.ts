@@ -17,11 +17,14 @@ export default async (request: NextApiRequest, response: NextApiResponse<ForceOw
 
   const { req, res } = auth
 
-  const searchQueryString = ((typeof req.query.search === "string" && req.query.search) || "").toLowerCase()
+  const { currentForceOwner, search } = req.query as {
+    currentForceOwner: string
+    search?: string
+  }
 
-  const filteredItems = searchForceOwners(searchQueryString).map((ou) => ({
-    forceCode: getForceCode(ou),
-    forceName: getForceName(ou)
+  const filteredItems = searchForceOwners(currentForceOwner, search ?? "").map((force) => ({
+    forceCode: getForceCode(force),
+    forceName: getForceName(force)
   }))
 
   res.status(200).json(filteredItems.slice(0, 20))

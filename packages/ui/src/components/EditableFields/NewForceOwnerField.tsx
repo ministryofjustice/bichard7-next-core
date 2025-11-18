@@ -1,15 +1,19 @@
-import ForceOwnerTypeahead from "../ForceOwnerTypeahead"
 import { useState } from "react"
-import ForceOwnerApiResponse from "../../types/ForceOwnerApiResponse"
+import ForceOwnerTypeahead from "../ForceOwnerTypeahead"
+import type ForceOwnerApiResponse from "../../types/ForceOwnerApiResponse"
 
-export const NewForceOwnerField = ({}) => {
-  const [forceCodes, setForceOwners] = useState<ForceOwnerApiResponse>([])
+interface Props {
+  currentForceOwner?: string
+}
 
-  let forceOwnerToDisplay = undefined
+export const NewForceOwnerField = ({ currentForceOwner }: Props) => {
+  const [selectedForce, setSelectedForce] = useState<ForceOwnerApiResponse[0] | null>(null)
 
-  if (forceCodes.length == 1) {
-    forceOwnerToDisplay = forceCodes[0].forceCode + " - " + forceCodes[0].forceName
-  }
+  return (
+    <>
+      <input type="hidden" name="force" value={selectedForce?.forceCode ?? ""} />
 
-  return <ForceOwnerTypeahead value={forceOwnerToDisplay} setForceOwners={setForceOwners} />
+      <ForceOwnerTypeahead onSelect={setSelectedForce} currentForceOwner={currentForceOwner} />
+    </>
+  )
 }

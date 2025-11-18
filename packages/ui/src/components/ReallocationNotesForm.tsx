@@ -43,7 +43,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
           <Label size={"s"} htmlFor="force">
             {"New force owner"}
 
-            <NewForceOwnerField />
+            <NewForceOwnerField currentForceOwner={currentForce?.code} />
           </Label>
         </FormGroup>
 
