@@ -8,19 +8,15 @@ import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
 import { remand } from "./remand"
 
+const personId = "123"
+const reportId = "456"
+const request = {
+  operation: PncOperation.REMAND,
+  request: buildRemandRequest()
+} as PoliceUpdateRequest
+
 describe("remand", () => {
-  const personId = "123"
-  const reportId = "456"
-
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   it("returns endpoint and requestBody", () => {
-    const request = {
-      operation: PncOperation.REMAND,
-      request: buildRemandRequest()
-    } as PoliceUpdateRequest
     const endpoint = "/people/123/arrest-reports/456/basic-remands"
     const requestBody = {
       appearanceResult: "remanded-on-bail",
@@ -51,19 +47,19 @@ describe("remand", () => {
   })
 
   it("returns error when operation is not remand", () => {
-    const request = {
+    const normalDisposalRequest = {
       operation: PncOperation.NORMAL_DISPOSAL,
       request: buildNormalDisposalRequest()
     } as PoliceUpdateRequest
 
-    const result = remand(request, personId, reportId)
+    const result = remand(normalDisposalRequest, personId, reportId)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("mapToRemandRequest called with a non-remand request")
   })
 
   it("returns error when zod schema does not match any of the fields", () => {
-    const request = {
+    const requestWithInvalidData = {
       operation: PncOperation.REMAND,
       request: buildRemandRequest({ pncIdentifier: "" })
     } as PoliceUpdateRequest
@@ -71,7 +67,7 @@ describe("remand", () => {
     const x = buildRemandRequest()
     x.pncIdentifier = ""
 
-    const result = remand(request, personId, reportId)
+    const result = remand(requestWithInvalidData, personId, reportId)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
@@ -79,9 +75,6 @@ describe("remand", () => {
 })
 
 describe("remand - endpoint usage", () => {
-  const personId = "123"
-  const reportId = "456"
-
   it("calls endpoints.remand with correct arguments", () => {
     const spy = jest.spyOn(endpoints, "remand")
     spy.mockReturnValue("/people/123/arrest-reports/456/basic-remands")
@@ -115,11 +108,6 @@ describe("remand - mapping calls", () => {
   })
 
   it("passes the request.request object into mapToRemandRequest", () => {
-    const request = {
-      operation: PncOperation.REMAND,
-      request: buildRemandRequest()
-    }
-
     mapToRemandRequest.mockReturnValue({ value: "mockValue" })
 
     remand(request, "123", "456")

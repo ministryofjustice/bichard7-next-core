@@ -2,7 +2,6 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
-import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
 
 import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
@@ -11,63 +10,14 @@ import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequ
 import PoliceApiError from "../../PoliceApiError"
 import { normalDisposal } from "./normalDisposal"
 
+const personId = "123456"
+const request = {
+  operation: PncOperation.NORMAL_DISPOSAL,
+  request: buildNormalDisposalRequest()
+} as PoliceUpdateRequest
+
 describe("normalDisposal", () => {
-  const personId = "123456"
-
-  it("returns error when operation is not normal disposal", () => {
-    const request = {
-      operation: PncOperation.DISPOSAL_UPDATED,
-      request: buildUpdatedRequest()
-    } as PoliceUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset()
-
-    const result = normalDisposal(request, personId, pncUpdateDataset)
-
-    expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain(
-      "mapToRemandRequest called with a non-normal-disposal request"
-    )
-  })
-
-  it("returns error when courtCaseId is not found", () => {
-    const request = {
-      operation: PncOperation.NORMAL_DISPOSAL,
-      request: buildNormalDisposalRequest()
-    } as NormalDisposalPncUpdateRequest
-    const pncUpdateDataset = {
-      PncQuery: {
-        courtCases: [
-          {
-            courtCaseReference: "98/2048/633Z"
-          }
-        ]
-      }
-    } as PncUpdateDataset
-
-    const result = normalDisposal(request, personId, pncUpdateDataset)
-
-    expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
-  })
-
-  it("returns error when zod schema does not match any of the fields", () => {
-    const request = {
-      operation: PncOperation.NORMAL_DISPOSAL,
-      request: buildNormalDisposalRequest({ psaCourtCode: "000123" })
-    } as NormalDisposalPncUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset(undefined, undefined, "Org")
-
-    const result = normalDisposal(request, personId, pncUpdateDataset)
-
-    expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
-  })
-
   it("returns endpoint and requestBody", () => {
-    const request = {
-      operation: PncOperation.NORMAL_DISPOSAL,
-      request: buildNormalDisposalRequest()
-    } as NormalDisposalPncUpdateRequest
     const pncUpdateDataset = buildPncUpdateDataset(undefined, undefined, "Org")
     const endpoint = "/people/123456/disposals/ABC123/court-case-disposal-result"
     const requestBody = {
@@ -227,5 +177,50 @@ describe("normalDisposal", () => {
     const result = normalDisposal(request, personId, pncUpdateDataset)
 
     expect(result).toStrictEqual(expectedResult)
+  })
+
+  it("returns error when operation is not normal disposal", () => {
+    const request = {
+      operation: PncOperation.DISPOSAL_UPDATED,
+      request: buildUpdatedRequest()
+    } as PoliceUpdateRequest
+    const pncUpdateDataset = buildPncUpdateDataset()
+
+    const result = normalDisposal(request, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain(
+      "mapToRemandRequest called with a non-normal-disposal request"
+    )
+  })
+
+  it("returns error when courtCaseId is not found", () => {
+    const pncUpdateDataset = {
+      PncQuery: {
+        courtCases: [
+          {
+            courtCaseReference: "98/2048/633Z"
+          }
+        ]
+      }
+    } as PncUpdateDataset
+
+    const result = normalDisposal(request, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
+  })
+
+  it("returns error when zod schema does not match any of the fields", () => {
+    const requestWithInvalidData = {
+      operation: PncOperation.NORMAL_DISPOSAL,
+      request: buildNormalDisposalRequest({ psaCourtCode: "000123" })
+    } as PoliceUpdateRequest
+    const pncUpdateDataset = buildPncUpdateDataset(undefined, undefined, "Org")
+
+    const result = normalDisposal(requestWithInvalidData, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
   })
 })

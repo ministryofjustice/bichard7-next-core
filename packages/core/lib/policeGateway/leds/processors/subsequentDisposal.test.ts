@@ -21,49 +21,6 @@ const request = {
 const pncUpdateDataset = buildPncUpdateDataset()
 
 describe("subsequentDisposal", () => {
-  it("returns error when operation is not subsequent-disposal", () => {
-    const remandRequest = {
-      operation: PncOperation.REMAND,
-      request: buildRemandRequest()
-    } as PoliceUpdateRequest
-
-    const result = subsequentDisposal(remandRequest, personId, pncUpdateDataset)
-
-    expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain(
-      "mapToRemandRequest called with a non-disposal-updated request"
-    )
-  })
-
-  it("returns error when courtCaseId is not found", () => {
-    const pncUpdateDataset = {
-      PncQuery: {
-        courtCases: [
-          {
-            courtCaseReference: "98/2048/633Z"
-          }
-        ]
-      }
-    } as PncUpdateDataset
-
-    const result = subsequentDisposal(request, personId, pncUpdateDataset)
-
-    expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
-  })
-
-  it("returns error when zod schema does not match any of the fields", () => {
-    const requestWithInvalidData = {
-      operation: PncOperation.DISPOSAL_UPDATED,
-      request: buildUpdatedRequest({ courtCode: "longInvalidCourtCode" })
-    } as PoliceUpdateRequest
-
-    const result = subsequentDisposal(requestWithInvalidData, personId, pncUpdateDataset)
-
-    expect(result).toBeInstanceOf(PoliceApiError)
-    expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
-  })
-
   it("returns endpoint and requestBody", () => {
     const endpoint = "/people/123/disposals/ABC123/court-case-subsequent-disposal-results"
     const requestBody = {
@@ -109,6 +66,49 @@ describe("subsequentDisposal", () => {
     const result = subsequentDisposal(request, personId, pncUpdateDataset)
 
     expect(result).toStrictEqual(expectedResult)
+  })
+
+  it("returns error when operation is not subsequent-disposal", () => {
+    const remandRequest = {
+      operation: PncOperation.REMAND,
+      request: buildRemandRequest()
+    } as PoliceUpdateRequest
+
+    const result = subsequentDisposal(remandRequest, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain(
+      "mapToRemandRequest called with a non-disposal-updated request"
+    )
+  })
+
+  it("returns error when courtCaseId is not found", () => {
+    const pncUpdateDataset = {
+      PncQuery: {
+        courtCases: [
+          {
+            courtCaseReference: "98/2048/633Z"
+          }
+        ]
+      }
+    } as PncUpdateDataset
+
+    const result = subsequentDisposal(request, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
+  })
+
+  it("returns error when zod schema does not match any of the fields", () => {
+    const requestWithInvalidData = {
+      operation: PncOperation.DISPOSAL_UPDATED,
+      request: buildUpdatedRequest({ courtCode: "longInvalidCourtCode" })
+    } as PoliceUpdateRequest
+
+    const result = subsequentDisposal(requestWithInvalidData, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
   })
 })
 
