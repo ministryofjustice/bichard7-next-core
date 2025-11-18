@@ -15,7 +15,7 @@ describe("mapAdditionalArrestOffences", () => {
         additionalOffences: [
           {
             courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "Offence reason",
+            cjsOffenceCode: "00998877",
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -28,7 +28,7 @@ describe("mapAdditionalArrestOffences", () => {
             disposalResults: [
               {
                 disposalCode: 10,
-                disposalQualifiers: ["Disposal qualifiers"],
+                disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }
             ],
@@ -37,7 +37,7 @@ describe("mapAdditionalArrestOffences", () => {
           },
           {
             courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "Offence reason",
+            cjsOffenceCode: "00998877",
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -50,7 +50,7 @@ describe("mapAdditionalArrestOffences", () => {
             disposalResults: [
               {
                 disposalCode: 10,
-                disposalQualifiers: ["Disposal qualifiers"],
+                disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }
             ],

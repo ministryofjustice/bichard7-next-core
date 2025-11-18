@@ -28,7 +28,8 @@ export const buildPncUpdateDataset = (familyName?: string, givenName?: string[],
                 offenceId: "112233"
               }
             }
-          ]
+          ],
+          courtCaseId: "ABC123"
         }
       ]
     }

@@ -3,28 +3,27 @@ import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDis
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 
 export const buildNormalDisposalRequest = (
-  psaCourtCode?: string,
-  pendingPsaCourtCode?: string,
-  disposalQuantity = "D123100520240012000.9900"
+  overrides: Partial<NormalDisposalPncUpdateRequest["request"]> = {}
 ): NormalDisposalPncUpdateRequest["request"] => {
-  return {
+  const base: NormalDisposalPncUpdateRequest["request"] = {
     forceStationCode: "07A1",
     pncIdentifier: "22/858J",
     pncCheckName: "Pnc check name",
     courtCaseReferenceNumber: "98/2048/633Y",
     arrestSummonsNumber: "11/01ZD/01/1448754K",
-    psaCourtCode,
+    psaCourtCode: "0001",
     courtHouseName: "Court house name",
     dateOfHearing: "12082025",
     generatedPNCFilename: "",
-    pendingPsaCourtCode,
+    pendingPsaCourtCode: "0002",
     pendingCourtDate: "13082025",
     pendingCourtHouseName: "Pending court house name",
     preTrialIssuesUniqueReferenceNumber: "121212",
+    croNumber: null,
     hearingsAdjudicationsAndDisposals: [
       {
         courtOffenceSequenceNumber: "1",
-        offenceReason: "Offence reason",
+        offenceReason: "00112233",
         type: PncUpdateType.ORDINARY
       },
       {
@@ -35,22 +34,22 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity,
+        disposalQualifiers: "A",
+        disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity,
+        disposalQualifiers: "A",
+        disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
       },
       {
         courtOffenceSequenceNumber: "1",
-        offenceReason: "Offence reason",
+        offenceReason: "00112233",
         type: PncUpdateType.ORDINARY
       },
       {
@@ -61,15 +60,15 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity,
+        disposalQualifiers: "A",
+        disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
-        disposalQuantity,
+        disposalQualifiers: "A",
+        disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
@@ -81,7 +80,7 @@ export const buildNormalDisposalRequest = (
         courtOffenceSequenceNumber: "2",
         locationOfOffence: "Offence location",
         offenceLocationFSCode: "Offence location FS code",
-        offenceReason: "Offence reason",
+        offenceReason: "00998877",
         offenceReasonSequence: "1",
         offenceStartDate: "16082025",
         offenceStartTime: "1430",
@@ -97,7 +96,7 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
+        disposalQualifiers: "A",
         disposalQuantity: "Disposal quantity",
         disposalText: "Disposal text",
         disposalType: "10",
@@ -108,7 +107,7 @@ export const buildNormalDisposalRequest = (
         courtOffenceSequenceNumber: "2",
         locationOfOffence: "Offence location",
         offenceLocationFSCode: "Offence location FS code",
-        offenceReason: "Offence reason",
+        offenceReason: "00998877",
         offenceReasonSequence: "1",
         offenceStartDate: "16082025",
         offenceStartTime: "1430",
@@ -124,12 +123,17 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "Disposal qualifiers",
+        disposalQualifiers: "A",
         disposalQuantity: "Disposal quantity",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
       }
     ]
-  } as NormalDisposalPncUpdateRequest["request"]
+  }
+
+  return {
+    ...base,
+    ...overrides
+  }
 }

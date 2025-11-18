@@ -14,7 +14,7 @@ describe("mapOffences", () => {
     const expectedOffences = [
       {
         courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "Offence reason",
+        cjsOffenceCode: "00112233",
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -22,7 +22,7 @@ describe("mapOffences", () => {
         disposalResults: [
           {
             disposalCode: 10,
-            disposalQualifiers: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -35,7 +35,7 @@ describe("mapOffences", () => {
           },
           {
             disposalCode: 10,
-            disposalQualifiers: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -51,7 +51,7 @@ describe("mapOffences", () => {
       },
       {
         courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "Offence reason",
+        cjsOffenceCode: "00112233",
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -59,7 +59,7 @@ describe("mapOffences", () => {
         disposalResults: [
           {
             disposalCode: 10,
-            disposalQualifiers: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -72,7 +72,7 @@ describe("mapOffences", () => {
           },
           {
             disposalCode: 10,
-            disposalQualifiers: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -138,10 +138,17 @@ describe("mapOffences", () => {
   })
 
   it("doesn't include disposalDuration if units is empty string", () => {
-    const psaCourtCode = ""
-    const pendingPsaCourtCode = ""
-    const disposalQuantity = "    10052024          00"
-    const normalDisposalRequest = buildNormalDisposalRequest(psaCourtCode, pendingPsaCourtCode, disposalQuantity)
+    const normalDisposalRequest = buildNormalDisposalRequest({
+      hearingsAdjudicationsAndDisposals: [
+        {
+          disposalQualifiers: "A",
+          disposalQuantity: "    10052024          00",
+          disposalText: "Disposal text",
+          disposalType: "10",
+          type: PncUpdateType.DISPOSAL
+        }
+      ]
+    })
 
     const offences = mapOffences(
       normalDisposalRequest.hearingsAdjudicationsAndDisposals,
