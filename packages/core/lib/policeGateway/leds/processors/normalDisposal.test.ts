@@ -48,6 +48,19 @@ describe("normalDisposal", () => {
     expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
   })
 
+  it("returns error when zod schema does not match any of the fields", () => {
+    const request = {
+      operation: PncOperation.NORMAL_DISPOSAL,
+      request: buildNormalDisposalRequest({ psaCourtCode: "000123" })
+    } as NormalDisposalPncUpdateRequest
+    const pncUpdateDataset = buildPncUpdateDataset(undefined, undefined, "Org")
+
+    const result = normalDisposal(request, personId, pncUpdateDataset)
+
+    expect(result).toBeInstanceOf(PoliceApiError)
+    expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
+  })
+
   it("returns endpoint and requestBody", () => {
     const request = {
       operation: PncOperation.NORMAL_DISPOSAL,
