@@ -17,7 +17,7 @@ export const subsequentDisposal = (
   pncUpdateDataset: PncUpdateDataset
 ): PoliceApiError | { endpoint: string; requestBody: SubsequentDisposalResultsRequest } => {
   if (request.operation !== PncOperation.DISPOSAL_UPDATED && request.operation !== PncOperation.SENTENCE_DEFERRED) {
-    return new PoliceApiError(["mapToRemandRequest called with a non-remand request"])
+    return new PoliceApiError(["mapToRemandRequest called with a non-disposal-updated request"])
   }
 
   const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)

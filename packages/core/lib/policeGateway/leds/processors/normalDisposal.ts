@@ -17,7 +17,7 @@ export const normalDisposal = (
   pncUpdateDataset: PncUpdateDataset
 ): PoliceApiError | { endpoint: string; requestBody: AddDisposalRequest } => {
   if (request.operation !== PncOperation.NORMAL_DISPOSAL) {
-    return new PoliceApiError(["mapToRemandRequest called with a non-remand request"])
+    return new PoliceApiError(["mapToRemandRequest called with a non-normal-disposal request"])
   }
 
   const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
