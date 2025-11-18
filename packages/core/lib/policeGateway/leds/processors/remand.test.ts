@@ -79,11 +79,6 @@ describe("remand - endpoint usage", () => {
     const spy = jest.spyOn(endpoints, "remand")
     spy.mockReturnValue("/people/123/arrest-reports/456/basic-remands")
 
-    const request = {
-      operation: PncOperation.REMAND,
-      request: buildRemandRequest()
-    } as PoliceUpdateRequest
-
     remand(request, personId, reportId)
 
     expect(spy).toHaveBeenCalledTimes(1)
