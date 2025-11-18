@@ -56,6 +56,18 @@ describe("ForceOwnerTypeahead Component", () => {
     cy.get("input#force").should("have.value", "02 - Suffolk Constabulary")
   })
 
+  it("updates parent component when input is blurred", () => {
+    const onSelectSpy = cy.spy().as("onSelectSpy")
+    cy.mount(<ForceOwnerTypeahead onSelect={onSelectSpy} />)
+
+    cy.get("input#force").type("Suffolk")
+    cy.wait("@getForces")
+    cy.get("input#force").blur()
+
+    cy.get("@onSelectSpy").should("have.been.calledWith", mockForces[1])
+    cy.get("input#force").should("have.value", "02 - Suffolk Constabulary")
+  })
+
   it("selects the top result automatically when pressing Enter", () => {
     const onSelectSpy = cy.spy().as("onSelectSpy")
     cy.mount(<ForceOwnerTypeahead onSelect={onSelectSpy} />)

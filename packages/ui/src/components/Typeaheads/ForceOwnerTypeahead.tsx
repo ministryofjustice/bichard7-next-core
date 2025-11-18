@@ -46,6 +46,25 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }: P
       if (!newVal) {
         onSelect(null)
       }
+    },
+    stateReducer: (state, actionAndChanges) => {
+      const { type, changes } = actionAndChanges
+      if (type === useCombobox.stateChangeTypes.InputBlur) {
+        const typedValue = state.inputValue.trim() // TRIM added to handle accidental spaces/event quirks
+        const exactMatch =
+          inputItems.find(
+            (item) => item.forceCode === typedValue || `${item.forceCode} - ${item.forceName}` === typedValue
+          ) || (inputItems.length === 1 ? inputItems[0] : null)
+
+        if (exactMatch) {
+          return {
+            ...changes,
+            selectedItem: exactMatch,
+            inputValue: `${exactMatch.forceCode} - ${exactMatch.forceName}`
+          }
+        }
+      }
+      return changes
     }
   })
 

@@ -5,7 +5,6 @@ import { clickTab, loginAndVisit } from "../../support/helpers"
 
 describe("Case details", () => {
   before(() => {
-    // Create sessions
     loginAndVisit("BichardForce03")
     loginAndVisit()
   })
@@ -14,8 +13,6 @@ describe("Case details", () => {
     cy.task("clearCourtCases")
   })
 
-
-  //add another test actually testing the typeahead
   it("Should be able to reallocate a case is visible to the user and not locked by another user", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
     const triggers: TestTrigger[] = [
@@ -32,13 +29,15 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
 
     cy.contains("H2", "Case reallocation").should("exist")
 
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
-    cy.get('input[name="force"]').type("03 - Cumbria")
+    cy.get("input#force").type("03 - Cumbria")
+    cy.get("ul li").should("exist").and("contain", "03")
+
     cy.get('textarea[name="note"]').type("This is a dummy note")
     cy.get("div.govuk-hint").should("contain", "You have 1980 characters remaining")
     cy.get("button").contains("Reallocate").click()
@@ -76,11 +75,14 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
     cy.contains("H2", "Case reallocation").should("exist")
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
-    cy.get('input[name="force"]').type("03 - Cumbria")
+    cy.get("input#force").type("03 - Cumbria")
+    cy.get("ul li").should("exist").and("contain", "03")
+    cy.get("input#force").blur()
+
     cy.get("div.govuk-hint").should("contain", "You have 2000 characters remaining")
     cy.get("button").contains("Reallocate").click()
 
@@ -116,11 +118,13 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
     cy.contains("H2", "Case reallocation").should("exist")
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
-    cy.get('input[name="force"]').type("03 - Cumbria")
+    cy.get("input#force").type("03 - Cumbria")
+    cy.get("ul li").should("exist").and("contain", "03")
+
     cy.get('textarea[name="note"]').then((element) => {
       element[0].textContent = "a".repeat(990)
     })
@@ -217,12 +221,14 @@ describe("Case details", () => {
 
     cy.findByText("NAME Defendant").click()
 
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
     cy.contains("H2", "Case reallocation").should("exist")
 
     cy.findByText("Cancel").should("have.attr", "href", "/bichard/court-cases/0")
 
-    cy.get('input[name="force"]').type("03 - Cumbria")
+    cy.get("input#force").type("03 - Cumbria")
+    cy.get("ul li").should("exist").and("contain", "03")
+
     cy.get('textarea[name="note"]').type("This is a dummy note")
     cy.get("div.govuk-hint").should("contain", "You have 1980 characters remaining")
     cy.get("button").contains("Reallocate").click()
@@ -248,7 +254,7 @@ describe("Case details", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
 
     cy.contains("Case has no user notes.")
     cy.contains("show more").should("not.exist")
@@ -274,7 +280,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
 
     cy.contains("Another User2")
     cy.contains("Test note 2")
@@ -297,7 +303,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
 
     cy.contains("Another User")
     cy.contains("Test note")
@@ -322,7 +328,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
 
     cy.contains("Another User2")
     cy.contains("Test note 2")
@@ -351,7 +357,7 @@ describe("Case details", () => {
     })
 
     loginAndVisit("/bichard/court-cases/0")
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
     cy.get("button").contains("show more").click()
 
     cy.contains("Another User2")
@@ -394,10 +400,12 @@ describe("Case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get('.b7-reallocate-button').click()
+    cy.get(".b7-reallocate-button").click()
     cy.contains("H2", "Case reallocation").should("exist")
 
-    cy.get('input[name="force"]').type("03 - Cumbria")
+    cy.get("input#force").type("03 - Cumbria")
+    cy.get("ul li").should("exist").and("contain", "03")
+
     cy.get('textarea[name="note"]').type("This is a dummy note")
     cy.get("div.govuk-hint").should("contain", "You have 1980 characters remaining")
     cy.get("button").contains("Reallocate").click()
