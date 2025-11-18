@@ -1,6 +1,6 @@
-import type DisposalUpdatedPncUpdateRequest from "../../../phase3/types/DisposalUpdatedPncUpdateRequest"
+import type DisposalUpdatedPncUpdateRequest from "../../phase3/types/DisposalUpdatedPncUpdateRequest"
 
-import { PncUpdateType } from "../../../phase3/types/HearingDetails"
+import { PncUpdateType } from "../../phase3/types/HearingDetails"
 
 type UpdatedRequest = DisposalUpdatedPncUpdateRequest["request"]
 

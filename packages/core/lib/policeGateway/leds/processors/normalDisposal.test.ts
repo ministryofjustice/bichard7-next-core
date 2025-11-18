@@ -5,9 +5,9 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
 
-import { buildNormalDisposalRequest } from "../../../../tests/fixtures/addDisposalRequests/buildNormalDisposalRequest"
-import { buildPncUpdateDataset } from "../../../../tests/fixtures/addDisposalRequests/buildPncUpdateDataset"
-import { buildUpdatedRequest } from "../../../../tests/fixtures/addDisposalRequests/buildUpdatedRequest"
+import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
+import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
+import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import PoliceApiError from "../../PoliceApiError"
 import { normalDisposal } from "./normalDisposal"
 
@@ -28,6 +28,10 @@ describe("normalDisposal", () => {
   })
 
   it("returns error when courtCaseId is not found", () => {
+    const request = {
+      operation: PncOperation.NORMAL_DISPOSAL,
+      request: buildNormalDisposalRequest()
+    } as NormalDisposalPncUpdateRequest
     const pncUpdateDataset = {
       PncQuery: {
         courtCases: [
@@ -37,10 +41,6 @@ describe("normalDisposal", () => {
         ]
       }
     } as PncUpdateDataset
-    const request = {
-      operation: PncOperation.NORMAL_DISPOSAL,
-      request: buildNormalDisposalRequest()
-    } as NormalDisposalPncUpdateRequest
 
     const result = normalDisposal(request, personId, pncUpdateDataset)
 

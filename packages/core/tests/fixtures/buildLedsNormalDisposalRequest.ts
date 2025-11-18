@@ -1,4 +1,4 @@
-import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
+import type { AddDisposalRequest } from "../../types/leds/AddDisposalRequest"
 
 export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalRequest> = {}): AddDisposalRequest => {
   const base: AddDisposalRequest = {

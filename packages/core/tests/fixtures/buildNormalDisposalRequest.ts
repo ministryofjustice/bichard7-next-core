@@ -1,6 +1,6 @@
-import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
+import type NormalDisposalPncUpdateRequest from "../../phase3/types/NormalDisposalPncUpdateRequest"
 
-import { PncUpdateType } from "../../../phase3/types/HearingDetails"
+import { PncUpdateType } from "../../phase3/types/HearingDetails"
 
 export const buildNormalDisposalRequest = (
   overrides: Partial<NormalDisposalPncUpdateRequest["request"]> = {}
