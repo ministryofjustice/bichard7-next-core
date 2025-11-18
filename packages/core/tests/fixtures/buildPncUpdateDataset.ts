@@ -1,6 +1,16 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-export const buildPncUpdateDataset = (familyName?: string, givenName?: string[], organisationName?: string) => {
+type BuildPncUpdateDatasetParams = {
+  familyName?: string
+  givenName?: string[]
+  organisationName?: string
+}
+
+export const buildPncUpdateDataset = ({
+  familyName,
+  givenName,
+  organisationName
+}: BuildPncUpdateDatasetParams = {}) => {
   return {
     AnnotatedHearingOutcome: {
       HearingOutcome: {

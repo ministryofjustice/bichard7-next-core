@@ -11,7 +11,7 @@ describe("mapToNormalDisposalRequest", () => {
       psaCourtCode: PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR,
       pendingPsaCourtCode: "0001"
     })
-    const pncUpdateDataset = buildPncUpdateDataset("Brown", ["Adam"])
+    const pncUpdateDataset = buildPncUpdateDataset({ familyName: "Brown", givenName: ["Adam"] })
     const expectedLedsRequest = buildLedsNormalDisposalRequest()
 
     const ledsRequest = mapToAddDisposalRequest(request, pncUpdateDataset)
@@ -21,7 +21,7 @@ describe("mapToNormalDisposalRequest", () => {
 
   it("produces a different LEDS request when psaCourtCode, defendantOrganisation and pendingPsaCourtCode values differ", () => {
     const request = buildNormalDisposalRequest({ psaCourtCode: "1112", pendingPsaCourtCode: undefined })
-    const pncUpdateDataset = buildPncUpdateDataset(undefined, undefined, "Org")
+    const pncUpdateDataset = buildPncUpdateDataset({ organisationName: "Org" })
     const expectedLedsRequest = buildLedsNormalDisposalRequest({
       court: { courtIdentityType: "code", courtCode: "1112" },
       defendant: { defendantType: "organisation", defendantOrganisationName: "Org" },
@@ -50,7 +50,7 @@ describe("mapToNormalDisposalRequest", () => {
         ...base.hearingsAdjudicationsAndDisposals.slice(3)
       ]
     })
-    const pncUpdateDataset = buildPncUpdateDataset("Brown", ["Adam"])
+    const pncUpdateDataset = buildPncUpdateDataset({ familyName: "Brown", givenName: ["Adam"] })
     const expectedLedsRequest = buildLedsNormalDisposalRequest({
       offences: [
         {
