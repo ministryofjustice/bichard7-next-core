@@ -1,9 +1,9 @@
 import axios from "axios"
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
-import type ForceOwnerApiResponse from "../types/ForceOwnerApiResponse"
-import { isError } from "../types/Result"
-import { ListWrapper } from "./OrganisationUnitTypeahead.styles"
+import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
+import { isError } from "types/Result"
+import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
   onSelect: (item: ForceOwnerApiResponse[0] | null) => void

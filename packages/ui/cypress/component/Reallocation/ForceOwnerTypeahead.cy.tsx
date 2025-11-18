@@ -1,5 +1,5 @@
 import React from "react"
-import ForceOwnerTypeahead from "components/ForceOwnerTypeahead"
+import ForceOwnerTypeahead from "components/Typeaheads/ForceOwnerTypeahead"
 import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
 
 const mockForces: ForceOwnerApiResponse = [
@@ -7,6 +7,7 @@ const mockForces: ForceOwnerApiResponse = [
   { forceCode: "02", forceName: "Suffolk Constabulary" },
   { forceCode: "03", forceName: "Cumbria Constabulary" }
 ]
+
 describe("ForceOwnerTypeahead Component", () => {
   beforeEach(() => {
     cy.intercept("GET", "/bichard/api/force-owner*", (req) => {

@@ -1,6 +1,6 @@
 import { useState } from "react"
-import ForceOwnerTypeahead from "../ForceOwnerTypeahead"
 import type ForceOwnerApiResponse from "../../types/ForceOwnerApiResponse"
+import ForceOwnerTypeahead from "components/Typeaheads/ForceOwnerTypeahead"
 
 interface Props {
   currentForceOwner?: string
