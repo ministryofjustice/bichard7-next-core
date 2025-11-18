@@ -42,11 +42,11 @@ const expectedRequest = {
       courtIdentityType: "code",
       courtCode: "2063"
     },
-    date: "11122024"
+    date: "2024-12-11"
   },
   ownerCode: "02YZ",
   personUrn: "2000/0448754K",
-  remandDate: "05122024"
+  remandDate: "2024-12-05"
 }
 
 describe("mapToRemandRequest", () => {
@@ -91,7 +91,7 @@ describe("mapToRemandRequest", () => {
           courtIdentityType: "name",
           courtName: "Magistrates' Courts London Croydon MCA"
         },
-        date: "11122024"
+        date: "2024-12-11"
       }
     })
   })
@@ -107,7 +107,7 @@ describe("mapToRemandRequest", () => {
           courtCode: "2673",
           courtIdentityType: "code"
         },
-        date: "11122024"
+        date: "2024-12-11"
       }
     })
   })

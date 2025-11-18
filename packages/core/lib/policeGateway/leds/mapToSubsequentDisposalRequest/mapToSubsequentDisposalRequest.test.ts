@@ -115,15 +115,15 @@ describe("mapToSubsequentDisposalRequest", () => {
     expect(subsequentDisposalRequest).toStrictEqual(expectedSubsequentDisposalResult)
   })
 
-  it.each(["Sentenced Deferred", "Heard at Court", "Subsequently Varied"])(
-    "passes through reasonForAppearance: %s",
-    (hearingType) => {
-      const request = buildUpdatedRequest({ hearingType })
-      const pncUpdateDataset = buildPncUpdateDataset()
+  it.each([
+    { hearingType: "D", reasonForAppearance: "Sentenced Deferred" },
+    { hearingType: "V", reasonForAppearance: "Subsequently Varied" }
+  ])("passes through reasonForAppearance: %s", ({ hearingType, reasonForAppearance }) => {
+    const request = buildUpdatedRequest({ hearingType })
+    const pncUpdateDataset = buildPncUpdateDataset()
 
-      const result = mapToSubsequentDisposalRequest(request, pncUpdateDataset)
+    const result = mapToSubsequentDisposalRequest(request, pncUpdateDataset)
 
-      expect(result.reasonForAppearance).toBe(hearingType)
-    }
-  )
+    expect(result.reasonForAppearance).toBe(reasonForAppearance)
+  })
 })

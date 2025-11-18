@@ -11,7 +11,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
     courtCaseReferenceNumber: "98/2048/633Y",
     courtCode: "Court code",
     hearingDate: "12082025",
-    hearingType: "Sentenced Deferred",
+    hearingType: "D",
     pncCheckName: "Pnc check name",
     pncIdentifier: "22/858J",
     hearingDetails: [
