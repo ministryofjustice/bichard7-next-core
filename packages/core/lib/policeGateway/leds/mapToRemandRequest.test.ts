@@ -1,31 +1,5 @@
-import type RemandPncUpdateRequest from "../../../phase3/types/RemandPncUpdateRequest"
-
+import { buildRemandRequest } from "../../../tests/fixtures/buildRemandRequest"
 import mapToRemandRequest from "./mapToRemandRequest"
-
-type GenerateRemandRequestParams = {
-  psaCourtCode?: string
-  remandLocationCourt?: string
-}
-
-const generateRemandRequest = ({
-  remandLocationCourt,
-  psaCourtCode
-}: GenerateRemandRequestParams): RemandPncUpdateRequest["request"] => ({
-  croNumber: "DUMMY_CRO_NUMBER",
-  forceStationCode: "02YZ",
-  pncCheckName: "CHECKNAME",
-  pncIdentifier: "2000/0448754K",
-  arrestSummonsNumber: "11/01ZD/01/410780J",
-  hearingDate: "05122024",
-  nextHearingDate: "11122024",
-  pncRemandStatus: "B",
-  remandLocationCourt: remandLocationCourt ?? "2063",
-  psaCourtCode: psaCourtCode ?? "2063",
-  courtNameType1: "Magistrates' Courts London Croydon MCA",
-  courtNameType2: "Magistrates' Courts London Croydon MCA",
-  localAuthorityCode: "0000",
-  bailConditions: ["This is a dummy bail condition."]
-})
 
 const expectedRequest = {
   appearanceResult: "remanded-on-bail",
@@ -51,7 +25,7 @@ const expectedRequest = {
 
 describe("mapToRemandRequest", () => {
   it("should map the remand operation to LEDS remand request when remand location is 9998", () => {
-    const request = generateRemandRequest({ remandLocationCourt: "9998" })
+    const request = buildRemandRequest({ remandLocationCourt: "9998" })
     const ledsRequest = mapToRemandRequest(request)
 
     expect(ledsRequest).toEqual({
@@ -66,7 +40,7 @@ describe("mapToRemandRequest", () => {
   })
 
   it("should map the remand operation to LEDS remand request when remand location is not 9998", () => {
-    const request = generateRemandRequest({ remandLocationCourt: "2673" })
+    const request = buildRemandRequest({ remandLocationCourt: "2673" })
     const ledsRequest = mapToRemandRequest(request)
 
     expect(ledsRequest).toEqual({
@@ -81,7 +55,7 @@ describe("mapToRemandRequest", () => {
   })
 
   it("should map the remand operation to LEDS remand request when PSA court code is 9998", () => {
-    const request = generateRemandRequest({ psaCourtCode: "9998" })
+    const request = buildRemandRequest({ psaCourtCode: "9998" })
     const ledsRequest = mapToRemandRequest(request)
 
     expect(ledsRequest).toEqual({
@@ -97,7 +71,7 @@ describe("mapToRemandRequest", () => {
   })
 
   it("should map the remand operation to LEDS remand request when PSA court code is not 9998", () => {
-    const request = generateRemandRequest({ psaCourtCode: "2673" })
+    const request = buildRemandRequest({ psaCourtCode: "2673" })
     const ledsRequest = mapToRemandRequest(request)
 
     expect(ledsRequest).toEqual({
