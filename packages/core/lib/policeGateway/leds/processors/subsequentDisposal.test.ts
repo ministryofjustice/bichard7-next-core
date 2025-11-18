@@ -12,17 +12,22 @@ import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
 import { subsequentDisposal } from "./subsequentDisposal"
 
-describe("subsequentDisposal", () => {
-  const personId = "123"
+const personId = "123"
+const courtCaseId = "ABC123"
+const request = {
+  operation: PncOperation.DISPOSAL_UPDATED,
+  request: buildUpdatedRequest()
+} as PoliceUpdateRequest
+const pncUpdateDataset = buildPncUpdateDataset()
 
+describe("subsequentDisposal", () => {
   it("returns error when operation is not subsequent-disposal", () => {
-    const request = {
+    const remandRequest = {
       operation: PncOperation.REMAND,
       request: buildRemandRequest()
     } as PoliceUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset()
 
-    const result = subsequentDisposal(request, personId, pncUpdateDataset)
+    const result = subsequentDisposal(remandRequest, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain(
@@ -31,10 +36,6 @@ describe("subsequentDisposal", () => {
   })
 
   it("returns error when courtCaseId is not found", () => {
-    const request = {
-      operation: PncOperation.DISPOSAL_UPDATED,
-      request: buildUpdatedRequest()
-    } as PoliceUpdateRequest
     const pncUpdateDataset = {
       PncQuery: {
         courtCases: [
@@ -52,24 +53,18 @@ describe("subsequentDisposal", () => {
   })
 
   it("returns error when zod schema does not match any of the fields", () => {
-    const request = {
+    const requestWithInvalidData = {
       operation: PncOperation.DISPOSAL_UPDATED,
       request: buildUpdatedRequest({ courtCode: "longInvalidCourtCode" })
     } as PoliceUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset()
 
-    const result = subsequentDisposal(request, personId, pncUpdateDataset)
+    const result = subsequentDisposal(requestWithInvalidData, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
   })
 
   it("returns endpoint and requestBody", () => {
-    const request = {
-      operation: PncOperation.DISPOSAL_UPDATED,
-      request: buildUpdatedRequest()
-    } as PoliceUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset()
     const endpoint = "/people/123/disposals/ABC123/court-case-subsequent-disposal-results"
     const requestBody = {
       ownerCode: "07A1",
@@ -118,18 +113,9 @@ describe("subsequentDisposal", () => {
 })
 
 describe("subsequentDisposal - endpoint usage", () => {
-  const personId = "123"
-  const courtCaseId = "ABC123"
-
   it("calls endpoints.subsequentDisposalResults with correct arguments", () => {
     const spy = jest.spyOn(endpoints, "subsequentDisposalResults")
     spy.mockReturnValue("/people/123/disposals/ABC123/court-case-subsequent-disposal-results")
-
-    const request = {
-      operation: PncOperation.DISPOSAL_UPDATED,
-      request: buildUpdatedRequest()
-    } as PoliceUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset()
 
     subsequentDisposal(request, personId, pncUpdateDataset)
 
@@ -155,12 +141,6 @@ describe("subsequentDisposal - mapping calls", () => {
   })
 
   it("passes the request.request and pncUpdateDataset objects into mapToSubsequentDisposalRequest", () => {
-    const request = {
-      operation: PncOperation.DISPOSAL_UPDATED,
-      request: buildUpdatedRequest()
-    } as PoliceUpdateRequest
-    const pncUpdateDataset = buildPncUpdateDataset()
-
     mapToSubsequentDisposalRequest.mockReturnValue({ value: "mockValue" })
 
     subsequentDisposal(request, "123", pncUpdateDataset)
