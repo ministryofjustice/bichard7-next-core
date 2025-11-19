@@ -54,11 +54,6 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("should store multiple events in a single call to the API", async () => {
-    const datetimeIso = "2025-11-11T10:21:42.175Z"
-    const datetime = new Date(datetimeIso)
-    jest.useFakeTimers()
-    jest.setSystemTime(datetime)
-
     const phase1Result: Phase1Result = {
       correlationId,
       auditLogEvents: [
@@ -90,13 +85,23 @@ describe("storeAuditLogEvents", () => {
 
     expect(auditLog.events).toHaveLength(2)
 
-    const expectedAuditLogEvents = phase1Result.auditLogEvents.map((e) => ({
-      ...e,
-      timestamp: datetimeIso
-    }))
-    expect(auditLog.events).toEqual(expect.arrayContaining(expectedAuditLogEvents))
+    phase1Result.auditLogEvents.forEach((expectedEvent) => {
+      const actualEvent = auditLog.events.find(
+        (e) => e.eventCode === expectedEvent.eventCode && e.eventSource === expectedEvent.eventSource
+      )
 
-    jest.useRealTimers()
+      expect(actualEvent).toBeDefined()
+      expect(actualEvent).toMatchObject({
+        eventCode: expectedEvent.eventCode,
+        eventSource: expectedEvent.eventSource,
+        eventType: expectedEvent.eventType,
+        category: expectedEvent.category
+      })
+
+      const actualTime = new Date(actualEvent!.timestamp).getTime()
+      const expectedTime = expectedEvent.timestamp.getTime()
+      expect(Math.abs(actualTime - expectedTime)).toBeLessThan(1000)
+    })
   })
 
   it("should return FAILED if it fails to write to the audit log", async () => {

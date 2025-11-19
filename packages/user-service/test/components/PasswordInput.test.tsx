@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react"
+import { fireEvent, render, screen } from "@testing-library/react"
 import PasswordInput from "components/Login/PasswordInput"
 
 describe("PasswordInput", () => {
@@ -23,4 +23,24 @@ describe("PasswordInput", () => {
     const { container } = render(<PasswordInput label="Large Label" name="largeLabelPass" labelSize="l" />)
     expect(container).toMatchSnapshot()
   })
+})
+
+it("should toggle password visibility when button is clicked", () => {
+  render(<PasswordInput label="password" name="test" />)
+  const input = screen.getByTestId("password-input_test")
+  const button = screen.getByTestId("password-input-button_test")
+
+  expect(input.getAttribute("type")).toBe("password")
+  expect(button.textContent).toBe("Show")
+  expect(button.getAttribute("aria-label")).toBe("Show password")
+
+  fireEvent.click(button)
+  expect(input.getAttribute("type")).toBe("text")
+  expect(button.textContent).toBe("Hide")
+  expect(button.getAttribute("aria-label")).toBe("Hide password")
+
+  fireEvent.click(button)
+  expect(input.getAttribute("type")).toBe("password")
+  expect(button.textContent).toBe("Show")
+  expect(button.getAttribute("aria-label")).toBe("Show password")
 })
