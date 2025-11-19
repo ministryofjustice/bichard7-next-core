@@ -50,7 +50,7 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(true)
-    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["001"])).toBe(true)
   })
 
   it("returns true when USE_API_CASE_RESUBMIT_ENDPOINT is enabled", () => {
