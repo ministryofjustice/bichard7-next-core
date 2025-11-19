@@ -12,13 +12,13 @@ export enum ApiEndpoints {
   CaseResubmit = "CaseResubmit"
 }
 
-export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boolean => {
+export const canUseApiEndpoint = (endpoint: ApiEndpoints, visibleForces: string[]): boolean => {
   if (!USE_API) {
     return false
   }
 
   if (
-    !forces
+    !visibleForces
       .map((force) => {
         if (force.length === 3) {
           return force.replace(/^0(\d+)/, "$1")
