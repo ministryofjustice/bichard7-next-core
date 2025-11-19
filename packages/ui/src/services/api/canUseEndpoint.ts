@@ -20,7 +20,7 @@ export const canUseApiEndpoint = (endpoint: ApiEndpoints, visibleForces: string[
   if (
     !visibleForces
       .map((force) => {
-        if (force.length === 3) {
+        if (force.length === 3 && force[0] === "0") {
           return force.replace(/^0(\d+)/, "$1")
         } else {
           return force
