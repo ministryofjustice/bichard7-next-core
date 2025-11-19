@@ -2,6 +2,10 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import preProcessCourtCaseReferenceNumber from "./preProcessCourtCaseReferenceNumber"
 describe("preProcessCourtCaseReferenceNumber", () => {
+  beforeEach(() => {
+    delete process.env.USE_LEDS
+  })
+
   it("should return empty string when CCR is undefined", () => {
     const result = preProcessCourtCaseReferenceNumber(undefined)
 
@@ -19,6 +23,14 @@ describe("preProcessCourtCaseReferenceNumber", () => {
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Court Case Reference Number length must be 15, but the length is 14")
+  })
+
+  it("should return CCR without preprocessing when using LEDS", () => {
+    process.env.USE_LEDS = "true"
+
+    const result = preProcessCourtCaseReferenceNumber("97/1626/8395Q")
+
+    expect(result).toBe("97/1626/8395Q")
   })
 
   it("should return error when CCR length is more than 15 characters", () => {
