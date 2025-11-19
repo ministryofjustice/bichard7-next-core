@@ -17,7 +17,7 @@ export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boo
     return false
   }
 
-  if (!forces.some((force) => FORCES_WITH_API_ENABLED.has(force))) {
+  if (!forces.map((force) => force.replace(/^0(\d+)/, "$1")).some((force) => FORCES_WITH_API_ENABLED.has(force))) {
     return false
   }
 
