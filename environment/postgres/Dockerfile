@@ -19,3 +19,5 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 WORKDIR /
 
 COPY docker /docker-entrypoint-initdb.d
+
+COPY schema.sql /docker-entrypoint-initdb.d/init-db.sql
