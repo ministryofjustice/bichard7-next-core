@@ -1,5 +1,5 @@
-export const convertCou = (couXml: string) => {
-  const slice = (start: number, end: number) => couXml.substring(start, end).trim()
+export const convertCou = (couValue: string) => {
+  const slice = (start: number, end: number) => couValue.substring(start, end).trim()
 
   return {
     updateTypeInfo: slice(0, 1),

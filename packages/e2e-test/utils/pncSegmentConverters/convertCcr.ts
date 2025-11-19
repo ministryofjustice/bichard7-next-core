@@ -1,5 +1,5 @@
-export const convertCcr = (ccrXml: string) => {
-  const slice = (start: number, end: number) => ccrXml.substring(start, end).trim()
+export const convertCcr = (ccrValue: string) => {
+  const slice = (start: number, end: number) => ccrValue.substring(start, end).trim()
 
   return {
     updateTypeKey: slice(0, 1),

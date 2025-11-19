@@ -1,5 +1,5 @@
-export const convertCof = (cofXml: string) => {
-  const slice = (start: number, end: number) => cofXml.substring(start, end).trim()
+export const convertCof = (cofValue: string) => {
+  const slice = (start: number, end: number) => cofValue.substring(start, end).trim()
 
   return {
     intfcUpdateType: slice(0, 1),

@@ -1,5 +1,5 @@
-export const convertCrt = (crtXml: string) => {
-  const slice = (start: number, end: number) => crtXml.substring(start, end).trim()
+export const convertCrt = (crtValue: string) => {
+  const slice = (start: number, end: number) => crtValue.substring(start, end).trim()
 
   return {
     updateTypeInfo: slice(0, 1),

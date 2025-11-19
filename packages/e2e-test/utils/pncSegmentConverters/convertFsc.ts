@@ -1,6 +1,6 @@
-export const convertFsc = (fscXml: string) => {
+export const convertFsc = (fscValue: string) => {
   return {
-    updateType: fscXml.substring(0, 1),
-    forceStationCode: fscXml.substring(1, 5)
+    updateType: fscValue.substring(0, 1),
+    forceStationCode: fscValue.substring(1, 5)
   }
 }

@@ -1,5 +1,5 @@
-export const convertIds = (idsXml: string) => {
-  const slice = (start: number, end: number) => idsXml.substring(start, end).trim()
+export const convertIds = (idsValue: string) => {
+  const slice = (start: number, end: number) => idsValue.substring(start, end).trim()
 
   return {
     updateTypeKey: slice(0, 1),
