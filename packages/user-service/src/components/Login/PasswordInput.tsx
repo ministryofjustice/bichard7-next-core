@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 interface Props {
   label?: string
   labelSize?: "s" | "m" | "l"
@@ -29,18 +31,18 @@ const PasswordInput = ({
   mandatory = false,
   optionalProps = {}
 }: Props) => {
+  const [showPassword, setShowPassword] = useState(false)
+
+  const togglePassword = () => {
+    setShowPassword((prev) => !prev)
+  }
+
   const hintElementId = `${name}-hint`
   const errorElementId = `${name}-error`
   const inputId = id || name
-
   const hasError = error && !readOnly
 
-  const formGroupClasses = [
-    "govuk-form-group",
-    "govuk-password-input",
-    className,
-    hasError ? "govuk-form-group--error" : null
-  ]
+  const formGroupClasses = ["govuk-form-group", className, hasError ? "govuk-form-group--error" : null]
     .filter(Boolean)
     .join(" ")
 
@@ -49,7 +51,6 @@ const PasswordInput = ({
   const inputClasses = [
     "govuk-input",
     "govuk-password-input__input",
-    "govuk-js-password-input-input",
     widthClass,
     hasError ? "govuk-input--error" : null
   ]
@@ -62,7 +63,7 @@ const PasswordInput = ({
 
   const ariaDescribedBy = [hint ? hintElementId : null, hasError ? errorElementId : null].filter(Boolean).join(" ")
   return (
-    <div className={formGroupClasses} data-module="govuk-password-input">
+    <div className={formGroupClasses}>
       {label && (
         <label className={labelClasses} htmlFor={name}>
           {label}
@@ -86,8 +87,8 @@ const PasswordInput = ({
           className={inputClasses}
           id={inputId}
           name={name}
-          data-test={`password-input_${name}`}
-          type="password"
+          data-testid={`password-input_${name}`}
+          type={showPassword ? "text" : "password"}
           defaultValue={value}
           readOnly={readOnly}
           disabled={disabled}
@@ -99,13 +100,14 @@ const PasswordInput = ({
         />
 
         <button
-          className="govuk-button govuk-button--secondary govuk-password-input__toggle govuk-js-password-input-toggle"
+          className="govuk-button govuk-button--secondary govuk-password-input__toggle"
           type="button"
-          data-module="govuk-button"
+          onClick={togglePassword}
           aria-controls={inputId}
-          aria-label="Show password"
+          aria-label={showPassword ? "Hide password" : "Show password"}
+          data-testid={`password-input-button_${name}`}
         >
-          {"Show"}
+          {showPassword ? "Hide" : "Show"}
         </button>
       </div>
     </div>
