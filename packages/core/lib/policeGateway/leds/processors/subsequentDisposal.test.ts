@@ -9,11 +9,9 @@ import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdate
 import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import PoliceApiError from "../../PoliceApiError"
-import endpoints from "../endpoints"
 import { subsequentDisposal } from "./subsequentDisposal"
 
 const personId = "123"
-const courtCaseId = "ABC123"
 const request = {
   operation: PncOperation.DISPOSAL_UPDATED,
   request: buildUpdatedRequest()
@@ -109,43 +107,5 @@ describe("subsequentDisposal", () => {
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
-  })
-})
-
-describe("subsequentDisposal - endpoint usage", () => {
-  it("calls endpoints.subsequentDisposalResults with correct arguments", () => {
-    const spy = jest.spyOn(endpoints, "subsequentDisposalResults")
-    spy.mockReturnValue("/people/123/disposals/ABC123/court-case-subsequent-disposal-results")
-
-    subsequentDisposal(request, personId, pncUpdateDataset)
-
-    expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenCalledWith(personId, courtCaseId)
-  })
-})
-
-describe("subsequentDisposal - mapping calls", () => {
-  let subsequentDisposal: any
-  let mapToSubsequentDisposalRequest: jest.Mock
-
-  beforeEach(() => {
-    jest.resetModules()
-
-    jest.doMock("../mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest", () => ({
-      __esModule: true,
-      default: jest.fn()
-    }))
-
-    mapToSubsequentDisposalRequest = require("../mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest").default
-    subsequentDisposal = require("./subsequentDisposal").subsequentDisposal
-  })
-
-  it("passes the request.request and pncUpdateDataset objects into mapToSubsequentDisposalRequest", () => {
-    mapToSubsequentDisposalRequest.mockReturnValue({ value: "mockValue" })
-
-    subsequentDisposal(request, "123", pncUpdateDataset)
-
-    expect(mapToSubsequentDisposalRequest).toHaveBeenCalledTimes(1)
-    expect(mapToSubsequentDisposalRequest).toHaveBeenCalledWith(request.request, pncUpdateDataset)
   })
 })

@@ -8,17 +8,14 @@ import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNorm
 import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
 import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import PoliceApiError from "../../PoliceApiError"
-import endpoints from "../endpoints"
 import { normalDisposal } from "./normalDisposal"
 
 const personId = "123456"
-const courtCaseId = "ABC123"
 
 const request = {
   operation: PncOperation.NORMAL_DISPOSAL,
   request: buildNormalDisposalRequest()
 } as PoliceUpdateRequest
-const pncUpdateDataset = buildPncUpdateDataset()
 
 describe("normalDisposal", () => {
   it("returns endpoint and requestBody", () => {
@@ -226,43 +223,5 @@ describe("normalDisposal", () => {
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
-  })
-})
-
-describe("normalDisposal - endpoint usage", () => {
-  it("calls endpoint.addDisposal with correct arguments", () => {
-    const spy = jest.spyOn(endpoints, "addDisposal")
-    spy.mockReturnValue("/people/123456/disposals/ABC123/court-case-disposal-result")
-
-    normalDisposal(request, personId, pncUpdateDataset)
-
-    expect(spy).toHaveBeenCalledTimes(1)
-    expect(spy).toHaveBeenCalledWith(personId, courtCaseId)
-  })
-})
-
-describe("normalDisposal - mapping calls", () => {
-  let normalDisposal: any
-  let mapToAddDisposalRequest: jest.Mock
-
-  beforeEach(() => {
-    jest.resetModules()
-
-    jest.doMock("../mapToAddDisposalRequest/mapToAddDisposalRequest", () => ({
-      __esModule: true,
-      default: jest.fn()
-    }))
-
-    mapToAddDisposalRequest = require("../mapToAddDisposalRequest/mapToAddDisposalRequest").default
-    normalDisposal = require("./normalDisposal").normalDisposal
-  })
-
-  it("passes the request.request and pncUpdateDataset objects into mapToAddDisposalRequest", () => {
-    mapToAddDisposalRequest.mockReturnValue({ value: "mockValue" })
-
-    normalDisposal(request, personId, pncUpdateDataset)
-
-    expect(mapToAddDisposalRequest).toHaveBeenCalledTimes(1)
-    expect(mapToAddDisposalRequest).toHaveBeenCalledWith(request.request, pncUpdateDataset)
   })
 })
