@@ -1,5 +1,5 @@
 const convertDis = (disValue: string) => ({
-  intfcUpdateType: disValue.substring(0, 1),
+  updateType: disValue.substring(0, 1),
   type: disValue.substring(1, 5),
   qtyDuration: disValue.substring(5, 9),
   qtyDate: disValue.substring(9, 17),
