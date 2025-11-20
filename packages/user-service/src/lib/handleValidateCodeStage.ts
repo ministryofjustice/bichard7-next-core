@@ -5,9 +5,10 @@ import type CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import type Database from "types/Database"
 import { isError } from "types/Result"
 import type ServiceMessage from "types/ServiceMessage"
-import logger from "utils/logger"
 import validateUserVerificationCode from "useCases/validateUserVerificationCode"
+import logger from "utils/logger"
 import type UserAuthBichard from "../types/UserAuthBichard"
+import config from "./config"
 
 interface Props {
   emailAddress?: string
@@ -16,6 +17,7 @@ interface Props {
   validationCode?: string
   invalidCodeError?: string
   serviceMessages: ServiceMessage[]
+  incorrectDelay: number
 }
 
 type ValidateStageConfig = {
@@ -48,7 +50,8 @@ export const handleValidateCodeStage = async (
         emailAddress,
         csrfToken,
         [stageKey]: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }
@@ -63,7 +66,8 @@ export const handleValidateCodeStage = async (
         emailAddress,
         csrfToken,
         [stageKey]: "validateCode",
-        serviceMessages: JSON.parse(JSON.stringify(serviceMessages))
+        serviceMessages: JSON.parse(JSON.stringify(serviceMessages)),
+        incorrectDelay: config.incorrectDelay
       }
     }
   }

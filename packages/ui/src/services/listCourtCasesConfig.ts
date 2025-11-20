@@ -25,10 +25,11 @@ const CaseListQuery = [
   "courtCase.triggerResolvedBy",
   "courtCase.defendantName",
   "courtCase.errorLockedByUsername",
-  "courtCase.triggerLockedByUsername"
+  "courtCase.triggerLockedByUsername",
+  "courtCase.messageReceivedTimestamp"
 ]
 
-const ResolvedExceptionsReport = [...CaseListQuery, "courtCase.messageReceivedTimestamp", "courtCase.hearingOutcome"]
+const ResolvedExceptionsReport = [...CaseListQuery, "courtCase.hearingOutcome"]
 
 const BYPASS_PAGE_LIMIT = -1
 

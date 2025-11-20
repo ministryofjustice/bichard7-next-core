@@ -16,6 +16,7 @@ interface CaseDetailsRowProps {
   lockTag?: React.ReactNode
   previousPath: string | null
   displayAuditQuality: boolean
+  courtDateReceivedDateMismatch: boolean
 }
 
 export const CaseDetailsRow = ({
@@ -23,10 +24,20 @@ export const CaseDetailsRow = ({
   reasonCell,
   lockTag,
   previousPath,
-  displayAuditQuality
+  displayAuditQuality,
+  courtDateReceivedDateMismatch
 }: CaseDetailsRowProps) => {
-  const { notes, defendantName, errorId, courtDate, courtName, ptiurn, errorQualityChecked, triggerQualityChecked } =
-    courtCase
+  const {
+    notes,
+    defendantName,
+    errorId,
+    courtDate,
+    courtName,
+    ptiurn,
+    errorQualityChecked,
+    triggerQualityChecked,
+    messageReceivedTimestamp
+  } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
@@ -47,6 +58,11 @@ export const CaseDetailsRow = ({
         <TableCell rowSpan={showPreview ? 2 : 3}>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </TableCell>
+        <ConditionalRender isRendered={courtDateReceivedDateMismatch}>
+          <TableCell rowSpan={showPreview ? 2 : 3}>
+            <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
+          </TableCell>
+        </ConditionalRender>
         <TableCell rowSpan={showPreview ? 2 : 3}>{courtName}</TableCell>
         <TableCell rowSpan={showPreview ? 2 : 3}>{ptiurn}</TableCell>
         <TableCell>

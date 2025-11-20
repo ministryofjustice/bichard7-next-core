@@ -52,7 +52,7 @@ export const disposalResultSchema = z.object({
   disposalDuration: disposalDurationSchema.optional(),
   disposalFine: disposalFineSchema.optional(),
   disposalEffectiveDate: dateStringSchema.optional(),
-  disposalQualifies: z.array(z.string().min(1).max(2)).max(4).optional(),
+  disposalQualifiers: z.array(z.string().min(1).max(2)).max(4).optional(),
   disposalQualifierDuration: disposalDurationSchema.optional(),
   disposalText: z.string().optional()
 })

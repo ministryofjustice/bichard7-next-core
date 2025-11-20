@@ -19,10 +19,6 @@ describe("Change password", () => {
       cy.get("button[type=submit]").click()
       cy.get("body").contains(/You can now sign in with your new password./i)
       cy.url().should("not.match", /token=/)
-
-      // Note: Although we avoid waits in cypress test as the logic implemented is temporal in nature we can consider this OK
-      /* eslint-disable-next-line cypress/no-unnecessary-waiting */
-      cy.wait(10000)
       cy.get(".govuk-notification-banner__heading a[class=govuk-link]").click()
       cy.get("input[type=email]").type(emailAddress)
       cy.get("input#password").type(newPassword)

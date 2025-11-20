@@ -1,9 +1,19 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import ApiClient from "./ApiClient"
+import axios from "axios"
+import type { AxiosResponse } from "axios"
+import { API_LOCATION } from "config"
+
+jest.mock("axios")
+const mockedAxios = axios as jest.MockedFunction<typeof axios>
 
 describe("apiClient get", () => {
   const apiClient = new ApiClient("jwt")
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
 
   it("requires JWT", () => {
     expect(apiClient.jwt).toBe("jwt")
@@ -12,25 +22,35 @@ describe("apiClient get", () => {
   it("returns a case successfully", async () => {
     const testCase = { asn: "0011", defendant_name: "Adam Smith", error_count: 1, trigger_count: 1 }
 
-    jest
-      .spyOn(apiClient, "useFetch")
-      .mockResolvedValue({ ok: true, json: async () => Promise.resolve(testCase) } as Response)
+    mockedAxios.mockResolvedValue({
+      status: 200,
+      statusText: "OK",
+      data: testCase,
+      headers: {},
+      config: {} as any
+    } as AxiosResponse)
 
     const result = await apiClient.get("/v1/cases/1")
 
-    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "GET")
+    expect(mockedAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: `${API_LOCATION}/v1/cases/1`,
+        method: "GET"
+      })
+    )
 
     expect(isError(result)).toBe(false)
     expect(result).toEqual(testCase)
   })
 
-  it("throws an error when the API returns an error response", async () => {
-    jest.spyOn(apiClient, "useFetch").mockResolvedValue({
-      ok: false,
+  it("returns an error when the API returns an error response", async () => {
+    mockedAxios.mockResolvedValue({
       status: 404,
       statusText: "Not Found",
-      json: async () => ({ message: "Not Found" })
-    } as Response)
+      data: { message: "Not Found" },
+      headers: {},
+      config: {} as any
+    } as AxiosResponse)
 
     const result = await apiClient.get("/v1/cases/1")
 
@@ -38,13 +58,14 @@ describe("apiClient get", () => {
     expect(result).toEqual(new Error("Error: 404 - Not Found"))
   })
 
-  it("throws an error when the API returns an error response when expecting a string", async () => {
-    jest.spyOn(apiClient, "useFetch").mockResolvedValue({
-      ok: false,
+  it("returns an error when the API returns an error response when expecting a string", async () => {
+    mockedAxios.mockResolvedValue({
       status: 404,
       statusText: "Not Found",
-      json: async () => ({ message: "Not Found" })
-    } as Response)
+      data: { message: "Not Found" },
+      headers: {},
+      config: {} as any
+    } as AxiosResponse)
 
     const result = await apiClient.get<string>("/v1/cases/1")
 
@@ -55,13 +76,23 @@ describe("apiClient get", () => {
   it("can post without a body", async () => {
     const testCase = { asn: "0011", defendant_name: "Adam Smith", error_count: 1, trigger_count: 1 }
 
-    jest
-      .spyOn(apiClient, "useFetch")
-      .mockResolvedValue({ ok: true, json: async () => Promise.resolve(testCase) } as Response)
+    mockedAxios.mockResolvedValue({
+      status: 200,
+      statusText: "OK",
+      data: testCase,
+      headers: {},
+      config: {} as any
+    } as AxiosResponse)
 
     const result = await apiClient.post("/v1/cases/1")
 
-    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "POST", undefined)
+    expect(mockedAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: `${API_LOCATION}/v1/cases/1`,
+        method: "POST",
+        data: {}
+      })
+    )
 
     expect(isError(result)).toBe(false)
     expect(result).toEqual(testCase)
@@ -70,13 +101,23 @@ describe("apiClient get", () => {
   it("can post with a body", async () => {
     const testCase = { asn: "0011", defendant_name: "Adam Smith", error_count: 1, trigger_count: 1 }
 
-    jest
-      .spyOn(apiClient, "useFetch")
-      .mockResolvedValue({ ok: true, json: async () => Promise.resolve(testCase) } as Response)
+    mockedAxios.mockResolvedValue({
+      status: 200,
+      statusText: "OK",
+      data: testCase,
+      headers: {},
+      config: {} as any
+    } as AxiosResponse)
 
     const result = await apiClient.post("/v1/cases/1", { 1: "thing", obj: { hello: "world" } })
 
-    expect(apiClient.useFetch).toHaveBeenCalledWith("/v1/cases/1", "POST", { 1: "thing", obj: { hello: "world" } })
+    expect(mockedAxios).toHaveBeenCalledWith(
+      expect.objectContaining({
+        url: `${API_LOCATION}/v1/cases/1`,
+        method: "POST",
+        data: { 1: "thing", obj: { hello: "world" } }
+      })
+    )
 
     expect(isError(result)).toBe(false)
     expect(result).toEqual(testCase)

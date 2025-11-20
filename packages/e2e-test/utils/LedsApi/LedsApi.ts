@@ -10,6 +10,7 @@ export class LedsApi implements PoliceApi {
   mocks: LedsMock[] = []
   private personId: string
   private reportId: string
+  private courtCaseId: string
 
   readonly mockServerClient: MockServerClient
 
@@ -44,6 +45,7 @@ export class LedsApi implements PoliceApi {
     const queryOptions = options ?? {}
     this.personId = queryOptions.personId ??= randomUUID()
     this.reportId = queryOptions.reportId ??= randomUUID()
+    this.courtCaseId = queryOptions.courtCaseId ??= randomUUID()
 
     return mockGenerators.generateAsnQueryFromNcm(this.bichard, ncmFile, queryOptions)
   }
@@ -52,6 +54,7 @@ export class LedsApi implements PoliceApi {
     const updateOptions = options ?? {}
     updateOptions.personId ??= this.personId
     updateOptions.reportId ??= this.reportId
+    updateOptions.courtCaseId ??= this.courtCaseId
 
     return mockGenerators.generateUpdate(code, updateOptions)
   }

@@ -694,6 +694,8 @@ jobs:
       - run:
           name: Run e2e tests against user service code
           command: bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
+          environment:
+            INCORRECT_DELAY: 0
       - store_test_results:
           path: ~/project/packages/user-service/cypress/results
       - store_artifacts:

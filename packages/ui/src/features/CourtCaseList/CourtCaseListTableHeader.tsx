@@ -9,9 +9,14 @@ import { HeaderButton, HeaderCell } from "./CourtCaseListTableHeader.styles"
 interface CourtCaseListTableHeaderProps {
   order: QueryOrder
   displayAuditQuality: boolean
+  courtDateReceivedDateMismatch: boolean
 }
 
-export const CourtCaseListTableHeader = ({ order, displayAuditQuality }: CourtCaseListTableHeaderProps) => {
+export const CourtCaseListTableHeader = ({
+  order,
+  displayAuditQuality,
+  courtDateReceivedDateMismatch
+}: CourtCaseListTableHeaderProps) => {
   const router = useRouter()
   const { query } = router
   const orderByParams = (orderBy: string) => `?${new URLSearchParams({ ...query, orderBy, order })}`
@@ -69,6 +74,25 @@ export const CourtCaseListTableHeader = ({ order, displayAuditQuality }: CourtCa
           <ColumnOrderIcons columnName={"courtDate"} currentOrder={query.order} orderBy={query.orderBy} />
         </HeaderButton>
       </HeaderCell>
+      <ConditionalRender isRendered={courtDateReceivedDateMismatch}>
+        <HeaderCell className={className} style={{ width: "115px" }}>
+          <HeaderButton
+            className={"table-column-header-button"}
+            id="received-date-sort"
+            aria-live="polite"
+            aria-sort={ariaSort("messageReceivedTimestamp")}
+            aria-label={ariaLabel("messageReceivedTimestamp")}
+            onClick={(event) => handleHeaderClick(event, "messageReceivedTimestamp")}
+          >
+            {"Received date"}
+            <ColumnOrderIcons
+              columnName={"messageReceivedTimestamp"}
+              currentOrder={query.order}
+              orderBy={query.orderBy}
+            />
+          </HeaderButton>
+        </HeaderCell>
+      </ConditionalRender>
       <HeaderCell className={className}>
         <HeaderButton
           className={"table-column-header-button"}

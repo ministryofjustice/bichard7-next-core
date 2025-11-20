@@ -28,6 +28,7 @@ export type DisplayPartialCourtCase = Pick<CourtCase, FieldsForDisplayPartialCou
   triggers: DisplayTrigger[]
   resolutionTimestamp: string | null
   noteCount?: number
+  messageReceivedTimestamp: string
 }
 
 type FieldsForDisplayFullCourtCase =

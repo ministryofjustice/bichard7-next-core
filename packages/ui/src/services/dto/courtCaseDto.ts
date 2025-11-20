@@ -33,7 +33,8 @@ export const courtCaseToDisplayPartialCourtCaseDto = (
     triggerStatus: courtCase.triggerStatus ?? null,
     triggerCount: courtCase.triggerCount,
     triggerQualityChecked: courtCase.triggerQualityChecked ?? null,
-    defendantName: courtCase.defendantName
+    defendantName: courtCase.defendantName,
+    messageReceivedTimestamp: courtCase.messageReceivedTimestamp.toISOString()
   }
 
   if (courtCase.errorLockedByUserFullName) {

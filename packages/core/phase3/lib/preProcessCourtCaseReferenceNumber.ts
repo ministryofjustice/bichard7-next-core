@@ -7,6 +7,11 @@ const preProcessCourtCaseReferenceNumber = (ccr?: string): Result<string> => {
     return ""
   }
 
+  // CCR in the LEDS update request is the same as the CCR in the LEDS ASN query.
+  if (process.env.USE_LEDS === "true") {
+    return ccr
+  }
+
   if (ccr.length !== COURT_CASE_REFERENCE_NUMBER_LENGTH) {
     // We return an error because this data comes from the PNC and is always 15 characters.
     // If it's not 15 characters then something is very wrong and we'll see this error
