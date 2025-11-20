@@ -1,4 +1,23 @@
-export const convertAch = (achValue: string) => {
+export type Ach = {
+  updateTypeInfo: string
+  crimeOffenceReferenceNumber: string
+  arrestOffenceNumber: string
+  offenceQualifier: string
+  apcoOffenceCode: string
+  offenceDescription: string
+  cjsOffenceCode: string
+  methodUsed: string
+  dress: string
+  committedOnBail: string
+  locationOfOffence: string
+  offenceLocationFSCode: string
+  offenceStartDate: string
+  offenceStartTime: string
+  offenceEndDate: string
+  offenceEndTime: string
+}
+
+const convertAch = (achValue: string): Ach => {
   let currentIndex = 0
   const read = (length: number) => {
     const value = achValue.substring(currentIndex, currentIndex + length)
@@ -26,3 +45,5 @@ export const convertAch = (achValue: string) => {
     offenceEndTime: read(4)
   }
 }
+
+export default convertAch

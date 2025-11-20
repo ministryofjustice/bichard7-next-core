@@ -1,4 +1,11 @@
-export const convertCrt = (crtValue: string) => {
+export type Crt = {
+  updateTypeInfo: string
+  courtCode: string
+  courtName: string
+  courtDate: string
+}
+
+const convertCrt = (crtValue: string): Crt => {
   const slice = (start: number, end: number) => crtValue.substring(start, end).trim()
 
   return {
@@ -8,3 +15,5 @@ export const convertCrt = (crtValue: string) => {
     courtDate: slice(76, 84)
   }
 }
+
+export default convertCrt

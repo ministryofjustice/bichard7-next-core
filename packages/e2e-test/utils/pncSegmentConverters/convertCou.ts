@@ -1,4 +1,13 @@
-export const convertCou = (couValue: string) => {
+export type Cou = {
+  updateTypeInfo: string
+  courtCode: string
+  courtName: string
+  generatedPNCFilename: string
+  dateOfHearing: string
+  numberOfTics: string
+}
+
+const convertCou = (couValue: string): Cou => {
   const slice = (start: number, end: number) => couValue.substring(start, end).trim()
 
   return {
@@ -10,3 +19,5 @@ export const convertCou = (couValue: string) => {
     numberOfTics: slice(138, 142)
   }
 }
+
+export default convertCou

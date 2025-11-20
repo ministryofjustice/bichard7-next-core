@@ -1,4 +1,11 @@
-export const convertIds = (idsValue: string) => {
+export type Ids = {
+  updateTypeKey: string
+  pncIdentifier: string
+  pncCheckName: string
+  croNumber: string
+}
+
+const convertIds = (idsValue: string): Ids => {
   const slice = (start: number, end: number) => idsValue.substring(start, end).trim()
 
   return {
@@ -8,3 +15,5 @@ export const convertIds = (idsValue: string) => {
     croNumber: slice(24, 36)
   }
 }
+
+export default convertIds

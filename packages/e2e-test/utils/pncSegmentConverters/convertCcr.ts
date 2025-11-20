@@ -1,4 +1,10 @@
-export const convertCcr = (ccrValue: string) => {
+export type Ccr = {
+  updateTypeKey: string
+  courtCaseReferenceNumber: string
+  crimeOffenceReferenceNumber: string
+}
+
+const convertCcr = (ccrValue: string): Ccr => {
   const slice = (start: number, end: number) => ccrValue.substring(start, end).trim()
 
   return {
@@ -7,3 +13,5 @@ export const convertCcr = (ccrValue: string) => {
     crimeOffenceReferenceNumber: slice(16, 31)
   }
 }
+
+export default convertCcr

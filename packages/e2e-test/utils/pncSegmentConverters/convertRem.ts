@@ -1,10 +1,35 @@
-const convertRem = (remValue: string) => {
+export type Rem = {
+  updateType: string
+  remandDate: string
+  remandResult: string
+  remandLocationFfss: string
+  remandLocationCourt: string
+  courtNameType1: string
+  nextAppearanceDate: string
+  nextAppearanceLocation: string
+  courtNameType2: string
+  bailConditions: string
+  bailAddress: string
+  breachOfBailConditions: string
+  custodyForceStationCode: string
+  institutionCode: string
+  prisonerNumber: string
+  custodyText: string
+  nextAppearanceLocationFfss: string
+  localAuthorityCode: string
+  localAuthorityName: string
+  localAuthoritySecureUnitMarker: string
+  socialWorkerName: string
+  socialWorkerTelephone: string
+}
+
+const convertRem = (remValue: string): Rem => {
   let currentIndex = 0
   const read = (length: number) => {
     const value = remValue.substring(currentIndex, currentIndex + length)
     currentIndex += length
 
-    return value
+    return value.trim()
   }
 
   return {

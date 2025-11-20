@@ -1,7 +1,17 @@
-const convertCch = (cchValue: string) => ({
-  updateType: cchValue.substring(0, 1),
-  offenceSequenceNumber: cchValue.substring(1, 4),
-  cjsOffenceCode: cchValue.substring(18, 26)
-})
+export type Cch = {
+  updateType: string
+  offenceSequenceNumber: string
+  cjsOffenceCode: string
+}
+
+const convertCch = (cchValue: string): Cch => {
+  const slice = (start: number, end: number) => cchValue.substring(start, end).trim()
+
+  return {
+    updateType: slice(0, 1),
+    offenceSequenceNumber: slice(1, 4),
+    cjsOffenceCode: slice(18, 26)
+  }
+}
 
 export default convertCch
