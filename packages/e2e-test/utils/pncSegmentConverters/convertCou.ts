@@ -1,5 +1,4 @@
 export type Cou = {
-  updateTypeInfo: string
   courtCode: string
   courtName: string
   generatedPNCFilename: string
@@ -11,7 +10,6 @@ const convertCou = (couValue: string): Cou => {
   const slice = (start: number, end: number) => couValue.substring(start, end).trim()
 
   return {
-    updateTypeInfo: slice(0, 1),
     courtCode: slice(1, 5),
     courtName: slice(5, 76),
     generatedPNCFilename: slice(76, 130),

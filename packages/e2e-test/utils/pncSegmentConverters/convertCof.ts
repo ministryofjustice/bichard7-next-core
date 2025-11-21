@@ -1,5 +1,4 @@
 export type Cof = {
-  intfcUpdateType: string
   referenceNumber: string
   offenceQualifier1: string
   offenceQualifier2: string
@@ -15,7 +14,6 @@ const convertCof = (cofValue: string): Cof => {
   const slice = (start: number, end: number) => cofValue.substring(start, end).trim()
 
   return {
-    intfcUpdateType: slice(0, 1),
     referenceNumber: slice(1, 4),
     offenceQualifier1: slice(4, 6),
     offenceQualifier2: slice(6, 8),

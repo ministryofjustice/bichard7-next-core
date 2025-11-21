@@ -1,5 +1,4 @@
 export type Ach = {
-  updateTypeInfo: string
   crimeOffenceReferenceNumber: string
   arrestOffenceNumber: string
   offenceQualifier: string
@@ -27,7 +26,6 @@ const convertAch = (achValue: string): Ach => {
   }
 
   return {
-    updateTypeInfo: read(1),
     crimeOffenceReferenceNumber: read(15),
     arrestOffenceNumber: read(3),
     offenceQualifier: read(4),

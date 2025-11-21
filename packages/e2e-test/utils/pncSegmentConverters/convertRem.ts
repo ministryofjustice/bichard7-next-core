@@ -1,5 +1,4 @@
 export type Rem = {
-  updateType: string
   remandDate: string
   remandResult: string
   remandLocationFfss: string
@@ -33,7 +32,6 @@ const convertRem = (remValue: string): Rem => {
   }
 
   return {
-    updateType: read(1),
     remandDate: read(8),
     remandResult: read(1),
     remandLocationFfss: read(4), // Unused
