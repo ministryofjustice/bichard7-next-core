@@ -134,9 +134,9 @@ describe("normalDisposal", () => {
               dateOfSentence: "2025-08-15",
               offenceTic: 4,
               offenceStartDate: "2025-08-16",
-              offenceStartTime: "14:30+01:00",
+              offenceStartTime: "14:30+00:00",
               offenceEndDate: "2025-08-17",
-              offenceEndTime: "14:45+01:00",
+              offenceEndTime: "14:45+00:00",
               disposalResults: [
                 {
                   disposalCode: 10,
@@ -156,9 +156,9 @@ describe("normalDisposal", () => {
               dateOfSentence: "2025-08-15",
               offenceTic: 4,
               offenceStartDate: "2025-08-16",
-              offenceStartTime: "14:30+01:00",
+              offenceStartTime: "14:30+00:00",
               offenceEndDate: "2025-08-17",
-              offenceEndTime: "14:45+01:00",
+              offenceEndTime: "14:45+00:00",
               disposalResults: [
                 {
                   disposalCode: 10,
