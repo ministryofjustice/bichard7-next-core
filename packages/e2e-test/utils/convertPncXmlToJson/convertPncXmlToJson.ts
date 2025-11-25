@@ -55,7 +55,7 @@ export type PncSubsequentDisposalJson = Fsc &
   UpdateOffences & { type: "Sentence deferred" | "Subsequently varied" }
 type PncJson = PncAsnQueryJson | PncRemandJson | PncNormalDisposalJson | PncSubsequentDisposalJson
 
-const convertToPncJson = <T extends PncJson>(segments: Segment[]): T => {
+const convertPncXmlToJson = <T extends PncJson>(segments: Segment[]): T => {
   let json = {} as T
 
   let offences: (Partial<(Cof | Cch | Ach) & Adj> & { disposals: Dis[] })[] = []
@@ -113,4 +113,4 @@ const convertToPncJson = <T extends PncJson>(segments: Segment[]): T => {
   return json
 }
 
-export default convertToPncJson
+export default convertPncXmlToJson
