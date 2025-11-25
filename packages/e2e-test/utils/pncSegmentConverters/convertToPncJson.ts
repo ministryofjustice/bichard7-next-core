@@ -58,85 +58,55 @@ type PncJson = PncAsnQueryJson | PncRemandJson | PncNormalDisposalJson | PncSubs
 const convertToPncJson = <T extends PncJson>(segments: Segment[]): T => {
   let json = {} as T
 
-  let lastOffenceSegment: "" | "COF" | "CCH" | "ACH" = ""
+  let offences: (Partial<(Cof | Cch | Ach) & Adj> & { disposals: Dis[] })[] = []
 
   converters["COF"] = (value: string): void => {
     const cof = convertCof(value)
-    ;(json as AsnQueryOffences).offences ??= []
-    ;(json as AsnQueryOffences).offences.push({ ...cof, disposals: [] })
-    lastOffenceSegment = "COF"
+
+    offences = (json as AsnQueryOffences).offences ??= []
+    offences.push({ ...cof, disposals: [] })
   }
 
   converters["CCH"] = (value: string): void => {
     const cch = convertCch(value)
-    ;(json as UpdateOffences).offences ??= []
-    ;(json as UpdateOffences).offences.push({ ...cch, disposals: [] })
-    lastOffenceSegment = "CCH"
+
+    offences = (json as UpdateOffences).offences ??= []
+    offences.push({ ...cch, disposals: [] })
   }
 
   converters["ACH"] = (value: string): void => {
     const ach = convertAch(value)
-    ;(json as AdditionalOffences).additionalOffences ??= {
+
+    offences = ((json as AdditionalOffences).additionalOffences ??= {
       arrestSummonsNumber: "",
       crimeOffenceReferenceNo: "",
       offences: []
-    }
-    ;(json as AdditionalOffences).additionalOffences.offences ??= []
-    ;(json as AdditionalOffences).additionalOffences.offences.push({ ...ach, disposals: [] })
-    lastOffenceSegment = "ACH"
+    }).offences
+    offences.push({ ...ach, disposals: [] })
   }
 
   converters["ADJ"] = (value: string): void => {
     const adj = convertAdj(value)
 
-    if (lastOffenceSegment === "COF") {
-      const lastOffenceIndex = (json as AsnQueryOffences).offences.length - 1
-      ;(json as AsnQueryOffences).offences[lastOffenceIndex] = {
-        ...(json as AsnQueryOffences).offences[lastOffenceIndex],
-        ...adj
-      }
-    }
-
-    if (lastOffenceSegment === "CCH") {
-      const lastOffenceIndex = (json as UpdateOffences).offences.length - 1
-      ;(json as UpdateOffences).offences[lastOffenceIndex] = {
-        ...(json as UpdateOffences).offences[lastOffenceIndex],
-        ...adj
-      }
-    }
-
-    if (lastOffenceSegment === "ACH") {
-      const lastAdditionalOffenceIndex = (json as AdditionalOffences).additionalOffences.offences.length - 1
-      ;(json as AdditionalOffences).additionalOffences.offences[lastAdditionalOffenceIndex] = {
-        ...(json as AdditionalOffences).additionalOffences.offences[lastAdditionalOffenceIndex],
-        ...adj
-      }
+    if (offences.length) {
+      Object.assign(offences[offences.length - 1], adj)
     }
   }
 
   converters["DIS"] = (value: string): void => {
     const dis = convertDis(value)
-    if (lastOffenceSegment === "COF") {
-      const lastOffenceIndex = (json as AsnQueryOffences).offences.length - 1
-      ;(json as AsnQueryOffences).offences[lastOffenceIndex].disposals ??= []
-      ;(json as AsnQueryOffences).offences[lastOffenceIndex].disposals.push(dis)
-    }
 
-    if (lastOffenceSegment === "CCH") {
-      const lastOffenceIndex = (json as UpdateOffences).offences.length - 1
-      ;(json as UpdateOffences).offences[lastOffenceIndex].disposals ??= []
-      ;(json as UpdateOffences).offences[lastOffenceIndex].disposals.push(dis)
-    }
-
-    if (lastOffenceSegment === "ACH") {
-      const lastOffenceIndex = (json as AdditionalOffences).additionalOffences.offences.length - 1
-      ;(json as AdditionalOffences).additionalOffences.offences[lastOffenceIndex].disposals ??= []
-      ;(json as AdditionalOffences).additionalOffences.offences[lastOffenceIndex].disposals.push(dis)
+    if (offences.length) {
+      offences[offences.length - 1].disposals.push(dis)
     }
   }
 
   for (const { name, value } of segments) {
-    const converted = converters[name](value)
+    const converted = converters[name]?.(value)
+    if (!converted) {
+      continue
+    }
+
     json = { ...json, ...converted }
   }
 
