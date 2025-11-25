@@ -1,9 +1,9 @@
-import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../types/leds/DisposalRequest"
+import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../../types/leds/DisposalRequest"
 
 import {
   type PncUpdateArrestHearingAdjudicationAndDisposal,
   PncUpdateType
-} from "../../../../phase3/types/HearingDetails"
+} from "../../../../../phase3/types/HearingDetails"
 import convertPncDateTimeToLedsDateTime from "./convertPncDateTimeToLedsDateTime"
 import { toTitleCase } from "./toTitleCase"
 

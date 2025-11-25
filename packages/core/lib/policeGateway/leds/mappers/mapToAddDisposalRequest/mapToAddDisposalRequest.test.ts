@@ -1,8 +1,8 @@
-import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../phase3/lib/getPncCourtCode"
-import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
-import { buildLedsNormalDisposalRequest } from "../../../../tests/fixtures/buildLedsNormalDisposalRequest"
-import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
-import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
+import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../../phase3/lib/getPncCourtCode"
+import { PncUpdateType } from "../../../../../phase3/types/HearingDetails"
+import { buildLedsNormalDisposalRequest } from "../../../../../tests/fixtures/buildLedsNormalDisposalRequest"
+import { buildNormalDisposalRequest } from "../../../../../tests/fixtures/buildNormalDisposalRequest"
+import { buildPncUpdateDataset } from "../../../../../tests/fixtures/buildPncUpdateDataset"
 import mapToAddDisposalRequest from "./mapToAddDisposalRequest"
 
 describe("mapToNormalDisposalRequest", () => {

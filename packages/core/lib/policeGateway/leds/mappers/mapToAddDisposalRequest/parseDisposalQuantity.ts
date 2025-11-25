@@ -1,4 +1,4 @@
-import type { DisposalDurationUnit } from "../../../../types/leds/DisposalRequest"
+import type { DisposalDurationUnit } from "../../../../../types/leds/DisposalRequest"
 
 export const parseDisposalQuantity = (disposalQuantity: string) => {
   const quantity = disposalQuantity.toLowerCase()

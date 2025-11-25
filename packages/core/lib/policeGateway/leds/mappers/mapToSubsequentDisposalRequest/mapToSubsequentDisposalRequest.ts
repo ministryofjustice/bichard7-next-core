@@ -1,11 +1,11 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type DisposalUpdatedPncUpdateRequest from "../../../../phase3/types/DisposalUpdatedPncUpdateRequest"
-import type SentenceDeferredPncUpdateRequest from "../../../../phase3/types/SentenceDeferredPncUpdateRequest"
+import type DisposalUpdatedPncUpdateRequest from "../../../../../phase3/types/DisposalUpdatedPncUpdateRequest"
+import type SentenceDeferredPncUpdateRequest from "../../../../../phase3/types/SentenceDeferredPncUpdateRequest"
 import type {
   ReasonForAppearance,
   SubsequentDisposalResultsRequest
-} from "../../../../types/leds/SubsequentDisposalResultsRequest"
+} from "../../../../../types/leds/SubsequentDisposalResultsRequest"
 
 import convertPncDateTimeToLedsDateTime from "../mapToAddDisposalRequest/convertPncDateTimeToLedsDateTime"
 import mapOffences from "../mapToAddDisposalRequest/mapOffences"

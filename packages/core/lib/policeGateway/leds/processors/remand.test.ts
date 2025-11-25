@@ -5,7 +5,6 @@ import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateReque
 import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
 import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import PoliceApiError from "../../PoliceApiError"
-import endpoints from "../endpoints"
 import { remand } from "./remand"
 
 const personId = "123"

@@ -8,8 +8,8 @@ import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalReque
 import { addDisposalRequestSchema } from "../../../../schemas/leds/addDisposalRequest"
 import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
-import { findCourtCaseId } from "../mapToAddDisposalRequest/findCourtCaseId"
-import mapToAddDisposalRequest from "../mapToAddDisposalRequest/mapToAddDisposalRequest"
+import { mapToAddDisposalRequest } from "../mappers/mapToAddDisposalRequest"
+import { findCourtCaseId } from "../mappers/mapToAddDisposalRequest/findCourtCaseId"
 
 export const normalDisposal = (
   request: PoliceUpdateRequest,

@@ -8,8 +8,8 @@ import type { SubsequentDisposalResultsRequest } from "../../../../types/leds/Su
 import { subsequentDisposalResultsRequestSchema } from "../../../../schemas/leds/subsequentDisposalResultsRequest"
 import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
-import { findCourtCaseId } from "../mapToAddDisposalRequest/findCourtCaseId"
-import mapToSubsequentDisposalRequest from "../mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
+import { findCourtCaseId } from "../mappers/mapToAddDisposalRequest/findCourtCaseId"
+import mapToSubsequentDisposalRequest from "../mappers/mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
 
 export const subsequentDisposal = (
   request: PoliceUpdateRequest,
