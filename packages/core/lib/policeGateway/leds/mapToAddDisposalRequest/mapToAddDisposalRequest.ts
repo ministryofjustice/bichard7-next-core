@@ -3,7 +3,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalRequest"
 
-import convertPncDateTimeToLedsDateTime from "./convertPncDateTimeToLedsDateTime"
+import { convertDate } from "../dateTimeConverter"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
@@ -15,9 +15,7 @@ const mapToAddDisposalRequest = (
 ): AddDisposalRequest => {
   const carryForward = pncRequest.pendingPsaCourtCode
     ? {
-        appearanceDate: pncRequest.pendingCourtDate
-          ? convertPncDateTimeToLedsDateTime(pncRequest.pendingCourtDate).date
-          : undefined,
+        appearanceDate: pncRequest.pendingCourtDate ? convertDate(pncRequest.pendingCourtDate) : undefined,
         court: mapCourt(pncRequest.pendingPsaCourtCode, pncRequest.pendingCourtHouseName)
       }
     : undefined
@@ -33,7 +31,7 @@ const mapToAddDisposalRequest = (
     checkName: pncRequest.pncCheckName ?? "",
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
-    dateOfConviction: convertPncDateTimeToLedsDateTime(pncRequest.dateOfHearing).date,
+    dateOfConviction: convertDate(pncRequest.dateOfHearing),
     defendant: mapDefendant(pncUpdateDataset),
     carryForward,
     ...(pncRequest.preTrialIssuesUniqueReferenceNumber && {
