@@ -23,10 +23,10 @@ import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
+import { generateDisposalResultsRequest } from "./generators/generateDisposalResultsRequest"
+import { generateRemandRequest } from "./generators/generateRemandRequest"
+import { generateSubsequentDisposalRequest } from "./generators/generateSubsequentDisposalRequest"
 import mapToPoliceQueryResult from "./mappers/mapToPoliceQueryResult"
-import { generateDisposalResultsRequest } from "./processors/generateDisposalResultsRequest"
-import { generateRemandRequest } from "./processors/generateRemandRequest"
-import { generateSubsequentDisposalRequest } from "./processors/generateSubsequentDisposalRequest"
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
