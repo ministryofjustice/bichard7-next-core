@@ -11,7 +11,7 @@ import endpoints from "../endpoints"
 import { findCourtCaseId } from "../mappers/mapToAddDisposalRequest/findCourtCaseId"
 import mapToSubsequentDisposalRequest from "../mappers/mapToSubsequentDisposalRequest"
 
-export const subsequentDisposal = (
+export const generateSubsequentDisposalRequest = (
   request: PoliceUpdateRequest,
   personId: string,
   pncUpdateDataset: PncUpdateDataset

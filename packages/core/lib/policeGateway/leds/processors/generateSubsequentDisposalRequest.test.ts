@@ -9,7 +9,7 @@ import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdate
 import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import PoliceApiError from "../../PoliceApiError"
-import { subsequentDisposal } from "./subsequentDisposal"
+import { generateSubsequentDisposalRequest } from "./generateSubsequentDisposalRequest"
 
 const personId = "123"
 const request = {
@@ -61,7 +61,7 @@ describe("subsequentDisposal", () => {
     } as SubsequentDisposalResultsRequest
     const expectedResult = { endpoint, requestBody }
 
-    const result = subsequentDisposal(request, personId, pncUpdateDataset)
+    const result = generateSubsequentDisposalRequest(request, personId, pncUpdateDataset)
 
     expect(result).toStrictEqual(expectedResult)
   })
@@ -72,7 +72,7 @@ describe("subsequentDisposal", () => {
       request: buildRemandRequest()
     } as PoliceUpdateRequest
 
-    const result = subsequentDisposal(remandRequest, personId, pncUpdateDataset)
+    const result = generateSubsequentDisposalRequest(remandRequest, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain(
@@ -91,7 +91,7 @@ describe("subsequentDisposal", () => {
       }
     } as PncUpdateDataset
 
-    const result = subsequentDisposal(request, personId, pncUpdateDataset)
+    const result = generateSubsequentDisposalRequest(request, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
@@ -103,7 +103,7 @@ describe("subsequentDisposal", () => {
       request: buildUpdatedRequest({ courtCode: "longInvalidCourtCode" })
     } as PoliceUpdateRequest
 
-    const result = subsequentDisposal(requestWithInvalidData, personId, pncUpdateDataset)
+    const result = generateSubsequentDisposalRequest(requestWithInvalidData, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
