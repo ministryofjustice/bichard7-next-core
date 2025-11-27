@@ -1,73 +1,65 @@
+import type {
+  PncUpdateAdjudication,
+  PncUpdateArrestHearing,
+  PncUpdateDisposal
+} from "../../../../../phase3/types/HearingDetails"
 import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../../types/leds/AddDisposalRequest"
 
 import {
   type PncUpdateArrestHearingAdjudicationAndDisposal,
   PncUpdateType
 } from "../../../../../phase3/types/HearingDetails"
-import convertPncDateTimeToLedsDateTime from "./convertPncDateTimeToLedsDateTime"
+import { convertDate, convertTime } from "../../dateTimeConverter"
 import { toTitleCase } from "./toTitleCase"
+
+type ArrestGroup = {
+  adjudication?: PncUpdateAdjudication
+  arrest: PncUpdateArrestHearing
+  disposals: PncUpdateDisposal[]
+}
 
 const mapAdditionalArrestOffences = (
   asn: string,
   arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[]
 ): AdditionalArrestOffences[] => {
-  const offenceGroups = arrestsAdjudicationsAndDisposals.reduce<PncUpdateArrestHearingAdjudicationAndDisposal[][]>(
-    (groups, item) => {
-      if (item.type === PncUpdateType.ARREST || groups.length === 0) {
-        groups.push([])
-      }
+  const offenceGroups = arrestsAdjudicationsAndDisposals.reduce<ArrestGroup[]>((groups, item) => {
+    switch (item.type) {
+      case PncUpdateType.ADJUDICATION:
+        groups[groups.length - 1].adjudication = item
+        break
+      case PncUpdateType.ARREST:
+        groups.push({ arrest: item, disposals: [] })
+        break
+      case PncUpdateType.DISPOSAL:
+        groups[groups.length - 1].disposals.push(item)
+    }
 
-      groups[groups.length - 1].push(item)
-      return groups
-    },
-    []
-  )
+    return groups
+  }, [])
 
-  const additionalOffences = offenceGroups.map((group) => {
-    const arrest = group.find((el) => el.type === PncUpdateType.ARREST)
-    const adjudication = group.find((el) => el.type === PncUpdateType.ADJUDICATION)
-    const disposals = group.filter((el) => el.type === PncUpdateType.DISPOSAL)
-
-    const committedOnBail = arrest?.committedOnBail?.toLowerCase() === "y"
+  const additionalOffences = offenceGroups.map(({ arrest, adjudication, disposals }) => {
+    const committedOnBail = arrest.committedOnBail?.toLowerCase() === "y"
     const disposalResults = disposals.map((disposal) => ({
       disposalCode: Number(disposal.disposalType),
       disposalQualifiers: [disposal.disposalQualifiers ?? ""],
       disposalText: disposal?.disposalText ?? undefined
     }))
 
-    let offenceStartDate = ""
-    let offenceStartTime = undefined
-    if (arrest?.offenceStartDate) {
-      const { date, time } = convertPncDateTimeToLedsDateTime(arrest.offenceStartDate, arrest.offenceStartTime)
-      offenceStartDate = date
-      offenceStartTime = time
-    }
-
-    let offenceEndDate = undefined
-    let offenceEndTime = undefined
-    if (arrest?.offenceEndDate) {
-      const { date, time } = convertPncDateTimeToLedsDateTime(arrest.offenceEndDate, arrest.offenceEndTime)
-      offenceEndDate = date
-      offenceEndTime = time
-    }
-
     return {
-      courtOffenceSequenceNumber: Number(arrest?.courtOffenceSequenceNumber),
-      cjsOffenceCode: arrest?.offenceReason ?? "",
+      courtOffenceSequenceNumber: Number(arrest.courtOffenceSequenceNumber),
+      cjsOffenceCode: arrest.offenceReason,
       committedOnBail,
       plea: toTitleCase(adjudication?.pleaStatus) as Plea,
       adjudication: toTitleCase(adjudication?.verdict) as Adjudication,
-      dateOfSentence: adjudication?.hearingDate
-        ? convertPncDateTimeToLedsDateTime(adjudication.hearingDate).date
-        : undefined,
+      dateOfSentence: adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined,
       offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
-      offenceStartDate,
-      offenceStartTime,
-      offenceEndDate,
-      offenceEndTime,
+      offenceStartDate: convertDate(arrest.offenceStartDate),
+      offenceStartTime: convertTime(arrest.offenceStartTime),
+      offenceEndDate: convertDate(arrest.offenceEndDate),
+      offenceEndTime: convertTime(arrest.offenceEndTime),
       disposalResults,
-      locationFsCode: arrest?.offenceLocationFSCode ?? "",
-      locationText: arrest?.locationOfOffence
+      locationFsCode: arrest.offenceLocationFSCode,
+      locationText: arrest.locationOfOffence
     }
   })
 

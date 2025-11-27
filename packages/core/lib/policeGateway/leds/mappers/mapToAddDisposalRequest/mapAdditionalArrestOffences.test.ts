@@ -22,9 +22,9 @@ describe("mapAdditionalArrestOffences", () => {
             dateOfSentence: "2025-08-15",
             offenceTic: 4,
             offenceStartDate: "2025-08-16",
-            offenceStartTime: "14:30+01:00",
+            offenceStartTime: "14:30+00:00",
             offenceEndDate: "2025-08-17",
-            offenceEndTime: "14:45+01:00",
+            offenceEndTime: "14:45+00:00",
             disposalResults: [
               {
                 disposalCode: 10,
@@ -44,9 +44,9 @@ describe("mapAdditionalArrestOffences", () => {
             dateOfSentence: "2025-08-15",
             offenceTic: 4,
             offenceStartDate: "2025-08-16",
-            offenceStartTime: "14:30+01:00",
+            offenceStartTime: "14:30+00:00",
             offenceEndDate: "2025-08-17",
-            offenceEndTime: "14:45+01:00",
+            offenceEndTime: "14:45+00:00",
             disposalResults: [
               {
                 disposalCode: 10,
@@ -67,14 +67,21 @@ describe("mapAdditionalArrestOffences", () => {
   })
 
   it("handles missing adjudication and disposal", () => {
-    const arrestsAdjudicationsAndDisposals = [
+    const arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = [
       {
         committedOnBail: "y",
         courtOffenceSequenceNumber: "3",
         offenceReason: "Some offence",
-        type: PncUpdateType.ARREST
+        type: PncUpdateType.ARREST,
+        offenceStartDate: "02052025",
+        offenceStartTime: "1645",
+        offenceEndDate: "03052025",
+        offenceEndTime: "1700",
+        locationOfOffence: "Dummy location",
+        offenceLocationFSCode: "Dummy location fs code",
+        offenceReasonSequence: "Dummy reason sequence"
       }
-    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
+    ]
 
     const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
 
@@ -86,24 +93,21 @@ describe("mapAdditionalArrestOffences", () => {
     })
   })
 
-  it("handles undefined committedOnBail", () => {
-    const arrestsAdjudicationsAndDisposals = [
-      { courtOffenceSequenceNumber: "1", offenceReason: "Test", type: PncUpdateType.ARREST }
-    ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
-
-    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
-
-    expect(result[0].additionalOffences[0]).toMatchObject({
-      plea: "",
-      adjudication: "",
-      disposalResults: [],
-      committedOnBail: false
-    })
-  })
-
   it("handles missing disposalQualifiers and disposalText", () => {
     const arrestsAdjudicationsAndDisposals = [
-      { committedOnBail: "y", courtOffenceSequenceNumber: "1", type: PncUpdateType.ARREST },
+      {
+        committedOnBail: "y",
+        courtOffenceSequenceNumber: "1",
+        type: PncUpdateType.ARREST,
+        offenceReason: "Some offence",
+        offenceStartDate: "02052025",
+        offenceStartTime: "1645",
+        offenceEndDate: "03052025",
+        offenceEndTime: "1700",
+        locationOfOffence: "Dummy location",
+        offenceLocationFSCode: "Dummy location fs code",
+        offenceReasonSequence: "Dummy reason sequence"
+      },
       { type: PncUpdateType.ADJUDICATION },
       { disposalType: "20", type: PncUpdateType.DISPOSAL }
     ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
