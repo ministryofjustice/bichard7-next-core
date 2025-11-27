@@ -1,4 +1,4 @@
-import type { RequestHeaders } from "../../../types/leds/RequestHeaders"
+import type { RequestHeaders } from "../../../../types/leds/RequestHeaders"
 
 const generateRequestHeaders = (correlationId: string): RequestHeaders => ({
   Accept: "application/json",
