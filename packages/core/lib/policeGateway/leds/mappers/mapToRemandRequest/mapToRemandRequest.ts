@@ -1,13 +1,13 @@
-import type RemandPncUpdateRequest from "../../../phase3/types/RemandPncUpdateRequest"
+import type RemandPncUpdateRequest from "../../../../../phase3/types/RemandPncUpdateRequest"
 import type {
   AppearanceResult,
   CurrentAppearance,
   NextAppearance,
   RemandRequest
-} from "../../../types/leds/RemandRequest"
+} from "../../../../../types/leds/RemandRequest"
 
-import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
-import convertPncDateTimeToLedsDateTime from "./mapToAddDisposalRequest/convertPncDateTimeToLedsDateTime"
+import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../../phase3/lib/getPncCourtCode"
+import convertPncDateTimeToLedsDateTime from "../mapToAddDisposalRequest/convertPncDateTimeToLedsDateTime"
 
 const remandStatusByPncCode: Record<string, AppearanceResult> = {
   B: "remanded-on-bail",
