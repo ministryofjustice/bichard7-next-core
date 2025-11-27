@@ -6,7 +6,7 @@ import type { RemandRequest } from "../../../../types/leds/RemandRequest"
 import { remandRequestSchema } from "../../../../schemas/leds/remandRequest"
 import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
-import { mapToRemandRequest } from "../mappers/mapToRemandRequest"
+import mapToRemandRequest from "../mappers/mapToRemandRequest"
 
 export const remand = (
   request: PoliceUpdateRequest,

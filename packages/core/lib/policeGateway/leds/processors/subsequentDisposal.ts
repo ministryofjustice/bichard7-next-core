@@ -9,7 +9,7 @@ import { subsequentDisposalResultsRequestSchema } from "../../../../schemas/leds
 import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
 import { findCourtCaseId } from "../mappers/mapToAddDisposalRequest/findCourtCaseId"
-import mapToSubsequentDisposalRequest from "../mappers/mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
+import mapToSubsequentDisposalRequest from "../mappers/mapToSubsequentDisposalRequest"
 
 export const subsequentDisposal = (
   request: PoliceUpdateRequest,

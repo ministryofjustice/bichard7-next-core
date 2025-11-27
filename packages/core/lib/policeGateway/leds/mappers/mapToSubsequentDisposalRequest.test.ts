@@ -1,8 +1,8 @@
-import type { SubsequentDisposalResultsRequest } from "../../../../../types/leds/SubsequentDisposalResultsRequest"
+import type { SubsequentDisposalResultsRequest } from "../../../../types/leds/SubsequentDisposalResultsRequest"
 
-import { PncUpdateType } from "../../../../../phase3/types/HearingDetails"
-import { buildPncUpdateDataset } from "../../../../../tests/fixtures/buildPncUpdateDataset"
-import { buildUpdatedRequest } from "../../../../../tests/fixtures/buildUpdatedRequest"
+import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
+import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
+import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import mapToSubsequentDisposalRequest from "./mapToSubsequentDisposalRequest"
 
 describe("mapToSubsequentDisposalRequest", () => {
