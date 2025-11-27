@@ -82,7 +82,7 @@ export default class LedsGateway implements PoliceGateway {
   }
 
   async update(
-    request: PoliceUpdateRequest,
+    pncRequest: PoliceUpdateRequest,
     correlationId: string,
     pncUpdateDataset: PncUpdateDataset
   ): Promise<PoliceApiError | void> {
@@ -93,30 +93,30 @@ export default class LedsGateway implements PoliceGateway {
       return new PoliceApiError(["Failed to update LEDS due to missing data."])
     }
 
-    let result:
+    let ledsRequest:
       | PoliceApiError
       | { endpoint: string; requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest }
 
-    switch (request.operation) {
+    switch (pncRequest.operation) {
       case PncOperation.DISPOSAL_UPDATED:
       case PncOperation.SENTENCE_DEFERRED:
-        result = subsequentDisposal(request, personId, pncUpdateDataset)
+        ledsRequest = subsequentDisposal(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.NORMAL_DISPOSAL:
-        result = normalDisposal(request, personId, pncUpdateDataset)
+        ledsRequest = normalDisposal(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.REMAND:
-        result = remand(request, personId, reportId)
+        ledsRequest = remand(pncRequest, personId, reportId)
         break
       default:
         return new PoliceApiError(["Invalid LEDS update operation."])
     }
 
-    if (result instanceof PoliceApiError) {
-      return result
+    if (ledsRequest instanceof PoliceApiError) {
+      return ledsRequest
     }
 
-    const { endpoint, requestBody } = result
+    const { endpoint, requestBody } = ledsRequest
 
     const apiResponse = await axios
       .post(`${this.config.url}${endpoint}`, requestBody, {
