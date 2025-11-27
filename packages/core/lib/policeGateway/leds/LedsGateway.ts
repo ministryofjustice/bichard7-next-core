@@ -11,6 +11,7 @@ import https from "https"
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
 import type { AsnQueryRequest } from "../../../types/leds/AsnQueryRequest"
+import type { EndpointPayload } from "../../../types/leds/EndpointPayload"
 import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
@@ -94,8 +95,8 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     let ledsRequest:
+      | EndpointPayload<AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest>
       | PoliceApiError
-      | { endpoint: string; requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest }
 
     switch (pncRequest.operation) {
       case PncOperation.DISPOSAL_UPDATED:

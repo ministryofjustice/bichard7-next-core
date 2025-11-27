@@ -1,6 +1,7 @@
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
+import type { EndpointPayload } from "../../../../types/leds/EndpointPayload"
 import type { RemandRequest } from "../../../../types/leds/RemandRequest"
 
 import { remandRequestSchema } from "../../../../schemas/leds/remandRequest"
@@ -12,7 +13,7 @@ export const generateRemandRequest = (
   request: PoliceUpdateRequest,
   personId: string,
   reportId: string
-): PoliceApiError | { endpoint: string; requestBody: RemandRequest } => {
+): EndpointPayload<RemandRequest> | PoliceApiError => {
   if (request.operation !== PncOperation.REMAND) {
     return new PoliceApiError(["mapToRemandRequest called with a non-remand request"])
   }
