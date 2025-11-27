@@ -1,4 +1,4 @@
-import type { Court } from "../../../../../types/leds/DisposalRequest"
+import type { Court } from "../../../../../types/leds/AddDisposalRequest"
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../../phase3/lib/getPncCourtCode"
 

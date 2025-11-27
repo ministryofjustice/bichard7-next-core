@@ -1,4 +1,4 @@
-import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../../types/leds/DisposalRequest"
+import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../../types/leds/AddDisposalRequest"
 
 import {
   type PncUpdateArrestHearingAdjudicationAndDisposal,

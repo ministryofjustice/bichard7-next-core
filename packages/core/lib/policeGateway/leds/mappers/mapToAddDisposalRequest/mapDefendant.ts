@@ -1,6 +1,6 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Defendant } from "../../../../../types/leds/DisposalRequest"
+import type { Defendant } from "../../../../../types/leds/AddDisposalRequest"
 
 const mapDefendant = (pncUpdateDataset: PncUpdateDataset): Defendant => {
   const hearingDefendant = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant

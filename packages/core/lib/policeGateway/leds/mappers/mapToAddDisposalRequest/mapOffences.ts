@@ -1,6 +1,6 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Adjudication, Offence, Plea } from "../../../../../types/leds/DisposalRequest"
+import type { Adjudication, Offence, Plea } from "../../../../../types/leds/AddDisposalRequest"
 
 import {
   type PncUpdateCourtHearingAdjudicationAndDisposal,
