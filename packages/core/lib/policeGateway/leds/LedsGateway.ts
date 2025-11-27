@@ -24,8 +24,8 @@ import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
 import mapToPoliceQueryResult from "./mappers/mapToPoliceQueryResult"
+import { generateDisposalResultsRequest } from "./processors/GenerateDisposalResultsRequest"
 import { generateSubsequentDisposalRequest } from "./processors/generateSubsequentDisposalRequest"
-import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
 
 export default class LedsGateway implements PoliceGateway {
@@ -103,7 +103,7 @@ export default class LedsGateway implements PoliceGateway {
         ledsRequest = generateSubsequentDisposalRequest(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.NORMAL_DISPOSAL:
-        ledsRequest = normalDisposal(pncRequest, personId, pncUpdateDataset)
+        ledsRequest = generateDisposalResultsRequest(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.REMAND:
         ledsRequest = remand(pncRequest, personId, reportId)

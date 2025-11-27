@@ -8,7 +8,7 @@ import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNorm
 import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
 import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import PoliceApiError from "../../PoliceApiError"
-import { normalDisposal } from "./normalDisposal"
+import { generateDisposalResultsRequest } from "./GenerateDisposalResultsRequest"
 
 const personId = "123456"
 
@@ -175,7 +175,7 @@ describe("normalDisposal", () => {
     }
     const expectedResult = { endpoint, requestBody }
 
-    const result = normalDisposal(request, personId, pncUpdateDataset)
+    const result = generateDisposalResultsRequest(request, personId, pncUpdateDataset)
 
     expect(result).toStrictEqual(expectedResult)
   })
@@ -187,7 +187,7 @@ describe("normalDisposal", () => {
     } as PoliceUpdateRequest
     const pncUpdateDataset = buildPncUpdateDataset()
 
-    const result = normalDisposal(request, personId, pncUpdateDataset)
+    const result = generateDisposalResultsRequest(request, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain(
@@ -206,7 +206,7 @@ describe("normalDisposal", () => {
       }
     } as PncUpdateDataset
 
-    const result = normalDisposal(request, personId, pncUpdateDataset)
+    const result = generateDisposalResultsRequest(request, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to update LEDS due to missing data.")
@@ -219,7 +219,7 @@ describe("normalDisposal", () => {
     } as PoliceUpdateRequest
     const pncUpdateDataset = buildPncUpdateDataset({ organisationName: "Org" })
 
-    const result = normalDisposal(requestWithInvalidData, personId, pncUpdateDataset)
+    const result = generateDisposalResultsRequest(requestWithInvalidData, personId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
