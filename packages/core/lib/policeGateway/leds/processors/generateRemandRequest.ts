@@ -8,7 +8,7 @@ import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
 import mapToRemandRequest from "../mappers/mapToRemandRequest"
 
-export const remand = (
+export const generateRemandRequest = (
   request: PoliceUpdateRequest,
   personId: string,
   reportId: string

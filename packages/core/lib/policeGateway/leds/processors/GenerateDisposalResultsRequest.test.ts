@@ -8,7 +8,7 @@ import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNorm
 import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
 import { buildUpdatedRequest } from "../../../../tests/fixtures/buildUpdatedRequest"
 import PoliceApiError from "../../PoliceApiError"
-import { generateDisposalResultsRequest } from "./GenerateDisposalResultsRequest"
+import { generateDisposalResultsRequest } from "./generateDisposalResultsRequest"
 
 const personId = "123456"
 

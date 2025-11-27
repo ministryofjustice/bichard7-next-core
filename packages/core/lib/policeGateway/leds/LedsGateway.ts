@@ -24,9 +24,9 @@ import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
 import mapToPoliceQueryResult from "./mappers/mapToPoliceQueryResult"
-import { generateDisposalResultsRequest } from "./processors/GenerateDisposalResultsRequest"
+import { generateDisposalResultsRequest } from "./processors/generateDisposalResultsRequest"
+import { generateRemandRequest } from "./processors/generateRemandRequest"
 import { generateSubsequentDisposalRequest } from "./processors/generateSubsequentDisposalRequest"
-import { remand } from "./processors/remand"
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -106,7 +106,7 @@ export default class LedsGateway implements PoliceGateway {
         ledsRequest = generateDisposalResultsRequest(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.REMAND:
-        ledsRequest = remand(pncRequest, personId, reportId)
+        ledsRequest = generateRemandRequest(pncRequest, personId, reportId)
         break
       default:
         return new PoliceApiError(["Invalid LEDS update operation."])
