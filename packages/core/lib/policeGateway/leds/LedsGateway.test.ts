@@ -230,7 +230,7 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases?.[0].courtCaseId}/court-case-disposal-result`
+        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-disposal-result`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "02YZ",
@@ -321,8 +321,9 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases?.[0].courtCaseId}/court-case-subsequent-disposal-results`
+        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
+      console.log("======>", JSON.stringify(axiosMock.mock.calls[0][0], null, 2))
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "01YZ",
         personUrn: "2000/0410770Y",
@@ -422,7 +423,7 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery?.courtCases?.[0].courtCaseId}/court-case-subsequent-disposal-results`
+        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "01YZ",
