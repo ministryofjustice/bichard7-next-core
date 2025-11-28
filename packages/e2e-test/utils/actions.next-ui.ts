@@ -1,4 +1,3 @@
-import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
 import assert from "assert"
 import { expect } from "expect"
 import type { KeyInput, Page } from "puppeteer"
@@ -206,28 +205,23 @@ export const reallocateCaseToForce = async function (this: Bichard, force: strin
 
   await this.browser.clickAndWait("text=Reallocate Case")
   const selectedForceCode = { BTP: "93", Merseyside: "05", Metropolitan: "02" }[force]
-  const forceDetails = forces.find((x) => x.code === selectedForceCode)
-  if (!forceDetails) {
-    throw new Error("Could not find force code")
-  }
 
-  const optionValue = await page.evaluate((f) => {
-    const select = document.querySelector<HTMLSelectElement>('select[name="force"]')
-    if (!select) {
-      return
-    }
-
-    const options = Array.from(select?.options)
-    const dropdownTextToSelect = `${f.code} - ${f.name}`
-    const option = options.find((o) => o.text === dropdownTextToSelect)
-    return option?.value
-  }, forceDetails)
-
-  if (!optionValue) {
+  if (!selectedForceCode) {
     throw new Error("Could not find option for force code")
   }
 
-  await page.select('select[name="force"]', optionValue)
+  await page.focus("input#force")
+  await page.keyboard.type(selectedForceCode)
+
+  await page.waitForFunction(
+    (text) => {
+      const items = Array.from(document.querySelectorAll("ul li"))
+      return items.some((item) => item.textContent?.includes(text))
+    },
+    { timeout: 5000 },
+    selectedForceCode
+  )
+
   await this.browser.clickAndWait("#Reallocate")
 }
 
