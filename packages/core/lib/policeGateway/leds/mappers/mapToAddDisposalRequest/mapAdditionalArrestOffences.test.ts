@@ -1,7 +1,7 @@
-import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
+import type { PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../../../phase3/types/HearingDetails"
 
-import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
-import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
+import { PncUpdateType } from "../../../../../phase3/types/HearingDetails"
+import { buildNormalDisposalRequest } from "../../../../../tests/fixtures/buildNormalDisposalRequest"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 
 describe("mapAdditionalArrestOffences", () => {
