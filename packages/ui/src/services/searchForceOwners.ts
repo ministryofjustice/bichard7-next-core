@@ -2,7 +2,7 @@ import getForcesForReallocation from "./getForcesForReallocation"
 import { sortBy } from "lodash"
 import type { Force } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 
-export const getForceCode = (force: Force) => `${force.code}`
+export const getForceCode = (force: Force) => force.code
 
 export const getForceName = (force: Force) => [force.name].filter((part) => !!part).join(" ")
 

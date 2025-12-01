@@ -2,7 +2,6 @@ import axios from "axios"
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
 import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
-import { isError } from "types/Result"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
@@ -14,23 +13,25 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }: P
   const [inputItems, setInputItems] = useState<ForceOwnerApiResponse>([])
 
   const fetchItems = useCallback(
-    async (searchStringParam?: string) => {
-      const forceOwnersResponse = await axios
-        .get<ForceOwnerApiResponse>("/bichard/api/force-owner", {
+    async (searchStringParam?: string, config?: { signal?: AbortSignal }) => {
+      try {
+        const forceOwnersResponse = await axios.get<ForceOwnerApiResponse>("/bichard/api/force-owner", {
           params: {
             currentForceOwner,
             search: searchStringParam
-          }
+          },
+          signal: config?.signal
         })
-        .then((response) => response.data)
-        .catch((error) => error as Error)
 
-      if (isError(forceOwnersResponse)) {
-        return
+        const filteredForceOwners = forceOwnersResponse.data.filter((item) => currentForceOwner !== item.forceCode)
+
+        setInputItems(filteredForceOwners)
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          return
+        }
+        console.error("Error fetching force owners:", error)
       }
-
-      const filteredForceOwners = forceOwnersResponse.filter((item) => currentForceOwner !== item.forceCode)
-      setInputItems(filteredForceOwners)
     },
     [currentForceOwner]
   )
@@ -69,11 +70,16 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }: P
   })
 
   useEffect(() => {
+    const abortController = new AbortController()
+
     const delayDebounceFn = setTimeout(() => {
-      fetchItems(inputValue)
+      fetchItems(inputValue, { signal: abortController.signal })
     }, 250)
 
-    return () => clearTimeout(delayDebounceFn)
+    return () => {
+      clearTimeout(delayDebounceFn)
+      abortController.abort()
+    }
   }, [fetchItems, inputValue])
 
   return (
