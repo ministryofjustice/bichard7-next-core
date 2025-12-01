@@ -1,6 +1,4 @@
-import serialiseToAhoXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
-import serialiseToPncUpdateDatasetXml from "@moj-bichard7/core/lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import getCourtCase from "services/getCourtCase"
 import insertNotes from "services/insertNotes"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
@@ -10,7 +8,6 @@ import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import getSystemNotes from "utils/amendments/getSystemNotes"
 import createForceOwner from "utils/createForceOwner"
-import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
@@ -45,12 +42,7 @@ const amendCourtCase = async (
     return updatedAho
   }
 
-  // Depending on the phase, treat the update as either hoUpdate or pncUpdate
-  const updatedAhoXml = isPncUpdateDataset(updatedAho)
-    ? serialiseToPncUpdateDatasetXml(updatedAho, false)
-    : serialiseToAhoXml(updatedAho, false)
-
-  const updateResult = await updateCourtCaseAho(dataSource, courtCase.errorId, updatedAhoXml)
+  const updateResult = await updateCourtCaseAho(dataSource, courtCase.errorId, updatedAho)
   if (isError(updateResult)) {
     return updateResult
   }
