@@ -1,3 +1,6 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type ResolutionStatus from "./ResolutionStatus"
 
 export enum QualityCheckStatus {
@@ -26,6 +29,7 @@ type ErrorListRecord = {
   error_resolved_by?: null | string
   error_resolved_ts?: Date | null
   error_status?: null | ResolutionStatus
+  hearing_outcome?: AnnotatedHearingOutcome | PncUpdateDataset
   is_urgent: number
   last_pnc_failure_resubmission_ts?: Date
   message_id: string
@@ -44,6 +48,7 @@ type ErrorListRecord = {
   trigger_resolved_by?: null | string
   trigger_resolved_ts?: Date
   trigger_status?: null | ResolutionStatus
+  updated_hearing_outcome?: AnnotatedHearingOutcome | PncUpdateDataset
   updated_msg?: string
   user_updated_flag: number
 }
