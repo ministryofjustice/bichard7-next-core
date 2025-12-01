@@ -8,3 +8,9 @@ ALTER TABLE br7own.error_list
 
 ALTER TABLE br7own.error_list
   ADD COLUMN updated_hearing_outcome jsonb DEFAULT NULL;
+
+ALTER TABLE br7own.archive_error_list
+  ADD COLUMN hearing_outcome jsonb DEFAULT NULL;
+
+ALTER TABLE br7own.archive_error_list
+  ADD COLUMN updated_hearing_outcome jsonb DEFAULT NULL;
