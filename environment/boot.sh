@@ -75,24 +75,14 @@ if [ "$CI" == "true" ]; then
     fi
 fi
 
-if [ "$LEGACY" == "true" ] || [ ${#SERVICES_TO_RUN[@]} -eq 0 ]; then
-
-    if [ "$LEGACY" == "true" ]; then
-        echo "LEGACY flag detected."
-    else
-        echo "No specific services requested ('all')."
+if [ "$LEGACY" == "true" ]; then
+    echo "LEGACY flag detected."
+    if [ -f "environment/docker-compose-legacy-bichard.yml" ]; then
+        DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-legacy-bichard.yml"
     fi
-
-    if [ -f "environment/docker-compose-bichard.yml" ]; then
-         DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
-    fi
-
-elif [ -f "environment/docker-compose-bichard.yml" ]; then
-     if [ "$LEGACY" == "true" ]; then
-        DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-bichard.yml"
-    fi
+elif [ ${#SERVICES_TO_RUN[@]} -eq 0 ]; then
+    echo "No specific services requested ('all')."
 fi
-
 
 # should run by default
 if [ "$LEGACY" == "false" ] && [ "$NOWORKER" == "false" ]; then
