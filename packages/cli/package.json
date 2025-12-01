@@ -27,7 +27,7 @@
     "pg": "^8.16.3"
   },
   "devDependencies": {
-    "@inquirer/prompts": "^8.0.1",
+    "@inquirer/prompts": "^7.10.1",
     "@types/cli-color": "^2.0.6",
     "@types/commander": "^2.12.5",
     "@types/inquirer": "^9.0.9",
