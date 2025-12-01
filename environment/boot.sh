@@ -15,23 +15,23 @@ IMAGES_TO_PULL=()
 
 ALL_ECR_IMAGES=(beanconnect pncemulator)
 PLATFORM=$(uname -m)
-if [ $PLATFORM != "arm64" ]; then
+if [[ $PLATFORM != "arm64" ]]; then
     ALL_ECR_IMAGES+=(bichard7-liberty conductor nginx-auth-proxy ui)
 fi
 
-if [ ${#SERVICES_TO_RUN[@]} -eq 0 ]; then
+if [[ ${#SERVICES_TO_RUN[@]} -eq 0 ]]; then
     echo "No specific services requested, preparing to fetch all ECR images..."
     IMAGES_TO_PULL=("${ALL_ECR_IMAGES[@]}")
 else
     echo "Services requested: ${SERVICES_TO_RUN[*]}"
     for service in "${SERVICES_TO_RUN[@]}"; do
-        if [ "$service" == "pnc" ]; then
+        if [[ "$service" == "pnc" ]]; then
             IMAGES_TO_PULL+=("pncemulator")
             continue
         fi
 
         for ecr_image in "${ALL_ECR_IMAGES[@]}"; do
-            if [ "$service" == "$ecr_image" ]; then
+            if [[ "$service" == "$ecr_image" ]]; then
                 IMAGES_TO_PULL+=("$service")
                 break
             fi
@@ -66,8 +66,8 @@ done
 
 DOCKER_COMPOSE="docker compose --project-name bichard -f environment/docker-compose.yml"
 
-if [ "$CI" == "true" ]; then
-    if [ -f "environment/docker-compose.ci.yml" ]; then
+if [[ "$CI" == "true" ]]; then
+    if [[ -f "environment/docker-compose.ci.yml" ]]; then
         echo "CI environment detected, using environment/docker-compose.ci.yml override."
         DOCKER_COMPOSE="$DOCKER_COMPOSE -f environment/docker-compose.ci.yml"
     else
@@ -75,20 +75,20 @@ if [ "$CI" == "true" ]; then
     fi
 fi
 
-if [ "$LEGACY" == "true" ]; then
+if [[ "$LEGACY" == "true" ]]; then
     echo "LEGACY flag detected."
-    if [ -f "environment/docker-compose-legacy-bichard.yml" ]; then
+    if [[ -f "environment/docker-compose-legacy-bichard.yml" ]]; then
         DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-legacy-bichard.yml"
     fi
-elif [ ${#SERVICES_TO_RUN[@]} -eq 0 ]; then
+elif [[ ${#SERVICES_TO_RUN[@]} -eq 0 ]]; then
     echo "No specific services requested ('all')."
 fi
 
 # should run by default
-if [ "$LEGACY" == "false" ] && [ "$NOWORKER" == "false" ]; then
+if [[ "$LEGACY" == "false" ]] && [[ "$NOWORKER" == "false" ]]; then
     DOCKER_COMPOSE="${DOCKER_COMPOSE} -f environment/docker-compose-worker.yml"
 
-    if [ "$BUILD_WORKER" == "true" ]; then
+    if [[ "$BUILD_WORKER" == "true" ]]; then
         eval "$DOCKER_COMPOSE build worker"
     fi
 fi
@@ -99,13 +99,13 @@ eval "$DOCKER_COMPOSE up -d --wait $@"
 
 SUCCESS=$?
 
-if [ $SUCCESS -gt 0 ]; then
+if [[ $SUCCESS -gt 0 ]]; then
     echo ""
     echo "Failed to start"
     exit $SUCCESS
 fi
 
-if [ "$LEGACY" == "false" ] && [ $SUCCESS ] && [ "$SKIP_CONDUCTOR_SETUP" == "false" ]; then
+if [[ "$LEGACY" == "false" ]] && [[ $SUCCESS ]] && [[ "$SKIP_CONDUCTOR_SETUP" == "false" ]]; then
     SUCCESS_CONDUCTOR="false"
 
     echo ""
@@ -113,13 +113,13 @@ if [ "$LEGACY" == "false" ] && [ $SUCCESS ] && [ "$SKIP_CONDUCTOR_SETUP" == "fal
 
     npm run -w packages/conductor setup
 
-    if [ $? -eq 0 ]; then
+    if [[ $? -eq 0 ]]; then
         echo ""
         echo "Success"
         SUCCESS_CONDUCTOR="true"
     fi
 
-    if [ "$SUCCESS_CONDUCTOR" == "false" ]; then
+    if [[ "$SUCCESS_CONDUCTOR" == "false" ]]; then
         echo ""
         echo "Failed to setup Conductor"
         exit 1
