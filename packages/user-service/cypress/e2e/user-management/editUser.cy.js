@@ -243,4 +243,40 @@ describe("Edit user", () => {
       expect(newUiGroup.name).to.equal("B7NewUI_grp")
     })
   })
+
+  it("should not have unexpected groups", () => {
+    cy.task("insertIntoUserGroupsTable", {
+      email: "bichard01@example.com",
+      groups: ["B7Supervisor_grp"]
+    })
+
+    cy.login("bichard02@example.com", "password")
+
+    cy.visit("users/Bichard02")
+    cy.get('a[data-test="edit-user-view"]').click()
+    cy.get('input[name="B7Audit_grp"]').check()
+    cy.get('input[name="B7ExceptionHandler_grp"]').uncheck()
+    cy.get('button[type="submit"]').click()
+
+    cy.visit("users/Bichard01")
+    cy.get('a[data-test="edit-user-view"]').click()
+    cy.get('input[name="B7Audit_grp"]').check()
+    cy.get('button[type="submit"]').click()
+
+    cy.task("selectGroupsForUser", "bichard01@example.com").then((groups) => {
+      expect(groups).to.have.length(2)
+
+      const groupNames = groups.map((g) => g.name)
+      expect(groupNames).to.contain("B7Supervisor_grp")
+      expect(groupNames).to.contain("B7Audit_grp")
+    })
+
+    cy.task("selectGroupsForUser", "bichard02@example.com").then((groups) => {
+      expect(groups).to.have.length(2)
+
+      const groupNames = groups.map((g) => g.name)
+      expect(groupNames).to.contain("B7UserManager_grp")
+      expect(groupNames).to.contain("B7Audit_grp")
+    })
+  })
 })
