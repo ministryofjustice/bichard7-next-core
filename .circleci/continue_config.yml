@@ -10,9 +10,6 @@ parameters:
   circleci-changes:
     type: boolean
     default: false
-  env-changes:
-    type: boolean
-    default: false
   api-changes:
     type: boolean
     default: false
@@ -380,7 +377,6 @@ jobs:
               - << pipeline.parameters.conductor-changes >>
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.e2e-test-changes >>
-              - << pipeline.parameters.env-changes >>
               - << pipeline.parameters.message-forwarder-changes >>
               - << pipeline.parameters.user-service-changes >>
           steps:
@@ -509,7 +505,6 @@ jobs:
           condition:
             or:
               - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -720,7 +715,6 @@ jobs:
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.conductor-changes >>
               - << pipeline.parameters.api-changes >>
-              - << pipeline.parameters.env-changes >>
               - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
