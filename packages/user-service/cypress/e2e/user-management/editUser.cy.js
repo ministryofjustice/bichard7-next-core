@@ -1,4 +1,4 @@
-import users from "../../testFixtures/database/data/users"
+import users from "../../../testFixtures/database/data/users"
 
 const [, bichard02] = users
 const currentUserGroupNames = ["B7UserManager_grp", "B7ExceptionHandler_grp"]
