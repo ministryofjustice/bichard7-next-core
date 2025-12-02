@@ -56,7 +56,7 @@ export const reloadUntilContent = (page: Page, content: string) => {
   return retryDelay(checkForContent, reloadPage, 1000)
 }
 
-export const reloadUntilContentInSelector = (page: Page, content: string, selector: string, attempts = 20) => {
+export const reloadUntilContentInSelector = (page: Page, content: string, selector: string, attempts = 30) => {
   const checkForContent = async () =>
     !!(await page.evaluate(
       (cont, sel) =>
