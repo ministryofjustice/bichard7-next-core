@@ -1,7 +1,7 @@
 import type { DisposalDurationUnit } from "../../../../types/leds/DisposalRequest"
 
 export const parseDisposalDuration = (disposalQuantity: string) => {
-  const quantity = disposalQuantity.toLowerCase()
+  const quantity = disposalQuantity.toLowerCase().trim()
   const durationCode = quantity.slice(0, 1).trim()
 
   let count: number = 0

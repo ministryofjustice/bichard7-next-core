@@ -17,7 +17,14 @@ type Params = {
   courtCaseId: string
 }
 
-const parseDisposalQualifiers = (qualifiers: string) => {
+const parseDisposalQualifiers = (qualifiers?: string) => {
+  if (!qualifiers) {
+    return {
+      disposalQualifiers: undefined,
+      disposalQualifierDuration: undefined
+    }
+  }
+
   const disposalQualifiers = qualifiers.substring(0, 9).trim().split("") /// <--- needs to be checked
   const { units, count } = parseDisposalDuration(qualifiers.substring(8, 12))
 
@@ -34,20 +41,15 @@ const mapDisposalResults = (disposalResults: Dis[]): DisposalResult[] => {
 
     return {
       disposalId: "TBC",
-      disposalCode: Number(disposalResult.type),
-      disposalDuration: disposalResult.qtyDuration
-        ? {
-            units,
-            count
-          }
-        : undefined,
+      disposalCode: disposalResult.type ? Number(disposalResult.type) : 0,
+      disposalDuration: disposalResult.qtyDuration ? { units, count } : undefined,
       disposalFine: disposalResult.qtyMonetaryValue
         ? {
             amount: Number(disposalResult.qtyMonetaryValue),
             units: Number(disposalResult.qtyUnitsFined)
           }
         : undefined,
-      disposalEffectiveDate: disposalResult.qtyDate,
+      disposalEffectiveDate: convertDate(disposalResult.qtyDate),
       disposalQualifiers,
       disposalQualifierDuration,
       disposalText: disposalResult.text
@@ -62,9 +64,9 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
     return {
       courtOffenceSequenceNumber: Number(offence.referenceNumber),
       cjsOffenceCode: offence.cjsOffenceCode,
-      roleQualifiers: [offence.offenceQualifier1],
-      legislationQualifiers: [offence.offenceQualifier2],
-      plea: toTitleCase(offence.plea) as Plea,
+      roleQualifiers: [offence.offenceQualifier1].filter(Boolean),
+      legislationQualifiers: [offence.offenceQualifier2].filter(Boolean),
+      plea: offence.plea ? (toTitleCase(offence.plea) as Plea) : undefined,
       dateOfSentence: "TBC",
       offenceTic: 0,
       offenceStartDate: convertDate(offence.offenceStartDate),
@@ -83,7 +85,7 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
               }
             ]
           : undefined,
-      offenceDescription: ["TBC"],
+      offenceDescription: ["TBC"], /// <-- offence.title?
       disposalResults: mapDisposalResults(offence.disposals)
     }
   })
@@ -96,11 +98,11 @@ export const convertPncJsonToLedsAsnQueryResponse = (
   { asn, personId, reportId, courtCaseId }: Params
 ): AsnQueryResponse => {
   return {
-    asn,
-    ownerCode: pncJson.forceStationCode,
     personId,
     personUrn: pncJson.pncIdentifier,
     reportId,
+    asn,
+    ownerCode: pncJson.forceStationCode,
     disposals: [
       {
         courtCaseId,
