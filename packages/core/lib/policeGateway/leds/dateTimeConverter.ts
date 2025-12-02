@@ -1,4 +1,8 @@
-export const convertDate = (date: string) => {
+export const convertDate = (date?: string) => {
+  if (!date) {
+    return undefined
+  }
+
   const dayOfMonth = date.substring(0, 2)
   const month = date.substring(2, 4)
   const year = date.substring(4, 8)
@@ -6,7 +10,11 @@ export const convertDate = (date: string) => {
   return `${year}-${month}-${dayOfMonth}`
 }
 
-export const convertTime = (time: string) => {
+export const convertTime = (time?: string) => {
+  if (!time) {
+    return undefined
+  }
+
   const hour = time.substring(0, 2)
   const minute = time.substring(2, 4)
 
