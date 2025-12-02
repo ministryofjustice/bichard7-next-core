@@ -21,6 +21,7 @@ interface Props {
     caseState?: string | null
     caseResolvedDateRange?: SerializedDateRange | null
     resolvedByUsername?: string | null
+    courtDateReceivedDateMismatch?: boolean
   }
 }
 
@@ -40,7 +41,8 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
     !!filters.caseState ||
     !!filters.caseResolvedDateRange?.from ||
     !!filters.caseResolvedDateRange?.to ||
-    !!filters.resolvedByUsername
+    !!filters.resolvedByUsername ||
+    !!filters.courtDateReceivedDateMismatch
 
   const removeFilterFromPath = (paramToRemove: { [key: string]: string }): string => {
     let searchParams = deleteQueryParam(paramToRemove, query)
@@ -179,6 +181,15 @@ const AppliedFilters: React.FC<Props> = ({ filters }: Props) => {
           <ConditionalRender isRendered={filters.resolvedByUsername === currentUser.username}>
             <li>
               <FilterTag tag={"My resolved cases"} href={removeQueryParamsByName(["resolvedByUsername"])} />
+            </li>
+          </ConditionalRender>
+
+          <ConditionalRender isRendered={!!filters.courtDateReceivedDateMismatch}>
+            <li>
+              <FilterTag
+                tag={"Cases where date received is different"}
+                href={removeQueryParamsByName(["courtDateReceivedDateMismatch"])}
+              />
             </li>
           </ConditionalRender>
         </ul>

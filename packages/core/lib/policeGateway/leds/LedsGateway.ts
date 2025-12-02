@@ -14,19 +14,19 @@ import type { AsnQueryRequest } from "../../../types/leds/AsnQueryRequest"
 import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
+import type { SubsequentDisposalResultsRequest } from "../../../types/leds/SubsequentDisposalResultsRequest"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
-import { addDisposalRequestSchema } from "../../../schemas/leds/addDisposalRequest"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
-import { findCourtCaseId } from "./mapToAddDisposalRequest/findCourtCaseId"
-import mapToAddDisposalRequest from "./mapToAddDisposalRequest/mapToAddDisposalRequest"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
-import mapToRemandRequest from "./mapToRemandRequest"
+import { normalDisposal } from "./processors/normalDisposal"
+import { remand } from "./processors/remand"
+import { subsequentDisposal } from "./processors/subsequentDisposal"
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -86,8 +86,6 @@ export default class LedsGateway implements PoliceGateway {
     correlationId: string,
     pncUpdateDataset: PncUpdateDataset
   ): Promise<PoliceApiError | void> {
-    let endpoint: string
-    let requestBody: AddDisposalRequest | RemandRequest
     const personId = pncUpdateDataset.PncQuery?.personId
     const reportId = pncUpdateDataset.PncQuery?.reportId
 
@@ -95,28 +93,30 @@ export default class LedsGateway implements PoliceGateway {
       return new PoliceApiError(["Failed to update LEDS due to missing data."])
     }
 
-    if (request.operation === PncOperation.REMAND) {
-      requestBody = mapToRemandRequest(request.request)
-      endpoint = endpoints.remand(personId, reportId)
-    } else if (request.operation === PncOperation.NORMAL_DISPOSAL) {
-      const courtCaseId = findCourtCaseId(pncUpdateDataset, request.request.courtCaseReferenceNumber)
+    let result:
+      | PoliceApiError
+      | { endpoint: string; requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest }
 
-      if (!courtCaseId) {
-        return new PoliceApiError(["Failed to update LEDS due to missing data."])
-      }
-
-      requestBody = mapToAddDisposalRequest(request.request, pncUpdateDataset)
-
-      const validationResult = addDisposalRequestSchema.safeParse(requestBody)
-
-      if (!validationResult.success) {
-        return new PoliceApiError(["Failed to validate LEDS request."])
-      }
-
-      endpoint = endpoints.addDisposal(personId, courtCaseId)
-    } else {
-      return new PoliceApiError(["Invalid LEDS update operation."])
+    switch (request.operation) {
+      case PncOperation.DISPOSAL_UPDATED:
+      case PncOperation.SENTENCE_DEFERRED:
+        result = subsequentDisposal(request, personId, pncUpdateDataset)
+        break
+      case PncOperation.NORMAL_DISPOSAL:
+        result = normalDisposal(request, personId, pncUpdateDataset)
+        break
+      case PncOperation.REMAND:
+        result = remand(request, personId, reportId)
+        break
+      default:
+        return new PoliceApiError(["Invalid LEDS update operation."])
     }
+
+    if (result instanceof PoliceApiError) {
+      return result
+    }
+
+    const { endpoint, requestBody } = result
 
     const apiResponse = await axios
       .post(`${this.config.url}${endpoint}`, requestBody, {
@@ -137,6 +137,14 @@ export default class LedsGateway implements PoliceGateway {
       }
 
       return new PoliceApiError([apiResponse.message])
+    }
+
+    if (apiResponse.status !== HttpStatusCode.Ok) {
+      const errors = (apiResponse.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
+        `Update failed with status code ${apiResponse.status}.`
+      ]
+
+      return new PoliceApiError(errors)
     }
   }
 }

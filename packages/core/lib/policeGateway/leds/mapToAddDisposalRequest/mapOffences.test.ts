@@ -1,8 +1,8 @@
 import type { PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
 
 import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
-import { buildNormalDisposalRequest } from "../../../../tests/fixtures/addDisposalRequests/buildNormalDisposalRequest"
-import { buildPncUpdateDataset } from "../../../../tests/fixtures/addDisposalRequests/buildPncUpdateDataset"
+import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
+import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
 import mapOffences from "./mapOffences"
 
 describe("mapOffences", () => {
@@ -14,7 +14,7 @@ describe("mapOffences", () => {
     const expectedOffences = [
       {
         courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "Offence reason",
+        cjsOffenceCode: "00112233",
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -22,7 +22,7 @@ describe("mapOffences", () => {
         disposalResults: [
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -35,7 +35,7 @@ describe("mapOffences", () => {
           },
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -51,7 +51,7 @@ describe("mapOffences", () => {
       },
       {
         courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "Offence reason",
+        cjsOffenceCode: "00112233",
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -59,7 +59,7 @@ describe("mapOffences", () => {
         disposalResults: [
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -72,7 +72,7 @@ describe("mapOffences", () => {
           },
           {
             disposalCode: 10,
-            disposalQualifies: ["Disposal qualifiers"],
+            disposalQualifiers: ["A"],
             disposalText: "Disposal text",
             disposalDuration: {
               count: 123,
@@ -106,8 +106,9 @@ describe("mapOffences", () => {
 
     expect(offences[0]).toMatchObject({
       courtOffenceSequenceNumber: 1,
-      plea: "",
-      adjudication: "",
+      plea: undefined,
+      adjudication: undefined,
+      offenceTic: undefined,
       disposalResults: [],
       offenceId: "112233"
     })
@@ -132,15 +133,22 @@ describe("mapOffences", () => {
 
     const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
 
-    expect(offences[0].disposalResults?.[0].disposalQualifies).toEqual([""])
+    expect(offences[0].disposalResults?.[0].disposalQualifiers).toEqual([])
     expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
   })
 
   it("doesn't include disposalDuration if units is empty string", () => {
-    const psaCourtCode = ""
-    const pendingPsaCourtCode = ""
-    const disposalQuantity = "    10052024          00"
-    const normalDisposalRequest = buildNormalDisposalRequest(psaCourtCode, pendingPsaCourtCode, disposalQuantity)
+    const normalDisposalRequest = buildNormalDisposalRequest({
+      hearingsAdjudicationsAndDisposals: [
+        {
+          disposalQualifiers: "A",
+          disposalQuantity: "    10052024          00",
+          disposalText: "Disposal text",
+          disposalType: "10",
+          type: PncUpdateType.DISPOSAL
+        }
+      ]
+    })
 
     const offences = mapOffences(
       normalDisposalRequest.hearingsAdjudicationsAndDisposals,

@@ -11,9 +11,15 @@ interface Props {
   courtCases: DisplayPartialCourtCase[]
   order?: QueryOrder
   displayAuditQuality: boolean
+  courtDateReceivedDateMismatch: boolean
 }
 
-const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc", displayAuditQuality }: Props) => {
+const CourtCaseList: React.FC<Props> = ({
+  courtCases,
+  order = "asc",
+  displayAuditQuality,
+  courtDateReceivedDateMismatch
+}: Props) => {
   const { query, events } = useRouter()
   const announcerRef = useRef<HTMLDivElement>(null)
   const recentlyUnlockedExceptionId = query.unlockException
@@ -58,7 +64,11 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc", displayAudi
           <span className="govuk-visually-hidden">{"Column headers with buttons are sortable."}</span>
         </caption>
         <TableHead>
-          <CourtCaseListTableHeader order={order} displayAuditQuality={displayAuditQuality} />
+          <CourtCaseListTableHeader
+            order={order}
+            displayAuditQuality={displayAuditQuality}
+            courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
+          />
         </TableHead>
         {courtCases.map((courtCase) => (
           <CourtCaseListEntry
@@ -68,6 +78,7 @@ const CourtCaseList: React.FC<Props> = ({ courtCases, order = "asc", displayAudi
             key={`court-case-${courtCase.errorId}`}
             previousPath={queryString}
             displayAuditQuality={displayAuditQuality}
+            courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
           />
         ))}
       </Table>

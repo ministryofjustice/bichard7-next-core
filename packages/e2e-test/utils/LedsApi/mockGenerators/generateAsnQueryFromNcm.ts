@@ -52,8 +52,8 @@ const generateResponseBody = (ncm: ParsedNcm, options: LedsMockOptions): AsnQuer
     ownerCode: forceStationCode,
     disposals: [
       {
-        courtCaseId: randomUUID(),
-        courtCaseReference: "97/1626/008395Q",
+        courtCaseId: options.courtCaseId ?? randomUUID(),
+        courtCaseReference: "97/1626/8395Q",
         caseStatusMarker: "impending-prosecution-detail",
         court: {
           courtIdentityType: "code",

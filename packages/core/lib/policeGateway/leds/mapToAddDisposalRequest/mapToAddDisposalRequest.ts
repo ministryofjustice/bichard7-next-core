@@ -3,6 +3,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalRequest"
 
+import { convertDate } from "../dateTimeConverter"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
@@ -14,10 +15,15 @@ const mapToAddDisposalRequest = (
 ): AddDisposalRequest => {
   const carryForward = pncRequest.pendingPsaCourtCode
     ? {
-        appearanceDate: pncRequest.pendingCourtDate ?? undefined,
+        appearanceDate: pncRequest.pendingCourtDate ? convertDate(pncRequest.pendingCourtDate) : undefined,
         court: mapCourt(pncRequest.pendingPsaCourtCode, pncRequest.pendingCourtHouseName)
       }
     : undefined
+
+  const additionalArrestOffences =
+    pncRequest.arrestSummonsNumber && pncRequest.arrestsAdjudicationsAndDisposals.length > 0
+      ? mapAdditionalArrestOffences(pncRequest.arrestSummonsNumber, pncRequest.arrestsAdjudicationsAndDisposals)
+      : undefined
 
   return {
     ownerCode: pncRequest.forceStationCode,
@@ -25,21 +31,20 @@ const mapToAddDisposalRequest = (
     checkName: pncRequest.pncCheckName ?? "",
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
-    dateOfConviction: pncRequest.dateOfHearing,
+    dateOfConviction: convertDate(pncRequest.dateOfHearing),
     defendant: mapDefendant(pncUpdateDataset),
     carryForward,
-    referToCourtCase: {
-      reference: pncRequest.preTrialIssuesUniqueReferenceNumber ?? ""
-    },
+    ...(pncRequest.preTrialIssuesUniqueReferenceNumber && {
+      referToCourtCase: {
+        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
+      }
+    }),
     offences: mapOffences(
       pncRequest.hearingsAdjudicationsAndDisposals,
       pncUpdateDataset,
       pncRequest.courtCaseReferenceNumber
     ),
-    additionalArrestOffences: mapAdditionalArrestOffences(
-      pncRequest.arrestSummonsNumber,
-      pncRequest.arrestsAdjudicationsAndDisposals
-    )
+    additionalArrestOffences
   }
 }
 

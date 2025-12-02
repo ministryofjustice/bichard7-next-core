@@ -14,22 +14,23 @@ enum Operation {
 
 export const generateUpdate = (code: string, options: LedsMockOptions): LedsMock => {
   const personId = options.personId ?? randomUUID()
+  const reportId = options.reportId ?? randomUUID()
+  const courtCaseId = options.courtCaseId ?? randomUUID()
   let endpoint = ""
 
   switch (code.toUpperCase()) {
     case Operation.Remand:
-      const reportId = options.reportId ?? randomUUID()
       endpoint = endpoints.remand(personId, reportId)
       break
     case Operation.AddDisposal:
-      endpoint = endpoints.addDisposal(personId, "NOT-IMPLEMENTED-disposalId")
+      endpoint = endpoints.addDisposal(personId, courtCaseId)
       break
     case Operation.Subsequently_Varied:
     case Operation.Sentence_Deferred:
-      endpoint = endpoints.subsequentDisposalResults(personId, "NOT-IMPLEMENTED-disposalId")
+      endpoint = endpoints.subsequentDisposalResults(personId, courtCaseId)
       break
     default:
-      throw Error(`Unknown operation code: ${code}`)
+      throw Error(`Unsupported operation code: ${code}`)
   }
 
   const request = createMockRequest({
