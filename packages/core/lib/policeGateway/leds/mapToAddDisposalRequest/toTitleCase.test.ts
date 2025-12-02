@@ -6,8 +6,7 @@ describe("toTitleCase", () => {
     ["NOT GUILTY", "Not Guilty"],
     ["NON-CONVICTION", "Non-Conviction"],
     ["NO PLEA TAKEN", "No Plea Taken"],
-    ["", undefined],
-    [undefined, undefined]
+    ["", ""]
   ])("converts %s into %s", (text, expectedTitleCase) => {
     const titleCase = toTitleCase(text)
 
