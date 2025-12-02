@@ -25,7 +25,11 @@ const parseDisposalQualifiers = (qualifiers?: string) => {
     }
   }
 
-  const disposalQualifiers = qualifiers.substring(0, 9).trim().split("") /// <--- needs to be checked
+  const disposalQualifiers =
+    qualifiers
+      .substring(0, 9)
+      .trim()
+      .match(/.{1,2}/g) || []
   const { units, count } = parseDisposalDuration(qualifiers.substring(8, 12))
 
   return {
@@ -40,7 +44,7 @@ const mapDisposalResults = (disposalResults: Dis[]): DisposalResult[] => {
     const { disposalQualifiers, disposalQualifierDuration } = parseDisposalQualifiers(disposalResult.qualifiers)
 
     return {
-      disposalId: "TBC",
+      disposalId: randomUUID(),
       disposalCode: disposalResult.type ? Number(disposalResult.type) : 0,
       disposalDuration: disposalResult.qtyDuration ? { units, count } : undefined,
       disposalFine: disposalResult.qtyMonetaryValue
@@ -67,7 +71,6 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
       roleQualifiers: [offence.offenceQualifier1].filter(Boolean),
       legislationQualifiers: [offence.offenceQualifier2].filter(Boolean),
       plea: offence.plea ? (toTitleCase(offence.plea) as Plea) : undefined,
-      dateOfSentence: "TBC",
       offenceTic: 0,
       offenceStartDate: convertDate(offence.offenceStartDate),
       offenceStartTime: convertTime(offence.offenceStartTime),
@@ -85,7 +88,6 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
               }
             ]
           : undefined,
-      offenceDescription: ["TBC"], /// <-- offence.title?
       disposalResults: mapDisposalResults(offence.disposals)
     }
   })
