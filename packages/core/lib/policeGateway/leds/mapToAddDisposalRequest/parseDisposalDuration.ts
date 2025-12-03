@@ -7,7 +7,7 @@ export const parseDisposalDuration = (disposalQuantity: string) => {
   let count: number = 0
   let units: DisposalDurationUnit
 
-  if (quantity.slice(0, 4) === "y999") {
+  if (quantity.startsWith("y999")) {
     count = 1
     units = "life"
   } else {
