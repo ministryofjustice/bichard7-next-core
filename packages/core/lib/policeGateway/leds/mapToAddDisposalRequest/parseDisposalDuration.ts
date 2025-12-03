@@ -4,6 +4,13 @@ export const parseDisposalDuration = (disposalQuantity: string) => {
   const quantity = disposalQuantity.toLowerCase()
   const durationCode = quantity.slice(0, 1).trim()
   const countString = quantity.slice(1, 4).trim()
+  const unitMap: Record<string, DisposalDurationUnit> = {
+    d: "days",
+    h: "hours",
+    m: "months",
+    w: "weeks",
+    y: "years"
+  }
 
   let count: number = 0
   let units: DisposalDurationUnit
@@ -13,13 +20,6 @@ export const parseDisposalDuration = (disposalQuantity: string) => {
     units = "life"
   } else {
     count = Number(countString) || 0
-    const unitMap: Record<string, DisposalDurationUnit> = {
-      d: "days",
-      h: "hours",
-      m: "months",
-      w: "weeks",
-      y: "years"
-    }
     units = unitMap[durationCode] ?? ""
   }
 
