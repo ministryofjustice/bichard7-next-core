@@ -113,11 +113,19 @@ class BrowserHelper {
 
   async close() {
     if (this.recorder) {
-      await this.recorder.stop()
+      this.recorder.stop()
     }
 
     if (this.currentPage) {
-      this.currentPage.close()
+      await this.currentPage.close()
+    }
+
+    if (this.currentPage?.browserContext()) {
+      await this.currentPage.browserContext().close()
+    }
+
+    if (this.browser) {
+      await this.browser.close()
     }
   }
 
