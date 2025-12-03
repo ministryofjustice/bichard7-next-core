@@ -10,7 +10,7 @@ export const parseDisposalDuration = (disposalQuantity: string) => {
     m: "months",
     w: "weeks",
     y: "years"
-  }
+  } as const
 
   let count: number = 0
   let units: DisposalDurationUnit
