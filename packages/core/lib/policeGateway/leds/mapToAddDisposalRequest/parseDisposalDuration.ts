@@ -3,6 +3,7 @@ import type { DisposalDurationUnit } from "../../../../types/leds/DisposalReques
 export const parseDisposalDuration = (disposalQuantity: string) => {
   const quantity = disposalQuantity.toLowerCase()
   const durationCode = quantity.slice(0, 1).trim()
+  const countString = quantity.slice(1, 4).trim()
 
   let count: number = 0
   let units: DisposalDurationUnit
@@ -11,7 +12,7 @@ export const parseDisposalDuration = (disposalQuantity: string) => {
     count = 1
     units = "life"
   } else {
-    count = Number(quantity.slice(1, 4).trim()) || 0
+    count = Number(countString) || 0
     const unitMap: Record<string, DisposalDurationUnit> = {
       d: "days",
       h: "hours",
