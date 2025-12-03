@@ -33,8 +33,6 @@ export class MockPNCHelper implements PncHelper {
       throw new Error("Error getting mock from PNC Emulator")
     }
 
-    console.log("Got mock", resp.data)
-
     return resp.data
   }
 
