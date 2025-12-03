@@ -146,8 +146,10 @@ class BrowserHelper {
     await Promise.all([linkHandlers[0].click(), this.page.waitForNavigation()])
   }
 
-  clickAndWait(selector: string) {
-    return Promise.all([this.page.click(selector), this.page.waitForNavigation()])
+  async clickAndWait(selector: string) {
+    await this.page.waitForSelector(selector, { visible: true, timeout: 5000 })
+
+    return await Promise.all([this.page.click(selector), this.page.waitForNavigation()])
   }
 
   async setupDownloadFolder(folder: string) {
