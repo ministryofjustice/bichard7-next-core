@@ -31,6 +31,8 @@ import updateUserCodes from "useCases/updateUserCodes"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isPost } from "utils/http"
 import logger from "utils/logger"
+import { hasNewUIGroup } from "useCases/hasNewUIGroup"
+import getGroup from "useCases/getGroup"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -101,6 +103,21 @@ export const getServerSideProps = withMultipleServerSideProps(
       if (formValidationResult.isFormValid) {
         const groupsChecked = groups.filter((group) => formData[group.name] === "yes")
         userDetails.groups = groupsChecked
+
+        if (hasNewUIGroup(user.groups ?? [], groups ?? [])) {
+          const newUiGroup = userDetails.groups.find((group) => group.name === "B7NewUI")
+
+          if (newUiGroup === undefined) {
+            const uiGroup = await getGroup(connection, "B7NewUI_grp")
+
+            if (isError(uiGroup)) {
+              logger.error(uiGroup)
+              return createRedirectResponse("/500")
+            }
+
+            userDetails.groups = [...userDetails.groups, uiGroup]
+          }
+        }
 
         const oldEmail = user.emailAddress
         const newEmail = userDetails.emailAddress as string
