@@ -113,11 +113,19 @@ class BrowserHelper {
 
   async close() {
     if (this.recorder) {
-      await this.recorder.stop()
+      this.recorder.stop()
     }
 
     if (this.currentPage) {
-      this.currentPage.close()
+      await this.currentPage.close()
+    }
+
+    if (this.currentPage?.browserContext()) {
+      await this.currentPage.browserContext().close()
+    }
+
+    if (this.browser) {
+      await this.browser.close()
     }
   }
 
@@ -138,8 +146,10 @@ class BrowserHelper {
     await Promise.all([linkHandlers[0].click(), this.page.waitForNavigation()])
   }
 
-  clickAndWait(selector: string) {
-    return Promise.all([this.page.click(selector), this.page.waitForNavigation()])
+  async clickAndWait(selector: string) {
+    await this.page.waitForSelector(selector, { visible: true, timeout: 5000 })
+
+    return await Promise.all([this.page.click(selector), this.page.waitForNavigation()])
   }
 
   async setupDownloadFolder(folder: string) {
