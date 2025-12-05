@@ -6,9 +6,7 @@ import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
-import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
-import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { createHash, randomUUID } from "crypto"
 import fs from "fs"
@@ -21,7 +19,6 @@ const { apiKey, apiUrl, basePath } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
-const mqConfig = createMqConfig()
 
 const setupCase = async (
   messageId: string,
@@ -74,22 +71,12 @@ const startAndCompleteFullResubmit = async (
 }
 
 describe("resubmit", () => {
-  let mqListener: MqListener
-
-  beforeAll(() => {
-    mqListener = new MqListener(mqConfig)
-    mqListener.listen("TEST_PHASE3_QUEUE")
-  })
-
   beforeEach(async () => {
     await db`TRUNCATE br7own.error_list RESTART IDENTITY CASCADE`
   })
 
   afterAll(async () => {
     await db.end()
-
-    mqListener.clearMessages()
-    mqListener.stop()
   })
 
   it("triggers the bichard_phase_1 successfully", async () => {

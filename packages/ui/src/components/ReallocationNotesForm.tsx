@@ -1,16 +1,15 @@
-import { forces } from "@moj-bichard7-developers/bichard7-next-data"
+import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import Link from "next/link"
 import { FormEventHandler, useState } from "react"
-import getForcesForReallocation from "services/getForcesForReallocation"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
 import { FormGroup } from "components/FormGroup"
 import { NoteTextArea } from "./NoteTextArea"
-import { NewForceOwner } from "./ReallocationNotesForm.styles"
+import { NewForceOwnerField } from "./EditableFields/NewForceOwnerField"
 import { Label } from "./Label"
 
 interface Props {
@@ -21,7 +20,6 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const { courtCase } = useCourtCase()
   const currentForce = forces.find((force) => force.code === courtCase.orgForPoliceFilter?.substring(0, 2))
-  const forcesForReallocation = getForcesForReallocation(currentForce?.code)
   const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
@@ -45,13 +43,8 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
           <Label size={"s"} htmlFor="force">
             {"New force owner"}
           </Label>
-          <NewForceOwner className="govuk-select" name="force" id="force">
-            {forcesForReallocation.map(({ code, name }) => (
-              <option key={code} value={code}>
-                {`${code} - ${name}`}
-              </option>
-            ))}
-          </NewForceOwner>
+
+          <NewForceOwnerField currentForceOwner={currentForce?.code} />
         </FormGroup>
 
         <NoteTextArea

@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
 const ListWrapper = styled.div`
+  position: relative;
   max-height: 20rem;
   overflow-y: scroll;
   background: white;
