@@ -11,6 +11,7 @@ import https from "https"
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
 import type { AsnQueryRequest } from "../../../types/leds/AsnQueryRequest"
+import type { EndpointPayload } from "../../../types/leds/EndpointPayload"
 import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
@@ -21,12 +22,12 @@ import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
-import generateCheckName from "./generateCheckName"
-import generateRequestHeaders from "./generateRequestHeaders"
-import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
-import { normalDisposal } from "./processors/normalDisposal"
-import { remand } from "./processors/remand"
-import { subsequentDisposal } from "./processors/subsequentDisposal"
+import generateCheckName from "./generators/generateCheckName"
+import { generateDisposalResultsRequest } from "./generators/generateDisposalResultsRequest"
+import { generateRemandRequest } from "./generators/generateRemandRequest"
+import generateRequestHeaders from "./generators/generateRequestHeaders"
+import { generateSubsequentDisposalRequest } from "./generators/generateSubsequentDisposalRequest"
+import mapToPoliceQueryResult from "./mappers/mapToPoliceQueryResult"
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -82,7 +83,7 @@ export default class LedsGateway implements PoliceGateway {
   }
 
   async update(
-    request: PoliceUpdateRequest,
+    pncRequest: PoliceUpdateRequest,
     correlationId: string,
     pncUpdateDataset: PncUpdateDataset
   ): Promise<PoliceApiError | void> {
@@ -93,30 +94,30 @@ export default class LedsGateway implements PoliceGateway {
       return new PoliceApiError(["Failed to update LEDS due to missing data."])
     }
 
-    let result:
+    let ledsRequest:
+      | EndpointPayload<AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest>
       | PoliceApiError
-      | { endpoint: string; requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest }
 
-    switch (request.operation) {
+    switch (pncRequest.operation) {
       case PncOperation.DISPOSAL_UPDATED:
       case PncOperation.SENTENCE_DEFERRED:
-        result = subsequentDisposal(request, personId, pncUpdateDataset)
+        ledsRequest = generateSubsequentDisposalRequest(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.NORMAL_DISPOSAL:
-        result = normalDisposal(request, personId, pncUpdateDataset)
+        ledsRequest = generateDisposalResultsRequest(pncRequest, personId, pncUpdateDataset)
         break
       case PncOperation.REMAND:
-        result = remand(request, personId, reportId)
+        ledsRequest = generateRemandRequest(pncRequest, personId, reportId)
         break
       default:
         return new PoliceApiError(["Invalid LEDS update operation."])
     }
 
-    if (result instanceof PoliceApiError) {
-      return result
+    if (ledsRequest instanceof PoliceApiError) {
+      return ledsRequest
     }
 
-    const { endpoint, requestBody } = result
+    const { endpoint, requestBody } = ledsRequest
 
     const apiResponse = await axios
       .post(`${this.config.url}${endpoint}`, requestBody, {

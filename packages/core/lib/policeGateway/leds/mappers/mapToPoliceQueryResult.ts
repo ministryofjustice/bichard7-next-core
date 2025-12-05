@@ -12,12 +12,12 @@ import type {
   Disposal as LedsDisposal,
   DisposalResult as LedsDisposalResult,
   Offence as LedsOffence
-} from "../../../types/leds/AsnQueryResponse"
+} from "../../../../types/leds/AsnQueryResponse"
 
 import {
   DISPOSAL_QUALIFIERS_FIELD_LENGTH,
   PNC_REPRESENTATION_OF_LIFE
-} from "../../results/createPoliceDisposalsFromResult/createPoliceDisposal"
+} from "../../../results/createPoliceDisposalsFromResult/createPoliceDisposal"
 
 const mapToPoliceOffence = (offence: LedsOffence): PoliceOffence["offence"] => ({
   offenceId: offence.offenceId,
