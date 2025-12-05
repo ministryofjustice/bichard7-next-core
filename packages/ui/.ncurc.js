@@ -10,9 +10,11 @@
     - v16 doesn't load the sass files from @ministryofjustice/frontend
 
   Ignored:
+  - cypress-circleci-reporter
+    - v0.4.0 doesn't work (haven't spent much time on it)
 */
 const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next"]
-const ignored = []
+const ignored = ["cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
 module.exports = {

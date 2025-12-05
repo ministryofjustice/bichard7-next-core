@@ -95,7 +95,7 @@
     "concurrently": "^9.2.1",
     "cypress": "^14.5.4",
     "cypress-axe": "^1.7.0",
-    "cypress-circleci-reporter": "^0.4.0",
+    "cypress-circleci-reporter": "^0.3.0",
     "cypress-plugin-tab": "^1.0.5",
     "eslint": "^9.39.1",
     "eslint-config-next": "^16.0.6",
