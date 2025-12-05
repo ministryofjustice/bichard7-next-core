@@ -1,4 +1,4 @@
-import users from "../../testFixtures/database/data/users"
+import users from "../../../testFixtures/database/data/users"
 
 const [, bichard02] = users
 const currentUserGroupNames = ["B7UserManager_grp", "B7ExceptionHandler_grp"]
@@ -213,5 +213,70 @@ describe("Edit user", () => {
     cy.get('[data-test="included-triggers"]').click()
     cy.get('input[id="excludedTriggersTRPR0001"]').should("not.be.checked")
     cy.get('input[id="excludedTriggersTRPR0004"]').should("not.be.checked")
+  })
+
+  it("should keep New UI group if the current user does not have it", () => {
+    cy.task("insertIntoUserGroupsTable", {
+      email: "bichard01@example.com",
+      groups: ["B7Supervisor_grp", "B7NewUI_grp"]
+    })
+
+    cy.login("bichard02@example.com", "password")
+
+    const emailAddress = "bichard01@example.com"
+    cy.visit("users/Bichard01")
+
+    cy.get('dd[data-test="summary-item_group-memberships_value"]').contains("New Bichard UI")
+
+    cy.get('a[data-test="edit-user-view"]').click()
+
+    cy.get('input[name="B7NewUI_grp"]').should("not.exist")
+
+    cy.get('input[id="excludedTriggersTRPR0001"]').uncheck({ force: true })
+
+    cy.get('button[type="submit"]').click()
+
+    cy.task("selectGroupsForUser", emailAddress).then((groups) => {
+      expect(groups).to.have.length.greaterThan(0)
+
+      const newUiGroup = groups.find((group) => group.name === "B7NewUI_grp")
+      expect(newUiGroup.name).to.equal("B7NewUI_grp")
+    })
+  })
+
+  it("should not have unexpected groups", () => {
+    cy.task("insertIntoUserGroupsTable", {
+      email: "bichard01@example.com",
+      groups: ["B7Supervisor_grp"]
+    })
+
+    cy.login("bichard02@example.com", "password")
+
+    cy.visit("users/Bichard02")
+    cy.get('a[data-test="edit-user-view"]').click()
+    cy.get('input[name="B7Audit_grp"]').check()
+    cy.get('input[name="B7ExceptionHandler_grp"]').uncheck()
+    cy.get('button[type="submit"]').click()
+
+    cy.visit("users/Bichard01")
+    cy.get('a[data-test="edit-user-view"]').click()
+    cy.get('input[name="B7Audit_grp"]').check()
+    cy.get('button[type="submit"]').click()
+
+    cy.task("selectGroupsForUser", "bichard01@example.com").then((groups) => {
+      expect(groups).to.have.length(2)
+
+      const groupNames = groups.map((g) => g.name)
+      expect(groupNames).to.contain("B7Supervisor_grp")
+      expect(groupNames).to.contain("B7Audit_grp")
+    })
+
+    cy.task("selectGroupsForUser", "bichard02@example.com").then((groups) => {
+      expect(groups).to.have.length(2)
+
+      const groupNames = groups.map((g) => g.name)
+      expect(groupNames).to.contain("B7UserManager_grp")
+      expect(groupNames).to.contain("B7Audit_grp")
+    })
   })
 })
