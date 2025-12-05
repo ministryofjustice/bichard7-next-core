@@ -1,35 +1,31 @@
 import { randomUUID } from "crypto"
-import { mockServerClient, type MockServerClient } from "mockserver-client/mockServerClient"
 import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
+import type { PartialPoliceApiRequestMock } from "../../types/PoliceApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
 import * as mockGenerators from "./mockGenerators"
+import { generateAsnQuery } from "./mockGenerators/generateAsnQuery"
+import MockServer from "./MockServer"
 
 export class LedsApi implements PoliceApi {
   mocks: LedsMock[] = []
   private personId: string
   private reportId: string
   private courtCaseId: string
-
-  readonly mockServerClient: MockServerClient
+  readonly mockServerClient: MockServer
 
   constructor(private readonly bichard: LedsBichard) {
-    const mockServerUrl = new URL(this.bichard.config.ledsApiUrl)
-    this.mockServerClient = mockServerClient(mockServerUrl.hostname, Number(mockServerUrl.port))
+    this.mockServerClient = new MockServer(this.bichard.config.ledsApiUrl)
   }
 
   async checkMocks(): Promise<void> {
-    const expectations = await this.mockServerClient.retrieveActiveExpectations({})
-    if (expectations.length === 0) {
+    const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
+    if (unusedMocks.length === 0) {
       return
     }
 
-    const expectationPaths = expectations
-      .map(
-        (expectation) => expectation.httpRequest && "path" in expectation.httpRequest && expectation.httpRequest.path
-      )
-      .filter(Boolean)
+    const expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
     throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
   }
 
@@ -50,6 +46,20 @@ export class LedsApi implements PoliceApi {
     return mockGenerators.generateAsnQueryFromNcm(this.bichard, ncmFile, queryOptions)
   }
 
+  mockAsnQuery(params: {
+    matchRegex: string
+    response: string
+    expectedRequest: string
+    asn: string
+    count: number
+  }): PartialPoliceApiRequestMock {
+    this.personId = randomUUID()
+    this.reportId = randomUUID()
+    this.courtCaseId = randomUUID()
+
+    return generateAsnQuery(params.response, params.count, params.asn, this.personId, this.reportId, this.courtCaseId)
+  }
+
   mockUpdate(code: string, options?: LedsMockOptions): LedsMock {
     const updateOptions = options ?? {}
     updateOptions.personId ??= this.personId
@@ -64,7 +74,7 @@ export class LedsApi implements PoliceApi {
   }
 
   async clearMocks(): Promise<void> {
-    await this.mockServerClient.clear("", "ALL")
+    await this.mockServerClient.clear()
   }
 
   recordMocks(): Promise<void> {

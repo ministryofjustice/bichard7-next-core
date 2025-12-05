@@ -53,7 +53,7 @@ const mapDisposalResults = (disposalResults: Dis[]): DisposalResult[] => {
             units: Number(disposalResult.qtyUnitsFined)
           }
         : undefined,
-      disposalEffectiveDate: convertDate(disposalResult.qtyDate),
+      disposalEffectiveDate: disposalResult.qtyDate ? convertDate(disposalResult.qtyDate) : undefined,
       disposalQualifiers,
       disposalQualifierDuration,
       disposalText: disposalResult.text
@@ -72,10 +72,10 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
       legislationQualifiers: [offence.offenceQualifier2].filter(Boolean),
       plea: offence.plea ? (toTitleCase(offence.plea) as Plea) : undefined,
       offenceTic: 0,
-      offenceStartDate: offence.offenceStartDate && convertDate(offence.offenceStartDate),
-      offenceStartTime: offence.offenceStartTime && convertTime(offence.offenceStartTime),
-      offenceEndDate: offence.offenceEndDate && convertDate(offence.offenceEndDate),
-      offenceEndTime: offence.offenceEndTime && convertTime(offence.offenceEndTime),
+      offenceStartDate: convertDate(offence.offenceStartDate),
+      offenceStartTime: offence.offenceStartTime ? convertTime(offence.offenceStartTime) : undefined,
+      offenceEndDate: offence.offenceEndDate ? convertDate(offence.offenceEndDate) : undefined,
+      offenceEndTime: offence.offenceEndTime ? convertTime(offence.offenceEndTime) : undefined,
       offenceId: randomUUID(),
       adjudications:
         offence.dateOfSentence && offence.adjudication
