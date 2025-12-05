@@ -12,12 +12,22 @@ export enum ApiEndpoints {
   CaseResubmit = "CaseResubmit"
 }
 
-export const canUseApiEndpoint = (endpoint: ApiEndpoints, forces: string[]): boolean => {
+export const canUseApiEndpoint = (endpoint: ApiEndpoints, visibleForces: string[]): boolean => {
   if (!USE_API) {
     return false
   }
 
-  if (!forces.some((force) => FORCES_WITH_API_ENABLED.has(force))) {
+  if (
+    !visibleForces
+      .map((force) => {
+        if (force.length === 3 && force[0] === "0") {
+          return force.replace(/^0(\d+)/, "$1")
+        } else {
+          return force
+        }
+      })
+      .some((force) => FORCES_WITH_API_ENABLED.has(force))
+  ) {
     return false
   }
 
