@@ -34,11 +34,17 @@ type HandlerProps = {
   user: User
 }
 
+// unvalidatedHearingOutcomeSchema breaks Swagger/zod
+const SimplifiedCaseDtoSchema = CaseDtoSchema.extend({
+  aho: z.object({}).meta({ description: "Annotated Hearing Outcome" }),
+  updatedHearingOutcome: z.object({}).meta({ description: "Updated Annotated Hearing Outcome" })
+}).meta({ description: "Case DTO" })
+
 const schema = {
   ...auth,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: jsonResponse("Case DTO", CaseDtoSchema.meta({ description: "Case DTO" })),
+    [OK]: jsonResponse("Case DTO", SimplifiedCaseDtoSchema),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...notFoundError(),
