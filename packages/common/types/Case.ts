@@ -123,16 +123,18 @@ export const CaseIndexDtoSchema = z.object({
   triggerStatus: z.string().nullable()
 })
 
-export const CaseDtoSchema = CaseIndexDtoSchema.and(
-  z.object({
-    aho: unvalidatedHearingOutcomeSchema,
-    courtCode: z.string().nullable(),
-    courtReference: z.string().optional(),
-    orgForPoliceFilter: z.string().optional(),
-    phase: z.number().optional(),
-    updatedHearingOutcome: unvalidatedHearingOutcomeSchema.or(z.null())
-  })
-)
+const CaseDtoAdditionsShape = {
+  aho: unvalidatedHearingOutcomeSchema,
+  courtCode: z.string().nullable(),
+  courtReference: z.string().optional(),
+  orgForPoliceFilter: z.string().optional(),
+  phase: z.number().optional(),
+  updatedHearingOutcome: unvalidatedHearingOutcomeSchema.or(z.null())
+}
+
+type CaseDtoSchemaShape = typeof CaseDtoAdditionsShape & typeof CaseIndexDtoSchema.shape
+
+export const CaseDtoSchema: z.ZodObject<CaseDtoSchemaShape> = CaseIndexDtoSchema.extend(CaseDtoAdditionsShape)
 
 export const CaseAgesSchema = z.object(
   Object.fromEntries(Object.values(CaseAge).map((key) => [key, z.coerce.number().min(0).optional()]))
