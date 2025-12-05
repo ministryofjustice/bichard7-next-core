@@ -32,6 +32,7 @@ const arrestOffenceSchema = baseOffenceSchema.extend({
   committedOnBail: z.boolean(),
   locationFsCode: z.string().nonempty(),
   locationText: z.string().optional(),
+  dateOfSentence: dateStringSchema.optional(),
   locationAddress: z
     .object({
       addressLines: z.array(z.string()).optional(),

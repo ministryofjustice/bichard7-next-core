@@ -32,5 +32,5 @@ export const config: Config = {
   noUi: process.env.NO_UI === "true",
   messageEntryPoint: process.env.MESSAGE_ENTRY_POINT || "s3",
   realPNC: process.env.REAL_PNC === "true",
-  ledsApiUrl: process.env.LEDS_API_URL || "http://localhost:1080/mockserver"
+  ledsApiUrl: process.env.LEDS_API_URL || "https://localhost:8443"
 }
