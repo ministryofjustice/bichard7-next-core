@@ -37,17 +37,17 @@ const ignored = [
 ]
 
 module.exports = {
-  target: (package) => {
-    if (pinned.some((p) => new RegExp(`^${p}$`).test(package))) {
+  target: (pkg) => {
+    if (pinned.some((p) => new RegExp(`^${p}$`).test(pkg))) {
       const res = "minor"
-      console.log(` ${package} is pinned to ${res} upgrades only (.ncurc.js)`)
+      console.log(` ${pkg} is pinned to ${res} upgrades only (.ncurc.js)`)
       return res
     }
     return "latest"
   },
 
-  filterResults: (package) => {
-    if (ignored.some((p) => new RegExp(`^${p}$`).test(package))) {
+  filterResults: (pkg) => {
+    if (ignored.some((p) => new RegExp(`^${p}$`).test(pkg))) {
       return
     }
     return true

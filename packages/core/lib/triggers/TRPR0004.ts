@@ -49,8 +49,8 @@ const guiltyAndOffenceCodeMatches = (offence: Offence): boolean => {
   const fullCode = getOffenceFullCode(offence)
   return Boolean(
     offence.Result.some((result) => result.Verdict === CjsVerdict.Guilty) &&
-      fullCode &&
-      offenceCodes.includes(fullCode.substring(0, 7))
+    fullCode &&
+    offenceCodes.includes(fullCode.substring(0, 7))
   )
 }
 
