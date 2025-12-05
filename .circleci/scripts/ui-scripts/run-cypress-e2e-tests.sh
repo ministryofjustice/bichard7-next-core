@@ -6,7 +6,7 @@ CYPRESS_OPTS="--config baseUrl=https://localhost:4443 --reporter ../../node_modu
 TEST_PATTERN="cypress/e2e/**/*.cy.ts"
 CYPRESS_CMD="xargs npx cypress run $CYPRESS_OPTS --spec"
 
-if [[ $API == "1" ]]; then
+if [ "$API" = "1" ] || [ "$API" = "true" ]; then
   echo "Running tests (including API)..."
   circleci tests glob "$TEST_PATTERN" | circleci tests run --command="$CYPRESS_CMD" --split-by=timings
 else
