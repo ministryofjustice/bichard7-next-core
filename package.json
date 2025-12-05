@@ -76,8 +76,10 @@
     "@aws-sdk/client-lambda": "^3.945.0",
     "@aws-sdk/client-rds": "^3.943.0",
     "@aws-sdk/lib-dynamodb": "^3.943.0",
+    "@eslint/compat": "^2.0.0",
     "@swc/core": "^1.15.3",
     "@swc/jest": "^0.2.39",
+    "@next/eslint-plugin-next": "^16.0.7",
     "@types/jest": "30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.17.0",
     "eslint": "^9.39.1",
@@ -97,5 +99,6 @@
     "lint-staged": "^16.2.7",
     "npm-check-updates": "^19.1.2",
     "zod": "^4.1.13"
-  }
+  },
+  "dependencies": {}
 }
