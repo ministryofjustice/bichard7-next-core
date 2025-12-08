@@ -432,6 +432,7 @@ jobs:
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -494,6 +495,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -644,6 +646,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -673,6 +676,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
