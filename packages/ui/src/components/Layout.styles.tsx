@@ -12,4 +12,10 @@ const Banner = styled.div`
   }
 `
 
-export { Banner }
+const CrownContainer = styled.div`
+  display: block;
+  min-width: 100%;
+  padding-left: 30px;
+`
+
+export { Banner, CrownContainer }
