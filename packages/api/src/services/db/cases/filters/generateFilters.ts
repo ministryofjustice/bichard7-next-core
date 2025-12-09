@@ -37,7 +37,7 @@ export const generateFilters = (
     filterByLockedState(database, user, filters.lockedState),
     filterByResolvedCaseDateRange(database, filters),
     filterByAllocatedUsername(database, filters.allocatedUsername),
-    filterByShowCasesWithDateDifference(database, filters.showCasesWithDateDifference)
+    filterByShowCasesWithDateDifference(database, filters.courtDateReceivedDateMismatch)
   ]
 
   return database.connection`

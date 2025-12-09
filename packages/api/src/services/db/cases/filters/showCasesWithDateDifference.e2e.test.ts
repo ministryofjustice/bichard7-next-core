@@ -44,7 +44,7 @@ describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e"
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
       {
-        showCasesWithDateDifference: true,
+        courtDateReceivedDateMismatch: true,
         ...defaultQuery
       },
       user
@@ -60,7 +60,7 @@ describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e"
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
       {
-        showCasesWithDateDifference: false,
+        courtDateReceivedDateMismatch: false,
         ...defaultQuery
       },
       user
