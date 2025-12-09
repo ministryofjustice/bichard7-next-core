@@ -1,7 +1,6 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
 import AutoLoad from "@fastify/autoload"
-import { createSerializerCompiler } from "fastify-zod-openapi"
 import path from "path"
 
 import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
@@ -33,12 +32,6 @@ export default async function ({ auditLogGateway, database }: Gateways) {
 
   await setupZod(fastify)
   await setupSwagger(fastify)
-
-  fastify.setSerializerCompiler(
-    createSerializerCompiler({
-      stringify: JSON.stringify
-    })
-  )
 
   // Autoloaded plugins (no authentication)
   fastify.register(async (instance) => {
