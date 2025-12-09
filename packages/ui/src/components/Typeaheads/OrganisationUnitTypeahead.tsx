@@ -2,9 +2,9 @@ import axios from "axios"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
-import OrganisationUnitApiResponse from "../types/OrganisationUnitApiResponse"
-import { isError } from "../types/Result"
-import { ListWrapper } from "./OrganisationUnitTypeahead.styles"
+import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
+import { isError } from "types/Result"
+import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
   resultIndex: number
@@ -95,7 +95,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
             ? inputItems.map((item, index) => (
                 <li
                   style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
-                  key={`${item}${index}`}
+                  key={`${item.fullOrganisationCode}-${index}`}
                   {...getItemProps({ item, index })}
                 >
                   {item.fullOrganisationCode}

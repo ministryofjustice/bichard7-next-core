@@ -6,6 +6,7 @@ export type Filters = Pick<
   | "asn"
   | "caseAge"
   | "caseState"
+  | "courtDateReceivedDateMismatch"
   | "courtName"
   | "defendantName"
   | "from"
@@ -16,7 +17,6 @@ export type Filters = Pick<
   | "resolvedByUsername"
   | "resolvedFrom"
   | "resolvedTo"
-  | "showCasesWithDateDifference"
   | "to"
 >
 export type Pagination = Pick<ApiCaseQuery, "maxPerPage" | "pageNum">

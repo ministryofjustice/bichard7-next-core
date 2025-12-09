@@ -116,19 +116,19 @@ commands:
     steps:
       - run:
           name: Load ui image
-          command: docker image load < "images/ui:latest"
+          command: docker image load < "images/ui.tar.gz"
 
   load_user_service_image:
     steps:
       - run:
           name: Load user-service image
-          command: docker image load < "images/user-service:latest"
+          command: docker image load < "images/user-service.tar.gz"
 
   load_api_image:
     steps:
       - run:
           name: Load api image
-          command: docker image load < "images/api:latest"
+          command: docker image load < "images/api.tar.gz"
 
   start_services:
     parameters:
@@ -208,6 +208,7 @@ jobs:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -306,6 +307,7 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -336,6 +338,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.message-forwarder-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -429,6 +432,7 @@ jobs:
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.ui-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -464,15 +468,17 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
       - run: ./scripts/build-api-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save -o "images/api:latest" "api:latest"
+            docker image save "api:latest" | pigz > "images/api.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -489,6 +495,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -535,15 +542,17 @@ jobs:
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
       - run: ./scripts/build-ui-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save -o "images/ui:latest" "ui:latest"
+            docker image save "ui:latest" | pigz > "images/ui.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -637,6 +646,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -666,6 +676,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -723,12 +734,13 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
       - run: ./scripts/build-user-service-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save -o "images/user-service:latest" "user-service:latest"
+            docker image save "user-service:latest" | pigz > "images/user-service.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -751,6 +763,7 @@ jobs:
               - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.env-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
                   - equal: [true, << parameters.api >>]
@@ -835,6 +848,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.env-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
                   - equal: [true, << parameters.api >>]

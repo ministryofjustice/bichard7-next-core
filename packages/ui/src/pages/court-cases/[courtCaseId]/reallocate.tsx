@@ -35,6 +35,7 @@ import {
   UserNotesContainer
 } from "../../../styles/reallocate.styles"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
+import searchForceOwners from "services/searchForceOwners"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -76,6 +77,13 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     if (isPost(req)) {
       const { force, note } = formData as { force: string; note?: string }
+
+      const validatedForce = searchForceOwners(courtCase.orgForPoliceFilter?.substring(0, 2) ?? "", force)
+
+      if (validatedForce.length !== 1) {
+        return redirectTo(req.url ?? "/")
+      }
+
       const reallocateResult = await reallocateCourtCase(dataSource, courtCase.errorId, currentUser, force, note)
 
       if (isError(reallocateResult)) {

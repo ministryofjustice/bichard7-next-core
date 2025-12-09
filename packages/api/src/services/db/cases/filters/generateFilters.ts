@@ -9,6 +9,7 @@ import { filterByAllocatedUsername } from "./allocatedUsername"
 import { filterByAsn } from "./asn"
 import { filterByCaseAge } from "./caseAge"
 import { filterByCourtDate } from "./courtDate"
+import { filterByCourtDateReceivedDateMismatch } from "./courtDateReceivedDateMismatch"
 import { filterByCourtName } from "./courtName"
 import { filterByDefendantName } from "./defendantName"
 import { filterByLockedState } from "./lockedState"
@@ -17,7 +18,6 @@ import { filterByReasonAndResolutionStatus } from "./reasonAndResolutionStatus"
 import { filterByReasonCodes } from "./reasonCodes"
 import { filterByResolvedByUsername } from "./resolvedByUsername"
 import { filterByResolvedCaseDateRange } from "./resolvedCaseDateRange"
-import { filterByShowCasesWithDateDifference } from "./showCasesWithDateDifference"
 
 export const generateFilters = (
   database: DatabaseConnection,
@@ -37,7 +37,7 @@ export const generateFilters = (
     filterByLockedState(database, user, filters.lockedState),
     filterByResolvedCaseDateRange(database, filters),
     filterByAllocatedUsername(database, filters.allocatedUsername),
-    filterByShowCasesWithDateDifference(database, filters.showCasesWithDateDifference)
+    filterByCourtDateReceivedDateMismatch(database, filters.courtDateReceivedDateMismatch)
   ]
 
   return database.connection`
