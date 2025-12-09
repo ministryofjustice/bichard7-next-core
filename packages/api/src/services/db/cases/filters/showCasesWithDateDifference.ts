@@ -3,7 +3,7 @@ import type { Row } from "postgres"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-export const filterByShowCasesWithDateDifference = (
+export const filterByCourtDateReceivedDateMismatch = (
   database: DatabaseConnection,
   showCasesWithDateDifference: boolean | undefined
 ): postgres.PendingQuery<Row[]> => {
