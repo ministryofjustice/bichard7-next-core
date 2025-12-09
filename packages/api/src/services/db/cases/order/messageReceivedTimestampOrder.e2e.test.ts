@@ -47,7 +47,7 @@ describe("fetchCasesAndFilter ordering message received at e2e", () => {
   it("will order the message received at by asc", async () => {
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
-      { order: Order.asc, orderBy: OrderBy.messageReceivedAt, ...defaultQuery },
+      { order: Order.asc, orderBy: OrderBy.messageReceivedTimestamp, ...defaultQuery },
       user
     )) as CaseIndexMetadata
 
@@ -60,7 +60,7 @@ describe("fetchCasesAndFilter ordering message received at e2e", () => {
   it("will order the message received at by DESC", async () => {
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
-      { order: Order.desc, orderBy: OrderBy.messageReceivedAt, ...defaultQuery },
+      { order: Order.desc, orderBy: OrderBy.messageReceivedTimestamp, ...defaultQuery },
       user
     )) as CaseIndexMetadata
 
