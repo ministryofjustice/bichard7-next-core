@@ -10,7 +10,7 @@ import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2End
 import { createUser } from "../../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../../useCases/cases/getCases/fetchCasesAndFilter"
 
-describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e", () => {
+describe("fetchCasesAndFilter filtering by courtDateReceivedDateMismatch flag e2e", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let user: User
