@@ -65,6 +65,7 @@ const fetchCasesAndFilter = async (
     asn: query.asn,
     caseAge: query.caseAge,
     caseState: query.caseState,
+    courtDateReceivedDateMismatch: query.courtDateReceivedDateMismatch,
     courtName: query.courtName,
     defendantName: query.defendantName,
     from: query.from,
@@ -75,7 +76,6 @@ const fetchCasesAndFilter = async (
     resolvedByUsername: query.resolvedByUsername,
     resolvedFrom: query.resolvedFrom,
     resolvedTo: query.resolvedTo,
-    showCasesWithDateDifference: query.showCasesWithDateDifference,
     to: query.to
   }
 
