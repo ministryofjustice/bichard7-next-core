@@ -6,6 +6,7 @@
     "install:assets": "./scripts/copy-govuk-frontend-assets.sh && ./scripts/copy-moj-frontend-assets.sh",
     "predev": "./scripts/symlink-node-modules.sh",
     "dev": "next dev -p 4080",
+    "dev:api": "./scripts/run-dev-with-api.sh",
     "prebuild": "./scripts/symlink-node-modules.sh",
     "build": "next build",
     "build:analyse": "ANALYZE=true npm run build",
