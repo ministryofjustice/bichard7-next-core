@@ -59,7 +59,7 @@ describe("apiClient get", () => {
     const result = await apiClient.get("/v1/cases/1")
 
     expect(isError(result)).toBe(true)
-    expect(result).toEqual(new Error("Error: 404 - Not Found"))
+    expect((result as Error).message).toBe("Error: 404 - Not Found")
   })
 
   it("returns an error when the API returns an error response when expecting a string", async () => {
