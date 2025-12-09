@@ -44,13 +44,15 @@ describe("apiClient get", () => {
   })
 
   it("returns an error when the API returns an error response", async () => {
-    mockedAxios.mockResolvedValue({
-      status: 404,
-      statusText: "Not Found",
-      data: { message: "Not Found" },
-      headers: {},
-      config: {} as any
-    } as AxiosResponse)
+    mockedAxios.mockRejectedValue({
+      response: {
+        status: 404,
+        statusText: "Not Found",
+        data: { message: "Not Found" },
+        headers: {},
+        config: {} as any
+      }
+    })
 
     const result = await apiClient.get("/v1/cases/1")
 
@@ -66,7 +68,6 @@ describe("apiClient get", () => {
       headers: {},
       config: {} as any
     } as AxiosResponse)
-
     const result = await apiClient.get<string>("/v1/cases/1")
 
     expect(isError(result)).toBe(true)
