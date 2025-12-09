@@ -1,7 +1,7 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import ApiClient from "./ApiClient"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import type { AxiosResponse } from "axios"
 import { API_LOCATION } from "config"
 
@@ -45,15 +45,16 @@ describe("apiClient get", () => {
   })
 
   it("returns an error when the API returns an error response", async () => {
-    mockedAxios.mockRejectedValue(
-      new AxiosError("", "", {} as any, {} as any, {
+    mockedAxios.mockRejectedValue({
+      response: {
         status: 404,
         statusText: "Not Found",
-        data: { message: "Not Found" },
+        data: { message: "Error: 404 - Not Found" },
         headers: {},
         config: {} as any
-      })
-    )
+      },
+      isAxiosError: true
+    })
 
     const result = await apiClient.get("/v1/cases/1")
 
