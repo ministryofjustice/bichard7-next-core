@@ -1,12 +1,13 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import ApiClient from "./ApiClient"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import type { AxiosResponse } from "axios"
 import { API_LOCATION } from "config"
 
 jest.mock("axios")
 const mockedAxios = axios as jest.MockedFunction<typeof axios>
+mockedAxios.isAxiosError = jest.requireActual("axios").isAxiosError
 
 describe("apiClient get", () => {
   const apiClient = new ApiClient("jwt")
@@ -44,15 +45,15 @@ describe("apiClient get", () => {
   })
 
   it("returns an error when the API returns an error response", async () => {
-    mockedAxios.mockRejectedValue({
-      response: {
+    mockedAxios.mockRejectedValue(
+      new AxiosError("", "", {} as any, {} as any, {
         status: 404,
         statusText: "Not Found",
         data: { message: "Not Found" },
         headers: {},
         config: {} as any
-      }
-    })
+      })
+    )
 
     const result = await apiClient.get("/v1/cases/1")
 
