@@ -40,10 +40,7 @@ export const ApiCaseQuerySchema = z.object({
   asn: z.string().optional(),
   caseAge: z.array(z.nativeEnum(CaseAge)).or(z.nativeEnum(CaseAge)).optional(),
   caseState: z.nativeEnum(ResolutionStatus).optional(),
-  courtDateReceivedDateMismatch: z
-    .string()
-    .transform((val) => val === "on")
-    .optional(),
+  courtDateReceivedDateMismatch: z.coerce.boolean().optional(),
   courtName: z.string().optional(),
   defendantName: z.string().optional().describe("Format: 'De*Name'"),
   from: dateLikeToDate.optional().describe("Format: '2025-03-13'"),
