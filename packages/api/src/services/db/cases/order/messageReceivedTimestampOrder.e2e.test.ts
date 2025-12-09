@@ -52,9 +52,9 @@ describe("fetchCasesAndFilter ordering message received at e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
-    expect(caseMetadata.cases[0].messageReceivedAt).toStrictEqual(firstDate)
-    expect(caseMetadata.cases[1].messageReceivedAt).toStrictEqual(secondDate)
-    expect(caseMetadata.cases[2].messageReceivedAt).toStrictEqual(thirdDate)
+    expect(caseMetadata.cases[0].messageReceivedTimestamp).toStrictEqual(firstDate)
+    expect(caseMetadata.cases[1].messageReceivedTimestamp).toStrictEqual(secondDate)
+    expect(caseMetadata.cases[2].messageReceivedTimestamp).toStrictEqual(thirdDate)
   })
 
   it("will order the message received at by DESC", async () => {
@@ -65,8 +65,8 @@ describe("fetchCasesAndFilter ordering message received at e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
-    expect(caseMetadata.cases[0].messageReceivedAt).toStrictEqual(thirdDate)
-    expect(caseMetadata.cases[1].messageReceivedAt).toStrictEqual(secondDate)
-    expect(caseMetadata.cases[2].messageReceivedAt).toStrictEqual(firstDate)
+    expect(caseMetadata.cases[0].messageReceivedTimestamp).toStrictEqual(thirdDate)
+    expect(caseMetadata.cases[1].messageReceivedTimestamp).toStrictEqual(secondDate)
+    expect(caseMetadata.cases[2].messageReceivedTimestamp).toStrictEqual(firstDate)
   })
 })
