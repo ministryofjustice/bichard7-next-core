@@ -60,7 +60,7 @@ export const convertCaseToCaseIndexDto = (
   errorReport: caseRowForDto.error_report,
   errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
   isUrgent: caseRowForDto.is_urgent,
-  messageReceivedAt: caseRowForDto.msg_received_ts,
+  messageReceivedTimestamp: caseRowForDto.msg_received_ts,
   noteCount: (caseRowForDto as CaseRowForIndexDto).note_count
     ? Number((caseRowForDto as CaseRowForIndexDto).note_count)
     : undefined,

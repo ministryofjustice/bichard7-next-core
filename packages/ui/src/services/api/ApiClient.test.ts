@@ -7,6 +7,7 @@ import { API_LOCATION } from "config"
 
 jest.mock("axios")
 const mockedAxios = axios as jest.MockedFunction<typeof axios>
+mockedAxios.isAxiosError = jest.requireActual("axios").isAxiosError
 
 describe("apiClient get", () => {
   const apiClient = new ApiClient("jwt")
@@ -44,33 +45,21 @@ describe("apiClient get", () => {
   })
 
   it("returns an error when the API returns an error response", async () => {
-    mockedAxios.mockResolvedValue({
-      status: 404,
-      statusText: "Not Found",
-      data: { message: "Not Found" },
-      headers: {},
-      config: {} as any
-    } as AxiosResponse)
+    mockedAxios.mockRejectedValue({
+      response: {
+        status: 404,
+        statusText: "Not Found",
+        data: { message: "Error: 404 - Not Found" },
+        headers: {},
+        config: {} as any
+      },
+      isAxiosError: true
+    })
 
     const result = await apiClient.get("/v1/cases/1")
 
     expect(isError(result)).toBe(true)
-    expect(result).toEqual(new Error("Error: 404 - Not Found"))
-  })
-
-  it("returns an error when the API returns an error response when expecting a string", async () => {
-    mockedAxios.mockResolvedValue({
-      status: 404,
-      statusText: "Not Found",
-      data: { message: "Not Found" },
-      headers: {},
-      config: {} as any
-    } as AxiosResponse)
-
-    const result = await apiClient.get<string>("/v1/cases/1")
-
-    expect(isError(result)).toBe(true)
-    expect(result).toEqual(new Error("Error: 404 - Not Found"))
+    expect((result as Error).message).toBe("Error: 404 - Not Found")
   })
 
   it("can post without a body", async () => {

@@ -66,7 +66,7 @@ describe("retrieve a case", () => {
       errorReport: "HO100304||br7:ArrestSummonsNumber",
       errorStatus: "Unresolved",
       isUrgent: 1,
-      messageReceivedAt: "2025-05-23T00:00:00.000Z",
+      messageReceivedTimestamp: "2025-05-23T00:00:00.000Z",
       notes: [],
       orgForPoliceFilter: "01",
       phase: 1,

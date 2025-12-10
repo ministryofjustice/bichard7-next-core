@@ -6,6 +6,7 @@
     "install:assets": "./scripts/copy-govuk-frontend-assets.sh && ./scripts/copy-moj-frontend-assets.sh",
     "predev": "./scripts/symlink-node-modules.sh",
     "dev": "next dev -p 4080",
+    "dev:api": "./scripts/run-dev-with-api.sh",
     "prebuild": "./scripts/symlink-node-modules.sh",
     "build": "next build",
     "build:analyse": "ANALYZE=true npm run build",
@@ -43,7 +44,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^7.1.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.311",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.312",
     "axios": "^1.13.2",
     "cookie": "^1.0.2",
     "cookie-signature": "^1.2.2",
