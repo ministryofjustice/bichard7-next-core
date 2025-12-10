@@ -1,4 +1,6 @@
 import { randomUUID } from "crypto"
+import expect from "expect"
+import { promises as fs } from "fs"
 import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
@@ -17,22 +19,6 @@ export class LedsApi implements PoliceApi {
 
   constructor(private readonly bichard: LedsBichard) {
     this.mockServerClient = new MockServer(this.bichard.config.ledsApiUrl)
-  }
-
-  async checkMocks(): Promise<void> {
-    let expectationPaths: string[] = []
-    for (let index = 0; index < 3; index++) {
-      const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
-      if (unusedMocks.length === 0) {
-        return
-      }
-
-      expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
-
-      await new Promise((resolve) => setTimeout(resolve, 2_000))
-    }
-
-    throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
   }
 
   createValidRecord: (record: string) => Promise<void>
@@ -83,19 +69,70 @@ export class LedsApi implements PoliceApi {
     await this.mockServerClient.clear()
   }
 
-  recordMocks(): Promise<void> {
-    throw new Error("Method not implemented.")
+  async recordMocks(): Promise<void> {
+    const mocks = await this.mockServerClient.fetchMocks()
+    await fs.writeFile(`${this.bichard.outputDir}/mocks.json`, JSON.stringify(mocks))
   }
 
-  recordRequests(): Promise<void> {
-    throw new Error("Method not implemented.")
+  async recordRequests(): Promise<void> {
+    const requests = await this.mockServerClient.fetchRequests()
+    await fs.writeFile(`${this.bichard.outputDir}/requests.json`, JSON.stringify(requests))
   }
 
-  expectNoRequests: () => Promise<void>
+  async checkMocks(): Promise<void> {
+    let expectationPaths: string[] = []
+    for (let index = 0; index < 3; index++) {
+      const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
+      if (unusedMocks.length === 0) {
+        return
+      }
 
-  expectNoUpdates: () => Promise<void>
+      expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
 
-  expectNotUpdated: () => Promise<void>
+      await new Promise((resolve) => setTimeout(resolve, 2_000))
+    }
+
+    throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
+  }
+
+  async expectNoRequests(): Promise<void> {
+    for (let index = 0; index < 2; index++) {
+      const requests = await this.mockServerClient.fetchRequests()
+      if (requests.length > 0) {
+        expect(requests).toHaveLength(0)
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2_000))
+    }
+  }
+
+  async expectNoUpdates(): Promise<void> {
+    for (let index = 0; index < 2; index++) {
+      const updates = (await this.mockServerClient.fetchRequests()).filter((request) =>
+        request.path.startsWith("/people/")
+      )
+
+      if (updates.length > 0) {
+        expect(updates).toHaveLength(0)
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2_000))
+    }
+  }
+
+  async expectNotUpdated(): Promise<void> {
+    for (let index = 0; index < 2; index++) {
+      const updates = (await this.mockServerClient.fetchMocks()).filter(
+        (mock) => mock.path.startsWith("/people/") && !mock.request
+      )
+
+      if (updates.length > 0) {
+        expect(updates).toHaveLength(0)
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 2_000))
+    }
+  }
 
   expectUpdateIncludes: (data: string) => Promise<void>
 }

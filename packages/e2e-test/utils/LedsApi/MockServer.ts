@@ -33,13 +33,31 @@ export default class MockServer {
     })
   }
 
-  async retrieveUnusedMocks() {
+  async fetchMocks(): Promise<RequestResponseMock[]> {
     const mocksResponse = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/mocks`, {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
     })
 
-    return mocksResponse.data.filter((mock) => !mock.request)
+    return mocksResponse.data
+  }
+
+  async retrieveUnusedMocks(): Promise<RequestResponseMock[]> {
+    const mocks = await this.fetchMocks()
+
+    return mocks.filter((mock) => !mock.request)
+  }
+
+  async fetchRequests(): Promise<RequestResponseMock[]> {
+    const response = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/requests`, {
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      })
+    })
+
+    const ignoredPaths = ["/clear", "/mocks", "/requests"]
+
+    return response.data.filter((request) => !ignoredPaths.includes(request.path))
   }
 }
