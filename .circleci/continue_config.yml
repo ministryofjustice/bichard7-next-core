@@ -832,6 +832,9 @@ jobs:
     parallelism: 10
     parameters:
       <<: *ui_params
+      use-leds:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
@@ -897,6 +900,7 @@ jobs:
             RECORD: "true"
             NEXTUI: "true"
             MESSAGE_ENTRY_POINT: "s3"
+            USE_LEDS: << parameters.use-leds >>
           command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
 
@@ -984,7 +988,25 @@ workflows:
             - build_ui_image
             - build_user_service_image
       - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_leds
+          use-leds: true
+          requires:
+            - build_ui_image
+            - build_user_service_image
+      - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
+          api: true
+          forces-with-api-enabled: "01"
+          api-case-details: true
+          api-case-list: true
+          api-case-resubmit: true
+          requires:
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_api_leds
+          use-leds: true
           api: true
           forces-with-api-enabled: "01"
           api-case-details: true
