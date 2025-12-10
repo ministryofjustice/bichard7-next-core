@@ -2,8 +2,8 @@ import axios from "axios"
 import https from "node:https"
 
 import { API_LOCATION } from "config"
-import { ApiError } from "../../types/ApiError"
-import type PromiseResult from "../../types/PromiseResult"
+import { ApiError } from "types/ApiError"
+import type PromiseResult from "types/PromiseResult"
 
 export enum HttpMethod {
   GET = "GET",
