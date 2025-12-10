@@ -48,7 +48,8 @@ class ApiClient {
       return response.data
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        return new Error(err?.response?.data?.message)
+        const msg = err.response?.data?.message
+        return new Error(err.response?.status + (msg ? " " + msg : ""))
       }
 
       return err as Error
