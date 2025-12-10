@@ -3,20 +3,22 @@ import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { Order, OrderBy, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../../useCases/cases/getCases/fetchCasesAndFilter"
 
-describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e", () => {
+describe("fetchCasesAndFilter ordering message received at e2e", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let user: User
 
+  const firstDate = new Date("2001-09-26")
+  const secondDate = new Date("2008-01-26")
+  const thirdDate = new Date("2013-10-16")
   const defaultQuery: ApiCaseQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
-  const differentCourtDate = new Date("2001-09-26")
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
@@ -26,8 +28,10 @@ describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e"
     await helper.dynamo.clearDynamo()
 
     user = await createUser(helper.postgres)
-    await createCases(helper.postgres, 2, {
-      0: { courtDate: differentCourtDate }
+    await createCases(helper.postgres, 3, {
+      0: { messageReceivedAt: secondDate },
+      1: { messageReceivedAt: firstDate },
+      2: { messageReceivedAt: thirdDate }
     })
   })
 
@@ -40,34 +44,29 @@ describe("fetchCasesAndFilter filtering by showCasesWithDateDifference flag e2e"
     await helper.postgres.close()
   })
 
-  it("will filter cases with date differences", async () => {
+  it("will order the message received at by asc", async () => {
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
-      {
-        showCasesWithDateDifference: true,
-        ...defaultQuery
-      },
+      { order: Order.asc, orderBy: OrderBy.messageReceivedTimestamp, ...defaultQuery },
       user
     )) as CaseIndexMetadata
 
-    expect(caseMetadata.cases).toHaveLength(1)
-    expect(caseMetadata.totalCases).toBe(1)
-    expect(caseMetadata.returnCases).toBe(1)
-    expect(caseMetadata.cases[0].courtDate).toStrictEqual(differentCourtDate)
+    expect(caseMetadata.cases).toHaveLength(3)
+    expect(caseMetadata.cases[0].messageReceivedTimestamp).toStrictEqual(firstDate)
+    expect(caseMetadata.cases[1].messageReceivedTimestamp).toStrictEqual(secondDate)
+    expect(caseMetadata.cases[2].messageReceivedTimestamp).toStrictEqual(thirdDate)
   })
 
-  it("will not filter cases with date differences when flag is false", async () => {
+  it("will order the message received at by DESC", async () => {
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
-      {
-        showCasesWithDateDifference: false,
-        ...defaultQuery
-      },
+      { order: Order.desc, orderBy: OrderBy.messageReceivedTimestamp, ...defaultQuery },
       user
     )) as CaseIndexMetadata
 
-    expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.totalCases).toBe(2)
-    expect(caseMetadata.returnCases).toBe(2)
+    expect(caseMetadata.cases).toHaveLength(3)
+    expect(caseMetadata.cases[0].messageReceivedTimestamp).toStrictEqual(thirdDate)
+    expect(caseMetadata.cases[1].messageReceivedTimestamp).toStrictEqual(secondDate)
+    expect(caseMetadata.cases[2].messageReceivedTimestamp).toStrictEqual(firstDate)
   })
 })
