@@ -841,6 +841,7 @@ jobs:
       WORKSPACE: local-next
       AUTH_TYPE: user-service
       TZ: "Europe/London"
+      USE_LEDS: << parameters.use-leds >>
     steps:
       - unless:
           condition:
@@ -900,7 +901,6 @@ jobs:
             RECORD: "true"
             NEXTUI: "true"
             MESSAGE_ENTRY_POINT: "s3"
-            USE_LEDS: << parameters.use-leds >>
           command: bash ./scripts/run_test_chunk.sh "not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC"
       - save_artifacts
 
