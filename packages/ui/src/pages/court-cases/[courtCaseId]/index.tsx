@@ -147,9 +147,9 @@ export const getServerSideProps = withMultipleServerSideProps(
         logger.info("[API] Using API to resubmit")
         const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
-        if (isError(resubmitResult)) {
+        if (isApiError(resubmitResult)) {
           const error = resubmitResult
-          if (/404/.test(error.message)) {
+          if (error.status === 404) {
             return {
               notFound: true
             }
