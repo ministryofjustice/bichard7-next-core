@@ -36,19 +36,24 @@ class ApiClient {
       Authorization: `Bearer ${this.jwt}`
     }
 
-    const response = await axios({
-      url: `${API_LOCATION}${route}`,
-      method,
-      headers,
-      data: method === HttpMethod.GET ? undefined : bodyContent,
-      httpsAgent
-    })
+    try {
+      const response = await axios({
+        url: `${API_LOCATION}${route}`,
+        method,
+        headers,
+        data: method === HttpMethod.GET ? undefined : bodyContent,
+        httpsAgent
+      })
 
-    if (response.status >= 200 && response.status < 300) {
       return response.data
-    }
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const msg = err.response?.data?.message
+        return new Error(err.response?.status + (msg ? " " + msg : ""))
+      }
 
-    return new Error(`Error: ${response.status} - ${response.statusText}`)
+      return err as Error
+    }
   }
 }
 
