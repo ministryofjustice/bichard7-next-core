@@ -106,8 +106,8 @@ describe("updateErrorListRecord", () => {
         SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
       )[0]
 
-      expect(JSON.stringify(updatedRecord.hearing_outcome)).toBe(JSON.stringify(result.outputMessage))
-      expect(JSON.stringify(updatedRecord.updated_hearing_outcome)).toBe(JSON.stringify(result.outputMessage))
+      expect(updatedRecord.hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.outputMessage)))
+      expect(updatedRecord.updated_hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.outputMessage)))
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })
@@ -131,8 +131,8 @@ describe("updateErrorListRecord", () => {
         SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
       )[0]
 
-      expect(JSON.stringify(updatedRecord.hearing_outcome)).toBe(JSON.stringify(result.hearingOutcome))
-      expect(JSON.stringify(updatedRecord.updated_hearing_outcome)).toBe(JSON.stringify(result.hearingOutcome))
+      expect(updatedRecord.hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.hearingOutcome)))
+      expect(updatedRecord.updated_hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.hearingOutcome)))
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })
