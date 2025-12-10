@@ -1,7 +1,7 @@
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?XML VERSION="1.0" STANDALONE="YES"?>
   <CXE01>
@@ -18,7 +18,9 @@ export default (_: string, { policeApi }: Bichard) => [
     </ASI>
     <GMT>000008073ENQR004540S</GMT>
   </CXE01>`,
-    expectedRequest: ""
-  },
+    asn: "",
+    expectedRequest: "",
+    count: 1
+  }),
   policeApi.generateDummyUpdate()
 ]

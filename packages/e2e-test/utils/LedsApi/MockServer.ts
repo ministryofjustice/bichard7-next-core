@@ -3,7 +3,7 @@ import https from "https"
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-type RequestResponseMock = {
+export type RequestResponseMock = {
   method: "GET" | "POST" | "PUT"
   path: string
   response: {
@@ -34,14 +34,12 @@ export default class MockServer {
   }
 
   async retrieveUnusedMocks() {
-    const mocksResponse = await axios.get(`${this.apiUrl}/mocks`, {
+    const mocksResponse = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/mocks`, {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
     })
 
-    const mocks = JSON.parse(mocksResponse.data) as RequestResponseMock[]
-
-    return mocks.filter((mock) => !mock.request)
+    return mocksResponse.data.filter((mock) => !mock.request)
   }
 }

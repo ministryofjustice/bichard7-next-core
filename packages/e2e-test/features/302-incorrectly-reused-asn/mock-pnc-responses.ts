@@ -1,7 +1,7 @@
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -14,15 +14,16 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000008073ENQR000728R</GMT>
     </CXE01>`,
+    asn: "",
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K21/23U     TWICEBREACHE            </IDS><CCR>K21/2732/17A                   </CCR><COU>I2576                                                                       TWICEBREACHED/ASNREUSED                               261020090000</COU><CCH>K001              CJ03510 </CCH><ADJ>INO PLEA TAKENNOT GUILTY    261020090000 </ADJ><DIS>I2006                      00                                                                            </DIS>",
     count: 1
   }),
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -37,7 +38,8 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000010073ENQR000729R</GMT>
     </CXE01>`,
+    asn: "",
     expectedRequest: "",
     count: 2
-  }
+  })
 ]
