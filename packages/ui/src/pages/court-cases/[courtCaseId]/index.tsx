@@ -45,6 +45,7 @@ import logger from "utils/logger"
 import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
+import { isApiError } from "types/ApiError"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
@@ -235,9 +236,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       logger.info("[API] Using API to fetch case details")
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
 
-      if (isError(apiCase)) {
+      if (isApiError(apiCase)) {
         const error = apiCase
-        if (/404/.test(error.message)) {
+        if (error.status === 404) {
           return {
             notFound: true
           }
