@@ -20,12 +20,18 @@ export class LedsApi implements PoliceApi {
   }
 
   async checkMocks(): Promise<void> {
-    const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
-    if (unusedMocks.length === 0) {
-      return
+    let expectationPaths: string[] = []
+    for (let index = 0; index < 3; index++) {
+      const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
+      if (unusedMocks.length === 0) {
+        return
+      }
+
+      expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
+
+      await new Promise((resolve) => setTimeout(resolve, 2_000))
     }
 
-    const expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
     throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
   }
 
