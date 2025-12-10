@@ -1,4 +1,5 @@
 import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { randomUUID } from "crypto"
 import fs from "fs"
 import type Note from "services/entities/Note"
@@ -46,10 +47,12 @@ const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtC
   const hearingOutcome =
     overrides?.hearingOutcome ??
     (overrides?.phase === 2 ? getAnnotatedPncUpdateDatasetXml() : DummyMultipleOffencesAho.hearingOutcomeXml)
+  const hearingOutcomeJson = parseHearingOutcome(hearingOutcome)
 
   return (await getDataSource()).getRepository(CourtCase).create({
     ...DummyCourtCase,
     hearingOutcome,
+    hearingOutcomeJson,
     errorCount: 1,
     errorReason: "HO100102",
     errorReport: "HO100102||ds:NextHearingDate",
