@@ -163,7 +163,7 @@ const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathn
     method: req.method || "UNKNOWN",
     path: pathname,
     // Clone headers to prevent issues with Node's Headers object
-    headers: JSON.parse(JSON.stringify(req.headers)),
+    headers: structuredClone(req.headers),
     body: requestBody
   }
 
