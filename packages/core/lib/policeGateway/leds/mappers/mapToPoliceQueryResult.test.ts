@@ -1,6 +1,6 @@
-import type { AsnQueryResponse } from "../../../types/leds/AsnQueryResponse"
+import type { AsnQueryResponse } from "../../../../types/leds/AsnQueryResponse"
 
-import ledsAsnQueryResponse from "../../../tests/fixtures/leds-asn-query-response-001.json"
+import ledsAsnQueryResponse from "../../../../tests/fixtures/leds-asn-query-response-001.json"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 
 describe("mapToPoliceQueryResult", () => {
