@@ -45,6 +45,7 @@ import logger from "utils/logger"
 import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
+import { isApiError } from "types/ApiError"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
@@ -148,7 +149,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
         if (isError(resubmitResult)) {
           const error = resubmitResult
-          if (/404/.test(error.message)) {
+          if (isApiError(error) && error.status === 404) {
             return {
               notFound: true
             }
@@ -237,7 +238,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
       if (isError(apiCase)) {
         const error = apiCase
-        if (/404/.test(error.message)) {
+        if (isApiError(error) && error.status === 404) {
           return {
             notFound: true
           }
