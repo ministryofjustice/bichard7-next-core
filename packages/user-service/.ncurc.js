@@ -13,7 +13,7 @@ const pinned = [
   "@next/eslint-plugin-next"
 ]
 const ignored = ["eslint"]
-const skipped = []
+const skipped = [{ package: "cypress-circleci-reporter", version: "0.4.0", reason: "Not compatible with Node v24" }]
 
 module.exports = {
   filter: (pkg) => {
@@ -33,11 +33,13 @@ module.exports = {
     return "latest"
   },
 
-  filterResults: (pkg, { upgradedVersion }) => {
+  filterResults: (pkg, { upgradedVersion }, reason) => {
     if (ignored.some((ignore) => ignore.package === pkg)) {
       return false
     }
-    if (skipped.some((skip) => skip.package === pkg && skip.version === upgradedVersion)) {
+    const skippedItem = skipped.find((skip) => skip.package === pkg && skip.version === upgradedVersion)
+    if (skippedItem) {
+      console.log(`Skipping ${pkg} upgrade to ${upgradedVersion}: ${skippedItem.reason} (.ncurc.js)`)
       return false
     }
     return true

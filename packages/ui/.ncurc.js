@@ -1,3 +1,5 @@
+const { version } = require("os")
+
 /*
   Pinned:
   - cookies-next
@@ -13,31 +15,33 @@
 */
 const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next"]
 const ignored = []
-const skipped = [{ package: "next", version: "13.4.13" }]
+const skipped = [
+  { package: "next", version: "13.4.13" },
+  { package: "cypress-circleci-reporter", version: "0.4.0", reason: "Not compatible with Node v24" }
+]
 
 module.exports = {
   filter: (pkg) => {
     if (ignored.some((ignore) => ignore === pkg)) {
       return false
     }
-
     return true
   },
-
   target: (pkg) => {
     if (pinned.some((pin) => pin === pkg)) {
       const res = "minor"
-      console.log(` ${pkg} is pinned to ${res} upgrades only (.ncurc.js)`)
+      console.log(`${pkg} is pinned to ${res} upgrades only (.ncurc.js)`)
       return res
     }
     return "latest"
   },
-
   filterResults: (pkg, { upgradedVersion }) => {
-    if (ignored.some((ignore) => ignore.pkg === pkg)) {
+    if (ignored.some((ignore) => ignore === pkg)) {
       return false
     }
-    if (skipped.some((skip) => skip.pkg === pkg && skip.version === upgradedVersion)) {
+    const skippedItem = skipped.find((skip) => skip.package === pkg && skip.version === upgradedVersion)
+    if (skippedItem) {
+      console.log(`Skipping ${pkg} upgrade to ${upgradedVersion}: ${skippedItem.reason} (.ncurc.js)`)
       return false
     }
     return true

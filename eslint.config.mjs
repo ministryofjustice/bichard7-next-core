@@ -1,14 +1,20 @@
 import { fixupPluginRules } from "@eslint/compat"
 import { FlatCompat } from "@eslint/eslintrc"
 import js from "@eslint/js"
+import nextPlugin from "@next/eslint-plugin-next"
 import typescriptEslint from "@typescript-eslint/eslint-plugin"
 import tsParser from "@typescript-eslint/parser"
+import cypressPlugin from "eslint-plugin-cypress"
 import esImport from "eslint-plugin-import"
 import jest from "eslint-plugin-jest"
+import jsxA11y from "eslint-plugin-jsx-a11y"
 import mocha from "eslint-plugin-mocha"
 import perfectionist from "eslint-plugin-perfectionist"
+import reactPlugin from "eslint-plugin-react"
+import reactHooksPlugin from "eslint-plugin-react-hooks"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import prettierPlugin from "eslint-plugin-prettier"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -79,11 +85,13 @@ export default [
     ignores: [
       "dist/*",
       "docs/*",
+      "scripts/**/*",
       "**/jest.setup.ts",
       "**/node_modules",
       "packages/*/build.js",
       "packages/*/build/*",
       "packages/*/dist/*",
+      "packages/*/site/*",
       "packages/*/scripts/utility*",
       "packages/e2e-test/scripts",
       "packages/ui/cypress.config.ts",
@@ -155,7 +163,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       ecmaVersion: 2020,
-      sourceType: "script"
+      sourceType: "module"
     },
 
     rules: {
@@ -248,10 +256,24 @@ export default [
       "require-await": "off"
     }
   },
-  ...compat.extends("plugin:@next/next/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`])
-  })),
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.{js,jsx,ts,tsx}`]),
+    plugins: {
+      "@next/next": nextPlugin,
+      react: fixupPluginRules(reactPlugin),
+      "react-hooks": fixupPluginRules(reactHooksPlugin),
+      "jsx-a11y": jsxA11y
+    },
+    settings: {
+      react: {
+        version: "detect"
+      }
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules
+    }
+  },
   // Apply tsconfig for Next.js packages
   ...nextPackages.map((pkg) => createPackageConfig(pkg)),
   ...compat.extends("prettier", "plugin:prettier/recommended").map((config) => ({
@@ -276,28 +298,22 @@ export default [
       "jest/no-conditional-expect": "off"
     }
   },
-  ...compat
-    .extends("next", "plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
-    .map((config) => ({
-      ...config,
-      files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
-      languageOptions: {
-        ...config.languageOptions,
-        parser: tsParser
-      }
-    })),
   // TSX configs for Next.js packages
   ...nextPackages.map((pkg) => ({
     files: [`packages/${pkg}/**/*.tsx`],
     plugins: {
-      "@typescript-eslint": typescriptEslint
+      "@typescript-eslint": typescriptEslint,
+      import: fixupPluginRules(esImport),
+      prettier: prettierPlugin
     },
     languageOptions: {
       ecmaVersion: 2020,
-      sourceType: "script",
+      sourceType: "module",
+      parser: tsParser,
       parserOptions: {
-        parserOptions: {
-          sourceType: "module"
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true
         },
         project: `./packages/${pkg}/tsconfig.json`,
         tsconfigRootDir: __dirname
@@ -305,8 +321,9 @@ export default [
     },
     rules: nextJsTsxRules
   })),
-  {
-    files: nextPackages.flatMap((pkg) => [
+
+  ...nextPackages.map((pkg) => ({
+    files: [
       `packages/${pkg}/**/_*.ts`,
       `packages/${pkg}/**/_*.tsx`,
       `packages/${pkg}/src/pages/**/*.ts`,
@@ -315,16 +332,19 @@ export default [
       `packages/${pkg}/**/*.config.ts`,
       `packages/${pkg}/test/helpers/**/*.ts`,
       `packages/${pkg}/cypress/**/*.ts`
-    ]),
-
+    ],
     languageOptions: {
-      parser: tsParser
+      parser: tsParser,
+      parserOptions: {
+        project: `./packages/${pkg}/tsconfig.json`,
+        tsconfigRootDir: __dirname
+      }
     },
-
     rules: {
       "import/no-extraneous-dependencies": "off"
     }
-  },
+  })),
+
   {
     files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.test.*`]),
 
@@ -332,10 +352,15 @@ export default [
       "@typescript-eslint/no-explicit-any": "off"
     }
   },
-  ...compat.extends("plugin:cypress/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`])
-  })),
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`]),
+    plugins: {
+      cypress: fixupPluginRules(cypressPlugin)
+    },
+    rules: {
+      ...cypressPlugin.configs.recommended.rules
+    }
+  },
   {
     files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`]),
 
