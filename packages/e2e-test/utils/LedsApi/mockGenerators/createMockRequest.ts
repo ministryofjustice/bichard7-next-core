@@ -15,20 +15,14 @@ type CreateMockRequestOptions<T> = {
     }
 )
 
-const createMockRequest = <T>({ path, headers, body, exactBodyMatch }: CreateMockRequestOptions<T>): HttpRequest => ({
+const createMockRequest = <T>({ path, headers, body }: CreateMockRequestOptions<T>): HttpRequest => ({
   method: "POST",
   path,
   headers: headers ?? {
     Accept: "application/json",
     "X-Leds-Correlation-Id": [".*"]
   },
-  body: body
-    ? {
-        type: "JSON",
-        json: body,
-        matchType: exactBodyMatch ? "STRICT" : "ONLY_MATCHING_FIELDS"
-      }
-    : undefined
+  body: body ?? {}
 })
 
 export default createMockRequest

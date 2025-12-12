@@ -19,7 +19,7 @@ Feature: {050} R3.4_BR7_YZ Force Code
     Given the data for this test is in the PNC
       And "input-message" is received
 
-  @Must @NextUI
+  @Must @NextUI @ExcludedOnLeds
   Scenario: YZ Force code is used in logs
     Given I am logged in as "generalhandler"
       And I view the list of exceptions

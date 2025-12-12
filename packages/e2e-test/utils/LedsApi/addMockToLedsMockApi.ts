@@ -9,17 +9,20 @@ const addMockToLedsMockApi = async (bichard: LedsBichard): Promise<void> => {
 
   bichard.policeApi.mocks = mockRequestsAndResponses(`${bichard.specFolder}/pnc-data.xml`, bichard)
 
-  await bichard.policeApi.mockServerClient.clear("", "ALL")
+  await bichard.policeApi.mockServerClient.clear()
 
   for (const mock of bichard.policeApi.mocks) {
-    await bichard.policeApi.mockServerClient.mockWithCallback(
-      mock.request,
-      () => mock.response,
-      mock.count,
-      undefined,
-      undefined,
-      mock.id
-    )
+    await bichard.policeApi.mockServerClient.addMock({
+      path: mock.request.path as unknown as string,
+      method: mock.request.method as "GET" | "POST",
+
+      response: {
+        status: mock.response.statusCode as number,
+        body: mock.response.body as {},
+        headers: mock.response.headers as {}
+      }
+      // id: mock.id
+    })
   }
 }
 
