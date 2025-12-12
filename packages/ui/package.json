@@ -76,7 +76,7 @@
     "@next/eslint-plugin-next": "^16.0.3",
     "@stdlib/random-base-exponential": "^0.2.1",
     "@stdlib/random-sample": "^0.2.1",
-    "@swc/core": "^1.15.2",
+    "@swc/core": "^1.15.3",
     "@swc/jest": "^0.2.39",
     "@testing-library/cypress": "^10.1.0",
     "@testing-library/jest-dom": "^6.9.1",
