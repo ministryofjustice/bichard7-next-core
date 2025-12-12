@@ -9,7 +9,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         " js-enabled" + ("noModule" in HTMLScriptElement.prototype ? " govuk-frontend-supported" : "")
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const GovUkFrontend = require("govuk-frontend")
     GovUkFrontend.initAll()
   }, [])

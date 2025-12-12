@@ -15,7 +15,6 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   async (
     context: GetServerSidePropsContext<ParsedUrlQuery>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<GetServerSidePropsResult<{ [key: string]: any }>> => {
     const { req, res } = context as AuthenticationServerSidePropsContext
     const connection = getConnection()

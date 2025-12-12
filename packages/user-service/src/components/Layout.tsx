@@ -15,7 +15,7 @@ interface Props {
   showPhaseBanner?: boolean
 }
 
-/* eslint-disable jsx-a11y/alt-text, @next/next/no-img-element */
+/* eslint-disable @next/next/no-img-element */
 const FakeAssetForNoJsStatsGathering = () => (
   <noscript>
     <img src="/assets/nojs.png" className="govuk-!-display-none" />
@@ -24,7 +24,7 @@ const FakeAssetForNoJsStatsGathering = () => (
 
 const ScreenSizeStats = () => <script src={`${basePath}/js/grabScreenSize.js`} async />
 
-/* eslint-enable jsx-a11y/alt-text, @next/next/no-img-element */
+/* eslint-enable @next/next/no-img-element */
 const Layout = ({ children, user, hasAccessTo, showPhaseBanner = true }: Props) => (
   <>
     <FakeAssetForNoJsStatsGathering />
