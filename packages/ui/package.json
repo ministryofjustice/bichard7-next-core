@@ -15,7 +15,7 @@
     "prelint": "./scripts/symlink-node-modules.sh",
     "lint": "eslint .",
     "prelint:fix": "./scripts/symlink-node-modules.sh",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "eslint --fix .",
     "cypress:open": "cypress open",
     "cypress:open:docker": "cypress open --config baseUrl='https://localhost:4443'",
     "cypress:run": "cypress run",
