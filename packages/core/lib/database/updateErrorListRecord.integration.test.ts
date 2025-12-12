@@ -34,6 +34,8 @@ const snapshotExclusions = {
   msg_received_ts: expect.any(Date),
   error_insert_ts: expect.any(Date),
   create_ts: expect.any(Date),
+  hearing_outcome: expect.any(Object),
+  updated_hearing_outcome: expect.any(Object),
   annotated_msg: expect.any(String),
   updated_msg: expect.any(String),
   message_id: expect.any(String)
@@ -104,6 +106,8 @@ describe("updateErrorListRecord", () => {
         SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
       )[0]
 
+      expect(updatedRecord.hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.outputMessage)))
+      expect(updatedRecord.updated_hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.outputMessage)))
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })
@@ -127,6 +131,8 @@ describe("updateErrorListRecord", () => {
         SELECT * FROM br7own.error_list WHERE error_id = ${recordId}`
       )[0]
 
+      expect(updatedRecord.hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.hearingOutcome)))
+      expect(updatedRecord.updated_hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.hearingOutcome)))
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })
