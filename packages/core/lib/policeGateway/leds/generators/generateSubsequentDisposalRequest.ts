@@ -3,19 +3,20 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
+import type { EndpointPayload } from "../../../../types/leds/EndpointPayload"
 import type { SubsequentDisposalResultsRequest } from "../../../../types/leds/SubsequentDisposalResultsRequest"
 
 import { subsequentDisposalResultsRequestSchema } from "../../../../schemas/leds/subsequentDisposalResultsRequest"
 import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
-import { findCourtCaseId } from "../mapToAddDisposalRequest/findCourtCaseId"
-import mapToSubsequentDisposalRequest from "../mapToSubsequentDisposalRequest/mapToSubsequentDisposalRequest"
+import { findCourtCaseId } from "../mappers/mapToAddDisposalRequest/findCourtCaseId"
+import mapToSubsequentDisposalRequest from "../mappers/mapToSubsequentDisposalRequest"
 
-export const subsequentDisposal = (
+export const generateSubsequentDisposalRequest = (
   request: PoliceUpdateRequest,
   personId: string,
   pncUpdateDataset: PncUpdateDataset
-): PoliceApiError | { endpoint: string; requestBody: SubsequentDisposalResultsRequest } => {
+): EndpointPayload<SubsequentDisposalResultsRequest> | PoliceApiError => {
   if (request.operation !== PncOperation.DISPOSAL_UPDATED && request.operation !== PncOperation.SENTENCE_DEFERRED) {
     return new PoliceApiError(["mapToRemandRequest called with a non-disposal-updated request"])
   }

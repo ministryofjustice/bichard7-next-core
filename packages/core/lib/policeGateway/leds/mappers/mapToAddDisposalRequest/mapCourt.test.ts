@@ -1,4 +1,4 @@
-import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../phase3/lib/getPncCourtCode"
+import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../../../phase3/lib/getPncCourtCode"
 import mapCourt from "./mapCourt"
 
 describe("mapCourt", () => {

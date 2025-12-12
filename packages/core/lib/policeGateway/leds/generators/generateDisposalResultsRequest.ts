@@ -4,18 +4,19 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
 import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalRequest"
+import type { EndpointPayload } from "../../../../types/leds/EndpointPayload"
 
 import { addDisposalRequestSchema } from "../../../../schemas/leds/addDisposalRequest"
 import PoliceApiError from "../../PoliceApiError"
 import endpoints from "../endpoints"
-import { findCourtCaseId } from "../mapToAddDisposalRequest/findCourtCaseId"
-import mapToAddDisposalRequest from "../mapToAddDisposalRequest/mapToAddDisposalRequest"
+import { mapToAddDisposalRequest } from "../mappers/mapToAddDisposalRequest"
+import { findCourtCaseId } from "../mappers/mapToAddDisposalRequest/findCourtCaseId"
 
-export const normalDisposal = (
+export const generateDisposalResultsRequest = (
   request: PoliceUpdateRequest,
   personId: string,
   pncUpdateDataset: PncUpdateDataset
-): PoliceApiError | { endpoint: string; requestBody: AddDisposalRequest } => {
+): EndpointPayload<AddDisposalRequest> | PoliceApiError => {
   if (request.operation !== PncOperation.NORMAL_DISPOSAL) {
     return new PoliceApiError(["mapToRemandRequest called with a non-normal-disposal request"])
   }

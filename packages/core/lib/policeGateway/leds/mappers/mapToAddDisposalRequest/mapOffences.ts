@@ -1,12 +1,12 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Adjudication, Offence, Plea } from "../../../../types/leds/DisposalRequest"
+import type { Adjudication, Offence, Plea } from "../../../../../types/leds/AddDisposalRequest"
 
 import {
   type PncUpdateCourtHearingAdjudicationAndDisposal,
   PncUpdateType
-} from "../../../../phase3/types/HearingDetails"
-import { convertDate } from "../dateTimeConverter"
+} from "../../../../../phase3/types/HearingDetails"
+import { convertDate } from "../../dateTimeConverter"
 import { findOffenceId } from "./findOffenceId"
 import { parseDisposalQuantity } from "./parseDisposalQuantity"
 import { toTitleCase } from "./toTitleCase"
