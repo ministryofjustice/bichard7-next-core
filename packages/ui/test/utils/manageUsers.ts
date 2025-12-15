@@ -28,23 +28,39 @@ const getDummyUser = async (overrides?: Partial<User>): Promise<User> =>
 
 const insertUserIntoGroup = async (emailAddress: string, groupName: string): Promise<InsertResult> => {
   const dataSource = await getDataSource()
-  return dataSource.manager.query(
-    `
-    INSERT INTO
-      br7own.users_groups(
-      group_id,
-      user_id
+  const qr = dataSource.createQueryRunner()
+
+  try {
+    await qr.startTransaction()
+
+    const result = qr.query(
+      `
+      INSERT INTO
+        br7own.users_groups(
+        group_id,
+        user_id
+      )
+      SELECT G.id, U.id FROM br7own.users AS U, br7own."groups" AS G
+      WHERE
+        G.id = (SELECT id FROM br7own.groups WHERE friendly_name=$1 LIMIT 1)
+        AND
+        U.id = (SELECT id FROM br7own.users WHERE email=$2 LIMIT 1)
+        AND
+        NOT EXISTS (SELECT * FROM br7own.users_groups AS UG WHERE UG.group_id = G.id AND UG.user_id = U.id)
+      `,
+      [groupName, emailAddress]
     )
-    SELECT G.id, U.id FROM br7own.users AS U, br7own."groups" AS G
-    WHERE
-    	G.id = (SELECT id FROM br7own.groups WHERE friendly_name=$1 LIMIT 1)
-    	AND
-    	U.id = (SELECT id FROM br7own.users WHERE email=$2 LIMIT 1)
-    	AND
-    	NOT EXISTS (SELECT * FROM br7own.users_groups AS UG WHERE UG.group_id = G.id AND UG.user_id = U.id)
-    `,
-    [groupName, emailAddress]
-  )
+
+    await qr.commitTransaction()
+
+    return result
+  } catch (error) {
+    await qr.rollbackTransaction()
+
+    throw error
+  } finally {
+    await qr.release()
+  }
 }
 
 const runQuery = async (query: string) => {
@@ -69,11 +85,9 @@ export const insertUser = async (user: User, userGroups?: string[]): Promise<Ins
     return result
   }
 
-  await Promise.all(
-    userGroups.map((userGroup) => {
-      return insertUserIntoGroup(user.email, userGroup)
-    })
-  )
+  for (const userGroup of userGroups) {
+    await insertUserIntoGroup(user.email, userGroup)
+  }
 }
 
 export const createUser = async (type: string): Promise<User | null> => {
@@ -94,17 +108,20 @@ export const createUser = async (type: string): Promise<User | null> => {
 const insertUsers = async (userData: User | User[], userGroups?: string[]): Promise<null> => {
   const userArray: User[] = Array.isArray(userData) ? userData : [userData]
 
-  await Promise.all(userArray.map((u) => insertUser(u, userGroups)))
+  for (const user of userArray) {
+    await insertUser(user, userGroups)
+  }
+
   return null
 }
 
 const insertUsersWithOverrides = async (userOverrides: Partial<User>[], userGroups?: string[]) => {
   const usersToInsert: User[] = []
-  for (let i = 0; i < userOverrides.length; i++) {
-    usersToInsert.push(await getDummyUser({ ...userOverrides[i] }))
+  for (const userOverride of userOverrides) {
+    usersToInsert.push(await getDummyUser({ ...userOverride }))
   }
 
-  return insertUsers(usersToInsert, userGroups)
+  return await insertUsers(usersToInsert, userGroups)
 }
 
 export { getDummyUser, insertUserIntoGroup, insertUsers, insertUsersWithOverrides, runQuery }
