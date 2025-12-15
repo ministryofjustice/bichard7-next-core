@@ -26,7 +26,7 @@ const getDummyUser = async (overrides?: Partial<User>): Promise<User> =>
     ...overrides
   })
 
-const insertUserIntoGroup = async (emailAddress: string, groupName: string): Promise<InsertResult> => {
+const insertUserIntoGroup = async (emailAddress: string, groupName: string): Promise<InsertResult | void> => {
   const dataSource = await getDataSource()
   const qr = dataSource.createQueryRunner()
 
@@ -54,10 +54,14 @@ const insertUserIntoGroup = async (emailAddress: string, groupName: string): Pro
     await qr.commitTransaction()
 
     return result
-  } catch (error) {
+  } catch (err) {
     await qr.rollbackTransaction()
 
-    throw error
+    const error = err as Error
+
+    if (error.message !== 'duplicate key value violates unique constraint "users_groups_pkey"') {
+      throw error
+    }
   } finally {
     await qr.release()
   }
