@@ -26,15 +26,11 @@ const getDummyUser = async (overrides?: Partial<User>): Promise<User> =>
     ...overrides
   })
 
-const insertUserIntoGroup = async (emailAddress: string, groupName: string): Promise<InsertResult | void> => {
+const insertUserIntoGroup = async (emailAddress: string, groupName: string): Promise<InsertResult> => {
   const dataSource = await getDataSource()
-  const qr = dataSource.createQueryRunner()
 
-  try {
-    await qr.startTransaction()
-
-    const result = qr.query(
-      `
+  return await dataSource.manager.query(
+    `
       INSERT INTO
         br7own.users_groups(
         group_id,
@@ -45,26 +41,10 @@ const insertUserIntoGroup = async (emailAddress: string, groupName: string): Pro
         G.id = (SELECT id FROM br7own.groups WHERE friendly_name=$1 LIMIT 1)
         AND
         U.id = (SELECT id FROM br7own.users WHERE email=$2 LIMIT 1)
-        AND
-        NOT EXISTS (SELECT * FROM br7own.users_groups AS UG WHERE UG.group_id = G.id AND UG.user_id = U.id)
-      `,
-      [groupName, emailAddress]
-    )
-
-    await qr.commitTransaction()
-
-    return result
-  } catch (err) {
-    await qr.rollbackTransaction()
-
-    const error = err as Error
-
-    if (error.message !== 'duplicate key value violates unique constraint "users_groups_pkey"') {
-      throw error
-    }
-  } finally {
-    await qr.release()
-  }
+      ON CONFLICT (group_id, user_id) DO NOTHING
+    `,
+    [groupName, emailAddress]
+  )
 }
 
 const runQuery = async (query: string) => {
