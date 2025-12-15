@@ -31,7 +31,6 @@ import { insertTriggers } from "../../utils/manageTriggers"
 jest.mock("services/queries/courtCasesByOrganisationUnitQuery")
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
 
-jest.setTimeout(100000)
 describe("listCourtCases", () => {
   let dataSource: DataSource
   const orgCode = "36FPA1"
@@ -62,9 +61,7 @@ describe("listCourtCases", () => {
   })
 
   afterAll(async () => {
-    if (dataSource) {
-      await dataSource.destroy()
-    }
+    await dataSource.destroy()
   })
 
   it("Should call cases by organisation unit query", async () => {

@@ -24,9 +24,7 @@ describe("courtCaseByVisibleForcesQuery", () => {
   })
 
   afterAll(async () => {
-    if (dataSource) {
-      await dataSource.destroy()
-    }
+    await dataSource.destroy()
   })
 
   it("Should remove a leading 0 from a the users visible force", async () => {
