@@ -23,11 +23,7 @@ import convertPcr from "./convertPcr"
 import convertRcc from "./convertRcc"
 import type { Rem } from "./convertRem"
 import convertRem from "./convertRem"
-
-type Segment = {
-  name: string
-  value: string
-}
+import extractSegments from "./extractSegments"
 
 const converters: Record<string, (value: string) => object | void> = {
   REM: convertRem,
@@ -55,7 +51,8 @@ export type PncSubsequentDisposalJson = Fsc &
   UpdateOffences & { type: "Sentence deferred" | "Subsequently varied" }
 type PncJson = PncAsnQueryJson | PncRemandJson | PncNormalDisposalJson | PncSubsequentDisposalJson
 
-const convertPncXmlToJson = <T extends PncJson>(segments: Segment[]): T => {
+const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
+  const segments = extractSegments(xml)
   let json = {} as T
 
   let offences: (Partial<(Cof | Cch | Ach) & Adj> & { disposals: Dis[] })[] = []
