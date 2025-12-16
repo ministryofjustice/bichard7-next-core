@@ -162,7 +162,7 @@ describe("listCourtCases", () => {
         >`UPDATE br7own.error_list set error_count = 0, error_reason = null, error_report = '', error_status = null, error_insert_ts = null WHERE error_id = ${i}`
       }
 
-      db.end()
+      await db.end()
     }
 
     async function resolveException() {
@@ -172,7 +172,7 @@ describe("listCourtCases", () => {
         ErrorListRecord[]
       >`UPDATE br7own.error_list set error_status = 2, error_resolved_by = 'Dummy User', error_resolved_ts = ${new Date()} WHERE error_id = 0`
 
-      db.end()
+      await db.end()
     }
 
     const caseTriggerTRPR0001: { code: string; status: ResolutionStatus }[] = [
