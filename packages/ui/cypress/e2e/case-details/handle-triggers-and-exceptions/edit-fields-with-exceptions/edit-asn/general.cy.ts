@@ -110,6 +110,8 @@ describe("ASN", () => {
 
     submitAndConfirmExceptions()
 
+    cy.pollUntilElementExists(".moj-badge:contains('Correction')")
+
     cy.get(".defendant-details").contains("11/01ZD/01/448754K")
     cy.get(".moj-badge").contains("Correction").should("exist")
   })

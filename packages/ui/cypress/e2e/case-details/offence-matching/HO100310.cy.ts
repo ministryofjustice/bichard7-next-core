@@ -171,6 +171,8 @@ describe("Offence matching HO100310", () => {
       cy.get("button#submit").click()
       cy.get("button#confirm-submit").click()
 
+      cy.pollUntilElementExists(".moj-badge:contains('Submitted')")
+
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get("#offences").contains("Theft of pedal cycle").click()
       cy.contains("Matched PNC offence")
