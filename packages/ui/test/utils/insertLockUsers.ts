@@ -25,10 +25,10 @@ const insertLockUser = async (name: string, createFakeUser: boolean) => {
 
 export const insertLockUsers = async (lockedCase: CourtCase, createFakeUser = false): Promise<void> => {
   if (lockedCase.errorLockedByUsername) {
-    insertLockUser(lockedCase.errorLockedByUsername, createFakeUser)
+    await insertLockUser(lockedCase.errorLockedByUsername, createFakeUser)
   }
 
   if (lockedCase.triggerLockedByUsername) {
-    insertLockUser(lockedCase.triggerLockedByUsername, createFakeUser)
+    await insertLockUser(lockedCase.triggerLockedByUsername, createFakeUser)
   }
 }

@@ -27,9 +27,7 @@ describe("listCourtCases", () => {
   })
 
   afterAll(async () => {
-    if (dataSource) {
-      await dataSource.destroy()
-    }
+    await dataSource.destroy()
   })
 
   afterEach(() => {

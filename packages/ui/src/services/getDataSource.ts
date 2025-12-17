@@ -21,16 +21,19 @@ const getDataSource = async (): Promise<DataSource> => {
     subscribers: [CourtCaseSubscriber, NoteSubscriber],
     migrations: [],
     logging: false, // Set to true to see what queries are being sent to Postgres
+
+    poolSize: 10,
     extra: {
-      max: 1
+      max: 10,
+      min: 1
     }
   }
 
   if (config.synchronize) {
-    throw Error("Synchronize must be false.")
+    throw new Error("Synchronize must be false.")
   }
 
-  if (!appDataSource || !appDataSource.isInitialized) {
+  if (!appDataSource?.isInitialized) {
     appDataSource = await new DataSource(config).initialize()
   }
 
