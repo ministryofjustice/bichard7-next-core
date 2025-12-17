@@ -31,6 +31,8 @@ describe("exceptions", () => {
     ).should("exist")
     cy.get("button").contains("Submit exception(s)").click()
 
+    cy.pollUntilElementExists(".moj-badge:contains('Submitted')")
+
     cy.contains(`GeneralHandler: Portal Action: Update Applied. Element: asn. New Value: ${asn}`)
     cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
   }
@@ -83,7 +85,6 @@ describe("exceptions", () => {
       updatedMessageNotHaveContent: ["<br7:ArrestSummonsNumber>AAAAAAAAAAAAAAAAAAAA</br7:ArrestSummonsNumber>"],
       updatedMessageHaveContent: ["<br7:ArrestSummonsNumber>1101ZD0100000448754K</br7:ArrestSummonsNumber>"]
     })
-
   })
 
   it("Should be able to edit ASN field if HO100321 is raised", () => {

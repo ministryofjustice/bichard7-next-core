@@ -71,6 +71,8 @@ describe("Exception resolution message", () => {
     ).should("exist")
     cy.get("button").contains("Submit exception(s)").click()
 
+    cy.pollUntilElementExists(".moj-badge:contains('Submitted')")
+
     cy.get("#case-detail-header .exceptions-submitted-tag").should("have.text", "ExceptionsSubmitted")
     cy.get("#exceptions-tab-panel .exceptions-submitted-tag").should("have.text", "ExceptionsSubmitted")
   })

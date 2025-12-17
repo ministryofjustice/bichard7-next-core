@@ -115,6 +115,44 @@ Cypress.Commands.add("resetDeviceMetrics", () => {
   })
 })
 
+Cypress.Commands.add(
+  "pollUntilElementExists",
+  (selector: string, waitTime: number = 50, maxAttempts: number = 20): Cypress.Chainable<JQuery> => {
+    let attempt = 1
+
+    // Allow one reload to fail
+    Cypress.once("uncaught:exception", () => {
+      return false
+    })
+
+    const loop = (): Cypress.Chainable<JQuery> => {
+      if (attempt > maxAttempts) {
+        throw new Error(`Element "${selector}" not found after ${maxAttempts} attempts and reloads.`)
+      }
+
+      cy.log(`Polling for element: ${selector}. Attempt ${attempt}`)
+
+      return cy.get("body", { log: false }).then(($body) => {
+        const element = $body.find(selector)
+
+        if (element.length > 0) {
+          return cy.get(selector).should("exist")
+        } else {
+          cy.log("Not found")
+          attempt++
+
+          cy.wait(waitTime, { log: false })
+          cy.reload({ log: false })
+
+          return loop()
+        }
+      })
+    }
+
+    return cy.wrap(null, { log: false }).then(loop)
+  }
+)
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
@@ -126,6 +164,7 @@ declare global {
       toBeUnauthorized(url: string): Chainable<Element>
       setDevicePixelRatio(scaleFactor: number): void
       resetDeviceMetrics(): void
+      pollUntilElementExists(selector: string, waitTime?: number, maxAttempts?: number): Chainable<JQuery>
     }
   }
 }
