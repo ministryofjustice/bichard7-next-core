@@ -67,7 +67,6 @@ export const baseOffenceSchema = z.object({
   roleQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   plea: pleaSchema.optional(),
-  dateOfSentence: dateStringSchema.optional(),
   offenceTic: z.number().optional(),
   offenceStartTime: timeStringSchema.optional(),
   offenceEndDate: dateStringSchema.optional(),
@@ -78,5 +77,6 @@ export const baseOffenceSchema = z.object({
 export const offenceSchema = baseOffenceSchema.extend({
   adjudication: adjudicationSchema.optional(),
   offenceStartDate: dateStringSchema.optional(),
-  offenceId: z.string().nonempty()
+  offenceId: z.string().nonempty(),
+  dateOfSentence: dateStringSchema.optional()
 })

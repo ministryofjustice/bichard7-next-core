@@ -149,8 +149,8 @@ describe("LedsGateway", () => {
   describe("update", () => {
     it("should successfully update when operation is remand", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
-        status: 200,
-        data: ledsAsnQueryResponse
+        status: 201,
+        data: { id: randomUUID() }
       })
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
@@ -179,8 +179,8 @@ describe("LedsGateway", () => {
 
     it("should successfully update when operation is add disposal results", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
-        status: 200,
-        data: ledsAsnQueryResponse
+        status: 201,
+        data: { id: randomUUID() }
       })
 
       const request: NormalDisposalPncUpdateRequest = {
@@ -258,8 +258,8 @@ describe("LedsGateway", () => {
 
     it("should successfully update when operation is subsequently varied", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
-        status: 200,
-        data: ledsAsnQueryResponse
+        status: 201,
+        data: { id: randomUUID() }
       })
 
       const request: DisposalUpdatedPncUpdateRequest = {
@@ -373,8 +373,8 @@ describe("LedsGateway", () => {
 
     it("should successfully update when operation is sentence deferred", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
-        status: 200,
-        data: ledsAsnQueryResponse
+        status: 201,
+        data: { id: randomUUID() }
       })
 
       const request: SentenceDeferredPncUpdateRequest = {
