@@ -1,4 +1,9 @@
-const extractSegments = (xml: string) => {
+type Segment = {
+  name: string
+  value: string
+}
+
+const extractSegments = (xml: string): Segment[] => {
   const regex = new RegExp(/<(?<name>[A-Z]{3})>(?<value>.*?)<\/[A-Z]{3}>/g)
 
   const segments: { name: string; value: string }[] = []

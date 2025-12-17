@@ -11,6 +11,13 @@ export default interface PoliceApi {
   mockMissingDataForTest: () => Promise<void>
   mockDataForTest: () => Promise<void>
   mockEnquiryFromNcm: (ncmFile: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
+  mockAsnQuery: (params: {
+    matchRegex: string
+    response: string
+    expectedRequest: string
+    asn: string
+    count: number
+  }) => PartialPoliceApiRequestMock
   mockUpdate: (code: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
   generateDummyUpdate(): PartialPoliceApiRequestMock
   clearMocks(): Promise<void>

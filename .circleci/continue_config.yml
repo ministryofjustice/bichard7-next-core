@@ -832,12 +832,16 @@ jobs:
     parallelism: 10
     parameters:
       <<: *ui_params
+      use-leds:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
       WORKSPACE: local-next
       AUTH_TYPE: user-service
       TZ: "Europe/London"
+      USE_LEDS: << parameters.use-leds >>
     steps:
       - unless:
           condition:
@@ -980,6 +984,12 @@ workflows:
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
+          requires:
+            - build_ui_image
+            - build_user_service_image
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_leds
+          use-leds: true
           requires:
             - build_ui_image
             - build_user_service_image
