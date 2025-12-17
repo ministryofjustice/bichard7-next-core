@@ -15,7 +15,7 @@ const generateDates = (start: Date, end: Date): Date[] => {
   let currentDate = new Date(start)
   while (currentDate < end) {
     dates.push(new Date(currentDate))
-    addOneDay(currentDate)
+    currentDate = addOneDay(currentDate)
   }
 
   return dates

@@ -4,6 +4,7 @@ import ApiClient from "./ApiClient"
 import axios from "axios"
 import type { AxiosResponse } from "axios"
 import { API_LOCATION } from "config"
+import { type ApiError, isApiError } from "../../types/ApiError"
 
 jest.mock("axios")
 const mockedAxios = axios as jest.MockedFunction<typeof axios>
@@ -58,8 +59,9 @@ describe("apiClient get", () => {
 
     const result = await apiClient.get("/v1/cases/1")
 
-    expect(isError(result)).toBe(true)
-    expect((result as Error).message).toBe("404 Not Found")
+    expect(isApiError(result)).toBe(true)
+    expect((result as ApiError).status).toBe(404)
+    expect((result as ApiError).message).toBe("Not Found")
   })
 
   it("can post without a body", async () => {

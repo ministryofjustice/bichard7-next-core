@@ -2,6 +2,8 @@ import axios from "axios"
 import https from "node:https"
 
 import { API_LOCATION } from "config"
+import { ApiError } from "types/ApiError"
+import type PromiseResult from "types/PromiseResult"
 
 export enum HttpMethod {
   GET = "GET",
@@ -31,7 +33,7 @@ class ApiClient {
     route: string,
     method: HttpMethod,
     bodyContent: string | Record<string, unknown> = {}
-  ): Promise<Error | T> {
+  ): PromiseResult<T> {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`
     }
@@ -48,8 +50,7 @@ class ApiClient {
       return response.data
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        const msg = err.response?.data?.message
-        return new Error(err.response?.status + (msg ? " " + msg : ""))
+        return new ApiError(err.response?.status as number, err.response?.data?.message ?? "")
       }
 
       return err as Error
