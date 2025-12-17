@@ -69,9 +69,11 @@ export const insertUser = async (user: User, userGroups?: string[]): Promise<Ins
     return result
   }
 
-  for (const userGroup of userGroups) {
-    await insertUserIntoGroup(user.email, userGroup)
-  }
+  await Promise.all(
+    userGroups.map((userGroup) => {
+      return insertUserIntoGroup(user.email, userGroup)
+    })
+  )
 }
 
 export const createUser = async (type: string): Promise<User | null> => {
@@ -92,9 +94,7 @@ export const createUser = async (type: string): Promise<User | null> => {
 const insertUsers = async (userData: User | User[], userGroups?: string[]): Promise<null> => {
   const userArray: User[] = Array.isArray(userData) ? userData : [userData]
 
-  for (const user of userArray) {
-    await insertUser(user, userGroups)
-  }
+  await Promise.all(userArray.map((u) => insertUser(u, userGroups)))
 
   return null
 }
@@ -105,7 +105,7 @@ const insertUsersWithOverrides = async (userOverrides: Partial<User>[], userGrou
     usersToInsert.push(await getDummyUser({ ...userOverride }))
   }
 
-  return await insertUsers(usersToInsert, userGroups)
+  return insertUsers(usersToInsert, userGroups)
 }
 
 export { getDummyUser, insertUserIntoGroup, insertUsers, insertUsersWithOverrides, runQuery }
