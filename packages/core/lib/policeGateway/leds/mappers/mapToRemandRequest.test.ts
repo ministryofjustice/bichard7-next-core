@@ -1,4 +1,4 @@
-import { buildRemandRequest } from "../../../tests/fixtures/buildRemandRequest"
+import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import mapToRemandRequest from "./mapToRemandRequest"
 
 const expectedRequest = {

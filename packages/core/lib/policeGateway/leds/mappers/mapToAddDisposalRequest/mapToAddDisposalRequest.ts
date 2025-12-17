@@ -1,9 +1,9 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
-import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalRequest"
+import type NormalDisposalPncUpdateRequest from "../../../../../phase3/types/NormalDisposalPncUpdateRequest"
+import type { AddDisposalRequest } from "../../../../../types/leds/AddDisposalRequest"
 
-import { convertDate } from "../dateTimeConverter"
+import { convertDate } from "../../dateTimeConverter"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"

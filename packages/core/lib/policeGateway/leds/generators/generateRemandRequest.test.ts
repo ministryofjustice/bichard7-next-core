@@ -5,8 +5,7 @@ import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateReque
 import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
 import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import PoliceApiError from "../../PoliceApiError"
-import endpoints from "../endpoints"
-import { remand } from "./remand"
+import { generateRemandRequest } from "./generateRemandRequest"
 
 const personId = "123"
 const reportId = "456"
@@ -41,7 +40,7 @@ describe("remand", () => {
     }
     const expectedResult = { endpoint, requestBody }
 
-    const result = remand(request, personId, reportId)
+    const result = generateRemandRequest(request, personId, reportId)
 
     expect(result).toStrictEqual(expectedResult)
   })
@@ -52,7 +51,7 @@ describe("remand", () => {
       request: buildNormalDisposalRequest()
     } as PoliceUpdateRequest
 
-    const result = remand(normalDisposalRequest, personId, reportId)
+    const result = generateRemandRequest(normalDisposalRequest, personId, reportId)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("mapToRemandRequest called with a non-remand request")
@@ -67,7 +66,7 @@ describe("remand", () => {
     const x = buildRemandRequest()
     x.pncIdentifier = ""
 
-    const result = remand(requestWithInvalidData, personId, reportId)
+    const result = generateRemandRequest(requestWithInvalidData, personId, reportId)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")
