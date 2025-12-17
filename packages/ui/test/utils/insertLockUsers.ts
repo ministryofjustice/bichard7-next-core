@@ -24,11 +24,15 @@ const insertLockUser = async (name: string, createFakeUser: boolean) => {
 }
 
 export const insertLockUsers = async (lockedCase: CourtCase, createFakeUser = false): Promise<void> => {
+  const usernames = new Set<string>()
+
   if (lockedCase.errorLockedByUsername) {
-    await insertLockUser(lockedCase.errorLockedByUsername, createFakeUser)
+    usernames.add(lockedCase.errorLockedByUsername)
   }
 
   if (lockedCase.triggerLockedByUsername) {
-    await insertLockUser(lockedCase.triggerLockedByUsername, createFakeUser)
+    usernames.add(lockedCase.triggerLockedByUsername)
   }
+
+  await Promise.all(Array.from(usernames).map((name) => insertLockUser(name, createFakeUser)))
 }
