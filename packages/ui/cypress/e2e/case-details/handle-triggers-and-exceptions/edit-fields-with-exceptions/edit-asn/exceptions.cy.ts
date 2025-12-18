@@ -4,7 +4,7 @@ import HO100301 from "../../../../../../test/test-data/HO100301.json"
 import HO100304 from "../../../../../../test/test-data/HO100304.json"
 import HO100314 from "../../../../../../test/test-data/HO100314.json"
 import HO100321 from "../../../../../../test/test-data/HO100321.json"
-import { loginAndVisit, verifyUpdatedMessage } from "../../../../../support/helpers"
+import { loginAndVisit, refreshUntilNotePresent, verifyUpdatedMessage } from "../../../../../support/helpers"
 
 describe("exceptions", () => {
   function submitEditableAsnExceptionAmendment(exception: { hearingOutcomeXml: string }, asn: string) {
@@ -34,7 +34,8 @@ describe("exceptions", () => {
     cy.pollUntilElementExists(".moj-badge:contains('Submitted')")
 
     cy.contains(`GeneralHandler: Portal Action: Update Applied. Element: asn. New Value: ${asn}`)
-    cy.contains("GeneralHandler: Portal Action: Resubmitted Message.")
+
+    refreshUntilNotePresent("GeneralHandler: Portal Action: Resubmitted Message.")
   }
 
   it("Should be able to edit ASN field if HO100206 is raised", () => {
