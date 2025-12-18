@@ -9,7 +9,7 @@ import {
 export enum ApiEndpoints {
   CaseDetails = "CaseDetails",
   CaseList = "CaseList",
-  CaseResubmit = "CaseResubmit"
+  CaseDetailsCaseResubmit = "CaseResubmit"
 }
 
 export const canUseApiEndpoint = (endpoint: ApiEndpoints, visibleForces: string[]): boolean => {
@@ -30,7 +30,7 @@ export const canUseApiEndpoint = (endpoint: ApiEndpoints, visibleForces: string[
       return USE_API_CASE_ENDPOINT
     case ApiEndpoints.CaseList:
       return USE_API_CASES_INDEX_ENDPOINT
-    case ApiEndpoints.CaseResubmit:
+    case ApiEndpoints.CaseDetailsCaseResubmit:
       return USE_API_CASE_RESUBMIT_ENDPOINT
     default:
       return false
