@@ -16,7 +16,7 @@ const mockUseApiModule = (
   }))
 }
 
-const enabledForces = new Set<string>(["01", "02", "03"])
+const enabledForces = new Set<string>(["01", "02", "03", "99"])
 
 describe("canUseEndpoint", () => {
   beforeEach(() => {
@@ -41,6 +41,9 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["001"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["99"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["099"])).toBe(true)
   })
 
   it("returns true when USE_API_CASES_INDEX_ENDPOINT is enabled", () => {
@@ -49,6 +52,7 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["001"])).toBe(true)
   })
 
   it("returns true when USE_API_CASE_RESUBMIT_ENDPOINT is enabled", () => {
@@ -57,6 +61,7 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["001"])).toBe(true)
   })
 
   it("returns false when USE_API_CASE_ENDPOINT is disabled", () => {
@@ -65,6 +70,7 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["001"])).toBe(false)
   })
 
   it("returns false when USE_API_CASES_INDEX_ENDPOINT is disabled", () => {
@@ -73,14 +79,16 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["001"])).toBe(false)
   })
 
-  it("returns true when USE_API_CASE_RESUBMIT_ENDPOINT is disabled", () => {
+  it("returns false when USE_API_CASE_RESUBMIT_ENDPOINT is disabled", () => {
     mockUseApiModule(true, true, true, false, enabledForces)
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["001"])).toBe(false)
   })
 
   it("returns false when both USE_API_CASE_ENDPOINT and USE_API_CASES_INDEX_ENDPOINT are disabled", () => {
@@ -89,7 +97,9 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["001"])).toBe(false)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["001"])).toBe(false)
   })
 
   it("returns false when USE_API is disabled, and all other flags are enabled", () => {
@@ -98,7 +108,9 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["001"])).toBe(false)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["001"])).toBe(false)
   })
 
   it("returns false when FORCES_WITH_API_ENABLED does not include force", () => {
@@ -107,7 +119,9 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["06"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["006"])).toBe(false)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["006"])).toBe(false)
   })
 
   it("returns false when none of the visible forces are enabled", () => {
@@ -116,7 +130,9 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["06", "07"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["006", "007"])).toBe(false)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06", "07"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["006", "007"])).toBe(false)
   })
 
   it("returns true when FORCES_WITH_API_ENABLED includes at least one enabled force", () => {
@@ -125,7 +141,9 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["06", "07", "01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["006", "007", "001"])).toBe(true)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06", "07", "01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["006", "007", "001"])).toBe(true)
   })
 
   it("returns false when empty array of FORCES_WITH_API_ENABLED", () => {
@@ -134,6 +152,8 @@ describe("canUseEndpoint", () => {
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
     expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["06", "07", "01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseDetails, ["006", "007", "001"])).toBe(false)
     expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["06", "07", "01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseList, ["006", "007", "001"])).toBe(false)
   })
 })
