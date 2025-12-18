@@ -19,13 +19,7 @@ export const canUseApiEndpoint = (endpoint: ApiEndpoints, visibleForces: string[
 
   if (
     !visibleForces
-      .map((force) => {
-        if (force.length === 3 && force[0] === "0") {
-          return force.replace(/^0(\d+)/, "$1")
-        } else {
-          return force
-        }
-      })
+      .map((force) => force.padStart(3, "0").substring(1))
       .some((force) => FORCES_WITH_API_ENABLED.has(force))
   ) {
     return false
