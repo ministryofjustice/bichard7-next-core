@@ -71,8 +71,8 @@ const insertCourtCases = async (courtCases: CourtCase | CourtCase[]): Promise<Co
     .map((courtCase) => courtCase.notes)
     .flat()
 
-  lockedCases.map(async (courtCase) => await insertLockUsers(courtCase))
-  courtCaseNotes.map(async (courtCaseNote) => await insertNoteUser(courtCaseNote))
+  await Promise.all(lockedCases.map((courtCase) => insertLockUsers(courtCase)))
+  await Promise.all(courtCaseNotes.map((courtCaseNote) => insertNoteUser(courtCaseNote)))
 
   return cases
 }
