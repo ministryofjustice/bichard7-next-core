@@ -60,8 +60,8 @@ describe("canUseEndpoint", () => {
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
-    expect(canUseApiEndpoint(ApiEndpoints.CaseDetailsCaseResubmit, ["01"])).toBe(true)
-    expect(canUseApiEndpoint(ApiEndpoints.CaseDetailsCaseResubmit, ["001"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["01"])).toBe(true)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["001"])).toBe(true)
   })
 
   it("returns false when USE_API_CASE_ENDPOINT is disabled", () => {
@@ -87,8 +87,8 @@ describe("canUseEndpoint", () => {
 
     const { canUseApiEndpoint } = require("./canUseEndpoint")
 
-    expect(canUseApiEndpoint(ApiEndpoints.CaseDetailsCaseResubmit, ["01"])).toBe(false)
-    expect(canUseApiEndpoint(ApiEndpoints.CaseDetailsCaseResubmit, ["001"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["01"])).toBe(false)
+    expect(canUseApiEndpoint(ApiEndpoints.CaseResubmit, ["001"])).toBe(false)
   })
 
   it("returns false when both USE_API_CASE_ENDPOINT and USE_API_CASES_INDEX_ENDPOINT are disabled", () => {
