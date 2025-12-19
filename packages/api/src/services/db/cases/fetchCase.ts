@@ -10,6 +10,7 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
+import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 
 export default async (
   database: DatabaseConnection,
@@ -69,10 +70,12 @@ export default async (
       WHERE
         el.error_id = ${caseId} AND
         (${organisationUnitSql(database, user)})
+        ${exceptionsAndTriggers(database, user)}
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `.catch((error: Error) => error)
 
   if (isError(result)) {
+    console.log({ result })
     return Error(`Couldn't fetch case id ${caseId} for user ${user.username}: ${result.message}`)
   }
 
