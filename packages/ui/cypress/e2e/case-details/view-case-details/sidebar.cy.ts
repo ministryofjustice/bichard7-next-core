@@ -8,7 +8,7 @@ describe("sidebar", () => {
   describe("sidebar-tabs", () => {
     beforeEach(() => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
-      loginAndVisit("/bichard/court-cases/0")
+      loginAndVisit("Supervisor", "/bichard/court-cases/0")
     })
 
     it("allows keyboard navigation to default sidebar tab", () => {
@@ -90,7 +90,9 @@ describe("sidebar", () => {
     })
 
     it("Should not show qualityStatusCard when user groups are incorrect", () => {
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved" }])
+      cy.task("insertCourtCasesWithFields", [
+        { orgForPoliceFilter: "01", errorStatus: "Resolved", errorCount: 1, errorResolvedBy: "GeneralHandler" }
+      ])
       loginAndVisit("/bichard/court-cases/0")
 
       cy.get("ul.moj-sub-navigation__list").should("exist")
