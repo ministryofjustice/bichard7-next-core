@@ -9,6 +9,9 @@
 // import { clickTab, loginAndVisit } from "../../../support/helpers"
 // import logAccessibilityViolations from "../../../support/logAccessibilityViolations"
 
+import { TestTrigger } from "../../../../test/utils/manageTriggers"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 describe("View case details", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
@@ -59,27 +62,119 @@ describe("View case details", () => {
   //   })
   // })
 
-  it("Should return 404 for a case that this user can not see due to being in no groups", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-    cy.loginAs("NoGroups")
+  describe("Role based tests", () => {
+    it("Should return 404 for a case that this user can not see due to being in no groups", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.loginAs("NoGroups")
 
-    cy.request({
-      failOnStatusCode: false,
-      url: "/bichard/court-cases/0"
-    }).then((response) => {
-      expect(response.status).to.eq(404)
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(404)
+      })
     })
-  })
 
-  it("Should return 200 for a case that this user should see because they are an exception handler", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
-    cy.loginAs("ExceptionHandler")
+    it("Should return 200 if the case has unresolved exceptions and the user is an exception handler", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
+      cy.loginAs("ExceptionHandler")
 
-    cy.request({
-      failOnStatusCode: false,
-      url: "/bichard/court-cases/0"
-    }).then((response) => {
-      expect(response.status).to.eq(200)
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(200)
+      })
+    })
+
+    it("Should return 200 if the case has resolved exceptions and the user is an exception handler who resolved it", () => {
+      cy.task("insertCourtCasesWithFields", [
+        { orgForPoliceFilter: "01", errorCount: 1, errorResolvedBy: "ExceptionHandler" }
+      ])
+      cy.loginAs("ExceptionHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(200)
+      })
+    })
+
+    it("Should return 404 if the case has resolved exceptions and the user is an exception handler who did not resolve it", () => {
+      cy.task("insertCourtCasesWithFields", [
+        { orgForPoliceFilter: "01", errorCount: 1, errorResolvedBy: "AnotherUser" }
+      ])
+      cy.loginAs("ExceptionHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(404)
+      })
+    })
+
+    it("Should return 200 if the case has unresolved triggers and the user is a trigger handler", () => {
+      const trigger: TestTrigger = {
+        triggerId: 1,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Unresolved",
+        createdAt: new Date()
+      }
+
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+      cy.loginAs("TriggerHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(200)
+      })
+    })
+
+    it("Should return 200 if the case has a resolved trigger and the user is a trigger handler who resolved it", () => {
+      const trigger: TestTrigger = {
+        triggerId: 1,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Resolved",
+        resolvedBy: "TriggerHandler",
+        createdAt: new Date()
+      }
+
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+      cy.loginAs("TriggerHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(200)
+      })
+    })
+
+    it("Should return 404 if the case has a resolved trigger and the user is a trigger handler who did not resolve it", () => {
+      const trigger: TestTrigger = {
+        triggerId: 1,
+        triggerCode: TriggerCode.TRPR0001,
+        status: "Resolved",
+        resolvedBy: "AnotherUser",
+        createdAt: new Date()
+      }
+
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+      cy.loginAs("TriggerHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(404)
+      })
     })
   })
 
