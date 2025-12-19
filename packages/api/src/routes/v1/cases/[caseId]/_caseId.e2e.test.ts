@@ -6,6 +6,7 @@ import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { OK } from "http-status"
 
@@ -54,7 +55,7 @@ describe("/v1/case e2e", () => {
       courtReference: "ABC",
       createdAt: new Date(2025, 1, 1),
       defendantName: "Defendant",
-      errorCount: 0,
+      errorCount: 1,
       errorId: 0,
       errorLockedById: "user1",
       errorReport: "HO100304||br7:ArrestSummonsNumber",
@@ -238,17 +239,17 @@ describe("/v1/case e2e", () => {
     },
     {
       caseData: { triggerCount: 0, triggerLockedById: null, triggerStatus: null },
-      description: "doesn't lock exception when case does not have any exception",
+      description: "doesn't lock trigger when case does not have any trigger",
       expectedTriggerLockedByUsername: null
     },
     {
       caseData: { triggerCount: 1, triggerLockedById: null, triggerStatus: ResolutionStatusNumber.Resolved },
-      description: "doesn't lock exception when error status is resolved",
+      description: "doesn't lock trigger when trigger status is resolved",
       expectedTriggerLockedByUsername: null
     },
     {
       caseData: { triggerCount: 1, triggerLockedById: null, triggerStatus: ResolutionStatusNumber.Submitted },
-      description: "doesn't lock exception when error status is submitted",
+      description: "doesn't lock trigger when trigger status is submitted",
       expectedTriggerLockedByUsername: null
     }
   ]
@@ -256,7 +257,7 @@ describe("/v1/case e2e", () => {
   it.each(testCases)(
     "$description",
     async ({ caseData, expectedErrorLockedByUsername = "User1", expectedTriggerLockedByUsername = "User1" }) => {
-      const user = await createUser(helper.postgres, { username: "User1" })
+      const user = await createUser(helper.postgres, { groups: [UserGroup.Supervisor], username: "User1" })
       const jwtToken = generateJwtForUser(user)
 
       const testCase = await createCase(helper.postgres, caseData)
