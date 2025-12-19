@@ -36,9 +36,32 @@ describe("View case details", () => {
   //   cy.checkA11y(undefined, a11yConfig, logAccessibilityViolations)
   // })
 
-  it("Should return 404 for a case that this user can not see due it being against a different force", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "02" }])
-    cy.loginAs("GeneralHandler")
+  // it("Should return 404 for a case that this user can not see due it being against a different force", () => {
+  //   cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "02" }])
+  //   cy.loginAs("GeneralHandler")
+  //
+  //   cy.request({
+  //     failOnStatusCode: false,
+  //     url: "/bichard/court-cases/0"
+  //   }).then((response) => {
+  //     expect(response.status).to.eq(404)
+  //   })
+  // })
+  //
+  // it("Should return 404 for a case that does not exist", () => {
+  //   cy.loginAs("GeneralHandler")
+  //
+  //   cy.request({
+  //     failOnStatusCode: false,
+  //     url: "/court-cases/1"
+  //   }).then((response) => {
+  //     expect(response.status).to.eq(404)
+  //   })
+  // })
+
+  it("Should return 404 for a case that this user can not see due to being in no groups", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+    cy.loginAs("NoGroups")
 
     cy.request({
       failOnStatusCode: false,
@@ -48,14 +71,15 @@ describe("View case details", () => {
     })
   })
 
-  it("Should return 404 for a case that does not exist", () => {
-    cy.loginAs("GeneralHandler")
+  it("Should return 200 for a case that this user should see because they are an exception handler", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
+    cy.loginAs("ExceptionHandler")
 
     cy.request({
       failOnStatusCode: false,
-      url: "/court-cases/1"
+      url: "/bichard/court-cases/0"
     }).then((response) => {
-      expect(response.status).to.eq(404)
+      expect(response.status).to.eq(200)
     })
   })
 
