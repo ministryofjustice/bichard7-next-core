@@ -1,7 +1,11 @@
 import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyBaseLogger } from "fastify"
 
+import { expect } from "@jest/globals"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+
 import { createCase } from "../../../tests/helpers/caseHelper"
+import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import filter from "./fetchCase"
@@ -69,6 +73,49 @@ describe("fetchCase", () => {
       courtCode: "ABC",
       orgForPoliceFilter: "02"
     })
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+
+    expect(result.errorId).toEqual(caseObj.errorId)
+  })
+
+  it("returns an error if the user is an exception handler but the case has no exceptions", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway, {
+      errorCount: 0
+    })
+
+    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+  })
+
+  it("fetches the case if the user is an exception handler and the case has exceptions", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway, {
+      errorCount: 1
+    })
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+
+    expect(result.errorId).toEqual(caseObj.errorId)
+  })
+
+  it("returns an error if the user is an trigger handler but the case has no triggers", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway)
+
+    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+  })
+
+  it("fetches the case if the user is a trigger handler and the case has triggers", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway)
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{}])
 
     const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
 
