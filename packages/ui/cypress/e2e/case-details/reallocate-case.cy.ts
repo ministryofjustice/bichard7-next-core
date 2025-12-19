@@ -185,7 +185,9 @@ describe("Case details", () => {
           {
             orgForPoliceFilter: "01",
             triggerStatus: triggers,
+            triggerResolvedBy: triggers === "Resolved" ? "GeneralHandler" : undefined,
             errorStatus: exceptions,
+            errorResolvedBy: exceptions === "Resolved" ? "GeneralHandler" : undefined,
             triggersLockedByAnotherUser: triggersLockedByAnotherUser ? "BichardForce03" : null,
             errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : null
           }
