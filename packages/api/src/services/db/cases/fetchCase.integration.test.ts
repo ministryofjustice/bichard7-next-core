@@ -121,4 +121,33 @@ describe("fetchCase", () => {
 
     expect(result.errorId).toEqual(caseObj.errorId)
   })
+
+  it("returns error if user in no groups", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway)
+
+    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+  })
+
+  it("fetches the case if the user is can't list all cases but the case has exceptions resolved by them", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway, { errorResolvedBy: user.username })
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+
+    expect(result.errorId).toEqual(caseObj.errorId)
+  })
+
+  it("fetches the case if the user is can't list all cases but the case has triggers resolved by them", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
+    const caseObj = await createCase(testDatabaseGateway)
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ resolvedBy: user.username }])
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+
+    expect(result.errorId).toEqual(caseObj.errorId)
+  })
 })
