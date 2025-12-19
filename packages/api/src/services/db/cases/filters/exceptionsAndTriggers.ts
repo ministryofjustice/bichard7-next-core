@@ -31,11 +31,7 @@ export const exceptionsAndTriggers = (
   let triggersSql
 
   if (userAccess(user)[Permission.Exceptions]) {
-    exceptionsSql = database.connection`
-      (
-        el.error_count > 0
-        AND el.error_status = ANY (${resolutionStatus})
-      )`
+    exceptionsSql = database.connection`(el.error_count > 0 AND el.error_status = ANY (${resolutionStatus}))`
   }
 
   if (userAccess(user)[Permission.Triggers]) {
