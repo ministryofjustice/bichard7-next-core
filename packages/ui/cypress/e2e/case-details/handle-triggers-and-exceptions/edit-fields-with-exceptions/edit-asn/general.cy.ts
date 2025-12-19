@@ -4,6 +4,8 @@ import HO100206 from "../../../../../../test/test-data/HO100206.json"
 import ExceptionHO100239 from "../../../../../../test/test-data/HO100239_1.json"
 import HO100300 from "../../../../../../test/test-data/HO100300.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions } from "../../../../../support/helpers"
+import type { TestTrigger } from "../../../../../../test/utils/manageTriggers"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("ASN", () => {
   beforeEach(() => {
@@ -20,6 +22,13 @@ describe("ASN", () => {
   })
 
   it("Should not be able to edit ASN field when there is no relevant exception", () => {
+    const trigger: TestTrigger = {
+      triggerId: 1,
+      triggerCode: TriggerCode.TRPR0001,
+      status: "Unresolved",
+      createdAt: new Date()
+    }
+
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
@@ -29,10 +38,11 @@ describe("ASN", () => {
         errorStatus: null
       }
     ])
+    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".moj-badge").contains("Editable Field").should("not.exist")
+    cy.contains(".moj-badge", "Editable Field").should("not.exist")
   })
 
   it("Should not be able to edit ASN field when the case isn't in 'unresolved' state", () => {
@@ -49,6 +59,7 @@ describe("ASN", () => {
       },
       {
         errorStatus: "Resolved",
+        errorResolvedBy: "GeneralHandler",
         errorId: resolvedCaseId,
         orgForPoliceFilter: "01",
         hearingOutcome: HO100206.hearingOutcomeXml,
@@ -59,12 +70,12 @@ describe("ASN", () => {
 
     loginAndVisit(`/bichard/court-cases/${submittedCaseId}`)
 
-    cy.get(".moj-badge").contains("Editable Field").should("not.exist")
+    cy.contains(".moj-badge", "Editable Field").should("not.exist")
     cy.get("#asn").should("not.exist")
 
     cy.visit(`/bichard/court-cases/${resolvedCaseId}`)
 
-    cy.get(".moj-badge").contains("Editable Field").should("not.exist")
+    cy.contains(".moj-badge", "Editable Field").should("not.exist")
     cy.get("#asn").should("not.exist")
   })
 
@@ -143,6 +154,13 @@ describe("ASN", () => {
   })
 
   it("Should not be able to edit ASN field if user is not an exception handler", () => {
+    const trigger: TestTrigger = {
+      triggerId: 1,
+      triggerCode: TriggerCode.TRPR0001,
+      status: "Unresolved",
+      createdAt: new Date()
+    }
+
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
@@ -153,6 +171,8 @@ describe("ASN", () => {
         errorLockedByUsername: "TriggerHandler"
       }
     ])
+    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
     cy.get(".moj-badge").should("not.exist")

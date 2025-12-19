@@ -8,6 +8,8 @@ import {
   verifyUpdatedMessage,
   refreshUntilNotePresent
 } from "../../../../support/helpers"
+import type { TestTrigger } from "../../../../../test/utils/manageTriggers"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("NextHearingLocation", () => {
   beforeEach(() => {
@@ -357,6 +359,7 @@ describe("NextHearingLocation", () => {
       },
       {
         errorStatus: "Resolved",
+        errorResolvedBy: "GeneralHandler",
         errorId: resolvedCaseId,
         orgForPoliceFilter: "01",
         hearingOutcome: nextHearingLocationExceptions.hearingOutcomeXml,
@@ -416,6 +419,14 @@ describe("NextHearingLocation", () => {
   })
 
   it("Should not be able to edit next hearing location field when user is not exception-handler", () => {
+    const trigger: TestTrigger = {
+      triggerId: 1,
+      triggerCode: TriggerCode.TRPR0001,
+      status: "Unresolved",
+      createdAt: new Date()
+    }
+    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
