@@ -89,7 +89,7 @@ describe("View case details", () => {
 
     it("Should return 200 if the case has resolved exceptions and the user is an exception handler who resolved it", () => {
       cy.task("insertCourtCasesWithFields", [
-        { orgForPoliceFilter: "01", errorCount: 1, errorResolvedBy: "ExceptionHandler" }
+        { orgForPoliceFilter: "01", errorCount: 1, errorStatus: "Resolved", errorResolvedBy: "ExceptionHandler" }
       ])
       cy.loginAs("ExceptionHandler")
 
@@ -101,9 +101,9 @@ describe("View case details", () => {
       })
     })
 
-    it("Should return 404 if the case has resolved exceptions and the user is an exception handler who did not resolve it", () => {
+    it("Should return 404 if the case has resolved exceptions and the user is an exception handler but not the one who resolved it", () => {
       cy.task("insertCourtCasesWithFields", [
-        { orgForPoliceFilter: "01", errorCount: 1, errorResolvedBy: "AnotherUser" }
+        { orgForPoliceFilter: "01", errorCount: 1, errorStatus: "Resolved", errorResolvedBy: "AnotherUser" }
       ])
       cy.loginAs("ExceptionHandler")
 
@@ -144,7 +144,7 @@ describe("View case details", () => {
         createdAt: new Date()
       }
 
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", triggerStatus: "Resolved" }])
       cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
       cy.loginAs("TriggerHandler")
 
@@ -156,7 +156,7 @@ describe("View case details", () => {
       })
     })
 
-    it("Should return 404 if the case has a resolved trigger and the user is a trigger handler who did not resolve it", () => {
+    it("Should return 404 if the case has a resolved trigger and the user is a trigger handler but not the one who resolved", () => {
       const trigger: TestTrigger = {
         triggerId: 1,
         triggerCode: TriggerCode.TRPR0001,
@@ -165,7 +165,7 @@ describe("View case details", () => {
         createdAt: new Date()
       }
 
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", triggerStatus: "Resolved" }])
       cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
       cy.loginAs("TriggerHandler")
 
