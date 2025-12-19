@@ -11,22 +11,15 @@ import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
 import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
-function getResolutionStatuses(filters?: Filters) {
-  if (filters == null) {
-    return [ResolutionStatusNumber.Resolved, ResolutionStatusNumber.Unresolved, ResolutionStatusNumber.Submitted]
-  }
-
-  return filters.caseState === ResolutionStatus.Resolved
-    ? [ResolutionStatusNumber.Resolved]
-    : [ResolutionStatusNumber.Unresolved, ResolutionStatusNumber.Submitted]
-}
-
 export const exceptionsAndTriggers = (
   database: DatabaseConnection,
   user: User,
-  filters?: Filters
+  filters: Filters
 ): postgres.PendingQuery<Row[]> => {
-  const resolutionStatus = getResolutionStatuses(filters)
+  const resolutionStatus: number[] =
+    filters.caseState === ResolutionStatus.Resolved
+      ? [ResolutionStatusNumber.Resolved]
+      : [ResolutionStatusNumber.Unresolved, ResolutionStatusNumber.Submitted]
   let exceptionsSql
   let triggersSql
 

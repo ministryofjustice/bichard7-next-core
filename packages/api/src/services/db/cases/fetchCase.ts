@@ -11,7 +11,6 @@ import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
 import { checkUserCanAccessCase } from "./checkUserCanAccessCase"
-import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 
 export default async (
   database: DatabaseConnection,
@@ -71,7 +70,6 @@ export default async (
       WHERE
         el.error_id = ${caseId} 
         AND (${organisationUnitSql(database, user)})
-        ${exceptionsAndTriggers(database, user)}
         ${checkUserCanAccessCase(database, user)}
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `.catch((error: Error) => error)
