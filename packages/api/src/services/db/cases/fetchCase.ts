@@ -10,6 +10,7 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
+import { checkUserCanAccessCase } from "./checkUserCanAccessCase"
 import { exceptionsAndTriggers } from "./filters/exceptionsAndTriggers"
 
 export default async (
@@ -68,9 +69,10 @@ export default async (
         LEFT JOIN br7own.users AS errorLockU ON errorLockU.username = el.error_locked_by_id
         LEFT JOIN br7own.users AS triggerLockU ON triggerLockU.username = el.trigger_locked_by_id
       WHERE
-        el.error_id = ${caseId} AND
-        (${organisationUnitSql(database, user)})
+        el.error_id = ${caseId} 
+        AND (${organisationUnitSql(database, user)})
         ${exceptionsAndTriggers(database, user)}
+        ${checkUserCanAccessCase(database, user)}
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `.catch((error: Error) => error)
 
