@@ -53,6 +53,18 @@ describe("View case details", () => {
       })
     })
 
+    it("Should return 404 if the user is an exception handler but the case has no exceptions", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
+      cy.loginAs("ExceptionHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(404)
+      })
+    })
+
     it("Should return 404 if the case has resolved exceptions and the user is an exception handler but not the one who resolved it", () => {
       cy.task("insertCourtCasesWithFields", [
         { orgForPoliceFilter: "01", errorCount: 1, errorStatus: "Resolved", errorResolvedBy: "AnotherUser" }
@@ -105,6 +117,18 @@ describe("View case details", () => {
         url: "/bichard/court-cases/0"
       }).then((response) => {
         expect(response.status).to.eq(200)
+      })
+    })
+
+    it("Should return 404 if the user is a trigger handler but the case has no exceptions", () => {
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+      cy.loginAs("TriggerHandler")
+
+      cy.request({
+        failOnStatusCode: false,
+        url: "/bichard/court-cases/0"
+      }).then((response) => {
+        expect(response.status).to.eq(404)
       })
     })
 
