@@ -8,7 +8,7 @@ describe("Exception permissions", () => {
 
   canManuallyResolveAndSubmitTestData.forEach(
     ({ canManuallyResolveAndSubmit, exceptionStatus, exceptionLockedByAnotherUser, loggedInAs }) => {
-      it(`Should ${
+      it(`${loggedInAs} should ${
         canManuallyResolveAndSubmit ? "be able to resolve or submit" : "NOT be able to resolve or submit"
       } when exceptions are ${exceptionStatus}, ${
         exceptionLockedByAnotherUser ? "locked by another user" : "locked by current user"
@@ -16,7 +16,9 @@ describe("Exception permissions", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             orgForPoliceFilter: "01",
+            errorCount: 1,
             errorStatus: exceptionStatus,
+            errorResolvedBy: exceptionStatus === "Resolved" ? loggedInAs : undefined,
             errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : loggedInAs
           }
         ])
@@ -44,5 +46,3 @@ describe("Exception permissions", () => {
     }
   )
 })
-
-export {}
