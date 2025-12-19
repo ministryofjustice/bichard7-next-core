@@ -92,15 +92,18 @@ describe("View case details", () => {
     })
 
     it("Should return 200 if the case has unresolved triggers and the user is a trigger handler", () => {
-      const trigger: TestTrigger = {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0001,
-        status: "Unresolved",
-        createdAt: new Date()
-      }
-
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-      cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Unresolved",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
       cy.loginAs("TriggerHandler")
 
       cy.request({
@@ -112,16 +115,20 @@ describe("View case details", () => {
     })
 
     it("Should return 200 if the case has a resolved trigger and the user is a trigger handler who resolved it", () => {
-      const trigger: TestTrigger = {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0001,
-        status: "Resolved",
-        resolvedBy: "TriggerHandler",
-        createdAt: new Date()
-      }
-
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", triggerStatus: "Resolved" }])
-      cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Resolved",
+            resolvedBy: "TriggerHandler",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
+
       cy.loginAs("TriggerHandler")
 
       cy.request({
@@ -145,16 +152,20 @@ describe("View case details", () => {
     })
 
     it("Should return 404 if the case has a resolved trigger and the user is a trigger handler but not the one who resolved", () => {
-      const trigger: TestTrigger = {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0001,
-        status: "Resolved",
-        resolvedBy: "AnotherUser",
-        createdAt: new Date()
-      }
-
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", triggerStatus: "Resolved" }])
-      cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Resolved",
+            resolvedBy: "AnotherUser",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
+
       cy.loginAs("TriggerHandler")
 
       cy.request({
@@ -168,15 +179,17 @@ describe("View case details", () => {
 
   it("Should be accessible", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
-    const triggers: TestTrigger[] = [
-      {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
-      }
-    ]
-    cy.task("insertTriggers", { caseId: 0, triggers })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -231,15 +244,17 @@ describe("View case details", () => {
 
   it("Should load case details for the case that this user can see", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-    const triggers: TestTrigger[] = [
-      {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0001,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
-      }
-    ]
-    cy.task("insertTriggers", { caseId: 0, triggers })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -538,23 +553,25 @@ describe("View case details", () => {
 
   it("Should show triggers tab by default when navigating to court case details page", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-    const triggers: TestTrigger[] = [
-      {
-        triggerId: 0,
-        triggerItemIdentity: 1,
-        triggerCode: TriggerCode.TRPR0010,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
-      },
-      {
-        triggerId: 1,
-        triggerItemIdentity: 1,
-        triggerCode: TriggerCode.TRPR0015,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T11:22:34.000Z")
-      }
-    ]
-    cy.task("insertTriggers", { caseId: 0, triggers })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerItemIdentity: 1,
+          triggerCode: TriggerCode.TRPR0010,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        },
+        {
+          triggerId: 1,
+          triggerItemIdentity: 1,
+          triggerCode: TriggerCode.TRPR0015,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T11:22:34.000Z")
+        }
+      ] satisfies TestTrigger[]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -587,16 +604,18 @@ describe("View case details", () => {
 
   it("Should show exceptions in exceptions tab", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-    const triggers: TestTrigger[] = [
-      {
-        triggerId: 0,
-        triggerItemIdentity: 1,
-        triggerCode: TriggerCode.TRPR0010,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
-      }
-    ]
-    cy.task("insertTriggers", { caseId: 0, triggers })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerItemIdentity: 1,
+          triggerCode: TriggerCode.TRPR0010,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -630,23 +649,25 @@ describe("View case details", () => {
 
   it("Should take the user to the offence tab when trigger is clicked", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-    const triggers: TestTrigger[] = [
-      {
-        triggerId: 0,
-        triggerCode: TriggerCode.TRPR0010,
-        triggerItemIdentity: 1,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
-      },
-      {
-        triggerId: 1,
-        triggerCode: TriggerCode.TRPR0015,
-        triggerItemIdentity: 2,
-        status: "Unresolved",
-        createdAt: new Date("2022-07-09T10:22:34.000Z")
-      }
-    ]
-    cy.task("insertTriggers", { caseId: 0, triggers })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0010,
+          triggerItemIdentity: 1,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        },
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0015,
+          triggerItemIdentity: 2,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        }
+      ] satisfies TestTrigger[]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -710,13 +731,17 @@ describe("View case details", () => {
 
   it("Should show contextual help for a trigger when the accordion button is clicked", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-    const trigger: TestTrigger = {
-      triggerId: 0,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Unresolved",
-      createdAt: new Date()
-    }
-    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -781,15 +806,19 @@ describe("View case details", () => {
     cy.task("insertCourtCasesWithFields", [
       { orgForPoliceFilter: "01", hearingOutcome: DummyHO100302Aho.hearingOutcomeXml }
     ])
-    const trigger: TestTrigger = {
-      triggerId: 0,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Resolved",
-      createdAt: new Date(),
-      resolvedAt: new Date(),
-      resolvedBy: "BichardForce01"
-    }
-    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Resolved",
+          createdAt: new Date(),
+          resolvedAt: new Date(),
+          resolvedBy: "BichardForce01"
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 

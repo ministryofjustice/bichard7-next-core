@@ -22,13 +22,6 @@ describe("ASN", () => {
   })
 
   it("Should not be able to edit ASN field when there is no relevant exception", () => {
-    const trigger: TestTrigger = {
-      triggerId: 1,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Unresolved",
-      createdAt: new Date()
-    }
-
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
@@ -38,7 +31,17 @@ describe("ASN", () => {
         errorStatus: null
       }
     ])
-    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -154,13 +157,6 @@ describe("ASN", () => {
   })
 
   it("Should not be able to edit ASN field if user is not an exception handler", () => {
-    const trigger: TestTrigger = {
-      triggerId: 1,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Unresolved",
-      createdAt: new Date()
-    }
-
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [
       {
@@ -171,7 +167,17 @@ describe("ASN", () => {
         errorLockedByUsername: "TriggerHandler"
       }
     ])
-    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
