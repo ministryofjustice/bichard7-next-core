@@ -419,13 +419,17 @@ describe("NextHearingLocation", () => {
   })
 
   it("Should not be able to edit next hearing location field when user is not exception-handler", () => {
-    const trigger: TestTrigger = {
-      triggerId: 1,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Unresolved",
-      createdAt: new Date()
-    }
-    cy.task("insertTriggers", { caseId: 0, triggers: [trigger] })
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
