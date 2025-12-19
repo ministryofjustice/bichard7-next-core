@@ -19,7 +19,7 @@ export function checkUserCanAccessCase(database: DatabaseConnection, user: User)
     return database.connection`
       AND (
         el.trigger_status = ${ResolutionStatusNumber.Unresolved} 
-        OR el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}
+        OR el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})
         OR el.trigger_resolved_by = ${user.username} 
         OR elt.resolved_by = ${user.username}
         OR el.error_resolved_by = ${user.username}
