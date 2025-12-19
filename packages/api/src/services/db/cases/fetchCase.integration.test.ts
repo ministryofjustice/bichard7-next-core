@@ -80,108 +80,110 @@ describe("fetchCase", () => {
     expect(result.errorId).toEqual(caseObj.errorId)
   })
 
-  it("fetches the case if the user is an exception handler and the case has unresolved exceptions", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway, {
-      errorCount: 1
+  describe("Test different roles", () => {
+    it("returns error if user in no groups", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway)
+
+      const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+
+      expect(result).toBeInstanceOf(Error)
+      expect((result as Error).message).toBe("Case id 1 for user User1 not found")
     })
 
-    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    it("fetches the case if the user is an exception handler and the case has unresolved exceptions", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, {
+        errorCount: 1
+      })
 
-    expect(result.errorId).toEqual(caseObj.errorId)
-  })
+      const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
 
-  it("fetches the case if the user is an exception handler and the case has been resolved by them", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway, {
-      errorCount: 1,
-      errorResolvedBy: user.username,
-      errorStatus: ResolutionStatusNumber.Resolved
+      expect(result.errorId).toEqual(caseObj.errorId)
     })
 
-    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    it("fetches the case if the user is an exception handler and the case has been resolved by them", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, {
+        errorCount: 1,
+        errorResolvedBy: user.username,
+        errorStatus: ResolutionStatusNumber.Resolved
+      })
 
-    expect(result.errorId).toEqual(caseObj.errorId)
-  })
+      const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
 
-  it("returns error if the user is an exception handler but the case has been resolved by another user", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway, {
-      errorCount: 1,
-      errorResolvedBy: "another_user",
-      errorStatus: ResolutionStatusNumber.Resolved
+      expect(result.errorId).toEqual(caseObj.errorId)
     })
 
-    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+    it("returns error if the user is an exception handler but the case has been resolved by another user", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, {
+        errorCount: 1,
+        errorResolvedBy: "another_user",
+        errorStatus: ResolutionStatusNumber.Resolved
+      })
 
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
-  })
+      const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
 
-  it("returns an error if the user is an exception handler but the case has no exceptions", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway, {
-      errorCount: 0
+      expect(result).toBeInstanceOf(Error)
+      expect((result as Error).message).toBe("Case id 1 for user User1 not found")
     })
 
-    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+    it("returns an error if the user is an exception handler but the case has no exceptions", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, {
+        errorCount: 0
+      })
 
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
-  })
+      const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
 
-  it("fetches the case if the user is a trigger handler and the case has unresolved triggers", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway)
-    await createTriggers(testDatabaseGateway, caseObj.errorId, [{}])
+      expect(result).toBeInstanceOf(Error)
+      expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+    })
 
-    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    it("fetches the case if the user is a trigger handler and the case has unresolved triggers", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway)
+      await createTriggers(testDatabaseGateway, caseObj.errorId, [{}])
 
-    expect(result.errorId).toEqual(caseObj.errorId)
-  })
+      const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
 
-  it("fetches the case if the user is a trigger handler and the case has been resolved by them", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway, { triggerStatus: ResolutionStatusNumber.Resolved })
-    await createTriggers(testDatabaseGateway, caseObj.errorId, [
-      { resolvedBy: user.username, status: ResolutionStatusNumber.Resolved }
-    ])
+      expect(result.errorId).toEqual(caseObj.errorId)
+    })
 
-    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    it("fetches the case if the user is a trigger handler and the case has been resolved by them", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, { triggerStatus: ResolutionStatusNumber.Resolved })
+      await createTriggers(testDatabaseGateway, caseObj.errorId, [
+        { resolvedBy: user.username, status: ResolutionStatusNumber.Resolved }
+      ])
 
-    expect(result.errorId).toEqual(caseObj.errorId)
-  })
+      const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
 
-  it("returns error if the user is a trigger handler but the case has been resolved by another user", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway, { triggerStatus: ResolutionStatusNumber.Resolved })
-    await createTriggers(testDatabaseGateway, caseObj.errorId, [
-      { resolvedBy: "another_user", status: ResolutionStatusNumber.Resolved }
-    ])
+      expect(result.errorId).toEqual(caseObj.errorId)
+    })
 
-    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+    it("returns error if the user is a trigger handler but the case has been resolved by another user", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, { triggerStatus: ResolutionStatusNumber.Resolved })
+      await createTriggers(testDatabaseGateway, caseObj.errorId, [
+        { resolvedBy: "another_user", status: ResolutionStatusNumber.Resolved }
+      ])
 
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
-  })
+      const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
 
-  it("returns an error if the user is an trigger handler but the case has no triggers", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway)
+      expect(result).toBeInstanceOf(Error)
+      expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+    })
 
-    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
+    it("returns an error if the user is an trigger handler but the case has no triggers", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway)
 
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
-  })
+      const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
 
-  it("returns error if user in no groups", async () => {
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
-    const caseObj = await createCase(testDatabaseGateway)
-
-    const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
-
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+      expect(result).toBeInstanceOf(Error)
+      expect((result as Error).message).toBe("Case id 1 for user User1 not found")
+    })
   })
 })
