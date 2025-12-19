@@ -16,7 +16,7 @@ describe("View case details", () => {
 
   describe("Role based tests", () => {
     it("Should return 200 for a case when the user is a supervisor", () => {
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
       cy.loginAs("Supervisor")
 
       cy.request({
@@ -28,7 +28,7 @@ describe("View case details", () => {
     })
 
     it("Should return 404 for a case that this user can not see due to being in no groups", () => {
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
+      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
       cy.loginAs("NoGroups")
 
       cy.request({
