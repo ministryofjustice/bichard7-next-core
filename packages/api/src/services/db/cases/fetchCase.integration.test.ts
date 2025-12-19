@@ -81,6 +81,15 @@ describe("fetchCase", () => {
   })
 
   describe("Test different roles", () => {
+    it("fetches case if user is a supervisor", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor], id: 1 })
+      const caseObj = await createCase(testDatabaseGateway, { errorStatus: 2 })
+
+      const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+
+      expect(result.errorId).toEqual(caseObj.errorId)
+    })
+
     it("returns error if user in no groups", async () => {
       const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
       const caseObj = await createCase(testDatabaseGateway)
