@@ -75,7 +75,6 @@ export default async (
     `.catch((error: Error) => error)
 
   if (isError(result)) {
-    console.log({ result })
     return Error(`Couldn't fetch case id ${caseId} for user ${user.username}: ${result.message}`)
   }
 
