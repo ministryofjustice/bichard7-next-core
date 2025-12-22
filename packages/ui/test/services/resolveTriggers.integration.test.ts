@@ -20,8 +20,6 @@ import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-jest.setTimeout(100000)
-
 describe("resolveTriggers", () => {
   let dataSource: DataSource
 
