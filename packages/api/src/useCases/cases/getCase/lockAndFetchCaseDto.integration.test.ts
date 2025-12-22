@@ -126,31 +126,7 @@ describe("lockAndFetchCaseDto", () => {
     expect(result.canUserEditExceptions).toBe(false)
   })
 
-  it("returns canUserEditExceptions false when user does not have access to exceptions", async () => {
-    const user = await createUser(databaseGateway, {
-      groups: [UserGroup.Audit],
-      username: "user1",
-      visibleForces: ["01"]
-    })
-    const caseObj = await createCase(databaseGateway, {
-      aho: testAhoXml,
-      errorId: 1,
-      errorLockedById: "user1",
-      errorStatus: 1
-    })
-
-    const result = (await lockAndFetchCaseDto(
-      databaseGateway.writable,
-      testDynamoGateway,
-      user,
-      caseObj.errorId,
-      logger
-    )) as CaseDto
-
-    expect(result.canUserEditExceptions).toBe(false)
-  })
-
-  it("returns canUserEditExceptions false errorStatus is not unresolved", async () => {
+  it("returns canUserEditExceptions false when errorStatus is resolved", async () => {
     const user = await createUser(databaseGateway, {
       groups: [UserGroup.ExceptionHandler],
       username: "user1",
@@ -160,6 +136,7 @@ describe("lockAndFetchCaseDto", () => {
       aho: testAhoXml,
       errorId: 1,
       errorLockedById: "user1",
+      errorResolvedBy: "user1",
       errorStatus: 2
     })
 

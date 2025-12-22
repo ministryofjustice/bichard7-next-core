@@ -1,5 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { loginAndVisit } from "../../../support/helpers"
+import { TestTrigger } from "../../../../test/utils/manageTriggers"
 
 describe("View court case details header", () => {
   beforeEach(() => {
@@ -10,23 +11,25 @@ describe("View court case details header", () => {
   it("should have a leave and lock button that returns to the case list when the case is locked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
+        triggerStatus: "Unresolved",
         triggerLockedByUsername: "TriggerHandler",
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01t"
       }
     ])
     cy.task("insertTriggers", {
       caseId: 0,
       triggers: [
         {
-          triggerId: 0,
-          triggerCode: TriggerCode.TRPR0010,
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
           status: "Unresolved",
-          createdAt: new Date("2022-07-09T10:22:34.000Z")
-        }
+          createdAt: new Date()
+        } satisfies TestTrigger
       ]
     })
 
     loginAndVisit("TriggerHandler")
+
     cy.get(".locked-by-tag").should("have.text", "Trigger Handler User")
     cy.get("td a").contains("NAME Defendant").click()
     cy.location("pathname").should("equal", "/bichard/court-cases/0")
@@ -40,10 +43,22 @@ describe("View court case details header", () => {
   it("should have a return to case list button that returns to the case list when the case isn't locked", () => {
     cy.task("insertCourtCasesWithFields", [
       {
+        triggerStatus: "Unresolved",
         triggerLockedByUsername: "Supervisor",
         orgForPoliceFilter: "01"
       }
     ])
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
@@ -137,6 +152,17 @@ describe("View court case details header", () => {
           orgForPoliceFilter: "01"
         }
       ])
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Unresolved",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
 
       loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
       cy.get(".view-only-badge").contains("View only").should("exist").should("be.visible")
@@ -151,6 +177,17 @@ describe("View court case details header", () => {
           orgForPoliceFilter: "01"
         }
       ])
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Unresolved",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
 
       loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
       cy.get(".view-only-badge").should("not.exist")
@@ -165,6 +202,17 @@ describe("View court case details header", () => {
           orgForPoliceFilter: "01"
         }
       ])
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Unresolved",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
 
       loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
       cy.get(".view-only-badge").should("not.exist")
@@ -179,6 +227,17 @@ describe("View court case details header", () => {
           orgForPoliceFilter: "01"
         }
       ])
+      cy.task("insertTriggers", {
+        caseId: 0,
+        triggers: [
+          {
+            triggerId: 1,
+            triggerCode: TriggerCode.TRPR0001,
+            status: "Unresolved",
+            createdAt: new Date()
+          } satisfies TestTrigger
+        ]
+      })
 
       loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
       cy.get(".view-only-badge").should("not.exist")
@@ -252,6 +311,17 @@ describe("View court case details header", () => {
             orgForPoliceFilter: "01"
           }
         ])
+        cy.task("insertTriggers", {
+          caseId: 0,
+          triggers: [
+            {
+              triggerId: 1,
+              triggerCode: TriggerCode.TRPR0001,
+              status: "Unresolved",
+              createdAt: new Date()
+            } satisfies TestTrigger
+          ]
+        })
 
         loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
@@ -268,6 +338,17 @@ describe("View court case details header", () => {
             orgForPoliceFilter: "01"
           }
         ])
+        cy.task("insertTriggers", {
+          caseId: 0,
+          triggers: [
+            {
+              triggerId: 1,
+              triggerCode: TriggerCode.TRPR0001,
+              status: "Unresolved",
+              createdAt: new Date()
+            } satisfies TestTrigger
+          ]
+        })
 
         loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 

@@ -9,16 +9,6 @@ describe("Triggers and exceptions tabs", () => {
     cy.task("insertCourtCasesWithFields", defaultTriggerCases)
   })
 
-  it("should show neither triggers nor exceptions to a user with no groups", () => {
-    loginAndVisit("NoGroups", caseURL)
-
-    cy.get(".case-details-sidebar #triggers-tab").should("not.exist")
-    cy.get(".case-details-sidebar #triggers-tab-panel").should("not.exist")
-
-    cy.get(".case-details-sidebar #exceptions-tab").should("not.exist")
-    cy.get(".case-details-sidebar #exceptions-tab-panel").should("not.exist")
-  })
-
   it("should only show triggers to Trigger Handlers", () => {
     cy.task("insertTriggers", {
       caseId: 0,
@@ -26,7 +16,7 @@ describe("Triggers and exceptions tabs", () => {
         {
           triggerId: 0,
           triggerCode: TriggerCode.TRPR0001,
-          status: "Resolved",
+          status: "Unresolved",
           createdAt: new Date("2022-07-09T10:22:34.000Z")
         }
       ]

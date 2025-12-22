@@ -34,11 +34,5 @@
     "exceptionLockedByAnotherUser": false,
     "exceptionStatus": "Resolved",
     "loggedInAs": "ExceptionHandler"
-  },
-  {
-    "canManuallyResolveAndSubmit": false,
-    "exceptionLockedByAnotherUser": false,
-    "exceptionStatus": "Unresolved",
-    "loggedInAs": "TriggerHandler"
   }
 ]

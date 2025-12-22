@@ -4,6 +4,7 @@ import type PromiseResult from "../types/PromiseResult"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import type User from "./entities/User"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
+import { filterByUserAccess } from "./filters/filterByUserAccess"
 
 const getCourtCaseByOrganisationUnit = (
   dataSource: DataSource | EntityManager,
@@ -28,6 +29,8 @@ const getCourtCaseByOrganisationUnit = (
     .leftJoin("note.user", "user")
     .addSelect(["user.forenames", "user.surname", "user.visibleForces", "user.username"])
     .addOrderBy("note.createdAt", "ASC")
+
+  query = filterByUserAccess(dataSource, query, user)
 
   return query.getOne().catch((error) => error)
 }

@@ -7,6 +7,8 @@ import {
   verifyUpdatedMessage,
   refreshUntilNotePresent
 } from "../../../../support/helpers"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type { TestTrigger } from "../../../../../test/utils/manageTriggers"
 
 describe("NextHearingDate", () => {
   beforeEach(() => {
@@ -21,14 +23,25 @@ describe("NextHearingDate", () => {
     ])
   })
 
-  it("Should not be able to edit next hearing date field there is no exception", () => {
+  it("Should not be able to edit next hearing date field if there is no exception", () => {
     cy.task("insertCourtCasesWithFields", [
       {
         orgForPoliceFilter: "01",
         hearingOutcome: dummyAho.hearingOutcomeXml,
-        errorCount: 1
+        errorCount: 0
       }
     ])
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
 
     loginAndVisit("/bichard/court-cases/0")
 
@@ -52,6 +65,7 @@ describe("NextHearingDate", () => {
       },
       {
         errorStatus: "Resolved",
+        errorResolvedBy: "GeneralHandler",
         errorId: resolvedCaseId,
         orgForPoliceFilter: "01",
         hearingOutcome: nextHearingDateExceptions.hearingOutcomeXml,
@@ -386,6 +400,18 @@ describe("NextHearingDate", () => {
   })
 
   it("Should not be able to edit next hearing date field when user is not exception-handler", () => {
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 1,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date()
+        } satisfies TestTrigger
+      ]
+    })
+
     loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()

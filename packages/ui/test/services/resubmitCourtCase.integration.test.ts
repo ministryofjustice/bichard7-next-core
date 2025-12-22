@@ -16,6 +16,7 @@ import offenceSequenceException from "../test-data/HO100302_1.json"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCasesWithFields } from "../utils/insertCourtCases"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/insertNotes")
 
@@ -94,6 +95,7 @@ describe("resubmit court case", () => {
       username: userName,
       visibleForces: ["01"],
       visibleCourts: [],
+      groups: [UserGroup.GeneralHandler],
       hasAccessTo: hasAccessToAll
     } as Partial<User> as User)
 
@@ -154,6 +156,7 @@ describe("resubmit court case", () => {
         username: userName,
         visibleForces: ["11"],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
@@ -234,6 +237,7 @@ describe("resubmit court case", () => {
         username: userName,
         visibleForces: ["11"],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
@@ -301,6 +305,7 @@ describe("resubmit court case", () => {
         username: userName,
         visibleForces: ["11"],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
@@ -338,6 +343,7 @@ describe("resubmit court case", () => {
         username: userName,
         visibleForces: ["11"],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
@@ -380,6 +386,7 @@ describe("resubmit court case", () => {
         username: userName,
         visibleForces: ["11"],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
@@ -416,6 +423,7 @@ describe("resubmit court case", () => {
         username: userName,
         visibleForces: ["11"],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
     )
