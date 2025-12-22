@@ -10,7 +10,7 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
-import { checkUserCanAccessCase } from "./checkUserCanAccessCase"
+import { filterByUserAccess } from "./filterByUserAccess"
 
 export default async (
   database: DatabaseConnection,
@@ -70,7 +70,7 @@ export default async (
       WHERE
         el.error_id = ${caseId} 
         AND (${organisationUnitSql(database, user)})
-        ${checkUserCanAccessCase(database, user)}
+        ${filterByUserAccess(database, user)}
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `.catch((error: Error) => error)
 

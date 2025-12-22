@@ -7,7 +7,7 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
-export function checkUserCanAccessCase(database: DatabaseConnection, user: User) {
+export function filterByUserAccess(database: DatabaseConnection, user: User) {
   if (userAccess(user)[Permission.ListAllCases]) {
     return database.connection``
   }
