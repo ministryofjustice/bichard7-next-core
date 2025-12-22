@@ -26,6 +26,7 @@ import deleteFromDynamoTable from "../../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../../utils/deleteFromEntity"
 import { getCourtCaseById } from "../../utils/getCourtCaseById"
 import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/insertNotes")
 jest.mock("services/reallocateCourtCase/recalculateTriggers")
@@ -39,6 +40,7 @@ const user = {
   username: "GeneralHandler",
   visibleForces: [oldForceCode],
   visibleCourts: [],
+  groups: [UserGroup.GeneralHandler],
   hasAccessTo: hasAccessToAll
 } as Partial<User> as User
 
@@ -112,6 +114,7 @@ describe("reallocate court case to another force", () => {
     await deleteFromEntity(SurveyFeedback)
     await deleteFromDynamoTable("auditLogTable", "messageId")
     await deleteFromDynamoTable("auditLogEventsTable", "_id")
+
     jest.resetAllMocks()
     jest.clearAllMocks()
     ;(insertNotes as jest.Mock).mockImplementation(jest.requireActual("services/insertNotes").default)
@@ -152,6 +155,7 @@ describe("reallocate court case to another force", () => {
         username: userName,
         visibleForces: [oldForceCode],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
 
@@ -217,6 +221,7 @@ describe("reallocate court case to another force", () => {
         username: userName,
         visibleForces: [oldForceCode],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
 
@@ -278,7 +283,9 @@ describe("reallocate court case to another force", () => {
         {
           orgForPoliceFilter: oldForceCode,
           errorId: courtCaseId,
+          errorCount: 1,
           errorStatus: "Resolved",
+          errorResolvedBy: user.username,
           errorLockedByUsername: user.username,
           triggerLockedByUsername: user.username,
           phase: Phase.PNC_UPDATE,
@@ -315,7 +322,12 @@ describe("reallocate court case to another force", () => {
         }
       ])
 
-      const result = await reallocateCourtCaseToForce(dataSource, courtCaseId, user, "06").catch((error) => error)
+      const result = await reallocateCourtCaseToForce(
+        dataSource,
+        courtCaseId,
+        { ...user, groups: [UserGroup.Supervisor] } as User, // Use supervisor as general handlers wouldn't be able to access case
+        "06"
+      ).catch((error) => error)
       expect(isError(result)).toBe(false)
 
       const reallocatedCourtCase = (await getCourtCaseById(courtCaseId)) as CourtCase
@@ -339,7 +351,8 @@ describe("reallocate court case to another force", () => {
         errorId: courtCaseId,
         errorLockedByUsername: null,
         triggerLockedByUsername: userName,
-        errorStatus: "Resolved"
+        errorStatus: "Resolved",
+        errorResolvedBy: userName
       }
     ])
 
@@ -347,6 +360,7 @@ describe("reallocate court case to another force", () => {
       username: userName,
       visibleForces: [oldForceCode],
       visibleCourts: [],
+      groups: [UserGroup.GeneralHandler],
       hasAccessTo: hasAccessToAll
     } as Partial<User> as User
 
@@ -385,6 +399,7 @@ describe("reallocate court case to another force", () => {
       username: userName,
       visibleForces: [oldForceCode],
       visibleCourts: [],
+      groups: [UserGroup.GeneralHandler],
       hasAccessTo: hasAccessToAll
     } as Partial<User> as User
 
@@ -447,6 +462,7 @@ describe("reallocate court case to another force", () => {
         username: "GeneralHandler",
         visibleForces: [oldForceCode],
         visibleCourts: [],
+        groups: [UserGroup.GeneralHandler],
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
 
