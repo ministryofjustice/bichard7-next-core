@@ -73,11 +73,13 @@ describe("resolveTriggers", () => {
   })
 
   beforeEach(async () => {
-    await deleteFromEntity(Note)
-    await deleteFromEntity(Trigger)
-    await deleteFromEntity(CourtCase)
-    await deleteFromDynamoTable("auditLogTable", "messageId")
-    await deleteFromDynamoTable("auditLogEventsTable", "_id")
+    await Promise.all([
+      deleteFromEntity(Note),
+      deleteFromEntity(Trigger),
+      deleteFromEntity(CourtCase),
+      deleteFromDynamoTable("auditLogTable", "messageId"),
+      deleteFromDynamoTable("auditLogEventsTable", "_id")
+    ])
   })
 
   afterAll(async () => {
