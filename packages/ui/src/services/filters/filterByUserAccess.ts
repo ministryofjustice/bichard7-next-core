@@ -5,6 +5,7 @@ import type User from "../entities/User"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import Permission from "@moj-bichard7/common/types/Permission"
 import Trigger from "../entities/Trigger"
+import { ResolutionStatusNumber } from "@moj-bichard7/api/src/useCases/dto/convertResolutionStatus"
 
 export const filterByUserAccess = (
   dataSource: DataSource | EntityManager,
@@ -38,7 +39,7 @@ export const filterByUserAccess = (
       new Brackets((orQb) => {
         orQb
           .orWhere("courtCase.errorStatus IN (:...status)", {
-            status: ["Unresolved", "Submitted"]
+            status: [ResolutionStatusNumber.Unresolved, ResolutionStatusNumber.Submitted]
           })
           .orWhere({ errorResolvedBy: user.username })
       })
