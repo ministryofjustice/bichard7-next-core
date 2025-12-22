@@ -80,7 +80,7 @@ describe("resolveTriggers", () => {
       deleteFromDynamoTable("auditLogTable", "messageId"),
       deleteFromDynamoTable("auditLogEventsTable", "_id")
     ])
-  })
+  }, 15_000)
 
   afterAll(async () => {
     await dataSource.destroy()
