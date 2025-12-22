@@ -31,7 +31,6 @@ const getCourtCaseByOrganisationUnit = (
     .addOrderBy("note.createdAt", "ASC")
 
   query = filterByUserAccess(dataSource, query, user)
-  console.log({ query: query.getQuery(), params: query.getParameters() })
 
   return query.getOne().catch((error) => error)
 }
