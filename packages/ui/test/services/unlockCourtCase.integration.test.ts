@@ -15,6 +15,7 @@ import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/updateLockStatusToUnlocked")
 jest.mock("services/storeAuditLogEvents")
@@ -27,6 +28,7 @@ describe("unlock court case", () => {
     username: lockedByName,
     visibleForces: ["36"],
     visibleCourts: [],
+    groups: [UserGroup.GeneralHandler],
     hasAccessTo: hasAccessToAll
   } as Partial<User> as User
   let lockedCourtCase: CourtCase
