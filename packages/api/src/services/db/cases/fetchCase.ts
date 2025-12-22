@@ -10,7 +10,7 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
-import { filterByUserAccess } from "./filterByUserAccess"
+import { filterByUserAccess } from "./filters/userAccess"
 
 export default async (
   database: DatabaseConnection,
