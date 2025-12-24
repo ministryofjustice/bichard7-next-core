@@ -16,12 +16,18 @@ describe("convertResultToErrorListRecord", () => {
         triggers: [{ code: TriggerCode.TRPR0001 }],
         hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] }
       })
+
       const convertedResult = convertResultToErrorListRecord(phase1Result)
+
+      expect(convertedResult.hearing_outcome).toEqual(phase1Result.hearingOutcome)
+      expect(convertedResult.updated_hearing_outcome).toEqual(phase1Result.hearingOutcome)
       expect(convertedResult).toMatchSnapshot({
         trigger_insert_ts: expect.any(Date),
         msg_received_ts: expect.any(Date),
         error_insert_ts: expect.any(Date),
         create_ts: expect.any(Date),
+        hearing_outcome: expect.any(Object),
+        updated_hearing_outcome: expect.any(Object),
         annotated_msg: expect.any(String),
         updated_msg: expect.any(String),
         message_id: expect.any(String)
@@ -91,11 +97,16 @@ describe("convertResultToErrorListRecord", () => {
         } as PncUpdateDataset
       })
       const convertedResult = convertResultToErrorListRecord(phase2Result)
+
+      expect(convertedResult.hearing_outcome).toEqual(phase2Result.outputMessage)
+      expect(convertedResult.updated_hearing_outcome).toEqual(phase2Result.outputMessage)
       expect(convertedResult).toMatchSnapshot({
         trigger_insert_ts: expect.any(Date),
         msg_received_ts: expect.any(Date),
         error_insert_ts: expect.any(Date),
         create_ts: expect.any(Date),
+        hearing_outcome: expect.any(Object),
+        updated_hearing_outcome: expect.any(Object),
         annotated_msg: expect.any(String),
         updated_msg: expect.any(String),
         message_id: expect.any(String)
