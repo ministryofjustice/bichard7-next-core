@@ -23,4 +23,4 @@ RUN mkdir -p /docker-entrypoint-initdb.d && \
 
 USER postgres
 
-COPY --chown=postgres:postgres docker /docker-entrypoint-initdb.d
+COPY --chown=postgres:postgres --chmod=0555 docker /docker-entrypoint-initdb.d
