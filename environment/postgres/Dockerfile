@@ -18,4 +18,9 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
 WORKDIR /
 
-COPY docker /docker-entrypoint-initdb.d
+RUN mkdir -p /docker-entrypoint-initdb.d && \
+    chown -R postgres:postgres /docker-entrypoint-initdb.d
+
+USER postgres
+
+COPY --chown=postgres:postgres docker /docker-entrypoint-initdb.d
