@@ -1,3 +1,5 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -10,7 +12,6 @@ import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTr
 import type { DataSource } from "typeorm"
 import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
 import CourtCase from "../../../src/services/entities/CourtCase"
 import Trigger from "../../../src/services/entities/Trigger"

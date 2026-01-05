@@ -1,10 +1,11 @@
+import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
+
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import CourtCase from "services/entities/CourtCase"
 import Trigger from "services/entities/Trigger"
 import getDataSource from "services/getDataSource"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import { isError } from "types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields, insertDummyCourtCasesWithTriggers } from "../utils/insertCourtCases"
@@ -18,7 +19,7 @@ describe("leftJoinAndSelectTriggersQuery", () => {
   const dummyOrgCode = "01"
   const testTrigger: { code: string; status: ResolutionStatus } = {
     code: "TRPR0001",
-    status: "Unresolved"
+    status: ResolutionStatus.Unresolved
   }
 
   beforeAll(async () => {
@@ -80,26 +81,26 @@ describe("leftJoinAndSelectTriggersQuery", () => {
       const caseOneTriggers: { code: string; status: ResolutionStatus }[] = [
         {
           code: excludedTriggerCodes[0],
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         },
         {
           code: excludedTriggerCodes[1],
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         }
       ]
 
       const caseTwoTriggers: { code: string; status: ResolutionStatus }[] = [
         {
           code: excludedTriggerCodes[0],
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         },
         {
           code: "TRPR0002",
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         },
         {
           code: excludedTriggerCodes[1],
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         }
       ]
       await insertDummyCourtCasesWithTriggers([caseOneTriggers, caseTwoTriggers], dummyOrgCode)
@@ -124,18 +125,18 @@ describe("leftJoinAndSelectTriggersQuery", () => {
       const caseOneTriggers: { code: string; status: ResolutionStatus }[] = [
         {
           code: "TRPR0001",
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         }
       ]
 
       const caseTwoTriggers: { code: string; status: ResolutionStatus }[] = [
         {
           code: "TRPR0001",
-          status: "Resolved"
+          status: ResolutionStatus.Resolved
         },
         {
           code: "TRPR0002",
-          status: "Resolved"
+          status: ResolutionStatus.Resolved
         }
       ]
       await insertDummyCourtCasesWithTriggers([caseOneTriggers, caseTwoTriggers], dummyOrgCode)

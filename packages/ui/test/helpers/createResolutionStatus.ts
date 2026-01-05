@@ -1,7 +1,8 @@
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import sample from "lodash.sample"
-import type { ResolutionStatus } from "../../src/types/ResolutionStatus"
 
 export default (): ResolutionStatus => {
-  const choices: ResolutionStatus[] = ["Unresolved", "Resolved"]
-  return sample(choices) || "Unresolved"
+  const choices: ResolutionStatus[] = [ResolutionStatus.Unresolved, ResolutionStatus.Resolved]
+  return sample(choices) || ResolutionStatus.Unresolved
 }
