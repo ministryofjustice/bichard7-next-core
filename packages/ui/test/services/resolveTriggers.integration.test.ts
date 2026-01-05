@@ -18,8 +18,7 @@ import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import insertException from "../utils/manageExceptions"
 import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
-
-jest.setTimeout(100000)
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 describe("resolveTriggers", () => {
   let dataSource: DataSource
@@ -74,11 +73,14 @@ describe("resolveTriggers", () => {
   })
 
   beforeEach(async () => {
-    await deleteFromEntity(Note)
-    await deleteFromEntity(CourtCase)
-    await deleteFromDynamoTable("auditLogTable", "messageId")
-    await deleteFromDynamoTable("auditLogEventsTable", "_id")
-  })
+    await Promise.all([
+      deleteFromEntity(Note),
+      deleteFromEntity(Trigger),
+      deleteFromEntity(CourtCase),
+      deleteFromDynamoTable("auditLogTable", "messageId"),
+      deleteFromDynamoTable("auditLogEventsTable", "_id")
+    ])
+  }, 15_000)
 
   afterAll(async () => {
     await dataSource.destroy()
@@ -91,6 +93,7 @@ describe("resolveTriggers", () => {
       visibleCourts: [],
       visibleForces: [visibleForce],
       username: resolverUsername,
+      groups: [UserGroup.TriggerHandler],
       hasAccessTo: hasAccessToAll,
       excludedTriggers: [TriggerCode.TRPR0015]
     } as Partial<User> as User
@@ -258,13 +261,15 @@ describe("resolveTriggers", () => {
         visibleCourts: [],
         visibleForces: [visibleForce],
         username: "BichardForce02",
+        groups: [UserGroup.Supervisor], // Set to supervisor so the user can access the resolved case
         hasAccessTo: hasAccessToAll
       } as Partial<User> as User
 
       const [courtCase] = await insertCourtCasesWithFields([
         {
           triggerLockedByUsername: user.username,
-          orgForPoliceFilter: visibleForce
+          orgForPoliceFilter: visibleForce,
+          triggerStatus: "Unresolved"
         }
       ])
 

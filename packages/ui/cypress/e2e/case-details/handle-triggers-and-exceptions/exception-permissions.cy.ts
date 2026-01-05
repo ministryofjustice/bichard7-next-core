@@ -1,5 +1,7 @@
 import canManuallyResolveAndSubmitTestData from "../../../fixtures/canManuallyResolveAndSubmitTestData.json"
 import { loginAndVisit } from "../../../support/helpers"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type { TestTrigger } from "../../../../test/utils/manageTriggers"
 
 describe("Exception permissions", () => {
   beforeEach(() => {
@@ -8,7 +10,7 @@ describe("Exception permissions", () => {
 
   canManuallyResolveAndSubmitTestData.forEach(
     ({ canManuallyResolveAndSubmit, exceptionStatus, exceptionLockedByAnotherUser, loggedInAs }) => {
-      it(`Should ${
+      it(`${loggedInAs} should ${
         canManuallyResolveAndSubmit ? "be able to resolve or submit" : "NOT be able to resolve or submit"
       } when exceptions are ${exceptionStatus}, ${
         exceptionLockedByAnotherUser ? "locked by another user" : "locked by current user"
@@ -16,10 +18,23 @@ describe("Exception permissions", () => {
         cy.task("insertCourtCasesWithFields", [
           {
             orgForPoliceFilter: "01",
+            errorCount: 1,
             errorStatus: exceptionStatus,
+            errorResolvedBy: exceptionStatus === "Resolved" ? loggedInAs : undefined,
             errorLockedByUsername: exceptionLockedByAnotherUser ? "BichardForce03" : loggedInAs
           }
         ])
+        cy.task("insertTriggers", {
+          caseId: 0,
+          triggers: [
+            {
+              triggerId: 1,
+              triggerCode: TriggerCode.TRPR0001,
+              status: "Unresolved",
+              createdAt: new Date()
+            } satisfies TestTrigger
+          ]
+        })
         loginAndVisit(loggedInAs, "/bichard/court-cases/0")
 
         if (loggedInAs === "GeneralHandler") {
@@ -44,5 +59,3 @@ describe("Exception permissions", () => {
     }
   )
 })
-
-export {}

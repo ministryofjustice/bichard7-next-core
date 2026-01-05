@@ -833,7 +833,6 @@ describe("Filtering cases", () => {
     })
 
     it("Should not show court date mismatch checkbox when feature flags disabled", () => {
-      cy.loginAs("UserMissingFeatureFlags")
       visitBasePath()
 
       cy.get("#case-age").should("exist")

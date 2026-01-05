@@ -1,6 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import axios from "axios"
 import type User from "services/entities/User"
+import type Trigger from "services/entities/Trigger"
 import getCourtCase from "services/getCourtCase"
 import lockCourtCase from "services/lockCourtCase"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
@@ -17,6 +18,8 @@ import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 jest.mock("services/updateLockStatusToLocked")
 jest.mock("services/storeAuditLogEvents")
@@ -29,6 +32,7 @@ describe("lock court case", () => {
     username: lockedByName,
     visibleForces: ["36"],
     visibleCourts: [],
+    groups: [UserGroup.GeneralHandler],
     hasAccessTo: hasAccessToAll
   } as Partial<User> as User
   let unlockedCourtCase: CourtCase
@@ -238,7 +242,10 @@ describe("lock court case", () => {
           errorStatus: "Resolved",
           triggerCount: 1,
           triggerStatus: "Unresolved",
-          orgForPoliceFilter: "36FPA "
+          orgForPoliceFilter: "36FPA ",
+          triggers: [
+            { triggerCode: TriggerCode.TRPR0001, status: ResolutionStatus.Unresolved, createdAt: new Date() } as Trigger
+          ]
         }
       ])
 
@@ -262,8 +269,10 @@ describe("lock court case", () => {
           triggerLockedByUsername: null,
           errorCount: 1,
           errorStatus: "Resolved",
+          errorResolvedBy: user.username,
           triggerCount: 1,
           triggerStatus: "Resolved",
+          triggerResolvedBy: user.username,
           orgForPoliceFilter: "36FPA "
         }
       ])

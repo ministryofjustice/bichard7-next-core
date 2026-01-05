@@ -16,7 +16,7 @@ describe("Check Result Qualifiers", () => {
   })
 
   beforeEach(() => {
-    cy.loginAs("GeneralHandler")
+    cy.loginAs("Supervisor")
     cy.visit("/bichard/court-cases/0")
 
     clickTab("Offences")
@@ -30,12 +30,24 @@ describe("Check Result Qualifiers", () => {
   })
 
   it("will have three codes in the first table", () => {
-    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes").siblings().should("contain.text", "F (Consecutive)")
-    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes").siblings().should("contain.text", "YP (Effective)")
-    cy.get(".hearing-result-1").contains("dt", "Result qualifier codes").siblings().should("contain.text", "RA (Condition - Other)")
+    cy.get(".hearing-result-1")
+      .contains("dt", "Result qualifier codes")
+      .siblings()
+      .should("contain.text", "F (Consecutive)")
+    cy.get(".hearing-result-1")
+      .contains("dt", "Result qualifier codes")
+      .siblings()
+      .should("contain.text", "YP (Effective)")
+    cy.get(".hearing-result-1")
+      .contains("dt", "Result qualifier codes")
+      .siblings()
+      .should("contain.text", "RA (Condition - Other)")
   })
 
   it("will have one codes in the second table", () => {
-    cy.get(".hearing-result-2").contains("dt", "Result qualifier code").siblings().should("contain.text", "F (Consecutive)")
+    cy.get(".hearing-result-2")
+      .contains("dt", "Result qualifier code")
+      .siblings()
+      .should("contain.text", "F (Consecutive)")
   })
 })

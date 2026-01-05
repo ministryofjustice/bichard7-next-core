@@ -1,14 +1,14 @@
 import { loginAndVisit } from "../../../support/helpers"
 
-describe("sidebar", () => {
+describe("Sidebar", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
   })
 
-  describe("sidebar-tabs", () => {
+  describe("Sidebar Tabs", () => {
     beforeEach(() => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
-      loginAndVisit("/bichard/court-cases/0")
+      loginAndVisit("Supervisor", "/bichard/court-cases/0")
     })
 
     it("allows keyboard navigation to default sidebar tab", () => {
@@ -67,7 +67,7 @@ describe("sidebar", () => {
     })
   })
 
-  describe("quality status card", () => {
+  describe("Quality Status Card", () => {
     it("Should show qualityStatusCard when feature flags enabled and user is a supervisor", () => {
       cy.task("insertCourtCasesWithFields", [
         { orgForPoliceFilter: "01", errorStatus: "Resolved", errorCount: 1, triggerCount: 1 }
@@ -90,7 +90,9 @@ describe("sidebar", () => {
     })
 
     it("Should not show qualityStatusCard when user groups are incorrect", () => {
-      cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorStatus: "Resolved" }])
+      cy.task("insertCourtCasesWithFields", [
+        { orgForPoliceFilter: "01", errorStatus: "Resolved", errorCount: 1, errorResolvedBy: "GeneralHandler" }
+      ])
       loginAndVisit("/bichard/court-cases/0")
 
       cy.get("ul.moj-sub-navigation__list").should("exist")
