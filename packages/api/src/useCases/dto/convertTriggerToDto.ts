@@ -1,9 +1,10 @@
 import type { Trigger, TriggerDto } from "@moj-bichard7/common/types/Trigger"
 
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 
-import { ResolutionStatus, resolutionStatusFromDb } from "./convertResolutionStatus"
+import { resolutionStatusFromDb } from "./convertResolutionStatus"
 
 export const convertTriggerToDto = (trigger: Trigger): TriggerDto => {
   return {
