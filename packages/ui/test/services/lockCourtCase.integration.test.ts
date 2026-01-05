@@ -19,7 +19,7 @@ import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 jest.mock("services/updateLockStatusToLocked")
 jest.mock("services/storeAuditLogEvents")
