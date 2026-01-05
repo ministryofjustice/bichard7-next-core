@@ -4,7 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
-import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
 import { sortBy } from "lodash"
@@ -18,7 +18,7 @@ import { sortStringAsc } from "../../../../tests/helpers/sort"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../../useCases/cases/getCases/fetchCasesAndFilter"
-import { resolutionStatusCodeByText, ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
+import { resolutionStatusCodeByText } from "../../../../useCases/dto/convertResolutionStatus"
 
 type CreateReasonCaseProps = {
   caseId: number
