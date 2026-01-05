@@ -2,6 +2,7 @@ import z from "zod"
 
 import { dateLikeToDate } from "../schemas/dateLikeToDate"
 import { CaseAge } from "./CaseAge"
+import { ResolutionStatus } from "./ResolutionStatus"
 
 export enum LockedState {
   All = "All",
@@ -27,12 +28,6 @@ export enum Reason {
   All = "All",
   Exceptions = "Exceptions",
   Triggers = "Triggers"
-}
-
-export enum ResolutionStatus {
-  Resolved = "Resolved",
-  Submitted = "Submitted",
-  Unresolved = "Unresolved"
 }
 
 export const ApiCaseQuerySchema = z.object({
