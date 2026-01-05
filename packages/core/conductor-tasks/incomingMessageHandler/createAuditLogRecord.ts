@@ -12,9 +12,6 @@ import AuditLogStatus from "@moj-bichard7/common/types/AuditLogStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { z } from "zod"
 
-const { apiKey, apiUrl, basePath } = createApiConfig()
-const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
-
 const inputDataSchema = z.object({
   auditLogRecord: auditLogApiRecordInputSchema
 })
@@ -25,6 +22,8 @@ const duplicateOutputData = { duplicateMessage: "isDuplicate" }
 const createAuditLogRecord: ConductorWorker = {
   taskDefName: "create_audit_log_record",
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
+    const { apiKey, apiUrl, basePath } = createApiConfig()
+    const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
     const { auditLogRecord } = task.inputData
 
     const apiResult = await apiClient.createAuditLog(auditLogRecord)
