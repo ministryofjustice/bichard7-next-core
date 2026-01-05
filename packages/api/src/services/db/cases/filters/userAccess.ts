@@ -41,7 +41,9 @@ export function filterByUserAccess(database: DatabaseConnection, user: User) {
         )
       )
     `
-  } else if (canAccessTriggers) {
+  }
+
+  if (canAccessTriggers) {
     return database.connection`
       AND (
         (
@@ -58,7 +60,9 @@ export function filterByUserAccess(database: DatabaseConnection, user: User) {
         )
       )
     `
-  } else if (canAccessExceptions) {
+  }
+
+  if (canAccessExceptions) {
     return database.connection`
       AND (
         el.error_count > 0 
