@@ -244,7 +244,11 @@ describe("lock court case", () => {
           triggerStatus: "Unresolved",
           orgForPoliceFilter: "36FPA ",
           triggers: [
-            { triggerCode: TriggerCode.TRPR0001, status: ResolutionStatus.Unresolved, createdAt: new Date() } as Trigger
+            {
+              triggerCode: TriggerCode.TRPR0001,
+              status: ResolutionStatus.Unresolved,
+              createdAt: new Date()
+            } as Trigger
           ]
         }
       ])
