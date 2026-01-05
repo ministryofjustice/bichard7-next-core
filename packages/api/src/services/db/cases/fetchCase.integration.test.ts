@@ -9,6 +9,7 @@ import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import filter from "./fetchCase"
 
 const testDatabaseGateway = new End2EndPostgres()
