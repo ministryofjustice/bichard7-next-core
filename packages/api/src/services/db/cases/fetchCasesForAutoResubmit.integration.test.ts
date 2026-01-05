@@ -1,10 +1,10 @@
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import { createCases } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import { fetchCasesForAutoResubmit } from "./fetchCasesForAutoResubmit"
 
 describe("fetchCasesForAutoResubmit integration", () => {

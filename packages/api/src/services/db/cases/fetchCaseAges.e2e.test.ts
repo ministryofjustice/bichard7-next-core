@@ -6,6 +6,7 @@ import type { FastifyInstance } from "fastify"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 
@@ -14,7 +15,6 @@ import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHel
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../useCases/cases/getCases/fetchCasesAndFilter"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
 const defaultQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 

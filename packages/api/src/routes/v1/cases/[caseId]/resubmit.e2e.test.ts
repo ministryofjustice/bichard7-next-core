@@ -1,13 +1,13 @@
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { ACCEPTED, FORBIDDEN, NOT_FOUND } from "http-status"
 
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 const defaultRequest = (jwt: string) => {
   return {

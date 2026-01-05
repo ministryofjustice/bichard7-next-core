@@ -1,7 +1,8 @@
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import canCaseBeResubmitted from "./canCaseBeResubmitted"
 
 const testDatabaseGateway = new End2EndPostgres()
