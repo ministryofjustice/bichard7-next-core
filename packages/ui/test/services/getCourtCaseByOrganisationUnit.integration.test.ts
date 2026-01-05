@@ -6,6 +6,7 @@ import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "../../src/services/getCourtCaseByOrganisationUnit"
 import getDataSource from "../../src/services/getDataSource"
 import { isError } from "../../src/types/Result"
+import "../helpers/jest-extensions"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
 
@@ -62,7 +63,7 @@ describe("getCourtCaseByOrganisationUnits", () => {
     expect(isError(result)).toBe(false)
 
     let actualCourtCase = result as CourtCase
-    expect(actualCourtCase).toStrictEqual(inputCourtCase)
+    expect(actualCourtCase).toMatchJson(inputCourtCase)
 
     result = await getCourtCaseByOrganisationUnit(dataSource, inputCourtCase.errorId, {
       visibleForces: [courtCode.substring(0, 2)],
@@ -71,7 +72,7 @@ describe("getCourtCaseByOrganisationUnits", () => {
     expect(isError(result)).toBe(false)
 
     actualCourtCase = result as CourtCase
-    expect(actualCourtCase).toStrictEqual(inputCourtCase)
+    expect(actualCourtCase).toMatchJson(inputCourtCase)
   })
 
   it("Should return null if the court case doesn't exist", async () => {

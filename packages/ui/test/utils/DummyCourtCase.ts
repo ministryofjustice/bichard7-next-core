@@ -21,6 +21,7 @@ const DummyCourtCase: Partial<CourtCase> = {
   asn: "0836FP0100000377244A",
   courtCode: "B42AZ01",
   updatedHearingOutcome: null,
+  updatedHearingOutcomeJson: null,
   errorReport: "",
   createdTimestamp: new Date("2022-06-30T08:44:03.930Z"),
   errorCount: 0,
