@@ -1,11 +1,11 @@
 import { loginAndVisit } from "../../../support/helpers"
 
-describe("sidebar", () => {
+describe("Sidebar", () => {
   beforeEach(() => {
     cy.task("clearCourtCases")
   })
 
-  describe("sidebar-tabs", () => {
+  describe("Sidebar Tabs", () => {
     beforeEach(() => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
       loginAndVisit("Supervisor", "/bichard/court-cases/0")
@@ -67,7 +67,7 @@ describe("sidebar", () => {
     })
   })
 
-  describe("quality status card", () => {
+  describe("Quality Status Card", () => {
     it("Should show qualityStatusCard when feature flags enabled and user is a supervisor", () => {
       cy.task("insertCourtCasesWithFields", [
         { orgForPoliceFilter: "01", errorStatus: "Resolved", errorCount: 1, triggerCount: 1 }
