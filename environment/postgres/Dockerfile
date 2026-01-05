@@ -19,3 +19,7 @@ RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 WORKDIR /
 
 COPY docker /docker-entrypoint-initdb.d
+
+RUN chmod -R 755 /docker-entrypoint-initdb.d
+
+USER postgres
