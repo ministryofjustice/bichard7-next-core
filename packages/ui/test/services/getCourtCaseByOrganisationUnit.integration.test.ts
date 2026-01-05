@@ -1,16 +1,18 @@
+import type { DataSource } from "typeorm"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+
 import Trigger from "services/entities/Trigger"
 import type User from "services/entities/User"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource } from "typeorm"
 import CourtCase from "services/entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
 import { isError } from "types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 jest.mock("services/queries/leftJoinAndSelectTriggersQuery")
 
