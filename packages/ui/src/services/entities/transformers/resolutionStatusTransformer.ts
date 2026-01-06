@@ -1,11 +1,13 @@
 import type { FindOperator, ValueTransformer } from "typeorm"
-import type { ResolutionStatus } from "types/ResolutionStatus"
+
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import resolveFindOperator from "./resolveFindOperator"
 
 const resolutionStatusByCode: Record<number, ResolutionStatus> = {
-  1: "Unresolved",
-  2: "Resolved",
-  3: "Submitted"
+  1: ResolutionStatus.Unresolved,
+  2: ResolutionStatus.Resolved,
+  3: ResolutionStatus.Submitted
 }
 
 const getResolutionStatusCodeByText = (text: string) =>

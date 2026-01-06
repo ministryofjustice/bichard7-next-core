@@ -1,8 +1,9 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import LockedTag from "../../components/LockedTag"
 import ResolutionStatusTag from "../../components/ResolutionStatusTag"
 import { useCourtCase } from "../../context/CourtCaseContext"
 import { useCurrentUser } from "../../context/CurrentUserContext"
-import { ResolutionStatus } from "../../types/ResolutionStatus"
 
 const LockStatusTag = ({
   isRendered,

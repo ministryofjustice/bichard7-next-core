@@ -1,6 +1,7 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import { useCourtCase } from "context/CourtCaseContext"
 import Image from "next/image"
-import { ResolutionStatus } from "../types/ResolutionStatus"
 import { TICK_ICON_URL } from "../utils/icons"
 import { ResolutionStatusTagContainer, ResolutionTag } from "./ResolutionStatusTag.styles"
 

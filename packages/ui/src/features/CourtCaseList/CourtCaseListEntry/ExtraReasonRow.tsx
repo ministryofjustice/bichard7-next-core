@@ -1,6 +1,7 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import ConditionalRender from "components/ConditionalRender"
 import { TableCell } from "components/Table"
-import { ResolutionStatus } from "types/ResolutionStatus"
 import ResolutionStatusBadge from "../tags/ResolutionStatusBadge"
 import { CaseListResolutionStatusBadgeWrapper } from "./CaseDetailsRow/CaseDetailsRow.styles"
 import { StyledExtraReasonRow } from "./ExtraReasonRow.styles"

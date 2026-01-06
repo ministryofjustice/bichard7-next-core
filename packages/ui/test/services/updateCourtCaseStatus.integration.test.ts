@@ -1,9 +1,12 @@
+import type { DataSource, UpdateResult } from "typeorm"
+
 import MockDate from "mockdate"
+
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import type User from "services/entities/User"
 import { isError } from "services/mq/types/Result"
 import updateCourtCaseStatus from "services/updateCourtCaseStatus"
-import type { DataSource, UpdateResult } from "typeorm"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import deleteFromEntity from "../utils/deleteFromEntity"

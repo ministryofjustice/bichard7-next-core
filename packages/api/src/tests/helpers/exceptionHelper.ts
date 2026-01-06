@@ -1,10 +1,8 @@
+import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import type End2EndPostgres from "../testGateways/e2ePostgres"
 
-import {
-  ResolutionStatus,
-  resolutionStatusCodeByText,
-  ResolutionStatusNumber
-} from "../../useCases/dto/convertResolutionStatus"
+import { resolutionStatusCodeByText } from "../../useCases/dto/convertResolutionStatus"
 
 export const createExceptionOnCase = async (
   postgres: End2EndPostgres,

@@ -3,6 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { format, isValid } from "date-fns"
 
@@ -10,7 +11,6 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { CaseAgeOptions } from "../../../useCases/cases/getCases/caseAgeOptions"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import { organisationUnitSql } from "../organisationUnitSql"
 
 const formInputDateFormat = "yyyy-MM-dd"
