@@ -3,13 +3,13 @@ import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import { Reason, ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../../useCases/cases/getCases/fetchCasesAndFilter"
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 describe("fetchCasesAndFilter filtering by resolved case date e2e", () => {
   let helper: SetupAppEnd2EndHelper

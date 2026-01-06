@@ -1,4 +1,4 @@
-import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { TableBody } from "components/Table"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { useRouter } from "next/router"

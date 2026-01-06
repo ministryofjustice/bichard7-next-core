@@ -5,6 +5,7 @@ import type { FastifyInstance } from "fastify"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { sortBy } from "lodash"
 
 import type { Filters } from "../../../types/CaseIndexQuerystring"
@@ -13,7 +14,6 @@ import { createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUsers } from "../../../tests/helpers/userHelper"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import fetchTriggers from "./fetchTriggers"
 
 describe("fetchTriggers e2e", () => {

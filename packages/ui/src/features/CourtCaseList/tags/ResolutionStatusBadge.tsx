@@ -1,5 +1,6 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import Badge, { BadgeColours } from "components/Badge"
-import { ResolutionStatus } from "../../../types/ResolutionStatus"
 
 interface Props {
   resolutionStatus: ResolutionStatus
