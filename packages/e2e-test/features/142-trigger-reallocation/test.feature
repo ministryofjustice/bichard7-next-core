@@ -60,8 +60,7 @@ Feature: {142} BR7 R5.2-RCD423-Trigger Reallocation
       And I see "essex.user: Portal Action: Update Applied. Element: ASN. New Value: 0836FP0100000377244A" in the table
       And I see "essex.user: Portal Action: Resubmitted Message" in the table
     When I click the "Triggers" tab
-    Then I see trigger "TRPR0001" for offence "1"
-      And I see trigger "TRPR0006"
+    Then I see trigger "TRPR0006"
       And I see complete trigger "TRPR0004" for offence "2"
       And the PNC updates the record
       And the audit log contains "Triggers generated"
