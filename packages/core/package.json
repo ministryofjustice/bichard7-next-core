@@ -81,7 +81,6 @@
     "nunjucks": "^3.2.4",
     "pg-promise": "^12.3.0",
     "promise-poller": "^1.9.1",
-    "s3rver": "^3.7.1",
     "ts-command-line-args": "^2.5.1",
     "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
