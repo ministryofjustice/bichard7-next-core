@@ -1,8 +1,8 @@
-import type { PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
+import type { PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../../phase3/types/HearingDetails"
 
-import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
-import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
-import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
+import { PncUpdateType } from "../../../../../phase3/types/HearingDetails"
+import { buildNormalDisposalRequest } from "../../../../../tests/fixtures/buildNormalDisposalRequest"
+import { buildPncUpdateDataset } from "../../../../../tests/fixtures/buildPncUpdateDataset"
 import mapOffences from "./mapOffences"
 
 describe("mapOffences", () => {

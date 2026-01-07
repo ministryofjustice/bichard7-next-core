@@ -8,7 +8,7 @@ import type {
 } from "../../../../types/leds/SubsequentDisposalResultsRequest"
 
 import { convertDate } from "../dateTimeConverter"
-import mapOffences from "../mapToAddDisposalRequest/mapOffences"
+import mapOffences from "./mapToAddDisposalRequest/mapOffences"
 
 const reasonForAppearance: Record<string, ReasonForAppearance> = {
   V: "Subsequently Varied",

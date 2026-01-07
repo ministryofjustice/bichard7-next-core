@@ -2,14 +2,14 @@ import type {
   PncUpdateAdjudication,
   PncUpdateArrestHearing,
   PncUpdateDisposal
-} from "../../../../phase3/types/HearingDetails"
-import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../types/leds/DisposalRequest"
+} from "../../../../../phase3/types/HearingDetails"
+import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../../types/leds/AddDisposalRequest"
 
 import {
   type PncUpdateArrestHearingAdjudicationAndDisposal,
   PncUpdateType
-} from "../../../../phase3/types/HearingDetails"
-import { convertDate, convertTime } from "../dateTimeConverter"
+} from "../../../../../phase3/types/HearingDetails"
+import { convertDate, convertTime } from "../../dateTimeConverter"
 import { toTitleCase } from "./toTitleCase"
 
 type ArrestGroup = {
