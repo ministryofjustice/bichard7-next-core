@@ -6,6 +6,8 @@ LABEL maintainer="CJSE"
 #########################################################
 FROM base AS deps
 
+USER root
+
 WORKDIR /core
 
 # Copy in package info so we don't have to re-install packages for every code change
@@ -23,6 +25,8 @@ RUN npm run install:assets -w packages/ui
 FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
 
+USER root
+
 WORKDIR /core
 
 COPY --from=deps ./core ./
@@ -39,6 +43,8 @@ FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV TZ="Europe/London"
+
+USER root
 
 WORKDIR /app
 

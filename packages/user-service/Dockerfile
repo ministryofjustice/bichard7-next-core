@@ -6,6 +6,8 @@ LABEL maintainer="CJSE"
 #########################################################
 FROM base AS deps
 
+USER root
+
 WORKDIR /core
 
 COPY package*.json ./
@@ -20,6 +22,8 @@ RUN npm run install:assets -w packages/user-service
 FROM base AS builder
 ENV NEXT_TELEMETRY_DISABLED=1
 
+USER root
+
 WORKDIR /core
 
 COPY --from=deps ./core ./
@@ -33,6 +37,8 @@ RUN npm run build:user-service
 FROM base AS runner
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+
+USER root
 
 WORKDIR /app
 
