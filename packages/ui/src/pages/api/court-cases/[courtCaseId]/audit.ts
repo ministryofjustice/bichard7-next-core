@@ -7,7 +7,7 @@ import getDataSource from "services/getDataSource"
 import { isError } from "types/Result"
 import ApiClient from "../../../../services/api/ApiClient"
 import BichardApiV1 from "../../../../services/api/BichardApiV1"
-import { ApiEndpoints, canUseApiEndpoint } from "../../../../services/api/canUseEndpoint"
+import { ApiEndpoints, canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const allowedMethods = ["PATCH", "PUT", "POST"]

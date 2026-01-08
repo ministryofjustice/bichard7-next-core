@@ -18,7 +18,7 @@ import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { ApiEndpoints, canUseApiEndpoint } from "services/api/canUseEndpoint"
+import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
 import { canReallocate, canResolveOrSubmit } from "services/case"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
@@ -46,6 +46,7 @@ import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
 import { isApiError } from "types/ApiError"
+import { ApiEndpoints } from "services/api/types"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
