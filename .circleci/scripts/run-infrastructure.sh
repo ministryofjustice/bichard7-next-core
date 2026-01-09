@@ -2,7 +2,7 @@
 # Set defaults
 USE_API="${USE_API:-false}"
 
-if [ "$USE_API" = "true" ]; then
+if [[ "$USE_API" = "true" ]]; then
   export USE_API_CASE_CANARY_RATIO="1"
   export USE_API_CASES_INDEX_CANARY_RATIO="1"
   export USE_API_CASE_RESUBMIT_CANARY_RATIO="1"
