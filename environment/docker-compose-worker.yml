@@ -39,6 +39,7 @@ services:
       SMTP_PORT: 1025
       SMTP_TLS: "false"
       SMTP_DEBUG: "true"
+      USE_LEDS: ${USE_LEDS:-false}
     depends_on:
       audit-log-api:
         condition: service_healthy
