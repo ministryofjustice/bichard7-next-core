@@ -2,7 +2,7 @@ import type Bichard from "../../utils/world"
 
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
-  {
+  policeApi.mockUpdate("CXU02", {
     matchRegex: "CXU02",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXU02>
@@ -11,5 +11,5 @@ export default (ncm: string, { policeApi }: Bichard) => [
       <GMT>000003073RDIS000006E</GMT>
     </CXU02>`,
     expectedRequest: ""
-  }
+  })
 ]
