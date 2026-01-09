@@ -83,8 +83,12 @@ export const getServerSideProps = withMultipleServerSideProps(
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
     const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
 
-    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces)
-    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
+    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces, currentUser.email)
+    const useApiForCaseResubmit = canUseApiEndpoint(
+      ApiEndpoints.CaseResubmit,
+      currentUser.visibleForces,
+      currentUser.email
+    )
 
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 

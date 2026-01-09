@@ -50,7 +50,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
-  const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
+  const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces, currentUser.email)
 
   let finalCourtCase
   if (!useApiForCaseDetails) {

@@ -4,7 +4,7 @@ import { canaryCheck } from "./canaryCheck"
 import { hasApiEnabledByForce } from "./hasApiEnabledByForce"
 import { isEndpointEnabled } from "./isEndpointEnabled"
 
-export const canUseApiEndpoint = (endpoint: ApiEndpointValue, visibleForces: string[], userEmail?: string): boolean => {
+export const canUseApiEndpoint = (endpoint: ApiEndpointValue, visibleForces: string[], userEmail: string): boolean => {
   if (!USE_API) {
     return false
   }

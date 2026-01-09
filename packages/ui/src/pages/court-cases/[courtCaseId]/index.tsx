@@ -79,8 +79,16 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const loadLockedBy = true
 
-    const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
-    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
+    const useApiForCaseDetails = canUseApiEndpoint(
+      ApiEndpoints.CaseDetails,
+      currentUser.visibleForces,
+      currentUser.email
+    )
+    const useApiForCaseResubmit = canUseApiEndpoint(
+      ApiEndpoints.CaseResubmit,
+      currentUser.visibleForces,
+      currentUser.email
+    )
 
     let apiGateway: BichardApiV1 | undefined = undefined
 
