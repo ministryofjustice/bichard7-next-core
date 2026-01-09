@@ -7,7 +7,8 @@ import getDataSource from "services/getDataSource"
 import { isError } from "types/Result"
 import ApiClient from "../../../../services/api/ApiClient"
 import BichardApiV1 from "../../../../services/api/BichardApiV1"
-import { ApiEndpoints, canUseApiEndpoint } from "../../../../services/api/canUseEndpoint"
+import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
+import { ApiEndpoints } from "services/api/types"
 
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   const allowedMethods = ["PATCH", "PUT", "POST"]
@@ -49,7 +50,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
     return
   }
 
-  const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces)
+  const useApiForCaseDetails = canUseApiEndpoint(ApiEndpoints.CaseDetails, currentUser.visibleForces, currentUser.email)
 
   let finalCourtCase
   if (!useApiForCaseDetails) {

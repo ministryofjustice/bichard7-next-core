@@ -809,6 +809,9 @@ jobs:
             equal: [true, << parameters.api >>]
           steps:
             run:
+              name: Boot Conductor
+              environment:
+                <<: *ui_envs
               command: bash .circleci/scripts/run-infrastructure.sh api conductor
       - run:
           name: Run UI tests
