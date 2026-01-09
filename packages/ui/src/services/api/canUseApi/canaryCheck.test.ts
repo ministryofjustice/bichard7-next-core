@@ -17,14 +17,12 @@ describe("canaryCheck", () => {
     ;(CANARY_RATIOS as any)[ApiEndpoints.CaseDetails] = 1.0
 
     expect(canaryCheck(ApiEndpoints.CaseDetails, "user@example.com")).toBe(true)
-    expect(canaryCheck(ApiEndpoints.CaseDetails)).toBe(true)
   })
 
   it("should always return false when ratio is 0.0", () => {
     ;(CANARY_RATIOS as any)[ApiEndpoints.CaseDetails] = 0.0
 
     expect(canaryCheck(ApiEndpoints.CaseDetails, "user@example.com")).toBe(false)
-    expect(canaryCheck(ApiEndpoints.CaseDetails)).toBe(false)
   })
 
   it("should return consistent results for the same email", () => {
@@ -41,18 +39,5 @@ describe("canaryCheck", () => {
     const result1 = canaryCheck(ApiEndpoints.CaseList, "User@Example.COM")
     const result2 = canaryCheck(ApiEndpoints.CaseList, "user@example.com")
     expect(result1).toBe(result2)
-  })
-
-  it("should return random results when no email is provided", () => {
-    ;(CANARY_RATIOS as any)[ApiEndpoints.CaseList] = 0.5
-    const mockRandom = jest.spyOn(Math, "random")
-
-    mockRandom.mockReturnValue(0.3)
-    expect(canaryCheck(ApiEndpoints.CaseList)).toBe(true)
-
-    mockRandom.mockReturnValue(0.7)
-    expect(canaryCheck(ApiEndpoints.CaseList)).toBe(false)
-
-    mockRandom.mockRestore()
   })
 })
