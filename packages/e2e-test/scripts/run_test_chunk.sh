@@ -10,6 +10,10 @@ else
   TAGS="${TAGS} and not @ExcludeOnLegacyUI"
 fi
 
+if [ "${USE_LEDS}x" == "truex" ]; then
+  TAGS="${TAGS} and not @ExcludedOnLeds"
+fi
+
 echo "---------------------------------------------"
 echo "Running tests using the following parameters:"
 echo "Tags: ${TAGS}"
