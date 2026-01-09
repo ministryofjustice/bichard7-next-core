@@ -1,3 +1,4 @@
+import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
@@ -16,7 +17,7 @@ export default (_: string, { policeApi }: Bichard) => [
       <GMT>000009073ENQR000300R</GMT>
     </CXE01>`,
     expectedRequest: "",
-    asn: "1101ZD0100000410785P",
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
@@ -47,7 +48,7 @@ export default (_: string, { policeApi }: Bichard) => [
       <GMT>000012073ENQR000301R</GMT>
     </CXE01>`,
     expectedRequest: "",
-    asn: "1101ZD0100000410785P",
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
