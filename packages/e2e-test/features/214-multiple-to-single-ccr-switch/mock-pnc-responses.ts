@@ -17,7 +17,7 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000010073ENQR000491R</GMT>
     </CXE01>`,
-    asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
+    asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1
   }),
@@ -35,7 +35,7 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000009073ENQR000492R</GMT>
     </CXE01>`,
-    asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
+    asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1
   }),
