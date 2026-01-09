@@ -1,7 +1,8 @@
+import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -14,9 +15,10 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000008073ENQR000711R</GMT>
     </CXE01>`,
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K21/16L     COMMUNITYORD            </IDS><CCR>K21/2812/5J                    </CCR><COU>I2576                                                                       COMMUNITYORDERTWO/BREACH                              261020090000</COU><CCH>K001              TH68023 </CCH><ADJ>INOT GUILTY   GUILTY        261020090000 </ADJ><DIS>I1002M3                    00                                                                            </DIS><ASR>K11/01VK/01/376290V                    </ASR><ACH>I                                                                                                                                            CJ03511                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01VK01102009                </ACH><ADJ>IGUILTY       GUILTY        261020090000 </ADJ><DIS>I1029                      00                                                                            </DIS>",
