@@ -43,32 +43,42 @@ Install the following required components:
 
 ### Booting the infrastructure
 
-This project has a number of external dependencies that need building in order to run the whole stack. Check the
-following out and run `make build` in each repository:
+This project has a number of external dependencies that need building in order to run 
+the whole stack. Clone the following repositories and run the specified build command
+for each of them:
 
-- [Docker Images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images)
-  - Make command is `SKIP_GOSS=true make build-local` for this repo
-- [Bichard7 Next (Old Bichard)](https://github.com/ministryofjustice/bichard7-next)
-  - Make command is `make build` for this repo, or
+- Clone [Docker Images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images)
+  - Run `SKIP_GOSS=true make build-local`
+- Clone [Bichard7 Next (Old Bichard)](https://github.com/ministryofjustice/bichard7-next)
+  - Run `make build`, or
   - `make build-debug` if you need to run Bichard in debug mode
-- [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
-  - Make command is `make build` for this repo
-- [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
-  - Make command is `SKIP_GOSS=true make build` for this repo
-- [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
-  - Make command is `make build-api-server build-event-handler-server` for this repo
-- [User Service](packages/user-service)
-  - Navigate to packages/user-service and run `make build`
+- Clone [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
+  - Run `make build`
+- Clone [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
+  - Run `SKIP_GOSS=true make build`
+- Clone [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
+  - Run `make build-api-server build-event-handler-server`
+
+There are two folders inside this very repo (bichard7-next-core) that also need building:
 - [UI](packages/ui)
   - Navigate to packages/ui and run `make build`
+- [User Service](packages/user-service)
+  - Navigate to packages/user-service and run `make build`
 
-Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
+Next, boot up all the containers you will need in order to run Bichard end to end.
+You can do this with the following command:
 
 ```bash
 aws-vault exec bichard7-shared -- npm run all
 ```
 
 This will pull down the images from ECR so you don't need to build them. On an M1 Mac, see below.
+
+You should now have access to https://localhost:4443/bichard
+
+In order to log in, you will need to get a username and password
+from the local database.
+
 
 You can also run subsets of the infrastructure using:
 
@@ -87,6 +97,57 @@ Finally, to bring all of that infrastructure down again, you can use:
 ```bash
 npm run destroy
 ```
+
+### Setting up the Local Database
+
+After following the instructions in the previous section, you will have several
+db-related containers running:
+
+- postgress-1 contains the DB.
+- db-migrate and db-seed: if these containers are running, your db will be
+  correctly populated.
+
+You can access this db in several ways:
+
+1. From WebStorm
+
+Go to View/Tool Windows/Database
+Go to the db that just opened and click on the Plus sign.
+Select Data Source, and then PostgreSQL.
+
+On the general tab (opens by default) use the following configuration details:
+
+- Host: 127.0.0.1
+- Port: 5432
+- User: bichard
+- Password: password
+- Database: bichard
+
+On the Schemas tab, check Bichard -> br7own
+
+2. From TablePlus
+
+Click on Connection/New and select PostgreSQL
+
+Add the following config details (same as the ones listed above for WebStorm):
+
+- Host: 127.0.0.1
+- Port: 5432
+- User: bichard
+- Password: password
+- Database: bichard
+
+Once done with this configuration, go to the dropdown on the bottom left and select br7own
+
+
+Now that you have access to the Local Database, you can find a valid user
+and log into your local Bichard. You will need a user that has a value
+for the following columns:
+- email
+- password
+- email_verification_code
+
+
 
 ### Running legacy Bichard in debug mode
 
