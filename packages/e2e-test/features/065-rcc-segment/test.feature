@@ -18,7 +18,7 @@ Feature: {065} R3.5_BR7_Populate RCC with PTIURN-Offence Withdrawn
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Could @NextUI
+	@Could @NextUI @ExcludedOnLeds
 	Scenario: Correctly adding RCC segment
 		Given I am logged in as "generalhandler"
 		When I view the list of exceptions

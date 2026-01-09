@@ -1,7 +1,8 @@
+import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -17,9 +18,10 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000011073ENQR000051R</GMT>
     </CXE01>`,
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><CCR>K12/2732/30H                   </CCR><COU>I2576                                                                       LIVERPOOL/MARTIN                                      011020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I4004    08102009          00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I4004    08102009          00                                                                            </DIS>",
@@ -30,7 +32,7 @@ export default (_: string, { policeApi }: Bichard) => [
       "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><ASR>K12/0000/00/12Z                        </ASR><REM>I01102009B    2576                                                                       081020092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
     count: 1
   }),
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -50,9 +52,10 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000015073ENQR000143R</GMT>
     </CXE01>`,
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU04", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><SUB>I2576                                                                       08102009D</SUB><CCR>K12/2732/30H                   </CCR><CCH>K001              OF61016 </CCH><DIS>I1002M12                   00                                                                            </DIS><CCH>K002              PC53001 </CCH><DIS>I1002M12                   00                                                                            </DIS>",
