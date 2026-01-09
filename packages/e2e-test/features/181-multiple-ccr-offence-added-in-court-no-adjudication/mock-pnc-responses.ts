@@ -1,7 +1,8 @@
+import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -17,15 +18,16 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000011073ENQR000138R</GMT>
     </CXE01>`,
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K12/18B     WELLINGTON              </IDS><CCR>K12/2732/26D                   </CCR><COU>I2576                                                                       WELLINGTON/MARTIN                                     101020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M13                   00                                                                            </DIS>",
     count: 1
   }),
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -45,9 +47,10 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000015073ENQR000139R</GMT>
     </CXE01>`,
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU01", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K12/18B     WELLINGTON              </IDS><ASR>K12/0000/00/10X                        </ASR><REM>I20102009B    2576                                                                       081120092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
