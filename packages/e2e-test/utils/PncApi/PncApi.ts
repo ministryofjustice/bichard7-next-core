@@ -3,7 +3,7 @@ import type PncHelper from "../../types/PncHelper"
 import type PncMock from "../../types/PncMock"
 import type { PartialPncMock, PncBichard, PncMockOptions } from "../../types/PncMock"
 import type PoliceApi from "../../types/PoliceApi"
-import type { PartialPoliceApiRequestMock } from "../../types/PoliceApi"
+import type { MockAsnQueryParams } from "../../types/PoliceApi"
 import defaults from "../defaults"
 import addMockToPncEmulator from "./addMockToPncEmulator"
 import addMockToPncTestTool from "./addMockToPncTestTool"
@@ -35,13 +35,7 @@ export class PncApi implements PoliceApi {
         })
   }
 
-  mockAsnQuery(params: {
-    matchRegex: string
-    response: string
-    expectedRequest: string
-    asn: string
-    count: number
-  }): PartialPoliceApiRequestMock {
+  mockAsnQuery(params: MockAsnQueryParams): PartialPncMock {
     return params
   }
 

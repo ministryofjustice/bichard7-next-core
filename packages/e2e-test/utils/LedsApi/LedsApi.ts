@@ -4,7 +4,7 @@ import { promises as fs } from "fs"
 import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
-import type { PartialPoliceApiRequestMock } from "../../types/PoliceApi"
+import type { MockAsnQueryParams } from "../../types/PoliceApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
 import * as mockGenerators from "./mockGenerators"
 import { generateAsnQuery } from "./mockGenerators/generateAsnQuery"
@@ -38,13 +38,7 @@ export class LedsApi implements PoliceApi {
     return mockGenerators.generateAsnQueryFromNcm(this.bichard, ncmFile, queryOptions)
   }
 
-  mockAsnQuery(params: {
-    matchRegex: string
-    response: string
-    expectedRequest: string
-    asn: string
-    count: number
-  }): PartialPoliceApiRequestMock {
+  mockAsnQuery(params: MockAsnQueryParams): LedsMock {
     this.personId = randomUUID()
     this.reportId = randomUUID()
     this.courtCaseId = randomUUID()

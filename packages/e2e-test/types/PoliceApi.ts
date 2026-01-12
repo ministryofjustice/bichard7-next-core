@@ -4,7 +4,7 @@ export type PartialPoliceApiRequestMock = {}
 
 export type PoliceApiRequestMock = PartialPoliceApiRequestMock & {}
 
-type MockAsnQueryParams = {
+export type MockAsnQueryParams = {
   matchRegex: string
   response: string
   expectedRequest: string
