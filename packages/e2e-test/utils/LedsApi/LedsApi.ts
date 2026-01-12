@@ -43,7 +43,14 @@ export class LedsApi implements PoliceApi {
     this.reportId = randomUUID()
     this.courtCaseId = randomUUID()
 
-    return generateAsnQuery(params.response, params.count, params.asn, this.personId, this.reportId, this.courtCaseId)
+    return generateAsnQuery(
+      params.response,
+      params.count ?? 0,
+      params.asn,
+      this.personId,
+      this.reportId,
+      this.courtCaseId
+    )
   }
 
   mockUpdate(code: string, options?: LedsMockOptions): LedsMock {
