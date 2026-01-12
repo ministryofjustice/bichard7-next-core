@@ -28,6 +28,7 @@ interface MockEndpoint {
   path: string
   response: { status: number; body: any; headers?: Record<string, string> }
   hits: number
+  count: number
   request?: RequestDetails // Stores the request details that consumed this mock.
 }
 
@@ -138,12 +139,12 @@ const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pa
  * Checks against defined MOCKS. Returns true if handled.
  */
 const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathname: string): Promise<boolean> => {
-  // Find the FIRST (oldest) mock that matches method/path AND is unused (hits < 1).
-  const mock = MOCKS.find((m) => m.method === req.method && m.path === pathname && m.hits < 1)
+  // Find the FIRST (oldest) mock that matches method/path AND is unused (hits < count).
+  const mock = MOCKS.find((m) => m.method === req.method && m.path === pathname && (m.count === 0 || m.hits < m.count))
 
   if (!mock) {
     // Log/respond with 404 if an expired mock was found
-    const expiredMock = MOCKS.find((m) => m.method === req.method && m.path === pathname && m.hits >= 1)
+    const expiredMock = MOCKS.find((m) => m.method === req.method && m.path === pathname && m.hits >= m.count)
     if (expiredMock) {
       logRequest(req, 404, "Mock Expired (Hit Limit Reached)")
       sendJSON(res, 404, {
