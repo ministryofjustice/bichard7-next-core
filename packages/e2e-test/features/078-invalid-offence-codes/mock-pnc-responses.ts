@@ -10,8 +10,7 @@ export default (_: string, { policeApi }: Bichard) => [
       <TXT>I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410832Q) NOT FOUND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              </TXT>
       <GMT>000003073ENQR010172E</GMT>
     </CXE01>`,
-    asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
-    expectedRequest: "",
-    count: 1
+    asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
+    expectedRequest: ""
   })
 ]

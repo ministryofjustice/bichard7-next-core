@@ -19,8 +19,7 @@ export default (_: string, { policeApi }: Bichard) => [
       <GMT>000008073ENQR004540S</GMT>
     </CXE01>`,
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
-    expectedRequest: "",
-    count: 1
+    expectedRequest: ""
   }),
   policeApi.mockUpdate("CXU02", {
     matchRegex: "CXU02.*SX03001A",
