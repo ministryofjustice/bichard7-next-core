@@ -9,7 +9,7 @@ export type MockAsnQueryParams = {
   response: string
   expectedRequest: string
   asn: string
-  count: number
+  count?: number
 }
 
 export default interface PoliceApi {
