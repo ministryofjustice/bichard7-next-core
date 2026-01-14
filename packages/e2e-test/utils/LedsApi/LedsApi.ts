@@ -93,6 +93,10 @@ export class LedsApi implements PoliceApi {
       await new Promise((resolve) => setTimeout(resolve, 2_000))
     }
 
+    console.log("Requests =======", JSON.stringify(await this.mockServerClient.fetchRequests(), null, 2))
+
+    console.log("Mocks =======", JSON.stringify(await this.mockServerClient.fetchMocks(), null, 2))
+
     throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
   }
 
