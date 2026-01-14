@@ -34,3 +34,5 @@ export const config: Config = {
   realPNC: process.env.REAL_PNC === "true",
   ledsApiUrl: process.env.LEDS_API_URL || "https://localhost:8443"
 }
+
+console.log(">>> LEDS BASE URL (config.ts):", config.ledsApiUrl)
