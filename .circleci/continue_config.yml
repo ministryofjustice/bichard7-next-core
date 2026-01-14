@@ -845,6 +845,7 @@ jobs:
       AUTH_TYPE: user-service
       TZ: "Europe/London"
       USE_LEDS: << parameters.use-leds >>
+      LEDS_API_URL: "https://leds:8443"
     steps:
       - unless:
           condition:
