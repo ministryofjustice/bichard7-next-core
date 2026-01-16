@@ -4,5 +4,5 @@
   "responseTimeoutSeconds": 25,
   "asyncComplete": false,
   "inputKeys": ["autoResubmit", "messageId"],
-  "outputKeys": ["events", "s3TaskDataPath"]
+  "outputKeys": ["autoFailed", "events", "s3TaskDataPath"]
 }

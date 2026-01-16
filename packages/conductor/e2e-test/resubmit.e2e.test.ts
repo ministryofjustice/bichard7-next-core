@@ -1,5 +1,6 @@
 import "./helpers/setEnvironmentVariables"
 
+import type { WorkflowSummary } from "@io-orkes/conductor-javascript"
 import type { AuditLogApiRecordInput } from "@moj-bichard7/common/types/AuditLogRecord"
 import type { CaseRow } from "@moj-bichard7/common/types/Case"
 
@@ -14,6 +15,11 @@ import * as path from "node:path"
 import postgres from "postgres"
 
 import startWorkflow from "./helpers/startWorkflow"
+
+type WorkflowResults = {
+  phaseResult?: WorkflowSummary
+  resubmitResult: WorkflowSummary
+}
 
 const { apiKey, apiUrl, basePath } = createApiConfig()
 const apiClient = new AuditLogApiClient(apiUrl, apiKey, 30_000, basePath)
@@ -58,16 +64,22 @@ const startAndCompleteFullResubmit = async (
   phaseToWaitFor: 1 | 2,
   autoResubmit: boolean,
   expectedParentStatus: "COMPLETED" | "FAILED" = "COMPLETED"
-) => {
+): Promise<WorkflowResults> => {
   await startWorkflow("resubmit", { autoResubmit, messageId }, messageId)
 
-  await waitForCompletedWorkflow(messageId, expectedParentStatus, undefined, "resubmit")
+  const result: WorkflowResults = {
+    resubmitResult: await waitForCompletedWorkflow(messageId, expectedParentStatus, undefined, "resubmit")
+  }
 
-  if (expectedParentStatus === "COMPLETED") {
+  const startedWorkflowId = result.resubmitResult.output!.startsWith("{workflowId=")
+
+  if (expectedParentStatus === "COMPLETED" && startedWorkflowId) {
     const childWorkflowName = phaseToWaitFor === 1 ? "bichard_phase_1" : "bichard_phase_2"
 
-    await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, childWorkflowName)
+    result.phaseResult = await waitForCompletedWorkflow(messageId, "COMPLETED", undefined, childWorkflowName)
   }
+
+  return result
 }
 
 describe("resubmit", () => {
@@ -124,33 +136,48 @@ describe("resubmit", () => {
       const messageId = randomUUID()
       await setupCase(messageId, 1, null, 1)
 
-      await startAndCompleteFullResubmit(messageId, 1, true, "COMPLETED")
+      const workflows = await startAndCompleteFullResubmit(messageId, 1, true, "COMPLETED")
 
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.total_pnc_failure_resubmissions).toBe(1)
+      expect(workflows.resubmitResult.output!).not.toBe("{reason=autoFailed is true}")
     })
 
-    it("fails to run the resubmit workflow with a case that's locked to a user", async () => {
+    it("fails to run the phase workflow with a case that's locked to a user", async () => {
       const messageId = randomUUID()
       await setupCase(messageId, 1, "user.locked", 1)
 
-      await startAndCompleteFullResubmit(messageId, 1, true, "FAILED")
+      const workflows = await startAndCompleteFullResubmit(messageId, 1, true, "COMPLETED")
 
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.error_status).toBe(1)
+      expect(workflows.resubmitResult.output!).toBe("{reason=autoFailed is true}")
     })
 
-    it("fails to run the resubmit workflow with a case not unresolved", async () => {
+    it("fails to run the phase workflow with a case submitted", async () => {
       const messageId = randomUUID()
-      await setupCase(messageId, 1, "user.locked", 3)
+      await setupCase(messageId, 1, null, 3)
 
-      await startAndCompleteFullResubmit(messageId, 1, true, "FAILED")
+      const workflows = await startAndCompleteFullResubmit(messageId, 1, true, "COMPLETED")
 
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.error_status).toBe(3)
+      expect(workflows.resubmitResult.output!).toBe("{reason=autoFailed is true}")
+    })
+
+    it("fails to run the phase workflow with a case resolved", async () => {
+      const messageId = randomUUID()
+      await setupCase(messageId, 1, null, 2)
+
+      const workflows = await startAndCompleteFullResubmit(messageId, 1, true, "COMPLETED")
+
+      const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
+
+      expect(caseRow.error_status).toBe(2)
+      expect(workflows.resubmitResult.output!).toBe("{reason=autoFailed is true}")
     })
   })
 })
