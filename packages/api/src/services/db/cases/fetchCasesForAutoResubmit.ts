@@ -3,12 +3,11 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { isServiceUser } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
-
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
 const MAX_RESUBMISSIONS = 100
 export const PNC_ERRORS = [ExceptionCode.HO100302, ExceptionCode.HO100404]

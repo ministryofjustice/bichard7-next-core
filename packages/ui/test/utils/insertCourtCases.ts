@@ -1,9 +1,11 @@
-import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { randomUUID } from "crypto"
 import fs from "fs"
+
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+
 import type Note from "services/entities/Note"
 import type Trigger from "services/entities/Trigger"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import createAuditLogRecord from "../helpers/createAuditLogRecord"

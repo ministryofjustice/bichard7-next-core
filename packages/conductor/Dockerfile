@@ -1,4 +1,3 @@
-#########################################################
 ARG BUILD_IMAGE="nodejs-20-2023"
 FROM ${BUILD_IMAGE} AS base
 
@@ -6,6 +5,8 @@ LABEL maintainer="CJSE"
 
 #########################################################
 FROM base AS deps
+
+USER root
 
 WORKDIR /core
 
@@ -20,6 +21,8 @@ RUN npm ci --ignore-scripts --no-audit
 
 #########################################################
 FROM base AS builder
+
+USER root
 
 WORKDIR /core
 
@@ -38,6 +41,8 @@ RUN npm run esbuild -w packages/conductor
 
 #########################################################
 FROM base AS runner
+
+USER root
 
 WORKDIR /core
 

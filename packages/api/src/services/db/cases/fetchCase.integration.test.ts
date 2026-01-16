@@ -2,13 +2,13 @@ import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyBaseLogger } from "fastify"
 
 import { expect } from "@jest/globals"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 import filter from "./fetchCase"
 
 const testDatabaseGateway = new End2EndPostgres()

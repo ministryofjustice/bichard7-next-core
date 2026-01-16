@@ -5,6 +5,7 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
@@ -21,7 +22,6 @@ import {
   createUsers,
   generateJwtForUser
 } from "../../../../tests/helpers/userHelper"
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 import FetchById from "../../../../useCases/fetchAuditLogs/FetchById"
 
 describe("/v1/case e2e", () => {

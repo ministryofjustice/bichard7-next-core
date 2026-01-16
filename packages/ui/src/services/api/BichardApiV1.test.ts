@@ -1,6 +1,6 @@
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-
-import { Order, OrderBy, Reason, ResolutionStatus, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { Order, OrderBy, Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { isError } from "@moj-bichard7/common/types/Result"

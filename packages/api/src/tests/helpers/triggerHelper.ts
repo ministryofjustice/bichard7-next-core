@@ -1,15 +1,11 @@
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import type End2EndPostgres from "../testGateways/e2ePostgres"
 
-import {
-  ResolutionStatus,
-  resolutionStatusCodeByText,
-  resolutionStatusFromDb,
-  ResolutionStatusNumber
-} from "../../useCases/dto/convertResolutionStatus"
+import { resolutionStatusCodeByText, resolutionStatusFromDb } from "../../useCases/dto/convertResolutionStatus"
 
 export const createTriggers = async (
   postgres: End2EndPostgres,

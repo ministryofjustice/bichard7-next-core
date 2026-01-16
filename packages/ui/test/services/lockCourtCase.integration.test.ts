@@ -1,5 +1,10 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type { DataSource } from "typeorm"
+
 import axios from "axios"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import type User from "services/entities/User"
 import type Trigger from "services/entities/Trigger"
 import getCourtCase from "services/getCourtCase"
@@ -7,7 +12,6 @@ import lockCourtCase from "services/lockCourtCase"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import updateLockStatusToLocked from "services/updateLockStatusToLocked"
-import type { DataSource } from "typeorm"
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getDataSource from "../../src/services/getDataSource"
@@ -18,8 +22,6 @@ import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 jest.mock("services/updateLockStatusToLocked")
 jest.mock("services/storeAuditLogEvents")
@@ -244,7 +246,11 @@ describe("lock court case", () => {
           triggerStatus: "Unresolved",
           orgForPoliceFilter: "36FPA ",
           triggers: [
-            { triggerCode: TriggerCode.TRPR0001, status: ResolutionStatus.Unresolved, createdAt: new Date() } as Trigger
+            {
+              triggerCode: TriggerCode.TRPR0001,
+              status: ResolutionStatus.Unresolved,
+              createdAt: new Date()
+            } as Trigger
           ]
         }
       ])

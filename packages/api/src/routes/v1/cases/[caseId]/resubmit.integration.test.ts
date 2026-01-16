@@ -3,6 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND } from "http-status"
 
@@ -13,7 +14,6 @@ import { createCase } from "../../../../tests/helpers/caseHelper"
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { createUser, generateJwtForStaticUser } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 jest.mock("../../../../services/db/cases/canCaseBeResubmitted")
 

@@ -2,14 +2,12 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-import { ResolutionStatus } from "@moj-bichard7/common/types/ApiCaseQuery"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { Filters } from "../../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
-
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 export const exceptionsAndTriggers = (
   database: DatabaseConnection,

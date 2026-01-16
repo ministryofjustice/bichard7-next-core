@@ -1,10 +1,10 @@
 import type { CaseRow } from "@moj-bichard7/common/types/Case"
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
-import type { ResolutionStatus } from "../../../useCases/dto/convertResolutionStatus"
 
 import { resolutionStatusCodeByText } from "../../../useCases/dto/convertResolutionStatus"
 

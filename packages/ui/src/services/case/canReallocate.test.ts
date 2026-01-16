@@ -1,5 +1,5 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import { canReallocate } from "./canReallocate"
 
 describe("canReallocate", () => {

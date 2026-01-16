@@ -1,10 +1,11 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { defineConfig } from "cypress"
 import pgPromise from "pg-promise"
 import CourtCase from "./src/services/entities/CourtCase"
 import SurveyFeedback from "./src/services/entities/SurveyFeedback"
 import User from "./src/services/entities/User"
-import { ResolutionStatus } from "./src/types/ResolutionStatus"
 import generateAhoWithPncException, {
   GenerateAhoWithPncExceptionParams
 } from "./test/helpers/generateAhoWithPncException"

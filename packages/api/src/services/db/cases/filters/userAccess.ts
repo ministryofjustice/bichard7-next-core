@@ -1,11 +1,10 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
 import Permission from "@moj-bichard7/common/types/Permission"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
-
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 export function filterByUserAccess(database: DatabaseConnection, user: User) {
   if (userAccess(user)[Permission.ListAllCases]) {

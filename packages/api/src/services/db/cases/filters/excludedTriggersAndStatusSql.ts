@@ -2,10 +2,12 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import type { Filters } from "../../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-import { resolutionStatusCodeByText, ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
+import { resolutionStatusCodeByText } from "../../../../useCases/dto/convertResolutionStatus"
 
 export const excludedTriggersAndStatusSql = (
   database: DatabaseConnection,
