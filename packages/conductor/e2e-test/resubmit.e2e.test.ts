@@ -14,6 +14,7 @@ import fs from "fs"
 import * as path from "node:path"
 import postgres from "postgres"
 
+import { javaMapToJson } from "./helpers/javaMapToJson"
 import startWorkflow from "./helpers/startWorkflow"
 
 type WorkflowResults = {
@@ -141,7 +142,14 @@ describe("resubmit", () => {
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.total_pnc_failure_resubmissions).toBe(1)
-      expect(workflows.resubmitResult.output!).not.toBe("{reason=autoFailed is true}")
+
+      const output = javaMapToJson(workflows.resubmitResult.output!)
+
+      expect(output).not.toEqual(
+        expect.objectContaining({
+          reason: "Auto Resubmission failed"
+        })
+      )
     })
 
     it("fails to run the phase workflow with a case that's locked to a user", async () => {
@@ -153,7 +161,15 @@ describe("resubmit", () => {
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.error_status).toBe(1)
-      expect(workflows.resubmitResult.output!).toBe("{reason=autoFailed is true}")
+
+      const output = javaMapToJson(workflows.resubmitResult.output!)
+
+      expect(output).toEqual(
+        expect.objectContaining({
+          errorMessage: expect.stringContaining("[AutoResubmit] Case is locked"),
+          reason: "Auto Resubmission failed"
+        })
+      )
     })
 
     it("fails to run the phase workflow with a case submitted", async () => {
@@ -165,7 +181,15 @@ describe("resubmit", () => {
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.error_status).toBe(3)
-      expect(workflows.resubmitResult.output!).toBe("{reason=autoFailed is true}")
+
+      const output = javaMapToJson(workflows.resubmitResult.output!)
+
+      expect(output).toEqual(
+        expect.objectContaining({
+          errorMessage: expect.stringContaining("[AutoResubmit] Case is not unresolved"),
+          reason: "Auto Resubmission failed"
+        })
+      )
     })
 
     it("fails to run the phase workflow with a case resolved", async () => {
@@ -177,7 +201,15 @@ describe("resubmit", () => {
       const [caseRow] = await db<CaseRow[]>`SELECT * FROM br7own.error_list WHERE message_id = ${messageId}`
 
       expect(caseRow.error_status).toBe(2)
-      expect(workflows.resubmitResult.output!).toBe("{reason=autoFailed is true}")
+
+      const output = javaMapToJson(workflows.resubmitResult.output!)
+
+      expect(output).toEqual(
+        expect.objectContaining({
+          errorMessage: expect.stringContaining("[AutoResubmit] Case is not unresolved"),
+          reason: "Auto Resubmission failed"
+        })
+      )
     })
   })
 })

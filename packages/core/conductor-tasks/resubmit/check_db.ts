@@ -30,6 +30,7 @@ const inputDataSchema = z.object({
 type InputData = z.infer<typeof inputDataSchema>
 
 const SERVICE_USERNAME = "service.user"
+export const AUTO_RESUBMIT_LOG_PREFIX = "[AutoResubmit]"
 
 const caseLocked = (caseRow: CaseRow): boolean => !!caseRow.error_locked_by_id
 
@@ -39,11 +40,11 @@ const autoResubmitHandler = async (
   auditLogger: CoreAuditLogger
 ): Promise<void> => {
   if (caseLocked(caseRow)) {
-    throw new Error(`[AutoResubmit] Case is locked: ${caseRow.message_id}`)
+    throw new Error(`${AUTO_RESUBMIT_LOG_PREFIX} Case is locked: ${caseRow.message_id}`)
   }
 
   if (caseRow.error_status !== ResolutionStatus.UNRESOLVED) {
-    throw new Error(`[AutoResubmit] Case is not unresolved: ${caseRow.message_id}`)
+    throw new Error(`${AUTO_RESUBMIT_LOG_PREFIX} Case is not unresolved: ${caseRow.message_id}`)
   }
 
   const updateRow = await dbTransaction`
@@ -55,7 +56,7 @@ const autoResubmitHandler = async (
   `.catch((error: Error) => error)
 
   if (isError(updateRow)) {
-    throw new Error(`[AutoResubmit] Failed to lock DB record for ${caseRow.message_id}`)
+    throw new Error(`${AUTO_RESUBMIT_LOG_PREFIX} Failed to lock DB record for ${caseRow.message_id}`)
   }
 
   auditLogger.info(EventCode.ExceptionsLocked, { user: SERVICE_USERNAME })
@@ -122,8 +123,8 @@ const checkDb: ConductorWorker = {
       .catch((error: Error) => error)
 
     if (isError(result)) {
-      if (result.message.startsWith("[AutoResubmit]")) {
-        return completed({ autoFailed: true }, `${result.message}`)
+      if (result.message.startsWith(AUTO_RESUBMIT_LOG_PREFIX)) {
+        return completed({ autoFailed: true, errorMessage: result.message }, `${result.message}`)
       }
 
       return failed(`${result.name}: ${result.message}`)

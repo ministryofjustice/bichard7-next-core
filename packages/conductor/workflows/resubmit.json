@@ -29,7 +29,10 @@
             "taskReferenceName": "terminate_auto_failed_ref",
             "inputParameters": {
               "terminationStatus": "COMPLETED",
-              "workflowOutput": { "reason": "autoFailed is true" }
+              "workflowOutput": {
+                "errorMessage": "${check_db_ref.output.errorMessage}",
+                "reason": "Auto Resubmission failed"
+              }
             },
             "type": "TERMINATE"
           }

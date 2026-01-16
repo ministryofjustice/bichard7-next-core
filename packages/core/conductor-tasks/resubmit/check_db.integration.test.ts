@@ -6,6 +6,7 @@ import postgres from "postgres"
 import { setupCase } from "../../tests/helpers/setupCase"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import checkDb from "./check_db"
+import { AUTO_RESUBMIT_LOG_PREFIX } from "./check_db"
 
 const dbConfig = createDbConfig()
 const sql = postgres({
@@ -21,6 +22,8 @@ const sql = postgres({
     }
   }
 })
+
+const logRegex = new RegExp(AUTO_RESUBMIT_LOG_PREFIX)
 
 describe("check db", () => {
   beforeEach(async () => {
@@ -80,7 +83,13 @@ describe("check db", () => {
       const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: true } })
 
       expect(result.status).toBe("COMPLETED")
-      expect(result.logs?.[0].log).toMatch(/^\[AutoResubmit]/)
+      expect(result.logs?.[0].log).toMatch(logRegex)
+      expect(result.outputData).toEqual(
+        expect.objectContaining({
+          autoFailed: true,
+          errorMessage: expect.stringContaining(`${AUTO_RESUBMIT_LOG_PREFIX} Case is locked`)
+        })
+      )
     })
 
     it("if the case is Submitted", async () => {
@@ -89,7 +98,28 @@ describe("check db", () => {
       const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: true } })
 
       expect(result.status).toBe("COMPLETED")
-      expect(result.logs?.[0].log).toMatch(/^\[AutoResubmit]/)
+      expect(result.logs?.[0].log).toMatch(logRegex)
+      expect(result.outputData).toEqual(
+        expect.objectContaining({
+          autoFailed: true,
+          errorMessage: expect.stringContaining(`${AUTO_RESUBMIT_LOG_PREFIX} Case is not unresolved`)
+        })
+      )
+    })
+
+    it("if the case is Resolved", async () => {
+      const caseDb = await setupCase(sql, ResolutionStatus.RESOLVED, undefined)
+
+      const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: true } })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.logs?.[0].log).toMatch(logRegex)
+      expect(result.outputData).toEqual(
+        expect.objectContaining({
+          errorMessage: expect.stringContaining(`${AUTO_RESUBMIT_LOG_PREFIX} Case is not unresolved`),
+          autoFailed: true
+        })
+      )
     })
 
     it("should be Completed if the case is Unresolved and not locked", async () => {
