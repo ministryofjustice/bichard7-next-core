@@ -12,6 +12,7 @@ export type RequestResponseMock = {
     headers: Record<string, string>
   }
   request?: Record<string, unknown>
+  hits: number
 }
 
 export default class MockServer {
@@ -25,7 +26,7 @@ export default class MockServer {
     })
   }
 
-  addMock(mock: RequestResponseMock) {
+  addMock(mock: Omit<RequestResponseMock, "hits">) {
     return axios.post(`${this.apiUrl}/mocks`, mock, {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false

@@ -93,10 +93,6 @@ export class LedsApi implements PoliceApi {
       await new Promise((resolve) => setTimeout(resolve, 2_000))
     }
 
-    console.log("Requests =======", JSON.stringify(await this.mockServerClient.fetchRequests(), null, 2))
-
-    console.log("Mocks =======", JSON.stringify(await this.mockServerClient.fetchMocks(), null, 2))
-
     throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
   }
 
@@ -128,7 +124,7 @@ export class LedsApi implements PoliceApi {
   async expectNotUpdated(): Promise<void> {
     for (let index = 0; index < 2; index++) {
       const updates = (await this.mockServerClient.fetchMocks()).filter(
-        (mock) => mock.path.startsWith("/people/") && !mock.request
+        (mock) => mock.path.startsWith("/people/") && mock.hits > 0
       )
 
       if (updates.length > 0) {
