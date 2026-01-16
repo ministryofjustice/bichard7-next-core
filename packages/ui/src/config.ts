@@ -21,6 +21,10 @@ export const USE_API = toBoolean(process.env.USE_API ?? "false")
 export const USE_API_CASE_ENDPOINT = toBoolean(process.env.USE_API_CASE_ENDPOINT ?? "false")
 export const USE_API_CASES_INDEX_ENDPOINT = toBoolean(process.env.USE_API_CASES_INDEX_ENDPOINT ?? "false")
 export const USE_API_CASE_RESUBMIT_ENDPOINT = toBoolean(process.env.USE_API_CASE_RESUBMIT_ENDPOINT ?? "false")
+export const USE_API_CASE_CANARY_RATIO = Number(process.env.USE_API_CASE_CANARY_RATIO ?? 0)
+export const USE_API_CASES_INDEX_CANARY_RATIO = Number(process.env.USE_API_CASES_INDEX_CANARY_RATIO ?? 0)
+export const USE_API_CASE_RESUBMIT_CANARY_RATIO = Number(process.env.USE_API_CASE_RESUBMIT_CANARY_RATIO ?? 0)
+
 export const FORCES_WITH_API_ENABLED: Set<string> = new Set(
   (process.env.FORCES_WITH_API_ENABLED ?? "").split(",").filter(Boolean)
 )

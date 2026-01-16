@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
@@ -13,7 +14,6 @@ import { createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
 import { generateJwtForStaticUser } from "../../../tests/helpers/userHelper"
-import { ResolutionStatusNumber } from "../../../useCases/dto/convertResolutionStatus"
 
 const defaultRequest = (jwt: string) => {
   return {

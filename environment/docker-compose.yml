@@ -318,9 +318,22 @@ services:
     restart: on-failure
 
   leds:
-    image: mockserver/mockserver
+    build:
+      dockerfile: ./Dockerfile
+      context: mock-server
     ports:
-      - 1080:1080
+      - "8081:8081"
+      - "8443:8443"
+    environment:
+      - HTTP_PORT=8081
+      - HTTPS_PORT=8443
+      - HTTPS_ENABLED=true
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8081/requests"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
 
   user-service:
     image: user-service
@@ -374,6 +387,9 @@ services:
       USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
       USE_API_CASES_INDEX_ENDPOINT: ${USE_API_CASES_INDEX_ENDPOINT:-false}
       USE_API_CASE_RESUBMIT_ENDPOINT: ${USE_API_CASE_RESUBMIT_ENDPOINT:-false}
+      USE_API_CASE_CANARY_RATIO: ${USE_API_CASE_CANARY_RATIO:-0}
+      USE_API_CASES_INDEX_CANARY_RATIO: ${USE_API_CASES_INDEX_CANARY_RATIO:-0}
+      USE_API_CASE_RESUBMIT_CANARY_RATIO: ${USE_API_CASE_RESUBMIT_CANARY_RATIO:-0}
     ports:
       - 4543:9443
     healthcheck:

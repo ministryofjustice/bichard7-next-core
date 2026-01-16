@@ -4,13 +4,14 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { hasAccessToExceptions } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty, isError, sortBy } from "lodash"
 
 import type { CaseRowForDto, CaseRowForIndexDto } from "../../types/Case"
 
 import { convertNoteToDto } from "./convertNoteToDto"
-import { ResolutionStatus, resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
+import { resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
 import { convertTriggerRowToDto } from "./convertTriggerRowToDto"
 
 export const convertCaseToCaseDto = (

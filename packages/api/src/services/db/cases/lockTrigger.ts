@@ -1,11 +1,12 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import { ResolutionStatus, resolutionStatusCodeByText } from "../../../useCases/dto/convertResolutionStatus"
+import { resolutionStatusCodeByText } from "../../../useCases/dto/convertResolutionStatus"
 import { organisationUnitSql } from "../organisationUnitSql"
 
 export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<boolean> => {

@@ -1,6 +1,8 @@
 import { expect } from "@jest/globals"
+
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import CourtCase from "services/entities/CourtCase"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 
 describe("CourtCase", () => {
   it("Should be locked by another user when error is locked by another user", () => {

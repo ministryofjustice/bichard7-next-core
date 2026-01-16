@@ -1,10 +1,10 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
 import type { Filters } from "../../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
-
-import { ResolutionStatus } from "../../../../useCases/dto/convertResolutionStatus"
 
 export const filterByResolvedCaseDateRange = (
   database: DatabaseConnection,

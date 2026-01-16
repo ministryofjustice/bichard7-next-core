@@ -1,8 +1,12 @@
 ARG BUILD_IMAGE="nodejs-20-2023"
 FROM ${BUILD_IMAGE} AS base
 
+LABEL maintainer="CJSE"
+
 #########################################################
 FROM base AS deps
+
+USER root
 
 WORKDIR /message-forwarder
 
@@ -17,6 +21,8 @@ RUN npm ci --ignore-scripts --no-audit
 #########################################################
 FROM base AS builder
 
+USER root
+
 WORKDIR /message-forwarder
 
 COPY --from=deps ./message-forwarder ./
@@ -30,6 +36,8 @@ COPY packages/message-forwarder ./packages/message-forwarder
 RUN npm run build:core && npm run esbuild -w packages/message-forwarder
 
 FROM base AS runner
+
+USER root
 
 WORKDIR /message-forwarder
 

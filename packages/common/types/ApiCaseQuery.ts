@@ -2,6 +2,7 @@ import z from "zod"
 
 import { dateLikeToDate } from "../schemas/dateLikeToDate"
 import { CaseAge } from "./CaseAge"
+import { ResolutionStatus } from "./ResolutionStatus"
 
 export enum LockedState {
   All = "All",
@@ -29,17 +30,11 @@ export enum Reason {
   Triggers = "Triggers"
 }
 
-export enum ResolutionStatus {
-  Resolved = "Resolved",
-  Submitted = "Submitted",
-  Unresolved = "Unresolved"
-}
-
 export const ApiCaseQuerySchema = z.object({
   allocatedUsername: z.string().optional(),
   asn: z.string().optional(),
   caseAge: z.array(z.nativeEnum(CaseAge)).or(z.nativeEnum(CaseAge)).optional(),
-  caseState: z.nativeEnum(ResolutionStatus).optional(),
+  caseState: z.enum(ResolutionStatus).optional(),
   courtDateReceivedDateMismatch: z.coerce.boolean().optional(),
   courtName: z.string().optional(),
   defendantName: z.string().optional().describe("Format: 'De*Name'"),

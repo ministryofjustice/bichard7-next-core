@@ -7,10 +7,6 @@
     {
       "code": "TRPR0006",
       "identifier": null
-    },
-    {
-      "code": "TRPR0001",
-      "identifier": "1"
     }
   ],
   "pncOperations": [
@@ -304,7 +300,7 @@
           "trigger_status": 1,
           "error_quality_checked": 1,
           "trigger_quality_checked": 1,
-          "trigger_count": 3,
+          "trigger_count": 2,
           "error_locked_by_id": null,
           "trigger_locked_by_id": null,
           "is_urgent": 1,
@@ -360,16 +356,6 @@
           "create_ts": "2025-02-25T11:35:20.533Z",
           "resolved_by": "essex.user",
           "resolved_ts": "2025-02-25T11:35:24.432Z"
-        },
-        {
-          "trigger_id": 1484,
-          "error_id": 696,
-          "trigger_code": "TRPR0001",
-          "trigger_item_identity": "1",
-          "status": 1,
-          "create_ts": "2025-02-25T11:35:25.118Z",
-          "resolved_by": null,
-          "resolved_ts": null
         }
       ],
       "errorListNotes": [
@@ -409,13 +395,6 @@
           "create_ts": "2025-02-25T11:35:24.439Z"
         },
         {
-          "note_id": 1377,
-          "error_id": 696,
-          "note_text": "Triggers added: 1 x TRPR0001.",
-          "user_id": "System",
-          "create_ts": "2025-02-25T11:35:25.125Z"
-        },
-        {
           "note_id": 1378,
           "error_id": 696,
           "note_text": "Triggers deleted: 1 x TRPR0004.",
@@ -434,7 +413,7 @@
           "trigger_status": 1,
           "error_quality_checked": 1,
           "trigger_quality_checked": 1,
-          "trigger_count": 3,
+          "trigger_count": 2,
           "error_locked_by_id": null,
           "trigger_locked_by_id": null,
           "is_urgent": 1,
@@ -490,16 +469,6 @@
           "create_ts": "2025-02-25T11:35:20.533Z",
           "resolved_by": "essex.user",
           "resolved_ts": "2025-02-25T11:35:24.432Z"
-        },
-        {
-          "trigger_id": 1484,
-          "error_id": 696,
-          "trigger_code": "TRPR0001",
-          "trigger_item_identity": "1",
-          "status": 1,
-          "create_ts": "2025-02-25T11:35:25.118Z",
-          "resolved_by": null,
-          "resolved_ts": null
         }
       ],
       "errorListNotes": [
@@ -537,13 +506,6 @@
           "note_text": "essex.user: Portal Action: Resubmitted Message.",
           "user_id": "System",
           "create_ts": "2025-02-25T11:35:24.439Z"
-        },
-        {
-          "note_id": 1377,
-          "error_id": 696,
-          "note_text": "Triggers added: 1 x TRPR0001.",
-          "user_id": "System",
-          "create_ts": "2025-02-25T11:35:25.125Z"
         },
         {
           "note_id": 1378,

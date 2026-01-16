@@ -6,6 +6,8 @@ LABEL maintainer="CJSE"
 #########################################################F
 FROM base AS deps
 
+USER root
+
 WORKDIR /core
 
 COPY package*.json ./
@@ -16,6 +18,8 @@ RUN npm ci --ignore-scripts --no-audit
 
 #########################################################
 FROM base AS builder
+
+USER root
 
 WORKDIR /core
 
@@ -32,14 +36,16 @@ RUN npm prune --omit=dev --workspaces --include-root
 #########################################################
 FROM base AS runner
 
+USER root
+
 WORKDIR /core
 
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
-  usermod -a -G supervisor supervisor && \
-  chgrp supervisor -R /certs /run /var/log /var/lib/nginx && \
-  chmod g+r -R /certs/server.key /var/lib/nginx && \
-  chmod g+rw -R /run /var/log && \
-  npm config set cache /tmp/npm --global
+    usermod -a -G supervisor supervisor && \
+    chgrp supervisor -R /certs /run /var/log /var/lib/nginx && \
+    chmod g+r -R /certs/server.key /var/lib/nginx && \
+    chmod g+rw -R /run /var/log && \
+    npm config set cache /tmp/npm --global
 
 COPY --from=builder /core/node_modules ./node_modules
 

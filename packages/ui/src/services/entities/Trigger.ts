@@ -1,9 +1,10 @@
-import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 import type { Relation } from "typeorm"
 import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm"
-import type { ResolutionStatus } from "types/ResolutionStatus"
+
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import CourtCase from "./CourtCase"
 import dateTransformer from "./transformers/dateTransformer"

@@ -6,6 +6,7 @@ import type { FastifyInstance } from "fastify"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { createExceptionOnCase } from "../../../../tests/helpers/exceptionHelper"
@@ -13,7 +14,6 @@ import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2End
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../../useCases/cases/getCases/fetchCasesAndFilter"
-import { ResolutionStatusNumber } from "../../../../useCases/dto/convertResolutionStatus"
 
 describe("fetchCasesAndFilter filtering by reason codes e2e", () => {
   let helper: SetupAppEnd2EndHelper

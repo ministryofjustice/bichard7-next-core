@@ -1,4 +1,6 @@
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
+
 import CourtCase from "services/entities/CourtCase"
 import Note from "services/entities/Note"
 import Trigger from "services/entities/Trigger"
@@ -9,7 +11,6 @@ import type { DataSource } from "typeorm"
 import type { CaseListQueryParams } from "types/CaseListQueryParams"
 import { Reason } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import type { ResolutionStatus } from "types/ResolutionStatus"
 import {
   exceptionHandlerHasAccessTo,
   generalHandlerHasAccessTo,

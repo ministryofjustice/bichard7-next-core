@@ -1,5 +1,5 @@
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { ResolutionStatus } from "types/ResolutionStatus"
 import { TestTrigger } from "../../../../../test/utils/manageTriggers"
 import { caseURL } from "../../../../fixtures/triggers"
 import { clickTab } from "../../../../support/helpers"
@@ -83,19 +83,19 @@ describe("Resolve triggers", () => {
       [
         {
           code: "TRPR0001",
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         },
         {
           code: "TRPR0002",
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         },
         {
           code: "TRPR0003",
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         },
         {
           code: "TRPR0004",
-          status: "Unresolved"
+          status: ResolutionStatus.Unresolved
         }
       ]
     ]

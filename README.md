@@ -39,10 +39,9 @@ Packages:
 Please follow the instructions in this document:
 https://dsdmoj.atlassian.net/wiki/spaces/KB/pages/5879988352/Development+Software+Tools
 
-
 ### Booting the infrastructure
 
-This project has a number of external dependencies that need building in order to run 
+This project has a number of external dependencies that need building in order to run
 the whole stack. Clone the following repositories and run the specified build command
 for each of them:
 
@@ -59,16 +58,17 @@ for each of them:
   - Run `make build-api-server build-event-handler-server`
 
 There are two folders inside this very repo (bichard7-next-core) that also need building:
+
 - [UI](packages/ui)
   - Navigate to `packages/ui` and run `make build`
 - [User Service](packages/user-service)
   - Navigate to `packages/user-service` and run `make build`
 
-
 Next, go to the root directory of `bichard7-next-core` and run
+
 ```bash
 npm ci
-````
+```
 
 Then boot up all the containers you will need in order to run Bichard end to end.
 You can do this with the following command:
@@ -96,6 +96,7 @@ npm run test:nextUI
 ```
 
 To run a specific test, for example test 180 located in the `features` folder:
+
 ```bash
 npm run test:nextUI:file -- ./features/180*
 ```
@@ -141,18 +142,16 @@ Add the following config details (same as the ones listed above for WebStorm):
 - `Password: password`
 - `Database: bichard`
 
-Once done with this configuration, go to the dropdown on the bottom left 
+Once done with this configuration, go to the dropdown on the bottom left
 and select `br7own`
-
 
 Now that you have access to the Local Database, you can find a valid user
 and log into your local Bichard. You will need a user that has a value
 for the following columns:
+
 - `email`
 - `password`
 - `email_verification_code`
-
-
 
 ### Running legacy Bichard in debug mode
 

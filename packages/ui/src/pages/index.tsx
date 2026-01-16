@@ -21,7 +21,7 @@ import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { ApiEndpoints, canUseApiEndpoint } from "services/api/canUseEndpoint"
+import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
 import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import CourtCase from "services/entities/CourtCase"
@@ -52,6 +52,7 @@ import { canUseCourtDateReceivedDateMismatchFilters } from "../features/flags/ca
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
+import { ApiEndpoints } from "services/api/types"
 
 type Props = {
   build: string | null
@@ -82,8 +83,12 @@ export const getServerSideProps = withMultipleServerSideProps(
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
     const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
 
-    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces)
-    const useApiForCaseResubmit = canUseApiEndpoint(ApiEndpoints.CaseResubmit, currentUser.visibleForces)
+    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces, currentUser.email)
+    const useApiForCaseResubmit = canUseApiEndpoint(
+      ApiEndpoints.CaseResubmit,
+      currentUser.visibleForces,
+      currentUser.email
+    )
 
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 
