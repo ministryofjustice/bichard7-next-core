@@ -6,6 +6,7 @@ import postgres from "postgres"
 import { setupCase } from "../../tests/helpers/setupCase"
 import ResolutionStatus from "../../types/ResolutionStatus"
 import checkDb from "./check_db"
+import { AUTO_RESUBMIT_LOG_PREFIX } from "./check_db"
 
 const dbConfig = createDbConfig()
 const sql = postgres({
@@ -21,6 +22,8 @@ const sql = postgres({
     }
   }
 })
+
+const logRegex = new RegExp(AUTO_RESUBMIT_LOG_PREFIX)
 
 describe("check db", () => {
   beforeEach(async () => {
@@ -73,21 +76,50 @@ describe("check db", () => {
     expect(result.status).toBe("FAILED")
   })
 
-  describe("with auto resubmit", () => {
-    it("should fail if the case is locked to a user", async () => {
+  describe("with auto resubmit should complete with error in logs", () => {
+    it("if the case is locked to a user", async () => {
       const caseDb = await setupCase(sql, ResolutionStatus.UNRESOLVED, "username")
 
       const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: true } })
 
-      expect(result.status).toBe("FAILED")
+      expect(result.status).toBe("COMPLETED")
+      expect(result.logs?.[0].log).toMatch(logRegex)
+      expect(result.outputData).toEqual(
+        expect.objectContaining({
+          autoFailed: true,
+          errorMessage: expect.stringContaining(`${AUTO_RESUBMIT_LOG_PREFIX} Case is locked`)
+        })
+      )
     })
 
-    it("should fail if the case is Submitted", async () => {
+    it("if the case is Submitted", async () => {
       const caseDb = await setupCase(sql, ResolutionStatus.SUBMITTED, undefined)
 
       const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: true } })
 
-      expect(result.status).toBe("FAILED")
+      expect(result.status).toBe("COMPLETED")
+      expect(result.logs?.[0].log).toMatch(logRegex)
+      expect(result.outputData).toEqual(
+        expect.objectContaining({
+          autoFailed: true,
+          errorMessage: expect.stringContaining(`${AUTO_RESUBMIT_LOG_PREFIX} Case is not unresolved`)
+        })
+      )
+    })
+
+    it("if the case is Resolved", async () => {
+      const caseDb = await setupCase(sql, ResolutionStatus.RESOLVED, undefined)
+
+      const result = await checkDb.execute({ inputData: { messageId: caseDb.message_id, autoResubmit: true } })
+
+      expect(result.status).toBe("COMPLETED")
+      expect(result.logs?.[0].log).toMatch(logRegex)
+      expect(result.outputData).toEqual(
+        expect.objectContaining({
+          errorMessage: expect.stringContaining(`${AUTO_RESUBMIT_LOG_PREFIX} Case is not unresolved`),
+          autoFailed: true
+        })
+      )
     })
 
     it("should be Completed if the case is Unresolved and not locked", async () => {

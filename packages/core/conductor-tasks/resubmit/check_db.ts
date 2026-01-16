@@ -30,14 +30,21 @@ const inputDataSchema = z.object({
 type InputData = z.infer<typeof inputDataSchema>
 
 const SERVICE_USERNAME = "service.user"
+export const AUTO_RESUBMIT_LOG_PREFIX = "[AutoResubmit]"
+
+const caseLocked = (caseRow: CaseRow): boolean => !!caseRow.error_locked_by_id
 
 const autoResubmitHandler = async (
   dbTransaction: TransactionSql,
   caseRow: CaseRow,
   auditLogger: CoreAuditLogger
 ): Promise<void> => {
-  if (caseRow.error_locked_by_id) {
-    throw new Error(`Case is locked: ${caseRow.message_id}`)
+  if (caseLocked(caseRow)) {
+    throw new Error(`${AUTO_RESUBMIT_LOG_PREFIX} Case is locked: ${caseRow.message_id}`)
+  }
+
+  if (caseRow.error_status !== ResolutionStatus.UNRESOLVED) {
+    throw new Error(`${AUTO_RESUBMIT_LOG_PREFIX} Case is not unresolved: ${caseRow.message_id}`)
   }
 
   const updateRow = await dbTransaction`
@@ -49,7 +56,7 @@ const autoResubmitHandler = async (
   `.catch((error: Error) => error)
 
   if (isError(updateRow)) {
-    throw new Error(`Failed to lock DB record for ${caseRow.message_id}`)
+    throw new Error(`${AUTO_RESUBMIT_LOG_PREFIX} Failed to lock DB record for ${caseRow.message_id}`)
   }
 
   auditLogger.info(EventCode.ExceptionsLocked, { user: SERVICE_USERNAME })
@@ -67,22 +74,22 @@ const checkDb: ConductorWorker = {
         const [caseRow] = await dbTransaction<CaseRow[]>`
           SELECT *
           FROM br7own.error_list el
-          WHERE el.message_id = ${messageId} AND el.error_status = ${ResolutionStatus.UNRESOLVED}
+          WHERE el.message_id = ${messageId}
         `
 
         if (!caseRow) {
-          throw new Error(`Case not found or haven't got the error status of unresolved: ${messageId}`)
-        }
-
-        if (caseRow.error_status !== ResolutionStatus.UNRESOLVED) {
-          throw new Error(`Case is not Unresolved: ${messageId}`)
+          throw new Error(`Case not found message ID: ${messageId}`)
         }
 
         if (autoResubmit) {
           await autoResubmitHandler(dbTransaction, caseRow, auditLogger)
         } else {
-          if (!caseRow.error_locked_by_id) {
+          if (!caseLocked(caseRow)) {
             throw new Error(`Case is not locked: ${caseRow.message_id}`)
+          }
+
+          if (caseRow.error_status !== ResolutionStatus.UNRESOLVED) {
+            throw new Error(`Case is not Unresolved: ${messageId}`)
           }
 
           const updatedRow = await dbTransaction`
@@ -116,6 +123,10 @@ const checkDb: ConductorWorker = {
       .catch((error: Error) => error)
 
     if (isError(result)) {
+      if (result.message.startsWith(AUTO_RESUBMIT_LOG_PREFIX)) {
+        return completed({ autoFailed: true, errorMessage: result.message }, `${result.message}`)
+      }
+
       return failed(`${result.name}: ${result.message}`)
     }
 

@@ -1,149 +1,147 @@
 {
-  "createTime": 1758269877463,
-  "updateTime": 1758271543666,
   "name": "resubmit",
   "description": "Case Resubmission",
   "version": 3,
+  "schemaVersion": 2,
   "tasks": [
     {
       "name": "check_db",
-      "taskReferenceName": "check_db",
+      "taskReferenceName": "check_db_ref",
       "inputParameters": {
         "autoResubmit": "${workflow.input.autoResubmit}",
         "messageId": "${workflow.input.messageId}"
       },
-      "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": false,
-      "asyncComplete": false,
-      "retryLogic": "FIXED",
-      "retryCount": 0
+      "type": "SIMPLE"
     },
     {
-      "name": "lock_s3_file",
-      "taskReferenceName": "lock_s3_file",
+      "name": "check_output",
+      "taskReferenceName": "switch_auto_failed_ref",
       "inputParameters": {
-        "bucketId": "task-data",
-        "fileName": "${check_db.output.s3TaskDataPath}",
-        "lockId": "${workflow.workflowId}"
-      },
-      "type": "SIMPLE",
-      "startDelay": 0,
-      "optional": false,
-      "asyncComplete": false,
-      "permissive": false
-    },
-    {
-      "name": "check_lock",
-      "taskReferenceName": "check_lock",
-      "inputParameters": {
-        "lockState": "${lock_s3_file.output.lockState}"
+        "autoFailed": "${check_db_ref.output.autoFailed}"
       },
       "type": "SWITCH",
       "evaluatorType": "value-param",
-      "expression": "lockState",
+      "expression": "autoFailed",
       "decisionCases": {
-        "failure": [
+        "true": [
           {
             "name": "terminate",
-            "taskReferenceName": "terminate",
+            "taskReferenceName": "terminate_auto_failed_ref",
             "inputParameters": {
               "terminationStatus": "COMPLETED",
-              "workflowOutput": ""
+              "workflowOutput": {
+                "errorMessage": "${check_db_ref.output.errorMessage}",
+                "reason": "Auto Resubmission failed"
+              }
             },
-            "type": "TERMINATE",
-            "startDelay": 0,
-            "optional": false
+            "type": "TERMINATE"
           }
         ]
       },
       "defaultCase": [
         {
-          "name": "process_resubmit",
-          "taskReferenceName": "process_resubmit",
+          "name": "lock_s3_file",
+          "taskReferenceName": "lock_s3_file_ref",
           "inputParameters": {
-            "s3TaskDataPath": "${check_db.output.s3TaskDataPath}"
+            "bucketId": "task-data",
+            "fileName": "${check_db_ref.output.s3TaskDataPath}",
+            "lockId": "${workflow.workflowId}"
           },
-          "type": "SIMPLE",
-          "startDelay": 0,
-          "optional": false,
-          "asyncComplete": false,
-          "retryLogic": "FIXED",
-          "retryCount": 0
+          "type": "SIMPLE"
         },
         {
-          "name": "store_audit_log_events",
-          "taskReferenceName": "store_audit_log_events",
+          "name": "check_lock",
+          "taskReferenceName": "switch_check_lock_ref",
           "inputParameters": {
-            "correlationId": "${workflow.correlationId}",
-            "auditLogEvents": "${process_resubmit.output.auditLogEvents}"
+            "lockState": "${lock_s3_file_ref.output.lockState}"
           },
-          "type": "SIMPLE",
-          "startDelay": 0,
-          "optional": false,
-          "asyncComplete": false,
-          "permissive": false
-        },
-        {
-          "name": "switch_on_phase",
-          "taskReferenceName": "switch_on_phase",
           "type": "SWITCH",
-          "inputParameters": {
-            "phase": "${process_resubmit.output.currentPhase}"
-          },
           "evaluatorType": "value-param",
-          "expression": "phase",
+          "expression": "lockState",
           "decisionCases": {
-            "1": [
+            "failure": [
               {
-                "name": "start_bichard_phase_1",
-                "taskReferenceName": "start_bichard_phase_1",
-                "type": "START_WORKFLOW",
+                "name": "terminate",
+                "taskReferenceName": "terminate_lock_failure_ref",
                 "inputParameters": {
-                  "startWorkflow": {
-                    "name": "bichard_phase_1",
-                    "correlationId": "${workflow.correlationId}",
-                    "input": {
-                      "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
-                    }
-                  }
-                }
-              }
-            ],
-            "2": [
-              {
-                "name": "start_bichard_phase_2",
-                "taskReferenceName": "start_bichard_phase_2",
-                "type": "START_WORKFLOW",
-                "inputParameters": {
-                  "startWorkflow": {
-                    "name": "bichard_phase_2",
-                    "correlationId": "${workflow.correlationId}",
-                    "input": {
-                      "s3TaskDataPath": "${process_resubmit.output.s3TaskDataPath}"
-                    }
-                  }
-                }
+                  "terminationStatus": "COMPLETED",
+                  "workflowOutput": { "reason": "lock acquisition failed" }
+                },
+                "type": "TERMINATE"
               }
             ]
-          }
+          },
+          "defaultCase": [
+            {
+              "name": "process_resubmit",
+              "taskReferenceName": "process_resubmit_ref",
+              "inputParameters": {
+                "s3TaskDataPath": "${check_db_ref.output.s3TaskDataPath}"
+              },
+              "type": "SIMPLE"
+            },
+            {
+              "name": "store_audit_log_events",
+              "taskReferenceName": "store_audit_log_ref",
+              "inputParameters": {
+                "correlationId": "${workflow.correlationId}",
+                "auditLogEvents": "${process_resubmit_ref.output.auditLogEvents}"
+              },
+              "type": "SIMPLE"
+            },
+            {
+              "name": "switch_on_phase",
+              "taskReferenceName": "switch_phase_ref",
+              "inputParameters": {
+                "phase": "${process_resubmit_ref.output.currentPhase}"
+              },
+              "type": "SWITCH",
+              "evaluatorType": "value-param",
+              "expression": "phase",
+              "decisionCases": {
+                "1": [
+                  {
+                    "name": "start_workflow",
+                    "taskReferenceName": "start_bichard_p1_ref",
+                    "type": "START_WORKFLOW",
+                    "inputParameters": {
+                      "startWorkflow": {
+                        "name": "bichard_phase_1",
+                        "version": 1,
+                        "input": {
+                          "s3TaskDataPath": "${process_resubmit_ref.output.s3TaskDataPath}"
+                        }
+                      }
+                    }
+                  }
+                ],
+                "2": [
+                  {
+                    "name": "start_workflow",
+                    "taskReferenceName": "start_bichard_p2_ref",
+                    "type": "START_WORKFLOW",
+                    "inputParameters": {
+                      "startWorkflow": {
+                        "name": "bichard_phase_2",
+                        "version": 1,
+                        "input": {
+                          "s3TaskDataPath": "${process_resubmit_ref.output.s3TaskDataPath}"
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          ]
         }
-      ],
-      "startDelay": 0,
-      "optional": false,
-      "asyncComplete": false,
-      "permissive": false
+      ]
     }
   ],
   "inputParameters": ["autoResubmit", "messageId"],
   "outputParameters": {},
-  "schemaVersion": 2,
   "restartable": true,
   "workflowStatusListenerEnabled": false,
   "timeoutPolicy": "ALERT_ONLY",
-  "timeoutSeconds": 0,
-  "variables": {},
-  "inputTemplate": {},
-  "enforceSchema": true,
-  "metadata": {}
+  "timeoutSeconds": 0
 }
