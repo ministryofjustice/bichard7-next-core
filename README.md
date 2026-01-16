@@ -87,7 +87,7 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
-You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) by navigating to `packages/e2e-test` and running the following:
+You can also run the end-to-end tests by navigating to `packages/e2e-test` and running the following:
 
 To run all tests:
 
