@@ -8,8 +8,8 @@ The code to replace the processing logic of Bichard 7.
 - [Quickstart](#quickstart)
   - [Pre-Requisites](#pre-requisites)
   - [Booting the infrastructure](#booting-the-infrastructure)
+  - [Setting up the Local Database](#setting-up-the-local-database)
   - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
-  - [Building on an M1 Mac](#building-on-an-m1-mac)
 - [Running Packages locally](#running-packages-locally)
 - [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
@@ -21,10 +21,12 @@ The code to replace the processing logic of Bichard 7.
 Packages:
 
 - [api](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api)
+- [cli](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/cli)
 - [common](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/common)
 - [conductor](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor)
 - [core](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/core)
 - [e2e-test](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/e2e-test)
+- [help](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/help)
 - [message-forwarder](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/message-forwarder)
 - [uat-data](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/uat-data)
 - [ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui)
@@ -34,12 +36,9 @@ Packages:
 
 ### Pre-Requisites
 
-Install the following required components:
+Please follow the instructions in this document:
+https://dsdmoj.atlassian.net/wiki/spaces/KB/pages/5879988352/Development+Software+Tools
 
-- [Docker desktop](https://www.docker.com/products/docker-desktop/)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
-- [aws-vault](https://github.com/99designs/aws-vault)
-- [jq](https://stedolan.github.io/jq/download/)
 
 ### Booting the infrastructure
 
@@ -51,7 +50,7 @@ for each of them:
   - Run `SKIP_GOSS=true make build-local`
 - Clone [Bichard7 Next (Old Bichard)](https://github.com/ministryofjustice/bichard7-next)
   - Run `make build`, or
-  - `make build-debug` if you need to run Bichard in debug mode
+  - run `make build-debug` if you need to run Bichard in debug mode
 - Clone [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
   - Run `make build`
 - Clone [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
@@ -61,24 +60,26 @@ for each of them:
 
 There are two folders inside this very repo (bichard7-next-core) that also need building:
 - [UI](packages/ui)
-  - Navigate to packages/ui and run `make build`
+  - Navigate to `packages/ui` and run `make build`
 - [User Service](packages/user-service)
-  - Navigate to packages/user-service and run `make build`
+  - Navigate to `packages/user-service` and run `make build`
 
-Next, boot up all the containers you will need in order to run Bichard end to end.
+
+Next, go to the root directory of `bichard7-next-core` and run
+```bash
+npm ci
+````
+
+Then boot up all the containers you will need in order to run Bichard end to end.
 You can do this with the following command:
 
 ```bash
-aws-vault exec bichard7-shared -- npm run all
+npm run all
 ```
 
-This will pull down the images from ECR so you don't need to build them. On an M1 Mac, see below.
+You should now have access to the following:
 
-You should now have access to https://localhost:4443/bichard
-
-In order to log in, you will need to get a username and password
-from the local database.
-
+- https://localhost:4443/bichard
 
 You can also run subsets of the infrastructure using:
 
@@ -86,10 +87,17 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
-You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) against core in Conductor with:
+You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) by navigating to `packages/e2e-test` and running the following:
+
+To run all tests:
 
 ```bash
-npm run test:e2e
+npm run test:nextUI
+```
+
+To run a specific test, for example test 180 located in the `features` folder:
+```bash
+npm run test:nextUI:file -- ./features/180*
 ```
 
 Finally, to bring all of that infrastructure down again, you can use:
@@ -100,52 +108,49 @@ npm run destroy
 
 ### Setting up the Local Database
 
-After following the instructions in the previous section, you will have several
-db-related containers running:
-
-- postgress-1 contains the DB.
-- db-migrate and db-seed: if these containers are running, your db will be
-  correctly populated.
+In order to log in, you will need to get a username and password
+from the local database.
 
 You can access this db in several ways:
 
-1. From WebStorm
+#### From WebStorm
 
-Go to View/Tool Windows/Database
-Go to the db that just opened and click on the Plus sign.
-Select Data Source, and then PostgreSQL.
+Go to `View/Tool Windows/Database`
+Go to the db that just opened and click on the Plus (`+`) sign.
+Select `Data Source`, and then `PostgreSQL`.
 
-On the general tab (opens by default) use the following configuration details:
+On the `general tab` (opens by default) use the following configuration details:
 
-- Host: 127.0.0.1
-- Port: 5432
-- User: bichard
-- Password: password
-- Database: bichard
+- `Host: 127.0.0.1`
+- `Port: 5432`
+- `User: bichard`
+- `Password: password`
+- `Database: bichard`
 
-On the Schemas tab, check Bichard -> br7own
+On the `Schemas tab`, check `Bichard -> br7own`
 
-2. From TablePlus
+#### From TablePlus
 
-Click on Connection/New and select PostgreSQL
+Click on `Connection/New` and select `PostgreSQL`
 
 Add the following config details (same as the ones listed above for WebStorm):
 
-- Host: 127.0.0.1
-- Port: 5432
-- User: bichard
-- Password: password
-- Database: bichard
+- `Host: 127.0.0.1`
+- `Port: 5432`
+- `User: bichard`
+- `Password: password`
+- `Database: bichard`
 
-Once done with this configuration, go to the dropdown on the bottom left and select br7own
+Once done with this configuration, go to the dropdown on the bottom left 
+and select `br7own`
 
 
 Now that you have access to the Local Database, you can find a valid user
 and log into your local Bichard. You will need a user that has a value
 for the following columns:
-- email
-- password
-- email_verification_code
+- `email`
+- `password`
+- `email_verification_code`
 
 
 
@@ -161,20 +166,11 @@ for the following columns:
 1. Click the green bug icon and you should see `Connected to the target VM, address: 'localhost:7777', transport: 'socket'` printed out
 1. Set breakpoints then use Bichard and IntelliJ will let you step through the code
 
-### Building on an M1 Mac
-
-We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore, it is necessary to build the relevant images yourself.
-
-1. In the [bichard7-next-infrastructure-docker-images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/) repository, run `make build-local` to just build the required images
-1. Follow the instructions in the [bichard7-next](https://github.com/ministryofjustice/bichard7-next/#building-liberty-on-arm) repository to build the Bichard Open Liberty image
-1. In the [user-service](packages/user-service) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-user-service-docker.sh`
-1. In the [ui](packages/ui) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-ui-docker.sh`
-
 ## Running Packages locally
 
 1. From the root directory `npm ci`
 2. Run `npm run build:core`
-3. If you need to change `packages/common` you have to two options, `build` will just build the package once or `watch` all listen for changes and rebuild. You can either:
+3. If you need to change `packages/common` you have two options, `build` will just build the package once or `watch` all listen for changes and rebuild. You can either:
    1. `cd packages/common`
       1. And run `npm run build`
       2. Or `npm run watch`
