@@ -1,7 +1,8 @@
+import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
-  {
+  policeApi.mockAsnQuery({
     matchRegex: "CXE01",
     response: `<?xml version="1.0" standalone="yes"?>
     <CXE01>
@@ -14,9 +15,10 @@ export default (_: string, { policeApi }: Bichard) => [
       </ASI>
       <GMT>000008073ENQR000309R</GMT>
     </CXE01>`,
+    asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1
-  },
+  }),
   policeApi.mockUpdate("CXU02", {
     expectedRequest:
       "<FSC>K01YZ</FSC><IDS>K21/7B      FOARDS                  </IDS><CCR>K21/2732/7P                    </CCR><COU>I2576                                                                       FOARDSXX/LORNE                                        010820110000</COU><CCH>K001              PC00525 </CCH><ADJ>INOT GUILTY   GUILTY        010820110000 </ADJ><DIS>I1040                      00                                                                            </DIS><DIS>I1087                      00                                                                            </DIS>",
