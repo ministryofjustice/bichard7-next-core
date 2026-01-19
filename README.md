@@ -11,7 +11,6 @@ The code to replace the processing logic of Bichard 7.
   - [Setting up the Local Database](#setting-up-the-local-database)
   - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
 - [Running Packages locally](#running-packages-locally)
-- [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
 - [Excluding Triggers](#excluding-triggers)
 - [Conductor](#conductor)
@@ -83,7 +82,7 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
-You can also run the end-to-end tests by navigating to `packages/e2e-test` and running the following in order to run all tests:
+You can run the end-to-end tests by navigating to `packages/e2e-test` and running the following in order to run all tests:
 
 ```bash
 npm run test:nextUI
