@@ -11,6 +11,7 @@ The code to replace the processing logic of Bichard 7.
   - [Setting up the Local Database](#setting-up-the-local-database)
   - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
 - [Running Packages locally](#running-packages-locally)
+- [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
 - [Excluding Triggers](#excluding-triggers)
 - [Conductor](#conductor)
