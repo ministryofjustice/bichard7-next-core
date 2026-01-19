@@ -11,7 +11,6 @@ The code to replace the processing logic of Bichard 7.
   - [Setting up the Local Database](#setting-up-the-local-database)
   - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
 - [Running Packages locally](#running-packages-locally)
-- [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
 - [Excluding Triggers](#excluding-triggers)
 - [Conductor](#conductor)
@@ -83,17 +82,13 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
-To run the end-to-end tests, navigate to `packages/e2e-test`, run
-```bash
-npm ci
-```
-And then, to run all tests:
+You can also run the end-to-end tests by navigating to `packages/e2e-test` and running the following in order to run all tests:
 
 ```bash
 npm run test:nextUI
 ```
 
-Or to run a specific test, for example test 180 located in the `features` folder:
+Or to run a specific test, for example test 180 located in the `features` folder, run the following:
 
 ```bash
 npm run test:nextUI:file -- ./features/180*
@@ -143,13 +138,9 @@ Add the following config details (same as the ones listed above for WebStorm):
 Once done with this configuration, go to the dropdown on the bottom left
 and select `br7own`
 
-Now that you have access to the Local Database, you can go to the `users` table and find a valid user
-to log into your local Bichard. You will need a user that has a value
-for the following columns:
-
-- `email`
-- `password`
-- `email_verification_code`
+Now that you have access to the Local Database, you can go to the `users` table, pick a user and copy
+the `email` and `password` information to log into the app. You will then be asked to enter
+a verification code, that you can copy from field `email_verification_code`.
 
 ### Running legacy Bichard in debug mode
 
@@ -175,16 +166,6 @@ for the following columns:
       1. `npm run build -w packages/common`
       2. Or, `npm run watch -w packages/common`
 4. Go to the package you want to change and follow that package's README
-
-## Publishing package updates
-
-The code in this repository is packaged in the [`@moj-bichard7-developers/bichard7-next-core` NPM package](https://www.npmjs.com/package/@moj-bichard7-developers/bichard7-next-core).
-
-To deploy a new version of the package:
-
-1. Manually bump the version number in `package.json` in your PR. It's recommended to follow [semantic versioning principles](https://semver.org).
-1. Merge your PR into the `main` branch.
-1. Run the [`Release` GitHub action](https://github.com/ministryofjustice/bichard7-next-core/actions/workflows/release.yml) against the `main` branch, by clicking the "Run workflow" button in the Actions interface.
 
 ## Testing
 
