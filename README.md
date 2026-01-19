@@ -59,19 +59,15 @@ for each of them:
 
 There are two folders inside this very repo (bichard7-next-core) that also need building:
 
+- [api](packages/api)
+  - Navigate to `packages/api` and run `npm run build:docker`
 - [UI](packages/ui)
   - Navigate to `packages/ui` and run `make build`
 - [User Service](packages/user-service)
   - Navigate to `packages/user-service` and run `make build`
 
-Next, go to the root directory of `bichard7-next-core` and run
-
-```bash
-npm ci
-```
-
 Then boot up all the containers you will need in order to run Bichard end to end.
-You can do this with the following command:
+You can do this by navigating to the root directory of `bichard7-next-core`and running the following command:
 
 ```bash
 npm run all
@@ -87,15 +83,17 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
-You can also run the end-to-end tests by navigating to `packages/e2e-test` and running the following:
-
-To run all tests:
+To run the end-to-end tests, navigate to `packages/e2e-test`, run
+```bash
+npm ci
+```
+And then, to run all tests:
 
 ```bash
 npm run test:nextUI
 ```
 
-To run a specific test, for example test 180 located in the `features` folder:
+Or to run a specific test, for example test 180 located in the `features` folder:
 
 ```bash
 npm run test:nextUI:file -- ./features/180*
@@ -145,8 +143,8 @@ Add the following config details (same as the ones listed above for WebStorm):
 Once done with this configuration, go to the dropdown on the bottom left
 and select `br7own`
 
-Now that you have access to the Local Database, you can find a valid user
-and log into your local Bichard. You will need a user that has a value
+Now that you have access to the Local Database, you can go to the `users` table and find a valid user
+to log into your local Bichard. You will need a user that has a value
 for the following columns:
 
 - `email`
