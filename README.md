@@ -8,10 +8,9 @@ The code to replace the processing logic of Bichard 7.
 - [Quickstart](#quickstart)
   - [Pre-Requisites](#pre-requisites)
   - [Booting the infrastructure](#booting-the-infrastructure)
+  - [Setting up the Local Database](#setting-up-the-local-database)
   - [Running legacy Bichard in debug mode](#running-legacy-bichard-in-debug-mode)
-  - [Building on an M1 Mac](#building-on-an-m1-mac)
 - [Running Packages locally](#running-packages-locally)
-- [Publishing package updates](#publishing-package-updates)
 - [Testing](#testing)
 - [Excluding Triggers](#excluding-triggers)
 - [Conductor](#conductor)
@@ -21,10 +20,12 @@ The code to replace the processing logic of Bichard 7.
 Packages:
 
 - [api](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/api)
+- [cli](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/cli)
 - [common](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/common)
 - [conductor](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/conductor)
 - [core](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/core)
 - [e2e-test](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/e2e-test)
+- [help](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/help)
 - [message-forwarder](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/message-forwarder)
 - [uat-data](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/uat-data)
 - [ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui)
@@ -34,41 +35,46 @@ Packages:
 
 ### Pre-Requisites
 
-Install the following required components:
-
-- [Docker desktop](https://www.docker.com/products/docker-desktop/)
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
-- [aws-vault](https://github.com/99designs/aws-vault)
-- [jq](https://stedolan.github.io/jq/download/)
+Please follow the instructions in this document:
+https://dsdmoj.atlassian.net/wiki/spaces/KB/pages/5879988352/Development+Software+Tools
 
 ### Booting the infrastructure
 
-This project has a number of external dependencies that need building in order to run the whole stack. Check the
-following out and run `make build` in each repository:
+This project has a number of external dependencies that need building in order to run
+the whole stack. Clone the following repositories and run the specified build command
+for each of them:
 
-- [Docker Images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images)
-  - Make command is `SKIP_GOSS=true make build-local` for this repo
-- [Bichard7 Next (Old Bichard)](https://github.com/ministryofjustice/bichard7-next)
-  - Make command is `make build` for this repo, or
-  - `make build-debug` if you need to run Bichard in debug mode
-- [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
-  - Make command is `make build` for this repo
-- [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
-  - Make command is `SKIP_GOSS=true make build` for this repo
-- [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
-  - Make command is `make build-api-server build-event-handler-server` for this repo
-- [User Service](packages/user-service)
-  - Navigate to packages/user-service and run `make build`
+- Clone [Docker Images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images)
+  - Run `SKIP_GOSS=true make build-local`
+- Clone [Bichard7 Next (Old Bichard)](https://github.com/ministryofjustice/bichard7-next)
+  - Run `make build`, or
+  - run `make build-debug` if you need to run Bichard in debug mode
+- Clone [PNC Emulator](https://github.com/ministryofjustice/bichard7-next-pnc-emulator)
+  - Run `make build`
+- Clone [BeanConnect](https://github.com/ministryofjustice/bichard7-next-beanconnect)
+  - Run `SKIP_GOSS=true make build`
+- Clone [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
+  - Run `make build-api-server build-event-handler-server`
+
+There are two folders inside this very repo (bichard7-next-core) that also need building:
+
+- [api](packages/api)
+  - Navigate to `packages/api` and run `npm run build:docker`
 - [UI](packages/ui)
-  - Navigate to packages/ui and run `make build`
+  - Navigate to `packages/ui` and run `make build`
+- [User Service](packages/user-service)
+  - Navigate to `packages/user-service` and run `make build`
 
-Bichard relies on a number of containers to run from end to end. These can all be booted up by running:
+Then boot up all the containers you will need in order to run Bichard end to end.
+You can do this by navigating to the root directory of `bichard7-next-core`and running the following command:
 
 ```bash
-aws-vault exec bichard7-shared -- npm run all
+npm run all
 ```
 
-This will pull down the images from ECR so you don't need to build them. On an M1 Mac, see below.
+You should now have access to the following:
+
+- https://localhost:4443/bichard
 
 You can also run subsets of the infrastructure using:
 
@@ -76,10 +82,16 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor` will run Conductor, Postgres, Localstack and the worker
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
-You can also run the [end-to-end tests](https://github.com/ministryofjustice/bichard7-next-tests) against core in Conductor with:
+You can run the end-to-end tests by navigating to `packages/e2e-test` and running the following in order to run all tests:
 
 ```bash
-npm run test:e2e
+npm run test:nextUI
+```
+
+Or to run a specific test, for example test 180 located in the `features` folder, run the following:
+
+```bash
+npm run test:nextUI:file -- ./features/180*
 ```
 
 Finally, to bring all of that infrastructure down again, you can use:
@@ -87,6 +99,48 @@ Finally, to bring all of that infrastructure down again, you can use:
 ```bash
 npm run destroy
 ```
+
+### Setting up the Local Database
+
+In order to log in, you will need to get a username and password
+from the local database.
+
+You can access this db in several ways:
+
+#### From WebStorm
+
+Go to `View/Tool Windows/Database`
+Go to the db that just opened and click on the Plus (`+`) sign.
+Select `Data Source`, and then `PostgreSQL`.
+
+On the `general tab` (opens by default) use the following configuration details:
+
+- `Host: 127.0.0.1`
+- `Port: 5432`
+- `User: bichard`
+- `Password: password`
+- `Database: bichard`
+
+On the `Schemas tab`, check `Bichard -> br7own`
+
+#### From TablePlus
+
+Click on `Connection/New` and select `PostgreSQL`
+
+Add the following config details (same as the ones listed above for WebStorm):
+
+- `Host: 127.0.0.1`
+- `Port: 5432`
+- `User: bichard`
+- `Password: password`
+- `Database: bichard`
+
+Once done with this configuration, go to the dropdown on the bottom left
+and select `br7own`
+
+Now that you have access to the Local Database, you can go to the `users` table, pick a user and copy
+the `email` and `password` information to log into the app. You will then be asked to enter
+a verification code, that you can copy from field `email_verification_code`.
 
 ### Running legacy Bichard in debug mode
 
@@ -100,20 +154,11 @@ npm run destroy
 1. Click the green bug icon and you should see `Connected to the target VM, address: 'localhost:7777', transport: 'socket'` printed out
 1. Set breakpoints then use Bichard and IntelliJ will let you step through the code
 
-### Building on an M1 Mac
-
-We can't pull the images down from ECR for an M1 Mac because they are not in ARM format. Therefore, it is necessary to build the relevant images yourself.
-
-1. In the [bichard7-next-infrastructure-docker-images](https://github.com/ministryofjustice/bichard7-next-infrastructure-docker-images/) repository, run `make build-local` to just build the required images
-1. Follow the instructions in the [bichard7-next](https://github.com/ministryofjustice/bichard7-next/#building-liberty-on-arm) repository to build the Bichard Open Liberty image
-1. In the [user-service](packages/user-service) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-user-service-docker.sh`
-1. In the [ui](packages/ui) package, run `make build` or the top level of [bichard7-next-core](https://github.com/ministryofjustice/bichard7-next-core) run this script `./scripts/build-ui-docker.sh`
-
 ## Running Packages locally
 
 1. From the root directory `npm ci`
 2. Run `npm run build:core`
-3. If you need to change `packages/common` you have to two options, `build` will just build the package once or `watch` all listen for changes and rebuild. You can either:
+3. If you need to change `packages/common` you have two options, `build` will just build the package once or `watch` all listen for changes and rebuild. You can either:
    1. `cd packages/common`
       1. And run `npm run build`
       2. Or `npm run watch`
@@ -121,16 +166,6 @@ We can't pull the images down from ECR for an M1 Mac because they are not in ARM
       1. `npm run build -w packages/common`
       2. Or, `npm run watch -w packages/common`
 4. Go to the package you want to change and follow that package's README
-
-## Publishing package updates
-
-The code in this repository is packaged in the [`@moj-bichard7-developers/bichard7-next-core` NPM package](https://www.npmjs.com/package/@moj-bichard7-developers/bichard7-next-core).
-
-To deploy a new version of the package:
-
-1. Manually bump the version number in `package.json` in your PR. It's recommended to follow [semantic versioning principles](https://semver.org).
-1. Merge your PR into the `main` branch.
-1. Run the [`Release` GitHub action](https://github.com/ministryofjustice/bichard7-next-core/actions/workflows/release.yml) against the `main` branch, by clicking the "Run workflow" button in the Actions interface.
 
 ## Testing
 
