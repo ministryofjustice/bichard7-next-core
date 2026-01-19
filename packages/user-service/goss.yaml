@@ -1,14 +1,14 @@
 file:
   /certs:
     exists: true
-    owner: root
+    owner: node
     group: supervisor
     filetype: directory
     contains: []
     mode: "0755" # u=rwx,go=rx
   /certs/server.crt:
     exists: true
-    owner: root
+    owner: node
     group: supervisor
     size:
       and:
@@ -19,7 +19,7 @@ file:
     mode: "0644" # u=rw,go=r
   /certs/server.key:
     exists: true
-    owner: root
+    owner: node
     group: supervisor
     filetype: file
     size:
