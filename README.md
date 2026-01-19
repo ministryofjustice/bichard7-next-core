@@ -84,9 +84,11 @@ You can also run subsets of the infrastructure using:
 - `npm run conductor-no-worker` will run Conductor, Postgres, Localstack and will not run the worker (for development purposes)
 
 To run the end-to-end tests, navigate to `packages/e2e-test`, run
+
 ```bash
 npm ci
 ```
+
 And then, to run all tests:
 
 ```bash
