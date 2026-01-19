@@ -66,8 +66,6 @@ user:
     shell: /sbin/nologin
   nginx:
     exists: true
-    uid: 998
-    gid: 998
     groups:
       - nginx
     home: /var/lib/nginx

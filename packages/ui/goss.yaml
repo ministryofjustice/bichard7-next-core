@@ -84,16 +84,12 @@ user:
     shell: /bin/bash
   supervisor:
     exists: true
-    uid: 997
-    gid: 997
     groups:
       - supervisor
     home: /home/supervisor
     shell: /sbin/nologin
   systemd-network:
     exists: true
-    uid: 192
-    gid: 192
     groups:
       - systemd-network
     home: /
