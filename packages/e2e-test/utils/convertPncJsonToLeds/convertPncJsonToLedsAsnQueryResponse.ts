@@ -99,23 +99,23 @@ export const convertPncJsonToLedsAsnQueryResponse = (
   pncJson: PncAsnQueryJson,
   { asn, personId, reportId, courtCaseId }: Params
 ): AsnQueryResponse => {
+  const courtCaseReferences = Array.from(new Set(pncJson.offences.map((offence) => offence.courtCaseReference)))
+
   return {
     personId,
     personUrn: pncJson.pncIdentifier,
     reportId,
     asn,
     ownerCode: pncJson.forceStationCode,
-    disposals: [
-      {
-        courtCaseId,
-        courtCaseReference: pncJson.courtCaseReferenceNumber,
-        caseStatusMarker: "impending-prosecution-detail",
-        court: {
-          courtIdentityType: "code",
-          courtCode: "0000"
-        },
-        offences: mapOffences(pncJson.offences)
-      }
-    ]
+    disposals: courtCaseReferences.map((courtCaseReference) => ({
+      courtCaseId,
+      courtCaseReference: courtCaseReference,
+      caseStatusMarker: "impending-prosecution-detail",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "0000"
+      },
+      offences: mapOffences(pncJson.offences.filter((offence) => offence.courtCaseReference === courtCaseReference))
+    }))
   }
 }
