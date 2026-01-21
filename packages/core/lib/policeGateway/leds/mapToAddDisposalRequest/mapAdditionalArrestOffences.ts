@@ -41,7 +41,7 @@ const mapAdditionalArrestOffences = (
     const committedOnBail = arrest.committedOnBail?.toLowerCase() === "y"
     const disposalResults = disposals.map((disposal) => ({
       disposalCode: Number(disposal.disposalType),
-      disposalQualifiers: [disposal.disposalQualifiers ?? ""],
+      disposalQualifiers: disposal.disposalQualifiers ? [disposal.disposalQualifiers] : undefined,
       disposalText: disposal?.disposalText ?? undefined
     }))
 
@@ -54,9 +54,9 @@ const mapAdditionalArrestOffences = (
       dateOfSentence: adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined,
       offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
       offenceStartDate: convertDate(arrest.offenceStartDate),
-      offenceStartTime: convertTime(arrest.offenceStartTime),
-      offenceEndDate: convertDate(arrest.offenceEndDate),
-      offenceEndTime: convertTime(arrest.offenceEndTime),
+      offenceStartTime: arrest.offenceStartTime ? convertTime(arrest.offenceStartTime) : undefined,
+      offenceEndDate: arrest.offenceEndDate ? convertDate(arrest.offenceEndDate) : undefined,
+      offenceEndTime: arrest.offenceEndTime ? convertTime(arrest.offenceEndTime) : undefined,
       disposalResults,
       locationFsCode: arrest.offenceLocationFSCode,
       locationText: arrest.locationOfOffence
