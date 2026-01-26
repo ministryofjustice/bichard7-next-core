@@ -2,6 +2,7 @@ import * as fs from "fs"
 import * as http from "http"
 import { IncomingMessage, ServerResponse } from "http"
 import * as https from "https"
+import path from "path"
 import * as url from "url"
 
 // --- CONFIGURATION ---
@@ -19,6 +20,7 @@ const CONFIG = {
 interface RequestDetails {
   method: string
   path: string
+  timestamp: string
   headers: Record<string, any>
   body: any
 }
@@ -26,16 +28,41 @@ interface RequestDetails {
 interface MockEndpoint {
   method: string
   path: string
+  requestBody?: any
   response: { status: number; body: any; headers?: Record<string, string> }
   hits: number
   count?: number
-  request?: RequestDetails[] // Stores the request details that consumed this mock.
+  request?: RequestDetails[]
 }
 
 const MOCKS: MockEndpoint[] = []
 const REQUEST_LOG: { timestamp: string; method: string; path: string; status: number; note: string }[] = []
 
 // --- HELPERS ---
+
+/**
+ * Recursively checks if the 'actual' object contains at least
+ * all fields and values defined in the 'expected' object.
+ */
+const isPartialMatch = (expected: any, actual: any): boolean => {
+  // If no expected body is defined for the mock, it's a match
+  if (expected === undefined || expected === null) return true
+
+  // If expected is a primitive, perform direct comparison
+  if (typeof expected !== "object" || expected === null) {
+    return expected === actual
+  }
+
+  // If actual is not an object but expected is, it's not a match
+  if (typeof actual !== "object" || actual === null) {
+    return false
+  }
+
+  // Ensure every key in expected exists in actual and matches recursively
+  return Object.keys(expected).every((key) => {
+    return isPartialMatch(expected[key], actual[key])
+  })
+}
 
 /**
  * Utility to send JSON responses with standard headers.
@@ -90,9 +117,11 @@ const logRequest = (req: IncomingMessage, status: number, note: string = "") => 
  * Handles control endpoints: /requests, /clear, and /mocks.
  */
 const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pathname: string): Promise<boolean> => {
+  // Parse query parameters
+  const parsedUrl = url.parse(req.url || "", true)
+
   // GET /requests (Logs)
   if (pathname === "/requests" && req.method === "GET") {
-    logRequest(req, 200, "View Logs")
     sendJSON(res, 200, REQUEST_LOG)
     return true
   }
@@ -101,7 +130,6 @@ const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pa
   if (pathname === "/clear" && req.method === "POST") {
     MOCKS.length = 0
     REQUEST_LOG.length = 0
-    logRequest(req, 200, "Server State Cleared")
     sendJSON(res, 200, { message: "Mocks and Request Log have been cleared." })
     return true
   }
@@ -109,25 +137,35 @@ const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pa
   // /mocks Endpoint
   if (pathname === "/mocks") {
     if (req.method === "GET") {
-      logRequest(req, 200, "View Mocks")
-      sendJSON(res, 200, MOCKS)
+      const parsedUrl = url.parse(req.url || "", true)
+      const isJsonRequest = parsedUrl.query.output === "json"
+
+      if (isJsonRequest) {
+        sendJSON(res, 200, MOCKS)
+      } else {
+        try {
+          // Resolve the path to your HTML file
+          const htmlPath = path.join(process.cwd(), "mock-server.html")
+          const htmlContent = fs.readFileSync(htmlPath, "utf-8")
+
+          res.writeHead(200, { "Content-Type": "text/html" })
+          res.end(htmlContent)
+        } catch (err) {
+          res.writeHead(500, { "Content-Type": "text/plain" })
+          res.end("Error: Could not find mock-server.html in the server directory.")
+        }
+      }
       return true
     }
 
     if (req.method === "POST") {
       const body = await parseBody(req)
-
       if (!body.method || !body.path || !body.response?.status) {
-        logRequest(req, 400, "Invalid Mock Definition")
         sendJSON(res, 400, { error: "Missing required fields: method, path, response.status" })
         return true
       }
-
       const method = body.method.toUpperCase()
-
-      // Duplicates are allowed. Mocks are matched FIFO.
       MOCKS.push({ ...body, method, hits: 0, count: body.count })
-      logRequest(req, 201, `Added Mock: ${method} ${body.path} Count:${body.count}`)
       sendJSON(res, 201, { message: "Mock created (duplicates allowed)", count: body.count })
       return true
     }
@@ -139,18 +177,33 @@ const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pa
  * Checks against defined MOCKS. Returns true if handled.
  */
 const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathname: string): Promise<boolean> => {
-  // Find the FIRST (oldest) mock that matches method/path AND is unused (hits < count).
-  const mock = MOCKS.find((m) => m.method === req.method && m.path === pathname && (!m.count || m.hits < m.count))
+  // Parse body first so we can use it for matching
+  const requestBody = await parseBody(req)
+
+  // Find the FIRST mock matching method, path, hit count, AND partial body
+  const mock = MOCKS.find(
+    (m) =>
+      m.method === req.method &&
+      m.path === pathname &&
+      (!m.count || m.hits < m.count) &&
+      isPartialMatch(m.requestBody, requestBody)
+  )
 
   if (!mock) {
-    // Log/respond with 404 if an expired mock was found
+    // Check if an expired mock matches this specific request (including body)
     const expiredMock = MOCKS.find(
-      (m) => m.method === req.method && m.path === pathname && m.count && m.hits >= m.count
+      (m) =>
+        m.method === req.method &&
+        m.path === pathname &&
+        m.count &&
+        m.hits >= m.count &&
+        isPartialMatch(m.requestBody, requestBody)
     )
+
     if (expiredMock) {
       logRequest(req, 404, "Mock Expired (Hit Limit Reached)")
       sendJSON(res, 404, {
-        error: "Endpoint found, but mock has expired (one-time use limit reached).",
+        error: "Endpoint found, but mock has expired.",
         path: pathname
       })
       return true
@@ -160,13 +213,12 @@ const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathn
 
   mock.hits++
 
-  // Capture Request Details and store it in the mock
-  const requestBody = await parseBody(req)
+  // Store the actual request that matched
   mock.request ??= []
   mock.request.push({
     method: req.method || "UNKNOWN",
+    timestamp: new Date().toLocaleString(),
     path: pathname,
-    // Clone headers to prevent issues with Node's Headers object
     headers: structuredClone(req.headers),
     body: requestBody
   })
