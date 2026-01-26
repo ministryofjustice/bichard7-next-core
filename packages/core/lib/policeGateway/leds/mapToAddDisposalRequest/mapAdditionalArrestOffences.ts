@@ -39,11 +39,19 @@ const mapAdditionalArrestOffences = (
 
   const additionalOffences = offenceGroups.map(({ arrest, adjudication, disposals }) => {
     const committedOnBail = arrest.committedOnBail?.toLowerCase() === "y"
-    const disposalResults = disposals.map((disposal) => ({
-      disposalCode: Number(disposal.disposalType),
-      disposalQualifiers: disposal.disposalQualifiers ? [disposal.disposalQualifiers] : undefined,
-      disposalText: disposal?.disposalText ?? undefined
-    }))
+
+    const disposalResults = disposals.map((disposal) => {
+      const disposalQualifiers = disposal.disposalQualifiers
+        ?.match(/.{1,2}/g)
+        ?.map((q) => q.trim())
+        .filter(Boolean)
+
+      return {
+        disposalCode: Number(disposal.disposalType),
+        disposalQualifiers,
+        disposalText: disposal?.disposalText ?? undefined
+      }
+    })
 
     return {
       courtOffenceSequenceNumber: Number(arrest.courtOffenceSequenceNumber),
