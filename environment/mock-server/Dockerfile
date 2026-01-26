@@ -13,8 +13,7 @@ RUN apt-get update \
 RUN npm install -g --ignore-scripts typescript ts-node
 
 # Copy the server file and the entrypoint script
-COPY mock-server.ts .
-COPY mock-server.sh .
+COPY mock-server.* .
 
 # Ensure the entrypoint script is executable
 RUN chmod +x mock-server.sh
