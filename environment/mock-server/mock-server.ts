@@ -28,8 +28,8 @@ interface MockEndpoint {
   path: string
   response: { status: number; body: any; headers?: Record<string, string> }
   hits: number
-  count: number
-  request?: RequestDetails // Stores the request details that consumed this mock.
+  count?: number
+  request?: RequestDetails[] // Stores the request details that consumed this mock.
 }
 
 const MOCKS: MockEndpoint[] = []
@@ -126,9 +126,9 @@ const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pa
       const method = body.method.toUpperCase()
 
       // Duplicates are allowed. Mocks are matched FIFO.
-      MOCKS.push({ ...body, method, hits: 0 })
-      logRequest(req, 201, `Added Mock: ${method} ${body.path}`)
-      sendJSON(res, 201, { message: "Mock created (One-time use, duplicates allowed)", count: MOCKS.length })
+      MOCKS.push({ ...body, method, hits: 0, count: body.count })
+      logRequest(req, 201, `Added Mock: ${method} ${body.path} Count:${body.count}`)
+      sendJSON(res, 201, { message: "Mock created (duplicates allowed)", count: body.count })
       return true
     }
   }
@@ -140,11 +140,13 @@ const handleControlRoutes = async (req: IncomingMessage, res: ServerResponse, pa
  */
 const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathname: string): Promise<boolean> => {
   // Find the FIRST (oldest) mock that matches method/path AND is unused (hits < count).
-  const mock = MOCKS.find((m) => m.method === req.method && m.path === pathname && (m.count === 0 || m.hits < m.count))
+  const mock = MOCKS.find((m) => m.method === req.method && m.path === pathname && (!m.count || m.hits < m.count))
 
   if (!mock) {
     // Log/respond with 404 if an expired mock was found
-    const expiredMock = MOCKS.find((m) => m.method === req.method && m.path === pathname && m.hits >= m.count)
+    const expiredMock = MOCKS.find(
+      (m) => m.method === req.method && m.path === pathname && m.count && m.hits >= m.count
+    )
     if (expiredMock) {
       logRequest(req, 404, "Mock Expired (Hit Limit Reached)")
       sendJSON(res, 404, {
@@ -160,13 +162,14 @@ const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathn
 
   // Capture Request Details and store it in the mock
   const requestBody = await parseBody(req)
-  mock.request = {
+  mock.request ??= []
+  mock.request.push({
     method: req.method || "UNKNOWN",
     path: pathname,
     // Clone headers to prevent issues with Node's Headers object
     headers: structuredClone(req.headers),
     body: requestBody
-  }
+  })
 
   logRequest(req, mock.response.status, "Mock Served")
   sendJSON(res, mock.response.status, mock.response.body, mock.response.headers)
