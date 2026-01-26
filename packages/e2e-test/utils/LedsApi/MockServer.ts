@@ -6,6 +6,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 export type RequestResponseMock = {
   method: "GET" | "POST" | "PUT"
   path: string
+  requestBody: unknown
   response: {
     status: number
     body: Record<string, unknown>
@@ -36,7 +37,7 @@ export default class MockServer {
   }
 
   async fetchMocks(): Promise<RequestResponseMock[]> {
-    const mocksResponse = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/mocks`, {
+    const mocksResponse = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/mocks?output=json`, {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
@@ -58,8 +59,6 @@ export default class MockServer {
       })
     })
 
-    const ignoredPaths = ["/clear", "/mocks", "/requests"]
-
-    return response.data.filter((request) => !ignoredPaths.includes(request.path))
+    return response.data
   }
 }
