@@ -68,6 +68,7 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
       <NavBar
         hasAccessToReports={currentUser.hasAccessTo[Permission.ViewReports]}
         hasAccessToUserManagement={currentUser.hasAccessTo[Permission.ViewUserManagement]}
+        hasAccessToAudit={false}
       />
       <PageTemplate>
         <Banner>
