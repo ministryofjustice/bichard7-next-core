@@ -13,6 +13,7 @@ export type RequestResponseMock = {
   }
   request?: Record<string, unknown>
   hits: number
+  count?: number
 }
 
 export default class MockServer {

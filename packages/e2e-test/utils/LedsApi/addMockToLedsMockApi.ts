@@ -15,6 +15,7 @@ const addMockToLedsMockApi = async (bichard: LedsBichard): Promise<void> => {
     await bichard.policeApi.mockServerClient.addMock({
       path: mock.request.path as unknown as string,
       method: mock.request.method as "GET" | "POST",
+      count: mock.count,
 
       response: {
         status: mock.response.statusCode as number,
