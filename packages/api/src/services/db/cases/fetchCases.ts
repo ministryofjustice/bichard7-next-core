@@ -117,7 +117,53 @@ const fetchCases = async (
       el.trigger_locked_by_id,
       el.trigger_quality_checked,
       el.trigger_status,
-      COUNT(CASE WHEN eln.user_id != 'System' OR eln.user_id IS NULL THEN eln.note_id END) AS note_count,
+      (
+        SELECT COUNT(*)
+        FROM br7own.error_list_notes n_count
+        WHERE n_count.error_id = el.error_id
+          AND (n_count.user_id != 'System' OR n_count.user_id IS NULL)
+      ) AS note_count,
+      COALESCE(
+        (
+          SELECT json_build_array(
+            json_build_object(
+              'note_id', n_latest.note_id,
+              'error_id', n_latest.error_id,
+              'note_text', n_latest.note_text,
+              'user_id', n_latest.user_id,
+              'create_ts', n_latest.create_ts
+            )
+          )
+          FROM br7own.error_list_notes n_latest
+          WHERE 
+            n_latest.error_id = el.error_id
+            AND (n_latest.user_id != 'System' OR n_latest.user_id IS NULL)
+          ORDER BY 
+            n_latest.create_ts DESC
+          LIMIT 1
+        ),
+        '[]'::json
+      ) AS notes,
+      COALESCE(
+        (
+          SELECT json_agg(
+            json_build_object(
+              'create_ts', t.create_ts,
+              'error_id', t.error_id,
+              'resolved_by', t.resolved_by,
+              'resolved_ts', t.resolved_ts,
+              'status', t.status,
+              'trigger_code', t.trigger_code,
+              'trigger_id', t.trigger_id,
+              'trigger_item_identity', t.trigger_item_identity
+            )
+            ORDER BY t.trigger_id ASC
+          )
+          FROM br7own.error_list_triggers t
+          WHERE t.error_id = el.error_id
+        ),
+        '[]'::json
+      ) AS triggers,
       NULLIF(CONCAT_WS(' ', errorLockedByUser.forenames, errorLockedByUser.surname), '') AS error_locked_by_fullname,
       NULLIF(CONCAT_WS(' ', triggerLockedByUser.forenames, triggerLockedByUser.surname), '') AS trigger_locked_by_fullname,
       (SELECT fullCount FROM totalCount) AS full_count
@@ -125,7 +171,6 @@ const fetchCases = async (
       br7own.error_list el
       LEFT JOIN relevantUsers errorLockedByUser ON errorLockedByUser.username = el.error_locked_by_id
       LEFT JOIN relevantUsers triggerLockedByUser ON triggerLockedByUser.username = el.trigger_locked_by_id
-      LEFT JOIN br7own.error_list_notes AS eln ON eln.error_id = el.error_id
     WHERE
       (el.error_id IN (SELECT ids_el_error_id FROM limitedCases))
     GROUP BY
