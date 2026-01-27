@@ -309,7 +309,10 @@ const Home: NextPage<Props> = (props) => {
       </Head>
       <CsrfTokenContext.Provider value={csrfTokenContext}>
         <CurrentUserContext.Provider value={currentUserContext}>
-          <Layout bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}>
+          <Layout
+            canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
+            bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
+          >
             <CourtCaseWrapper
               filter={
                 <CourtCaseFilter

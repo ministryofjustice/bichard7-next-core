@@ -21,11 +21,13 @@ import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 interface Props {
   user: DisplayFullUser
   csrfToken: string
   previousPath: string
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -47,7 +49,8 @@ export const getServerSideProps = withMultipleServerSideProps(
     const props = {
       user: userToDisplayFullUserDto(currentUser),
       previousPath,
-      csrfToken
+      csrfToken,
+      canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
     }
 
     if (isPost(req)) {
@@ -72,7 +75,12 @@ export const getServerSideProps = withMultipleServerSideProps(
   }
 )
 
-const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken }: Props) => {
+const SwitchingFeedbackPage: NextPage<Props> = ({
+  user,
+  previousPath,
+  csrfToken,
+  canUseTriggerAndExceptionQualityAuditing
+}: Props) => {
   const [skipUrl, setSkipUrl] = useState<URL | null>(null)
   const router = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -100,7 +108,7 @@ const SwitchingFeedbackPage: NextPage<Props> = ({ user, previousPath, csrfToken 
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
-      <Layout>
+      <Layout canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}>
         <Head>
           <title>{"Bichard7 | Report an issue using new Bichard"}</title>
           <meta name="description" content="Bichard7 | User switching version feedback" />

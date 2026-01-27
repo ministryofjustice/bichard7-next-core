@@ -331,6 +331,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                   href: `/bichard-ui/SelectRecord?unstick=true&error_id=${courtCase.errorId}`,
                   displaySwitchingSurveyFeedback
                 }}
+                canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
               >
                 <Header canReallocate={canReallocate} />
                 <CourtCaseDetails
