@@ -1,5 +1,5 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import { INFO_BANNER_FIRST_SHOWN } from "config"
+import { CAN_VIEW_AUDIT_SECTION, INFO_BANNER_FIRST_SHOWN } from "config"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
@@ -39,9 +39,14 @@ interface Props {
     href?: string
     displaySwitchingSurveyFeedback: boolean
   }
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
-const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSurveyFeedback: false } }: Props) => {
+const Layout = ({
+  children,
+  bichardSwitch = { display: false, displaySwitchingSurveyFeedback: false },
+  canUseTriggerAndExceptionQualityAuditing
+}: Props) => {
   const { basePath } = useRouter()
   const pathname = usePathname()
   const currentUser = useCurrentUser()
@@ -68,7 +73,7 @@ const Layout = ({ children, bichardSwitch = { display: false, displaySwitchingSu
       <NavBar
         hasAccessToReports={currentUser.hasAccessTo[Permission.ViewReports]}
         hasAccessToUserManagement={currentUser.hasAccessTo[Permission.ViewUserManagement]}
-        hasAccessToAudit={false}
+        hasAccessToAudit={CAN_VIEW_AUDIT_SECTION && canUseTriggerAndExceptionQualityAuditing}
       />
       <PageTemplate>
         <Banner>

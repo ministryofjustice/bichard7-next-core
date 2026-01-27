@@ -25,6 +25,7 @@ import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 enum FeedbackExperienceKey {
   verySatisfied,
@@ -55,7 +56,8 @@ export const getServerSideProps = withMultipleServerSideProps(
     const props = {
       csrfToken,
       user: userToDisplayFullUserDto(currentUser),
-      previousPath
+      previousPath,
+      canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
     }
 
     if (isPost(req)) {
@@ -117,9 +119,16 @@ interface Props {
       value: string
     }
   }
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
-const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }: Props) => {
+const FeedbackPage: NextPage<Props> = ({
+  user,
+  previousPath,
+  fields,
+  csrfToken,
+  canUseTriggerAndExceptionQualityAuditing
+}: Props) => {
   const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(MAX_FEEDBACK_LENGTH)
   const router = useRouter()
 
@@ -131,7 +140,7 @@ const FeedbackPage: NextPage<Props> = ({ user, previousPath, fields, csrfToken }
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
-      <Layout>
+      <Layout canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}>
         <Head>
           <title>{"Bichard7 | Report an issue"}</title>
           <meta name="description" content="Bichard7 | User feedback" />
