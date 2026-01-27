@@ -135,10 +135,10 @@ const fetchCases = async (
             )
           )
           FROM br7own.error_list_notes n_latest
-          WHERE 
+          WHERE
             n_latest.error_id = el.error_id
             AND (n_latest.user_id != 'System' OR n_latest.user_id IS NULL)
-          ORDER BY 
+          ORDER BY
             n_latest.create_ts DESC
           LIMIT 1
         ),
