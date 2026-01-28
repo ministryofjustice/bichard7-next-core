@@ -319,8 +319,8 @@ describe("QualityStatusForm", () => {
       </MockNextRouter>
     )
 
-    cy.get("select[name='trigger-quality']").should("not.exist")
     cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("select[name='trigger-quality']").should("not.exist")
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
