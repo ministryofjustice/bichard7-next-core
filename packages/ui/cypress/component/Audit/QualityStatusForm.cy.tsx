@@ -459,4 +459,66 @@ describe("QualityStatusForm", () => {
       expect(request.body.data.exceptionQuality).to.equal(undefined)
     })
   })
+
+  it("validates forms where trigger quality already set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider
+          value={[
+            {
+              courtCase: {
+                ...courtCase,
+                triggerQualityChecked: newCourtCase.triggerQualityChecked
+              },
+              amendments: {},
+              savedAmendments: {}
+            },
+            () => {}
+          ]}
+        >
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("#exception-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
+  })
+
+  it("validates forms where exception quality already set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider
+          value={[
+            {
+              courtCase: {
+                ...courtCase,
+                errorQualityChecked: newCourtCase.errorQualityChecked
+              },
+              amendments: {},
+              savedAmendments: {}
+            },
+            () => {}
+          ]}
+        >
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("#trigger-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
+  })
 })
