@@ -164,6 +164,48 @@ describe("QualityStatusForm", () => {
     cy.get("@auditCase").should("not.exist")
   })
 
+  it("shows validation issues if only triggers and trigger quality not set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+      "auditCase"
+    )
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={false} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("#trigger-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
+  })
+
+  it("shows validation issues if only exceptions and exception quality not set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+      "auditCase"
+    )
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={false} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("#exception-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
+  })
+
   it("allows the entry of trigger quality only", () => {
     cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
       "auditCase"
