@@ -48,25 +48,29 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
       exceptionQualityHasError: false
     }
 
-    const triggerQuality = hasTriggers ? Number(formData.get("trigger-quality")) : undefined
-    const exceptionQuality = hasExceptions ? Number(formData.get("exception-quality")) : undefined
+    const checkTriggerQuality = hasTriggers && !triggerQualityAlreadySet
+    const triggerQuality = checkTriggerQuality ? Number(formData.get("trigger-quality")) : undefined
+    const triggerQualitySet = (triggerQuality ?? 0) > 1
+
+    const checkExceptionQuality = hasExceptions && !exceptionQualityAlreadySet
+    const exceptionQuality = checkExceptionQuality ? Number(formData.get("exception-quality")) : undefined
+    const exceptionQualitySet = (exceptionQuality ?? 0) > 1
+
     const note = formData.get("quality-status-note")
 
-    const triggerQualitySet = (triggerQuality ?? 0) > 1
-    const exceptionQualitySet = (exceptionQuality ?? 0) > 1
-    if (hasTriggers && hasExceptions) {
+    if (checkTriggerQuality && checkExceptionQuality) {
       if (!triggerQualitySet && !exceptionQualitySet) {
         return {
           ...initialFormState,
           errorMessage: "Select at least one: trigger quality or exception quality"
         }
       }
-    } else if (hasTriggers && !triggerQualitySet) {
+    } else if (checkTriggerQuality && !triggerQualitySet) {
       return {
         ...initialFormState,
         triggerQualityHasError: true
       }
-    } else if (hasExceptions && !exceptionQualitySet) {
+    } else if (checkExceptionQuality && !exceptionQualitySet) {
       return {
         ...initialFormState,
         exceptionQualityHasError: true
