@@ -142,7 +142,7 @@ describe("QualityStatusForm", () => {
     cy.get("button#quality-status-submit").should("not.be.disabled")
   })
 
-  it("shows validation issues if values not entered", () => {
+  it("shows validation issues if both values not entered", () => {
     cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
       "auditCase"
     )
@@ -162,6 +162,50 @@ describe("QualityStatusForm", () => {
     cy.get("#trigger-quality-error").should("be.visible")
     cy.get("#exception-quality-error").should("be.visible")
     cy.get("@auditCase").should("not.exist")
+  })
+
+  it("allows the entry of trigger quality only", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+      "auditCase"
+    )
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase")
+  })
+
+  it("allows the entry of exception quality only", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+      "auditCase"
+    )
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase")
   })
 
   it("shows error if API call returns an error", () => {
