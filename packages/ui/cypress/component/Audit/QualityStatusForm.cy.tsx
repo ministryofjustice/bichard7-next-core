@@ -207,9 +207,14 @@ describe("QualityStatusForm", () => {
   })
 
   it("allows the entry of trigger quality only", () => {
-    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
-      "auditCase"
-    )
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
 
     cy.mount(
       <MockNextRouter>
@@ -235,9 +240,14 @@ describe("QualityStatusForm", () => {
   })
 
   it("allows the entry of exception quality only", () => {
-    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
-      "auditCase"
-    )
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
 
     cy.mount(
       <MockNextRouter>
