@@ -221,7 +221,7 @@ describe("QualityStatusForm", () => {
       </MockNextRouter>
     )
 
-    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
@@ -243,7 +243,7 @@ describe("QualityStatusForm", () => {
       </MockNextRouter>
     )
 
-    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
