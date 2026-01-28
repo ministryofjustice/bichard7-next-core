@@ -5,12 +5,11 @@ import { QualityStatusForm } from "./QualityStatusForm"
 export const QualityStatusCard = () => {
   const { courtCase } = useCourtCase()
 
-  const auditQualitySet: boolean = [courtCase.errorQualityChecked, courtCase.triggerQualityChecked].some(
-    (value) => value !== null && value !== 1
-  )
-
   const hasExceptions = courtCase.aho.Exceptions.length > 0
   const hasTriggers = courtCase.triggerCount > 0
+  const auditQualitySet =
+    (!hasExceptions || (hasExceptions && (courtCase.errorQualityChecked ?? 0) > 1)) &&
+    (!hasTriggers || (hasTriggers && (courtCase.triggerQualityChecked ?? 0) > 1))
 
   return auditQualitySet ? (
     <QualityStatusDisplay hasExceptions={hasExceptions} hasTriggers={hasTriggers} />

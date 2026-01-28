@@ -142,7 +142,7 @@ describe("QualityStatusForm", () => {
     cy.get("button#quality-status-submit").should("not.be.disabled")
   })
 
-  it("shows validation issues if values not entered", () => {
+  it("shows validation issue if both values not entered", () => {
     cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
       "auditCase"
     )
@@ -159,9 +159,117 @@ describe("QualityStatusForm", () => {
 
     cy.get("button#quality-status-submit").click()
 
+    cy.get("#quality-status-form-error").should("be.visible")
+    cy.get("form").should("have.attr", "aria-describedby", "quality-status-form-error")
+    cy.get("@auditCase").should("not.exist")
+  })
+
+  it("shows validation issues if only triggers and trigger quality not set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+      "auditCase"
+    )
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={false} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
     cy.get("#trigger-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
+  })
+
+  it("shows validation issues if only exceptions and exception quality not set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
+      "auditCase"
+    )
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={false} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
     cy.get("#exception-quality-error").should("be.visible")
     cy.get("@auditCase").should("not.exist")
+  })
+
+  it("allows the entry of trigger quality only", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.csrfToken).to.equal("ABC")
+      expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
+      expect(request.body.data.exceptionQuality).to.be.equal(undefined)
+      expect(request.body.data.note).to.equal("Test notes")
+    })
+  })
+
+  it("allows the entry of exception quality only", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.csrfToken).to.equal("ABC")
+      expect(request.body.data.triggerQuality).to.equal(undefined)
+      expect(request.body.data.exceptionQuality).to.be.equal(newCourtCase.errorQualityChecked)
+      expect(request.body.data.note).to.equal("Test notes")
+    })
   })
 
   it("shows error if API call returns an error", () => {
@@ -211,8 +319,8 @@ describe("QualityStatusForm", () => {
       </MockNextRouter>
     )
 
-    cy.get("select[name='trigger-quality']").should("not.exist")
     cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("select[name='trigger-quality']").should("not.exist")
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
@@ -256,5 +364,161 @@ describe("QualityStatusForm", () => {
       expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
       expect(request.body.data.exceptionQuality).to.equal(undefined)
     })
+  })
+
+  it("renders read only trigger quality value if already set and can still submit the form", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider
+          value={[
+            {
+              courtCase: {
+                ...courtCase,
+                triggerQualityChecked: newCourtCase.triggerQualityChecked
+              },
+              amendments: {},
+              savedAmendments: {}
+            },
+            () => {}
+          ]}
+        >
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='exception-quality']").should("exist")
+    cy.get("b[id='trigger-quality-label']").should("exist")
+    cy.get("select[name='trigger-quality']").should("not.exist")
+
+    cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.data.triggerQuality).to.equal(undefined)
+      expect(request.body.data.exceptionQuality).to.equal(newCourtCase.errorQualityChecked)
+    })
+  })
+
+  it("renders read only exception quality value if already set and can still submit the form", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`, {
+      delay: 200,
+      statusCode: 200,
+      body: {
+        csrfToken: newCsrfToken,
+        courtCase: newCourtCase
+      }
+    }).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider
+          value={[
+            {
+              courtCase: {
+                ...courtCase,
+                errorQualityChecked: newCourtCase.errorQualityChecked
+              },
+              amendments: {},
+              savedAmendments: {}
+            },
+            () => {}
+          ]}
+        >
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("select[name='trigger-quality']").should("exist")
+    cy.get("b[id='exception-quality-label']").should("exist")
+    cy.get("select[name='exception-quality']").should("not.exist")
+
+    cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
+    cy.get("textarea[name='quality-status-note']").type("Test notes")
+    cy.get("button#quality-status-submit").click()
+
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
+      expect(request.body.data.exceptionQuality).to.equal(undefined)
+    })
+  })
+
+  it("validates forms where trigger quality already set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider
+          value={[
+            {
+              courtCase: {
+                ...courtCase,
+                triggerQualityChecked: newCourtCase.triggerQualityChecked
+              },
+              amendments: {},
+              savedAmendments: {}
+            },
+            () => {}
+          ]}
+        >
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("#exception-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
+  })
+
+  it("validates forms where exception quality already set", () => {
+    cy.intercept("POST", `${Cypress.config("baseUrl")}/api/court-cases/${courtCase.errorId}/audit`).as("auditCase")
+
+    cy.mount(
+      <MockNextRouter>
+        <CourtCaseContext.Provider
+          value={[
+            {
+              courtCase: {
+                ...courtCase,
+                errorQualityChecked: newCourtCase.errorQualityChecked
+              },
+              amendments: {},
+              savedAmendments: {}
+            },
+            () => {}
+          ]}
+        >
+          <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
+            <QualityStatusForm hasExceptions={true} hasTriggers={true} />
+          </CsrfTokenContext.Provider>
+        </CourtCaseContext.Provider>
+      </MockNextRouter>
+    )
+
+    cy.get("button#quality-status-submit").click()
+
+    cy.get("#trigger-quality-error").should("be.visible")
+    cy.get("@auditCase").should("not.exist")
   })
 })
