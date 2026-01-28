@@ -12,6 +12,8 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { ButtonContainer, DropdownContainer } from "./QualityStatusForm.styles"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
+import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 
 const initialFormState = {
   errorMessage: null as string | null,
@@ -30,6 +32,11 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
   const { csrfToken, updateCsrfToken } = useCsrfToken()
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
+
+  const showTriggerQualityDropdown =
+    (hasTriggers && courtCase.triggerQualityChecked === null) || courtCase.triggerQualityChecked === 1
+  const showExceptionQualityDropdown =
+    (hasExceptions && courtCase.errorQualityChecked === null) || courtCase.errorQualityChecked === 1
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const handleOnNoteChange = (event: FormEvent<HTMLTextAreaElement>) => {
@@ -104,9 +111,27 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
           </p>
         ) : null}
         <fieldset className="govuk-fieldset">
+          {hasTriggers && !showTriggerQualityDropdown && (
+            <p>
+              <b id="trigger-quality-label">{"Trigger Quality: "}</b>
+              <span aria-labelledby="trigger-quality-label">
+                {triggerQualityValues[courtCase.triggerQualityChecked ?? 1]}
+              </span>
+            </p>
+          )}
+          {hasExceptions && !showExceptionQualityDropdown && (
+            <p>
+              <b id="exception-quality-label">{"Exception Quality: "}</b>
+              <span aria-labelledby="exception-quality-label">
+                {exceptionQualityValues[courtCase.errorQualityChecked ?? 1]}
+              </span>
+            </p>
+          )}
           <DropdownContainer>
-            {hasTriggers && <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />}
-            {hasExceptions && <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />}
+            {showTriggerQualityDropdown && <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />}
+            {showExceptionQualityDropdown && (
+              <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
+            )}
           </DropdownContainer>
           <NoteTextArea
             handleOnNoteChange={handleOnNoteChange}
