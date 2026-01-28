@@ -61,14 +61,12 @@ describe("Audit case", () => {
 
     cy.get("#quality-status-submit").click()
 
+    cy.contains("Set quality status").should("be.visible")
     cy.get("select[name='trigger-quality']").should("not.exist")
+    cy.get("b[id='trigger-quality-label']").should("exist")
     cy.get("select[name='exception-quality']").should("exist")
     cy.get("textarea[name='quality-status-note']").should("exist")
     cy.get("#quality-status-submit").should("exist")
-
-    cy.contains("Quality status").should("be.visible")
-    cy.contains("Trigger Quality").should("exist")
-    cy.contains("Exception Quality").should("exist")
   })
 
   it("saves exception only audit results and show QualityStatusForm with partially read only fields", () => {
@@ -93,13 +91,11 @@ describe("Audit case", () => {
 
     cy.get("#quality-status-submit").click()
 
+    cy.contains("Set quality status").should("be.visible")
     cy.get("select[name='trigger-quality']").should("exist")
     cy.get("select[name='exception-quality']").should("not.exist")
+    cy.get("b[id='exception-quality-label']").should("exist")
     cy.get("textarea[name='quality-status-note']").should("exist")
     cy.get("#quality-status-submit").should("exist")
-
-    cy.contains("Quality status").should("be.visible")
-    cy.contains("Trigger Quality").should("exist")
-    cy.contains("Exception Quality").should("exist")
   })
 })
