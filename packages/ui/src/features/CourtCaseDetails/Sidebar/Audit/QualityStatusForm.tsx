@@ -48,11 +48,16 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
     const note = formData.get("quality-status-note")
 
     let hasErrors = false
-    if (triggerQuality !== undefined && triggerQuality <= 1) {
+    const triggerQualitySet = (triggerQuality ?? 0) > 1
+    const exceptionQualitySet = (exceptionQuality ?? 0) > 1
+    if (hasTriggers && hasExceptions) {
+      if (!triggerQualitySet && !exceptionQualitySet) {
+        hasErrors = true
+      }
+    } else if (hasTriggers && !triggerQualitySet) {
       hasErrors = true
       newState.triggerQualityHasError = true
-    }
-    if (exceptionQuality !== undefined && exceptionQuality <= 1) {
+    } else if (hasExceptions && !exceptionQualitySet) {
       hasErrors = true
       newState.exceptionQualityHasError = true
     }
