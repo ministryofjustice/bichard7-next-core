@@ -6,7 +6,7 @@ import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useRouter } from "next/router"
-import { useActionState, useState, type FormEventHandler } from "react"
+import { useActionState, useState, type FormEvent } from "react"
 import { useFormStatus } from "react-dom"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
@@ -14,7 +14,7 @@ import { ButtonContainer, DropdownContainer } from "./QualityStatusForm.styles"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
 
 const initialFormState = {
-  submitError: null as Error | null,
+  errorMessage: null as string | null,
   triggerQualityHasError: false,
   exceptionQualityHasError: false
 }
@@ -32,13 +32,13 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
   const router = useRouter()
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
-  const handleOnNoteChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
+  const handleOnNoteChange = (event: FormEvent<HTMLTextAreaElement>) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
 
   const submit = async (_: FormState, formData: FormData) => {
-    const newState: FormState = {
-      submitError: null,
+    const initialFormState: FormState = {
+      errorMessage: null,
       triggerQualityHasError: false,
       exceptionQualityHasError: false
     }
@@ -47,51 +47,60 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
     const exceptionQuality = hasExceptions ? Number(formData.get("exception-quality")) : undefined
     const note = formData.get("quality-status-note")
 
-    let hasErrors = false
     const triggerQualitySet = (triggerQuality ?? 0) > 1
     const exceptionQualitySet = (exceptionQuality ?? 0) > 1
     if (hasTriggers && hasExceptions) {
       if (!triggerQualitySet && !exceptionQualitySet) {
-        hasErrors = true
+        return {
+          ...initialFormState,
+          errorMessage: "Select at least one: trigger quality or exception quality"
+        }
       }
     } else if (hasTriggers && !triggerQualitySet) {
-      hasErrors = true
-      newState.triggerQualityHasError = true
+      return {
+        ...initialFormState,
+        triggerQualityHasError: true
+      }
     } else if (hasExceptions && !exceptionQualitySet) {
-      hasErrors = true
-      newState.exceptionQualityHasError = true
-    }
-    if (hasErrors) {
-      return newState
+      return {
+        ...initialFormState,
+        exceptionQualityHasError: true
+      }
     }
 
     try {
       const response = await axios.post(`${router.basePath}/api/court-cases/${courtCase.errorId}/audit`, {
         csrfToken,
         data: {
-          triggerQuality,
-          exceptionQuality,
+          triggerQuality: triggerQualitySet ? triggerQuality : undefined,
+          exceptionQuality: exceptionQualitySet ? exceptionQuality : undefined,
           note
         }
       })
 
       updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
       updateCsrfToken(response.data.csrfToken as string)
-    } catch (error) {
-      newState.submitError = error as Error
+    } catch {
+      return {
+        ...initialFormState,
+        errorMessage: "Audit has failed, please refresh"
+      }
     }
 
-    return newState
+    return initialFormState
   }
 
   const [submitResult, submitAction] = useActionState(submit, initialFormState)
 
   return (
     <Card heading={"Set quality status"}>
-      <form action={submitAction} aria-describedby={submitResult.submitError ? "quality-status-form-error" : undefined}>
-        {submitResult.submitError ? (
+      <form
+        action={submitAction}
+        aria-describedby={submitResult.errorMessage ? "quality-status-form-error" : undefined}
+      >
+        {submitResult.errorMessage ? (
           <p id="quality-status-form-error" className="govuk-error-message" role="alert">
-            {"Audit has failed, please refresh"}
+            {submitResult.errorMessage}
           </p>
         ) : null}
         <fieldset className="govuk-fieldset">
