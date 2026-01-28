@@ -33,10 +33,8 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
   const { courtCase, updateCourtCase } = useCourtCase()
   const router = useRouter()
 
-  const showTriggerQualityDropdown =
-    (hasTriggers && courtCase.triggerQualityChecked === null) || courtCase.triggerQualityChecked === 1
-  const showExceptionQualityDropdown =
-    (hasExceptions && courtCase.errorQualityChecked === null) || courtCase.errorQualityChecked === 1
+  const triggerQualitySet = (courtCase.triggerQualityChecked ?? 0) > 1
+  const exceptionQualitySet = (courtCase.errorQualityChecked ?? 0) > 1
 
   const [noteRemainingLength, setNoteRemainingLength] = useState(MAX_NOTE_LENGTH)
   const handleOnNoteChange = (event: FormEvent<HTMLTextAreaElement>) => {
@@ -111,7 +109,7 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
           </p>
         ) : null}
         <fieldset className="govuk-fieldset">
-          {hasTriggers && !showTriggerQualityDropdown && (
+          {hasTriggers && triggerQualitySet && (
             <p>
               <b id="trigger-quality-label">{"Trigger Quality: "}</b>
               <span aria-labelledby="trigger-quality-label">
@@ -119,7 +117,7 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
               </span>
             </p>
           )}
-          {hasExceptions && !showExceptionQualityDropdown && (
+          {hasExceptions && exceptionQualitySet && (
             <p>
               <b id="exception-quality-label">{"Exception Quality: "}</b>
               <span aria-labelledby="exception-quality-label">
@@ -128,8 +126,10 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
             </p>
           )}
           <DropdownContainer>
-            {showTriggerQualityDropdown && <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />}
-            {showExceptionQualityDropdown && (
+            {hasTriggers && !triggerQualitySet && (
+              <TriggerQualityDropdown showError={submitResult.triggerQualityHasError} />
+            )}
+            {hasExceptions && !exceptionQualitySet && (
               <ExceptionQualityDropdown showError={submitResult.exceptionQualityHasError} />
             )}
           </DropdownContainer>
