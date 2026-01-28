@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mock Server Dashboard</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            max-width: 1100px;
+            margin: 20px auto;
+            background: #f4f7f6;
+            color: #333;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .mock-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        summary:hover {
+            background: #f9f9f9;
+        }
+
+        .method {
+            background: #27ae60;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 0.85em;
+        }
+
+        .section-title {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            color: #666;
+            margin: 25px 0 10px 0;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+            font-weight: bold;
+        }
+
+        .data-block {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .data-label {
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        pre {
+            margin: 0;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        code {
+            border-radius: 6px;
+        }
+
+        .request-accordion {
+            margin: 10px 0;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+
+        .request-summary {
+            background: #fcfcfc;
+            font-size: 0.95em;
+            font-weight: normal;
+            color: #444;
+            padding: 10px 15px;
+        }
+
+        .request-content {
+            padding: 15px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .timestamp {
+            color: #888;
+            font-size: 0.85em;
+            font-family: monospace;
+        }
+
+        .badge-hits {
+            background: #ebf5fb;
+            color: #2e86de;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+        }
+
+        .no-data {
+            color: #999;
+            font-style: italic;
+            font-size: 0.9em;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 6px;
+            border: 1px dashed #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Server Mocks</h1>
+    <div id="container">Loading dashboard...</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+
+    <script>
+        async function loadData() {
+            try {
+                const res = await fetch('/mocks?output=json');
+                const mocks = await res.json();
+                const container = document.getElementById('container');
+
+                if (mocks.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; padding: 40px; color: #888;">No mocks defined yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = mocks.map((mock, i) => `
+                    <details class="mock-card">
+                        <summary>
+                            <span><span class="method">${mock.method}</span> ${mock.path}</span>
+                            <span class="badge-hits">Hits: ${mock.hits} / ${mock.count || '∞'}</span>
+                        </summary>
+                        <div style="padding: 0 20px 20px 20px;">
+                            
+                            <div class="section-title">Matching Criteria</div>
+                            <div class="data-block">
+                                <span class="data-label">Expected Request Body (Partial Match)</span>
+                                ${mock.requestBody ?
+                        `<pre><code class="language-json">${JSON.stringify(mock.requestBody, null, 2)}</code></pre>` :
+                        `<div class="no-data">Any body accepted (No criteria defined)</div>`
+                    }
+                            </div>
+
+                            <div class="section-title">Mocked Response</div>
+                            <div class="data-block">
+                                <span class="data-label">Status & Headers</span>
+                                <pre><code class="language-json">${JSON.stringify({
+                        status: mock.response.status,
+                        headers: mock.response.headers || {}
+                    }, null, 2)}</code></pre>
+                            </div>
+                            <div class="data-block">
+                                <span class="data-label">Body</span>
+                                <pre><code class="language-json">${JSON.stringify(mock.response.body, null, 2)}</code></pre>
+                            </div>
+
+                            <div class="section-title">Request History</div>
+                            ${mock.request && mock.request.length > 0 ? mock.request.sort((a, b) => a - b ? 1 : -1).map((req, j) => `
+                                <details class="request-accordion">
+                                    <summary class="request-summary">
+                                        <span>Request #${mock.request.length - j}</span>
+                                        <span class="timestamp">${req.timestamp || 'No Timestamp'}</span>
+                                    </summary>
+                                    <div class="request-content">
+                                        <div class="data-block">
+                                            <span class="data-label">Incoming Headers</span>
+                                            <pre><code class="language-json">${JSON.stringify(req.headers, null, 2)}</code></pre>
+                                        </div>
+                                        <div class="data-block">
+                                            <span class="data-label">Incoming Body</span>
+                                            <pre><code class="language-json">${JSON.stringify(req.body || {}, null, 2)}</code></pre>
+                                        </div>
+                                    </div>
+                                </details>
+                            `).reverse().join('') : '<p class="no-data">No requests captured for this mock yet.</p>'}
+                        </div>
+                    </details>
+                `).join('');
+
+                hljs.highlightAll();
+
+            } catch (err) {
+                document.getElementById('container').innerHTML = '<p style="color:red;">Error loading data: ' + err.message + '</p>';
+            }
+        }
+        loadData();
+    </script>
+</body>
+
+</html>

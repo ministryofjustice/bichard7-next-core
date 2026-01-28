@@ -1,7 +1,9 @@
 import type { PartialPncMock, PncMockOptions } from "../../../types/PncMock"
 
 export const generateUpdate = (code: string, options?: PncMockOptions): PartialPncMock => {
-  const response = `<?XML VERSION="1.0" STANDALONE="YES"?>
+  const response =
+    options?.response ??
+    `<?XML VERSION="1.0" STANDALONE="YES"?>
     <${code}>
       <GMH>073GENL000001RNEWREMPNCA05A73000017300000120210415154673000001                                             09000${
         Math.floor(Math.random() * 8999) + 1000

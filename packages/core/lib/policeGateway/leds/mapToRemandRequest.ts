@@ -37,7 +37,7 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
   const { nextHearingDate, psaCourtCode, courtNameType2 } = data
 
   return {
-    date: convertDate(nextHearingDate),
+    date: nextHearingDate ? convertDate(nextHearingDate) : undefined,
     court:
       psaCourtCode === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
         ? {
