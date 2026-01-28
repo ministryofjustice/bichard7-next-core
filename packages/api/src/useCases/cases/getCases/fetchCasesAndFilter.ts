@@ -1,5 +1,5 @@
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
-import type { CaseDto, CaseIndexDto, CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
@@ -10,48 +10,6 @@ import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { fetchCaseAges } from "../../../services/db/cases/fetchCaseAges"
 import fetchCases from "../../../services/db/cases/fetchCases"
-import fetchNotes from "../../../services/db/cases/fetchNotes"
-import fetchTriggers from "../../../services/db/cases/fetchTriggers"
-import { convertTriggerToDto } from "../../dto/convertTriggerToDto"
-
-const assignNotesAndTriggers = async (
-  database: DatabaseConnection,
-  user: User,
-  cases: CaseDto[] | CaseIndexDto[],
-  filters: Filters
-): PromiseResult<void> => {
-  const caseIds = cases.map((caseData) => caseData.errorId)
-  const notes = await fetchNotes(database, caseIds)
-  if (isError(notes)) {
-    return new Error(`Error while fetching notes for case ids ${caseIds}: ${notes.message}`)
-  }
-
-  const triggers = await fetchTriggers(database, user, caseIds, filters)
-  if (isError(triggers)) {
-    return new Error(`Error while fetching triggers for case ids ${caseIds}: ${triggers.message}`)
-  }
-
-  for (const caseData of cases) {
-    const matchedNotes = notes.filter((note) => note.errorId === caseData.errorId)
-    const matchedTriggers = triggers.filter((trigger) => trigger.errorId === caseData.errorId)
-
-    for (const note of matchedNotes) {
-      if (!caseData.notes) {
-        caseData.notes = []
-      }
-
-      caseData.notes.push(note)
-    }
-
-    for (const trigger of matchedTriggers.map(convertTriggerToDto)) {
-      if (!caseData.triggers) {
-        caseData.triggers = []
-      }
-
-      caseData.triggers.push(trigger)
-    }
-  }
-}
 
 const fetchCasesAndFilter = async (
   database: DatabaseConnection,
@@ -99,11 +57,6 @@ const fetchCasesAndFilter = async (
       totalCases: 0,
       ...pagination
     } satisfies CaseIndexMetadata
-  }
-
-  const assignNotesAndTriggersResult = await assignNotesAndTriggers(database, user, cases, filters)
-  if (isError(assignNotesAndTriggersResult)) {
-    return new Error(`Failed to assign notes and triggers: ${assignNotesAndTriggersResult.message}`)
   }
 
   return {
