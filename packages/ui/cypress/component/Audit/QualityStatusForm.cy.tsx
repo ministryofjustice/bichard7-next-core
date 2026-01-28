@@ -142,7 +142,7 @@ describe("QualityStatusForm", () => {
     cy.get("button#quality-status-submit").should("not.be.disabled")
   })
 
-  it("shows validation issues if both values not entered", () => {
+  it("shows validation issue if both values not entered", () => {
     cy.intercept("POST", `${Cypress.config("baseUrl")}/bichard/api/court-cases/${courtCase.errorId}/audit`).as(
       "auditCase"
     )
@@ -159,8 +159,8 @@ describe("QualityStatusForm", () => {
 
     cy.get("button#quality-status-submit").click()
 
-    cy.get("#trigger-quality-error").should("be.visible")
-    cy.get("#exception-quality-error").should("be.visible")
+    cy.get("#quality-status-form-error").should("be.visible")
+    cy.get("form").should("have.attr", "aria-describedby", "quality-status-form-error")
     cy.get("@auditCase").should("not.exist")
   })
 
