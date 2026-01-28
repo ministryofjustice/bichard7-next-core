@@ -225,7 +225,13 @@ describe("QualityStatusForm", () => {
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
-    cy.wait("@auditCase")
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.csrfToken).to.equal("ABC")
+      expect(request.body.data.triggerQuality).to.equal(newCourtCase.triggerQualityChecked)
+      expect(request.body.data.exceptionQuality).to.be.equal(undefined)
+      expect(request.body.data.note).to.equal("Test notes")
+    })
   })
 
   it("allows the entry of exception quality only", () => {
@@ -247,7 +253,13 @@ describe("QualityStatusForm", () => {
     cy.get("textarea[name='quality-status-note']").type("Test notes")
     cy.get("button#quality-status-submit").click()
 
-    cy.wait("@auditCase")
+    cy.wait("@auditCase").then(({ request }) => {
+      expect(request.method).to.equal("POST")
+      expect(request.body.csrfToken).to.equal("ABC")
+      expect(request.body.data.triggerQuality).to.equal(undefined)
+      expect(request.body.data.exceptionQuality).to.be.equal(newCourtCase.errorQualityChecked)
+      expect(request.body.data.note).to.equal("Test notes")
+    })
   })
 
   it("shows error if API call returns an error", () => {
