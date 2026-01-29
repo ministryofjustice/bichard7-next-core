@@ -22,9 +22,12 @@ import convertPcr from "./convertPcr"
 import convertRcc from "./convertRcc"
 import type { Rem } from "./convertRem"
 import convertRem from "./convertRem"
+import type { Txt } from "./convertTxt"
+import convertTxt from "./convertTxt"
 import extractSegments from "./extractSegments"
 
 const converters: Record<string, (value: string) => object | void> = {
+  TXT: convertTxt,
   REM: convertRem,
   ASR: convertAsr,
   IDS: convertIds,
@@ -41,7 +44,7 @@ type AdditionalOffences = {
   additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
 }
 
-export type PncAsnQueryJson = Fsc & Ids & AsnQueryOffences
+export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences) | Txt
 export type PncRemandJson = Fsc & Ids & Asr & Rem
 export type PncNormalDisposalJson = Fsc & Ids & Cou & UpdateOffences & AdditionalOffences
 export type PncSubsequentDisposalJson = Fsc &
