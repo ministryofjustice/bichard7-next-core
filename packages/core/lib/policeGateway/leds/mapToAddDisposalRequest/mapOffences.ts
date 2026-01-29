@@ -35,7 +35,7 @@ const mapOffences = (
     const disposals = group.filter((el) => el.type === PncUpdateType.DISPOSAL)
 
     const disposalResults = disposals.map((disposal) => {
-      const { count, units, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
+      const { disposalDuration, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity)
       const disposalQualifiers = disposal.disposalQualifiers
         ?.match(/.{1,2}/g)
         ?.map((q) => q.trim())
@@ -45,7 +45,7 @@ const mapOffences = (
         disposalCode: Number(disposal.disposalType),
         disposalQualifiers,
         disposalText: disposal.disposalText ?? undefined,
-        ...(units && { disposalDuration: { count, units } }),
+        disposalDuration,
         disposalEffectiveDate,
         disposalFine: { amount }
       }
