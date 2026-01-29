@@ -33,6 +33,7 @@ import Form from "../../../components/Form"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
 import forbidden from "../../../utils/forbidden"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -68,7 +69,8 @@ export const getServerSideProps = withMultipleServerSideProps(
       previousPath: previousPath ?? null,
       user: userToDisplayFullUserDto(currentUser),
       courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-      lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username)
+      lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username),
+      canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
     }
 
     if (isPost(req)) {
@@ -121,6 +123,7 @@ interface Props {
   selectedReason?: ResolutionReasonKey
   csrfToken: string
   previousPath: string | null
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
 const ResolveCourtCasePage: NextPage<Props> = ({
@@ -130,7 +133,8 @@ const ResolveCourtCasePage: NextPage<Props> = ({
   selectedReason,
   reasonTextError,
   csrfToken,
-  previousPath
+  previousPath,
+  canUseTriggerAndExceptionQualityAuditing
 }: Props) => {
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -148,7 +152,7 @@ const ResolveCourtCasePage: NextPage<Props> = ({
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
-      <Layout>
+      <Layout canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}>
         <Head>
           <title>{"Bichard7 | Resolve Case"}</title>
           <meta name="description" content="Bichard7 | Resolve Case" />
