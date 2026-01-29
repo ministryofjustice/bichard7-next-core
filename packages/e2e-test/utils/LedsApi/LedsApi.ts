@@ -23,7 +23,9 @@ export class LedsApi implements PoliceApi {
 
   createValidRecord: (record: string) => Promise<void>
 
-  mockMissingDataForTest: () => Promise<void>
+  mockMissingDataForTest(): Promise<void> {
+    return addMockToLedsMockApi(this.bichard)
+  }
 
   mockDataForTest(): Promise<void> {
     return addMockToLedsMockApi(this.bichard)
