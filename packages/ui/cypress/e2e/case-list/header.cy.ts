@@ -47,7 +47,7 @@ describe("Home", () => {
         cy.contains("nav a", "Reports").should("not.exist")
       })
 
-      it("as a user that is not a Supervisor, I should have access to the Audit tab", () => {
+      it("as a user that is not a Supervisor, I should not have access to the Audit tab", () => {
         loginAndVisit("GeneralHandler")
 
         cy.contains("nav a", "Audit").should("not.exist")
