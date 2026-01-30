@@ -13,6 +13,7 @@ describe("Home", () => {
 
         cy.contains("nav a", "Case list").should("have.attr", "href", "/bichard/")
         cy.contains("nav a", "Reports").should("not.exist")
+        cy.contains("nav a", "Audit").should("not.exist")
         cy.contains("nav a", "User management").should("not.exist")
         cy.contains("nav a", "Help").should("have.attr", "href", "/help/")
         cy.contains("nav a", "Sign out").should("have.attr", "href", "/users/logout/")
@@ -23,6 +24,7 @@ describe("Home", () => {
 
         cy.contains("nav a", "Case list").should("have.attr", "href", "/bichard/")
         cy.contains("nav a", "Reports").should("not.exist")
+        cy.contains("nav a", "Audit").should("not.exist")
         cy.contains("nav a", "User management").should("have.attr", "href", "/users/users/")
         cy.contains("nav a", "Help").should("have.attr", "href", "/help/")
         cy.contains("nav a", "Sign out").should("have.attr", "href", "/users/logout/")
@@ -33,6 +35,7 @@ describe("Home", () => {
 
         cy.contains("nav a", "Case list").should("have.attr", "href", "/bichard/")
         cy.contains("nav a", "Reports").should("have.attr", "href", "/bichard-ui/ReturnToReportIndex")
+        cy.contains("nav a", "Audit").should("exist")
         cy.contains("nav a", "User management").should("not.exist")
         cy.contains("nav a", "Help").should("have.attr", "href", "/help/")
         cy.contains("nav a", "Sign out").should("have.attr", "href", "/users/logout/")
@@ -42,6 +45,12 @@ describe("Home", () => {
         loginAndVisit("GeneralHandler")
 
         cy.contains("nav a", "Reports").should("not.exist")
+      })
+
+      it("as a user that is not a Supervisor, I should have access to the Audit tab", () => {
+        loginAndVisit("GeneralHandler")
+
+        cy.contains("nav a", "Audit").should("not.exist")
       })
 
       it("as a user that is not a User Manager, I should not have access to the User Manager tab", () => {
