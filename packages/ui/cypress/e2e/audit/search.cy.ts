@@ -2,10 +2,23 @@ import { loginAndVisit } from "../../support/helpers"
 
 describe('Search', () => {
 
-  it("Should show placeholder page", () => {
-    loginAndVisit("Supervisor", "/bichard/audit/search")
+  context("When the user is a supervisor", () => {
+    before(() => {
+      loginAndVisit("Supervisor", "/bichard/audit/search")
+    })
 
-    cy.findByText("Audit case search").should("exist")
+    it("Should show search page", () => {
+      cy.findByText("Audit case search").should("exist")
+    })
   })
 
+  context("When the user is not a supervisor", () => {
+    before(() => {
+      loginAndVisit("GeneralHandler", "/bichard/audit/search")
+    })
+
+    it("Should redirect to the case list", () => {
+      cy.location('pathname').should('eq', '/bichard')
+    })
+  })
 })

@@ -1,5 +1,5 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import { CAN_VIEW_AUDIT_SECTION, INFO_BANNER_FIRST_SHOWN } from "config"
+import { IS_AUDIT_PAGE_ACCESSIBLE, INFO_BANNER_FIRST_SHOWN } from "config"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
@@ -73,7 +73,7 @@ const Layout = ({
       <NavBar
         hasAccessToReports={currentUser.hasAccessTo[Permission.ViewReports]}
         hasAccessToUserManagement={currentUser.hasAccessTo[Permission.ViewUserManagement]}
-        hasAccessToAudit={CAN_VIEW_AUDIT_SECTION && canUseTriggerAndExceptionQualityAuditing}
+        hasAccessToAudit={IS_AUDIT_PAGE_ACCESSIBLE && canUseTriggerAndExceptionQualityAuditing}
       />
       <PageTemplate>
         <Banner>

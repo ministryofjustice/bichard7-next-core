@@ -16,6 +16,8 @@ import getDataSource from "services/getDataSource"
 import Layout from "components/Layout"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
+import redirectTo from "../../utils/redirectTo"
+import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 
 type Props = {
   csrfToken: string
@@ -37,12 +39,18 @@ export const getServerSideProps = withMultipleServerSideProps(
       throw lastSwitchingFormSubmission
     }
 
+    const canUseQualityAuditing = canUseTriggerAndExceptionQualityAuditing(currentUser)
+
+    if (!IS_AUDIT_PAGE_ACCESSIBLE || !canUseQualityAuditing) {
+      return redirectTo("/")
+    }
+
     return {
       props: {
         csrfToken,
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
         user: userToDisplayFullUserDto(currentUser),
-        canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
+        canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
       }
     }
   }
