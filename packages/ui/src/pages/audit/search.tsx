@@ -15,6 +15,7 @@ import { isError } from "types/Result"
 import getDataSource from "services/getDataSource"
 import Layout from "components/Layout"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
+import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 
 type Props = {
   csrfToken: string
@@ -65,7 +66,13 @@ const SearchPage: NextPage<Props> = (props) => {
             canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
             bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
           >
-            <h1>{"Audit Search"}</h1>
+            <HeaderContainer id="header-container">
+              <HeaderRow>
+                <h1 className="govuk-heading-l" aria-label="Audit case search">
+                  {"Audit case search"}
+                </h1>
+              </HeaderRow>
+            </HeaderContainer>
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
