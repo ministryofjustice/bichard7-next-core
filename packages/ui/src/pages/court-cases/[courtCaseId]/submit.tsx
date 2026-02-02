@@ -25,6 +25,7 @@ import amendmentsHaveChanged from "utils/amendmentsHaveChanged"
 import withCsrf from "../../../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
 import forbidden from "../../../utils/forbidden"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 const hasAmendments = (amendments: string | undefined): boolean =>
   !!amendments && Object.keys(JSON.parse(amendments ?? "{}")).length > 0
@@ -63,7 +64,8 @@ export const getServerSideProps = withMultipleServerSideProps(
       previousPath: previousPath ?? null,
       user: userToDisplayFullUserDto(currentUser),
       courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
-      amendments: "{}"
+      amendments: "{}",
+      canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
     }
 
     return { props }
@@ -76,8 +78,16 @@ interface Props {
   csrfToken: string
   previousPath: string | null
   amendments?: string
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
-const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, amendments, csrfToken }: Props) => {
+const SubmitCourtCasePage: NextPage<Props> = ({
+  courtCase,
+  user,
+  previousPath,
+  amendments,
+  csrfToken,
+  canUseTriggerAndExceptionQualityAuditing
+}: Props) => {
   const { basePath } = useRouter()
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
@@ -95,7 +105,7 @@ const SubmitCourtCasePage: NextPage<Props> = ({ courtCase, user, previousPath, a
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
-      <Layout>
+      <Layout canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}>
         <Head>
           <title>{"Bichard7 | Submit Case Exception(s)"}</title>
           <meta name="description" content="Bichard7 | Submit Case Exception(s)" />

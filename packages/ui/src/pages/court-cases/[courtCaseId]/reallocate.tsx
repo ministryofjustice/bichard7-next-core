@@ -36,6 +36,7 @@ import {
 } from "../../../styles/reallocate.styles"
 import CsrfServerSidePropsContext from "../../../types/CsrfServerSidePropsContext"
 import searchForceOwners from "services/searchForceOwners"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -72,7 +73,8 @@ export const getServerSideProps = withMultipleServerSideProps(
       user: userToDisplayFullUserDto(currentUser),
       courtCase: courtCaseToDisplayFullCourtCaseDto(courtCase, currentUser),
       lockedByAnotherUser: courtCase.isLockedByAnotherUser(currentUser.username),
-      canReallocate: courtCase.canReallocate(currentUser.username)
+      canReallocate: courtCase.canReallocate(currentUser.username),
+      canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
     }
 
     if (isPost(req)) {
@@ -104,6 +106,7 @@ interface Props {
   csrfToken: string
   previousPath: string
   canReallocate: boolean
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
 const ReallocateCasePage: NextPage<Props> = ({
@@ -112,7 +115,8 @@ const ReallocateCasePage: NextPage<Props> = ({
   lockedByAnotherUser,
   csrfToken,
   previousPath,
-  canReallocate
+  canReallocate,
+  canUseTriggerAndExceptionQualityAuditing
 }: Props) => {
   const [showMore, setShowMore] = useState<boolean>(false)
   const courtCaseContext = useCourtCaseContextState(courtCase)
@@ -141,7 +145,7 @@ const ReallocateCasePage: NextPage<Props> = ({
         <CourtCaseContext.Provider value={courtCaseContext}>
           <CsrfTokenContext.Provider value={csrfTokenContext}>
             <PreviousPathContext.Provider value={{ previousPath }}>
-              <Layout>
+              <Layout canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}>
                 <HeaderContainer id="header-container">
                   <Header canReallocate={canReallocate} />
 
