@@ -13,8 +13,8 @@ describe("parseDisposalQuantity", () => {
     (input, expectedCount, expectedUnits, expectedDate, expectedAmount) => {
       const parsed = parseDisposalQuantity(input)
 
-      expect(parsed.count).toBe(expectedCount)
-      expect(parsed.units).toBe(expectedUnits)
+      expect(parsed.disposalDuration?.count).toBe(expectedCount)
+      expect(parsed.disposalDuration?.units).toBe(expectedUnits)
       expect(parsed.disposalEffectiveDate).toBe(expectedDate)
       expect(parsed.amount).toBe(expectedAmount)
     }
