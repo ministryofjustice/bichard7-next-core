@@ -13,4 +13,11 @@ CREATE TABLE br7own.audits
     resolved_by_users VARCHAR[],
     trigger_types     VARCHAR[],
     volume_of_cases   SMALLINT
-)
+);
+
+CREATE TABLE br7own.audit_cases (
+    audit_case_id SERIAL PRIMARY KEY,
+    audit_id INT REFERENCES br7own.audits(audit_id) NOT NULL,
+    error_id INT REFERENCES br7own.error_list(error_id) NOT NULL,
+);
+
