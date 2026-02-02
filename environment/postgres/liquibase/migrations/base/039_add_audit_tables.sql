@@ -20,4 +20,5 @@ CREATE TABLE br7own.audit_cases (
     error_id INT REFERENCES br7own.error_list(error_id) NOT NULL
 );
 
-CREATE INDEX audit_cases_covering_idx ON br7own.audit_cases (audit_id) INCLUDE (error_id)
+ALTER TABLE br7own.audit_cases
+ADD CONSTRAINT audit_cases_audit_error_uq UNIQUE (audit_id, error_id);
