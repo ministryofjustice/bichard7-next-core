@@ -1,3 +1,4 @@
+import type { Audit } from "@moj-bichard7/common/types/Audit"
 import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -33,19 +34,23 @@ describe("Create audit", () => {
   it("returns 201 CREATED when audit created successfully", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
 
+    const payload = {
+      dateFrom: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+      dateTo: format(new Date(), "yyyy-MM-dd"),
+      includedTypes: ["Triggers", "Exceptions"],
+      volumeOfCases: 20
+    } satisfies CreateAudit
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
-      payload: {
-        dateFrom: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
-        dateTo: format(new Date(), "yyyy-MM-dd"),
-        includedTypes: ["Triggers", "Exceptions"],
-        volumeOfCases: 20
-      } satisfies CreateAudit,
+      payload,
       url: V1.Audit
     })
 
     expect(response.statusCode).toBe(CREATED)
+    expect((response.body as unknown as Audit).auditId).toBeGreaterThan(0)
+    expect((response.body as unknown as Audit).dateFrom).toBe(payload.dateFrom)
+    expect((response.body as unknown as Audit).dateTo).toBe(payload.dateTo)
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
