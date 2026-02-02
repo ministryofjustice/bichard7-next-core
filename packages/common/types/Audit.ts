@@ -1,6 +1,19 @@
 import z from "zod"
 
-export const AuditSchema = z.object({
+export const AuditRowSchema = z.object({
+  audit_id: z.number(),
+  completed_when: z.date(),
+  created_by: z.string(),
+  created_when: z.date(),
+  from_date: z.date(),
+  included_types: z.enum(["Triggers", "Exceptions"]).array(),
+  resolved_by_users: z.string().array().nullable(),
+  to_date: z.date(),
+  trigger_types: z.string().array().nullable(),
+  volume_of_cases: z.number()
+})
+
+export const AuditDtoSchema = z.object({
   auditId: z.number(),
   completedWhen: z.date(),
   createdBy: z.string(),
@@ -13,4 +26,5 @@ export const AuditSchema = z.object({
   volumeOfCases: z.number()
 })
 
-export type Audit = z.infer<typeof AuditSchema>
+export type AuditDto = z.infer<typeof AuditDtoSchema>
+export type AuditRow = z.infer<typeof AuditRowSchema>

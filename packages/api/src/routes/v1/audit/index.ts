@@ -3,7 +3,7 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { AuditSchema } from "@moj-bichard7/common/types/Audit"
+import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/types/CreateAudit"
 import { CREATED } from "http-status"
 
@@ -31,7 +31,7 @@ const schema = {
   ...auth,
   body: CreateAuditSchema,
   response: {
-    [CREATED]: jsonResponse("Created Audit", AuditSchema),
+    [CREATED]: jsonResponse("Created Audit", AuditDtoSchema),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...notFoundError(),

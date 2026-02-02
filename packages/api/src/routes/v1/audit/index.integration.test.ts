@@ -1,4 +1,4 @@
-import type { Audit } from "@moj-bichard7/common/types/Audit"
+import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -48,9 +48,9 @@ describe("Create audit", () => {
     })
 
     expect(response.statusCode).toBe(CREATED)
-    expect((response.body as unknown as Audit).auditId).toBeGreaterThan(0)
-    expect((response.body as unknown as Audit).fromDate).toBe(payload.fromDate)
-    expect((response.body as unknown as Audit).toDate).toBe(payload.toDate)
+    expect((response.body as unknown as AuditDto).auditId).toBeGreaterThan(0)
+    expect((response.body as unknown as AuditDto).fromDate).toBe(payload.fromDate)
+    expect((response.body as unknown as AuditDto).toDate).toBe(payload.toDate)
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
