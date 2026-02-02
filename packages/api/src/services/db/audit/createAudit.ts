@@ -45,7 +45,7 @@ export const createAudit = async (
     }
 
     const audit = results[0]
-    const caseIds = await getCasesToAudit(tx, createAudit)
+    const casesToAudit = await getCasesToAudit(tx, createAudit, user)
 
     return convertAuditToDto(audit)
   })
