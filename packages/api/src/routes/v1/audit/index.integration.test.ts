@@ -35,9 +35,9 @@ describe("Create audit", () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
 
     const payload = {
-      dateFrom: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
-      dateTo: format(new Date(), "yyyy-MM-dd"),
+      fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
       includedTypes: ["Triggers", "Exceptions"],
+      toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 20
     } satisfies CreateAudit
     const response = await app.inject({
@@ -49,8 +49,8 @@ describe("Create audit", () => {
 
     expect(response.statusCode).toBe(CREATED)
     expect((response.body as unknown as Audit).auditId).toBeGreaterThan(0)
-    expect((response.body as unknown as Audit).dateFrom).toBe(payload.dateFrom)
-    expect((response.body as unknown as Audit).dateTo).toBe(payload.dateTo)
+    expect((response.body as unknown as Audit).fromDate).toBe(payload.fromDate)
+    expect((response.body as unknown as Audit).toDate).toBe(payload.toDate)
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
@@ -60,9 +60,9 @@ describe("Create audit", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: {
-        dateFrom: format(new Date(), "yyyy-MM-dd"),
-        dateTo: format(addWeeks(new Date(), 7), "yyyy-MM-dd"), // Date ranges in the future should be rejected
+        fromDate: format(new Date(), "yyyy-MM-dd"),
         includedTypes: ["Triggers", "Exceptions"],
+        toDate: format(addWeeks(new Date(), 7), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
       } satisfies CreateAudit,
       url: V1.Audit

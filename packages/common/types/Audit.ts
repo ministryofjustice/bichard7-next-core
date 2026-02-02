@@ -5,10 +5,10 @@ export const AuditSchema = z.object({
   completedWhen: z.date(),
   createdBy: z.string(),
   createdWhen: z.date(),
-  dateFrom: z.date(),
-  dateTo: z.date(),
+  fromDate: z.date(),
   includedTypes: z.enum(["Triggers", "Exceptions"]).array(),
   resolvedByUsers: z.string().array().optional(),
+  toDate: z.date(),
   triggerTypes: z.string().array().optional(),
   volumeOfCases: z.number()
 })

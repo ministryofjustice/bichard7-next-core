@@ -3,20 +3,20 @@ import z from "zod"
 
 export const CreateAuditSchema = z
   .object({
-    dateFrom: z.iso.date(),
-    dateTo: z.iso.date(),
+    fromDate: z.iso.date(),
     includedTypes: z.enum(["Triggers", "Exceptions"]).array(),
     resolvedByUsers: z.string().array().optional(),
+    toDate: z.iso.date(),
     triggerTypes: z.string().array().optional(),
     volumeOfCases: z.number().gte(1).lte(100)
   })
-  .superRefine(({ dateFrom, dateTo }, ctx) => {
-    if (isBefore(dateTo, dateFrom) || isAfter(dateTo, new Date())) {
+  .superRefine(({ fromDate, toDate }, ctx) => {
+    if (isBefore(toDate, fromDate) || isAfter(toDate, new Date())) {
       ctx.addIssue({
         code: "custom",
         input: {
-          dateFrom,
-          dateTo
+          fromDate,
+          toDate
         },
         message: "Date range cannot be in the future"
       })
