@@ -16,8 +16,7 @@ const extractErrors = (pncResponse: string): LedsError[] => {
       return errors
     }
 
-    const [errorDetailType, message] = match.groups.error.split("-")
-    errors.push({ errorDetailType, message })
+    errors.push({ errorDetailType: match.groups.error, message: match.groups.error })
   }
 }
 
