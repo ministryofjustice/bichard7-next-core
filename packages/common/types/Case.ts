@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+import { dateLikeToDate } from "../schemas/dateLikeToDate"
 import { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
 import { CaseAge } from "./CaseAge"
 import { NoteDtoSchema, NoteRowSchema, NoteSchema } from "./Note"
@@ -147,9 +148,46 @@ export const CaseIndexMetadataSchema = z.object({
   totalCases: z.number()
 })
 
+export const CaseRowForReportSchema = z.object({
+  annotated_msg: z.string(),
+  asn: z.string(),
+  court_date: dateLikeToDate,
+  court_name: z.string(),
+  court_reference: z.string(),
+  court_room: z.string(),
+  create_ts: dateLikeToDate,
+  defendant_name: z.string(),
+  error_resolved_by: z.string(),
+  error_resolved_ts: dateLikeToDate,
+  notes: z.array(NoteRowSchema),
+  ptiurn: z.string(),
+  trigger_resolved_by: z.string(),
+  trigger_resolved_ts: dateLikeToDate
+})
+
+export const CaseForReportSchema = CaseSchema.pick({
+  asn: true,
+  courtName: true,
+  courtReference: true,
+  courtRoom: true,
+  createdAt: true,
+  defendantName: true,
+  errorResolvedAt: true,
+  errorResolvedBy: true,
+  notes: true,
+  ptiurn: true,
+  triggerResolvedAt: true,
+  triggerResolvedBy: true
+}).extend({
+  hearingDate: dateLikeToDate,
+  notes: z.array(NoteDtoSchema)
+})
+
 export type Case = z.infer<typeof CaseSchema>
 export type CaseAges = z.infer<typeof CaseAgesSchema>
 export type CaseDto = z.infer<typeof CaseDtoSchema>
+export type CaseForReport = z.infer<typeof CaseForReportSchema>
 export type CaseIndexDto = z.infer<typeof CaseIndexDtoSchema>
 export type CaseIndexMetadata = z.infer<typeof CaseIndexMetadataSchema>
 export type CaseRow = z.infer<typeof CaseRowSchema>
+export type CaseRowForReport = z.infer<typeof CaseRowForReportSchema>
