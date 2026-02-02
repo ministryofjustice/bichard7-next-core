@@ -6,12 +6,12 @@ CREATE TABLE br7own.audits (
     created_by        VARCHAR   NOT NULL,
     created_when      TIMESTAMP NOT NULL,
     completed_when    TIMESTAMP,
-    from_date         DATE,
-    to_date           DATE,
+    from_date         DATE NOT NULL,
+    to_date           DATE NOT NULL,
     included_types    VARCHAR[],
     resolved_by_users VARCHAR[],
     trigger_types     VARCHAR[],
-    volume_of_cases   SMALLINT
+    volume_of_cases   SMALLINT NOT NULL
 );
 
 CREATE TABLE br7own.audit_cases (
