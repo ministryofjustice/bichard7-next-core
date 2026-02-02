@@ -36,7 +36,7 @@ const schema = {
   ...auth,
   querystring: ExceptionReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Exceptions Report", CaseForReportSchema),
+    [OK]: jsonResponse("Exceptions Report", CaseForReportSchema.array()),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),
