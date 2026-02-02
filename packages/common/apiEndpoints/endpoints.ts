@@ -1,4 +1,5 @@
 export const enum Endpoints {
+  Audit = "/audit",
   AuditLog = "/audit-logs/:correlationId",
   AuditLogEvents = "/audit-logs/:correlationId/events",
   AuditLogs = "/audit-logs",
