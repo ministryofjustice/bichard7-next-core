@@ -42,7 +42,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ reply }: HandlerProps) => {
-  return reply.code(CREATED)
+  return reply.code(CREATED).send()
 }
 
 const route = async (fastify: FastifyInstance) => {
