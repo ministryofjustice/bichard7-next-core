@@ -7,9 +7,9 @@ export const AuditSchema = z.object({
   createdWhen: z.date(),
   fromDate: z.date(),
   includedTypes: z.enum(["Triggers", "Exceptions"]).array(),
-  resolvedByUsers: z.string().array().optional(),
+  resolvedByUsers: z.string().array().nullable(),
   toDate: z.date(),
-  triggerTypes: z.string().array().optional(),
+  triggerTypes: z.string().array().nullable(),
   volumeOfCases: z.number()
 })
 
