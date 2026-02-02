@@ -4,6 +4,7 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { CaseForReportSchema } from "@moj-bichard7/common/types/Case"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { ExceptionReportQuerySchema } from "@moj-bichard7/common/types/Reports"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
@@ -22,7 +23,6 @@ import {
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
 import { exceptionsReport } from "../../../../services/db/cases/reports/exceptions"
-import { ExceptionsReportDataSchema } from "../../../../types/Reports"
 import { reportStream } from "../../../../useCases/cases/reports/reportStream"
 
 type HandlerProps = {
@@ -36,7 +36,7 @@ const schema = {
   ...auth,
   querystring: ExceptionReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Exceptions Report", ExceptionsReportDataSchema),
+    [OK]: jsonResponse("Exceptions Report", CaseForReportSchema),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

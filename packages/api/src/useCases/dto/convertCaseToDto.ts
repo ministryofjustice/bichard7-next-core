@@ -1,4 +1,4 @@
-import type { CaseDto, CaseIndexDto } from "@moj-bichard7/common/types/Case"
+import type { CaseDto, CaseForReport, CaseIndexDto, CaseRowForReport } from "@moj-bichard7/common/types/Case"
 import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
@@ -13,6 +13,24 @@ import type { CaseRowForDto, CaseRowForIndexDto } from "../../types/Case"
 import { convertNoteToDto } from "./convertNoteToDto"
 import { resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
 import { convertTriggerRowToDto } from "./convertTriggerRowToDto"
+
+export const convertCaseToCaseReportDto = (caseRow: CaseRowForReport): CaseForReport => {
+  return {
+    asn: caseRow.asn,
+    courtName: caseRow.court_name,
+    courtReference: caseRow.court_reference,
+    courtRoom: caseRow.court_room,
+    createdAt: caseRow.create_ts,
+    defendantName: caseRow.defendant_name,
+    errorResolvedAt: caseRow.error_resolved_ts,
+    errorResolvedBy: caseRow.error_resolved_by,
+    hearingDate: caseRow.court_date,
+    notes: caseRow.notes ? sortBy(caseRow.notes, "create_ts").reverse().map(convertNoteToDto) : [],
+    ptiurn: caseRow.ptiurn,
+    triggerResolvedAt: caseRow.trigger_resolved_ts,
+    triggerResolvedBy: caseRow.trigger_resolved_by
+  }
+}
 
 export const convertCaseToCaseDto = (
   caseRowForDto: CaseRowForDto,
