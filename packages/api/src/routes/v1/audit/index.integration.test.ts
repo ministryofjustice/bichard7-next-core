@@ -1,7 +1,7 @@
 import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { addWeeks, subWeeks } from "date-fns"
+import { addWeeks, format, subWeeks } from "date-fns"
 import { type FastifyInstance } from "fastify"
 import { BAD_REQUEST, CREATED } from "http-status"
 
@@ -37,8 +37,8 @@ describe("Create audit", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: {
-        dateFrom: subWeeks(new Date(), 1),
-        dateTo: new Date(),
+        dateFrom: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        dateTo: format(new Date(), "yyyy-MM-dd"),
         includedTypes: ["Triggers", "Exceptions"],
         volumeOfCases: 20
       } satisfies CreateAudit,
@@ -55,14 +55,15 @@ describe("Create audit", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: {
-        dateFrom: new Date(),
-        dateTo: addWeeks(new Date(), 7), // Date ranges in the future should be reject
+        dateFrom: format(new Date(), "yyyy-MM-dd"),
+        dateTo: format(addWeeks(new Date(), 7), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         includedTypes: ["Triggers", "Exceptions"],
         volumeOfCases: 20
-      },
+      } satisfies CreateAudit,
       url: V1.Audit
     })
 
     expect(response.statusCode).toBe(BAD_REQUEST)
+    expect(response.body).toContain("Date range cannot be in the future")
   })
 })
