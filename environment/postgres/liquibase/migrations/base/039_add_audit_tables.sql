@@ -16,9 +16,7 @@ CREATE TABLE br7own.audits (
 
 CREATE TABLE br7own.audit_cases (
     audit_case_id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    audit_id INT REFERENCES br7own.audits(audit_id) NOT NULL,
-    error_id INT REFERENCES br7own.error_list(error_id) NOT NULL
+    audit_id INT NOT NULL REFERENCES br7own.audits(audit_id) ON DELETE CASCADE,
+    error_id INT NOT NULL REFERENCES br7own.error_list(error_id) ON DELETE CASCADE,
+    CONSTRAINT audit_cases_audit_id_error_id_uq UNIQUE (audit_id, error_id)
 );
-
-ALTER TABLE br7own.audit_cases
-ADD CONSTRAINT audit_cases_audit_error_uq UNIQUE (audit_id, error_id);
