@@ -3,16 +3,23 @@ import z from "zod"
 
 export const CreateAuditSchema = z
   .object({
-    dateFrom: z.date(),
-    dateTo: z.date(),
+    dateFrom: z.iso.date(),
+    dateTo: z.iso.date(),
     includedTypes: z.enum(["Triggers", "Exceptions"]).array(),
     resolvedByUsers: z.string().array().optional(),
     triggerTypes: z.string().array().optional(),
     volumeOfCases: z.number().gte(1).lte(100)
   })
-  .refine(({ dateFrom, dateTo }) => {
+  .superRefine(({ dateFrom, dateTo }, ctx) => {
     if (isBefore(dateTo, dateFrom) || isAfter(dateTo, new Date())) {
-      return false
+      ctx.addIssue({
+        code: "custom",
+        input: {
+          dateFrom,
+          dateTo
+        },
+        message: "Date range cannot be in the future"
+      })
     }
   })
 
