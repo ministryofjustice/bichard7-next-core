@@ -20,7 +20,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import createAudit from "../../../services/db/audit/createAudit"
+import { createAudit } from "../../../services/db/audit/createAudit"
 
 type HandlerProps = {
   body: CreateAudit

@@ -7,7 +7,10 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
 
-export default async (database: WritableDatabaseConnection, createAudit: CreateAudit): PromiseResult<AuditDto> => {
+export const createAudit = async (
+  database: WritableDatabaseConnection,
+  createAudit: CreateAudit
+): PromiseResult<AuditDto> => {
   return await database.transaction<AuditDto | Error>(async (tx) => {
     const sql = tx.connection
 
