@@ -3,7 +3,7 @@ Feature: {500} refer-to-court-case
 			"""
 			Bichard receives a court hearing outcome that includes:
 			- result code 2060 for an existing offence
-			- a recordable result code (1015) for an additional offence that conviction date is the same as hearing date
+			- a recordable result code (1015) for an additional offence where the conviction date is the same as the hearing date
 			Bichard updates the police system with the new disposal results and refer to the court case.
 			"""
 
