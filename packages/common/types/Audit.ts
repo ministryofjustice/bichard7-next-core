@@ -15,13 +15,13 @@ export const AuditRowSchema = z.object({
 
 export const AuditDtoSchema = z.object({
   auditId: z.number(),
-  completedWhen: z.date().nullable(),
+  completedWhen: z.string().nullable(),
   createdBy: z.string(),
-  createdWhen: z.date(),
-  fromDate: z.date(),
+  createdWhen: z.string(),
+  fromDate: z.string(),
   includedTypes: z.enum(["Triggers", "Exceptions"]).array(),
   resolvedByUsers: z.string().array().nullable(),
-  toDate: z.date(),
+  toDate: z.string(),
   triggerTypes: z.string().array().nullable(),
   volumeOfCases: z.number()
 })
