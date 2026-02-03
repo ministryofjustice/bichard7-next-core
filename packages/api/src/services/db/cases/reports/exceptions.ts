@@ -21,7 +21,7 @@ export const exceptionsReport = async (
 
     return database.connection`
       SELECT
-        ${isException ? "Exception" : "Trigger"}::text as record_type,
+        ${isException ? "Exception" : "Trigger"}::text as type,
         el.${database.connection(resolvedByCol)} as resolver,
         el.error_id,
         el.asn,
@@ -78,7 +78,11 @@ export const exceptionsReport = async (
     combinedParts = database.connection`${parts[0]} UNION ALL ${parts[1]}`
   }
 
-  const fullQuery = database.connection<CaseRowForReport[]>`${combinedParts}`
+  const fullQuery = database.connection<CaseRowForReport[]>`
+    WITH combined_data AS (${combinedParts})
+    SELECT * FROM combined_data cb
+    ORDER BY resolver, type DESC, resolved_ts, error_id
+  `
 
   try {
     await fullQuery.cursor(100, async (rows) => {

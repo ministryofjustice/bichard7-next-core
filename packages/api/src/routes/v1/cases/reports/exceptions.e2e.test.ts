@@ -1,3 +1,4 @@
+import type { CaseForReport } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -60,7 +61,7 @@ describe("exceptions report e2e", () => {
   it("gets exceptions that are resolved", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
 
-    await createCases(helper.postgres, 3, {
+    const cases = await createCases(helper.postgres, 3, {
       0: { errorResolvedAt: subDays(new Date(), 1), errorStatus: ResolutionStatusNumber.Resolved },
       1: { errorStatus: ResolutionStatusNumber.Unresolved },
       2: { errorStatus: ResolutionStatusNumber.Submitted }
@@ -79,12 +80,20 @@ describe("exceptions report e2e", () => {
     const json = await streamToJson(response)
 
     expect(json).toHaveLength(1)
+
+    const reportItem = json[0] as CaseForReport
+    const caseObj = cases[0]
+
+    expect(reportItem.resolver).toBe(caseObj.errorResolvedBy)
+    expect(reportItem.resolvedAt).toBe(caseObj.errorResolvedAt!.toISOString())
+    expect(reportItem.hearingDate).toBe(caseObj.courtDate!.toISOString())
+    expect(reportItem.type).toBe("Exception")
   })
 
   it("gets triggers that are resolved", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
 
-    await createCases(helper.postgres, 3, {
+    const cases = await createCases(helper.postgres, 3, {
       0: { triggerResolvedAt: subDays(new Date(), 1), triggerStatus: ResolutionStatusNumber.Resolved },
       1: { triggerStatus: ResolutionStatusNumber.Unresolved },
       2: { triggerStatus: ResolutionStatusNumber.Submitted }
@@ -103,14 +112,30 @@ describe("exceptions report e2e", () => {
     const json = await streamToJson(response)
 
     expect(json).toHaveLength(1)
+
+    const reportItem = json[0] as CaseForReport
+    const caseObj = cases[0]
+
+    expect(reportItem.resolver).toBe(caseObj.triggerResolvedBy)
+    expect(reportItem.resolvedAt).toBe(caseObj.triggerResolvedAt!.toISOString())
+    expect(reportItem.hearingDate).toBe(caseObj.courtDate!.toISOString())
+    expect(reportItem.type).toBe("Trigger")
   })
 
   it("gets exceptions and triggers that are resolved", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
 
-    await createCases(helper.postgres, 3, {
-      0: { triggerResolvedAt: subDays(new Date(), 1), triggerStatus: ResolutionStatusNumber.Resolved },
-      1: { errorResolvedAt: subDays(new Date(), 1), errorStatus: ResolutionStatusNumber.Resolved },
+    const cases = await createCases(helper.postgres, 3, {
+      0: {
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: "User 2",
+        triggerStatus: ResolutionStatusNumber.Resolved
+      },
+      1: {
+        errorResolvedAt: subDays(new Date(), 2),
+        errorResolvedBy: "User 1",
+        errorStatus: ResolutionStatusNumber.Resolved
+      },
       2: { triggerStatus: ResolutionStatusNumber.Submitted }
     })
 
@@ -127,6 +152,22 @@ describe("exceptions report e2e", () => {
     const json = await streamToJson(response)
 
     expect(json).toHaveLength(2)
+
+    const reportItemEx = json[0] as CaseForReport
+    const caseObjEx = cases[1]
+
+    expect(reportItemEx.resolver).toBe(caseObjEx.errorResolvedBy)
+    expect(reportItemEx.resolvedAt).toBe(caseObjEx.errorResolvedAt!.toISOString())
+    expect(reportItemEx.hearingDate).toBe(caseObjEx.courtDate!.toISOString())
+    expect(reportItemEx.type).toBe("Exception")
+
+    const reportItemTr = json[1] as CaseForReport
+    const caseObjTr = cases[0]
+
+    expect(reportItemTr.resolver).toBe(caseObjTr.triggerResolvedBy)
+    expect(reportItemTr.resolvedAt).toBe(caseObjTr.triggerResolvedAt!.toISOString())
+    expect(reportItemTr.hearingDate).toBe(caseObjTr.courtDate!.toISOString())
+    expect(reportItemTr.type).toBe("Trigger")
   })
 
   it("gets exceptions and triggers that are resolved on one case", async () => {
