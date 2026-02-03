@@ -5,7 +5,8 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/types/CreateAudit"
-import { CREATED } from "http-status"
+import { isError } from "@moj-bichard7/common/types/Result"
+import { CREATED, INTERNAL_SERVER_ERROR } from "http-status"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
@@ -19,6 +20,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
+import createAudit from "../../../services/db/audit/createAudit"
 
 type HandlerProps = {
   body: CreateAudit
@@ -41,8 +43,14 @@ const schema = {
   tags: ["Audit V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ reply }: HandlerProps) => {
-  return reply.code(CREATED).send()
+const handler = async ({ body, database, reply }: HandlerProps) => {
+  const auditResult = await createAudit(database.writable, body)
+  if (isError(auditResult)) {
+    reply.log.error(auditResult)
+    return reply.code(INTERNAL_SERVER_ERROR).send()
+  }
+
+  return reply.code(CREATED).send(auditResult)
 }
 
 const route = async (fastify: FastifyInstance) => {

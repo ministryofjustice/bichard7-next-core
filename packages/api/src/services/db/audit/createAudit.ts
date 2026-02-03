@@ -20,7 +20,8 @@ export default async (database: WritableDatabaseConnection, createAudit: CreateA
         included_types,
         resolved_by_users,
         trigger_types,
-        volume_of_cases)
+        volume_of_cases
+      )
       VALUES (
         'user',
         CURRENT_DATE,
