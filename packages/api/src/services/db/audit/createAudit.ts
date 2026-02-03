@@ -1,4 +1,4 @@
-import type { AuditDto, AuditRow } from "@moj-bichard7/common/types/Audit"
+import type { Audit, AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
@@ -11,7 +11,7 @@ export default async (database: WritableDatabaseConnection, createAudit: CreateA
   return await database.transaction<AuditDto | Error>(async (tx) => {
     const sql = tx.connection
 
-    const results = await sql<AuditRow[]>`
+    const results = await sql<Audit[]>`
       INSERT INTO br7own.audits (
         created_by,
         created_when,
