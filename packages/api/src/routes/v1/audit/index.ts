@@ -43,8 +43,8 @@ const schema = {
   tags: ["Audit V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, database, reply }: HandlerProps) => {
-  const auditResult = await createAudit(database.writable, body)
+const handler = async ({ body, database, reply, user }: HandlerProps) => {
+  const auditResult = await createAudit(database.writable, body, user)
   if (isError(auditResult)) {
     reply.log.error(auditResult)
     return reply.code(INTERNAL_SERVER_ERROR).send()

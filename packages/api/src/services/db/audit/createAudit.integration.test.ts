@@ -7,7 +7,7 @@ import { format, subWeeks } from "date-fns"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import createAudit from "./createAudit"
+import { createAudit } from "./createAudit"
 
 const testDatabaseGateway = new End2EndPostgres()
 
@@ -19,7 +19,6 @@ describe("createAudit", () => {
       errorId: 1,
       orgForPoliceFilter: "02"
     })
-    await createUser(testDatabaseGateway)
   })
 
   afterAll(async () => {
@@ -27,15 +26,19 @@ describe("createAudit", () => {
   })
 
   it("creates audit and returns it", async () => {
+    const user = await createUser(testDatabaseGateway)
     const payload = {
       fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
       includedTypes: ["Triggers", "Exceptions"],
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 20
     } satisfies CreateAudit
-    const result = await createAudit(testDatabaseGateway.writable, payload)
+    const result = await createAudit(testDatabaseGateway.writable, payload, user)
 
     expect(isError(result)).toBe(false)
     expect((result as AuditDto).auditId).toBeGreaterThan(0)
+    expect((result as AuditDto).createdBy).toBe(user.username)
+    expect((result as AuditDto).toDate).toBe(payload.toDate)
+    expect((result as AuditDto).createdBy).toBe(user.username)
   })
 })

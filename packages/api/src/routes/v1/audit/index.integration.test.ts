@@ -32,8 +32,7 @@ describe("Create audit", () => {
   })
 
   it("returns 201 CREATED when audit created successfully", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
-
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway)
     const payload = {
       fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
       includedTypes: ["Triggers", "Exceptions"],
@@ -52,6 +51,7 @@ describe("Create audit", () => {
     expect(body.auditId).toBeGreaterThan(0)
     expect(body.fromDate).toBe(payload.fromDate)
     expect(body.toDate).toBe(payload.toDate)
+    expect(body.createdBy).toBe(user.username)
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
