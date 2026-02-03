@@ -1,5 +1,6 @@
 import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Case"
 import type { ExceptionReportQuery, ExceptionReportType } from "@moj-bichard7/common/types/Reports"
+import type { User } from "@moj-bichard7/common/types/User"
 import type { PendingQuery, Row } from "postgres"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -7,9 +8,11 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
 import { processExceptions } from "../../../../useCases/cases/reports/processExceptions"
+import { organisationUnitSql } from "../../organisationUnitSql"
 
 export const exceptionsReport = async (
   database: DatabaseConnection,
+  user: User,
   filters: ExceptionReportQuery,
   processChunk: (rows: CaseForReport[]) => Promise<void>
 ): Promise<void> => {
@@ -53,6 +56,7 @@ export const exceptionsReport = async (
       WHERE
         el.${database.connection(resolvedTsCol)} BETWEEN ${filters.fromDate} AND ${filters.toDate}
         AND el.${database.connection(statusCol)} = ${ResolutionStatusNumber.Resolved}
+        AND (${organisationUnitSql(database, user)})
     `
   }
 

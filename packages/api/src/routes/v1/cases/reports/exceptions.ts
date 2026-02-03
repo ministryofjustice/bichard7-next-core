@@ -64,7 +64,7 @@ const handler = async ({ database, query, reply, user }: HandlerProps) => {
   reply.code(OK).type("application/json").send(stream)
 
   reportStream(stream, async (processBatch) => {
-    return exceptionsReport(database.readonly, query, processBatch)
+    return exceptionsReport(database.readonly, user, query, processBatch)
   }).catch((err: Error) => {
     stream.destroy(err)
   })
