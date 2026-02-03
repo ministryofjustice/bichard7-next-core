@@ -53,7 +53,7 @@ export default class MockServer {
   }
 
   async fetchRequests(): Promise<RequestResponseMock[]> {
-    const response = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/requests`, {
+    const response = await axios.get<RequestResponseMock[]>(`${this.apiUrl}/requests?output=json`, {
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
