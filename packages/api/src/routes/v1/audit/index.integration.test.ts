@@ -48,9 +48,10 @@ describe("Create audit", () => {
     })
 
     expect(response.statusCode).toBe(CREATED)
-    expect((response.body as unknown as AuditDto).auditId).toBeGreaterThan(0)
-    expect((response.body as unknown as AuditDto).fromDate).toBe(payload.fromDate)
-    expect((response.body as unknown as AuditDto).toDate).toBe(payload.toDate)
+    const body = response.json<AuditDto>()
+    expect(body.auditId).toBeGreaterThan(0)
+    expect(body.fromDate).toBe(payload.fromDate)
+    expect(body.toDate).toBe(payload.toDate)
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
