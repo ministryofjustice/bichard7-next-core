@@ -4,7 +4,7 @@ import { promises as fs } from "fs"
 import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
-import type { PartialPoliceApiRequestMock } from "../../types/PoliceApi"
+import type { MockAsnQueryParams } from "../../types/PoliceApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
 import * as mockGenerators from "./mockGenerators"
 import { generateAsnQuery } from "./mockGenerators/generateAsnQuery"
@@ -23,7 +23,9 @@ export class LedsApi implements PoliceApi {
 
   createValidRecord: (record: string) => Promise<void>
 
-  mockMissingDataForTest: () => Promise<void>
+  mockMissingDataForTest(): Promise<void> {
+    return addMockToLedsMockApi(this.bichard)
+  }
 
   mockDataForTest(): Promise<void> {
     return addMockToLedsMockApi(this.bichard)
@@ -38,18 +40,19 @@ export class LedsApi implements PoliceApi {
     return mockGenerators.generateAsnQueryFromNcm(this.bichard, ncmFile, queryOptions)
   }
 
-  mockAsnQuery(params: {
-    matchRegex: string
-    response: string
-    expectedRequest: string
-    asn: string
-    count: number
-  }): PartialPoliceApiRequestMock {
+  mockAsnQuery(params: MockAsnQueryParams): LedsMock {
     this.personId = randomUUID()
     this.reportId = randomUUID()
     this.courtCaseId = randomUUID()
 
-    return generateAsnQuery(params.response, params.count, params.asn, this.personId, this.reportId, this.courtCaseId)
+    return generateAsnQuery(
+      params.response,
+      params.count ?? 0,
+      params.asn,
+      this.personId,
+      this.reportId,
+      this.courtCaseId
+    )
   }
 
   mockUpdate(code: string, options?: LedsMockOptions): LedsMock {
@@ -123,7 +126,7 @@ export class LedsApi implements PoliceApi {
   async expectNotUpdated(): Promise<void> {
     for (let index = 0; index < 2; index++) {
       const updates = (await this.mockServerClient.fetchMocks()).filter(
-        (mock) => mock.path.startsWith("/people/") && !mock.request
+        (mock) => mock.path.startsWith("/people/") && mock.hits > 0
       )
 
       if (updates.length > 0) {

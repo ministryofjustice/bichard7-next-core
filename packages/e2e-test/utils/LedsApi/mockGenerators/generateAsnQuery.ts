@@ -8,9 +8,6 @@ import type { PncAsnQueryJson } from "../../convertPncXmlToJson/convertPncXmlToJ
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
 
-// pncJson: PncAsnQueryJson,
-// { asn, personId, reportId, courtCaseId }: Params
-
 export const generateAsnQuery = (
   responseXml: string,
   count: number,
@@ -36,7 +33,8 @@ export const generateAsnQuery = (
     }
   })
 
-  const response = createMockResponse(ledsAsnQueryResponse, HttpStatusCode.Ok)
+  const responseStatus = ("status" in ledsAsnQueryResponse && ledsAsnQueryResponse.status) || HttpStatusCode.Ok
+  const response = createMockResponse(ledsAsnQueryResponse, responseStatus)
 
   return {
     id: randomUUID(),

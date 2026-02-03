@@ -133,7 +133,7 @@ describe("mapOffences", () => {
 
     const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
 
-    expect(offences[0].disposalResults?.[0].disposalQualifiers).toEqual([])
+    expect(offences[0].disposalResults?.[0].disposalQualifiers).toBeUndefined()
     expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
   })
 

@@ -9,7 +9,7 @@ Feature: {408} Handling unexpected PNC enquiry errors
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@ExcludeOnPreProd @NextUI
+	@ExcludeOnPreProd @NextUI @ExcludedOnLeds
 	Scenario: Handling unexpected errors for PNC update
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

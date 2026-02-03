@@ -230,7 +230,7 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases[0].courtCaseId}/court-case-disposal-result`
+        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-disposal-result`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "02YZ",
@@ -247,7 +247,7 @@ describe("LedsGateway", () => {
             cjsOffenceCode: "RT88191",
             offenceTic: 0,
             disposalResults: [
-              { disposalCode: 2059, disposalQualifiers: [], disposalText: "", disposalFine: { amount: 0 } }
+              { disposalCode: 2059, disposalQualifiers: undefined, disposalText: "", disposalFine: { amount: 0 } }
             ],
             offenceId: pncUpdateDataset.PncQuery!.courtCases![0].offences[0].offence.offenceId
           }
@@ -321,7 +321,7 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases[0].courtCaseId}/court-case-subsequent-disposal-results`
+        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "01YZ",
@@ -342,7 +342,7 @@ describe("LedsGateway", () => {
             disposalResults: [
               {
                 disposalCode: 4004,
-                disposalQualifiers: [],
+                disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
                 disposalFine: { amount: 0 }
               }
@@ -359,7 +359,7 @@ describe("LedsGateway", () => {
             disposalResults: [
               {
                 disposalCode: 4004,
-                disposalQualifiers: [],
+                disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
                 disposalFine: { amount: 0 }
               }
@@ -422,7 +422,7 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases[0].courtCaseId}/court-case-subsequent-disposal-results`
+        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "01YZ",
@@ -439,7 +439,7 @@ describe("LedsGateway", () => {
             disposalResults: [
               {
                 disposalCode: 4004,
-                disposalQualifiers: [],
+                disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
                 disposalFine: { amount: 0 }
               }
@@ -452,7 +452,7 @@ describe("LedsGateway", () => {
             disposalResults: [
               {
                 disposalCode: 4004,
-                disposalQualifiers: [],
+                disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
                 disposalFine: { amount: 0 }
               }

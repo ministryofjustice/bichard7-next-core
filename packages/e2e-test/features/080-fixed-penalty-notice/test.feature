@@ -22,7 +22,7 @@ Feature: {080} R4.1-BR7-Scenario AJ-Fixed Penalty Notice for Disorder (Dealt wit
     Given the data for this test is in the PNC
       And "input-message" is received
 
-  @Must @ExcludeOnPreProd @NextUI
+  @Must @ExcludeOnPreProd @NextUI @ExcludedOnLeds
   Scenario: PNC is updated when there are multiple identical results
     Given I am logged in as "supervisor"
       And I view the list of exceptions

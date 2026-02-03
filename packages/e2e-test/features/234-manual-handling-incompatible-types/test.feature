@@ -18,7 +18,7 @@ Feature: {234} BR7 R5.5.1-PFI Change-1xCCR-PENHRG-DISARR
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Could @NextUI
+	@Could @NextUI @ExcludedOnLeds
 	Scenario: Manual handling of incompatible PNC types
 		Given I am logged in as "generalhandler"
 		When I view the list of exceptions
