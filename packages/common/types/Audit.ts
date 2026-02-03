@@ -2,7 +2,7 @@ import z from "zod"
 
 export const AuditRowSchema = z.object({
   audit_id: z.number(),
-  completed_when: z.date(),
+  completed_when: z.date().nullable(),
   created_by: z.string(),
   created_when: z.date(),
   from_date: z.date(),
@@ -15,7 +15,7 @@ export const AuditRowSchema = z.object({
 
 export const AuditDtoSchema = z.object({
   auditId: z.number(),
-  completedWhen: z.date(),
+  completedWhen: z.date().nullable(),
   createdBy: z.string(),
   createdWhen: z.date(),
   fromDate: z.date(),
