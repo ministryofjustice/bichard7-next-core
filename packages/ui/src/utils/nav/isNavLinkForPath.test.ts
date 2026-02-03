@@ -8,7 +8,7 @@ describe("navigation links", () => {
 
   it("should return false for non-case list nav link", () => {
     expect(isNavLinkForPath("/bichard/audit/", NavLink.CaseList)).toBeFalsy()
-    expect(isNavLinkForPath("/bichard/court-cases/{0}?previousPath=/audit/1234", NavLink.CaseList)).toBeFalsy()
+    expect(isNavLinkForPath("/bichard/court-cases/{0}?previousPath=%2Faudit%2F1234", NavLink.CaseList)).toBeFalsy()
   })
 
   it("should return true for the case list nav link", () => {
@@ -27,7 +27,7 @@ describe("navigation links", () => {
   })
 
   it("should return true for case list previous url querystring audit link", () => {
-    expect(isNavLinkForPath("/bichard/court-cases/{0}?previousPath=/audit/1234", NavLink.Audit)).toBeTruthy()
+    expect(isNavLinkForPath("/bichard/court-cases/{0}?previousPath=%2Faudit%2F1234", NavLink.Audit)).toBeTruthy()
   })
 
   it("should return false for non-case list report nav link", () => {

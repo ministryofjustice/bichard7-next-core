@@ -6,11 +6,12 @@ export function isNavLinkForPath(path: string, navLink: string): boolean {
     return false
   }
 
-  if (navLink === NavLink.Audit) {
-    return path.includes("/audit")
-  } else if (navLink === NavLink.CaseList) {
-    return path.startsWith("/?") || path === "/" || path.includes("/court-cases")
+  switch (navLink) {
+    case NavLink.Audit:
+      return path.includes("audit")
+    case NavLink.CaseList:
+      return path.startsWith("/?") || path === "/" || path.includes("/court-cases")
+    default:
+      return false
   }
-
-  return false
 }
