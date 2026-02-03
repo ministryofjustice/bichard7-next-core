@@ -1,25 +1,22 @@
-import type { CaseRowForReport } from "@moj-bichard7/common/types/Case"
+import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Case"
 
 import { convertCaseToCaseReportDto } from "./convertCaseToDto"
 
-// Don't mock sortBy or convertNoteToDto - test the actual implementation
 describe("convertCaseToCaseReportDto", () => {
   it("should convert case row to case report DTO with empty notes", () => {
     const caseRow: CaseRowForReport = {
-      annotated_msg: "<xml>test</xml>",
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
       court_reference: "REF123",
       court_room: "Room 1",
-      create_ts: new Date("2024-01-10"),
       defendant_name: "John Doe",
-      error_resolved_by: "user1",
-      error_resolved_ts: new Date("2024-01-20"),
+      msg_received_ts: new Date("2024-01-10"),
       notes: [],
       ptiurn: "01ZD0303208",
-      trigger_resolved_by: "user2",
-      trigger_resolved_ts: new Date("2024-01-21")
+      resolved_ts: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "Exceptions"
     }
 
     const result = convertCaseToCaseReportDto(caseRow)
@@ -29,30 +26,26 @@ describe("convertCaseToCaseReportDto", () => {
       courtName: "Test Court",
       courtReference: "REF123",
       courtRoom: "Room 1",
-      createdAt: new Date("2024-01-10"),
       defendantName: "John Doe",
-      errorResolvedAt: new Date("2024-01-20"),
-      errorResolvedBy: "user1",
       hearingDate: new Date("2024-01-15"),
+      messageReceivedAt: new Date("2024-01-10"),
       notes: [],
       ptiurn: "01ZD0303208",
-      triggerResolvedAt: new Date("2024-01-21"),
-      triggerResolvedBy: "user2"
-    })
+      resolvedAt: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "Exceptions"
+    } satisfies CaseForReport)
   })
 
   it("should convert case row with notes sorted by create_ts descending", () => {
     const caseRow: CaseRowForReport = {
-      annotated_msg: "<xml>test</xml>",
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
       court_reference: "REF123",
       court_room: "Room 1",
-      create_ts: new Date("2024-01-10"),
       defendant_name: "John Doe",
-      error_resolved_by: "user1",
-      error_resolved_ts: new Date("2024-01-20"),
+      msg_received_ts: new Date("2024-01-10"),
       notes: [
         {
           create_ts: new Date("2024-01-10T10:00:00Z"),
@@ -77,13 +70,13 @@ describe("convertCaseToCaseReportDto", () => {
         }
       ],
       ptiurn: "01ZD0303208",
-      trigger_resolved_by: "user2",
-      trigger_resolved_ts: new Date("2024-01-21")
+      resolved_ts: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "Exceptions"
     }
 
     const result = convertCaseToCaseReportDto(caseRow)
 
-    // Notes should be sorted by create_ts descending (newest first)
     expect(result.notes).toHaveLength(3)
     expect(result.notes[0].noteText).toBe("Second note") // 2024-01-11
     expect(result.notes[1].noteText).toBe("First note") // 2024-01-10
@@ -92,20 +85,18 @@ describe("convertCaseToCaseReportDto", () => {
 
   it("should handle undefined notes", () => {
     const caseRow: CaseRowForReport = {
-      annotated_msg: "<xml>test</xml>",
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
       court_reference: "REF123",
       court_room: "Room 1",
-      create_ts: new Date("2024-01-10"),
       defendant_name: "John Doe",
-      error_resolved_by: "user1",
-      error_resolved_ts: new Date("2024-01-20"),
+      msg_received_ts: new Date("2024-01-10"),
       notes: undefined as any,
       ptiurn: "01ZD0303208",
-      trigger_resolved_by: "user2",
-      trigger_resolved_ts: new Date("2024-01-21")
+      resolved_ts: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "Triggers"
     }
 
     const result = convertCaseToCaseReportDto(caseRow)
@@ -115,20 +106,18 @@ describe("convertCaseToCaseReportDto", () => {
 
   it("should handle null notes", () => {
     const caseRow: CaseRowForReport = {
-      annotated_msg: "<xml>test</xml>",
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
       court_reference: "REF123",
       court_room: "Room 1",
-      create_ts: new Date("2024-01-10"),
       defendant_name: "John Doe",
-      error_resolved_by: "user1",
-      error_resolved_ts: new Date("2024-01-20"),
+      msg_received_ts: new Date("2024-01-10"),
       notes: null as any,
       ptiurn: "01ZD0303208",
-      trigger_resolved_by: "user2",
-      trigger_resolved_ts: new Date("2024-01-21")
+      resolved_ts: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "Exceptions"
     }
 
     const result = convertCaseToCaseReportDto(caseRow)
@@ -138,20 +127,18 @@ describe("convertCaseToCaseReportDto", () => {
 
   it("should map all fields correctly", () => {
     const caseRow: CaseRowForReport = {
-      annotated_msg: "<xml>test</xml>",
       asn: "ASN123",
       court_date: new Date("2024-02-01"),
       court_name: "Crown Court",
       court_reference: "CC/2024/001",
       court_room: "Court 5",
-      create_ts: new Date("2024-01-25"),
       defendant_name: "Jane Smith",
-      error_resolved_by: "resolver1",
-      error_resolved_ts: new Date("2024-02-05"),
+      msg_received_ts: new Date("2024-01-25"),
       notes: [],
       ptiurn: "PTI001",
-      trigger_resolved_by: "resolver2",
-      trigger_resolved_ts: new Date("2024-02-06")
+      resolved_ts: new Date("2024-02-05"),
+      resolver: "resolver1",
+      type: "Triggers"
     }
 
     const result = convertCaseToCaseReportDto(caseRow)
@@ -160,13 +147,12 @@ describe("convertCaseToCaseReportDto", () => {
     expect(result.courtName).toBe(caseRow.court_name)
     expect(result.courtReference).toBe(caseRow.court_reference)
     expect(result.courtRoom).toBe(caseRow.court_room)
-    expect(result.createdAt).toBe(caseRow.create_ts)
+    expect(result.messageReceivedAt).toBe(caseRow.msg_received_ts)
     expect(result.defendantName).toBe(caseRow.defendant_name)
-    expect(result.errorResolvedAt).toBe(caseRow.error_resolved_ts)
-    expect(result.errorResolvedBy).toBe(caseRow.error_resolved_by)
+    expect(result.resolvedAt).toBe(caseRow.resolved_ts)
+    expect(result.resolver).toBe(caseRow.resolver)
     expect(result.hearingDate).toBe(caseRow.court_date)
     expect(result.ptiurn).toBe(caseRow.ptiurn)
-    expect(result.triggerResolvedAt).toBe(caseRow.trigger_resolved_ts)
-    expect(result.triggerResolvedBy).toBe(caseRow.trigger_resolved_by)
+    expect(result.type).toBe(caseRow.type)
   })
 })

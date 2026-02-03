@@ -155,7 +155,7 @@ describe("exceptions report e2e", () => {
 
     const json = await streamToJson(response)
 
-    expect(json).toHaveLength(1)
+    expect(json).toHaveLength(2)
   })
 
   it("gets triggers when exceptions are filtered", async () => {

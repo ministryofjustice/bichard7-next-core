@@ -12,20 +12,18 @@ describe("processExceptions", () => {
 
   it("should call convertCaseToCaseReportDto with the case row", () => {
     const mockCaseRow: CaseRowForReport = {
-      annotated_msg: "<xml>test</xml>",
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
       court_reference: "REF123",
       court_room: "Room 1",
       defendant_name: "John Doe",
-      error_resolved_by: "user1",
-      error_resolved_ts: new Date("2024-01-20"),
       msg_received_ts: new Date("2024-01-10"),
       notes: [],
       ptiurn: "01ZD0303208",
-      trigger_resolved_by: "user2",
-      trigger_resolved_ts: new Date("2024-01-21")
+      resolved_ts: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "error"
     }
 
     const mockResult: CaseForReport = {
@@ -34,14 +32,13 @@ describe("processExceptions", () => {
       courtReference: "REF123",
       courtRoom: "Room 1",
       defendantName: "John Doe",
-      errorResolvedAt: new Date("2024-01-20"),
-      errorResolvedBy: "user1",
       hearingDate: new Date("2024-01-15"),
       messageReceivedAt: new Date("2024-01-10"),
       notes: [],
       ptiurn: "01ZD0303208",
-      triggerResolvedAt: new Date("2024-01-21"),
-      triggerResolvedBy: "user2"
+      resolvedAt: new Date("2024-01-20"),
+      resolver: "user1",
+      type: "error"
     }
 
     jest.spyOn(convertCaseModule, "convertCaseToCaseReportDto").mockReturnValue(mockResult)

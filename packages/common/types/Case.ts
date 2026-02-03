@@ -149,20 +149,18 @@ export const CaseIndexMetadataSchema = z.object({
 })
 
 export const CaseRowForReportSchema = z.object({
-  annotated_msg: z.string(),
   asn: z.string(),
   court_date: dateLikeToDate,
   court_name: z.string(),
   court_reference: z.string(),
   court_room: z.string(),
   defendant_name: z.string(),
-  error_resolved_by: z.string(),
-  error_resolved_ts: dateLikeToDate,
   msg_received_ts: dateLikeToDate,
   notes: z.array(NoteRowSchema),
   ptiurn: z.string(),
-  trigger_resolved_by: z.string(),
-  trigger_resolved_ts: dateLikeToDate
+  resolved_ts: dateLikeToDate,
+  resolver: z.string(),
+  type: z.string()
 })
 
 export const CaseForReportSchema = CaseSchema.pick({
@@ -171,16 +169,15 @@ export const CaseForReportSchema = CaseSchema.pick({
   courtReference: true,
   courtRoom: true,
   defendantName: true,
-  errorResolvedAt: true,
-  errorResolvedBy: true,
   messageReceivedAt: true,
   notes: true,
-  ptiurn: true,
-  triggerResolvedAt: true,
-  triggerResolvedBy: true
+  ptiurn: true
 }).extend({
   hearingDate: dateLikeToDate,
-  notes: z.array(NoteDtoSchema)
+  notes: z.array(NoteDtoSchema),
+  resolvedAt: dateLikeToDate,
+  resolver: z.string(),
+  type: z.string()
 })
 
 export type Case = z.infer<typeof CaseSchema>

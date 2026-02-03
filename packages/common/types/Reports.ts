@@ -7,6 +7,8 @@ export const BaseReportQuerySchema = z.object({
   toDate: dateLikeToDate
 })
 
+export type ExceptionReportType = "Exceptions" | "Triggers"
+
 export const ExceptionReportQuerySchema = BaseReportQuerySchema.extend({
   exceptions: z.enum(["true", "false"]).transform((val) => val === "true"),
   triggers: z.enum(["true", "false"]).transform((val) => val === "true")

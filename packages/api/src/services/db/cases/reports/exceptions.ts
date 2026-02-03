@@ -1,5 +1,6 @@
 import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Case"
-import type { ExceptionReportQuery } from "@moj-bichard7/common/types/Reports"
+import type { ExceptionReportQuery, ExceptionReportType } from "@moj-bichard7/common/types/Reports"
+import type { PendingQuery, Row } from "postgres"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 
@@ -12,37 +13,29 @@ export const exceptionsReport = async (
   filters: ExceptionReportQuery,
   processChunk: (rows: CaseForReport[]) => Promise<void>
 ): Promise<void> => {
-  const conditions = []
+  const createQueryPart = (type: ExceptionReportType) => {
+    const isException = type === "Exceptions"
+    const resolvedByCol = isException ? "error_resolved_by" : "trigger_resolved_by"
+    const resolvedTsCol = isException ? "error_resolved_ts" : "trigger_resolved_ts"
+    const statusCol = isException ? "error_status" : "trigger_status"
 
-  if (filters.exceptions) {
-    conditions.push(
-      database.connection`el.error_resolved_ts BETWEEN ${filters.fromDate} AND ${filters.toDate} AND el.error_status = ${ResolutionStatusNumber.Resolved}`
-    )
-  }
-
-  if (filters.triggers) {
-    conditions.push(
-      database.connection`el.trigger_resolved_ts BETWEEN ${filters.fromDate} AND ${filters.toDate} AND el.trigger_status = ${ResolutionStatusNumber.Resolved}`
-    )
-  }
-
-  const query = database.connection<CaseRowForReport[]>`
-    SELECT
-      el.asn,
-      el.ptiurn,
-      el.defendant_name,
-      el.court_date,
-      el.court_name,
-      el.court_room,
-      el.court_reference,
-      el.error_resolved_by,
-      el.error_resolved_ts,
-      el.trigger_resolved_by,
-      el.trigger_resolved_ts,
-
-      COALESCE(notes_agg.notes, '[]'::json) AS notes
-    FROM
-      br7own.error_list el
+    return database.connection`
+      SELECT
+        ${isException ? "Exception" : "Trigger"}::text as record_type,
+        el.${database.connection(resolvedByCol)} as resolver,
+        el.error_id,
+        el.asn,
+        el.ptiurn,
+        el.defendant_name,
+        el.court_name,
+        el.court_room,
+        el.court_date,
+        el.court_reference,
+        el.msg_received_ts,
+        el.${database.connection(resolvedTsCol)} as resolved_ts,
+        COALESCE(notes_agg.notes, '[]'::json) AS notes
+      FROM
+        br7own.error_list el
       LEFT JOIN LATERAL (
         SELECT json_agg(
           json_build_object(
@@ -57,13 +50,38 @@ export const exceptionsReport = async (
         FROM br7own.error_list_notes n
         WHERE n.error_id = el.error_id
       ) AS notes_agg ON true
-    WHERE
-      ${conditions[0]}
-      ${conditions.length > 1 ? database.connection` OR ${conditions[1]}` : database.connection``}
-  `
+      WHERE
+        el.${database.connection(resolvedTsCol)} BETWEEN ${filters.fromDate} AND ${filters.toDate}
+        AND el.${database.connection(statusCol)} = ${ResolutionStatusNumber.Resolved}
+    `
+  }
+
+  const parts = []
+
+  if (filters.exceptions) {
+    parts.push(createQueryPart("Exceptions"))
+  }
+
+  if (filters.triggers) {
+    parts.push(createQueryPart("Triggers"))
+  }
+
+  if (parts.length === 0) {
+    return
+  }
+
+  let combinedParts: PendingQuery<Row[]>
+
+  if (parts.length === 1) {
+    combinedParts = parts[0]
+  } else {
+    combinedParts = database.connection`${parts[0]} UNION ALL ${parts[1]}`
+  }
+
+  const fullQuery = database.connection<CaseRowForReport[]>`${combinedParts}`
 
   try {
-    await query.cursor(100, async (rows: CaseRowForReport[]) => {
+    await fullQuery.cursor(100, async (rows) => {
       await processChunk(rows.map(processExceptions))
     })
   } catch (err) {
