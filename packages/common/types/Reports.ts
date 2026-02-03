@@ -8,8 +8,8 @@ export const BaseReportQuerySchema = z.object({
 })
 
 export const ExceptionReportQuerySchema = BaseReportQuerySchema.extend({
-  exceptions: z.coerce.boolean(),
-  triggers: z.coerce.boolean()
+  exceptions: z.enum(["true", "false"]).transform((val) => val === "true"),
+  triggers: z.enum(["true", "false"]).transform((val) => val === "true")
 })
 
 export type ExceptionReportQuery = z.infer<typeof ExceptionReportQuerySchema>

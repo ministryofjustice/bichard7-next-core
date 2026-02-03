@@ -12,6 +12,20 @@ export const exceptionsReport = async (
   filters: ExceptionReportQuery,
   processChunk: (rows: CaseForReport[]) => Promise<void>
 ): Promise<void> => {
+  const conditions = []
+
+  if (filters.exceptions) {
+    conditions.push(
+      database.connection`el.error_resolved_ts BETWEEN ${filters.fromDate} AND ${filters.toDate} AND el.error_status = ${ResolutionStatusNumber.Resolved}`
+    )
+  }
+
+  if (filters.triggers) {
+    conditions.push(
+      database.connection`el.trigger_resolved_ts BETWEEN ${filters.fromDate} AND ${filters.toDate} AND el.trigger_status = ${ResolutionStatusNumber.Resolved}`
+    )
+  }
+
   const query = database.connection<CaseRowForReport[]>`
     SELECT
       el.asn,
@@ -21,8 +35,6 @@ export const exceptionsReport = async (
       el.court_name,
       el.court_room,
       el.court_reference,
-      el.create_ts,
-      el.annotated_msg,
       el.error_resolved_by,
       el.error_resolved_ts,
       el.trigger_resolved_by,
@@ -46,9 +58,8 @@ export const exceptionsReport = async (
         WHERE n.error_id = el.error_id
       ) AS notes_agg ON true
     WHERE
-      el.court_date BETWEEN ${filters.fromDate} AND ${filters.toDate}
-      ${filters.exceptions ? database.connection`AND el.error_status = ${ResolutionStatusNumber.Resolved}` : database.connection``}
-      ${filters.triggers ? database.connection`AND el.trigger_status = ${ResolutionStatusNumber.Resolved}` : database.connection``}
+      ${conditions[0]}
+      ${conditions.length > 1 ? database.connection` OR ${conditions[1]}` : database.connection``}
   `
 
   try {

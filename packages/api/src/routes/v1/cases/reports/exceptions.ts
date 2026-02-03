@@ -8,7 +8,8 @@ import { CaseForReportSchema } from "@moj-bichard7/common/types/Case"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { ExceptionReportQuerySchema } from "@moj-bichard7/common/types/Reports"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import { FORBIDDEN, OK, UNPROCESSABLE_ENTITY } from "http-status"
+import { isAfter } from "date-fns"
+import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import { Readable } from "node:stream"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
@@ -51,11 +52,11 @@ const handler = async ({ database, query, reply, user }: HandlerProps) => {
   }
 
   if (!query.triggers && !query.exceptions) {
-    return reply.code(UNPROCESSABLE_ENTITY).send({
-      code: `${UNPROCESSABLE_ENTITY}`,
-      message: "Exceptions or Triggers need to selected",
-      statusCode: UNPROCESSABLE_ENTITY
-    })
+    return reply.code(BAD_REQUEST).send()
+  }
+
+  if (isAfter(query.fromDate, query.toDate)) {
+    return reply.code(BAD_REQUEST).send()
   }
 
   const stream = new Readable({ read() {} })
