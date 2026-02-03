@@ -1,18 +1,18 @@
-import type { AuditDto, AuditRow } from "@moj-bichard7/common/types/Audit"
+import type { Audit, AuditDto } from "@moj-bichard7/common/types/Audit"
 
 import { format } from "date-fns"
 
-export const convertAuditToDto = (auditRow: AuditRow): AuditDto => {
+export const convertAuditToDto = (audit: Audit): AuditDto => {
   return {
-    auditId: auditRow.audit_id,
-    completedWhen: auditRow.completed_when?.toISOString() ?? null,
-    createdBy: auditRow.created_by,
-    createdWhen: auditRow.created_when.toISOString(),
-    fromDate: format(auditRow.from_date, "yyyy-MM-dd"),
-    includedTypes: auditRow.included_types,
-    resolvedByUsers: auditRow.resolved_by_users,
-    toDate: format(auditRow.to_date, "yyyy-MM-dd"),
-    triggerTypes: auditRow.trigger_types,
-    volumeOfCases: auditRow.volume_of_cases
+    auditId: audit.audit_id,
+    completedWhen: audit.completed_when?.toISOString() ?? null,
+    createdBy: audit.created_by,
+    createdWhen: audit.created_when.toISOString(),
+    fromDate: format(audit.from_date, "yyyy-MM-dd"),
+    includedTypes: audit.included_types,
+    resolvedByUsers: audit.resolved_by_users,
+    toDate: format(audit.to_date, "yyyy-MM-dd"),
+    triggerTypes: audit.trigger_types,
+    volumeOfCases: audit.volume_of_cases
   }
 }
