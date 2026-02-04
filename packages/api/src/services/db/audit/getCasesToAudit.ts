@@ -23,7 +23,7 @@ export async function getCasesToAudit(
   [x] Included types should be an OR filter not an AND - ticking both does not mean it needs both, just one or the other
   [x] Triggers or exceptions resolved by user (from loop)
   [x] Court should be visible by the user (sending the request)
-  [] Force should be visible by the user (sending the request)
+  [x] Force should be visible by the user (sending the request)
    */
   const sql = database.connection
 
@@ -32,14 +32,15 @@ export async function getCasesToAudit(
           error_id
         FROM 
           br7own.error_list
+        WHERE
+          court_code IN (${user.visibleCourts})
+          AND org_for_police_filter IN (${user.visibleForces})
     `
 
   const resolvedByUsers = createAudit.resolvedByUsers ?? []
   const results = await Promise.all(
     resolvedByUsers.map(async (resolvedByUsername) => {
-      let filter = sql`
-            court_code IN (${user.visibleCourts})
-        `
+      let filter = sql``
       if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
         filter = sql`${filter} AND (trigger_resolved_by = ${resolvedByUsername} OR error_resolved_by = ${resolvedByUsername})`
       } else if (createAudit.includedTypes.includes("Triggers")) {
@@ -48,7 +49,7 @@ export async function getCasesToAudit(
         filter = sql`${filter} AND error_resolved_by = ${resolvedByUsername}`
       }
 
-      const results = await sql<{ error_id: number }[]>`${baseQuery} WHERE ${filter}`.catch((error: Error) => error)
+      const results = await sql<{ error_id: number }[]>`${baseQuery} ${filter}`.catch((error: Error) => error)
       if (isError(results)) {
         return new Error("Failed to get cases to audit")
       }
