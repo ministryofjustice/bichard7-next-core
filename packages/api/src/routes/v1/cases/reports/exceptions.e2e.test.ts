@@ -1,10 +1,11 @@
-import type { CaseForReport } from "@moj-bichard7/common/types/Case"
+import type { ExceptionReport } from "@moj-bichard7/common/types/Reports"
 import type { FastifyInstance } from "fastify"
 
+import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { subDays } from "date-fns"
+import { format, subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -38,6 +39,9 @@ const streamToJson = async (response: Response) => {
 
   return JSON.parse(result)
 }
+
+const formatDate = "yyyy-MM-dd" as const
+const formatDateTime = `${formatDate} HH:mm` as const
 
 describe("exceptions report e2e", () => {
   const endpoint = V1.CasesReportsExceptions
@@ -81,12 +85,14 @@ describe("exceptions report e2e", () => {
 
     expect(json).toHaveLength(1)
 
-    const reportItem = json[0] as CaseForReport
+    const exceptionReport = json[0] as ExceptionReport
+    const reportItem = exceptionReport.cases[0]
     const caseObj = cases[0]
 
+    expect(exceptionReport.username).toBe(caseObj.errorResolvedBy)
     expect(reportItem.resolver).toBe(caseObj.errorResolvedBy)
-    expect(reportItem.resolvedAt).toBe(caseObj.errorResolvedAt!.toISOString())
-    expect(reportItem.hearingDate).toBe(caseObj.courtDate!.toISOString())
+    expect(format(reportItem.resolvedAt, formatDateTime)).toBe(format(caseObj.errorResolvedAt!, formatDateTime))
+    expect(format(reportItem.hearingDate, formatDate)).toBe(format(caseObj.courtDate!, formatDate))
     expect(reportItem.type).toBe("Exception")
   })
 
@@ -113,12 +119,13 @@ describe("exceptions report e2e", () => {
 
     expect(json).toHaveLength(1)
 
-    const reportItem = json[0] as CaseForReport
+    const exceptionReport = json[0] as ExceptionReport
+    const reportItem = exceptionReport.cases[0]
     const caseObj = cases[0]
 
     expect(reportItem.resolver).toBe(caseObj.triggerResolvedBy)
-    expect(reportItem.resolvedAt).toBe(caseObj.triggerResolvedAt!.toISOString())
-    expect(reportItem.hearingDate).toBe(caseObj.courtDate!.toISOString())
+    expect(format(reportItem.resolvedAt, formatDateTime)).toBe(format(caseObj.triggerResolvedAt!, formatDateTime))
+    expect(format(reportItem.hearingDate, formatDate)).toBe(format(caseObj.courtDate!, formatDate))
     expect(reportItem.type).toBe("Trigger")
   })
 
@@ -153,27 +160,29 @@ describe("exceptions report e2e", () => {
 
     expect(json).toHaveLength(2)
 
-    const reportItemEx = json[0] as CaseForReport
+    const exceptionReportEx = json[0] as ExceptionReport
+    const reportItemEx = exceptionReportEx.cases[0]
     const caseObjEx = cases[1]
 
     expect(reportItemEx.resolver).toBe(caseObjEx.errorResolvedBy)
-    expect(reportItemEx.resolvedAt).toBe(caseObjEx.errorResolvedAt!.toISOString())
-    expect(reportItemEx.hearingDate).toBe(caseObjEx.courtDate!.toISOString())
+    expect(format(reportItemEx.resolvedAt, formatDateTime)).toBe(format(caseObjEx.errorResolvedAt!, formatDateTime))
+    expect(format(reportItemEx.hearingDate, formatDate)).toBe(format(caseObjEx.courtDate!, formatDate))
     expect(reportItemEx.type).toBe("Exception")
 
-    const reportItemTr = json[1] as CaseForReport
+    const exceptionReportTr = json[1] as ExceptionReport
+    const reportItemTr = exceptionReportTr.cases[0]
     const caseObjTr = cases[0]
 
     expect(reportItemTr.resolver).toBe(caseObjTr.triggerResolvedBy)
-    expect(reportItemTr.resolvedAt).toBe(caseObjTr.triggerResolvedAt!.toISOString())
-    expect(reportItemTr.hearingDate).toBe(caseObjTr.courtDate!.toISOString())
+    expect(format(reportItemTr.resolvedAt, formatDateTime)).toBe(format(caseObjTr.triggerResolvedAt!, formatDateTime))
+    expect(format(reportItemTr.hearingDate, formatDate)).toBe(format(caseObjTr.courtDate!, formatDate))
     expect(reportItemTr.type).toBe("Trigger")
   })
 
   it("gets exceptions and triggers that are resolved on one case", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
 
-    await createCases(helper.postgres, 3, {
+    const [caseObj] = await createCases(helper.postgres, 3, {
       0: {
         errorResolvedAt: subDays(new Date(), 1),
         errorStatus: ResolutionStatusNumber.Resolved,
@@ -194,9 +203,12 @@ describe("exceptions report e2e", () => {
 
     expect(response.status).toBe(200)
 
-    const json = await streamToJson(response)
+    const json = (await streamToJson(response)) as ExceptionReport[]
 
-    expect(json).toHaveLength(2)
+    expect(json).toHaveLength(1)
+    expect(json[0].username).toBe(caseObj.errorResolvedBy)
+    expect(json[0].username).toBe(caseObj.triggerResolvedBy)
+    expect(json[0].cases).toHaveLength(2)
   })
 
   it("gets triggers when exceptions are filtered", async () => {

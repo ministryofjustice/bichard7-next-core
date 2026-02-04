@@ -1,5 +1,9 @@
-import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Case"
-import type { ExceptionReportQuery, ExceptionReportType } from "@moj-bichard7/common/types/Reports"
+import type {
+  ExceptionReport,
+  ExceptionReportQuery,
+  ExceptionReportType,
+  UserReportRow
+} from "@moj-bichard7/common/types/Reports"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { PendingQuery, Row } from "postgres"
 
@@ -7,14 +11,14 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-import { processExceptions } from "../../../../useCases/cases/reports/processExceptions"
+import { processUsers } from "../../../../useCases/cases/reports/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
 export const exceptionsReport = async (
   database: DatabaseConnection,
   user: User,
   filters: ExceptionReportQuery,
-  processChunk: (rows: CaseForReport[]) => Promise<void>
+  processChunk: (rows: ExceptionReport[]) => Promise<void>
 ): Promise<void> => {
   const createQueryPart = (type: ExceptionReportType) => {
     const isException = type === "Exceptions"
@@ -82,15 +86,19 @@ export const exceptionsReport = async (
     combinedParts = database.connection`${parts[0]} UNION ALL ${parts[1]}`
   }
 
-  const fullQuery = database.connection<CaseRowForReport[]>`
+  const fullQuery = database.connection<UserReportRow[]>`
     WITH combined_data AS (${combinedParts})
-    SELECT * FROM combined_data cb
-    ORDER BY resolver, type DESC, resolved_ts, error_id
+    SELECT
+      cb.resolver as username,
+      json_agg(cb.* ORDER BY cb.type DESC, cb.resolved_ts, cb.error_id) as cases
+    FROM combined_data cb
+    GROUP BY cb.resolver
+    ORDER BY cb.resolver
   `
 
   try {
-    await fullQuery.cursor(100, async (rows) => {
-      await processChunk(rows.map(processExceptions))
+    await fullQuery.cursor(50, async (userRows) => {
+      await processChunk(processUsers(userRows))
     })
   } catch (err) {
     throw new Error(`Error fetching report: ${(err as Error).message}`)

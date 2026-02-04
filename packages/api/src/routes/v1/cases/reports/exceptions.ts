@@ -1,12 +1,14 @@
-import type { ExceptionReportQuery } from "@moj-bichard7/common/types/Reports"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { CaseForReportSchema } from "@moj-bichard7/common/types/Case"
 import Permission from "@moj-bichard7/common/types/Permission"
-import { ExceptionReportQuerySchema } from "@moj-bichard7/common/types/Reports"
+import {
+  type ExceptionReportQuery,
+  ExceptionReportQuerySchema,
+  ExceptionReportSchema
+} from "@moj-bichard7/common/types/Reports"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { isAfter } from "date-fns"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
@@ -37,7 +39,7 @@ const schema = {
   ...auth,
   querystring: ExceptionReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Exceptions Report", CaseForReportSchema.array()),
+    [OK]: jsonResponse("Exceptions Report", ExceptionReportSchema.array()),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

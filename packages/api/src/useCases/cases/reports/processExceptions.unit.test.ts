@@ -1,4 +1,4 @@
-import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Case"
+import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Reports"
 
 import * as convertCaseModule from "../../dto/convertCaseToDto"
 import { processExceptions } from "./processExceptions"
