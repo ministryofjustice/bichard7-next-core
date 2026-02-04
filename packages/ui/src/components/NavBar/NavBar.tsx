@@ -5,7 +5,7 @@ import { isNavLinkForPath } from "utils/nav/isNavLinkForPath"
 
 interface NavItemProps {
   name: string
-  link: string
+  link: NavLink
   newTab?: boolean
 }
 
