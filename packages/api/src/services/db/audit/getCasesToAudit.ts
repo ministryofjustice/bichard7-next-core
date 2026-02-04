@@ -5,10 +5,15 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+export type CasesToAuditByUser = {
+  caseIds: number[]
+  username: string
+}
+
 export async function getCasesToAudit(
   database: WritableDatabaseConnection,
   createAudit: CreateAudit
-): PromiseResult<number[]> {
+): PromiseResult<CasesToAuditByUser[]> {
   /*
   If included types has triggers then include cases with triggers. If specific trigger types have been included in the search criteria then filter these cases down further to only include cases that have one or more of these triggers.
 If included types has exceptions then include cases with exceptions
@@ -18,15 +23,35 @@ Court should be visible by the user (sending the request)
 Force should be visible by the user (sending the request)
    */
   const sql = database.connection
-  const results = await sql<{ error_id: number }[]>`
-        SELECT error_id
-        FROM br7own.error_list
-    `.catch((error: Error) => error)
+
+  const baseQuery = sql<{ error_id: number }[]>`
+        SELECT 
+          error_id
+        FROM 
+          br7own.error_list
+    `
+
+  let filter = sql``
+  if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
+    filter = sql`${filter} (trigger_resolved_by = 'user1' OR error_resolved_by = 'user1')`
+  } else if (createAudit.includedTypes.includes("Triggers")) {
+    filter = sql`${filter} trigger_resolved_by = 'user1'`
+  } else if (createAudit.includedTypes.includes("Exceptions")) {
+    filter = sql`${filter} error_resolved_by = 'user1'`
+  }
+
+  const results = await sql<{ error_id: number }[]>`${baseQuery} WHERE ${filter}`.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get cases to audit")
   }
 
-  return results.map((row) => row.error_id)
+  const caseIds = results.map((row) => row.error_id)
+  return [
+    {
+      caseIds,
+      username: "user1"
+    }
+  ]
   // const caseIds = await Promise.all(
   //   (createAudit.resolvedByUsers ?? []).map(async (username) => {
   //     const results = await sql<{ caseId: number }>`
