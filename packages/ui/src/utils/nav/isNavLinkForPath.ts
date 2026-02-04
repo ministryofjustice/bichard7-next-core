@@ -1,6 +1,6 @@
 import { NavLink } from "types/NavLinks"
 
-export function isNavLinkForPath(path: string, navLink: string): boolean {
+export function isNavLinkForPath(path: string, navLink: NavLink): boolean {
   switch (navLink) {
     case NavLink.Audit:
       return path.includes("audit")
