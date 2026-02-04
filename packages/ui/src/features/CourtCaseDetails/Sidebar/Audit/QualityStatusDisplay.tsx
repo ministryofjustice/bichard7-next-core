@@ -12,8 +12,8 @@ interface Props {
 export const QualityStatusDisplay = ({ hasTriggers, hasExceptions }: Props) => {
   const { courtCase } = useCourtCase()
 
-  const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
   const triggerQuality = triggerQualityValues[courtCase.triggerQualityChecked ?? 1]
+  const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
 
   return (
     <Card heading={"Quality status"}>
