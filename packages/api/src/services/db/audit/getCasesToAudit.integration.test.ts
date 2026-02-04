@@ -1,11 +1,14 @@
 import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { format, subDays, subWeeks } from "date-fns"
 
 import type { CasesToAuditByUser } from "./getCasesToAudit"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
+import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { getCasesToAudit } from "./getCasesToAudit"
@@ -262,6 +265,54 @@ describe("getCasesToAudit", () => {
       includedTypes: ["Triggers", "Exceptions"],
       resolvedByUsers: [username],
       toDate: format(new Date(), "yyyy-MM-dd"),
+      volumeOfCases: 20
+    } satisfies CreateAudit
+    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+
+    expect(isError(casesToAudit)).toBe(false)
+    expect(casesToAudit).toHaveLength(1)
+    expect((casesToAudit as CasesToAuditByUser[])[0].username).toBe(username)
+    expect((casesToAudit as CasesToAuditByUser[])[0].caseIds).toEqual([cases[0].errorId])
+  })
+
+  it("should return only cases with triggers in the included triggers", async () => {
+    const user = await createUser(testDatabaseGateway)
+    const username = "user1"
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 1,
+        orgForPoliceFilter: user.visibleForces[0]
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 2,
+        orgForPoliceFilter: user.visibleForces[0]
+      })
+    ])
+    await Promise.all([
+      createTriggers(testDatabaseGateway, 1, [
+        {
+          resolvedBy: username,
+          status: ResolutionStatusNumber.Resolved,
+          triggerCode: TriggerCode.TRPR0001
+        }
+      ]),
+      createTriggers(testDatabaseGateway, 2, [
+        {
+          resolvedBy: username,
+          status: ResolutionStatusNumber.Resolved,
+          triggerCode: TriggerCode.TRPR0017
+        }
+      ])
+    ])
+
+    const createAudit = {
+      fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+      includedTypes: ["Triggers"],
+      resolvedByUsers: [username],
+      toDate: format(new Date(), "yyyy-MM-dd"),
+      triggerTypes: [TriggerCode.TRPR0001],
       volumeOfCases: 20
     } satisfies CreateAudit
     const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)

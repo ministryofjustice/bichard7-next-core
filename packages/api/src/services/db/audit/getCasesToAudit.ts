@@ -31,7 +31,7 @@ export async function getCasesToAudit(
         SELECT 
           error_id
         FROM 
-          br7own.error_list
+          br7own.error_list el
         WHERE
           court_code IN (${user.visibleCourts})
           AND org_for_police_filter IN (${user.visibleForces})
@@ -41,12 +41,31 @@ export async function getCasesToAudit(
   const results = await Promise.all(
     resolvedByUsers.map(async (resolvedByUsername) => {
       let filter = sql``
+
+      let triggerFilter = sql`trigger_resolved_by = ${resolvedByUsername}`
+      if ((createAudit.triggerTypes?.length ?? 0) > 0) {
+        triggerFilter = sql`(
+            ${triggerFilter}
+            AND (
+              SELECT 
+                COUNT(*)
+              FROM 
+                br7own.error_list_triggers elt
+              WHERE 
+                elt.error_id = el.error_id
+                AND elt.trigger_code IN (${createAudit.triggerTypes as string[]})
+            ) > 0 
+        )`
+      }
+
+      const exceptionsFilter = sql`error_resolved_by = ${resolvedByUsername}`
+
       if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
-        filter = sql`${filter} AND (trigger_resolved_by = ${resolvedByUsername} OR error_resolved_by = ${resolvedByUsername})`
+        filter = sql`${filter} AND (${triggerFilter} OR ${exceptionsFilter})`
       } else if (createAudit.includedTypes.includes("Triggers")) {
-        filter = sql`${filter} AND trigger_resolved_by = ${resolvedByUsername}`
+        filter = sql`${filter} AND ${triggerFilter}`
       } else if (createAudit.includedTypes.includes("Exceptions")) {
-        filter = sql`${filter} AND error_resolved_by = ${resolvedByUsername}`
+        filter = sql`${filter} AND ${exceptionsFilter}`
       }
 
       const results = await sql<{ error_id: number }[]>`${baseQuery} ${filter}`.catch((error: Error) => error)
