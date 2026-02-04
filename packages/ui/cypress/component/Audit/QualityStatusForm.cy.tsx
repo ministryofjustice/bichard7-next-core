@@ -399,8 +399,8 @@ describe("QualityStatusForm", () => {
     )
 
     cy.get("select[name='exception-quality']").should("exist")
-    cy.get("b[id='trigger-quality-label']").should("exist")
     cy.get("select[name='trigger-quality']").should("not.exist")
+    cy.get(".govuk-summary-list__row").contains("Trigger Quality: ").should("be.visible")
 
     cy.get("select[name='exception-quality']").select(String(newCourtCase.errorQualityChecked))
     cy.get("textarea[name='quality-status-note']").type("Test notes")
@@ -446,8 +446,8 @@ describe("QualityStatusForm", () => {
     )
 
     cy.get("select[name='trigger-quality']").should("exist")
-    cy.get("b[id='exception-quality-label']").should("exist")
     cy.get("select[name='exception-quality']").should("not.exist")
+    cy.get(".govuk-summary-list__row").contains("Exception Quality: ").should("be.visible")
 
     cy.get("select[name='trigger-quality']").select(String(newCourtCase.triggerQualityChecked))
     cy.get("textarea[name='quality-status-note']").type("Test notes")
