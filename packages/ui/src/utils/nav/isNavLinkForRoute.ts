@@ -9,10 +9,7 @@ export function isNavLinkForRoute(router: NextRouter, navLink: NavLink): boolean
     case NavLink.Audit:
       return previousPath.includes("/audit") || pathname.includes("/audit")
     case NavLink.CaseList:
-      return (
-        !previousPath.includes("/audit") &&
-        (pathname.includes("/court-cases") || pathname.startsWith("/?") || pathname === "/")
-      )
+      return !previousPath.includes("/audit") && (pathname.includes("/court-cases") || pathname === "/")
     default:
       return false
   }

@@ -18,11 +18,7 @@ describe("navigation links", () => {
 
   it("should return true for the case list nav link", () => {
     expect(isNavLinkForRoute(mockRouter({ pathname: "/" }), NavLink.CaseList)).toBeTruthy()
-    expect(isNavLinkForRoute(mockRouter({ pathname: "/?order=desc&orderBy=courtDate" }), NavLink.CaseList)).toBeTruthy()
     expect(isNavLinkForRoute(mockRouter({ pathname: "/court-cases/{0}" }), NavLink.CaseList)).toBeTruthy()
-    expect(
-      isNavLinkForRoute(mockRouter({ pathname: "/court-cases/?order=desc&orderBy=courtDate" }), NavLink.CaseList)
-    ).toBeTruthy()
   })
 
   it("should return false for non-audit page audit link", () => {
