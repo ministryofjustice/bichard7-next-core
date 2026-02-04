@@ -105,4 +105,72 @@ describe("getCasesToAudit", () => {
     expect((casesToAudit as CasesToAuditByUser[])[0].username).toBe(username)
     expect((casesToAudit as CasesToAuditByUser[])[0].caseIds).toEqual([expectedCase.errorId])
   })
+
+  it("should return only cases for the specified user", async () => {
+    const username = "user1"
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        errorId: 1,
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: username
+      }),
+      createCase(testDatabaseGateway, {
+        errorId: 2,
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: "another_user"
+      })
+    ])
+
+    const createAudit = {
+      fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+      includedTypes: ["Triggers", "Exceptions"],
+      resolvedByUsers: [username],
+      toDate: format(new Date(), "yyyy-MM-dd"),
+      volumeOfCases: 20
+    } satisfies CreateAudit
+    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit)
+
+    expect(isError(casesToAudit)).toBe(false)
+    expect(casesToAudit).toHaveLength(1)
+    expect((casesToAudit as CasesToAuditByUser[])[0].username).toBe(username)
+    expect((casesToAudit as CasesToAuditByUser[])[0].caseIds).toEqual([cases[0].errorId])
+  })
+
+  it("should return cases for multiple users", async () => {
+    const username = "user1"
+    const anotherUsername = "user2"
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        errorId: 1,
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: username
+      }),
+      createCase(testDatabaseGateway, {
+        errorId: 2,
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: anotherUsername
+      }),
+      createCase(testDatabaseGateway, {
+        errorId: 3,
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: "excluded_user"
+      })
+    ])
+
+    const createAudit = {
+      fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+      includedTypes: ["Triggers", "Exceptions"],
+      resolvedByUsers: [username, anotherUsername],
+      toDate: format(new Date(), "yyyy-MM-dd"),
+      volumeOfCases: 20
+    } satisfies CreateAudit
+    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit)
+
+    expect(isError(casesToAudit)).toBe(false)
+    expect(casesToAudit).toHaveLength(2)
+    expect((casesToAudit as CasesToAuditByUser[])[0].username).toBe(username)
+    expect((casesToAudit as CasesToAuditByUser[])[0].caseIds).toEqual([cases[0].errorId])
+    expect((casesToAudit as CasesToAuditByUser[])[1].username).toBe(anotherUsername)
+    expect((casesToAudit as CasesToAuditByUser[])[1].caseIds).toEqual([cases[1].errorId])
+  })
 })
