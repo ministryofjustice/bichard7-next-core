@@ -7,6 +7,7 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
+import { getCasesToAudit } from "./getCasesToAudit"
 
 export const createAudit = async (
   database: WritableDatabaseConnection,
@@ -43,6 +44,9 @@ export const createAudit = async (
       return new Error("Failed to create audit record")
     }
 
-    return convertAuditToDto(results[0])
+    const audit = results[0]
+    const caseIds = await getCasesToAudit(tx, createAudit)
+
+    return convertAuditToDto(audit)
   })
 }
