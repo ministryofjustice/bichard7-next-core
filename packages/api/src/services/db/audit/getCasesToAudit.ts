@@ -16,25 +16,16 @@ export async function getCasesToAudit(
   createAudit: CreateAudit,
   user: User
 ): PromiseResult<CasesToAuditByUser[]> {
-  /*
-  [x] If included types has triggers then include cases with triggers.
-    [ ] If specific trigger types have been included in the search criteria then filter these cases down further to only include cases that have one or more of these triggers.
-  [x] If included types has exceptions then include cases with exceptions
-  [x] Included types should be an OR filter not an AND - ticking both does not mean it needs both, just one or the other
-  [x] Triggers or exceptions resolved by user (from loop)
-  [x] Court should be visible by the user (sending the request)
-  [x] Force should be visible by the user (sending the request)
-   */
   const sql = database.connection
 
-  const baseQuery = sql<{ error_id: number }[]>`
-        SELECT 
-          error_id
-        FROM 
-          br7own.error_list el
-        WHERE
-          court_code IN (${user.visibleCourts})
-          AND org_for_police_filter IN (${user.visibleForces})
+  const baseQuery = sql`
+    SELECT 
+      error_id
+    FROM 
+      br7own.error_list el
+    WHERE
+      court_code IN (${user.visibleCourts})
+      AND org_for_police_filter IN (${user.visibleForces})
     `
 
   const resolvedByUsers = createAudit.resolvedByUsers ?? []
