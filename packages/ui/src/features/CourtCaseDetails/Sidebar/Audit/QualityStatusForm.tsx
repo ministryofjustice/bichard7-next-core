@@ -1,3 +1,5 @@
+import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import axios from "axios"
 import { Button } from "components/Buttons/Button"
 import { Card } from "components/Card"
@@ -5,6 +7,7 @@ import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
+import { InfoRow } from "features/CourtCaseDetails/Tabs/Panels/InfoRow"
 import { useRouter } from "next/router"
 import { useActionState, useState, type FormEvent } from "react"
 import { useFormStatus } from "react-dom"
@@ -12,8 +15,6 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { ButtonContainer, DropdownContainer } from "./QualityStatusForm.styles"
 import { TriggerQualityDropdown } from "./TriggerQualityDropdown"
-import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
-import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 
 const initialFormState = {
   errorMessage: null as string | null,
@@ -101,6 +102,9 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
 
   const [submitResult, submitAction] = useActionState(submit, initialFormState)
 
+  const triggerQuality = triggerQualityValues[courtCase.triggerQualityChecked ?? 1]
+  const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
+
   return (
     <Card heading={"Set quality status"}>
       <form
@@ -113,21 +117,9 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
           </p>
         ) : null}
         <fieldset className="govuk-fieldset">
-          {hasTriggers && triggerQualityAlreadySet && (
-            <p>
-              <b id="trigger-quality-label">{"Trigger Quality: "}</b>
-              <span aria-labelledby="trigger-quality-label">
-                {triggerQualityValues[courtCase.triggerQualityChecked ?? 1]}
-              </span>
-            </p>
-          )}
+          {hasTriggers && triggerQualityAlreadySet && <InfoRow label="Trigger Quality: " value={triggerQuality} />}
           {hasExceptions && exceptionQualityAlreadySet && (
-            <p>
-              <b id="exception-quality-label">{"Exception Quality: "}</b>
-              <span aria-labelledby="exception-quality-label">
-                {exceptionQualityValues[courtCase.errorQualityChecked ?? 1]}
-              </span>
-            </p>
+            <InfoRow label="Exception Quality: " value={exceptionQuality} />
           )}
           <DropdownContainer>
             {hasTriggers && !triggerQualityAlreadySet && (
