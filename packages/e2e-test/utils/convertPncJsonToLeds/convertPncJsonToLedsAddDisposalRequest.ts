@@ -1,4 +1,4 @@
-import { convertDate } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
+import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import mapCourt from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/mapCourt"
 import { parseDisposalDuration } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/parseDisposalDuration"
 import { toTitleCase } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/toTitleCase"
@@ -54,11 +54,42 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
         disposalCode: Number(disposal.type),
         disposalDuration: parseDisposalDuration(disposal.qtyDuration),
         disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
-        disposalEffectiveDate: disposal.qtyDate,
+        disposalEffectiveDate: convertDate(disposal.qtyDate),
         disposalQualifiers: disposal.qualifiers.trim().match(/.{1,2}/g) || [],
-        // disposalQualifierDuration: {}, /// <-----needs to check
         disposalText: disposal.text
+        // disposalQualifierDuration: {}, /// <-----needs to check
       }))
-    }))
+    })),
+    additionalArrestOffences: [
+      {
+        asn: pncJson.additionalOffences.arrestSummonsNumber,
+        additionalOffences: pncJson.additionalOffences.offences.map((offence) => ({
+          courtOffenceSequenceNumber: Number(offence.crimeOffenceReferenceNumber), /// <-----needs to check
+          cjsOffenceCode: offence.cjsOffenceCode,
+          plea: toTitleCase(offence.plea) as Plea,
+          adjudication: toTitleCase(offence.adjudication) as Adjudication,
+          offenceDescription: offence.offenceDescription,
+          committedOnBail: Boolean(offence.committedOnBail),
+          locationFsCode: offence.offenceLocationFSCode,
+          // locationText: offence.locationOfOffence, /// <-----needs to check
+          dateOfSentence: offence.dateOfSentence,
+          locationAddress: { addressLines: [offence.locationOfOffence] }, /// <-----needs to check
+          offenceTic: Number(offence.offenceTICNumber),
+          offenceStartDate: convertDate(offence.offenceStartDate),
+          offenceStartTime: offence.offenceStartTime ? convertTime(offence.offenceStartTime) : undefined,
+          offenceEndDate: offence.offenceEndDate ? convertDate(offence.offenceEndDate) : undefined,
+          offenceEndTime: offence.offenceEndTime ? convertTime(offence.offenceEndTime) : undefined,
+          disposalResults: offence.disposals.map((disposal) => ({
+            disposalCode: Number(disposal.type),
+            disposalDuration: parseDisposalDuration(disposal.qtyDuration),
+            disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
+            disposalEffectiveDate: convertDate(disposal.qtyDate),
+            disposalQualifiers: disposal.qualifiers.trim().match(/.{1,2}/g) || [],
+            disposalText: disposal.text
+            // disposalQualifierDuration: {}, /// <-----needs to check
+          }))
+        }))
+      }
+    ]
   }
 }
