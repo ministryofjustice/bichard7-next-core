@@ -13,12 +13,6 @@ const courtCase = {
   triggerCount: 1
 } as unknown as DisplayFullCourtCase
 
-const newCourtCase = {
-  ...courtCase,
-  triggerQualityChecked: 2,
-  errorQualityChecked: 6
-} as unknown as DisplayFullCourtCase
-
 describe("QualityStatusDisplay", () => {
   it("mounts", () => {
     cy.mount(
@@ -61,6 +55,7 @@ describe("QualityStatusDisplay", () => {
     cy.get(".govuk-summary-list__row").should("exist")
     cy.get(".govuk-summary-list__row").contains("Exception Quality: ").should("be.visible")
     cy.get(".govuk-summary-list__value").contains("Not Checked").should("be.visible")
+    cy.get(".govuk-summary-list__row").contains("Trigger Quality: ").should("not.exist")
   })
 
   it("allows display of trigger quality only", () => {
@@ -73,6 +68,7 @@ describe("QualityStatusDisplay", () => {
     cy.get(".govuk-summary-list__row").should("exist")
     cy.get(".govuk-summary-list__row").contains("Trigger Quality: ").should("be.visible")
     cy.get(".govuk-summary-list__value").contains("Not Checked").should("be.visible")
+    cy.get(".govuk-summary-list__row").contains("Exception Quality: ").should("not.exist")
   })
 
   it("renders trigger quality if set", () => {
@@ -82,7 +78,7 @@ describe("QualityStatusDisplay", () => {
           {
             courtCase: {
               ...courtCase,
-              triggerQualityChecked: newCourtCase.triggerQualityChecked
+              triggerQualityChecked: 2
             },
             amendments: {},
             savedAmendments: {}
@@ -97,6 +93,7 @@ describe("QualityStatusDisplay", () => {
     cy.get(".govuk-summary-list__row").should("exist")
     cy.get(".govuk-summary-list__row").contains("Trigger Quality: ").should("be.visible")
     cy.get(".govuk-summary-list__value").contains("Pass").should("be.visible")
+    cy.get(".govuk-summary-list__row").contains("Exception Quality: ").should("not.exist")
   })
 
   it("renders exception value if set", () => {
@@ -106,7 +103,7 @@ describe("QualityStatusDisplay", () => {
           {
             courtCase: {
               ...courtCase,
-              errorQualityChecked: newCourtCase.errorQualityChecked
+              errorQualityChecked: 6
             },
             amendments: {},
             savedAmendments: {}
@@ -121,5 +118,6 @@ describe("QualityStatusDisplay", () => {
     cy.get(".govuk-summary-list__row").should("exist")
     cy.get(".govuk-summary-list__row").contains("Exception Quality: ").should("be.visible")
     cy.get(".govuk-summary-list__value").contains("Manual Disposal Fail").should("be.visible")
+    cy.get(".govuk-summary-list__row").contains("Trigger Quality: ").should("not.exist")
   })
 })
