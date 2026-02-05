@@ -7,6 +7,7 @@ import esImport from "eslint-plugin-import"
 import jest from "eslint-plugin-jest"
 import mocha from "eslint-plugin-mocha"
 import perfectionist from "eslint-plugin-perfectionist"
+import nextPlugin from "@next/eslint-plugin-next"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -248,10 +249,19 @@ export default [
       "require-await": "off"
     }
   },
-  ...compat.extends("plugin:@next/next/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`])
-  })),
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`]),
+    plugins: {
+      '@next/next': nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+    },
+  },
+  // ...compat.extends("plugin:@next/next/recommended").map((config) => ({
+  //   ...config,
+  //   files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`])
+  // })),
   // Apply tsconfig for Next.js packages
   ...nextPackages.map((pkg) => createPackageConfig(pkg)),
   ...compat.extends("prettier", "plugin:prettier/recommended").map((config) => ({
