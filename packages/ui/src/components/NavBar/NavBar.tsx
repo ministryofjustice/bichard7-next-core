@@ -1,7 +1,7 @@
 import { useRouter } from "next/router"
 import { NavLink } from "types/NavLinks"
 import { MojNavContainer } from "./NavBar.styles"
-import { isNavLinkForRoute } from "utils/nav/isNavLinkForRoute"
+import { isNavLinkForCurrentRoute } from "utils/nav/isNavLinkForCurrentRoute"
 
 interface NavItemProps {
   name: string
@@ -17,7 +17,7 @@ interface NavBarProps {
 
 const NavItem: React.FC<NavItemProps> = ({ name, link, newTab }: NavItemProps) => {
   const router = useRouter()
-  const ariaCurrent = isNavLinkForRoute(router, link) ? "page" : undefined
+  const ariaCurrent = isNavLinkForCurrentRoute(router, link) ? "page" : undefined
 
   return (
     <li className="moj-primary-navigation__item">

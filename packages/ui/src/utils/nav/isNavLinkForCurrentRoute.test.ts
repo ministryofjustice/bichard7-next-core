@@ -1,12 +1,12 @@
 import { NavLink } from "types/NavLinks"
-import { isNavLinkForRoute } from "./isNavLinkForRoute"
+import { isNavLinkForCurrentRoute } from "./isNavLinkForCurrentRoute"
 import { createMockRouter } from "../../../test/helpers/createMockRouter"
 
 describe("navigation links", () => {
   it("should return false for non-case list nav link", () => {
-    expect(isNavLinkForRoute(createMockRouter({ pathname: "/bichard/audit/" }), NavLink.CaseList)).toBeFalsy()
+    expect(isNavLinkForCurrentRoute(createMockRouter({ pathname: "/bichard/audit/" }), NavLink.CaseList)).toBeFalsy()
     expect(
-      isNavLinkForRoute(
+      isNavLinkForCurrentRoute(
         createMockRouter({
           pathname: "/bichard/court-cases/{0}",
           query: { previousPath: "/bichard/audit/1234" }
@@ -17,21 +17,21 @@ describe("navigation links", () => {
   })
 
   it("should return true for the case list nav link", () => {
-    expect(isNavLinkForRoute(createMockRouter({ pathname: "/" }), NavLink.CaseList)).toBeTruthy()
-    expect(isNavLinkForRoute(createMockRouter({ pathname: "/court-cases/{0}" }), NavLink.CaseList)).toBeTruthy()
+    expect(isNavLinkForCurrentRoute(createMockRouter({ pathname: "/" }), NavLink.CaseList)).toBeTruthy()
+    expect(isNavLinkForCurrentRoute(createMockRouter({ pathname: "/court-cases/{0}" }), NavLink.CaseList)).toBeTruthy()
   })
 
   it("should return false for non-audit page audit link", () => {
-    expect(isNavLinkForRoute(createMockRouter({ pathname: "/bichard/" }), NavLink.Audit)).toBeFalsy()
+    expect(isNavLinkForCurrentRoute(createMockRouter({ pathname: "/bichard/" }), NavLink.Audit)).toBeFalsy()
   })
 
   it("should return true for audit page audit link", () => {
-    expect(isNavLinkForRoute(createMockRouter({ pathname: "/bichard/audit/" }), NavLink.Audit)).toBeTruthy()
+    expect(isNavLinkForCurrentRoute(createMockRouter({ pathname: "/bichard/audit/" }), NavLink.Audit)).toBeTruthy()
   })
 
   it("should return true for case list previous url querystring audit link", () => {
     expect(
-      isNavLinkForRoute(
+      isNavLinkForCurrentRoute(
         createMockRouter({
           pathname: "/bichard/court-cases/{0}",
           query: { previousPath: "/bichard/audit/1234" }
@@ -42,6 +42,6 @@ describe("navigation links", () => {
   })
 
   it("should return false for non-case list report nav link", () => {
-    expect(isNavLinkForRoute(createMockRouter({ pathname: "/bichard/" }), NavLink.Reports)).toBeFalsy()
+    expect(isNavLinkForCurrentRoute(createMockRouter({ pathname: "/bichard/" }), NavLink.Reports)).toBeFalsy()
   })
 })

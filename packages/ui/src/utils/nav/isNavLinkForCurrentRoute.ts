@@ -1,7 +1,7 @@
 import { NavLink } from "types/NavLinks"
 import type { NextRouter } from "next/router"
 
-export function isNavLinkForRoute(router: NextRouter, navLink: NavLink): boolean {
+export function isNavLinkForCurrentRoute(router: NextRouter, navLink: NavLink): boolean {
   const { query, pathname } = router
   const previousPath = query["previousPath"] ?? ""
 
