@@ -325,4 +325,51 @@ describe("getCasesToAudit", () => {
       }
     ])
   })
+
+  it("should return only cases when in the requested date range", async () => {
+    const user = await createUser(testDatabaseGateway)
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 1,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 2,
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0]
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 3,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerResolvedAt: subDays(new Date(), 100),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 4,
+        errorResolvedAt: subDays(new Date(), 100),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0]
+      })
+    ])
+    const createAudit = {
+      ...defaultCreateAudit
+    } satisfies CreateAudit
+
+    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+
+    expect(isError(casesToAudit)).toBe(false)
+    expect(casesToAudit as CasesToAuditByUser[]).toEqual([
+      {
+        caseIds: [cases[0], cases[1]].map((row) => row.errorId),
+        username: testUsername
+      }
+    ])
+  })
 })

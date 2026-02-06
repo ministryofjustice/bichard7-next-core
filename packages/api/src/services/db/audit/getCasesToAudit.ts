@@ -3,6 +3,7 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
+import { addDays } from "date-fns"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -33,7 +34,11 @@ export async function getCasesToAudit(
     resolvedByUsers.map(async (resolvedByUsername) => {
       let filter = sql``
 
-      let triggerFilter = sql`trigger_resolved_by = ${resolvedByUsername}`
+      let triggerFilter = sql`( 
+        trigger_resolved_by = ${resolvedByUsername}
+        AND trigger_resolved_ts >= ${createAudit.fromDate}
+        AND trigger_resolved_ts < ${addDays(createAudit.toDate, 1)}
+      )`
       if ((createAudit.triggerTypes?.length ?? 0) > 0) {
         triggerFilter = sql`(
             ${triggerFilter}
@@ -49,7 +54,11 @@ export async function getCasesToAudit(
         )`
       }
 
-      const exceptionsFilter = sql`error_resolved_by = ${resolvedByUsername}`
+      const exceptionsFilter = sql`(
+        error_resolved_by = ${resolvedByUsername}
+        AND error_resolved_ts >= ${createAudit.fromDate}
+        AND error_resolved_ts < ${addDays(createAudit.toDate, 1)}
+      )`
 
       if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
         filter = sql`${filter} AND (${triggerFilter} OR ${exceptionsFilter})`
@@ -65,7 +74,7 @@ export async function getCasesToAudit(
       }
 
       return {
-        caseIds: results.map((result) => result.error_id),
+        caseIds: results.map((result) => result.error_id).sort((a, b) => a - b),
         username: resolvedByUsername
       }
     })
