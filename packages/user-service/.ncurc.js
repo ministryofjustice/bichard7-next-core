@@ -1,18 +1,5 @@
-const pinned = [
-  "eslint-plugin",
-  "eslint-plugin-cypress",
-  "@typescript-eslint/eslint-plugin",
-  "@typescript-eslint/parser",
-  "eslint-config-airbnb-typescript",
-  "word-list",
-  "react",
-  "react-dom",
-  "@types/react",
-  "@types/react-dom",
-  "next",
-  "@next/eslint-plugin-next"
-]
-const ignored = ["eslint"]
+const pinned = ["word-list", "react", "react-dom", "@types/react", "@types/react-dom", "next"]
+const ignored = []
 const skipped = []
 
 module.exports = {
