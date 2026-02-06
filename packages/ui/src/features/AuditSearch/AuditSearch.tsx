@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FormGroup } from "../../components/FormGroup"
+import { FormGroup } from "components/FormGroup"
 
 interface Resolver {
   name: string

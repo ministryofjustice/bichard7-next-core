@@ -16,9 +16,9 @@ import getDataSource from "services/getDataSource"
 import Layout from "components/Layout"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
-import redirectTo from "../../utils/redirectTo"
+import redirectTo from "utils/redirectTo"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
-import AuditSearch from "../../features/AuditSearch/AuditSearch"
+import AuditSearch from "features/AuditSearch/AuditSearch"
 
 type Props = {
   csrfToken: string
