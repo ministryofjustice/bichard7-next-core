@@ -63,7 +63,7 @@ describe("Audit case", () => {
 
     cy.contains("Set quality status").should("be.visible")
     cy.get("select[name='trigger-quality']").should("not.exist")
-    cy.get("b[id='trigger-quality-label']").should("exist")
+    cy.get(".govuk-summary-list__row").should("exist")
     cy.get("select[name='exception-quality']").should("exist")
     cy.get("textarea[name='quality-status-note']").should("exist")
     cy.get("#quality-status-submit").should("exist")
@@ -94,7 +94,7 @@ describe("Audit case", () => {
     cy.contains("Set quality status").should("be.visible")
     cy.get("select[name='trigger-quality']").should("exist")
     cy.get("select[name='exception-quality']").should("not.exist")
-    cy.get("b[id='exception-quality-label']").should("exist")
+    cy.get(".govuk-summary-list__row").should("exist")
     cy.get("textarea[name='quality-status-note']").should("exist")
     cy.get("#quality-status-submit").should("exist")
   })
