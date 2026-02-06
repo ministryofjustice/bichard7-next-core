@@ -18,6 +18,7 @@ import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseT
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import redirectTo from "../../utils/redirectTo"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
+import AuditSearch from "../../features/AuditSearch/AuditSearch"
 
 type Props = {
   csrfToken: string
@@ -81,6 +82,12 @@ const SearchPage: NextPage<Props> = (props) => {
                 </h1>
               </HeaderRow>
             </HeaderContainer>
+            <AuditSearch
+              resolvedBy={[{ name: "Name A" }, { name: "Name B" }, { name: "Name C" }]}
+              triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]}
+              volumes={["10", "20", "50", "100"]}
+              defaultVolume="20"
+            />
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
