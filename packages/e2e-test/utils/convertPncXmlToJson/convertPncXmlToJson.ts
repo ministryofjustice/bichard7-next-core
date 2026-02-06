@@ -11,6 +11,7 @@ import type { Cof } from "./convertCof"
 import convertCof from "./convertCof"
 import type { Cou } from "./convertCou"
 import convertCou from "./convertCou"
+import type { Crt } from "./convertCrt"
 import convertCrt from "./convertCrt"
 import type { Dis } from "./convertDis"
 import convertDis from "./convertDis"
@@ -19,6 +20,7 @@ import convertFsc from "./convertFsc"
 import type { Ids } from "./convertIds"
 import convertIds from "./convertIds"
 import convertPcr from "./convertPcr"
+import type { Rcc } from "./convertRcc"
 import convertRcc from "./convertRcc"
 import type { Rem } from "./convertRem"
 import convertRem from "./convertRem"
@@ -32,9 +34,7 @@ const converters: Record<string, (value: string) => object | void> = {
   ASR: convertAsr,
   IDS: convertIds,
   PCR: convertPcr,
-  RCC: convertRcc,
   FSC: convertFsc,
-  CRT: convertCrt,
   COU: convertCou
 }
 
@@ -46,7 +46,10 @@ type AdditionalOffences = {
 
 export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences) | Txt
 export type PncRemandJson = Fsc & Ids & Asr & Rem
-export type PncNormalDisposalJson = Fsc & Ids & Cou & UpdateOffences & AdditionalOffences
+export type PncNormalDisposalJson = Fsc &
+  Ids &
+  Cou & { carryForward?: Crt } & { referToCourtCase?: Rcc } & UpdateOffences &
+  AdditionalOffences
 export type PncSubsequentDisposalJson = Fsc &
   Ids &
   Cou &
@@ -65,6 +68,18 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
     const ccr = convertCcr(value)
 
     courtCaseReference = ccr.courtCaseReferenceNumber
+  }
+
+  converters["CRT"] = (value: string) => {
+    const crt = convertCrt(value)
+
+    ;(json as PncNormalDisposalJson).carryForward = crt
+  }
+
+  converters["RCC"] = (value: string) => {
+    const rcc = convertRcc(value)
+
+    ;(json as PncNormalDisposalJson).referToCourtCase = rcc
   }
 
   converters["COF"] = (value: string): void => {
@@ -123,3 +138,8 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
 }
 
 export default convertPncXmlToJson
+
+const a =
+  "<FSC>K01YZ</FSC><IDS>K00/410801G BASS                    </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       BASS/BARRY                                            011020110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><DIS>I3025Y999                  00            SEA MONKEY                                                      </DIS><CCH>K002              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I1002M14                   00                                                                            </DIS><DIS>I3107                      00                                                                            </DIS>"
+
+console.log("======>", JSON.stringify(convertPncXmlToJson(a), null, 2))

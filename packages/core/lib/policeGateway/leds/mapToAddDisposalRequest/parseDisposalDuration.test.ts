@@ -7,7 +7,8 @@ describe("parseDisposalDuration", () => {
     ["d1  100520240000009.9900", "days", 1],
     ["Y99910052024          00", "life", 0],
     ["Y999", "life", 0],
-    ["D123", "days", 123]
+    ["D123", "days", 123],
+    ["M12", "months", 12]
   ])("parses %s into { units: %s, count: %d}", (input, expectedUnits, expectedCount) => {
     const parsed = parseDisposalDuration(input)
 
