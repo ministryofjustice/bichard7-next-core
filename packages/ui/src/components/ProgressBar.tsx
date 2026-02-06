@@ -1,3 +1,5 @@
+import { gdsBlue, gdsDarkGreen, white } from "../utils/colours"
+
 interface ProgressBarProps {
   currentValue: number
   maxValue: number
@@ -19,7 +21,7 @@ export const ProgressBar = ({ currentValue, maxValue, label }: ProgressBarProps)
           style={{
             display: "flex",
             flexGrow: 1,
-            backgroundColor: "#1D70B8",
+            backgroundColor: `${gdsBlue}`,
             height: "15px"
           }}
           role="progressbar"
@@ -31,7 +33,7 @@ export const ProgressBar = ({ currentValue, maxValue, label }: ProgressBarProps)
           <div
             style={{
               width: `${progressWidth}%`,
-              backgroundColor: "#005A30"
+              backgroundColor: `${gdsDarkGreen}`
             }}
           />
 
@@ -39,7 +41,7 @@ export const ProgressBar = ({ currentValue, maxValue, label }: ProgressBarProps)
             <div
               style={{
                 width: "5px",
-                backgroundColor: "#FFF"
+                backgroundColor: `${white}`
               }}
             />
           )}
