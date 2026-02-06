@@ -14,10 +14,12 @@ export async function createAudit(
   createAudit: CreateAudit,
   user: User
 ): PromiseResult<AuditDto> {
-  const auditResult = await insertAudit(database, createAudit, user)
-  if (isError(auditResult)) {
-    throw auditResult
-  }
+  return await database.transaction<AuditDto | Error>(async (tx) => {
+    const auditResult = await insertAudit(tx, createAudit, user)
+    if (isError(auditResult)) {
+      throw auditResult
+    }
 
-  return auditResult
+    return auditResult
+  })
 }

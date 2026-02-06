@@ -13,10 +13,9 @@ export const insertAudit = async (
   createAudit: CreateAudit,
   user: User
 ): PromiseResult<AuditDto> => {
-  return await database.transaction<AuditDto | Error>(async (tx) => {
-    const sql = tx.connection
+  const sql = database.connection
 
-    const results = await sql<Audit[]>`
+  const results = await sql<Audit[]>`
       INSERT INTO br7own.audits (
         created_by,
         created_when,
@@ -39,10 +38,9 @@ export const insertAudit = async (
       )
       RETURNING *
     `.catch((error: Error) => error)
-    if (isError(results)) {
-      return new Error("Failed to create audit record")
-    }
+  if (isError(results)) {
+    return new Error("Failed to create audit record")
+  }
 
-    return convertAuditToDto(results[0])
-  })
+  return convertAuditToDto(results[0])
 }
