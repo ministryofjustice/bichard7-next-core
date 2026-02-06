@@ -13,7 +13,7 @@ describe("getVolumeOfCasesToAudit", () => {
 
     const caseIds = getVolumeOfCasesToAudit(casesToAuditByUser, 100)
 
-    expect(caseIds).toStrictEqual(casesToAuditByUser[0].caseIds)
+    expect(caseIds).toStrictEqual([1, 2, 3])
   })
 
   it("should round up number cases to nearest whole number", () => {
