@@ -11,6 +11,10 @@ import { DisplayFullUser } from "types/display/Users"
 import { ParsedUrlQuery } from "querystring"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { HeaderWrapper } from "../components/Card/Card.styles"
+import DateInput from "../components/CustomDateInput/DateInput"
+import { FormGroup } from "../components/FormGroup"
+import { Select } from "../components/Select"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -58,6 +62,41 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
         }}
       >
         <h1>{"Search reports"}</h1>
+        <HeaderWrapper>
+          <FormGroup>
+            <fieldset className="govuk-fieldset">
+              {/*<div id="conditional-resolved-date-range">*/}
+              <div>
+                <Select placeholder={"Resolved cases"} name={"resolved-cases"}></Select>
+                <b>{"Date range"}</b>
+                <div id={"report-selection-date-from"}>
+                  <DateInput
+                    dateType="resolvedFrom"
+                    dispatch={function (): void {
+                      throw new Error("Function not implemented.")
+                    }}
+                    value={""}
+                    dateRange={undefined} // dispatch={dispatch}
+                    // value={caseResolvedDateRange?.from ?? ""}
+                    // dateRange={caseResolvedDateRange}
+                  />
+                </div>
+                <div id={"report-selection-date-from"}>
+                  <DateInput
+                    dateType="resolvedTo"
+                    dispatch={function (): void {
+                      throw new Error("Function not implemented.")
+                    }}
+                    value={""}
+                    dateRange={undefined} // dispatch={dispatch}
+                    // value={caseResolvedDateRange?.to ?? ""}
+                    // dateRange={caseResolvedDateRange}
+                  />
+                </div>
+              </div>
+            </fieldset>
+          </FormGroup>
+        </HeaderWrapper>
       </Layout>
     </CurrentUserContext.Provider>
   )
