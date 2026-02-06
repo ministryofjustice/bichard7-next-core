@@ -1,4 +1,4 @@
-import { gdsBlue, gdsDarkGreen, white } from "../utils/colours"
+import { ProgressContainer, ProgressTrack, ProgressFill, ProgressSeparator } from "./ProgressBar.styles"
 
 interface ProgressBarProps {
   currentValue: number
@@ -16,37 +16,19 @@ export const ProgressBar = ({ currentValue, maxValue, label }: ProgressBarProps)
         {currentValue && <label>{label}</label>}
       </h2>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            flexGrow: 1,
-            backgroundColor: `${gdsBlue}`,
-            height: "15px"
-          }}
+      <ProgressContainer>
+        <ProgressTrack
           role="progressbar"
           aria-labelledby="progress-bar-label"
           aria-valuenow={currentValue}
           aria-valuemin={0}
           aria-valuemax={maxValue}
         >
-          <div
-            style={{
-              width: `${progressWidth}%`,
-              backgroundColor: `${gdsDarkGreen}`
-            }}
-          />
+          <ProgressFill $width={progressWidth} />
 
-          {progressWidth > 0 && (
-            <div
-              style={{
-                width: "5px",
-                backgroundColor: `${white}`
-              }}
-            />
-          )}
-        </div>
-      </div>
+          {progressWidth > 0 && <ProgressSeparator />}
+        </ProgressTrack>
+      </ProgressContainer>
     </>
   )
 }
