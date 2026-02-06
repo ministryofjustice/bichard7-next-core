@@ -3,6 +3,8 @@ import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { isError } from "@moj-bichard7/common/types/Result"
+
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import { insertAudit } from "../../services/db/audit/insertAudit"
@@ -13,6 +15,9 @@ export async function createAudit(
   user: User
 ): PromiseResult<AuditDto> {
   const auditResult = await insertAudit(database, createAudit, user)
+  if (isError(auditResult)) {
+    throw auditResult
+  }
 
   return auditResult
 }
