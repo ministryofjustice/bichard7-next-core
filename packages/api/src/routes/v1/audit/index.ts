@@ -20,7 +20,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
-import { createAudit } from "../../../services/db/audit/createAudit"
+import { insertAudit } from "../../../services/db/audit/insertAudit"
 
 type HandlerProps = {
   body: CreateAudit
@@ -44,7 +44,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ body, database, reply, user }: HandlerProps) => {
-  const auditResult = await createAudit(database.writable, body, user)
+  const auditResult = await insertAudit(database.writable, body, user)
   if (isError(auditResult)) {
     reply.log.error(auditResult)
     return reply.code(INTERNAL_SERVER_ERROR).send()

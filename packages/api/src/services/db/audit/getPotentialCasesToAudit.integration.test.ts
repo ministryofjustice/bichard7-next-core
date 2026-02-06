@@ -24,7 +24,7 @@ const defaultCreateAudit = {
   volumeOfCases: 20
 } satisfies CreateAudit
 
-describe("getCasesToAudit", () => {
+describe("getPotentialCasesToAudit", () => {
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
   })

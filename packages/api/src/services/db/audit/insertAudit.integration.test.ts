@@ -7,11 +7,11 @@ import { format, subWeeks } from "date-fns"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { createAudit } from "./createAudit"
+import { insertAudit } from "./insertAudit"
 
 const testDatabaseGateway = new End2EndPostgres()
 
-describe("createAudit", () => {
+describe("insertAudit", () => {
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
     await createCase(testDatabaseGateway, {
@@ -33,7 +33,7 @@ describe("createAudit", () => {
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 20
     } satisfies CreateAudit
-    const result = await createAudit(testDatabaseGateway.writable, payload, user)
+    const result = await insertAudit(testDatabaseGateway.writable, payload, user)
 
     expect(isError(result)).toBe(false)
     expect((result as AuditDto).auditId).toBeGreaterThan(0)
