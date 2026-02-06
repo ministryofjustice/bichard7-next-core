@@ -7,6 +7,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
+import { getPotentialCasesToAudit } from "../../services/db/audit/getPotentialCasesToAudit"
 import { insertAudit } from "../../services/db/audit/insertAudit"
 
 export async function createAudit(
@@ -18,6 +19,11 @@ export async function createAudit(
     const auditResult = await insertAudit(tx, createAudit, user)
     if (isError(auditResult)) {
       throw auditResult
+    }
+
+    const potentialCasesToAudit = await getPotentialCasesToAudit(tx, createAudit, user)
+    if (isError(potentialCasesToAudit)) {
+      throw potentialCasesToAudit
     }
 
     return auditResult
