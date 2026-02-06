@@ -75,6 +75,7 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
   updateCaseWithTriggers(
     caseId: number,
     triggerResolvedBy: null | string,
+    triggerResolvedAt: Date | null,
     triggerCount: number,
     triggerStatus: number,
     triggerReason: string
@@ -83,6 +84,7 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
       this.writable.connection,
       caseId,
       triggerResolvedBy,
+      triggerResolvedAt,
       triggerCount,
       triggerStatus,
       triggerReason
