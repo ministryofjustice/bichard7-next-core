@@ -5,13 +5,13 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import { isError } from "@moj-bichard7/common/types/Result"
 import { format, subDays, subWeeks } from "date-fns"
 
-import type { CasesToAuditByUser } from "./getCasesToAudit"
+import type { CasesToAuditByUser } from "./getPotentialCasesToAudit"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { getCasesToAudit } from "./getCasesToAudit"
+import { getPotentialCasesToAudit } from "./getPotentialCasesToAudit"
 
 const testDatabaseGateway = new End2EndPostgres()
 
@@ -55,7 +55,7 @@ describe("getCasesToAudit", () => {
       ...defaultCreateAudit
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -89,7 +89,7 @@ describe("getCasesToAudit", () => {
       includedTypes: ["Triggers"]
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -123,7 +123,7 @@ describe("getCasesToAudit", () => {
       includedTypes: ["Exceptions"]
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -156,7 +156,7 @@ describe("getCasesToAudit", () => {
       ...defaultCreateAudit
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -198,7 +198,7 @@ describe("getCasesToAudit", () => {
       resolvedByUsers: [testUsername, anotherUsername]
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -235,7 +235,7 @@ describe("getCasesToAudit", () => {
       ...defaultCreateAudit
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -268,7 +268,7 @@ describe("getCasesToAudit", () => {
       ...defaultCreateAudit
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -317,7 +317,7 @@ describe("getCasesToAudit", () => {
       triggerTypes: [TriggerCode.TRPR0001]
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -364,7 +364,7 @@ describe("getCasesToAudit", () => {
       ...defaultCreateAudit
     } satisfies CreateAudit
 
-    const casesToAudit = await getCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([

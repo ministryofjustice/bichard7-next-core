@@ -12,7 +12,7 @@ export type CasesToAuditByUser = {
   username: string
 }
 
-export async function getCasesToAudit(
+export async function getPotentialCasesToAudit(
   database: WritableDatabaseConnection,
   createAudit: CreateAudit,
   user: User

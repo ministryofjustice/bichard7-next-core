@@ -7,7 +7,7 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
-import { getCasesToAudit } from "./getCasesToAudit"
+import { getPotentialCasesToAudit } from "./getPotentialCasesToAudit"
 
 export const createAudit = async (
   database: WritableDatabaseConnection,
@@ -45,7 +45,7 @@ export const createAudit = async (
     }
 
     const audit = results[0]
-    const casesToAudit = await getCasesToAudit(tx, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(tx, createAudit, user)
 
     return convertAuditToDto(audit)
   })
