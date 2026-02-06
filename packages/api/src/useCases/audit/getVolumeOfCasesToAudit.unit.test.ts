@@ -15,4 +15,17 @@ describe("getVolumeOfCasesToAudit", () => {
 
     expect(caseIds).toStrictEqual(casesToAuditByUser[0].caseIds)
   })
+
+  it("should round up number cases to nearest whole number", () => {
+    const casesToAuditByUser: CasesToAuditByUser[] = [
+      {
+        caseIds: [1, 2, 3],
+        username: "user@example.com"
+      }
+    ]
+
+    const caseIds = getVolumeOfCasesToAudit(casesToAuditByUser, 50)
+
+    expect(caseIds).toStrictEqual([1, 2])
+  })
 })
