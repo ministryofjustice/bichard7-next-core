@@ -28,4 +28,21 @@ describe("getVolumeOfCasesToAudit", () => {
 
     expect(caseIds).toStrictEqual([1, 2])
   })
+
+  it("removes duplicate case IDs", () => {
+    const casesToAuditByUser: CasesToAuditByUser[] = [
+      {
+        caseIds: [1, 2, 3],
+        username: "user@example.com"
+      },
+      {
+        caseIds: [2, 3, 4],
+        username: "user2@example.com"
+      }
+    ]
+
+    const caseIds = getVolumeOfCasesToAudit(casesToAuditByUser, 100)
+
+    expect(caseIds).toStrictEqual([1, 2, 3, 4])
+  })
 })
