@@ -5,12 +5,8 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
 
+import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
-
-export type CasesToAuditByUser = {
-  caseIds: number[]
-  username: string
-}
 
 export async function getPotentialCasesToAudit(
   database: WritableDatabaseConnection,

@@ -5,7 +5,7 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import { isError } from "@moj-bichard7/common/types/Result"
 import { format, subDays, subWeeks } from "date-fns"
 
-import type { CasesToAuditByUser } from "./getPotentialCasesToAudit"
+import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
