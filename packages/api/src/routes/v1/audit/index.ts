@@ -54,14 +54,18 @@ const handler = async ({ body, database, reply, user }: HandlerProps) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post(V1.Audit, { schema }, async (req, reply) => {
-    await handler({
-      body: req.body,
-      database: req.database,
-      reply,
-      user: req.user
+  try {
+    useZod(fastify).post(V1.Audit, { schema }, async (req, reply) => {
+      await handler({
+        body: req.body,
+        database: req.database,
+        reply,
+        user: req.user
+      })
     })
-  })
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export default route

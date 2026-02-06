@@ -2,7 +2,7 @@ import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { addWeeks, format, subWeeks } from "date-fns"
+import { addDays, format, subWeeks } from "date-fns"
 import { type FastifyInstance } from "fastify"
 import { BAD_REQUEST, CREATED } from "http-status"
 
@@ -54,7 +54,7 @@ describe("Create audit", () => {
     expect(body.createdBy).toBe(user.username)
   })
 
-  it("returns 400 Bad Request when request body is invalid", async () => {
+  it("returns 400 Bad Request when date range is in the past", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
 
     const response = await app.inject({
@@ -63,7 +63,7 @@ describe("Create audit", () => {
       payload: {
         fromDate: format(new Date(), "yyyy-MM-dd"),
         includedTypes: ["Triggers", "Exceptions"],
-        toDate: format(addWeeks(new Date(), 7), "yyyy-MM-dd"), // Date ranges in the future should be rejected
+        toDate: format(addDays(new Date(), 1), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
       } satisfies CreateAudit,
       url: V1.Audit
@@ -71,5 +71,24 @@ describe("Create audit", () => {
 
     expect(response.statusCode).toBe(BAD_REQUEST)
     expect(response.body).toContain("Date range cannot be in the future")
+  })
+
+  it("returns 400 Bad Request when no included types", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: {
+        fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        includedTypes: [],
+        toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
+        volumeOfCases: 20
+      } satisfies CreateAudit,
+      url: V1.Audit
+    })
+
+    expect(response.statusCode).toBe(BAD_REQUEST)
+    expect(response.body).toContain("includedTypes")
   })
 })
