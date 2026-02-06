@@ -296,6 +296,7 @@ describe("getCasesToAudit", () => {
     await Promise.all([
       createTriggers(testDatabaseGateway, 1, [
         {
+          resolvedAt: subDays(new Date(), 1),
           resolvedBy: testUsername,
           status: ResolutionStatusNumber.Resolved,
           triggerCode: TriggerCode.TRPR0001
@@ -303,6 +304,7 @@ describe("getCasesToAudit", () => {
       ]),
       createTriggers(testDatabaseGateway, 2, [
         {
+          resolvedAt: subDays(new Date(), 1),
           resolvedBy: testUsername,
           status: ResolutionStatusNumber.Resolved,
           triggerCode: TriggerCode.TRPR0017
