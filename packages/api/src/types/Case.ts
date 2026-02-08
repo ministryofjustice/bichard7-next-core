@@ -17,6 +17,7 @@ export type CaseDataForIndexDto = FullnameFields &
     fullCount: number
     noteCount: number
   }
+
 export type CaseDataRow =
   | "annotated_msg"
   | "court_code"
