@@ -25,6 +25,8 @@ const semver = new RegExp(
     - Breaks dependency tree for eslint-config-next
   - postgres
     - 3.4.8 broke a Type: https://github.com/porsager/postgres/issues/1143
+  - cypress-circleci-reporter
+      - 0.4.0 changed to module type
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
@@ -36,7 +38,8 @@ const ignored = [
   "http-status",
   "@io-orkes/conductor-javascript",
   "@typescript-eslint/eslint-plugin",
-  "postgres"
+  "postgres",
+  "cypress-circleci-reporter"
 ]
 
 module.exports = {
