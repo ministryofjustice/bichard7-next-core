@@ -9,12 +9,13 @@ interface Resolver {
 interface Props {
   resolvedBy: Resolver[]
   triggerTypes: string[]
-  volumes: string[]
-  defaultVolume: string
 }
 
 const AuditSearch: React.FC<Props> = (props) => {
-  const { resolvedBy, triggerTypes, volumes, defaultVolume } = props
+  const { resolvedBy, triggerTypes } = props
+
+  const defaultVolume = "20"
+  const volumes = ["10", "20", "50", "100"]
 
   const [volume, setVolume] = useState(defaultVolume)
 

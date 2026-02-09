@@ -85,8 +85,6 @@ const SearchPage: NextPage<Props> = (props) => {
             <AuditSearch
               resolvedBy={[{ name: "Name A" }, { name: "Name B" }, { name: "Name C" }]}
               triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]}
-              volumes={["10", "20", "50", "100"]}
-              defaultVolume="20"
             />
           </Layout>
         </CurrentUserContext.Provider>
