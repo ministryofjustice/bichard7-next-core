@@ -22,7 +22,7 @@ const AuditSearch: React.FC<Props> = (props) => {
     <div className="moj-filter">
       <div className="moj-filter__header">
         <div className="moj-filter__header-title">
-          <h2 className="govuk-heading-m">{"Audit case search"}</h2>
+          <h2 className="govuk-heading-m">{"Audit search"}</h2>
         </div>
       </div>
       <div className="moj-filter__content">
