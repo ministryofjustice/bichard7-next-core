@@ -1,4 +1,5 @@
 import AuditSearch from "../../../src/features/AuditSearch/AuditSearch"
+import { subDays, format } from "date-fns"
 
 describe("AuditSearch", () => {
   it("mounts", () => {
@@ -42,5 +43,39 @@ describe("AuditSearch", () => {
     cy.get("label[for=audit-volume-100]").should("have.text", "100% of cases")
 
     cy.get("#audit-volume-20").should("be.checked")
+  })
+
+  it("defaults from date and to date to be the past week", () => {
+    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+
+    const fromStr = format(subDays(new Date(), 7), "yyyy-MM-dd")
+    const toStr = format(new Date(), "yyyy-MM-dd")
+
+    cy.get("#audit-date-from").should("have.value", fromStr)
+    cy.get("#audit-date-to").should("have.value", toStr)
+  })
+
+  it("allows dates to be specified in the past", () => {
+    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+
+    const str = format(subDays(new Date(), 4), "yyyy-MM-dd")
+
+    cy.get("#audit-date-from").type(str)
+    cy.get("#audit-date-from").should("have.value", str)
+
+    cy.get("#audit-date-to").type(str)
+    cy.get("#audit-date-to").should("have.value", str)
+  })
+
+  it("should reset cleared dates to today", () => {
+    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+
+    const todayStr = format(new Date(), "yyyy-MM-dd")
+
+    cy.get("#audit-date-from").clear()
+    cy.get("#audit-date-from").should("have.value", todayStr)
+
+    cy.get("#audit-date-to").clear()
+    cy.get("#audit-date-to").should("have.value", todayStr)
   })
 })

@@ -2,6 +2,7 @@ import { useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
+import { subDays, format, parse } from "date-fns"
 
 interface Resolver {
   username: string
@@ -14,13 +15,28 @@ interface Props {
   triggerTypes: string[]
 }
 
+function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
+  const parsedDate = parse(dateStr, format, new Date())
+  if (isNaN(parsedDate.getTime())) {
+    return new Date(defaultDate.getTime())
+  }
+  return parsedDate
+}
+
 const AuditSearch: React.FC<Props> = (props) => {
   const { resolvedBy, triggerTypes } = props
+
+  const DATE_FORMAT = "yyyy-MM-dd"
 
   const defaultVolume = "20"
   const volumes = ["10", "20", "50", "100"]
 
+  const today = new Date()
+
   const [volume, setVolume] = useState(defaultVolume)
+
+  const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
+  const [toDate, setToDate] = useState(new Date())
 
   return (
     <div className="moj-filter">
@@ -37,16 +53,32 @@ const AuditSearch: React.FC<Props> = (props) => {
                 <fieldset className="govuk-fieldset">
                   <legend className="govuk-fieldset__legend--m">{"Dates"}</legend>
                   <FormGroup>
-                    <label className="govuk-body" htmlFor="date-search-from">
+                    <label className="govuk-body" htmlFor="audit-date-from">
                       {"From date"}
                     </label>
-                    <input className="govuk-input" id="date-search-from" type="date" />
+                    <input
+                      name="date-from"
+                      className="govuk-input"
+                      id="audit-date-from"
+                      type="date"
+                      max={format(today, DATE_FORMAT)}
+                      value={format(fromDate, DATE_FORMAT)}
+                      onChange={(e) => setFromDate(parseDate(e.target.value, DATE_FORMAT, today))}
+                    />
                   </FormGroup>
                   <FormGroup>
-                    <label className="govuk-body" htmlFor="date-search-to">
+                    <label className="govuk-body" htmlFor="audit-date-to">
                       {"To date"}
                     </label>
-                    <input className="govuk-input" id="date-search-to" type="date" />
+                    <input
+                      name="date-to"
+                      className="govuk-input"
+                      id="audit-date-to"
+                      type="date"
+                      max={format(today, DATE_FORMAT)}
+                      value={format(toDate, DATE_FORMAT)}
+                      onChange={(e) => setToDate(parseDate(e.target.value, DATE_FORMAT, today))}
+                    />
                   </FormGroup>
                 </fieldset>
               </FormGroup>
