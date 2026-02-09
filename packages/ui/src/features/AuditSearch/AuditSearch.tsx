@@ -1,9 +1,12 @@
 import { useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
+import { formatUserFullName } from "utils/formatUserFullName"
 
 interface Resolver {
-  name: string
+  username: string
+  forenames: string
+  surname: string
 }
 
 interface Props {
@@ -87,7 +90,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     {resolvedBy.map((resolver, index) => {
                       return (
-                        <div key={resolver.name} className="govuk-checkboxes__item">
+                        <div key={resolver.username} className="govuk-checkboxes__item">
                           <input
                             className="govuk-checkboxes__input"
                             name="exceptions"
@@ -96,7 +99,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                             value="exceptions"
                           />
                           <label className="govuk-label govuk-checkboxes__label" htmlFor={`audit-resolved-by-${index}`}>
-                            {resolver.name}
+                            {formatUserFullName(resolver.forenames, resolver.surname)}
                           </label>
                         </div>
                       )

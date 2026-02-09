@@ -83,7 +83,11 @@ const SearchPage: NextPage<Props> = (props) => {
               </HeaderRow>
             </HeaderContainer>
             <AuditSearch
-              resolvedBy={[{ name: "Name A" }, { name: "Name B" }, { name: "Name C" }]}
+              resolvedBy={[
+                { username: "usera", forenames: "Name", surname: "A" },
+                { username: "userb", forenames: "Name", surname: "B" },
+                { username: "userc", forenames: "Name", surname: "C" }
+              ]}
               triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]}
             />
           </Layout>
