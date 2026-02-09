@@ -38,6 +38,11 @@ const AuditSearch: React.FC<Props> = (props) => {
   const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
   const [toDate, setToDate] = useState(new Date())
 
+  const [includeTriggers, setIncludeTriggers] = useState(false)
+  const [includeExceptions, setIncludeExceptions] = useState(false)
+
+  const formValid = fromDate <= toDate && toDate <= today && (includeTriggers || includeExceptions)
+
   return (
     <div className="moj-filter">
       <div className="moj-filter__header">
@@ -57,9 +62,8 @@ const AuditSearch: React.FC<Props> = (props) => {
                       {"From date"}
                     </label>
                     <input
-                      name="date-from"
+                      name="audit-date-from"
                       className="govuk-input"
-                      id="audit-date-from"
                       type="date"
                       max={format(today, DATE_FORMAT)}
                       value={format(fromDate, DATE_FORMAT)}
@@ -71,9 +75,8 @@ const AuditSearch: React.FC<Props> = (props) => {
                       {"To date"}
                     </label>
                     <input
-                      name="date-to"
+                      name="audit-date-to"
                       className="govuk-input"
-                      id="audit-date-to"
                       type="date"
                       max={format(today, DATE_FORMAT)}
                       value={format(toDate, DATE_FORMAT)}
@@ -90,24 +93,24 @@ const AuditSearch: React.FC<Props> = (props) => {
                     <div className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
-                        name="triggers"
-                        id="audit-search-triggers"
+                        name="audit-include-triggers"
                         type="checkbox"
-                        value="triggers"
+                        checked={includeTriggers}
+                        onChange={(e) => setIncludeTriggers(e.target.checked)}
                       />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-search-triggers">
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-include-triggers">
                         {"Triggers"}
                       </label>
                     </div>
                     <div className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
-                        name="exceptions"
-                        id="audit-search-exceptions"
+                        name="audit-include-exceptions"
                         type="checkbox"
-                        value="exceptions"
+                        checked={includeExceptions}
+                        onChange={(e) => setIncludeExceptions(e.target.checked)}
                       />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-search-exceptions">
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-include-exceptions">
                         {"Exceptions"}
                       </label>
                     </div>
@@ -125,10 +128,8 @@ const AuditSearch: React.FC<Props> = (props) => {
                         <div key={resolver.username} className="govuk-checkboxes__item">
                           <input
                             className="govuk-checkboxes__input"
-                            name="exceptions"
                             id={`audit-resolved-by-${index}`}
                             type="checkbox"
-                            value="exceptions"
                           />
                           <label className="govuk-label govuk-checkboxes__label" htmlFor={`audit-resolved-by-${index}`}>
                             {formatUserFullName(resolver.forenames, resolver.surname)}
@@ -150,10 +151,9 @@ const AuditSearch: React.FC<Props> = (props) => {
                         <div key={triggerType} className="govuk-checkboxes__item">
                           <input
                             className="govuk-checkboxes__input"
-                            name="exceptions"
+                            name="triggers"
                             id={`audit-trigger-type-${index}`}
                             type="checkbox"
-                            value="exceptions"
                           />
                           <label
                             className="govuk-label govuk-checkboxes__label"
@@ -198,7 +198,9 @@ const AuditSearch: React.FC<Props> = (props) => {
             </div>
           </div>
           <FormButtonRow>
-            <button className="govuk-button">{"Search cases"}</button>
+            <button className="govuk-button" disabled={!formValid}>
+              {"Search cases"}
+            </button>
             <p className="govuk-body">
               <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
                 {"Clear search"}
