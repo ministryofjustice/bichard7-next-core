@@ -15,13 +15,8 @@ const remandStatusByPncCode: Record<string, AppearanceResult> = {
   C: "remanded-in-custody"
 }
 
-const mapToCurrentAppearance = (
-  forceStationCode: string,
-  remandLocationCourt: string,
-  courtNameType1: string
-): CurrentAppearance => {
+const mapToCurrentAppearance = (remandLocationCourt: string, courtNameType1: string): CurrentAppearance => {
   return {
-    forceStationCode,
     court:
       remandLocationCourt === PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
         ? {
@@ -56,18 +51,16 @@ const mapToNextAppearance = (
 }
 
 export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): RemandRequest => {
+  const { remandLocationCourt, courtNameType1, institutionCode, nextAppearanceDate, courtNameType2 } = pncJson
+
   return {
     ownerCode: pncJson.forceStationCode,
     checkname: pncJson.pncCheckName,
     personUrn: pncJson.pncIdentifier,
     remandDate: convertDate(pncJson.remandDate),
     appearanceResult: remandStatusByPncCode[pncJson.remandResult],
-    bailConditions: pncJson.bailConditions.split(" "),
-    currentAppearance: mapToCurrentAppearance(
-      pncJson.forceStationCode,
-      pncJson.remandLocationCourt,
-      pncJson.courtNameType1
-    ),
-    nextAppearance: mapToNextAppearance(pncJson.institutionCode, pncJson.nextAppearanceDate, pncJson.courtNameType2)
+    bailConditions: pncJson.bailConditions.split(" ").filter(Boolean) ?? [],
+    currentAppearance: mapToCurrentAppearance(remandLocationCourt, courtNameType1),
+    nextAppearance: mapToNextAppearance(institutionCode, nextAppearanceDate, courtNameType2)
   }
 }
