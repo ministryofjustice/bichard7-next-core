@@ -48,7 +48,7 @@
     "nodemailer": "^8.0.1",
     "pg-promise": "^12.6.0",
     "pino": "^10.3.0",
-    "postgres": "^3.4.8",
+    "postgres": "3.4.7",
     "promise-poller": "^1.9.1",
     "stompit": "^1.0.0",
     "ws": "^8.19.0",

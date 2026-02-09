@@ -10,9 +10,11 @@
     - v16 doesn't load the sass files from @ministryofjustice/frontend
 
   Ignored:
+    - postgres
+      - 3.4.8 broke a Type: https://github.com/porsager/postgres/issues/1143
 */
 const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next"]
-const ignored = []
+const ignored = ["postgres"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
 module.exports = {

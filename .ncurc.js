@@ -23,6 +23,8 @@ const semver = new RegExp(
     - Breaking changes for how to use the Client, workflows etc
   - @typescript-eslint/eslint-plugin
     - Breaks dependency tree for eslint-config-next
+  - postgres
+    - 3.4.8 broke a Type: https://github.com/porsager/postgres/issues/1143
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
 const ignored = [
@@ -33,7 +35,8 @@ const ignored = [
   "@cucumber/pretty-formatter",
   "http-status",
   "@io-orkes/conductor-javascript",
-  "@typescript-eslint/eslint-plugin"
+  "@typescript-eslint/eslint-plugin",
+  "postgres"
 ]
 
 module.exports = {

@@ -53,7 +53,7 @@
     "esbuild": "~0.25.0",
     "jest": "^30.2.0",
     "mailhog": "^4.16.0",
-    "postgres": "^3.4.4g s",
+    "postgres": "3.4.7",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
