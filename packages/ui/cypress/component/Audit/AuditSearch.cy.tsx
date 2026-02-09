@@ -19,7 +19,7 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-search-resolved-by input[type=checkbox]").should("have.length", 2)
+    cy.get("#audit-search-resolved-by input[type=checkbox]").should("have.length", 3)
 
     cy.get("label[for=audit-resolved-by-0]").should("have.text", "Example User A")
     cy.get("label[for=audit-resolved-by-1]").should("have.text", "Another User-B")
@@ -87,4 +87,25 @@ describe("AuditSearch", () => {
     cy.get("input[name=audit-date-to]").clear()
     cy.get("input[name=audit-date-to]").should("have.value", todayStr)
   })
+
+  it("should select all resolvers when All option is clicked", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={[]}
+        resolvedBy={[
+          { username: "usera", forenames: "First", surname: "User" },
+          { username: "userb", forenames: "Second", surname: "Example-User" },
+          { username: "userc", forenames: "Third", surname: "Test-User" }
+        ]}
+      />
+    )
+
+    cy.get("#audit-resolved-by-all").click()
+
+    cy.get("#audit-search-resolved-by input[type=checkbox]:checked").should("have.length", 4)
+  })
+
+  it("should de-selected All checkbox if all resolvers are not selected", () => {})
+
+  it("should select All checkbox if all resolvers are manually selected", () => {})
 })

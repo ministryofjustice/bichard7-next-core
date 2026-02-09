@@ -38,6 +38,8 @@ const AuditSearch: React.FC<Props> = (props) => {
   const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
   const [toDate, setToDate] = useState(new Date())
 
+  const [resolvers, setResolvers] = useState<string[]>([])
+
   const [includeTriggers, setIncludeTriggers] = useState(false)
   const [includeExceptions, setIncludeExceptions] = useState(false)
 
@@ -123,6 +125,21 @@ const AuditSearch: React.FC<Props> = (props) => {
                 <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                   <legend className="govuk-fieldset__legend--m">{"Resolved by"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                    <div className="govuk-checkboxes__item">
+                      <input
+                        className="govuk-checkboxes__input"
+                        id="audit-resolved-by-all"
+                        type="checkbox"
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setResolvers(resolvedBy.map((rb) => rb.username))
+                          }
+                        }}
+                      />
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-resolved-by-all">
+                        {"All"}
+                      </label>
+                    </div>
                     {resolvedBy.map((resolver, index) => {
                       return (
                         <div key={resolver.username} className="govuk-checkboxes__item">
@@ -130,6 +147,21 @@ const AuditSearch: React.FC<Props> = (props) => {
                             className="govuk-checkboxes__input"
                             id={`audit-resolved-by-${index}`}
                             type="checkbox"
+                            data-resolver-name={resolver.username}
+                            checked={resolvers.includes(resolver.username)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                if (!resolvers.includes(resolver.username)) {
+                                  setResolvers([...resolvers, resolver.username])
+                                }
+                              } else {
+                                setResolvers([
+                                  ...resolvers.filter(
+                                    (r) => r != e.target.attributes.getNamedItem("data-resolver-name")?.value
+                                  )
+                                ])
+                              }
+                            }}
                           />
                           <label className="govuk-label govuk-checkboxes__label" htmlFor={`audit-resolved-by-${index}`}>
                             {formatUserFullName(resolver.forenames, resolver.surname)}
