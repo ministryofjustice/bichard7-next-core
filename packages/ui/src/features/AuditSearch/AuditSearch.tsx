@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { FormGroup } from "components/FormGroup"
-import { FormButtonRow } from "./AuditSearch.styles"
+import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 
 interface Resolver {
   name: string
@@ -49,20 +49,9 @@ const AuditSearch: React.FC<Props> = (props) => {
               </FormGroup>
               <FormGroup>
                 <fieldset className="govuk-fieldset">
-                  <legend className="govuk-fieldset__legend--m">{"Include"}</legend>
-                  <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    <div className="govuk-checkboxes__item">
-                      <input
-                        className="govuk-checkboxes__input"
-                        name="exceptions"
-                        id="date-search-exceptions"
-                        type="checkbox"
-                        value="exceptions"
-                      />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="date-search-exceptions">
-                        {"Exceptions"}
-                      </label>
-                    </div>
+                  <legend className="govuk-fieldset__legend--m govuk-!-margin-bottom-1">{"Include"}</legend>
+                  <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
+                  <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
@@ -75,7 +64,19 @@ const AuditSearch: React.FC<Props> = (props) => {
                         {"Triggers"}
                       </label>
                     </div>
-                  </div>
+                    <div className="govuk-checkboxes__item">
+                      <input
+                        className="govuk-checkboxes__input"
+                        name="exceptions"
+                        id="date-search-exceptions"
+                        type="checkbox"
+                        value="exceptions"
+                      />
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor="date-search-exceptions">
+                        {"Exceptions"}
+                      </label>
+                    </div>
+                  </IncludeRow>
                 </fieldset>
               </FormGroup>
             </div>

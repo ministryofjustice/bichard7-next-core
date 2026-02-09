@@ -1,5 +1,9 @@
 import styled from "styled-components"
 
+const IncludeRow = styled.div`
+  display: flex;
+`
+
 const FormButtonRow = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -7,4 +11,4 @@ const FormButtonRow = styled.div`
   gap: 1rem;
 `
 
-export { FormButtonRow }
+export { IncludeRow, FormButtonRow }
