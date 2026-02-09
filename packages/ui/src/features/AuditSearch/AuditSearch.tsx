@@ -59,11 +59,11 @@ const AuditSearch: React.FC<Props> = (props) => {
                       <input
                         className="govuk-checkboxes__input"
                         name="triggers"
-                        id="date-search-triggers"
+                        id="audit-search-triggers"
                         type="checkbox"
                         value="triggers"
                       />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="date-search-triggers">
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-search-triggers">
                         {"Triggers"}
                       </label>
                     </div>
@@ -71,11 +71,11 @@ const AuditSearch: React.FC<Props> = (props) => {
                       <input
                         className="govuk-checkboxes__input"
                         name="exceptions"
-                        id="date-search-exceptions"
+                        id="audit-search-exceptions"
                         type="checkbox"
                         value="exceptions"
                       />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="date-search-exceptions">
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-search-exceptions">
                         {"Exceptions"}
                       </label>
                     </div>
@@ -110,7 +110,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             </div>
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
-                <fieldset className="govuk-fieldset">
+                <fieldset className="govuk-fieldset" id="trigger-filters">
                   <legend className="govuk-fieldset__legend--m">{"Trigger type"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     {triggerTypes.map((triggerType, index) => {
