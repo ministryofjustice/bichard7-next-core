@@ -30,4 +30,17 @@ describe("AuditSearch", () => {
     cy.get("label[for=audit-trigger-type-0]").should("have.text", "TRPR0001")
     cy.get("label[for=audit-trigger-type-1]").should("have.text", "TRPR0003")
   })
+
+  it("lists volume options with 20% as default", () => {
+    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+
+    cy.get("#audit-search-volume input[type=radio]").should("have.length", 4)
+
+    cy.get("label[for=audit-volume-10]").should("have.text", "10% of cases")
+    cy.get("label[for=audit-volume-20]").should("have.text", "20% of cases")
+    cy.get("label[for=audit-volume-50]").should("have.text", "50% of cases")
+    cy.get("label[for=audit-volume-100]").should("have.text", "100% of cases")
+
+    cy.get("#audit-volume-20").should("be.checked")
+  })
 })

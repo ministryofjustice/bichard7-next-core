@@ -138,7 +138,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             </div>
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
-                <fieldset className="govuk-fieldset">
+                <fieldset className="govuk-fieldset" id="audit-search-volume">
                   <legend className="govuk-fieldset__legend--m">{"Volume of cases"}</legend>
                   <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
                     {volumes.map((v) => {
