@@ -83,7 +83,7 @@ const SearchPage: NextPage<Props> = (props) => {
               </HeaderRow>
             </HeaderContainer>
             <AuditSearch
-              resolvedBy={[
+              resolvers={[
                 { username: "usera", forenames: "Name", surname: "A" },
                 { username: "userb", forenames: "Name", surname: "B" },
                 { username: "userc", forenames: "Name", surname: "C" }

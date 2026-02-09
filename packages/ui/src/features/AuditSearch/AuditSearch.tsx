@@ -11,7 +11,7 @@ interface Resolver {
 }
 
 interface Props {
-  resolvedBy: Resolver[]
+  resolvers: Resolver[]
   triggerTypes: string[]
 }
 
@@ -24,7 +24,7 @@ function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
 }
 
 const AuditSearch: React.FC<Props> = (props) => {
-  const { resolvedBy, triggerTypes } = props
+  const { resolvers, triggerTypes } = props
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
@@ -38,12 +38,13 @@ const AuditSearch: React.FC<Props> = (props) => {
   const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
   const [toDate, setToDate] = useState(new Date())
 
-  const [resolvers, setResolvers] = useState<string[]>([])
+  const [resolvedBy, setResolvedBy] = useState<string[]>([])
 
   const [includeTriggers, setIncludeTriggers] = useState(false)
   const [includeExceptions, setIncludeExceptions] = useState(false)
 
   const formValid = fromDate <= toDate && toDate <= today && (includeTriggers || includeExceptions)
+  const allResolversSelected = resolvers.every((rb) => resolvedBy.includes(rb.username))
 
   return (
     <div className="moj-filter">
@@ -130,9 +131,14 @@ const AuditSearch: React.FC<Props> = (props) => {
                         className="govuk-checkboxes__input"
                         id="audit-resolved-by-all"
                         type="checkbox"
+                        checked={allResolversSelected}
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setResolvers(resolvedBy.map((rb) => rb.username))
+                            setResolvedBy(resolvers.map((rb) => rb.username))
+                          } else {
+                            if (allResolversSelected) {
+                              setResolvedBy([])
+                            }
                           }
                         }}
                       />
@@ -140,7 +146,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                         {"All"}
                       </label>
                     </div>
-                    {resolvedBy.map((resolver, index) => {
+                    {resolvers.map((resolver, index) => {
                       return (
                         <div key={resolver.username} className="govuk-checkboxes__item">
                           <input
@@ -148,15 +154,15 @@ const AuditSearch: React.FC<Props> = (props) => {
                             id={`audit-resolved-by-${index}`}
                             type="checkbox"
                             data-resolver-name={resolver.username}
-                            checked={resolvers.includes(resolver.username)}
+                            checked={resolvedBy.includes(resolver.username)}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                if (!resolvers.includes(resolver.username)) {
-                                  setResolvers([...resolvers, resolver.username])
+                                if (!resolvedBy.includes(resolver.username)) {
+                                  setResolvedBy([...resolvedBy, resolver.username])
                                 }
                               } else {
-                                setResolvers([
-                                  ...resolvers.filter(
+                                setResolvedBy([
+                                  ...resolvedBy.filter(
                                     (r) => r != e.target.attributes.getNamedItem("data-resolver-name")?.value
                                   )
                                 ])

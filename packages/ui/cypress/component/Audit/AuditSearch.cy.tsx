@@ -4,7 +4,7 @@ import { subDays, format } from "date-fns"
 describe("AuditSearch", () => {
   it("mounts", () => {
     cy.mount(
-      <AuditSearch triggerTypes={["TRPR0010"]} resolvedBy={[{ username: "usera", forenames: "User", surname: "A" }]} />
+      <AuditSearch triggerTypes={["TRPR0010"]} resolvers={[{ username: "usera", forenames: "User", surname: "A" }]} />
     )
   })
 
@@ -12,7 +12,7 @@ describe("AuditSearch", () => {
     cy.mount(
       <AuditSearch
         triggerTypes={[]}
-        resolvedBy={[
+        resolvers={[
           { username: "usera", forenames: "Example User", surname: "A" },
           { username: "userb", forenames: "Another", surname: "User-B" }
         ]}
@@ -26,7 +26,7 @@ describe("AuditSearch", () => {
   })
 
   it("lists triggers", () => {
-    cy.mount(<AuditSearch triggerTypes={["TRPR0001", "TRPR0003"]} resolvedBy={[]} />)
+    cy.mount(<AuditSearch triggerTypes={["TRPR0001", "TRPR0003"]} resolvers={[]} />)
 
     cy.get("#audit-search-triggers input[type=checkbox]").should("have.length", 2)
 
@@ -35,7 +35,7 @@ describe("AuditSearch", () => {
   })
 
   it("lists volume options with 20% as default", () => {
-    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+    cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     cy.get("#audit-search-volume input[type=radio]").should("have.length", 4)
 
@@ -48,7 +48,7 @@ describe("AuditSearch", () => {
   })
 
   it("defaults from date and to date to be the past week", () => {
-    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+    cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     const fromStr = format(subDays(new Date(), 7), "yyyy-MM-dd")
     const toStr = format(new Date(), "yyyy-MM-dd")
@@ -58,7 +58,7 @@ describe("AuditSearch", () => {
   })
 
   it("allows dates to be specified in the past", () => {
-    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+    cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     const str = format(subDays(new Date(), 4), "yyyy-MM-dd")
 
@@ -70,14 +70,14 @@ describe("AuditSearch", () => {
   })
 
   it("allows toggling include flags", () => {
-    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+    cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     cy.get("input[name=audit-include-triggers]").click()
     cy.get("input[name=audit-include-exceptions]").click()
   })
 
   it("should reset cleared dates to today", () => {
-    cy.mount(<AuditSearch triggerTypes={[]} resolvedBy={[]} />)
+    cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     const todayStr = format(new Date(), "yyyy-MM-dd")
 
@@ -92,7 +92,7 @@ describe("AuditSearch", () => {
     cy.mount(
       <AuditSearch
         triggerTypes={[]}
-        resolvedBy={[
+        resolvers={[
           { username: "usera", forenames: "First", surname: "User" },
           { username: "userb", forenames: "Second", surname: "Example-User" },
           { username: "userc", forenames: "Third", surname: "Test-User" }
@@ -108,4 +108,6 @@ describe("AuditSearch", () => {
   it("should de-selected All checkbox if all resolvers are not selected", () => {})
 
   it("should select All checkbox if all resolvers are manually selected", () => {})
+
+  it("should de-select all if All is unchecked and all resolvers were selected", () => {})
 })
