@@ -97,7 +97,7 @@ export const buildNormalDisposalRequest = (
       },
       {
         disposalQualifiers: "A",
-        disposalQuantity: "Disposal quantity",
+        disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
@@ -124,7 +124,7 @@ export const buildNormalDisposalRequest = (
       },
       {
         disposalQualifiers: "A",
-        disposalQuantity: "Disposal quantity",
+        disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
         type: PncUpdateType.DISPOSAL
