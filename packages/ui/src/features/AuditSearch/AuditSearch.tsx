@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { FormGroup } from "components/FormGroup"
+import { FormButtonRow } from "./AuditSearch.styles"
 
 interface Resolver {
   name: string
@@ -159,15 +160,14 @@ const AuditSearch: React.FC<Props> = (props) => {
               </FormGroup>
             </div>
           </div>
-
-          <div>
+          <FormButtonRow>
             <button className="govuk-button">{"Search cases"}</button>
             <p className="govuk-body">
               <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
                 {"Clear search"}
               </a>
             </p>
-          </div>
+          </FormButtonRow>
         </div>
       </div>
     </div>
