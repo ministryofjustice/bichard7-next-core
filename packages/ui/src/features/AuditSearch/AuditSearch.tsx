@@ -85,7 +85,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             </div>
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
-                <fieldset className="govuk-fieldset">
+                <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                   <legend className="govuk-fieldset__legend--m">{"Resolved by"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     {resolvedBy.map((resolver, index) => {
@@ -110,7 +110,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             </div>
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
-                <fieldset className="govuk-fieldset" id="trigger-filters">
+                <fieldset className="govuk-fieldset" id="audit-search-triggers">
                   <legend className="govuk-fieldset__legend--m">{"Trigger type"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     {triggerTypes.map((triggerType, index) => {
