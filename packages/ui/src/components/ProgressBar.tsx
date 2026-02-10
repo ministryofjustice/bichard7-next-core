@@ -2,24 +2,24 @@ import { ProgressContainer, ProgressTracker, ProgressFill, ProgressSeparator } f
 import { useId } from "react"
 
 interface ProgressBarProps {
-  currentValue: number
-  maxValue: number
+  currentCount: number
+  maxCount: number
   labelType?: string
 }
 
-export const ProgressBar = ({ currentValue, maxValue, labelType }: ProgressBarProps) => {
+export const ProgressBar = ({ currentCount, maxCount, labelType }: ProgressBarProps) => {
   const labelId = useId()
 
-  if (currentValue <= 0) {
+  if (currentCount <= 0) {
     return null
   }
 
-  const clampedValue = Math.min(Math.max(currentValue, 0), maxValue)
+  const clampedValue = Math.min(Math.max(currentCount, 0), maxCount)
 
-  const safeMax = maxValue > 0 ? maxValue : 1
+  const safeMax = maxCount > 0 ? maxCount : 1
   const percentage = (clampedValue / safeMax) * 100
 
-  const displayLabel = labelType === "percentage" ? `Progress: ${percentage}%` : `Page ${clampedValue} of ${maxValue}`
+  const displayLabel = labelType === "percentage" ? `Progress: ${percentage}%` : `Page ${clampedValue} of ${maxCount}`
 
   return (
     <section aria-labelledby={labelId}>
@@ -29,7 +29,7 @@ export const ProgressBar = ({ currentValue, maxValue, labelType }: ProgressBarPr
       </span>
 
       <ProgressContainer>
-        <ProgressTracker role="progressbar" aria-valuenow={currentValue} aria-valuemin={0} aria-valuemax={maxValue}>
+        <ProgressTracker role="progressbar" aria-valuenow={currentCount} aria-valuemin={0} aria-valuemax={maxCount}>
           <ProgressFill $width={percentage} />
 
           {percentage > 0 && percentage < 100 && <ProgressSeparator />}
