@@ -41,7 +41,7 @@ export const ExceptionReportQuerySchema = z
     }
   })
 
-export const CaseRowForReportSchema = z.object({
+export const CaseRowForExceptionReportSchema = z.object({
   asn: z.string(),
   court_date: dateLikeToDate,
   court_name: z.string(),
@@ -56,7 +56,7 @@ export const CaseRowForReportSchema = z.object({
   type: z.string()
 })
 
-export const CaseForReportSchema = CaseSchema.pick({
+export const CaseForExceptionReportSchema = CaseSchema.pick({
   asn: true,
   courtName: true,
   courtReference: true,
@@ -73,22 +73,22 @@ export const CaseForReportSchema = CaseSchema.pick({
   type: z.string()
 })
 
-export const UserReportRowSchema = z.object({
-  cases: z.array(CaseRowForReportSchema),
+export const UserExceptionReportRowSchema = z.object({
+  cases: z.array(CaseRowForExceptionReportSchema),
   username: z.string()
 })
 
 export const ExceptionReportSchema = z.object({
-  cases: z.array(CaseForReportSchema),
+  cases: z.array(CaseForExceptionReportSchema),
   username: z.string()
 })
 
-export type CaseForReport = z.infer<typeof CaseForReportSchema>
-export type CaseRowForReport = z.infer<typeof CaseRowForReportSchema>
+export type CaseForExceptionReport = z.infer<typeof CaseForExceptionReportSchema>
+export type CaseRowForExceptionReport = z.infer<typeof CaseRowForExceptionReportSchema>
 
 export type ExceptionReport = z.infer<typeof ExceptionReportSchema>
 export type ExceptionReportQuery = z.infer<typeof ExceptionReportQuerySchema>
 
 export type ExceptionReportType = "Exceptions" | "Triggers"
 
-export type UserReportRow = z.infer<typeof UserReportRowSchema>
+export type UserExceptionReportRow = z.infer<typeof UserExceptionReportRowSchema>

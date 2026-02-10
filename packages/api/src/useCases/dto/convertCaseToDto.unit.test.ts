@@ -1,10 +1,10 @@
-import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Reports"
+import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
 
 import { convertCaseToCaseReportDto } from "./convertCaseToDto"
 
 describe("convertCaseToCaseReportDto", () => {
   it("should convert case row to case report DTO with empty notes", () => {
-    const caseRow: CaseRowForReport = {
+    const caseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
@@ -34,11 +34,11 @@ describe("convertCaseToCaseReportDto", () => {
       resolvedAt: new Date("2024-01-20"),
       resolver: "user1",
       type: "Exceptions"
-    } satisfies CaseForReport)
+    } satisfies CaseForExceptionReport)
   })
 
   it("should convert case row with notes sorted by create_ts descending", () => {
-    const caseRow: CaseRowForReport = {
+    const caseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
@@ -84,7 +84,7 @@ describe("convertCaseToCaseReportDto", () => {
   })
 
   it("should handle undefined notes", () => {
-    const caseRow: CaseRowForReport = {
+    const caseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
@@ -105,7 +105,7 @@ describe("convertCaseToCaseReportDto", () => {
   })
 
   it("should handle null notes", () => {
-    const caseRow: CaseRowForReport = {
+    const caseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
@@ -126,7 +126,7 @@ describe("convertCaseToCaseReportDto", () => {
   })
 
   it("should map all fields correctly", () => {
-    const caseRow: CaseRowForReport = {
+    const caseRow: CaseRowForExceptionReport = {
       asn: "ASN123",
       court_date: new Date("2024-02-01"),
       court_name: "Crown Court",

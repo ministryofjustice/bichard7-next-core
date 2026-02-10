@@ -7,7 +7,7 @@ import {
   type ExceptionReportQuery,
   ExceptionReportQuerySchema,
   ExceptionReportSchema
-} from "@moj-bichard7/common/types/Reports"
+} from "@moj-bichard7/common/types/ExceptionReport"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 

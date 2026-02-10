@@ -1,5 +1,5 @@
 import type { CaseDto, CaseIndexDto } from "@moj-bichard7/common/types/Case"
-import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Reports"
+import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
 import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
@@ -15,7 +15,7 @@ import { convertNoteToDto } from "./convertNoteToDto"
 import { resolutionStatusCodeByText, resolutionStatusFromDb } from "./convertResolutionStatus"
 import { convertTriggerRowToDto } from "./convertTriggerRowToDto"
 
-export const convertCaseToCaseReportDto = (caseRow: CaseRowForReport): CaseForReport => {
+export const convertCaseToCaseReportDto = (caseRow: CaseRowForExceptionReport): CaseForExceptionReport => {
   return {
     asn: caseRow.asn,
     courtName: caseRow.court_name,

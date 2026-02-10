@@ -1,4 +1,4 @@
-import type { UserReportRow } from "@moj-bichard7/common/types/Reports"
+import type { UserExceptionReportRow } from "@moj-bichard7/common/types/ExceptionReport"
 
 import { processExceptions } from "./processExceptions"
 import { processUsers } from "./processUsers"
@@ -17,7 +17,7 @@ describe("processUsers", () => {
 
     mockProcessExceptions.mockReturnValue(mockProcessedCase)
 
-    const inputData: UserReportRow[] = [
+    const inputData: UserExceptionReportRow[] = [
       {
         cases: [{ asn: "raw_case_1" } as any, { asn: "raw_case_2" } as any],
         username: "User 1"
@@ -48,7 +48,7 @@ describe("processUsers", () => {
   })
 
   it("handles a user with no cases", () => {
-    const inputData: UserReportRow[] = [{ cases: [], username: "User Empty" }]
+    const inputData: UserExceptionReportRow[] = [{ cases: [], username: "User Empty" }]
 
     const result = processUsers(inputData)
 

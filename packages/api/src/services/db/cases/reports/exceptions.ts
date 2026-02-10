@@ -2,8 +2,8 @@ import type {
   ExceptionReport,
   ExceptionReportQuery,
   ExceptionReportType,
-  UserReportRow
-} from "@moj-bichard7/common/types/Reports"
+  UserExceptionReportRow
+} from "@moj-bichard7/common/types/ExceptionReport"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { PendingQuery, Row } from "postgres"
 
@@ -86,7 +86,7 @@ export const exceptionsReport = async (
     combinedParts = database.connection`${parts[0]} UNION ALL ${parts[1]}`
   }
 
-  const fullQuery = database.connection<UserReportRow[]>`
+  const fullQuery = database.connection<UserExceptionReportRow[]>`
     WITH combined_data AS (${combinedParts})
     SELECT
       cb.resolver as username,

@@ -1,8 +1,8 @@
-import type { ExceptionReport, UserReportRow } from "@moj-bichard7/common/types/Reports"
+import type { ExceptionReport, UserExceptionReportRow } from "@moj-bichard7/common/types/ExceptionReport"
 
 import { processExceptions } from "./processExceptions"
 
-export const processUsers = (userRows: UserReportRow[]): ExceptionReport[] => {
+export const processUsers = (userRows: UserExceptionReportRow[]): ExceptionReport[] => {
   return userRows.map((userRow) => {
     return {
       cases: userRow.cases.map(processExceptions),

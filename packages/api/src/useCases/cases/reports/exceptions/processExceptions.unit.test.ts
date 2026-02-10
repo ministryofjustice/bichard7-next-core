@@ -1,4 +1,4 @@
-import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Reports"
+import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
 
 import * as convertCaseModule from "../../../dto/convertCaseToDto"
 import { processExceptions } from "./processExceptions"
@@ -11,7 +11,7 @@ describe("processExceptions", () => {
   })
 
   it("should call convertCaseToCaseReportDto with the case row", () => {
-    const mockCaseRow: CaseRowForReport = {
+    const mockCaseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
       court_name: "Test Court",
@@ -26,7 +26,7 @@ describe("processExceptions", () => {
       type: "error"
     }
 
-    const mockResult: CaseForReport = {
+    const mockResult: CaseForExceptionReport = {
       asn: "1101ZD0100000410836J",
       courtName: "Test Court",
       courtReference: "REF123",
