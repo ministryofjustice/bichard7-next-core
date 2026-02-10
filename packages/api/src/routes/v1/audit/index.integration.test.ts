@@ -2,9 +2,10 @@ import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, format, subWeeks } from "date-fns"
 import { type FastifyInstance } from "fastify"
-import { BAD_REQUEST, CREATED } from "http-status"
+import { BAD_REQUEST, CREATED, FORBIDDEN } from "http-status"
 
 import build from "../../../app"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
@@ -32,13 +33,14 @@ describe("Create audit", () => {
   })
 
   it("returns 201 CREATED when audit created successfully", async () => {
-    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway)
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const payload = {
       fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
       includedTypes: ["Triggers", "Exceptions"],
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 20
     } satisfies CreateAudit
+
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
@@ -55,7 +57,7 @@ describe("Create audit", () => {
   })
 
   it("returns 400 Bad Request when date range is in the past", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -74,7 +76,7 @@ describe("Create audit", () => {
   })
 
   it("returns 400 Bad Request when no included types", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -90,5 +92,23 @@ describe("Create audit", () => {
 
     expect(response.statusCode).toBe(BAD_REQUEST)
     expect(response.body).toContain("includedTypes")
+  })
+
+  it("returns 403 when user does not have permission to do audits", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: {
+        fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        includedTypes: ["Triggers", "Exceptions"],
+        toDate: format(new Date(), "yyyy-MM-dd"),
+        volumeOfCases: 20
+      } satisfies CreateAudit,
+      url: V1.Audit
+    })
+
+    expect(response.statusCode).toBe(FORBIDDEN)
   })
 })

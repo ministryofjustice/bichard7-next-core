@@ -6,7 +6,7 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/contracts/CreateAudit"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { CREATED, INTERNAL_SERVER_ERROR } from "http-status"
+import { CREATED, FORBIDDEN } from "http-status"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
@@ -47,7 +47,7 @@ const handler = async ({ body, database, reply, user }: HandlerProps) => {
   const auditResult = await createAudit(database.writable, body, user)
   if (isError(auditResult)) {
     reply.log.error(auditResult)
-    return reply.code(INTERNAL_SERVER_ERROR).send()
+    return reply.code(FORBIDDEN).send()
   }
 
   return reply.code(CREATED).send(auditResult)
