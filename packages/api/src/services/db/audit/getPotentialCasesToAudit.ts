@@ -23,7 +23,9 @@ export async function getPotentialCasesToAudit(
     SELECT 
       error_id,
       trigger_resolved_by,
-      error_resolved_by
+      trigger_quality_checked,
+      error_resolved_by,
+      error_quality_checked
     FROM 
       br7own.error_list el
     WHERE
@@ -68,7 +70,13 @@ export async function getPotentialCasesToAudit(
   }
 
   const results = await sql<
-    { error_id: number; error_resolved_by: null | string; trigger_resolved_by: null | string }[]
+    {
+      error_id: number
+      error_quality_checked: null | number
+      error_resolved_by: null | string
+      trigger_quality_checked: null | number
+      trigger_resolved_by: null | string
+    }[]
   >`${baseQuery} ${filter}`.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get cases to audit")
@@ -83,7 +91,22 @@ export async function getPotentialCasesToAudit(
             (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername)
           )
         })
-        .map((result) => ({ audited: false, id: result.error_id }))
+        .map((result) => {
+          let audited = false
+          const triggersNeedAudit =
+            (result.trigger_resolved_by?.length ?? 0) > 0 && (result.trigger_quality_checked ?? 1) <= 1
+          const exceptionsNeedAudit =
+            (result.error_resolved_by?.length ?? 0) > 0 && (result.error_quality_checked ?? 1) <= 1
+          if (checkForResolvedTriggers && checkForResolvedExceptions) {
+            audited = !triggersNeedAudit && !exceptionsNeedAudit
+          } else if (checkForResolvedTriggers) {
+            audited = !triggersNeedAudit
+          } else if (checkForResolvedExceptions) {
+            audited = !exceptionsNeedAudit
+          }
+
+          return { audited, id: result.error_id }
+        })
         .sort((a, b) => {
           if (a.audited === b.audited) {
             return a.id - b.id

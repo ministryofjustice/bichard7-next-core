@@ -429,6 +429,28 @@ describe("getPotentialCasesToAudit", () => {
         errorResolvedAt: subDays(new Date(), 1),
         errorResolvedBy: testUsername,
         orgForPoliceFilter: user.visibleForces[0]
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 5,
+        errorQualityChecked: 1, // Not checked
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerQualityChecked: 2, // Pass
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 6,
+        errorQualityChecked: 7, // Remand Pass
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerQualityChecked: 1, // Not checked
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
       })
     ])
     const createAudit = {
@@ -444,7 +466,9 @@ describe("getPotentialCasesToAudit", () => {
           { audited: true, id: cases[0].errorId },
           { audited: true, id: cases[1].errorId },
           { audited: false, id: cases[2].errorId },
-          { audited: false, id: cases[3].errorId }
+          { audited: false, id: cases[3].errorId },
+          { audited: false, id: cases[4].errorId },
+          { audited: false, id: cases[5].errorId }
         ],
         username: testUsername
       }
