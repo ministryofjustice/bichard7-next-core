@@ -1,15 +1,15 @@
 import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
-import { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
 import type { LedsMock, LedsMockOptions } from "../../../types/LedsMock"
+import convertPncUpdateResponseToLeds from "../../convertPncJsonToLeds/convertPncUpdateResponseToLeds"
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
 
 enum Operation {
   Remand = "CXU01", // NEWREM
   AddDisposal = "CXU02", // DISARR
-  Subsequently_Varied = "CXU03", // SUBVAR
-  Sentence_Deferred = "CXU04" // SENDEF
+  SubsequentlyVaried = "CXU03", // SUBVAR
+  SentenceDeferred = "CXU04" // SENDEF
 }
 
 export const generateUpdate = (code: string, options: LedsMockOptions): LedsMock => {
@@ -25,8 +25,8 @@ export const generateUpdate = (code: string, options: LedsMockOptions): LedsMock
     case Operation.AddDisposal:
       endpoint = endpoints.addDisposal(personId, courtCaseId)
       break
-    case Operation.Subsequently_Varied:
-    case Operation.Sentence_Deferred:
+    case Operation.SubsequentlyVaried:
+    case Operation.SentenceDeferred:
       endpoint = endpoints.subsequentDisposalResults(personId, courtCaseId)
       break
     default:
@@ -39,8 +39,8 @@ export const generateUpdate = (code: string, options: LedsMockOptions): LedsMock
     body: undefined
   })
 
-  const mockResponse = { id: randomUUID() }
-  const response = createMockResponse(mockResponse, HttpStatusCode.Created)
+  const { mockResponse, statusCode } = convertPncUpdateResponseToLeds(options.response)
+  const response = createMockResponse(mockResponse, statusCode)
 
   return {
     id: randomUUID(),

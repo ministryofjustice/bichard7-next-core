@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Request Logs</title>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <style>
+        body {
+            font-family: -apple-system, sans-serif;
+            background: #f4f7f6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .request-card {
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        summary {
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        summary:hover {
+            background: #f9f9f9;
+        }
+
+        /* Flex group for Method and Path */
+        .req-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .method {
+            background: #27ae60;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        /* Status badge pushed to the right */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-family: monospace;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+            background: #fff;
+        }
+
+        .col-header {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: bold;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+        }
+
+        .meta-detail {
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        pre {
+            margin: 0;
+            font-size: 0.85em;
+            border-radius: 6px;
+        }
+
+        .no-mock {
+            color: #999;
+            font-style: italic;
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 6px;
+            border: 1px dashed #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Request History</h1>
+    <div id="container">Loading logs...</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script>
+        async function load() {
+            try {
+                const res = await fetch('/requests?output=json');
+                const data = await res.json();
+                const container = document.getElementById('container');
+
+                if (data.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; padding: 40px; color: #888;">No requests logged yet.</p>';
+                    return;
+                }
+
+                container.innerHTML = data.map(req => {
+                    const statusClass = req.status < 400 ? 'status-success' : 'status-error';
+                    return `
+                    <details class="request-card">
+                        <summary>
+                            <div class="req-info">
+                                <span class="method">${req.method}</span>
+                                <span style="font-family: monospace;">${req.path}</span>
+                            </div>
+                            <span class="status-badge ${statusClass}">HTTP ${req.status || '404'}</span>
+                        </summary>
+                        <div class="content-grid">
+                            <div class="col">
+                                <div class="col-header">Request Details</div>
+                                <div class="meta-detail"><span class="meta-label">ID:</span> ${req.id}</div>
+                                <div class="meta-detail"><span class="meta-label">Timestamp:</span> ${req.timestamp}</div>
+                                <pre><code class="language-json">${JSON.stringify({
+                        headers: req.headers,
+                        body: req.body
+                    }, null, 2)}</code></pre>
+                            </div>
+                            <div class="col">
+                                <div class="col-header">Matched Mock Definition</div>
+                                ${req.mock ? `
+                                    <div class="meta-detail"><span class="meta-label">Mock ID:</span> ${req.mock.id}</div>
+                                    <pre><code class="language-json">${JSON.stringify(req.mock.response, null, 2)}</code></pre>
+                                ` : `<p class="no-mock">No mock matched for this request (returned 404).</p>`}
+                            </div>
+                        </div>
+                    </details>
+                `}).join('');
+                hljs.highlightAll();
+            } catch (err) {
+                document.getElementById('container').innerHTML = '<p style="color:red;">Error loading requests: ' + err.message + '</p>';
+            }
+        }
+        load();
+    </script>
+</body>
+
+</html>

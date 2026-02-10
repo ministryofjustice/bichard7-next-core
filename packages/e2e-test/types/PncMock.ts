@@ -4,6 +4,7 @@ import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiReques
 
 export type PncMockOptions = PoliceApiRequestMockOptions & {
   matchRegex?: string
+  response?: string
   expectedRequest?: string
   count?: number
 }

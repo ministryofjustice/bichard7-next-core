@@ -835,12 +835,16 @@ jobs:
     parallelism: 10
     parameters:
       <<: *ui_params
+      use-leds:
+        type: boolean
+        default: false
     environment:
       RECORD: "true"
       STACK_TYPE: next
       WORKSPACE: local-next
       AUTH_TYPE: user-service
       TZ: "Europe/London"
+      USE_LEDS: << parameters.use-leds >>
     steps:
       - unless:
           condition:
@@ -940,7 +944,7 @@ jobs:
           command: DEPLOY_NAME=e2e-test npm run -w packages/ui seed-data
       - run:
           name: Run ZAP scanner
-          command: npm run -w packages/ui zap
+          command: IS_CI=true npm run -w packages/ui zap
 
 workflows:
   test-all:
@@ -983,6 +987,12 @@ workflows:
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
+          requires:
+            - build_ui_image
+            - build_user_service_image
+      - cucumber_e2e_tests:
+          name: cucumber_e2e_tests_leds
+          use-leds: true
           requires:
             - build_ui_image
             - build_user_service_image

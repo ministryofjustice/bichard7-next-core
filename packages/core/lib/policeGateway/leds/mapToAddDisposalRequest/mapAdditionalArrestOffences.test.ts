@@ -115,7 +115,7 @@ describe("mapAdditionalArrestOffences", () => {
     const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
     expect(result?.[0].additionalOffences?.[0].disposalResults?.[0]).toEqual({
       disposalCode: 20,
-      disposalQualifiers: [""],
+      disposalQualifiers: undefined,
       disposalText: undefined
     })
   })

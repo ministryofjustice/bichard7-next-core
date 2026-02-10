@@ -2,6 +2,7 @@ import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQual
 import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { Card } from "components/Card"
 import { useCourtCase } from "context/CourtCaseContext"
+import { InfoRow } from "features/CourtCaseDetails/Tabs/Panels/InfoRow"
 
 interface Props {
   hasExceptions: boolean
@@ -11,23 +12,13 @@ interface Props {
 export const QualityStatusDisplay = ({ hasTriggers, hasExceptions }: Props) => {
   const { courtCase } = useCourtCase()
 
-  const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
   const triggerQuality = triggerQualityValues[courtCase.triggerQualityChecked ?? 1]
+  const exceptionQuality = exceptionQualityValues[courtCase.errorQualityChecked ?? 1]
 
   return (
     <Card heading={"Quality status"}>
-      {hasTriggers && (
-        <p>
-          <b>{"Trigger Quality: "}</b>
-          {triggerQuality}
-        </p>
-      )}
-      {hasExceptions && (
-        <p>
-          <b>{"Exception Quality: "}</b>
-          {exceptionQuality}
-        </p>
-      )}
+      {hasTriggers && <InfoRow label="Trigger Quality: " value={triggerQuality} />}
+      {hasExceptions && <InfoRow label="Exception Quality: " value={exceptionQuality} />}
     </Card>
   )
 }

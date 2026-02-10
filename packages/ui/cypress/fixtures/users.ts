@@ -92,7 +92,11 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "supervisor@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor]
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    featureFlags: {
+      useCourtDateReceivedDateMismatchFiltersEnabled: true,
+      useTriggerAndExceptionQualityAuditingEnabled: true
+    }
   },
   UserManager: {
     username: "UserManager",

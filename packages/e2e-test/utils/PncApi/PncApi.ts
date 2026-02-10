@@ -3,6 +3,7 @@ import type PncHelper from "../../types/PncHelper"
 import type PncMock from "../../types/PncMock"
 import type { PartialPncMock, PncBichard, PncMockOptions } from "../../types/PncMock"
 import type PoliceApi from "../../types/PoliceApi"
+import type { MockAsnQueryParams } from "../../types/PoliceApi"
 import defaults from "../defaults"
 import addMockToPncEmulator from "./addMockToPncEmulator"
 import addMockToPncTestTool from "./addMockToPncTestTool"
@@ -32,6 +33,10 @@ export class PncApi implements PoliceApi {
           port: Number(process.env.PNC_PORT || defaults.pncPort),
           bichard: this.bichard
         })
+  }
+
+  mockAsnQuery(params: MockAsnQueryParams): PartialPncMock {
+    return params
   }
 
   checkMocks(): Promise<void> {

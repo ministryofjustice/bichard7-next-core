@@ -7,7 +7,7 @@ export const parseDisposalQuantity = (disposalQuantity: string) => {
   const year = quantity.slice(8, 12).trim()
   const amount = Number(quantity.slice(12)) || 0
   const disposalEffectiveDate = year && month && day ? `${year}-${month}-${day}` : undefined
-  const { units, count } = parseDisposalDuration(quantity)
+  const disposalDuration = parseDisposalDuration(quantity)
 
-  return { count, units, disposalEffectiveDate, amount }
+  return { disposalDuration, disposalEffectiveDate, amount }
 }

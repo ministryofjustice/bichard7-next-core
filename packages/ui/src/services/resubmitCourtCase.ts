@@ -26,6 +26,7 @@ const phase2ResubmissionQueue = process.env.PHASE_2_RESUBMIT_QUEUE_NAME ?? "PHAS
 
 const resubmitCourtCaseTransaction = async (
   dataSource: DataSource,
+  mqGateway: MqGateway,
   amendments: Partial<Amendments>,
   courtCaseId: number,
   user: User
@@ -96,10 +97,22 @@ const resubmitCourtCaseTransaction = async (
       )
     )
 
+    if (!updatedCourtCase.updatedHearingOutcome) {
+      throw Error(`Cannot resubmit court case id ${courtCaseId} because updated hearing outcome is null`)
+    }
+
     const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch((error) => error)
 
     if (isError(storeAuditLogResponse)) {
       throw storeAuditLogResponse
+    }
+
+    const destinationQueue =
+      updatedCourtCase.phase == Phase.HEARING_OUTCOME ? phase1ResubmissionQueue : phase2ResubmissionQueue
+    const queueResult = await mqGateway.execute(updatedCourtCase.updatedHearingOutcome, destinationQueue)
+
+    if (isError(queueResult)) {
+      throw queueResult
     }
 
     return updatedCourtCase
@@ -116,26 +129,14 @@ const resubmitCourtCase = async (
   const updatedCourtCase = await retryTransaction(
     resubmitCourtCaseTransaction,
     dataSource,
+    mqGateway,
     amendments,
     courtCaseId,
     user
   ).catch((error: Error) => error)
 
   if (isError(updatedCourtCase)) {
-    throw updatedCourtCase
-  }
-
-  if (!updatedCourtCase.updatedHearingOutcome) {
-    return Error(`Cannot resubmit court case id ${courtCaseId} because updated hearing outcome is null`)
-  }
-
-  // TODO: this doesn't look right - should it be in transaction??
-  const destinationQueue =
-    updatedCourtCase.phase == Phase.HEARING_OUTCOME ? phase1ResubmissionQueue : phase2ResubmissionQueue
-  const queueResult = await mqGateway.execute(updatedCourtCase.updatedHearingOutcome, destinationQueue)
-
-  if (isError(queueResult)) {
-    return queueResult
+    return updatedCourtCase
   }
 }
 

@@ -32,6 +32,7 @@ services:
       PHASE3_CORE_CANARY_RATIO: ${PHASE3_CORE_CANARY_RATIO:-1}
       PHASE_2_QUEUE_NAME: ${PHASE_2_QUEUE_NAME:-HEARING_OUTCOME_PNC_UPDATE_QUEUE}
       PHASE_3_QUEUE_NAME: ${PHASE_3_QUEUE_NAME:-PNC_UPDATE_REQUEST_QUEUE}
+      LEDS_API_URL: ${LEDS_API_URL:-https://leds:8443}
       NODE_ENV: ${NODE_ENV:-test}
       SMTP_HOST: mail
       SMTP_USER: ${DEFAULT_USER}
@@ -39,6 +40,7 @@ services:
       SMTP_PORT: 1025
       SMTP_TLS: "false"
       SMTP_DEBUG: "true"
+      USE_LEDS: ${USE_LEDS:-false}
     depends_on:
       audit-log-api:
         condition: service_healthy

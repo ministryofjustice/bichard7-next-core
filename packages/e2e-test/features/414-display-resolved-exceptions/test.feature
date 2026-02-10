@@ -17,7 +17,7 @@ Feature: {414} Persist Reason codes on a case list after the case is resolved.
 		Then I see exception "HO100206" in the exception list table
 		When I open this record
 			And I click the "Defendant" tab
-			And I correct "ASN" to "1101ZD0100000448754K"
+			And I correct "ASN" to "1101ZD0100000410846F"
 			And I submit the record
 		When I return to the list
 			And I reload until I don't see "(Submitted)"
@@ -39,7 +39,7 @@ Feature: {414} Persist Reason codes on a case list after the case is resolved.
 		Then I see exception "HO100206" in the exception list table
 		When I open this record
 			And I click the "Defendant" tab
-			And I correct "ASN" to "1101ZD0100000448754K"
+			And I correct "ASN" to "1101ZD0100000410846F"
 			And I submit the record
 		When I return to the list
 			And I reload until I don't see "(Submitted)"

@@ -8,6 +8,7 @@ describe("Case list", () => {
   it("should respond with forbidden response code when CSRF tokens are invalid", () => {
     loginAndVisit()
     cy.checkCsrf("/bichard")
+    cy.checkCsrf("/bichard/audit/search")
     cy.checkCsrf("/bichard/court-cases/0")
     cy.checkCsrf("/bichard/court-cases/0/reallocate")
     cy.checkCsrf("/bichard/court-cases/0/resolve")

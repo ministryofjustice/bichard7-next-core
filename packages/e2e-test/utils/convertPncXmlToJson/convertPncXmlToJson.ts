@@ -6,7 +6,6 @@ import type { Asr } from "./convertAsr"
 import convertAsr from "./convertAsr"
 import type { Cch } from "./convertCch"
 import convertCch from "./convertCch"
-import type { Ccr } from "./convertCcr"
 import convertCcr from "./convertCcr"
 import type { Cof } from "./convertCof"
 import convertCof from "./convertCof"
@@ -23,9 +22,12 @@ import convertPcr from "./convertPcr"
 import convertRcc from "./convertRcc"
 import type { Rem } from "./convertRem"
 import convertRem from "./convertRem"
+import type { Txt } from "./convertTxt"
+import convertTxt from "./convertTxt"
 import extractSegments from "./extractSegments"
 
 const converters: Record<string, (value: string) => object | void> = {
+  TXT: convertTxt,
   REM: convertRem,
   ASR: convertAsr,
   IDS: convertIds,
@@ -33,20 +35,20 @@ const converters: Record<string, (value: string) => object | void> = {
   RCC: convertRcc,
   FSC: convertFsc,
   CRT: convertCrt,
-  CCR: convertCcr,
   COU: convertCou
 }
 
-type AsnQueryOffences = { offences: (Cof & Partial<Adj> & { disposals: Dis[] })[] }
-type UpdateOffences = { offences: (Cch & Partial<Adj> & { disposals: Dis[] })[] }
-type AdditionalOffences = { additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[] })[] } }
+type AsnQueryOffences = { offences: (Cof & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
+type UpdateOffences = { offences: (Cch & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
+type AdditionalOffences = {
+  additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
+}
 
-export type PncAsnQueryJson = Fsc & Ids & Ccr & AsnQueryOffences
+export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences) | Txt
 export type PncRemandJson = Fsc & Ids & Asr & Rem
-export type PncNormalDisposalJson = Fsc & Ids & Ccr & Cou & UpdateOffences & AdditionalOffences
+export type PncNormalDisposalJson = Fsc & Ids & Cou & UpdateOffences & AdditionalOffences
 export type PncSubsequentDisposalJson = Fsc &
   Ids &
-  Ccr &
   Cou &
   UpdateOffences & { type: "Sentence deferred" | "Subsequently varied" }
 type PncJson = PncAsnQueryJson | PncRemandJson | PncNormalDisposalJson | PncSubsequentDisposalJson
@@ -55,37 +57,45 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
   const segments = extractSegments(xml)
   let json = {} as T
 
-  let offences: (Partial<(Cof | Cch | Ach) & Adj> & { disposals: Dis[] })[] = []
+  let courtCaseReference: string = ""
+  let offences: (Partial<(Cof | Cch) & Adj> & { disposals: Dis[]; courtCaseReference: string })[] = []
+  const additionalOffences: AdditionalOffences | undefined = undefined
+
+  converters["CCR"] = (value: string) => {
+    const ccr = convertCcr(value)
+
+    courtCaseReference = ccr.courtCaseReferenceNumber
+  }
 
   converters["COF"] = (value: string): void => {
     const cof = convertCof(value)
 
     offences = (json as AsnQueryOffences).offences ??= []
-    offences.push({ ...cof, disposals: [] })
+    offences.push({ ...cof, disposals: [], courtCaseReference })
   }
 
   converters["CCH"] = (value: string): void => {
     const cch = convertCch(value)
 
     offences = (json as UpdateOffences).offences ??= []
-    offences.push({ ...cch, disposals: [] })
+    offences.push({ ...cch, disposals: [], courtCaseReference })
   }
 
   converters["ACH"] = (value: string): void => {
     const ach = convertAch(value)
 
-    offences = ((json as AdditionalOffences).additionalOffences ??= {
+    ;(json as AdditionalOffences).additionalOffences ??= {
       arrestSummonsNumber: "",
       crimeOffenceReferenceNo: "",
       offences: []
-    }).offences
-    offences.push({ ...ach, disposals: [] })
+    }
+    ;(json as AdditionalOffences).additionalOffences.offences.push({ ...ach, disposals: [], courtCaseReference })
   }
 
   converters["ADJ"] = (value: string): void => {
     const adj = convertAdj(value)
 
-    if (offences.length) {
+    if (offences.length > 0) {
       Object.assign(offences[offences.length - 1], adj)
     }
   }
@@ -93,7 +103,7 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
   converters["DIS"] = (value: string): void => {
     const dis = convertDis(value)
 
-    if (offences.length) {
+    if (offences.length > 0) {
       offences[offences.length - 1].disposals.push(dis)
     }
   }
@@ -106,6 +116,8 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
 
     json = { ...json, ...converted }
   }
+
+  json = { ...json, ...offences, ...(additionalOffences ?? {}) }
 
   return json
 }

@@ -4,6 +4,7 @@ import type { AsnQueryResponse, DisposalResult, Offence } from "@moj-bichard7/co
 import type { Adjudication, Plea } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
 import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
+import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
 import { randomUUID } from "crypto"
 import type { Adj } from "../convertPncXmlToJson/convertAdj"
 import type { Cof } from "../convertPncXmlToJson/convertCof"
@@ -30,23 +31,23 @@ const parseDisposalQualifiers = (qualifiers?: string) => {
       .substring(0, 9)
       .trim()
       .match(/.{1,2}/g) || []
-  const { units, count } = parseDisposalDuration(qualifiers.substring(8, 12))
+  const disposalQualifierDuration = parseDisposalDuration(qualifiers.substring(8, 12))
 
   return {
     disposalQualifiers,
-    disposalQualifierDuration: { units, count }
+    disposalQualifierDuration
   }
 }
 
 const mapDisposalResults = (disposalResults: Dis[]): DisposalResult[] => {
   const mappedDisposalResults = disposalResults.map((disposalResult) => {
-    const { units, count } = parseDisposalDuration(disposalResult.qtyDuration)
+    const disposalDuration = parseDisposalDuration(disposalResult.qtyDuration)
     const { disposalQualifiers, disposalQualifierDuration } = parseDisposalQualifiers(disposalResult.qualifiers)
 
     return {
       disposalId: randomUUID(),
       disposalCode: disposalResult.type ? Number(disposalResult.type) : 0,
-      disposalDuration: disposalResult.qtyDuration ? { units, count } : undefined,
+      disposalDuration,
       disposalFine: disposalResult.qtyMonetaryValue
         ? {
             amount: Number(disposalResult.qtyMonetaryValue),
@@ -98,24 +99,42 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
 export const convertPncJsonToLedsAsnQueryResponse = (
   pncJson: PncAsnQueryJson,
   { asn, personId, reportId, courtCaseId }: Params
-): AsnQueryResponse => {
+): AsnQueryResponse | ErrorResponse => {
+  if ("txt" in pncJson) {
+    return {
+      status: 404,
+      title: "string",
+      type: "conflict/version",
+      details: "string",
+      instance: "string",
+      leds: {
+        errors: [
+          {
+            errorDetailType: pncJson.txt,
+            message: pncJson.txt
+          }
+        ]
+      }
+    }
+  }
+
+  const courtCaseReferences = Array.from(new Set(pncJson.offences.map((offence) => offence.courtCaseReference)))
+
   return {
     personId,
     personUrn: pncJson.pncIdentifier,
     reportId,
     asn,
     ownerCode: pncJson.forceStationCode,
-    disposals: [
-      {
-        courtCaseId,
-        courtCaseReference: pncJson.courtCaseReferenceNumber,
-        caseStatusMarker: "impending-prosecution-detail",
-        court: {
-          courtIdentityType: "code",
-          courtCode: "0000"
-        },
-        offences: mapOffences(pncJson.offences)
-      }
-    ]
+    disposals: courtCaseReferences.map((courtCaseReference) => ({
+      courtCaseId,
+      courtCaseReference: courtCaseReference,
+      caseStatusMarker: "impending-prosecution-detail",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "0000"
+      },
+      offences: mapOffences(pncJson.offences.filter((offence) => offence.courtCaseReference === courtCaseReference))
+    }))
   }
 }

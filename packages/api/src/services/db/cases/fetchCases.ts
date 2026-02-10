@@ -1,7 +1,10 @@
 import type { CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import Permission from "@moj-bichard7/common/types/Permission"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import { isEmpty } from "lodash"
 
 import type { CaseRowForIndexDto } from "../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
@@ -29,8 +32,46 @@ const fetchCases = async (
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
 
   const filtersSql = generateFilters(database, user, filters)
-
   const exceptionsAndTriggersSql = exceptionsAndTriggers(database, user, filters)
+
+  let triggerReasonCodeFilter = database.connection``
+
+  if (filters.reasonCodes && !isEmpty(filters.reasonCodes)) {
+    const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
+    const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
+    if (triggerCodes.length > 0) {
+      triggerReasonCodeFilter = database.connection`AND elt.trigger_code = ANY (${triggerCodes})`
+    }
+  }
+
+  const showTriggers = userAccess(user)[Permission.Triggers]
+
+  const triggersColSql = !showTriggers
+    ? database.connection`'[]'::json`
+    : database.connection`
+      COALESCE(
+        (
+          SELECT json_agg(
+            json_build_object(
+              'create_ts', elt.create_ts,
+              'error_id', elt.error_id,
+              'resolved_by', elt.resolved_by,
+              'resolved_ts', elt.resolved_ts,
+              'status', elt.status,
+              'trigger_code', elt.trigger_code,
+              'trigger_id', elt.trigger_id,
+              'trigger_item_identity', elt.trigger_item_identity
+            )
+            ORDER BY elt.trigger_id ASC
+          )
+          FROM br7own.error_list_triggers elt
+          WHERE elt.error_id = el.error_id
+            ${excludedTriggersAndStatusSql(database, user, filters)}
+            ${triggerReasonCodeFilter}
+        ),
+        '[]'::json
+      )
+    `
 
   const allCasesSql = database.connection`
     SELECT DISTINCT
@@ -117,7 +158,34 @@ const fetchCases = async (
       el.trigger_locked_by_id,
       el.trigger_quality_checked,
       el.trigger_status,
-      COUNT(CASE WHEN eln.user_id != 'System' OR eln.user_id IS NULL THEN eln.note_id END) AS note_count,
+      (
+        SELECT COUNT(*)
+        FROM br7own.error_list_notes n_count
+        WHERE n_count.error_id = el.error_id
+          AND (n_count.user_id != 'System' OR n_count.user_id IS NULL)
+      ) AS note_count,
+      COALESCE(
+        (
+          SELECT json_build_array(
+            json_build_object(
+              'note_id', n_latest.note_id,
+              'error_id', n_latest.error_id,
+              'note_text', n_latest.note_text,
+              'user_id', n_latest.user_id,
+              'create_ts', n_latest.create_ts
+            )
+          )
+          FROM br7own.error_list_notes n_latest
+          WHERE
+            n_latest.error_id = el.error_id
+            AND (n_latest.user_id != 'System' OR n_latest.user_id IS NULL)
+          ORDER BY
+            n_latest.create_ts DESC
+          LIMIT 1
+        ),
+        '[]'::json
+      ) AS notes,
+      ${triggersColSql} AS triggers,
       NULLIF(CONCAT_WS(' ', errorLockedByUser.forenames, errorLockedByUser.surname), '') AS error_locked_by_fullname,
       NULLIF(CONCAT_WS(' ', triggerLockedByUser.forenames, triggerLockedByUser.surname), '') AS trigger_locked_by_fullname,
       (SELECT fullCount FROM totalCount) AS full_count
@@ -125,7 +193,6 @@ const fetchCases = async (
       br7own.error_list el
       LEFT JOIN relevantUsers errorLockedByUser ON errorLockedByUser.username = el.error_locked_by_id
       LEFT JOIN relevantUsers triggerLockedByUser ON triggerLockedByUser.username = el.trigger_locked_by_id
-      LEFT JOIN br7own.error_list_notes AS eln ON eln.error_id = el.error_id
     WHERE
       (el.error_id IN (SELECT ids_el_error_id FROM limitedCases))
     GROUP BY
