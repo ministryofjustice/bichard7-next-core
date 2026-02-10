@@ -21,49 +21,50 @@ export async function getPotentialCasesToAudit(
     FROM 
       br7own.error_list el
     WHERE
-      court_code IN (${user.visibleCourts})
-      AND org_for_police_filter IN (${user.visibleForces})
+      court_code = ANY (${user.visibleCourts})
+      AND org_for_police_filter = ANY (${user.visibleForces})
     `
 
+  let filter = sql``
+
   const resolvedByUsers = createAudit.resolvedByUsers ?? []
+
+  let triggerFilter = sql`( 
+    trigger_resolved_by = ANY (${resolvedByUsers})
+    AND trigger_resolved_ts >= ${createAudit.fromDate}
+    AND trigger_resolved_ts < ${addDays(createAudit.toDate, 1)}
+  )`
+  if ((createAudit.triggerTypes?.length ?? 0) > 0) {
+    triggerFilter = sql`(
+      ${triggerFilter}
+      AND (
+        SELECT 
+          COUNT(*)
+        FROM 
+          br7own.error_list_triggers elt
+        WHERE 
+          elt.error_id = el.error_id
+          AND elt.trigger_code = ANY (${createAudit.triggerTypes as string[]})
+      ) > 0 
+    )`
+  }
+
+  const exceptionsFilter = sql`(
+    error_resolved_by = ANY (${resolvedByUsers})
+    AND error_resolved_ts >= ${createAudit.fromDate}
+    AND error_resolved_ts < ${addDays(createAudit.toDate, 1)}
+  )`
+
+  if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
+    filter = sql`${filter} AND (${triggerFilter} OR ${exceptionsFilter})`
+  } else if (createAudit.includedTypes.includes("Triggers")) {
+    filter = sql`${filter} AND ${triggerFilter}`
+  } else if (createAudit.includedTypes.includes("Exceptions")) {
+    filter = sql`${filter} AND ${exceptionsFilter}`
+  }
+
   const results = await Promise.all(
     resolvedByUsers.map(async (resolvedByUsername) => {
-      let filter = sql``
-
-      let triggerFilter = sql`( 
-        trigger_resolved_by = ${resolvedByUsername}
-        AND trigger_resolved_ts >= ${createAudit.fromDate}
-        AND trigger_resolved_ts < ${addDays(createAudit.toDate, 1)}
-      )`
-      if ((createAudit.triggerTypes?.length ?? 0) > 0) {
-        triggerFilter = sql`(
-            ${triggerFilter}
-            AND (
-              SELECT 
-                COUNT(*)
-              FROM 
-                br7own.error_list_triggers elt
-              WHERE 
-                elt.error_id = el.error_id
-                AND elt.trigger_code IN (${createAudit.triggerTypes as string[]})
-            ) > 0 
-        )`
-      }
-
-      const exceptionsFilter = sql`(
-        error_resolved_by = ${resolvedByUsername}
-        AND error_resolved_ts >= ${createAudit.fromDate}
-        AND error_resolved_ts < ${addDays(createAudit.toDate, 1)}
-      )`
-
-      if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
-        filter = sql`${filter} AND (${triggerFilter} OR ${exceptionsFilter})`
-      } else if (createAudit.includedTypes.includes("Triggers")) {
-        filter = sql`${filter} AND ${triggerFilter}`
-      } else if (createAudit.includedTypes.includes("Exceptions")) {
-        filter = sql`${filter} AND ${exceptionsFilter}`
-      }
-
       const results = await sql<{ error_id: number }[]>`${baseQuery} ${filter}`.catch((error: Error) => error)
       if (isError(results)) {
         return new Error("Failed to get cases to audit")

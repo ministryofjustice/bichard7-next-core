@@ -214,7 +214,7 @@ describe("getPotentialCasesToAudit", () => {
   })
 
   it("should return only cases for courts the user has access to", async () => {
-    const user = await createUser(testDatabaseGateway)
+    const user = await createUser(testDatabaseGateway, { visibleCourts: ["AB", "CD"] })
     const cases = await Promise.all([
       createCase(testDatabaseGateway, {
         courtCode: user.visibleCourts[0],
@@ -224,8 +224,15 @@ describe("getPotentialCasesToAudit", () => {
         triggerResolvedBy: testUsername
       }),
       createCase(testDatabaseGateway, {
-        courtCode: "XYZ",
+        courtCode: user.visibleCourts[1],
         errorId: 2,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: "XYZ",
+        errorId: 3,
         errorResolvedAt: subDays(new Date(), 1),
         errorResolvedBy: testUsername,
         orgForPoliceFilter: user.visibleForces[0]
@@ -240,14 +247,14 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        caseIds: [cases[0].errorId],
+        caseIds: [cases[0].errorId, cases[1].errorId],
         username: testUsername
       }
     ])
   })
 
   it("should return only cases for forces the user has access to", async () => {
-    const user = await createUser(testDatabaseGateway)
+    const user = await createUser(testDatabaseGateway, { visibleForces: ["01", "02"] })
     const cases = await Promise.all([
       createCase(testDatabaseGateway, {
         courtCode: user.visibleCourts[0],
@@ -259,6 +266,13 @@ describe("getPotentialCasesToAudit", () => {
       createCase(testDatabaseGateway, {
         courtCode: user.visibleCourts[0],
         errorId: 2,
+        orgForPoliceFilter: user.visibleForces[1],
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 3,
         errorResolvedAt: subDays(new Date(), 1),
         errorResolvedBy: testUsername,
         orgForPoliceFilter: "XYZ"
@@ -273,7 +287,7 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        caseIds: [cases[0].errorId],
+        caseIds: [cases[0].errorId, cases[1].errorId],
         username: testUsername
       }
     ])
@@ -314,7 +328,7 @@ describe("getPotentialCasesToAudit", () => {
     const createAudit = {
       ...defaultCreateAudit,
       includedTypes: ["Triggers"],
-      triggerTypes: [TriggerCode.TRPR0001]
+      triggerTypes: [TriggerCode.TRPR0001, TriggerCode.TRPR0002]
     } satisfies CreateAudit
 
     const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
