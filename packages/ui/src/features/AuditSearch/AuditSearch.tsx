@@ -43,7 +43,8 @@ const AuditSearch: React.FC<Props> = (props) => {
   const [includeTriggers, setIncludeTriggers] = useState(false)
   const [includeExceptions, setIncludeExceptions] = useState(false)
 
-  const formValid = fromDate <= toDate && toDate <= today && (includeTriggers || includeExceptions)
+  const formValid =
+    fromDate <= toDate && toDate <= today && (includeTriggers || includeExceptions) && resolvedBy.length > 0
   const allResolversSelected = resolvers.every((rb) => resolvedBy.includes(rb.username))
 
   return (
@@ -236,7 +237,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             </div>
           </div>
           <FormButtonRow>
-            <button className="govuk-button" disabled={!formValid}>
+            <button name="audit-search-button" className="govuk-button" disabled={!formValid}>
               {"Search cases"}
             </button>
             <p className="govuk-body">

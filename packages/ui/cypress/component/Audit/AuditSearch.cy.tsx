@@ -165,4 +165,30 @@ describe("AuditSearch", () => {
     cy.get("#audit-resolved-by-2").should("not.be.checked")
     cy.get("#audit-resolved-by-all").should("not.be.checked")
   })
+
+  it("should disable submit button with any missing required fields", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={["TRPR0010"]}
+        resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+      />
+    )
+
+    cy.get("button[name=audit-search-button]").should("not.be.enabled")
+  })
+
+  it("should enable submit button when all required fields are populated", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={["TRPR0010"]}
+        resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+      />
+    )
+
+    cy.get("#audit-resolved-by-all").click()
+    cy.get("input[name=audit-include-triggers]").click()
+    cy.get("#audit-trigger-type-0").click()
+
+    cy.get("button[name=audit-search-button]").should("be.enabled")
+  })
 })
