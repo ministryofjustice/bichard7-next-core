@@ -13,6 +13,10 @@ export async function getPotentialCasesToAudit(
   createAudit: CreateAudit,
   user: User
 ): PromiseResult<CasesToAuditByUser[]> {
+  const resolvedByUsers = createAudit.resolvedByUsers ?? []
+  const checkForResolvedTriggers = createAudit.includedTypes.includes("Triggers")
+  const checkForResolvedExceptions = createAudit.includedTypes.includes("Exceptions")
+
   const sql = database.connection
 
   const baseQuery = sql`
@@ -28,8 +32,6 @@ export async function getPotentialCasesToAudit(
     `
 
   let filter = sql``
-
-  const resolvedByUsers = createAudit.resolvedByUsers ?? []
 
   let triggerFilter = sql`( 
     trigger_resolved_by = ANY (${resolvedByUsers})
@@ -57,11 +59,11 @@ export async function getPotentialCasesToAudit(
     AND error_resolved_ts < ${addDays(createAudit.toDate, 1)}
   )`
 
-  if (createAudit.includedTypes.includes("Triggers") && createAudit.includedTypes.includes("Exceptions")) {
+  if (checkForResolvedTriggers && checkForResolvedExceptions) {
     filter = sql`${filter} AND (${triggerFilter} OR ${exceptionsFilter})`
-  } else if (createAudit.includedTypes.includes("Triggers")) {
+  } else if (checkForResolvedTriggers) {
     filter = sql`${filter} AND ${triggerFilter}`
-  } else if (createAudit.includedTypes.includes("Exceptions")) {
+  } else if (checkForResolvedExceptions) {
     filter = sql`${filter} AND ${exceptionsFilter}`
   }
 
@@ -76,11 +78,11 @@ export async function getPotentialCasesToAudit(
     return {
       caseIds: results
         .filter((result) => {
-          if (createAudit.includedTypes.includes("Triggers") && result.trigger_resolved_by == resolvedByUsername) {
+          if (checkForResolvedTriggers && result.trigger_resolved_by == resolvedByUsername) {
             return true
           }
 
-          if (createAudit.includedTypes.includes("Exceptions") && result.error_resolved_by == resolvedByUsername) {
+          if (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername) {
             return true
           }
         })
