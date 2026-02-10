@@ -9,7 +9,7 @@ import {
   ExceptionReportSchema
 } from "@moj-bichard7/common/types/Reports"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
+import { FORBIDDEN, OK } from "http-status"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
@@ -22,8 +22,6 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
-import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
-import { NotValidQueryError } from "../../../../types/errors/NotValidQueryError"
 import { generateExceptions } from "../../../../useCases/cases/reports/exceptions/generateExceptions"
 
 type HandlerProps = {
@@ -53,14 +51,7 @@ const handler = async ({ database, query, reply, user }: HandlerProps) => {
     return reply
   }
 
-  switch (true) {
-    case result instanceof NotValidQueryError:
-      return reply.code(BAD_REQUEST).send()
-    case result instanceof NotAllowedError:
-      return reply.code(FORBIDDEN).send()
-    default:
-      return reply.code(FORBIDDEN).send()
-  }
+  return reply.code(FORBIDDEN).send()
 }
 
 const route = async (fastify: FastifyInstance) => {

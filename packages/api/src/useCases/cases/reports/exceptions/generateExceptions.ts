@@ -5,7 +5,6 @@ import type { FastifyReply } from "fastify"
 
 import Permission from "@moj-bichard7/common/types/Permission"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import { isAfter } from "date-fns"
 import { OK } from "http-status"
 import { Readable } from "node:stream"
 
@@ -13,7 +12,6 @@ import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import { exceptionsReport } from "../../../../services/db/cases/reports/exceptions"
 import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
-import { NotValidQueryError } from "../../../../types/errors/NotValidQueryError"
 import { reportStream } from "../reportStream"
 
 export const generateExceptions = (
@@ -24,14 +22,6 @@ export const generateExceptions = (
 ): Result<void> => {
   if (!userAccess(user)[Permission.ViewReports]) {
     return new NotAllowedError()
-  }
-
-  if (!query.triggers && !query.exceptions) {
-    return new NotValidQueryError()
-  }
-
-  if (isAfter(query.fromDate, query.toDate)) {
-    return new NotValidQueryError()
   }
 
   const stream = new Readable({ read() {} })

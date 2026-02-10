@@ -10,7 +10,6 @@ import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import { exceptionsReport } from "../../../../services/db/cases/reports/exceptions"
 import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
-import { NotValidQueryError } from "../../../../types/errors/NotValidQueryError"
 import { reportStream } from "../reportStream"
 import { generateExceptions } from "./generateExceptions"
 
@@ -84,40 +83,6 @@ describe("generateExceptions with UserGroups", () => {
       )
 
       expect(result).toBeInstanceOf(NotAllowedError)
-    })
-  })
-
-  describe("Validation Logic", () => {
-    const validSupervisor = { groups: [UserGroup.Supervisor] } as User
-
-    it("should return NotValidQueryError if both triggers and exceptions are false", () => {
-      const invalidQuery = { ...mockQuery, exceptions: false, triggers: false }
-
-      const result = generateExceptions(
-        mockDatabase as DatabaseGateway,
-        validSupervisor,
-        invalidQuery,
-        mockReply as FastifyReply
-      )
-
-      expect(result).toBeInstanceOf(NotValidQueryError)
-    })
-
-    it("should return NotValidQueryError if dates are invalid (fromDate > toDate)", () => {
-      const invalidDates = {
-        ...mockQuery,
-        fromDate: new Date("2023-01-10"),
-        toDate: new Date("2023-01-01")
-      }
-
-      const result = generateExceptions(
-        mockDatabase as DatabaseGateway,
-        validSupervisor,
-        invalidDates,
-        mockReply as FastifyReply
-      )
-
-      expect(result).toBeInstanceOf(NotValidQueryError)
     })
   })
 

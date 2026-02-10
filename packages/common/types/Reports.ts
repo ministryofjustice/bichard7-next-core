@@ -1,18 +1,45 @@
+import { isAfter, isBefore } from "date-fns"
 import { z } from "zod"
 
 import { dateLikeToDate } from "../schemas/dateLikeToDate"
 import { CaseSchema } from "./Case"
 import { NoteDtoSchema, NoteRowSchema } from "./Note"
 
-export const BaseReportQuerySchema = z.object({
-  fromDate: dateLikeToDate,
-  toDate: dateLikeToDate
-})
+export const ExceptionReportQuerySchema = z
+  .object({
+    exceptions: z.enum(["true", "false"]).transform((val) => val === "true"),
+    fromDate: dateLikeToDate,
+    toDate: dateLikeToDate,
+    triggers: z.enum(["true", "false"]).transform((val) => val === "true")
+  })
+  .superRefine((data, ctx) => {
+    if (isBefore(data.toDate, data.fromDate) || isAfter(data.toDate, new Date())) {
+      ctx.addIssue({
+        code: "custom",
+        input: {
+          fromDate: data.fromDate,
+          toDate: data.toDate
+        },
+        message: "Date range cannot be in the future"
+      })
+    }
 
-export const ExceptionReportQuerySchema = BaseReportQuerySchema.extend({
-  exceptions: z.enum(["true", "false"]).transform((val) => val === "true"),
-  triggers: z.enum(["true", "false"]).transform((val) => val === "true")
-})
+    if (!data.triggers && !data.exceptions) {
+      const message = "At least one of 'triggers' or 'exceptions' must be selected"
+
+      ctx.addIssue({
+        code: "custom",
+        message,
+        path: ["triggers"]
+      })
+
+      ctx.addIssue({
+        code: "custom",
+        message,
+        path: ["exceptions"]
+      })
+    }
+  })
 
 export const CaseRowForReportSchema = z.object({
   asn: z.string(),
