@@ -8,7 +8,7 @@ describe("AuditSearch", () => {
     )
   })
 
-  it("lists resolvers", () => {
+  it("should list resolvers", () => {
     cy.mount(
       <AuditSearch
         triggerTypes={[]}
@@ -25,7 +25,7 @@ describe("AuditSearch", () => {
     cy.get("label[for=audit-resolved-by-1]").should("have.text", "Another User-B")
   })
 
-  it("lists triggers", () => {
+  it("should list triggers", () => {
     cy.mount(<AuditSearch triggerTypes={["TRPR0001", "TRPR0003"]} resolvers={[]} />)
 
     cy.get("#audit-search-triggers input[type=checkbox]").should("have.length", 2)
@@ -34,7 +34,7 @@ describe("AuditSearch", () => {
     cy.get("label[for=audit-trigger-type-1]").should("have.text", "TRPR0003")
   })
 
-  it("lists volume options with 20% as default", () => {
+  it("should list volume options with 20% as default", () => {
     cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     cy.get("#audit-search-volume input[type=radio]").should("have.length", 4)
@@ -47,7 +47,7 @@ describe("AuditSearch", () => {
     cy.get("[data-testid='audit-volume-20']").should("be.checked")
   })
 
-  it("defaults from date and to date to be the past week", () => {
+  it("should default from date and to date to be the past week", () => {
     cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     const fromStr = format(subDays(new Date(), 7), "yyyy-MM-dd")
@@ -57,7 +57,7 @@ describe("AuditSearch", () => {
     cy.get("input[name=audit-date-to]").should("have.value", toStr)
   })
 
-  it("allows dates to be specified in the past", () => {
+  it("should allow dates to be specified in the past", () => {
     cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     const str = format(subDays(new Date(), 4), "yyyy-MM-dd")
@@ -69,7 +69,7 @@ describe("AuditSearch", () => {
     cy.get("input[name=audit-date-to]").should("have.value", str)
   })
 
-  it("allows toggling include flags", () => {
+  it("should allow toggling include flags", () => {
     cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
     cy.get("input[name=audit-include-triggers]").click()
@@ -173,6 +173,24 @@ describe("AuditSearch", () => {
         resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
       />
     )
+
+    cy.get("button[name=audit-search-button]").should("not.be.enabled")
+  })
+
+  it("should disable submit button if dates are the wrong way around", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={["TRPR0010"]}
+        resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+      />
+    )
+
+    cy.get("#audit-resolved-by-all").click()
+    cy.get("input[name=audit-include-triggers]").click()
+    cy.get("[data-testid='audit-trigger-type-0']").click()
+
+    cy.get("input[name=audit-date-from]").type("2026-02-09")
+    cy.get("input[name=audit-date-to]").type("2026-02-04")
 
     cy.get("button[name=audit-search-button]").should("not.be.enabled")
   })
