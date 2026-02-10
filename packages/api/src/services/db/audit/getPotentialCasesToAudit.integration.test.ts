@@ -394,4 +394,60 @@ describe("getPotentialCasesToAudit", () => {
       }
     ])
   })
+
+  it("should get audit status for returned cases", async () => {
+    const user = await createUser(testDatabaseGateway)
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 1,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerQualityChecked: 2, // Pass
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 2,
+        errorQualityChecked: 7, // Remand Pass
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0]
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 3,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerQualityChecked: 1, // Not checked
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 4,
+        errorQualityChecked: 1, // Not checked
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0]
+      })
+    ])
+    const createAudit = {
+      ...defaultCreateAudit
+    } satisfies CreateAudit
+
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+
+    expect(isError(casesToAudit)).toBe(false)
+    expect(casesToAudit as CasesToAuditByUser[]).toEqual([
+      {
+        cases: [
+          { audited: true, id: cases[0].errorId },
+          { audited: true, id: cases[1].errorId },
+          { audited: false, id: cases[2].errorId },
+          { audited: false, id: cases[3].errorId }
+        ],
+        username: testUsername
+      }
+    ])
+  })
 })
