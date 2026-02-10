@@ -1,9 +1,9 @@
 import type { CaseForReport, CaseRowForReport } from "@moj-bichard7/common/types/Reports"
 
-import * as convertCaseModule from "../../dto/convertCaseToDto"
+import * as convertCaseModule from "../../../dto/convertCaseToDto"
 import { processExceptions } from "./processExceptions"
 
-jest.mock("../../dto/convertCaseToDto")
+jest.mock("../../../dto/convertCaseToDto")
 
 describe("processExceptions", () => {
   beforeEach(() => {

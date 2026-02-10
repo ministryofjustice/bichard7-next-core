@@ -11,7 +11,7 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-import { processUsers } from "../../../../useCases/cases/reports/processUsers"
+import { processUsers } from "../../../../useCases/cases/reports/exceptions/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
 export const exceptionsReport = async (
