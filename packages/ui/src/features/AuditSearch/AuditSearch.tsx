@@ -3,6 +3,8 @@ import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
 import { subDays, format, parse } from "date-fns"
+import { RadioGroups } from "../../components/Radios/RadioGroup"
+import RadioButton from "../../components/Radios/RadioButton"
 
 interface Resolver {
   username: string
@@ -208,32 +210,23 @@ const AuditSearch: React.FC<Props> = (props) => {
               </FormGroup>
             </div>
             <div className="govuk-grid-column-one-quarter">
-              <FormGroup>
-                <fieldset className="govuk-fieldset" id="audit-search-volume">
-                  <legend className="govuk-fieldset__legend--m">{"Volume of cases"}</legend>
-                  <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
-                    {volumes.map((v) => {
-                      return (
-                        <div key={v} className="govuk-radios__item">
-                          <input
-                            className="govuk-radios__input"
-                            type="radio"
-                            name="volume"
-                            checked={v == volume}
-                            data-testid={`audit-volume-${v}`}
-                            value={v}
-                            onChange={(e) => setVolume(e.target.value)}
-                          />
-                          <label className="govuk-label govuk-radios__label" htmlFor={`audit-volume-${v}`}>
-                            {v}
-                            {"% of cases"}
-                          </label>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </fieldset>
-              </FormGroup>
+              <RadioGroups legendText={"Volume of cases"} id="audit-search-volume">
+                <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
+                  {volumes.map((v) => {
+                    return (
+                      <RadioButton
+                        name={"volume"}
+                        id={`audit-volume-${v}`}
+                        onChange={(e) => setVolume(e.target.value)}
+                        label={`${v}% of cases`}
+                        checked={v == volume}
+                        value={v}
+                        key={v}
+                      />
+                    )
+                  })}
+                </div>
+              </RadioGroups>
             </div>
           </div>
           <FormButtonRow>

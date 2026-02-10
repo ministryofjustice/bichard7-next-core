@@ -39,12 +39,12 @@ describe("AuditSearch", () => {
 
     cy.get("#audit-search-volume input[type=radio]").should("have.length", 4)
 
-    cy.get("label[for=audit-volume-10]").should("have.text", "10% of cases")
-    cy.get("label[for=audit-volume-20]").should("have.text", "20% of cases")
-    cy.get("label[for=audit-volume-50]").should("have.text", "50% of cases")
-    cy.get("label[for=audit-volume-100]").should("have.text", "100% of cases")
+    cy.get("#audit-volume-10").should("have.value", "10")
+    cy.get("#audit-volume-20").should("have.value", "20")
+    cy.get("#audit-volume-50").should("have.value", "50")
+    cy.get("#audit-volume-100").should("have.value", "100")
 
-    cy.get("[data-testid='audit-volume-20']").should("be.checked")
+    cy.get("#audit-volume-20").should("be.checked")
   })
 
   it("should default from date and to date to be the past week", () => {
