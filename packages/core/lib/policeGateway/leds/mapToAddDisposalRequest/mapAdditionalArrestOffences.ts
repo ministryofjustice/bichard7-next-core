@@ -10,6 +10,7 @@ import {
   PncUpdateType
 } from "../../../../phase3/types/HearingDetails"
 import { convertDate, convertTime } from "../dateTimeConverter"
+import { parseDisposalQuantity } from "./parseDisposalQuantity"
 import { toTitleCase } from "./toTitleCase"
 
 type ArrestGroup = {
@@ -41,6 +42,13 @@ const mapAdditionalArrestOffences = (
     const committedOnBail = arrest.committedOnBail?.toLowerCase() === "y"
 
     const disposalResults = disposals.map((disposal) => {
+      const disposalQuantity = parseDisposalQuantity(disposal.disposalQuantity)
+      const { disposalDuration, disposalEffectiveDate, amount } = disposalQuantity ?? {
+        disposalDuration: undefined,
+        disposalEffectiveDate: undefined,
+        amount: 0
+      }
+
       const disposalQualifiers = disposal.disposalQualifiers
         ?.match(/.{1,2}/g)
         ?.map((q) => q.trim())
@@ -49,7 +57,10 @@ const mapAdditionalArrestOffences = (
       return {
         disposalCode: Number(disposal.disposalType),
         disposalQualifiers,
-        disposalText: disposal?.disposalText ?? undefined
+        disposalText: disposal?.disposalText ?? undefined,
+        disposalDuration,
+        disposalEffectiveDate,
+        disposalFine: { amount }
       }
     })
 
