@@ -1,3 +1,5 @@
+chmod 777 ./scripts/zap
+
 docker run \
   --rm \
   --network="bichard_default" \
