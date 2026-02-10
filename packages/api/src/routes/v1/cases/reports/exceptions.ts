@@ -3,16 +3,13 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import Permission from "@moj-bichard7/common/types/Permission"
 import {
   type ExceptionReportQuery,
   ExceptionReportQuerySchema,
   ExceptionReportSchema
 } from "@moj-bichard7/common/types/Reports"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import { isAfter } from "date-fns"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
-import { Readable } from "node:stream"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
@@ -25,8 +22,9 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
-import { exceptionsReport } from "../../../../services/db/cases/reports/exceptions"
-import { reportStream } from "../../../../useCases/cases/reports/reportStream"
+import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
+import { NotValidQueryError } from "../../../../types/errors/NotValidQueryError"
+import { generateExceptions } from "../../../../useCases/cases/reports/exceptions/generateExceptions"
 
 type HandlerProps = {
   database: DatabaseGateway
@@ -49,29 +47,20 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, query, reply, user }: HandlerProps) => {
-  if (!userAccess(user)[Permission.ViewReports]) {
-    return reply.code(FORBIDDEN).send()
+  const result = generateExceptions(database, user, query, reply)
+
+  if (!isError(result)) {
+    return reply
   }
 
-  if (!query.triggers && !query.exceptions) {
-    return reply.code(BAD_REQUEST).send()
+  switch (true) {
+    case result instanceof NotValidQueryError:
+      return reply.code(BAD_REQUEST).send()
+    case result instanceof NotAllowedError:
+      return reply.code(FORBIDDEN).send()
+    default:
+      return reply.code(FORBIDDEN).send()
   }
-
-  if (isAfter(query.fromDate, query.toDate)) {
-    return reply.code(BAD_REQUEST).send()
-  }
-
-  const stream = new Readable({ read() {} })
-
-  reply.code(OK).type("application/json").send(stream)
-
-  reportStream(stream, async (processBatch) => {
-    return exceptionsReport(database.readonly, user, query, processBatch)
-  }).catch((err: Error) => {
-    stream.destroy(err)
-  })
-
-  return reply
 }
 
 const route = async (fastify: FastifyInstance) => {
