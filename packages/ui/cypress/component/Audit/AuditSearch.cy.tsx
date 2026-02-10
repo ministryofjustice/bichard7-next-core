@@ -44,7 +44,7 @@ describe("AuditSearch", () => {
     cy.get("label[for=audit-volume-50]").should("have.text", "50% of cases")
     cy.get("label[for=audit-volume-100]").should("have.text", "100% of cases")
 
-    cy.get("#audit-volume-20").should("be.checked")
+    cy.get("[data-testid='audit-volume-20']").should("be.checked")
   })
 
   it("defaults from date and to date to be the past week", () => {
@@ -118,7 +118,7 @@ describe("AuditSearch", () => {
     )
 
     cy.get("#audit-resolved-by-all").click()
-    cy.get("#audit-resolved-by-0").click()
+    cy.get("[data-testid='audit-resolved-by-0']").click()
 
     cy.get("#audit-resolved-by-all").should("not.be.checked")
   })
@@ -135,9 +135,9 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-resolved-by-0").click()
-    cy.get("#audit-resolved-by-1").click()
-    cy.get("#audit-resolved-by-2").click()
+    cy.get("[data-testid='audit-resolved-by-0']").click()
+    cy.get("[data-testid='audit-resolved-by-1']").click()
+    cy.get("[data-testid='audit-resolved-by-2']").click()
 
     cy.get("#audit-resolved-by-all").should("be.checked")
   })
@@ -154,15 +154,15 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-resolved-by-0").click()
-    cy.get("#audit-resolved-by-1").click()
-    cy.get("#audit-resolved-by-2").click()
+    cy.get("[data-testid='audit-resolved-by-0']").click()
+    cy.get("[data-testid='audit-resolved-by-1']").click()
+    cy.get("[data-testid='audit-resolved-by-2']").click()
 
     cy.get("#audit-resolved-by-all").click()
 
-    cy.get("#audit-resolved-by-0").should("not.be.checked")
-    cy.get("#audit-resolved-by-1").should("not.be.checked")
-    cy.get("#audit-resolved-by-2").should("not.be.checked")
+    cy.get("[data-testid='audit-resolved-by-0']").should("not.be.checked")
+    cy.get("[data-testid='audit-resolved-by-1']").should("not.be.checked")
+    cy.get("[data-testid='audit-resolved-by-2']").should("not.be.checked")
     cy.get("#audit-resolved-by-all").should("not.be.checked")
   })
 
@@ -187,7 +187,7 @@ describe("AuditSearch", () => {
 
     cy.get("#audit-resolved-by-all").click()
     cy.get("input[name=audit-include-triggers]").click()
-    cy.get("#audit-trigger-type-0").click()
+    cy.get("[data-testid='audit-trigger-type-0']").click()
 
     cy.get("button[name=audit-search-button]").should("be.enabled")
   })

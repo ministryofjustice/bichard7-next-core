@@ -152,7 +152,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                         <div key={resolver.username} className="govuk-checkboxes__item">
                           <input
                             className="govuk-checkboxes__input"
-                            id={`audit-resolved-by-${index}`}
+                            data-testid={`audit-resolved-by-${index}`}
                             type="checkbox"
                             data-resolver-name={resolver.username}
                             checked={resolvedBy.includes(resolver.username)}
@@ -191,7 +191,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                           <input
                             className="govuk-checkboxes__input"
                             name="triggers"
-                            id={`audit-trigger-type-${index}`}
+                            data-testid={`audit-trigger-type-${index}`}
                             type="checkbox"
                           />
                           <label
@@ -220,7 +220,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                             type="radio"
                             name="volume"
                             checked={v == volume}
-                            id={`audit-volume-${v}`}
+                            data-testid={`audit-volume-${v}`}
                             value={v}
                             onChange={(e) => setVolume(e.target.value)}
                           />
