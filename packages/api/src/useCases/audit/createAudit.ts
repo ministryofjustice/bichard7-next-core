@@ -11,6 +11,7 @@ import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import { getPotentialCasesToAudit } from "../../services/db/audit/getPotentialCasesToAudit"
 import { insertAudit } from "../../services/db/audit/insertAudit"
+import { NotAllowedError } from "../../types/errors/NotAllowedError"
 
 export async function createAudit(
   database: WritableDatabaseConnection,
@@ -18,7 +19,7 @@ export async function createAudit(
   user: User
 ): PromiseResult<AuditDto> {
   if (!userAccess(user)[Permission.CanAuditCases]) {
-    return new Error("Not allowed")
+    return new NotAllowedError()
   }
 
   return await database.transaction<AuditDto | Error>(async (tx) => {

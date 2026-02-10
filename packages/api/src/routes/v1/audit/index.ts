@@ -6,7 +6,7 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/contracts/CreateAudit"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { CREATED, FORBIDDEN } from "http-status"
+import { CREATED, FORBIDDEN, INTERNAL_SERVER_ERROR } from "http-status"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
@@ -20,6 +20,7 @@ import {
   unprocessableEntityError
 } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { createAudit } from "../../../useCases/audit/createAudit"
 
 type HandlerProps = {
@@ -47,7 +48,12 @@ const handler = async ({ body, database, reply, user }: HandlerProps) => {
   const auditResult = await createAudit(database.writable, body, user)
   if (isError(auditResult)) {
     reply.log.error(auditResult)
-    return reply.code(FORBIDDEN).send()
+
+    if (auditResult instanceof NotAllowedError) {
+      return reply.code(FORBIDDEN).send()
+    }
+
+    return reply.code(INTERNAL_SERVER_ERROR).send()
   }
 
   return reply.code(CREATED).send(auditResult)
