@@ -17,7 +17,9 @@ export async function getPotentialCasesToAudit(
 
   const baseQuery = sql`
     SELECT 
-      error_id
+      error_id,
+      trigger_resolved_by,
+      error_resolved_by
     FROM 
       br7own.error_list el
     WHERE
@@ -63,24 +65,28 @@ export async function getPotentialCasesToAudit(
     filter = sql`${filter} AND ${exceptionsFilter}`
   }
 
-  const results = await Promise.all(
-    resolvedByUsers.map(async (resolvedByUsername) => {
-      const results = await sql<{ error_id: number }[]>`${baseQuery} ${filter}`.catch((error: Error) => error)
-      if (isError(results)) {
-        return new Error("Failed to get cases to audit")
-      }
-
-      return {
-        caseIds: results.map((result) => result.error_id).sort((a, b) => a - b),
-        username: resolvedByUsername
-      }
-    })
-  )
-
-  const error = results.find((result) => isError(result))
-  if (error) {
-    return error
+  const results = await sql<
+    { error_id: number; error_resolved_by: null | string; trigger_resolved_by: null | string }[]
+  >`${baseQuery} ${filter}`.catch((error: Error) => error)
+  if (isError(results)) {
+    return new Error("Failed to get cases to audit")
   }
 
-  return results as CasesToAuditByUser[]
+  return resolvedByUsers.map((resolvedByUsername) => {
+    return {
+      caseIds: results
+        .filter((result) => {
+          if (createAudit.includedTypes.includes("Triggers") && result.trigger_resolved_by == resolvedByUsername) {
+            return true
+          }
+
+          if (createAudit.includedTypes.includes("Exceptions") && result.error_resolved_by == resolvedByUsername) {
+            return true
+          }
+        })
+        .map((result) => result.error_id)
+        .sort((a, b) => a - b),
+      username: resolvedByUsername
+    }
+  })
 }
