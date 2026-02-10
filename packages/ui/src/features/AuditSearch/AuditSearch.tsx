@@ -62,7 +62,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
                 <fieldset className="govuk-fieldset">
-                  <legend className="govuk-fieldset__legend--m">{"Dates"}</legend>
+                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Dates"}</legend>
                   <FormGroup>
                     <label className="govuk-body" htmlFor="audit-date-from">
                       {"From date"}
@@ -93,7 +93,9 @@ const AuditSearch: React.FC<Props> = (props) => {
               </FormGroup>
               <FormGroup>
                 <fieldset className="govuk-fieldset">
-                  <legend className="govuk-fieldset__legend--m govuk-!-margin-bottom-1">{"Include"}</legend>
+                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
+                    {"Include"}
+                  </legend>
                   <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
                   <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div className="govuk-checkboxes__item">
@@ -127,7 +129,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
                 <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
-                  <legend className="govuk-fieldset__legend--m">{"Resolved by"}</legend>
+                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <div className="govuk-checkboxes__item">
                       <input
@@ -185,7 +187,7 @@ const AuditSearch: React.FC<Props> = (props) => {
             <div className="govuk-grid-column-one-quarter">
               <FormGroup>
                 <fieldset className="govuk-fieldset" id="audit-search-triggers">
-                  <legend className="govuk-fieldset__legend--m">{"Trigger type"}</legend>
+                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Trigger type"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     {triggerTypes.map((triggerType, index) => {
                       return (
