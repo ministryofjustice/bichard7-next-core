@@ -6,7 +6,7 @@ export const ProgressContainer = styled.div`
   align-items: center;
 `
 
-export const ProgressTrack = styled.div`
+export const ProgressTracker = styled.div`
   display: flex;
   flex-grow: 1;
   background-color: ${gdsBlue};
