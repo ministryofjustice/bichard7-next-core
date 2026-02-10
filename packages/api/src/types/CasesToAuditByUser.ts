@@ -1,4 +1,4 @@
 export type CasesToAuditByUser = {
-  caseIds: number[]
+  cases: { audited: boolean; id: number }[]
   username: string
 }

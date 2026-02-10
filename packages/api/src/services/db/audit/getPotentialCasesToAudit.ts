@@ -76,15 +76,21 @@ export async function getPotentialCasesToAudit(
 
   return resolvedByUsers.map((resolvedByUsername) => {
     return {
-      caseIds: results
+      cases: results
         .filter((result) => {
           return (
             (checkForResolvedTriggers && result.trigger_resolved_by == resolvedByUsername) ||
             (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername)
           )
         })
-        .map((result) => result.error_id)
-        .sort((a, b) => a - b),
+        .map((result) => ({ audited: false, id: result.error_id }))
+        .sort((a, b) => {
+          if (a.audited === b.audited) {
+            return a.id - b.id
+          }
+
+          return a.audited ? -1 : 1
+        }),
       username: resolvedByUsername
     }
   })
