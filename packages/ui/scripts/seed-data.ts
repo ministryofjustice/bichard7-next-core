@@ -1,5 +1,5 @@
 import { subDays } from "date-fns"
-import fs from "fs"
+import fs from "node:fs"
 import CourtCase from "../src/services/entities/CourtCase"
 import { default as Note, default as Trigger } from "../src/services/entities/Trigger"
 import getDataSource from "../src/services/getDataSource"
@@ -27,11 +27,16 @@ const ahoXml = fs.readFileSync("test/test-data/AnnotatedHOTemplate.xml").toStrin
 
 console.log(`Seeding ${numCases} cases for force ID ${forceId}`)
 
-getDataSource().then(async (dataSource) => {
+const seedData = async () => {
+  const dataSource = await getDataSource()
+
   const entitiesToClear = [CourtCase, Trigger, Note]
   const auditLogs: Record<string, unknown>[] = []
+
+  console.log("Clearing Entities")
   await Promise.all(entitiesToClear.map((entity) => deleteFromEntity(entity)))
 
+  console.log("Creating Court Cases")
   const courtCases = await Promise.all(
     new Array(numCases).fill(0).map(async (_, idx) => {
       const courtCase = await createDummyCase(dataSource, idx, forceId, ahoXml, subDays(new Date(), maxCaseAge))
@@ -42,13 +47,24 @@ getDataSource().then(async (dataSource) => {
 
   const courtCaseNotes = courtCases
     .filter((courtcase) => courtcase.notes.length > 0)
-    .map((courtCase) => courtCase.notes)
-    .flat()
+    .flatMap((courtCase) => courtCase.notes)
 
+  console.log("Locking Cases")
   await Promise.all(courtCases.map((courtCase) => insertLockUsers(courtCase, true)))
+
+  console.log("Creating Notes")
   await Promise.all(courtCaseNotes.map((courtCaseNote) => insertNoteUser(courtCaseNote)))
 
+  console.log("Creating Audit Logs")
   await insertManyIntoDynamoTable(auditLogs)
-})
 
-export {}
+  await dataSource.destroy()
+  console.log("Finished")
+}
+
+seedData()
+  .then(() => process.exit(0))
+  .catch((error: Error) => {
+    console.error(error)
+    process.exit(1)
+  })
