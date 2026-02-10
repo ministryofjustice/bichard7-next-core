@@ -10,7 +10,6 @@ interface Props {
   value?: string
   label: string
   secondaryInputDetail?: string
-  key?: string
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
@@ -21,13 +20,12 @@ const RadioButton: React.FC<Props> = ({
   defaultChecked,
   checked,
   value,
-  key,
   label,
   secondaryInputDetail,
   onChange
 }: Props) => {
   return (
-    <div className="govuk-radios__item" key={key}>
+    <div className="govuk-radios__item">
       <input
         className="govuk-radios__input"
         name={name}
