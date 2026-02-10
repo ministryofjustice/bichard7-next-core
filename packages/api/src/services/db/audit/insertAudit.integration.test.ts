@@ -1,5 +1,5 @@
+import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
-import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 import { format, subWeeks } from "date-fns"

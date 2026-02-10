@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
+import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 

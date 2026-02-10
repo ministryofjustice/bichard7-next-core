@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
+import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"

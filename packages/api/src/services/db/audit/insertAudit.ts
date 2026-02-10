@@ -1,5 +1,5 @@
+import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 import type { Audit, AuditDto } from "@moj-bichard7/common/types/Audit"
-import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"

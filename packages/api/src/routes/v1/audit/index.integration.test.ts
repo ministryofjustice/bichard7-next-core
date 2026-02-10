@@ -1,5 +1,5 @@
+import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
-import type { CreateAudit } from "@moj-bichard7/common/types/CreateAudit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { addDays, format, subWeeks } from "date-fns"

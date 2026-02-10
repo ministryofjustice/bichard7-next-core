@@ -3,8 +3,8 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/contracts/CreateAudit"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
-import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/types/CreateAudit"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { CREATED, INTERNAL_SERVER_ERROR } from "http-status"
 
