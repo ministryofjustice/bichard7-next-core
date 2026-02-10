@@ -105,9 +105,64 @@ describe("AuditSearch", () => {
     cy.get("#audit-search-resolved-by input[type=checkbox]:checked").should("have.length", 4)
   })
 
-  it("should de-selected All checkbox if all resolvers are not selected", () => {})
+  it("should de-selected All checkbox if all resolvers are not selected", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={[]}
+        resolvers={[
+          { username: "usera", forenames: "First", surname: "User" },
+          { username: "userb", forenames: "Second", surname: "Example-User" },
+          { username: "userc", forenames: "Third", surname: "Test-User" }
+        ]}
+      />
+    )
 
-  it("should select All checkbox if all resolvers are manually selected", () => {})
+    cy.get("#audit-resolved-by-all").click()
+    cy.get("#audit-resolved-by-0").click()
 
-  it("should de-select all if All is unchecked and all resolvers were selected", () => {})
+    cy.get("#audit-resolved-by-all").should("not.be.checked")
+  })
+
+  it("should select All checkbox if all resolvers are manually selected", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={[]}
+        resolvers={[
+          { username: "usera", forenames: "First", surname: "User" },
+          { username: "userb", forenames: "Second", surname: "Example-User" },
+          { username: "userc", forenames: "Third", surname: "Test-User" }
+        ]}
+      />
+    )
+
+    cy.get("#audit-resolved-by-0").click()
+    cy.get("#audit-resolved-by-1").click()
+    cy.get("#audit-resolved-by-2").click()
+
+    cy.get("#audit-resolved-by-all").should("be.checked")
+  })
+
+  it("should de-select all if All is unchecked and all resolvers were selected", () => {
+    cy.mount(
+      <AuditSearch
+        triggerTypes={[]}
+        resolvers={[
+          { username: "usera", forenames: "First", surname: "User" },
+          { username: "userb", forenames: "Second", surname: "Example-User" },
+          { username: "userc", forenames: "Third", surname: "Test-User" }
+        ]}
+      />
+    )
+
+    cy.get("#audit-resolved-by-0").click()
+    cy.get("#audit-resolved-by-1").click()
+    cy.get("#audit-resolved-by-2").click()
+
+    cy.get("#audit-resolved-by-all").click()
+
+    cy.get("#audit-resolved-by-0").should("not.be.checked")
+    cy.get("#audit-resolved-by-1").should("not.be.checked")
+    cy.get("#audit-resolved-by-2").should("not.be.checked")
+    cy.get("#audit-resolved-by-all").should("not.be.checked")
+  })
 })
