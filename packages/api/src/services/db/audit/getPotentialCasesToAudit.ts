@@ -78,13 +78,10 @@ export async function getPotentialCasesToAudit(
     return {
       caseIds: results
         .filter((result) => {
-          if (checkForResolvedTriggers && result.trigger_resolved_by == resolvedByUsername) {
-            return true
-          }
-
-          if (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername) {
-            return true
-          }
+          return (
+            (checkForResolvedTriggers && result.trigger_resolved_by == resolvedByUsername) ||
+            (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername)
+          )
         })
         .map((result) => result.error_id)
         .sort((a, b) => a - b),
