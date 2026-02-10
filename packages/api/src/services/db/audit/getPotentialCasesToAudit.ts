@@ -106,13 +106,6 @@ export async function getPotentialCasesToAudit(
           }
 
           return { audited, id: result.error_id }
-        })
-        .sort((a, b) => {
-          if (a.audited === b.audited) {
-            return a.id - b.id
-          }
-
-          return a.audited ? -1 : 1
         }),
       username: resolvedByUsername
     }

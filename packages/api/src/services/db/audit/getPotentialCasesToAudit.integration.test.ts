@@ -60,7 +60,10 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: cases.map((row) => ({ audited: false, id: row.errorId })),
+        cases: [
+          { audited: false, id: cases[0].errorId },
+          { audited: false, id: cases[1].errorId }
+        ],
         username: testUsername
       }
     ])
@@ -247,10 +250,10 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: [
+        cases: expect.arrayContaining([
           { audited: false, id: cases[0].errorId },
           { audited: false, id: cases[1].errorId }
-        ],
+        ]),
         username: testUsername
       }
     ])
@@ -290,10 +293,10 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: [
+        cases: expect.arrayContaining([
           { audited: false, id: cases[0].errorId },
           { audited: false, id: cases[1].errorId }
-        ],
+        ]),
         username: testUsername
       }
     ])
@@ -389,7 +392,10 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: [cases[0], cases[1]].map((row) => ({ audited: false, id: row.errorId })),
+        cases: expect.arrayContaining([
+          { audited: false, id: cases[0].errorId },
+          { audited: false, id: cases[1].errorId }
+        ]),
         username: testUsername
       }
     ])
@@ -462,14 +468,14 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: [
+        cases: expect.arrayContaining([
           { audited: true, id: cases[0].errorId },
           { audited: true, id: cases[1].errorId },
           { audited: false, id: cases[2].errorId },
           { audited: false, id: cases[3].errorId },
           { audited: false, id: cases[4].errorId },
           { audited: false, id: cases[5].errorId }
-        ],
+        ]),
         username: testUsername
       }
     ])
@@ -505,10 +511,10 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: [
+        cases: expect.arrayContaining([
           { audited: true, id: cases[0].errorId },
           { audited: false, id: cases[1].errorId }
-        ],
+        ]),
         username: testUsername
       }
     ])
@@ -544,10 +550,10 @@ describe("getPotentialCasesToAudit", () => {
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
       {
-        cases: [
+        cases: expect.arrayContaining([
           { audited: true, id: cases[0].errorId },
           { audited: false, id: cases[1].errorId }
-        ],
+        ]),
         username: testUsername
       }
     ])
