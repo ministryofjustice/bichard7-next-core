@@ -6,7 +6,11 @@ describe("getVolumeOfCasesToAudit", () => {
   it("gets all cases for 100% volume", () => {
     const casesToAuditByUser: CasesToAuditByUser[] = [
       {
-        caseIds: [1, 2, 3],
+        cases: [
+          { audited: false, id: 1 },
+          { audited: false, id: 2 },
+          { audited: false, id: 3 }
+        ],
         username: "user@example.com"
       }
     ]
@@ -19,7 +23,11 @@ describe("getVolumeOfCasesToAudit", () => {
   it("should round up number cases to nearest whole number", () => {
     const casesToAuditByUser: CasesToAuditByUser[] = [
       {
-        caseIds: [1, 2, 3],
+        cases: [
+          { audited: false, id: 1 },
+          { audited: false, id: 2 },
+          { audited: false, id: 3 }
+        ],
         username: "user@example.com"
       }
     ]
@@ -32,11 +40,19 @@ describe("getVolumeOfCasesToAudit", () => {
   it("removes duplicate case IDs", () => {
     const casesToAuditByUser: CasesToAuditByUser[] = [
       {
-        caseIds: [1, 2, 3],
+        cases: [
+          { audited: false, id: 1 },
+          { audited: false, id: 2 },
+          { audited: false, id: 3 }
+        ],
         username: "user@example.com"
       },
       {
-        caseIds: [2, 3, 4],
+        cases: [
+          { audited: false, id: 2 },
+          { audited: false, id: 3 },
+          { audited: false, id: 4 }
+        ],
         username: "user2@example.com"
       }
     ]
