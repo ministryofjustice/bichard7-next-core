@@ -4,7 +4,7 @@ import { useId } from "react"
 interface ProgressBarProps {
   currentCount: number
   maxCount: number
-  labelType?: string
+  labelType: "percentage" | "pageCount"
 }
 
 export const ProgressBar = ({ currentCount, maxCount, labelType }: ProgressBarProps) => {
