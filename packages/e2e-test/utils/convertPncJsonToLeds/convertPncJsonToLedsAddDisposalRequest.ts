@@ -39,7 +39,7 @@ const mapCarryForward = (carryForward?: Crt | undefined) => {
   }
 }
 
-const mapOffences = (
+export const mapOffences = (
   offences: (Cch & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[]
 ): Offence[] => {
   return offences.map((offence) => ({
