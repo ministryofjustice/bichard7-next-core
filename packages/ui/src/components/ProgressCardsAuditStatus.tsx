@@ -1,4 +1,4 @@
-import { CardRow, StatCard, CardStatus, CardCount } from "./ProgressCardsAuditStatus.styles"
+import { CardRow, StatCard, CardCount } from "./ProgressCardsAuditStatus.styles"
 
 interface AuditStatusProps {
   passCount?: number
@@ -27,7 +27,7 @@ export const ProgressCardsAuditStatus = ({ failCount = 0, passCount = 0, totalCa
         {stats.map(({ status, count, variant }) => (
           <StatCard key={variant} $variant={variant}>
             <CardCount className="govuk-body-l">{count}</CardCount>
-            <CardStatus className="govuk-body-m">{status}</CardStatus>
+            <span className="govuk-body-m">{status}</span>
           </StatCard>
         ))}
       </CardRow>

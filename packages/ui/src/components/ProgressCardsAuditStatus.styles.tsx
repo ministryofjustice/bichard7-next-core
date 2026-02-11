@@ -11,7 +11,7 @@ export const CardRow = styled.div`
   display: flex;
   gap: 15px;
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 100%;
 `
 
@@ -25,10 +25,7 @@ export const StatCard = styled.div<{ $variant: keyof typeof statusColorMap }>`
 
 export const CardCount = styled.span`
   display: block;
+  font-weight: bold;
   line-height: 1;
   margin-bottom: 5px;
-`
-
-export const CardStatus = styled.span`
-  display: block;
 `
