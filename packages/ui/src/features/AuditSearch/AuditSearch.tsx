@@ -138,26 +138,24 @@ const AuditSearch: React.FC<Props> = (props) => {
                         }
                       }}
                     />
-                    {resolvers.map((resolver, index) => {
-                      return (
-                        <Checkbox
-                          key={resolver.username}
-                          id={`audit-resolved-by-${index}`}
-                          data-testid={`audit-resolved-by-${index}`}
-                          label={formatUserFullName(resolver.forenames, resolver.surname)}
-                          checked={resolvedBy.includes(resolver.username)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              if (!resolvedBy.includes(resolver.username)) {
-                                setResolvedBy([...resolvedBy, resolver.username])
-                              }
-                            } else {
-                              setResolvedBy([...resolvedBy.filter((r) => r != resolver.username)])
+                    {resolvers.map((resolver, index) => (
+                      <Checkbox
+                        key={resolver.username}
+                        id={`audit-resolved-by-${index}`}
+                        data-testid={`audit-resolved-by-${index}`}
+                        label={formatUserFullName(resolver.forenames, resolver.surname)}
+                        checked={resolvedBy.includes(resolver.username)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            if (!resolvedBy.includes(resolver.username)) {
+                              setResolvedBy([...resolvedBy, resolver.username])
                             }
-                          }}
-                        />
-                      )
-                    })}
+                          } else {
+                            setResolvedBy([...resolvedBy.filter((r) => r != resolver.username)])
+                          }
+                        }}
+                      />
+                    ))}
                   </div>
                 </fieldset>
               </FormGroup>
@@ -167,26 +165,24 @@ const AuditSearch: React.FC<Props> = (props) => {
                 <fieldset className="govuk-fieldset" id="audit-search-triggers">
                   <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Trigger type"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    {triggerTypes.map((triggerType, index) => {
-                      return (
-                        <Checkbox
-                          label={triggerType}
-                          key={triggerType}
-                          id={`audit-trigger-type-${index}`}
-                          data-testid={`audit-trigger-type-${index}`}
-                          checked={triggers.includes(triggerType)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              if (!triggers.includes(triggerType)) {
-                                setTriggers([...triggers, triggerType])
-                              }
-                            } else {
-                              setTriggers([...triggers.filter((t) => t !== triggerType)])
+                    {triggerTypes.map((triggerType, index) => (
+                      <Checkbox
+                        label={triggerType}
+                        key={triggerType}
+                        id={`audit-trigger-type-${index}`}
+                        data-testid={`audit-trigger-type-${index}`}
+                        checked={triggers.includes(triggerType)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            if (!triggers.includes(triggerType)) {
+                              setTriggers([...triggers, triggerType])
                             }
-                          }}
-                        />
-                      )
-                    })}
+                          } else {
+                            setTriggers([...triggers.filter((t) => t !== triggerType)])
+                          }
+                        }}
+                      />
+                    ))}
                   </div>
                 </fieldset>
               </FormGroup>
@@ -194,19 +190,17 @@ const AuditSearch: React.FC<Props> = (props) => {
             <div className="govuk-grid-column-one-quarter">
               <RadioGroups legendText={"Volume of cases"} id="audit-search-volume">
                 <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
-                  {volumes.map((v) => {
-                    return (
-                      <RadioButton
-                        name={"volume"}
-                        id={`audit-volume-${v}`}
-                        onChange={(e) => setVolume(e.target.value)}
-                        label={`${v}% of cases`}
-                        checked={v == volume}
-                        value={v}
-                        key={v}
-                      />
-                    )
-                  })}
+                  {volumes.map((v) => (
+                    <RadioButton
+                      name={"volume"}
+                      id={`audit-volume-${v}`}
+                      onChange={(e) => setVolume(e.target.value)}
+                      label={`${v}% of cases`}
+                      checked={v == volume}
+                      value={v}
+                      key={v}
+                    />
+                  ))}
                 </div>
               </RadioGroups>
             </div>
