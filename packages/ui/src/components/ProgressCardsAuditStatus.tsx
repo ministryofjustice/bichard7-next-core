@@ -1,4 +1,4 @@
-import { CardRow, StatCard, CardLabel, CardValue } from "./ProgressCardsAuditStatus.styles"
+import { CardRow, StatCard, CardStatus, CardCount } from "./ProgressCardsAuditStatus.styles"
 
 interface AuditStatusProps {
   passCount?: number
@@ -7,15 +7,15 @@ interface AuditStatusProps {
 }
 
 export const ProgressCardsAuditStatus = ({ failCount = 0, passCount = 0, totalCases = 0 }: AuditStatusProps) => {
-  const remainingValue = Math.max(totalCases - (failCount + passCount), 0)
+  const remainingCount = Math.max(totalCases - (failCount + passCount), 0)
 
   const stats = [
-    { label: "Failed", value: failCount, variant: "fail" },
-    { label: "Passed", value: passCount, variant: "pass" },
-    { label: "Remaining", value: remainingValue, variant: "remaining" }
+    { status: "Failed", count: failCount, variant: "fail" },
+    { status: "Passed", count: passCount, variant: "pass" },
+    { status: "Remaining", count: remainingCount, variant: "remaining" }
   ] as const
 
-  const statSummaries = stats.map(({ value, label }) => `${value} ${label.toLowerCase()}`)
+  const statSummaries = stats.map(({ count, status }) => `${count} ${status.toLowerCase()}`)
 
   const srSummary = `${statSummaries.join(", ")} out of ${totalCases} total audits.`
 
@@ -24,10 +24,10 @@ export const ProgressCardsAuditStatus = ({ failCount = 0, passCount = 0, totalCa
       <span className="govuk-visually-hidden">{srSummary}</span>
 
       <CardRow aria-hidden="true">
-        {stats.map(({ label, value, variant }) => (
+        {stats.map(({ status, count, variant }) => (
           <StatCard key={variant} $variant={variant}>
-            <CardValue>{value}</CardValue>
-            <CardLabel>{label}</CardLabel>
+            <CardCount className="govuk-body-l">{count}</CardCount>
+            <CardStatus className="govuk-body-m">{status}</CardStatus>
           </StatCard>
         ))}
       </CardRow>
