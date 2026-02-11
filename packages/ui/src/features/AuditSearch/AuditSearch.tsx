@@ -3,8 +3,9 @@ import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
 import { subDays, format, parse } from "date-fns"
-import { RadioGroups } from "../../components/Radios/RadioGroup"
-import RadioButton from "../../components/Radios/RadioButton"
+import { RadioGroups } from "components/Radios/RadioGroup"
+import RadioButton from "components/Radios/RadioButton"
+import Checkbox from "components/Checkbox/Checkbox"
 
 interface Resolver {
   username: string
@@ -44,6 +45,8 @@ const AuditSearch: React.FC<Props> = (props) => {
 
   const [includeTriggers, setIncludeTriggers] = useState(false)
   const [includeExceptions, setIncludeExceptions] = useState(false)
+
+  const [triggers, setTriggers] = useState<string[]>([])
 
   const formValid =
     fromDate <= toDate && toDate <= today && (includeTriggers || includeExceptions) && resolvedBy.length > 0
@@ -98,30 +101,20 @@ const AuditSearch: React.FC<Props> = (props) => {
                   </legend>
                   <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
                   <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    <div className="govuk-checkboxes__item">
-                      <input
-                        className="govuk-checkboxes__input"
-                        name="audit-include-triggers"
-                        type="checkbox"
-                        checked={includeTriggers}
-                        onChange={(e) => setIncludeTriggers(e.target.checked)}
-                      />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-include-triggers">
-                        {"Triggers"}
-                      </label>
-                    </div>
-                    <div className="govuk-checkboxes__item">
-                      <input
-                        className="govuk-checkboxes__input"
-                        name="audit-include-exceptions"
-                        type="checkbox"
-                        checked={includeExceptions}
-                        onChange={(e) => setIncludeExceptions(e.target.checked)}
-                      />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-include-exceptions">
-                        {"Exceptions"}
-                      </label>
-                    </div>
+                    <Checkbox
+                      id={"audit-include-triggers"}
+                      label={"Triggers"}
+                      checked={includeTriggers}
+                      name={"audit-include-triggers"}
+                      onChange={(e) => setIncludeTriggers(e.target.checked)}
+                    />
+                    <Checkbox
+                      id={"audit-include-exceptions"}
+                      label={"Exceptions"}
+                      checked={includeExceptions}
+                      name={"audit-include-exceptions"}
+                      onChange={(e) => setIncludeExceptions(e.target.checked)}
+                    />
                   </IncludeRow>
                 </fieldset>
               </FormGroup>
@@ -131,53 +124,38 @@ const AuditSearch: React.FC<Props> = (props) => {
                 <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                   <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    <div className="govuk-checkboxes__item">
-                      <input
-                        className="govuk-checkboxes__input"
-                        id="audit-resolved-by-all"
-                        type="checkbox"
-                        checked={allResolversSelected}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setResolvedBy(resolvers.map((rb) => rb.username))
-                          } else {
-                            if (allResolversSelected) {
-                              setResolvedBy([])
-                            }
+                    <Checkbox
+                      id={"audit-resolved-by-all"}
+                      label={"All"}
+                      checked={allResolversSelected}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setResolvedBy(resolvers.map((rb) => rb.username))
+                        } else {
+                          if (allResolversSelected) {
+                            setResolvedBy([])
                           }
-                        }}
-                      />
-                      <label className="govuk-label govuk-checkboxes__label" htmlFor="audit-resolved-by-all">
-                        {"All"}
-                      </label>
-                    </div>
+                        }
+                      }}
+                    />
                     {resolvers.map((resolver, index) => {
                       return (
-                        <div key={resolver.username} className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            data-testid={`audit-resolved-by-${index}`}
-                            type="checkbox"
-                            data-resolver-name={resolver.username}
-                            checked={resolvedBy.includes(resolver.username)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                if (!resolvedBy.includes(resolver.username)) {
-                                  setResolvedBy([...resolvedBy, resolver.username])
-                                }
-                              } else {
-                                setResolvedBy([
-                                  ...resolvedBy.filter(
-                                    (r) => r != e.target.attributes.getNamedItem("data-resolver-name")?.value
-                                  )
-                                ])
+                        <Checkbox
+                          key={resolver.username}
+                          id={`audit-resolved-by-${index}`}
+                          data-testid={`audit-resolved-by-${index}`}
+                          label={formatUserFullName(resolver.forenames, resolver.surname)}
+                          checked={resolvedBy.includes(resolver.username)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              if (!resolvedBy.includes(resolver.username)) {
+                                setResolvedBy([...resolvedBy, resolver.username])
                               }
-                            }}
-                          />
-                          <label className="govuk-label govuk-checkboxes__label" htmlFor={`audit-resolved-by-${index}`}>
-                            {formatUserFullName(resolver.forenames, resolver.surname)}
-                          </label>
-                        </div>
+                            } else {
+                              setResolvedBy([...resolvedBy.filter((r) => r != resolver.username)])
+                            }
+                          }}
+                        />
                       )
                     })}
                   </div>
@@ -191,20 +169,22 @@ const AuditSearch: React.FC<Props> = (props) => {
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     {triggerTypes.map((triggerType, index) => {
                       return (
-                        <div key={triggerType} className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            name="triggers"
-                            data-testid={`audit-trigger-type-${index}`}
-                            type="checkbox"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor={`audit-trigger-type-${index}`}
-                          >
-                            {triggerType}
-                          </label>
-                        </div>
+                        <Checkbox
+                          label={triggerType}
+                          key={triggerType}
+                          id={`audit-trigger-type-${index}`}
+                          data-testid={`audit-trigger-type-${index}`}
+                          checked={triggers.includes(triggerType)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              if (!triggers.includes(triggerType)) {
+                                setTriggers([...triggers, triggerType])
+                              }
+                            } else {
+                              setTriggers([...triggers.filter((t) => t !== triggerType)])
+                            }
+                          }}
+                        />
                       )
                     })}
                   </div>
