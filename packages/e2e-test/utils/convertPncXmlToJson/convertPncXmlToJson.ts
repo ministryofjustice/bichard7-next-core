@@ -24,6 +24,8 @@ import type { Rcc } from "./convertRcc"
 import convertRcc from "./convertRcc"
 import type { Rem } from "./convertRem"
 import convertRem from "./convertRem"
+import type { Sub } from "./convertSub"
+import convertSub from "./convertSub"
 import type { Txt } from "./convertTxt"
 import convertTxt from "./convertTxt"
 import extractSegments from "./extractSegments"
@@ -52,8 +54,7 @@ export type PncNormalDisposalJson = Fsc &
   AdditionalOffences
 export type PncSubsequentDisposalJson = Fsc &
   Ids &
-  Cou &
-  UpdateOffences & { type: "Sentence deferred" | "Subsequently varied" }
+  Cou & { subsequentUpdate: Sub } & UpdateOffences & { type: "Sentence deferred" | "Subsequently varied" }
 type PncJson = PncAsnQueryJson | PncRemandJson | PncNormalDisposalJson | PncSubsequentDisposalJson
 
 const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
@@ -80,6 +81,12 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
     const rcc = convertRcc(value)
 
     ;(json as PncNormalDisposalJson).referToCourtCase = rcc
+  }
+
+  converters["SUB"] = (value: string) => {
+    const sub = convertSub(value)
+
+    ;(json as PncSubsequentDisposalJson).subsequentUpdate = sub
   }
 
   converters["COF"] = (value: string): void => {
