@@ -71,7 +71,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                       {"From date"}
                     </label>
                     <input
-                      name="audit-date-from"
+                      id="audit-date-from"
                       className="govuk-input"
                       type="date"
                       max={format(today, DATE_FORMAT)}
@@ -84,7 +84,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                       {"To date"}
                     </label>
                     <input
-                      name="audit-date-to"
+                      id="audit-date-to"
                       className="govuk-input"
                       type="date"
                       max={format(today, DATE_FORMAT)}
@@ -105,14 +105,12 @@ const AuditSearch: React.FC<Props> = (props) => {
                       id={"audit-include-triggers"}
                       label={"Triggers"}
                       checked={includeTriggers}
-                      name={"audit-include-triggers"}
                       onChange={(e) => setIncludeTriggers(e.target.checked)}
                     />
                     <Checkbox
                       id={"audit-include-exceptions"}
                       label={"Exceptions"}
                       checked={includeExceptions}
-                      name={"audit-include-exceptions"}
                       onChange={(e) => setIncludeExceptions(e.target.checked)}
                     />
                   </IncludeRow>

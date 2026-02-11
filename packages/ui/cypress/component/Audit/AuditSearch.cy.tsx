@@ -53,8 +53,8 @@ describe("AuditSearch", () => {
     const fromStr = format(subDays(new Date(), 7), "yyyy-MM-dd")
     const toStr = format(new Date(), "yyyy-MM-dd")
 
-    cy.get("input[name=audit-date-from]").should("have.value", fromStr)
-    cy.get("input[name=audit-date-to]").should("have.value", toStr)
+    cy.get("#audit-date-from").should("have.value", fromStr)
+    cy.get("#audit-date-to").should("have.value", toStr)
   })
 
   it("should allow dates to be specified in the past", () => {
@@ -62,18 +62,18 @@ describe("AuditSearch", () => {
 
     const str = format(subDays(new Date(), 4), "yyyy-MM-dd")
 
-    cy.get("input[name=audit-date-from]").type(str)
-    cy.get("input[name=audit-date-from]").should("have.value", str)
+    cy.get("#audit-date-from").type(str)
+    cy.get("#audit-date-from").should("have.value", str)
 
-    cy.get("input[name=audit-date-to]").type(str)
-    cy.get("input[name=audit-date-to]").should("have.value", str)
+    cy.get("#audit-date-to").type(str)
+    cy.get("#audit-date-to").should("have.value", str)
   })
 
   it("should allow toggling include flags", () => {
     cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
-    cy.get("input[name=audit-include-triggers]").click()
-    cy.get("input[name=audit-include-exceptions]").click()
+    cy.get("#audit-include-triggers").click()
+    cy.get("#audit-include-exceptions").click()
   })
 
   it("should reset cleared dates to today", () => {
@@ -81,11 +81,11 @@ describe("AuditSearch", () => {
 
     const todayStr = format(new Date(), "yyyy-MM-dd")
 
-    cy.get("input[name=audit-date-from]").clear()
-    cy.get("input[name=audit-date-from]").should("have.value", todayStr)
+    cy.get("#audit-date-from").clear()
+    cy.get("#audit-date-from").should("have.value", todayStr)
 
-    cy.get("input[name=audit-date-to]").clear()
-    cy.get("input[name=audit-date-to]").should("have.value", todayStr)
+    cy.get("#audit-date-to").clear()
+    cy.get("#audit-date-to").should("have.value", todayStr)
   })
 
   it("should select all resolvers when All option is clicked", () => {
@@ -186,11 +186,11 @@ describe("AuditSearch", () => {
     )
 
     cy.get("#audit-resolved-by-all").click()
-    cy.get("input[name=audit-include-triggers]").click()
+    cy.get("#audit-include-triggers").click()
     cy.get("[data-testid='audit-trigger-type-0']").click()
 
-    cy.get("input[name=audit-date-from]").type("2026-02-09")
-    cy.get("input[name=audit-date-to]").type("2026-02-04")
+    cy.get("#audit-date-from").type("2026-02-09")
+    cy.get("#audit-date-to").type("2026-02-04")
 
     cy.get("button[name=audit-search-button]").should("not.be.enabled")
   })
@@ -204,7 +204,7 @@ describe("AuditSearch", () => {
     )
 
     cy.get("#audit-resolved-by-all").click()
-    cy.get("input[name=audit-include-triggers]").click()
+    cy.get("#audit-include-triggers").click()
     cy.get("[data-testid='audit-trigger-type-0']").click()
 
     cy.get("button[name=audit-search-button]").should("be.enabled")
