@@ -121,7 +121,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                   <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
                   <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <Checkbox
-                      id={"audit-resolved-by-all"}
+                      data-testid={"audit-resolved-by-all"}
                       label={"All"}
                       checked={allResolversSelected}
                       onChange={(e) => {

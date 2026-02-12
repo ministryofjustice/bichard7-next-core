@@ -100,7 +100,7 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-resolved-by-all").click()
+    cy.get("[data-testid='audit-resolved-by-all']").click()
 
     cy.get("#audit-search-resolved-by input[type=checkbox]:checked").should("have.length", 4)
   })
@@ -117,10 +117,10 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-resolved-by-all").click()
+    cy.get("[data-testid='audit-resolved-by-all']").click()
     cy.get("[data-testid='audit-resolved-by-0']").click()
 
-    cy.get("#audit-resolved-by-all").should("not.be.checked")
+    cy.get("[data-testid='audit-resolved-by-all']").should("not.be.checked")
   })
 
   it("should select All checkbox if all resolvers are manually selected", () => {
@@ -139,7 +139,7 @@ describe("AuditSearch", () => {
     cy.get("[data-testid='audit-resolved-by-1']").click()
     cy.get("[data-testid='audit-resolved-by-2']").click()
 
-    cy.get("#audit-resolved-by-all").should("be.checked")
+    cy.get("[data-testid='audit-resolved-by-all']").should("be.checked")
   })
 
   it("should de-select all if All is unchecked and all resolvers were selected", () => {
@@ -158,12 +158,12 @@ describe("AuditSearch", () => {
     cy.get("[data-testid='audit-resolved-by-1']").click()
     cy.get("[data-testid='audit-resolved-by-2']").click()
 
-    cy.get("#audit-resolved-by-all").click()
+    cy.get("[data-testid='audit-resolved-by-all']").click()
 
     cy.get("[data-testid='audit-resolved-by-0']").should("not.be.checked")
     cy.get("[data-testid='audit-resolved-by-1']").should("not.be.checked")
     cy.get("[data-testid='audit-resolved-by-2']").should("not.be.checked")
-    cy.get("#audit-resolved-by-all").should("not.be.checked")
+    cy.get("[data-testid='audit-resolved-by-all']").should("not.be.checked")
   })
 
   it("should disable submit button with any missing required fields", () => {
@@ -185,7 +185,7 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-resolved-by-all").click()
+    cy.get("[data-testid='audit-resolved-by-all']").click()
     cy.get("label").contains("Triggers").click()
     cy.get("[data-testid='audit-trigger-type-0']").click()
 
@@ -203,7 +203,7 @@ describe("AuditSearch", () => {
       />
     )
 
-    cy.get("#audit-resolved-by-all").click()
+    cy.get("[data-testid='audit-resolved-by-all']").click()
     cy.get("label").contains("Triggers").click()
     cy.get("[data-testid='audit-trigger-type-0']").click()
 
