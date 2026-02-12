@@ -71,7 +71,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                       {"From date"}
                     </label>
                     <input
-                      id="audit-date-from"
+                      data-testid="audit-date-from"
                       className="govuk-input"
                       type="date"
                       max={format(today, DATE_FORMAT)}
@@ -84,7 +84,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                       {"To date"}
                     </label>
                     <input
-                      id="audit-date-to"
+                      data-testid="audit-date-to"
                       className="govuk-input"
                       type="date"
                       max={format(today, DATE_FORMAT)}
