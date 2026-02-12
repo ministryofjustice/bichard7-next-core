@@ -1,16 +1,19 @@
-import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
+import type {
+  CaseForExceptionReport,
+  CaseRowForExceptionReport
+} from "@moj-bichard7/common/types/reports/ExceptionReport"
 
-import * as convertCaseModule from "../../../dto/convertCaseToDto"
+import * as convertCaseModule from "../../../dto/reports/caseToExceptionsReportDto"
 import { processExceptions } from "./processExceptions"
 
-jest.mock("../../../dto/convertCaseToDto")
+jest.mock("../../../dto/reports/caseToExceptionsReportDto")
 
 describe("processExceptions", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  it("should call convertCaseToCaseReportDto with the case row", () => {
+  it("should call caseToExceptionsReportDto with the case row", () => {
     const mockCaseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
       court_date: new Date("2024-01-15"),
@@ -41,12 +44,12 @@ describe("processExceptions", () => {
       type: "error"
     }
 
-    jest.spyOn(convertCaseModule, "convertCaseToCaseReportDto").mockReturnValue(mockResult)
+    jest.spyOn(convertCaseModule, "caseToExceptionsReportDto").mockReturnValue(mockResult)
 
     const result = processExceptions(mockCaseRow)
 
-    expect(convertCaseModule.convertCaseToCaseReportDto).toHaveBeenCalledWith(mockCaseRow)
-    expect(convertCaseModule.convertCaseToCaseReportDto).toHaveBeenCalledTimes(1)
+    expect(convertCaseModule.caseToExceptionsReportDto).toHaveBeenCalledWith(mockCaseRow)
+    expect(convertCaseModule.caseToExceptionsReportDto).toHaveBeenCalledTimes(1)
     expect(result).toBe(mockResult)
   })
 })

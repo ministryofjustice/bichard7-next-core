@@ -1,9 +1,9 @@
 import { isAfter, isBefore } from "date-fns"
 import { z } from "zod"
 
-import { dateLikeToDate } from "../schemas/dateLikeToDate"
-import { CaseSchema } from "./Case"
-import { NoteDtoSchema, NoteRowSchema } from "./Note"
+import { dateLikeToDate } from "../../schemas/dateLikeToDate"
+import { CaseSchema } from "../Case"
+import { NoteDtoSchema, NoteRowSchema } from "../Note"
 
 export const ExceptionReportQuerySchema = z
   .object({

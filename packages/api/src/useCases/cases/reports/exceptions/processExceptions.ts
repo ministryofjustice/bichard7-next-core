@@ -1,7 +1,10 @@
-import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
+import type {
+  CaseForExceptionReport,
+  CaseRowForExceptionReport
+} from "@moj-bichard7/common/types/reports/ExceptionReport"
 
-import { convertCaseToCaseReportDto } from "../../../dto/convertCaseToDto"
+import { caseToExceptionsReportDto } from "../../../dto/reports/caseToExceptionsReportDto"
 
 export const processExceptions = (caseRowForReport: CaseRowForExceptionReport): CaseForExceptionReport => {
-  return convertCaseToCaseReportDto(caseRowForReport)
+  return caseToExceptionsReportDto(caseRowForReport)
 }

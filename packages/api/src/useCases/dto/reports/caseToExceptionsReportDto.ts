@@ -1,0 +1,25 @@
+import type {
+  CaseForExceptionReport,
+  CaseRowForExceptionReport
+} from "@moj-bichard7/common/types/reports/ExceptionReport"
+
+import { sortBy } from "lodash"
+
+import { convertNoteToDto } from "../convertNoteToDto"
+
+export const caseToExceptionsReportDto = (caseRow: CaseRowForExceptionReport): CaseForExceptionReport => {
+  return {
+    asn: caseRow.asn,
+    courtName: caseRow.court_name,
+    courtReference: caseRow.court_reference,
+    courtRoom: caseRow.court_room,
+    defendantName: caseRow.defendant_name,
+    hearingDate: caseRow.court_date,
+    messageReceivedAt: caseRow.msg_received_ts,
+    notes: caseRow.notes ? sortBy(caseRow.notes, "create_ts").reverse().map(convertNoteToDto) : [],
+    ptiurn: caseRow.ptiurn,
+    resolvedAt: caseRow.resolved_ts,
+    resolver: caseRow.resolver,
+    type: caseRow.type
+  }
+}

@@ -1,8 +1,11 @@
-import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
+import type {
+  CaseForExceptionReport,
+  CaseRowForExceptionReport
+} from "@moj-bichard7/common/types/reports/ExceptionReport"
 
-import { convertCaseToCaseReportDto } from "./convertCaseToDto"
+import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
 
-describe("convertCaseToCaseReportDto", () => {
+describe("caseToExceptionsReportDto", () => {
   it("should convert case row to case report DTO with empty notes", () => {
     const caseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
@@ -19,7 +22,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Exceptions"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result).toEqual({
       asn: "1101ZD0100000410836J",
@@ -75,7 +78,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Exceptions"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.notes).toHaveLength(3)
     expect(result.notes[0].noteText).toBe("Second note") // 2024-01-11
@@ -99,7 +102,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Triggers"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.notes).toEqual([])
   })
@@ -120,7 +123,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Exceptions"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.notes).toEqual([])
   })
@@ -141,7 +144,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Triggers"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.asn).toBe(caseRow.asn)
     expect(result.courtName).toBe(caseRow.court_name)

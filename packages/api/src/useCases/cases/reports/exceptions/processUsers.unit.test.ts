@@ -1,4 +1,4 @@
-import type { UserExceptionReportRow } from "@moj-bichard7/common/types/ExceptionReport"
+import type { UserExceptionReportRow } from "@moj-bichard7/common/types/reports/ExceptionReport"
 
 import { processExceptions } from "./processExceptions"
 import { processUsers } from "./processUsers"
