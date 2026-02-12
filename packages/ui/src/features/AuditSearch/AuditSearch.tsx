@@ -20,8 +20,8 @@ interface Props {
 
 function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
   const parsedDate = parse(dateStr, format, new Date())
-  if (isNaN(parsedDate.getTime())) {
-    return new Date(defaultDate.getTime())
+  if (Number.isNaN(parsedDate.getTime())) {
+    return new Date(defaultDate)
   }
   return parsedDate
 }
@@ -127,10 +127,8 @@ const AuditSearch: React.FC<Props> = (props) => {
                       onChange={(e) => {
                         if (e.target.checked) {
                           setResolvedBy(resolvers.map((rb) => rb.username))
-                        } else {
-                          if (allResolversSelected) {
-                            setResolvedBy([])
-                          }
+                        } else if (allResolversSelected) {
+                          setResolvedBy([])
                         }
                       }}
                     />
@@ -146,7 +144,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                               setResolvedBy([...resolvedBy, resolver.username])
                             }
                           } else {
-                            setResolvedBy([...resolvedBy.filter((r) => r != resolver.username)])
+                            setResolvedBy(resolvedBy.filter((r) => r != resolver.username))
                           }
                         }}
                       />
@@ -172,7 +170,7 @@ const AuditSearch: React.FC<Props> = (props) => {
                               setTriggers([...triggers, triggerType])
                             }
                           } else {
-                            setTriggers([...triggers.filter((t) => t !== triggerType)])
+                            setTriggers(triggers.filter((t) => t !== triggerType))
                           }
                         }}
                       />
