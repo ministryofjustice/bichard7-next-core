@@ -21,8 +21,8 @@ describe("AuditSearch", () => {
 
     cy.get("#audit-search-resolved-by input[type=checkbox]").should("have.length", 3)
 
-    cy.get("label[for=audit-resolved-by-0]").should("have.text", "Example User A")
-    cy.get("label[for=audit-resolved-by-1]").should("have.text", "Another User-B")
+    cy.get("#audit-search-resolved-by label").contains("Example User A").should("exist")
+    cy.get("#audit-search-resolved-by label").contains("Another User-B").should("exist")
   })
 
   it("should list triggers", () => {
@@ -30,8 +30,8 @@ describe("AuditSearch", () => {
 
     cy.get("#audit-search-triggers input[type=checkbox]").should("have.length", 2)
 
-    cy.get("label[for=audit-trigger-type-0]").should("have.text", "TRPR0001")
-    cy.get("label[for=audit-trigger-type-1]").should("have.text", "TRPR0003")
+    cy.get("#audit-search-triggers label").contains("TRPR0001").should("exist")
+    cy.get("#audit-search-triggers label").contains("TRPR0003").should("exist")
   })
 
   it("should list volume options with 20% as default", () => {

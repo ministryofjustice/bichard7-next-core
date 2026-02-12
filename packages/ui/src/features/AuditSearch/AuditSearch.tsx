@@ -137,7 +137,6 @@ const AuditSearch: React.FC<Props> = (props) => {
                     {resolvers.map((resolver, index) => (
                       <Checkbox
                         key={resolver.username}
-                        id={`audit-resolved-by-${index}`}
                         data-testid={`audit-resolved-by-${index}`}
                         label={formatUserFullName(resolver.forenames, resolver.surname)}
                         checked={resolvedBy.includes(resolver.username)}
@@ -165,7 +164,6 @@ const AuditSearch: React.FC<Props> = (props) => {
                       <Checkbox
                         label={triggerType}
                         key={triggerType}
-                        id={`audit-trigger-type-${index}`}
                         data-testid={`audit-trigger-type-${index}`}
                         checked={triggers.includes(triggerType)}
                         onChange={(e) => {
