@@ -1,4 +1,4 @@
-import type { ChangeEvent } from "react"
+import { useId, type ChangeEvent } from "react"
 
 interface Props {
   label: string
@@ -9,18 +9,21 @@ interface Props {
 }
 
 const Checkbox: React.FC<Props> = ({ label, name, checked, id, onChange, ...props }: Props) => {
+  const defaultId = useId()
+  const idToUse = id ?? defaultId
+
   return (
     <div className="govuk-checkboxes__item">
       <input
         className="govuk-checkboxes__input"
-        id={id}
+        id={idToUse}
         name={name}
         type="checkbox"
         checked={checked}
         onChange={onChange}
         {...props}
       />
-      <label className="govuk-checkboxes__label" htmlFor={id}>
+      <label className="govuk-checkboxes__label" htmlFor={idToUse}>
         {label}
       </label>
     </div>
