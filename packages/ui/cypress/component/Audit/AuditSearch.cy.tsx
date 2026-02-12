@@ -72,8 +72,8 @@ describe("AuditSearch", () => {
   it("should allow toggling include flags", () => {
     cy.mount(<AuditSearch triggerTypes={[]} resolvers={[]} />)
 
-    cy.get("#audit-include-triggers").click()
-    cy.get("#audit-include-exceptions").click()
+    cy.get("label").contains("Triggers").click()
+    cy.get("label").contains("Exceptions").click()
   })
 
   it("should reset cleared dates to today", () => {
@@ -186,7 +186,7 @@ describe("AuditSearch", () => {
     )
 
     cy.get("#audit-resolved-by-all").click()
-    cy.get("#audit-include-triggers").click()
+    cy.get("label").contains("Triggers").click()
     cy.get("[data-testid='audit-trigger-type-0']").click()
 
     cy.get("#audit-date-from").type("2026-02-09")
@@ -204,7 +204,7 @@ describe("AuditSearch", () => {
     )
 
     cy.get("#audit-resolved-by-all").click()
-    cy.get("#audit-include-triggers").click()
+    cy.get("label").contains("Triggers").click()
     cy.get("[data-testid='audit-trigger-type-0']").click()
 
     cy.get("button[name=audit-search-button]").should("be.enabled")

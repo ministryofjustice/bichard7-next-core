@@ -102,13 +102,11 @@ const AuditSearch: React.FC<Props> = (props) => {
                   <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
                   <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                     <Checkbox
-                      id={"audit-include-triggers"}
                       label={"Triggers"}
                       checked={includeTriggers}
                       onChange={(e) => setIncludeTriggers(e.target.checked)}
                     />
                     <Checkbox
-                      id={"audit-include-exceptions"}
                       label={"Exceptions"}
                       checked={includeExceptions}
                       onChange={(e) => setIncludeExceptions(e.target.checked)}
