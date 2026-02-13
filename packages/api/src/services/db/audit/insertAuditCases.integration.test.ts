@@ -16,7 +16,7 @@ describe("insertAuditCases", () => {
     await testDatabaseGateway.clearDb()
   })
 
-  it("Creates audit case", async () => {
+  it("Creates audit cases", async () => {
     const cases = await Promise.all([
       createCase(testDatabaseGateway, {
         courtCode: "ABC",

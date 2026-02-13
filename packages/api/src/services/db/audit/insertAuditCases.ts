@@ -11,16 +11,10 @@ export const insertAuditCases = async (
     return []
   }
 
-  const sql = database.connection
-
-  const cases = caseIds.map((caseId) => ({ audit_id: auditId, error_id: caseId }))
-
-  return await sql<{ audit_id: number; error_id: number }[]>`
+  return await database.connection<{ audit_id: number; error_id: number }[]>`
     INSERT INTO br7own.audit_cases (audit_id, error_id) 
-    SELECT * FROM UNNEST(
-      ${cases.map((c) => c.audit_id)}::int[],
-      ${cases.map((c) => c.error_id)}::int[]
-    )
+    SELECT ${auditId}, error_id
+    FROM UNNEST(${caseIds}::int[]) AS t(error_id)
     RETURNING *
   `.catch((err: Error) => err)
 }
