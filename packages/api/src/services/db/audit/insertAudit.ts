@@ -32,7 +32,7 @@ export const insertAudit = async (
         ${createAudit.fromDate},
         ${createAudit.toDate},
         ${createAudit.includedTypes},
-        ${createAudit.resolvedByUsers ?? null},
+        ${createAudit.resolvedByUsers},
         ${createAudit.triggerTypes ?? null},
         ${createAudit.volumeOfCases}
       )

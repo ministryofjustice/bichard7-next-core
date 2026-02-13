@@ -37,6 +37,7 @@ describe("Create audit", () => {
     const payload = {
       fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
       includedTypes: ["Triggers", "Exceptions"],
+      resolvedByUsers: ["user1"],
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 20
     } satisfies CreateAudit
@@ -65,6 +66,7 @@ describe("Create audit", () => {
       payload: {
         fromDate: format(new Date(), "yyyy-MM-dd"),
         includedTypes: ["Triggers", "Exceptions"],
+        resolvedByUsers: ["user1"],
         toDate: format(addDays(new Date(), 1), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
       } satisfies CreateAudit,
@@ -84,6 +86,7 @@ describe("Create audit", () => {
       payload: {
         fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
         includedTypes: [],
+        resolvedByUsers: ["user1"],
         toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
       } satisfies CreateAudit,
@@ -92,6 +95,26 @@ describe("Create audit", () => {
 
     expect(response.statusCode).toBe(BAD_REQUEST)
     expect(response.body).toContain("includedTypes")
+  })
+
+  it("returns 400 Bad Request when no users", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: {
+        fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        includedTypes: [],
+        resolvedByUsers: [],
+        toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
+        volumeOfCases: 20
+      } satisfies CreateAudit,
+      url: V1.Audit
+    })
+
+    expect(response.statusCode).toBe(BAD_REQUEST)
+    expect(response.body).toContain("resolvedByUsers")
   })
 
   it("returns 403 when user does not have permission to do audits", async () => {
@@ -103,6 +126,7 @@ describe("Create audit", () => {
       payload: {
         fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
         includedTypes: ["Triggers", "Exceptions"],
+        resolvedByUsers: ["user1"],
         toDate: format(new Date(), "yyyy-MM-dd"),
         volumeOfCases: 20
       } satisfies CreateAudit,

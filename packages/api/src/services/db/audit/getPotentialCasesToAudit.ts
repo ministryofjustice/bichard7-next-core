@@ -10,12 +10,11 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 export async function getPotentialCasesToAudit(
   database: WritableDatabaseConnection,
-  createAudit: CreateAudit,
+  { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes }: CreateAudit,
   user: User
 ): PromiseResult<CasesToAuditByUser[]> {
-  const resolvedByUsers = createAudit.resolvedByUsers ?? []
-  const checkForResolvedTriggers = createAudit.includedTypes.includes("Triggers")
-  const checkForResolvedExceptions = createAudit.includedTypes.includes("Exceptions")
+  const checkForResolvedTriggers = includedTypes.includes("Triggers")
+  const checkForResolvedExceptions = includedTypes.includes("Exceptions")
 
   const sql = database.connection
 
@@ -37,10 +36,10 @@ export async function getPotentialCasesToAudit(
 
   let triggerFilter = sql`( 
     trigger_resolved_by = ANY (${resolvedByUsers})
-    AND trigger_resolved_ts >= ${createAudit.fromDate}
-    AND trigger_resolved_ts < ${addDays(createAudit.toDate, 1)}
+    AND trigger_resolved_ts >= ${fromDate}
+    AND trigger_resolved_ts < ${addDays(toDate, 1)}
   )`
-  if ((createAudit.triggerTypes?.length ?? 0) > 0) {
+  if ((triggerTypes?.length ?? 0) > 0) {
     triggerFilter = sql`(
       ${triggerFilter}
       AND (
@@ -50,15 +49,15 @@ export async function getPotentialCasesToAudit(
           br7own.error_list_triggers elt
         WHERE 
           elt.error_id = el.error_id
-          AND elt.trigger_code = ANY (${createAudit.triggerTypes as string[]})
+          AND elt.trigger_code = ANY (${triggerTypes as string[]})
       ) > 0 
     )`
   }
 
   const exceptionsFilter = sql`(
     error_resolved_by = ANY (${resolvedByUsers})
-    AND error_resolved_ts >= ${createAudit.fromDate}
-    AND error_resolved_ts < ${addDays(createAudit.toDate, 1)}
+    AND error_resolved_ts >= ${fromDate}
+    AND error_resolved_ts < ${addDays(toDate, 1)}
   )`
 
   if (checkForResolvedTriggers && checkForResolvedExceptions) {
