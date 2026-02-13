@@ -1,14 +1,16 @@
 import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
+import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { addDays, format, subWeeks } from "date-fns"
+import { addDays, format, subDays, subWeeks } from "date-fns"
 import { type FastifyInstance } from "fastify"
 import { BAD_REQUEST, CREATED, FORBIDDEN } from "http-status"
 
 import build from "../../../app"
 import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
+import { createCase } from "../../../tests/helpers/caseHelper"
 import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
 import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
@@ -33,13 +35,31 @@ describe("Create audit", () => {
   })
 
   it("returns 201 CREATED when audit created successfully", async () => {
+    const testUsername = "user1"
     const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 1,
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerResolvedBy: testUsername
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 2,
+        errorResolvedAt: subDays(new Date(), 1),
+        errorResolvedBy: testUsername,
+        orgForPoliceFilter: user.visibleForces[0]
+      })
+    ])
+
     const payload = {
       fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
       includedTypes: ["Triggers", "Exceptions"],
-      resolvedByUsers: ["user1"],
+      resolvedByUsers: [testUsername],
       toDate: format(new Date(), "yyyy-MM-dd"),
-      volumeOfCases: 20
+      volumeOfCases: 50
     } satisfies CreateAudit
 
     const response = await app.inject({
@@ -55,6 +75,12 @@ describe("Create audit", () => {
     expect(body.fromDate).toBe(payload.fromDate)
     expect(body.toDate).toBe(payload.toDate)
     expect(body.createdBy).toBe(user.username)
+
+    const auditCases = await testDatabaseGateway.getAuditCases(body.auditId)
+    expect(auditCases).toHaveLength(1) // 50% of 2 courses
+    expect(auditCases).toEqual([
+      { audit_case_id: expect.any(Number), audit_id: body.auditId, error_id: cases[0].errorId }
+    ])
   })
 
   it("returns 400 Bad Request when date range is in the past", async () => {

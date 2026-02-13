@@ -53,6 +53,13 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     return mapUserRowToUser(dbUser)
   }
 
+  async getAuditCases(auditId: number) {
+    return this.readonly.connection<{ audit_case_id: number; audit_id: number; error_id: number }[]>`
+      SELECT *
+      FROM br7own.audit_cases
+      WHERE audit_id = ${auditId}`
+  }
+
   updateCaseWithException(
     caseId: number,
     exceptionCode: string,
