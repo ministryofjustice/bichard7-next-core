@@ -13,8 +13,22 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { HeaderWrapper } from "../components/Card/Card.styles"
 import DateInput from "../components/CustomDateInput/DateInput"
-import { FormGroup } from "../components/FormGroup"
 import { Select } from "../components/Select"
+import {
+  PageGeneral,
+  SectionTitle,
+  SecondarySectionTitle,
+  SelectReportsBox,
+  DateRangeBox,
+  CalendarsBox,
+  DateFromBox,
+  DateToBox,
+  ReportsBox,
+  IncludeBox,
+  CheckboxesBox,
+  CheckboxLabel,
+  CheckboxUnit
+} from "./report-selection-fields.styles"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -45,6 +59,8 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
   //const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(100)
   const router = useRouter()
 
+  const triggers = "triggers"
+  const exceptions = "exceptions"
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
       <Head>
@@ -63,39 +79,90 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
       >
         <h1>{"Search reports"}</h1>
         <HeaderWrapper>
-          <FormGroup>
-            <fieldset className="govuk-fieldset">
-              {/*<div id="conditional-resolved-date-range">*/}
-              <div>
-                <Select placeholder={"Resolved cases"} name={"resolved-cases"}></Select>
-                <b>{"Date range"}</b>
-                <div id={"report-selection-date-from"}>
-                  <DateInput
-                    dateType="resolvedFrom"
-                    dispatch={function (): void {
-                      throw new Error("Function not implemented.")
-                    }}
-                    value={""}
-                    dateRange={undefined} // dispatch={dispatch}
-                    // value={caseResolvedDateRange?.from ?? ""}
-                    // dateRange={caseResolvedDateRange}
-                  />
+          <fieldset className="govuk-fieldset">
+            <PageGeneral>
+              <ReportsBox>
+                <SectionTitle>
+                  <label>{"Reports"}</label>
+                </SectionTitle>
+                <SecondarySectionTitle>
+                  <label>{"Sort by"}</label>
+                </SecondarySectionTitle>
+                <SelectReportsBox>
+                  <Select placeholder={"Resolved cases"} name={"resolved-cases"}></Select>
+                </SelectReportsBox>
+              </ReportsBox>
+              <DateRangeBox>
+                <SectionTitle>
+                  <label>{"Date range"}</label>
+                </SectionTitle>
+                <CalendarsBox>
+                  <DateFromBox id={"report-selection-date-from"}>
+                    <DateInput
+                      dateType="resolvedFrom"
+                      dispatch={function (): void {
+                        throw new Error("Function not implemented.")
+                      }}
+                      value={""}
+                      dateRange={undefined} // dispatch={dispatch}
+                      // value={caseResolvedDateRange?.from ?? ""}
+                      // dateRange={caseResolvedDateRange}
+                    />
+                  </DateFromBox>
+                  <DateToBox id={"report-selection-date-to"}>
+                    <DateInput
+                      dateType="resolvedTo"
+                      dispatch={function (): void {
+                        throw new Error("Function not implemented.")
+                      }}
+                      value={""}
+                      dateRange={undefined} // dispatch={dispatch}
+                      // value={caseResolvedDateRange?.to ?? ""}
+                      // dateRange={caseResolvedDateRange}
+                    />
+                  </DateToBox>
+                </CalendarsBox>
+              </DateRangeBox>
+              <IncludeBox>
+                <SectionTitle>
+                  <label>{"Include"}</label>
+                </SectionTitle>
+                <div>
+                  <SecondarySectionTitle>
+                    <label>{"Select an option"}</label>
+                  </SecondarySectionTitle>
+                  <CheckboxesBox /*className="govuk-checkboxes" data-module="govuk-checkboxes"*/>
+                    <CheckboxUnit className="govuk-checkboxes__item">
+                      <input
+                        className="govuk-checkboxes__input"
+                        id={triggers}
+                        type="checkbox"
+                        value={"1"}
+                        //checked={selectedTriggerIds.includes(trigger.triggerId)}
+                        //onChange={setTriggerSelection}
+                      ></input>
+                      <CheckboxLabel className="govuk-checkboxes__label" htmlFor={triggers}>
+                        {"Triggers"}
+                      </CheckboxLabel>
+                    </CheckboxUnit>
+                    <CheckboxUnit className="govuk-checkboxes__item">
+                      <input
+                        className="govuk-checkboxes__input"
+                        id={exceptions}
+                        type="checkbox"
+                        value={"1"}
+                        //checked={selectedTriggerIds.includes(trigger.triggerId)}
+                        //onChange={setTriggerSelection}
+                      ></input>
+                      <CheckboxLabel className="govuk-checkboxes__label" htmlFor={exceptions}>
+                        {"Exceptions"}
+                      </CheckboxLabel>
+                    </CheckboxUnit>
+                  </CheckboxesBox>
                 </div>
-                <div id={"report-selection-date-from"}>
-                  <DateInput
-                    dateType="resolvedTo"
-                    dispatch={function (): void {
-                      throw new Error("Function not implemented.")
-                    }}
-                    value={""}
-                    dateRange={undefined} // dispatch={dispatch}
-                    // value={caseResolvedDateRange?.to ?? ""}
-                    // dateRange={caseResolvedDateRange}
-                  />
-                </div>
-              </div>
-            </fieldset>
-          </FormGroup>
+              </IncludeBox>
+            </PageGeneral>
+          </fieldset>
         </HeaderWrapper>
       </Layout>
     </CurrentUserContext.Provider>
