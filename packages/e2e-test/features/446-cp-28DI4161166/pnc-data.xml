@@ -75,21 +75,42 @@
           <DriverLicenceIssue>1</DriverLicenceIssue>
         </DriverInformation>
       </PoliceIndividualDefendant>
-      <Offence>
-        <BaseOffenceDetails>
-          <OffenceSequenceNumber>001</OffenceSequenceNumber>
-          <OffenceCode>SX03001A</OffenceCode>
-          <OffenceWording>Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.</OffenceWording>
-          <OffenceTiming>
-            <OffenceDateCode>1</OffenceDateCode>
-            <OffenceStart>
-              <OffenceDateStartDate>2026-01-22</OffenceDateStartDate>
-            </OffenceStart>
-          </OffenceTiming>
-          <ChargeDate>2026-01-22</ChargeDate>
-          <ArrestDate>2026-01-22</ArrestDate>
-          <LocationOfOffence>Kingston High Street</LocationOfOffence>
-        </BaseOffenceDetails>
+            <Offence>
+              <BaseOffenceDetails>
+                <OffenceSequenceNumber>002</OffenceSequenceNumber>
+                <OffenceCode>OF61102</OffenceCode>
+                <OffenceWording>Assault a person thereby occasioning them actual bodily harm</OffenceWording>
+                <OffenceTiming>
+                  <OffenceDateCode>1</OffenceDateCode>
+                  <OffenceStart>
+                    <OffenceDateStartDate>2019-11-28</OffenceDateStartDate>
+                  </OffenceStart>
+                </OffenceTiming>
+                <ChargeDate>2020-12-28</ChargeDate>
+                <ArrestDate>2021-01-01</ArrestDate>
+                <LocationOfOffence>Guildford High Street</LocationOfOffence>
+              </BaseOffenceDetails>
+              <InitiatedDate>2019-11-28</InitiatedDate>
+              <Plea>3</Plea>
+	      <FinalDisposalIndicator>N</FinalDisposalIndicator>
+
       </Offence>
+            <!-- <Offence> -->
+            <!--   <BaseOffenceDetails> -->
+            <!--     <OffenceSequenceNumber>000</OffenceSequenceNumber> -->
+            <!--     <OffenceCode>BA76504</OffenceCode> -->
+            <!--     <OffenceWording>Assault a person thereby occasioning them actual bodily harm</OffenceWording> -->
+            <!--     <OffenceTiming> -->
+            <!--       <OffenceDateCode>1</OffenceDateCode> -->
+            <!--       <OffenceStart> -->
+            <!--         <OffenceDateStartDate>2026-01-29</OffenceDateStartDate> -->
+            <!--       </OffenceStart> -->
+            <!--     </OffenceTiming> -->
+            <!--     <ChargeDate>2026-01-29</ChargeDate> -->
+            <!--   </BaseOffenceDetails> -->
+            <!--   <InitiatedDate>2026-01-29</InitiatedDate> -->
+            <!--   <Plea>3</Plea> -->
+            <!--   <FinalDisposalIndicator>Y</FinalDisposalIndicator> -->
+            <!-- </Offence> -->
   </Case>
 </NewCaseMessage>

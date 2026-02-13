@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeliverRequest xmlns="http://schemas.cjse.gov.uk/messages/deliver/2006-05" xmlns:mf="http://schemas.cjse.gov.uk/messages/format/2006-05" xmlns:mm="http://schemas.cjse.gov.uk/messages/metadata/2006-05" xmlns:msg="http://schemas.cjse.gov.uk/messages/messaging/2006-05" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.cjse.gov.uk/messages/deliver/2006-05 C:ClearCasekel-masri_BR7_0_1_intgBR7XML_ConverterSourceClassGenerationschemasReceiveDeliverServiceDeliverService-v1-0.xsd">
+  <msg:MessageIdentifier>EXTERNAL_CORRELATION_ID</msg:MessageIdentifier>
+  <msg:RequestingSystem>
+    <msg:Name>CJSE</msg:Name>
+    <msg:OrgUnitCode>Z000000</msg:OrgUnitCode>
+    <msg:Environment>Production</msg:Environment>
+  </msg:RequestingSystem>
+  <msg:AckRequested>1</msg:AckRequested>
+  <mm:MessageMetadata SchemaVersion="1.0">
+    <mm:OriginatingSystem>
+      <msg:Name>BICHARD7</msg:Name>
+      <msg:OrgUnitCode>C234567</msg:OrgUnitCode>
+      <msg:Environment>Production</msg:Environment>
+    </mm:OriginatingSystem>
+    <mm:DataController>
+      <msg:Organisation>C765432</msg:Organisation>
+      <msg:ReferencedElementURI>http://www.altova.com</msg:ReferencedElementURI>
+    </mm:DataController>
+    <mm:CreationDateTime>2001-12-17T09:30:47-05:00</mm:CreationDateTime>
+    <mm:ExpiryDateTime>2031-12-17T09:30:47-05:00</mm:ExpiryDateTime>
+    <mm:SenderRequestedDestination>String</mm:SenderRequestedDestination>
+  </mm:MessageMetadata>
+  <mf:MessageFormat SchemaVersion="1.0">
+    <mf:MessageType>
+      <msg:Type>SPIResults</msg:Type>
+      <msg:Version>1.200</msg:Version>
+    </mf:MessageType>
+    <mf:MessageSchema>
+      <msg:Namespace>http://www.dca.gov.uk/xmlschemas/libra</msg:Namespace>
+      <msg:Version>TBC</msg:Version>
+    </mf:MessageSchema>
+  </mf:MessageFormat>
+  <Message>
+    <ResultedCaseMessage xmlns="http://www.dca.gov.uk/xmlschemas/libra" xmlns:ns2="http://www.govtalk.gov.uk/people/bs7666" Flow="ResultedCasesForThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g">
+      <Session>
+        <CourtHearing>
+          <Hearing>
+            <CourtHearingLocation>B01LY01</CourtHearingLocation>
+            <DateOfHearing>2026-01-22</DateOfHearing>
+            <TimeOfHearing>10:00:00</TimeOfHearing>
+          </Hearing>
+          <PSAcode>2577</PSAcode>
+        </CourtHearing>
+        <Case>
+          <PTIURN>28DI8724922</PTIURN>
+          <Defendant>
+            <ProsecutorReference>1101ZD0100000448731K</ProsecutorReference>
+            <CourtIndividualDefendant>
+              <PersonDefendant>
+                <BasePersonDetails>
+                  <PersonName>
+                    <PersonGivenName1>Broad</PersonGivenName1>
+                    <PersonFamilyName>maximum</PersonFamilyName>
+                  </PersonName>
+                  <TelephoneDetails>
+                    <TelephoneNumberHome>07515266895</TelephoneNumberHome>
+                    <TelephoneNumberMobile>07515266895</TelephoneNumberMobile>
+                  </TelephoneDetails>
+                  <EmailDetails>
+                    <EmailAddress1>xyz@abc.com</EmailAddress1>
+                  </EmailDetails>
+                  <Birthdate>2000-10-11</Birthdate>
+                  <Gender>9</Gender>
+                </BasePersonDetails>
+              </PersonDefendant>
+              <BailStatus>A</BailStatus>
+              <Address>
+                <SimpleAddress>
+                  <AddressLine1>123 bridge road</AddressLine1>
+                  <AddressLine2>galleria</AddressLine2>
+                  <AddressLine3>comet</AddressLine3>
+                  <AddressLine4>hatfield</AddressLine4>
+                  <AddressLine5>AL10 9FL</AddressLine5>
+                </SimpleAddress>
+              </Address>
+              <PresentAtHearing>Y</PresentAtHearing>
+            </CourtIndividualDefendant>
+            <Offence>
+              <BaseOffenceDetails>
+                <OffenceSequenceNumber>001</OffenceSequenceNumber>
+                <OffenceCode>PL84501</OffenceCode>
+                <OffenceWording>Application for a warrant for further detention in connection with {1} arrest for an alleged offence {2}</OffenceWording>
+                <OffenceTiming>
+                  <OffenceDateCode>1</OffenceDateCode>
+                  <OffenceStart>
+                    <OffenceDateStartDate>2026-01-22</OffenceDateStartDate>
+                  </OffenceStart>
+                </OffenceTiming>
+              </BaseOffenceDetails>
+              <InitiatedDate>2026-01-22</InitiatedDate>
+              <Plea>3</Plea>
+              <FinalDisposalIndicator>Y</FinalDisposalIndicator>
+              <Result>
+                <ResultCode>4505</ResultCode>
+                <ResultText>WFD - Warrant of further detention
+      Warrant for further detention issued. Warrant issued to Police for up to 24 Hours from 11:00.</ResultText>
+                <Outcome>
+                  <Duration>
+                    <DurationValue>24</DurationValue>
+                    <DurationUnit>H</DurationUnit>
+                    <DurationStartDate>2026-01-21</DurationStartDate>
+                  </Duration>
+                </Outcome>
+              </Result>
+            </Offence>
+          </Defendant>
+        </Case>
+      </Session>
+    </ResultedCaseMessage>
+  </Message>
+</DeliverRequest>

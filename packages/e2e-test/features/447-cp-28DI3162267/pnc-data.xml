@@ -37,7 +37,7 @@
       </EmailDetails>
     </OtherPartyOfficerInCase>
     <Defendant>
-      <ProsecutorReference>1101ZD0100000448754K</ProsecutorReference>
+          <ProsecutorReference>1101ZD0100000448703E</ProsecutorReference>
       <PoliceIndividualDefendant>
         <PersonDefendant>
           <BasePersonDetails>
@@ -75,21 +75,25 @@
           <DriverLicenceIssue>1</DriverLicenceIssue>
         </DriverInformation>
       </PoliceIndividualDefendant>
-      <Offence>
-        <BaseOffenceDetails>
-          <OffenceSequenceNumber>001</OffenceSequenceNumber>
-          <OffenceCode>SX03001A</OffenceCode>
-          <OffenceWording>Attempt to rape a girl aged 13 / 14 / 15 / years of age - SOA 2003.</OffenceWording>
-          <OffenceTiming>
-            <OffenceDateCode>1</OffenceDateCode>
-            <OffenceStart>
-              <OffenceDateStartDate>2026-01-22</OffenceDateStartDate>
-            </OffenceStart>
-          </OffenceTiming>
-          <ChargeDate>2026-01-22</ChargeDate>
-          <ArrestDate>2026-01-22</ArrestDate>
-          <LocationOfOffence>Kingston High Street</LocationOfOffence>
-        </BaseOffenceDetails>
-      </Offence>
+            <Offence>
+              <BaseOffenceDetails>
+                <OffenceSequenceNumber>000</OffenceSequenceNumber>
+                <OffenceCode>CJ03510</OffenceCode>
+		<OffenceWording>test</OffenceWording>
+                <OffenceTiming>
+                  <OffenceDateCode>4</OffenceDateCode>
+                  <OffenceStart>
+                    <OffenceDateStartDate>2026-01-22</OffenceDateStartDate>
+                  </OffenceStart>
+                  <OffenceEnd>
+                    <OffenceEndDate>2026-01-22</OffenceEndDate>
+                  </OffenceEnd>
+                </OffenceTiming>
+                <ChargeDate>2026-01-22</ChargeDate>
+              </BaseOffenceDetails>
+              <InitiatedDate>2026-01-22</InitiatedDate>
+              <Plea>3</Plea>
+              <FinalDisposalIndicator>Y</FinalDisposalIndicator>
+            </Offence>
   </Case>
 </NewCaseMessage>

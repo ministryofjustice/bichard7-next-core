@@ -69,7 +69,7 @@
 		      <Birthdate>2001-11-11</Birthdate>
 		      <Gender>1</Gender>
 		    </BasePersonDetails>
-		    <PNCidentifier>PNC00000A001</PNCidentifier>
+		    <PNCidentifier>20261234567A</PNCidentifier>
 		    <BailConditions/>
 		  </PersonDefendant>
 		  <BailStatus>C</BailStatus>
@@ -98,9 +98,11 @@
 		    <ChargeDate>2026-01-22</ChargeDate>
 		  </BaseOffenceDetails>
 		  <InitiatedDate>2026-01-22</InitiatedDate>
-		  <Plea>3</Plea>
+		  <Plea>1</Plea>
+		  <Finding>NG</Finding>
 		  <FinalDisposalIndicator>Y</FinalDisposalIndicator>
 		  <Result>
+		    <ResultCode>3096</ResultCode>
 		    <ResultText>G - Granted</ResultText>
 		  </Result>
 		</Offence>

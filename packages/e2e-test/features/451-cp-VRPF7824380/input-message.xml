@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DeliverRequest xmlns="http://schemas.cjse.gov.uk/messages/deliver/2006-05" xmlns:mf="http://schemas.cjse.gov.uk/messages/format/2006-05" xmlns:mm="http://schemas.cjse.gov.uk/messages/metadata/2006-05" xmlns:msg="http://schemas.cjse.gov.uk/messages/messaging/2006-05" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.cjse.gov.uk/messages/deliver/2006-05 C:ClearCasekel-masri_BR7_0_1_intgBR7XML_ConverterSourceClassGenerationschemasReceiveDeliverServiceDeliverService-v1-0.xsd">
+  <msg:MessageIdentifier>EXTERNAL_CORRELATION_ID</msg:MessageIdentifier>
+  <msg:RequestingSystem>
+    <msg:Name>CJSE</msg:Name>
+    <msg:OrgUnitCode>Z000000</msg:OrgUnitCode>
+    <msg:Environment>Production</msg:Environment>
+  </msg:RequestingSystem>
+  <msg:AckRequested>1</msg:AckRequested>
+  <mm:MessageMetadata SchemaVersion="1.0">
+    <mm:OriginatingSystem>
+      <msg:Name>BICHARD7</msg:Name>
+      <msg:OrgUnitCode>C234567</msg:OrgUnitCode>
+      <msg:Environment>Production</msg:Environment>
+    </mm:OriginatingSystem>
+    <mm:DataController>
+      <msg:Organisation>C765432</msg:Organisation>
+      <msg:ReferencedElementURI>http://www.altova.com</msg:ReferencedElementURI>
+    </mm:DataController>
+    <mm:CreationDateTime>2001-12-17T09:30:47-05:00</mm:CreationDateTime>
+    <mm:ExpiryDateTime>2031-12-17T09:30:47-05:00</mm:ExpiryDateTime>
+    <mm:SenderRequestedDestination>String</mm:SenderRequestedDestination>
+  </mm:MessageMetadata>
+  <mf:MessageFormat SchemaVersion="1.0">
+    <mf:MessageType>
+      <msg:Type>SPIResults</msg:Type>
+      <msg:Version>1.200</msg:Version>
+    </mf:MessageType>
+    <mf:MessageSchema>
+      <msg:Namespace>http://www.dca.gov.uk/xmlschemas/libra</msg:Namespace>
+      <msg:Version>TBC</msg:Version>
+    </mf:MessageSchema>
+  </mf:MessageFormat>
+  <Message>
+    <ResultedCaseMessage xmlns="http://www.dca.gov.uk/xmlschemas/libra" xmlns:ns2="http://www.govtalk.gov.uk/people/bs7666" Flow="ResultedCasesForThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g">
+      <Session>
+        <CourtHearing>
+          <Hearing>
+            <CourtHearingLocation>B01LY02</CourtHearingLocation>
+            <DateOfHearing>2026-01-22</DateOfHearing>
+            <TimeOfHearing>10:00:00</TimeOfHearing>
+          </Hearing>
+          <PSAcode>2577</PSAcode>
+        </CourtHearing>
+        <Case>
+          <PTIURN>VRPF7824380</PTIURN>
+          <Defendant>
+            <ProsecutorReference>1101ZD0100000448721K</ProsecutorReference>
+            <CourtIndividualDefendant>
+              <PersonDefendant>
+                <BasePersonDetails>
+                  <PersonName>
+                    <PersonGivenName1>samuels</PersonGivenName1>
+                    <PersonFamilyName>Ryder</PersonFamilyName>
+                  </PersonName>
+                  <TelephoneDetails>
+                    <TelephoneNumberHome>07515266895</TelephoneNumberHome>
+                    <TelephoneNumberMobile>07515266895</TelephoneNumberMobile>
+                  </TelephoneDetails>
+                  <EmailDetails>
+                    <EmailAddress1>abc@xyz.com</EmailAddress1>
+                  </EmailDetails>
+                  <Birthdate>2002-11-11</Birthdate>
+                  <Gender>9</Gender>
+                </BasePersonDetails>
+              </PersonDefendant>
+              <BailStatus>A</BailStatus>
+              <Address>
+                <SimpleAddress>
+                  <AddressLine1>123 selected road</AddressLine1>
+                  <AddressLine2>Market area</AddressLine2>
+                  <AddressLine3>Town center</AddressLine3>
+                  <AddressLine4>Hatfield</AddressLine4>
+                  <AddressLine5>AL10 0LJ</AddressLine5>
+                </SimpleAddress>
+              </Address>
+              <PresentAtHearing>Y</PresentAtHearing>
+            </CourtIndividualDefendant>
+            <Offence>
+              <BaseOffenceDetails>
+                <OffenceSequenceNumber>001</OffenceSequenceNumber>
+                <OffenceCode>PL84504</OffenceCode>
+                <OffenceWording>This text is to test particulars</OffenceWording>
+                <OffenceTiming>
+                  <OffenceDateCode>1</OffenceDateCode>
+                  <OffenceStart>
+                    <OffenceDateStartDate>2026-01-22</OffenceDateStartDate>
+                  </OffenceStart>
+                </OffenceTiming>
+              </BaseOffenceDetails>
+              <InitiatedDate>2026-01-22</InitiatedDate>
+              <Plea>3</Plea>
+              <FinalDisposalIndicator>Y</FinalDisposalIndicator>
+              <Result>
+                <ResultText>PCGR - Pre charge bail extension granted
+      Granted. Applicable bail period extended by 18 months beginning on 22/01/2026. Reasons for grant: further time to investigate an offence or charge a suspect is satisfied because: further time to investigate an offence or charge a suspect, the investigation or charging process is proceeding diligently and expeditiously is satisfied because: the investigation or charging process is proceeding diligently and expeditiously, bail conditions remain necessary and proportionate is satisfied because: bail conditions remain necessary and proportionate</ResultText>
+              </Result>
+            </Offence>
+          </Defendant>
+        </Case>
+      </Session>
+    </ResultedCaseMessage>
+  </Message>
+</DeliverRequest>
