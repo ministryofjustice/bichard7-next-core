@@ -27,8 +27,12 @@ import {
   IncludeBox,
   CheckboxesBox,
   CheckboxLabel,
-  CheckboxUnit
+  CheckboxUnit,
+  BottomActionsBox,
+  SearchReportsButtonBox,
+  ClearSearchLink
 } from "./report-selection-fields.styles"
+import { Button } from "../components/Buttons/Button"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -163,6 +167,19 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
               </IncludeBox>
             </PageGeneral>
           </fieldset>
+
+          <BottomActionsBox>
+            <SearchReportsButtonBox>
+              <Button id={"search"} style={{ background: "lime", display: "flex", alignItems: "center" }}>
+                {"Search Reports"}
+              </Button>
+            </SearchReportsButtonBox>
+            <ClearSearchLink>
+              <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
+                {"Clear search"}
+              </a>
+            </ClearSearchLink>
+          </BottomActionsBox>
         </HeaderWrapper>
       </Layout>
     </CurrentUserContext.Provider>
