@@ -7,14 +7,20 @@ export const insertAuditCases = async (
   auditId: number,
   caseIds: number[]
 ): PromiseResult<{ audit_id: number; error_id: number }[]> => {
+  if (caseIds.length === 0) {
+    return []
+  }
+
   const sql = database.connection
 
   const cases = caseIds.map((caseId) => ({ audit_id: auditId, error_id: caseId }))
 
-  const result = await sql<{ audit_id: number; error_id: number }[]>`
-    INSERT INTO br7own.audit_cases ${sql(cases, "audit_id", "error_id")}
+  return await sql<{ audit_id: number; error_id: number }[]>`
+    INSERT INTO br7own.audit_cases
+    SELECT * FROM UNNEST(
+      ${cases.map((c) => c.audit_id)}::int[],
+      ${cases.map((c) => c.error_id)}::int[]
+    )
     RETURNING *
-  `
-
-  return result
+  `.catch((err: Error) => err)
 }

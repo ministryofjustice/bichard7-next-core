@@ -15,6 +15,7 @@ describe("createAudit", () => {
   const createAuditBody: CreateAudit = {
     fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
     includedTypes: ["Triggers", "Exceptions"],
+    resolvedByUsers: ["user1"],
     toDate: format(new Date(), "yyyy-MM-dd"),
     volumeOfCases: 20
   }
