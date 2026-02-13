@@ -29,4 +29,6 @@ describe("getSupervisedUsers", () => {
 
     expect(userList.map((u) => u.username)).toEqual(expect.arrayContaining(["generalhandler"]))
   })
+
+  // "it should return supervised users with more than one visible force"
 })
