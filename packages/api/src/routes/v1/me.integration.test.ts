@@ -2,6 +2,7 @@ import type { UserDto } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { OK } from "http-status"
 
@@ -37,7 +38,14 @@ describe("/v1/me", () => {
 
   it("returns the current user with a correct JWT", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.GeneralHandler])
-    await createUser(testDatabaseGateway, { groups: user.groups, jwtId: user.jwtId, username: user.username })
+    await createUser(testDatabaseGateway, {
+      email: user.email,
+      forenames: user.forenames,
+      groups: user.groups,
+      jwtId: user.jwtId,
+      surname: user.surname,
+      username: user.username
+    })
 
     const response = await app.inject({ headers: { authorization: `Bearer ${encodedJwt}` }, method: "GET", url: V1.Me })
 
@@ -45,21 +53,21 @@ describe("/v1/me", () => {
       email: user.email,
       excludedTriggers: "",
       featureFlags: {},
-      forenames: "Forename1",
-      fullname: "Forename1 Surname1",
+      forenames: user.forenames,
+      fullname: `${user.forenames} ${user.surname}`,
       groups: user.groups,
       hasAccessTo: {
-        "0": true,
-        "1": true,
-        "2": true,
-        "3": false,
-        "4": false,
-        "5": false,
-        "6": false,
-        "7": true,
-        "8": false
+        [Permission.CanAuditCases]: false,
+        [Permission.CanResubmit]: true,
+        [Permission.CaseDetailsSidebar]: true,
+        [Permission.Exceptions]: true,
+        [Permission.ListAllCases]: false,
+        [Permission.Triggers]: true,
+        [Permission.UnlockOtherUsersCases]: false,
+        [Permission.ViewReports]: false,
+        [Permission.ViewUserManagement]: false
       },
-      surname: "Surname1",
+      surname: user.surname,
       username: user.username,
       visibleCourts: "AB",
       visibleForces: ["01"]
@@ -71,7 +79,14 @@ describe("/v1/me", () => {
 
   it("returns the supervisor user with a correct JWT", async () => {
     const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.Supervisor])
-    await createUser(testDatabaseGateway, { groups: user.groups, jwtId: user.jwtId, username: user.username })
+    await createUser(testDatabaseGateway, {
+      email: user.email,
+      forenames: user.forenames,
+      groups: user.groups,
+      jwtId: user.jwtId,
+      surname: user.surname,
+      username: user.username
+    })
 
     const response = await app.inject({ headers: { authorization: `Bearer ${encodedJwt}` }, method: "GET", url: V1.Me })
 
@@ -79,21 +94,21 @@ describe("/v1/me", () => {
       email: user.email,
       excludedTriggers: "",
       featureFlags: {},
-      forenames: "Forename1",
-      fullname: "Forename1 Surname1",
+      forenames: user.forenames,
+      fullname: `${user.forenames} ${user.surname}`,
       groups: user.groups,
       hasAccessTo: {
-        "0": true,
-        "1": true,
-        "2": true,
-        "3": true,
-        "4": true,
-        "5": true,
-        "6": false,
-        "7": true,
-        "8": true
+        [Permission.CanAuditCases]: true,
+        [Permission.CanResubmit]: true,
+        [Permission.CaseDetailsSidebar]: true,
+        [Permission.Exceptions]: true,
+        [Permission.ListAllCases]: true,
+        [Permission.Triggers]: true,
+        [Permission.UnlockOtherUsersCases]: true,
+        [Permission.ViewReports]: true,
+        [Permission.ViewUserManagement]: false
       },
-      surname: "Surname1",
+      surname: user.surname,
       username: user.username,
       visibleCourts: "AB",
       visibleForces: ["01"]
