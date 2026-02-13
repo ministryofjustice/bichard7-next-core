@@ -30,6 +30,7 @@ const isServiceUser = (user: User): boolean => user.groups?.includes(UserGroup.S
 
 const userAccess = (user: User): { [key in Permission]: boolean } => {
   return {
+    [Permission.CanAuditCases]: isSupervisor(user),
     [Permission.CanResubmit]: hasAccessToExceptions(user) || isServiceUser(user),
     [Permission.CaseDetailsSidebar]: hasAccessToTriggers(user) || hasAccessToExceptions(user),
     [Permission.Exceptions]: hasAccessToExceptions(user),

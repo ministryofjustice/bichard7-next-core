@@ -3,6 +3,7 @@ import { Versions } from "./versions"
 
 export const VersionedEndpoints: Record<string, Record<string, string>> = {
   V1: {
+    Audit: Versions.V1 + Endpoints.Audit,
     AuditLog: Versions.V1 + Endpoints.AuditLog,
     AuditLogEvents: Versions.V1 + Endpoints.AuditLogEvents,
     AuditLogs: Versions.V1 + Endpoints.AuditLogs,
