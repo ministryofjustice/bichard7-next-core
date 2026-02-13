@@ -11,7 +11,9 @@ import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import { getPotentialCasesToAudit } from "../../services/db/audit/getPotentialCasesToAudit"
 import { insertAudit } from "../../services/db/audit/insertAudit"
+import { insertAuditCases } from "../../services/db/audit/insertAuditCases"
 import { NotAllowedError } from "../../types/errors/NotAllowedError"
+import { getVolumeOfCasesToAudit } from "./getVolumeOfCasesToAudit"
 
 export async function createAudit(
   database: WritableDatabaseConnection,
@@ -22,17 +24,25 @@ export async function createAudit(
     return new NotAllowedError()
   }
 
-  return await database.transaction<AuditDto | Error>(async (tx) => {
-    const auditResult = await insertAudit(tx, createAudit, user)
-    if (isError(auditResult)) {
-      throw auditResult
-    }
+  return await database
+    .transaction<AuditDto | Error>(async (tx) => {
+      const auditResult = await insertAudit(tx, createAudit, user)
+      if (isError(auditResult)) {
+        throw auditResult
+      }
 
-    const potentialCasesToAudit = await getPotentialCasesToAudit(tx, createAudit, user)
-    if (isError(potentialCasesToAudit)) {
-      throw potentialCasesToAudit
-    }
+      const potentialCasesToAuditResult = await getPotentialCasesToAudit(tx, createAudit, user)
+      if (isError(potentialCasesToAuditResult)) {
+        throw potentialCasesToAuditResult
+      }
 
-    return auditResult
-  })
+      const caseIds = getVolumeOfCasesToAudit(potentialCasesToAuditResult, createAudit.volumeOfCases)
+      const auditCasesResult = insertAuditCases(tx, auditResult.auditId, caseIds)
+      if (isError(auditCasesResult)) {
+        throw auditCasesResult
+      }
+
+      return auditResult
+    })
+    .catch((err) => err)
 }
