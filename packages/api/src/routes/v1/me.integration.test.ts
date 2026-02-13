@@ -48,7 +48,17 @@ describe("/v1/me", () => {
       forenames: "Forename1",
       fullname: "Forename1 Surname1",
       groups: user.groups,
-      hasAccessTo: { "0": true, "1": true, "2": true, "3": false, "4": false, "5": false, "6": false, "7": true },
+      hasAccessTo: {
+        "0": true,
+        "1": true,
+        "2": true,
+        "3": false,
+        "4": false,
+        "5": false,
+        "6": false,
+        "7": true,
+        "8": false
+      },
       surname: "Surname1",
       username: user.username,
       visibleCourts: "AB",
