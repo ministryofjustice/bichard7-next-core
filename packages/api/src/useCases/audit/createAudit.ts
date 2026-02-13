@@ -37,7 +37,7 @@ export async function createAudit(
       }
 
       const caseIds = getVolumeOfCasesToAudit(potentialCasesToAuditResult, createAudit.volumeOfCases)
-      const auditCasesResult = insertAuditCases(tx, auditResult.auditId, caseIds)
+      const auditCasesResult = await insertAuditCases(tx, auditResult.auditId, caseIds)
       if (isError(auditCasesResult)) {
         throw auditCasesResult
       }
