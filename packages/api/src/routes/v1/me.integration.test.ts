@@ -68,4 +68,38 @@ describe("/v1/me", () => {
     expect(response.statusCode).toBe(OK)
     expect(response.json()).toEqual(responseUser)
   })
+
+  it("returns the supervisor user with a correct JWT", async () => {
+    const [encodedJwt, user] = generateJwtForStaticUser([UserGroup.Supervisor])
+    await createUser(testDatabaseGateway, { groups: user.groups, jwtId: user.jwtId, username: user.username })
+
+    const response = await app.inject({ headers: { authorization: `Bearer ${encodedJwt}` }, method: "GET", url: V1.Me })
+
+    const responseUser: UserDto = {
+      email: user.email,
+      excludedTriggers: "",
+      featureFlags: {},
+      forenames: "Forename1",
+      fullname: "Forename1 Surname1",
+      groups: user.groups,
+      hasAccessTo: {
+        "0": true,
+        "1": true,
+        "2": true,
+        "3": true,
+        "4": true,
+        "5": true,
+        "6": false,
+        "7": true,
+        "8": true
+      },
+      surname: "Surname1",
+      username: user.username,
+      visibleCourts: "AB",
+      visibleForces: ["01"]
+    }
+
+    expect(response.statusCode).toBe(OK)
+    expect(response.json()).toEqual(responseUser)
+  })
 })
