@@ -15,7 +15,7 @@ import { HeaderWrapper } from "../components/Card/Card.styles"
 import DateInput from "../components/CustomDateInput/DateInput"
 import { Select } from "../components/Select"
 import {
-  PageGeneral,
+  FieldsBox,
   SectionTitle,
   SecondarySectionTitle,
   SelectReportsBox,
@@ -83,7 +83,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
         <h1>{"Search reports"}</h1>
         <HeaderWrapper style={{ paddingTop: "20px", paddingBottom: "20px" }}>
           <fieldset className="govuk-fieldset">
-            <PageGeneral>
+            <FieldsBox>
               <ReportsBox>
                 <SectionTitle>
                   <label>{"Reports"}</label>
@@ -164,12 +164,16 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                   </CheckboxesBox>
                 </div>
               </IncludeBox>
-            </PageGeneral>
+            </FieldsBox>
           </fieldset>
 
           <BottomActionsBox>
             {/*<SearchReportsButtonBox>*/}
-            <Button id={"search"} style={{ margin: "0px", display: "inline-flex", alignItems: "center" }}>
+            <Button
+              id={"search"}
+              //style={{ margin: "0px", display: "inline-flex", alignItems: "center" }}>
+              style={{ margin: 0, flexShrink: 0, width: "max-content", padding: "10px 20px" }}
+            >
               {"Search Reports"}
             </Button>
             {/*</SearchReportsButtonBox>*/}
