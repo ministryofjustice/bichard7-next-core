@@ -1,43 +1,23 @@
-import { isAfter, isBefore } from "date-fns"
 import { z } from "zod"
 
 import { dateLikeToDate } from "../../schemas/dateLikeToDate"
 import { CaseSchema } from "../Case"
 import { NoteDtoSchema, NoteRowSchema } from "../Note"
+import { dateRangeShape, validateDateRange } from "./BaseQuery"
 
 export const ExceptionReportQuerySchema = z
   .object({
+    ...dateRangeShape,
     exceptions: z.enum(["true", "false"]).transform((val) => val === "true"),
-    fromDate: dateLikeToDate,
-    toDate: dateLikeToDate,
     triggers: z.enum(["true", "false"]).transform((val) => val === "true")
   })
+  .superRefine(validateDateRange)
   .superRefine((data, ctx) => {
-    if (isBefore(data.toDate, data.fromDate) || isAfter(data.toDate, new Date())) {
-      ctx.addIssue({
-        code: "custom",
-        input: {
-          fromDate: data.fromDate,
-          toDate: data.toDate
-        },
-        message: "Date range cannot be in the future"
-      })
-    }
-
     if (!data.triggers && !data.exceptions) {
       const message = "At least one of 'triggers' or 'exceptions' must be selected"
 
-      ctx.addIssue({
-        code: "custom",
-        message,
-        path: ["triggers"]
-      })
-
-      ctx.addIssue({
-        code: "custom",
-        message,
-        path: ["exceptions"]
-      })
+      ctx.addIssue({ code: "custom", message, path: ["triggers"] })
+      ctx.addIssue({ code: "custom", message, path: ["exceptions"] })
     }
   })
 
