@@ -45,9 +45,15 @@ export default class LedsGateway implements PoliceGateway {
       caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
     }
 
+    const authToken = await this.config.authentication.generateBearerToken()
+    if (isError(authToken)) {
+      console.error(`Failed to generate LEDS auth token. ${authToken.message}`)
+      return new PoliceApiError(["Failed to query LEDS"])
+    }
+
     const apiResponse = await axios
       .post(`${this.config.url}${endpoints.asnQuery}`, requestBody, {
-        headers: generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, "DummyAuthToken"),
+        headers: generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
@@ -123,9 +129,15 @@ export default class LedsGateway implements PoliceGateway {
 
     const { endpoint, requestBody } = result
 
+    const authToken = await this.config.authentication.generateBearerToken()
+    if (isError(authToken)) {
+      console.error(`Failed to generate LEDS auth token. ${authToken.message}`)
+      return new PoliceApiError(["Failed to update LEDS"])
+    }
+
     const apiResponse = await axios
       .post(`${this.config.url}${endpoint}`, requestBody, {
-        headers: generateRequestHeaders(correlationId, actionCode, "DummyAuthToken"),
+        headers: generateRequestHeaders(correlationId, actionCode, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),

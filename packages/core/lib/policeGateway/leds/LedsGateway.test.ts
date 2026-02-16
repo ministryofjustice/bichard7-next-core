@@ -13,8 +13,19 @@ import generateFakePncUpdateDataset from "../../../phase2/tests/fixtures/helpers
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 import ledsAsnQueryResponse from "../../../tests/fixtures/leds-asn-query-response-001.json"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
+import LedsAuthentication from "../../../types/leds/LedsAuthentication"
 import generateRequestHeaders from "./generateRequestHeaders"
 import LedsGateway from "./LedsGateway"
+
+class FakeLedsAuthentication extends LedsAuthentication {
+  constructor() {
+    super()
+  }
+
+  async generateBearerToken() {
+    return "DummyAuthToken"
+  }
+}
 
 const aho = generateAhoFromOffenceList([])
 
@@ -64,7 +75,7 @@ describe("LedsGateway", () => {
   })
 
   beforeEach(() => {
-    ledsGateway = new LedsGateway({ url: "https://dummy" })
+    ledsGateway = new LedsGateway({ url: "https://dummy", authentication: new FakeLedsAuthentication() })
   })
 
   describe("query", () => {
