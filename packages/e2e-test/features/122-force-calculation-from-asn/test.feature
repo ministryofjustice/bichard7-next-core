@@ -22,7 +22,7 @@ Feature: {122} BR7 R5.1-RCD399-Force calculation-FF in ASN
 	Scenario: Deriving the force owner from the ASN
 		When I am logged in as "met.police"
 			And I view the list of exceptions
-		Then I see exception "HO100201 " in the exception list table
+		Then I see exception "HO100201" in the exception list table
 		When I open the record for "ASNFF FORCECALC"
 			And I click the "Case" tab
 		Then I see error "HO100201 - Bad PTIURN format" in the "PTIURN" row of the results table
