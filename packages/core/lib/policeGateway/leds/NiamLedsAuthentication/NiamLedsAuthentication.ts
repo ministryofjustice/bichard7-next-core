@@ -21,14 +21,10 @@ export default class NiamLedsAuthentication implements LedsAuthentication {
       return NiamLedsAuthentication.instance
     }
 
-    const authenticationUrl = process.env.LEDS_NIAM_AUTH_URL
+    const authenticationUrl = process.env.LEDS_NIAM_AUTH_URL ?? "https://localhost:8443/auth"
     const privateKey = process.env.LEDS_NIAM_PRIVATE_KEY
     const certificate = process.env.LEDS_NIAM_CERTIFICATE
     const parameters = process.env.LEDS_NIAM_PARAMETERS
-    if (!authenticationUrl) {
-      throw Error("LEDS_NIAM_AUTH_URL environment variable is required.")
-    }
-
     if (!privateKey) {
       throw Error("LEDS_NIAM_PRIVATE_KEY environment variable is required.")
     }

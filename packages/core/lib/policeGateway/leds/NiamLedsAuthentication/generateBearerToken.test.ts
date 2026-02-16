@@ -1,3 +1,4 @@
+import axios from "axios"
 import generateTestPrivateKeyAndCertificate from "../../../../tests/helpers/generateTestPrivateKeyAndCertificate"
 import generateBearerToken from "./generateBearerToken"
 
@@ -22,12 +23,11 @@ const generateOptions = (certificate: string, privateKey: string) => ({
 })
 
 const spyFetch = (token: unknown) => {
-  jest.spyOn(global, "fetch").mockImplementation(() =>
+  jest.spyOn(axios, "post").mockImplementation(() =>
     Promise.resolve({
-      ok: true,
       status: 200,
-      json: () => Promise.resolve({ access_token: token })
-    } as Response)
+      data: { access_token: token }
+    })
   )
 }
 
@@ -47,7 +47,7 @@ describe("generateBearerToken", () => {
   })
 
   it("should return error when API call fails", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(() => Promise.reject(new TypeError("Network Error")))
+    jest.spyOn(axios, "post").mockImplementation(() => Promise.reject(new TypeError("Network Error")))
     const { privateKey, certificate } = generateTestPrivateKeyAndCertificate()
 
     const result = await generateBearerToken(generateOptions(certificate, privateKey))
@@ -56,12 +56,11 @@ describe("generateBearerToken", () => {
   })
 
   it("should return error when API response does not have access_token key", async () => {
-    jest.spyOn(global, "fetch").mockImplementation(() =>
+    jest.spyOn(axios, "post").mockImplementation(() =>
       Promise.resolve({
-        ok: true,
         status: 200,
-        json: () => Promise.resolve({ randomKey: "random value" })
-      } as Response)
+        data: { randomKey: "random value" }
+      })
     )
     const { privateKey, certificate } = generateTestPrivateKeyAndCertificate()
 

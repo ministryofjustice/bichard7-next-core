@@ -2,6 +2,8 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import jwt from "jsonwebtoken"
 
+import axios from "axios"
+import https from "https"
 import NiamAuthenticationOptions from "../../../../types/leds/NiamAuthenticationOptions"
 import generateX5t from "./generateX5t"
 
@@ -44,20 +46,23 @@ const generateBearerToken = async ({
     client_assertion: clientAssertion
   })
 
-  const response = await fetch(authenticationUrl, {
-    method: "POST",
-    body: urlEncodedBody,
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
-  }).catch((error: Error) => new Error(error.message))
+  const response = await axios
+    .post(authenticationUrl, urlEncodedBody, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: String(parameters.tlsStrictMode).toLowerCase() !== "false"
+      })
+    })
+    .catch((error: Error) => error)
 
-  if (response instanceof Error) {
+  if (isError(response)) {
     return response
   }
 
   try {
-    const tokenResult = await response.json()
+    const tokenResult = await response.data
     const token = String(tokenResult["access_token"])
     const { exp: expiryEpochTime } = jwt.decode(token) as { exp: number }
 

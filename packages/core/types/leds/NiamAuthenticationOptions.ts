@@ -8,6 +8,7 @@ export type NiamAuthenticationParameters = {
   clientId: string
   grantType: string
   scope: string
+  tlsStrictMode?: boolean
 }
 
 type NiamAuthenticationOptions = {

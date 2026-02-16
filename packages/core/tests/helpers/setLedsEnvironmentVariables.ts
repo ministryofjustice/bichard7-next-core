@@ -16,7 +16,7 @@ const setLedsEnvironmentVariables = () => {
 
   const { privateKey, certificate } = generateTestPrivateKeyAndCertificate()
 
-  process.env.LEDS_NIAM_AUTH_URL = "https://dummy-url"
+  process.env.LEDS_NIAM_AUTH_URL = "http://dummy/auth"
   process.env.LEDS_NIAM_PRIVATE_KEY = privateKey
   process.env.LEDS_NIAM_CERTIFICATE = certificate
   process.env.LEDS_NIAM_PARAMETERS = JSON.stringify(niamParams)
