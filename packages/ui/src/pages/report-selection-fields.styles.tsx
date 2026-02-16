@@ -75,21 +75,21 @@ const CheckboxLabel = styled.label`
   line-height: 1;
 `
 const BottomActionsBox = styled.div`
-  background: hotpink;
+  //background: hotpink;
   display: flex;
-  //flex-direction: row-reverse;
   justify-content: flex-end;
   align-items: center;
-  height: 100%;
+  gap: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 100%;
 `
 const SearchReportsButtonBox = styled.div`
-  background: pink;
-  //padding-bottom: 30px;
+  //background: goldenrod;
 `
-const ClearSearchLink = styled.div`
-  background: blueviolet;
+const ClearSearchLinkBox = styled.div`
+  //background: blueviolet;
   margin-right: 44px;
-  margin-left: 14px;
 `
 
 export {
@@ -108,5 +108,5 @@ export {
   CheckboxUnit,
   BottomActionsBox,
   SearchReportsButtonBox,
-  ClearSearchLink
+  ClearSearchLinkBox
 }

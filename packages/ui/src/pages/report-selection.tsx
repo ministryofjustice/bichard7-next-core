@@ -29,8 +29,7 @@ import {
   CheckboxLabel,
   CheckboxUnit,
   BottomActionsBox,
-  SearchReportsButtonBox,
-  ClearSearchLink
+  ClearSearchLinkBox
 } from "./report-selection-fields.styles"
 import { Button } from "../components/Buttons/Button"
 
@@ -82,7 +81,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
         }}
       >
         <h1>{"Search reports"}</h1>
-        <HeaderWrapper>
+        <HeaderWrapper style={{ paddingTop: "20px", paddingBottom: "20px" }}>
           <fieldset className="govuk-fieldset">
             <PageGeneral>
               <ReportsBox>
@@ -169,16 +168,16 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
           </fieldset>
 
           <BottomActionsBox>
-            <SearchReportsButtonBox>
-              <Button id={"search"} style={{ background: "lime", display: "flex", alignItems: "center" }}>
-                {"Search Reports"}
-              </Button>
-            </SearchReportsButtonBox>
-            <ClearSearchLink>
+            {/*<SearchReportsButtonBox>*/}
+            <Button id={"search"} style={{ margin: "0px", display: "inline-flex", alignItems: "center" }}>
+              {"Search Reports"}
+            </Button>
+            {/*</SearchReportsButtonBox>*/}
+            <ClearSearchLinkBox>
               <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
                 {"Clear search"}
               </a>
-            </ClearSearchLink>
+            </ClearSearchLinkBox>
           </BottomActionsBox>
         </HeaderWrapper>
       </Layout>
