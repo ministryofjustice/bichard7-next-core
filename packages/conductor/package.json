@@ -10,7 +10,7 @@
     "update-deps": "ncu -u && npm install",
     "test": "jest --detectOpenHandles --workerThreads=true",
     "setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -T ./deploy/deploy.ts",
-    "worker": ". ../../environment/local-conductor-worker.env && npm run worker-noenv",
+    "worker": ". ../../environment/local-conductor-worker.env && . ../../environment/leds-environment-variable.sh && npm run worker-noenv",
     "worker-noenv": "npx ts-node -T src/worker.ts",
     "esbuild": "node build.js"
   },
