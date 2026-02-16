@@ -1,5 +1,6 @@
 import type { LedsBichard, LedsMock } from "../../types/LedsMock"
 import type Bichard from "../world"
+import addAuthMock from "./addAuthMock"
 
 type MockRequestsAndResponses = (ncmFile: string, bichard: Bichard) => LedsMock[]
 
@@ -10,6 +11,7 @@ const addMockToLedsMockApi = async (bichard: LedsBichard): Promise<void> => {
   bichard.policeApi.mocks = mockRequestsAndResponses(`${bichard.specFolder}/pnc-data.xml`, bichard)
 
   await bichard.policeApi.mockServerClient.clear()
+  await addAuthMock(bichard)
 
   for (const mock of bichard.policeApi.mocks) {
     await bichard.policeApi.mockServerClient.addMock({
