@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
@@ -10,7 +10,7 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 export async function getPotentialCasesToAudit(
   database: WritableDatabaseConnection,
-  { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes }: CreateAudit,
+  { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes }: CreateAuditInput,
   user: User
 ): PromiseResult<CasesToAuditByUser[]> {
   const checkForResolvedTriggers = includedTypes.includes("Triggers")

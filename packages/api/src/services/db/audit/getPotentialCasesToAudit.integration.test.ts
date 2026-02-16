@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -16,13 +16,13 @@ import { getPotentialCasesToAudit } from "./getPotentialCasesToAudit"
 const testDatabaseGateway = new End2EndPostgres()
 
 const testUsername = "user1"
-const defaultCreateAudit = {
+const defaultCreateAuditInput = {
   fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
   includedTypes: ["Triggers", "Exceptions"],
   resolvedByUsers: [testUsername],
   toDate: format(new Date(), "yyyy-MM-dd"),
   volumeOfCases: 20
-} satisfies CreateAudit
+} satisfies CreateAuditInput
 
 describe("getPotentialCasesToAudit", () => {
   beforeEach(async () => {
@@ -51,11 +51,11 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit
-    } satisfies CreateAudit
+    const createAuditInput = {
+      ...defaultCreateAuditInput
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -87,12 +87,12 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit,
+    const createAuditInput = {
+      ...defaultCreateAuditInput,
       includedTypes: ["Triggers"]
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -121,12 +121,12 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit,
+    const createAuditInput = {
+      ...defaultCreateAuditInput,
       includedTypes: ["Exceptions"]
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -155,11 +155,11 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit
-    } satisfies CreateAudit
+    const createAuditInput = {
+      ...defaultCreateAuditInput
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -196,12 +196,12 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit,
+    const createAuditInput = {
+      ...defaultCreateAuditInput,
       resolvedByUsers: [testUsername, anotherUsername]
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -241,11 +241,11 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit
-    } satisfies CreateAudit
+    const createAuditInput = {
+      ...defaultCreateAuditInput
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -284,11 +284,11 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: "XYZ"
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit
-    } satisfies CreateAudit
+    const createAuditInput = {
+      ...defaultCreateAuditInput
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -334,13 +334,13 @@ describe("getPotentialCasesToAudit", () => {
         }
       ])
     ])
-    const createAudit = {
-      ...defaultCreateAudit,
+    const createAuditInput = {
+      ...defaultCreateAuditInput,
       includedTypes: ["Triggers"],
       triggerTypes: [TriggerCode.TRPR0001, TriggerCode.TRPR0002]
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -383,11 +383,11 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit
-    } satisfies CreateAudit
+    const createAuditInput = {
+      ...defaultCreateAuditInput
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -459,11 +459,11 @@ describe("getPotentialCasesToAudit", () => {
         triggerResolvedBy: testUsername
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit
-    } satisfies CreateAudit
+    const createAuditInput = {
+      ...defaultCreateAuditInput
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -501,12 +501,12 @@ describe("getPotentialCasesToAudit", () => {
         triggerResolvedBy: testUsername
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit,
+    const createAuditInput = {
+      ...defaultCreateAuditInput,
       includedTypes: ["Triggers"]
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([
@@ -540,12 +540,12 @@ describe("getPotentialCasesToAudit", () => {
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
-    const createAudit = {
-      ...defaultCreateAudit,
+    const createAuditInput = {
+      ...defaultCreateAuditInput,
       includedTypes: ["Exceptions"]
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
-    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAudit, user)
+    const casesToAudit = await getPotentialCasesToAudit(testDatabaseGateway.writable, createAuditInput, user)
 
     expect(isError(casesToAudit)).toBe(false)
     expect(casesToAudit as CasesToAuditByUser[]).toEqual([

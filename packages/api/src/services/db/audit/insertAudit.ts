@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { Audit, AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { User } from "@moj-bichard7/common/types/User"
 
@@ -10,8 +10,8 @@ import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
 
 export const insertAudit = async (
   database: WritableDatabaseConnection,
-  createAudit: CreateAudit,
-  user: User
+  { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes, volumeOfCases }: CreateAuditInput,
+  { username }: User
 ): PromiseResult<AuditDto> => {
   const sql = database.connection
 
@@ -27,14 +27,14 @@ export const insertAudit = async (
         volume_of_cases
       )
       VALUES (
-        ${user.username},
+        ${username},
         CURRENT_DATE,
-        ${createAudit.fromDate},
-        ${createAudit.toDate},
-        ${createAudit.includedTypes},
-        ${createAudit.resolvedByUsers},
-        ${createAudit.triggerTypes ?? null},
-        ${createAudit.volumeOfCases}
+        ${fromDate},
+        ${toDate},
+        ${includedTypes},
+        ${resolvedByUsers},
+        ${triggerTypes ?? null},
+        ${volumeOfCases}
       )
       RETURNING *
     `.catch((error: Error) => error)

@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -33,7 +33,7 @@ describe("insertAudit", () => {
       resolvedByUsers: ["user1"],
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 20
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
     const result = await insertAudit(testDatabaseGateway.writable, payload, user)
 
     expect(isError(result)).toBe(false)

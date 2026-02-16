@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
@@ -17,7 +17,7 @@ import { getVolumeOfCasesToAudit } from "./getVolumeOfCasesToAudit"
 
 export async function createAudit(
   database: WritableDatabaseConnection,
-  createAudit: CreateAudit,
+  createAuditInput: CreateAuditInput,
   user: User
 ): PromiseResult<AuditDto> {
   if (!userAccess(user)[Permission.CanAuditCases]) {
@@ -26,17 +26,17 @@ export async function createAudit(
 
   return await database
     .transaction<AuditDto | Error>(async (tx) => {
-      const auditResult = await insertAudit(tx, createAudit, user)
+      const auditResult = await insertAudit(tx, createAuditInput, user)
       if (isError(auditResult)) {
         throw auditResult
       }
 
-      const potentialCasesToAuditResult = await getPotentialCasesToAudit(tx, createAudit, user)
+      const potentialCasesToAuditResult = await getPotentialCasesToAudit(tx, createAuditInput, user)
       if (isError(potentialCasesToAuditResult)) {
         throw potentialCasesToAuditResult
       }
 
-      const caseIds = getVolumeOfCasesToAudit(potentialCasesToAuditResult, createAudit.volumeOfCases)
+      const caseIds = getVolumeOfCasesToAudit(potentialCasesToAuditResult, createAuditInput.volumeOfCases)
       const auditCasesResult = await insertAuditCases(tx, auditResult.auditId, caseIds)
       if (isError(auditCasesResult)) {
         throw auditCasesResult

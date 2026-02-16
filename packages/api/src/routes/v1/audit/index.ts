@@ -3,7 +3,7 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { type CreateAudit, CreateAuditSchema } from "@moj-bichard7/common/contracts/CreateAudit"
+import { type CreateAuditInput, CreateAuditInputSchema } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { CREATED, FORBIDDEN, INTERNAL_SERVER_ERROR } from "http-status"
@@ -24,7 +24,7 @@ import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { createAudit } from "../../../useCases/audit/createAudit"
 
 type HandlerProps = {
-  body: CreateAudit
+  body: CreateAuditInput
   database: DatabaseGateway
   reply: FastifyReply
   user: User
@@ -32,7 +32,7 @@ type HandlerProps = {
 
 const schema = {
   ...auth,
-  body: CreateAuditSchema,
+  body: CreateAuditInputSchema,
   response: {
     [CREATED]: jsonResponse("Created Audit", AuditDtoSchema),
     ...unauthorizedError(),

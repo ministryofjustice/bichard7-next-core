@@ -1,7 +1,7 @@
 import { isAfter, isBefore } from "date-fns"
 import z from "zod"
 
-export const CreateAuditSchema = z
+export const CreateAuditInputSchema = z
   .object({
     fromDate: z.iso.date(),
     includedTypes: z.enum(["Triggers", "Exceptions"]).array().nonempty(),
@@ -23,4 +23,4 @@ export const CreateAuditSchema = z
     }
   })
 
-export type CreateAudit = z.infer<typeof CreateAuditSchema>
+export type CreateAuditInput = z.infer<typeof CreateAuditInputSchema>

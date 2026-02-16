@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { FastifyInstance } from "fastify"
 
@@ -11,7 +11,7 @@ import { createCase } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
 
-describe("POST /V1/audit", () => {
+describe("POST /v1/audit", () => {
   const endpoint = V1.Audit
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
@@ -56,7 +56,7 @@ describe("POST /V1/audit", () => {
       resolvedByUsers: [testUsername],
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 50
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
     const response = await fetch(`${helper.address}${endpoint}`, {
       body: JSON.stringify(payload),
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -87,7 +87,7 @@ describe("POST /V1/audit", () => {
         resolvedByUsers: ["user1"],
         toDate: format(addDays(new Date(), 1), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
-      } satisfies CreateAudit),
+      } satisfies CreateAuditInput),
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST"
     })
@@ -108,7 +108,7 @@ describe("POST /V1/audit", () => {
         resolvedByUsers: ["user1"],
         toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
-      } satisfies CreateAudit),
+      } satisfies CreateAuditInput),
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST"
     })
@@ -129,7 +129,7 @@ describe("POST /V1/audit", () => {
         resolvedByUsers: [],
         toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
-      } satisfies CreateAudit),
+      } satisfies CreateAuditInput),
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST"
     })
@@ -150,7 +150,7 @@ describe("POST /V1/audit", () => {
         resolvedByUsers: ["user1"],
         toDate: format(new Date(), "yyyy-MM-dd"),
         volumeOfCases: 20
-      } satisfies CreateAudit),
+      } satisfies CreateAuditInput),
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST"
     })

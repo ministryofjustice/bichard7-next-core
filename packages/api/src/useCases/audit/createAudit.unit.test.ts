@@ -1,4 +1,4 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { User } from "@moj-bichard7/common/types/User"
 
@@ -16,7 +16,7 @@ describe("createAudit", () => {
     transaction: jest.fn()
   } as unknown as jest.Mocked<WritableDatabaseConnection>
 
-  const createAuditBody: CreateAudit = {
+  const createAuditInput: CreateAuditInput = {
     fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
     includedTypes: ["Triggers", "Exceptions"],
     resolvedByUsers: ["user1"],
@@ -31,7 +31,7 @@ describe("createAudit", () => {
   it("runs the transaction if the user is a supervisor", async () => {
     mockDatabase.transaction.mockResolvedValue({ auditId: 1 })
 
-    const result = await createAudit(mockDatabase, createAuditBody, {
+    const result = await createAudit(mockDatabase, createAuditInput, {
       groups: [UserGroup.Supervisor]
     } as User)
 
@@ -41,7 +41,7 @@ describe("createAudit", () => {
   })
 
   it("returns an error due to lack of user permissions", async () => {
-    const audit = await createAudit(mockDatabase, createAuditBody, {
+    const audit = await createAudit(mockDatabase, createAuditInput, {
       groups: [UserGroup.GeneralHandler]
     } as User)
 
@@ -51,7 +51,7 @@ describe("createAudit", () => {
   it("returns an error if the transaction returns an error", async () => {
     mockDatabase.transaction.mockRejectedValue(new Error("Test error message"))
 
-    const result = await createAudit(mockDatabase, createAuditBody, {
+    const result = await createAudit(mockDatabase, createAuditInput, {
       groups: [UserGroup.Supervisor]
     } as User)
 

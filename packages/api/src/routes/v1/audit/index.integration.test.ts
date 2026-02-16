@@ -1,7 +1,6 @@
-import type { CreateAudit } from "@moj-bichard7/common/contracts/CreateAudit"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
-import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, format, subWeeks } from "date-fns"
@@ -14,7 +13,7 @@ import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
 import { createUserAndJwtToken } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 
-describe("Create audit", () => {
+describe("POST /v1/audit", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
   const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
@@ -43,7 +42,7 @@ describe("Create audit", () => {
       resolvedByUsers: [testUsername],
       toDate: format(new Date(), "yyyy-MM-dd"),
       volumeOfCases: 50
-    } satisfies CreateAudit
+    } satisfies CreateAuditInput
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -72,7 +71,7 @@ describe("Create audit", () => {
         resolvedByUsers: ["user1"],
         toDate: format(addDays(new Date(), 1), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
-      } satisfies CreateAudit,
+      } satisfies CreateAuditInput,
       url: V1.Audit
     })
 
@@ -92,7 +91,7 @@ describe("Create audit", () => {
         resolvedByUsers: ["user1"],
         toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
-      } satisfies CreateAudit,
+      } satisfies CreateAuditInput,
       url: V1.Audit
     })
 
@@ -112,7 +111,7 @@ describe("Create audit", () => {
         resolvedByUsers: [],
         toDate: format(new Date(), "yyyy-MM-dd"), // Date ranges in the future should be rejected
         volumeOfCases: 20
-      } satisfies CreateAudit,
+      } satisfies CreateAuditInput,
       url: V1.Audit
     })
 
@@ -132,7 +131,7 @@ describe("Create audit", () => {
         resolvedByUsers: ["user1"],
         toDate: format(new Date(), "yyyy-MM-dd"),
         volumeOfCases: 20
-      } satisfies CreateAudit,
+      } satisfies CreateAuditInput,
       url: V1.Audit
     })
 
