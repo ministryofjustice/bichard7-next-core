@@ -3,6 +3,8 @@ import type {
   CaseRowForExceptionReport
 } from "@moj-bichard7/common/types/reports/ExceptionReport"
 
+import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
+
 import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
 
 describe("caseToExceptionsReportDto", () => {
@@ -25,7 +27,7 @@ describe("caseToExceptionsReportDto", () => {
     const result = caseToExceptionsReportDto(caseRow)
 
     expect(result).toEqual({
-      asn: "1101ZD0100000410836J",
+      asn: "11/01ZD/01/410836J",
       courtName: "Test Court",
       courtReference: "REF123",
       courtRoom: "Room 1",
@@ -130,7 +132,7 @@ describe("caseToExceptionsReportDto", () => {
 
   it("should map all fields correctly", () => {
     const caseRow: CaseRowForExceptionReport = {
-      asn: "ASN123",
+      asn: "1101ZD0100000410836J",
       court_date: new Date("2024-02-01"),
       court_name: "Crown Court",
       court_reference: "CC/2024/001",
@@ -146,7 +148,7 @@ describe("caseToExceptionsReportDto", () => {
 
     const result = caseToExceptionsReportDto(caseRow)
 
-    expect(result.asn).toBe(caseRow.asn)
+    expect(result.asn).toBe(getShortAsn(caseRow.asn))
     expect(result.courtName).toBe(caseRow.court_name)
     expect(result.courtReference).toBe(caseRow.court_reference)
     expect(result.courtRoom).toBe(caseRow.court_room)
