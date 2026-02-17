@@ -4,7 +4,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import {
-  CaseForWarrantsReportSchema,
+  CaseForWarrantsReportDtoSchema,
   type WarrantsReportQuery,
   WarrantsReportQuerySchema
 } from "@moj-bichard7/common/types/reports/WarrantsReport"
@@ -36,7 +36,7 @@ const schema = {
   ...auth,
   querystring: WarrantsReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Warrants Report", z.array(CaseForWarrantsReportSchema)),
+    [OK]: jsonResponse("Warrants Report", z.array(CaseForWarrantsReportDtoSchema)),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

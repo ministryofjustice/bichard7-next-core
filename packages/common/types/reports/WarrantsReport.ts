@@ -19,7 +19,7 @@ export const CaseRowForWarrantsReportSchema = CaseRowSchema.pick({
   triggers: z.array(TriggerRowSchema)
 })
 
-export const CaseForWarrantsReportSchema = z.object({
+export const CaseForWarrantsReportDtoSchema = z.object({
   asn: z.string(),
   bailOrNoBail: z.string(),
   courtName: z.string(),
@@ -40,6 +40,6 @@ export const CaseForWarrantsReportSchema = z.object({
   warrantType: z.string()
 })
 
-export type CaseForWarrantsReport = z.infer<typeof CaseForWarrantsReportSchema>
+export type CaseForWarrantsReportDto = z.infer<typeof CaseForWarrantsReportDtoSchema>
 export type CaseRowForWarrantsReport = z.infer<typeof CaseRowForWarrantsReportSchema>
 export type WarrantsReportQuery = z.infer<typeof WarrantsReportQuerySchema>

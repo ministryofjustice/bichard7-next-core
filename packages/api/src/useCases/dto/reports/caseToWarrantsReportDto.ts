@@ -1,4 +1,7 @@
-import type { CaseForWarrantsReport, CaseRowForWarrantsReport } from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type {
+  CaseForWarrantsReportDto,
+  CaseRowForWarrantsReport
+} from "@moj-bichard7/common/types/reports/WarrantsReport"
 
 import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -14,7 +17,7 @@ import {
 } from "../../cases/reports/warrants/extractionUtils"
 import { hearingOutcomeDetails } from "../../cases/reports/warrants/transformers/hearingOutcomeDetails"
 
-export const caseToWarrantsReportDto = (caseRow: CaseRowForWarrantsReport): CaseForWarrantsReport => {
+export const caseToWarrantsReportDto = (caseRow: CaseRowForWarrantsReport): CaseForWarrantsReportDto => {
   const aho = parseAhoXml(caseRow.annotated_msg)
 
   if (isError(aho)) {
