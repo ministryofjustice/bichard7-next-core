@@ -18,6 +18,39 @@ interface AggregatedOutcome {
   withdrawnResultText?: string
 }
 
+const updateFlags = (acc: AggregatedOutcome, result: Result) => {
+  const analysis = analyzeResult(result)
+
+  if (analysis.parentResult) {
+    acc.flags.parentResult = true
+  }
+
+  if (analysis.witnessResult) {
+    acc.flags.witnessResult = true
+  }
+
+  if (analysis.bail) {
+    acc.flags.bail = true
+  }
+
+  if (analysis.noBail) {
+    acc.flags.noBail = true
+  }
+
+  if (analysis.firstInstance) {
+    acc.flags.firstInstance = true
+  }
+
+  // Capture text (First found wins)
+  if (!acc.warrantResultText && analysis.warrantResultText) {
+    acc.warrantResultText = analysis.warrantResultText
+  }
+
+  if (!acc.withdrawnResultText && analysis.withdrawnResultText) {
+    acc.withdrawnResultText = analysis.withdrawnResultText
+  }
+}
+
 export const aggregateOutcome = (results: Result[]): AggregatedOutcome => {
   // Initialize State
   const acc: AggregatedOutcome = {
@@ -38,36 +71,7 @@ export const aggregateOutcome = (results: Result[]): AggregatedOutcome => {
   for (const result of results) {
     // A. Analyse Flags & Text
     // We reuse the analyzeResult logic but apply it immediately
-    const analysis = analyzeResult(result)
-
-    if (analysis.parentResult) {
-      acc.flags.parentResult = true
-    }
-
-    if (analysis.witnessResult) {
-      acc.flags.witnessResult = true
-    }
-
-    if (analysis.bail) {
-      acc.flags.bail = true
-    }
-
-    if (analysis.noBail) {
-      acc.flags.noBail = true
-    }
-
-    if (analysis.firstInstance) {
-      acc.flags.firstInstance = true
-    }
-
-    // Capture text (First found wins)
-    if (!acc.warrantResultText && analysis.warrantResultText) {
-      acc.warrantResultText = analysis.warrantResultText
-    }
-
-    if (!acc.withdrawnResultText && analysis.withdrawnResultText) {
-      acc.withdrawnResultText = analysis.withdrawnResultText
-    }
+    updateFlags(acc, result)
 
     // B. Extract Next Hearing
     const hearing = findNextHearing(result)
