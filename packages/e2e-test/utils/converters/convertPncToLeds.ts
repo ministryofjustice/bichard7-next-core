@@ -1,5 +1,4 @@
 import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
-import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { RemandRequest } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "@moj-bichard7/core/types/leds/SubsequentDisposalResultsRequest"
 import { convertPncXmlToJson } from "../convertPncXmlToJson"
@@ -12,35 +11,43 @@ import type {
   PncSubsequentDisposalJson
 } from "./convertPncXmlToJson/convertPncXmlToJson"
 
-type ConvertPncToLedsResult<T extends Operation> = T extends "ASN Query"
-  ? AsnQueryResponse
-  : T extends "Remand"
-    ? RemandRequest
-    : T extends "Add Disposal"
-      ? AddDisposalRequest
-      : SubsequentDisposalResultsRequest
+export type Operation = "Remand" | "Add Disposal" | "Sentence Deferred" | "Subsequently Varied"
 
-export type Operation = "ASN Query" | "Remand" | "Add Disposal" | "Sentence Deferred" | "Subsequently Varied"
+type PncToLedsResultMap = {
+  "Add Disposal": AddDisposalRequest
+  Remand: RemandRequest
+  "Sentence Deferred": SubsequentDisposalResultsRequest
+  "Subsequently Varied": SubsequentDisposalResultsRequest
+}
+
+type ConvertPncToLedsResult<T extends Operation> = PncToLedsResultMap[T]
+
+const handleSubsequentDisposal = (pncXml: string): SubsequentDisposalResultsRequest => {
+  const pncJson = convertPncXmlToJson<PncSubsequentDisposalJson>(pncXml)
+  return convertPncJsonToLedsSubsequentDisposalRequest(pncJson)
+}
+
+const pncXmlConverters = {
+  "Add Disposal": (pncXml: string): AddDisposalRequest => {
+    const pncJson = convertPncXmlToJson<PncNormalDisposalJson>(pncXml)
+    return convertPncJsonToLedsAddDisposalRequest(pncJson)
+  },
+  Remand: (pncXml: string): RemandRequest => {
+    const pncJson = convertPncXmlToJson<PncRemandJson>(pncXml)
+    return convertPncJsonToLedsRemandRequest(pncJson)
+  },
+  "Sentence Deferred": handleSubsequentDisposal,
+  "Subsequently Varied": handleSubsequentDisposal
+} as const
 
 const convertPncToLeds = <T extends Operation>(pncXml: string, operation: T): ConvertPncToLedsResult<T> => {
-  const getResult = () => {
-    switch (operation) {
-      case "Add Disposal":
-        const pncNormalDisposalJson = convertPncXmlToJson<PncNormalDisposalJson>(pncXml)
-        return convertPncJsonToLedsAddDisposalRequest(pncNormalDisposalJson)
-      case "Remand":
-        const pncRemandJson = convertPncXmlToJson<PncRemandJson>(pncXml)
-        return convertPncJsonToLedsRemandRequest(pncRemandJson)
-      case "Sentence Deferred":
-      case "Subsequently Varied":
-        const pncSubsequentDisposalJson = convertPncXmlToJson<PncSubsequentDisposalJson>(pncXml)
-        return convertPncJsonToLedsSubsequentDisposalRequest(pncSubsequentDisposalJson)
-      default:
-        throw new Error(`Invalid operation: ${operation}`)
-    }
+  const pncXmlConverter = pncXmlConverters[operation]
+
+  if (!pncXmlConverter) {
+    throw new Error(`Unsupported PNC operation: ${operation}`)
   }
 
-  return getResult() as ConvertPncToLedsResult<T>
+  return pncXmlConverter(pncXml) as ConvertPncToLedsResult<T>
 }
 
 export default convertPncToLeds
