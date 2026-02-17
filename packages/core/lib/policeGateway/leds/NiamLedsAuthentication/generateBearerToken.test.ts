@@ -1,4 +1,5 @@
 import axios from "axios"
+
 import generateTestPrivateKeyAndCertificate from "../../../../tests/helpers/generateTestPrivateKeyAndCertificate"
 import generateBearerToken from "./generateBearerToken"
 

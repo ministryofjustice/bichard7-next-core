@@ -1,4 +1,5 @@
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
+
 import { NiamLedsAuthentication } from "./NiamLedsAuthentication"
 
 const createLedsApiConfig = (): LedsApiConfig => ({

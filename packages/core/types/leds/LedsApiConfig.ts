@@ -1,8 +1,8 @@
-import LedsAuthentication from "./LedsAuthentication"
+import type LedsAuthentication from "./LedsAuthentication"
 
 type LedsApiConfig = {
-  url: string
   authentication: LedsAuthentication
+  url: string
 }
 
 export default LedsApiConfig

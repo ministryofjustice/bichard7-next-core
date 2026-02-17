@@ -1,4 +1,5 @@
 import type { NiamAuthenticationParameters } from "../../types/leds/NiamAuthenticationOptions"
+
 import generateTestPrivateKeyAndCertificate from "./generateTestPrivateKeyAndCertificate"
 
 const setLedsEnvironmentVariables = () => {

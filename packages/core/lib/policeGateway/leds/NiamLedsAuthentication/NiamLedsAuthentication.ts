@@ -3,10 +3,9 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type LedsAuthentication from "../../../../types/leds/LedsAuthentication"
+import type NiamAuthenticationOptions from "../../../../types/leds/NiamAuthenticationOptions"
+import type { NiamAuthenticationParameters } from "../../../../types/leds/NiamAuthenticationOptions"
 
-import NiamAuthenticationOptions, {
-  NiamAuthenticationParameters
-} from "../../../../types/leds/NiamAuthenticationOptions"
 import generateBearerToken from "./generateBearerToken"
 
 export default class NiamLedsAuthentication implements LedsAuthentication {

@@ -18,12 +18,8 @@ import generateRequestHeaders from "./generateRequestHeaders"
 import LedsGateway from "./LedsGateway"
 
 class FakeLedsAuthentication extends LedsAuthentication {
-  constructor() {
-    super()
-  }
-
-  async generateBearerToken() {
-    return "DummyAuthToken"
+  generateBearerToken() {
+    return Promise.resolve("DummyAuthToken")
   }
 }
 

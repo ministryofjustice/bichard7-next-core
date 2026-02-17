@@ -1,8 +1,8 @@
+import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 import jwt from "jsonwebtoken"
-
-import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "node:crypto"
+
 import setLedsEnvironmentVariables from "../../../../tests/helpers/setLedsEnvironmentVariables"
 import NiamLedsAuthentication from "./NiamLedsAuthentication"
 
@@ -111,7 +111,7 @@ describe("NiamLedsAuthentication", () => {
 
   it.each(["LEDS_NIAM_PRIVATE_KEY", "LEDS_NIAM_CERTIFICATE", "LEDS_NIAM_PARAMETERS"])(
     "should throw error if %s environment variable doesn't exist",
-    async (key) => {
+    (key) => {
       delete process.env[key]
 
       expect(() => NiamLedsAuthentication.createInstance()).toThrow(`${key} environment variable is required.`)
@@ -120,14 +120,14 @@ describe("NiamLedsAuthentication", () => {
 
   it.each(["LEDS_NIAM_PRIVATE_KEY", "LEDS_NIAM_CERTIFICATE", "LEDS_NIAM_PARAMETERS"])(
     "should throw error if %s environment variable is empty string",
-    async (key) => {
+    (key) => {
       process.env[key] = ""
 
       expect(() => NiamLedsAuthentication.createInstance()).toThrow(`${key} environment variable is required.`)
     }
   )
 
-  it("should throw error if LEDS_NIAM_PARAMETERS environment variable is not a valid JSON", async () => {
+  it("should throw error if LEDS_NIAM_PARAMETERS environment variable is not a valid JSON", () => {
     process.env.LEDS_NIAM_PARAMETERS = "invalid json"
 
     expect(() => NiamLedsAuthentication.createInstance()).toThrow(

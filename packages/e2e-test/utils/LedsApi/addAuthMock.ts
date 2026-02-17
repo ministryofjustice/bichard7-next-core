@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { LedsBichard } from "../../types/LedsMock"
+import type { LedsBichard } from "../../types/LedsMock"
 
 const addAuthMock = (bichard: LedsBichard) => {
   const tokenExpiry = new Date()

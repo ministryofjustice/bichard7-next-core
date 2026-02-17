@@ -1,10 +1,10 @@
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-
-import jwt from "jsonwebtoken"
-
 import axios from "axios"
 import https from "https"
-import NiamAuthenticationOptions from "../../../../types/leds/NiamAuthenticationOptions"
+import jwt from "jsonwebtoken"
+
+import type NiamAuthenticationOptions from "../../../../types/leds/NiamAuthenticationOptions"
+
 import generateX5t from "./generateX5t"
 
 type GenerateBearerTokenResult = {

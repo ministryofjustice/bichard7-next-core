@@ -1,4 +1,5 @@
-import { Result } from "@moj-bichard7/common/types/Result"
+import type { Result } from "@moj-bichard7/common/types/Result"
+
 import crypto from "crypto"
 
 const generateX5t = (certificate: string): Result<string> => {
