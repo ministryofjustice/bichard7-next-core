@@ -23,7 +23,7 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
-import { generateWarrants } from "../../../../useCases/cases/reports/warrants/generateWarrants"
+import { generateWarrantsReport } from "../../../../useCases/cases/reports/warrants/generateWarrantsReport"
 
 type HandlerProps = {
   database: DatabaseGateway
@@ -46,7 +46,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, query, reply, user }: HandlerProps) => {
-  const result = generateWarrants(database, user, query, reply)
+  const result = generateWarrantsReport(database, user, query, reply)
 
   if (!isError(result)) {
     return reply

@@ -13,7 +13,7 @@ import { warrants } from "../../../../services/db/cases/reports/warrants"
 import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
 import { reportStream } from "../reportStream"
 
-export const generateWarrants = (
+export const generateWarrantsReport = (
   database: DatabaseGateway,
   user: User,
   query: WarrantsReportQuery,
