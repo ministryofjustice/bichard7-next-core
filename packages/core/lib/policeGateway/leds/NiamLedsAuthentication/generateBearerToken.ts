@@ -47,7 +47,7 @@ const generateBearerToken = async ({
   })
 
   const response = await axios
-    .post(authenticationUrl, urlEncodedBody, {
+    .post<{ access_token: string }>(authenticationUrl, urlEncodedBody, {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
@@ -62,8 +62,7 @@ const generateBearerToken = async ({
   }
 
   try {
-    const tokenResult = await response.data
-    const token = String(tokenResult["access_token"])
+    const token = response.data.access_token
     const { exp: expiryEpochTime } = jwt.decode(token) as { exp: number }
 
     return { token, expiryDate: new Date(expiryEpochTime * 1000) }
