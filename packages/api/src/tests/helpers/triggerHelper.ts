@@ -20,7 +20,7 @@ export const createTriggers = async (
       const triggerToInsert: Trigger = {
         createdAt: trigger.createdAt ?? new Date(),
         errorId: caseId,
-        resolvedAt: triggerStatus === ResolutionStatus.Resolved ? new Date() : null,
+        resolvedAt: triggerStatus === ResolutionStatus.Resolved ? (trigger.resolvedAt ?? new Date()) : null,
         resolvedBy: triggerStatus === ResolutionStatus.Resolved ? (username ?? "GeneralHandler") : null,
         status: trigger.status ?? ResolutionStatusNumber.Unresolved,
         triggerCode: trigger.triggerCode ?? TriggerCode.TRPR0001,
@@ -39,6 +39,12 @@ export const createTriggers = async (
   )
   const allTriggersResolved = allResolvedTriggers.length === triggers.length
   const triggerResolvedBy = allTriggersResolved ? (username ?? triggerResolutionUser) : null
+  const validResolvedAtDates = triggers
+    .map(({ resolvedAt }) => resolvedAt)
+    .filter((resolvedAt): resolvedAt is Date => resolvedAt instanceof Date)
+  const maxResolvedAtDate =
+    validResolvedAtDates.length > 0 ? new Date(Math.max(...validResolvedAtDates.map((d) => d.getTime()))) : null
+  const triggerResolvedAt = allTriggersResolved ? (maxResolvedAtDate ?? new Date()) : null
 
   const triggerStatus = triggerResolvedBy
     ? resolutionStatusCodeByText(ResolutionStatus.Resolved)
@@ -51,6 +57,7 @@ export const createTriggers = async (
   await postgres.updateCaseWithTriggers(
     caseId,
     triggerResolvedBy,
+    triggerResolvedAt,
     triggers.length,
     triggerStatus,
     triggers[triggers.length - 1].triggerCode ?? TriggerCode.TRPR0001
