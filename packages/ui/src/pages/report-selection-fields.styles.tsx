@@ -4,9 +4,12 @@ const FieldsBox = styled.div`
   //background: red;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 50px;
   width: 100%;
   align-items: flex-start;
+  padding-left: 30px;
+  padding-right: 30px;
+  box-sizing: border-box;
   //justify-content: flex-start;
 `
 const SectionTitle = styled.div`
@@ -17,20 +20,20 @@ const SecondarySectionTitle = styled.div`
   font-size: 19px;
 `
 const ReportsBox = styled.div`
-  background: orange;
+  //background: orange;
   //@include govuk-responsive-margin(4, "right");
-  flex: 1 1 300px;
+  flex: 1 1 250px;
   min-width: 150px;
-  padding-left: 10px;
+  //padding-left: 10px;
 `
 const SelectReportsBox = styled.div`
   //background: mediumaquamarine;
-  //flex: 1 1 300px;
-  //min-width: 250px;
+  flex: 1 1 150px;
+  //min-width: 300px;
 `
 const DateRangeBox = styled.div`
-  background: fuchsia;
-  flex: 1 1 300px;
+  //background: fuchsia;
+  flex: 1 1 500px;
   min-width: 150px;
 `
 const CalendarsBox = styled.div`
@@ -39,22 +42,27 @@ const CalendarsBox = styled.div`
   flex-wrap: nowrap;
 `
 const DateFromBox = styled.div`
-  //background: gold;
+  //background: lime;
   float: left;
   margin-right: 25px;
-  flex: 1 1 300px;
-  min-width: 50px;
+  flex: 1 1 150px;
+  min-width: 150px;
 `
 const DateToBox = styled.div`
-  //background: silver;
+  //background: mediumvioletred;
   float: right;
-  flex: 1 1 300px;
+  flex: 1 1 150px;
   min-width: 50px;
 `
 const IncludeBox = styled.div`
-  background: lightseagreen;
-  flex: 1 1 300px;
+  //background: lightseagreen;
+  flex: 1 1 225px;
   min-width: 150px;
+  //display: flex;
+`
+const CheckboxesBox = styled.div`
+  //background: navy;
+  display: flex;
 `
 const CheckboxUnit = styled.div`
   //background: magenta;
@@ -64,12 +72,8 @@ const CheckboxUnit = styled.div`
   //gap: 5px;
   flex-shrink: 0;
 `
-const CheckboxesBox = styled.div`
-  //background: navy;
-  display: flex;
-`
 const CheckboxLabel = styled.label`
-  //background: orange;
+  //background: yellow;
   margin: 0;
   line-height: 1;
 `
@@ -84,7 +88,7 @@ const BottomActionsBox = styled.div`
   width: 100%;
 `
 const SearchReportsButtonBox = styled.div`
-  background: goldenrod;
+  //background: goldenrod;
 `
 const ClearSearchLinkBox = styled.div`
   //background: blueviolet;

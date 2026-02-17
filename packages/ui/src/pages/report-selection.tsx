@@ -92,7 +92,11 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                   <label>{"Sort by"}</label>
                 </SecondarySectionTitle>
                 <SelectReportsBox>
-                  <Select placeholder={"Resolved cases"} name={"resolved-cases"}></Select>
+                  <Select
+                    placeholder={"Resolved cases"}
+                    name={"resolved-cases"}
+                    style={{ width: "100%" }} //flex: "1 1 900px", minWidth: "300px" }}
+                  ></Select>
                 </SelectReportsBox>
               </ReportsBox>
               <DateRangeBox>
@@ -135,7 +139,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                     <label>{"Select an option"}</label>
                   </SecondarySectionTitle>
                   <CheckboxesBox /*className="govuk-checkboxes" data-module="govuk-checkboxes"*/>
-                    <CheckboxUnit className="govuk-checkboxes__item">
+                    <CheckboxUnit style={{ flex: "1 1 150px" }} className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
                         id={triggers}
@@ -148,7 +152,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                         {"Triggers"}
                       </CheckboxLabel>
                     </CheckboxUnit>
-                    <CheckboxUnit className="govuk-checkboxes__item">
+                    <CheckboxUnit style={{ flex: "1 1 150px" }} className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
                         id={exceptions}
