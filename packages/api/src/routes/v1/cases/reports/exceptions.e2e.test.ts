@@ -9,6 +9,7 @@ import { format, subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { streamToJson } from "../../../../tests/helpers/streamToJson"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 
 const defaultRequest = (jwt: string) => {
@@ -19,25 +20,6 @@ const defaultRequest = (jwt: string) => {
     },
     method: "GET"
   }
-}
-
-const streamToJson = async (response: Response) => {
-  const reader = response.body!.getReader()
-  const decoder = new TextDecoder()
-  let result = ""
-
-  while (true) {
-    const { done, value } = await reader.read()
-    if (done) {
-      break
-    }
-
-    result += decoder.decode(value, { stream: true })
-  }
-
-  result += decoder.decode()
-
-  return JSON.parse(result)
 }
 
 const formatDate = "yyyy-MM-dd" as const
