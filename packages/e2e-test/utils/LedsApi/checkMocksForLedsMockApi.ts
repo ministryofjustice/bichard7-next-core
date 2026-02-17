@@ -1,29 +1,33 @@
 import expect from "expect"
 import type { LedsBichard } from "../../types/LedsMock"
+import type { Operation } from "../converters/convertPncToLeds"
 import convertPncToLeds from "../converters/convertPncToLeds"
 
 const verifyRequests = async (bichard: LedsBichard) => {
   const serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
   const localMocks = bichard.policeApi.mocks
 
-  console.log("**** SERVER MOCKS", JSON.stringify(serverMocks, null, 2))
-  console.log("**** LOCAL MOCKS", JSON.stringify(localMocks, null, 2))
-
-  for (let index = 0; index < localMocks.length; index++) {
+  serverMocks.forEach((serverMock, index) => {
     const localMock = localMocks[index]
     if (!localMock.expectedRequest) {
-      continue
+      return
     }
 
-    const serverMock = serverMocks[index]
-    console.log("SERVER REQ:", serverMock.request)
-    console.log("LOCAL  REQ:", localMock.expectedRequest)
-
-    if (serverMock.path.includes("court-case-disposal-result")) {
-      const request = convertPncToLeds(localMock.expectedRequest, "Add Disposal")
-      expect(serverMock.request).toEqual(request)
+    const pathMapping: Record<string, Operation> = {
+      "court-case-disposal-result": "Add Disposal",
+      "basic-remands": "Remand",
+      "court-case-subsequent-disposal-results": "Sentence Deferred"
     }
-  }
+
+    const match = Object.entries(pathMapping).find(([key]) => serverMock.path.includes(key))
+
+    if (match) {
+      const [_, operation] = match
+      const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
+
+      expect(serverMock.request).toEqual(localMockRequest)
+    }
+  })
 }
 
 const checkMocksForLedsMockApi = async (bichard: LedsBichard) => {
