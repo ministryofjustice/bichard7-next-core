@@ -12,6 +12,7 @@ import mapUserRowToUser from "../../services/db/mapUserRowToUser"
 import mapUserToUserRow from "../../services/db/mapUserToUserRow"
 import Postgres from "../../services/gateways/database/Postgres"
 import clearAllTables from "./e2ePostgres/clearAllTables"
+import { fetchCase } from "./e2ePostgres/fetchCase"
 import insertCase from "./e2ePostgres/insertCase"
 import insertTrigger from "./e2ePostgres/insertTrigger"
 import insertUser from "./e2ePostgres/insertUser"
@@ -51,6 +52,12 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     dbUser.groups = user.groups
 
     return mapUserRowToUser(dbUser)
+  }
+
+  async fetchCase(errorId: number): Promise<Case> {
+    const caseRow = await fetchCase(this.readonly, errorId)
+
+    return mapCaseRowToCase(caseRow)
   }
 
   updateCaseWithException(

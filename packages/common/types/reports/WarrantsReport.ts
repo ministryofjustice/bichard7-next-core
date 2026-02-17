@@ -1,5 +1,6 @@
 import z from "zod"
 
+import { dateLikeToDate } from "../../schemas/dateLikeToDate"
 import { CaseRowSchema } from "../Case"
 import { TriggerRowSchema } from "../Trigger"
 import { dateRangeShape, validateDateRange } from "./BaseQuery"
@@ -9,13 +10,13 @@ export const WarrantsReportQuerySchema = z.object(dateRangeShape).superRefine(va
 export const CaseRowForWarrantsReportSchema = CaseRowSchema.pick({
   annotated_msg: true,
   asn: true,
-  court_date: true,
   court_name: true,
   defendant_name: true,
   error_id: true,
   msg_received_ts: true,
   ptiurn: true
 }).extend({
+  court_date: dateLikeToDate,
   triggers: z.array(TriggerRowSchema)
 })
 
@@ -32,10 +33,13 @@ export const CaseForWarrantsReportDtoSchema = z.object({
   hearingTime: z.string(),
   nextCourtAppearance: z.string(),
   nextCourtAppearanceDate: z.string(),
+  numberOfDaysTakenToEnterPortal: z.number().optional(),
   offencesTitle: z.string(),
   offencesWording: z.string(),
   pncId: z.string(),
   ptiurn: z.string(),
+  triggerResolvedDate: z.string(),
+  triggerStatus: z.string(),
   warrantText: z.string(),
   warrantType: z.string()
 })

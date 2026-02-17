@@ -25,7 +25,8 @@ export const createTriggers = async (
         status: trigger.status ?? ResolutionStatusNumber.Unresolved,
         triggerCode: trigger.triggerCode ?? TriggerCode.TRPR0001,
         triggerId: trigger.triggerId ?? index,
-        triggerItemIdentity: trigger.triggerItemIdentity ?? null
+        triggerItemIdentity: trigger.triggerItemIdentity ?? null,
+        ...trigger
       }
 
       await postgres.createTestTrigger(triggerToInsert)

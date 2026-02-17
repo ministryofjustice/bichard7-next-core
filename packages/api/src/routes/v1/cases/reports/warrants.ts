@@ -46,7 +46,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, query, reply, user }: HandlerProps) => {
-  const result = generateWarrantsReport(database, user, query, reply)
+  const result = await generateWarrantsReport(database, user, query, reply)
 
   if (!isError(result)) {
     return reply
