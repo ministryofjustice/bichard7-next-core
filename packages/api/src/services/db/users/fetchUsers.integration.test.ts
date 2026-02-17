@@ -18,22 +18,22 @@ describe("fetchUsers", () => {
   })
 
   it("should return supervised users in same force", async () => {
-    const user = await createUser(testDatabaseGateway)
-    const supervisor = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor] })
+    const user = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
+    const supervisor = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor], visibleForces: ["01"] })
 
     const userList = (await fetchUsers(testDatabaseGateway.readonly, supervisor)) as FetchUsersResult
 
     expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([user.username]))
   })
 
-  it("should return supervised users with more than one visible force", async () => {
-    const nonVisibleUser = await createUser(testDatabaseGateway, { visibleForces: ["001", "002"] })
-    const visibleUser1 = await createUser(testDatabaseGateway, { visibleForces: ["002", "003"] })
-    const visibleUser2 = await createUser(testDatabaseGateway, { visibleForces: ["003", "004"] })
-    const visibleUser3 = await createUser(testDatabaseGateway, { visibleForces: ["004", "005"] })
+  it("should return supervised users in multiple forces", async () => {
+    const nonVisibleUser = await createUser(testDatabaseGateway, { visibleForces: ["01", "02"] })
+    const visibleUser1 = await createUser(testDatabaseGateway, { visibleForces: ["02", "03"] })
+    const visibleUser2 = await createUser(testDatabaseGateway, { visibleForces: ["03", "04"] })
+    const visibleUser3 = await createUser(testDatabaseGateway, { visibleForces: ["04", "05", "06", "07"] })
     const supervisor = await createUser(testDatabaseGateway, {
       groups: [UserGroup.Supervisor],
-      visibleForces: ["003", "004"]
+      visibleForces: ["03", "04"]
     })
 
     const userList = (await fetchUsers(testDatabaseGateway.readonly, supervisor)) as FetchUsersResult

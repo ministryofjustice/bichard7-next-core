@@ -19,20 +19,12 @@ import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import redirectTo from "utils/redirectTo"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 import AuditSearch from "features/AuditSearch/AuditSearch"
-import getSupervisedUsers from "../../services/getSupervisedUsers"
-
-type SupervisedUser = {
-  forenames: string
-  surname: string
-  username: string
-}
 
 type Props = {
   csrfToken: string
   user: DisplayFullUser
   canUseTriggerAndExceptionQualityAuditing: boolean
   displaySwitchingSurveyFeedback: boolean
-  supervisedUsers: SupervisedUser[]
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -54,39 +46,19 @@ export const getServerSideProps = withMultipleServerSideProps(
       return redirectTo("/")
     }
 
-    const supervisedUsers = await getSupervisedUsers(dataSource, currentUser)
-
-    const mapSupervisedUsers = () => {
-      if (isError(supervisedUsers)) {
-        throw supervisedUsers
-      }
-
-      if (!supervisedUsers) {
-        return []
-      }
-
-      return supervisedUsers.map((m) => ({
-        forenames: m.forenames ?? "",
-        surname: m.surname ?? "",
-        username: m.username
-      }))
-    }
-
     return {
       props: {
         csrfToken,
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
         user: userToDisplayFullUserDto(currentUser),
-        canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing,
-        supervisedUsers: mapSupervisedUsers()
+        canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
       }
     }
   }
 )
 
 const SearchPage: NextPage<Props> = (props) => {
-  const { csrfToken, canUseTriggerAndExceptionQualityAuditing, displaySwitchingSurveyFeedback, user, supervisedUsers } =
-    props
+  const { csrfToken, canUseTriggerAndExceptionQualityAuditing, displaySwitchingSurveyFeedback, user } = props
 
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -110,7 +82,14 @@ const SearchPage: NextPage<Props> = (props) => {
                 </h1>
               </HeaderRow>
             </HeaderContainer>
-            <AuditSearch resolvers={supervisedUsers} triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]} />
+            <AuditSearch
+              resolvers={[
+                { username: "usera", forenames: "Name", surname: "A" },
+                { username: "userb", forenames: "Name", surname: "B" },
+                { username: "userc", forenames: "Name", surname: "C" }
+              ]}
+              triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]}
+            />
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
