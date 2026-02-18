@@ -10,5 +10,6 @@ export const Endpoints = {
   CasesReportsExceptions: "/cases/reports/exceptions",
   CasesResubmit: "/cases/resubmit",
   Health: "/health",
-  Me: "/me"
+  Me: "/me",
+  Users: "/users"
 } as const
