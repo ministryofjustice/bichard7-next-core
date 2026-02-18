@@ -1,7 +1,6 @@
 import styled from "styled-components"
 
-const FieldsBox = styled.div`
-  //background: red;
+const FieldsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 50px;
@@ -10,7 +9,6 @@ const FieldsBox = styled.div`
   padding-left: 30px;
   padding-right: 30px;
   box-sizing: border-box;
-  //justify-content: flex-start;
 `
 const SectionTitle = styled.div`
   font-weight: bold;
@@ -19,56 +17,43 @@ const SectionTitle = styled.div`
 const SecondarySectionTitle = styled.div`
   font-size: 19px;
 `
-const ReportsBox = styled.div`
-  //background: orange;
-  //@include govuk-responsive-margin(4, "right");
+const ReportsSectionWrapper = styled.div`
   flex: 1 1 250px;
   min-width: 150px;
-  //padding-left: 10px;
 `
 const SelectReportsLabelWrapper = styled.div`
   padding-bottom: 1.5px;
 `
-const SelectReportsBox = styled.div`
-  //background: mediumaquamarine;
+const SelectReportsWrapper = styled.div`
   flex: 1 1 150px;
-  //min-width: 300px;
 `
-const DateRangeBox = styled.div`
-  //background: fuchsia;
+const DateRangeSectionWrapper = styled.div`
   flex: 1 1 500px;
   min-width: 150px;
 `
-const CalendarsBox = styled.div`
-  //background: darkcyan;
+const CalendarsWrapper = styled.div`
   display: flex;
   flex-wrap: nowrap;
 `
-const DateFromBox = styled.div`
-  //background: lime;
+const DateFromWrapper = styled.div`
   float: left;
   margin-right: 25px;
   flex: 1 1 150px;
   min-width: 150px;
 `
-const DateToBox = styled.div`
-  //background: mediumvioletred;
+const DateToWrapper = styled.div`
   float: right;
   flex: 1 1 150px;
   min-width: 50px;
 `
-const IncludeBox = styled.div`
-  //background: lightseagreen;
+const IncludeSectionWrapper = styled.div`
   flex: 1 1 225px;
   min-width: 150px;
-  //display: flex;
 `
-const CheckboxesBox = styled.div`
-  //background: navy;
+const CheckboxesWrapper = styled.div`
   display: flex;
 `
 const CheckboxUnit = styled.div`
-  //background: magenta;
   display: flex;
   align-items: center;
   margin: 0;
@@ -76,12 +61,10 @@ const CheckboxUnit = styled.div`
   max-width: 150px;
 `
 const CheckboxLabel = styled.label`
-  //background: yellow;
   margin: 0;
   line-height: 1;
 `
 const BottomActionsBox = styled.div`
-  //background: hotpink;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -90,30 +73,25 @@ const BottomActionsBox = styled.div`
   padding-bottom: 10px;
   width: 100%;
 `
-const SearchReportsButtonBox = styled.div`
-  //background: goldenrod;
-`
 const ClearSearchLinkBox = styled.div`
-  //background: blueviolet;
   margin-right: 44px;
 `
 
 export {
-  FieldsBox,
+  FieldsWrapper,
   SectionTitle,
   SecondarySectionTitle,
-  ReportsBox,
+  ReportsSectionWrapper,
   SelectReportsLabelWrapper,
-  SelectReportsBox,
-  DateRangeBox,
-  CalendarsBox,
-  DateFromBox,
-  DateToBox,
-  IncludeBox,
-  CheckboxesBox,
+  SelectReportsWrapper,
+  DateRangeSectionWrapper,
+  CalendarsWrapper,
+  DateFromWrapper,
+  DateToWrapper,
+  IncludeSectionWrapper,
+  CheckboxesWrapper,
   CheckboxLabel,
   CheckboxUnit,
   BottomActionsBox,
-  SearchReportsButtonBox,
   ClearSearchLinkBox
 }

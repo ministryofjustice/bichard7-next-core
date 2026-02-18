@@ -15,18 +15,18 @@ import { HeaderWrapper } from "../components/Card/Card.styles"
 import DateInput from "../components/CustomDateInput/DateInput"
 import { Select } from "../components/Select"
 import {
-  FieldsBox,
+  FieldsWrapper,
   SectionTitle,
   SecondarySectionTitle,
   SelectReportsLabelWrapper,
-  SelectReportsBox,
-  DateRangeBox,
-  CalendarsBox,
-  DateFromBox,
-  DateToBox,
-  ReportsBox,
-  IncludeBox,
-  CheckboxesBox,
+  SelectReportsWrapper,
+  DateRangeSectionWrapper,
+  CalendarsWrapper,
+  DateFromWrapper,
+  DateToWrapper,
+  ReportsSectionWrapper,
+  IncludeSectionWrapper,
+  CheckboxesWrapper,
   CheckboxLabel,
   CheckboxUnit,
   BottomActionsBox,
@@ -84,8 +84,8 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
         <h1>{"Search reports"}</h1>
         <HeaderWrapper style={{ paddingTop: "20px", paddingBottom: "20px" }}>
           <fieldset className="govuk-fieldset">
-            <FieldsBox>
-              <ReportsBox>
+            <FieldsWrapper>
+              <ReportsSectionWrapper>
                 <SectionTitle>
                   <label>{"Reports"}</label>
                 </SectionTitle>
@@ -94,20 +94,16 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                     <label>{"Sort by"}</label>
                   </SelectReportsLabelWrapper>
                 </SecondarySectionTitle>
-                <SelectReportsBox>
-                  <Select
-                    placeholder={"Resolved cases"}
-                    name={"resolved-cases"}
-                    style={{ width: "100%" }} //flex: "1 1 900px", minWidth: "300px" }}
-                  ></Select>
-                </SelectReportsBox>
-              </ReportsBox>
-              <DateRangeBox>
+                <SelectReportsWrapper>
+                  <Select placeholder={"Resolved cases"} name={"resolved-cases"} style={{ width: "100%" }}></Select>
+                </SelectReportsWrapper>
+              </ReportsSectionWrapper>
+              <DateRangeSectionWrapper>
                 <SectionTitle>
                   <label>{"Date range"}</label>
                 </SectionTitle>
-                <CalendarsBox>
-                  <DateFromBox id={"report-selection-date-from"}>
+                <CalendarsWrapper>
+                  <DateFromWrapper id={"report-selection-date-from"}>
                     <DateInput
                       dateType="resolvedFrom"
                       dispatch={function (): void {
@@ -118,8 +114,8 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                       // value={caseResolvedDateRange?.from ?? ""}
                       // dateRange={caseResolvedDateRange}
                     />
-                  </DateFromBox>
-                  <DateToBox id={"report-selection-date-to"}>
+                  </DateFromWrapper>
+                  <DateToWrapper id={"report-selection-date-to"}>
                     <DateInput
                       dateType="resolvedTo"
                       dispatch={function (): void {
@@ -130,10 +126,10 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                       // value={caseResolvedDateRange?.to ?? ""}
                       // dateRange={caseResolvedDateRange}
                     />
-                  </DateToBox>
-                </CalendarsBox>
-              </DateRangeBox>
-              <IncludeBox>
+                  </DateToWrapper>
+                </CalendarsWrapper>
+              </DateRangeSectionWrapper>
+              <IncludeSectionWrapper>
                 <SectionTitle>
                   <label>{"Include"}</label>
                 </SectionTitle>
@@ -141,7 +137,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                   <SecondarySectionTitle>
                     <label>{"Select an option"}</label>
                   </SecondarySectionTitle>
-                  <CheckboxesBox /*className="govuk-checkboxes" data-module="govuk-checkboxes"*/>
+                  <CheckboxesWrapper>
                     <CheckboxUnit className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
@@ -168,22 +164,15 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                         {"Exceptions"}
                       </CheckboxLabel>
                     </CheckboxUnit>
-                  </CheckboxesBox>
+                  </CheckboxesWrapper>
                 </div>
-              </IncludeBox>
-            </FieldsBox>
+              </IncludeSectionWrapper>
+            </FieldsWrapper>
           </fieldset>
-
           <BottomActionsBox>
-            {/*<SearchReportsButtonBox>*/}
-            <Button
-              id={"search"}
-              //style={{ margin: "0px", display: "inline-flex", alignItems: "center" }}>
-              style={{ margin: 0, flexShrink: 0, width: "max-content", padding: "10px 20px" }}
-            >
+            <Button id={"search"} style={{ margin: 0, flexShrink: 0, width: "max-content", padding: "10px 20px" }}>
               {"Search Reports"}
             </Button>
-            {/*</SearchReportsButtonBox>*/}
             <ClearSearchLinkBox>
               <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
                 {"Clear search"}
