@@ -26,6 +26,9 @@ const ReportsBox = styled.div`
   min-width: 150px;
   //padding-left: 10px;
 `
+const SelectReportsLabelWrapper = styled.div`
+  padding-bottom: 1.5px;
+`
 const SelectReportsBox = styled.div`
   //background: mediumaquamarine;
   flex: 1 1 150px;
@@ -96,20 +99,21 @@ const ClearSearchLinkBox = styled.div`
 `
 
 export {
-  BottomActionsBox,
+  FieldsBox,
+  SectionTitle,
+  SecondarySectionTitle,
+  ReportsBox,
+  SelectReportsLabelWrapper,
+  SelectReportsBox,
+  DateRangeBox,
   CalendarsBox,
+  DateFromBox,
+  DateToBox,
+  IncludeBox,
   CheckboxesBox,
   CheckboxLabel,
   CheckboxUnit,
-  ClearSearchLinkBox,
-  DateFromBox,
-  DateRangeBox,
-  DateToBox,
-  FieldsBox,
-  IncludeBox,
-  ReportsBox,
+  BottomActionsBox,
   SearchReportsButtonBox,
-  SecondarySectionTitle,
-  SectionTitle,
-  SelectReportsBox
+  ClearSearchLinkBox
 }

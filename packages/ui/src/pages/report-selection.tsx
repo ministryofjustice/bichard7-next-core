@@ -1,37 +1,38 @@
+import Head from "next/head"
+import Layout from "../components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
-import Head from "next/head"
-import { useRouter } from "next/router"
-import { ParsedUrlQuery } from "querystring"
-import { useState } from "react"
-import { DisplayFullUser } from "types/display/Users"
-import { Button } from "../components/Buttons/Button"
-import { HeaderWrapper } from "../components/Card/Card.styles"
-import DateInput from "../components/CustomDateInput/DateInput"
-import Layout from "../components/Layout"
-import { Select } from "../components/Select"
 import { withAuthentication, withMultipleServerSideProps } from "../middleware"
 import withCsrf from "../middleware/withCsrf/withCsrf"
-import { userToDisplayFullUserDto } from "../services/dto/userDto"
-import AuthenticationServerSidePropsContext from "../types/AuthenticationServerSidePropsContext"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
+import AuthenticationServerSidePropsContext from "../types/AuthenticationServerSidePropsContext"
+import { userToDisplayFullUserDto } from "../services/dto/userDto"
+import { DisplayFullUser } from "types/display/Users"
+import { ParsedUrlQuery } from "querystring"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import { HeaderWrapper } from "../components/Card/Card.styles"
+import DateInput from "../components/CustomDateInput/DateInput"
+import { Select } from "../components/Select"
 import {
-  BottomActionsBox,
+  FieldsBox,
+  SectionTitle,
+  SecondarySectionTitle,
+  SelectReportsLabelWrapper,
+  SelectReportsBox,
+  DateRangeBox,
   CalendarsBox,
+  DateFromBox,
+  DateToBox,
+  ReportsBox,
+  IncludeBox,
   CheckboxesBox,
   CheckboxLabel,
   CheckboxUnit,
-  ClearSearchLinkBox,
-  DateFromBox,
-  DateRangeBox,
-  DateToBox,
-  FieldsBox,
-  IncludeBox,
-  ReportsBox,
-  SecondarySectionTitle,
-  SectionTitle,
-  SelectReportsBox
+  BottomActionsBox,
+  ClearSearchLinkBox
 } from "./report-selection-fields.styles"
+import { Button } from "../components/Buttons/Button"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -89,7 +90,9 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                   <label>{"Reports"}</label>
                 </SectionTitle>
                 <SecondarySectionTitle>
-                  <label>{"Sort by"}</label>
+                  <SelectReportsLabelWrapper>
+                    <label>{"Sort by"}</label>
+                  </SelectReportsLabelWrapper>
                 </SecondarySectionTitle>
                 <SelectReportsBox>
                   <Select
