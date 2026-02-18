@@ -9,7 +9,7 @@ import fetchUserList from "./fetchUserList"
 
 const testDatabaseGateway = new End2EndPostgres()
 
-describe("lockExceptions", () => {
+describe("fetchUserList", () => {
   const logger = new FakeLogger()
 
   afterAll(async () => {
