@@ -6,32 +6,39 @@ export const PaginationNav = styled.nav`
   align-self: flex-end;
   min-height: 50px;
 
-  li {
-    &.govuk-pagination {
-      &__item {
-        margin-top: 8px;
+  ul {
+    align-items: flex-end;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
 
-        &:hover {
-          background-color: ${lightGrey};
-        }
+    li {
+      &.govuk-pagination {
+        &__item {
+          margin-top: 3px;
 
-        &--current {
-          color: ${white};
-
-          &,
           &:hover {
-            background-color: ${blue};
+            background-color: ${lightGrey};
+          }
+
+          &--current {
+            color: ${white};
+
+            &,
+            &:hover {
+              background-color: ${blue};
+            }
+          }
+
+          &--ellipsis:hover {
+            background-color: transparent;
           }
         }
 
-        &--ellipsis:hover {
-          background-color: transparent;
+        &__next:hover,
+        &__prev:hover {
+          background-color: ${lightGrey};
         }
-      }
-
-      &__next:hover,
-      &__prev:hover {
-        background-color: ${lightGrey};
       }
     }
   }
