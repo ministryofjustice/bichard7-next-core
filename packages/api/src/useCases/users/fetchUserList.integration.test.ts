@@ -24,7 +24,6 @@ describe("fetchUserList", () => {
     jest.restoreAllMocks()
   })
 
-  // if the user is a supervisor, they can see users
   it("should show users if current user is a supervisor", async () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.GeneralHandler], visibleForces: ["001"] })
     const supervisor = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor], visibleForces: ["001"] })
