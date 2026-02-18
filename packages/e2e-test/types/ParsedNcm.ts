@@ -3,6 +3,7 @@ export type ParsedNcmOffence = {
     OffenceCode: string
     OffenceSequenceNumber: number
     OffenceWording: string
+    LocationOfOffence: string
     OffenceTiming: {
       OffenceStart: {
         OffenceDateStartDate: string
@@ -19,6 +20,7 @@ type ParsedNcm = {
     Case: {
       InitialHearing: {
         CourtHearingLocation: string
+        DateOfHearing: string
       }
       Defendant: {
         ProsecutorReference: string
@@ -27,7 +29,12 @@ type ParsedNcm = {
             BasePersonDetails: {
               PersonName: {
                 PersonFamilyName: string
+                PersonGivenName1: string
+                PersonGivenName2: string
+                PersonGivenName3: string
               }
+              Birthdate: string
+              Gender: number
             }
           }
         }
