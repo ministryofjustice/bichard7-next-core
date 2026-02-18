@@ -9,7 +9,7 @@ const fetchUserList = async (
   _user: User,
   _logger: FastifyBaseLogger
 ): PromiseResult<UserList> => {
-  return Promise.resolve({ users: [] })
+  return { users: [] }
 }
 
 export default fetchUserList

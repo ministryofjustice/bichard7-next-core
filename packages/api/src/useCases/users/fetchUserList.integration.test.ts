@@ -1,0 +1,37 @@
+import type { UserList } from "@moj-bichard7/common/types/User"
+
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+
+import FakeLogger from "../../tests/helpers/fakeLogger"
+import { createUser } from "../../tests/helpers/userHelper"
+import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
+import fetchUserList from "./fetchUserList"
+
+const testDatabaseGateway = new End2EndPostgres()
+
+describe("lockExceptions", () => {
+  const logger = new FakeLogger()
+
+  afterAll(async () => {
+    await testDatabaseGateway.close()
+  })
+
+  beforeEach(async () => {
+    await testDatabaseGateway.clearDb()
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  // if the user is a supervisor, they can see users
+  it("should show users if current user is a supervisor", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.GeneralHandler], visibleForces: ["001"] })
+    const supervisor = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor], visibleForces: ["001"] })
+
+    const userList = (await fetchUserList(testDatabaseGateway.readonly, supervisor, logger)) as UserList
+
+    expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([user.username]))
+  })
+  // if the user is not a supervisor, they receive a 401 error
+})

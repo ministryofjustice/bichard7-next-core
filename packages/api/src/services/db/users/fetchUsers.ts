@@ -15,9 +15,9 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
   const forceClauses = user.visibleForces.map((f) => {
     const trimmedForceCode = f.replace(/^0+(\d+)/, "$1")
 
-    const visibleForceRegex = String.raw`\y0+${trimmedForceCode}\y`
+    const visibleForce = String.raw`\y0+${trimmedForceCode}\y`
 
-    return sql`u.visible_forces ~ ${visibleForceRegex}`
+    return sql`u.visible_forces ~ ${visibleForce}`
   })
 
   let where = forceClauses[0]
