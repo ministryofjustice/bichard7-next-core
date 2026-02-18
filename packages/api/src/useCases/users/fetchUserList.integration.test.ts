@@ -5,6 +5,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import FakeLogger from "../../tests/helpers/fakeLogger"
 import { createUser } from "../../tests/helpers/userHelper"
 import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
+import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import fetchUserList from "./fetchUserList"
 
 const testDatabaseGateway = new End2EndPostgres()
@@ -32,5 +33,12 @@ describe("fetchUserList", () => {
 
     expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([user.username]))
   })
-  // if the user is not a supervisor, they receive a 401 error
+
+  it("should return a 'not allowed' error if current user is not a supervisor", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.GeneralHandler], visibleForces: ["001"] })
+
+    const result = await fetchUserList(testDatabaseGateway.readonly, user, logger)
+
+    expect(result).toBeInstanceOf(NotAllowedError)
+  })
 })
