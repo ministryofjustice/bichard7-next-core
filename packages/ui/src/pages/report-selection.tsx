@@ -1,37 +1,37 @@
-import Head from "next/head"
-import Layout from "../components/Layout"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
-import { withAuthentication, withMultipleServerSideProps } from "../middleware"
-import withCsrf from "../middleware/withCsrf/withCsrf"
-import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
-import AuthenticationServerSidePropsContext from "../types/AuthenticationServerSidePropsContext"
-import { userToDisplayFullUserDto } from "../services/dto/userDto"
-import { DisplayFullUser } from "types/display/Users"
-import { ParsedUrlQuery } from "querystring"
+import Head from "next/head"
 import { useRouter } from "next/router"
+import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
+import { DisplayFullUser } from "types/display/Users"
+import { Button } from "../components/Buttons/Button"
 import { HeaderWrapper } from "../components/Card/Card.styles"
 import DateInput from "../components/CustomDateInput/DateInput"
+import Layout from "../components/Layout"
 import { Select } from "../components/Select"
+import { withAuthentication, withMultipleServerSideProps } from "../middleware"
+import withCsrf from "../middleware/withCsrf/withCsrf"
+import { userToDisplayFullUserDto } from "../services/dto/userDto"
+import AuthenticationServerSidePropsContext from "../types/AuthenticationServerSidePropsContext"
+import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import {
-  FieldsBox,
-  SectionTitle,
-  SecondarySectionTitle,
-  SelectReportsBox,
-  DateRangeBox,
+  BottomActionsBox,
   CalendarsBox,
-  DateFromBox,
-  DateToBox,
-  ReportsBox,
-  IncludeBox,
   CheckboxesBox,
   CheckboxLabel,
   CheckboxUnit,
-  BottomActionsBox,
-  ClearSearchLinkBox
+  ClearSearchLinkBox,
+  DateFromBox,
+  DateRangeBox,
+  DateToBox,
+  FieldsBox,
+  IncludeBox,
+  ReportsBox,
+  SecondarySectionTitle,
+  SectionTitle,
+  SelectReportsBox
 } from "./report-selection-fields.styles"
-import { Button } from "../components/Buttons/Button"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -139,7 +139,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                     <label>{"Select an option"}</label>
                   </SecondarySectionTitle>
                   <CheckboxesBox /*className="govuk-checkboxes" data-module="govuk-checkboxes"*/>
-                    <CheckboxUnit style={{ flex: "1 1 150px" }} className="govuk-checkboxes__item">
+                    <CheckboxUnit className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
                         id={triggers}
@@ -152,7 +152,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/
                         {"Triggers"}
                       </CheckboxLabel>
                     </CheckboxUnit>
-                    <CheckboxUnit style={{ flex: "1 1 150px" }} className="govuk-checkboxes__item">
+                    <CheckboxUnit className="govuk-checkboxes__item">
                       <input
                         className="govuk-checkboxes__input"
                         id={exceptions}

@@ -69,8 +69,8 @@ const CheckboxUnit = styled.div`
   display: flex;
   align-items: center;
   margin: 0;
-  //gap: 5px;
-  flex-shrink: 0;
+  flex: 1 1 150px;
+  max-width: 150px;
 `
 const CheckboxLabel = styled.label`
   //background: yellow;
@@ -96,20 +96,20 @@ const ClearSearchLinkBox = styled.div`
 `
 
 export {
-  FieldsBox,
-  SectionTitle,
-  SecondarySectionTitle,
-  ReportsBox,
-  SelectReportsBox,
-  DateRangeBox,
+  BottomActionsBox,
   CalendarsBox,
-  DateFromBox,
-  DateToBox,
-  IncludeBox,
   CheckboxesBox,
   CheckboxLabel,
   CheckboxUnit,
-  BottomActionsBox,
+  ClearSearchLinkBox,
+  DateFromBox,
+  DateRangeBox,
+  DateToBox,
+  FieldsBox,
+  IncludeBox,
+  ReportsBox,
   SearchReportsButtonBox,
-  ClearSearchLinkBox
+  SecondarySectionTitle,
+  SectionTitle,
+  SelectReportsBox
 }
