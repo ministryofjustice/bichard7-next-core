@@ -28,6 +28,17 @@ export class LedsApi implements PoliceApi {
     }
   }
 
+  prepareInputMessage(message: string) {
+    if (!this.bichard.config.realPNC) {
+      return Promise.resolve(message)
+    }
+
+    const asn = this.ledsTestApiHelper.arrestSummonsNumber?.replace(/\//g, "")
+    const updatedMessage = message.replace(/(<.*:ProsecutorReference>).*?(<\/.*:ProsecutorReference>)/, `$1${asn}$2`)
+
+    return Promise.resolve(updatedMessage)
+  }
+
   createValidRecord: (record: string) => Promise<void>
 
   mockMissingDataForTest(): Promise<void> {

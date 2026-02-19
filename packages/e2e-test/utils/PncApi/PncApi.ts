@@ -35,6 +35,10 @@ export class PncApi implements PoliceApi {
         })
   }
 
+  prepareInputMessage(message: string) {
+    return Promise.resolve(message)
+  }
+
   mockAsnQuery(params: MockAsnQueryParams): PartialPncMock {
     return params
   }
