@@ -73,6 +73,7 @@ const delay = (delayInMs = 300) => new Promise((resolve) => setTimeout(resolve, 
 export default class LedsTestApiHelper {
   private readonly authentication: LedsAuthentication
   private readonly baseUrl: string
+  arrestSummonsNumber: string | undefined
 
   constructor(private readonly bichard: Bichard) {
     this.baseUrl = this.bichard.config.ledsApiUrl
@@ -108,6 +109,7 @@ export default class LedsTestApiHelper {
       )
     }
 
+    this.arrestSummonsNumber = arrestSummonsNumber
     return arrestSummonsNumber
   }
 

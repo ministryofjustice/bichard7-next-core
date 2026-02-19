@@ -29,4 +29,5 @@ export default interface PoliceApi {
   expectNoUpdates: () => Promise<void>
   expectNotUpdated: () => Promise<void>
   expectUpdateIncludes: (data: string) => Promise<void>
+  prepareInputMessage: (message: string) => Promise<string>
 }

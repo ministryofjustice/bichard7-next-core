@@ -154,7 +154,7 @@ const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathn
   const mock = MOCKS.find(
     (m) =>
       m.method === req.method &&
-      m.path === pathname &&
+      [pathname, pathname.substring(1)].includes(m.path) &&
       (!m.count || m.hits < m.count) &&
       isPartialMatch(m.requestBody, requestBody)
   )

@@ -1,4 +1,5 @@
-import Asn from "@moj-bichard7/core/lib/Asn"
+import convertLongAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertLongAsnToLedsFormat"
+import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
 import type { LedsMock } from "../../../types/LedsMock"
@@ -25,10 +26,10 @@ export const generateAsnQuery = (
   })
 
   const request = createMockRequest({
-    path: "/find-disposals-by-asn",
+    path: endpoints.asnQuery,
     exactBodyMatch: true,
     body: {
-      asn: new Asn(asn).toPncFormat(),
+      asn: convertLongAsnToLedsFormat(asn),
       caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
     }
   })
