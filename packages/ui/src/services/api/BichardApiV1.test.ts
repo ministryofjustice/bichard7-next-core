@@ -9,6 +9,7 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
+import type { UserList } from "@moj-bichard7/common/types/User"
 
 describe("BichardApiV1", () => {
   let client: FakeApiClient
@@ -181,6 +182,18 @@ describe("BichardApiV1", () => {
 
       expect(isError(result)).toBe(true)
       expect(result).toEqual(new Error("Save failed"))
+    })
+  })
+
+  describe("#fetchUsers", () => {
+    it("calls apiClient#get with a route", async () => {
+      const endpoint = V1.Users
+
+      jest.spyOn(client, "get").mockResolvedValue({} as UserList)
+
+      await gateway.fetchUsers()
+
+      expect(client.get).toHaveBeenCalledWith(endpoint)
     })
   })
 })
