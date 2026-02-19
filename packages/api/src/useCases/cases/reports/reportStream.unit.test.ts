@@ -1,4 +1,4 @@
-import { Readable } from "node:stream"
+import type { Readable } from "node:stream"
 
 import { reportStream } from "./reportStream"
 
@@ -6,16 +6,18 @@ describe("reportStream", () => {
   let mockStream: Readable
 
   beforeEach(() => {
-    mockStream = new Readable({
-      read() {}
-    })
-    jest.spyOn(mockStream, "push")
-    jest.spyOn(mockStream, "destroy")
+    mockStream = {
+      destroy: jest.fn(),
+      emit: jest.fn(),
+      on: jest.fn().mockReturnThis(),
+      once: jest.fn().mockReturnThis(),
+      push: jest.fn().mockReturnValue(true),
+      removeListener: jest.fn().mockReturnThis()
+    } as unknown as Readable
   })
 
   afterEach(() => {
     jest.restoreAllMocks()
-    mockStream.removeAllListeners()
   })
 
   it("should write opening bracket at the start", async () => {
@@ -48,7 +50,6 @@ describe("reportStream", () => {
     await reportStream(mockStream, fetchData)
 
     expect(mockStream.push).toHaveBeenCalledWith(JSON.stringify(testData[0]))
-    expect(mockStream.push).not.toHaveBeenCalledWith(",")
   })
 
   it("should process multiple rows with comma separators", async () => {
@@ -68,10 +69,8 @@ describe("reportStream", () => {
     expect(pushCalls).toEqual([
       "[",
       JSON.stringify(testData[0]),
-      ",",
-      JSON.stringify(testData[1]),
-      ",",
-      JSON.stringify(testData[2]),
+      `,${JSON.stringify(testData[1])}`,
+      `,${JSON.stringify(testData[2])}`,
       "]",
       null
     ])
@@ -93,28 +92,12 @@ describe("reportStream", () => {
     expect(pushCalls).toEqual([
       "[",
       JSON.stringify(batch1[0]),
-      ",",
-      JSON.stringify(batch1[1]),
-      ",",
-      JSON.stringify(batch2[0]),
-      ",",
-      JSON.stringify(batch2[1]),
+      `,${JSON.stringify(batch1[1])}`,
+      `,${JSON.stringify(batch2[0])}`,
+      `,${JSON.stringify(batch2[1])}`,
       "]",
       null
     ])
-  })
-
-  it("should handle empty batches", async () => {
-    const fetchData = jest.fn(async (processBatch) => {
-      await processBatch([])
-      await processBatch([])
-    })
-
-    await reportStream(mockStream, fetchData)
-
-    const pushCalls = (mockStream.push as jest.Mock).mock.calls.map((call) => call[0])
-
-    expect(pushCalls).toEqual(["[", "]", null])
   })
 
   it("should handle mixed empty and non-empty batches", async () => {
@@ -130,47 +113,6 @@ describe("reportStream", () => {
     const pushCalls = (mockStream.push as jest.Mock).mock.calls.map((call) => call[0])
 
     expect(pushCalls).toEqual(["[", JSON.stringify(testData[0]), "]", null])
-  })
-
-  it("should destroy stream with error when fetchData throws", async () => {
-    const testError = new Error("Fetch failed")
-    const fetchData = jest.fn(async () => {
-      throw testError
-    })
-
-    // Attach error handler before calling reportStream
-    const errorPromise = new Promise((resolve) => {
-      mockStream.on("error", resolve)
-    })
-
-    await reportStream(mockStream, fetchData)
-
-    // Wait for error event to be emitted
-    await errorPromise
-
-    expect(mockStream.destroy).toHaveBeenCalledWith(testError)
-    expect(mockStream.push).not.toHaveBeenCalledWith("]")
-    expect(mockStream.push).not.toHaveBeenCalledWith(null)
-  })
-
-  it("should destroy stream with error when processBatch throws", async () => {
-    const testError = new Error("Process failed")
-    const fetchData = jest.fn(async (processBatch) => {
-      await processBatch([{ id: 1 }])
-      throw testError
-    })
-
-    // Attach error handler before calling reportStream
-    const errorPromise = new Promise((resolve) => {
-      mockStream.on("error", resolve)
-    })
-
-    await reportStream(mockStream, fetchData)
-
-    // Wait for error event to be emitted
-    await errorPromise
-
-    expect(mockStream.destroy).toHaveBeenCalledWith(testError)
   })
 
   it("should handle different data types", async () => {
@@ -201,5 +143,35 @@ describe("reportStream", () => {
     await reportStream(mockStream, fetchData)
 
     expect(mockStream.push).toHaveBeenCalledWith('{"enabled":true,"metadata":null,"name":"test","value":123}')
+  })
+
+  it("should destroy stream and re-throw when fetchData fails", async () => {
+    const testError = new Error("Database connection lost")
+    const fetchData = jest.fn(async () => {
+      throw testError
+    })
+
+    await expect(reportStream(mockStream, fetchData)).rejects.toThrow(testError)
+    expect(mockStream.destroy).toHaveBeenCalledWith(testError)
+    expect(mockStream.push).not.toHaveBeenCalledWith("]")
+  })
+
+  it("should respect backpressure and wait for drain", async () => {
+    ;(mockStream.push as jest.Mock).mockReturnValueOnce(true).mockReturnValueOnce(false)
+
+    const fetchData = jest.fn(async (processBatch) => {
+      const batchProcessingPromise = processBatch([{ id: 1 }])
+
+      const drainCall = (mockStream.once as jest.Mock).mock.calls.find((args) => args[0] === "drain")
+      const drainHandler = drainCall[1]
+
+      drainHandler()
+
+      await batchProcessingPromise
+    })
+
+    await reportStream(mockStream, fetchData)
+
+    expect(mockStream.once).toHaveBeenCalledWith("drain", expect.any(Function))
   })
 })

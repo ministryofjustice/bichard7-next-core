@@ -4,12 +4,13 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import {
-  type ExceptionReportQuery,
-  ExceptionReportQuerySchema,
-  ExceptionReportSchema
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+  CaseForWarrantsReportDtoSchema,
+  type WarrantsReportQuery,
+  WarrantsReportQuerySchema
+} from "@moj-bichard7/common/types/reports/WarrantsReport"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
+import z from "zod"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
@@ -22,20 +23,20 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
-import { generateExceptions } from "../../../../useCases/cases/reports/exceptions/generateExceptions"
+import { generateWarrantsReport } from "../../../../useCases/cases/reports/warrants/generateWarrantsReport"
 
 type HandlerProps = {
   database: DatabaseGateway
-  query: ExceptionReportQuery
+  query: WarrantsReportQuery
   reply: FastifyReply
   user: User
 }
 
 const schema = {
   ...auth,
-  querystring: ExceptionReportQuerySchema,
+  querystring: WarrantsReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Exceptions Report", ExceptionReportSchema.array()),
+    [OK]: jsonResponse("Warrants Report", z.array(CaseForWarrantsReportDtoSchema)),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),
@@ -45,7 +46,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, query, reply, user }: HandlerProps) => {
-  const result = generateExceptions(database, user, query, reply)
+  const result = await generateWarrantsReport(database, user, query, reply)
 
   if (!isError(result)) {
     return reply
@@ -55,7 +56,7 @@ const handler = async ({ database, query, reply, user }: HandlerProps) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(V1.CasesReportsExceptions, { schema }, async (req, reply) => {
+  useZod(fastify).get(V1.CasesReportsWarrants, { schema }, async (req, reply) => {
     await handler({
       database: req.database,
       query: req.query,

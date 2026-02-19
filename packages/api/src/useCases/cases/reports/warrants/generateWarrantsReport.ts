@@ -1,5 +1,5 @@
-import type { ExceptionReportQuery } from "@moj-bichard7/common/types/reports/ExceptionReport"
-import type { Result } from "@moj-bichard7/common/types/Result"
+import type { WarrantsReportQuery } from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply } from "fastify"
 
@@ -10,16 +10,16 @@ import { Readable } from "node:stream"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { exceptionsReport } from "../../../../services/db/cases/reports/exceptions"
+import { warrants } from "../../../../services/db/cases/reports/warrants"
 import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
 import { reportStream } from "../reportStream"
 
-export const generateExceptions = (
+export const generateWarrantsReport = async (
   database: DatabaseGateway,
   user: User,
-  query: ExceptionReportQuery,
+  query: WarrantsReportQuery,
   reply: FastifyReply
-): Result<void> => {
+): PromiseResult<void> => {
   if (!userAccess(user)[Permission.ViewReports]) {
     return new NotAllowedError()
   }
@@ -28,9 +28,13 @@ export const generateExceptions = (
 
   reply.code(OK).type("application/json").send(stream)
 
-  reportStream(stream, async (processBatch) => {
-    return exceptionsReport(database.readonly, user, query, processBatch)
-  }).catch((err: Error) => {
-    stream.destroy(err)
-  })
+  try {
+    await reportStream(stream, (processBatch) => {
+      return warrants(database.readonly, user, query, processBatch)
+    })
+
+    stream.push(null)
+  } catch (err) {
+    return err as Error
+  }
 }

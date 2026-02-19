@@ -3,7 +3,7 @@ import type {
   ExceptionReportQuery,
   ExceptionReportType,
   UserExceptionReportRow
-} from "@moj-bichard7/common/types/ExceptionReport"
+} from "@moj-bichard7/common/types/reports/ExceptionReport"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { PendingQuery, Row } from "postgres"
 

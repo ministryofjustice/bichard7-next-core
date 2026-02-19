@@ -1,5 +1,7 @@
 import type { Readable } from "node:stream"
 
+import { once } from "node:events"
+
 type DataFetcher<T> = (processBatch: (rows: T[]) => Promise<void>) => Promise<void>
 
 export const reportStream = async <T>(stream: Readable, fetchData: DataFetcher<T>): Promise<void> => {
@@ -9,11 +11,12 @@ export const reportStream = async <T>(stream: Readable, fetchData: DataFetcher<T
   try {
     await fetchData(async (rows: T[]) => {
       for (const row of rows) {
-        if (!isFirst) {
-          stream.push(",")
+        const chunk = isFirst ? JSON.stringify(row) : `,${JSON.stringify(row)}`
+
+        if (!stream.push(chunk)) {
+          await once(stream, "drain")
         }
 
-        stream.push(JSON.stringify(row))
         isFirst = false
       }
     })
@@ -22,5 +25,6 @@ export const reportStream = async <T>(stream: Readable, fetchData: DataFetcher<T
     stream.push(null)
   } catch (err) {
     stream.destroy(err as Error)
+    throw err
   }
 }
