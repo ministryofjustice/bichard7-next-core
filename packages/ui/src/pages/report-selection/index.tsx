@@ -5,24 +5,19 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
-import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import { DisplayFullUser } from "types/display/Users"
 import Layout from "../../components/Layout"
 import { withAuthentication, withMultipleServerSideProps } from "../../middleware"
-import withCsrf from "../../middleware/withCsrf/withCsrf"
 import { userToDisplayFullUserDto } from "../../services/dto/userDto"
 import AuthenticationServerSidePropsContext from "../../types/AuthenticationServerSidePropsContext"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
-  withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query /*csrfToken*/ } = context as AuthenticationServerSidePropsContext &
-      CsrfServerSidePropsContext
+    const { currentUser, query } = context as AuthenticationServerSidePropsContext
     const { previousPath } = query as { previousPath: string }
 
     const props = {
-      //csrfToken,
       user: userToDisplayFullUserDto(currentUser),
       previousPath: previousPath ?? null
     }
@@ -32,12 +27,11 @@ export const getServerSideProps = withMultipleServerSideProps(
 )
 
 interface Props {
-  //csrfToken: string
   user: DisplayFullUser
   previousPath: string
 }
 
-const ReportSelectionPage: NextPage<Props> = ({ user, previousPath /*csrfToken*/ }: Props) => {
+const ReportSelectionPage: NextPage<Props> = ({ user, previousPath }: Props) => {
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   //const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(100)
   const router = useRouter()
