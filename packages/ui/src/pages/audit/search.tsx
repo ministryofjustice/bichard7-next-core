@@ -19,19 +19,28 @@ import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import redirectTo from "utils/redirectTo"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 import AuditSearch from "features/AuditSearch/AuditSearch"
+import BichardApiV1 from "../../services/api/BichardApiV1"
+import ApiClient from "../../services/api/ApiClient"
+
+type ResolvedBy = {
+  forenames: string
+  surname: string
+  username: string
+}
 
 type Props = {
   csrfToken: string
   user: DisplayFullUser
   canUseTriggerAndExceptionQualityAuditing: boolean
   displaySwitchingSurveyFeedback: boolean
+  resolvedBy: ResolvedBy[]
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
+    const { req, currentUser, csrfToken } = context as CsrfServerSidePropsContext & AuthenticationServerSidePropsContext
 
     const dataSource = await getDataSource()
     const lastSwitchingFormSubmission = await getLastSwitchingFormSubmission(dataSource, currentUser.id)
@@ -46,19 +55,40 @@ export const getServerSideProps = withMultipleServerSideProps(
       return redirectTo("/")
     }
 
+    const jwt = req.cookies[".AUTH"] as string
+    const apiClient = new ApiClient(jwt)
+    const apiGateway = new BichardApiV1(apiClient)
+
+    console.log("api gateway", JSON.stringify(apiGateway))
+
+    const usersResponse = await apiGateway.fetchUsers()
+    let resolvedBy: ResolvedBy[] = []
+
+    console.log("users response:", JSON.stringify(usersResponse))
+
+    if (!isError(usersResponse) && !!usersResponse) {
+      resolvedBy = usersResponse.users.map((u) => ({
+        username: u.username,
+        forenames: u.forenames ?? "",
+        surname: u.surname ?? ""
+      }))
+    }
+
     return {
       props: {
         csrfToken,
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
         user: userToDisplayFullUserDto(currentUser),
-        canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
+        canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing,
+        resolvedBy: resolvedBy
       }
     }
   }
 )
 
 const SearchPage: NextPage<Props> = (props) => {
-  const { csrfToken, canUseTriggerAndExceptionQualityAuditing, displaySwitchingSurveyFeedback, user } = props
+  const { csrfToken, canUseTriggerAndExceptionQualityAuditing, displaySwitchingSurveyFeedback, user, resolvedBy } =
+    props
 
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -82,14 +112,7 @@ const SearchPage: NextPage<Props> = (props) => {
                 </h1>
               </HeaderRow>
             </HeaderContainer>
-            <AuditSearch
-              resolvers={[
-                { username: "usera", forenames: "Name", surname: "A" },
-                { username: "userb", forenames: "Name", surname: "B" },
-                { username: "userc", forenames: "Name", surname: "C" }
-              ]}
-              triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]}
-            />
+            <AuditSearch resolvers={resolvedBy} triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]} />
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
