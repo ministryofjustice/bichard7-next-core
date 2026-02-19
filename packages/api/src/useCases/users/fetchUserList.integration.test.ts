@@ -32,6 +32,7 @@ describe("fetchUserList", () => {
     const userList = (await fetchUserList(testDatabaseGateway.readonly, supervisor, logger)) as UserList
 
     expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([user.username]))
+    expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([supervisor.username]))
   })
 
   it("should return a 'not allowed' error if current user is not a supervisor", async () => {
