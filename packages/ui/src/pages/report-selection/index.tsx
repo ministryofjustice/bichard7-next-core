@@ -2,7 +2,6 @@ import { ReportSelectionFilter } from "components/SearchFilters/ReportSelectionF
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
-import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
 import { DisplayFullUser } from "types/display/Users"
@@ -14,12 +13,10 @@ import AuthenticationServerSidePropsContext from "../../types/AuthenticationServ
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query } = context as AuthenticationServerSidePropsContext
-    const { previousPath } = query as { previousPath: string }
+    const { currentUser } = context as AuthenticationServerSidePropsContext
 
     const props = {
-      user: userToDisplayFullUserDto(currentUser),
-      previousPath: previousPath ?? null
+      user: userToDisplayFullUserDto(currentUser)
     }
 
     return { props }
@@ -28,22 +25,17 @@ export const getServerSideProps = withMultipleServerSideProps(
 
 interface Props {
   user: DisplayFullUser
-  previousPath: string
 }
 
-const ReportSelectionPage: NextPage<Props> = ({ user, previousPath }: Props) => {
+const ReportSelectionPage: NextPage<Props> = ({ user }: Props) => {
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   //const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(100)
-  const router = useRouter()
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
       <Head>
         <title>{"Bichard7 | Select a report"}</title>
         <meta name="description" content="Bichard7 | Report selection" />
       </Head>
-      <a className="govuk-back-link" href={`${router.basePath}` + previousPath} onClick={function noRefCheck() {}}>
-        {"Back"}
-      </a>
       <Layout
         bichardSwitch={{
           display: true,
