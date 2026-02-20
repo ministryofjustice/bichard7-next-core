@@ -12,7 +12,16 @@ import generateAhoFromOffenceList from "../../../phase2/tests/fixtures/helpers/g
 import generateFakePncUpdateDataset from "../../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 import ledsAsnQueryResponse from "../../../tests/fixtures/leds-asn-query-response-001.json"
+import LedsActionCode from "../../../types/leds/LedsActionCode"
+import LedsAuthentication from "../../../types/leds/LedsAuthentication"
+import generateRequestHeaders from "./generateRequestHeaders"
 import LedsGateway from "./LedsGateway"
+
+class FakeLedsAuthentication extends LedsAuthentication {
+  generateBearerToken() {
+    return Promise.resolve("DummyAuthToken")
+  }
+}
 
 const aho = generateAhoFromOffenceList([])
 
@@ -46,17 +55,13 @@ const generateRemandRequest = (): RemandPncUpdateRequest => ({
   }
 })
 
-const generateHeaders = (correlationId: string) => ({
-  Accept: "application/json",
-  "X-Leds-Correlation-Id": correlationId,
-  "X-Leds-Action-Code": "",
-  "X-Leds-Activity-Code": "",
-  "X-Leds-Activity-Flow-Id": "",
-  "X-Leds-Application-Datetime": "",
-  "X-Leds-Justification": "",
-  "X-Leds-Reason": "",
-  "X-Leds-Session-Id": "",
-  "X-Leds-System-Name": ""
+const generateExpectedHeaders = (correlationId: string, actionCode: LedsActionCode) => ({
+  ...generateRequestHeaders(correlationId, actionCode, "dummy"),
+  Authorization: expect.anything(),
+  "X-Leds-Session-Id": expect.anything(),
+  "X-Leds-Application-Datetime": expect.anything(),
+  "X-Leds-Activity-Flow-Id": expect.anything(),
+  "X-Leds-Reference-Id": expect.anything()
 })
 
 describe("LedsGateway", () => {
@@ -66,12 +71,12 @@ describe("LedsGateway", () => {
   })
 
   beforeEach(() => {
-    ledsGateway = new LedsGateway({ url: "https://dummy" })
+    ledsGateway = new LedsGateway({ url: "https://dummy", authentication: new FakeLedsAuthentication() })
   })
 
   describe("query", () => {
     it("should return police query result and update query time", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
         status: 200,
         data: ledsAsnQueryResponse
       })
@@ -82,6 +87,9 @@ describe("LedsGateway", () => {
 
       expect(result).toMatchSnapshot()
       expect(ledsGateway.queryTime).toBeDefined()
+      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
+        generateExpectedHeaders("dummy-id", LedsActionCode.QueryByAsn)
+      )
     })
 
     it("should return an error when api call fails", async () => {
@@ -174,7 +182,9 @@ describe("LedsGateway", () => {
           court: { courtIdentityType: "name", courtName: "Magistrates' Courts London Croydon MCA" }
         }
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(generateHeaders(correlationId))
+      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
+        generateExpectedHeaders(correlationId, LedsActionCode.AddRemand)
+      )
     })
 
     it("should successfully update when operation is add disposal results", async () => {
@@ -253,7 +263,9 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(generateHeaders(correlationId))
+      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
+        generateExpectedHeaders(correlationId, LedsActionCode.AddDisposalResults)
+      )
     })
 
     it("should successfully update when operation is subsequently varied", async () => {
@@ -368,7 +380,9 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(generateHeaders(correlationId))
+      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
+        generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
+      )
     })
 
     it("should successfully update when operation is sentence deferred", async () => {
@@ -461,7 +475,9 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(generateHeaders(correlationId))
+      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
+        generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
+      )
     })
 
     it("should return an error when api call fails", async () => {

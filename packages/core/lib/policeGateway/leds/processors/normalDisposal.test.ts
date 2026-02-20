@@ -140,6 +140,14 @@ describe("normalDisposal", () => {
               disposalResults: [
                 {
                   disposalCode: 10,
+                  disposalDuration: {
+                    count: 123,
+                    units: "days"
+                  },
+                  disposalEffectiveDate: "2024-05-10",
+                  disposalFine: {
+                    amount: 12000.99
+                  },
                   disposalQualifiers: ["A"],
                   disposalText: "Disposal text"
                 }
@@ -162,6 +170,14 @@ describe("normalDisposal", () => {
               disposalResults: [
                 {
                   disposalCode: 10,
+                  disposalDuration: {
+                    count: 123,
+                    units: "days"
+                  },
+                  disposalEffectiveDate: "2024-05-10",
+                  disposalFine: {
+                    amount: 12000.99
+                  },
                   disposalQualifiers: ["A"],
                   disposalText: "Disposal text"
                 }

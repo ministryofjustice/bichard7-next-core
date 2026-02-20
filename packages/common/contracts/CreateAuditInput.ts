@@ -1,0 +1,26 @@
+import { isAfter, isBefore } from "date-fns"
+import z from "zod"
+
+export const CreateAuditInputSchema = z
+  .object({
+    fromDate: z.iso.date(),
+    includedTypes: z.enum(["Triggers", "Exceptions"]).array().nonempty(),
+    resolvedByUsers: z.string().array().nonempty(),
+    toDate: z.iso.date(),
+    triggerTypes: z.string().array().optional(),
+    volumeOfCases: z.number().gte(1).lte(100)
+  })
+  .superRefine(({ fromDate, toDate }, ctx) => {
+    if (isBefore(toDate, fromDate) || isAfter(toDate, new Date())) {
+      ctx.addIssue({
+        code: "custom",
+        input: {
+          fromDate,
+          toDate
+        },
+        message: "Date range cannot be in the future"
+      })
+    }
+  })
+
+export type CreateAuditInput = z.infer<typeof CreateAuditInputSchema>

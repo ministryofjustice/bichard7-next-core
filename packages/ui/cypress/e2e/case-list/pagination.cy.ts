@@ -40,7 +40,7 @@ describe("Pagination", () => {
 
     cy.get(".cases-per-page").first().select("25")
     // Navigating to a different page should keep the same page size
-    cy.get(".moj-pagination__item").contains("Next").first().click()
+    cy.get(".govuk-pagination__item").contains("Next").first().click()
     cy.get("tbody tr").should("have.length", 25)
     cy.get("tr").contains("Case00025").should("exist")
     cy.get("tr").contains("Case00049").should("exist")
@@ -57,7 +57,7 @@ describe("Pagination", () => {
     cy.get(".cases-per-page").first().select("50")
     cy.get("tbody tr").should("have.length", 50)
 
-    cy.get(".moj-pagination__item").contains("Next").first().click()
+    cy.get(".govuk-pagination__item").contains("Next").first().click()
     cy.get("tbody tr").should("have.length", 50)
     cy.get("tr").contains("Case00050").should("exist")
 
@@ -85,7 +85,7 @@ describe("Pagination", () => {
 
     loginAndVisit()
 
-    cy.get(".moj-pagination__list li").should("not.exist")
+    cy.get(".govuk-pagination__list li").should("not.exist")
   })
 
   it("has correct pagination information when there is only one page", () => {
@@ -107,17 +107,17 @@ describe("Pagination", () => {
     cy.get("tr").contains("Case00000").should("exist")
     cy.get("tr").contains("Case00024").should("exist")
 
-    cy.get("li.moj-pagination__item").contains("2").click()
+    cy.get("li.govuk-pagination__item").contains("2").click()
     cy.get("p.moj-pagination__results").first().should("contain.text", "Showing 26 to 50 of 250 cases")
     cy.get("tr").contains("Case00025").should("exist")
     cy.get("tr").contains("Case00049").should("exist")
 
-    cy.get("li.moj-pagination__item").contains("10").click()
+    cy.get("li.govuk-pagination__item").contains("10").click()
     cy.get("p.moj-pagination__results").first().should("contain.text", "Showing 226 to 250 of 250 cases")
     cy.get("tr").contains("Case00225").should("exist")
     cy.get("tr").contains("Case00249").should("exist")
 
-    cy.get("li.moj-pagination__item").contains("9").click()
+    cy.get("li.govuk-pagination__item").contains("9").click()
     cy.get("p.moj-pagination__results").first().should("contain.text", "Showing 201 to 225 of 250 cases")
     cy.get("tr").contains("Case00200").should("exist")
     cy.get("tr").contains("Case00224").should("exist")
@@ -134,17 +134,17 @@ describe("Pagination", () => {
     cy.get("tr").contains("Case00000").should("exist")
     cy.get("tr").contains("Case00024").should("exist")
 
-    cy.get("li.moj-pagination__item").contains("Next").click()
+    cy.get("li.govuk-pagination__item").contains("Next").click()
     cy.get("p.moj-pagination__results").first().should("contain.text", "Showing 26 to 50 of 250 cases")
     cy.get("tr").contains("Case00025").should("exist")
     cy.get("tr").contains("Case00049").should("exist")
 
-    cy.get("li.moj-pagination__item").contains("Next").click()
+    cy.get("li.govuk-pagination__item").contains("Next").click()
     cy.get("p.moj-pagination__results").first().should("contain.text", "Showing 51 to 75 of 250 cases")
     cy.get("tr").contains("Case00050").should("exist")
     cy.get("tr").contains("Case00074").should("exist")
 
-    cy.get("li.moj-pagination__item").contains("Previous").click()
+    cy.get("li.govuk-pagination__item").contains("Previous").click()
     cy.get("p.moj-pagination__results").first().should("contain.text", "Showing 26 to 50 of 250 cases")
     cy.get("tr").contains("Case00025").should("exist")
     cy.get("tr").contains("Case00049").should("exist")
@@ -177,7 +177,7 @@ describe("Pagination", () => {
 
     confirmFiltersAppliedContains("Locked to me")
 
-    cy.get("li.moj-pagination__item").contains("Next").click()
+    cy.get("li.govuk-pagination__item").contains("Next").click()
     confirmFiltersAppliedContains("Locked to me")
   })
 })

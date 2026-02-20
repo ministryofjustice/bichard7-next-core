@@ -28,6 +28,14 @@ describe("mapAdditionalArrestOffences", () => {
             disposalResults: [
               {
                 disposalCode: 10,
+                disposalDuration: {
+                  count: 123,
+                  units: "days"
+                },
+                disposalEffectiveDate: "2024-05-10",
+                disposalFine: {
+                  amount: 12000.99
+                },
                 disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }
@@ -50,6 +58,14 @@ describe("mapAdditionalArrestOffences", () => {
             disposalResults: [
               {
                 disposalCode: 10,
+                disposalDuration: {
+                  count: 123,
+                  units: "days"
+                },
+                disposalEffectiveDate: "2024-05-10",
+                disposalFine: {
+                  amount: 12000.99
+                },
                 disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }
@@ -86,8 +102,8 @@ describe("mapAdditionalArrestOffences", () => {
     const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
 
     expect(result[0].additionalOffences[0]).toMatchObject({
-      plea: "",
-      adjudication: "",
+      plea: undefined,
+      adjudication: undefined,
       disposalResults: [],
       committedOnBail: true
     })
@@ -115,6 +131,11 @@ describe("mapAdditionalArrestOffences", () => {
     const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
     expect(result?.[0].additionalOffences?.[0].disposalResults?.[0]).toEqual({
       disposalCode: 20,
+      disposalDuration: undefined,
+      disposalEffectiveDate: undefined,
+      disposalFine: {
+        amount: 0
+      },
       disposalQualifiers: undefined,
       disposalText: undefined
     })

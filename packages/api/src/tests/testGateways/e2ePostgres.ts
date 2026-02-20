@@ -12,6 +12,7 @@ import mapUserRowToUser from "../../services/db/mapUserRowToUser"
 import mapUserToUserRow from "../../services/db/mapUserToUserRow"
 import Postgres from "../../services/gateways/database/Postgres"
 import clearAllTables from "./e2ePostgres/clearAllTables"
+import { fetchCase } from "./e2ePostgres/fetchCase"
 import insertCase from "./e2ePostgres/insertCase"
 import insertTrigger from "./e2ePostgres/insertTrigger"
 import insertUser from "./e2ePostgres/insertUser"
@@ -53,6 +54,19 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     return mapUserRowToUser(dbUser)
   }
 
+  async fetchCase(errorId: number): Promise<Case> {
+    const caseRow = await fetchCase(this.readonly, errorId)
+
+    return mapCaseRowToCase(caseRow)
+  }
+
+  async getAuditCases(auditId: number) {
+    return this.readonly.connection<{ audit_case_id: number; audit_id: number; error_id: number }[]>`
+      SELECT *
+      FROM br7own.audit_cases
+      WHERE audit_id = ${auditId}`
+  }
+
   updateCaseWithException(
     caseId: number,
     exceptionCode: string,
@@ -75,6 +89,7 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
   updateCaseWithTriggers(
     caseId: number,
     triggerResolvedBy: null | string,
+    triggerResolvedAt: Date | null,
     triggerCount: number,
     triggerStatus: number,
     triggerReason: string
@@ -83,6 +98,7 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
       this.writable.connection,
       caseId,
       triggerResolvedBy,
+      triggerResolvedAt,
       triggerCount,
       triggerStatus,
       triggerReason

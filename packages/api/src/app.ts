@@ -13,6 +13,11 @@ import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
 
 declare module "fastify" {
+  interface FastifyInstance {
+    auditLogGateway: AuditLogDynamoGateway
+    database: DatabaseGateway
+  }
+
   interface FastifyRequest {
     auditLogGateway: AuditLogDynamoGateway
     database: DatabaseGateway
@@ -30,6 +35,9 @@ type Gateways = {
 export default async function ({ auditLogGateway, database }: Gateways) {
   const fastify = createFastify()
 
+  fastify.decorate("database", database)
+  fastify.decorate("auditLogGateway", auditLogGateway)
+
   await setupZod(fastify)
   await setupSwagger(fastify)
 
@@ -46,13 +54,13 @@ export default async function ({ auditLogGateway, database }: Gateways) {
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      const authenticatedUser = await authenticate(database.readonly, request, reply)
+      const authenticatedUser = await authenticate(instance.database.readonly, request, reply)
       if (!authenticatedUser) {
         return
       }
 
-      request.auditLogGateway = auditLogGateway
-      request.database = database
+      request.auditLogGateway = instance.auditLogGateway
+      request.database = instance.database
       request.user = authenticatedUser
     })
 
@@ -78,6 +86,11 @@ export default async function ({ auditLogGateway, database }: Gateways) {
       },
       "request completed"
     )
+  })
+
+  fastify.addHook("onClose", async (instance) => {
+    await instance.database.readonly.connection.end()
+    await instance.database.writable.connection.end()
   })
 
   return fastify

@@ -18,6 +18,7 @@ import type { SubsequentDisposalResultsRequest } from "../../../types/leds/Subse
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
+import LedsActionCode from "../../../types/leds/LedsActionCode"
 import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
 import endpoints from "./endpoints"
@@ -44,9 +45,15 @@ export default class LedsGateway implements PoliceGateway {
       caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
     }
 
+    const authToken = await this.config.authentication.generateBearerToken()
+    if (isError(authToken)) {
+      console.error(`Failed to generate LEDS auth token. ${authToken.message}`)
+      return new PoliceApiError(["Failed to query LEDS"])
+    }
+
     const apiResponse = await axios
       .post(`${this.config.url}${endpoints.asnQuery}`, requestBody, {
-        headers: generateRequestHeaders(correlationId),
+        headers: generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
@@ -96,16 +103,20 @@ export default class LedsGateway implements PoliceGateway {
     let result:
       | PoliceApiError
       | { endpoint: string; requestBody: AddDisposalRequest | RemandRequest | SubsequentDisposalResultsRequest }
+    let actionCode: LedsActionCode
 
     switch (request.operation) {
       case PncOperation.DISPOSAL_UPDATED:
       case PncOperation.SENTENCE_DEFERRED:
+        actionCode = LedsActionCode.AddSubsequentDisposalResults
         result = subsequentDisposal(request, personId, pncUpdateDataset)
         break
       case PncOperation.NORMAL_DISPOSAL:
+        actionCode = LedsActionCode.AddDisposalResults
         result = normalDisposal(request, personId, pncUpdateDataset)
         break
       case PncOperation.REMAND:
+        actionCode = LedsActionCode.AddRemand
         result = remand(request, personId, reportId)
         break
       default:
@@ -118,9 +129,15 @@ export default class LedsGateway implements PoliceGateway {
 
     const { endpoint, requestBody } = result
 
+    const authToken = await this.config.authentication.generateBearerToken()
+    if (isError(authToken)) {
+      console.error(`Failed to generate LEDS auth token. ${authToken.message}`)
+      return new PoliceApiError(["Failed to update LEDS"])
+    }
+
     const apiResponse = await axios
       .post(`${this.config.url}${endpoint}`, requestBody, {
-        headers: generateRequestHeaders(correlationId),
+        headers: generateRequestHeaders(correlationId, actionCode, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),

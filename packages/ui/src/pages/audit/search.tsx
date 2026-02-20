@@ -16,8 +16,9 @@ import getDataSource from "services/getDataSource"
 import Layout from "components/Layout"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
-import redirectTo from "../../utils/redirectTo"
+import redirectTo from "utils/redirectTo"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
+import AuditSearch from "features/AuditSearch/AuditSearch"
 
 type Props = {
   csrfToken: string
@@ -81,6 +82,14 @@ const SearchPage: NextPage<Props> = (props) => {
                 </h1>
               </HeaderRow>
             </HeaderContainer>
+            <AuditSearch
+              resolvers={[
+                { username: "usera", forenames: "Name", surname: "A" },
+                { username: "userb", forenames: "Name", surname: "B" },
+                { username: "userc", forenames: "Name", surname: "C" }
+              ]}
+              triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]}
+            />
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
