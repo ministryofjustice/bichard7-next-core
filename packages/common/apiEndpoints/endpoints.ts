@@ -7,6 +7,7 @@ export const Endpoints = {
   CaseAudit: "/cases/:caseId/audit",
   CaseResubmit: "/cases/:caseId/resubmit",
   Cases: "/cases",
+  CasesReportsBails: "/cases/reports/bails",
   CasesReportsExceptions: "/cases/reports/exceptions",
   CasesReportsWarrants: "/cases/reports/warrants",
   CasesResubmit: "/cases/resubmit",

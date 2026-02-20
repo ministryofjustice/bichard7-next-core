@@ -11,12 +11,13 @@ export const VersionedEndpoints: Record<string, Record<string, string>> = {
     CaseAudit: Versions.V1 + Endpoints.CaseAudit,
     CaseResubmit: Versions.V1 + Endpoints.CaseResubmit,
     Cases: Versions.V1 + Endpoints.Cases,
+    CasesReportsBails: Versions.V1 + Endpoints.CasesReportsBails,
     CasesReportsExceptions: Versions.V1 + Endpoints.CasesReportsExceptions,
     CasesReportsWarrants: Versions.V1 + Endpoints.CasesReportsWarrants,
     CasesResubmit: Versions.V1 + Endpoints.CasesResubmit,
     Health: Versions.V1 + Endpoints.Health,
     Me: Versions.V1 + Endpoints.Me
-  }
-}
+  } as const
+} as const
 
 export const V1 = VersionedEndpoints.V1
