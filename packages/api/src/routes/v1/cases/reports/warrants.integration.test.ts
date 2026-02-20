@@ -1,4 +1,4 @@
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"

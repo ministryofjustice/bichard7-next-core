@@ -1,24 +1,8 @@
 import z from "zod"
 
-import { dateLikeToDate } from "../../schemas/dateLikeToDate"
-import { CaseRowSchema } from "../Case"
-import { TriggerRowSchema } from "../Trigger"
-import { dateRangeShape, validateDateRange } from "./BaseQuery"
+import { dateRangeShape, validateDateRange } from "../types/reports/BaseQuery"
 
 export const WarrantsReportQuerySchema = z.object(dateRangeShape).superRefine(validateDateRange)
-
-export const CaseRowForWarrantsReportSchema = CaseRowSchema.pick({
-  annotated_msg: true,
-  asn: true,
-  court_name: true,
-  defendant_name: true,
-  error_id: true,
-  msg_received_ts: true,
-  ptiurn: true
-}).extend({
-  court_date: dateLikeToDate,
-  triggers: z.array(TriggerRowSchema)
-})
 
 export const CaseForWarrantsReportDtoSchema = z.object({
   asn: z.string(),
@@ -45,5 +29,4 @@ export const CaseForWarrantsReportDtoSchema = z.object({
 })
 
 export type CaseForWarrantsReportDto = z.infer<typeof CaseForWarrantsReportDtoSchema>
-export type CaseRowForWarrantsReport = z.infer<typeof CaseRowForWarrantsReportSchema>
 export type WarrantsReportQuery = z.infer<typeof WarrantsReportQuerySchema>

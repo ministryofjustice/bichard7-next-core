@@ -1,12 +1,11 @@
-import type {
-  CaseForWarrantsReportDto,
-  CaseRowForWarrantsReport
-} from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
 
 import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { differenceInCalendarDays } from "date-fns"
+
+import type { CaseRowForWarrantsReport } from "../../../types/reports/Warrants"
 
 import {
   dateOfBirth,
