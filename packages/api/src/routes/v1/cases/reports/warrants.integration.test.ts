@@ -16,7 +16,7 @@ import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
 
-describe("exceptions report", () => {
+describe("warrants report", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
 
