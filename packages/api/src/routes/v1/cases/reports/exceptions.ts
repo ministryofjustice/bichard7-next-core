@@ -4,10 +4,10 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import {
+  ExceptionReportDtoSchema,
   type ExceptionReportQuery,
-  ExceptionReportQuerySchema,
-  ExceptionReportSchema
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+  ExceptionReportQuerySchema
+} from "@moj-bichard7/common/contracts/ExceptionReportDto"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 
@@ -35,7 +35,7 @@ const schema = {
   ...auth,
   querystring: ExceptionReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Exceptions Report", ExceptionReportSchema.array()),
+    [OK]: jsonResponse("Exceptions Report", ExceptionReportDtoSchema.array()),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),
@@ -45,7 +45,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, query, reply, user }: HandlerProps) => {
-  const result = generateExceptions(database, user, query, reply)
+  const result = await generateExceptions(database, user, query, reply)
 
   if (!isError(result)) {
     return reply

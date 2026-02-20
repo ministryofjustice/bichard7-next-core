@@ -1,7 +1,6 @@
-import type {
-  CaseForExceptionReport,
-  CaseRowForExceptionReport
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReportDto"
+
+import type { CaseRowForExceptionReport } from "../../../../types/reports/Exceptions"
 
 import * as convertCaseModule from "../../../dto/reports/caseToExceptionsReportDto"
 import { processExceptions } from "./processExceptions"
@@ -29,7 +28,7 @@ describe("processExceptions", () => {
       type: "error"
     }
 
-    const mockResult: CaseForExceptionReport = {
+    const mockResult: CaseForExceptionReportDto = {
       asn: "1101ZD0100000410836J",
       courtName: "Test Court",
       courtReference: "REF123",

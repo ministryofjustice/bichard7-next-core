@@ -1,4 +1,4 @@
-import type { ExceptionReportQuery } from "@moj-bichard7/common/types/reports/ExceptionReport"
+import type { ExceptionReportQuery } from "@moj-bichard7/common/contracts/ExceptionReportDto"
 import type { FastifyReply } from "fastify"
 
 import { type User } from "@moj-bichard7/common/types/User"
@@ -21,8 +21,8 @@ jest.mock("../reportStream", () => ({
 }))
 
 describe("generateExceptions with UserGroups", () => {
-  let mockDatabase: jest.Mocked<Partial<DatabaseGateway>>
-  let mockReply: jest.Mocked<Partial<FastifyReply>>
+  let mockDatabase: DatabaseGateway
+  let mockReply: FastifyReply
   let mockQuery: ExceptionReportQuery
 
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe("generateExceptions with UserGroups", () => {
       code: jest.fn().mockReturnThis(),
       send: jest.fn().mockReturnThis(),
       type: jest.fn().mockReturnThis()
-    }
+    } as unknown as FastifyReply
 
     mockQuery = {
       exceptions: true,
@@ -41,46 +41,32 @@ describe("generateExceptions with UserGroups", () => {
       toDate: new Date("2023-01-02"),
       triggers: true
     }
+    ;(reportStream as jest.Mock).mockResolvedValue(undefined)
   })
 
   describe("Permission & Group Logic", () => {
-    it("should allow access when user is in the Supervisor group", () => {
+    it("should allow access when user is in the Supervisor group", async () => {
       const supervisorUser = { groups: [UserGroup.Supervisor] } as User
 
-      const result = generateExceptions(
-        mockDatabase as DatabaseGateway,
-        supervisorUser,
-        mockQuery,
-        mockReply as FastifyReply
-      )
+      const result = await generateExceptions(mockDatabase, supervisorUser, mockQuery, mockReply)
 
       expect(result).toBeUndefined()
       expect(mockReply.code).toHaveBeenCalledWith(OK)
     })
 
-    it("should return NotAllowedError when user is only an ExceptionHandler", () => {
+    it("should return NotAllowedError when user is only an ExceptionHandler", async () => {
       const handlerUser = { groups: [UserGroup.ExceptionHandler] } as User
 
-      const result = generateExceptions(
-        mockDatabase as DatabaseGateway,
-        handlerUser,
-        mockQuery,
-        mockReply as FastifyReply
-      )
+      const result = await generateExceptions(mockDatabase, handlerUser, mockQuery, mockReply)
 
       expect(result).toBeInstanceOf(NotAllowedError)
       expect(mockReply.send).not.toHaveBeenCalled()
     })
 
-    it("should return NotAllowedError when user has no groups", () => {
+    it("should return NotAllowedError when user has no groups", async () => {
       const emptyUser = { groups: [] } as unknown as User
 
-      const result = generateExceptions(
-        mockDatabase as DatabaseGateway,
-        emptyUser,
-        mockQuery,
-        mockReply as FastifyReply
-      )
+      const result = await generateExceptions(mockDatabase, emptyUser, mockQuery, mockReply)
 
       expect(result).toBeInstanceOf(NotAllowedError)
     })
@@ -89,8 +75,8 @@ describe("generateExceptions with UserGroups", () => {
   describe("Stream Handling", () => {
     const validSupervisor = { groups: [UserGroup.Supervisor] } as User
 
-    it("should initialise the JSON stream and send it to Fastify", () => {
-      generateExceptions(mockDatabase as DatabaseGateway, validSupervisor, mockQuery, mockReply as FastifyReply)
+    it("should initialise the JSON stream and send it to Fastify", async () => {
+      await generateExceptions(mockDatabase, validSupervisor, mockQuery, mockReply)
 
       const [sentStream] = (mockReply.send as jest.Mock).mock.lastCall
 
@@ -106,7 +92,7 @@ describe("generateExceptions with UserGroups", () => {
         return Promise.resolve()
       })
 
-      generateExceptions(mockDatabase as DatabaseGateway, validSupervisor, mockQuery, mockReply as FastifyReply)
+      await generateExceptions(mockDatabase, validSupervisor, mockQuery, mockReply)
 
       const mockProcessBatch = jest.fn()
       await capturedCallback!(mockProcessBatch)
@@ -114,20 +100,17 @@ describe("generateExceptions with UserGroups", () => {
       expect(exceptionsReport).toHaveBeenCalledWith(mockDatabase.readonly, validSupervisor, mockQuery, mockProcessBatch)
     })
 
-    it("should destroy the stream with the specific error if generation fails", async () => {
+    it("should return the specific error if generation fails", async () => {
       const dbError = new Error("Database Timeout")
       ;(reportStream as jest.Mock).mockRejectedValue(dbError)
 
-      generateExceptions(mockDatabase as DatabaseGateway, validSupervisor, mockQuery, mockReply as FastifyReply)
+      const result = await generateExceptions(mockDatabase, validSupervisor, mockQuery, mockReply)
 
-      const [sentStream] = (mockReply.send as jest.Mock).mock.lastCall
+      const [sentStream] = (mockReply.send as jest.Mock).mock.calls[0]
 
       sentStream.on("error", () => {})
-      const destroySpy = jest.spyOn(sentStream, "destroy")
 
-      await new Promise(process.nextTick)
-
-      expect(destroySpy).toHaveBeenCalledWith(dbError)
+      expect(result).toBe(dbError)
     })
   })
 })

@@ -1,10 +1,9 @@
-import type {
-  CaseForExceptionReport,
-  CaseRowForExceptionReport
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReportDto"
+
+import type { CaseRowForExceptionReport } from "../../../../types/reports/Exceptions"
 
 import { caseToExceptionsReportDto } from "../../../dto/reports/caseToExceptionsReportDto"
 
-export const processExceptions = (caseRowForReport: CaseRowForExceptionReport): CaseForExceptionReport => {
+export const processExceptions = (caseRowForReport: CaseRowForExceptionReport): CaseForExceptionReportDto => {
   return caseToExceptionsReportDto(caseRowForReport)
 }

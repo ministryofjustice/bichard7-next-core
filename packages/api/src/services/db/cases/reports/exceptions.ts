@@ -1,15 +1,15 @@
 import type {
-  ExceptionReport,
+  ExceptionReportDto,
   ExceptionReportQuery,
-  ExceptionReportType,
-  UserExceptionReportRow
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+  ExceptionReportType
+} from "@moj-bichard7/common/contracts/ExceptionReportDto"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { PendingQuery, Row } from "postgres"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { UserExceptionReportRow } from "../../../../types/reports/Exceptions"
 
 import { processUsers } from "../../../../useCases/cases/reports/exceptions/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
@@ -18,7 +18,7 @@ export const exceptionsReport = async (
   database: DatabaseConnection,
   user: User,
   filters: ExceptionReportQuery,
-  processChunk: (rows: ExceptionReport[]) => Promise<void>
+  processChunk: (rows: ExceptionReportDto[]) => Promise<void>
 ): Promise<void> => {
   const createQueryPart = (type: ExceptionReportType) => {
     const isException = type === "Exceptions"
