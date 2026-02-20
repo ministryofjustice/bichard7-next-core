@@ -25,7 +25,7 @@ export const defendantSchema = z.discriminatedUnion("defendantType", [
   })
 ])
 
-const arrestOffenceSchema = baseOffenceSchema.extend({
+export const arrestOffenceSchema = baseOffenceSchema.extend({
   offenceStartDate: dateStringSchema,
   adjudication: adjudicationSchema.optional(),
   offenceDescription: z.string().optional(),

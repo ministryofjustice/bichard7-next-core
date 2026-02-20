@@ -14,7 +14,7 @@ const mapCourt = (courtCase: CourtCase): Court =>
         courtName: courtCase.court.courtName
       }
 
-const mapToDisposalRequest = (
+const mapToCreateDisposalRequest = (
   courtCase: CourtCase,
   linkedOffences: OffenceIdAndVersion[],
   forceCode: string,
@@ -29,11 +29,11 @@ const mapToDisposalRequest = (
     })),
     disposal: {
       forceStationInCase: forceCode,
-      convictionDate: courtCase.convictionDate,
+      convictionDate: courtCase.dateOfHearing,
       court: mapCourt(courtCase),
       caseStatusMarker: "impending-prosecution-detail"
     }
   }
 })
 
-export default mapToDisposalRequest
+export default mapToCreateDisposalRequest

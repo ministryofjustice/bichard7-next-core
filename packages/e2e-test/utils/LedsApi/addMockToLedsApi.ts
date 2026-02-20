@@ -30,7 +30,7 @@ const readNcmFile = (bichard: LedsBichard): ParsedNcm => {
 }
 
 const mapNcmToArrestedPerson = (ncm: ParsedNcm): PersonDetails => {
-  const forceOwnerCode = "46BZ" // ncm.NewCaseMessage.Case.PTIURN.substring(0, 4)
+  const forceOwnerCode = ncm.NewCaseMessage.Case.PTIURN.substring(0, 4)
   const personDetails = ncm.NewCaseMessage.Case.Defendant.PoliceIndividualDefendant.PersonDefendant.BasePersonDetails
   const personName = personDetails.PersonName
 
@@ -62,22 +62,42 @@ const mapNcmToCourtCases = (ncm: ParsedNcm): NonEmptyCourtCaseArray => {
     .filter((x) => x)
     .join(" ")
   const dateOfHearing = ncm.NewCaseMessage.Case.InitialHearing.DateOfHearing
+  const courtHearingLocation = ncm.NewCaseMessage.Case.InitialHearing.CourtHearingLocation
   const ncmOffences = Array.isArray(ncm.NewCaseMessage.Case.Defendant.Offence)
     ? ncm.NewCaseMessage.Case.Defendant.Offence
     : [ncm.NewCaseMessage.Case.Defendant.Offence]
-  const offences: NonEmptyOffenceDetailsArray = ncmOffences.map((offence) => ({
-    ownerCode: forceOwnerCode,
-    startDate: offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate,
-    startTime: undefined,
-    endDate: undefined,
-    endTime: undefined,
-    offenceLocation: offence.BaseOffenceDetails.LocationOfOffence,
-    offenceCode: offence.BaseOffenceDetails.OffenceCode
-  })) as NonEmptyOffenceDetailsArray
+
+  const offences: NonEmptyOffenceDetailsArray = ncmOffences.map((ncmOffence) => {
+    const ncmResults = !ncmOffence.Result
+      ? []
+      : Array.isArray(ncmOffence.Result)
+        ? ncmOffence.Result
+        : [ncmOffence.Result]
+
+    return {
+      ownerCode: forceOwnerCode,
+      startDate: ncmOffence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate,
+      startTime: undefined,
+      endDate: undefined,
+      endTime: undefined,
+      offenceLocation: ncmOffence.BaseOffenceDetails.LocationOfOffence,
+      offenceCode: ncmOffence.BaseOffenceDetails.OffenceCode,
+      convictionDate: ncmOffence.ConvictionDate,
+      verdict: ncmOffence.Finding,
+      plea: ncmOffence.Plea,
+      results:
+        ncmResults.map((result) => ({
+          resultCode: result.ResultCode,
+          resultText: result.ResultText,
+          disposalEffectiveDate: result.DisposalEffectiveDate
+        })) ?? []
+    }
+  }) as NonEmptyOffenceDetailsArray
 
   return [
     {
-      convictionDate: dateOfHearing,
+      dateOfHearing,
+      courtHearingLocation,
       offences,
       court: {
         courtIdentityType: "name",
@@ -97,7 +117,8 @@ const addMockToLedsApi = async (bichard: LedsBichard): Promise<void> => {
   const courtCases = mapNcmToCourtCases(ncm)
 
   const asn = await bichard.policeApi.ledsTestApiHelper.createArrestedPersonAndDisposals(arrestedPerson, courtCases)
-  console.log("==============", asn)
+
+  console.log(asn)
 }
 
 export default addMockToLedsApi
