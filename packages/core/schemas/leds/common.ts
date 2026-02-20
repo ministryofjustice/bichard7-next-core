@@ -43,7 +43,7 @@ export const disposalDurationSchema = z.object({
 })
 
 export const disposalFineSchema = z.object({
-  amount: z.number(),
+  amount: z.number().optional(),
   units: z.number().optional()
 })
 

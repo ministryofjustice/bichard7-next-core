@@ -9,7 +9,7 @@ import {
   offenceSchema
 } from "./common"
 
-export const reasonForAppearanceSchema = z.enum(["Sentenced Deferred", "Heard at Court", "Subsequently Varied"])
+export const reasonForAppearanceSchema = z.enum(["Sentence Deferred", "Heard at Court", "Subsequently Varied"])
 
 export const subsequentDisposalResultsRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,

@@ -5,7 +5,9 @@ import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
 import type { MockAsnQueryParams } from "../../types/PoliceApi"
+import addMockToLedsApi from "./addMockToLedsApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
+import LedsTestApiHelper from "./helpers/LedsTestApiHelper/LedsTestApiHelper"
 import * as mockGenerators from "./mockGenerators"
 import { generateAsnQuery } from "./mockGenerators/generateAsnQuery"
 import MockServer from "./MockServer"
@@ -16,9 +18,25 @@ export class LedsApi implements PoliceApi {
   private reportId: string
   private courtCaseId: string
   readonly mockServerClient: MockServer
+  readonly ledsTestApiHelper: LedsTestApiHelper
 
   constructor(private readonly bichard: LedsBichard) {
-    this.mockServerClient = new MockServer(this.bichard.config.ledsApiUrl)
+    if (this.bichard.config.realPNC) {
+      this.ledsTestApiHelper = new LedsTestApiHelper(this.bichard)
+    } else {
+      this.mockServerClient = new MockServer(this.bichard.config.ledsApiUrl)
+    }
+  }
+
+  prepareInputMessage(message: string) {
+    if (!this.bichard.config.realPNC) {
+      return Promise.resolve(message)
+    }
+
+    const asn = this.ledsTestApiHelper.arrestSummonsNumber?.replace(/\//g, "")
+    const updatedMessage = message.replace(/(<.*:ProsecutorReference>).*?(<\/.*:ProsecutorReference>)/, `$1${asn}$2`)
+
+    return Promise.resolve(updatedMessage)
   }
 
   createValidRecord: (record: string) => Promise<void>
@@ -28,7 +46,7 @@ export class LedsApi implements PoliceApi {
   }
 
   mockDataForTest(): Promise<void> {
-    return addMockToLedsMockApi(this.bichard)
+    return this.bichard.config.realPNC ? addMockToLedsApi(this.bichard) : addMockToLedsMockApi(this.bichard)
   }
 
   mockEnquiryFromNcm(ncmFile: string, options?: LedsMockOptions): LedsMock {
