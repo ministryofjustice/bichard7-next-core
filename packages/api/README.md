@@ -22,7 +22,7 @@ Then from this directory run `npm run start:dev`
 
 ## Building
 
-Go to the top level and run `npm run build:docker`. This will build all the dependencies and the API.
+Go to the top level and run `npm run build:api`. This will build all the dependencies and the API.
 
 If you make changes in `packages/common` you need to stop the running server and rebuild `common`. The easiest way of
 doing this is to `cd packages/common` and run `npm run watch`. This will rebuild on any change. If you're running the
