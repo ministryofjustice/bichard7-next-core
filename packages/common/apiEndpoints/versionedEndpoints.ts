@@ -12,6 +12,7 @@ export const VersionedEndpoints: Record<string, Record<string, string>> = {
     CaseResubmit: Versions.V1 + Endpoints.CaseResubmit,
     Cases: Versions.V1 + Endpoints.Cases,
     CasesReportsBails: Versions.V1 + Endpoints.CasesReportsBails,
+    CasesReportsDomesticViolence: Versions.V1 + Endpoints.CasesReportsDomesticViolence,
     CasesReportsExceptions: Versions.V1 + Endpoints.CasesReportsExceptions,
     CasesReportsWarrants: Versions.V1 + Endpoints.CasesReportsWarrants,
     CasesResubmit: Versions.V1 + Endpoints.CasesResubmit,
