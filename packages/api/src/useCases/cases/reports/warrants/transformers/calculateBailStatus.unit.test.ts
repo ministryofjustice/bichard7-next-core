@@ -1,12 +1,4 @@
-import { calculateBailStatus } from "./calculateBailStatus"
-
-interface BailStatusInputs {
-  bail: boolean
-  hasNextCourtAppearance: boolean
-  noBail: boolean
-  tRPR0002Present: boolean
-  tRPR0012Present: boolean
-}
+import { type BailStatusInputs, calculateBailStatus } from "./calculateBailStatus"
 
 describe("calculateBailStatus", () => {
   const createInputs = (overrides: Partial<BailStatusInputs> = {}): BailStatusInputs => ({

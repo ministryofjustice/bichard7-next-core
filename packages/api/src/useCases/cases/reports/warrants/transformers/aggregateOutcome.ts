@@ -1,8 +1,8 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import type { NextHearingDetails } from "../extractionUtils/findNextHearing"
+import type { NextHearingDetails } from "../utils/findNextHearing"
 
-import { findNextHearing } from "../extractionUtils/findNextHearing"
+import { findNextHearing } from "../utils/findNextHearing"
 import { analyzeResult } from "./analyzeResult"
 
 interface AggregatedOutcome {
@@ -52,7 +52,6 @@ const updateFlags = (acc: AggregatedOutcome, result: Result) => {
 }
 
 export const aggregateOutcome = (results: Result[]): AggregatedOutcome => {
-  // Initialize State
   const acc: AggregatedOutcome = {
     flags: {
       bail: false,
@@ -69,11 +68,8 @@ export const aggregateOutcome = (results: Result[]): AggregatedOutcome => {
   const uniqueHearingKeys = new Set<string>()
 
   for (const result of results) {
-    // A. Analyse Flags & Text
-    // We reuse the analyzeResult logic but apply it immediately
     updateFlags(acc, result)
 
-    // B. Extract Next Hearing
     const hearing = findNextHearing(result)
     if (hearing && !uniqueHearingKeys.has(hearing.uniqueKey)) {
       uniqueHearingKeys.add(hearing.uniqueKey)

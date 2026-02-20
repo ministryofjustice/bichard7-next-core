@@ -1,4 +1,4 @@
-interface BailStatusInputs {
+export interface BailStatusInputs {
   bail: boolean
   hasNextCourtAppearance: boolean
   noBail: boolean

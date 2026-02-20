@@ -7,7 +7,14 @@ import { differenceInCalendarDays, format } from "date-fns"
 
 import type { CaseRowForBailsReport } from "../../../types/reports/Bails"
 
-import * as logic from "../../cases/reports/bails/reportLogic"
+import { bailConditionsImposed } from "../../cases/reports/bails/utils/bailConditionsImposed"
+import { caseAutomatedToPNC } from "../../cases/reports/bails/utils/caseAutomatedToPNC"
+import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
+import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
+import { formatDate } from "../../cases/reports/utils/formatDate"
+import { formatOffenceData } from "../../cases/reports/utils/formatOffenceData"
+import { hearingTime } from "../../cases/reports/utils/hearingTime"
+import { resolutionStatusFromDb } from "../convertResolutionStatus"
 
 export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<CaseForBailsReportDto> {
   const aho = parseAhoXml(row.annotated_msg)
@@ -16,20 +23,20 @@ export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<Cas
     throw aho
   }
 
-  const aggregatedOffences = logic.aggregateOffenceData(aho)
+  const aggregatedOffences = formatOffenceData(aho)
 
   const sharedData = {
     asn: getShortAsn(row.asn),
-    automatedToPNC: logic.getCaseAutomatedToPNC(aho, row.error_count),
-    bailConditions: logic.getBailConditionsImposed(aho),
+    automatedToPNC: caseAutomatedToPNC(aho, row.error_count),
+    bailConditions: bailConditionsImposed(aho),
     courtName: row.court_name ?? null,
-    dateOfBirth: format(new Date(logic.getDateOfBirth(aho)), "dd/MM/yyyy"),
+    dateOfBirth: format(new Date(dateOfBirth(aho)), "dd/MM/yyyy"),
     daysToEnterPortal:
       row.court_date > row.msg_received_ts ? null : differenceInCalendarDays(row.msg_received_ts, row.court_date),
-    defendantAddress: logic.getDefendantAddress(aho),
+    defendantAddress: defendantAddress(aho),
     defendantName: row.defendant_name ?? null,
     hearingDate: format(row.court_date, "dd/MM/yyyy"),
-    hearingTime: logic.getHearingTime(aho),
+    hearingTime: hearingTime(aho),
     nextAppearanceCourt: aggregatedOffences.nextCourtNames,
     nextAppearanceDate: aggregatedOffences.nextCourtDates,
     nextAppearanceTime: aggregatedOffences.nextCourtTimes,
@@ -41,8 +48,8 @@ export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<Cas
   for (const trigger of row.triggers) {
     yield {
       ...sharedData,
-      triggerResolvedDate: logic.formatDate(trigger.resolved_ts),
-      triggerStatus: logic.getTriggerStatus(trigger.status)
+      triggerResolvedDate: formatDate(trigger.resolved_ts),
+      triggerStatus: resolutionStatusFromDb(trigger.status) ?? "Unresolved"
     }
   }
 }

@@ -7,15 +7,13 @@ import { differenceInCalendarDays } from "date-fns"
 
 import type { CaseRowForWarrantsReport } from "../../../types/reports/Warrants"
 
-import {
-  dateOfBirth,
-  defendantAddress,
-  formatDate,
-  gender,
-  hearingTime,
-  pncIdentifier
-} from "../../cases/reports/warrants/extractionUtils"
+import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
+import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
+import { formatDate } from "../../cases/reports/utils/formatDate"
+import { hearingTime } from "../../cases/reports/utils/hearingTime"
 import { hearingOutcomeDetails } from "../../cases/reports/warrants/transformers/hearingOutcomeDetails"
+import { gender } from "../../cases/reports/warrants/utils/gender"
+import { pncIdentifier } from "../../cases/reports/warrants/utils/pncIdentifier"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
 
 export const caseToWarrantsReportDto = (caseRow: CaseRowForWarrantsReport): CaseForWarrantsReportDto => {

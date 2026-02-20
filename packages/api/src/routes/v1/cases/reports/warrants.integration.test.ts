@@ -304,9 +304,9 @@ describe("warrants report", () => {
     expect(reportItem.nextCourtAppearance).toBe("")
     expect(reportItem.nextCourtAppearanceDate).toBe("")
     expect(reportItem.offencesTitle).toBe(
-      "Aid and abet theft\n" +
-        "Sell a tobacco product without a license\n" +
-        "Use a motor vehicle on a road / public place without third party insurance"
+      "Aid and abet theft.\n" +
+        "Sell a tobacco product without a license.\n" +
+        "Use a motor vehicle on a road / public place without third party insurance."
     )
     expect(reportItem.offencesWording).toBe(
       "Aid and abet theft\n" +
