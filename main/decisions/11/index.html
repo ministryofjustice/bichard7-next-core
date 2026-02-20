@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Define use of e2e and integration tests on API routes | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../style.css" rel="stylesheet">
+    <link href="./../../style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../../../modal.js"></script>
+    <script type="text/javascript" src="../../../svg-modal.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, '../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="">Home</a><a href="../" class="is-active">Decisions</a><a href="../../software-systems/" class="">Software Systems</a><a href="../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../bichard/" class="">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../leds/" class="">LEDS</a><a href="../../libra/" class="">Libra</a><a href="../../niam/" class="">NIAM</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../pnc/" class="">PNC</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid">
+        <div class="content p-3">
+          <div><h1>11. Define use of e2e and integration tests on API routes</h1>
+<p>Date: 2026-02-16</p>
+<h2>Status</h2>
+<p>Accepted</p>
+<h2>Context</h2>
+<p>Currently, we have 2 methods of testing our API routes:</p>
+<ul>
+ <li>e2e tests use the node <code>fetch</code> API to test the endpoint and therefore go through the network layer</li>
+ <li>Integration tests use Fastify's <code>app.inject</code> functionality to test the endpoint and do not therefore go through the network layer</li>
+</ul>
+<h3>Issue</h3>
+<p>We are often duplicating the same tests in both our e2e and integration suites. This offers us no additional value and takes up extra time to both write and also run in our CI pipeline</p>
+<h3>Solution</h3>
+<ul>
+ <li>Route integration tests should test all business logic such as validation, user permissions and also ensuring that data is present in the database and the response contains the data we expect. They should make calls to the endpoint using Fastify's <code>app.inject</code> feature.</li>
+ <li>Route e2e tests should be happy path smoke tests only. Often this will mean only 1 e2e test per endpoint. It should make the request using the <code>fetch</code> API and just check the response code with a simple check on the response body.</li>
+</ul>
+<h2>Consequences</h2>
+<ul>
+ <li>Eliminates redundant test cases across suites</li>
+ <li>Fewer tests to maintain</li>
+ <li>Improved CI pipeline speed - e2e are slower as they need to spin up an actual server so having most of the tests in the integration test suite will improve speed of testing</li>
+</ul></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.9.0/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
