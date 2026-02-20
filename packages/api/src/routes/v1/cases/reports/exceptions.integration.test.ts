@@ -1,4 +1,4 @@
-import type { ExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReportDto"
+import type { ExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReport"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"

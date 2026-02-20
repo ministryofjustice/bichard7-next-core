@@ -1,4 +1,4 @@
-import type { ExceptionReportQuery } from "@moj-bichard7/common/contracts/ExceptionReportDto"
+import type { ExceptionReportQuery } from "@moj-bichard7/common/contracts/ExceptionReport"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply } from "fastify"

@@ -1,4 +1,4 @@
-import type { CaseForExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReportDto"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReport"
 
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
