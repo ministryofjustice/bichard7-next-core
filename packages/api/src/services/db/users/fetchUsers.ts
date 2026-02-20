@@ -12,6 +12,10 @@ export type FetchUsersResult = {
 export default async (database: DatabaseConnection, user: User): PromiseResult<FetchUsersResult> => {
   const sql = database.connection
 
+  if (user.visibleForces.length === 0) {
+    return { users: [] }
+  }
+
   const forceClauses = user.visibleForces.map((f) => {
     const trimmedForceCode = f.replace(/^0+(\d+)/, "$1")
 

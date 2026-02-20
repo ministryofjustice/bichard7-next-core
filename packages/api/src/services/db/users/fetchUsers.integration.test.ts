@@ -17,6 +17,14 @@ describe("fetchUsers", () => {
     await testDatabaseGateway.close()
   })
 
+  it("should return no users if current user has no visible forces", async () => {
+    const supervisor = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor], visibleForces: [] })
+
+    const userList = (await fetchUsers(testDatabaseGateway.readonly, supervisor)) as FetchUsersResult
+
+    expect(userList.users).toEqual([])
+  })
+
   it("should return supervised users in same force", async () => {
     const user = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
     const supervisor = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor], visibleForces: ["01"] })
@@ -38,9 +46,9 @@ describe("fetchUsers", () => {
 
     const userList = (await fetchUsers(testDatabaseGateway.readonly, supervisor)) as FetchUsersResult
 
-    expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([visibleUser1.username]))
-    expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([visibleUser2.username]))
-    expect(userList.users.map((u) => u.username)).toEqual(expect.arrayContaining([visibleUser3.username]))
+    expect(userList.users.map((u) => u.username)).toEqual(
+      expect.arrayContaining([visibleUser1.username, visibleUser2.username, visibleUser3.username])
+    )
     expect(userList.users.map((u) => u.username)).toEqual(expect.not.arrayContaining([nonVisibleUser.username]))
   })
 })
