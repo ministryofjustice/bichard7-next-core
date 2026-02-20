@@ -59,12 +59,8 @@ export const getServerSideProps = withMultipleServerSideProps(
     const apiClient = new ApiClient(jwt)
     const apiGateway = new BichardApiV1(apiClient)
 
-    console.log("api gateway", JSON.stringify(apiGateway))
-
     const usersResponse = await apiGateway.fetchUsers()
     let resolvedBy: ResolvedBy[] = []
-
-    console.log("users response:", JSON.stringify(usersResponse))
 
     if (!isError(usersResponse) && !!usersResponse) {
       resolvedBy = usersResponse.users.map((u) => ({
