@@ -23,6 +23,7 @@ import insertException from "./test/utils/manageExceptions"
 import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./test/utils/manageFeedbackSurveys"
 import { deleteTriggers, insertTriggers } from "./test/utils/manageTriggers"
 import { insertUsersWithOverrides } from "./test/utils/manageUsers"
+import deleteFromTable from "./test/utils/deleteFromTable"
 
 export default defineConfig({
   e2e: {
@@ -125,6 +126,11 @@ export default defineConfig({
 
         clearCourtCases() {
           return deleteFromEntity(CourtCase)
+        },
+
+        async clearUsers() {
+          await deleteFromTable("users")
+          return true
         },
 
         insertUsers(params: { users: Partial<User>[]; userGroups?: string[] }) {

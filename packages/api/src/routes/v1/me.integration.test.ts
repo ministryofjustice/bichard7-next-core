@@ -58,6 +58,7 @@ describe("/v1/me", () => {
       groups: user.groups,
       hasAccessTo: {
         [Permission.CanAuditCases]: false,
+        [Permission.CanListUsers]: false,
         [Permission.CanResubmit]: true,
         [Permission.CaseDetailsSidebar]: true,
         [Permission.Exceptions]: true,
@@ -99,6 +100,7 @@ describe("/v1/me", () => {
       groups: user.groups,
       hasAccessTo: {
         [Permission.CanAuditCases]: true,
+        [Permission.CanListUsers]: true,
         [Permission.CanResubmit]: true,
         [Permission.CaseDetailsSidebar]: true,
         [Permission.Exceptions]: true,
