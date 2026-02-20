@@ -12,7 +12,7 @@ import mapOffences from "../mapToAddDisposalRequest/mapOffences"
 
 const reasonForAppearance: Record<string, ReasonForAppearance> = {
   V: "Subsequently Varied",
-  D: "Sentenced Deferred"
+  D: "Sentence Deferred"
 }
 
 const mapToSubsequentDisposalRequest = (
