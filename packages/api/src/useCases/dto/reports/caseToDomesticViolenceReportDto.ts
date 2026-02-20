@@ -7,7 +7,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { format } from "date-fns"
 
-import type { CaseRowForDomesticViolenceReport } from "../../types/Reports"
+import type { CaseRowForDomesticViolenceReport } from "../../../types/reports/DomesticViolence"
 
 // Java loaded this from properties; standard Excel limit safe-guard
 const TRUNCATED_TEXT_SUFFIX = "[TEXT TRUNCATED - REFER TO REGISTER OR BICHARD 7 PORTAL]"

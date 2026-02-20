@@ -5,9 +5,9 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { differenceInCalendarDays, format } from "date-fns"
 
-import type { CaseRowForBailsReport } from "../../types/Reports"
+import type { CaseRowForBailsReport } from "../../../types/reports/Bails"
 
-import * as logic from "../cases/reports/bails/reportLogic"
+import * as logic from "../../cases/reports/bails/reportLogic"
 
 export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<CaseForBailsReportDto> {
   const aho = parseAhoXml(row.annotated_msg)

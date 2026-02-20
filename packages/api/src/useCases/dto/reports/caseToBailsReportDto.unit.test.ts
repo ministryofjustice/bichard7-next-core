@@ -2,15 +2,15 @@ import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
-import type { CaseRowForBailsReport } from "../../types/Reports"
+import type { CaseRowForBailsReport } from "../../../types/reports/Bails"
 
-import * as logic from "../cases/reports/bails/reportLogic"
+import * as logic from "../../cases/reports/bails/reportLogic"
 import { caseToBailsReportDto } from "./caseToBailsReportDto"
 
 jest.mock("@moj-bichard7/common/aho/parseAhoXml/index")
 jest.mock("@moj-bichard7/common/types/Result")
 jest.mock("@moj-bichard7/common/utils/getShortAsn")
-jest.mock("../cases/reports/bails/reportLogic")
+jest.mock("../../cases/reports/bails/reportLogic")
 
 describe("caseToBailsReportDto", () => {
   let mockRow: CaseRowForBailsReport

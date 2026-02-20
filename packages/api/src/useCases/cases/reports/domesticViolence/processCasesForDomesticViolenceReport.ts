@@ -1,8 +1,8 @@
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/contracts/DomesticViolenceReport"
 
-import type { CaseRowForDomesticViolenceReport } from "../../../../types/Reports"
+import type { CaseRowForDomesticViolenceReport } from "../../../../types/reports/DomesticViolence"
 
-import { caseToDomesticViolenceReportDto } from "../../../dto/caseToDomesticViolenceReportDto"
+import { caseToDomesticViolenceReportDto } from "../../../dto/reports/caseToDomesticViolenceReportDto"
 
 export const processCasesForDomesticViolenceReport = (
   cases: CaseRowForDomesticViolenceReport[]

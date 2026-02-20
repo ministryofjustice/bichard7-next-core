@@ -2,7 +2,7 @@ import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
-import type { CaseRowForDomesticViolenceReport } from "../../types/Reports"
+import type { CaseRowForDomesticViolenceReport } from "../../../types/reports/DomesticViolence"
 
 import { caseToDomesticViolenceReportDto } from "./caseToDomesticViolenceReportDto"
 
