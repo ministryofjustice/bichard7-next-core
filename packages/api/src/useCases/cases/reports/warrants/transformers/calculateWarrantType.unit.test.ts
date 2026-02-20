@@ -1,12 +1,4 @@
-import { calculateWarrantType } from "./calculateWarrantType"
-
-interface WarrantTypeInputs {
-  firstInstance: boolean
-  parentResult: boolean
-  tRPR0002Present: boolean
-  tRPR0012Present: boolean
-  witnessResult: boolean
-}
+import { calculateWarrantType, type WarrantTypeInputs } from "./calculateWarrantType"
 
 describe("calculateWarrantType", () => {
   const createInputs = (overrides: Partial<WarrantTypeInputs> = {}): WarrantTypeInputs => ({

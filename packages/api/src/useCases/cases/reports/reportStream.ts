@@ -21,8 +21,10 @@ export const reportStream = async <T>(stream: Readable, fetchData: DataFetcher<T
       }
     })
 
-    stream.push("]")
-    stream.push(null)
+    if (!stream.destroyed) {
+      stream.push("]")
+      stream.push(null)
+    }
   } catch (err) {
     stream.destroy(err as Error)
     throw err

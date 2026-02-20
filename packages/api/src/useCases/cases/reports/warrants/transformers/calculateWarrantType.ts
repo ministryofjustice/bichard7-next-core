@@ -1,4 +1,4 @@
-interface WarrantTypeInputs {
+export interface WarrantTypeInputs {
   firstInstance: boolean
   parentResult: boolean
   tRPR0002Present: boolean

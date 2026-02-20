@@ -1,11 +1,11 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { findNextHearing } from "../extractionUtils/findNextHearing"
+import { findNextHearing } from "../utils/findNextHearing"
 import { aggregateOutcome } from "./aggregateOutcome"
 import { analyzeResult } from "./analyzeResult"
 
 jest.mock("./analyzeResult")
-jest.mock("../extractionUtils/findNextHearing")
+jest.mock("../utils/findNextHearing")
 
 describe("aggregateOutcome", () => {
   const mockResult = (id: string) => ({ ResultClass: id }) as unknown as Result

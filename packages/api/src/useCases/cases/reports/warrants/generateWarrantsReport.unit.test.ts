@@ -69,6 +69,7 @@ describe("generateWarrantsReport", () => {
 
   it("should pass the warrants fetcher to reportStream", async () => {
     ;(userAccess as jest.Mock).mockReturnValue({ [Permission.ViewReports]: true })
+    ;(reportStream as jest.Mock).mockResolvedValue(undefined)
 
     await generateWarrantsReport(mockDatabase, mockUser, query, mockReply)
 

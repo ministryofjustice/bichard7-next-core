@@ -1,4 +1,4 @@
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
@@ -16,7 +16,7 @@ import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
 
-describe("exceptions report", () => {
+describe("warrants report", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
 
@@ -304,9 +304,9 @@ describe("exceptions report", () => {
     expect(reportItem.nextCourtAppearance).toBe("")
     expect(reportItem.nextCourtAppearanceDate).toBe("")
     expect(reportItem.offencesTitle).toBe(
-      "Aid and abet theft\n" +
-        "Sell a tobacco product without a license\n" +
-        "Use a motor vehicle on a road / public place without third party insurance"
+      "Aid and abet theft.\n" +
+        "Sell a tobacco product without a license.\n" +
+        "Use a motor vehicle on a road / public place without third party insurance."
     )
     expect(reportItem.offencesWording).toBe(
       "Aid and abet theft\n" +

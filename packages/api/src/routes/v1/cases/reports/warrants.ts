@@ -1,3 +1,4 @@
+import type { WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
@@ -5,9 +6,8 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import {
   CaseForWarrantsReportDtoSchema,
-  type WarrantsReportQuery,
   WarrantsReportQuerySchema
-} from "@moj-bichard7/common/types/reports/WarrantsReport"
+} from "@moj-bichard7/common/contracts/WarrantsReport"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 import z from "zod"
