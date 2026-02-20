@@ -25,7 +25,8 @@ const verifyRequests = async (bichard: LedsBichard) => {
       const [_, operation] = match
       const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
 
-      expect(serverMock.request).toEqual(localMockRequest)
+      const parsedLocalMockRequests = JSON.parse(JSON.stringify(localMockRequest))
+      expect(serverMock.request?.[0]?.body).toEqual(parsedLocalMockRequests)
     }
   })
 }
