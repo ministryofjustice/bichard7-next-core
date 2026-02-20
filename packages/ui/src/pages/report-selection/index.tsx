@@ -42,6 +42,7 @@ const ReportSelectionPage: NextPage<Props> = ({ user }: Props) => {
           href: `/bichard-ui/ReturnToReportIndex`,
           displaySwitchingSurveyFeedback: true
         }}
+        canUseTriggerAndExceptionQualityAuditing={false}
       >
         <h1>{"Search reports"}</h1>
         <ReportSelectionFilter />
