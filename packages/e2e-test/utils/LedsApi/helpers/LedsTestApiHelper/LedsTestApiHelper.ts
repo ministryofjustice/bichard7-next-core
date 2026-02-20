@@ -1,10 +1,14 @@
+import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import NiamLedsAuthentication from "@moj-bichard7/core/lib/policeGateway/leds/NiamLedsAuthentication/NiamLedsAuthentication"
+import type { AsnQueryRequest } from "@moj-bichard7/core/types/leds/AsnQueryRequest"
+import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type LedsAuthentication from "@moj-bichard7/core/types/leds/LedsAuthentication"
 import type { AxiosError } from "axios"
 import axios, { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
 import https from "https"
 import path from "path"
+import type CourtCase from "../../../../types/LedsTestApi/CourtCase"
 import type { NonEmptyCourtCaseArray } from "../../../../types/LedsTestApi/CourtCase"
 import type { PendingRequest, RequestStatus } from "../../../../types/LedsTestApi/LedsAsyncRequest"
 import type OffenceDetails from "../../../../types/LedsTestApi/OffenceDetails"
@@ -12,9 +16,10 @@ import type OffenceIdAndVersion from "../../../../types/LedsTestApi/OffenceIdAnd
 import type PersonDetails from "../../../../types/LedsTestApi/PersonDetails"
 import { isError } from "../../../isError"
 import type Bichard from "../../../world"
+import mapToAddDisposalResult from "./mapToAddDisposalResult"
 import mapToAddOffenceRequest from "./mapToAddOffenceRequest"
 import mapToCreateArrestedPersonRequest from "./mapToCreateArrestedPersonRequest"
-import mapToDisposalRequest from "./mapToDisposalRequest"
+import mapToCreateDisposalRequest from "./mapToCreateDisposalRequest"
 
 type CreateArrestedPersonResult = {
   arrestSummonsNumber: string
@@ -27,9 +32,17 @@ type AddOffenceResult = {
   chargeId: string
 }
 
-type AddDisposalRequest = {
+type CreateDisposalRequest = {
   courtCaseId: string
 }
+
+// type ArrestSummariesResult = {
+//   arrestSummaries: {
+//     offencesHeadlines: {
+//       offenceId: string
+//     }[]
+//   }[]
+// }
 
 type AddOffenceParams = {
   offence: OffenceDetails
@@ -38,26 +51,49 @@ type AddOffenceParams = {
   checkname: string
 }
 
+type AddDisposalResultsParams = {
+  person: PersonDetails
+  courtCase: CourtCase
+  arrestSummonsNumber: string
+  checkname: string
+}
+
 const ENDPOINT_HEADERS = {
   createArrestedPerson: {
     "X-Leds-Action-Code": "Create Arrested Person",
     "X-Leds-Activity-Code": "Person Create",
-    "X-Leds-Justification": "Create arrested person"
+    "X-Leds-Justification": "Create arrested person",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
   },
   addOffence: {
     "X-Leds-Action-Code": "Create Offence",
     "X-Leds-Activity-Code": "Person Update",
-    "X-Leds-Justification": "Create impending prosecution"
+    "X-Leds-Justification": "Create impending prosecution",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
   },
   offenceLoop: {
     "X-Leds-Action-Code": "View Offence Details",
     "X-Leds-Activity-Code": "Person Enquiry",
-    "X-Leds-Justification": "Offence enquiry loop"
+    "X-Leds-Justification": "Offence enquiry loop",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
+  },
+  arrestSummaries: {
+    "X-Leds-Action-Code": "View Arrest / Summons Summary",
+    "X-Leds-Activity-Code": "Person Enquiry",
+    "X-Leds-Justification": "Arrest summary",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
   },
   disposals: {
     "X-Leds-Action-Code": "Create Disposal",
     "X-Leds-Activity-Code": "Person Update",
-    "X-Leds-Justification": "Create impending prosecution"
+    "X-Leds-Justification": "Create impending prosecution",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
+  },
+  addDisposalResults: {
+    "X-Leds-Action-Code": "Add Disposal Results",
+    "X-Leds-Activity-Code": "Person Update",
+    "X-Leds-Justification": "Add disposal results",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
   }
 }
 
@@ -89,29 +125,112 @@ export default class LedsTestApiHelper {
       arrestedPersonRequest,
       ENDPOINT_HEADERS.createArrestedPerson
     )
+    person.personId = personId
+    this.arrestSummonsNumber = arrestSummonsNumber
 
     for (let courtCaseIndex = 0; courtCaseIndex < courtCases.length; courtCaseIndex++) {
       const courtCase = courtCases[courtCaseIndex]
-      // The first offence of the first court case has already been added when arrested person created
-      const offences = courtCase.offences.slice(courtCaseIndex === 0 ? 1 : 0)
 
-      const offencesResult = await Promise.all(
-        offences
-          .slice(courtCaseIndex === 0 ? 1 : 0)
-          .map((offence) => this.addOffence({ offence, personId, arrestSummonsId, checkname }))
+      const offencesResult: OffenceIdAndVersion[] = await Promise.all(
+        courtCase.offences.map((offence) => this.addOffence({ offence, personId, arrestSummonsId, checkname }))
       )
 
-      const disposalRequest = mapToDisposalRequest(courtCase, offencesResult, person.forceOwnerCode, checkname)
-      await this.request<AddDisposalRequest>(
+      const disposalRequest = mapToCreateDisposalRequest(courtCase, offencesResult, person.forceOwnerCode, checkname)
+      const { courtCaseId } = await this.request<CreateDisposalRequest>(
         `person-services/v1/people/${personId}/disposals`,
         disposalRequest,
         ENDPOINT_HEADERS.disposals
       )
+      courtCase.courtCaseId = courtCaseId
+
+      if (courtCase.offences.every((offence) => offence.results.length === 0)) {
+        continue
+      }
+
+      await this.addDisposalResults({ person, courtCase, arrestSummonsNumber, checkname })
     }
 
-    this.arrestSummonsNumber = arrestSummonsNumber
     return arrestSummonsNumber
   }
+
+  private async addDisposalResults({
+    arrestSummonsNumber,
+    person,
+    courtCase,
+    checkname
+  }: AddDisposalResultsParams): Promise<void> {
+    if (!person.personId || !courtCase.courtCaseId) {
+      throw Error("Person ID and Court case ID must be provided.")
+    }
+
+    const disposal = await this.findDisposalByAsn(arrestSummonsNumber)
+    const request = mapToAddDisposalResult(person, courtCase, disposal, checkname)
+
+    const headers = await this.generateHeaders(ENDPOINT_HEADERS.addDisposalResults)
+    const response = await axios
+      .post(path.join(this.baseUrl, endpoints.addDisposal(person.personId, courtCase.courtCaseId)), request, {
+        headers,
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
+      })
+      .catch((error: AxiosError) => error)
+
+    if (isError(response)) {
+      throw new ApiError(response)
+    }
+  }
+
+  private async findDisposalByAsn(arrestSummonsNumber?: string): Promise<AsnQueryResponse> {
+    const asn = arrestSummonsNumber ?? this.arrestSummonsNumber
+    if (!asn) {
+      throw new Error("Arrest summons number missing. Arrest must be created first.")
+    }
+
+    const request: AsnQueryRequest = {
+      asn,
+      caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
+    }
+    const headers = await this.generateHeaders(ENDPOINT_HEADERS.arrestSummaries)
+    const response = await axios
+      .post<AsnQueryResponse>(path.join(this.baseUrl, endpoints.asnQuery), request, {
+        headers,
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
+      })
+      .catch((error: AxiosError) => error)
+
+    if (isError(response)) {
+      throw new ApiError(response)
+    }
+
+    return response.data
+  }
+
+  // private async fetchFirstOffenceDetails(personId: string, arrestSummonsId: string): Promise<OffenceIdAndVersion> {
+  //   const headers = await this.generateHeaders(ENDPOINT_HEADERS.arrestSummaries)
+  //   const response = await axios
+  //     .get<ArrestSummariesResult>(
+  //       path.join(this.baseUrl, `person-services/v1/people/${personId}/arrest-reports?offset=0&limit=999`),
+  //       {
+  //         headers,
+  //         httpsAgent: new https.Agent({
+  //           rejectUnauthorized: false
+  //         })
+  //       }
+  //     )
+  //     .catch((error: AxiosError) => error)
+
+  //   if (isError(response)) {
+  //     throw new ApiError(response)
+  //   }
+
+  //   const offenceId = response.data.arrestSummaries[0].offencesHeadlines[0].offenceId
+  //   const version = await this.fetchOffenceVersion(personId, arrestSummonsId, offenceId)
+
+  //   return { offenceId, version }
+  // }
 
   private async addOffence({
     offence,
@@ -127,6 +246,7 @@ export default class LedsTestApiHelper {
       ENDPOINT_HEADERS.addOffence
     )
 
+    offence.offenceId = offenceId
     const offenceVersion = await this.fetchOffenceVersion(personId, arrestSummonsId, offenceId)
 
     return { offenceId, version: offenceVersion }
@@ -168,7 +288,6 @@ export default class LedsTestApiHelper {
       "X-Leds-Session-Id": randomUUID(),
       "X-Leds-System-Name": "Bichard7",
       "X-Leds-Application-Datetime": new Date().toISOString(),
-      "X-Leds-Reason": "0 - Transaction log and other audit checks",
       "X-Leds-On-Behalf-Of": "Bichard7",
       "X-Leds-Activity-Flow-Id": randomUUID(),
       "X-Leds-Reference-Id": randomUUID(),

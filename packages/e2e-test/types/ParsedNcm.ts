@@ -1,3 +1,10 @@
+export type ParsedNcmOffenceResult = {
+  ResultCode: number
+  ResultText: string
+  // Additional optional fields
+  DisposalEffectiveDate?: string
+}
+
 export type ParsedNcmOffence = {
   BaseOffenceDetails: {
     OffenceCode: string
@@ -8,11 +15,18 @@ export type ParsedNcmOffence = {
       OffenceStart: {
         OffenceDateStartDate: string
       }
-      OffenceEnd: {
+      OffenceEnd?: {
         OffenceEndDate: string
       }
     }
   }
+  InitiatedDate: string
+  Plea: string
+  ModeOfTrial: string
+  FinalDisposalIndicator: string
+  ConvictionDate: string
+  Finding: string
+  Result: ParsedNcmOffenceResult | ParsedNcmOffenceResult[]
 }
 
 type ParsedNcm = {

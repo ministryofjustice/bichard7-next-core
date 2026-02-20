@@ -2,7 +2,9 @@ import type { NonEmptyOffenceDetailsArray } from "./OffenceDetails"
 import type { Court } from "./Requests/Disposals"
 
 type CourtCase = {
-  convictionDate: string
+  courtCaseId?: string
+  dateOfHearing: string
+  courtHearingLocation: string
   court: Court
   offences: NonEmptyOffenceDetailsArray
 }
