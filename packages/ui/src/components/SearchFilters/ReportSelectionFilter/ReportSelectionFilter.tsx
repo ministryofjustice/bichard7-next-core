@@ -1,6 +1,6 @@
 import { HeaderWrapper } from "components/Card/Card.styles"
 import DateInput from "components/CustomDateInput/DateInput"
-import { Button } from "components/FilterChip.styles"
+
 import {
   BottomActionsBox,
   CalendarsWrapper,
@@ -22,6 +22,7 @@ import {
 import { Select } from "components/Select"
 import { NextPage } from "next"
 import { Props } from "next/script"
+import { Button } from "../../Buttons/Button"
 
 export const ReportSelectionFilter: NextPage<Props> = () => {
   const triggers = "triggers"
