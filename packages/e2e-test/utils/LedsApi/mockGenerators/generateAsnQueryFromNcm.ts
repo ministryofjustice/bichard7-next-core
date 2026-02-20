@@ -86,7 +86,6 @@ export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, o
     id: randomUUID(),
     request,
     response,
-    count: options?.count,
-    receivedRequests: []
+    count: options?.count
   }
 }

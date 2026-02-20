@@ -47,6 +47,6 @@ export const generateUpdate = (code: string, options: LedsMockOptions): LedsMock
     request,
     response,
     count: options?.count,
-    receivedRequests: []
+    expectedRequest: options.expectedRequest
   }
 }
