@@ -1,7 +1,7 @@
-import type CourtCase from "../../../../types/LedsTestApi/CourtCase"
-import type OffenceIdAndVersion from "../../../../types/LedsTestApi/OffenceIdAndVersion"
-import type Disposals from "../../../../types/LedsTestApi/Requests/Disposals"
-import type { Court } from "../../../../types/LedsTestApi/Requests/Disposals"
+import type CourtCase from "../../../../../types/LedsTestApiHelper/CourtCase"
+import type OffenceIdAndVersion from "../../../../../types/LedsTestApiHelper/OffenceIdAndVersion"
+import type Disposals from "../../../../../types/LedsTestApiHelper/Requests/Disposals"
+import type { Court } from "../../../../../types/LedsTestApiHelper/Requests/Disposals"
 
 const mapCourt = (courtCase: CourtCase): Court =>
   courtCase.court.courtIdentityType === "code"
@@ -18,10 +18,10 @@ const mapToCreateDisposalRequest = (
   courtCase: CourtCase,
   linkedOffences: OffenceIdAndVersion[],
   forceCode: string,
-  checkname: string
+  checkName: string
 ): Disposals => ({
   fsCodeMakingChange: forceCode,
-  checkname,
+  checkname: checkName,
   content: {
     linkedOffences: linkedOffences.map((linkedOffence) => ({
       versionToChange: linkedOffence.version,
