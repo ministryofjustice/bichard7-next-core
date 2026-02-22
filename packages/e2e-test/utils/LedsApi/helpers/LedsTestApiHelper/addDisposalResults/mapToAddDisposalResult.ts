@@ -6,8 +6,8 @@ import { toTitleCase } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddD
 import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { Adjudication, Offence, Plea } from "@moj-bichard7/core/types/leds/DisposalRequest"
-import type CourtCase from "../../../../types/LedsTestApi/CourtCase"
-import type PersonDetails from "../../../../types/LedsTestApi/PersonDetails"
+import type CourtCase from "../../../../../types/LedsTestApiHelper/CourtCase"
+import type PersonDetails from "../../../../../types/LedsTestApiHelper/PersonDetails"
 
 const mapToAddDisposalResult = (
   person: PersonDetails,

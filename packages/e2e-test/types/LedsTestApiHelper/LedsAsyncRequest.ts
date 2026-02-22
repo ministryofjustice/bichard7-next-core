@@ -1,5 +1,5 @@
 export type PendingRequest = { requestId: string }
-export type RequestStatus = {
+export type PendingRequestResponse = {
   status: string
   steps: {
     type: string

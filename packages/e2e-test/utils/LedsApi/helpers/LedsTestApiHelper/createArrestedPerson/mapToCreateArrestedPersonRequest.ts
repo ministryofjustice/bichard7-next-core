@@ -1,14 +1,14 @@
-import type OffenceDetails from "../../../../types/LedsTestApi/OffenceDetails"
-import type PersonDetails from "../../../../types/LedsTestApi/PersonDetails"
-import type CreateArrestedPersonRequest from "../../../../types/LedsTestApi/Requests/CreateArrestedPersonRequest"
-import mapToAddOffenceRequest from "./mapToAddOffenceRequest"
+import type OffenceDetails from "../../../../../types/LedsTestApiHelper/OffenceDetails"
+import type PersonDetails from "../../../../../types/LedsTestApiHelper/PersonDetails"
+import type CreateArrestedPersonRequest from "../../../../../types/LedsTestApiHelper/Requests/CreateArrestedPersonRequest"
+import mapToAddOffenceRequest from "../addOffence/mapToAddOffenceRequest"
 
 const mapToCreateArrestedPersonRequest = (
   person: PersonDetails,
   firstOffence: OffenceDetails,
-  checkname: string
+  checkName: string
 ): CreateArrestedPersonRequest => {
-  const offence = mapToAddOffenceRequest(firstOffence, checkname).content
+  const offence = mapToAddOffenceRequest(firstOffence, checkName).content
 
   return {
     person: {
@@ -57,7 +57,7 @@ const mapToCreateArrestedPersonRequest = (
         offence,
         caseDetailText: []
       },
-      checkname
+      checkname: checkName
     }
   }
 }

@@ -1,7 +1,7 @@
-import type OffenceDetails from "../../../../types/LedsTestApi/OffenceDetails"
-import type AddOffenceRequest from "../../../../types/LedsTestApi/Requests/AddOffenceRequest"
+import type OffenceDetails from "../../../../../types/LedsTestApiHelper/OffenceDetails"
+import type AddOffenceRequest from "../../../../../types/LedsTestApiHelper/Requests/AddOffenceRequest"
 
-const mapToAddOffenceRequest = (offence: OffenceDetails, checkname: string): AddOffenceRequest => {
+const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): AddOffenceRequest => {
   return {
     content: {
       committedOnBail: "false",
@@ -24,7 +24,7 @@ const mapToAddOffenceRequest = (offence: OffenceDetails, checkname: string): Add
       }
     },
     changedBy: offence.ownerCode,
-    checkname
+    checkname: checkName
   }
 }
 
