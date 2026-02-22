@@ -7,7 +7,7 @@ import { isError } from "../../../isError"
 import ApiError from "./ApiError"
 import generateHeaders, { ENDPOINT_HEADERS } from "./generateHeaders"
 
-type ArrestSummaries = {
+export type ArrestSummaries = {
   offencesHeadlines: {
     offenceId: string
   }[]
