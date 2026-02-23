@@ -35,7 +35,7 @@ describe("GET /v1/audit/:auditId/cases", () => {
     await app.close()
   })
 
-  it("returns 200 OK when retrieved audit cases", async () => {
+  it("returns 200 OK with retrieved audit cases", async () => {
     const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const cases = await Promise.all([
       createCase(testDatabaseGateway, {

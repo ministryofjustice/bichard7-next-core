@@ -64,13 +64,7 @@ const handler = async ({ database, params, query, reply, user }: HandlerProps) =
     return reply.code(INTERNAL_SERVER_ERROR).send()
   }
 
-  return reply.code(OK).send({
-    cases: [],
-    maxPerPage: 50,
-    pageNum: 1,
-    returnCases: 0,
-    totalCases: 0
-  })
+  return reply.code(OK).send(result)
 }
 
 const route = async (fastify: FastifyInstance) => {

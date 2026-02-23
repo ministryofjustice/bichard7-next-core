@@ -1,4 +1,5 @@
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -7,7 +8,8 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
-import { getAudit } from "../../services/db/audit/getAudit"
+import { fetchAudit } from "../../services/db/audit/fetchAudit"
+import { fetchAuditCases } from "../../services/db/audit/fetchAuditCases"
 import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 
@@ -16,21 +18,28 @@ export async function getAuditCases(
   auditId: number,
   auditCasesQuery: AuditCasesQuery,
   user: User
-): PromiseResult<void> {
+): PromiseResult<AuditCasesMetadata> {
   if (!userAccess(user)[Permission.CanAuditCases]) {
     return new NotAllowedError()
   }
 
   return await database
-    .transaction<Error | void>(async (tx) => {
-      const auditResult = await getAudit(tx, auditId, user)
-      if (isError(auditResult)) {
-        throw auditResult
+    .transaction<AuditCasesMetadata | Error>(async (tx) => {
+      const audit = await fetchAudit(tx, auditId, user)
+      if (isError(audit)) {
+        throw audit
       }
 
-      if (!auditResult) {
+      if (!audit) {
         throw new NotFoundError()
       }
+
+      const auditCases = await fetchAuditCases(tx, auditId, auditCasesQuery, user)
+      if (isError(auditCases)) {
+        throw auditCases
+      }
+
+      return auditCases
     })
     .catch((err) => err)
 }
