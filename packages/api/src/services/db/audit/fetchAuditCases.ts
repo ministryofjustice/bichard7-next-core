@@ -1,4 +1,5 @@
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import type { CaseOrder, CaseOrderBy } from "@moj-bichard7/common/contracts/CaseOrderingQuery"
 import type { AuditCase, AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
@@ -66,7 +67,7 @@ export const fetchAuditCases = async (
     WHERE
       ac.audit_id = ${auditId}
       AND (${organisationUnitSql(database, user)})
-    ORDER BY el.error_id ASC
+    ORDER BY ${orderSql(database, order, orderBy)}
     LIMIT ${maxPerPage}
     OFFSET ${offset}
   `.catch((error: Error) => error)
@@ -94,5 +95,23 @@ export const fetchAuditCases = async (
     pageNum,
     returnCases: results.length,
     totalCases: Number(summary[0].count)
+  }
+}
+
+function orderSql(database: DatabaseConnection, order: CaseOrder, orderBy: CaseOrderBy | undefined) {
+  const orderSql = order === "desc" ? database.connection`DESC` : database.connection`ASC`
+  switch (orderBy) {
+    case "courtDate":
+      return database.connection`el.court_date ${orderSql}`
+    case "courtName":
+      return database.connection`el.court_name ${orderSql}`
+    case "defendantName":
+      return database.connection`el.defendant_name ${orderSql}`
+    case "messageReceivedTimestamp":
+      return database.connection`el.msg_received_ts ${orderSql}`
+    case "ptiurn":
+      return database.connection`el.ptiurn ${orderSql}`
+    default:
+      return database.connection`el.error_id ASC`
   }
 }
