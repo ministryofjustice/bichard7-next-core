@@ -8,11 +8,11 @@ import type DatabaseGateway from "../../../../types/DatabaseGateway"
 import { domesticViolenceReport } from "../../../../services/db/cases/reports/domesticViolence"
 import { createReportHandler } from "../createReportHandler"
 
-export const generateDomesticViolenceReport = (
+export const generateDomesticViolenceReport = async (
   database: DatabaseGateway,
   user: User,
   query: DomesticViolenceReportQuery,
   reply: FastifyReply
 ): PromiseResult<void> => {
-  return createReportHandler(domesticViolenceReport)(database, user, query, reply)
+  return await createReportHandler(domesticViolenceReport)(database, user, query, reply)
 }

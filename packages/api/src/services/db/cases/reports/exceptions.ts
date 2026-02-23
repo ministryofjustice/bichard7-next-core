@@ -15,12 +15,11 @@ import type { UserExceptionReportRow } from "../../../../types/reports/Exception
 import { processUsers } from "../../../../useCases/cases/reports/exceptions/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
-export const exceptionsReport = async (
+export async function* exceptionsReport(
   database: DatabaseConnection,
   user: User,
-  filters: ExceptionReportQuery,
-  processChunk: (rows: ExceptionReportDto[]) => Promise<void>
-): Promise<void> => {
+  filters: ExceptionReportQuery
+): AsyncGenerator<ExceptionReportDto[]> {
   const createQueryPart = (type: ExceptionReportType) => {
     const isException = type === "Exceptions"
     const resolvedByCol = isException ? "error_resolved_by" : "trigger_resolved_by"
@@ -98,9 +97,10 @@ export const exceptionsReport = async (
   `
 
   try {
-    await fullQuery.cursor(50, async (userRows) => {
-      await processChunk(processUsers(userRows))
-    })
+    const cursor = fullQuery.cursor(25)
+    for await (const userRows of cursor) {
+      yield processUsers(userRows)
+    }
   } catch (err) {
     throw new Error(`Error fetching report: ${(err as Error).message}`)
   }

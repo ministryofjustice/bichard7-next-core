@@ -8,17 +8,11 @@ import { OK } from "http-status"
 import { Readable } from "node:stream"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import { type DatabaseConnection } from "../../../types/DatabaseGateway"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
-import { reportStream } from "./reportStream"
 
-type ReportStrategy<TQuery, TDto> = (
-  database: DatabaseConnection,
-  user: User,
-  query: TQuery,
-  processChunk: (rows: TDto[]) => Promise<void>
-) => Promise<void>
+type ReportStrategy<TQuery, TDto> = (database: DatabaseConnection, user: User, query: TQuery) => AsyncGenerator<TDto[]>
 
 export const createReportHandler = <TQuery, TDto>(reportStrategy: ReportStrategy<TQuery, TDto>) => {
   return async (database: DatabaseGateway, user: User, query: TQuery, reply: FastifyReply): PromiseResult<void> => {
@@ -26,12 +20,25 @@ export const createReportHandler = <TQuery, TDto>(reportStrategy: ReportStrategy
       return new NotAllowedError()
     }
 
-    const stream = new Readable({ read() {} })
+    const jsonStreamGenerator = async function* () {
+      yield "["
+      let isFirst = true
 
-    reply.code(OK).type("application/json").send(stream)
+      const dataStream = reportStrategy(database.readonly, user, query)
 
-    return await reportStream(stream, (processBatch) => {
-      return reportStrategy(database.readonly, user, query, processBatch)
-    }).catch((error) => error)
+      for await (const rows of dataStream) {
+        for (const row of rows) {
+          const chunk = isFirst ? JSON.stringify(row) : `,${JSON.stringify(row)}`
+          yield chunk
+          isFirst = false
+        }
+      }
+
+      yield "]"
+    }
+
+    const stream = Readable.from(jsonStreamGenerator())
+
+    return reply.code(OK).type("application/json").send(stream)
   }
 }

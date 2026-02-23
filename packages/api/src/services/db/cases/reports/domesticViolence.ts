@@ -15,12 +15,11 @@ import { organisationUnitSql } from "../../organisationUnitSql"
 
 const DV_TRIGGERS = [TriggerCode.TRPR0023, TriggerCode.TRPR0024]
 
-export const domesticViolenceReport = async (
+export async function* domesticViolenceReport(
   database: DatabaseConnection,
   user: User,
-  filters: DomesticViolenceReportQuery,
-  processChunk: (rows: CaseForDomesticViolenceReportDto[]) => Promise<void>
-): Promise<void> => {
+  filters: DomesticViolenceReportQuery
+): AsyncGenerator<CaseForDomesticViolenceReportDto[]> {
   const query = database.connection<CaseRowForDomesticViolenceReport[]>`
     SELECT 
       el.error_id,
@@ -53,9 +52,10 @@ export const domesticViolenceReport = async (
   `
 
   try {
-    await query.cursor(100, async (rows: CaseRowForDomesticViolenceReport[]) => {
-      await processChunk(processCasesForDomesticViolenceReport(rows))
-    })
+    const cursor = query.cursor(100)
+    for await (const rows of cursor) {
+      yield processCasesForDomesticViolenceReport(rows)
+    }
   } catch (err) {
     throw new Error(`Error fetching Domestic Violence report: ${(err as Error).message}`)
   }

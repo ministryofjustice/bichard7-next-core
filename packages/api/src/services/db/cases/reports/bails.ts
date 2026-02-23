@@ -12,12 +12,11 @@ import { organisationUnitSql } from "../../organisationUnitSql"
 
 const BAILS_TRIGGERS = [TriggerCode.TRPR0010]
 
-export const bailsReport = async (
+export async function* bailsReport(
   database: DatabaseConnection,
   user: User,
-  filters: BailsReportQuery,
-  processChunk: (rows: CaseForBailsReportDto[]) => Promise<void>
-): Promise<void> => {
+  filters: BailsReportQuery
+): AsyncGenerator<CaseForBailsReportDto[]> {
   const query = database.connection<CaseRowForBailsReport[]>`
     SELECT 
       el.error_id,
@@ -56,9 +55,10 @@ export const bailsReport = async (
   `
 
   try {
-    await query.cursor(100, async (rows: CaseRowForBailsReport[]) => {
-      await processChunk(processCasesForBailsReport(rows))
-    })
+    const cursor = query.cursor(100)
+    for await (const rows of cursor) {
+      yield processCasesForBailsReport(rows)
+    }
   } catch (err) {
     throw new Error(`Error fetching report: ${(err as Error).message}`)
   }
