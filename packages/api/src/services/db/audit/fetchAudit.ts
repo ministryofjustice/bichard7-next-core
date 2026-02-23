@@ -7,7 +7,7 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
 
-export const getAudit = async (
+export const fetchAudit = async (
   database: WritableDatabaseConnection,
   auditId: number,
   { username }: User

@@ -5,12 +5,12 @@ import { format, subWeeks } from "date-fns"
 
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { getAudit } from "./getAudit"
+import { fetchAudit } from "./fetchAudit"
 import { insertAudit } from "./insertAudit"
 
 const testDatabaseGateway = new End2EndPostgres()
 
-describe("getAudit", () => {
+describe("fetchAudit", () => {
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
   })
@@ -30,7 +30,7 @@ describe("getAudit", () => {
     )
     expect(isError(audit)).toBe(false)
 
-    const retrievedAudit = await getAudit(testDatabaseGateway.writable, (audit as AuditDto).auditId, user)
+    const retrievedAudit = await fetchAudit(testDatabaseGateway.writable, (audit as AuditDto).auditId, user)
 
     expect(isError(retrievedAudit)).toBe(false)
     expect((retrievedAudit as AuditDto).auditId).toBe((audit as AuditDto).auditId)
@@ -51,7 +51,7 @@ describe("getAudit", () => {
     )
     expect(isError(audit)).toBe(false)
 
-    const retrievedAudit = await getAudit(testDatabaseGateway.writable, (audit as AuditDto).auditId, {
+    const retrievedAudit = await fetchAudit(testDatabaseGateway.writable, (audit as AuditDto).auditId, {
       ...user,
       username: "another_user"
     })
