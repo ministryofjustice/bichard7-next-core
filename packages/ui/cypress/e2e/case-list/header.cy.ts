@@ -45,7 +45,7 @@ describe("Home", () => {
         loginAndVisit("Supervisor")
 
         cy.contains("nav a", "Case list").should("have.attr", "href", "/bichard/")
-        cy.contains("nav a", "Reports").should("have.attr", "href", "/bichard-ui/report-selection")
+        cy.contains("nav a", "Reports").should("have.attr", "href", "/bichard/report-selection")
         cy.contains("nav a", "Audit").should("have.attr", "href", "/bichard/audit/search")
         cy.contains("nav a", "User management").should("not.exist")
         cy.contains("nav a", "Help").should("have.attr", "href", "/help/")
