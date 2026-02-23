@@ -15,6 +15,7 @@ import { isError } from "types/Result"
 import getDataSource from "services/getDataSource"
 import Layout from "components/Layout"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
+import { HeaderContainer, HeaderRow } from "components/Header/Header.styles"
 import redirectTo from "utils/redirectTo"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 import AuditSearch from "features/AuditSearch/AuditSearch"
@@ -74,6 +75,13 @@ const SearchPage: NextPage<Props> = (props) => {
             canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
             bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
           >
+            <HeaderContainer id="header-container">
+              <HeaderRow>
+                <h1 className="govuk-heading-l" aria-label="Audit case search">
+                  {"Audit case search"}
+                </h1>
+              </HeaderRow>
+            </HeaderContainer>
             <AuditSearch
               resolvers={[
                 { username: "usera", forenames: "Name", surname: "A" },
