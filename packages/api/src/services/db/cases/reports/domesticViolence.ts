@@ -5,6 +5,7 @@ import type {
 import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { endOfDay, startOfDay } from "date-fns"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 import type { CaseRowForDomesticViolenceReport } from "../../../../types/reports/DomesticViolence"
@@ -35,7 +36,7 @@ export const domesticViolenceReport = async (
     FROM br7own.error_list el
     INNER JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
     WHERE 
-      el.msg_received_ts BETWEEN ${filters.fromDate} AND ${filters.toDate}
+      el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
       AND elt.trigger_code = ANY (${DV_TRIGGERS})
       AND (${organisationUnitSql(database, user)})
     GROUP BY
