@@ -2,6 +2,7 @@ import expect from "expect"
 import type { LedsBichard } from "../../types/LedsMock"
 import type { Operation } from "../converters/convertPncToLeds"
 import convertPncToLeds from "../converters/convertPncToLeds"
+import { sanitiseLocalMockRequest, sanitiseServerMockRequest } from "../sanitiseMockRequest"
 
 const verifyRequests = async (bichard: LedsBichard) => {
   const serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
@@ -24,9 +25,9 @@ const verifyRequests = async (bichard: LedsBichard) => {
     if (match) {
       const [_, operation] = match
       const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
+      const serverMockRequest = serverMock.request?.[0]?.body
 
-      const parsedLocalMockRequests = JSON.parse(JSON.stringify(localMockRequest))
-      expect(serverMock.request?.[0]?.body).toEqual(parsedLocalMockRequests)
+      expect(sanitiseServerMockRequest(serverMockRequest)).toEqual(sanitiseLocalMockRequest(localMockRequest))
     }
   })
 }

@@ -20,7 +20,7 @@ type PncToLedsResultMap = {
   "Subsequently Varied": SubsequentDisposalResultsRequest
 }
 
-type ConvertPncToLedsResult<T extends Operation> = PncToLedsResultMap[T]
+export type ConvertPncToLedsResult<T extends Operation> = PncToLedsResultMap[T]
 
 const handleSubsequentDisposal = (pncXml: string): SubsequentDisposalResultsRequest => {
   const pncJson = convertPncXmlToJson<PncSubsequentDisposalJson>(pncXml)

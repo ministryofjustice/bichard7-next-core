@@ -62,13 +62,14 @@ const mapOffences = (
     const offenceTic = adjudication?.numberOffencesTakenIntoAccount
       ? Number(adjudication?.numberOffencesTakenIntoAccount)
       : undefined
+    const dateOfSentence = adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined
 
     return {
       courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
       cjsOffenceCode: ordinary?.offenceReason ?? "",
       plea,
       adjudication: adjudicationResult,
-      dateOfSentence: adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined,
+      ...(dateOfSentence && { dateOfSentence }),
       offenceTic,
       disposalResults,
       offenceId
