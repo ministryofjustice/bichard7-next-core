@@ -27,7 +27,7 @@ describe("getAuditCases", () => {
   it("runs the transaction if the user is a supervisor", async () => {
     mockDatabase.transaction.mockResolvedValue({ cases: [] })
 
-    const result = await getAuditCases(mockDatabase, auditCasesQuery, {
+    const result = await getAuditCases(mockDatabase, 1, auditCasesQuery, {
       groups: [UserGroup.Supervisor]
     } as User)
 
@@ -36,7 +36,7 @@ describe("getAuditCases", () => {
   })
 
   it("returns an error due to lack of user permissions", async () => {
-    const result = await getAuditCases(mockDatabase, auditCasesQuery, {
+    const result = await getAuditCases(mockDatabase, 1, auditCasesQuery, {
       groups: [UserGroup.GeneralHandler]
     } as User)
 
@@ -46,7 +46,7 @@ describe("getAuditCases", () => {
   it("returns an error if the transaction returns an error", async () => {
     mockDatabase.transaction.mockRejectedValue(new Error("Test error message"))
 
-    const result = await getAuditCases(mockDatabase, auditCasesQuery, {
+    const result = await getAuditCases(mockDatabase, 1, auditCasesQuery, {
       groups: [UserGroup.Supervisor]
     } as User)
 
