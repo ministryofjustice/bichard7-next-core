@@ -2,7 +2,7 @@ import expect from "expect"
 import type { LedsBichard } from "../../types/LedsMock"
 import type { Operation } from "../converters/convertPncToLeds"
 import convertPncToLeds from "../converters/convertPncToLeds"
-import { sanitiseLocalMockRequest, sanitiseServerMockRequest } from "../sanitiseMockRequest"
+import { mormaliseForComparison } from "../mormaliseForComparison"
 
 const verifyRequests = async (bichard: LedsBichard) => {
   const serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
@@ -27,7 +27,7 @@ const verifyRequests = async (bichard: LedsBichard) => {
       const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
       const serverMockRequest = serverMock.request?.[0]?.body
 
-      expect(sanitiseServerMockRequest(serverMockRequest)).toEqual(sanitiseLocalMockRequest(localMockRequest))
+      expect(mormaliseForComparison(serverMockRequest)).toEqual(mormaliseForComparison(localMockRequest))
     }
   })
 }
