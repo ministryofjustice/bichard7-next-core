@@ -1,9 +1,14 @@
+import type { AuditDto } from "@moj-bichard7/common/types/Audit"
+
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { format, subWeeks } from "date-fns"
 import { type FastifyInstance } from "fastify"
 import { BAD_REQUEST, FORBIDDEN, NOT_FOUND, OK } from "http-status"
 
 import build from "../../../../app"
+import { insertAudit } from "../../../../services/db/audit/insertAudit"
 import AuditLogDynamoGateway from "../../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
@@ -29,12 +34,24 @@ describe("GET /v1/audit/:auditId/cases", () => {
   })
 
   it("returns 200 OK when retrieved audit cases", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const audit = await insertAudit(
+      testDatabaseGateway.writable,
+      {
+        fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        includedTypes: ["Triggers", "Exceptions"],
+        resolvedByUsers: ["user1"],
+        toDate: format(new Date(), "yyyy-MM-dd"),
+        volumeOfCases: 20
+      },
+      user
+    )
+    expect(isError(audit)).toBe(false)
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "GET",
-      url: V1.AuditCases.replace(":auditId", "1")
+      url: V1.AuditCases.replace(":auditId", (audit as AuditDto).auditId.toString())
     })
 
     expect(response.statusCode).toBe(OK)
@@ -89,6 +106,30 @@ describe("GET /v1/audit/:auditId/cases", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "GET",
       url: V1.AuditCases.replace(":auditId", "1")
+    })
+
+    expect(response.statusCode).toBe(NOT_FOUND)
+  })
+
+  it("returns 404 when audit exists but for another user", async () => {
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const audit = await insertAudit(
+      testDatabaseGateway.writable,
+      {
+        fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        includedTypes: ["Triggers", "Exceptions"],
+        resolvedByUsers: ["user1"],
+        toDate: format(new Date(), "yyyy-MM-dd"),
+        volumeOfCases: 20
+      },
+      { ...user, username: "another_user" }
+    )
+    expect(isError(audit)).toBe(false)
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "GET",
+      url: V1.AuditCases.replace(":auditId", (audit as AuditDto).auditId.toString())
     })
 
     expect(response.statusCode).toBe(NOT_FOUND)
