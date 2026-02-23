@@ -32,7 +32,7 @@ export const ReportSelectionFilter: NextPage<Props> = () => {
     <HeaderWrapper style={{ paddingTop: "20px", paddingBottom: "20px" }}>
       <fieldset className="govuk-fieldset">
         <FieldsWrapper>
-          <ReportsSectionWrapper>
+          <ReportsSectionWrapper id={"report-section"}>
             <SectionTitle>
               <label>{"Reports"}</label>
             </SectionTitle>
@@ -42,10 +42,10 @@ export const ReportSelectionFilter: NextPage<Props> = () => {
               </SelectReportsLabelWrapper>
             </SecondarySectionTitle>
             <SelectReportsWrapper>
-              <Select placeholder={"Resolved cases"} name={"resolved-cases"} style={{ width: "100%" }}></Select>
+              <Select placeholder={"Resolved cases"} name={"select-case-type"} style={{ width: "100%" }}></Select>
             </SelectReportsWrapper>
           </ReportsSectionWrapper>
-          <DateRangeSectionWrapper>
+          <DateRangeSectionWrapper id={"date-range-section"}>
             <SectionTitle>
               <label>{"Date range"}</label>
             </SectionTitle>
@@ -76,7 +76,7 @@ export const ReportSelectionFilter: NextPage<Props> = () => {
               </DateToWrapper>
             </CalendarsWrapper>
           </DateRangeSectionWrapper>
-          <IncludeSectionWrapper>
+          <IncludeSectionWrapper id={"include-section"}>
             <SectionTitle>
               <label>{"Include"}</label>
             </SectionTitle>
