@@ -1,15 +1,16 @@
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
-import type { AuditCase, AuditCaseDto, AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
+import type { AuditCase, AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditCaseToDto } from "../../../useCases/dto/convertAuditCaseToDto"
+import { organisationUnitSql } from "../organisationUnitSql"
 
 export const fetchAuditCases = async (
-  database: WritableDatabaseConnection,
+  database: DatabaseConnection,
   auditId: number,
   { maxPerPage, order, orderBy, pageNum }: AuditCasesQuery,
   user: User
@@ -63,6 +64,7 @@ export const fetchAuditCases = async (
       INNER JOIN br7own.error_list AS el ON el.error_id = ac.error_id
     WHERE
       ac.audit_id = ${auditId}
+      AND (${organisationUnitSql(database, user)})
   `.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get audit case records")
@@ -76,6 +78,7 @@ export const fetchAuditCases = async (
       INNER JOIN br7own.error_list AS el ON el.error_id = ac.error_id
     WHERE
       ac.audit_id = ${auditId}
+      AND (${organisationUnitSql(database, user)})
   `.catch((error: Error) => error)
   if (isError(summary)) {
     return new Error("Failed to get count of audit case records")

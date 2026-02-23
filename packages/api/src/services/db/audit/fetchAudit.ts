@@ -3,12 +3,12 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
 
 export const fetchAudit = async (
-  database: WritableDatabaseConnection,
+  database: DatabaseConnection,
   auditId: number,
   { username }: User
 ): PromiseResult<AuditDto | null> => {
