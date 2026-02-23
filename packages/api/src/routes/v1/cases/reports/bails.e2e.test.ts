@@ -1,15 +1,15 @@
-import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { streamToJson } from "../../../../tests/helpers/streamToJson"
+import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 
 const defaultRequest = (jwt: string) => {
@@ -22,8 +22,8 @@ const defaultRequest = (jwt: string) => {
   }
 }
 
-describe("exceptions report e2e", () => {
-  const endpoint = V1.CasesReportsExceptions
+describe("bails report e2e", () => {
+  const endpoint = V1.CasesReportsBails
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
@@ -41,14 +41,15 @@ describe("exceptions report e2e", () => {
     await helper.postgres.close()
   })
 
-  it("gets exceptions that are resolved", async () => {
+  it("gets bails that are the correct code", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
-
-    await createCases(helper.postgres, 3, {
-      0: { errorResolvedAt: subDays(new Date(), 1), errorStatus: ResolutionStatusNumber.Resolved },
-      1: { triggerResolvedAt: subDays(new Date(), 1), triggerStatus: ResolutionStatusNumber.Resolved },
-      2: { errorStatus: ResolutionStatusNumber.Submitted }
+    const [caseObj] = await createCases(helper.postgres, 3, {
+      0: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) },
+      1: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) },
+      2: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) }
     })
+
+    await createTriggers(helper.postgres, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0010 }])
 
     const query = new URLSearchParams()
     query.append("fromDate", subDays(new Date(), 7).toISOString())
@@ -60,8 +61,8 @@ describe("exceptions report e2e", () => {
 
     expect(response.status).toBe(200)
 
-    const [json] = (await streamToJson(response)) as ExceptionReportDto[]
+    const json = await streamToJson(response)
 
-    expect(json.cases).toHaveLength(2)
+    expect(json).toHaveLength(1)
   })
 })

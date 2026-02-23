@@ -1,14 +1,13 @@
-import type {
-  CaseForExceptionReport,
-  CaseRowForExceptionReport
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { sortBy } from "lodash"
 
+import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
+
 import { convertNoteToDto } from "../convertNoteToDto"
 
-export const caseToExceptionsReportDto = (caseRow: CaseRowForExceptionReport): CaseForExceptionReport => {
+export const caseToExceptionsReportDto = (caseRow: CaseRowForExceptionReport): CaseForExceptionReportDto => {
   return {
     asn: getShortAsn(caseRow.asn),
     courtName: caseRow.court_name,

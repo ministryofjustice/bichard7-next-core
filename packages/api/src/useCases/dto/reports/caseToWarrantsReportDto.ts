@@ -1,22 +1,19 @@
-import type {
-  CaseForWarrantsReportDto,
-  CaseRowForWarrantsReport
-} from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 
 import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { differenceInCalendarDays } from "date-fns"
 
-import {
-  dateOfBirth,
-  defendantAddress,
-  formatDate,
-  gender,
-  hearingTime,
-  pncIdentifier
-} from "../../cases/reports/warrants/extractionUtils"
+import type { CaseRowForWarrantsReport } from "../../../types/reports/Warrants"
+
+import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
+import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
+import { formatDate } from "../../cases/reports/utils/formatDate"
+import { hearingTime } from "../../cases/reports/utils/hearingTime"
 import { hearingOutcomeDetails } from "../../cases/reports/warrants/transformers/hearingOutcomeDetails"
+import { gender } from "../../cases/reports/warrants/utils/gender"
+import { pncIdentifier } from "../../cases/reports/warrants/utils/pncIdentifier"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
 
 export const caseToWarrantsReportDto = (caseRow: CaseRowForWarrantsReport): CaseForWarrantsReportDto => {

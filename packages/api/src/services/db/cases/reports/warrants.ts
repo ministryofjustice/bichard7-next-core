@@ -1,36 +1,31 @@
-import type {
-  CaseForWarrantsReportDto,
-  CaseRowForWarrantsReport
-} from "@moj-bichard7/common/types/reports/WarrantsReport"
+import type { WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { endOfDay, startOfDay } from "date-fns"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { CaseRowForWarrantsReport } from "../../../../types/reports/Warrants"
 
 import { processCases } from "../../../../useCases/cases/reports/warrants/processCases"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
-type WarrantReportQuery = {
-  fromDate: Date
-  toDate: Date
-}
-
 const WARRANT_TRIGGER_CODES = [TriggerCode.TRPR0002, TriggerCode.TRPR0012] as const
 
-export const warrants = async (
+export async function* warrants(
   database: DatabaseConnection,
   user: User,
-  filters: WarrantReportQuery,
-  processChunk: (rows: CaseForWarrantsReportDto[]) => Promise<void>
-) => {
+  filters: WarrantsReportQuery
+): AsyncGenerator<CaseForWarrantsReportDto[]> {
   const warrantQuery = database.connection<CaseRowForWarrantsReport[]>`
     WITH filtered_ids AS (
       SELECT
         el.error_id
       FROM br7own.error_list el
-             JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
-      WHERE el.msg_received_ts BETWEEN ${filters.fromDate} AND ${filters.toDate}
+      JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
+      WHERE 
+        el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
         AND (${organisationUnitSql(database, user)})
         AND elt.trigger_code = ANY (${WARRANT_TRIGGER_CODES})
       GROUP BY el.error_id
@@ -73,9 +68,10 @@ export const warrants = async (
   `
 
   try {
-    await warrantQuery.cursor(50, async (rows) => {
-      await processChunk(processCases(rows))
-    })
+    const cursor = warrantQuery.cursor(100)
+    for await (const rows of cursor) {
+      yield processCases(rows)
+    }
   } catch (err) {
     throw new Error(`Error fetching report: ${(err as Error).message}`)
   }
