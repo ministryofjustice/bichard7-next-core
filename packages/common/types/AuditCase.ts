@@ -2,7 +2,7 @@ import z from "zod"
 
 import { NoteDtoSchema, NoteRowSchema } from "./Note"
 
-export const AuditCaseRowSchema = z.object({
+export const AuditCaseSchema = z.object({
   asn: z.string().max(21).nullable(),
   audit_case_id: z.number(),
   audit_id: z.number(),
@@ -18,24 +18,6 @@ export const AuditCaseRowSchema = z.object({
   resolution_ts: z.date().nullable(),
   trigger_quality_checked: z.number().nullable(),
   trigger_status: z.number().nullable()
-})
-
-export const AuditCaseSchema = z.object({
-  asn: z.string().nullable(),
-  auditCaseId: z.number(),
-  auditId: z.number(),
-  courtDate: z.date().nullable(),
-  courtName: z.string().nullable(),
-  defendantName: z.string().nullable(),
-  errorId: z.number(),
-  errorQualityChecked: z.number().nullable(),
-  messageReceivedTimestamp: z.date().nullable(),
-  noteCount: z.number().optional(),
-  notes: z.array(NoteDtoSchema),
-  ptiurn: z.string().nullable(),
-  resolutionTimestamp: z.date().nullable(),
-  triggerQualityChecked: z.number().nullable(),
-  triggerStatus: z.string().nullable()
 })
 
 export const AuditCaseDtoSchema = z.object({
@@ -64,5 +46,4 @@ export const AuditCasesMetadataSchema = z.object({
 
 export type AuditCase = z.infer<typeof AuditCaseSchema>
 export type AuditCaseDto = z.infer<typeof AuditCaseDtoSchema>
-export type AuditCaseRow = z.infer<typeof AuditCaseRowSchema>
 export type AuditCasesMetadata = z.infer<typeof AuditCasesMetadataSchema>
