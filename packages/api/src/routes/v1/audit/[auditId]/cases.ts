@@ -5,7 +5,8 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { type AuditCasesQuery, AuditCasesQuerySchema } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import { AuditCasesMetadataSchema } from "@moj-bichard7/common/types/AuditCase"
-import { OK } from "http-status"
+import { isError } from "@moj-bichard7/common/types/Result"
+import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
 import z from "zod"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
@@ -20,6 +21,8 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
+import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
+import { getAuditCases } from "../../../../useCases/audit/getAuditCases"
 
 type HandlerProps = {
   database: DatabaseGateway
@@ -43,17 +46,17 @@ const schema = {
   tags: ["Audit V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ reply }: HandlerProps) => {
-  // const auditResult = await createAudit(database.writable, body, user)
-  // if (isError(auditResult)) {
-  //   reply.log.error(auditResult)
-  //
-  //   if (auditResult instanceof NotAllowedError) {
-  //     return reply.code(FORBIDDEN).send()
-  //   }
-  //
-  //   return reply.code(INTERNAL_SERVER_ERROR).send()
-  // }
+const handler = async ({ database, query, reply, user }: HandlerProps) => {
+  const result = await getAuditCases(database.writable, query, user)
+  if (isError(result)) {
+    reply.log.error(result)
+
+    if (result instanceof NotAllowedError) {
+      return reply.code(FORBIDDEN).send()
+    }
+
+    return reply.code(INTERNAL_SERVER_ERROR).send()
+  }
 
   return reply.code(OK).send({
     cases: [],
