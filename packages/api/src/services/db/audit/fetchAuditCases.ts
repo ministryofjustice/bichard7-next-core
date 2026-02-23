@@ -16,6 +16,7 @@ export const fetchAuditCases = async (
   user: User
 ): PromiseResult<AuditCasesMetadata> => {
   const sql = database.connection
+  const offset = (pageNum - 1) * maxPerPage
 
   const results = await sql<AuditCase[]>`
     SELECT
@@ -65,6 +66,9 @@ export const fetchAuditCases = async (
     WHERE
       ac.audit_id = ${auditId}
       AND (${organisationUnitSql(database, user)})
+    ORDER BY el.error_id ASC
+    LIMIT ${maxPerPage}
+    OFFSET ${offset}
   `.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get audit case records")

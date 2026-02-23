@@ -146,4 +146,83 @@ describe("fetchAuditCases", () => {
       })
     )
   })
+
+  it("Handles pagination", async () => {
+    const user = await createUser(testDatabaseGateway)
+    const cases = await Promise.all([
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 1,
+        orgForPoliceFilter: user.visibleForces[0]
+      }),
+      createCase(testDatabaseGateway, {
+        courtCode: user.visibleCourts[0],
+        errorId: 2,
+        orgForPoliceFilter: user.visibleForces[0]
+      })
+    ])
+    const audit = await insertAudit(
+      testDatabaseGateway.writable,
+      {
+        fromDate: format(subWeeks(new Date(), 1), "yyyy-MM-dd"),
+        includedTypes: ["Triggers", "Exceptions"],
+        resolvedByUsers: ["user1"],
+        toDate: format(new Date(), "yyyy-MM-dd"),
+        volumeOfCases: 20
+      },
+      user
+    )
+    expect(isError(audit)).toBe(false)
+
+    const auditCases = await insertAuditCases(
+      testDatabaseGateway.writable,
+      (audit as AuditDto).auditId,
+      cases.map((c) => c.errorId)
+    )
+    expect(isError(auditCases)).toBe(false)
+
+    const retrievedAuditCasesP1 = await fetchAuditCases(
+      testDatabaseGateway.readonly,
+      (audit as AuditDto).auditId,
+      { maxPerPage: 1, order: "asc", pageNum: 1 },
+      user
+    )
+
+    expect(isError(retrievedAuditCasesP1)).toBe(false)
+    expect(retrievedAuditCasesP1 as AuditCasesMetadata).toEqual(
+      expect.objectContaining({
+        cases: expect.arrayContaining([
+          expect.objectContaining({
+            errorId: 1
+          })
+        ]),
+        maxPerPage: 1,
+        pageNum: 1,
+        returnCases: 1,
+        totalCases: 2
+      })
+    )
+
+    const retrievedAuditCasesP2 = await fetchAuditCases(
+      testDatabaseGateway.readonly,
+      (audit as AuditDto).auditId,
+      { maxPerPage: 1, order: "asc", pageNum: 2 },
+      user
+    )
+
+    expect(isError(retrievedAuditCasesP2)).toBe(false)
+    expect(retrievedAuditCasesP2 as AuditCasesMetadata).toEqual(
+      expect.objectContaining({
+        cases: expect.arrayContaining([
+          expect.objectContaining({
+            errorId: 2
+          })
+        ]),
+        maxPerPage: 1,
+        pageNum: 2,
+        returnCases: 1,
+        totalCases: 2
+      })
+    )
+  })
 })
