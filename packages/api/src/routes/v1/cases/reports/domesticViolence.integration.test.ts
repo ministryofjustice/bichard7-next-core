@@ -1,4 +1,4 @@
-import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/contracts/DomesticViolenceReport"
+import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
@@ -39,7 +39,7 @@ describe("domestic violence report", () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: V1.CasesReportsDomesticViolence
     })
@@ -57,7 +57,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -75,7 +75,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -83,7 +83,7 @@ describe("domestic violence report", () => {
     expect(statusCode).toBe(FORBIDDEN)
   })
 
-  it("fails if the fromDate is before the toDate", async () => {
+  it("fails if the fromDate is after the toDate", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const query = new URLSearchParams()
@@ -93,7 +93,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -116,7 +116,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -141,7 +141,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -166,7 +166,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -196,7 +196,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -229,7 +229,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -265,7 +265,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })
@@ -298,7 +298,7 @@ describe("domestic violence report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
     })

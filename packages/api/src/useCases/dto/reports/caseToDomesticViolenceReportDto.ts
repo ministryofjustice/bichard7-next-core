@@ -1,8 +1,9 @@
+import type {
+  CaseForDomesticViolenceReportDto,
+  DomesticViolenceReportType
+} from "@moj-bichard7/common/types/reports/DomesticViolence"
+
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
-import {
-  type CaseForDomesticViolenceReportDto,
-  type DomesticViolenceReportType
-} from "@moj-bichard7/common/contracts/DomesticViolenceReport"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { format } from "date-fns"

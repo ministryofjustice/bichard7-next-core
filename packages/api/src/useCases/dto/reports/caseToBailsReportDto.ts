@@ -1,4 +1,4 @@
-import type { CaseForBailsReportDto } from "@moj-bichard7/common/contracts/BailsReport"
+import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 
 import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"

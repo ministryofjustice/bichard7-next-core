@@ -1,4 +1,4 @@
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 
 import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { isError } from "@moj-bichard7/common/types/Result"

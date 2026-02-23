@@ -1,7 +1,5 @@
-import type {
-  CaseForDomesticViolenceReportDto,
-  DomesticViolenceReportQuery
-} from "@moj-bichard7/common/contracts/DomesticViolenceReport"
+import type { DomesticViolenceReportQuery } from "@moj-bichard7/common/contracts/DomesticViolenceReport"
+import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"

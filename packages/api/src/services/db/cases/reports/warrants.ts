@@ -1,4 +1,5 @@
-import type { CaseForWarrantsReportDto, WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
@@ -22,7 +23,7 @@ export async function* warrants(
       SELECT
         el.error_id
       FROM br7own.error_list el
-             JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
+      JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
       WHERE 
         el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
         AND (${organisationUnitSql(database, user)})

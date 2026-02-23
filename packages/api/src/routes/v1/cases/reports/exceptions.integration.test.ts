@@ -1,4 +1,4 @@
-import type { ExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReport"
+import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
@@ -40,7 +40,7 @@ describe("exceptions report", () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: V1.CasesReportsExceptions
     })
@@ -58,7 +58,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -76,7 +76,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -94,7 +94,7 @@ describe("exceptions report", () => {
     query.append("triggers", "false")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -112,7 +112,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -136,7 +136,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -174,7 +174,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -219,7 +219,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -270,7 +270,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -301,7 +301,7 @@ describe("exceptions report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })
@@ -329,7 +329,7 @@ describe("exceptions report", () => {
     query.append("triggers", "false")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsExceptions}?${query.toString()}`
     })

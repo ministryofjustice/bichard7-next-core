@@ -1,4 +1,4 @@
-import type { CaseForExceptionReportDto } from "@moj-bichard7/common/contracts/ExceptionReport"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 
 import type { CaseRowForExceptionReport } from "../../../../types/reports/Exceptions"
 

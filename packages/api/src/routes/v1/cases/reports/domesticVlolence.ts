@@ -4,10 +4,10 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import {
-  CaseForDomesticViolenceReportDtoSchema,
   type DomesticViolenceReportQuery,
   DomesticViolenceReportQuerySchema
 } from "@moj-bichard7/common/contracts/DomesticViolenceReport"
+import { CaseForDomesticViolenceReportDtoSchema } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 
@@ -35,7 +35,7 @@ const schema = {
   ...auth,
   querystring: DomesticViolenceReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Bails Report", CaseForDomesticViolenceReportDtoSchema.array()),
+    [OK]: jsonResponse("Domestic Violence Report", CaseForDomesticViolenceReportDtoSchema.array()),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

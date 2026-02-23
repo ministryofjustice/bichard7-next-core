@@ -3,11 +3,8 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import {
-  ExceptionReportDtoSchema,
-  type ExceptionReportQuery,
-  ExceptionReportQuerySchema
-} from "@moj-bichard7/common/contracts/ExceptionReport"
+import { type ExceptionReportQuery, ExceptionReportQuerySchema } from "@moj-bichard7/common/contracts/ExceptionReport"
+import { ExceptionReportDtoSchema } from "@moj-bichard7/common/types/reports/Exceptions"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 

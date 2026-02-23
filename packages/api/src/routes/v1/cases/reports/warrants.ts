@@ -4,13 +4,10 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import {
-  CaseForWarrantsReportDtoSchema,
-  WarrantsReportQuerySchema
-} from "@moj-bichard7/common/contracts/WarrantsReport"
+import { WarrantsReportQuerySchema } from "@moj-bichard7/common/contracts/WarrantsReport"
+import { CaseForWarrantsReportDtoSchema } from "@moj-bichard7/common/types/reports/Warrants"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
-import z from "zod"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
@@ -36,7 +33,7 @@ const schema = {
   ...auth,
   querystring: WarrantsReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Warrants Report", z.array(CaseForWarrantsReportDtoSchema)),
+    [OK]: jsonResponse("Warrants Report", CaseForWarrantsReportDtoSchema.array()),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

@@ -3,11 +3,8 @@ import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import {
-  type BailsReportQuery,
-  BailsReportQuerySchema,
-  CaseForBailsReportDtoSchema
-} from "@moj-bichard7/common/contracts/BailsReport"
+import { type BailsReportQuery, BailsReportQuerySchema } from "@moj-bichard7/common/contracts/BailsReport"
+import { CaseForBailsReportDtoSchema } from "@moj-bichard7/common/types/reports/Bails"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 

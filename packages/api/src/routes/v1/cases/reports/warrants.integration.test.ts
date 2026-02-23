@@ -1,4 +1,4 @@
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
@@ -50,7 +50,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -66,7 +66,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -82,7 +82,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -104,7 +104,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -126,7 +126,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -148,7 +148,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -170,7 +170,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -195,7 +195,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -220,7 +220,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -249,7 +249,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -276,7 +276,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })
@@ -341,7 +341,7 @@ describe("warrants report", () => {
     query.append("toDate", new Date().toISOString())
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsWarrants}?${query.toString()}`
     })

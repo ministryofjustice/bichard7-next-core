@@ -1,4 +1,4 @@
-import type { CaseForBailsReportDto } from "@moj-bichard7/common/contracts/BailsReport"
+import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
@@ -39,7 +39,7 @@ describe("bails report", () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: V1.CasesReportsBails
     })
@@ -57,7 +57,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -75,7 +75,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -93,7 +93,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const { statusCode } = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -116,7 +116,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -141,7 +141,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -166,7 +166,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -197,7 +197,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })
@@ -253,7 +253,7 @@ describe("bails report", () => {
     query.append("triggers", "true")
 
     const response = await app.inject({
-      headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
+      headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsBails}?${query.toString()}`
     })

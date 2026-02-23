@@ -1,4 +1,4 @@
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 
 import type { CaseRowForWarrantsReport } from "../../../../types/reports/Warrants"
 
