@@ -1,4 +1,4 @@
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/contracts/WarrantsReport"
+import type { CaseForWarrantsReportDto, WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
@@ -10,17 +10,12 @@ import type { CaseRowForWarrantsReport } from "../../../../types/reports/Warrant
 import { processCases } from "../../../../useCases/cases/reports/warrants/processCases"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
-type WarrantReportQuery = {
-  fromDate: Date
-  toDate: Date
-}
-
 const WARRANT_TRIGGER_CODES = [TriggerCode.TRPR0002, TriggerCode.TRPR0012] as const
 
 export const warrants = async (
   database: DatabaseConnection,
   user: User,
-  filters: WarrantReportQuery,
+  filters: WarrantsReportQuery,
   processChunk: (rows: CaseForWarrantsReportDto[]) => Promise<void>
 ) => {
   const warrantQuery = database.connection<CaseRowForWarrantsReport[]>`
