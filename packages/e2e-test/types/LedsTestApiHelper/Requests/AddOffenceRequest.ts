@@ -4,7 +4,7 @@ export interface Content {
   startDate: string
   startTime?: string
   locationFSCode: string
-  roleQualifier?: null
+  roleQualifier?: string
   legislationQualifier?: null
   endDate?: string
   endTime?: string

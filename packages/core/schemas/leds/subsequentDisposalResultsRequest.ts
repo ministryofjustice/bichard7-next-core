@@ -6,7 +6,7 @@ import {
   courtSchema,
   dateStringSchema,
   forceStationCodeSchema,
-  offenceSchema
+  updateOffenceSchema
 } from "./common"
 
 export const reasonForAppearanceSchema = z.enum(["Sentence Deferred", "Heard at Court", "Subsequently Varied"])
@@ -19,5 +19,5 @@ export const subsequentDisposalResultsRequestSchema = z.object({
   court: courtSchema.optional(),
   appearanceDate: dateStringSchema,
   reasonForAppearance: reasonForAppearanceSchema,
-  offences: offenceSchema.array().optional()
+  offences: updateOffenceSchema.array().optional()
 })
