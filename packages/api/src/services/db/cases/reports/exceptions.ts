@@ -49,7 +49,7 @@ export async function* exceptionsReport(
             'user_id', n.user_id,
             'create_ts', n.create_ts
           )
-          ORDER BY n.create_ts DESC
+          ORDER BY n.create_ts ASC
         ) AS notes
         FROM br7own.error_list_notes n
         WHERE n.error_id = el.error_id
