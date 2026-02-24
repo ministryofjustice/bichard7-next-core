@@ -1,18 +1,37 @@
 import { loginAndVisit } from "../../support/helpers"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 describe('Search', () => {
 
   context("When the user is a supervisor", () => {
     before(() => {
-      cy.log("about to clearUsers")
       cy.task("clearUsers")
-      cy.log("about to insertUsers")
-      cy.task("insertUsers", { users: [
-          { username: "username01", forenames: "username", surname: "01", email: "username01@example.com", visibleForces: ["01","001"] },
-          { username: "username02", forenames: "username", surname: "02", email: "username02@example.com", visibleForces: ["01","001"] },
-          { username: "username03", forenames: "username", surname: "03", email: "username03@example.com", visibleForces: ["01","001"] }
-        ]})
-      cy.log("logging in and visiting!")
+      cy.task("insertUsers", {
+        users: [
+          {
+            username: "username01",
+            forenames: "username",
+            surname: "01",
+            email: "username01@example.com",
+            visibleForces: ["01", "001"]
+          },
+          {
+            username: "username02",
+            forenames: "username",
+            surname: "02",
+            email: "username02@example.com",
+            visibleForces: ["01", "001"]
+          },
+          {
+            username: "username03",
+            forenames: "username",
+            surname: "03",
+            email: "username03@example.com",
+            visibleForces: ["01", "001"]
+          }
+        ],
+        userGroups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+      })
       loginAndVisit("Supervisor", "/bichard/audit/search")
     })
 
