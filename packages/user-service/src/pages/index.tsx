@@ -114,28 +114,7 @@ const Home = ({
           <GridColumn width="two-thirds">
             <h1 className="govuk-heading-l">{`Welcome ${currentUser?.forenames} ${currentUser?.surname}`}</h1>
 
-            {hasAccessToBichard && (
-              <Link
-                href={config.bichardRedirectURL}
-                basePath={false}
-                className="govuk-button govuk-button--start govuk-!-margin-top-5"
-                id="bichard-link"
-                onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.Old)}
-              >
-                {"Access Bichard"}
-                <svg
-                  className="govuk-button__start-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="17.5"
-                  height="19"
-                  viewBox="0 0 33 40"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
-                </svg>
-              </Link>
-            )}
+            {hasAccessToBichard && <BichardLink />}
 
             {!hasAccessToBichard && (
               <Paragraph>
@@ -148,26 +127,7 @@ const Home = ({
             {hasAccessToNewBichard && (
               <>
                 <br />
-                <Link
-                  href={config.newBichardRedirectURL + courtCaseDetails}
-                  basePath={false}
-                  className="govuk-button govuk-button--start govuk-!-margin-top-5"
-                  id="bichard-link"
-                  onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.New)}
-                >
-                  {"Access New Bichard"}
-                  <svg
-                    className="govuk-button__start-icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="17.5"
-                    height="19"
-                    viewBox="0 0 33 40"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
-                  </svg>
-                </Link>
+                <NewBichardLink courtCaseDetails={courtCaseDetails} />
               </>
             )}
 
@@ -238,6 +198,56 @@ const Home = ({
         <ForceBrowserShareAssets visibleForces={currentUser?.visibleForces} userId={currentUser.id} />
       )}
     </>
+  )
+}
+
+const BichardLink = () => {
+  return (
+    <Link
+      href={config.bichardRedirectURL}
+      basePath={false}
+      className="govuk-button govuk-button--start govuk-!-margin-top-5"
+      id="bichard-link"
+      onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.Old)}
+    >
+      {"Access Bichard"}
+      <svg
+        className="govuk-button__start-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="17.5"
+        height="19"
+        viewBox="0 0 33 40"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+      </svg>
+    </Link>
+  )
+}
+
+const NewBichardLink = ({ courtCaseDetails }: { courtCaseDetails: string }) => {
+  return (
+    <Link
+      href={config.newBichardRedirectURL + courtCaseDetails}
+      basePath={false}
+      className="govuk-button govuk-button--start govuk-!-margin-top-5"
+      id="bichard-link"
+      onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.New)}
+    >
+      {"Access New Bichard"}
+      <svg
+        className="govuk-button__start-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="17.5"
+        height="19"
+        viewBox="0 0 33 40"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+      </svg>
+    </Link>
   )
 }
 
