@@ -1,9 +1,15 @@
+const { _ } = Cypress
+
 describe("Home", () => {
   before(() => {
     cy.resetTablesToDefault()
     cy.task("insertIntoUsersTable")
     cy.task("insertIntoUserGroupsTable", {
       email: "bichard01@example.com",
+      groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp", "B7NewUI_grp"]
+    })
+    cy.task("insertIntoUserGroupsTable", {
+      email: "newbicharduser@example.com",
       groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp", "B7NewUI_grp"]
     })
   })
@@ -67,5 +73,25 @@ describe("Home", () => {
       cy.reload()
       cy.get("a").contains("Access New Bichard").should("have.attr", "href", "/bichard")
     })
+  })
+
+  it("should show link to old bichard before new bichard if feature flag not set", () => {
+    cy.login("bichard01@example.com", "password")
+
+    cy.get("a.access-bichard-link")
+      .then((buttons) => _.map(buttons, "textContent"))
+      .then((buttonsTexts) => {
+        expect(buttonsTexts).to.deep.eq(["Access Bichard", "Access New Bichard"])
+      })
+  })
+
+  it("should show link to new bichard before old bichard if feature flag set", () => {
+    cy.login("newbicharduser@example.com", "password")
+
+    cy.get("a.access-bichard-link")
+      .then((buttons) => _.map(buttons, "textContent"))
+      .then((buttonsTexts) => {
+        expect(buttonsTexts).to.deep.eq(["Access New Bichard", "Access Bichard"])
+      })
   })
 })
