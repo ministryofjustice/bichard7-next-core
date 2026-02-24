@@ -1,7 +1,6 @@
 import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type { RemandRequest } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "@moj-bichard7/core/types/leds/SubsequentDisposalResultsRequest"
-import { convertPncXmlToJson } from "../convertPncXmlToJson"
 import { convertPncJsonToLedsAddDisposalRequest } from "./convertPncJsonToLeds/convertPncJsonToLedsAddDisposalRequest"
 import { convertPncJsonToLedsRemandRequest } from "./convertPncJsonToLeds/convertPncJsonToLedsRemandRequest"
 import { convertPncJsonToLedsSubsequentDisposalRequest } from "./convertPncJsonToLeds/convertPncJsonToLedsSubsequentDisposalRequest"
@@ -10,6 +9,7 @@ import type {
   PncRemandJson,
   PncSubsequentDisposalJson
 } from "./convertPncXmlToJson/convertPncXmlToJson"
+import convertPncXmlToJson from "./convertPncXmlToJson/convertPncXmlToJson"
 
 export type Operation = "Remand" | "Add Disposal" | "Sentence Deferred" | "Subsequently Varied"
 
