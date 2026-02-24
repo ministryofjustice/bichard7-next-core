@@ -1,8 +1,12 @@
-import type { CaseForExceptionReport, CaseRowForExceptionReport } from "@moj-bichard7/common/types/ExceptionReport"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 
-import { convertCaseToCaseReportDto } from "./convertCaseToDto"
+import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
-describe("convertCaseToCaseReportDto", () => {
+import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
+
+import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
+
+describe("caseToExceptionsReportDto", () => {
   it("should convert case row to case report DTO with empty notes", () => {
     const caseRow: CaseRowForExceptionReport = {
       asn: "1101ZD0100000410836J",
@@ -19,10 +23,10 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Exceptions"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result).toEqual({
-      asn: "1101ZD0100000410836J",
+      asn: "11/01ZD/01/410836J",
       courtName: "Test Court",
       courtReference: "REF123",
       courtRoom: "Room 1",
@@ -34,7 +38,7 @@ describe("convertCaseToCaseReportDto", () => {
       resolvedAt: new Date("2024-01-20"),
       resolver: "user1",
       type: "Exceptions"
-    } satisfies CaseForExceptionReport)
+    } satisfies CaseForExceptionReportDto)
   })
 
   it("should convert case row with notes sorted by create_ts descending", () => {
@@ -75,7 +79,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Exceptions"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.notes).toHaveLength(3)
     expect(result.notes[0].noteText).toBe("Second note") // 2024-01-11
@@ -99,7 +103,7 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Triggers"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.notes).toEqual([])
   })
@@ -120,14 +124,14 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Exceptions"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
     expect(result.notes).toEqual([])
   })
 
   it("should map all fields correctly", () => {
     const caseRow: CaseRowForExceptionReport = {
-      asn: "ASN123",
+      asn: "1101ZD0100000410836J",
       court_date: new Date("2024-02-01"),
       court_name: "Crown Court",
       court_reference: "CC/2024/001",
@@ -141,9 +145,9 @@ describe("convertCaseToCaseReportDto", () => {
       type: "Triggers"
     }
 
-    const result = convertCaseToCaseReportDto(caseRow)
+    const result = caseToExceptionsReportDto(caseRow)
 
-    expect(result.asn).toBe(caseRow.asn)
+    expect(result.asn).toBe(getShortAsn(caseRow.asn))
     expect(result.courtName).toBe(caseRow.court_name)
     expect(result.courtReference).toBe(caseRow.court_reference)
     expect(result.courtRoom).toBe(caseRow.court_room)

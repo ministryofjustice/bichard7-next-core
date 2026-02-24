@@ -1,25 +1,22 @@
-import type {
-  ExceptionReport,
-  ExceptionReportQuery,
-  ExceptionReportType,
-  UserExceptionReportRow
-} from "@moj-bichard7/common/types/ExceptionReport"
+import type { ExceptionReportQuery } from "@moj-bichard7/common/contracts/ExceptionReport"
+import type { ExceptionReportDto, ExceptionReportType } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { PendingQuery, Row } from "postgres"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import { endOfDay, startOfDay } from "date-fns"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { UserExceptionReportRow } from "../../../../types/reports/Exceptions"
 
 import { processUsers } from "../../../../useCases/cases/reports/exceptions/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
-export const exceptionsReport = async (
+export async function* exceptionsReport(
   database: DatabaseConnection,
   user: User,
-  filters: ExceptionReportQuery,
-  processChunk: (rows: ExceptionReport[]) => Promise<void>
-): Promise<void> => {
+  filters: ExceptionReportQuery
+): AsyncGenerator<ExceptionReportDto[]> {
   const createQueryPart = (type: ExceptionReportType) => {
     const isException = type === "Exceptions"
     const resolvedByCol = isException ? "error_resolved_by" : "trigger_resolved_by"
@@ -58,7 +55,7 @@ export const exceptionsReport = async (
         WHERE n.error_id = el.error_id
       ) AS notes_agg ON true
       WHERE
-        el.${database.connection(resolvedTsCol)} BETWEEN ${filters.fromDate} AND ${filters.toDate}
+        el.${database.connection(resolvedTsCol)} BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
         AND el.${database.connection(statusCol)} = ${ResolutionStatusNumber.Resolved}
         AND (${organisationUnitSql(database, user)})
     `
@@ -97,9 +94,10 @@ export const exceptionsReport = async (
   `
 
   try {
-    await fullQuery.cursor(50, async (userRows) => {
-      await processChunk(processUsers(userRows))
-    })
+    const cursor = fullQuery.cursor(25)
+    for await (const userRows of cursor) {
+      yield processUsers(userRows)
+    }
   } catch (err) {
     throw new Error(`Error fetching report: ${(err as Error).message}`)
   }

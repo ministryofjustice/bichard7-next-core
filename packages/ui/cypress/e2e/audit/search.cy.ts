@@ -36,7 +36,7 @@ describe('Search', () => {
     })
 
     it("Should show search page", () => {
-      cy.findByText("Audit case search").should("exist")
+      cy.findByText("Audit search").should("exist")
       cy.findByText("Resolved by").should("exist")
       cy.findByText("Supervisor User").should("exist")
       cy.findByText("username 01").should("exist")
