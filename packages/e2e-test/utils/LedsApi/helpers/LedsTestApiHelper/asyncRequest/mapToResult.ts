@@ -1,4 +1,4 @@
-import type { PendingRequestResponse } from "../../../../../types/LedsTestApiHelper/LedsAsyncRequest"
+import type { PendingRequestResponse } from "../../../../../types/LedsTestApiHelper/Requests/LedsAsyncRequest"
 
 const toCamelCase = (text: string): string => {
   return text.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())

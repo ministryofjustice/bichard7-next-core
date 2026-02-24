@@ -101,6 +101,12 @@ export class LedsApi implements PoliceApi {
   }
 
   async checkMocks(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      const disposalHistory = await this.ledsTestApiHelper.fetchDisposalHistory()
+      console.log(JSON.stringify(disposalHistory, null, 2))
+      return
+    }
+
     let expectationPaths: string[] = []
     for (let index = 0; index < 3; index++) {
       const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()

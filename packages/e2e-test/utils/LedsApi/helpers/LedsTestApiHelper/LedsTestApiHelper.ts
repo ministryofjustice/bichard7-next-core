@@ -9,15 +9,16 @@ import type Bichard from "../../../world"
 import addOffence from "./addOffence/addOffence"
 import createArrestedPerson from "./createArrestedPerson/createArrestedPerson"
 import createDisposal from "./createDisposal/createDisposal"
-import type { ArrestSummaries } from "./fetchArrestSummaries"
+import type { RemandHeadline } from "./fetchArrestSummaries"
 import fetchArrestSummaries from "./fetchArrestSummaries"
+import fetchDisposalHistory from "./fetchDisposalHistory"
 import findDisposalsByAsn from "./findDisposalsByAsn"
 
 export default class LedsTestApiHelper {
   private readonly authentication: LedsAuthentication
   private readonly baseUrl: string
   private person: PersonDetails
-  private arrestSummonsNumber: string
+  arrestSummonsNumber: string
 
   constructor(private readonly bichard: Bichard) {
     this.baseUrl = this.bichard.config.ledsApiUrl
@@ -71,13 +72,23 @@ export default class LedsTestApiHelper {
     return arrestSummonsNumber
   }
 
-  async fetchArrestSummaries(): Promise<ArrestSummaries[]> {
+  async fetchRemands(): Promise<RemandHeadline[]> {
     const requestOptions = await this.createRequestOptions(this.person)
-    return fetchArrestSummaries(requestOptions, this.person)
+    const arrestSummaries = await fetchArrestSummaries(requestOptions, this.person)
+    const arrestSummary = arrestSummaries.find(
+      (arrest) => arrest.arrestReportHeadlines.asn === this.arrestSummonsNumber
+    )
+
+    return arrestSummary?.remandHeadlines ?? []
   }
 
-  async fetchDisposals(): Promise<AsnQueryResponse> {
+  async fetchDisposalsByAsn(): Promise<AsnQueryResponse> {
     const requestOptions = await this.createRequestOptions(this.person)
     return findDisposalsByAsn(requestOptions, this.arrestSummonsNumber)
+  }
+
+  async fetchDisposalHistory() {
+    const requestOptions = await this.createRequestOptions(this.person)
+    return fetchDisposalHistory(requestOptions, this.person)
   }
 }

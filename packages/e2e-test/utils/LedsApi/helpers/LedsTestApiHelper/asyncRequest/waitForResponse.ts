@@ -1,8 +1,8 @@
 import type { AxiosError } from "axios"
 import axios, { HttpStatusCode } from "axios"
 import https from "https"
-import type { PendingRequestResponse } from "../../../../../types/LedsTestApiHelper/LedsAsyncRequest"
 import type RequestOptions from "../../../../../types/LedsTestApiHelper/RequestOptions"
+import type { PendingRequestResponse } from "../../../../../types/LedsTestApiHelper/Requests/LedsAsyncRequest"
 import { isError } from "../../../../isError"
 import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
@@ -18,7 +18,8 @@ const waitForResponse = async (
 ): Promise<PendingRequestResponse> => {
   await wait(100)
 
-  for (let index = 0; index < 10; index++) {
+  let counter = 0
+  while (true) {
     const statusRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
     const response = await axios
       .get<PendingRequestResponse>(`${requestOptions.baseUrl}/person-services/v1/status/${requestId}`, {
@@ -44,12 +45,17 @@ const waitForResponse = async (
 
     const requestDetails = response.data
     if (requestDetails.status === "Completed") {
+      return response.data
+    }
+
+    counter += 1
+
+    if (counter === 10) {
+      throw new Error(`Pending request didn't complete for ${urlPath}. ${JSON.stringify(response.data)}`)
     }
 
     await wait()
   }
-
-  throw new Error(`Pending request didn't complete for ${urlPath}`)
 }
 
 export default waitForResponse

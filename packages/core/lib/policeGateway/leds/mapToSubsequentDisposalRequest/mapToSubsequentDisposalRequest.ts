@@ -18,20 +18,23 @@ const reasonForAppearance: Record<string, ReasonForAppearance> = {
 const mapToSubsequentDisposalRequest = (
   pncRequest: DisposalUpdatedPncUpdateRequest["request"] | SentenceDeferredPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
-): SubsequentDisposalResultsRequest => {
-  return {
-    ownerCode: pncRequest.forceStationCode,
-    personUrn: pncRequest.pncIdentifier ?? "",
-    checkName: pncRequest.pncCheckName ?? "",
-    courtCaseReference: pncRequest.courtCaseReferenceNumber,
-    court: {
-      courtIdentityType: "code",
-      courtCode: pncRequest.courtCode
-    },
-    appearanceDate: convertDate(pncRequest.hearingDate),
-    reasonForAppearance: reasonForAppearance[pncRequest.hearingType],
-    offences: mapOffences(pncRequest.hearingDetails, pncUpdateDataset, pncRequest.courtCaseReferenceNumber)
-  }
-}
+): SubsequentDisposalResultsRequest => ({
+  ownerCode: pncRequest.forceStationCode,
+  personUrn: pncRequest.pncIdentifier ?? "",
+  checkName: pncRequest.pncCheckName ?? "",
+  courtCaseReference: pncRequest.courtCaseReferenceNumber,
+  court: {
+    courtIdentityType: "code",
+    courtCode: pncRequest.courtCode
+  },
+  appearanceDate: convertDate(pncRequest.hearingDate),
+  reasonForAppearance: reasonForAppearance[pncRequest.hearingType],
+  offences: mapOffences(
+    pncRequest.hearingDetails,
+    pncUpdateDataset,
+    pncRequest.courtCaseReferenceNumber,
+    pncRequest.hearingDate //TODO: To confirm with LEDS if Sentence Deferred requires DateOfSentence? We only need to pass this hearing date for Sentence Deferred.
+  )
+})
 
 export default mapToSubsequentDisposalRequest

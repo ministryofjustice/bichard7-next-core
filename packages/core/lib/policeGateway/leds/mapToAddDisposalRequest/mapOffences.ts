@@ -1,81 +1,49 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import type { Adjudication, Offence, Plea } from "../../../../types/leds/DisposalRequest"
+import type { Offence } from "../../../../types/leds/AddDisposalRequest"
+import type { Adjudication, Plea } from "../../../../types/leds/DisposalRequest"
 
-import {
-  type PncUpdateCourtHearingAdjudicationAndDisposal,
-  PncUpdateType
-} from "../../../../phase3/types/HearingDetails"
+import { type PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
 import { convertDate } from "../dateTimeConverter"
+import generateOffenceCodeAndRoleQualifier from "../generateOffenceCodeAndRoleQualifier"
 import { findOffenceId } from "./findOffenceId"
-import { parseDisposalQuantity } from "./parseDisposalQuantity"
+import generateOffenceGroups from "./generateOffenceGroups"
+import mapDisposalResult from "./mapDisposalResult"
 import { toTitleCase } from "./toTitleCase"
 
 const mapOffences = (
   hearingsAdjudicationsAndDisposals: PncUpdateCourtHearingAdjudicationAndDisposal[],
   pncUpdateDataset: PncUpdateDataset,
-  courtCaseReferenceNumber: string
-): Offence[] => {
-  const offenceGroups = hearingsAdjudicationsAndDisposals.reduce<PncUpdateCourtHearingAdjudicationAndDisposal[][]>(
-    (groups, item) => {
-      if (item.type === PncUpdateType.ORDINARY || groups.length === 0) {
-        groups.push([])
-      }
-
-      groups[groups.length - 1].push(item)
-
-      return groups
-    },
-    []
-  )
-
-  const offences = offenceGroups.map((group) => {
-    const ordinary = group.find((el) => el.type === PncUpdateType.ORDINARY)
-    const adjudication = group.find((el) => el.type === PncUpdateType.ADJUDICATION)
-    const disposals = group.filter((el) => el.type === PncUpdateType.DISPOSAL)
-
-    const disposalResults = disposals.map((disposal) => {
-      const disposalQuantity = parseDisposalQuantity(disposal.disposalQuantity)
-      const { disposalDuration, disposalEffectiveDate, amount } = disposalQuantity ?? {
-        disposalDuration: undefined,
-        disposalEffectiveDate: undefined,
-        amount: 0
-      }
-
-      const disposalQualifiers = disposal.disposalQualifiers
-        ?.match(/.{1,2}/g)
-        ?.map((q) => q.trim())
-        .filter(Boolean)
-
-      return {
-        disposalCode: Number(disposal.disposalType),
-        disposalQualifiers,
-        disposalText: disposal.disposalText ?? undefined,
-        disposalDuration,
-        disposalEffectiveDate,
-        disposalFine: { amount }
-      }
-    })
-    const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
+  courtCaseReferenceNumber: string,
+  hearingDate?: string
+): Offence[] =>
+  generateOffenceGroups(hearingsAdjudicationsAndDisposals).map<Offence>((group) => {
+    const { ordinary, adjudication, disposals } = group
+    const disposalResults = disposals.map(mapDisposalResult)
+    const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary.courtOffenceSequenceNumber)
     const plea = adjudication?.pleaStatus ? (toTitleCase(adjudication?.pleaStatus) as Plea) : undefined
     const adjudicationResult = adjudication?.verdict ? (toTitleCase(adjudication?.verdict) as Adjudication) : undefined
     const offenceTic = adjudication?.numberOffencesTakenIntoAccount
       ? Number(adjudication?.numberOffencesTakenIntoAccount)
       : undefined
+    const { offenceCode: cjsOffenceCode, roleQualifier } = generateOffenceCodeAndRoleQualifier(ordinary.offenceReason)
+    const dateOfSentence = adjudication?.hearingDate
+      ? convertDate(adjudication.hearingDate)
+      : hearingDate
+        ? convertDate(hearingDate)
+        : undefined
 
     return {
-      courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
-      cjsOffenceCode: ordinary?.offenceReason ?? "",
+      courtOffenceSequenceNumber: Number(ordinary.courtOffenceSequenceNumber),
+      cjsOffenceCode,
+      roleQualifiers: roleQualifier ? [roleQualifier] : undefined,
       plea,
       adjudication: adjudicationResult,
-      dateOfSentence: adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined,
+      dateOfSentence,
       offenceTic,
       disposalResults,
       offenceId
     }
   })
-
-  return offences
-}
 
 export default mapOffences

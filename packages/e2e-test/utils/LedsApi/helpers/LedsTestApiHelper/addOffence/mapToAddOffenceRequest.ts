@@ -1,7 +1,10 @@
+import generateOffenceCodeAndRoleQualifier from "@moj-bichard7/core/lib/policeGateway/leds/generateOffenceCodeAndRoleQualifier"
 import type OffenceDetails from "../../../../../types/LedsTestApiHelper/OffenceDetails"
 import type AddOffenceRequest from "../../../../../types/LedsTestApiHelper/Requests/AddOffenceRequest"
 
 const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): AddOffenceRequest => {
+  const { offenceCode: cjsOffenceCode, roleQualifier } = generateOffenceCodeAndRoleQualifier(offence.offenceCode)
+
   return {
     content: {
       committedOnBail: "false",
@@ -9,7 +12,7 @@ const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): Add
       startDate: offence.startDate,
       startTime: offence.startTime ?? "",
       locationFSCode: offence.ownerCode,
-      roleQualifier: null,
+      roleQualifier,
       legislationQualifier: null,
       endDate: offence.endDate ?? "",
       endTime: offence.endTime ?? "",
@@ -20,7 +23,7 @@ const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): Add
       },
       offenceCode: {
         offenceCodeType: "cjs",
-        cjsOffenceCode: offence.offenceCode
+        cjsOffenceCode
       }
     },
     changedBy: offence.ownerCode,

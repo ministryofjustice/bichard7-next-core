@@ -2,8 +2,8 @@ import type { AxiosError } from "axios"
 import axios, { HttpStatusCode } from "axios"
 import https from "https"
 import path from "path"
-import type { PendingRequest } from "../../../../../types/LedsTestApiHelper/LedsAsyncRequest"
 import type RequestOptions from "../../../../../types/LedsTestApiHelper/RequestOptions"
+import type { PendingRequest } from "../../../../../types/LedsTestApiHelper/Requests/LedsAsyncRequest"
 import { isError } from "../../../../isError"
 import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
@@ -30,6 +30,8 @@ const initiateRequest = async (
   if (isError(pendingRequestResponse)) {
     throw new ApiError(pendingRequestResponse)
   }
+
+  console.log(JSON.stringify(pendingRequestResponse.data))
 
   if (pendingRequestResponse.status !== HttpStatusCode.Accepted) {
     throw new Error(
