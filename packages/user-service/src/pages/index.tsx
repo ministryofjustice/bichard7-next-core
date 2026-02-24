@@ -114,8 +114,6 @@ const Home = ({
           <GridColumn width="two-thirds">
             <h1 className="govuk-heading-l">{`Welcome ${currentUser?.forenames} ${currentUser?.surname}`}</h1>
 
-            {hasAccessToBichard && <BichardLink />}
-
             {!hasAccessToBichard && (
               <Paragraph>
                 {
@@ -124,12 +122,12 @@ const Home = ({
               </Paragraph>
             )}
 
-            {hasAccessToNewBichard && (
-              <>
-                <br />
-                <NewBichardLink courtCaseDetails={courtCaseDetails} />
-              </>
-            )}
+            <BichardLinks
+              courtCaseDetails={courtCaseDetails}
+              hasAccessToBichard={hasAccessToBichard}
+              hasAccessToNewBichard={hasAccessToNewBichard}
+              showNewBichardButtonFirst={currentUser?.featureFlags?.showNewBichardButtonFirst ?? false}
+            />
 
             {hasAccessToUserManagement && (
               <>
@@ -201,12 +199,50 @@ const Home = ({
   )
 }
 
+const BichardLinks = ({
+  courtCaseDetails,
+  hasAccessToBichard,
+  hasAccessToNewBichard,
+  showNewBichardButtonFirst
+}: {
+  courtCaseDetails: string
+  hasAccessToBichard: boolean
+  hasAccessToNewBichard: boolean
+  showNewBichardButtonFirst: boolean
+}) => {
+  if (showNewBichardButtonFirst) {
+    return (
+      <>
+        {hasAccessToNewBichard && (
+          <>
+            <NewBichardLink courtCaseDetails={courtCaseDetails} />
+            <br />
+          </>
+        )}
+        {hasAccessToBichard && <BichardLink />}
+      </>
+    )
+  } else {
+    return (
+      <>
+        {hasAccessToBichard && <BichardLink />}
+        {hasAccessToNewBichard && (
+          <>
+            <br />
+            <NewBichardLink courtCaseDetails={courtCaseDetails} />
+          </>
+        )}
+      </>
+    )
+  }
+}
+
 const BichardLink = () => {
   return (
     <Link
       href={config.bichardRedirectURL}
       basePath={false}
-      className="govuk-button govuk-button--start govuk-!-margin-top-5"
+      className="govuk-button govuk-button--start govuk-!-margin-top-5 access-bichard-link"
       id="bichard-link"
       onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.Old)}
     >
@@ -231,7 +267,7 @@ const NewBichardLink = ({ courtCaseDetails }: { courtCaseDetails: string }) => {
     <Link
       href={config.newBichardRedirectURL + courtCaseDetails}
       basePath={false}
-      className="govuk-button govuk-button--start govuk-!-margin-top-5"
+      className="govuk-button govuk-button--start govuk-!-margin-top-5 access-bichard-link"
       id="bichard-link"
       onClick={() => localStorage.setItem(LocalStorageKey.CurrentUi, Ui.New)}
     >
