@@ -99,17 +99,20 @@
 							<DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
 							<DC:Finding>G</DC:Finding>
 							<DC:Result>
-								<DC:ResultCode>2059</DC:ResultCode>
-								<DC:ResultText>Carried Forward to Court Case.</DC:ResultText>
-								<DC:NextHearing>
-									<DC:NextHearingDetails>
-										<DC:CourtHearingLocation>B01EF01</DC:CourtHearingLocation>
-										<DC:DateOfHearing>2011-10-08</DC:DateOfHearing>
-										<DC:TimeOfHearing>14:00:00</DC:TimeOfHearing>
-									</DC:NextHearingDetails>
-									<DC:NextHearingReason>Adjourned for Defendant to attend</DC:NextHearingReason>
-									<DC:BailStatusOffence>U</DC:BailStatusOffence>
-								</DC:NextHearing>
+								<DC:ResultCode>3070</DC:ResultCode>
+								<DC:ResultText>Disqualified from holding or obtaining a driving
+									licence for 12 month(s) from 26/09/2011. Disqualification
+									obligatory for the offence. Disqualification to be reduced by 4
+									months if by 01/03/2012 the defendant satisfactorily completes a
+									course approved by the Secretary of State. The cost of the
+									course will not exceed £250. Licence endorsed. Sections 34(1)
+									&amp; 34A Road Traffic Offenders Act 1988. </DC:ResultText>
+								<DC:Outcome>
+									<DC:Duration>
+										<DC:DurationValue>2</DC:DurationValue>
+										<DC:DurationUnit>Y</DC:DurationUnit>
+									</DC:Duration>
+								</DC:Outcome>
 							</DC:Result>
 						</DC:Offence>
 						<DC:Offence>

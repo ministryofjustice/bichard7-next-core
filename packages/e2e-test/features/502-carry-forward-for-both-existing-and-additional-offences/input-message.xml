@@ -148,10 +148,9 @@
 								</DC:NextHearing>
 							</DC:Result>
 						</DC:Offence>
-
 						<DC:Offence>
 							<DC:BaseOffenceDetails>
-								<DC:OffenceSequenceNumber>004</DC:OffenceSequenceNumber>
+								<DC:OffenceSequenceNumber>003</DC:OffenceSequenceNumber>
 								<DC:OffenceCode>TH68072</DC:OffenceCode>
 								<DC:OffenceWording>Handling stolen goods.</DC:OffenceWording>
 								<DC:OffenceTiming>
