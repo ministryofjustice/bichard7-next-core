@@ -15,8 +15,8 @@ import { createCases } from "../../../../tests/helpers/caseHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
 
-const formatDate = "yyyy-MM-dd" as const
-const formatDateTime = `${formatDate} HH:mm` as const
+const formatDateDto = "dd/MM/yyyy" as const
+const formatTimeDto = "HH:mm" as const
 
 describe("exceptions report", () => {
   let app: FastifyInstance
@@ -153,9 +153,9 @@ describe("exceptions report", () => {
 
     expect(exceptionReport.username).toBe(caseObj.errorResolvedBy)
     expect(reportItem.resolver).toBe(caseObj.errorResolvedBy)
-    expect(format(reportItem.resolvedAt, formatDateTime)).toBe(format(caseObj.errorResolvedAt!, formatDateTime))
-    expect(format(reportItem.hearingDate, formatDate)).toBe(format(caseObj.courtDate!, formatDate))
-    expect(reportItem.type).toBe("Exception")
+    expect(reportItem.resolvedAt).toBe(format(caseObj.errorResolvedAt!, `${formatDateDto} ${formatTimeDto}`))
+    expect(reportItem.hearingDate).toBe(format(caseObj.courtDate!, formatDateDto))
+    expect(reportItem.type).toBe("Ex")
   })
 
   it("gets triggers that are resolved", async () => {
@@ -190,9 +190,9 @@ describe("exceptions report", () => {
     const caseObj = cases[0]
 
     expect(reportItem.resolver).toBe(caseObj.triggerResolvedBy)
-    expect(format(reportItem.resolvedAt, formatDateTime)).toBe(format(caseObj.triggerResolvedAt!, formatDateTime))
-    expect(format(reportItem.hearingDate, formatDate)).toBe(format(caseObj.courtDate!, formatDate))
-    expect(reportItem.type).toBe("Trigger")
+    expect(reportItem.resolvedAt).toBe(format(caseObj.triggerResolvedAt!, `${formatDateDto} ${formatTimeDto}`))
+    expect(reportItem.hearingDate).toBe(format(caseObj.courtDate!, formatDateDto))
+    expect(reportItem.type).toBe("Tr")
   })
 
   it("gets exceptions and triggers that are resolved", async () => {
@@ -235,18 +235,17 @@ describe("exceptions report", () => {
     const caseObjEx = cases[1]
 
     expect(reportItemEx.resolver).toBe(caseObjEx.errorResolvedBy)
-    expect(format(reportItemEx.resolvedAt, formatDateTime)).toBe(format(caseObjEx.errorResolvedAt!, formatDateTime))
-    expect(format(reportItemEx.hearingDate, formatDate)).toBe(format(caseObjEx.courtDate!, formatDate))
-    expect(reportItemEx.type).toBe("Exception")
+    expect(reportItemEx.resolvedAt).toBe(format(caseObjEx.errorResolvedAt!, `${formatDateDto} ${formatTimeDto}`))
+    expect(reportItemEx.hearingDate).toBe(format(caseObjEx.courtDate!, formatDateDto))
+    expect(reportItemEx.type).toBe("Ex")
 
     const exceptionReportTr = json[1] as ExceptionReportDto
     const reportItemTr = exceptionReportTr.cases[0]
     const caseObjTr = cases[0]
 
-    expect(reportItemTr.resolver).toBe(caseObjTr.triggerResolvedBy)
-    expect(format(reportItemTr.resolvedAt, formatDateTime)).toBe(format(caseObjTr.triggerResolvedAt!, formatDateTime))
-    expect(format(reportItemTr.hearingDate, formatDate)).toBe(format(caseObjTr.courtDate!, formatDate))
-    expect(reportItemTr.type).toBe("Trigger")
+    expect(reportItemTr.resolvedAt).toBe(format(caseObjTr.triggerResolvedAt!, `${formatDateDto} ${formatTimeDto}`))
+    expect(reportItemTr.hearingDate).toBe(format(caseObjTr.courtDate!, formatDateDto))
+    expect(reportItemTr.type).toBe("Tr")
   })
 
   it("gets exceptions and triggers that are resolved on one case", async () => {
