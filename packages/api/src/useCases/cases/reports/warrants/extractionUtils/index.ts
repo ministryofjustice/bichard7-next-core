@@ -1,6 +1,0 @@
-export { dateOfBirth } from "./dateOfBirth"
-export { defendantAddress } from "./defendantAddress"
-export { formatDate } from "./formatDate"
-export { gender } from "./gender"
-export { hearingTime } from "./hearingTime"
-export { pncIdentifier } from "./pncIdentifier"

@@ -1,9 +1,8 @@
-import type {
-  CaseForExceptionReport,
-  CaseRowForExceptionReport
-} from "@moj-bichard7/common/types/reports/ExceptionReport"
+import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
+
+import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
 
 import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
 
@@ -39,7 +38,7 @@ describe("caseToExceptionsReportDto", () => {
       resolvedAt: new Date("2024-01-20"),
       resolver: "user1",
       type: "Exceptions"
-    } satisfies CaseForExceptionReport)
+    } satisfies CaseForExceptionReportDto)
   })
 
   it("should convert case row with notes sorted by create_ts descending", () => {
