@@ -16,7 +16,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard02",
@@ -35,7 +36,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard03",
@@ -54,7 +56,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard04",
@@ -73,7 +76,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard05",
@@ -92,7 +96,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,007",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard06",
@@ -111,7 +116,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,003,004,007",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard07",
@@ -130,7 +136,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,007,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard08",
@@ -149,7 +156,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,003,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard09",
@@ -168,7 +176,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,007",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard10",
@@ -187,7 +196,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard11",
@@ -206,7 +216,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,003",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard12",
@@ -225,7 +236,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "001,004,007",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   },
   {
     username: "Bichard13",
@@ -244,7 +256,8 @@ const manyUsers = [
     migrated_password: null,
     visible_forces: "004",
     visible_courts: "B01,B41ME00",
-    excluded_triggers: "TRPR0001,"
+    excluded_triggers: "TRPR0001,",
+    feature_flags: {}
   }
 ]
 

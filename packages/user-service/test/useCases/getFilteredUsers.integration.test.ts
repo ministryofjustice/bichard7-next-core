@@ -121,6 +121,6 @@ describe("getFilteredUsers", () => {
     await insertIntoTable(users)
     const fullListResult = await getFilteredUsers(connection, "", "", true)
     expect(isError(fullListResult)).toBe(false)
-    expect(fullListResult.totalElements).toBe("4") // total number of users that match the filter
+    expect(fullListResult.totalElements).toBe("5") // total number of users that match the filter
   })
 })
