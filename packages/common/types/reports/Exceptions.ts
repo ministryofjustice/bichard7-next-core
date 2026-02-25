@@ -1,8 +1,6 @@
 import z from "zod"
 
-import { dateLikeToDate } from "../../schemas/dateLikeToDate"
 import { CaseSchema } from "../Case"
-import { NoteDtoSchema } from "../Note"
 
 export const CaseForExceptionReportDtoSchema = CaseSchema.pick({
   asn: true,
@@ -10,13 +8,13 @@ export const CaseForExceptionReportDtoSchema = CaseSchema.pick({
   courtReference: true,
   courtRoom: true,
   defendantName: true,
-  messageReceivedAt: true,
-  notes: true,
   ptiurn: true
 }).extend({
-  hearingDate: dateLikeToDate,
-  notes: z.array(NoteDtoSchema),
-  resolvedAt: dateLikeToDate,
+  hearingDate: z.string(),
+  messageReceivedAt: z.string(),
+  notes: z.string(),
+  resolutionAction: z.string(),
+  resolvedAt: z.string(),
   resolver: z.string(),
   type: z.string()
 })
