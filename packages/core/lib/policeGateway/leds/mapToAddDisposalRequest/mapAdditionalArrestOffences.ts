@@ -5,7 +5,7 @@ import convertAsnToLongFormat from "../../../../phase1/enrichAho/enrichFunctions
 import { type PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
 import convertLongAsnToLedsFormat from "../convertLongAsnToLedsFormat"
 import { convertDate, convertTime } from "../dateTimeConverter"
-import generateOffenceCodeAndRoleQualifier from "../generateOffenceCodeAndRoleQualifier"
+import preProcessOffenceCode from "../preProcessOffenceCode"
 import generateOffenceGroups from "./generateOffenceGroups"
 import mapDisposalResult from "./mapDisposalResult"
 import { toTitleCase } from "./toTitleCase"
@@ -17,7 +17,7 @@ const mapAdditionalArrestOffences = (
   const arrestSummonsNumber = convertLongAsnToLedsFormat(convertAsnToLongFormat(asn))
   const additionalOffences = generateOffenceGroups(arrestsAdjudicationsAndDisposals).map<ArrestOffence>(
     ({ arrest, adjudication, disposals }) => {
-      const { offenceCode: cjsOffenceCode, roleQualifier } = generateOffenceCodeAndRoleQualifier(arrest.offenceReason)
+      const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(arrest.offenceReason)
 
       return {
         courtOffenceSequenceNumber: Number(arrest.courtOffenceSequenceNumber),
