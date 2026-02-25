@@ -1,3 +1,4 @@
+import { CSSProperties } from "react"
 import styled from "styled-components"
 
 const FieldsWrapper = styled.div`
@@ -77,21 +78,35 @@ const ClearSearchLinkBox = styled.div`
   margin-right: 44px;
 `
 
+const headerPadding: CSSProperties = {
+  paddingTop: "20px",
+  paddingBottom: "20px"
+}
+
+const searchButton: CSSProperties = {
+  margin: 0,
+  flexShrink: 0,
+  width: "max-content",
+  padding: "10px 20px"
+}
+
 export {
-  FieldsWrapper,
-  SectionTitle,
-  SecondarySectionTitle,
-  ReportsSectionWrapper,
-  SelectReportsLabelWrapper,
-  SelectReportsWrapper,
-  DateRangeSectionWrapper,
+  BottomActionsBox,
   CalendarsWrapper,
-  DateFromWrapper,
-  DateToWrapper,
-  IncludeSectionWrapper,
   CheckboxesWrapper,
   CheckboxLabel,
   CheckboxUnit,
-  BottomActionsBox,
-  ClearSearchLinkBox
+  ClearSearchLinkBox,
+  DateFromWrapper,
+  DateRangeSectionWrapper,
+  DateToWrapper,
+  FieldsWrapper,
+  headerPadding,
+  IncludeSectionWrapper,
+  ReportsSectionWrapper,
+  searchButton,
+  SecondarySectionTitle,
+  SectionTitle,
+  SelectReportsLabelWrapper,
+  SelectReportsWrapper
 }
