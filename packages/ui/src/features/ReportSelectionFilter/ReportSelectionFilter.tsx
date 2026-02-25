@@ -17,13 +17,12 @@ import {
   ReportsSectionWrapper,
   searchButtonStyling,
   SecondarySectionTitle,
-  SectionTitle,
-  SelectReportsLabelWrapper,
   SelectReportsWrapper,
   selectStyling
 } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
 import { NextPage } from "next"
 import { Button } from "../../components/Buttons/Button"
+import { Label } from "../../components/Label"
 
 export const ReportSelectionFilter: NextPage = () => {
   const triggers = "triggers"
@@ -34,22 +33,24 @@ export const ReportSelectionFilter: NextPage = () => {
       <fieldset className="govuk-fieldset">
         <FieldsWrapper>
           <ReportsSectionWrapper id={"report-section"}>
-            <SectionTitle>
-              <label>{"Reports"}</label>
-            </SectionTitle>
-            <SecondarySectionTitle>
-              <SelectReportsLabelWrapper>
-                <label>{"Sort by"}</label>
-              </SelectReportsLabelWrapper>
-            </SecondarySectionTitle>
+            <h1 className={"govuk-heading-m"}>{"Reports"}</h1>
+            {/*<SecondarySectionTitle>*/}
+            <Label className="govuk-!-font-weight-regular" size={"s"} htmlFor={"report-select"}>
+              {"Sort by"}
+            </Label>
+            {/*<h3 className={"govuk-body"}>{"Sort by"}</h3>*/}
+            {/*</SecondarySectionTitle>*/}
             <SelectReportsWrapper>
-              <Select placeholder={"Resolved cases"} name={"select-case-type"} style={selectStyling}></Select>
+              <Select
+                id={"report-select"}
+                placeholder={"Resolved cases"}
+                name={"select-case-type"}
+                style={selectStyling}
+              ></Select>
             </SelectReportsWrapper>
           </ReportsSectionWrapper>
           <DateRangeSectionWrapper id={"date-range-section"}>
-            <SectionTitle>
-              <label>{"Date range"}</label>
-            </SectionTitle>
+            <h1 className={"govuk-heading-m"}>{"Date range"}</h1>
             <CalendarsWrapper>
               <DateFromWrapper id={"report-selection-date-from"}>
                 <DateInput
@@ -74,9 +75,7 @@ export const ReportSelectionFilter: NextPage = () => {
             </CalendarsWrapper>
           </DateRangeSectionWrapper>
           <IncludeSectionWrapper id={"include-section"}>
-            <SectionTitle>
-              <label>{"Include"}</label>
-            </SectionTitle>
+            <h1 className={"govuk-heading-m"}>{"Include"}</h1>
             <div>
               <SecondarySectionTitle>
                 <label>{"Select an option"}</label>

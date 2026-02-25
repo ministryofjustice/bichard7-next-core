@@ -1,6 +1,6 @@
 export enum NavLink {
   CaseList = "/bichard/",
-  Reports = "/bichard/report-selection",
+  Reports = "/bichard-ui/ReturnToReportIndex",
   Audit = "/bichard/audit/search",
   UserManagement = "/users/users/",
   Help = "/help/",
