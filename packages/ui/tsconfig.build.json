@@ -1,5 +1,15 @@
 {
   "extends": "./tsconfig.json",
   "include": ["next-env.d.ts", "package.json", "**/*.ts", "**/*.tsx", "**/*.js"],
-  "exclude": ["node_modules", "eslintrc.js", "cypress-axe", "cypress", "cypress.config.ts", "scripts/utility", "scripts/*.ts", "test"]
+  "exclude": [
+    "node_modules",
+    "eslintrc.js",
+    "cypress-axe",
+    "cypress",
+    "cypress.config.ts",
+    "scripts/utility",
+    "scripts/*.ts",
+    "test",
+    "**/*.test.ts"
+  ]
 }
