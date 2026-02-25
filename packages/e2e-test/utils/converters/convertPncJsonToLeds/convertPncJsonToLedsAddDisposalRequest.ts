@@ -57,7 +57,7 @@ export const mapOffences = (
       disposalFine: { amount: Number(disposal.qtyMonetaryValue) || 0 },
       disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
       disposalQualifiers: disposal.qualifiers.match(/.{1,2}/g)?.map((q) => q.trim()),
-      disposalText: disposal.text
+      disposalText: disposal.text || undefined
     }))
   }))
 }
@@ -88,7 +88,7 @@ const mapAdditionalArrestOffences = (
       disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
       disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
       disposalQualifiers: disposal.qualifiers.match(/.{1,2}/g)?.map((q) => q.trim()),
-      disposalText: disposal.text
+      disposalText: disposal.text || undefined
     }))
   }))
 

@@ -50,7 +50,7 @@ const mapOffences = (
       return {
         disposalCode: Number(disposal.disposalType),
         disposalQualifiers,
-        disposalText: disposal.disposalText ?? undefined,
+        disposalText: disposal.disposalText || undefined,
         disposalDuration,
         disposalEffectiveDate,
         disposalFine: { amount }
