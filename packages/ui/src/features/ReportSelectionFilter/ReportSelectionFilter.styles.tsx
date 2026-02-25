@@ -47,29 +47,26 @@ const IncludeSectionWrapper = styled.div`
 `
 const CheckboxesWrapper = styled.div`
   display: flex;
-`
-const CheckboxUnit = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 0;
-  flex: 1 1 150px;
-  max-width: 150px;
-`
 
-const CheckboxesInput = styled.input.attrs({ className: "govuk-checkboxes__input" })`
-  width: 40px;
-  height: 40px;
-`
+  .govuk-checkboxes__item {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    flex: 1 1 150px;
+    max-width: 150px;
+  }
 
-const CheckboxLabel = styled.label.attrs({
-  className: "govuk-checkboxes__label" // Keeps the original class for other styles
-})`
-  &::before {
+  .govuk-checkboxes__input {
+    width: 40px;
+    height: 40px;
+  }
+
+  .govuk-checkboxes__label::before {
     top: 0px;
     left: 0px;
   }
 
-  &::after {
+  .govuk-checkboxes__label::after {
     top: 11px;
     left: 9px;
   }
@@ -107,10 +104,7 @@ const searchButtonStyling: CSSProperties = {
 export {
   BottomActionsBox,
   CalendarsWrapper,
-  CheckboxesInput,
   CheckboxesWrapper,
-  CheckboxLabel,
-  CheckboxUnit,
   ClearSearchLinkBox,
   DateFromWrapper,
   DateRangeSectionWrapper,

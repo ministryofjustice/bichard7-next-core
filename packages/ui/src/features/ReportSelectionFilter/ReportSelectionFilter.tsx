@@ -1,13 +1,11 @@
 import { HeaderWrapper } from "components/Card/Card.styles"
+import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
 import { Select } from "components/Select"
 import {
   BottomActionsBox,
   CalendarsWrapper,
-  CheckboxesInput,
   CheckboxesWrapper,
-  CheckboxLabel,
-  CheckboxUnit,
   ClearSearchLinkBox,
   DateFromWrapper,
   DateRangeSectionWrapper,
@@ -24,9 +22,6 @@ import { NextPage } from "next"
 import { Button } from "../../components/Buttons/Button"
 
 export const ReportSelectionFilter: NextPage = () => {
-  const triggers = "triggers"
-  const exceptions = "exceptions"
-
   return (
     <HeaderWrapper style={headerStyling}>
       <fieldset className="govuk-fieldset">
@@ -76,14 +71,8 @@ export const ReportSelectionFilter: NextPage = () => {
               {"Select an option"}
             </label>
             <CheckboxesWrapper id={"checkboxes-container"}>
-              <CheckboxUnit className="govuk-checkboxes__item">
-                <CheckboxesInput id={triggers} type="checkbox"></CheckboxesInput>
-                <CheckboxLabel htmlFor={triggers}>{"Triggers"}</CheckboxLabel>
-              </CheckboxUnit>
-              <CheckboxUnit className="govuk-checkboxes__item">
-                <CheckboxesInput id={exceptions} type="checkbox"></CheckboxesInput>
-                <CheckboxLabel>{"Exceptions"}</CheckboxLabel>
-              </CheckboxUnit>
+              <Checkbox label={"Triggers"} checked={false}></Checkbox>
+              <Checkbox label={"Exceptions"} checked={false}></Checkbox>
             </CheckboxesWrapper>
           </IncludeSectionWrapper>
         </FieldsWrapper>
