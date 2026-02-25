@@ -5,7 +5,7 @@ import type { Adjudication, Plea } from "../../../../types/leds/DisposalRequest"
 
 import { type PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
 import { convertDate } from "../dateTimeConverter"
-import generateOffenceCodeAndRoleQualifier from "../generateOffenceCodeAndRoleQualifier"
+import preProcessOffenceCode from "../preProcessOffenceCode"
 import { findOffenceId } from "./findOffenceId"
 import generateOffenceGroups from "./generateOffenceGroups"
 import mapDisposalResult from "./mapDisposalResult"
@@ -26,7 +26,7 @@ const mapOffences = (
     const offenceTic = adjudication?.numberOffencesTakenIntoAccount
       ? Number(adjudication?.numberOffencesTakenIntoAccount)
       : undefined
-    const { offenceCode: cjsOffenceCode, roleQualifier } = generateOffenceCodeAndRoleQualifier(ordinary.offenceReason)
+    const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(ordinary.offenceReason)
     const dateOfSentence = adjudication?.hearingDate
       ? convertDate(adjudication.hearingDate)
       : hearingDate

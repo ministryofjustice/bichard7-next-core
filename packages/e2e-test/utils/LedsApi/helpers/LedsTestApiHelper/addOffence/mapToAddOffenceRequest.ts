@@ -1,9 +1,9 @@
-import generateOffenceCodeAndRoleQualifier from "@moj-bichard7/core/lib/policeGateway/leds/generateOffenceCodeAndRoleQualifier"
+import preProcessOffenceCode from "@moj-bichard7/core/lib/policeGateway/leds/preProcessOffenceCode"
 import type OffenceDetails from "../../../../../types/LedsTestApiHelper/OffenceDetails"
 import type AddOffenceRequest from "../../../../../types/LedsTestApiHelper/Requests/AddOffenceRequest"
 
 const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): AddOffenceRequest => {
-  const { offenceCode: cjsOffenceCode, roleQualifier } = generateOffenceCodeAndRoleQualifier(offence.offenceCode)
+  const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(offence.offenceCode)
 
   return {
     content: {
