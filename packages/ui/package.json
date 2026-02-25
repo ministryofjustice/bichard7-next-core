@@ -53,7 +53,7 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "downshift": "^9.3.1",
-    "govuk-frontend": "^6.0.0",
+    "govuk-frontend": "^5.14.0",
     "json-2-csv": "^5.5.10",
     "lodash": "^4.17.23",
     "lodash.clonedeep": "^4.5.0",
