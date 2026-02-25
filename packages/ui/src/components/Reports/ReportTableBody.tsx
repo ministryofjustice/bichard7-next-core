@@ -10,7 +10,7 @@ interface TableBodyProps<T> {
 export const ReportTableBody = <T extends Record<string, unknown>>({ rows, columns }: TableBodyProps<T>) => (
   <StyledReportTableBody>
     {rows.map((row, rowIdx) => (
-      <ReportTableRow key={rowIdx} row={row} columns={columns} />
+      <ReportTableRow key={`${row.asn}-${rowIdx}`} row={row} columns={columns} />
     ))}
   </StyledReportTableBody>
 )

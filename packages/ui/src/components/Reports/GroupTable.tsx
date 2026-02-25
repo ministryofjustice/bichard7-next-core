@@ -11,13 +11,25 @@ interface GroupedTableProps<T> {
   groups: T[]
 }
 
+const ensureString = (val: unknown): string => {
+  if (typeof val === "string") {
+    return val
+  }
+
+  if (typeof val === "number") {
+    return String(val)
+  }
+
+  return ""
+}
+
 export const GroupTable = <T extends Record<string, unknown>>({ config, groups }: GroupedTableProps<T>) => {
   if (!config.isGrouped) {
     return
   }
 
   const renderableGroups = groups.map((group) => {
-    const groupName = String(group[config.groupNameKey] || "")
+    const groupName = ensureString(group[config.groupNameKey])
     const rawDataList = group[config.dataListKey]
 
     const dataList = isRecordArray(rawDataList) ? rawDataList : []

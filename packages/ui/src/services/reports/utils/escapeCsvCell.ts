@@ -3,7 +3,8 @@ export const escapeCsvCell = (value: unknown): string => {
     return '""'
   }
 
-  const stringValue = String(value)
+  const stringValue =
+    typeof value === "object" ? JSON.stringify(value) : String(value as string | number | boolean | undefined)
 
   return `"${stringValue.replaceAll('"', '""')}"`
 }
