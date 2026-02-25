@@ -31,8 +31,6 @@ const initiateRequest = async (
     throw new ApiError(pendingRequestResponse)
   }
 
-  console.log(JSON.stringify(pendingRequestResponse.data))
-
   if (pendingRequestResponse.status !== HttpStatusCode.Accepted) {
     throw new Error(
       `Failed to send request to POST ${path.join(requestOptions.baseUrl, urlPath)}: ${pendingRequestResponse.status}, ${pendingRequestResponse.data}`

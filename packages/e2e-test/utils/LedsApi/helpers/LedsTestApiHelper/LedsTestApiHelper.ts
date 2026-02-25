@@ -53,11 +53,13 @@ export default class LedsTestApiHelper {
     this.person = person
     this.arrestSummonsNumber = arrestSummonsNumber
 
-    console.log({
-      "Person ID": personId,
-      "Arrest Summons Number": arrestSummonsNumber,
-      "Arrest Summons ID": arrestSummonsId
-    })
+    console.log(
+      [
+        `\tPerson ID: ${personId}`,
+        `\tArrest Summons Number: ${arrestSummonsNumber}`,
+        `\tArrest Summons ID: ${arrestSummonsId}`
+      ].join("\n")
+    )
 
     await Promise.all(
       courtCases.map(async (courtCase) => {
