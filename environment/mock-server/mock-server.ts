@@ -42,6 +42,11 @@ const REQUEST_LOG: RequestDetails[] = [] // Unified request log
 
 // --- HELPERS ---
 
+const isPathEqual = (pathA: string, pathB: string): boolean => {
+  const normalize = (p: string) => p.replace(/^\/+/, "")
+  return normalize(pathA) === normalize(pathB)
+}
+
 const isPartialMatch = (expected: any, actual: any): boolean => {
   if (expected === undefined || expected === null) return true
   if (typeof expected !== "object" || expected === null) return expected === actual
@@ -154,7 +159,7 @@ const handleMockRoutes = async (req: IncomingMessage, res: ServerResponse, pathn
   const mock = MOCKS.find(
     (m) =>
       m.method === req.method &&
-      [pathname, pathname.substring(1)].includes(m.path) &&
+      isPathEqual(pathname, m.path) &&
       (!m.count || m.hits < m.count) &&
       isPartialMatch(m.requestBody, requestBody)
   )
