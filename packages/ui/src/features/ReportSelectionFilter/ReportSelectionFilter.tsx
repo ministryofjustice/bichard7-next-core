@@ -16,13 +16,11 @@ import {
   IncludeSectionWrapper,
   ReportsSectionWrapper,
   searchButtonStyling,
-  SecondarySectionTitle,
   SelectReportsWrapper,
   selectStyling
 } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
 import { NextPage } from "next"
 import { Button } from "../../components/Buttons/Button"
-import { Label } from "../../components/Label"
 
 export const ReportSelectionFilter: NextPage = () => {
   const triggers = "triggers"
@@ -34,12 +32,9 @@ export const ReportSelectionFilter: NextPage = () => {
         <FieldsWrapper>
           <ReportsSectionWrapper id={"report-section"}>
             <h1 className={"govuk-heading-m"}>{"Reports"}</h1>
-            {/*<SecondarySectionTitle>*/}
-            <Label className="govuk-!-font-weight-regular" size={"s"} htmlFor={"report-select"}>
+            <label className="govuk-body" htmlFor={"report-select"}>
               {"Sort by"}
-            </Label>
-            {/*<h3 className={"govuk-body"}>{"Sort by"}</h3>*/}
-            {/*</SecondarySectionTitle>*/}
+            </label>
             <SelectReportsWrapper>
               <Select
                 id={"report-select"}
@@ -76,25 +71,21 @@ export const ReportSelectionFilter: NextPage = () => {
           </DateRangeSectionWrapper>
           <IncludeSectionWrapper id={"include-section"}>
             <h1 className={"govuk-heading-m"}>{"Include"}</h1>
-            <div>
-              <SecondarySectionTitle>
-                <label>{"Select an option"}</label>
-              </SecondarySectionTitle>
-              <CheckboxesWrapper>
-                <CheckboxUnit className="govuk-checkboxes__item">
-                  <input className="govuk-checkboxes__input" id={triggers} type="checkbox"></input>
-                  <CheckboxLabel className="govuk-checkboxes__label" htmlFor={triggers}>
-                    {"Triggers"}
-                  </CheckboxLabel>
-                </CheckboxUnit>
-                <CheckboxUnit className="govuk-checkboxes__item">
-                  <input className="govuk-checkboxes__input" id={exceptions} type="checkbox"></input>
-                  <CheckboxLabel className="govuk-checkboxes__label" htmlFor={exceptions}>
-                    {"Exceptions"}
-                  </CheckboxLabel>
-                </CheckboxUnit>
-              </CheckboxesWrapper>
-            </div>
+            <label className="govuk-body" htmlFor={"checkboxes-container"}>
+              {"Select an option"}
+            </label>
+            <CheckboxesWrapper id={"checkboxes-container"}>
+              <CheckboxUnit className="govuk-checkboxes__item">
+                <input className="govuk-checkboxes__input" id={triggers} type="checkbox"></input>
+                <CheckboxLabel className="govuk-checkboxes__label" htmlFor={triggers}>
+                  {"Triggers"}
+                </CheckboxLabel>
+              </CheckboxUnit>
+              <CheckboxUnit className="govuk-checkboxes__item">
+                <input className="govuk-checkboxes__input" id={exceptions} type="checkbox"></input>
+                <CheckboxLabel className="govuk-checkboxes__label">{"Exceptions"}</CheckboxLabel>
+              </CheckboxUnit>
+            </CheckboxesWrapper>
           </IncludeSectionWrapper>
         </FieldsWrapper>
       </fieldset>
