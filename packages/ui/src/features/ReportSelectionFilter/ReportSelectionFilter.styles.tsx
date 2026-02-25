@@ -11,13 +11,7 @@ const FieldsWrapper = styled.div`
   padding-right: 30px;
   box-sizing: border-box;
 `
-const SectionTitle = styled.div`
-  font-weight: bold;
-  font-size: 20px;
-`
-const SecondarySectionTitle = styled.div`
-  font-size: 19px;
-`
+
 const ReportsSectionWrapper = styled.div`
   flex: 1 1 250px;
   min-width: 150px;
@@ -61,10 +55,21 @@ const CheckboxUnit = styled.div`
   flex: 1 1 150px;
   max-width: 150px;
 `
-const CheckboxLabel = styled.label`
-  margin: 0;
-  line-height: 1;
+
+const CheckboxLabel = styled.label.attrs({
+  className: "govuk-checkboxes__label" // Keeps the original class for other styles
+})`
+  &::before {
+    top: 0px !important;
+    left: 0px !important;
+  }
+
+  &::after {
+    top: 11px !important;
+    left: 9px !important;
+  }
 `
+
 const BottomActionsBox = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -109,8 +114,6 @@ export {
   IncludeSectionWrapper,
   ReportsSectionWrapper,
   searchButtonStyling,
-  SecondarySectionTitle,
-  SectionTitle,
   SelectReportsLabelWrapper,
   SelectReportsWrapper,
   selectStyling
