@@ -1,4 +1,4 @@
-import { ReportSelectionFilter } from "components/SearchFilters/ReportSelectionFilter/ReportSelectionFilter"
+import { ReportSelectionFilter } from "features/ReportSelectionFilter/ReportSelectionFilter"
 
 describe("ReportSelectionFilter", () => {
   it("renders the correct fields for report section", () => {
