@@ -1,6 +1,5 @@
 import { HeaderWrapper } from "components/Card/Card.styles"
 import DateInput from "components/CustomDateInput/DateInput"
-
 import { Select } from "components/Select"
 import {
   BottomActionsBox,
@@ -13,14 +12,15 @@ import {
   DateRangeSectionWrapper,
   DateToWrapper,
   FieldsWrapper,
-  headerPadding,
+  headerStyling,
   IncludeSectionWrapper,
   ReportsSectionWrapper,
-  searchButton,
+  searchButtonStyling,
   SecondarySectionTitle,
   SectionTitle,
   SelectReportsLabelWrapper,
-  SelectReportsWrapper
+  SelectReportsWrapper,
+  selectStyling
 } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
 import { NextPage } from "next"
 import { Button } from "../../components/Buttons/Button"
@@ -30,7 +30,7 @@ export const ReportSelectionFilter: NextPage = () => {
   const exceptions = "exceptions"
 
   return (
-    <HeaderWrapper style={headerPadding}>
+    <HeaderWrapper style={headerStyling}>
       <fieldset className="govuk-fieldset">
         <FieldsWrapper>
           <ReportsSectionWrapper id={"report-section"}>
@@ -43,7 +43,7 @@ export const ReportSelectionFilter: NextPage = () => {
               </SelectReportsLabelWrapper>
             </SecondarySectionTitle>
             <SelectReportsWrapper>
-              <Select placeholder={"Resolved cases"} name={"select-case-type"} style={{ width: "100%" }}></Select>
+              <Select placeholder={"Resolved cases"} name={"select-case-type"} style={selectStyling}></Select>
             </SelectReportsWrapper>
           </ReportsSectionWrapper>
           <DateRangeSectionWrapper id={"date-range-section"}>
@@ -100,7 +100,7 @@ export const ReportSelectionFilter: NextPage = () => {
         </FieldsWrapper>
       </fieldset>
       <BottomActionsBox>
-        <Button id={"search"} style={searchButton}>
+        <Button id={"search"} style={searchButtonStyling}>
           {"Search Reports"}
         </Button>
         <ClearSearchLinkBox>

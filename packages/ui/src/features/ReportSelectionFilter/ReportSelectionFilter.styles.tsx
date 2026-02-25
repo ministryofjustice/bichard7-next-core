@@ -78,12 +78,16 @@ const ClearSearchLinkBox = styled.div`
   margin-right: 44px;
 `
 
-const headerPadding: CSSProperties = {
+const headerStyling: CSSProperties = {
   paddingTop: "20px",
   paddingBottom: "20px"
 }
 
-const searchButton: CSSProperties = {
+const selectStyling: CSSProperties = {
+  width: "100%"
+}
+
+const searchButtonStyling: CSSProperties = {
   margin: 0,
   flexShrink: 0,
   width: "max-content",
@@ -101,12 +105,13 @@ export {
   DateRangeSectionWrapper,
   DateToWrapper,
   FieldsWrapper,
-  headerPadding,
+  headerStyling,
   IncludeSectionWrapper,
   ReportsSectionWrapper,
-  searchButton,
+  searchButtonStyling,
   SecondarySectionTitle,
   SectionTitle,
   SelectReportsLabelWrapper,
-  SelectReportsWrapper
+  SelectReportsWrapper,
+  selectStyling
 }
