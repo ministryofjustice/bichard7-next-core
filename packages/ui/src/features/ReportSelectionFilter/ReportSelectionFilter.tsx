@@ -4,6 +4,7 @@ import { Select } from "components/Select"
 import {
   BottomActionsBox,
   CalendarsWrapper,
+  CheckboxesInput,
   CheckboxesWrapper,
   CheckboxLabel,
   CheckboxUnit,
@@ -76,14 +77,12 @@ export const ReportSelectionFilter: NextPage = () => {
             </label>
             <CheckboxesWrapper id={"checkboxes-container"}>
               <CheckboxUnit className="govuk-checkboxes__item">
-                <input className="govuk-checkboxes__input" id={triggers} type="checkbox"></input>
-                <CheckboxLabel className="govuk-checkboxes__label" htmlFor={triggers}>
-                  {"Triggers"}
-                </CheckboxLabel>
+                <CheckboxesInput id={triggers} type="checkbox"></CheckboxesInput>
+                <CheckboxLabel htmlFor={triggers}>{"Triggers"}</CheckboxLabel>
               </CheckboxUnit>
               <CheckboxUnit className="govuk-checkboxes__item">
-                <input className="govuk-checkboxes__input" id={exceptions} type="checkbox"></input>
-                <CheckboxLabel className="govuk-checkboxes__label">{"Exceptions"}</CheckboxLabel>
+                <CheckboxesInput id={exceptions} type="checkbox"></CheckboxesInput>
+                <CheckboxLabel>{"Exceptions"}</CheckboxLabel>
               </CheckboxUnit>
             </CheckboxesWrapper>
           </IncludeSectionWrapper>

@@ -56,17 +56,22 @@ const CheckboxUnit = styled.div`
   max-width: 150px;
 `
 
+const CheckboxesInput = styled.input.attrs({ className: "govuk-checkboxes__input" })`
+  width: 40px;
+  height: 40px;
+`
+
 const CheckboxLabel = styled.label.attrs({
   className: "govuk-checkboxes__label" // Keeps the original class for other styles
 })`
   &::before {
-    top: 0px !important;
-    left: 0px !important;
+    top: 0px;
+    left: 0px;
   }
 
   &::after {
-    top: 11px !important;
-    left: 9px !important;
+    top: 11px;
+    left: 9px;
   }
 `
 
@@ -102,6 +107,7 @@ const searchButtonStyling: CSSProperties = {
 export {
   BottomActionsBox,
   CalendarsWrapper,
+  CheckboxesInput,
   CheckboxesWrapper,
   CheckboxLabel,
   CheckboxUnit,
