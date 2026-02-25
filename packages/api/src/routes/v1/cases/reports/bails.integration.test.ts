@@ -223,8 +223,8 @@ describe("bails report", () => {
         nextAppearanceDate: "",
         nextAppearanceTime: "",
         offenceTitles:
-          "Aid and abet theft.\n" +
-          "Sell a tobacco product without a license.\n" +
+          "Aid and abet theft.\n\n" +
+          "Sell a tobacco product without a license.\n\n" +
           "Use a motor vehicle on a road / public place without third party insurance.",
         ptiurn: caseObj.ptiurn,
         receivedDate: format(caseObj.messageReceivedAt, "dd/MM/yyyy HH:mm"),
@@ -279,8 +279,8 @@ describe("bails report", () => {
         nextAppearanceDate: "",
         nextAppearanceTime: "",
         offenceTitles:
-          "Aid and abet theft.\n" +
-          "Sell a tobacco product without a license.\n" +
+          "Aid and abet theft.\n\n" +
+          "Sell a tobacco product without a license.\n\n" +
           "Use a motor vehicle on a road / public place without third party insurance.",
         ptiurn: caseObj.ptiurn,
         receivedDate: format(caseObj.messageReceivedAt, "dd/MM/yyyy HH:mm"),
