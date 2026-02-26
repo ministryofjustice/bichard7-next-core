@@ -1,120 +1,103 @@
-import { CSSProperties } from "react"
 import styled from "styled-components"
 
-const FieldsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 50px;
-  width: 100%;
-  align-items: flex-start;
-  padding-left: 30px;
-  padding-right: 30px;
-  box-sizing: border-box;
-`
+const ReportSelectionFilterWrapper = styled.div`
+  .include-section-wrapper {
+    flex: 1 1 250px;
+    min-width: 150px;
 
-const ReportsSectionWrapper = styled.div`
-  flex: 1 1 250px;
-  min-width: 150px;
-`
-const SelectReportsLabelWrapper = styled.div`
-  padding-bottom: 1.5px;
-`
-const SelectReportsWrapper = styled.div`
-  flex: 1 1 150px;
-`
-const DateRangeSectionWrapper = styled.div`
-  flex: 1 1 500px;
-  min-width: 150px;
-`
-const CalendarsWrapper = styled.div`
-  display: flex;
-  flex-wrap: nowrap;
-`
-const DateFromWrapper = styled.div`
-  float: left;
-  margin-right: 25px;
-  flex: 1 1 150px;
-  min-width: 150px;
-`
-const DateToWrapper = styled.div`
-  float: right;
-  flex: 1 1 150px;
-  min-width: 50px;
-`
-const IncludeSectionWrapper = styled.div`
-  flex: 1 1 225px;
-  min-width: 150px;
-`
-const CheckboxesWrapper = styled.div`
-  display: flex;
+    .checkboxes-wrapper {
+      display: flex;
 
-  .govuk-checkboxes__item {
+      .govuk-checkboxes__item {
+        margin: 0;
+        flex: 1 1 150px;
+        min-width: 150px;
+        max-width: 200px;
+      }
+
+      .govuk-checkboxes__input {
+        width: 40px;
+        height: 40px;
+      }
+
+      .govuk-checkboxes__label::before {
+        top: 0px;
+        left: 0px;
+      }
+
+      .govuk-checkboxes__label::after {
+        top: 11px;
+        left: 9px;
+      }
+    }
+  }
+
+  .reports-section-wrapper {
+    flex: 1 1 250px;
+    min-width: 150px;
+  }
+
+  .date-range-section-wrapper {
+    flex: 1 1 475px;
+    min-width: 150px;
+    justify-content: space-between;
+    flex-direction: row;
+
+    .date {
+      min-width: 150px;
+      flex: 1 1 150px;
+
+      &:first-child {
+        margin-right: 25px;
+      }
+    }
+
+    .date-to-wrapper {
+      float: right;
+    }
+
+    .date-from-wrapper {
+      float: left;
+    }
+
+    .calendars-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+  }
+
+  .fields-wrapper {
     display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    width: 100%;
+    align-items: flex-start;
+    padding-left: 30px;
+    padding-right: 30px;
+    box-sizing: border-box;
+  }
+
+  .bottom-actions-bar {
+    display: flex;
+    justify-content: flex-end;
     align-items: center;
-    margin: 0;
-    flex: 1 1 150px;
-    max-width: 150px;
+    gap: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+
+    .clear-search-link {
+      margin-right: 44px;
+    }
+
+    .search-button {
+      margin: 0;
+    }
   }
 
-  .govuk-checkboxes__input {
-    width: 40px;
-    height: 40px;
-  }
-
-  .govuk-checkboxes__label::before {
-    top: 0px;
-    left: 0px;
-  }
-
-  .govuk-checkboxes__label::after {
-    top: 11px;
-    left: 9px;
+  .select-report-field {
+    width: 100%;
   }
 `
 
-const BottomActionsBox = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  width: 100%;
-`
-const ClearSearchLinkBox = styled.div`
-  margin-right: 44px;
-`
-
-const headerStyling: CSSProperties = {
-  paddingTop: "20px",
-  paddingBottom: "20px"
-}
-
-const selectStyling: CSSProperties = {
-  width: "100%"
-}
-
-const searchButtonStyling: CSSProperties = {
-  margin: 0,
-  flexShrink: 0,
-  width: "max-content",
-  padding: "10px 20px"
-}
-
-export {
-  BottomActionsBox,
-  CalendarsWrapper,
-  CheckboxesWrapper,
-  ClearSearchLinkBox,
-  DateFromWrapper,
-  DateRangeSectionWrapper,
-  DateToWrapper,
-  FieldsWrapper,
-  headerStyling,
-  IncludeSectionWrapper,
-  ReportsSectionWrapper,
-  searchButtonStyling,
-  SelectReportsLabelWrapper,
-  SelectReportsWrapper,
-  selectStyling
-}
+export { ReportSelectionFilterWrapper }

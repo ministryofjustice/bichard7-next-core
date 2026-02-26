@@ -1,49 +1,32 @@
-import { HeaderWrapper } from "components/Card/Card.styles"
+import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
 import { Select } from "components/Select"
-import {
-  BottomActionsBox,
-  CalendarsWrapper,
-  CheckboxesWrapper,
-  ClearSearchLinkBox,
-  DateFromWrapper,
-  DateRangeSectionWrapper,
-  DateToWrapper,
-  FieldsWrapper,
-  headerStyling,
-  IncludeSectionWrapper,
-  ReportsSectionWrapper,
-  searchButtonStyling,
-  SelectReportsWrapper,
-  selectStyling
-} from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
+import { ReportSelectionFilterWrapper } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
 import { NextPage } from "next"
 import { Button } from "../../components/Buttons/Button"
 
 export const ReportSelectionFilter: NextPage = () => {
   return (
-    <HeaderWrapper style={headerStyling}>
-      <fieldset className="govuk-fieldset">
-        <FieldsWrapper>
-          <ReportsSectionWrapper id={"report-section"}>
+    <ReportSelectionFilterWrapper>
+      <Card heading={"Report selection filter"} isContentVisible={true}>
+        <fieldset className="govuk-fieldset fields-wrapper">
+          <div id={"report-section"} className="reports-section-wrapper">
             <h1 className={"govuk-heading-m"}>{"Reports"}</h1>
             <label className="govuk-body" htmlFor={"report-select"}>
               {"Sort by"}
             </label>
-            <SelectReportsWrapper>
-              <Select
-                id={"report-select"}
-                placeholder={"Resolved cases"}
-                name={"select-case-type"}
-                style={selectStyling}
-              ></Select>
-            </SelectReportsWrapper>
-          </ReportsSectionWrapper>
-          <DateRangeSectionWrapper id={"date-range-section"}>
+            <Select
+              id={"report-select"}
+              placeholder={"Resolved cases"}
+              name={"select-case-type"}
+              className="select-report-field"
+            ></Select>
+          </div>
+          <div id={"date-range-section"} className="date-range-section-wrapper">
             <h1 className={"govuk-heading-m"}>{"Date range"}</h1>
-            <CalendarsWrapper>
-              <DateFromWrapper id={"report-selection-date-from"}>
+            <div className="calendars-wrapper">
+              <div id={"report-selection-date-from"} className="date date-from-wrapper">
                 <DateInput
                   dateType="resolvedFrom"
                   dispatch={function (): void {
@@ -52,8 +35,8 @@ export const ReportSelectionFilter: NextPage = () => {
                   value={""}
                   dateRange={undefined}
                 />
-              </DateFromWrapper>
-              <DateToWrapper id={"report-selection-date-to"}>
+              </div>
+              <div id={"report-selection-date-to"} className="date date-to-wrapper">
                 <DateInput
                   dateType="resolvedTo"
                   dispatch={function (): void {
@@ -62,31 +45,31 @@ export const ReportSelectionFilter: NextPage = () => {
                   value={""}
                   dateRange={undefined}
                 />
-              </DateToWrapper>
-            </CalendarsWrapper>
-          </DateRangeSectionWrapper>
-          <IncludeSectionWrapper id={"include-section"}>
+              </div>
+            </div>
+          </div>
+          <div id={"include-section"} className="include-section-wrapper">
             <h1 className={"govuk-heading-m"}>{"Include"}</h1>
             <label className="govuk-body" htmlFor={"checkboxes-container"}>
               {"Select an option"}
             </label>
-            <CheckboxesWrapper id={"checkboxes-container"}>
+            <div id={"checkboxes-container"} className="checkboxes-wrapper">
               <Checkbox label={"Triggers"} checked={false}></Checkbox>
               <Checkbox label={"Exceptions"} checked={false}></Checkbox>
-            </CheckboxesWrapper>
-          </IncludeSectionWrapper>
-        </FieldsWrapper>
-      </fieldset>
-      <BottomActionsBox>
-        <Button id={"search"} style={searchButtonStyling}>
-          {"Search Reports"}
-        </Button>
-        <ClearSearchLinkBox>
-          <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
-            {"Clear search"}
-          </a>
-        </ClearSearchLinkBox>
-      </BottomActionsBox>
-    </HeaderWrapper>
+            </div>
+          </div>
+        </fieldset>
+        <div className="bottom-actions-bar">
+          <Button id={"search"} className="search-button">
+            {"Search Reports"}
+          </Button>
+          <div className="clear-search-link">
+            <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
+              {"Clear search"}
+            </a>
+          </div>
+        </div>
+      </Card>
+    </ReportSelectionFilterWrapper>
   )
 }
