@@ -3,6 +3,13 @@ import type PersonDetails from "../../../../../types/LedsTestApiHelper/PersonDet
 import type CreateArrestedPersonRequest from "../../../../../types/LedsTestApiHelper/Requests/CreateArrestedPersonRequest"
 import mapToAddOffenceRequest from "../addOffence/mapToAddOffenceRequest"
 
+// IMPORTANT:
+// This value is intentionally fixed for the TEST environment.
+// It has been agreed with the LEDS team so they can periodically
+// identify and purge test records on their side.
+// Do NOT change this value unless the LEDS team confirms an update.
+const ARRESTING_OFFICER_LAST_NAME = "Moj Test Officer"
+
 const mapToCreateArrestedPersonRequest = (
   person: PersonDetails,
   firstOffence: OffenceDetails,
@@ -35,7 +42,7 @@ const mapToCreateArrestedPersonRequest = (
         prosecutingAgent: "CPS",
         arrestingOfficer: {
           division: "HQ",
-          lastName: "Test Officer",
+          lastName: ARRESTING_OFFICER_LAST_NAME,
           rankCode: "COMM",
           number: 51843
         },
