@@ -26,7 +26,7 @@ export const ReportSelectionFilter: NextPage = () => {
           <div id={"date-range-section"} className="date-range-section-wrapper">
             <h2 className={"govuk-heading-m"}>{"Date range"}</h2>
             <div className="calendars-wrapper">
-              <div id={"report-selection-date-from"} className="date date-from-wrapper">
+              <div id={"report-selection-date-from"} className="date">
                 <DateInput
                   dateType="resolvedFrom"
                   dispatch={function (): void {
@@ -36,7 +36,7 @@ export const ReportSelectionFilter: NextPage = () => {
                   dateRange={undefined}
                 />
               </div>
-              <div id={"report-selection-date-to"} className="date date-to-wrapper">
+              <div id={"report-selection-date-to"} className="date">
                 <DateInput
                   dateType="resolvedTo"
                   dispatch={function (): void {
