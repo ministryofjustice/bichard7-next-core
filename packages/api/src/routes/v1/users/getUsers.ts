@@ -5,7 +5,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserListSchema } from "@moj-bichard7/common/types/User"
-import { FORBIDDEN, OK } from "http-status"
+import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
@@ -45,6 +45,8 @@ const handler = async ({ database, logger, reply, user }: HandlerProps) => {
   if (userList instanceof NotAllowedError) {
     return reply.code(FORBIDDEN).send()
   }
+
+  return reply.code(INTERNAL_SERVER_ERROR).send()
 }
 
 const route = async (fastify: FastifyInstance) => {
