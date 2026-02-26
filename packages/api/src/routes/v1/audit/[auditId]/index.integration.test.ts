@@ -42,7 +42,7 @@ describe("GET /v1/audit/:auditId", () => {
         courtCode: user.visibleCourts[0],
         errorId: 1,
         orgForPoliceFilter: user.visibleForces[0],
-        triggerQualityChecked: 1,
+        triggerQualityChecked: 2,
         triggerResolvedAt: subDays(new Date(), 1),
         triggerResolvedBy: "user1"
       }),
@@ -86,7 +86,7 @@ describe("GET /v1/audit/:auditId", () => {
     const body = await response.json()
     expect(body).toEqual({
       auditedCases: 1,
-      auditId: expect.any(Number),
+      auditId: (audit as AuditDto).auditId,
       completedWhen: null,
       createdBy: user.username,
       createdWhen: expect.any(String),
