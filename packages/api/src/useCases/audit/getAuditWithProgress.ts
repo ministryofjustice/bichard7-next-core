@@ -21,18 +21,14 @@ export async function getAuditWithProgress(
     return new NotAllowedError()
   }
 
-  return await database
-    .transaction<AuditWithProgressDto | Error>(async (tx) => {
-      const audit = await fetchAuditWithProgress(tx, auditId, user)
-      if (isError(audit)) {
-        throw audit
-      }
+  const audit = await fetchAuditWithProgress(database, auditId, user)
+  if (isError(audit)) {
+    return audit
+  }
 
-      if (!audit) {
-        throw new NotFoundError()
-      }
+  if (!audit) {
+    return new NotFoundError()
+  }
 
-      return convertAuditWithProgressToDto(audit)
-    })
-    .catch((err) => err)
+  return convertAuditWithProgressToDto(audit)
 }
