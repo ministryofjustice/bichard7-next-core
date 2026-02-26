@@ -51,4 +51,25 @@ describe("fetchUsers", () => {
     )
     expect(userList.users.map((u) => u.username)).toEqual(expect.not.arrayContaining([nonVisibleUser.username]))
   })
+
+  it("should return supervised users with different visible force formatting", async () => {
+    const visibleUser1 = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
+    const visibleUser2 = await createUser(testDatabaseGateway, { visibleForces: ["001", "002"] })
+    const nonVisibleUser1 = await createUser(testDatabaseGateway, { visibleForces: ["02"] })
+    const nonVisibleUser2 = await createUser(testDatabaseGateway, { visibleForces: ["101"] })
+    const supervisor = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      visibleForces: ["01"]
+    })
+
+    const userList = (await fetchUsers(testDatabaseGateway.readonly, supervisor)) as FetchUsersResult
+
+    expect(userList.users).toHaveLength(3)
+    expect(userList.users.map((u) => u.username)).toEqual(
+      expect.arrayContaining([visibleUser1.username, visibleUser2.username, supervisor.username])
+    )
+    expect(userList.users.map((u) => u.username)).toEqual(
+      expect.not.arrayContaining([nonVisibleUser1.username, nonVisibleUser2.username])
+    )
+  })
 })
