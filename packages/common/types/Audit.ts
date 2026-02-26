@@ -26,5 +26,19 @@ export const AuditDtoSchema = z.object({
   volumeOfCases: z.number()
 })
 
+export const AuditWithProgressSchema = z.object({
+  ...AuditSchema.shape,
+  audited_cases: z.number(),
+  total_cases: z.number()
+})
+
+export const AuditWithProgressDtoSchema = z.object({
+  ...AuditDtoSchema.shape,
+  auditedCases: z.number(),
+  totalCases: z.number()
+})
+
 export type Audit = z.infer<typeof AuditSchema>
 export type AuditDto = z.infer<typeof AuditDtoSchema>
+export type AuditWithProgress = z.infer<typeof AuditWithProgressSchema>
+export type AuditWithProgressDto = z.infer<typeof AuditWithProgressSchema>
