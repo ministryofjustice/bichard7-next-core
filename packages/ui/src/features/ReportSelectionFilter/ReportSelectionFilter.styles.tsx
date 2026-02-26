@@ -52,14 +52,6 @@ const ReportSelectionFilterWrapper = styled.div`
       }
     }
 
-    .date-to-wrapper {
-      float: right;
-    }
-
-    .date-from-wrapper {
-      float: left;
-    }
-
     .calendars-wrapper {
       display: flex;
       flex-wrap: nowrap;
