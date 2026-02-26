@@ -211,7 +211,7 @@ describe("bails report", () => {
       expect.objectContaining({
         asn: getShortAsn(caseObj.asn),
         automatedToPNC: "No",
-        bailConditions: "noBailConditionsText",
+        bailConditions: "No bail conditions found",
         courtName: caseObj.courtName,
         dateOfBirth: "11/11/1948",
         daysToEnterPortal: 1,
@@ -267,7 +267,7 @@ describe("bails report", () => {
       expect.objectContaining({
         asn: getShortAsn(caseObj.asn),
         automatedToPNC: "No",
-        bailConditions: "noBailConditionsText",
+        bailConditions: "No bail conditions found",
         courtName: caseObj.courtName,
         dateOfBirth: "11/11/1948",
         daysToEnterPortal: 4,
