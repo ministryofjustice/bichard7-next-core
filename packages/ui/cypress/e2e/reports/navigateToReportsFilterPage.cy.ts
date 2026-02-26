@@ -8,7 +8,7 @@ describe('Navigate to Reports filter page', () => {
     })
 
     it("Should show Reports filter page", () => {
-      cy.findByText("Search reports").should("exist")
+      cy.find("h1").should("have.text", "Search reports")
     })
   })
 
