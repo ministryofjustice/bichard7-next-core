@@ -1,14 +1,13 @@
 import { loginAndVisit } from "../../support/helpers"
 
-describe('Navigate to Reports filter page', () => {
-
+describe("Navigate to Reports filter page", () => {
   context("When the user is a supervisor", () => {
     before(() => {
       loginAndVisit("Supervisor", "/bichard/report-selection")
     })
 
     it("Should show Reports filter page", () => {
-      cy.find("h1").should("have.text", "Search reports")
+      cy.get("h1").should("have.text", "Search reports")
     })
   })
 
@@ -18,7 +17,7 @@ describe('Navigate to Reports filter page', () => {
     })
 
     it("Should redirect to the case list", () => {
-      cy.location('pathname').should('eq', '/bichard')
+      cy.location("pathname").should("eq", "/bichard")
     })
   })
 })
