@@ -71,8 +71,8 @@ const ReportSelectionFilterWrapper = styled.div`
     flex-wrap: wrap;
     gap: 3rem;
     align-items: flex-start;
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
     box-sizing: border-box;
   }
 
