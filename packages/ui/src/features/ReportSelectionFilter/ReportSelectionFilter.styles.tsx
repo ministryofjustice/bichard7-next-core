@@ -35,6 +35,10 @@ const ReportSelectionFilterWrapper = styled.div`
   .reports-section-wrapper {
     flex: 1 1 15rem;
     min-width: 9rem;
+
+    .select-report-input {
+      width: 100%;
+    }
   }
 
   .date-range-section-wrapper {

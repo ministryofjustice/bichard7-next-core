@@ -20,7 +20,7 @@ export const ReportSelectionFilter: NextPage = () => {
               id={"report-select"}
               placeholder={"Resolved cases"}
               name={"select-case-type"}
-              className="govuk-input"
+              className="select-report-input"
             ></Select>
           </div>
           <div id={"date-range-section"} className="date-range-section-wrapper">
