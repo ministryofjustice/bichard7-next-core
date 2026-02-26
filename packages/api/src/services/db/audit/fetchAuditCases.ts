@@ -86,6 +86,7 @@ export const fetchAuditCases = async (
       ac.audit_id = ${auditId}
       AND (${organisationUnitSql(database, user)})
   `.catch((error: Error) => error)
+
   if (isError(summary)) {
     return new Error("Failed to get count of audit case records")
   }
