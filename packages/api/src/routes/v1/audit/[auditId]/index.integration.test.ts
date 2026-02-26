@@ -1,6 +1,7 @@
 import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { format, subDays, subWeeks } from "date-fns"
@@ -44,13 +45,15 @@ describe("GET /v1/audit/:auditId", () => {
         orgForPoliceFilter: user.visibleForces[0],
         triggerQualityChecked: 2,
         triggerResolvedAt: subDays(new Date(), 1),
-        triggerResolvedBy: "user1"
+        triggerResolvedBy: "user1",
+        triggerStatus: ResolutionStatusNumber.Resolved
       }),
       createCase(testDatabaseGateway, {
         courtCode: user.visibleCourts[0],
         errorId: 2,
         errorResolvedAt: subDays(new Date(), 1),
         errorResolvedBy: "user1",
+        errorStatus: ResolutionStatusNumber.Resolved,
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])

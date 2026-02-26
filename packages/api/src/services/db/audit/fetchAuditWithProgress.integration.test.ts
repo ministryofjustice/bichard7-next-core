@@ -1,5 +1,6 @@
 import type { AuditDto, AuditWithProgress } from "@moj-bichard7/common/types/Audit"
 
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { format, subDays, subWeeks } from "date-fns"
 
@@ -30,13 +31,15 @@ describe("fetchAuditWithProgress", () => {
         orgForPoliceFilter: user.visibleForces[0],
         triggerQualityChecked: 2,
         triggerResolvedAt: subDays(new Date(), 1),
-        triggerResolvedBy: "user1"
+        triggerResolvedBy: "user1",
+        triggerStatus: ResolutionStatusNumber.Resolved
       }),
       createCase(testDatabaseGateway, {
         courtCode: user.visibleCourts[0],
         errorId: 2,
         errorResolvedAt: subDays(new Date(), 1),
         errorResolvedBy: "user1",
+        errorStatus: ResolutionStatusNumber.Resolved,
         orgForPoliceFilter: user.visibleForces[0]
       })
     ])
@@ -92,22 +95,26 @@ describe("fetchAuditWithProgress", () => {
         courtCode: user.visibleCourts[0],
         errorId: 1,
         orgForPoliceFilter: "XYZ",
-        triggerQualityChecked: 2
+        triggerQualityChecked: 2,
+        triggerStatus: ResolutionStatusNumber.Resolved
       }),
       createCase(testDatabaseGateway, {
         courtCode: "XYZ",
         errorId: 2,
-        orgForPoliceFilter: user.visibleForces[0]
+        orgForPoliceFilter: user.visibleForces[0],
+        triggerStatus: ResolutionStatusNumber.Resolved
       }),
       createCase(testDatabaseGateway, {
         courtCode: "XYZ",
         errorId: 3,
-        orgForPoliceFilter: "XYZ"
+        orgForPoliceFilter: "XYZ",
+        triggerStatus: ResolutionStatusNumber.Resolved
       }),
       createCase(testDatabaseGateway, {
         courtCode: "XYZ",
         errorId: 4,
-        orgForPoliceFilter: "XYZ"
+        orgForPoliceFilter: "XYZ",
+        triggerStatus: ResolutionStatusNumber.Resolved
       })
     ])
     const audit = await insertAudit(
