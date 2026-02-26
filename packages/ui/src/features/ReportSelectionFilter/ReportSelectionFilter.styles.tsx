@@ -2,17 +2,17 @@ import styled from "styled-components"
 
 const ReportSelectionFilterWrapper = styled.div`
   .include-section-wrapper {
-    flex: 1 1 250px;
-    min-width: 150px;
+    flex: 1 1 15rem;
+    min-width: 9rem;
 
     .checkboxes-wrapper {
       display: flex;
 
       .govuk-checkboxes__item {
         margin: 0;
-        flex: 1 1 150px;
-        min-width: 150px;
-        max-width: 200px;
+        flex: 1 1 9rem;
+        min-width: 9rem;
+        max-width: 12.5rem;
       }
 
       .govuk-checkboxes__input {
@@ -33,22 +33,22 @@ const ReportSelectionFilterWrapper = styled.div`
   }
 
   .reports-section-wrapper {
-    flex: 1 1 250px;
-    min-width: 150px;
+    flex: 1 1 15rem;
+    min-width: 9rem;
   }
 
   .date-range-section-wrapper {
-    flex: 1 1 475px;
-    min-width: 150px;
+    flex: 1 1 30rem;
+    min-width: 9rem;
     justify-content: space-between;
     flex-direction: row;
 
     .date {
-      min-width: 150px;
-      flex: 1 1 150px;
+      min-width: 9rem;
+      flex: 1 1 9rem;
 
       &:first-child {
-        margin-right: 25px;
+        margin-right: 1.5rem;
       }
     }
 
@@ -69,10 +69,10 @@ const ReportSelectionFilterWrapper = styled.div`
   .fields-wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: 50px;
+    gap: 3rem;
     align-items: flex-start;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: 2rem;
+    padding-right: 2rem;
     box-sizing: border-box;
   }
 
@@ -80,8 +80,8 @@ const ReportSelectionFilterWrapper = styled.div`
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 15px;
-    padding-bottom: 10px;
+    gap: 1rem;
+    padding-bottom: 1rem;
     width: 100%;
 
     .search-button {
