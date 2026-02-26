@@ -1,5 +1,6 @@
 export const Endpoints = {
   Audit: "/audit",
+  AuditCases: "/audit/:auditId/cases",
   AuditLog: "/audit-logs/:correlationId",
   AuditLogEvents: "/audit-logs/:correlationId/events",
   AuditLogs: "/audit-logs",

@@ -1,6 +1,6 @@
 import { Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
-import { generateUrlSearchParams } from "./generateUrlSearchParams"
+import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
 
 describe("generateUrlSearchParams", () => {
   it("handles numbers", () => {

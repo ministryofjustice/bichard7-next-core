@@ -1,5 +1,7 @@
 #!/bin/bash
 
+lpm add postgresql --global
+
 /liquibase/docker-entrypoint.sh \
   --logLevel info --defaultsFile=${LIQUIBASE_PROPERTIES_FILE} update && \
   touch /liquibase/completed && \

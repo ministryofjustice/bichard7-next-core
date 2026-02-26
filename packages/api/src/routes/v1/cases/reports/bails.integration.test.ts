@@ -211,7 +211,7 @@ describe("bails report", () => {
       expect.objectContaining({
         asn: getShortAsn(caseObj.asn),
         automatedToPNC: "No",
-        bailConditions: "noBailConditionsText",
+        bailConditions: "No bail conditions found",
         courtName: caseObj.courtName,
         dateOfBirth: "11/11/1948",
         daysToEnterPortal: 1,
@@ -223,8 +223,8 @@ describe("bails report", () => {
         nextAppearanceDate: "",
         nextAppearanceTime: "",
         offenceTitles:
-          "Aid and abet theft.\n" +
-          "Sell a tobacco product without a license.\n" +
+          "Aid and abet theft.\n\n" +
+          "Sell a tobacco product without a license.\n\n" +
           "Use a motor vehicle on a road / public place without third party insurance.",
         ptiurn: caseObj.ptiurn,
         receivedDate: format(caseObj.messageReceivedAt, "dd/MM/yyyy HH:mm"),
@@ -267,7 +267,7 @@ describe("bails report", () => {
       expect.objectContaining({
         asn: getShortAsn(caseObj.asn),
         automatedToPNC: "No",
-        bailConditions: "noBailConditionsText",
+        bailConditions: "No bail conditions found",
         courtName: caseObj.courtName,
         dateOfBirth: "11/11/1948",
         daysToEnterPortal: 4,
@@ -279,8 +279,8 @@ describe("bails report", () => {
         nextAppearanceDate: "",
         nextAppearanceTime: "",
         offenceTitles:
-          "Aid and abet theft.\n" +
-          "Sell a tobacco product without a license.\n" +
+          "Aid and abet theft.\n\n" +
+          "Sell a tobacco product without a license.\n\n" +
           "Use a motor vehicle on a road / public place without third party insurance.",
         ptiurn: caseObj.ptiurn,
         receivedDate: format(caseObj.messageReceivedAt, "dd/MM/yyyy HH:mm"),

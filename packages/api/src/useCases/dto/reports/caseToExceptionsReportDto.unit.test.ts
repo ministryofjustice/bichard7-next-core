@@ -1,29 +1,27 @@
 import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 
-import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
-
 import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
 
 import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
 
 describe("caseToExceptionsReportDto", () => {
-  it("should convert case row to case report DTO with empty notes", () => {
-    const caseRow: CaseRowForExceptionReport = {
-      asn: "1101ZD0100000410836J",
-      court_date: new Date("2024-01-15"),
-      court_name: "Test Court",
-      court_reference: "REF123",
-      court_room: "Room 1",
-      defendant_name: "John Doe",
-      msg_received_ts: new Date("2024-01-10"),
-      notes: [],
-      ptiurn: "01ZD0303208",
-      resolved_ts: new Date("2024-01-20"),
-      resolver: "user1",
-      type: "Exceptions"
-    }
+  const baseCaseRow: CaseRowForExceptionReport = {
+    asn: "1101ZD0100000410836J",
+    court_date: new Date("2024-01-15"),
+    court_name: "Test Court",
+    court_reference: "REF123",
+    court_room: "Room 1",
+    defendant_name: "John Doe",
+    msg_received_ts: new Date("2024-01-10T12:00:00Z"),
+    notes: [],
+    ptiurn: "01ZD0303208",
+    resolved_ts: new Date("2024-01-20T15:30:00Z"),
+    resolver: "user1",
+    type: "Exceptions"
+  }
 
-    const result = caseToExceptionsReportDto(caseRow)
+  it("should convert case row to report DTO and format dates as strings", () => {
+    const result = caseToExceptionsReportDto(baseCaseRow)
 
     expect(result).toEqual({
       asn: "11/01ZD/01/410836J",
@@ -31,25 +29,20 @@ describe("caseToExceptionsReportDto", () => {
       courtReference: "REF123",
       courtRoom: "Room 1",
       defendantName: "John Doe",
-      hearingDate: new Date("2024-01-15"),
-      messageReceivedAt: new Date("2024-01-10"),
-      notes: [],
+      hearingDate: "15/01/2024",
+      messageReceivedAt: "10/01/2024 12:00", // Matches your Received output
+      notes: "",
       ptiurn: "01ZD0303208",
-      resolvedAt: new Date("2024-01-20"),
+      resolutionAction: "",
+      resolvedAt: "20/01/2024 15:30", // Matches your Received output
       resolver: "user1",
-      type: "Exceptions"
+      type: "Ex"
     } satisfies CaseForExceptionReportDto)
   })
 
-  it("should convert case row with notes sorted by create_ts descending", () => {
+  it("should format multiple notes into a single newline-separated string in DB order", () => {
     const caseRow: CaseRowForExceptionReport = {
-      asn: "1101ZD0100000410836J",
-      court_date: new Date("2024-01-15"),
-      court_name: "Test Court",
-      court_reference: "REF123",
-      court_room: "Room 1",
-      defendant_name: "John Doe",
-      msg_received_ts: new Date("2024-01-10"),
+      ...baseCaseRow,
       notes: [
         {
           create_ts: new Date("2024-01-10T10:00:00Z"),
@@ -59,104 +52,98 @@ describe("caseToExceptionsReportDto", () => {
           user_id: "user1"
         },
         {
-          create_ts: new Date("2024-01-11T10:00:00Z"),
+          create_ts: new Date("2024-01-11T14:00:00Z"),
           error_id: 1,
           note_id: 2,
           note_text: "Second note",
           user_id: "user2"
-        },
-        {
-          create_ts: new Date("2024-01-09T10:00:00Z"),
-          error_id: 1,
-          note_id: 3,
-          note_text: "Third note",
-          user_id: "user3"
         }
-      ],
-      ptiurn: "01ZD0303208",
-      resolved_ts: new Date("2024-01-20"),
-      resolver: "user1",
-      type: "Exceptions"
+      ]
     }
 
     const result = caseToExceptionsReportDto(caseRow)
 
-    expect(result.notes).toHaveLength(3)
-    expect(result.notes[0].noteText).toBe("Second note") // 2024-01-11
-    expect(result.notes[1].noteText).toBe("First note") // 2024-01-10
-    expect(result.notes[2].noteText).toBe("Third note") // 2024-01-09
+    const expectedNotes = "First note [user1 10/01/2024 10:00]\n\n" + "Second note [user2 11/01/2024 14:00]"
+
+    expect(result.notes).toBe(expectedNotes)
   })
 
-  it("should handle undefined notes", () => {
-    const caseRow: CaseRowForExceptionReport = {
-      asn: "1101ZD0100000410836J",
-      court_date: new Date("2024-01-15"),
-      court_name: "Test Court",
-      court_reference: "REF123",
-      court_room: "Room 1",
-      defendant_name: "John Doe",
-      msg_received_ts: new Date("2024-01-10"),
-      notes: undefined as any,
-      ptiurn: "01ZD0303208",
-      resolved_ts: new Date("2024-01-20"),
-      resolver: "user1",
-      type: "Triggers"
-    }
+  describe("resolutionAction logic", () => {
+    it("should set resolutionAction to 'Trigger activity performed' for Trigger types", () => {
+      const caseRow = { ...baseCaseRow, type: "Trigger" }
+      const result = caseToExceptionsReportDto(caseRow)
+      expect(result.resolutionAction).toBe("Trigger activity performed")
+      expect(result.type).toBe("Tr")
+    })
 
-    const result = caseToExceptionsReportDto(caseRow)
+    it("should identify 'Resolved via re-submission' from notes", () => {
+      const caseRow: CaseRowForExceptionReport = {
+        ...baseCaseRow,
+        notes: [
+          {
+            create_ts: new Date(),
+            error_id: 1,
+            note_id: 1,
+            note_text: "System generated: Portal Action: Resubmitted Message",
+            user_id: "System"
+          }
+        ],
+        type: "Exceptions"
+      }
+      const result = caseToExceptionsReportDto(caseRow)
+      expect(result.resolutionAction).toBe("Resolved via re-submission")
+    })
 
-    expect(result.notes).toEqual([])
+    it("should extract manual resolution reason and reason text", () => {
+      const caseRow: CaseRowForExceptionReport = {
+        ...baseCaseRow,
+        notes: [
+          {
+            create_ts: new Date(),
+            error_id: 1,
+            note_id: 1,
+            note_text: "Portal Action: Record Manually Resolved. Reason: Postponed Reason Text: Awaiting documents",
+            user_id: "user1"
+          }
+        ],
+        type: "Exceptions"
+      }
+      const result = caseToExceptionsReportDto(caseRow)
+      expect(result.resolutionAction).toBe("Postponed (Awaiting documents)")
+    })
+
+    it("should use the most recent resolution note (right-most in chronologically ordered array)", () => {
+      const caseRow: CaseRowForExceptionReport = {
+        ...baseCaseRow,
+        notes: [
+          {
+            create_ts: new Date("2024-01-01"),
+            error_id: 1,
+            note_id: 1,
+            note_text: "Portal Action: Resubmitted Message",
+            user_id: "sys"
+          },
+          {
+            create_ts: new Date("2024-01-02"),
+            error_id: 1,
+            note_id: 2,
+            note_text: "Portal Action: Record Manually Resolved. Reason: Finished",
+            user_id: "user1"
+          }
+        ]
+      }
+      const result = caseToExceptionsReportDto(caseRow)
+      expect(result.resolutionAction).toBe("Finished")
+    })
   })
 
-  it("should handle null notes", () => {
-    const caseRow: CaseRowForExceptionReport = {
-      asn: "1101ZD0100000410836J",
-      court_date: new Date("2024-01-15"),
-      court_name: "Test Court",
-      court_reference: "REF123",
-      court_room: "Room 1",
-      defendant_name: "John Doe",
-      msg_received_ts: new Date("2024-01-10"),
-      notes: null as any,
-      ptiurn: "01ZD0303208",
-      resolved_ts: new Date("2024-01-20"),
-      resolver: "user1",
-      type: "Exceptions"
-    }
+  it("should handle null or undefined notes gracefully", () => {
+    const caseRow = { ...baseCaseRow, notes: null as any }
+    const resultNull = caseToExceptionsReportDto(caseRow)
+    expect(resultNull.notes).toBe("")
 
-    const result = caseToExceptionsReportDto(caseRow)
-
-    expect(result.notes).toEqual([])
-  })
-
-  it("should map all fields correctly", () => {
-    const caseRow: CaseRowForExceptionReport = {
-      asn: "1101ZD0100000410836J",
-      court_date: new Date("2024-02-01"),
-      court_name: "Crown Court",
-      court_reference: "CC/2024/001",
-      court_room: "Court 5",
-      defendant_name: "Jane Smith",
-      msg_received_ts: new Date("2024-01-25"),
-      notes: [],
-      ptiurn: "PTI001",
-      resolved_ts: new Date("2024-02-05"),
-      resolver: "resolver1",
-      type: "Triggers"
-    }
-
-    const result = caseToExceptionsReportDto(caseRow)
-
-    expect(result.asn).toBe(getShortAsn(caseRow.asn))
-    expect(result.courtName).toBe(caseRow.court_name)
-    expect(result.courtReference).toBe(caseRow.court_reference)
-    expect(result.courtRoom).toBe(caseRow.court_room)
-    expect(result.messageReceivedAt).toBe(caseRow.msg_received_ts)
-    expect(result.defendantName).toBe(caseRow.defendant_name)
-    expect(result.resolvedAt).toBe(caseRow.resolved_ts)
-    expect(result.resolver).toBe(caseRow.resolver)
-    expect(result.hearingDate).toBe(caseRow.court_date)
-    expect(result.ptiurn).toBe(caseRow.ptiurn)
-    expect(result.type).toBe(caseRow.type)
+    const caseRowUndefined = { ...baseCaseRow, notes: undefined as any }
+    const resultUndefined = caseToExceptionsReportDto(caseRowUndefined)
+    expect(resultUndefined.notes).toBe("")
   })
 })

@@ -51,10 +51,10 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
   )
 
   return {
-    nextCourtDates: nextDates.join("\n"),
-    nextCourtNames: nextNames.join("\n"),
-    nextCourtTimes: nextTimes.join("\n"),
-    offenceTitles: formattedTitles.join("\n"),
-    offenceWordings: wordings.join("\n")
+    nextCourtDates: nextDates.join("\n\n"),
+    nextCourtNames: nextNames.join("\n\n"),
+    nextCourtTimes: nextTimes.join("\n\n"),
+    offenceTitles: formattedTitles.join("\n\n"),
+    offenceWordings: wordings.join("\n\n")
   }
 }

@@ -38,7 +38,7 @@ describe("bailConditionsImposed", () => {
 
     const result = bailConditionsImposed(aho)
 
-    expect(result).toBe("noBailConditionsText")
+    expect(result).toBe("No bail conditions found")
   })
 
   it("should return the default NO_BAIL_CONDITIONS_TEXT when BailConditions is undefined", () => {
@@ -46,6 +46,6 @@ describe("bailConditionsImposed", () => {
 
     const result = bailConditionsImposed(aho)
 
-    expect(result).toBe("noBailConditionsText")
+    expect(result).toBe("No bail conditions found")
   })
 })

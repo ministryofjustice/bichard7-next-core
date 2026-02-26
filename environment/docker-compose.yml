@@ -97,7 +97,7 @@ services:
       start_period: 20s
 
   db-migrate:
-    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:5.0}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.migrations.properties"
@@ -114,7 +114,7 @@ services:
       start_period: 20s
 
   db-seed:
-    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:4.33}"
+    image: "${LIQUIBASE_IMAGE:-liquibase/liquibase:5.0}"
     volumes: ["./postgres/liquibase:/liquibase/changelog"]
     environment:
       LIQUIBASE_PROPERTIES_FILE: "/liquibase/changelog/liquibase.seeds.properties"
