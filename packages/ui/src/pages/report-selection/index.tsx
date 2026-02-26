@@ -57,7 +57,7 @@ const ReportSelectionPage: NextPage<Props> = (props) => {
         }}
         canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
       >
-        <h1>{"Search reports"}</h1>
+        <h1 hidden={true}>{"Search reports"}</h1>
         <ReportSelectionFilter />
       </Layout>
     </CurrentUserContext.Provider>

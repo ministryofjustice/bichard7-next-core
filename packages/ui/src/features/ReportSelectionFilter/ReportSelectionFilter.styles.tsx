@@ -70,7 +70,6 @@ const ReportSelectionFilterWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     gap: 50px;
-    width: 100%;
     align-items: flex-start;
     padding-left: 30px;
     padding-right: 30px;
@@ -82,21 +81,12 @@ const ReportSelectionFilterWrapper = styled.div`
     justify-content: flex-end;
     align-items: center;
     gap: 15px;
-    padding-top: 10px;
     padding-bottom: 10px;
     width: 100%;
-
-    .clear-search-link {
-      margin-right: 44px;
-    }
 
     .search-button {
       margin: 0;
     }
-  }
-
-  .select-report-field {
-    width: 100%;
   }
 `
 

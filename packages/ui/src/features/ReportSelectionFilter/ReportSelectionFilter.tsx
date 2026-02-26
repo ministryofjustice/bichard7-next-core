@@ -9,7 +9,7 @@ import { Button } from "../../components/Buttons/Button"
 export const ReportSelectionFilter: NextPage = () => {
   return (
     <ReportSelectionFilterWrapper>
-      <Card heading={"Report selection filter"} isContentVisible={true}>
+      <Card heading={"Search reports"} isContentVisible={true}>
         <fieldset className="govuk-fieldset fields-wrapper">
           <div id={"report-section"} className="reports-section-wrapper">
             <h1 className={"govuk-heading-m"}>{"Reports"}</h1>
@@ -20,7 +20,7 @@ export const ReportSelectionFilter: NextPage = () => {
               id={"report-select"}
               placeholder={"Resolved cases"}
               name={"select-case-type"}
-              className="select-report-field"
+              className="govuk-input"
             ></Select>
           </div>
           <div id={"date-range-section"} className="date-range-section-wrapper">
@@ -59,15 +59,14 @@ export const ReportSelectionFilter: NextPage = () => {
             </div>
           </div>
         </fieldset>
+        <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
         <div className="bottom-actions-bar">
           <Button id={"search"} className="search-button">
             {"Search Reports"}
           </Button>
-          <div className="clear-search-link">
-            <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
-              {"Clear search"}
-            </a>
-          </div>
+          <a className="govuk-link govuk-link--no-visited-state" href="/bichard?keywords=">
+            {"Clear search"}
+          </a>
         </div>
       </Card>
     </ReportSelectionFilterWrapper>
