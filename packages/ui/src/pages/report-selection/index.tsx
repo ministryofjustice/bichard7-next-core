@@ -26,7 +26,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
     }
 
-    if (!userAccess(currentUser)[Permission.ViewReports]) {
+    if (process.env.NODE_ENV === "production" || !userAccess(currentUser)[Permission.ViewReports]) {
       return redirectTo("/")
     }
 
