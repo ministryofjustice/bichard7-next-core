@@ -1,7 +1,5 @@
 import type { AuditCase, AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
 
-import { sortBy } from "lodash"
-
 import { convertNoteToDto } from "./convertNoteToDto"
 import { resolutionStatusFromDb } from "./convertResolutionStatus"
 
@@ -14,7 +12,7 @@ export const convertAuditCaseToDto = (auditCase: AuditCase): AuditCaseDto => ({
   errorQualityChecked: auditCase.error_quality_checked,
   messageReceivedTimestamp: auditCase.msg_received_ts,
   noteCount: auditCase.notes?.length,
-  notes: auditCase.notes ? sortBy(auditCase.notes, "create_ts").reverse().map(convertNoteToDto) : [],
+  notes: auditCase.notes ? auditCase.notes.map(convertNoteToDto) : [],
   ptiurn: auditCase.ptiurn,
   resolutionTimestamp: auditCase.resolution_ts,
   triggerQualityChecked: auditCase.trigger_quality_checked,
