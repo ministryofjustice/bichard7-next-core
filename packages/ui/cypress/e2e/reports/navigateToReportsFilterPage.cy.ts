@@ -6,7 +6,7 @@ describe("Navigate to Reports filter page", () => {
       loginAndVisit("Supervisor", "/bichard/report-selection")
     })
 
-    it("Should show Reports filter page", () => {
+    it("Should redirect to the case list", () => {
       cy.location("pathname").should("eq", "/bichard")
     })
   })
