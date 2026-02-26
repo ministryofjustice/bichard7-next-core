@@ -41,4 +41,4 @@ export const AuditWithProgressDtoSchema = z.object({
 export type Audit = z.infer<typeof AuditSchema>
 export type AuditDto = z.infer<typeof AuditDtoSchema>
 export type AuditWithProgress = z.infer<typeof AuditWithProgressSchema>
-export type AuditWithProgressDto = z.infer<typeof AuditWithProgressSchema>
+export type AuditWithProgressDto = z.infer<typeof AuditWithProgressDtoSchema>
