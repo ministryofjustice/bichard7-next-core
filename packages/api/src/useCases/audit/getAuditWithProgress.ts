@@ -7,9 +7,10 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
-import { fetchAudit } from "../../services/db/audit/fetchAudit"
+import { fetchAuditWithProgress } from "../../services/db/audit/fetchAuditWithProgress"
 import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../types/errors/NotFoundError"
+import { convertAuditWithProgressToDto } from "../dto/convertAuditToDto"
 
 export async function getAuditWithProgress(
   database: WritableDatabaseConnection,
@@ -21,8 +22,8 @@ export async function getAuditWithProgress(
   }
 
   return await database
-    .transaction<Error | void>(async (tx) => {
-      const audit = await fetchAudit(tx, auditId, user)
+    .transaction<AuditWithProgressDto | Error>(async (tx) => {
+      const audit = await fetchAuditWithProgress(tx, auditId, user)
       if (isError(audit)) {
         throw audit
       }
@@ -30,6 +31,8 @@ export async function getAuditWithProgress(
       if (!audit) {
         throw new NotFoundError()
       }
+
+      return convertAuditWithProgressToDto(audit)
     })
     .catch((err) => err)
 }
