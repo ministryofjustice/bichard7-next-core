@@ -20,19 +20,14 @@ import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 import AuditSearch from "features/AuditSearch/AuditSearch"
 import BichardApiV1 from "../../services/api/BichardApiV1"
 import ApiClient from "../../services/api/ApiClient"
-
-type ResolvedBy = {
-  forenames: string
-  surname: string
-  username: string
-}
+import AuditResolvedBy from "../../types/AuditResolvedBy"
 
 type Props = {
   csrfToken: string
   user: DisplayFullUser
   canUseTriggerAndExceptionQualityAuditing: boolean
   displaySwitchingSurveyFeedback: boolean
-  resolvedBy: ResolvedBy[]
+  resolvedBy: AuditResolvedBy[]
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -59,7 +54,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     const apiGateway = new BichardApiV1(apiClient)
 
     const usersResponse = await apiGateway.fetchUsers()
-    let resolvedBy: ResolvedBy[] = []
+    let resolvedBy: AuditResolvedBy[] = []
 
     if (!isError(usersResponse) && !!usersResponse) {
       resolvedBy = usersResponse.users.map((u) => ({
