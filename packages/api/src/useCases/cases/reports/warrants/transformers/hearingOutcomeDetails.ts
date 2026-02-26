@@ -42,7 +42,7 @@ export const hearingOutcomeDetails = (
 
   const warrantText = [outcome.withdrawnResultText, outcome.warrantResultText]
     .filter((text): text is string => !!text)
-    .join("\n")
+    .join("\n\n")
 
   return {
     bailStatus,

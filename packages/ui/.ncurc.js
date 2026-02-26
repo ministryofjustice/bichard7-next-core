@@ -15,7 +15,7 @@
     - cypress-circleci-reporter
       - 0.4.0 changed to module type
 */
-const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next"]
+const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next", "govuk-frontend"]
 const ignored = ["postgres", "cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 

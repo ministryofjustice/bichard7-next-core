@@ -31,5 +31,5 @@ export const calculateWarrantType = (inputs: WarrantTypeInputs): string => {
 
   // Join with newlines to handle cases where multiple types might be appended
   // (although the simplified logic mostly yields one)
-  return parts.join("\n")
+  return parts.join("\n\n")
 }

@@ -77,7 +77,7 @@ describe("calculateWarrantType", () => {
       tRPR0002Present: true,
       tRPR0012Present: true
     })
-    expect(calculateWarrantType(inputs)).toBe("Withdrawn\nFTA")
+    expect(calculateWarrantType(inputs)).toBe("Withdrawn\n\nFTA")
   })
 
   it("should combine special case Withdrawn with Parent if Parent is present", () => {
@@ -86,7 +86,7 @@ describe("calculateWarrantType", () => {
       tRPR0002Present: true,
       tRPR0012Present: true
     })
-    expect(calculateWarrantType(inputs)).toBe("Withdrawn\nParent")
+    expect(calculateWarrantType(inputs)).toBe("Withdrawn\n\nParent")
   })
 
   it("should combine special case Withdrawn with Witness if Witness is present", () => {
@@ -95,6 +95,6 @@ describe("calculateWarrantType", () => {
       tRPR0012Present: true,
       witnessResult: true
     })
-    expect(calculateWarrantType(inputs)).toBe("Withdrawn\nWitness")
+    expect(calculateWarrantType(inputs)).toBe("Withdrawn\n\nWitness")
   })
 })
