@@ -12,7 +12,7 @@ export const ReportSelectionFilter: NextPage = () => {
       <Card heading={"Search reports"} isContentVisible={true}>
         <fieldset className="govuk-fieldset fields-wrapper">
           <div id={"report-section"} className="reports-section-wrapper">
-            <h1 className={"govuk-heading-m"}>{"Reports"}</h1>
+            <h2 className={"govuk-heading-m"}>{"Reports"}</h2>
             <label className="govuk-body" htmlFor={"report-select"}>
               {"Sort by"}
             </label>
@@ -24,7 +24,7 @@ export const ReportSelectionFilter: NextPage = () => {
             ></Select>
           </div>
           <div id={"date-range-section"} className="date-range-section-wrapper">
-            <h1 className={"govuk-heading-m"}>{"Date range"}</h1>
+            <h2 className={"govuk-heading-m"}>{"Date range"}</h2>
             <div className="calendars-wrapper">
               <div id={"report-selection-date-from"} className="date date-from-wrapper">
                 <DateInput
@@ -49,13 +49,13 @@ export const ReportSelectionFilter: NextPage = () => {
             </div>
           </div>
           <div id={"include-section"} className="include-section-wrapper">
-            <h1 className={"govuk-heading-m"}>{"Include"}</h1>
+            <h2 className={"govuk-heading-m"}>{"Include"}</h2>
             <label className="govuk-body" htmlFor={"checkboxes-container"}>
               {"Select an option"}
             </label>
             <div id={"checkboxes-container"} className="checkboxes-wrapper">
-              <Checkbox label={"Triggers"} checked={false}></Checkbox>
-              <Checkbox label={"Exceptions"} checked={false}></Checkbox>
+              <Checkbox label={"Triggers"} checked={false} id={"triggers"}></Checkbox>
+              <Checkbox label={"Exceptions"} checked={false} id={"exceptions"}></Checkbox>
             </div>
           </div>
         </fieldset>

@@ -5,8 +5,8 @@ describe("ReportSelectionFilter", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get("div#report-section").should("exist")
-    cy.get("div#report-section").find("label").eq(0).should("have.text", "Reports")
-    cy.get("div#report-section").find("label").eq(1).should("have.text", "Sort by")
+    cy.get("div#report-section").find("h2").should("have.text", "Reports")
+    cy.get("div#report-section").find("label").should("have.text", "Sort by")
     cy.get('select[name="select-case-type"]').should("exist")
   })
 
@@ -14,7 +14,7 @@ describe("ReportSelectionFilter", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get("div#date-range-section").should("exist")
-    cy.get("div#date-range-section").find("label").eq(0).should("have.text", "Date range")
+    cy.get("div#date-range-section").find("h2").should("have.text", "Date range")
     cy.get("div#date-range-section").find("div#report-selection-date-from").should("exist")
     cy.get("div#date-range-section").find("div#report-selection-date-to").should("exist")
   })
@@ -23,8 +23,8 @@ describe("ReportSelectionFilter", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get("div#include-section").should("exist")
-    cy.get("div#include-section").find("label").eq(0).should("have.text", "Include")
-    cy.get("div#include-section").find("label").eq(1).should("have.text", "Select an option")
+    cy.get("div#include-section").find("h2").should("have.text", "Include")
+    cy.get("div#include-section").find("label").eq(0).should("have.text", "Select an option")
     cy.get("div#include-section")
       .find("input")
       .eq(0)
@@ -37,8 +37,8 @@ describe("ReportSelectionFilter", () => {
       .should("have.attr", "type", "checkbox")
       .should("have.id", "exceptions")
 
-    cy.get("div#include-section").find("label").eq(2).should("have.attr", "for", "triggers")
-    cy.get("div#include-section").find("label").eq(3).should("have.attr", "for", "exceptions")
+    cy.get("div#include-section").find("label").eq(1).should("have.attr", "for", "triggers")
+    cy.get("div#include-section").find("label").eq(2).should("have.attr", "for", "exceptions")
   })
 
   it("renders the search button and clear search link", () => {
