@@ -5,7 +5,7 @@ import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchPar
 import type { BailsReportQuery } from "@moj-bichard7/common/contracts/BailsReport"
 import type { DomesticViolenceReportQuery } from "@moj-bichard7/common/contracts/DomesticViolenceReport"
 import type { WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
-import type { ReportType } from "types/ReportType"
+import type { ReportType } from "types/reports/ReportType"
 import type { BichardReportGateway, AnyReportQuery, AnyReportDto } from "services/api/interfaces/BichardReportGateway"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"

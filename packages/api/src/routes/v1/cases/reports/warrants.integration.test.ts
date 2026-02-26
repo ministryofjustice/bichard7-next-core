@@ -304,19 +304,19 @@ describe("warrants report", () => {
     expect(reportItem.nextCourtAppearance).toBe("")
     expect(reportItem.nextCourtAppearanceDate).toBe("")
     expect(reportItem.offencesTitle).toBe(
-      "Aid and abet theft.\n" +
-        "Sell a tobacco product without a license.\n" +
+      "Aid and abet theft.\n\n" +
+        "Sell a tobacco product without a license.\n\n" +
         "Use a motor vehicle on a road / public place without third party insurance."
     )
     expect(reportItem.offencesWording).toBe(
-      "Aid and abet theft\n" +
-        "Sell a tobacco product without a license\n" +
+      "Aid and abet theft\n\n" +
+        "Sell a tobacco product without a license\n\n" +
         "Use a motor vehicle without third party insurance."
     )
     expect(reportItem.pncId).toBe("2000/0448754K")
     expect(reportItem.ptiurn).toBe("00112233")
     expect(reportItem.warrantText).toBe("")
-    expect(reportItem.warrantType).toBe("Withdrawn\nFTA")
+    expect(reportItem.warrantType).toBe("Withdrawn\n\nFTA")
 
     expect(reportItem.triggerResolvedDate).toBe("")
     expect(reportItem.triggerStatus).toBe("Unresolved")

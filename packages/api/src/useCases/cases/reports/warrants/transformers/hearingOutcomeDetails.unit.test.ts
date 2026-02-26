@@ -126,7 +126,7 @@ describe("hearingOutcomeDetails", () => {
 
     const result = hearingOutcomeDetails(mockAho, false, false)
 
-    expect(result.warrantText).toBe("Withdrawn Info\nWarrant Info")
+    expect(result.warrantText).toBe("Withdrawn Info\n\nWarrant Info")
   })
 
   it("should handle missing warrant or withdrawn text", () => {

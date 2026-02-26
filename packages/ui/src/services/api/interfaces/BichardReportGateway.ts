@@ -3,7 +3,7 @@ import type { BailsReportQuery } from "@moj-bichard7/common/contracts/BailsRepor
 import type { ExceptionReportQuery } from "@moj-bichard7/common/contracts/ExceptionReport"
 import type { DomesticViolenceReportQuery } from "@moj-bichard7/common/contracts/DomesticViolenceReport"
 import type { WarrantsReportQuery } from "@moj-bichard7/common/contracts/WarrantsReport"
-import type { ReportType } from "types/ReportType"
+import type { ReportType } from "types/reports/ReportType"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
