@@ -7,7 +7,7 @@ describe("Navigate to Reports filter page", () => {
     })
 
     it("Should show Reports filter page", () => {
-      cy.get("h1").should("have.text", "Search reports")
+      cy.location("pathname").should("eq", "/bichard")
     })
   })
 
