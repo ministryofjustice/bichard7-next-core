@@ -5,13 +5,14 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserListSchema } from "@moj-bichard7/common/types/User"
-import { OK } from "http-status"
+import { FORBIDDEN, OK } from "http-status"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
 import auth from "../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
 import useZod from "../../../server/useZod"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import fetchUserList from "../../../useCases/users/fetchUserList"
 
 type HandlerProps = {
@@ -37,6 +38,12 @@ const handler = async ({ database, logger, reply, user }: HandlerProps) => {
 
   if (!isError(userList)) {
     reply.code(OK).send(userList)
+  }
+
+  reply.log.error(userList)
+
+  if (userList instanceof NotAllowedError) {
+    return reply.code(FORBIDDEN).send()
   }
 }
 

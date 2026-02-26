@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { OK } from "http-status"
+import { FORBIDDEN, OK } from "http-status"
 
 import build from "../../../app"
 import { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
@@ -53,5 +53,17 @@ describe("GET /v1/audit/users", () => {
         expect.objectContaining({ username: "username02" })
       ])
     )
+  })
+
+  it("returns 403 Forbidden for unauthorised user", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}` },
+      method: "GET",
+      url: V1.Users
+    })
+
+    expect(response.statusCode).toBe(FORBIDDEN)
   })
 })
