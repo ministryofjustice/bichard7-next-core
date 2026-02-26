@@ -24,6 +24,10 @@ describe("getAuditCases", () => {
     jest.clearAllMocks()
   })
 
+  afterAll(() => {
+    jest.restoreAllMocks()
+  })
+
   it("runs the transaction if the user is a supervisor", async () => {
     mockDatabase.transaction.mockResolvedValue({ cases: [] })
 

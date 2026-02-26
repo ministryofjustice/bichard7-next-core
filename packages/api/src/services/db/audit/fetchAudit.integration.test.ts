@@ -15,6 +15,10 @@ describe("fetchAudit", () => {
     await testDatabaseGateway.clearDb()
   })
 
+  afterAll(async () => {
+    await testDatabaseGateway.close()
+  })
+
   it("Gets audit", async () => {
     const user = await createUser(testDatabaseGateway)
     const audit = await insertAudit(
