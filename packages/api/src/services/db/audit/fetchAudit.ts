@@ -32,6 +32,7 @@ export const fetchAudit = async (
         audit_id = ${auditId}
         AND created_by = ${username}
     `.catch((error: Error) => error)
+
   if (isError(results)) {
     return new Error("Failed to get audit record")
   }

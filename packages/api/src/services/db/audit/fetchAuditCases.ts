@@ -71,6 +71,7 @@ export const fetchAuditCases = async (
     LIMIT ${maxPerPage}
     OFFSET ${offset}
   `.catch((error: Error) => error)
+
   if (isError(results)) {
     return new Error("Failed to get audit case records")
   }
