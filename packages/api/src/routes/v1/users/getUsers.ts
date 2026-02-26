@@ -36,17 +36,17 @@ const schema = {
 const handler = async ({ database, logger, reply, user }: HandlerProps) => {
   const userList = await fetchUserList(database.readonly, user, logger)
 
-  if (!isError(userList)) {
-    reply.code(OK).send(userList)
+  if (isError(userList)) {
+    reply.log.error(userList)
+
+    if (userList instanceof NotAllowedError) {
+      return reply.code(FORBIDDEN).send()
+    }
+
+    return reply.code(INTERNAL_SERVER_ERROR).send()
   }
 
-  reply.log.error(userList)
-
-  if (userList instanceof NotAllowedError) {
-    return reply.code(FORBIDDEN).send()
-  }
-
-  return reply.code(INTERNAL_SERVER_ERROR).send()
+  return reply.code(OK).send(userList)
 }
 
 const route = async (fastify: FastifyInstance) => {
