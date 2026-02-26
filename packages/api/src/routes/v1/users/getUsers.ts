@@ -34,6 +34,7 @@ const schema = {
 
 const handler = async ({ database, logger, reply, user }: HandlerProps) => {
   const userList = await fetchUserList(database.readonly, user, logger)
+
   if (!isError(userList)) {
     reply.code(OK).send(userList)
   }
