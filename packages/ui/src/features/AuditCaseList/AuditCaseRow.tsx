@@ -64,12 +64,14 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </TableCell>
         <TableCell rowSpan={showPreview ? 2 : 3}>{courtReference}</TableCell>
-        <TableCell>
+        <TableCell rowSpan={showPreview ? 2 : 3}>
           <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
         </TableCell>
+        <TableCell>{"TODO: Resolved date"}</TableCell>
         <TableCell>
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
         </TableCell>
+        <TableCell>{"TODO: Resolution action"}</TableCell>
         <AuditQualityCell
           rowSpan={showPreview ? 2 : 3}
           errorQualityChecked={errorQualityChecked as ExceptionQuality}
