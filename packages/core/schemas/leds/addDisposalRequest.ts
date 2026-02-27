@@ -3,7 +3,6 @@ import z from "zod"
 import {
   adjudicationSchema,
   baseOffenceSchema,
-  checkNameSchema,
   courtCaseReferenceSchema,
   courtSchema,
   dateStringSchema,
@@ -73,7 +72,6 @@ export const carryForwardSchema = z.object({
 export const addDisposalRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
   personUrn: z.string().nonempty(),
-  checkName: checkNameSchema,
   courtCaseReference: courtCaseReferenceSchema,
   court: courtSchema.optional(),
   dateOfConviction: dateStringSchema,

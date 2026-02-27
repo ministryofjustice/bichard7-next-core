@@ -1,7 +1,6 @@
 import z from "zod"
 
 import {
-  checkNameSchema,
   courtCaseReferenceSchema,
   courtSchema,
   dateStringSchema,
@@ -14,7 +13,6 @@ export const reasonForAppearanceSchema = z.enum(["Sentence Deferred", "Heard at 
 export const subsequentDisposalResultsRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
   personUrn: z.string().nonempty(),
-  checkName: checkNameSchema,
   courtCaseReference: courtCaseReferenceSchema,
   court: courtSchema.optional(),
   appearanceDate: dateStringSchema,

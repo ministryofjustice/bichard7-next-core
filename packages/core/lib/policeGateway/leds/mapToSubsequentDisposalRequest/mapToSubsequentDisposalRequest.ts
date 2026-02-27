@@ -21,7 +21,6 @@ const mapToSubsequentDisposalRequest = (
 ): SubsequentDisposalResultsRequest => ({
   ownerCode: pncRequest.forceStationCode,
   personUrn: pncRequest.pncIdentifier ?? "",
-  checkName: pncRequest.pncCheckName ?? "",
   courtCaseReference: pncRequest.courtCaseReferenceNumber,
   court: {
     courtIdentityType: "code",

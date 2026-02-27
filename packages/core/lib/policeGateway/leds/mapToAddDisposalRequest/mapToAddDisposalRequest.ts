@@ -33,7 +33,6 @@ const mapToAddDisposalRequest = (
   return {
     ownerCode: pncRequest.forceStationCode,
     personUrn: pncRequest.pncIdentifier ?? "",
-    checkName: pncRequest.pncCheckName ?? "",
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
     dateOfConviction: convertDate(pncRequest.dateOfHearing),
