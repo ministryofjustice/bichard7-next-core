@@ -1,4 +1,4 @@
-import type { Defendant } from "@moj-bichard7/core/types/leds/DisposalRequest"
+import type { AdditionalArrestOffences, Defendant } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
 const dropUndefinedFields = (obj: Record<string, unknown>) => JSON.parse(JSON.stringify(obj))
 
@@ -28,6 +28,14 @@ export const mormaliseForComparison = (
     result.offences = result.offences.map((offence) => {
       offence.offenceId = "__STRIPPED_ID__"
       return offence
+    })
+  }
+
+  if ("additionalArrestOffences" in result && Array.isArray(result.additionalArrestOffences)) {
+    const additionalArrestOffences = result.additionalArrestOffences as AdditionalArrestOffences[]
+
+    result.additionalArrestOffences = additionalArrestOffences.map((additionalArrestOffence) => {
+      additionalArrestOffence.additionalOffences.map((offence) => offence.locationText?.toLowerCase())
     })
   }
 
