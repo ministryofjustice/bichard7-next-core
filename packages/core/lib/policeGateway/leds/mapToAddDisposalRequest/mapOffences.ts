@@ -57,8 +57,8 @@ const mapOffences = (
       }
     })
     const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
-    const plea = adjudication?.pleaStatus ? (toTitleCase(adjudication?.pleaStatus) as Plea) : undefined
-    const adjudicationResult = adjudication?.verdict ? (toTitleCase(adjudication?.verdict) as Adjudication) : undefined
+    const plea = toTitleCase(adjudication?.pleaStatus) as Plea
+    const adjudicationResult = toTitleCase(adjudication?.verdict) as Adjudication
     const offenceTic = adjudication?.numberOffencesTakenIntoAccount
       ? Number(adjudication?.numberOffencesTakenIntoAccount)
       : undefined
