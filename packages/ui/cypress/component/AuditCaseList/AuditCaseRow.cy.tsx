@@ -18,6 +18,7 @@ describe("AuditCaseRow", () => {
     defendantName: "Test Defendant",
     errorId: 1,
     errorQualityChecked: 1,
+    errorStatus: ResolutionStatus.Unresolved,
     messageReceivedTimestamp: new Date(),
     noteCount: 0,
     notes: [],
@@ -72,7 +73,13 @@ describe("AuditCaseRow", () => {
     cy.contains("Test note")
   })
 
-  it("should show trigger status if resolved", () => {
+  it("should show exception audit quality if resolved", () => {
+    mount(auditId, { ...auditCase, errorStatus: ResolutionStatus.Resolved })
+
+    cy.contains("Exceptions:")
+  })
+
+  it("should show trigger audit quality if resolved", () => {
     mount(auditId, { ...auditCase, triggerStatus: ResolutionStatus.Resolved })
 
     cy.contains("Triggers:")

@@ -29,10 +29,11 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     courtName,
     ptiurn,
     errorQualityChecked,
+    errorStatus,
     triggerQualityChecked,
+    triggerStatus,
     messageReceivedTimestamp,
-    noteCount,
-    triggerStatus
+    noteCount
   } = auditCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
@@ -72,7 +73,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
           rowSpan={showPreview ? 2 : 3}
           errorQualityChecked={errorQualityChecked as ExceptionQuality}
           triggerQualityChecked={triggerQualityChecked as TriggerQuality}
-          hasExceptions={true}
+          hasExceptions={errorStatus == ResolutionStatus.Resolved}
           hasTriggers={triggerStatus == ResolutionStatus.Resolved}
         />
       </TableRow>
