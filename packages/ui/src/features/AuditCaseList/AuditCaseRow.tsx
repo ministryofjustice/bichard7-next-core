@@ -9,6 +9,8 @@ import { displayedDateFormat } from "utils/date/formattedDate"
 import { AuditQualityCell } from "features/CaseList/CaseListRow/AuditQualityCell"
 import { NotePreviewButton } from "features/CaseList/CaseListRow/NotePreviewButton"
 import { NotePreviewRow } from "features/CaseList/CaseListRow/NotePreviewRow"
+import { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
+import { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 
 interface AuditCaseRowProps {
   auditId: number
@@ -59,8 +61,8 @@ export const AuditCaseRow = ({ auditId, courtCase }: AuditCaseRowProps) => {
         </TableCell>
         <AuditQualityCell
           rowSpan={showPreview ? 2 : 3}
-          errorQualityChecked={errorQualityChecked}
-          triggerQualityChecked={triggerQualityChecked}
+          errorQualityChecked={errorQualityChecked as ExceptionQuality}
+          triggerQualityChecked={triggerQualityChecked as TriggerQuality}
           hasExceptions={true}
           hasTriggers={true}
         />
