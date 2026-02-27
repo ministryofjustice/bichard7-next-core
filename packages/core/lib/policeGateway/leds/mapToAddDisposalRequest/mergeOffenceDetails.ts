@@ -15,11 +15,10 @@ type ArrestOffenceGroup = {
   disposals: PncUpdateDisposal[]
 }
 
-type OffenceData = PncUpdateArrestHearingAdjudicationAndDisposal | PncUpdateCourtHearingAdjudicationAndDisposal
-// type OffenceDetailsGroup<T> = T extends PncUpdateCourtHearingAdjudicationAndDisposal ? OffenceGroup : ArrestOffenceGroup
-type OffenceDetailsGroup<T> = [T] extends [PncUpdateArrestHearingAdjudicationAndDisposal]
+type MergedOffenceDetails<T> = [T] extends [PncUpdateArrestHearingAdjudicationAndDisposal]
   ? ArrestOffenceGroup
   : OffenceGroup
+type OffenceData = PncUpdateArrestHearingAdjudicationAndDisposal | PncUpdateCourtHearingAdjudicationAndDisposal
 
 type OffenceGroup = {
   adjudication?: PncUpdateAdjudication
@@ -27,8 +26,8 @@ type OffenceGroup = {
   ordinary: PncUpdateCourtHearing
 }
 
-const generateOffenceGroups = <T extends OffenceData>(offenceData: T[]): OffenceDetailsGroup<T>[] =>
-  offenceData.reduce<OffenceDetailsGroup<T>[]>((groups, item) => {
+const mergeOffenceDetails = <T extends OffenceData>(offenceData: T[]): MergedOffenceDetails<T>[] =>
+  offenceData.reduce<MergedOffenceDetails<T>[]>((groups, item) => {
     switch (item.type) {
       case PncUpdateType.ADJUDICATION:
         groups[groups.length - 1].adjudication = item
@@ -46,4 +45,4 @@ const generateOffenceGroups = <T extends OffenceData>(offenceData: T[]): Offence
     return groups
   }, [])
 
-export default generateOffenceGroups
+export default mergeOffenceDetails

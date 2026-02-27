@@ -7,8 +7,8 @@ import { type PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../p
 import { convertDate } from "../dateTimeConverter"
 import preProcessOffenceCode from "../preProcessOffenceCode"
 import { findOffenceId } from "./findOffenceId"
-import generateOffenceGroups from "./generateOffenceGroups"
 import mapDisposalResult from "./mapDisposalResult"
+import mergeOffenceDetails from "./mergeOffenceDetails"
 import { toTitleCase } from "./toTitleCase"
 
 const mapOffences = (
@@ -17,7 +17,7 @@ const mapOffences = (
   courtCaseReferenceNumber: string,
   hearingDate?: string
 ): Offence[] =>
-  generateOffenceGroups(hearingsAdjudicationsAndDisposals).map<Offence>((group) => {
+  mergeOffenceDetails(hearingsAdjudicationsAndDisposals).map<Offence>((group) => {
     const { ordinary, adjudication, disposals } = group
     const disposalResults = disposals.map(mapDisposalResult)
     const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary.courtOffenceSequenceNumber)
