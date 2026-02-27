@@ -43,7 +43,7 @@ export const ENDPOINT_HEADERS: Record<string, EndpointHeaders> = {
     "X-Leds-Action-Code": "Add Disposal Results",
     "X-Leds-Activity-Code": "Person Update",
     "X-Leds-Justification": "Add disposal results",
-    "X-Leds-Reason": "0 - Transaction log and other audit checks"
+    "X-Leds-Reason": "9 - Update/Confirm/Broadcast"
   },
   disposalHistory: {
     "X-Leds-Action-Code": "View Disposal History",
