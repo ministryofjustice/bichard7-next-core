@@ -5,11 +5,7 @@ import { parseDisposalQuantity } from "./parseDisposalQuantity"
 
 const mapDisposalResult = (disposal: PncUpdateDisposal): DisposalResult => {
   const disposalQuantity = parseDisposalQuantity(disposal.disposalQuantity)
-  const { disposalDuration, disposalEffectiveDate, amount } = disposalQuantity ?? {
-    disposalDuration: undefined,
-    disposalEffectiveDate: undefined,
-    amount: 0
-  }
+  const { disposalDuration, disposalEffectiveDate, amount } = disposalQuantity ?? {}
 
   const disposalQualifiers = disposal.disposalQualifiers
     ?.match(/.{1,2}/g)
