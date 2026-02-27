@@ -34,7 +34,8 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     triggerQualityChecked,
     triggerStatus,
     messageReceivedTimestamp,
-    noteCount
+    noteCount,
+    resolutionTimestamp
   } = auditCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
@@ -67,7 +68,9 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
         <TableCell rowSpan={showPreview ? 2 : 3}>
           <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
         </TableCell>
-        <TableCell>{"TODO: Resolved date"}</TableCell>
+        <TableCell>
+          <DateTime date={resolutionTimestamp} dateFormat={displayedDateFormat} />
+        </TableCell>
         <TableCell>
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
         </TableCell>
