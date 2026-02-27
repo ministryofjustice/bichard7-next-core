@@ -10,6 +10,7 @@ export const convertAuditCaseToDto = (auditCase: AuditCase): AuditCaseDto => ({
   defendantName: auditCase.defendant_name,
   errorId: auditCase.error_id,
   errorQualityChecked: auditCase.error_quality_checked,
+  errorStatus: resolutionStatusFromDb(auditCase.error_status),
   messageReceivedTimestamp: auditCase.msg_received_ts,
   noteCount: auditCase.notes?.length,
   notes: auditCase.notes ? auditCase.notes.map(convertNoteToDto) : [],
