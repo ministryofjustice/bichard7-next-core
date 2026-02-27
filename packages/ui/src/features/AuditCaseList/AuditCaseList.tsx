@@ -1,7 +1,7 @@
 import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
 
 import { RefreshButton } from "components/Buttons/RefreshButton"
-import { Table, TableHead } from "components/Table"
+import { Table, TableBody, TableHead } from "components/Table"
 import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
@@ -35,7 +35,7 @@ const AuditCaseList: React.FC<Props> = ({ auditId, auditCases, order = "asc" }: 
   if (auditCases.length === 0) {
     return (
       <div>
-        <p className="govuk-body govuk-!-margin-top-4">{"There are no court cases to show"}</p>
+        <p className="govuk-body govuk-!-margin-top-4">{"No court cases found for this audit"}</p>
         <RefreshButton location="top" />
       </div>
     )
@@ -51,9 +51,11 @@ const AuditCaseList: React.FC<Props> = ({ auditId, auditCases, order = "asc" }: 
         <TableHead>
           <AuditCaseListTableHeader order={order} />
         </TableHead>
-        {auditCases.map((auditCase) => (
-          <AuditCaseRow auditId={auditId} auditCase={auditCase} key={`audit-case-${auditCase.errorId}`} />
-        ))}
+        <TableBody>
+          {auditCases.map((auditCase) => (
+            <AuditCaseRow auditId={auditId} auditCase={auditCase} key={`audit-case-${auditCase.errorId}`} />
+          ))}
+        </TableBody>
       </Table>
     </>
   )
