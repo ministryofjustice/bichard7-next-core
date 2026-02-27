@@ -6,9 +6,9 @@ import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
-import { AuditQualityCell } from "../AuditQualityCell"
-import { NotePreviewButton } from "./NotePreviewButton"
-import { NotePreviewRow } from "./NotePreviewRow"
+import { AuditQualityCell } from "features/CaseList/CaseListRow/AuditQualityCell"
+import { NotePreviewButton } from "features/CaseList/CaseListRow/NotePreviewButton"
+import { NotePreviewRow } from "features/CaseList/CaseListRow/NotePreviewRow"
 
 interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase

@@ -1,5 +1,5 @@
 import { DisplayNote } from "types/display/Notes"
-import { NotePreview } from "../../src/features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/NotePreviewButton"
+import { NotePreview } from "../../src/features/CaseList/CaseListRow/NotePreviewButton"
 
 describe("NotePreview", () => {
   it("should show the full text when note length is 100 characters", () => {
