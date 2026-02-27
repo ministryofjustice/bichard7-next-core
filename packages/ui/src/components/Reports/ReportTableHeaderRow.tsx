@@ -9,7 +9,9 @@ interface TableHeaderRowProps {
 export const ReportTableHeaderRow: React.FC<TableHeaderRowProps> = ({ columns }) => (
   <TableRow>
     {columns.map((col) => (
-      <ReportTableHeaderCell key={String(col.key)}>{col.header}</ReportTableHeaderCell>
+      <ReportTableHeaderCell key={String(col.key)} scope={"col"}>
+        {col.header}
+      </ReportTableHeaderCell>
     ))}
   </TableRow>
 )
