@@ -13,6 +13,7 @@ import { NotePreviewRow } from "features/CaseList/CaseListRow/NotePreviewRow"
 import { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
 import { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 import { noteToDisplayNoteDto } from "../../services/dto/noteDto"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 interface AuditCaseRowProps {
   auditId: number
@@ -30,7 +31,8 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     errorQualityChecked,
     triggerQualityChecked,
     messageReceivedTimestamp,
-    noteCount
+    noteCount,
+    triggerStatus
   } = auditCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
@@ -71,7 +73,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
           errorQualityChecked={errorQualityChecked as ExceptionQuality}
           triggerQualityChecked={triggerQualityChecked as TriggerQuality}
           hasExceptions={true}
-          hasTriggers={true}
+          hasTriggers={triggerStatus == ResolutionStatus.Resolved}
         />
       </TableRow>
       {notes.length > 0 && !showPreview && (

@@ -6,6 +6,7 @@ import { MockNextRouter } from "../../support/MockNextRouter"
 
 import "../../../styles/globals.scss"
 import { Table, TableBody } from "../../../src/components/Table"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 describe("AuditCaseRow", () => {
   const auditId = 1
@@ -22,7 +23,7 @@ describe("AuditCaseRow", () => {
     notes: [],
     resolutionTimestamp: new Date(),
     triggerQualityChecked: 1,
-    triggerStatus: "Resolved"
+    triggerStatus: ResolutionStatus.Unresolved
   } as AuditCaseDto
 
   function mount(auditId: number, auditCase: AuditCaseDto) {
@@ -69,5 +70,11 @@ describe("AuditCaseRow", () => {
 
     cy.get("button.preview-button").click()
     cy.contains("Test note")
+  })
+
+  it("should show trigger status if resolved", () => {
+    mount(auditId, { ...auditCase, triggerStatus: ResolutionStatus.Resolved })
+
+    cy.contains("Triggers:")
   })
 })
