@@ -9,6 +9,7 @@ export interface LinkButtonProps extends React.ComponentProps<"a"> {
   dataModule?: string
   canBeDisabled?: boolean
   disabled?: boolean
+  overrideLink?: boolean
 }
 
 export const LinkButton: React.FC<LinkButtonProps> = ({
@@ -17,6 +18,7 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
   secondary = false,
   dataModule = "govuk-button",
   canBeDisabled = false,
+  overrideLink = false,
   ...linkButtonProps
 }: LinkButtonProps) => {
   const { asPath, basePath } = useRouter()
@@ -33,10 +35,16 @@ export const LinkButton: React.FC<LinkButtonProps> = ({
 
   linkButtonProps.disabled = canBeDisabled && isClicked
 
+  let link = href.startsWith("/") ? href : `${basePath}${asPath}/${href}`
+
+  if (overrideLink) {
+    link = href
+  }
+
   return (
     <StyledLinkButton
       {...linkButtonProps}
-      href={href.startsWith("/") ? href : `${basePath}${asPath}/${href}`}
+      href={link}
       role="button"
       draggable="false"
       className={mergeClassNames(
