@@ -12,8 +12,7 @@ import type PersonDetails from "../../../../../types/LedsTestApiHelper/PersonDet
 const mapToAddDisposalResult = (
   person: PersonDetails,
   courtCase: CourtCase,
-  asnQueryResponse: AsnQueryResponse,
-  checkName: string
+  asnQueryResponse: AsnQueryResponse
 ): AddDisposalRequest => {
   const disposal = asnQueryResponse.disposals.find((disposal) => disposal.courtCaseId === courtCase.courtCaseId)
   if (!disposal) {
@@ -69,7 +68,6 @@ const mapToAddDisposalResult = (
   return {
     ownerCode: asnQueryResponse.ownerCode,
     personUrn: asnQueryResponse.personUrn,
-    checkName,
     courtCaseReference: disposal.courtCaseReference,
     court: {
       courtIdentityType: "name",

@@ -52,11 +52,10 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
 }
 
 const mapToRemandRequest = (request: RemandPncUpdateRequest["request"]): RemandRequest => {
-  const { forceStationCode, pncCheckName, pncIdentifier, hearingDate, pncRemandStatus, bailConditions } = request
+  const { forceStationCode, pncIdentifier, hearingDate, pncRemandStatus, bailConditions } = request
 
   return {
     ownerCode: forceStationCode,
-    checkname: pncCheckName ?? "",
     personUrn: pncIdentifier ?? "",
     remandDate: convertDate(hearingDate),
     appearanceResult: remandStatusByPncCode[pncRemandStatus],

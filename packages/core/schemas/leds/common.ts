@@ -4,8 +4,6 @@ export const dateStringSchema = z.string().regex(/\d{4}-\d{2}-\d{2}/)
 
 export const timeStringSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)(Z|[+-][01]\d:[0-5]\d)$/)
 
-export const checkNameSchema = z.string().min(1).max(54)
-
 export const forceStationCodeSchema = z
   .string()
   .regex(/^[0-9A-Za-z]*$/)

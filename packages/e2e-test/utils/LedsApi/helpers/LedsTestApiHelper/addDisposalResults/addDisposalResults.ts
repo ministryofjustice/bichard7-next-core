@@ -22,7 +22,7 @@ const addDisposalResults = async (
   }
 
   const disposal = await findDisposalsByAsn(requestOptions, arrestSummonsNumber)
-  const request = mapToAddDisposalResult(person, courtCase, disposal, requestOptions.checkName)
+  const request = mapToAddDisposalResult(person, courtCase, disposal)
 
   const headers = generateHeaders(ENDPOINT_HEADERS.addDisposalResults, requestOptions.authToken)
   const url = `${requestOptions.baseUrl}/${endpoints.addDisposal(person.personId, courtCase.courtCaseId)}`
