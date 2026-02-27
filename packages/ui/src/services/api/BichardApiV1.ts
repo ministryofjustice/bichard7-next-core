@@ -7,6 +7,7 @@ import type ApiClient from "./ApiClient"
 import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type PromiseResult from "types/PromiseResult"
+import type { UserList } from "@moj-bichard7/common/types/User"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -36,5 +37,9 @@ export default class BichardApiV1 implements BichardApiGateway {
     } catch (error) {
       return error as Error
     }
+  }
+
+  async fetchUsers(): Promise<UserList | Error> {
+    return await this.apiClient.get<UserList>(V1.Users)
   }
 }
