@@ -15,7 +15,7 @@ const generateRequestHeaders = (
   let activityCode = "Person Update"
 
   if (actionCode === LedsActionCode.QueryByAsn) {
-    reason = "8 - on behalf of an authorised third party"
+    reason = "8 - On behalf of another authorised agency"
     activityCode = "Person Enquiry"
   }
 
