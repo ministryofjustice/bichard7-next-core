@@ -1,43 +1,18 @@
+import type { QueryOrder } from "types/CaseListQueryParams"
+
 import { TableRow } from "components/Table"
 import ColumnHeading from "features/CourtCaseFilters/ColumnHeading"
 import ColumnOrderIcons from "features/CourtCaseFilters/ColumnOrderIcons"
-import { useRouter } from "next/router"
-import type { QueryOrder } from "types/CaseListQueryParams"
 import { HeaderButton, HeaderCell } from "./AuditCaseListTableHeader.styles"
+import { useColumnSorting } from "hooks/useColumnSorting"
 
 interface CourtCaseListTableHeaderProps {
   order: QueryOrder
 }
 
 export const AuditCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProps) => {
-  const router = useRouter()
-  const { query } = router
-  const orderByParams = (orderBy: string) => `?${new URLSearchParams({ ...query, orderBy, order })}`
+  const { query, handleHeaderClick, ariaSort, ariaLabel } = useColumnSorting(order)
   const className = "govuk-table__header table-column-header-cell govuk-body-s"
-  const handleHeaderClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, columnName: string) => {
-    const target = event.target as HTMLElement
-    const headerId = target.closest("button")?.id
-    if (headerId) {
-      const headerElement = document.getElementById(headerId)
-      if (headerElement) {
-        headerElement.focus()
-      }
-    }
-
-    router.push(orderByParams(columnName))
-  }
-
-  const ariaSort = (columnName: string) =>
-    query.orderBy === columnName ? (query.order === "asc" ? "ascending" : "descending") : "none"
-
-  const ariaLabel = (columnName: string): string => {
-    const isSorted = query.orderBy === columnName
-    const direction = ariaSort(columnName)
-    const readableColumnName = columnName.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase())
-    return isSorted
-      ? `${readableColumnName} column, sorted ${direction}, click to change sort order`
-      : `${readableColumnName} column, sortable, click to sort ascending`
-  }
 
   return (
     <TableRow>
