@@ -56,7 +56,10 @@ export const mapOffences = (
       disposalDuration: parseDisposalDuration(disposal.qtyDuration),
       disposalFine: { amount: Number(disposal.qtyMonetaryValue) || 0 },
       disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
-      disposalQualifiers: disposal.qualifiers.match(/.{1,2}/g)?.map((q) => q.trim()),
+      disposalQualifiers: disposal.qualifiers
+        .match(/.{1,2}/g)
+        ?.map((q) => q.trim())
+        .filter(Boolean),
       disposalText: disposal.text || undefined
     }))
   }))
