@@ -73,7 +73,7 @@ const mapAdditionalArrestOffences = (
     plea: toTitleCase(offence.plea) as Plea,
     adjudication: toTitleCase(offence.adjudication) as Adjudication,
     offenceDescription: offence.offenceDescription,
-    committedOnBail: Boolean(offence.committedOnBail),
+    committedOnBail: offence.committedOnBail.toLowerCase() === "y",
     locationFsCode: offence.offenceLocationFSCode,
     locationText: offence.locationOfOffence,
     dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
