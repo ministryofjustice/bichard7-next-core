@@ -1,4 +1,5 @@
 import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
+import type { Note } from "@moj-bichard7/common/types/Note"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import { MockNextRouter } from "../../support/MockNextRouter"
@@ -30,8 +31,13 @@ describe("AuditCaseList", () => {
         errorQualityChecked: 1,
         errorStatus: ResolutionStatus.Resolved,
         messageReceivedTimestamp: new Date(),
-        noteCount: 0,
-        notes: [],
+        noteCount: 1,
+        notes: [
+          {
+            createdAt: new Date(),
+            noteText: "Test note"
+          }
+        ] as Note[],
         resolutionTimestamp: new Date(),
         triggerQualityChecked: 1,
         triggerStatus: ResolutionStatus.Resolved
