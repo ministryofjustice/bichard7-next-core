@@ -41,14 +41,14 @@ describe("ReportSelectionFilter", () => {
     cy.get("div#include-section").find("label").eq(2).should("have.attr", "for", "exceptions")
   })
 
-  it("renders the search button and clear search link", () => {
+  it("renders the run reports button and clear filters link", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    cy.get("button#search").should("exist")
-    cy.get("button#search").should("have.text", "Search Reports")
-    cy.get("button#search").should("have.attr", "data-module", "govuk-button")
+    cy.get("button#run-report").should("exist")
+    cy.get("button#run-report").should("have.text", "Run Report")
+    cy.get("button#run-report").should("have.attr", "data-module", "govuk-button")
 
-    cy.get("a").should("have.text", "Clear search")
-    cy.get("a").should("have.attr", "href", "/bichard?keywords=")
+    cy.get("a").should("have.text", "Clear filters")
+    cy.get("a").should("have.attr", "href", "/bichard/report-selection")
   })
 })

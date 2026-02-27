@@ -21,8 +21,8 @@ const ReportSelectionFilterWrapper = styled.div`
       }
 
       .govuk-checkboxes__label::before {
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
       }
 
       .govuk-checkboxes__label::after {
@@ -80,10 +80,22 @@ const ReportSelectionFilterWrapper = styled.div`
     padding-bottom: 1rem;
     width: 100%;
 
-    .search-button {
+    .govuk-button {
       margin: 0;
+    }
+
+    .left-aligned {
+      margin-right: auto;
     }
   }
 `
 
-export { ReportSelectionFilterWrapper }
+const ResultsTableWrapper = styled.div`
+  overflow: scroll;
+
+  .reports-table {
+    margin-top: 1rem;
+  }
+`
+
+export { ReportSelectionFilterWrapper, ResultsTableWrapper }
