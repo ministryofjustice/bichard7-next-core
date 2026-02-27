@@ -2,17 +2,16 @@ import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
 import { Select } from "components/Select"
-import { ReportSelectionFilterWrapper } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
+import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { NextPage } from "next"
 import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
 import { SyntheticEvent, useState, useEffect } from "react"
 import { downloadReport } from "services/reports/downloadReport"
 import { createReportCsv } from "services/reports/createReportCsv"
-import { Loading } from "components/Loading"
 import { ReportConfigs } from "types/reports/Config"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { ReportTable } from "features/ReportSelectionFilter/ReportTable"
-import { ActionBar } from "features/ReportSelectionFilter/ActionBar"
+import { ActionBar } from "./ActionBar"
+import { ReportResults } from "./ReportResults"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
@@ -180,23 +179,7 @@ export const ReportSelectionFilter: NextPage = () => {
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <div className="results-area" aria-busy={isStreaming} aria-live="polite">
-        {isStreaming && reportType ? <Loading text={`Loading ${REPORT_TYPE_MAP[reportType]} report...`} /> : null}
-
-        {hasRun && !isStreaming && reportType && rows.length > 0 ? (
-          <section aria-label={`${REPORT_TYPE_MAP[reportType]} results loaded`} tabIndex={-1}>
-            <ReportTable config={config} rows={rows} tableName={`${REPORT_TYPE_MAP[reportType]} report`} />
-          </section>
-        ) : null}
-
-        {hasRun && !isStreaming && reportType && rows.length === 0 ? (
-          <div className="govuk-!-text-align-centre">
-            <p className="govuk-body">
-              <output>{"No results found for the selected criteria."}</output>
-            </p>
-          </div>
-        ) : null}
-      </div>
+      <ReportResults reportType={reportType} rows={rows} config={config} hasRun={hasRun} isStreaming={isStreaming} />
     </>
   )
 }
