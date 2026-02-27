@@ -16,10 +16,10 @@ import { noteToDisplayNoteDto } from "../../services/dto/noteDto"
 
 interface AuditCaseRowProps {
   auditId: number
-  courtCase: AuditCaseDto
+  auditCase: AuditCaseDto
 }
 
-export const AuditCaseRow = ({ auditId, courtCase }: AuditCaseRowProps) => {
+export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
   const {
     asn,
     defendantName,
@@ -29,23 +29,28 @@ export const AuditCaseRow = ({ auditId, courtCase }: AuditCaseRowProps) => {
     ptiurn,
     errorQualityChecked,
     triggerQualityChecked,
-    messageReceivedTimestamp
-  } = courtCase
+    messageReceivedTimestamp,
+    noteCount
+  } = auditCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
-  const notes = courtCase.notes.map((note) => noteToDisplayNoteDto(note as Note))
-  const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
+  const notes = auditCase.notes.map((note) => noteToDisplayNoteDto(note as Note))
+  const numberOfNotes = noteCount ?? filterUserNotes(notes).length
 
   return (
     <>
       <TableRow className="caseDetailsRow">
         <TableCell rowSpan={showPreview ? 2 : 3}>
-          <a href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`} className="defendant-name govuk-link">
+          <a
+            href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
+            id="defendant-name-link"
+            className="govuk-link"
+          >
             {defendantName}
           </a>
         </TableCell>
         <TableCell rowSpan={showPreview ? 2 : 3}>
-          <a href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`} className="asn govuk-link">
+          <a href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`} id="asn-link" className="govuk-link">
             {asn}
           </a>
         </TableCell>
@@ -55,7 +60,7 @@ export const AuditCaseRow = ({ auditId, courtCase }: AuditCaseRowProps) => {
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </TableCell>
         <TableCell rowSpan={showPreview ? 2 : 3}>{"TODO: Case reference"}</TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>
+        <TableCell>
           <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
         </TableCell>
         <TableCell>

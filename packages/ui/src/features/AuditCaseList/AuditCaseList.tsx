@@ -10,11 +10,11 @@ import { AuditCaseRow } from "./AuditCaseRow"
 
 interface Props {
   auditId: number
-  cases: AuditCaseDto[]
+  auditCases: AuditCaseDto[]
   order?: QueryOrder
 }
 
-const AuditCaseList: React.FC<Props> = ({ auditId, cases, order = "asc" }: Props) => {
+const AuditCaseList: React.FC<Props> = ({ auditId, auditCases, order = "asc" }: Props) => {
   const { query, events } = useRouter()
   const announcerRef = useRef<HTMLDivElement>(null)
 
@@ -32,7 +32,7 @@ const AuditCaseList: React.FC<Props> = ({ auditId, cases, order = "asc" }: Props
     }
   }, [query.orderBy, query.order, events])
 
-  if (cases.length === 0) {
+  if (auditCases.length === 0) {
     return (
       <div>
         <p className="govuk-body govuk-!-margin-top-4">{"There are no court cases to show"}</p>
@@ -51,8 +51,8 @@ const AuditCaseList: React.FC<Props> = ({ auditId, cases, order = "asc" }: Props
         <TableHead>
           <AuditCaseListTableHeader order={order} />
         </TableHead>
-        {cases.map((c) => (
-          <AuditCaseRow auditId={auditId} courtCase={c} key={`audit-case-${c.errorId}`} />
+        {auditCases.map((auditCase) => (
+          <AuditCaseRow auditId={auditId} auditCase={auditCase} key={`audit-case-${auditCase.errorId}`} />
         ))}
       </Table>
     </>
