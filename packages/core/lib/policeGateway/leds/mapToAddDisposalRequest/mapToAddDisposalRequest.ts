@@ -22,12 +22,24 @@ const mapToAddDisposalRequest = (
         }
       : undefined
 
+  const referToCourtCase = pncRequest.preTrialIssuesUniqueReferenceNumber
+    ? {
+        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
+      }
+    : undefined
+
+  const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
+
   const arrestSummonsNumber = convertLongAsnToLedsFormat(
     pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
   )
   const additionalArrestOffences =
     arrestSummonsNumber && pncRequest.arrestsAdjudicationsAndDisposals.length > 0
-      ? mapAdditionalArrestOffences(arrestSummonsNumber, pncRequest.arrestsAdjudicationsAndDisposals)
+      ? mapAdditionalArrestOffences(
+          arrestSummonsNumber,
+          pncRequest.arrestsAdjudicationsAndDisposals,
+          isCarriedForwardOrReferredToCourtCase
+        )
       : undefined
 
   return {
@@ -38,15 +50,12 @@ const mapToAddDisposalRequest = (
     dateOfConviction: convertDate(pncRequest.dateOfHearing),
     defendant: mapDefendant(pncUpdateDataset),
     carryForward,
-    ...(pncRequest.preTrialIssuesUniqueReferenceNumber && {
-      referToCourtCase: {
-        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
-      }
-    }),
+    referToCourtCase,
     offences: mapOffences(
       pncRequest.hearingsAdjudicationsAndDisposals,
       pncUpdateDataset,
-      pncRequest.courtCaseReferenceNumber
+      pncRequest.courtCaseReferenceNumber,
+      isCarriedForwardOrReferredToCourtCase
     ),
     additionalArrestOffences
   }

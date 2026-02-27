@@ -28,12 +28,7 @@ const mapToSubsequentDisposalRequest = (
   },
   appearanceDate: convertDate(pncRequest.hearingDate),
   reasonForAppearance: reasonForAppearance[pncRequest.hearingType],
-  offences: mapOffences(
-    pncRequest.hearingDetails,
-    pncUpdateDataset,
-    pncRequest.courtCaseReferenceNumber,
-    pncRequest.hearingDate //TODO: To confirm with LEDS if Sentence Deferred requires DateOfSentence? We only need to pass this hearing date for Sentence Deferred.
-  )
+  offences: mapOffences(pncRequest.hearingDetails, pncUpdateDataset, pncRequest.courtCaseReferenceNumber, false)
 })
 
 export default mapToSubsequentDisposalRequest

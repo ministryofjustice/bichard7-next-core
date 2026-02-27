@@ -8,16 +8,25 @@ import { convertDate, convertTime } from "../dateTimeConverter"
 import preProcessOffenceCode from "../preProcessOffenceCode"
 import mapDisposalResult from "./mapDisposalResult"
 import mergeOffenceDetails from "./mergeOffenceDetails"
+import shouldExcludePleaAndAdjudication from "./shouldExcludePleaAndAdjudication"
 import { toTitleCase } from "./toTitleCase"
 
 const mapAdditionalArrestOffences = (
   asn: string,
-  arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[]
+  arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[],
+  isCarriedForwardOrReferredToCourtCase: boolean
 ): AdditionalArrestOffences[] => {
   const arrestSummonsNumber = convertLongAsnToLedsFormat(convertAsnToLongFormat(asn))
   const additionalOffences = mergeOffenceDetails(arrestsAdjudicationsAndDisposals).map<ArrestOffence>(
     ({ arrest, adjudication, disposals }) => {
       const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(arrest.offenceReason)
+      const disposalResults = disposals.map(mapDisposalResult)
+      const excludePleaAndAdjudication = shouldExcludePleaAndAdjudication(
+        disposalResults,
+        isCarriedForwardOrReferredToCourtCase
+      )
+      const plea = !excludePleaAndAdjudication ? (toTitleCase(adjudication?.pleaStatus) as Plea) : undefined
+      const verdict = !excludePleaAndAdjudication ? (toTitleCase(adjudication?.verdict) as Adjudication) : undefined
 
       return {
         courtOffenceSequenceNumber: Number(arrest.courtOffenceSequenceNumber),
@@ -27,15 +36,15 @@ const mapAdditionalArrestOffences = (
         },
         roleQualifiers: roleQualifier ? [roleQualifier] : undefined,
         committedOnBail: arrest.committedOnBail?.toLowerCase() === "y",
-        plea: toTitleCase(adjudication?.pleaStatus) as Plea,
-        adjudication: toTitleCase(adjudication?.verdict) as Adjudication,
+        plea,
+        adjudication: verdict,
         dateOfSentence: adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined,
         offenceTic: Number(adjudication?.numberOffencesTakenIntoAccount),
         offenceStartDate: convertDate(arrest.offenceStartDate),
         offenceStartTime: arrest.offenceStartTime ? convertTime(arrest.offenceStartTime) : undefined,
         offenceEndDate: arrest.offenceEndDate ? convertDate(arrest.offenceEndDate) : undefined,
         offenceEndTime: arrest.offenceEndTime ? convertTime(arrest.offenceEndTime) : undefined,
-        disposalResults: disposals.map(mapDisposalResult),
+        disposalResults,
         locationFsCode: arrest.offenceLocationFSCode,
         locationText: { locationText: arrest.locationOfOffence }
       }
