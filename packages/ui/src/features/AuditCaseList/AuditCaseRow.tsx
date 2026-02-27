@@ -27,6 +27,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     errorId,
     courtDate,
     courtName,
+    courtReference,
     ptiurn,
     errorQualityChecked,
     errorStatus,
@@ -62,7 +63,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
         <TableCell rowSpan={showPreview ? 2 : 3}>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>{"TODO: Case reference"}</TableCell>
+        <TableCell rowSpan={showPreview ? 2 : 3}>{courtReference}</TableCell>
         <TableCell>
           <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
         </TableCell>

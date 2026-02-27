@@ -22,18 +22,19 @@ describe("AuditCaseList", () => {
       {
         asn: "test asn",
         courtDate: new Date(),
-        courtName: "Court Name",
+        courtName: "Magistrates",
+        courtReference: "01XX",
         ptiurn: "Case0001",
         defendantName: "Test Defendant",
         errorId: 1,
         errorQualityChecked: 1,
-        errorStatus: ResolutionStatus.Unresolved,
+        errorStatus: ResolutionStatus.Resolved,
         messageReceivedTimestamp: new Date(),
         noteCount: 0,
         notes: [],
         resolutionTimestamp: new Date(),
         triggerQualityChecked: 1,
-        triggerStatus: ResolutionStatus.Unresolved
+        triggerStatus: ResolutionStatus.Resolved
       }
     ]
 

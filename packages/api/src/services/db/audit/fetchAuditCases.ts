@@ -25,6 +25,7 @@ export const fetchAuditCases = async (
       ac.audit_id,
       el.error_id,
       el.asn,
+      el.court_reference,
       el.court_date,
       el.court_name,
       el.defendant_name,

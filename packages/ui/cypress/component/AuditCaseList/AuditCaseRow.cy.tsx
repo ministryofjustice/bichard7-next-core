@@ -13,7 +13,8 @@ describe("AuditCaseRow", () => {
   const auditCase = {
     asn: "test asn",
     courtDate: new Date(),
-    courtName: "Court Name",
+    courtName: "Magistrates",
+    courtReference: "01XX",
     ptiurn: "Case0001",
     defendantName: "Test Defendant",
     errorId: 1,
