@@ -7,10 +7,10 @@ interface LoadingProps {
 
 export const Loading: FC<LoadingProps> = ({ text = "Loading Case Details..." }): React.ReactNode => {
   return (
-    <LoadingSpinnerWrapper className="loading-spinner">
-      <LoadingSpinner className="loading-spinner__spinner" aria-live="polite" role="status" />
+    <LoadingSpinnerWrapper className="loading-spinner" role="status" aria-live="polite" aria-atomic="true">
+      <LoadingSpinner className="loading-spinner__spinner" aria-hidden="true" />
       <LoadingSpinnerContent className="loading-spinner__content">
-        <h3 className="govuk-heading-m">{text}</h3>
+        <p className="govuk-heading-m">{text}</p>
       </LoadingSpinnerContent>
     </LoadingSpinnerWrapper>
   )

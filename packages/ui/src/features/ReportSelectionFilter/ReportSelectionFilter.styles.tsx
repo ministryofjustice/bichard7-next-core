@@ -71,31 +71,6 @@ const ReportSelectionFilterWrapper = styled.div`
     padding-right: 3rem;
     box-sizing: border-box;
   }
-
-  .bottom-actions-bar {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 1rem;
-    padding-bottom: 1rem;
-    width: 100%;
-
-    .govuk-button {
-      margin: 0;
-    }
-
-    .left-aligned {
-      margin-right: auto;
-    }
-  }
 `
 
-const ResultsTableWrapper = styled.div`
-  overflow: scroll;
-
-  .reports-table {
-    margin-top: 1rem;
-  }
-`
-
-export { ReportSelectionFilterWrapper, ResultsTableWrapper }
+export { ReportSelectionFilterWrapper }
