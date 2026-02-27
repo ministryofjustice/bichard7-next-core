@@ -1,23 +1,23 @@
+import { LinkButton } from "components/Buttons/LinkButton"
 import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
+import { Loading } from "components/Loading"
+import { GroupTable } from "components/Reports/GroupTable"
+import { SimpleTable } from "components/Reports/SimpleTable"
 import { Select } from "components/Select"
 import {
   ReportSelectionFilterWrapper,
   ResultsTableWrapper
 } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
 import { NextPage } from "next"
-import { Button } from "../../components/Buttons/Button"
-import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
-import { SyntheticEvent, useState, useEffect } from "react"
-import { downloadReport } from "services/reports/downloadReport"
+import { SyntheticEvent, useEffect, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
-import { Loading } from "components/Loading"
-import { GroupTable } from "components/Reports/GroupTable"
-import { SimpleTable } from "components/Reports/SimpleTable"
-import { ReportConfigs } from "types/reports/Config"
+import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { LinkButton } from "components/Buttons/LinkButton"
+import { ReportConfigs } from "types/reports/Config"
+import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
+import { Button } from "../../components/Buttons/Button"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
@@ -26,6 +26,7 @@ export const ReportSelectionFilter: NextPage = () => {
   const [exceptions, setExceptions] = useState<boolean>(true)
   const [triggers, setTriggers] = useState<boolean>(true)
 
+  const [hasRunReport, setHasRunReport] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[]>([])
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
@@ -37,6 +38,7 @@ export const ReportSelectionFilter: NextPage = () => {
     setReportType(event.currentTarget.value as ReportType)
     setRows([])
     setCsvDownloadUrl(null)
+    setHasRunReport(false)
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -77,6 +79,7 @@ export const ReportSelectionFilter: NextPage = () => {
     } catch (error) {
       console.error("Fetch failed:", error)
     } finally {
+      setHasRunReport(true)
       setIsStreaming(false)
     }
   }
@@ -87,6 +90,7 @@ export const ReportSelectionFilter: NextPage = () => {
     setReportType(undefined)
     setRows([])
     setCsvDownloadUrl(null)
+    setHasRunReport(false)
 
     setToDate("")
     setFromDate("")
@@ -189,7 +193,9 @@ export const ReportSelectionFilter: NextPage = () => {
 
       <ResultsTableWrapper>
         {isStreaming && reportType ? <Loading text={`Loading ${REPORT_TYPE_MAP[reportType]} report...`} /> : undefined}
-
+        {rows.length === 0 && hasRunReport && !isStreaming && (
+          <p className="govuk-body">{"No results found for the selected filters."}</p>
+        )}
         {rows.length > 0 && config && (
           <div className={"reports-table"}>
             {config.isGrouped ? (

@@ -91,8 +91,6 @@ const ReportSelectionFilterWrapper = styled.div`
 `
 
 const ResultsTableWrapper = styled.div`
-  overflow: scroll;
-
   .reports-table {
     margin-top: 1rem;
   }
