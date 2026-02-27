@@ -6,8 +6,8 @@ import { type PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../../
 import convertLongAsnToLedsFormat from "../convertLongAsnToLedsFormat"
 import { convertDate, convertTime } from "../dateTimeConverter"
 import preProcessOffenceCode from "../preProcessOffenceCode"
-import generateOffenceGroups from "./generateOffenceGroups"
 import mapDisposalResult from "./mapDisposalResult"
+import mergeOffenceDetails from "./mergeOffenceDetails"
 import { toTitleCase } from "./toTitleCase"
 
 const mapAdditionalArrestOffences = (
@@ -15,7 +15,7 @@ const mapAdditionalArrestOffences = (
   arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[]
 ): AdditionalArrestOffences[] => {
   const arrestSummonsNumber = convertLongAsnToLedsFormat(convertAsnToLongFormat(asn))
-  const additionalOffences = generateOffenceGroups(arrestsAdjudicationsAndDisposals).map<ArrestOffence>(
+  const additionalOffences = mergeOffenceDetails(arrestsAdjudicationsAndDisposals).map<ArrestOffence>(
     ({ arrest, adjudication, disposals }) => {
       const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(arrest.offenceReason)
 
