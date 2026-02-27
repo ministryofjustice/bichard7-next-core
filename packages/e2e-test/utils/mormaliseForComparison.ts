@@ -11,6 +11,8 @@ export const mormaliseForComparison = (
 
   const result = { ...data }
 
+  result.checkName = "__STRIPPED_CHECK_NAME__"
+
   if (typeof result.checkName === "string") {
     result.checkName = result.checkName.toLowerCase()
   }
