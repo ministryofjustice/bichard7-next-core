@@ -1,4 +1,5 @@
 import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
+import type Note from "../../services/entities/Note"
 
 import DateTime from "components/DateTime"
 import { TableCell, TableRow } from "components/Table"
@@ -11,6 +12,7 @@ import { NotePreviewButton } from "features/CaseList/CaseListRow/NotePreviewButt
 import { NotePreviewRow } from "features/CaseList/CaseListRow/NotePreviewRow"
 import { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
 import { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
+import { noteToDisplayNoteDto } from "../../services/dto/noteDto"
 
 interface AuditCaseRowProps {
   auditId: number
@@ -20,7 +22,6 @@ interface AuditCaseRowProps {
 export const AuditCaseRow = ({ auditId, courtCase }: AuditCaseRowProps) => {
   const {
     asn,
-    notes,
     defendantName,
     errorId,
     courtDate,
@@ -32,6 +33,7 @@ export const AuditCaseRow = ({ auditId, courtCase }: AuditCaseRowProps) => {
   } = courtCase
   const { basePath } = useRouter()
   const [showPreview, setShowPreview] = useState(true)
+  const notes = courtCase.notes.map((note) => noteToDisplayNoteDto(note as Note))
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
 
   return (
