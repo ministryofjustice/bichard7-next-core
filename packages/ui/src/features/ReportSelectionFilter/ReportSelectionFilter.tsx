@@ -2,22 +2,17 @@ import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
 import { Select } from "components/Select"
-import {
-  ReportSelectionFilterWrapper,
-  ResultsTableWrapper
-} from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
+import { ReportSelectionFilterWrapper } from "features/ReportSelectionFilter/ReportSelectionFilter.styles"
 import { NextPage } from "next"
-import { Button } from "../../components/Buttons/Button"
 import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
 import { SyntheticEvent, useState, useEffect } from "react"
 import { downloadReport } from "services/reports/downloadReport"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { Loading } from "components/Loading"
-import { GroupTable } from "components/Reports/GroupTable"
-import { SimpleTable } from "components/Reports/SimpleTable"
 import { ReportConfigs } from "types/reports/Config"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { LinkButton } from "components/Buttons/LinkButton"
+import { ReportTable } from "features/ReportSelectionFilter/ReportTable"
+import { ActionBar } from "features/ReportSelectionFilter/ActionBar"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
@@ -26,6 +21,7 @@ export const ReportSelectionFilter: NextPage = () => {
   const [exceptions, setExceptions] = useState<boolean>(true)
   const [triggers, setTriggers] = useState<boolean>(true)
 
+  const [hasRun, setHasRun] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[]>([])
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
@@ -37,6 +33,7 @@ export const ReportSelectionFilter: NextPage = () => {
     setReportType(event.currentTarget.value as ReportType)
     setRows([])
     setCsvDownloadUrl(null)
+    setHasRun(false)
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -49,6 +46,8 @@ export const ReportSelectionFilter: NextPage = () => {
     if (target.id === "triggers") {
       setTriggers(target.checked)
     }
+
+    setHasRun(false)
   }
 
   const handleDownload = async () => {
@@ -57,6 +56,7 @@ export const ReportSelectionFilter: NextPage = () => {
     }
 
     setIsStreaming(true)
+    setHasRun(true)
     setRows([])
     setCsvDownloadUrl(null)
 
@@ -81,12 +81,13 @@ export const ReportSelectionFilter: NextPage = () => {
     }
   }
 
-  const clearFilters = (event: SyntheticEvent<HTMLAnchorElement>) => {
+  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault()
 
     setReportType(undefined)
     setRows([])
     setCsvDownloadUrl(null)
+    setHasRun(false)
 
     setToDate("")
     setFromDate("")
@@ -104,7 +105,7 @@ export const ReportSelectionFilter: NextPage = () => {
 
   return (
     <>
-      <ReportSelectionFilterWrapper>
+      <ReportSelectionFilterWrapper aria-busy={isStreaming}>
         <Card heading={"Search reports"} isContentVisible={true}>
           <fieldset className="govuk-fieldset fields-wrapper">
             <div id={"report-section"} className="reports-section-wrapper">
@@ -118,6 +119,7 @@ export const ReportSelectionFilter: NextPage = () => {
                 name={"select-case-type"}
                 className="select-report-input"
                 onChange={handleChange}
+                aria-describedby="report-type-label"
               >
                 <option disabled={true} value={undefined}>
                   {"Select Report..."}
@@ -135,7 +137,10 @@ export const ReportSelectionFilter: NextPage = () => {
                 <div id={"report-selection-date-from"} className="date">
                   <DateInput
                     dateType="resolvedFrom"
-                    dispatch={(p) => setFromDate(p.value as string)}
+                    dispatch={(p) => {
+                      setFromDate(p.value as string)
+                      setHasRun(false)
+                    }}
                     value={fromDate}
                     dateRange={undefined}
                   />
@@ -143,7 +148,10 @@ export const ReportSelectionFilter: NextPage = () => {
                 <div id={"report-selection-date-to"} className="date">
                   <DateInput
                     dateType="resolvedTo"
-                    dispatch={(p) => setToDate(p.value as string)}
+                    dispatch={(p) => {
+                      setToDate(p.value as string)
+                      setHasRun(false)
+                    }}
                     value={toDate}
                     dateRange={undefined}
                   />
@@ -162,44 +170,33 @@ export const ReportSelectionFilter: NextPage = () => {
             </div>
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
-          <div className="bottom-actions-bar">
-            {csvDownloadUrl && rows.length > 0 ? (
-              <LinkButton
-                href={csvDownloadUrl}
-                download={csvReportFilename}
-                overrideLink={true}
-                className={"left-aligned"}
-              >
-                {"Download CSV"}
-              </LinkButton>
-            ) : null}
-            <Button id={"run-report"} className="run-report-button" onClick={handleDownload}>
-              {"Run Report"}
-            </Button>
-            <a
-              className="govuk-link govuk-link--no-visited-state"
-              href="/bichard/report-selection"
-              onClick={clearFilters}
-            >
-              {"Clear filters"}
-            </a>
-          </div>
+          <ActionBar
+            clearFilters={clearFilters}
+            csvDownloadUrl={csvDownloadUrl}
+            handleDownload={handleDownload}
+            csvReportFilename={csvReportFilename}
+            hasRows={rows.length > 0}
+          />
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <ResultsTableWrapper>
-        {isStreaming && reportType ? <Loading text={`Loading ${REPORT_TYPE_MAP[reportType]} report...`} /> : undefined}
+      <div className="results-area" aria-busy={isStreaming} aria-live="polite">
+        {isStreaming && reportType ? <Loading text={`Loading ${REPORT_TYPE_MAP[reportType]} report...`} /> : null}
 
-        {rows.length > 0 && config && (
-          <div className={"reports-table"}>
-            {config.isGrouped ? (
-              <GroupTable config={config} groups={rows} />
-            ) : (
-              <SimpleTable config={config} rows={rows} />
-            )}
+        {hasRun && !isStreaming && reportType && rows.length > 0 ? (
+          <section aria-label={`${REPORT_TYPE_MAP[reportType]} results loaded`} tabIndex={-1}>
+            <ReportTable config={config} rows={rows} tableName={`${REPORT_TYPE_MAP[reportType]} report`} />
+          </section>
+        ) : null}
+
+        {hasRun && !isStreaming && reportType && rows.length === 0 ? (
+          <div className="govuk-!-text-align-centre">
+            <p className="govuk-body">
+              <output>{"No results found for the selected criteria."}</output>
+            </p>
           </div>
-        )}
-      </ResultsTableWrapper>
+        ) : null}
+      </div>
     </>
   )
 }
