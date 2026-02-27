@@ -4,7 +4,7 @@ import mapToRemandRequest from "./mapToRemandRequest"
 const expectedRequest = {
   appearanceResult: "remanded-on-bail",
   bailConditions: ["This is a dummy bail condition."],
-  checkname: "CHECKNAME",
+  checkName: "CHECKNAME",
   currentAppearance: {
     court: {
       courtIdentityType: "code",

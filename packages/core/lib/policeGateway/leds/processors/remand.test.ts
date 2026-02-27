@@ -21,7 +21,7 @@ describe("remand", () => {
     const requestBody = {
       appearanceResult: "remanded-on-bail",
       bailConditions: ["This is a dummy bail condition."],
-      checkname: "CHECKNAME",
+      checkName: "CHECKNAME",
       currentAppearance: {
         court: {
           courtIdentityType: "code",
