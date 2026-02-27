@@ -2,8 +2,8 @@ import { Preview } from "components/Preview"
 import { truncate } from "lodash"
 import { Dispatch, SetStateAction } from "react"
 import { DisplayNote } from "types/display/Notes"
-import ConditionalRender from "../../../../components/ConditionalRender"
-import { validateMostRecentNoteDate } from "./CourtCaseListEntryHelperFunction"
+import ConditionalRender from "../../../components/ConditionalRender"
+import { validateMostRecentNoteDate } from "../../CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { NotePreviewBody, NotePreviewHeader, StyledPreviewButton } from "./NotePreviewButton.styles"
 
 interface NotePreviewProps {
