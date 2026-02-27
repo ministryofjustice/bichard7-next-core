@@ -118,8 +118,9 @@ export const ReportSelectionFilter: NextPage = () => {
                 name={"select-case-type"}
                 className="select-report-input"
                 onChange={handleChange}
+                value={reportType || ""}
               >
-                <option disabled={true} value={undefined}>
+                <option disabled={true} value={""}>
                   {"Select Report..."}
                 </option>
                 {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
