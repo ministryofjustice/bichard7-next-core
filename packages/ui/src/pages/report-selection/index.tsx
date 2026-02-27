@@ -3,7 +3,7 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { ReportSelectionFilter } from "features/ReportSelectionFilter/ReportSelectionFilter"
-import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
 import { useState } from "react"
@@ -39,7 +39,7 @@ interface Props {
   canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
-const ReportSelectionPage: NextPage<Props> = (props) => {
+function ReportSelectionPage(props: Readonly<Props>) {
   const { canUseTriggerAndExceptionQualityAuditing, user } = props
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
