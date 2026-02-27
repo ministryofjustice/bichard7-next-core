@@ -42,7 +42,7 @@ const converters: Record<string, (value: string) => object | void> = {
 
 type AsnQueryOffences = { offences: (Cof & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
 type UpdateOffences = { offences: (Cch & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
-type AdditionalOffences = {
+export type AdditionalOffences = {
   additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
 }
 
@@ -61,9 +61,28 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
   const segments = extractSegments(xml)
   let json = {} as T
 
+  let currentOffenceSegment: string | undefined
   let courtCaseReference: string = ""
   let offences: (Partial<(Cof | Cch) & Adj> & { disposals: Dis[]; courtCaseReference: string })[] = []
   const additionalOffences: AdditionalOffences | undefined = undefined
+
+  const getOffenceSegment = (name: string): string | undefined => {
+    const offenceSegments = ["CCH", "ACH"]
+    return offenceSegments.includes(name) ? name : currentOffenceSegment
+  }
+
+  const getLastOffence = () => {
+    if (currentOffenceSegment === "CCH" && offences.length > 0) {
+      return offences[offences.length - 1]
+    }
+
+    const additional = (json as AdditionalOffences).additionalOffences
+    if (currentOffenceSegment === "ACH" && additional?.offences.length > 0) {
+      return additional.offences[additional.offences.length - 1]
+    }
+
+    return undefined
+  }
 
   converters["CCR"] = (value: string) => {
     const ccr = convertCcr(value)
@@ -116,21 +135,25 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
 
   converters["ADJ"] = (value: string): void => {
     const adj = convertAdj(value)
+    const target = getLastOffence()
 
-    if (offences.length > 0) {
-      Object.assign(offences[offences.length - 1], adj)
+    if (target) {
+      Object.assign(target, adj)
     }
   }
 
   converters["DIS"] = (value: string): void => {
     const dis = convertDis(value)
+    const target = getLastOffence()
 
-    if (offences.length > 0) {
-      offences[offences.length - 1].disposals.push(dis)
+    if (target) {
+      target.disposals.push(dis)
     }
   }
 
   for (const { name, value } of segments) {
+    currentOffenceSegment = getOffenceSegment(name)
+
     const converted = converters[name]?.(value)
     if (!converted) {
       continue
