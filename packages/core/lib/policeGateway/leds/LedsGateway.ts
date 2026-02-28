@@ -19,8 +19,8 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
-import Asn from "../../Asn"
 import PoliceApiError from "../PoliceApiError"
+import convertLongAsnToLedsFormat from "./convertLongAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
@@ -28,6 +28,14 @@ import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
 import { subsequentDisposal } from "./processors/subsequentDisposal"
+
+const jsonTransformer = (data: string): unknown => {
+  try {
+    return JSON.parse(data)
+  } catch {
+    return data
+  }
+}
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -41,7 +49,7 @@ export default class LedsGateway implements PoliceGateway {
   ): Promise<PoliceApiError | PoliceQueryResult | undefined> {
     this.queryTime = new Date()
     const requestBody: AsnQueryRequest = {
-      asn: new Asn(asn).toPncFormat(),
+      asn: convertLongAsnToLedsFormat(asn),
       caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
     }
 
@@ -51,19 +59,21 @@ export default class LedsGateway implements PoliceGateway {
       return new PoliceApiError(["Failed to query LEDS"])
     }
 
+    const asnQueryUrl = this.generateUrl(endpoints.asnQuery)
     const apiResponse = await axios
-      .post(`${this.config.url}${endpoints.asnQuery}`, requestBody, {
+      .post(asnQueryUrl, requestBody, {
         headers: generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        transformResponse: [(data) => JSON.parse(data)]
+        transformResponse: [jsonTransformer]
       })
-      .catch((error: AxiosError) => error)
+      .catch((error: AxiosError<ErrorResponse>) => error)
 
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {
-        const errors = (apiResponse.response?.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
+        console.error(JSON.stringify(apiResponse.response.data, null, 2))
+        const errors = apiResponse.response.data?.leds?.errors.map((error) => error.message) ?? [
           `ASN query failed with status code ${apiResponse.status}.`
         ]
         return new PoliceApiError(errors)
@@ -135,19 +145,21 @@ export default class LedsGateway implements PoliceGateway {
       return new PoliceApiError(["Failed to update LEDS"])
     }
 
+    const updateUrl = this.generateUrl(endpoint)
     const apiResponse = await axios
-      .post(`${this.config.url}${endpoint}`, requestBody, {
+      .post(updateUrl, requestBody, {
         headers: generateRequestHeaders(correlationId, actionCode, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
-        transformResponse: [(data) => JSON.parse(data)]
+        transformResponse: [jsonTransformer]
       })
-      .catch((error: AxiosError) => error)
+      .catch((error: AxiosError<ErrorResponse>) => error)
 
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {
-        const errors = (apiResponse.response?.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
+        console.error(JSON.stringify(apiResponse.response.data, null, 2))
+        const errors = apiResponse.response.data?.leds?.errors.map((error) => error.message) ?? [
           `LEDS update failed with status code ${apiResponse.status}.`
         ]
         return new PoliceApiError(errors)
@@ -160,8 +172,13 @@ export default class LedsGateway implements PoliceGateway {
       const errors = (apiResponse.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
         `Update failed with status code ${apiResponse.status}.`
       ]
-
       return new PoliceApiError(errors)
     }
+  }
+
+  private generateUrl(endpoint: string): string {
+    const baseUrl = this.config.url.concat(this.config.url.endsWith("/") ? "" : "/")
+
+    return new URL(endpoint, baseUrl).href
   }
 }

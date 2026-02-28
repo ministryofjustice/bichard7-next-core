@@ -1,4 +1,5 @@
-import Asn from "@moj-bichard7/core/lib/Asn"
+import convertLongAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertLongAsnToLedsFormat"
+import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import type { AsnQueryRequest } from "@moj-bichard7/core/types/leds/AsnQueryRequest"
 import type {
   AsnQueryResponse,
@@ -18,7 +19,7 @@ const parser = new XMLParser()
 
 const generateRequestBody = (ncm: ParsedNcm): AsnQueryRequest => {
   return {
-    asn: new Asn(ncm.NewCaseMessage.Case.Defendant.ProsecutorReference).toPncFormat(),
+    asn: convertLongAsnToLedsFormat(ncm.NewCaseMessage.Case.Defendant.ProsecutorReference),
     caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
   }
 }
@@ -74,7 +75,7 @@ export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, o
 
   const ncm = parser.parse(xmlData) as ParsedNcm
   const request = createMockRequest({
-    path: "/find-disposals-by-asn",
+    path: endpoints.asnQuery,
     exactBodyMatch: true,
     body: generateRequestBody(ncm)
   })

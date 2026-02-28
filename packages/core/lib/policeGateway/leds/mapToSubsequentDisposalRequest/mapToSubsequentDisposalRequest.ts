@@ -12,26 +12,23 @@ import mapOffences from "../mapToAddDisposalRequest/mapOffences"
 
 const reasonForAppearance: Record<string, ReasonForAppearance> = {
   V: "Subsequently Varied",
-  D: "Sentenced Deferred"
+  D: "Sentence Deferred"
 }
 
 const mapToSubsequentDisposalRequest = (
   pncRequest: DisposalUpdatedPncUpdateRequest["request"] | SentenceDeferredPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
-): SubsequentDisposalResultsRequest => {
-  return {
-    ownerCode: pncRequest.forceStationCode,
-    personUrn: pncRequest.pncIdentifier ?? "",
-    checkName: pncRequest.pncCheckName ?? "",
-    courtCaseReference: pncRequest.courtCaseReferenceNumber,
-    court: {
-      courtIdentityType: "code",
-      courtCode: pncRequest.courtCode
-    },
-    appearanceDate: convertDate(pncRequest.hearingDate),
-    reasonForAppearance: reasonForAppearance[pncRequest.hearingType],
-    offences: mapOffences(pncRequest.hearingDetails, pncUpdateDataset, pncRequest.courtCaseReferenceNumber)
-  }
-}
+): SubsequentDisposalResultsRequest => ({
+  ownerCode: pncRequest.forceStationCode,
+  personUrn: pncRequest.pncIdentifier ?? "",
+  courtCaseReference: pncRequest.courtCaseReferenceNumber,
+  court: {
+    courtIdentityType: "code",
+    courtCode: pncRequest.courtCode
+  },
+  appearanceDate: convertDate(pncRequest.hearingDate),
+  reasonForAppearance: reasonForAppearance[pncRequest.hearingType],
+  offences: mapOffences(pncRequest.hearingDetails, pncUpdateDataset, pncRequest.courtCaseReferenceNumber, false)
+})
 
 export default mapToSubsequentDisposalRequest
