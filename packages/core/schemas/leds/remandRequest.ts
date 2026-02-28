@@ -47,7 +47,7 @@ const localAuthoritySchema = z.object({
 
 export const remandRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
-  checkname: checkNameSchema,
+  checkName: checkNameSchema,
   personUrn: z.string().nonempty(),
   remandDate: dateStringSchema,
   appearanceResult: appearanceResultSchema,

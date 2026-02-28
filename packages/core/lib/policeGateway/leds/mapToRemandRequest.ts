@@ -56,7 +56,7 @@ const mapToRemandRequest = (request: RemandPncUpdateRequest["request"]): RemandR
 
   return {
     ownerCode: forceStationCode,
-    checkname: pncCheckName ?? "",
+    checkName: pncCheckName ?? "",
     personUrn: pncIdentifier ?? "",
     remandDate: convertDate(hearingDate),
     appearanceResult: remandStatusByPncCode[pncRemandStatus],

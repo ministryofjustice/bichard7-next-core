@@ -171,7 +171,7 @@ describe("LedsGateway", () => {
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "02YZ",
-        checkname: "FIRST NAME LAST NAME",
+        checkName: "FIRST NAME LAST NAME",
         personUrn: pncUpdateDataset.PncQuery!.personId,
         remandDate: "2024-12-05",
         appearanceResult: "remanded-on-bail",
@@ -257,7 +257,12 @@ describe("LedsGateway", () => {
             cjsOffenceCode: "RT88191",
             offenceTic: 0,
             disposalResults: [
-              { disposalCode: 2059, disposalQualifiers: undefined, disposalText: "", disposalFine: { amount: 0 } }
+              {
+                disposalCode: 2059,
+                disposalQualifiers: undefined,
+                disposalText: undefined,
+                disposalFine: { amount: 0 }
+              }
             ],
             offenceId: pncUpdateDataset.PncQuery!.courtCases![0].offences[0].offence.offenceId
           }

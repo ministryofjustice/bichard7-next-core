@@ -50,25 +50,26 @@ const mapOffences = (
       return {
         disposalCode: Number(disposal.disposalType),
         disposalQualifiers,
-        disposalText: disposal.disposalText ?? undefined,
+        disposalText: disposal.disposalText || undefined,
         disposalDuration,
         disposalEffectiveDate,
         disposalFine: { amount }
       }
     })
     const offenceId = findOffenceId(pncUpdateDataset, courtCaseReferenceNumber, ordinary?.courtOffenceSequenceNumber)
-    const plea = adjudication?.pleaStatus ? (toTitleCase(adjudication?.pleaStatus) as Plea) : undefined
-    const adjudicationResult = adjudication?.verdict ? (toTitleCase(adjudication?.verdict) as Adjudication) : undefined
+    const plea = toTitleCase(adjudication?.pleaStatus) as Plea
+    const adjudicationResult = toTitleCase(adjudication?.verdict) as Adjudication
     const offenceTic = adjudication?.numberOffencesTakenIntoAccount
       ? Number(adjudication?.numberOffencesTakenIntoAccount)
       : undefined
+    const dateOfSentence = adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined
 
     return {
       courtOffenceSequenceNumber: Number(ordinary?.courtOffenceSequenceNumber),
       cjsOffenceCode: ordinary?.offenceReason ?? "",
       plea,
       adjudication: adjudicationResult,
-      dateOfSentence: adjudication?.hearingDate ? convertDate(adjudication.hearingDate) : undefined,
+      ...(dateOfSentence && { dateOfSentence }),
       offenceTic,
       disposalResults,
       offenceId

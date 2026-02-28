@@ -17,7 +17,7 @@ export type Ach = {
 }
 
 const convertAch = (achValue: string): Ach => {
-  let currentIndex = 0
+  let currentIndex = 1
   const read = (length: number) => {
     const value = achValue.substring(currentIndex, currentIndex + length)
     currentIndex += length
