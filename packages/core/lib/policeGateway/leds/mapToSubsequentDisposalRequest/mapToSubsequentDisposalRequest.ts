@@ -9,6 +9,7 @@ import type {
 
 import { convertDate } from "../dateTimeConverter"
 import mapOffences from "../mapToAddDisposalRequest/mapOffences"
+import preProcessPersonUrn from "../preProcessPersonUrn"
 
 const reasonForAppearance: Record<string, ReasonForAppearance> = {
   V: "Subsequently Varied",
@@ -20,7 +21,9 @@ const mapToSubsequentDisposalRequest = (
   pncUpdateDataset: PncUpdateDataset
 ): SubsequentDisposalResultsRequest => ({
   ownerCode: pncRequest.forceStationCode,
-  personUrn: pncRequest.pncIdentifier ?? "",
+  personUrn:
+    preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
+    "",
   courtCaseReference: pncRequest.courtCaseReferenceNumber,
   court: {
     courtIdentityType: "code",

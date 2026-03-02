@@ -70,4 +70,27 @@ describe("mapDisposalResults", () => {
       disposalText: "Dummy text"
     })
   })
+
+  it("should not populate disposalFine when amount is 0 in disposalQuantity", () => {
+    const disposal: PncUpdateDisposal = {
+      disposalType: "1015",
+      disposalQualifiers: "A",
+      disposalQuantity: "D123100520240           ",
+      disposalText: "Dummy text",
+      type: PncUpdateType.DISPOSAL
+    }
+
+    const disposalResult = mapDisposalResult(disposal)
+
+    expect(disposalResult).toEqual({
+      disposalCode: 1015,
+      disposalDuration: {
+        count: 123,
+        units: "days"
+      },
+      disposalEffectiveDate: "2024-05-10",
+      disposalQualifiers: ["A"],
+      disposalText: "Dummy text"
+    })
+  })
 })

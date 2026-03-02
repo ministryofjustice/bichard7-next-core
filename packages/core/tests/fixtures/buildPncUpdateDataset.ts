@@ -16,6 +16,7 @@ export const buildPncUpdateDataset = ({
       HearingOutcome: {
         Case: {
           HearingDefendant: {
+            PNCIdentifier: "201950/0000123X",
             DefendantDetail: {
               PersonName: {
                 FamilyName: familyName,

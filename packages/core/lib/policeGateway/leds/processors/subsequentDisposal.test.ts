@@ -23,7 +23,7 @@ describe("subsequentDisposal", () => {
     const endpoint = "person-services/v1/people/123/disposals/ABC123/court-case-subsequent-disposal-results"
     const requestBody: SubsequentDisposalResultsRequest = {
       ownerCode: "07A1",
-      personUrn: "22/858J",
+      personUrn: "1950/123X",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",

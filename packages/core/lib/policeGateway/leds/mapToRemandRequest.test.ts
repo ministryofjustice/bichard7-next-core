@@ -1,3 +1,4 @@
+import { buildPncUpdateDataset } from "../../../tests/fixtures/buildPncUpdateDataset"
 import { buildRemandRequest } from "../../../tests/fixtures/buildRemandRequest"
 import mapToRemandRequest from "./mapToRemandRequest"
 
@@ -18,14 +19,16 @@ const expectedRequest = {
     date: "2024-12-11"
   },
   ownerCode: "02YZ",
-  personUrn: "2000/0448754K",
+  personUrn: "1950/123X",
   remandDate: "2024-12-05"
 }
 
 describe("mapToRemandRequest", () => {
+  const pncUpdateDataSet = buildPncUpdateDataset()
+
   it("should map the remand operation to LEDS remand request when remand location is 9998", () => {
     const request = buildRemandRequest({ remandLocationCourt: "9998" })
-    const ledsRequest = mapToRemandRequest(request)
+    const ledsRequest = mapToRemandRequest(request, pncUpdateDataSet)
 
     expect(ledsRequest).toEqual({
       ...expectedRequest,
@@ -40,7 +43,7 @@ describe("mapToRemandRequest", () => {
 
   it("should map the remand operation to LEDS remand request when remand location is not 9998", () => {
     const request = buildRemandRequest({ remandLocationCourt: "2673" })
-    const ledsRequest = mapToRemandRequest(request)
+    const ledsRequest = mapToRemandRequest(request, pncUpdateDataSet)
 
     expect(ledsRequest).toEqual({
       ...expectedRequest,
@@ -55,7 +58,7 @@ describe("mapToRemandRequest", () => {
 
   it("should map the remand operation to LEDS remand request when PSA court code is 9998", () => {
     const request = buildRemandRequest({ psaCourtCode: "9998" })
-    const ledsRequest = mapToRemandRequest(request)
+    const ledsRequest = mapToRemandRequest(request, pncUpdateDataSet)
 
     expect(ledsRequest).toEqual({
       ...expectedRequest,
@@ -71,7 +74,7 @@ describe("mapToRemandRequest", () => {
 
   it("should map the remand operation to LEDS remand request when PSA court code is not 9998", () => {
     const request = buildRemandRequest({ psaCourtCode: "2673" })
-    const ledsRequest = mapToRemandRequest(request)
+    const ledsRequest = mapToRemandRequest(request, pncUpdateDataSet)
 
     expect(ledsRequest).toEqual({
       ...expectedRequest,

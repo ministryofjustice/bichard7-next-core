@@ -5,6 +5,7 @@ import type { AddDisposalRequest, CarryForward } from "../../../../types/leds/Ad
 
 import convertAsnToLedsFormat from "../convertAsnToLedsFormat"
 import { convertDate } from "../dateTimeConverter"
+import preProcessPersonUrn from "../preProcessPersonUrn"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
@@ -14,6 +15,9 @@ const mapToAddDisposalRequest = (
   pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): AddDisposalRequest => {
+  const personUrn =
+    preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
+    ""
   const carryForward: CarryForward | undefined =
     pncRequest.pendingPsaCourtCode && pncRequest.pendingCourtDate
       ? {
@@ -42,7 +46,7 @@ const mapToAddDisposalRequest = (
 
   return {
     ownerCode: pncRequest.forceStationCode,
-    personUrn: pncRequest.pncIdentifier ?? "",
+    personUrn,
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
     dateOfConviction: convertDate(pncRequest.dateOfHearing),

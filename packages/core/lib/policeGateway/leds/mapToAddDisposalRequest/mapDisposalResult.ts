@@ -17,7 +17,7 @@ const mapDisposalResult = (disposal: PncUpdateDisposal): DisposalResult => {
     disposalText: disposal.disposalText || undefined,
     disposalDuration,
     disposalEffectiveDate,
-    ...(amount !== undefined && { disposalFine: { amount } })
+    ...(amount && { disposalFine: { amount } })
   }
 }
 

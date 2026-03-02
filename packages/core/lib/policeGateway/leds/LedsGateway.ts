@@ -127,7 +127,7 @@ export default class LedsGateway implements PoliceGateway {
         break
       case PncOperation.REMAND:
         actionCode = LedsActionCode.AddRemand
-        result = remand(request, personId, reportId)
+        result = remand(request, personId, reportId, pncUpdateDataset)
         break
       default:
         return new PoliceApiError(["Invalid LEDS update operation."])
