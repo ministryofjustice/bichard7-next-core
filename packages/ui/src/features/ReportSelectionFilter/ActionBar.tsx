@@ -41,7 +41,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         {"Run Report"}
       </Button>
 
-      <LinkStyleButton type="button" onClick={clearFilters}>
+      <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
         {"Clear filters"}
       </LinkStyleButton>
     </StyledActionBar>
