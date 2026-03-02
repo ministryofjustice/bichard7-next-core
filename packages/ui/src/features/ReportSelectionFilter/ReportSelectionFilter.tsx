@@ -38,10 +38,13 @@ export const ReportSelectionFilter: NextPage = () => {
   const [minDateString] = useState<string>(getDaysAgoString(31))
   const [maxDateString] = useState<string>(getTodayString())
 
+  const [showSelectError, setShowSelectError] = useState<boolean>(false)
+
   const config = reportType ? ReportConfigs[reportType] : null
 
-  const handleChange = (event: SyntheticEvent<HTMLSelectElement>) => {
+  const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
     setReportType(event.currentTarget.value as ReportType)
+    setShowSelectError(false)
     setRows([])
     setCsvDownloadUrl(null)
     setHasRun(false)
@@ -63,6 +66,7 @@ export const ReportSelectionFilter: NextPage = () => {
 
   const handleDownload = async () => {
     if (!reportType || !config) {
+      setShowSelectError(true)
       return
     }
 
@@ -117,26 +121,28 @@ export const ReportSelectionFilter: NextPage = () => {
   return (
     <>
       <ReportSelectionFilterWrapper aria-busy={isStreaming}>
-        <Card heading={"Search reports"} isContentVisible={true}>
+        <Card heading={"Reports"} isContentVisible={true}>
           <fieldset className="govuk-fieldset fields-wrapper">
             <div id={"report-section"} className="reports-section-wrapper">
               <h2 className={"govuk-heading-m"}>{"Reports"}</h2>
-              <label className="govuk-body" htmlFor={"report-select"}>
-                {"Sort by"}
-              </label>
-              <FormGroup showError={true}>
-                <p className="govuk-error-message">
-                  <span className="govuk-visually-hidden">{"Error:"}</span> {"errorMessage"}
-                </p>
+              <FormGroup showError={showSelectError}>
+                <label className="govuk-body" htmlFor={"report-select"}>
+                  {"Select Report"}
+                </label>
+                {showSelectError ? (
+                  <p className="govuk-error-message">
+                    <span className="govuk-visually-hidden">{"Error:"}</span> {"This field is required"}
+                  </p>
+                ) : null}
                 <Select
                   id={"report-select"}
                   placeholder={"Select Report..."}
                   name={"select-case-type"}
                   className="select-report-input"
-                  onChange={handleChange}
+                  onChange={handleSelectChange}
                   aria-describedby="report-type-label"
                   value={reportType || ""}
-                  showError={true}
+                  showError={showSelectError}
                 >
                   <option disabled={true} value={""}>
                     {"Select Report..."}
