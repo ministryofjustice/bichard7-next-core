@@ -81,7 +81,7 @@ When you have selected your filter values, click on the refresh button at the to
 
 ## Searching
 
-The search facility will allow users to lookup records via a defendant name or by court. The search looks for an exact match to the search term entered. A common search facility (known as a wildcard) is used to allow users greater flexibility in searching. A wildcard is a character that may be used in a search to represent one or more characters - this is an asterisk '\*'. Wildcards can be used at the start, end or in the middle of words, e.g. S*H would return both Smith and South.
+The search facility will allow users to lookup records via a defendant name or by court. The search looks for an exact match to the search term entered. A common search facility (known as a wildcard) is used to allow users greater flexibility in searching. A wildcard is a character that may be used in a search to represent one or more characters - this is an asterisk '\*'. Wildcards can be used at the start, end or in the middle of words, e.g. S\*H would return both Smith and South.
 
 It should also be noted that searches are NOT case sensitive.
 
@@ -91,7 +91,7 @@ Below are some specific examples of how to search for a defendant and court.
 
 ### Defendant search example
 
-Defendants are listed in the portal in the format Surname/Firstname (without a slash). To search for a defendant with a surname of Smith, the following search would be required. Note that the asterisk, written as '*', is added after the defendant's surname, as we are unsure of the defendant's first name.
+Defendants are listed in the portal in the format Surname/Firstname (without a slash). To search for a defendant with a surname of Smith, the following search would be required. Note that the asterisk, written as '\*', is added after the defendant's surname, as we are unsure of the defendant's first name.
 
 `Smith*`
 
@@ -109,7 +109,7 @@ Smith Robert, Davies Robert, etc…
 
 ### Court search example
 
-The court search also works in a similar way. A wildcard ( '*' ) is required when searching for court locations. The format that courts are displayed in is area / sub area (without slash), therefore a search for all cases in Westminster would be:
+The court search also works in a similar way. A wildcard ( '\*' ) is required when searching for court locations. The format that courts are displayed in is area / sub area (without slash), therefore a search for all cases in Westminster would be:
 
 `*Westminster`
 
