@@ -20,6 +20,7 @@ const sendMsg = async function (world: Bichard, messagePath: string) {
   const correlationId = `CID-${randomUUID()}`
   let messageData = rawMessage.toString().replace("EXTERNAL_CORRELATION_ID", correlationId)
   messageData = await world.policeApi.prepareInputMessage(messageData)
+  world.setCorrelationId(correlationId)
 
   if (world.config.parallel) {
     messageData = replaceAllTags(world, messageData, "DC:")
