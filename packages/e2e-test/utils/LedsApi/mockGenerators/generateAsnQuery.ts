@@ -1,4 +1,4 @@
-import convertLongAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
+import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
@@ -29,7 +29,7 @@ export const generateAsnQuery = (
     path: endpoints.asnQuery,
     exactBodyMatch: true,
     body: {
-      asn: convertLongAsnToLedsFormat(asn),
+      asn: convertAsnToLedsFormat(asn),
       caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
     }
   })
