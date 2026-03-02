@@ -9,6 +9,7 @@ export const CaseForBailsReportDtoSchema = z.object({
   daysToEnterPortal: z.number().nullish(),
   defendantAddress: z.string(),
   defendantName: z.string().nullish(),
+  errorId: z.number(),
   hearingDate: z.string(),
   hearingTime: z.string(),
   nextAppearanceCourt: z.string(),

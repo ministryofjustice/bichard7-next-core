@@ -6,12 +6,15 @@ describe("<ReportTableRow />", () => {
   const mockColumns: BaseReportColumn[] = [
     { key: "id", header: "ID" },
     { key: "status", header: "Status" },
-    { key: "date", header: "Date" }
+    { key: "date", header: "Date" },
+    { key: "defendantName", header: "Defendant Name" }
   ]
 
   const mockRow = {
     id: "987",
-    status: "Pending"
+    status: "Pending",
+    defendantName: "Defendant Name",
+    errorId: 123
   }
 
   it("renders a cell for every column provided", () => {
@@ -23,7 +26,7 @@ describe("<ReportTableRow />", () => {
       </table>
     )
 
-    cy.get("td").should("have.length", 3)
+    cy.get("td").should("have.length", 4)
   })
 
   it("renders the correct data in the correct columns", () => {
@@ -49,5 +52,20 @@ describe("<ReportTableRow />", () => {
     )
 
     cy.get("td").eq(2).should("contain.text", "-")
+  })
+
+  it("turns defendantName into a link", () => {
+    cy.mount(
+      <table>
+        <tbody>
+          <ReportTableRow row={mockRow} columns={mockColumns} />
+        </tbody>
+      </table>
+    )
+
+    cy.get("td a")
+      .should("contain.text", "Defendant Name")
+      .should("have.attr", "href", "/bichard/court-cases/123")
+      .should("have.attr", "target", "_blank")
   })
 })

@@ -35,6 +35,7 @@ export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<Cas
       row.court_date > row.msg_received_ts ? null : differenceInCalendarDays(row.msg_received_ts, row.court_date),
     defendantAddress: defendantAddress(aho),
     defendantName: row.defendant_name ?? null,
+    errorId: row.error_id,
     hearingDate: format(row.court_date, "dd/MM/yyyy"),
     hearingTime: hearingTime(aho),
     nextAppearanceCourt: aggregatedOffences.nextCourtNames,
