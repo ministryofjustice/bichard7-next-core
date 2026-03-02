@@ -1,3 +1,5 @@
+@import "../../base";
+
 @include govuk-exports("govuk/component/tabs") {
   .govuk-tabs {
     @include govuk-responsive-margin(1, "top");
@@ -10,8 +12,9 @@
     // user agent font size overrides the inherited font size
     @include govuk-font-size($size: 19);
     @include govuk-typography-weight-regular;
-    @include govuk-text-colour;
+
     margin-bottom: govuk-spacing(2);
+    color: govuk-functional-colour(text);
   }
 
   .govuk-tabs__list {
@@ -25,10 +28,10 @@
     margin-left: govuk-spacing(5);
 
     &::before {
-      @include govuk-text-colour;
       content: "\2014 "; // "— "
       margin-left: govuk-spacing(-5);
       padding-right: govuk-spacing(1);
+      color: govuk-functional-colour(text);
     }
   }
 
@@ -46,11 +49,12 @@
 
   // GOV.UK Frontend JavaScript enabled
   .govuk-frontend-supported {
-    @include govuk-media-query($from: tablet) {
+    @media #{govuk-from-breakpoint(tablet)} {
       .govuk-tabs__list {
         @include govuk-clearfix;
         margin-bottom: 0;
-        border-bottom: 1px solid $govuk-border-colour;
+        border-bottom: 1px solid;
+        border-bottom-color: govuk-functional-colour(border);
       }
 
       .govuk-tabs__title {
@@ -66,7 +70,7 @@
         padding: govuk-spacing(2) govuk-spacing(4);
 
         float: left;
-        background-color: govuk-colour("light-grey");
+        background-color: govuk-colour("black", $variant: "tint-95");
         text-align: center;
 
         &::before {
@@ -88,10 +92,11 @@
         padding-bottom: govuk-spacing(3) + $border-width;
         padding-left: govuk-spacing(4) - $border-width;
 
-        border: $border-width solid $govuk-border-colour;
+        border: $border-width solid;
         border-bottom: 0;
+        border-color: govuk-functional-colour(border);
 
-        background-color: $govuk-body-background-colour;
+        background-color: govuk-functional-colour(body-background);
 
         .govuk-tabs__tab {
           text-decoration: none;
@@ -116,8 +121,9 @@
       .govuk-tabs__panel {
         @include govuk-responsive-margin(0, "bottom");
         padding: govuk-spacing(6) govuk-spacing(4);
-        border: 1px solid $govuk-border-colour;
+        border: 1px solid;
         border-top: 0;
+        border-color: govuk-functional-colour(border);
 
         & > :last-child {
           margin-bottom: 0;
