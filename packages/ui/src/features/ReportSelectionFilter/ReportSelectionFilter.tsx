@@ -2,16 +2,16 @@ import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
 import { Select } from "components/Select"
-import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { NextPage } from "next"
-import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
-import { SyntheticEvent, useState, useEffect } from "react"
-import { downloadReport } from "services/reports/downloadReport"
+import { SyntheticEvent, useEffect, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
-import { ReportConfigs } from "types/reports/Config"
+import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
+import { ReportConfigs } from "types/reports/Config"
+import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
 import { ActionBar } from "./ActionBar"
 import { ReportResults } from "./ReportResults"
+import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
@@ -25,6 +25,9 @@ export const ReportSelectionFilter: NextPage = () => {
   const [rows, setRows] = useState<Record<string, unknown>[]>([])
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
+
+  const [minDateString] = useState<string>(getDaysAgoString(31))
+  const [maxDateString] = useState<string>(getTodayString())
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -143,6 +146,8 @@ export const ReportSelectionFilter: NextPage = () => {
                     }}
                     value={fromDate}
                     dateRange={undefined}
+                    minValue={minDateString}
+                    maxValue={toDate === "" ? maxDateString : toDate}
                   />
                 </div>
                 <div id={"report-selection-date-to"} className="date">
@@ -154,6 +159,8 @@ export const ReportSelectionFilter: NextPage = () => {
                     }}
                     value={toDate}
                     dateRange={undefined}
+                    minValue={fromDate === "" ? minDateString : fromDate}
+                    maxValue={maxDateString}
                   />
                 </div>
               </div>
