@@ -6,15 +6,10 @@ import { subDays, format, parse } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
 import Checkbox from "components/Checkbox/Checkbox"
-
-interface Resolver {
-  username: string
-  forenames: string
-  surname: string
-}
+import AuditResolvedBy from "../../types/AuditResolvedBy"
 
 interface Props {
-  resolvers: Resolver[]
+  resolvers: AuditResolvedBy[]
   triggerTypes: string[]
 }
 

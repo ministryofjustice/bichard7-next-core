@@ -13,12 +13,12 @@ describe("Persist applied filters", () => {
     cy.get("#defendantName").type("Defendant Name")
     cy.get("#search").click()
 
-    cy.get("li.moj-pagination__item").contains("Next").click()
-    cy.get(".moj-pagination__item--active").contains("2")
+    cy.get("li.govuk-pagination__item").contains("Next").click()
+    cy.get(".govuk-pagination__item--current").contains("2")
 
     cy.visit("/bichard")
     cy.get("#defendantName").should("have.value", "Defendant Name")
-    cy.get(".moj-pagination__item--active").contains("2")
+    cy.get(".govuk-pagination__item--current").contains("2")
   })
 
   it("Should clear the applied filters", () => {
@@ -29,16 +29,16 @@ describe("Persist applied filters", () => {
     cy.get("#defendantName").type("Defendant Name")
     cy.get("#search").click()
 
-    cy.get("li.moj-pagination__item").contains("Next").click()
-    cy.get(".moj-pagination__item--active").contains("2")
+    cy.get("li.govuk-pagination__item").contains("Next").click()
+    cy.get(".govuk-pagination__item--current").contains("2")
 
     cy.visit("/bichard")
     cy.get("#defendantName").should("have.value", "Defendant Name")
-    cy.get(".moj-pagination__item--active").contains("2")
+    cy.get(".govuk-pagination__item--current").contains("2")
 
     cy.get(".moj-filter__heading-title a").contains("Clear filters").click({ force: true })
 
     cy.get("#defendantName").should("not.have.value", "Defendant Name")
-    cy.get(".moj-pagination__item--active").contains("1")
+    cy.get(".govuk-pagination__item--current").contains("1")
   })
 })

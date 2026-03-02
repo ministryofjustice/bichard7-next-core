@@ -18,7 +18,7 @@ The Bichard7 API acts as a single point of access for the database and conductor
 
 Install NPM dependencies from the top level of this repo `npm ci`
 
-Then from this directory run `npm run server:dev`
+Then from this directory run `npm run start:dev`
 
 ## Building
 

@@ -15,7 +15,7 @@ const getFilteredUsers = async (
   if (visibleForces !== "" || isSuperUser) {
     const forces = visibleForces.split(",")
 
-    const forceWhere = forces.map((code) => `visible_forces ~ '\\y${code}\\y'`).join(" OR ")
+    const forceWhere = forces.map((code) => String.raw`visible_forces ~ '\y${code}\y'`).join(" OR ")
     const getFilteredUsersQuery = `
       SELECT
         id,

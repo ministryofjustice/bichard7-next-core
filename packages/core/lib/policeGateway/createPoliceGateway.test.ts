@@ -1,3 +1,4 @@
+import setLedsEnvironmentVariables from "../../tests/helpers/setLedsEnvironmentVariables"
 import createPoliceGateway from "./createPoliceGateway"
 import LedsGateway from "./leds/LedsGateway"
 import PncGateway from "./pnc/PncGateway"
@@ -24,6 +25,7 @@ describe("createPoliceGateway", () => {
 
   it("should return LEDS gateway when USE_LEDS environment variable is true", () => {
     process.env.USE_LEDS = "true"
+    setLedsEnvironmentVariables()
 
     const gateway = createPoliceGateway()
 

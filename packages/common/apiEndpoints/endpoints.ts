@@ -1,4 +1,6 @@
 export const Endpoints = {
+  Audit: "/audit",
+  AuditCases: "/audit/:auditId/cases",
   AuditLog: "/audit-logs/:correlationId",
   AuditLogEvents: "/audit-logs/:correlationId/events",
   AuditLogs: "/audit-logs",
@@ -6,8 +8,12 @@ export const Endpoints = {
   CaseAudit: "/cases/:caseId/audit",
   CaseResubmit: "/cases/:caseId/resubmit",
   Cases: "/cases",
+  CasesReportsBails: "/cases/reports/bails",
+  CasesReportsDomesticViolence: "/cases/reports/domestic-violence",
   CasesReportsExceptions: "/cases/reports/exceptions",
+  CasesReportsWarrants: "/cases/reports/warrants",
   CasesResubmit: "/cases/resubmit",
   Health: "/health",
-  Me: "/me"
+  Me: "/me",
+  Users: "/users"
 } as const

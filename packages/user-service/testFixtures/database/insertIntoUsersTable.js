@@ -21,7 +21,8 @@ const insertIntoUsersTable = async (data) => {
         migrated_password,
         visible_forces,
         visible_courts,
-        excluded_triggers
+        excluded_triggers,
+        feature_flags
       ) VALUES (
         $\{username\},
         $\{created_at\},
@@ -38,7 +39,8 @@ const insertIntoUsersTable = async (data) => {
         $\{migrated_password\},
         $\{visible_forces\},
         $\{visible_courts\},
-        $\{excluded_triggers\}
+        $\{excluded_triggers\},
+        $\{feature_flags\}
   )
   `
 

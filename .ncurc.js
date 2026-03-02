@@ -28,7 +28,7 @@ const semver = new RegExp(
   - cypress-circleci-reporter
       - 0.4.0 changed to module type
 */
-const pinned = ["chalk", "@types/diff", "@faker-js/faker"]
+const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist"]
 const ignored = [
   `bichard7-next-data-(${semver.source})`,
   "p-limit",

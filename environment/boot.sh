@@ -3,6 +3,7 @@ set -e
 
 echo "Skipping images: $SKIP_IMAGES"
 
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd -P)
 LEGACY=${LEGACY:-"false"}
 NOWORKER=${NOWORKER:-"false"}
 SKIP_IMAGES=($SKIP_IMAGES)
@@ -93,6 +94,9 @@ if [[ "$LEGACY" == "false" ]] && [[ "$NOWORKER" == "false" ]]; then
     fi
 fi
 
+if [[ "$USE_LEDS" == "true" ]]; then
+    source "$SCRIPT_DIR/leds-environment-variable.sh"
+fi
 
 echo "Setting up infrastructure"
 eval "$DOCKER_COMPOSE up -d --wait $@"

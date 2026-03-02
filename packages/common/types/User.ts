@@ -44,6 +44,11 @@ export const UserDtoSchema = z.object({
   visibleForces: z.array(z.string()).nullable()
 })
 
+export const UserListSchema = z.object({
+  users: z.array(UserDtoSchema)
+})
+
 export type User = z.infer<typeof UserSchema>
 export type UserDto = z.infer<typeof UserDtoSchema>
+export type UserList = z.infer<typeof UserListSchema>
 export type UserRow = z.infer<typeof UserRowSchema>
