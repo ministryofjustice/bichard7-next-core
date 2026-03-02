@@ -8,6 +8,8 @@
     - v15 doesn't play nice with TypeORM
   - next
     - v16 doesn't load the sass files from @ministryofjustice/frontend
+  - @ministryofjustice/frontend
+    - v9 contains breaking changes
 
   Ignored:
     - postgres
@@ -15,7 +17,8 @@
     - cypress-circleci-reporter
       - 0.4.0 changed to module type
 */
-const pinned = ["cookies-next", "@faker-js/faker", "cypress", "next", "govuk-frontend"]
+
+const pinned = ["@ministryofjustice/frontend", "cookies-next", "@faker-js/faker", "cypress", "next", "govuk-frontend"]
 const ignored = ["postgres", "cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
