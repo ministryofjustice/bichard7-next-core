@@ -1,4 +1,13 @@
-const pinned = ["word-list", "react", "react-dom", "@types/react", "@types/react-dom", "next", "govuk-frontend"]
+const pinned = [
+  "word-list",
+  "react",
+  "react-dom",
+  "@types/react",
+  "@types/react-dom",
+  "next",
+  "govuk-frontend",
+  "@ministryofjustice/frontend"
+]
 const ignored = []
 const skipped = []
 
