@@ -1,9 +1,10 @@
 import { StyledReportTableCell } from "./ReportTableCell.styles"
+import { JSX } from "react"
 
 interface TableCellProps {
-  value: unknown
+  value: string | JSX.Element
 }
 
 export const ReportTableCell: React.FC<TableCellProps> = ({ value }) => (
-  <StyledReportTableCell>{value !== undefined && value !== null ? String(value) : "-"}</StyledReportTableCell>
+  <StyledReportTableCell>{value}</StyledReportTableCell>
 )

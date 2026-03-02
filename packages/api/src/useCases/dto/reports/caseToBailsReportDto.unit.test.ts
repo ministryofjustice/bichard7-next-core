@@ -40,6 +40,7 @@ describe("caseToBailsReportDto", () => {
       court_name: "Test Court",
       defendant_name: "John Doe",
       error_count: 0,
+      error_id: 123,
       msg_received_ts: new Date("2023-05-12T10:00:00Z"),
       ptiurn: "12345",
       triggers: [
@@ -98,6 +99,7 @@ describe("caseToBailsReportDto", () => {
     expect(firstRow.offenceTitles).toBe("1× Theft.")
     expect(firstRow.ptiurn).toBe("12345")
     expect(firstRow.receivedDate).toBe("12/05/2023 10:00")
+    expect(firstRow.errorId).toBe(123)
 
     expect(results[0].triggerStatus).toBe("Unresolved")
     expect(results[0].triggerResolvedDate).toBeNull()
