@@ -41,11 +41,12 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
   const [showPreview, setShowPreview] = useState(true)
   const notes = auditCase.notes.map((note) => noteToDisplayNoteDto(note as Note))
   const numberOfNotes = noteCount ?? filterUserNotes(notes).length
+  const rowSpan = showPreview ? 1 : 2 // Row span should be 2 when notes are being shown so the notes row overlaps existing row
 
   return (
     <>
       <TableRow className="caseDetailsRow">
-        <TableCell rowSpan={showPreview ? 2 : 3}>
+        <TableCell rowSpan={rowSpan}>
           <a
             href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
             id="defendant-name-link"
@@ -54,18 +55,18 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
             {defendantName}
           </a>
         </TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>
+        <TableCell rowSpan={rowSpan}>
           <a href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`} id="asn-link" className="govuk-link">
             {asn}
           </a>
         </TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>{ptiurn}</TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>{courtName}</TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>
+        <TableCell rowSpan={rowSpan}>{ptiurn}</TableCell>
+        <TableCell rowSpan={rowSpan}>{courtName}</TableCell>
+        <TableCell rowSpan={rowSpan}>
           <DateTime date={courtDate} dateFormat={displayedDateFormat} />
         </TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>{courtReference}</TableCell>
-        <TableCell rowSpan={showPreview ? 2 : 3}>
+        <TableCell rowSpan={rowSpan}>{courtReference}</TableCell>
+        <TableCell rowSpan={rowSpan}>
           <DateTime date={messageReceivedTimestamp} dateFormat={displayedDateFormat} />
         </TableCell>
         <TableCell>
