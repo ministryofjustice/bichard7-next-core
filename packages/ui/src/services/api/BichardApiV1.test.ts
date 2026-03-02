@@ -1,7 +1,11 @@
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
+import type { UserList } from "@moj-bichard7/common/types/User"
+import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
+import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
+
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { Order, OrderBy, Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { LockedState } from "types/CaseListQueryParams"
@@ -9,7 +13,6 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
-import type { UserList } from "@moj-bichard7/common/types/User"
 
 describe("BichardApiV1", () => {
   let client: FakeApiClient
@@ -200,6 +203,52 @@ describe("BichardApiV1", () => {
       jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
 
       const result = await gateway.fetchUsers()
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
+    })
+  })
+
+  describe("#fetchAuditById", () => {
+    const auditId = 1
+
+    it("calls apiClient#get with a route", async () => {
+      const endpoint = V1.AuditById.replace(":auditId", String(auditId))
+
+      jest.spyOn(client, "get").mockResolvedValue({} as AuditWithProgressDto)
+
+      await gateway.fetchAuditById(auditId)
+
+      expect(client.get).toHaveBeenCalledWith(endpoint)
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+
+      const result = await gateway.fetchAuditById(auditId)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
+    })
+  })
+
+  describe("#fetchAuditCases", () => {
+    const auditId = 1
+
+    it("calls apiClient#get with a route", async () => {
+      const endpoint = V1.AuditCases.replace(":auditId", String(auditId))
+
+      jest.spyOn(client, "get").mockResolvedValue({} as AuditCasesMetadata)
+
+      await gateway.fetchAuditCases(auditId)
+
+      expect(client.get).toHaveBeenCalledWith(endpoint)
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+
+      const result = await gateway.fetchAuditCases(auditId)
 
       expect(isError(result)).toBe(true)
       expect(result).toEqual(new Error("Error"))
