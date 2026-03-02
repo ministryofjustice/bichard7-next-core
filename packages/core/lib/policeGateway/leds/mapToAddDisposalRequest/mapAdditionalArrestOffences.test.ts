@@ -149,4 +149,82 @@ describe("mapAdditionalArrestOffences", () => {
       disposalText: undefined
     })
   })
+
+  it.each([2059, 2060])(
+    "should not include plea and adjudication when case is carried forward or referred to court case and offence has disposal result %i",
+    (disposalResultCode) => {
+      const arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = [
+        {
+          committedOnBail: "y",
+          courtOffenceSequenceNumber: "3",
+          locationOfOffence: "Offence location",
+          offenceLocationFSCode: "Offence location FS code",
+          offenceReason: "SX03001B",
+          offenceReasonSequence: "1",
+          offenceStartDate: "16082025",
+          offenceStartTime: "1430",
+          offenceEndDate: "17082025",
+          offenceEndTime: "1445",
+          type: PncUpdateType.ARREST
+        },
+        {
+          hearingDate: "15082025",
+          numberOffencesTakenIntoAccount: "4",
+          pleaStatus: "RESISTED",
+          verdict: "NOT GUILTY",
+          type: PncUpdateType.ADJUDICATION
+        },
+        {
+          disposalQualifiers: "A",
+          disposalQuantity: "D123100520240012000.9900",
+          disposalText: "Disposal text",
+          disposalType: "1015",
+          type: PncUpdateType.DISPOSAL
+        },
+        {
+          committedOnBail: "y",
+          courtOffenceSequenceNumber: "4",
+          locationOfOffence: "Offence location",
+          offenceLocationFSCode: "Offence location FS code",
+          offenceReason: "TH68006",
+          offenceReasonSequence: "1",
+          offenceStartDate: "16082025",
+          offenceStartTime: "1430",
+          offenceEndDate: "17082025",
+          offenceEndTime: "1445",
+          type: PncUpdateType.ARREST
+        },
+        {
+          hearingDate: "15082025",
+          numberOffencesTakenIntoAccount: "4",
+          pleaStatus: "RESISTED",
+          verdict: "NOT GUILTY",
+          type: PncUpdateType.ADJUDICATION
+        },
+        {
+          disposalQualifiers: "A",
+          disposalQuantity: "D123100520240012000.9900",
+          disposalText: "Disposal text",
+          disposalType: String(disposalResultCode),
+          type: PncUpdateType.DISPOSAL
+        }
+      ]
+
+      const additionalOffences = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals, true)
+
+      const offences = additionalOffences[0].additionalOffences
+
+      const firstOffenceCode =
+        offences[0].offenceCode.offenceCodeType === "cjs" && offences[0].offenceCode.cjsOffenceCode
+      expect(firstOffenceCode).toBe("SX03001")
+      expect(offences[0].plea).toBe("Resisted")
+      expect(offences[0].adjudication).toBe("Not Guilty")
+
+      const secondOffenceCode =
+        offences[1].offenceCode.offenceCodeType === "cjs" && offences[1].offenceCode.cjsOffenceCode
+      expect(secondOffenceCode).toBe("TH68006")
+      expect(offences[1].plea).toBeUndefined()
+      expect(offences[1].adjudication).toBeUndefined()
+    }
+  )
 })

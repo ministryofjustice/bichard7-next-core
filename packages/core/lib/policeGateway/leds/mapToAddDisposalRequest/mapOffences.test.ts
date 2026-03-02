@@ -175,4 +175,67 @@ describe("mapOffences", () => {
 
     expect(offences[0].disposalResults?.[0].disposalDuration).toBeUndefined()
   })
+
+  it.each([2059, 2060])(
+    "should not include plea and adjudication when case is carried forward or referred to court case and offence has disposal result %i",
+    (disposalResultCode) => {
+      const normalDisposalRequest = buildNormalDisposalRequest({
+        hearingsAdjudicationsAndDisposals: [
+          {
+            courtOffenceSequenceNumber: "2",
+            offenceReason: "CJ03507",
+            type: PncUpdateType.ORDINARY
+          },
+          {
+            hearingDate: "14082025",
+            numberOffencesTakenIntoAccount: "3",
+            pleaStatus: "NO PLEA TAKEN",
+            verdict: "NON-CONVICTION",
+            type: PncUpdateType.ADJUDICATION
+          },
+          {
+            disposalQualifiers: "A",
+            disposalQuantity: "    10052024          00",
+            disposalText: "Disposal text",
+            disposalType: "1015",
+            type: PncUpdateType.DISPOSAL
+          },
+          {
+            courtOffenceSequenceNumber: "3",
+            offenceReason: "SX03001",
+            type: PncUpdateType.ORDINARY
+          },
+          {
+            hearingDate: "14082025",
+            numberOffencesTakenIntoAccount: "3",
+            pleaStatus: "NO PLEA TAKEN",
+            verdict: "NON-CONVICTION",
+            type: PncUpdateType.ADJUDICATION
+          },
+          {
+            disposalQualifiers: "A",
+            disposalQuantity: "    10052024          00",
+            disposalText: "Disposal text",
+            disposalType: String(disposalResultCode),
+            type: PncUpdateType.DISPOSAL
+          }
+        ]
+      })
+
+      const offences = mapOffences(
+        normalDisposalRequest.hearingsAdjudicationsAndDisposals,
+        pncUpdateDataset,
+        courtCaseReferenceNumber,
+        true
+      )
+
+      expect(offences[0].cjsOffenceCode).toBe("CJ03507")
+      expect(offences[0].plea).toBe("No Plea Taken")
+      expect(offences[0].adjudication).toBe("Non-Conviction")
+
+      expect(offences[1].cjsOffenceCode).toBe("SX03001")
+      expect(offences[1].plea).toBeUndefined()
+      expect(offences[1].adjudication).toBeUndefined()
+    }
+  )
 })
