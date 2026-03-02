@@ -1,6 +1,7 @@
 import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import DateInput from "components/CustomDateInput/DateInput"
+import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
 import { NextPage } from "next"
 import { SyntheticEvent, useEffect, useState } from "react"
@@ -123,24 +124,30 @@ export const ReportSelectionFilter: NextPage = () => {
               <label className="govuk-body" htmlFor={"report-select"}>
                 {"Sort by"}
               </label>
-              <Select
-                id={"report-select"}
-                placeholder={"Select Report..."}
-                name={"select-case-type"}
-                className="select-report-input"
-                onChange={handleChange}
-                aria-describedby="report-type-label"
-                value={reportType || ""}
-              >
-                <option disabled={true} value={""}>
-                  {"Select Report..."}
-                </option>
-                {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value}
+              <FormGroup showError={true}>
+                <p className="govuk-error-message">
+                  <span className="govuk-visually-hidden">{"Error:"}</span> {"errorMessage"}
+                </p>
+                <Select
+                  id={"report-select"}
+                  placeholder={"Select Report..."}
+                  name={"select-case-type"}
+                  className="select-report-input"
+                  onChange={handleChange}
+                  aria-describedby="report-type-label"
+                  value={reportType || ""}
+                  showError={true}
+                >
+                  <option disabled={true} value={""}>
+                    {"Select Report..."}
                   </option>
-                ))}
-              </Select>
+                  {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
+                    <option key={key} value={key}>
+                      {value}
+                    </option>
+                  ))}
+                </Select>
+              </FormGroup>
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
               <h2 className={"govuk-heading-m"}>{"Date range"}</h2>
