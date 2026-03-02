@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.336",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.337",
     "@trust/webcrypto": "^0.9.2",
     "argon2": "^0.44.0",
     "axios": "^1.13.6",
