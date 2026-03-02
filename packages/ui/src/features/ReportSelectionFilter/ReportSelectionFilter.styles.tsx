@@ -73,10 +73,4 @@ const ReportSelectionFilterWrapper = styled.div`
   }
 `
 
-const ResultsTableWrapper = styled.div`
-  .reports-table {
-    margin-top: 1rem;
-  }
-`
-
-export { ReportSelectionFilterWrapper, ResultsTableWrapper }
+export { ReportSelectionFilterWrapper }

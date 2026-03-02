@@ -13,6 +13,14 @@ import { ActionBar } from "./ActionBar"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
+const getTodayString = () => new Date().toISOString().split("T")[0]
+
+const getDaysAgoString = (days: number) => {
+  const date = new Date()
+  date.setDate(date.getDate() - days)
+  return date.toISOString().split("T")[0]
+}
+
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
   const [toDate, setToDate] = useState<string>("")
