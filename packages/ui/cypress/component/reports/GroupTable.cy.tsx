@@ -67,7 +67,6 @@ describe("GroupTable", () => {
     cy.mount(<GroupTable config={mockConfig} groups={missingNameGroups} />)
 
     cy.get("table").first().find("thead").should("exist")
-    // Should render a row but the text will be empty/dash based on HeaderCell logic
     cy.get("table").first().find("tr").first().should("not.have.text", "Hardware")
   })
 })

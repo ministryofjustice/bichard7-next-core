@@ -22,6 +22,11 @@ describe("<Loading />", () => {
   it("has the correct accessibility attributes on the spinner", () => {
     cy.mount(<Loading />)
 
-    cy.get(".loading-spinner__spinner").should("have.attr", "role", "status").should("have.attr", "aria-live", "polite")
+    cy.get(".loading-spinner__spinner").should("have.attr", "aria-hidden", "true")
+
+    cy.get(".loading-spinner")
+      .should("have.attr", "role", "status")
+      .should("have.attr", "aria-live", "polite")
+      .should("have.attr", "aria-atomic", "true")
   })
 })

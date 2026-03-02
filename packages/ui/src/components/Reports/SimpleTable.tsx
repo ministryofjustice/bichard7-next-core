@@ -7,13 +7,18 @@ import { Table } from "components/Table"
 interface SimpleTableProps<T> {
   config: ReportConfig
   rows: T[]
+  tableName: string
 }
 
-export const SimpleTable = <T extends Record<string, unknown>>({ config, rows }: SimpleTableProps<T>) => {
+export const SimpleTable = <T extends Record<string, unknown>>({ config, rows, tableName }: SimpleTableProps<T>) => {
   return (
-    <Table style={{ width: "100%", borderCollapse: "collapse" }}>
-      <ReportTableHeader columns={config.columns} />
-      <ReportTableBody rows={rows} columns={config.columns} />
-    </Table>
+    <section aria-label={`${tableName} container`}>
+      <Table>
+        <caption className={"govuk-visually-hidden"}>{tableName}</caption>
+
+        <ReportTableHeader columns={config.columns} />
+        <ReportTableBody rows={rows} columns={config.columns} />
+      </Table>
+    </section>
   )
 }

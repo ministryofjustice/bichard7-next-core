@@ -5,6 +5,7 @@ import { isRecord } from "services/reports/utils/isRecord"
 import { ReportTableHeader } from "./ReportTableHeader"
 import { ReportTableBody } from "./ReportTableBody"
 import { Table } from "components/Table"
+import { ReportContainer } from "./GroupTable.styles"
 
 interface GroupedTableProps<T> {
   config: ReportConfig
@@ -42,16 +43,25 @@ export const GroupTable = <T extends Record<string, unknown>>({ config, groups }
   })
 
   return (
-    <>
-      {renderableGroups.map(({ groupName, rows }, groupIdx) => (
-        <Table
-          key={`${groupName}-${groupIdx}`}
-          style={{ width: "100%", marginBottom: "2rem", borderCollapse: "collapse" }}
-        >
-          <ReportTableHeader columns={config.columns} groupName={groupName} />
-          <ReportTableBody rows={rows} columns={config.columns} />
-        </Table>
-      ))}
-    </>
+    <ReportContainer className="report-container">
+      {renderableGroups.map(({ groupName, rows }) => {
+        const sectionId = `report-group-${groupName}`
+
+        return (
+          <section key={sectionId} aria-labelledby={sectionId}>
+            <h3 id={sectionId} className={"govuk-heading-m"}>
+              {groupName}
+            </h3>
+
+            <Table>
+              <caption className="govuk-visually-hidden">{`Report table for ${groupName}`}</caption>
+
+              <ReportTableHeader columns={config.columns} />
+              <ReportTableBody rows={rows} columns={config.columns} />
+            </Table>
+          </section>
+        )
+      })}
+    </ReportContainer>
   )
 }
