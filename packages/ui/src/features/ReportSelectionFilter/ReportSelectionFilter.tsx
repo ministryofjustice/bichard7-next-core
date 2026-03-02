@@ -26,7 +26,6 @@ export const ReportSelectionFilter: NextPage = () => {
   const [exceptions, setExceptions] = useState<boolean>(true)
   const [triggers, setTriggers] = useState<boolean>(true)
 
-  const [hasRunReport, setHasRunReport] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[]>([])
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
@@ -38,7 +37,6 @@ export const ReportSelectionFilter: NextPage = () => {
     setReportType(event.currentTarget.value as ReportType)
     setRows([])
     setCsvDownloadUrl(null)
-    setHasRunReport(false)
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -79,7 +77,6 @@ export const ReportSelectionFilter: NextPage = () => {
     } catch (error) {
       console.error("Fetch failed:", error)
     } finally {
-      setHasRunReport(true)
       setIsStreaming(false)
     }
   }
@@ -90,7 +87,6 @@ export const ReportSelectionFilter: NextPage = () => {
     setReportType(undefined)
     setRows([])
     setCsvDownloadUrl(null)
-    setHasRunReport(false)
 
     setToDate("")
     setFromDate("")
@@ -193,9 +189,6 @@ export const ReportSelectionFilter: NextPage = () => {
 
       <ResultsTableWrapper>
         {isStreaming && reportType ? <Loading text={`Loading ${REPORT_TYPE_MAP[reportType]} report...`} /> : undefined}
-        {rows.length === 0 && hasRunReport && !isStreaming && (
-          <p className="govuk-body">{"No results found for the selected filters."}</p>
-        )}
         {rows.length > 0 && config && (
           <div className={"reports-table"}>
             {config.isGrouped ? (
