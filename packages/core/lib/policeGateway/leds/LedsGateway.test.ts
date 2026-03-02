@@ -167,11 +167,10 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/arrest-reports/${pncUpdateDataset.PncQuery!.reportId}/basic-remands`
+        `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/arrest-reports/${pncUpdateDataset.PncQuery!.reportId}/basic-remands`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "02YZ",
-        checkname: "FIRST NAME LAST NAME",
         personUrn: pncUpdateDataset.PncQuery!.personId,
         remandDate: "2024-12-05",
         appearanceResult: "remanded-on-bail",
@@ -240,26 +239,37 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-disposal-result`
+        `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-disposal-result`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "02YZ",
         personUrn: pncUpdateDataset.PncQuery!.personId,
-        checkName: "FIRST NAME LAST NAME",
         courtCaseReference: "97/1626/008395Q",
         court: { courtIdentityType: "code", courtCode: "1234" },
         dateOfConviction: "2024-12-05",
         defendant: { defendantType: "individual", defendantFirstNames: ["TRPSTWO"], defendantLastName: "TRTHREE" },
         carryForward: { appearanceDate: "2024-12-11", court: { courtIdentityType: "code", courtCode: "2575" } },
+        additionalArrestOffences: undefined,
         offences: [
           {
+            adjudication: undefined,
             courtOffenceSequenceNumber: 1,
+            dateOfSentence: undefined,
             cjsOffenceCode: "RT88191",
             offenceTic: 0,
+            plea: undefined,
+            roleQualifiers: undefined,
+            offenceId: pncUpdateDataset.PncQuery!.courtCases![0].offences[0].offence.offenceId,
             disposalResults: [
-              { disposalCode: 2059, disposalQualifiers: undefined, disposalText: "", disposalFine: { amount: 0 } }
-            ],
-            offenceId: pncUpdateDataset.PncQuery!.courtCases![0].offences[0].offence.offenceId
+              {
+                disposalCode: 2059,
+                disposalDuration: undefined,
+                disposalEffectiveDate: undefined,
+                disposalQualifiers: undefined,
+                disposalText: undefined,
+                disposalFine: { amount: 0 }
+              }
+            ]
           }
         ]
       })
@@ -333,12 +343,11 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
+        `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "01YZ",
         personUrn: "2000/0410770Y",
-        checkName: "COLE",
         courtCaseReference: "97/1626/008395Q",
         court: { courtIdentityType: "code", courtCode: "2575" },
         appearanceDate: "2023-12-19",
@@ -347,6 +356,7 @@ describe("LedsGateway", () => {
           {
             courtOffenceSequenceNumber: 1,
             cjsOffenceCode: "FA06001",
+            roleQualifiers: undefined,
             plea: "Guilty",
             adjudication: "Guilty",
             dateOfSentence: "2023-12-19",
@@ -354,6 +364,8 @@ describe("LedsGateway", () => {
             disposalResults: [
               {
                 disposalCode: 4004,
+                disposalDuration: undefined,
+                disposalEffectiveDate: undefined,
                 disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
                 disposalFine: { amount: 0 }
@@ -364,6 +376,7 @@ describe("LedsGateway", () => {
           {
             courtOffenceSequenceNumber: 2,
             cjsOffenceCode: "FA06001",
+            roleQualifiers: undefined,
             plea: "Guilty",
             adjudication: "Guilty",
             dateOfSentence: "2023-12-19",
@@ -371,6 +384,8 @@ describe("LedsGateway", () => {
             disposalResults: [
               {
                 disposalCode: 4004,
+                disposalDuration: undefined,
+                disposalEffectiveDate: undefined,
                 disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
                 disposalFine: { amount: 0 }
@@ -436,29 +451,35 @@ describe("LedsGateway", () => {
 
       expect(result).toBeUndefined()
       expect(axiosMock.mock.calls[0][0]).toBe(
-        `https://dummy/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
+        `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(axiosMock.mock.calls[0][1]).toEqual({
         ownerCode: "01YZ",
         personUrn: pncUpdateDataset.PncQuery!.pncId,
-        checkName: "COLE",
         courtCaseReference: "97/1626/008395Q",
         court: { courtIdentityType: "code", courtCode: "2575" },
         appearanceDate: "2023-12-19",
-        reasonForAppearance: "Sentenced Deferred",
+        reasonForAppearance: "Sentence Deferred",
         offences: [
           {
             courtOffenceSequenceNumber: 1,
             cjsOffenceCode: "FA06001",
+            adjudication: undefined,
+            dateOfSentence: undefined,
+            offenceTic: undefined,
+            plea: undefined,
+            roleQualifiers: undefined,
+            offenceId: pncUpdateDataset.PncQuery!.courtCases![0].offences[0].offence.offenceId,
             disposalResults: [
               {
                 disposalCode: 4004,
                 disposalQualifiers: undefined,
                 disposalText: "FAILED TO APPEAR WARRANT ISSUED",
+                disposalDuration: undefined,
+                disposalEffectiveDate: undefined,
                 disposalFine: { amount: 0 }
               }
-            ],
-            offenceId: pncUpdateDataset.PncQuery!.courtCases![0].offences[0].offence.offenceId
+            ]
           },
           {
             courtOffenceSequenceNumber: 2,

@@ -4,7 +4,6 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
   const base: AddDisposalRequest = {
     ownerCode: "07A1",
     personUrn: "22/858J",
-    checkName: "Pnc check name",
     courtCaseReference: "98/2048/633Y",
     court: {
       courtIdentityType: "name",
@@ -29,7 +28,8 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
     offences: [
       {
         courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "00112233",
+        cjsOffenceCode: "SX03001",
+        roleQualifiers: ["AT"],
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -62,11 +62,12 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
             disposalText: "Disposal text"
           }
         ],
-        offenceId: "112233"
+        offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
       },
       {
-        courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "00112233",
+        courtOffenceSequenceNumber: 2,
+        cjsOffenceCode: "CJ03507",
+        roleQualifiers: undefined,
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -99,16 +100,20 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
             disposalText: "Disposal text"
           }
         ],
-        offenceId: "112233"
+        offenceId: "025459be-b60b-4919-8b7c-67371f2ca80b"
       }
     ],
     additionalArrestOffences: [
       {
-        asn: "11/01ZD/01/1448754K",
+        asn: "11/01ZD/01/00001448754K",
         additionalOffences: [
           {
-            courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "00998877",
+            courtOffenceSequenceNumber: 3,
+            offenceCode: {
+              offenceCodeType: "cjs",
+              cjsOffenceCode: "SX03001"
+            },
+            roleQualifiers: ["AA"],
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -134,11 +139,15 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
               }
             ],
             locationFsCode: "Offence location FS code",
-            locationText: "Offence location"
+            locationText: { locationText: "Offence location" }
           },
           {
-            courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "00998877",
+            courtOffenceSequenceNumber: 4,
+            offenceCode: {
+              offenceCodeType: "cjs",
+              cjsOffenceCode: "TH68006"
+            },
+            roleQualifiers: undefined,
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -164,7 +173,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
               }
             ],
             locationFsCode: "Offence location FS code",
-            locationText: "Offence location"
+            locationText: { locationText: "Offence location" }
           }
         ]
       }

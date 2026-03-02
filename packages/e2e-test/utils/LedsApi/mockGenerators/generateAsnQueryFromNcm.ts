@@ -1,4 +1,4 @@
-import convertLongAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertLongAsnToLedsFormat"
+import convertLongAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import type { AsnQueryRequest } from "@moj-bichard7/core/types/leds/AsnQueryRequest"
 import type {

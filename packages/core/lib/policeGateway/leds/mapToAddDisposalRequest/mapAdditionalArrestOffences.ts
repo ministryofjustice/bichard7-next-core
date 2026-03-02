@@ -1,9 +1,8 @@
 import type { ArrestOffence } from "../../../../types/leds/AddDisposalRequest"
 import type { AdditionalArrestOffences, Adjudication, Plea } from "../../../../types/leds/DisposalRequest"
 
-import convertAsnToLongFormat from "../../../../phase1/enrichAho/enrichFunctions/enrichDefendant/convertAsnToLongFormat"
 import { type PncUpdateArrestHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
-import convertLongAsnToLedsFormat from "../convertLongAsnToLedsFormat"
+import convertAsnToLedsFormat from "../convertAsnToLedsFormat"
 import { convertDate, convertTime } from "../dateTimeConverter"
 import preProcessOffenceCode from "../preProcessOffenceCode"
 import mapDisposalResult from "./mapDisposalResult"
@@ -16,7 +15,7 @@ const mapAdditionalArrestOffences = (
   arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[],
   isCarriedForwardOrReferredToCourtCase: boolean
 ): AdditionalArrestOffences[] => {
-  const arrestSummonsNumber = convertLongAsnToLedsFormat(convertAsnToLongFormat(asn))
+  const arrestSummonsNumber = convertAsnToLedsFormat(asn)
   const additionalOffences = mergeOffenceDetails(arrestsAdjudicationsAndDisposals).map<ArrestOffence>(
     ({ arrest, adjudication, disposals }) => {
       const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(arrest.offenceReason)

@@ -3,7 +3,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type { AddDisposalRequest, CarryForward } from "../../../../types/leds/AddDisposalRequest"
 
-import convertLongAsnToLedsFormat from "../convertLongAsnToLedsFormat"
+import convertAsnToLedsFormat from "../convertAsnToLedsFormat"
 import { convertDate } from "../dateTimeConverter"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
@@ -30,9 +30,7 @@ const mapToAddDisposalRequest = (
 
   const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
 
-  const arrestSummonsNumber = convertLongAsnToLedsFormat(
-    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
-  )
+  const arrestSummonsNumber = pncRequest.arrestSummonsNumber && convertAsnToLedsFormat(pncRequest.arrestSummonsNumber)
   const additionalArrestOffences =
     arrestSummonsNumber && pncRequest.arrestsAdjudicationsAndDisposals.length > 0
       ? mapAdditionalArrestOffences(

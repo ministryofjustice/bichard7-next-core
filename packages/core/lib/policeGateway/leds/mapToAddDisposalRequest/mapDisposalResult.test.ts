@@ -52,7 +52,7 @@ describe("mapDisposalResults", () => {
     const disposal: PncUpdateDisposal = {
       disposalType: "1015",
       disposalQualifiers: "A",
-      disposalQuantity: "D1231005202400          ",
+      disposalQuantity: "D12310052024            ",
       disposalText: "Dummy text",
       type: PncUpdateType.DISPOSAL
     }

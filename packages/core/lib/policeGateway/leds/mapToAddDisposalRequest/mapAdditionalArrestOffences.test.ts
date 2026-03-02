@@ -11,11 +11,15 @@ describe("mapAdditionalArrestOffences", () => {
     const normalDisposalRequest = buildNormalDisposalRequest()
     const expectedAdditionalOffences = [
       {
-        asn: "1101ZD01410836V",
+        asn: "11/01ZD/01/00000410836V",
         additionalOffences: [
           {
-            courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "00998877",
+            courtOffenceSequenceNumber: 3,
+            offenceCode: {
+              cjsOffenceCode: "SX03001",
+              offenceCodeType: "cjs"
+            },
+            roleQualifiers: ["AA"],
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -41,11 +45,15 @@ describe("mapAdditionalArrestOffences", () => {
               }
             ],
             locationFsCode: "Offence location FS code",
-            locationText: "Offence location"
+            locationText: { locationText: "Offence location" }
           },
           {
-            courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "00998877",
+            courtOffenceSequenceNumber: 4,
+            offenceCode: {
+              cjsOffenceCode: "TH68006",
+              offenceCodeType: "cjs"
+            },
+            roleQualifiers: undefined,
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -71,13 +79,17 @@ describe("mapAdditionalArrestOffences", () => {
               }
             ],
             locationFsCode: "Offence location FS code",
-            locationText: "Offence location"
+            locationText: { locationText: "Offence location" }
           }
         ]
       }
     ]
 
-    const additionalOffences = mapAdditionalArrestOffences(asn, normalDisposalRequest.arrestsAdjudicationsAndDisposals)
+    const additionalOffences = mapAdditionalArrestOffences(
+      asn,
+      normalDisposalRequest.arrestsAdjudicationsAndDisposals,
+      false
+    )
 
     expect(additionalOffences).toStrictEqual(expectedAdditionalOffences)
   })
@@ -99,7 +111,7 @@ describe("mapAdditionalArrestOffences", () => {
       }
     ]
 
-    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
+    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals, false)
 
     expect(result[0].additionalOffences[0]).toMatchObject({
       plea: undefined,
@@ -128,14 +140,11 @@ describe("mapAdditionalArrestOffences", () => {
       { disposalType: "20", type: PncUpdateType.DISPOSAL }
     ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
 
-    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
+    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals, false)
     expect(result?.[0].additionalOffences?.[0].disposalResults?.[0]).toEqual({
       disposalCode: 20,
       disposalDuration: undefined,
       disposalEffectiveDate: undefined,
-      disposalFine: {
-        amount: 0
-      },
       disposalQualifiers: undefined,
       disposalText: undefined
     })

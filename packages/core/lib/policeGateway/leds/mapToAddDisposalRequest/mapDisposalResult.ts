@@ -4,8 +4,7 @@ import type { DisposalResult } from "../../../../types/leds/AddDisposalRequest"
 import { parseDisposalQuantity } from "./parseDisposalQuantity"
 
 const mapDisposalResult = (disposal: PncUpdateDisposal): DisposalResult => {
-  const disposalQuantity = parseDisposalQuantity(disposal.disposalQuantity)
-  const { disposalDuration, disposalEffectiveDate, amount } = disposalQuantity ?? {}
+  const { disposalDuration, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity) ?? {}
 
   const disposalQualifiers = disposal.disposalQualifiers
     ?.match(/.{1,2}/g)
@@ -18,7 +17,7 @@ const mapDisposalResult = (disposal: PncUpdateDisposal): DisposalResult => {
     disposalText: disposal.disposalText || undefined,
     disposalDuration,
     disposalEffectiveDate,
-    ...(amount && { disposalFine: { amount } })
+    ...(amount !== undefined && { disposalFine: { amount } })
   }
 }
 

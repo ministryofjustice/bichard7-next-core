@@ -20,7 +20,7 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import PoliceApiError from "../PoliceApiError"
-import convertLongAsnToLedsFormat from "./convertLongAsnToLedsFormat"
+import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
@@ -49,7 +49,7 @@ export default class LedsGateway implements PoliceGateway {
   ): Promise<PoliceApiError | PoliceQueryResult | undefined> {
     this.queryTime = new Date()
     const requestBody: AsnQueryRequest = {
-      asn: convertLongAsnToLedsFormat(asn),
+      asn: convertAsnToLedsFormat(asn),
       caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
     }
 

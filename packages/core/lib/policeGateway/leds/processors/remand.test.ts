@@ -5,7 +5,6 @@ import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateReque
 import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
 import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import PoliceApiError from "../../PoliceApiError"
-import endpoints from "../endpoints"
 import { remand } from "./remand"
 
 const personId = "123"
@@ -17,11 +16,10 @@ const request = {
 
 describe("remand", () => {
   it("returns endpoint and requestBody", () => {
-    const endpoint = "/people/123/arrest-reports/456/basic-remands"
+    const endpoint = "person-services/v1/people/123/arrest-reports/456/basic-remands"
     const requestBody = {
       appearanceResult: "remanded-on-bail",
       bailConditions: ["This is a dummy bail condition."],
-      checkname: "CHECKNAME",
       currentAppearance: {
         court: {
           courtIdentityType: "code",

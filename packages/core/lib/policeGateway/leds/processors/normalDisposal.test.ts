@@ -20,11 +20,10 @@ const request = {
 describe("normalDisposal", () => {
   it("returns endpoint and requestBody", () => {
     const pncUpdateDataset = buildPncUpdateDataset({ organisationName: "Org" })
-    const endpoint = "/people/123456/disposals/ABC123/court-case-disposal-result"
+    const endpoint = "person-services/v1/people/123456/disposals/ABC123/court-case-disposal-result"
     const requestBody = {
       ownerCode: "07A1",
       personUrn: "22/858J",
-      checkName: "Pnc check name",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
@@ -48,11 +47,13 @@ describe("normalDisposal", () => {
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          cjsOffenceCode: "SX03001",
+          roleQualifiers: ["AT"],
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
           offenceTic: 3,
+          offenceId: "66cdba73-c8a7-426d-a766-02e449843a69",
           disposalResults: [
             {
               disposalCode: 10,
@@ -80,12 +81,12 @@ describe("normalDisposal", () => {
                 amount: 12000.99
               }
             }
-          ],
-          offenceId: "112233"
+          ]
         },
         {
-          courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "CJ03507",
+          roleQualifiers: undefined,
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
@@ -118,16 +119,20 @@ describe("normalDisposal", () => {
               }
             }
           ],
-          offenceId: "112233"
+          offenceId: "025459be-b60b-4919-8b7c-67371f2ca80b"
         }
       ],
       additionalArrestOffences: [
         {
-          asn: "11/01ZD/01/1448754K",
+          asn: "11/01ZD/01/00001448754K",
           additionalOffences: [
             {
-              courtOffenceSequenceNumber: 2,
-              cjsOffenceCode: "00998877",
+              courtOffenceSequenceNumber: 3,
+              offenceCode: {
+                cjsOffenceCode: "SX03001",
+                offenceCodeType: "cjs"
+              },
+              roleQualifiers: ["AA"],
               committedOnBail: true,
               plea: "Resisted",
               adjudication: "Not Guilty",
@@ -153,11 +158,15 @@ describe("normalDisposal", () => {
                 }
               ],
               locationFsCode: "Offence location FS code",
-              locationText: "Offence location"
+              locationText: { locationText: "Offence location" }
             },
             {
-              courtOffenceSequenceNumber: 2,
-              cjsOffenceCode: "00998877",
+              courtOffenceSequenceNumber: 4,
+              offenceCode: {
+                cjsOffenceCode: "TH68006",
+                offenceCodeType: "cjs"
+              },
+              roleQualifiers: undefined,
               committedOnBail: true,
               plea: "Resisted",
               adjudication: "Not Guilty",
@@ -183,7 +192,7 @@ describe("normalDisposal", () => {
                 }
               ],
               locationFsCode: "Offence location FS code",
-              locationText: "Offence location"
+              locationText: { locationText: "Offence location" }
             }
           ]
         }
