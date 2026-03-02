@@ -1,8 +1,8 @@
-export type ParsedNcmOffenceResult = {
+type AdditionalOffenceResultFieldsForSeedingTestData = { DisposalEffectiveDate?: string }
+
+export type ParsedNcmOffenceResult = AdditionalOffenceResultFieldsForSeedingTestData & {
   ResultCode: number
   ResultText: string
-  // Additional optional fields
-  DisposalEffectiveDate?: string
 }
 
 export type ParsedNcmOffence = {
