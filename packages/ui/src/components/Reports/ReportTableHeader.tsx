@@ -12,7 +12,7 @@ export const ReportTableHeader: React.FC<TableHeaderProps> = ({ columns, groupNa
   <TableHead>
     {groupName && (
       <TableRow>
-        <ReportTableHeaderCell colSpan={columns.length} isGroupHeader>
+        <ReportTableHeaderCell colSpan={columns.length} scope="colgroup" isGroupHeader>
           {groupName}
         </ReportTableHeaderCell>
       </TableRow>

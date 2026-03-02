@@ -37,6 +37,7 @@ export const caseToWarrantsReportDto = (caseRow: CaseRowForWarrantsReport): Case
     dateTimeReceivedByCJSE: formatDate(caseRow.msg_received_ts, true),
     defendantAddress: defendantAddress(aho),
     defendantName: caseRow.defendant_name ?? "",
+    errorId: caseRow.error_id,
     gender: gender(aho),
     hearingDate: formatDate(caseRow.court_date),
     hearingTime: hearingTime(aho),

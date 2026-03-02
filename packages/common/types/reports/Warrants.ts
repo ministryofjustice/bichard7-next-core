@@ -8,6 +8,7 @@ export const CaseForWarrantsReportDtoSchema = z.object({
   dateTimeReceivedByCJSE: z.string(),
   defendantAddress: z.string(),
   defendantName: z.string(),
+  errorId: z.number(),
   gender: z.string(),
   hearingDate: z.string(),
   hearingTime: z.string(),

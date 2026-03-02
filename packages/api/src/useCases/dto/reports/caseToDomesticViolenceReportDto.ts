@@ -46,6 +46,7 @@ export function* caseToDomesticViolenceReportDto(
     courtName: row.court_name ?? "",
     dateOfBirth,
     defendantName: row.defendant_name ?? "",
+    errorId: row.error_id,
     hearingDate,
     ptiurn: row.ptiurn ?? "",
     type: reportType

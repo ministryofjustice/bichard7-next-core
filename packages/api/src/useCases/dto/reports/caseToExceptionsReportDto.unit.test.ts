@@ -12,6 +12,7 @@ describe("caseToExceptionsReportDto", () => {
     court_reference: "REF123",
     court_room: "Room 1",
     defendant_name: "John Doe",
+    error_id: 123,
     msg_received_ts: new Date("2024-01-10T12:00:00Z"),
     notes: [],
     ptiurn: "01ZD0303208",
@@ -29,6 +30,7 @@ describe("caseToExceptionsReportDto", () => {
       courtReference: "REF123",
       courtRoom: "Room 1",
       defendantName: "John Doe",
+      errorId: 123,
       hearingDate: "15/01/2024",
       messageReceivedAt: "10/01/2024 12:00", // Matches your Received output
       notes: "",

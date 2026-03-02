@@ -1,0 +1,56 @@
+import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
+import type { Note } from "@moj-bichard7/common/types/Note"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+
+import { MockNextRouter } from "../../support/MockNextRouter"
+import AuditCaseList from "features/AuditCaseList/AuditCaseList"
+
+import "../../../styles/globals.scss"
+
+describe("AuditCaseList", () => {
+  it("renders the message for no rows found", () => {
+    cy.mount(
+      <MockNextRouter>
+        <AuditCaseList auditId={1} auditCases={[]} />
+      </MockNextRouter>
+    )
+
+    cy.contains("No court cases found for this audit")
+  })
+
+  it("renders the row", () => {
+    const auditCases: AuditCaseDto[] = [
+      {
+        asn: "test asn",
+        courtDate: new Date(),
+        courtName: "Magistrates",
+        courtReference: "01XX",
+        ptiurn: "Case0001",
+        defendantName: "Test Defendant",
+        errorId: 1,
+        errorQualityChecked: 1,
+        errorStatus: ResolutionStatus.Resolved,
+        messageReceivedTimestamp: new Date(),
+        noteCount: 1,
+        notes: [
+          {
+            createdAt: new Date(),
+            noteText: "Test note"
+          }
+        ] as Note[],
+        resolutionTimestamp: new Date(),
+        triggerQualityChecked: 1,
+        triggerStatus: ResolutionStatus.Resolved
+      }
+    ]
+
+    cy.mount(
+      <MockNextRouter>
+        <AuditCaseList auditId={1} auditCases={auditCases} />
+      </MockNextRouter>
+    )
+
+    cy.get("tbody > tr").should("have.length", 1)
+    cy.contains(auditCases[0].defendantName!)
+  })
+})
