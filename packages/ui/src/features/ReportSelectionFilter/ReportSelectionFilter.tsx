@@ -39,6 +39,8 @@ export const ReportSelectionFilter: NextPage = () => {
   const [maxDateString] = useState<string>(getTodayString())
 
   const [showSelectError, setShowSelectError] = useState<boolean>(false)
+  const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
+  //const [showDateToError, setShowDateToError] = useState<boolean>(false)
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -67,6 +69,13 @@ export const ReportSelectionFilter: NextPage = () => {
   const handleDownload = async () => {
     if (!reportType || !config) {
       setShowSelectError(true)
+    }
+
+    if (fromDate === "") {
+      setShowDateFromError(true)
+    }
+
+    if (!reportType || !config || fromDate === "" || toDate === "") {
       return
     }
 
@@ -163,12 +172,15 @@ export const ReportSelectionFilter: NextPage = () => {
                     dateType="resolvedFrom"
                     dispatch={(p) => {
                       setFromDate(p.value as string)
+                      setShowDateFromError(false)
                       setHasRun(false)
                     }}
                     value={fromDate}
                     dateRange={undefined}
                     minValue={minDateString}
                     maxValue={toDate === "" ? maxDateString : toDate}
+                    showError={showDateFromError}
+                    errorMessage={"This field is required"}
                   />
                 </div>
                 <div id={"report-selection-date-to"} className="date">

@@ -3,6 +3,7 @@ import type { Dispatch } from "react"
 import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
 import { SmallButton } from "./DateInput.styles"
+import { mergeClassNames } from "../../helpers/mergeClassNames"
 
 type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
 type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
@@ -12,6 +13,8 @@ interface Props {
   dispatch: Dispatch<FilterAction>
   value: string
   dateRange: SerializedDateRange | undefined
+  showError?: boolean
+  errorMessage?: string
   minValue?: string
   maxValue?: string
 }
@@ -35,7 +38,16 @@ const formatLabelText = (dateType: DateType): string => {
   return "Date"
 }
 
-const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange, minValue, maxValue }: Props) => {
+const DateInput: React.FC<Props> = ({
+  dateType,
+  dispatch,
+  value,
+  dateRange,
+  showError,
+  errorMessage,
+  minValue,
+  maxValue
+}: Props) => {
   const actionType = dateActions[dateType] as ActionType
   const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
   const setSameDateValue = () => {
@@ -57,13 +69,18 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange, minV
   )
 
   return (
-    <FormGroup>
+    <FormGroup showError={showError}>
       <label className="govuk-body" htmlFor={`date-${dateType}`}>
         {formatLabelText(dateType)}
         {renderSameDateButton && SameDateButton}
       </label>
+      {showError ? (
+        <p className="govuk-error-message">
+          <span className="govuk-visually-hidden">{"Error:"}</span> {errorMessage}
+        </p>
+      ) : null}
       <input
-        className="govuk-input"
+        className={mergeClassNames("govuk-input", showError ? "govuk-input--error" : "")}
         type="date"
         id={`date-${dateType}`}
         name={dateType}
