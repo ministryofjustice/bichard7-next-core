@@ -1,4 +1,4 @@
-import convertLongAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
+import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import type { AsnQueryRequest } from "@moj-bichard7/core/types/leds/AsnQueryRequest"
 import type {
@@ -19,7 +19,7 @@ const parser = new XMLParser()
 
 const generateRequestBody = (ncm: ParsedNcm): AsnQueryRequest => {
   return {
-    asn: convertLongAsnToLedsFormat(ncm.NewCaseMessage.Case.Defendant.ProsecutorReference),
+    asn: convertAsnToLedsFormat(ncm.NewCaseMessage.Case.Defendant.ProsecutorReference),
     caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
   }
 }
