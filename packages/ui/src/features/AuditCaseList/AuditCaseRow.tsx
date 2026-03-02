@@ -74,9 +74,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
         <TableCell>
           <NotePreviewButton previewState={showPreview} setShowPreview={setShowPreview} numberOfNotes={numberOfNotes} />
         </TableCell>
-        <TableCell>{"TODO: Resolution action"}</TableCell>
         <AuditQualityCell
-          rowSpan={showPreview ? 2 : 3}
           errorQualityChecked={errorQualityChecked as ExceptionQuality}
           triggerQualityChecked={triggerQualityChecked as TriggerQuality}
           hasExceptions={errorStatus == ResolutionStatus.Resolved}

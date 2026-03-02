@@ -118,9 +118,6 @@ export const AuditCaseListTableHeader = ({ order }: CourtCaseListTableHeaderProp
         <ColumnHeading aria-sort="none">{"Notes"}</ColumnHeading>
       </HeaderCell>
       <HeaderCell className={className}>
-        <ColumnHeading aria-sort="none">{"Resolution action"}</ColumnHeading>
-      </HeaderCell>
-      <HeaderCell className={className}>
         <ColumnHeading aria-sort="none">{"Quality status"}</ColumnHeading>
       </HeaderCell>
     </TableRow>
