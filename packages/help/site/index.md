@@ -3,7 +3,7 @@ layout: default
 title: Help
 ---
 
-Contact the Bichard team for support at moj-bichard7@madetech.com
+Contact the Bichard team for support at [moj-bichard7@madetech.com](mailto:moj-bichard7@madetech.com)
 
 ## What's New
   - [Improvements to Case List filtering](whats-new/case-list-filtering/)
