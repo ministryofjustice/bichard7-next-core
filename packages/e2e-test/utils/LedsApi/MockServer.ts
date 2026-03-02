@@ -45,7 +45,7 @@ export default class MockServer {
       })
     })
 
-    return mocksResponse.data
+    return mocksResponse.data.filter((mock) => mock.path !== "/auth")
   }
 
   async retrieveUnusedMocks(): Promise<RequestResponseMock[]> {
@@ -61,6 +61,6 @@ export default class MockServer {
       })
     })
 
-    return response.data
+    return response.data.filter((request) => request.path !== "/auth")
   }
 }
