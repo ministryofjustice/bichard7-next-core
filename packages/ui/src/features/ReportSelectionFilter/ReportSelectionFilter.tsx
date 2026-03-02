@@ -19,6 +19,14 @@ import { ReportConfigs } from "types/reports/Config"
 import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
 import { Button } from "../../components/Buttons/Button"
 
+const getTodayString = () => new Date().toISOString().split("T")[0]
+
+const getDaysAgoString = (days: number) => {
+  const date = new Date()
+  date.setDate(date.getDate() - days)
+  return date.toISOString().split("T")[0]
+}
+
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
   const [toDate, setToDate] = useState<string>("")
@@ -30,6 +38,9 @@ export const ReportSelectionFilter: NextPage = () => {
   const [rows, setRows] = useState<Record<string, unknown>[]>([])
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
+
+  const [minDateString] = useState<string>(getDaysAgoString(31))
+  const [maxDateString] = useState<string>(getTodayString())
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -138,6 +149,8 @@ export const ReportSelectionFilter: NextPage = () => {
                     dispatch={(p) => setFromDate(p.value as string)}
                     value={fromDate}
                     dateRange={undefined}
+                    minValue={minDateString}
+                    maxValue={toDate === "" ? maxDateString : toDate}
                   />
                 </div>
                 <div id={"report-selection-date-to"} className="date">
@@ -146,6 +159,8 @@ export const ReportSelectionFilter: NextPage = () => {
                     dispatch={(p) => setToDate(p.value as string)}
                     value={toDate}
                     dateRange={undefined}
+                    minValue={fromDate === "" ? minDateString : fromDate}
+                    maxValue={maxDateString}
                   />
                 </div>
               </div>

@@ -1,8 +1,8 @@
+import { FormGroup } from "components/FormGroup"
 import type { Dispatch } from "react"
 import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
 import { SmallButton } from "./DateInput.styles"
-import { FormGroup } from "components/FormGroup"
 
 type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
 type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
@@ -12,6 +12,8 @@ interface Props {
   dispatch: Dispatch<FilterAction>
   value: string
   dateRange: SerializedDateRange | undefined
+  minValue?: string
+  maxValue?: string
 }
 
 const dateActions = {
@@ -33,7 +35,7 @@ const formatLabelText = (dateType: DateType): string => {
   return "Date"
 }
 
-const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Props) => {
+const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange, minValue, maxValue }: Props) => {
   const actionType = dateActions[dateType] as ActionType
   const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
   const setSameDateValue = () => {
@@ -69,6 +71,8 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
         onChange={(event) => {
           dispatch({ method: "add", type: actionType, value: event.target.value })
         }}
+        min={minValue}
+        max={maxValue}
       />
     </FormGroup>
   )
