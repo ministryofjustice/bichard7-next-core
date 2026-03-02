@@ -119,8 +119,9 @@ export const ReportSelectionFilter: NextPage = () => {
                 className="select-report-input"
                 onChange={handleChange}
                 aria-describedby="report-type-label"
+                value={reportType || ""}
               >
-                <option disabled={true} value={undefined}>
+                <option disabled={true} value={""}>
                   {"Select Report..."}
                 </option>
                 {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
