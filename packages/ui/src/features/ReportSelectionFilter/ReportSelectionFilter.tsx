@@ -22,6 +22,8 @@ const getDaysAgoString = (days: number) => {
   return date.toISOString().split("T")[0]
 }
 
+const FIELD_REQUIRED_ERROR = "This field is required"
+
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
   const [toDate, setToDate] = useState<string>("")
@@ -40,7 +42,7 @@ export const ReportSelectionFilter: NextPage = () => {
 
   const [showSelectError, setShowSelectError] = useState<boolean>(false)
   const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
-  //const [showDateToError, setShowDateToError] = useState<boolean>(false)
+  const [showDateToError, setShowDateToError] = useState<boolean>(false)
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -73,6 +75,10 @@ export const ReportSelectionFilter: NextPage = () => {
 
     if (fromDate === "") {
       setShowDateFromError(true)
+    }
+
+    if (toDate === "") {
+      setShowDateToError(true)
     }
 
     if (!reportType || !config || fromDate === "" || toDate === "") {
@@ -140,7 +146,7 @@ export const ReportSelectionFilter: NextPage = () => {
                 </label>
                 {showSelectError ? (
                   <p className="govuk-error-message">
-                    <span className="govuk-visually-hidden">{"Error:"}</span> {"This field is required"}
+                    <span className="govuk-visually-hidden">{"Error:"}</span> {FIELD_REQUIRED_ERROR}
                   </p>
                 ) : null}
                 <Select
@@ -180,7 +186,7 @@ export const ReportSelectionFilter: NextPage = () => {
                     minValue={minDateString}
                     maxValue={toDate === "" ? maxDateString : toDate}
                     showError={showDateFromError}
-                    errorMessage={"This field is required"}
+                    errorMessage={FIELD_REQUIRED_ERROR}
                   />
                 </div>
                 <div id={"report-selection-date-to"} className="date">
@@ -188,12 +194,15 @@ export const ReportSelectionFilter: NextPage = () => {
                     dateType="resolvedTo"
                     dispatch={(p) => {
                       setToDate(p.value as string)
+                      setShowDateToError(false)
                       setHasRun(false)
                     }}
                     value={toDate}
                     dateRange={undefined}
                     minValue={fromDate === "" ? minDateString : fromDate}
                     maxValue={maxDateString}
+                    showError={showDateToError}
+                    errorMessage={FIELD_REQUIRED_ERROR}
                   />
                 </div>
               </div>
