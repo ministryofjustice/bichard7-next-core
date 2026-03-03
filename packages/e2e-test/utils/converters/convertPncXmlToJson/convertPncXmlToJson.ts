@@ -67,11 +67,15 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
   const additionalOffences: AdditionalOffences | undefined = undefined
 
   const getOffenceSegment = (name: string): string | undefined => {
-    const offenceSegments = ["CCH", "ACH"]
+    const offenceSegments = ["CCH", "ACH", "COF"]
     return offenceSegments.includes(name) ? name : currentOffenceSegment
   }
 
   const getLastOffence = () => {
+    if (currentOffenceSegment === "COF" && offences.length > 0) {
+      return offences[offences.length - 1]
+    }
+
     if (currentOffenceSegment === "CCH" && offences.length > 0) {
       return offences[offences.length - 1]
     }
@@ -135,19 +139,19 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
 
   converters["ADJ"] = (value: string): void => {
     const adj = convertAdj(value)
-    const target = getLastOffence()
+    const lastOffence = getLastOffence()
 
-    if (target) {
-      Object.assign(target, adj)
+    if (lastOffence) {
+      Object.assign(lastOffence, adj)
     }
   }
 
   converters["DIS"] = (value: string): void => {
     const dis = convertDis(value)
-    const target = getLastOffence()
+    const lastOffence = getLastOffence()
 
-    if (target) {
-      target.disposals.push(dis)
+    if (lastOffence) {
+      lastOffence.disposals.push(dis)
     }
   }
 
