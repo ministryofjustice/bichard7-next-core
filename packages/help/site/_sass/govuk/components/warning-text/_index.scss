@@ -1,3 +1,5 @@
+@import "../../base";
+
 @include govuk-exports("govuk/component/warning-text") {
   .govuk-warning-text {
     @include govuk-font($size: 19);
@@ -19,17 +21,18 @@
     min-height: 35px;
     margin-top: -7px;
 
-    @include govuk-media-query($from: tablet) {
+    @media #{govuk-from-breakpoint(tablet)} {
       margin-top: -5px;
     }
 
     // When a user customises their colours the background colour will often be
     // removed. Adding a border to the component keeps it's shape as a circle.
-    border: 3px solid $govuk-text-colour;
+    border: 3px solid;
     border-radius: 50%;
+    border-color: govuk-functional-colour(text);
 
-    color: $govuk-body-background-colour;
-    background: $govuk-text-colour;
+    color: govuk-functional-colour(body-background);
+    background: govuk-functional-colour(text);
 
     font-size: 30px;
     line-height: 29px;
@@ -52,9 +55,9 @@
   }
 
   .govuk-warning-text__text {
-    @include govuk-text-colour;
     display: block;
     padding-left: 45px;
+    color: govuk-functional-colour(text);
     // While `<strong>` is styled `bold` or `bolder` by user-agents
     // this can be reset by the app's stylesheet
     font-weight: inherit;

@@ -37,6 +37,7 @@ describe("caseToDomesticViolenceReportDto", () => {
       court_date: new Date("2023-05-10T10:00:00Z"),
       court_name: "Test Court",
       defendant_name: "John Doe",
+      error_id: 123,
       ptiurn: "12345",
       trigger_codes: ["TRPR0024"]
     } as CaseRowForDomesticViolenceReport
@@ -82,6 +83,7 @@ describe("caseToDomesticViolenceReportDto", () => {
     expect(result.ptiurn).toBe("12345")
     expect(result.asn).toBe("SHORT_ASN")
     expect(getShortAsn).toHaveBeenCalledWith("LONG_ASN")
+    expect(result.errorId).toBe(123)
   })
 
   it("should gracefully handle missing or undefined fields", () => {
@@ -100,6 +102,7 @@ describe("caseToDomesticViolenceReportDto", () => {
     expect(result.defendantName).toBe("")
     expect(result.ptiurn).toBe("")
     expect(result.offenceTitle).toBe("Unavailable")
+    expect(result.errorId).toBe(123)
   })
 
   it("should yield multiple rows when multiple offences exist", () => {

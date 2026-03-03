@@ -8,6 +8,7 @@ export const CaseForExceptionReportDtoSchema = CaseSchema.pick({
   courtReference: true,
   courtRoom: true,
   defendantName: true,
+  errorId: true,
   ptiurn: true
 }).extend({
   hearingDate: z.string(),

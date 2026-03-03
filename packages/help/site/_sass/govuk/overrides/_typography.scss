@@ -1,16 +1,19 @@
+@use "sass:map";
+@import "../settings/typography-responsive";
+@import "../tools/exports";
+@import "../helpers/typography";
+
 @include govuk-exports("govuk/overrides/typography") {
   // Font size and line height
 
   // Generate typography override classes for each responsive font map in the
   // typography scale eg .govuk-\!-font-size-80
-  //
-  // govuk-!-font-size-14 is deprecated
   @each $size, $font-map in $govuk-typography-scale {
     .govuk-\!-font-size-#{$size} {
-      $font-map: map-get($govuk-typography-scale, $size);
+      $font-map: map.get($govuk-typography-scale, $size);
 
       // Add underscore to deprecated typography scale keys
-      @if map-has-key($font-map, "deprecation") {
+      @if map.has-key($font-map, "deprecation") {
         $size: _#{$size};
       }
 

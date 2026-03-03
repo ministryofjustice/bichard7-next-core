@@ -48,6 +48,7 @@ export const caseToExceptionsReportDto = (caseRow: CaseRowForExceptionReport): C
     courtReference: caseRow.court_reference,
     courtRoom: caseRow.court_room,
     defendantName: caseRow.defendant_name,
+    errorId: caseRow.error_id,
     hearingDate: formatDate(caseRow.court_date),
     messageReceivedAt: formatDate(caseRow.msg_received_ts, true),
     notes: notesString,

@@ -310,12 +310,13 @@ describe("domestic violence report", () => {
     expect(reportItems).toHaveLength(3)
 
     for (const reportItem of reportItems) {
-      expect(Object.keys(reportItem)).toHaveLength(9)
+      expect(Object.keys(reportItem)).toHaveLength(10)
 
       expect(reportItem).toHaveProperty("asn")
       expect(reportItem).toHaveProperty("courtName")
       expect(reportItem).toHaveProperty("dateOfBirth")
       expect(reportItem).toHaveProperty("defendantName")
+      expect(reportItem).toHaveProperty("errorId")
       expect(reportItem).toHaveProperty("hearingDate")
       expect(reportItem).toHaveProperty("offenceTitle")
       expect(reportItem).toHaveProperty("outcome")

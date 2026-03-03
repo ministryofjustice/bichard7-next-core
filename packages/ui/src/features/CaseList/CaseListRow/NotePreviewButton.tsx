@@ -2,8 +2,8 @@ import { Preview } from "components/Preview"
 import { truncate } from "lodash"
 import { Dispatch, SetStateAction } from "react"
 import { DisplayNote } from "types/display/Notes"
-import ConditionalRender from "../../../../components/ConditionalRender"
-import { validateMostRecentNoteDate } from "./CourtCaseListEntryHelperFunction"
+import ConditionalRender from "../../../components/ConditionalRender"
+import { validateMostRecentNoteDate } from "../../CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { NotePreviewBody, NotePreviewHeader, StyledPreviewButton } from "./NotePreviewButton.styles"
 
 interface NotePreviewProps {
@@ -39,16 +39,14 @@ export const NotePreviewButton: React.FC<NotePreviewButtonProps> = (props: NoteP
   const buttonText = props.numberOfNotes > 1 ? `${props.numberOfNotes} notes` : `${props.numberOfNotes} note`
 
   return (
-    <>
-      <ConditionalRender isRendered={props.numberOfNotes > 0}>
-        <StyledPreviewButton
-          showPreview={props.previewState}
-          onClick={props.setShowPreview}
-          previewLabel={buttonText}
-          hideLabel={buttonText}
-          ariaControls={"note-preview"}
-        />
-      </ConditionalRender>
-    </>
+    <ConditionalRender isRendered={props.numberOfNotes > 0}>
+      <StyledPreviewButton
+        showPreview={props.previewState}
+        onClick={props.setShowPreview}
+        previewLabel={buttonText}
+        hideLabel={buttonText}
+        ariaControls={"note-preview"}
+      />
+    </ConditionalRender>
   )
 }

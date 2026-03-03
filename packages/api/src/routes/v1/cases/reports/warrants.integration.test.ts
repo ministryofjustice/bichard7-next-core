@@ -298,6 +298,7 @@ describe("warrants report", () => {
       "Scenario1 Address Line 1, Scenario1 Address Line 2, Scenario1 Address Line 3"
     )
     expect(reportItem.defendantName).toBe("Defendant")
+    expect(reportItem.errorId).toBe(0)
     expect(reportItem.gender).toBe("Male")
     expect(reportItem.hearingDate).toBe(format(courtDate, "dd/MM/yyyy"))
     expect(reportItem.hearingTime).toBe("10:00")

@@ -74,25 +74,25 @@
 
 @mixin govuk-link-style-default {
   &:link {
-    color: $govuk-link-colour;
+    color: govuk-functional-colour(link);
   }
 
   &:visited {
-    color: $govuk-link-visited-colour;
+    color: govuk-functional-colour(link-visited);
   }
 
   &:hover {
-    color: $govuk-link-hover-colour;
+    color: govuk-functional-colour(link-hover);
   }
 
   &:active {
-    color: $govuk-link-active-colour;
+    color: govuk-functional-colour(link-active);
   }
 
   // When focussed, the text colour needs to be darker to ensure that colour
   // contrast is still acceptable
   &:focus {
-    color: $govuk-focus-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -115,21 +115,21 @@
 @mixin govuk-link-style-error {
   &:link,
   &:visited {
-    color: $govuk-error-colour;
+    color: govuk-functional-colour(error);
   }
 
   &:hover {
-    color: scale-color($govuk-error-colour, $lightness: -30%);
+    color: govuk-colour("red", $variant: "shade-50");
   }
 
   &:active {
-    color: $govuk-error-colour;
+    color: govuk-functional-colour(error);
   }
 
   // When focussed, the text colour needs to be darker to ensure that colour
   // contrast is still acceptable
   &:focus {
-    color: $govuk-focus-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -152,21 +152,21 @@
 @mixin govuk-link-style-success {
   &:link,
   &:visited {
-    color: $govuk-success-colour;
+    color: govuk-functional-colour(success);
   }
 
   &:hover {
-    color: scale-color($govuk-success-colour, $lightness: -30%);
+    color: govuk-colour("green", $variant: "shade-50");
   }
 
   &:active {
-    color: $govuk-success-colour;
+    color: govuk-functional-colour(success);
   }
 
   // When focussed, the text colour needs to be darker to ensure that colour
   // contrast is still acceptable
   &:focus {
-    color: $govuk-focus-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -189,18 +189,18 @@
 @mixin govuk-link-style-muted {
   &:link,
   &:visited {
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour(secondary-text);
   }
 
   &:hover,
   &:active {
-    color: $govuk-text-colour;
+    color: govuk-functional-colour(text);
   }
 
   // When focussed, the text colour needs to be darker to ensure that colour
   // contrast is still acceptable
   &:focus {
-    color: $govuk-focus-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -222,21 +222,13 @@
 
 @mixin govuk-link-style-text {
   &:link,
-  &:visited {
-    @include govuk-text-colour;
+  &:visited,
+  &:active {
+    color: govuk-functional-colour(text);
   }
 
-  // Force a colour change on hover to work around a bug in Safari
-  // https://webkit.org/b/224483
-  &:hover {
-    @if type-of($govuk-text-colour) == color {
-      color: rgba($govuk-text-colour, 0.99);
-    }
-  }
-
-  &:active,
   &:focus {
-    @include govuk-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -262,15 +254,8 @@
     color: govuk-colour("white");
   }
 
-  // Force a colour change on hover to work around a bug in Safari
-  // https://webkit.org/b/224483
-  &:hover,
-  &:active {
-    color: rgba(govuk-colour("white"), 0.99);
-  }
-
   &:focus {
-    color: $govuk-focus-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -296,25 +281,25 @@
 
 @mixin govuk-link-style-no-visited-state {
   &:link {
-    color: $govuk-link-colour;
+    color: govuk-functional-colour(link);
   }
 
   &:visited {
-    color: $govuk-link-colour;
+    color: govuk-functional-colour(link);
   }
 
   &:hover {
-    color: $govuk-link-hover-colour;
+    color: govuk-functional-colour(link-hover);
   }
 
   &:active {
-    color: $govuk-link-active-colour;
+    color: govuk-functional-colour(link-active);
   }
 
   // When focussed, the text colour needs to be darker to ensure that colour
   // contrast is still acceptable
   &:focus {
-    color: $govuk-focus-text-colour;
+    color: govuk-functional-colour(focus-text);
   }
 }
 
@@ -346,11 +331,10 @@
 /// @access public
 
 @mixin govuk-link-print-friendly {
-  @include govuk-media-query($media-type: print) {
+  @media print {
     &[href^="/"],
     &[href^="http://"],
-    &[href^="https://"]
-    {
+    &[href^="https://"] {
       &::after {
         content: " (" attr(href) ")";
         font-size: 90%;
