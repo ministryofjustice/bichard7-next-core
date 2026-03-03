@@ -42,6 +42,8 @@ export const ReportSelectionFilter: NextPage = () => {
   const [showSelectError, setShowSelectError] = useState<boolean>(false)
   const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
   const [showDateToError, setShowDateToError] = useState<boolean>(false)
+  const [dateFromErrorMessage, setDateFromErrorMessage] = useState<string>("")
+  //const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -74,6 +76,17 @@ export const ReportSelectionFilter: NextPage = () => {
 
     if (fromDate === "") {
       setShowDateFromError(true)
+      setDateFromErrorMessage(FIELD_REQUIRED_ERROR)
+    } else {
+      //minValue={minDate}
+      //maxValue={toDate === "" ? maxDate : new Date(toDate)}
+      if (new Date(fromDate) < minDate) {
+        setShowDateFromError(true)
+        setDateFromErrorMessage("Date must not be further in the past than 31 days ago")
+      }
+      //else if (new Date(fromDate) > maxDate) {
+
+      //}
     }
 
     if (toDate === "") {
@@ -185,7 +198,7 @@ export const ReportSelectionFilter: NextPage = () => {
                     minValue={minDate}
                     maxValue={toDate === "" ? maxDate : new Date(toDate)}
                     showError={showDateFromError}
-                    errorMessage={FIELD_REQUIRED_ERROR}
+                    errorMessage={dateFromErrorMessage}
                   />
                 </div>
                 <div id={"report-selection-date-to"} className="date">
