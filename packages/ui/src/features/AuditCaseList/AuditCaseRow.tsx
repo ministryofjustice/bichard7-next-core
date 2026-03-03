@@ -2,7 +2,7 @@ import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
 import type Note from "../../services/entities/Note"
 
 import DateTime from "components/DateTime"
-import { TableCell, TableRow } from "components/Table"
+import { TableBody, TableCell, TableRow } from "components/Table"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -44,7 +44,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
   const rowSpan = showPreview ? 1 : 2 // Row span should be 2 when notes are being shown so the notes row overlaps existing row
 
   return (
-    <>
+    <TableBody className="caseListEntry">
       <TableRow className="caseDetailsRow">
         <TableCell rowSpan={rowSpan}>
           <a
@@ -85,6 +85,6 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
       {notes.length > 0 && !showPreview && (
         <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
       )}
-    </>
+    </TableBody>
   )
 }

@@ -5,7 +5,7 @@ import { AuditCaseRow } from "features/AuditCaseList/AuditCaseRow"
 import { MockNextRouter } from "../../support/MockNextRouter"
 
 import "../../../styles/globals.scss"
-import { Table, TableBody } from "../../../src/components/Table"
+import { Table } from "../../../src/components/Table"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 describe("AuditCaseRow", () => {
@@ -32,9 +32,7 @@ describe("AuditCaseRow", () => {
     cy.mount(
       <MockNextRouter>
         <Table>
-          <TableBody>
-            <AuditCaseRow auditId={auditId} auditCase={auditCase} />
-          </TableBody>
+          <AuditCaseRow auditId={auditId} auditCase={auditCase} />
         </Table>
       </MockNextRouter>
     )

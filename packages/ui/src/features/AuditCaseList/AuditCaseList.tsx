@@ -1,7 +1,7 @@
 import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
 
 import { RefreshButton } from "components/Buttons/RefreshButton"
-import { Table, TableBody, TableHead } from "components/Table"
+import { Table, TableHead } from "components/Table"
 import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
@@ -51,11 +51,9 @@ const AuditCaseList: React.FC<Props> = ({ auditId, auditCases, order = "asc" }: 
         <TableHead>
           <AuditCaseListTableHeader order={order} />
         </TableHead>
-        <TableBody>
-          {auditCases.map((auditCase) => (
-            <AuditCaseRow auditId={auditId} auditCase={auditCase} key={`audit-case-${auditCase.errorId}`} />
-          ))}
-        </TableBody>
+        {auditCases.map((auditCase) => (
+          <AuditCaseRow auditId={auditId} auditCase={auditCase} key={`audit-case-${auditCase.errorId}`} />
+        ))}
       </Table>
     </>
   )
