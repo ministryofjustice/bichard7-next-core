@@ -1,20 +1,28 @@
-import { ExceptionQuality, exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
-import { TriggerQuality, triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
+import type { ComponentProps } from "react"
+
+import { type ExceptionQuality, exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import { type TriggerQuality, triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { TableCell } from "components/Table"
 
-interface Props {
+interface Props extends ComponentProps<"td"> {
   errorQualityChecked: ExceptionQuality | null
   triggerQualityChecked: TriggerQuality | null
   hasExceptions: boolean
   hasTriggers: boolean
 }
 
-export const AuditQualityCell = ({ errorQualityChecked, triggerQualityChecked, hasExceptions, hasTriggers }: Props) => {
+export const AuditQualityCell = ({
+  errorQualityChecked,
+  triggerQualityChecked,
+  hasExceptions,
+  hasTriggers,
+  ...props
+}: Props) => {
   const exceptionQuality = exceptionQualityValues[errorQualityChecked ?? 1]
   const triggerQuality = triggerQualityValues[triggerQualityChecked ?? 1]
 
   return (
-    <TableCell>
+    <TableCell {...props}>
       {hasExceptions && (
         <div>
           <b>{"Exceptions: "}</b>

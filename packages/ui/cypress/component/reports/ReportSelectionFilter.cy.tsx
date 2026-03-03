@@ -48,7 +48,6 @@ describe("ReportSelectionFilter", () => {
     cy.get("button#run-report").should("have.text", "Run Report")
     cy.get("button#run-report").should("have.attr", "data-module", "govuk-button")
 
-    cy.get("a").should("have.text", "Clear filters")
-    cy.get("a").should("have.attr", "href", "/bichard/report-selection")
+    cy.get("button#clear-filters").should("have.text", "Clear filters")
   })
 })

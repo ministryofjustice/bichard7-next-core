@@ -8,6 +8,7 @@ export const CaseForDomesticViolenceReportDtoSchema = z.object({
   courtName: z.string(),
   dateOfBirth: z.string(),
   defendantName: z.string(),
+  errorId: z.number(),
   hearingDate: z.string(),
   offenceTitle: z.string(),
   outcome: z.string(),

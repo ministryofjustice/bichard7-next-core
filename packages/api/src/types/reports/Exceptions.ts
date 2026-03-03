@@ -9,6 +9,7 @@ export const CaseRowForExceptionReportSchema = z.object({
   court_reference: z.string(),
   court_room: z.string(),
   defendant_name: z.string(),
+  error_id: z.number(),
   msg_received_ts: dateLikeToDate,
   notes: z.array(NoteRowSchema),
   ptiurn: z.string(),
