@@ -80,7 +80,12 @@ export const CaseDetailsRow = ({
         </ConditionalRender>
       </TableRow>
       {notes.length > 0 && !showPreview && (
-        <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
+        <NotePreviewRow
+          notes={notes}
+          numberOfNotes={numberOfNotes}
+          previewState={showPreview}
+          colSpan={displayAuditQuality ? 4 : 3}
+        />
       )}
     </>
   )

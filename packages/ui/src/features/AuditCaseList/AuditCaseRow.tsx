@@ -85,7 +85,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
         />
       </TableRow>
       {notes.length > 0 && !showPreview && (
-        <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
+        <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} colSpan={2} />
       )}
     </TableBody>
   )
