@@ -16,6 +16,7 @@ import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
 const getDaysAgo = (days: number) => {
   const date = new Date()
+  date.setHours(0, 0, 0, 0)
   date.setDate(date.getDate() - days)
   return date
 }
