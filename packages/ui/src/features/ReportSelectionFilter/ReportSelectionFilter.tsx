@@ -247,14 +247,18 @@ export const ReportSelectionFilter: NextPage = () => {
               </div>
             </div>
             <div id={"include-section"} className="include-section-wrapper">
-              <h2 className={"govuk-heading-m"}>{"Include"}</h2>
-              <label className="govuk-body" htmlFor={"checkboxes-container"}>
-                {"Select an option"}
-              </label>
-              <div id={"checkboxes-container"} className="checkboxes-wrapper">
-                <Checkbox label={"Triggers"} checked={triggers} id={"triggers"} onChange={handleCheckbox} />
-                <Checkbox label={"Exceptions"} checked={exceptions} id={"exceptions"} onChange={handleCheckbox} />
-              </div>
+              {reportType === "exceptions" && (
+                <>
+                  <h2 className={"govuk-heading-m"}>{"Include"}</h2>
+                  <label className="govuk-body" htmlFor={"checkboxes-container"}>
+                    {"Select an option"}
+                  </label>
+                  <div id={"checkboxes-container"} className="checkboxes-wrapper">
+                    <Checkbox label={"Triggers"} checked={triggers} id={"triggers"} onChange={handleCheckbox} />
+                    <Checkbox label={"Exceptions"} checked={exceptions} id={"exceptions"} onChange={handleCheckbox} />
+                  </div>
+                </>
+              )}
             </div>
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
