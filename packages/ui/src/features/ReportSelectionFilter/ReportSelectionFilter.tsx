@@ -25,8 +25,8 @@ const FIELD_REQUIRED_ERROR = "This field is required"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
-  const [toDate, setToDate] = useState<string>("")
-  const [fromDate, setFromDate] = useState<string>("")
+  const [dateToString, setDateToString] = useState<string>("")
+  const [dateFromString, setDateFromString] = useState<string>("")
   const [exceptions, setExceptions] = useState<boolean>(true)
   const [triggers, setTriggers] = useState<boolean>(true)
 
@@ -43,7 +43,7 @@ export const ReportSelectionFilter: NextPage = () => {
   const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
   const [showDateToError, setShowDateToError] = useState<boolean>(false)
   const [dateFromErrorMessage, setDateFromErrorMessage] = useState<string>("")
-  //const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
+  const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -74,29 +74,42 @@ export const ReportSelectionFilter: NextPage = () => {
       setShowSelectError(true)
     }
 
-    if (fromDate === "") {
+    const dateFrom = new Date(dateFromString)
+    const dateTo = new Date(dateToString)
+
+    if (dateFromString === "") {
       setShowDateFromError(true)
       setDateFromErrorMessage(FIELD_REQUIRED_ERROR)
     } else {
-      //minValue={minDate}
-      //maxValue={toDate === "" ? today : new Date(toDate)}
-      if (new Date(fromDate) < minDate) {
+      if (dateFrom < minDate) {
         setShowDateFromError(true)
         setDateFromErrorMessage("Date must not be further in the past than 31 days ago")
-      } else if (new Date(fromDate) > today) {
+      } else if (dateFrom > today) {
         setShowDateFromError(true)
         setDateFromErrorMessage("Date cannot be in the future")
-      } else if (toDate !== "" && new Date(fromDate) > new Date(toDate)) {
+      } else if (dateToString !== "" && dateFrom > dateTo) {
         setShowDateFromError(true)
         setDateFromErrorMessage("Date cannot be after 'Date to'")
       }
     }
 
-    if (toDate === "") {
+    if (dateToString === "") {
       setShowDateToError(true)
+      setDateToErrorMessage(FIELD_REQUIRED_ERROR)
+    } else {
+      if (dateTo > today) {
+        setShowDateToError(true)
+        setDateToErrorMessage("Date cannot be in the future")
+      } else if (dateTo < minDate) {
+        setShowDateToError(true)
+        setDateToErrorMessage("Date must not be further in the past than 31 days ago")
+      } else if (dateFromString !== "" && dateTo < dateFrom) {
+        setShowDateToError(true)
+        setDateToErrorMessage("Date cannot be before 'Date from'")
+      }
     }
 
-    if (!reportType || !config || fromDate === "" || toDate === "") {
+    if (!reportType || !config || dateFromString === "" || dateToString === "") {
       return
     }
 
@@ -107,14 +120,14 @@ export const ReportSelectionFilter: NextPage = () => {
 
     try {
       const urlQuery = new URLSearchParams({
-        fromDate,
-        toDate,
+        dateFromString,
+        dateToString,
         exceptions: String(exceptions),
         triggers: String(triggers)
       })
 
       const parsedData = await downloadReport(reportType, urlQuery)
-      const csvBlob = await createReportCsv(parsedData, config, reportType, fromDate, toDate)
+      const csvBlob = await createReportCsv(parsedData, config, reportType, dateFromString, dateToString)
 
       setRows(parsedData)
       setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
@@ -134,8 +147,8 @@ export const ReportSelectionFilter: NextPage = () => {
     setCsvDownloadUrl(null)
     setHasRun(false)
 
-    setToDate("")
-    setFromDate("")
+    setDateToString("")
+    setDateFromString("")
     setTriggers(true)
     setExceptions(true)
   }
@@ -192,14 +205,14 @@ export const ReportSelectionFilter: NextPage = () => {
                   <DateInput
                     dateType="resolvedFrom"
                     dispatch={(p) => {
-                      setFromDate(p.value as string)
+                      setDateFromString(p.value as string)
                       setShowDateFromError(false)
                       setHasRun(false)
                     }}
-                    value={fromDate}
+                    value={dateFromString}
                     dateRange={undefined}
                     minValue={minDate}
-                    maxValue={toDate === "" ? today : new Date(toDate)}
+                    maxValue={dateToString === "" ? today : new Date(dateToString)}
                     showError={showDateFromError}
                     errorMessage={dateFromErrorMessage}
                   />
@@ -208,16 +221,16 @@ export const ReportSelectionFilter: NextPage = () => {
                   <DateInput
                     dateType="resolvedTo"
                     dispatch={(p) => {
-                      setToDate(p.value as string)
+                      setDateToString(p.value as string)
                       setShowDateToError(false)
                       setHasRun(false)
                     }}
-                    value={toDate}
+                    value={dateToString}
                     dateRange={undefined}
-                    minValue={fromDate === "" ? minDate : new Date(fromDate)}
+                    minValue={dateFromString === "" ? minDate : new Date(dateFromString)}
                     maxValue={today}
                     showError={showDateToError}
-                    errorMessage={FIELD_REQUIRED_ERROR}
+                    errorMessage={dateToErrorMessage}
                   />
                 </div>
               </div>
