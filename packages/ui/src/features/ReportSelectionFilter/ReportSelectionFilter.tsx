@@ -16,6 +16,7 @@ import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
 const FIELD_REQUIRED_ERROR = "This field is required"
+const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
@@ -37,6 +38,15 @@ export const ReportSelectionFilter: NextPage = () => {
   const [showDateToError, setShowDateToError] = useState<boolean>(false)
   const [dateFromErrorMessage, setDateFromErrorMessage] = useState<string>("")
   const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
+  const [showCheckboxesError, setShowCheckboxesError] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!exceptions && !triggers) {
+      setShowCheckboxesError(true)
+    } else {
+      setShowCheckboxesError(false)
+    }
+  }, [exceptions, triggers])
 
   const config = reportType ? ReportConfigs[reportType] : null
 
@@ -120,7 +130,7 @@ export const ReportSelectionFilter: NextPage = () => {
       }
     }
 
-    if (!reportType || !config || dateFromString === "" || dateToString === "") {
+    if (!reportType || !config || dateFromString === "" || dateToString === "" || showCheckboxesError) {
       return
     }
 
@@ -250,13 +260,20 @@ export const ReportSelectionFilter: NextPage = () => {
               {reportType === "exceptions" && (
                 <>
                   <h2 className={"govuk-heading-m"}>{"Include"}</h2>
-                  <label className="govuk-body" htmlFor={"checkboxes-container"}>
-                    {"Select an option"}
-                  </label>
-                  <div id={"checkboxes-container"} className="checkboxes-wrapper">
-                    <Checkbox label={"Triggers"} checked={triggers} id={"triggers"} onChange={handleCheckbox} />
-                    <Checkbox label={"Exceptions"} checked={exceptions} id={"exceptions"} onChange={handleCheckbox} />
-                  </div>
+                  <FormGroup showError={showCheckboxesError}>
+                    <label className="govuk-body" htmlFor={"checkboxes-container"}>
+                      {"Select an option"}
+                    </label>
+                    {showCheckboxesError ? (
+                      <p className="govuk-error-message">
+                        <span className="govuk-visually-hidden">{"Error:"}</span> {AT_LEAST_ONE_CHECKBOX_REQUIRED}
+                      </p>
+                    ) : null}
+                    <div id={"checkboxes-container"} className="checkboxes-wrapper">
+                      <Checkbox label={"Triggers"} checked={triggers} id={"triggers"} onChange={handleCheckbox} />
+                      <Checkbox label={"Exceptions"} checked={exceptions} id={"exceptions"} onChange={handleCheckbox} />
+                    </div>
+                  </FormGroup>
                 </>
               )}
             </div>
