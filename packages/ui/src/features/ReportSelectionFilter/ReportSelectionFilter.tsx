@@ -37,7 +37,7 @@ export const ReportSelectionFilter: NextPage = () => {
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
   const [minDate] = useState<Date>(getDaysAgo(31))
-  const [maxDate] = useState<Date>(new Date())
+  const [today] = useState<Date>(new Date())
 
   const [showSelectError, setShowSelectError] = useState<boolean>(false)
   const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
@@ -79,14 +79,17 @@ export const ReportSelectionFilter: NextPage = () => {
       setDateFromErrorMessage(FIELD_REQUIRED_ERROR)
     } else {
       //minValue={minDate}
-      //maxValue={toDate === "" ? maxDate : new Date(toDate)}
+      //maxValue={toDate === "" ? today : new Date(toDate)}
       if (new Date(fromDate) < minDate) {
         setShowDateFromError(true)
         setDateFromErrorMessage("Date must not be further in the past than 31 days ago")
+      } else if (new Date(fromDate) > today) {
+        setShowDateFromError(true)
+        setDateFromErrorMessage("Date cannot be in the future")
+      } else if (toDate !== "" && new Date(fromDate) > new Date(toDate)) {
+        setShowDateFromError(true)
+        setDateFromErrorMessage("Date cannot be after 'Date to'")
       }
-      //else if (new Date(fromDate) > maxDate) {
-
-      //}
     }
 
     if (toDate === "") {
@@ -196,7 +199,7 @@ export const ReportSelectionFilter: NextPage = () => {
                     value={fromDate}
                     dateRange={undefined}
                     minValue={minDate}
-                    maxValue={toDate === "" ? maxDate : new Date(toDate)}
+                    maxValue={toDate === "" ? today : new Date(toDate)}
                     showError={showDateFromError}
                     errorMessage={dateFromErrorMessage}
                   />
@@ -212,7 +215,7 @@ export const ReportSelectionFilter: NextPage = () => {
                     value={toDate}
                     dateRange={undefined}
                     minValue={fromDate === "" ? minDate : new Date(fromDate)}
-                    maxValue={maxDate}
+                    maxValue={today}
                     showError={showDateToError}
                     errorMessage={FIELD_REQUIRED_ERROR}
                   />
