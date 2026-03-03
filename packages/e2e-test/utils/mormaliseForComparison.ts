@@ -1,4 +1,9 @@
-import type { AdditionalArrestOffences, Defendant } from "@moj-bichard7/core/types/leds/DisposalRequest"
+import type {
+  AdditionalArrestOffences,
+  Defendant,
+  DisposalResult,
+  Offence
+} from "@moj-bichard7/core/types/leds/DisposalRequest"
 
 const dropUndefinedFields = (obj: Record<string, unknown>) => JSON.parse(JSON.stringify(obj))
 
@@ -12,6 +17,10 @@ export const mormaliseForComparison = (
   const result = { ...data }
 
   result.checkName = "__STRIPPED_CHECK_NAME__"
+
+  if ("bailConditions" in result && Array.isArray(result.bailConditions)) {
+    result.bailConditions = result.bailConditions.map((bc) => bc.toLowerCase().replace(/\s/g, "")).join("")
+  }
 
   if (typeof result.checkName === "string") {
     result.checkName = result.checkName.toLowerCase()
@@ -29,8 +38,13 @@ export const mormaliseForComparison = (
   if ("offences" in result && Array.isArray(result.offences)) {
     result.offences = result.offences.map((offence) => {
       offence.offenceId = "__STRIPPED_ID__"
-      return offence
     })
+
+    const offences = result.offences as Offence[]
+    if ("disposalResults" in offences && Array.isArray(offences.disposalResults)) {
+      const disposalResults = offences.disposalResults as DisposalResult[]
+      disposalResults.map((d) => (d.disposalText = d.disposalText?.toLowerCase()))
+    }
   }
 
   if ("additionalArrestOffences" in result && Array.isArray(result.additionalArrestOffences)) {
