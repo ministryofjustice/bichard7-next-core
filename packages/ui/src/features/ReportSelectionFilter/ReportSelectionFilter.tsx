@@ -141,8 +141,8 @@ export const ReportSelectionFilter: NextPage = () => {
 
     try {
       const urlQuery = new URLSearchParams({
-        dateFromString,
-        dateToString,
+        fromDate: dateFromString,
+        toDate: dateToString,
         exceptions: String(exceptions),
         triggers: String(triggers)
       })
