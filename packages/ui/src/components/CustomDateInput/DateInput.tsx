@@ -2,8 +2,8 @@ import { FormGroup } from "components/FormGroup"
 import type { Dispatch } from "react"
 import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
-import { SmallButton } from "./DateInput.styles"
 import { mergeClassNames } from "../../helpers/mergeClassNames"
+import { SmallButton } from "./DateInput.styles"
 
 type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
 type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
@@ -15,8 +15,8 @@ interface Props {
   dateRange: SerializedDateRange | undefined
   showError?: boolean
   errorMessage?: string
-  minValue?: string
-  maxValue?: string
+  minValue?: Date
+  maxValue?: Date
 }
 
 const dateActions = {
@@ -88,8 +88,8 @@ const DateInput: React.FC<Props> = ({
         onChange={(event) => {
           dispatch({ method: "add", type: actionType, value: event.target.value })
         }}
-        min={minValue}
-        max={maxValue}
+        min={minValue?.toISOString().split("T")[0]}
+        max={maxValue?.toISOString().split("T")[0]}
       />
     </FormGroup>
   )
