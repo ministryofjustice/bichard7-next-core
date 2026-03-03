@@ -1,3 +1,5 @@
+@import "../../base";
+
 @import "../error-message/index";
 @import "../hint/index";
 @import "../label/index";
@@ -15,22 +17,15 @@
     // to dark backgrounds in Firefox (https://bugzil.la/1335476). As
     // background-color and color need to always be set together, color should
     // not be set either
-    border: $govuk-border-width-form-element solid $govuk-input-border-colour;
+    border: $govuk-border-width-form-element solid;
     border-radius: 0;
+    border-color: govuk-functional-colour(input-border);
 
     // Disable inner shadow and remove rounded corners
     appearance: none;
 
     &:focus {
-      outline: $govuk-focus-width solid $govuk-focus-colour;
-      // Ensure outline appears outside of the element
-      outline-offset: 0;
-      // Double the border by adding its width again. Use `box-shadow` for this
-      // instead of changing `border-width` - this is for consistency with
-      // components such as textarea where we avoid changing `border-width` as
-      // it will change the element size. Also, `outline` cannot be utilised
-      // here as it is already used for the yellow focus state.
-      box-shadow: inset 0 0 0 $govuk-border-width-form-element;
+      @include govuk-focused-form-input;
     }
 
     &:disabled {
@@ -52,10 +47,10 @@
   }
 
   .govuk-input--error {
-    border-color: $govuk-error-colour;
+    border-color: govuk-functional-colour(error);
 
     &:focus {
-      border-color: $govuk-input-border-colour;
+      border-color: govuk-functional-colour(input-border);
     }
   }
 
@@ -108,7 +103,7 @@
     }
 
     // Split prefix/suffix onto separate lines on narrow screens
-    @include govuk-media-query($until: mobile) {
+    @media #{govuk-until-breakpoint(mobile)} {
       display: block;
 
       .govuk-input {
@@ -129,15 +124,16 @@
     min-width: govuk-px-to-rem(40px);
     height: govuk-px-to-rem(40px);
     padding: govuk-spacing(1);
-    border: $govuk-border-width-form-element solid $govuk-input-border-colour;
-    background-color: govuk-colour("light-grey");
+    border: $govuk-border-width-form-element solid;
+    border-color: govuk-functional-colour(input-border);
+    background-color: govuk-colour("black", $variant: "tint-95");
     text-align: center;
     white-space: nowrap;
     // Emphasise non-editable status of prefixes and suffixes
     cursor: default;
     flex: 0 0 auto;
     // Split prefix/suffix onto separate lines on narrow screens
-    @include govuk-media-query($until: mobile) {
+    @media #{govuk-until-breakpoint(mobile)} {
       display: block;
       height: 100%;
       white-space: normal;
@@ -145,20 +141,20 @@
   }
 
   .govuk-input__prefix {
-    @include govuk-media-query($until: mobile) {
+    @media #{govuk-until-breakpoint(mobile)} {
       border-bottom: 0;
     }
-    @include govuk-media-query($from: mobile) {
+    @media #{govuk-from-breakpoint(mobile)} {
       border-right: 0;
     }
   }
 
   // Split prefix/suffix onto separate lines on narrow screens
   .govuk-input__suffix {
-    @include govuk-media-query($until: mobile) {
+    @media #{govuk-until-breakpoint(mobile)} {
       border-top: 0;
     }
-    @include govuk-media-query($from: mobile) {
+    @media #{govuk-from-breakpoint(mobile)} {
       border-left: 0;
     }
   }

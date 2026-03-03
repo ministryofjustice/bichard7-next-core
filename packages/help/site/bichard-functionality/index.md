@@ -5,20 +5,6 @@ title: Functionality
 
 The Bichard 7 application operates in the same way as it has previously.
 
-## Bichard Roles
-
-When users are setup on the Bichard 7 portal, they are assigned a specific role which determines which actions the user is able to undertake on the portal. Users can be assigned one of the following roles.
-
-**Exceptions Handler**: is able to view and update exceptions for the areas specified in the setup and reallocate exceptions to another force area.
-
-**Trigger Handler**: is able to view and update the triggers for the areas specified in the setup and reallocate trigger only cases to another force area.
-
-**General Handler**: is able to view and update both triggers and exceptions and reallocate cases to another force area.
-
-**Supervisor**: is able to view triggers specified in setup, view exceptions, reallocate cases, unlock results, undertake quality audits, allocate results to users and run management information reports. The Supervisor role now also allows users to create/edit and delete users within their own allocated Force.
-
-**Audit**: is able to view resolved and unresolved exceptions and triggers, but not update them (i.e. this is read only access).
-
 ## Basic Navigation
 
 After logging on you will be presented with the home screen which has allows you to log in to Bichard or manage the users for your force (if a User Manager). Clicking on the "Access Bichard" button takes you to the list of exceptions and triggers for your force. The contents of this list will depend on the permissions you have been granted.
@@ -95,7 +81,7 @@ When you have selected your filter values, click on the refresh button at the to
 
 ## Searching
 
-The search facility will allow users to lookup records via a defendant name or by court. The search looks for an exact match to the search term entered. A common search facility (known as a wildcard) is used to allow users greater flexibility in searching. A wildcard is a character that may be used in a search to represent one or more characters - this is an asterisk '\*'. Wildcards can be used at the start, end or in the middle of words, e.g. S*H would return both Smith and South.
+The search facility will allow users to lookup records via a defendant name or by court. The search looks for an exact match to the search term entered. A common search facility (known as a wildcard) is used to allow users greater flexibility in searching. A wildcard is a character that may be used in a search to represent one or more characters - this is an asterisk '\*'. Wildcards can be used at the start, end or in the middle of words, e.g. S\*H would return both Smith and South.
 
 It should also be noted that searches are NOT case sensitive.
 
@@ -105,7 +91,7 @@ Below are some specific examples of how to search for a defendant and court.
 
 ### Defendant search example
 
-Defendants are listed in the portal in the format Surname/Firstname (without a slash). To search for a defendant with a surname of Smith, the following search would be required. Note that the asterisk, written as '*', is added after the defendant's surname, as we are unsure of the defendant's first name.
+Defendants are listed in the portal in the format Surname/Firstname (without a slash). To search for a defendant with a surname of Smith, the following search would be required. Note that the asterisk, written as '\*', is added after the defendant's surname, as we are unsure of the defendant's first name.
 
 `Smith*`
 
@@ -123,7 +109,7 @@ Smith Robert, Davies Robert, etc…
 
 ### Court search example
 
-The court search also works in a similar way. A wildcard ( '*' ) is required when searching for court locations. The format that courts are displayed in is area / sub area (without slash), therefore a search for all cases in Westminster would be:
+The court search also works in a similar way. A wildcard ( '\*' ) is required when searching for court locations. The format that courts are displayed in is area / sub area (without slash), therefore a search for all cases in Westminster would be:
 
 `*Westminster`
 

@@ -1,3 +1,5 @@
+@import "../../base";
+
 @include govuk-exports("govuk/component/pagination") {
   // Flexbox enhancement for small screen visual design
   // Falls back to a float: left layout on non-flex browsers
@@ -8,7 +10,7 @@
     align-items: center;
     flex-wrap: wrap;
 
-    @include govuk-media-query($from: tablet) {
+    @media #{govuk-from-breakpoint(tablet)} {
       flex-direction: row;
       align-items: flex-start;
     }
@@ -32,7 +34,7 @@
     float: left; // Float is ignored if flex is active for prev/next links
 
     &:hover {
-      background-color: govuk-colour("light-grey");
+      background-color: govuk-colour("black", $variant: "tint-95");
     }
   }
 
@@ -45,7 +47,7 @@
     // visually sit in the middle of their touch area
     text-align: center;
 
-    @include govuk-media-query($from: tablet) {
+    @media #{govuk-from-breakpoint(tablet)} {
       display: block;
     }
   }
@@ -72,7 +74,7 @@
 
   // Only show first, last and non-link items on mobile
   .govuk-pagination__item--current,
-  .govuk-pagination__item--ellipses,
+  .govuk-pagination__item--ellipsis,
   .govuk-pagination__item:first-child,
   .govuk-pagination__item:last-child {
     display: block;
@@ -81,10 +83,10 @@
   .govuk-pagination__item--current {
     @include govuk-typography-weight-bold;
     outline: 1px solid transparent;
-    background-color: $govuk-link-colour;
+    background-color: govuk-functional-colour(link);
 
     &:hover {
-      background-color: $govuk-link-colour;
+      background-color: govuk-functional-colour(link);
     }
 
     .govuk-pagination__link {
@@ -92,9 +94,9 @@
     }
   }
 
-  .govuk-pagination__item--ellipses {
+  .govuk-pagination__item--ellipsis {
     @include govuk-typography-weight-bold;
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour(secondary-text);
 
     // Remove hover state for ellipsis items as they don't contain links
     &:hover {
@@ -134,7 +136,7 @@
 
     &:focus {
       .govuk-pagination__icon {
-        color: $govuk-focus-text-colour;
+        color: govuk-functional-colour(focus-text);
       }
 
       .govuk-pagination__link-label {
@@ -147,6 +149,10 @@
     }
   }
 
+  .govuk-pagination__link-title {
+    text-decoration-thickness: inherit;
+  }
+
   .govuk-pagination__link-label {
     @include govuk-typography-weight-regular;
     @include govuk-link-decoration;
@@ -157,7 +163,7 @@
     // Set size using rems to make the icon scale with text
     width: govuk-px-to-rem(15px);
     height: govuk-px-to-rem(13px);
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour(secondary-text);
     fill: currentcolor;
     forced-color-adjust: auto;
   }
@@ -190,7 +196,8 @@
 
     // Only apply a border between prev and next if both are present
     .govuk-pagination__prev + .govuk-pagination__next {
-      border-top: 1px solid $govuk-border-colour;
+      border-top: 1px solid;
+      border-top-color: govuk-functional-colour(border);
     }
 
     // Set the after pseudo element to a block which makes the title visually
