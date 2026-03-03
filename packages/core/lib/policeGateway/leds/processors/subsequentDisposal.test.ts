@@ -20,22 +20,22 @@ const pncUpdateDataset = buildPncUpdateDataset()
 
 describe("subsequentDisposal", () => {
   it("returns endpoint and requestBody", () => {
-    const endpoint = "/people/123/disposals/ABC123/court-case-subsequent-disposal-results"
-    const requestBody = {
+    const endpoint = "person-services/v1/people/123/disposals/ABC123/court-case-subsequent-disposal-results"
+    const requestBody: SubsequentDisposalResultsRequest = {
       ownerCode: "07A1",
-      personUrn: "22/858J",
-      checkName: "Pnc check name",
+      personUrn: "1950/123X",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
         courtCode: "0001"
       },
       appearanceDate: "2025-08-12",
-      reasonForAppearance: "Sentenced Deferred",
+      reasonForAppearance: "Sentence Deferred",
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          cjsOffenceCode: "SX03001",
+          roleQualifiers: ["AT"],
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
@@ -55,10 +55,10 @@ describe("subsequentDisposal", () => {
               }
             }
           ],
-          offenceId: "112233"
+          offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
         }
       ]
-    } as SubsequentDisposalResultsRequest
+    }
     const expectedResult = { endpoint, requestBody }
 
     const result = subsequentDisposal(request, personId, pncUpdateDataset)

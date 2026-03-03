@@ -30,7 +30,8 @@ export const offenceSchema = baseOffenceSchema.extend({
   offenceId: z.string(),
   offenceDescription: z.array(z.string().min(1).max(54)).min(1).max(2).optional(),
   offenceStartDate: dateStringSchema,
-  disposalResults: disposalResultSchema.array().optional()
+  disposalResults: disposalResultSchema.array().optional(),
+  cjsOffenceCode: z.string().min(1).max(8)
 })
 
 export const disposalSchema = z.object({

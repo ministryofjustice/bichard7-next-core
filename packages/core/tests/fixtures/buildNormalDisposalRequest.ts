@@ -23,7 +23,7 @@ export const buildNormalDisposalRequest = (
     hearingsAdjudicationsAndDisposals: [
       {
         courtOffenceSequenceNumber: "1",
-        offenceReason: "00112233",
+        offenceReason: "SX03001A",
         type: PncUpdateType.ORDINARY
       },
       {
@@ -48,8 +48,8 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.DISPOSAL
       },
       {
-        courtOffenceSequenceNumber: "1",
-        offenceReason: "00112233",
+        courtOffenceSequenceNumber: "2",
+        offenceReason: "CJ03507",
         type: PncUpdateType.ORDINARY
       },
       {
@@ -77,10 +77,10 @@ export const buildNormalDisposalRequest = (
     arrestsAdjudicationsAndDisposals: [
       {
         committedOnBail: "y",
-        courtOffenceSequenceNumber: "2",
+        courtOffenceSequenceNumber: "3",
         locationOfOffence: "Offence location",
         offenceLocationFSCode: "Offence location FS code",
-        offenceReason: "00998877",
+        offenceReason: "SX03001B",
         offenceReasonSequence: "1",
         offenceStartDate: "16082025",
         offenceStartTime: "1430",
@@ -104,10 +104,10 @@ export const buildNormalDisposalRequest = (
       },
       {
         committedOnBail: "y",
-        courtOffenceSequenceNumber: "2",
+        courtOffenceSequenceNumber: "4",
         locationOfOffence: "Offence location",
         offenceLocationFSCode: "Offence location FS code",
-        offenceReason: "00998877",
+        offenceReason: "TH68006",
         offenceReasonSequence: "1",
         offenceStartDate: "16082025",
         offenceStartTime: "1430",

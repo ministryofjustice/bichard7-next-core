@@ -13,7 +13,7 @@ exports[`mapToPoliceQueryResult should map LEDS ASN query response to police que
           "adjudication": undefined,
           "disposals": [],
           "offence": {
-            "acpoOffenceCode": "12:15:24:1",
+            "acpoOffenceCode": "1.2.3.4",
             "cjsOffenceCode": "SX03001A",
             "endDate": undefined,
             "endTime": undefined,
@@ -30,7 +30,7 @@ exports[`mapToPoliceQueryResult should map LEDS ASN query response to police que
           "adjudication": undefined,
           "disposals": [],
           "offence": {
-            "acpoOffenceCode": "12:15:24:1",
+            "acpoOffenceCode": "1.2.3.5",
             "cjsOffenceCode": "SX03001",
             "endDate": undefined,
             "endTime": undefined,
@@ -47,7 +47,7 @@ exports[`mapToPoliceQueryResult should map LEDS ASN query response to police que
           "adjudication": undefined,
           "disposals": [],
           "offence": {
-            "acpoOffenceCode": "12:15:24:1",
+            "acpoOffenceCode": "1.2.3.6",
             "cjsOffenceCode": "RT88191",
             "endDate": undefined,
             "endTime": undefined,

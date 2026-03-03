@@ -11,11 +11,15 @@ describe("mapAdditionalArrestOffences", () => {
     const normalDisposalRequest = buildNormalDisposalRequest()
     const expectedAdditionalOffences = [
       {
-        asn: "1101ZD01410836V",
+        asn: "11/01ZD/01/00000410836V",
         additionalOffences: [
           {
-            courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "00998877",
+            courtOffenceSequenceNumber: 3,
+            offenceCode: {
+              cjsOffenceCode: "SX03001",
+              offenceCodeType: "cjs"
+            },
+            roleQualifiers: ["AA"],
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -41,11 +45,15 @@ describe("mapAdditionalArrestOffences", () => {
               }
             ],
             locationFsCode: "Offence location FS code",
-            locationText: "Offence location"
+            locationText: { locationText: "Offence location" }
           },
           {
-            courtOffenceSequenceNumber: 2,
-            cjsOffenceCode: "00998877",
+            courtOffenceSequenceNumber: 4,
+            offenceCode: {
+              cjsOffenceCode: "TH68006",
+              offenceCodeType: "cjs"
+            },
+            roleQualifiers: undefined,
             committedOnBail: true,
             plea: "Resisted",
             adjudication: "Not Guilty",
@@ -71,13 +79,17 @@ describe("mapAdditionalArrestOffences", () => {
               }
             ],
             locationFsCode: "Offence location FS code",
-            locationText: "Offence location"
+            locationText: { locationText: "Offence location" }
           }
         ]
       }
     ]
 
-    const additionalOffences = mapAdditionalArrestOffences(asn, normalDisposalRequest.arrestsAdjudicationsAndDisposals)
+    const additionalOffences = mapAdditionalArrestOffences(
+      asn,
+      normalDisposalRequest.arrestsAdjudicationsAndDisposals,
+      false
+    )
 
     expect(additionalOffences).toStrictEqual(expectedAdditionalOffences)
   })
@@ -99,7 +111,7 @@ describe("mapAdditionalArrestOffences", () => {
       }
     ]
 
-    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
+    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals, false)
 
     expect(result[0].additionalOffences[0]).toMatchObject({
       plea: undefined,
@@ -128,16 +140,91 @@ describe("mapAdditionalArrestOffences", () => {
       { disposalType: "20", type: PncUpdateType.DISPOSAL }
     ] as PncUpdateArrestHearingAdjudicationAndDisposal[]
 
-    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals)
+    const result = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals, false)
     expect(result?.[0].additionalOffences?.[0].disposalResults?.[0]).toEqual({
       disposalCode: 20,
       disposalDuration: undefined,
       disposalEffectiveDate: undefined,
-      disposalFine: {
-        amount: 0
-      },
       disposalQualifiers: undefined,
       disposalText: undefined
     })
   })
+
+  it.each([2059, 2060])(
+    "should not include plea and adjudication when case is carried forward or referred to court case and offence has disposal result %i",
+    (disposalResultCode) => {
+      const arrestsAdjudicationsAndDisposals: PncUpdateArrestHearingAdjudicationAndDisposal[] = [
+        {
+          committedOnBail: "y",
+          courtOffenceSequenceNumber: "3",
+          locationOfOffence: "Offence location",
+          offenceLocationFSCode: "Offence location FS code",
+          offenceReason: "SX03001B",
+          offenceReasonSequence: "1",
+          offenceStartDate: "16082025",
+          offenceStartTime: "1430",
+          offenceEndDate: "17082025",
+          offenceEndTime: "1445",
+          type: PncUpdateType.ARREST
+        },
+        {
+          hearingDate: "15082025",
+          numberOffencesTakenIntoAccount: "4",
+          pleaStatus: "RESISTED",
+          verdict: "NOT GUILTY",
+          type: PncUpdateType.ADJUDICATION
+        },
+        {
+          disposalQualifiers: "A",
+          disposalQuantity: "D123100520240012000.9900",
+          disposalText: "Disposal text",
+          disposalType: "1015",
+          type: PncUpdateType.DISPOSAL
+        },
+        {
+          committedOnBail: "y",
+          courtOffenceSequenceNumber: "4",
+          locationOfOffence: "Offence location",
+          offenceLocationFSCode: "Offence location FS code",
+          offenceReason: "TH68006",
+          offenceReasonSequence: "1",
+          offenceStartDate: "16082025",
+          offenceStartTime: "1430",
+          offenceEndDate: "17082025",
+          offenceEndTime: "1445",
+          type: PncUpdateType.ARREST
+        },
+        {
+          hearingDate: "15082025",
+          numberOffencesTakenIntoAccount: "4",
+          pleaStatus: "RESISTED",
+          verdict: "NOT GUILTY",
+          type: PncUpdateType.ADJUDICATION
+        },
+        {
+          disposalQualifiers: "A",
+          disposalQuantity: "D123100520240012000.9900",
+          disposalText: "Disposal text",
+          disposalType: String(disposalResultCode),
+          type: PncUpdateType.DISPOSAL
+        }
+      ]
+
+      const additionalOffences = mapAdditionalArrestOffences(asn, arrestsAdjudicationsAndDisposals, true)
+
+      const offences = additionalOffences[0].additionalOffences
+
+      const firstOffenceCode =
+        offences[0].offenceCode.offenceCodeType === "cjs" && offences[0].offenceCode.cjsOffenceCode
+      expect(firstOffenceCode).toBe("SX03001")
+      expect(offences[0].plea).toBe("Resisted")
+      expect(offences[0].adjudication).toBe("Not Guilty")
+
+      const secondOffenceCode =
+        offences[1].offenceCode.offenceCodeType === "cjs" && offences[1].offenceCode.cjsOffenceCode
+      expect(secondOffenceCode).toBe("TH68006")
+      expect(offences[1].plea).toBeUndefined()
+      expect(offences[1].adjudication).toBeUndefined()
+    }
+  )
 })

@@ -3,6 +3,7 @@ import { toTitleCase } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddD
 import type { AsnQueryResponse, DisposalResult, Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { Adjudication, Plea } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
+import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
 import { randomUUID } from "crypto"
@@ -124,7 +125,7 @@ export const convertPncJsonToLedsAsnQueryResponse = (
     personId,
     personUrn: pncJson.pncIdentifier,
     reportId,
-    asn,
+    asn: convertAsnToLedsFormat(asn),
     ownerCode: pncJson.forceStationCode,
     disposals: courtCaseReferences.map((courtCaseReference) => ({
       courtCaseId,

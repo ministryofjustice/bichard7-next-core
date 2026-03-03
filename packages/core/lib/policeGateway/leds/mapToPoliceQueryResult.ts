@@ -21,7 +21,7 @@ import {
 
 const mapToPoliceOffence = (offence: LedsOffence): PoliceOffence["offence"] => ({
   offenceId: offence.offenceId,
-  acpoOffenceCode: "12:15:24:1",
+  acpoOffenceCode: offence.npccOffenceCode,
   cjsOffenceCode: offence.cjsOffenceCode,
   startDate: new Date(offence.offenceStartDate),
   startTime: offence.offenceStartTime,
@@ -71,7 +71,7 @@ const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDispo
       disposalId: disposalResult.disposalId,
       qtyDate: disposalResult.disposalEffectiveDate,
       qtyDuration: convertDuration(disposalResult.disposalDuration),
-      qtyMonetaryValue: disposalResult.disposalFine?.amount.toFixed(2),
+      qtyMonetaryValue: disposalResult.disposalFine?.amount?.toFixed(2),
       qtyUnitsFined: undefined,
       qualifiers,
       text: disposalResult.disposalText,
