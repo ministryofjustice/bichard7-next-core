@@ -27,6 +27,8 @@ import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackFo
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, type CurrentUserContextType } from "context/CurrentUserContext"
 import Layout from "components/Layout"
+import { ProgressBar } from "../../../components/ProgressBar"
+import { AuditCaseListContainer } from "../../../features/AuditCaseList/AuditCaseList.styles"
 
 interface Props {
   csrfToken: string
@@ -120,7 +122,10 @@ const Page: NextPage<Props> = ({
             canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
             bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
           >
-            <AuditCaseList auditId={audit.auditId} auditCases={auditCases.cases} />
+            <ProgressBar currentCount={audit.auditedCases} maxCount={audit.totalCases} labelType="percentage" />
+            <AuditCaseListContainer>
+              <AuditCaseList auditId={audit.auditId} auditCases={auditCases.cases} />
+            </AuditCaseListContainer>
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
