@@ -37,7 +37,7 @@ interface Props {
   user: DisplayFullUser
   audit: AuditWithProgressDto
   auditCases: AuditCasesMetadata
-  queryParams: AuditCasesQuery
+  auditCasesQuery: AuditCasesQuery
   displaySwitchingSurveyFeedback: boolean
   canUseTriggerAndExceptionQualityAuditing: boolean
 }
@@ -65,7 +65,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     const { auditId } = query as {
       auditId: string
     }
-    const queryParams = AuditCasesQuerySchema.parse(query)
+    const auditCasesQuery = AuditCasesQuerySchema.parse(query)
 
     const jwt = req.cookies[".AUTH"] as string
     const apiClient = new ApiClient(jwt)
@@ -73,7 +73,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const [audit, auditCases] = await Promise.all([
       apiGateway.fetchAuditById(Number(auditId)),
-      apiGateway.fetchAuditCases(Number(auditId))
+      apiGateway.fetchAuditCases(Number(auditId), auditCasesQuery)
     ])
 
     if (isError(audit)) {
@@ -97,7 +97,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         user: userToDisplayFullUserDto(currentUser),
         audit,
         auditCases,
-        queryParams,
+        auditCasesQuery,
         canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
       }
     }
@@ -109,7 +109,7 @@ const Page: NextPage<Props> = ({
   user,
   audit,
   auditCases,
-  queryParams,
+  auditCasesQuery,
   displaySwitchingSurveyFeedback,
   canUseTriggerAndExceptionQualityAuditing
 }) => {
@@ -131,15 +131,15 @@ const Page: NextPage<Props> = ({
             <ProgressBar currentCount={audit.auditedCases} maxCount={audit.totalCases} labelType="percentage" />
             <AuditCaseListContainer>
               <Pagination
-                pageNum={queryParams.pageNum}
-                casesPerPage={queryParams.maxPerPage}
+                pageNum={auditCasesQuery.pageNum}
+                casesPerPage={auditCasesQuery.maxPerPage}
                 totalCases={audit.totalCases}
                 name="top"
               />
               <AuditCaseList auditId={audit.auditId} auditCases={auditCases.cases} />
               <Pagination
-                pageNum={queryParams.pageNum}
-                casesPerPage={queryParams.maxPerPage}
+                pageNum={auditCasesQuery.pageNum}
+                casesPerPage={auditCasesQuery.maxPerPage}
                 totalCases={audit.totalCases}
                 name="bottom"
               />

@@ -89,4 +89,11 @@ describe("/audit/:auditId", () => {
       expect(response.status).to.eq(500)
     })
   })
+
+  it("Should show order", () => {
+    loginAndVisit("Supervisor", `/bichard/audit/1?order=desc&orderBy=courtDate`)
+
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+    cy.get("#court-date-sort").should("have.attr", "aria-sort", "descending")
+  })
 })
