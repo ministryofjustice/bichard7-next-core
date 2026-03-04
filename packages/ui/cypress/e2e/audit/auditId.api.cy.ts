@@ -22,7 +22,7 @@ describe("/audit/:auditId", () => {
         errorCount: 1,
         triggerStatus: "Resolved",
         triggerCount: 1,
-        triggerQualityStatus: 2
+        triggerQualityChecked: 2
       }
     ])
     cy.task("insertAudit", {
