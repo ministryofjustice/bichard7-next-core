@@ -2,6 +2,7 @@ import type { UserList } from "@moj-bichard7/common/types/User"
 import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
 import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
+import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 
@@ -50,7 +51,23 @@ export default class BichardApiV1 implements BichardApiGateway {
     return await this.apiClient.get<AuditWithProgressDto>(V1.AuditById.replace(":auditId", String(auditId)))
   }
 
-  async fetchAuditCases(auditId: number): PromiseResult<AuditCasesMetadata> {
-    return await this.apiClient.get<AuditCasesMetadata>(V1.AuditCases.replace(":auditId", String(auditId)))
+  async fetchAuditCases(auditId: number, auditCasesQuery: AuditCasesQuery): PromiseResult<AuditCasesMetadata> {
+    const urlParams = new URLSearchParams()
+    urlParams.set("order", auditCasesQuery.order)
+    if (auditCasesQuery.orderBy) {
+      urlParams.set("orderBy", auditCasesQuery.orderBy)
+    }
+
+    if (auditCasesQuery.pageNum) {
+      urlParams.set("pageNum", String(auditCasesQuery.pageNum))
+    }
+
+    if (auditCasesQuery.maxPerPage) {
+      urlParams.set("maxPerPage", String(auditCasesQuery.maxPerPage))
+    }
+
+    return await this.apiClient.get<AuditCasesMetadata>(
+      `${V1.AuditCases.replace(":auditId", String(auditId))}?${urlParams.toString()}`
+    )
   }
 }

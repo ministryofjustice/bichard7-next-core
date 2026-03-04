@@ -1,8 +1,9 @@
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import type { ParsedUrlQuery } from "node:querystring"
 
-import { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
-import { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
+import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
+import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
+import { type AuditCasesQuery, AuditCasesQuerySchema } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 
 import { useState } from "react"
 import Head from "next/head"
@@ -29,12 +30,14 @@ import { CurrentUserContext, type CurrentUserContextType } from "context/Current
 import Layout from "components/Layout"
 import { ProgressBar } from "../../../components/ProgressBar"
 import { AuditCaseListContainer } from "../../../features/AuditCaseList/AuditCaseList.styles"
+import Pagination from "../../../components/Pagination"
 
 interface Props {
   csrfToken: string
   user: DisplayFullUser
   audit: AuditWithProgressDto
   auditCases: AuditCasesMetadata
+  queryParams: AuditCasesQuery
   displaySwitchingSurveyFeedback: boolean
   canUseTriggerAndExceptionQualityAuditing: boolean
 }
@@ -62,6 +65,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     const { auditId } = query as {
       auditId: string
     }
+    const queryParams = AuditCasesQuerySchema.parse(query)
 
     const jwt = req.cookies[".AUTH"] as string
     const apiClient = new ApiClient(jwt)
@@ -93,6 +97,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         user: userToDisplayFullUserDto(currentUser),
         audit,
         auditCases,
+        queryParams,
         canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
       }
     }
@@ -104,6 +109,7 @@ const Page: NextPage<Props> = ({
   user,
   audit,
   auditCases,
+  queryParams,
   displaySwitchingSurveyFeedback,
   canUseTriggerAndExceptionQualityAuditing
 }) => {
@@ -124,7 +130,19 @@ const Page: NextPage<Props> = ({
           >
             <ProgressBar currentCount={audit.auditedCases} maxCount={audit.totalCases} labelType="percentage" />
             <AuditCaseListContainer>
+              <Pagination
+                pageNum={queryParams.pageNum}
+                casesPerPage={queryParams.maxPerPage}
+                totalCases={audit.totalCases}
+                name="top"
+              />
               <AuditCaseList auditId={audit.auditId} auditCases={auditCases.cases} />
+              <Pagination
+                pageNum={queryParams.pageNum}
+                casesPerPage={queryParams.maxPerPage}
+                totalCases={audit.totalCases}
+                name="bottom"
+              />
             </AuditCaseListContainer>
           </Layout>
         </CurrentUserContext.Provider>

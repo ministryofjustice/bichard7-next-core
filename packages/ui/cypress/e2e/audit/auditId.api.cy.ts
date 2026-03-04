@@ -71,4 +71,22 @@ describe("/audit/:auditId", () => {
     cy.location("pathname").should("eq", "/bichard/audit/1")
     cy.contains("50%")
   })
+
+  it("Should show pagination", () => {
+    loginAndVisit("Supervisor", `/bichard/audit/1?pageNum=1&maxPerPage=25`)
+
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+    cy.contains("Showing 1 to 2 of 2 cases")
+  })
+
+  it("Should error with invalid maxPerPage", () => {
+    cy.loginAs("Supervisor")
+
+    cy.request({
+      failOnStatusCode: false,
+      url: "/bichard/audit/1?pageNum=1&maxPerPage=1000"
+    }).then((response) => {
+      expect(response.status).to.eq(500)
+    })
+  })
 })
