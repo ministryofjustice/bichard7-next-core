@@ -51,14 +51,18 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
         <TableCell rowSpan={rowSpan}>
           <a
             href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
-            id="defendant-name-link"
+            id={`defendant-name-link-${errorId}`}
             className="govuk-link"
           >
             {defendantName}
           </a>
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          <a href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`} id="asn-link" className="govuk-link">
+          <a
+            href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
+            id={`asn-link-${errorId}`}
+            className="asn-link govuk-link"
+          >
             {asn}
           </a>
         </TableCell>

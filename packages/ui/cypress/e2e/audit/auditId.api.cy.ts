@@ -14,11 +14,20 @@ describe("/audit/:auditId", () => {
         errorCount: 1,
         errorStatus: "Resolved",
         triggerCount: 1
+      },
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
+        updatedHearingOutcome: AsnExceptionHO100206.hearingOutcomeXml,
+        errorCount: 1,
+        triggerStatus: "Resolved",
+        triggerCount: 1,
+        triggerQualityStatus: 2
       }
     ])
     cy.task("insertAudit", {
       overrides: {},
-      caseIds: [0],
+      caseIds: [0, 1],
       username: "Supervisor"
     })
   })
@@ -34,7 +43,7 @@ describe("/audit/:auditId", () => {
 
     cy.location("pathname").should("eq", "/bichard/audit/1")
 
-    cy.get("a#defendant-name-link").click()
+    cy.get("a#defendant-name-link-0").click()
     cy.location("pathname").should("eq", "/bichard/court-cases/0")
     cy.location("search").should("eq", "?prev=/audit/1")
   })
@@ -54,5 +63,12 @@ describe("/audit/:auditId", () => {
     }).then((response) => {
       expect(response.status).to.eq(404)
     })
+  })
+
+  it("Should show progress", () => {
+    loginAndVisit("Supervisor", `/bichard/audit/1`)
+
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+    cy.contains("50%")
   })
 })
