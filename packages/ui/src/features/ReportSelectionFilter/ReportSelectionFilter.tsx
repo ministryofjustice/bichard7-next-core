@@ -17,6 +17,10 @@ import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
 const FIELD_REQUIRED_ERROR = "This field is required"
 const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
+const DATE_CANNOT_BE_IN_THE_FUTURE = "Date cannot be in the future"
+const DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO = "Date must not be further in the past than 31 days ago"
+const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
+const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
 
 export const ReportSelectionFilter: NextPage = () => {
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
@@ -111,15 +115,15 @@ export const ReportSelectionFilter: NextPage = () => {
       if (isBefore(dateFrom, thirtyOneDaysAgo)) {
         hasErrors = true
         setShowDateFromError(true)
-        setDateFromErrorMessage("Date must not be further in the past than 31 days ago")
+        setDateFromErrorMessage(DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO)
       } else if (isFuture(dateFrom)) {
         hasErrors = true
         setShowDateFromError(true)
-        setDateFromErrorMessage("Date cannot be in the future")
+        setDateFromErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
       } else if (dateToString !== "" && isAfter(dateFrom, dateTo)) {
         hasErrors = true
         setShowDateFromError(true)
-        setDateFromErrorMessage("Date cannot be after 'Date to'")
+        setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
       }
     }
 
@@ -131,19 +135,19 @@ export const ReportSelectionFilter: NextPage = () => {
       if (isFuture(dateTo)) {
         hasErrors = true
         setShowDateToError(true)
-        setDateToErrorMessage("Date cannot be in the future")
+        setDateToErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
       } else if (isBefore(dateTo, thirtyOneDaysAgo)) {
         hasErrors = true
         setShowDateToError(true)
-        setDateToErrorMessage("Date must not be further in the past than 31 days ago")
+        setDateToErrorMessage(DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO)
       } else if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
         hasErrors = true
         setShowDateToError(true)
-        setDateToErrorMessage("Date cannot be before 'Date from'")
+        setDateToErrorMessage(DATE_CANNOT_BE_BEFORE_DATE_FROM)
       }
     }
 
-    if (hasErrors) {
+    if (hasErrors || !reportType || !config) {
       return
     }
 
