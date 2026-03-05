@@ -1,10 +1,12 @@
+@import "../../base";
+
 @include govuk-exports("govuk/component/hint") {
   .govuk-hint {
     @include govuk-font($size: 19);
 
     margin-bottom: govuk-spacing(3);
 
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour(secondary-text);
   }
 
   // Reduces margin-bottom of hint when used after the default label (no class)

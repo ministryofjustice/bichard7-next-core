@@ -1,3 +1,5 @@
+@import "../../base";
+
 @include govuk-exports("govuk/component/panel") {
   .govuk-panel {
     @include govuk-font($size: 36);
@@ -11,8 +13,8 @@
 
     text-align: center;
 
-    @include govuk-media-query($until: tablet) {
-      padding: govuk-spacing(if($govuk-new-typography-scale, 4, 3)) - $govuk-border-width;
+    @media #{govuk-until-breakpoint(tablet)} {
+      padding: govuk-spacing(4) - $govuk-border-width;
 
       // This is an if-all-else-fails attempt to stop long words from
       // overflowing the container on very narrow viewports by forcing them to
@@ -36,9 +38,9 @@
     color: govuk-colour("white");
     background: govuk-colour("green");
 
-    @include govuk-media-query($media-type: print) {
+    @media print {
       border-color: currentcolor;
-      color: $govuk-print-text-colour;
+      color: govuk-functional-colour(text);
       background: none;
     }
   }

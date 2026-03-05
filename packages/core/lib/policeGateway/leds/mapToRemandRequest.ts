@@ -1,3 +1,5 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import type RemandPncUpdateRequest from "../../../phase3/types/RemandPncUpdateRequest"
 import type {
   AppearanceResult,
@@ -8,6 +10,7 @@ import type {
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { convertDate } from "./dateTimeConverter"
+import preProcessPersonUrn from "./preProcessPersonUrn"
 
 const remandStatusByPncCode: Record<string, AppearanceResult> = {
   B: "remanded-on-bail",
@@ -51,13 +54,18 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
   }
 }
 
-const mapToRemandRequest = (request: RemandPncUpdateRequest["request"]): RemandRequest => {
-  const { forceStationCode, pncCheckName, pncIdentifier, hearingDate, pncRemandStatus, bailConditions } = request
+const mapToRemandRequest = (
+  request: RemandPncUpdateRequest["request"],
+  pncUpdateDataset: PncUpdateDataset
+): RemandRequest => {
+  const { forceStationCode, hearingDate, pncRemandStatus, bailConditions } = request
+  const personUrn =
+    preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
+    ""
 
   return {
     ownerCode: forceStationCode,
-    checkName: pncCheckName ?? "",
-    personUrn: pncIdentifier ?? "",
+    personUrn,
     remandDate: convertDate(hearingDate),
     appearanceResult: remandStatusByPncCode[pncRemandStatus],
     bailConditions: bailConditions,

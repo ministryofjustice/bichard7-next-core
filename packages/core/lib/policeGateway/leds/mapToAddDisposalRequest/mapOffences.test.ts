@@ -1,4 +1,5 @@
 import type { PncUpdateCourtHearingAdjudicationAndDisposal } from "../../../../phase3/types/HearingDetails"
+import type { Offence } from "../../../../types/leds/AddDisposalRequest"
 
 import { PncUpdateType } from "../../../../phase3/types/HearingDetails"
 import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
@@ -11,10 +12,11 @@ describe("mapOffences", () => {
 
   it("maps offences", () => {
     const normalDisposalRequest = buildNormalDisposalRequest()
-    const expectedOffences = [
+    const expectedOffences: Offence[] = [
       {
         courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "00112233",
+        cjsOffenceCode: "SX03001",
+        roleQualifiers: ["AT"],
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -47,11 +49,12 @@ describe("mapOffences", () => {
             }
           }
         ],
-        offenceId: "112233"
+        offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
       },
       {
-        courtOffenceSequenceNumber: 1,
-        cjsOffenceCode: "00112233",
+        courtOffenceSequenceNumber: 2,
+        cjsOffenceCode: "CJ03507",
+        roleQualifiers: undefined,
         plea: "No Plea Taken",
         adjudication: "Non-Conviction",
         dateOfSentence: "2025-08-14",
@@ -84,14 +87,15 @@ describe("mapOffences", () => {
             }
           }
         ],
-        offenceId: "112233"
+        offenceId: "025459be-b60b-4919-8b7c-67371f2ca80b"
       }
     ]
 
     const offences = mapOffences(
       normalDisposalRequest.hearingsAdjudicationsAndDisposals,
       pncUpdateDataset,
-      courtCaseReferenceNumber
+      courtCaseReferenceNumber,
+      false
     )
 
     expect(offences).toStrictEqual(expectedOffences)
@@ -102,7 +106,7 @@ describe("mapOffences", () => {
       { courtOffenceSequenceNumber: "1", offenceReason: "Reason", type: PncUpdateType.ORDINARY }
     ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
 
-    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
+    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber, false)
 
     expect(offences[0]).toMatchObject({
       courtOffenceSequenceNumber: 1,
@@ -110,7 +114,7 @@ describe("mapOffences", () => {
       adjudication: undefined,
       offenceTic: undefined,
       disposalResults: [],
-      offenceId: "112233"
+      offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
     })
   })
 
@@ -120,7 +124,7 @@ describe("mapOffences", () => {
       { hearingDate: "2025-01-01", pleaStatus: "GUILTY", verdict: "CONVICTION", type: PncUpdateType.ADJUDICATION }
     ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
 
-    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
+    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber, false)
 
     expect(offences[0].disposalResults).toEqual([])
   })
@@ -131,7 +135,7 @@ describe("mapOffences", () => {
       { type: PncUpdateType.DISPOSAL, disposalQuantity: "D001010120240000000.0000" }
     ] as PncUpdateCourtHearingAdjudicationAndDisposal[]
 
-    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber)
+    const offences = mapOffences(hearings, pncUpdateDataset, courtCaseReferenceNumber, false)
 
     expect(offences[0].disposalResults?.[0].disposalQualifiers).toBeUndefined()
     expect(offences[0].disposalResults?.[0].disposalText).toBeUndefined()
@@ -140,6 +144,18 @@ describe("mapOffences", () => {
   it("doesn't include disposalDuration if units is empty string", () => {
     const normalDisposalRequest = buildNormalDisposalRequest({
       hearingsAdjudicationsAndDisposals: [
+        {
+          courtOffenceSequenceNumber: "2",
+          offenceReason: "CJ03507",
+          type: PncUpdateType.ORDINARY
+        },
+        {
+          hearingDate: "14082025",
+          numberOffencesTakenIntoAccount: "3",
+          pleaStatus: "NO PLEA TAKEN",
+          verdict: "NON-CONVICTION",
+          type: PncUpdateType.ADJUDICATION
+        },
         {
           disposalQualifiers: "A",
           disposalQuantity: "    10052024          00",
@@ -153,9 +169,73 @@ describe("mapOffences", () => {
     const offences = mapOffences(
       normalDisposalRequest.hearingsAdjudicationsAndDisposals,
       pncUpdateDataset,
-      courtCaseReferenceNumber
+      courtCaseReferenceNumber,
+      false
     )
 
     expect(offences[0].disposalResults?.[0].disposalDuration).toBeUndefined()
   })
+
+  it.each([2059, 2060])(
+    "should not include plea and adjudication when case is carried forward or referred to court case and offence has disposal result %i",
+    (disposalResultCode) => {
+      const normalDisposalRequest = buildNormalDisposalRequest({
+        hearingsAdjudicationsAndDisposals: [
+          {
+            courtOffenceSequenceNumber: "2",
+            offenceReason: "CJ03507",
+            type: PncUpdateType.ORDINARY
+          },
+          {
+            hearingDate: "14082025",
+            numberOffencesTakenIntoAccount: "3",
+            pleaStatus: "NO PLEA TAKEN",
+            verdict: "NON-CONVICTION",
+            type: PncUpdateType.ADJUDICATION
+          },
+          {
+            disposalQualifiers: "A",
+            disposalQuantity: "    10052024          00",
+            disposalText: "Disposal text",
+            disposalType: "1015",
+            type: PncUpdateType.DISPOSAL
+          },
+          {
+            courtOffenceSequenceNumber: "3",
+            offenceReason: "SX03001",
+            type: PncUpdateType.ORDINARY
+          },
+          {
+            hearingDate: "14082025",
+            numberOffencesTakenIntoAccount: "3",
+            pleaStatus: "NO PLEA TAKEN",
+            verdict: "NON-CONVICTION",
+            type: PncUpdateType.ADJUDICATION
+          },
+          {
+            disposalQualifiers: "A",
+            disposalQuantity: "    10052024          00",
+            disposalText: "Disposal text",
+            disposalType: String(disposalResultCode),
+            type: PncUpdateType.DISPOSAL
+          }
+        ]
+      })
+
+      const offences = mapOffences(
+        normalDisposalRequest.hearingsAdjudicationsAndDisposals,
+        pncUpdateDataset,
+        courtCaseReferenceNumber,
+        true
+      )
+
+      expect(offences[0].cjsOffenceCode).toBe("CJ03507")
+      expect(offences[0].plea).toBe("No Plea Taken")
+      expect(offences[0].adjudication).toBe("Non-Conviction")
+
+      expect(offences[1].cjsOffenceCode).toBe("SX03001")
+      expect(offences[1].plea).toBeUndefined()
+      expect(offences[1].adjudication).toBeUndefined()
+    }
+  )
 })

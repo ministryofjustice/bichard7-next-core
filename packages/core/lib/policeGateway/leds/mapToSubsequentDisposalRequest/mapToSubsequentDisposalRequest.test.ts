@@ -9,21 +9,21 @@ describe("mapToSubsequentDisposalRequest", () => {
   it("maps disposal updated (SUBVAR) request to LEDS subsequent disposal request", () => {
     const request = buildUpdatedRequest()
     const pncUpdateDataset = buildPncUpdateDataset()
-    const expectedSubsequentDisposalResult = {
+    const expectedSubsequentDisposalResult: SubsequentDisposalResultsRequest = {
       ownerCode: "07A1",
-      personUrn: "22/858J",
-      checkName: "Pnc check name",
+      personUrn: "1950/123X",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
         courtCode: "0001"
       },
       appearanceDate: "2025-08-12",
-      reasonForAppearance: "Sentenced Deferred",
+      reasonForAppearance: "Sentence Deferred",
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          cjsOffenceCode: "SX03001",
+          roleQualifiers: ["AT"],
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
@@ -43,10 +43,10 @@ describe("mapToSubsequentDisposalRequest", () => {
               }
             }
           ],
-          offenceId: "112233"
+          offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
         }
       ]
-    } as SubsequentDisposalResultsRequest
+    }
 
     const subsequentDisposalRequest = mapToSubsequentDisposalRequest(request, pncUpdateDataset)
 
@@ -58,7 +58,7 @@ describe("mapToSubsequentDisposalRequest", () => {
       hearingDetails: [
         {
           courtOffenceSequenceNumber: "1",
-          offenceReason: "00112233",
+          offenceReason: "RT88191",
           type: PncUpdateType.ORDINARY
         },
         {
@@ -71,21 +71,21 @@ describe("mapToSubsequentDisposalRequest", () => {
       ]
     })
     const pncUpdateDataset = buildPncUpdateDataset()
-    const expectedSubsequentDisposalResult = {
+    const expectedSubsequentDisposalResult: SubsequentDisposalResultsRequest = {
       ownerCode: "07A1",
-      personUrn: "22/858J",
-      checkName: "Pnc check name",
+      personUrn: "1950/123X",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
         courtCode: "0001"
       },
       appearanceDate: "2025-08-12",
-      reasonForAppearance: "Sentenced Deferred",
+      reasonForAppearance: "Sentence Deferred",
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          cjsOffenceCode: "RT88191",
+          roleQualifiers: undefined,
           plea: undefined,
           adjudication: undefined,
           offenceTic: undefined,
@@ -104,10 +104,10 @@ describe("mapToSubsequentDisposalRequest", () => {
               }
             }
           ],
-          offenceId: "112233"
+          offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
         }
       ]
-    } as SubsequentDisposalResultsRequest
+    }
 
     const subsequentDisposalRequest = mapToSubsequentDisposalRequest(request, pncUpdateDataset)
 
@@ -115,7 +115,7 @@ describe("mapToSubsequentDisposalRequest", () => {
   })
 
   it.each([
-    { hearingType: "D", reasonForAppearance: "Sentenced Deferred" },
+    { hearingType: "D", reasonForAppearance: "Sentence Deferred" },
     { hearingType: "V", reasonForAppearance: "Subsequently Varied" }
   ])("passes through reasonForAppearance: %s", ({ hearingType, reasonForAppearance }) => {
     const request = buildUpdatedRequest({ hearingType })

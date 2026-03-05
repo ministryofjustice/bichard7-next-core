@@ -95,6 +95,22 @@
 					<LocationOfOffence>Kingston High Street</LocationOfOffence>
 				</BaseOffenceDetails>
 			</Offence>
+			<Offence>
+				<BaseOffenceDetails>
+					<OffenceSequenceNumber>003</OffenceSequenceNumber>
+					<OffenceCode>TH68072</OffenceCode>
+					<OffenceWording>Handling stolen goods.</OffenceWording>
+					<OffenceTiming>
+						<OffenceDateCode>1</OffenceDateCode>
+						<OffenceStart>
+							<OffenceDateStartDate>2010-11-28</OffenceDateStartDate>
+						</OffenceStart>
+					</OffenceTiming>
+					<ChargeDate>2010-12-02</ChargeDate>
+					<ArrestDate>2010-12-01</ArrestDate>
+					<LocationOfOffence>Kingston High Street</LocationOfOffence>
+				</BaseOffenceDetails>
+			</Offence>
 		</Defendant>
 	</Case>
 </NewCaseMessage>

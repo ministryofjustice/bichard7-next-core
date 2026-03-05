@@ -3,9 +3,9 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
 
 import { buildNormalDisposalRequest } from "../../../../tests/fixtures/buildNormalDisposalRequest"
+import { buildPncUpdateDataset } from "../../../../tests/fixtures/buildPncUpdateDataset"
 import { buildRemandRequest } from "../../../../tests/fixtures/buildRemandRequest"
 import PoliceApiError from "../../PoliceApiError"
-import endpoints from "../endpoints"
 import { remand } from "./remand"
 
 const personId = "123"
@@ -16,12 +16,13 @@ const request = {
 } as PoliceUpdateRequest
 
 describe("remand", () => {
+  const pncUpdateDataset = buildPncUpdateDataset({ organisationName: "Org" })
+
   it("returns endpoint and requestBody", () => {
-    const endpoint = "/people/123/arrest-reports/456/basic-remands"
+    const endpoint = "person-services/v1/people/123/arrest-reports/456/basic-remands"
     const requestBody = {
       appearanceResult: "remanded-on-bail",
       bailConditions: ["This is a dummy bail condition."],
-      checkName: "CHECKNAME",
       currentAppearance: {
         court: {
           courtIdentityType: "code",
@@ -36,12 +37,12 @@ describe("remand", () => {
         date: "2024-12-11"
       },
       ownerCode: "02YZ",
-      personUrn: "2000/0448754K",
+      personUrn: "1950/123X",
       remandDate: "2024-12-05"
     }
     const expectedResult = { endpoint, requestBody }
 
-    const result = remand(request, personId, reportId)
+    const result = remand(request, personId, reportId, pncUpdateDataset)
 
     expect(result).toStrictEqual(expectedResult)
   })
@@ -52,7 +53,7 @@ describe("remand", () => {
       request: buildNormalDisposalRequest()
     } as PoliceUpdateRequest
 
-    const result = remand(normalDisposalRequest, personId, reportId)
+    const result = remand(normalDisposalRequest, personId, reportId, pncUpdateDataset)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("mapToRemandRequest called with a non-remand request")
@@ -61,13 +62,13 @@ describe("remand", () => {
   it("returns error when zod schema does not match any of the fields", () => {
     const requestWithInvalidData = {
       operation: PncOperation.REMAND,
-      request: buildRemandRequest({ pncIdentifier: "" })
+      request: buildRemandRequest()
     } as PoliceUpdateRequest
 
-    const x = buildRemandRequest()
-    x.pncIdentifier = ""
+    const pncUpdateDatasetWithMissingPersonUrn = buildPncUpdateDataset()
+    pncUpdateDatasetWithMissingPersonUrn.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier = ""
 
-    const result = remand(requestWithInvalidData, personId, reportId)
+    const result = remand(requestWithInvalidData, personId, reportId, pncUpdateDatasetWithMissingPersonUrn)
 
     expect(result).toBeInstanceOf(PoliceApiError)
     expect((result as PoliceApiError).messages).toContain("Failed to validate LEDS request.")

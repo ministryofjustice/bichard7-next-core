@@ -1,9 +1,11 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
 import type NormalDisposalPncUpdateRequest from "../../../../phase3/types/NormalDisposalPncUpdateRequest"
-import type { AddDisposalRequest } from "../../../../types/leds/AddDisposalRequest"
+import type { AddDisposalRequest, CarryForward } from "../../../../types/leds/AddDisposalRequest"
 
+import convertAsnToLedsFormat from "../convertAsnToLedsFormat"
 import { convertDate } from "../dateTimeConverter"
+import preProcessPersonUrn from "../preProcessPersonUrn"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
@@ -13,36 +15,49 @@ const mapToAddDisposalRequest = (
   pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): AddDisposalRequest => {
-  const carryForward = pncRequest.pendingPsaCourtCode
+  const personUrn =
+    preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
+    ""
+  const carryForward: CarryForward | undefined =
+    pncRequest.pendingPsaCourtCode && pncRequest.pendingCourtDate
+      ? {
+          appearanceDate: convertDate(pncRequest.pendingCourtDate),
+          court: mapCourt(pncRequest.pendingPsaCourtCode, pncRequest.pendingCourtHouseName)
+        }
+      : undefined
+
+  const referToCourtCase = pncRequest.preTrialIssuesUniqueReferenceNumber
     ? {
-        appearanceDate: pncRequest.pendingCourtDate ? convertDate(pncRequest.pendingCourtDate) : undefined,
-        court: mapCourt(pncRequest.pendingPsaCourtCode, pncRequest.pendingCourtHouseName)
+        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
       }
     : undefined
 
+  const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
+
+  const arrestSummonsNumber = pncRequest.arrestSummonsNumber && convertAsnToLedsFormat(pncRequest.arrestSummonsNumber)
   const additionalArrestOffences =
-    pncRequest.arrestSummonsNumber && pncRequest.arrestsAdjudicationsAndDisposals.length > 0
-      ? mapAdditionalArrestOffences(pncRequest.arrestSummonsNumber, pncRequest.arrestsAdjudicationsAndDisposals)
+    arrestSummonsNumber && pncRequest.arrestsAdjudicationsAndDisposals.length > 0
+      ? mapAdditionalArrestOffences(
+          arrestSummonsNumber,
+          pncRequest.arrestsAdjudicationsAndDisposals,
+          isCarriedForwardOrReferredToCourtCase
+        )
       : undefined
 
   return {
     ownerCode: pncRequest.forceStationCode,
-    personUrn: pncRequest.pncIdentifier ?? "",
-    checkName: pncRequest.pncCheckName ?? "",
+    personUrn,
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
     dateOfConviction: convertDate(pncRequest.dateOfHearing),
     defendant: mapDefendant(pncUpdateDataset),
     carryForward,
-    ...(pncRequest.preTrialIssuesUniqueReferenceNumber && {
-      referToCourtCase: {
-        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
-      }
-    }),
+    referToCourtCase,
     offences: mapOffences(
       pncRequest.hearingsAdjudicationsAndDisposals,
       pncUpdateDataset,
-      pncRequest.courtCaseReferenceNumber
+      pncRequest.courtCaseReferenceNumber,
+      isCarriedForwardOrReferredToCourtCase
     ),
     additionalArrestOffences
   }
