@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.337",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.341",
     "axios": "^1.13.6",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
@@ -58,7 +58,7 @@
     "lodash": "^4.17.23",
     "lodash.clonedeep": "^4.5.0",
     "next": "^15.5.12",
-    "pg": "^8.19.0",
+    "pg": "^8.20.0",
     "pino": "^10.3.1",
     "qs": "^6.15.0",
     "raw-body": "^3.0.2",
@@ -96,12 +96,12 @@
     "cypress": "^14.5.4",
     "cypress-axe": "^1.7.0",
     "cypress-circleci-reporter": "0.3.0",
-    "cypress-plugin-tab": "^1.0.5",
+    "cypress-plugin-tab": "^2.0.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "jest-axe": "^10.0.0",
-    "lint-staged": "^16.3.1",
+    "lint-staged": "^16.3.2",
     "lodash.sample": "^4.2.1",
     "mocha": "^11.7.5",
     "mockdate": "^3.0.5",
@@ -117,6 +117,6 @@
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "typescript": "5.9.3",
     "wait-on": "^9.0.4",
-    "webpack": "^5.105.3"
+    "webpack": "^5.105.4"
   }
 }
