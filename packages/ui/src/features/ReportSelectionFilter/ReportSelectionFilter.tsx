@@ -70,6 +70,8 @@ export const ReportSelectionFilter: NextPage = () => {
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
     setReportType(event.currentTarget.value as ReportType)
+    setTriggers(true)
+    setExceptions(true)
     setShowSelectError(false)
     setRows([])
     setCsvDownloadUrl(null)
@@ -191,7 +193,7 @@ export const ReportSelectionFilter: NextPage = () => {
               <h2 className={"govuk-heading-m"}>{"Reports"}</h2>
               <FormGroup showError={showSelectError}>
                 <label className="govuk-body" htmlFor={"report-select"}>
-                  {"Select Report"}
+                  {"Select report"}
                 </label>
                 {showSelectError ? (
                   <p className="govuk-error-message">
@@ -200,7 +202,7 @@ export const ReportSelectionFilter: NextPage = () => {
                 ) : null}
                 <Select
                   id={"report-select"}
-                  placeholder={"Select Report..."}
+                  placeholder={"Select report..."}
                   name={"select-case-type"}
                   className="select-report-input"
                   onChange={handleSelectChange}
@@ -209,7 +211,7 @@ export const ReportSelectionFilter: NextPage = () => {
                   showError={showSelectError}
                 >
                   <option disabled={true} value={""}>
-                    {"Select Report..."}
+                    {"Select report..."}
                   </option>
                   {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
                     <option key={key} value={key}>

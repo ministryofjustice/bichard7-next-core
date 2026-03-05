@@ -6,7 +6,7 @@ describe("ReportSelectionFilter", () => {
 
     cy.get("div#report-section").should("exist")
     cy.get("div#report-section").find("h2").should("have.text", "Reports")
-    cy.get("div#report-section").find("label").should("have.text", "Select Report")
+    cy.get("div#report-section").find("label").should("have.text", "Select report")
     cy.get('select[name="select-case-type"]').should("exist")
   })
 
