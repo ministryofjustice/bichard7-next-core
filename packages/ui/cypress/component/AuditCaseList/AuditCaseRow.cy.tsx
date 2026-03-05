@@ -9,6 +9,7 @@ import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 describe("AuditCaseRow", () => {
   const auditId = 1
+  const queryParams = { order: "asc", orderBy: "courtDate", pageNum: "1", maxPerPage: "50" }
   const auditCase = {
     asn: "test asn",
     courtDate: new Date().toISOString(),
@@ -29,7 +30,7 @@ describe("AuditCaseRow", () => {
 
   function mount(auditId: number, auditCase: AuditCaseDto) {
     cy.mount(
-      <MockNextRouter>
+      <MockNextRouter query={queryParams}>
         <Table>
           <AuditCaseRow auditId={auditId} auditCase={auditCase} />
         </Table>
@@ -46,7 +47,10 @@ describe("AuditCaseRow", () => {
   it("has the correct links to the case details page", () => {
     mount(auditId, auditCase)
 
-    const expectedHref = `/court-cases/${auditCase.errorId}?prev=/audit/${auditId}`
+    const prevUrl = encodeURIComponent(
+      `/audit/${auditId}?order=${queryParams.order}&orderBy=${queryParams.orderBy}&pageNum=${queryParams.pageNum}&maxPerPage=${queryParams.maxPerPage}`
+    )
+    const expectedHref = `/court-cases/${auditCase.errorId}?prev=${prevUrl}`
 
     cy.get(`a#defendant-name-link-${auditCase.errorId}`).should("have.attr", "href", expectedHref)
     cy.get(`a#asn-link-${auditCase.errorId}`).should("have.attr", "href", expectedHref)

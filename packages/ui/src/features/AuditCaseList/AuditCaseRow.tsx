@@ -37,7 +37,24 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     noteCount,
     resolutionTimestamp
   } = auditCase
-  const { basePath } = useRouter()
+  const { basePath, query } = useRouter()
+  const params = new URLSearchParams()
+  if (typeof query.order === "string") {
+    params.set("order", query.order)
+  }
+  if (typeof query.orderBy === "string") {
+    params.set("orderBy", query.orderBy)
+  }
+  if (typeof query.pageNum === "string") {
+    params.set("pageNum", query.pageNum)
+  }
+  if (typeof query.maxPerPage === "string") {
+    params.set("maxPerPage", query.maxPerPage)
+  }
+  const queryString = params.toString()
+  const prevUrl = encodeURIComponent(`/audit/${auditId}${queryString.length > 0 ? "?" + queryString : ""}`)
+  const caseHref = `${basePath}/court-cases/${errorId}?prev=${prevUrl}`
+
   const [showPreview, setShowPreview] = useState(true)
   const notes = auditCase.notes.map((note) =>
     noteToDisplayNoteDto({ ...note, createdAt: new Date(note.createdAt) } as Note)
@@ -49,20 +66,12 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     <TableBody className="caseListEntry">
       <TableRow className="caseDetailsRow">
         <TableCell rowSpan={rowSpan}>
-          <a
-            href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
-            id={`defendant-name-link-${errorId}`}
-            className="govuk-link"
-          >
+          <a href={caseHref} id={`defendant-name-link-${errorId}`} className="govuk-link">
             {defendantName}
           </a>
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          <a
-            href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
-            id={`asn-link-${errorId}`}
-            className="asn-link govuk-link"
-          >
+          <a href={caseHref} id={`asn-link-${errorId}`} className="asn-link govuk-link">
             {asn}
           </a>
         </TableCell>

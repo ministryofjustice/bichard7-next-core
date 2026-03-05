@@ -45,7 +45,7 @@ describe("/audit/:auditId", () => {
 
     cy.get("a#defendant-name-link-0").click()
     cy.location("pathname").should("eq", "/bichard/court-cases/0")
-    cy.location("search").should("eq", "?prev=/audit/1")
+    cy.location("search").should("eq", `?prev=${encodeURIComponent("/audit/1")}`)
   })
 
   it("Should redirect to the case list if user is not a supervisor", () => {
@@ -77,6 +77,11 @@ describe("/audit/:auditId", () => {
 
     cy.location("pathname").should("eq", "/bichard/audit/1")
     cy.contains("Showing 1 to 2 of 2 cases")
+    cy.get("a#defendant-name-link-0").should(
+      "have.attr",
+      "href",
+      `/bichard/court-cases/0?prev=${encodeURIComponent(`/audit/1?pageNum=1&maxPerPage=25`)}`
+    )
   })
 
   it("Should error with invalid maxPerPage", () => {
@@ -95,5 +100,10 @@ describe("/audit/:auditId", () => {
 
     cy.location("pathname").should("eq", "/bichard/audit/1")
     cy.get("#court-date-sort").should("have.attr", "aria-sort", "descending")
+    cy.get("a#defendant-name-link-0").should(
+      "have.attr",
+      "href",
+      `/bichard/court-cases/0?prev=${encodeURIComponent(`/audit/1?order=desc&orderBy=courtDate`)}`
+    )
   })
 })
