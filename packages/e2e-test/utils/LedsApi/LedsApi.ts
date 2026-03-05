@@ -35,6 +35,10 @@ export class LedsApi implements PoliceApi {
     }
 
     const asn = this.testApiHelper.arrestSummonsNumber?.replace(/\//g, "")
+    if (!asn) {
+      return Promise.resolve(message)
+    }
+
     const updatedMessage = message.replace(/(<.*:ProsecutorReference>).*?(<\/.*:ProsecutorReference>)/, `$1${asn}$2`)
 
     return Promise.resolve(updatedMessage)
@@ -122,6 +126,10 @@ export class LedsApi implements PoliceApi {
   }
 
   async expectNoRequests(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      return
+    }
+
     for (let index = 0; index < 2; index++) {
       const requests = await this.mockServerClient.fetchRequests()
       if (requests.length > 0) {

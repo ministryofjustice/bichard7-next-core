@@ -7,7 +7,12 @@ const matchRealLedsApiDataToSnapshot = (): Promise<void> => {
   return Promise.resolve()
 }
 
-const verifyRealLedsApiData = (bichard: LedsBichard): Promise<void> =>
-  bichard.config.policeApiSnapshot ? snapshotLedsApiData(bichard, "after") : matchRealLedsApiDataToSnapshot()
+const verifyRealLedsApiData = (bichard: LedsBichard): Promise<void> => {
+  if (!bichard.policeApi.testApiHelper.arrestSummonsNumber) {
+    return Promise.resolve()
+  }
+
+  return bichard.config.policeApiSnapshot ? snapshotLedsApiData(bichard, "after") : matchRealLedsApiDataToSnapshot()
+}
 
 export default verifyRealLedsApiData

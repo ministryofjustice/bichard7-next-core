@@ -8,7 +8,7 @@ const snapshotLedsApiData = async (
   beforeOrAfterRunningTest: "before" | "after"
 ): Promise<void> => {
   await delay(15)
-  const disposals = (await bichard.policeApi.testApiHelper.fetchDisposalHistory()).entries
+  const disposals = await bichard.policeApi.testApiHelper.fetchDisposals()
   const remands = await bichard.policeApi.testApiHelper.fetchRemands()
 
   const caseData: CaseData = { disposals, remands }
