@@ -3,12 +3,11 @@ import z from "zod"
 import {
   adjudicationSchema,
   baseOffenceSchema,
-  checkNameSchema,
   courtCaseReferenceSchema,
   courtSchema,
   dateStringSchema,
   forceStationCodeSchema,
-  offenceSchema
+  updateOffenceSchema
 } from "./common"
 
 const otherTicSchema = z.number().min(0).max(9999)
@@ -25,14 +24,33 @@ export const defendantSchema = z.discriminatedUnion("defendantType", [
   })
 ])
 
-const arrestOffenceSchema = baseOffenceSchema.extend({
+const locationAddressSchema = z.object({
+  description: z.string().optional(),
+  locationText: z.string()
+})
+
+const offenceCodeSchema = z.discriminatedUnion("offenceCodeType", [
+  z.object({
+    description: z.string().optional(),
+    offenceCodeType: z.literal("cjs"),
+    cjsOffenceCode: z.string().length(7)
+  }),
+  z.object({
+    description: z.string().optional(),
+    offenceCodeType: z.literal("npcc"),
+    npccOffenceCode: z.string().regex(/^([0-9]{1,3}\\.){1,2}[0-9]{1,3}(\\.[0-9]{1,3})?$/)
+  })
+])
+
+export const arrestOffenceSchema = baseOffenceSchema.extend({
   offenceStartDate: dateStringSchema,
   adjudication: adjudicationSchema.optional(),
   offenceDescription: z.string().optional(),
   committedOnBail: z.boolean(),
   locationFsCode: z.string().nonempty(),
-  locationText: z.string().optional(),
+  locationText: locationAddressSchema.optional(),
   dateOfSentence: dateStringSchema.optional(),
+  offenceCode: offenceCodeSchema,
   locationAddress: z
     .object({
       addressLines: z.array(z.string()).optional(),
@@ -46,27 +64,26 @@ export const additionalArrestOffencesSchema = z.object({
   additionalOffences: z.array(arrestOffenceSchema)
 })
 
+export const carryForwardSchema = z.object({
+  appearanceDate: dateStringSchema,
+  court: courtSchema
+})
+
 export const addDisposalRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
   personUrn: z.string().nonempty(),
-  checkName: checkNameSchema,
   courtCaseReference: courtCaseReferenceSchema,
   court: courtSchema.optional(),
   dateOfConviction: dateStringSchema,
   defendant: defendantSchema,
   otherTic: otherTicSchema.optional(),
-  carryForward: z
-    .object({
-      appearanceDate: dateStringSchema.optional(),
-      court: courtSchema.optional()
-    })
-    .optional(),
+  carryForward: carryForwardSchema.optional(),
   referToCourtCase: z
     .object({
       reference: z.string().nonempty(),
       text: z.string().optional()
     })
     .optional(),
-  offences: offenceSchema.array().optional(),
+  offences: updateOffenceSchema.array().optional(),
   additionalArrestOffences: additionalArrestOffencesSchema.array().optional()
 })

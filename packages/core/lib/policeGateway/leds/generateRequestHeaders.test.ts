@@ -4,7 +4,7 @@ import LedsActionCode from "../../../types/leds/LedsActionCode"
 import generateRequestHeaders from "./generateRequestHeaders"
 
 const testInput: Record<LedsActionCode, { activityCode: string; reason: string }> = {
-  [LedsActionCode.QueryByAsn]: { reason: "8 - on behalf of an authorised third party", activityCode: "Person Enquiry" },
+  [LedsActionCode.QueryByAsn]: { reason: "8 - On behalf of another authorised agency", activityCode: "Person Enquiry" },
   [LedsActionCode.AddDisposalResults]: { reason: "9 - Update/Confirm/Broadcast", activityCode: "Person Update" },
   [LedsActionCode.AddRemand]: { reason: "9 - Update/Confirm/Broadcast", activityCode: "Person Update" },
   [LedsActionCode.AddSubsequentDisposalResults]: {

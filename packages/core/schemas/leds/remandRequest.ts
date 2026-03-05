@@ -1,6 +1,6 @@
 import z from "zod"
 
-import { checkNameSchema, courtSchema, dateStringSchema, forceStationCodeSchema } from "./common"
+import { courtSchema, dateStringSchema, forceStationCodeSchema } from "./common"
 
 export const appearanceResultSchema = z.enum([
   "remanded-on-bail",
@@ -47,7 +47,6 @@ const localAuthoritySchema = z.object({
 
 export const remandRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
-  checkname: checkNameSchema,
   personUrn: z.string().nonempty(),
   remandDate: dateStringSchema,
   appearanceResult: appearanceResultSchema,

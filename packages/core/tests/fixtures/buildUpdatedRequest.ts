@@ -17,7 +17,7 @@ export const buildUpdatedRequest = (overrides: Partial<UpdatedRequest> = {}): Up
     hearingDetails: [
       {
         courtOffenceSequenceNumber: "1",
-        offenceReason: "00112233",
+        offenceReason: "SX03001A",
         type: PncUpdateType.ORDINARY
       },
       {
