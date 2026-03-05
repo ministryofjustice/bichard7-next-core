@@ -5,6 +5,7 @@ import type { LedsBichard, LedsMock } from "../../../types/LedsMock"
 import type ParsedNcm from "../../../types/ParsedNcm"
 import { extractAllTags } from "../../tagProcessing"
 import type Bichard from "../../world"
+import snapshotLedsApiData from "../snapshotLedsApiData"
 import mapNcmToArrestedPerson from "./mapNcmToArrestedPerson"
 import mapNcmToCourtCases from "./mapNcmToCourtCases"
 
@@ -36,7 +37,10 @@ const addMockToLedsApi = async (bichard: LedsBichard): Promise<void> => {
   const arrestedPerson = mapNcmToArrestedPerson(ncm)
   const courtCases = mapNcmToCourtCases(ncm)
 
-  await bichard.policeApi.ledsTestApiHelper.createArrestedPersonAndDisposals(arrestedPerson, courtCases)
+  await bichard.policeApi.testApiHelper.createArrestedPersonAndDisposals(arrestedPerson, courtCases)
+  if (bichard.config.policeApiSnapshot) {
+    await snapshotLedsApiData(bichard, "before")
+  }
 }
 
 export default addMockToLedsApi
