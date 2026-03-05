@@ -7,6 +7,17 @@ describe("ReportSelectionFilter", () => {
     cy.get("div#include-section").find("label").should("not.exist")
   }
 
+  const checkboxesMessageShouldExist = () => {
+    cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")
+    cy.get("div#include-section").find("input").eq(0).click()
+    cy.get("div#include-section").find("input").eq(1).click()
+
+    cy.get("button#run-report").click()
+    cy.get("div#include-section")
+      .find("p.govuk-error-message")
+      .should("contain", "At least one option must be selected")
+  }
+
   it("renders the correct fields for include/checkboxes section when triggers/exceptions is selected", () => {
     cy.mount(<ReportSelectionFilter />)
 
@@ -53,5 +64,47 @@ describe("ReportSelectionFilter", () => {
     cy.get("div#include-section").find("input").eq(1).click()
     cy.get("button#clear-filters").click()
     checkboxesShouldNotExist()
+  })
+
+  it("'At least one option must be selected' message is displayed when both checkboxes are unchecked and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    checkboxesMessageShouldExist()
+  })
+
+  it("'At least one option must be selected' message is removed when 'Triggers' checkbox is checked and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    checkboxesMessageShouldExist()
+
+    cy.get("div#include-section").find("input").eq(0).click()
+
+    cy.get("button#run-report").click()
+    cy.get("div#include-section")
+      .find("p.govuk-error-message")
+      .should("not.exist", "At least one option must be selected")
+  })
+
+  it("'At least one option must be selected' message is removed when 'Exceptions' checkbox is checked and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    checkboxesMessageShouldExist()
+
+    cy.get("div#include-section").find("input").eq(1).click()
+
+    cy.get("button#run-report").click()
+    cy.get("div#include-section").find("p.govuk-error-message").should("not.exist")
+  })
+
+  it("'At least one option must be selected' message is removed when both checkboxes are checked and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    checkboxesMessageShouldExist()
+
+    cy.get("div#include-section").find("input").eq(0).click()
+    cy.get("div#include-section").find("input").eq(1).click()
+
+    cy.get("button#run-report").click()
+    cy.get("div#include-section").find("p.govuk-error-message").should("not.exist")
   })
 })

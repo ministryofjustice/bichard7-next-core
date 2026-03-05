@@ -1,3 +1,4 @@
+import { addDays, subDays } from "date-fns"
 import { ReportSelectionFilter } from "features/ReportSelectionFilter/ReportSelectionFilter"
 
 describe("ReportSelectionFilter", () => {
@@ -24,5 +25,84 @@ describe("ReportSelectionFilter", () => {
     cy.get("div#date-range-section").find("div#report-selection-date-to").type("2026-02-02")
     cy.get("button#clear-filters").click()
     cy.get("div#date-range-section").find("div#report-selection-date-to").should("have.value", "")
+  })
+
+  it("'This field is required' message is displayed when 'Date from' has no value and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-from").find("p.govuk-error-message").should("contain", "This field is required")
+  })
+
+  it("'This field is required' message is displayed when 'Date to' has no value and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-to").find("p.govuk-error-message").should("contain", "This field is required")
+  })
+
+  it("'Date cannot be in the future' message is displayed when 'Date from' has a future date and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    const currentDate = addDays(new Date(), 1).toISOString().split("T")[0]
+    cy.get("div#date-range-section").find("div#report-selection-date-from").type(currentDate)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-from")
+      .find("p.govuk-error-message")
+      .should("contain", "Date cannot be in the future")
+  })
+
+  it("'Date cannot be in the future' message is displayed when 'Date to' has a future date and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    const futureDate = addDays(new Date(), 1).toISOString().split("T")[0]
+    cy.get("div#date-range-section").find("div#report-selection-date-to").type(futureDate)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-to")
+      .find("p.govuk-error-message")
+      .should("contain", "Date cannot be in the future")
+  })
+
+  it("'Date must not be further in the past than 31 days ago' message is displayed when 'Date from' has date more than 31 days ago and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    const pastDate = subDays(new Date(), 32).toISOString().split("T")[0]
+    cy.get("div#date-range-section").find("div#report-selection-date-from").type(pastDate)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-from")
+      .find("p.govuk-error-message")
+      .should("contain", "Date must not be further in the past than 31 days ago")
+  })
+
+  it("'Date must not be further in the past than 31 days ago' message is displayed when 'Date to' has date more than 31 days ago and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    const pastDate = subDays(new Date(), 32).toISOString().split("T")[0]
+    cy.get("div#date-range-section").find("div#report-selection-date-to").type(pastDate)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-to")
+      .find("p.govuk-error-message")
+      .should("contain", "Date must not be further in the past than 31 days ago")
+  })
+
+  it("'Error messages are displayed when 'Date from' is before 'Date to' and 'Run report' is clicked", () => {
+    cy.mount(<ReportSelectionFilter />)
+
+    const pastDate = subDays(new Date(), 5).toISOString().split("T")[0]
+    const currentDate = new Date().toISOString().split("T")[0]
+    cy.get("div#date-range-section").find("div#report-selection-date-from").type(currentDate)
+    cy.get("div#date-range-section").find("div#report-selection-date-to").type(pastDate)
+
+    cy.get("button#run-report").click()
+    cy.get("div#report-selection-date-from")
+      .find("p.govuk-error-message")
+      .should("contain", "Date cannot be after 'Date to'")
+    cy.get("div#report-selection-date-to")
+      .find("p.govuk-error-message")
+      .should("contain", "Date cannot be before 'Date from'")
   })
 })

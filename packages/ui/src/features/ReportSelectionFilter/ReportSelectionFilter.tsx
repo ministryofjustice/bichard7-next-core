@@ -93,7 +93,10 @@ export const ReportSelectionFilter: NextPage = () => {
   }
 
   const handleDownload = async () => {
+    let hasErrors = false
+
     if (!reportType || !config) {
+      hasErrors = true
       setShowSelectError(true)
     }
 
@@ -101,38 +104,46 @@ export const ReportSelectionFilter: NextPage = () => {
     const dateTo = new Date(dateToString)
 
     if (dateFromString === "") {
+      hasErrors = true
       setShowDateFromError(true)
       setDateFromErrorMessage(FIELD_REQUIRED_ERROR)
     } else {
       if (isBefore(dateFrom, thirtyOneDaysAgo)) {
+        hasErrors = true
         setShowDateFromError(true)
         setDateFromErrorMessage("Date must not be further in the past than 31 days ago")
       } else if (isFuture(dateFrom)) {
+        hasErrors = true
         setShowDateFromError(true)
         setDateFromErrorMessage("Date cannot be in the future")
       } else if (dateToString !== "" && isAfter(dateFrom, dateTo)) {
+        hasErrors = true
         setShowDateFromError(true)
         setDateFromErrorMessage("Date cannot be after 'Date to'")
       }
     }
 
     if (dateToString === "") {
+      hasErrors = true
       setShowDateToError(true)
       setDateToErrorMessage(FIELD_REQUIRED_ERROR)
     } else {
       if (isFuture(dateTo)) {
+        hasErrors = true
         setShowDateToError(true)
         setDateToErrorMessage("Date cannot be in the future")
       } else if (isBefore(dateTo, thirtyOneDaysAgo)) {
+        hasErrors = true
         setShowDateToError(true)
         setDateToErrorMessage("Date must not be further in the past than 31 days ago")
       } else if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
+        hasErrors = true
         setShowDateToError(true)
         setDateToErrorMessage("Date cannot be before 'Date from'")
       }
     }
 
-    if (!reportType || !config || dateFromString === "" || dateToString === "" || showCheckboxesError) {
+    if (hasErrors) {
       return
     }
 
