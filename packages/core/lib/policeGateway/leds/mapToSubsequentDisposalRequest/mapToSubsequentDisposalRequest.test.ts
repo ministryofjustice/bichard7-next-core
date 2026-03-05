@@ -87,6 +87,7 @@ describe("mapToSubsequentDisposalRequest", () => {
           cjsOffenceCode: "RT88191",
           roleQualifiers: undefined,
           plea: undefined,
+          dateOfSentence: undefined,
           adjudication: undefined,
           offenceTic: undefined,
           disposalResults: [

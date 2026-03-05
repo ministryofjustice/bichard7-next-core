@@ -8,7 +8,7 @@ import { mapOffences } from "./convertPncJsonToLedsAddDisposalRequest"
 
 const reasonForAppearance: Record<string, ReasonForAppearance> = {
   V: "Subsequently Varied",
-  D: "Sentenced Deferred"
+  D: "Sentence Deferred"
 }
 
 export const convertPncJsonToLedsSubsequentDisposalRequest = (
@@ -21,7 +21,6 @@ export const convertPncJsonToLedsSubsequentDisposalRequest = (
   return {
     ownerCode: pncJson.forceStationCode,
     personUrn: pncJson.pncIdentifier,
-    checkName: pncJson.pncCheckName,
     courtCaseReference: pncJson.offences[0].courtCaseReference,
     court: {
       courtIdentityType: "code",

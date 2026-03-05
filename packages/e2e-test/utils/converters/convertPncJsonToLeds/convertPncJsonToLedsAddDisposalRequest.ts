@@ -35,7 +35,7 @@ const mapCarryForward = (carryForward?: Crt | undefined) => {
   }
 
   return {
-    appearanceDate: carryForward.courtDate ? convertDate(carryForward.courtDate) : undefined,
+    appearanceDate: convertDate(carryForward.courtDate),
     court: mapCourt(carryForward.courtCode, carryForward.courtName)
   }
 }
@@ -78,8 +78,13 @@ const mapAdditionalArrestOffences = (
     offenceDescription: offence.offenceDescription,
     committedOnBail: offence.committedOnBail.toLowerCase() === "y",
     locationFsCode: offence.offenceLocationFSCode,
-    locationText: offence.locationOfOffence,
+    locationText: { locationText: offence.locationOfOffence },
     dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
+    offenceCode: {
+      offenceCodeType: "cjs" as const,
+      cjsOffenceCode: offence.cjsOffenceCode,
+      description: offence.offenceDescription
+    },
     offenceTic: Number(offence.offenceTICNumber),
     offenceStartDate: convertDate(offence.offenceStartDate),
     offenceStartTime: offence.offenceStartTime ? convertTime(offence.offenceStartTime) : undefined,
@@ -117,7 +122,6 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
   return {
     ownerCode: pncJson.forceStationCode,
     personUrn: pncJson.pncIdentifier,
-    checkName: pncJson.pncCheckName,
     courtCaseReference: pncJson.offences[0].courtCaseReference,
     court: mapCourt(pncJson.courtCode, pncJson.courtName),
     dateOfConviction: convertDate(pncJson.dateOfHearing),

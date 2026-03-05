@@ -16,8 +16,6 @@ export const mormaliseForComparison = (
 
   const result = { ...data }
 
-  result.checkName = "__STRIPPED_CHECK_NAME__"
-
   if ("bailConditions" in result && Array.isArray(result.bailConditions)) {
     result.bailConditions = result.bailConditions.map((bc) => bc.toLowerCase().replace(/\s/g, "")).join("")
   }
@@ -51,7 +49,7 @@ export const mormaliseForComparison = (
     const additionalArrestOffences = result.additionalArrestOffences as AdditionalArrestOffences[]
 
     result.additionalArrestOffences = additionalArrestOffences.map((additionalArrestOffence) => {
-      additionalArrestOffence.additionalOffences.map((offence) => offence.locationText?.toLowerCase())
+      additionalArrestOffence.additionalOffences.map((offence) => offence.locationText?.locationText.toLowerCase())
     })
   }
 
