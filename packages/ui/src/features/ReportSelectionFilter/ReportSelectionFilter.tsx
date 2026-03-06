@@ -1,28 +1,25 @@
 import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
-import DateInput from "components/CustomDateInput/DateInput"
 import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
-import { isAfter, isBefore, isFuture, startOfToday, subDays } from "date-fns"
 import { NextPage } from "next"
-import { SyntheticEvent, useEffect, useState } from "react"
+import { SyntheticEvent, useEffect, useRef, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfigs } from "types/reports/Config"
 import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
 import { ActionBar } from "./ActionBar"
+import { DateRange, DateRangeRef } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
 const FIELD_REQUIRED_ERROR = "This field is required"
 const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
-const DATE_CANNOT_BE_IN_THE_FUTURE = "Date cannot be in the future"
-const DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO = "Date must not be further in the past than 31 days ago"
-const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
-const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
 
 export const ReportSelectionFilter: NextPage = () => {
+  const dateRangeRef = useRef<DateRangeRef>(null)
+
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
   const [dateToString, setDateToString] = useState<string>("")
   const [dateFromString, setDateFromString] = useState<string>("")
@@ -35,13 +32,7 @@ export const ReportSelectionFilter: NextPage = () => {
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
-  const [thirtyOneDaysAgo] = useState<Date>(subDays(startOfToday(), 31))
-
   const [showSelectError, setShowSelectError] = useState<boolean>(false)
-  const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
-  const [showDateToError, setShowDateToError] = useState<boolean>(false)
-  const [dateFromErrorMessage, setDateFromErrorMessage] = useState<string>("")
-  const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
   const [showCheckboxesError, setShowCheckboxesError] = useState<boolean>(false)
 
   useEffect(() => {
@@ -53,24 +44,6 @@ export const ReportSelectionFilter: NextPage = () => {
   }, [exceptions, triggers])
 
   const config = reportType ? ReportConfigs[reportType] : null
-
-  const calculateDateFromMaxValue = (dateToString: string): Date => {
-    if (dateToString === "") {
-      return startOfToday()
-    } else {
-      const dateTo = new Date(dateToString)
-      return isBefore(dateTo, startOfToday()) ? dateTo : startOfToday()
-    }
-  }
-
-  const calculateDateToMinValue = (dateFromString: string): Date => {
-    if (dateFromString === "") {
-      return thirtyOneDaysAgo
-    } else {
-      const dateFrom = new Date(dateFromString)
-      return isAfter(dateFrom, thirtyOneDaysAgo) ? dateFrom : thirtyOneDaysAgo
-    }
-  }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
     setReportType(event.currentTarget.value as ReportType)
@@ -97,57 +70,13 @@ export const ReportSelectionFilter: NextPage = () => {
   }
 
   const handleDownload = async () => {
-    let hasErrors = false
-
     if (!reportType || !config) {
-      hasErrors = true
       setShowSelectError(true)
     }
 
-    const dateFrom = new Date(dateFromString)
-    const dateTo = new Date(dateToString)
+    const isDateRangeValid = dateRangeRef.current?.validateRange()
 
-    if (dateFromString === "") {
-      hasErrors = true
-      setShowDateFromError(true)
-      setDateFromErrorMessage(FIELD_REQUIRED_ERROR)
-    } else {
-      if (isBefore(dateFrom, thirtyOneDaysAgo)) {
-        hasErrors = true
-        setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO)
-      } else if (isFuture(dateFrom)) {
-        hasErrors = true
-        setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
-      } else if (dateToString !== "" && isAfter(dateFrom, dateTo)) {
-        hasErrors = true
-        setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
-      }
-    }
-
-    if (dateToString === "") {
-      hasErrors = true
-      setShowDateToError(true)
-      setDateToErrorMessage(FIELD_REQUIRED_ERROR)
-    } else {
-      if (isFuture(dateTo)) {
-        hasErrors = true
-        setShowDateToError(true)
-        setDateToErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
-      } else if (isBefore(dateTo, thirtyOneDaysAgo)) {
-        hasErrors = true
-        setShowDateToError(true)
-        setDateToErrorMessage(DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO)
-      } else if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
-        hasErrors = true
-        setShowDateToError(true)
-        setDateToErrorMessage(DATE_CANNOT_BE_BEFORE_DATE_FROM)
-      }
-    }
-
-    if (hasErrors || !reportType || !config) {
+    if (!reportType || !config || !isDateRangeValid || showCheckboxesError) {
       return
     }
 
@@ -237,41 +166,14 @@ export const ReportSelectionFilter: NextPage = () => {
               </FormGroup>
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
-              <h2 className={"govuk-heading-m"}>{"Date range"}</h2>
-              <div className="calendars-wrapper">
-                <div id={"report-selection-date-from"} className="date">
-                  <DateInput
-                    dateType="resolvedFrom"
-                    dispatch={(p) => {
-                      setDateFromString(p.value as string)
-                      setShowDateFromError(false)
-                      setHasRun(false)
-                    }}
-                    value={dateFromString}
-                    dateRange={undefined}
-                    minValue={thirtyOneDaysAgo}
-                    maxValue={calculateDateFromMaxValue(dateToString)}
-                    showError={showDateFromError}
-                    errorMessage={dateFromErrorMessage}
-                  />
-                </div>
-                <div id={"report-selection-date-to"} className="date">
-                  <DateInput
-                    dateType="resolvedTo"
-                    dispatch={(p) => {
-                      setDateToString(p.value as string)
-                      setShowDateToError(false)
-                      setHasRun(false)
-                    }}
-                    value={dateToString}
-                    dateRange={undefined}
-                    minValue={calculateDateToMinValue(dateFromString)}
-                    maxValue={startOfToday()}
-                    showError={showDateToError}
-                    errorMessage={dateToErrorMessage}
-                  />
-                </div>
-              </div>
+              <DateRange
+                setDateFromString={setDateFromString}
+                setDateToString={setDateToString}
+                setHasRun={setHasRun}
+                dateFromString={dateFromString}
+                dateToString={dateToString}
+                ref={dateRangeRef}
+              />
             </div>
             <div id={"include-section"} className="include-section-wrapper">
               {reportType === "exceptions" && (
