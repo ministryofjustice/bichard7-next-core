@@ -56,12 +56,11 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
 
 const mapToRemandRequest = (
   request: RemandPncUpdateRequest["request"],
-  pncUpdateDataset: PncUpdateDataset
+  pncUpdateDataset?: PncUpdateDataset
 ): RemandRequest => {
   const { forceStationCode, hearingDate, pncRemandStatus, bailConditions } = request
-  const personUrn =
-    preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
-    ""
+  const pncIdentifier = pncUpdateDataset?.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
+  const personUrn = (pncUpdateDataset ? preProcessPersonUrn(pncIdentifier) : request.pncIdentifier) ?? ""
 
   return {
     ownerCode: forceStationCode,

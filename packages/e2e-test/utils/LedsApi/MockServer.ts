@@ -10,7 +10,7 @@ export type RequestResponseMock = {
     body: Record<string, unknown>
     headers: Record<string, string>
   }
-  request?: Record<string, unknown>
+  request?: { body: Record<string, unknown> }[]
   hits: number
   count?: number
 }

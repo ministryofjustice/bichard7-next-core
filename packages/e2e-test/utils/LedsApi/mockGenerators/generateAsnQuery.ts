@@ -3,9 +3,9 @@ import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
 import type { LedsMock } from "../../../types/LedsMock"
-import { convertPncJsonToLedsAsnQueryResponse } from "../../convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
-import { convertPncXmlToJson } from "../../convertPncXmlToJson"
-import type { PncAsnQueryJson } from "../../convertPncXmlToJson/convertPncXmlToJson"
+import { convertPncJsonToLedsAsnQueryResponse } from "../../converters/convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
+import { convertPncXmlToJson } from "../../converters/convertPncXmlToJson"
+import type { PncAsnQueryJson } from "../../converters/convertPncXmlToJson/convertPncXmlToJson"
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
 
@@ -41,7 +41,6 @@ export const generateAsnQuery = (
     id: randomUUID(),
     request,
     response,
-    count,
-    receivedRequests: []
+    count
   }
 }
