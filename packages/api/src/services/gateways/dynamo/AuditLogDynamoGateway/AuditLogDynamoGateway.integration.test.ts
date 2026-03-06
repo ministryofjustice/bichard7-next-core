@@ -7,7 +7,7 @@ import { addDays } from "date-fns"
 import MockDate from "mockdate"
 
 import type { DynamoAuditLog } from "../../../../types/AuditLog"
-import type { ApiAuditLogEvent, DynamoAuditLogEvent } from "../../../../types/AuditLogEvent"
+import type { ApiAuditLogEvent, DynamoAuditLogEvent, DynamoAuditLogUserEvent } from "../../../../types/AuditLogEvent"
 
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import {
@@ -256,6 +256,32 @@ describe("AuditLogDynamoGateway", () => {
 
       expect(isError(results)).toBe(false)
       expect(results).toHaveLength(0)
+    })
+
+    it("can handle 0 number attributes", async () => {
+      const userEvent = mockDynamoAuditLogUserEvent({
+        attributes: {
+          "Number of Records Returned": 0,
+          "Number of Records Returned 2": 31,
+          "Number of Records Returned Zero": 0
+        },
+        eventCode: "report-run",
+        user: "user.one"
+      })
+      await gateway.createManyUserEvents([userEvent])
+
+      const results = await gateway.getUserEvents("report-run")
+
+      expect(isError(results)).toBe(false)
+      expect(results).toHaveLength(1)
+
+      const event = (results as DynamoAuditLogUserEvent[])[0]
+
+      const attributes = event.attributes!
+
+      expect(attributes["Number of Records Returned"]).toBe(0)
+      expect(attributes["Number of Records Returned 2"]).toBe(31)
+      expect(attributes).not.toHaveProperty("Number of Records Returned Zero")
     })
   })
 

@@ -7,21 +7,26 @@ import type { DynamoAuditLogUserEvent } from "../types/AuditLogEvent"
 import { AuditLogDynamoGateway } from "../services/gateways/dynamo"
 import auditLogDynamoConfig from "../tests/helpers/dynamoDbConfig"
 import TestDynamoGateway from "../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
-import buildAuditLogEvent from "./auditLog/buildAuditLogEvent"
+import buildAuditLogUserEvent from "./auditLog/buildAuditLogUserEvent"
 import createAuditLogUserEvent from "./createAuditLogUserEvents"
 
 const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
 const auditLogDynamoGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
-const reportAuditLogEvent = buildAuditLogEvent(EventCode.ReportRun, EventCategory.information, "Bichard New UI", {
-  auditLogVersion: 2,
-  "Date Range": "2026-01-01 to 2026-01-31",
-  "Number of Records Returned": 31,
-  "Output Format": "Viewed in UI",
-  "Report ID": "Bail Conditions",
-  "Time Taken": "50ms",
-  user: "User 1"
-})
+const reportAuditLogEvent = buildAuditLogUserEvent(
+  "User1",
+  EventCode.ReportRun,
+  EventCategory.information,
+  "Bichard New UI",
+  {
+    auditLogVersion: 2,
+    "Date Range": "2026-01-01 to 2026-01-31",
+    "Number of Records Returned": 31,
+    "Output Format": "Viewed in UI",
+    "Report ID": "Bail Conditions",
+    "Time Taken": "50ms"
+  }
+)
 
 describe("createAuditLogUserEvents", () => {
   beforeEach(async () => {
@@ -57,14 +62,14 @@ describe("createAuditLogUserEvents", () => {
           "Number of Records Returned": 31,
           "Output Format": "Viewed in UI",
           "Report ID": "Bail Conditions",
-          "Time Taken": "50ms",
-          user: "User 1"
+          "Time Taken": "50ms"
         },
         category: "information",
         eventCode: "report-run",
         eventSource: "Bichard New UI",
         eventType: "Report run",
-        timestamp: expect.any(String)
+        timestamp: expect.any(String),
+        user: "User1"
       })
     )
   })

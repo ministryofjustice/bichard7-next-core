@@ -585,7 +585,9 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     if (attributes) {
       for (const attributeKey of Object.keys(attributes)) {
         const attributeValue = event.attributes?.[attributeKey]
-        if (attributeValue) {
+        const isZeroRecords = attributeKey === "Number of Records Returned" && attributeValue === 0
+
+        if (attributeValue || isZeroRecords) {
           if (typeof attributeValue === "string" && attributeValue.length > maxAttributeValueLength) {
             const compressedValue = await compress(attributeValue)
             if (isError(compressedValue)) {
@@ -676,7 +678,9 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     const decompressedAttributes: AuditLogEventAttributes = {}
     if (attributes) {
       for (const [attributeKey, attributeValue] of Object.entries(attributes)) {
-        if (attributeValue) {
+        const isZeroRecords = attributeKey === "Number of Records Returned" && attributeValue === 0
+
+        if (attributeValue || isZeroRecords) {
           if (typeof attributeValue === "object" && "_compressedValue" in attributeValue) {
             const compressedValue = attributeValue._compressedValue
 
