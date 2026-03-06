@@ -2,7 +2,6 @@ import { Card } from "components/Card"
 import Checkbox from "components/Checkbox/Checkbox"
 import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
-import { NextPage } from "next"
 import { SyntheticEvent, useEffect, useRef, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
@@ -17,7 +16,7 @@ import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 const FIELD_REQUIRED_ERROR = "This field is required"
 const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
 
-export const ReportSelectionFilter: NextPage = () => {
+export const ReportSelectionFilter: React.FC = () => {
   const dateRangeRef = useRef<DateRangeRef>(null)
 
   const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
