@@ -3,9 +3,23 @@ import type { LedsBichard } from "../../types/LedsMock"
 import type { Operation } from "../converters/convertPncToLeds"
 import convertPncToLeds from "../converters/convertPncToLeds"
 import { mormaliseForComparison } from "../mormaliseForComparison"
+import { delay } from "../puppeteer-utils"
+import type { RequestResponseMock } from "./MockServer"
 
 const verifyRequests = async (bichard: LedsBichard) => {
-  const serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
+  let serverMocks: RequestResponseMock[] | undefined = undefined
+  for (let index = 0; index < 4; index++) {
+    serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
+    if (!serverMocks.every((mock) => mock.request)) {
+      await delay(3)
+      continue
+    }
+  }
+
+  if (!serverMocks) {
+    throw Error("Couldn't fetch mocks.")
+  }
+
   const localMocks = bichard.policeApi.mocks
 
   serverMocks.forEach((serverMock, index) => {
