@@ -29,10 +29,6 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
     const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
 
     const validateRange = (): boolean => {
-      const dateFrom = new Date(dateFromString)
-      const dateTo = new Date(dateToString)
-      let hasErrors = false
-
       const validateDateField = (
         setError: React.Dispatch<React.SetStateAction<boolean>>,
         setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
@@ -60,22 +56,21 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
       const isDateToValid = validateDateField(setShowDateToError, setDateToErrorMessage, dateToString)
 
       if (!isDateFromValid || !isDateToValid) {
-        hasErrors = true
+        return false
       }
 
-      if (dateToString !== "" && isAfter(dateFrom, dateTo)) {
-        setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
-        hasErrors = true
-      }
+      const dateFrom = new Date(dateFromString)
+      const dateTo = new Date(dateToString)
 
       if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
+        setShowDateFromError(true)
         setShowDateToError(true)
+        setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
         setDateToErrorMessage(DATE_CANNOT_BE_BEFORE_DATE_FROM)
-        hasErrors = true
+        return false
       }
 
-      return !hasErrors
+      return true
     }
 
     const calculateDateFromMaxValue = (dateToString: string): Date => {
