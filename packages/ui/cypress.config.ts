@@ -19,11 +19,13 @@ import {
   insertDummyCourtCasesWithTriggers,
   insertMultipleDummyCourtCases
 } from "./test/utils/insertCourtCases"
+import { insertAuditWithOverrides } from "./test/utils/insertAudit"
 import insertException from "./test/utils/manageExceptions"
 import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./test/utils/manageFeedbackSurveys"
 import { deleteTriggers, insertTriggers } from "./test/utils/manageTriggers"
 import { insertUsersWithOverrides } from "./test/utils/manageUsers"
 import deleteFromTable from "./test/utils/deleteFromTable"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 
 export default defineConfig({
   e2e: {
@@ -126,6 +128,16 @@ export default defineConfig({
 
         clearCourtCases() {
           return deleteFromEntity(CourtCase)
+        },
+
+        async clearAudits() {
+          await deleteFromTable("audits")
+          return true
+        },
+
+        async insertAudit(params: { audit: Partial<CreateAuditInput>; caseIds: number[]; username: string }) {
+          await insertAuditWithOverrides(params.audit, params.caseIds, params.username)
+          return true
         },
 
         async clearUsers() {

@@ -2,7 +2,7 @@ import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
 import type Note from "../../services/entities/Note"
 
 import DateTime from "components/DateTime"
-import { TableCell, TableRow } from "components/Table"
+import { TableBody, TableCell, TableRow } from "components/Table"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -37,26 +37,41 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
     noteCount,
     resolutionTimestamp
   } = auditCase
-  const { basePath } = useRouter()
+  const { basePath, query } = useRouter()
+  const params = new URLSearchParams()
+  if (typeof query.order === "string") {
+    params.set("order", query.order)
+  }
+  if (typeof query.orderBy === "string") {
+    params.set("orderBy", query.orderBy)
+  }
+  if (typeof query.pageNum === "string") {
+    params.set("pageNum", query.pageNum)
+  }
+  if (typeof query.maxPerPage === "string") {
+    params.set("maxPerPage", query.maxPerPage)
+  }
+  const queryString = params.toString()
+  const prevUrl = encodeURIComponent(`/audit/${auditId}${queryString.length > 0 ? "?" + queryString : ""}`)
+  const caseHref = `${basePath}/court-cases/${errorId}?prev=${prevUrl}`
+
   const [showPreview, setShowPreview] = useState(true)
-  const notes = auditCase.notes.map((note) => noteToDisplayNoteDto(note as Note))
+  const notes = auditCase.notes.map((note) =>
+    noteToDisplayNoteDto({ ...note, createdAt: new Date(note.createdAt) } as Note)
+  )
   const numberOfNotes = noteCount ?? filterUserNotes(notes).length
   const rowSpan = showPreview ? 1 : 2 // Row span should be 2 when notes are being shown so the notes row overlaps existing row
 
   return (
-    <>
+    <TableBody className="caseListEntry">
       <TableRow className="caseDetailsRow">
         <TableCell rowSpan={rowSpan}>
-          <a
-            href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`}
-            id="defendant-name-link"
-            className="govuk-link"
-          >
+          <a href={caseHref} id={`defendant-name-link-${errorId}`} className="govuk-link">
             {defendantName}
           </a>
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          <a href={`${basePath}/court-cases/${errorId}?prev=/audit/${auditId}`} id="asn-link" className="govuk-link">
+          <a href={caseHref} id={`asn-link-${errorId}`} className="asn-link govuk-link">
             {asn}
           </a>
         </TableCell>
@@ -83,8 +98,8 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
         />
       </TableRow>
       {notes.length > 0 && !showPreview && (
-        <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
+        <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} colSpan={2} />
       )}
-    </>
+    </TableBody>
   )
 }
