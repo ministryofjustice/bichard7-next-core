@@ -1,5 +1,5 @@
-import { LinkButton } from "components/Buttons/LinkButton"
 import { Button } from "components/Buttons/Button"
+import { LinkButton } from "components/Buttons/LinkButton"
 import { SyntheticEvent } from "react"
 import { LinkStyleButton, StyledActionBar } from "./ActionBar.styles"
 
@@ -38,7 +38,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         onClick={handleDownload}
         aria-label="Run report based on selected filters"
       >
-        {"Run Report"}
+        {"Run report"}
       </Button>
 
       <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
