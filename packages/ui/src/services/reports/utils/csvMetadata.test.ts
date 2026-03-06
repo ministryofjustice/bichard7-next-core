@@ -1,11 +1,11 @@
 import { csvMetadata } from "./csvMetadata"
-import type { ReportType } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 jest.mock("./escapeCsvCell", () => ({
   escapeCsvCell: jest.fn((val) => `"${val}"`)
 }))
 
-jest.mock("types/reports/ReportType", () => ({
+jest.mock("@moj-bichard7/common/types/reports/ReportType", () => ({
   REPORT_TYPE_MAP: {
     TEST_REPORT: "My Test Report"
   }

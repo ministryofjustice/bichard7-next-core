@@ -1,5 +1,5 @@
-import type { ReportType } from "types/reports/ReportType"
-import { REPORT_TYPE_MAP } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { REPORT_TYPE_MAP } from "@moj-bichard7/common/types/reports/ReportType"
 import { format } from "date-fns"
 
 export const csvFilename = (reportType: ReportType, urlQuery: URLSearchParams) => {
