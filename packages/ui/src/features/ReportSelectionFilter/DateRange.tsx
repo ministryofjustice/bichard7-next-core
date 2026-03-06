@@ -62,7 +62,7 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
       const dateFrom = new Date(dateFromString)
       const dateTo = new Date(dateToString)
 
-      if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
+      if (dateFromString !== "" && dateToString !== "" && isBefore(dateTo, dateFrom)) {
         setShowDateFromError(true)
         setShowDateToError(true)
         setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
