@@ -4,7 +4,7 @@ import { forwardRef, useImperativeHandle, useState } from "react"
 
 const FIELD_REQUIRED_ERROR = "This field is required"
 const DATE_CANNOT_BE_IN_THE_FUTURE = "Date cannot be in the future"
-const DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO = "Date must not be further in the past than 31 days ago"
+const DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS = "Date should be within the last 31 days"
 const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
 const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
 
@@ -39,7 +39,7 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
         hasErrors = true
       } else if (isBefore(dateFrom, thirtyOneDaysAgo)) {
         setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO)
+        setDateFromErrorMessage(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
         hasErrors = true
       } else if (isFuture(dateFrom)) {
         setShowDateFromError(true)
@@ -61,7 +61,7 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
         hasErrors = true
       } else if (isBefore(dateTo, thirtyOneDaysAgo)) {
         setShowDateToError(true)
-        setDateToErrorMessage(DATE_MUST_NOT_BE_FURTHER_IN_THE_PAST_THAN_31_DAYS_AGO)
+        setDateToErrorMessage(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
         hasErrors = true
       } else if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
         setShowDateToError(true)
