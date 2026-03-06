@@ -355,6 +355,48 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
     }
   }
 
+  async getUserEvents(eventCode: string): PromiseResult<DynamoAuditLogUserEvent[]> {
+    let lastMessage: InternalDynamoAuditLogUserEvent | undefined
+    let allEvents: DynamoAuditLogUserEvent[] = []
+
+    while (true) {
+      const indexSearcher = new IndexSearcher<InternalDynamoAuditLogUserEvent[]>(
+        this,
+        this.config.eventsTableName,
+        this.eventsTableKey
+      )
+        .useIndex("eventCodeIndex")
+        .setIndexKeys("eventCode", eventCode, "timestamp")
+        .paginate(getEventsPageLimit, lastMessage)
+
+      const events = (await indexSearcher.execute()) ?? []
+
+      if (isError(events)) {
+        return events
+      }
+
+      const decompressedEvents: DynamoAuditLogUserEvent[] = new Array(events.length)
+
+      for (let i = 0; i < events.length; i++) {
+        const decompressedEvent = await this.decompressUserEventValues(events[i])
+
+        if (isError(decompressedEvent)) {
+          return decompressedEvent
+        }
+
+        decompressedEvents[i] = decompressedEvent
+      }
+
+      allEvents = allEvents.concat(decompressedEvents)
+
+      if (events.length < getEventsPageLimit) {
+        return allEvents.sort((a, b) => (a.timestamp > b.timestamp ? 1 : b.timestamp > a.timestamp ? -1 : 0))
+      }
+
+      lastMessage = events[events.length - 1]
+    }
+  }
+
   async prepareUpdate(
     existing: DynamoAuditLog,
     updates: Partial<DynamoAuditLog>
@@ -623,6 +665,39 @@ export default class AuditLogDynamoGateway extends DynamoGateway implements Audi
       ...eventOutput,
       ...(attributes ? { attributes: decompressedAttributes } : {}),
       ...(eventXml ? { eventXml: decompressedEventXml } : {})
+    }
+  }
+
+  private async decompressUserEventValues(
+    event: InternalDynamoAuditLogUserEvent
+  ): PromiseResult<DynamoAuditLogUserEvent> {
+    const { attributes, ...eventOutput } = event
+
+    const decompressedAttributes: AuditLogEventAttributes = {}
+    if (attributes) {
+      for (const [attributeKey, attributeValue] of Object.entries(attributes)) {
+        if (attributeValue) {
+          if (typeof attributeValue === "object" && "_compressedValue" in attributeValue) {
+            const compressedValue = attributeValue._compressedValue
+
+            if (typeof compressedValue === "string") {
+              const decompressedValue = await decompress(compressedValue)
+              if (isError(decompressedValue)) {
+                return decompressedValue
+              }
+
+              decompressedAttributes[attributeKey] = decompressedValue
+            }
+          } else {
+            decompressedAttributes[attributeKey] = attributeValue
+          }
+        }
+      }
+    }
+
+    return {
+      ...eventOutput,
+      ...(attributes ? { attributes: decompressedAttributes } : {})
     }
   }
 
