@@ -21,6 +21,7 @@ export type Config = {
   messageEntryPoint: string
   realPNC: boolean
   ledsApiUrl: string
+  policeApiSnapshot: boolean
 }
 
 export const config: Config = {
@@ -32,5 +33,6 @@ export const config: Config = {
   noUi: process.env.NO_UI === "true",
   messageEntryPoint: process.env.MESSAGE_ENTRY_POINT || "s3",
   realPNC: process.env.REAL_PNC === "true",
-  ledsApiUrl: process.env.LEDS_API_URL || "https://localhost:8443"
+  ledsApiUrl: process.env.LEDS_API_URL || "https://localhost:8443",
+  policeApiSnapshot: process.env.POLICE_API_SNAPSHOT === "true"
 }

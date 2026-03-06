@@ -8,7 +8,10 @@ import { isError } from "../../../isError"
 import ApiError from "./ApiError"
 import generateHeaders, { ENDPOINT_HEADERS } from "./generateHeaders"
 
-const fetchDisposalHistory = async (requestOptions: RequestOptions, person: PersonDetails) => {
+const fetchDisposalHistory = async (
+  requestOptions: RequestOptions,
+  person: PersonDetails
+): Promise<DisposalHistoryResponse> => {
   if (!person.personId) {
     throw Error("Person ID is missing. Person must be created first.")
   }
