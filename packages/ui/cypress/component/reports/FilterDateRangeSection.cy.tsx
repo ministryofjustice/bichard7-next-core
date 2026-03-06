@@ -29,7 +29,7 @@ describe("ReportSelectionFilter", () => {
     apiCallCheck(true)
   })
 
-  it("clears Date From value when Clear Filters is clicked", () => {
+  it("clears Date From value when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get("div#date-range-section").find("div#report-selection-date-from").type("2026-02-02")
@@ -37,7 +37,7 @@ describe("ReportSelectionFilter", () => {
     cy.get("div#date-range-section").find("div#report-selection-date-from").should("have.value", "")
   })
 
-  it("clears Date To value when Clear Filters is clicked", () => {
+  it("clears Date To value when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get("div#date-range-section").find("div#report-selection-date-to").type("2026-02-02")

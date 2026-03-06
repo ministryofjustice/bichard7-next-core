@@ -91,7 +91,7 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
     }
 
     const onDateFromChange = (value: string) => {
-      setDateFromString(value as string)
+      setDateFromString(value)
       setShowDateFromError(false)
       setHasRun(false)
 
@@ -104,7 +104,7 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
     }
 
     const onDateToChange = (value: string) => {
-      setDateToString(value as string)
+      setDateToString(value)
       setShowDateToError(false)
       setHasRun(false)
 

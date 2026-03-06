@@ -22,7 +22,7 @@ describe("ReportSelectionFilter", () => {
     cy.get('select[name="select-case-type"]').should("exist")
   })
 
-  it("clears report selection dropdown when Clear Filters is clicked", () => {
+  it("clears report selection dropdown when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")

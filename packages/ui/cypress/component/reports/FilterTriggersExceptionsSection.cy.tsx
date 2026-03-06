@@ -50,7 +50,7 @@ describe("ReportSelectionFilter", () => {
     apiCallCheck(true)
   })
 
-  it("renders the correct fields for include/checkboxes section when triggers/exceptions is selected", () => {
+  it("renders the correct fields for include/checkboxes section when 'Resolved Exceptions/Triggers' is selected", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")
@@ -74,7 +74,7 @@ describe("ReportSelectionFilter", () => {
     cy.get("div#include-section").find("label").eq(2).should("have.attr", "for", "exceptions")
   })
 
-  it("hides the checkboxes when something other than trigger/exceptions is selected in the reports dropdown", () => {
+  it("hides the checkboxes when something other than 'Resolved Exceptions/Triggers' is selected in the reports dropdown", () => {
     cy.mount(<ReportSelectionFilter />)
     checkboxesShouldNotExist()
 
@@ -88,7 +88,7 @@ describe("ReportSelectionFilter", () => {
     checkboxesShouldNotExist()
   })
 
-  it("Triggers and Exceptions checkboxes disappear when Clear Filters is clicked", () => {
+  it("Triggers and Exceptions checkboxes disappear when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
     cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")
