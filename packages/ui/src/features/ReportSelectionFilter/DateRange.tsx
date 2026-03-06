@@ -33,37 +33,43 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
       const dateTo = new Date(dateToString)
       let hasErrors = false
 
-      if (dateFromString === "") {
-        setShowDateFromError(true)
-        setDateFromErrorMessage(FIELD_REQUIRED_ERROR)
+      const validateDateField = (
+        setError: React.Dispatch<React.SetStateAction<boolean>>,
+        setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
+        dateString: string
+      ): boolean => {
+        const date = new Date(dateString)
+        if (dateString === "") {
+          setError(true)
+          setErrorMessage(FIELD_REQUIRED_ERROR)
+          return false
+        } else if (isBefore(date, thirtyOneDaysAgo)) {
+          setError(true)
+          setErrorMessage(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
+          return false
+        } else if (isFuture(date)) {
+          setError(true)
+          setErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
+          return false
+        } else {
+          return true
+        }
+      }
+
+      const isDateFromValid = validateDateField(setShowDateFromError, setDateFromErrorMessage, dateFromString)
+      const isDateToValid = validateDateField(setShowDateToError, setDateToErrorMessage, dateToString)
+
+      if (!isDateFromValid || !isDateToValid) {
         hasErrors = true
-      } else if (isBefore(dateFrom, thirtyOneDaysAgo)) {
-        setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
-        hasErrors = true
-      } else if (isFuture(dateFrom)) {
-        setShowDateFromError(true)
-        setDateFromErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
-        hasErrors = true
-      } else if (dateToString !== "" && isAfter(dateFrom, dateTo)) {
+      }
+
+      if (dateToString !== "" && isAfter(dateFrom, dateTo)) {
         setShowDateFromError(true)
         setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
         hasErrors = true
       }
 
-      if (dateToString === "") {
-        setShowDateToError(true)
-        setDateToErrorMessage(FIELD_REQUIRED_ERROR)
-        hasErrors = true
-      } else if (isFuture(dateTo)) {
-        setShowDateToError(true)
-        setDateToErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
-        hasErrors = true
-      } else if (isBefore(dateTo, thirtyOneDaysAgo)) {
-        setShowDateToError(true)
-        setDateToErrorMessage(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
-        hasErrors = true
-      } else if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
+      if (dateFromString !== "" && isBefore(dateTo, dateFrom)) {
         setShowDateToError(true)
         setDateToErrorMessage(DATE_CANNOT_BE_BEFORE_DATE_FROM)
         hasErrors = true
