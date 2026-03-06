@@ -89,7 +89,7 @@ describe("ReportSelectionFilter", () => {
     apiCallCheck(false)
   })
 
-  it("'Date must not be further in the past than 31 days ago' message is displayed when 'Date from' has date more than 31 days ago and 'Run report' is clicked", () => {
+  it("'Date should be within the last 31 days' message is displayed when 'Date from' has date more than 31 days ago and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
     const pastDate = subDays(new Date(), 32).toISOString().split("T")[0]
@@ -98,12 +98,12 @@ describe("ReportSelectionFilter", () => {
     cy.get("button#run-report").click()
     cy.get("div#report-selection-date-from")
       .find("p.govuk-error-message")
-      .should("contain", "Date must not be further in the past than 31 days ago")
+      .should("contain", "Date should be within the last 31 days")
 
     apiCallCheck(false)
   })
 
-  it("'Date must not be further in the past than 31 days ago' message is displayed when 'Date to' has date more than 31 days ago and 'Run report' is clicked", () => {
+  it("'Date should be within the last 31 days' message is displayed when 'Date to' has date more than 31 days ago and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
     const pastDate = subDays(new Date(), 32).toISOString().split("T")[0]
@@ -112,7 +112,7 @@ describe("ReportSelectionFilter", () => {
     cy.get("button#run-report").click()
     cy.get("div#report-selection-date-to")
       .find("p.govuk-error-message")
-      .should("contain", "Date must not be further in the past than 31 days ago")
+      .should("contain", "Date should be within the last 31 days")
 
     apiCallCheck(false)
   })
