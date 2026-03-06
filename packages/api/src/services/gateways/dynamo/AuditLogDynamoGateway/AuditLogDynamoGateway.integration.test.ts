@@ -230,6 +230,35 @@ describe("AuditLogDynamoGateway", () => {
     })
   })
 
+  describe("fetchUserEvents", () => {
+    it("does not error when fetching events that don't exist", async () => {
+      const results = await gateway.getUserEvents("report-run")
+
+      expect(isError(results)).toBe(false)
+      expect(results).toHaveLength(0)
+    })
+
+    it("fetching events for known eventCode", async () => {
+      const userEvent = mockDynamoAuditLogUserEvent({ eventCode: "report-run", user: "user.one" })
+      await gateway.createManyUserEvents([userEvent])
+
+      const results = await gateway.getUserEvents("report-run")
+
+      expect(isError(results)).toBe(false)
+      expect(results).toHaveLength(1)
+    })
+
+    it("fetching events for unknown eventCode", async () => {
+      const userEvent = mockDynamoAuditLogUserEvent({ eventCode: "report-run", user: "user.one" })
+      await gateway.createManyUserEvents([userEvent])
+
+      const results = await gateway.getUserEvents("dummy.event-code")
+
+      expect(isError(results)).toBe(false)
+      expect(results).toHaveLength(0)
+    })
+  })
+
   describe("fetchOne", () => {
     it("should return the matching AuditLog and no AuditLogEvent when message does not have any event", async () => {
       const expectedAuditLog = mockDynamoAuditLog()
