@@ -1,22 +1,19 @@
 import { Card } from "components/Card"
-import { SyntheticEvent, useEffect, useRef, useState } from "react"
+import { SyntheticEvent, useEffect, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfigs } from "types/reports/Config"
 import { ReportType } from "types/reports/ReportType"
 import { ActionBar } from "./ActionBar"
-import { Checkboxes, CheckboxesRef } from "./Checkboxes"
-import { DateRange, DateRangeRef } from "./DateRange"
+import { Checkboxes } from "./Checkboxes"
+import { DateRange } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
-import { SelectReportDropdown, SelectReportDropdownRef } from "./SelectReportDropdown"
+import { SelectReportDropdown } from "./SelectReportDropdown"
+import { validateCheckboxes, validateDateRange, validateSelectReport } from "./validation"
 
 export const ReportSelectionFilter: React.FC = () => {
-  const dateRangeRef = useRef<DateRangeRef>(null)
-  const checkboxesRef = useRef<CheckboxesRef>(null)
-  const selectReportDropdownRef = useRef<SelectReportDropdownRef>(null)
-
   const [hasRun, setHasRun] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[]>([])
@@ -30,15 +27,30 @@ export const ReportSelectionFilter: React.FC = () => {
     exceptions: true,
     triggers: true
   })
+  const [errors, setErrors] = useState<Record<string, string | null>>({})
+
+  const clearErrors = (field: string) => {
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }))
+    }
+  }
 
   const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
-  const handleSetDateFrom = (date: string): void => {
-    setFilterValues((prev) => ({ ...prev, dateFrom: date }))
+  const handleSetDateFrom = (date: string) => {
+    setFilterValues((prev) => ({
+      ...prev,
+      dateFrom: date
+    }))
+    clearErrors("dateFrom")
   }
 
-  const handleSetDateTo = (date: string): void => {
-    setFilterValues((prev) => ({ ...prev, dateTo: date }))
+  const handleSetDateTo = (date: string) => {
+    setFilterValues((prev) => ({
+      ...prev,
+      dateTo: date
+    }))
+    clearErrors("dateTo")
   }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
@@ -49,14 +61,19 @@ export const ReportSelectionFilter: React.FC = () => {
       triggers: true,
       exceptions: true
     }))
+    setErrors({})
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
-    const target = event.currentTarget
-    setFilterValues((prev) => ({
-      ...prev,
-      [target.id]: target.checked
-    }))
+    const { id, checked } = event.currentTarget
+
+    setFilterValues((prev) => {
+      const next = { ...prev, [id]: checked }
+      const reportVals = validateCheckboxes(next.reportType, next.triggers, next.exceptions)
+
+      setErrors((errs) => ({ ...errs, checkboxes: reportVals.checkboxes }))
+      return next
+    })
   }
 
   const clearResults = () => {
@@ -78,16 +95,24 @@ export const ReportSelectionFilter: React.FC = () => {
   }
 
   const handleDownload = async () => {
-    const isSelectValid = selectReportDropdownRef.current?.validate()
-    const isDateRangeValid = dateRangeRef.current?.validateRange()
-    const areCheckboxesValid = checkboxesRef.current?.validate()
+    const rangeValidation = validateDateRange(filterValues.dateFrom, filterValues.dateTo)
+    const checkboxesValidation = validateCheckboxes(
+      filterValues.reportType,
+      filterValues.triggers,
+      filterValues.exceptions
+    )
+    const selectReportValidation = validateSelectReport(filterValues.reportType)
 
-    if (
-      !config ||
-      !isDateRangeValid ||
-      !isSelectValid ||
-      (filterValues.reportType === "exceptions" && !areCheckboxesValid)
-    ) {
+    const newErrors = {
+      dateFrom: rangeValidation.fromError,
+      dateTo: rangeValidation.toError,
+      reportType: selectReportValidation.reportType,
+      checkboxes: checkboxesValidation.checkboxes
+    }
+
+    setErrors(newErrors)
+
+    if (Object.values(newErrors).some((error) => error !== null) || !config) {
       return
     }
 
@@ -139,7 +164,7 @@ export const ReportSelectionFilter: React.FC = () => {
               <SelectReportDropdown
                 handleChange={handleSelectChange}
                 reportType={filterValues.reportType}
-                ref={selectReportDropdownRef}
+                error={errors.reportType}
               />
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
@@ -148,7 +173,8 @@ export const ReportSelectionFilter: React.FC = () => {
                 setDateToString={handleSetDateTo}
                 dateFromString={filterValues.dateFrom}
                 dateToString={filterValues.dateTo}
-                ref={dateRangeRef}
+                dateFromError={errors.dateFrom}
+                dateToError={errors.dateTo}
               />
             </div>
             <div id={"include-section"} className="include-section-wrapper">
@@ -157,7 +183,7 @@ export const ReportSelectionFilter: React.FC = () => {
                   handleChange={handleCheckbox}
                   triggers={filterValues.triggers}
                   exceptions={filterValues.exceptions}
-                  ref={checkboxesRef}
+                  error={errors.checkboxes}
                 />
               )}
             </div>

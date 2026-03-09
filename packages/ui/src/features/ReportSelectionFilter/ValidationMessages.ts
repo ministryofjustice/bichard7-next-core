@@ -1,6 +1,0 @@
-export const FIELD_REQUIRED_ERROR = "This field is required"
-export const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
-export const DATE_CANNOT_BE_IN_THE_FUTURE = "Date cannot be in the future"
-export const DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS = "Date should be within the last 31 days"
-export const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
-export const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"

@@ -1,160 +1,97 @@
 import DateInput from "components/CustomDateInput/DateInput"
-import { isAfter, isBefore, isFuture, startOfToday, subDays } from "date-fns"
-import { forwardRef, useImperativeHandle, useState } from "react"
-import {
-  DATE_CANNOT_BE_AFTER_DATE_TO,
-  DATE_CANNOT_BE_BEFORE_DATE_FROM,
-  DATE_CANNOT_BE_IN_THE_FUTURE,
-  DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS,
-  FIELD_REQUIRED_ERROR
-} from "./ValidationMessages"
+import { isAfter, isBefore, startOfToday, subDays } from "date-fns"
+import { useMemo } from "react"
 
 interface DateRangeProps {
-  setDateFromString: (value: string) => void
-  setDateToString: (value: string) => void
   dateFromString: string
   dateToString: string
+  setDateFromString: (value: string) => void
+  setDateToString: (value: string) => void
+  dateFromError?: string | null
+  dateToError?: string | null
 }
 
-export interface DateRangeRef {
-  validateRange: () => boolean
-}
+export const DateRange: React.FC<DateRangeProps> = ({
+  setDateFromString,
+  setDateToString,
+  dateFromString,
+  dateToString,
+  dateFromError,
+  dateToError
+}) => {
+  const thirtyOneDaysAgo = useMemo(() => subDays(startOfToday(), 31), [])
 
-export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
-  ({ setDateFromString, setDateToString, dateFromString, dateToString }, ref) => {
-    const [thirtyOneDaysAgo] = useState<Date>(subDays(startOfToday(), 31))
-    const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
-    const [showDateToError, setShowDateToError] = useState<boolean>(false)
-    const [dateFromErrorMessage, setDateFromErrorMessage] = useState<string>("")
-    const [dateToErrorMessage, setDateToErrorMessage] = useState<string>("")
-
-    const validateRange = (): boolean => {
-      const validateDateField = (
-        setError: React.Dispatch<React.SetStateAction<boolean>>,
-        setErrorMessage: React.Dispatch<React.SetStateAction<string>>,
-        dateString: string
-      ): boolean => {
-        const date = new Date(dateString)
-        if (dateString === "") {
-          setError(true)
-          setErrorMessage(FIELD_REQUIRED_ERROR)
-          return false
-        } else if (isBefore(date, thirtyOneDaysAgo)) {
-          setError(true)
-          setErrorMessage(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
-          return false
-        } else if (isFuture(date)) {
-          setError(true)
-          setErrorMessage(DATE_CANNOT_BE_IN_THE_FUTURE)
-          return false
-        } else {
-          return true
-        }
-      }
-
-      const isDateFromValid = validateDateField(setShowDateFromError, setDateFromErrorMessage, dateFromString)
-      const isDateToValid = validateDateField(setShowDateToError, setDateToErrorMessage, dateToString)
-
-      if (!isDateFromValid || !isDateToValid) {
-        return false
-      }
-
-      const dateFrom = new Date(dateFromString)
+  const calculateDateFromMaxValue = (dateToString: string): Date => {
+    if (dateToString === "") {
+      return startOfToday()
+    } else {
       const dateTo = new Date(dateToString)
-
-      if (isBefore(dateTo, dateFrom)) {
-        setShowDateFromError(true)
-        setShowDateToError(true)
-        setDateFromErrorMessage(DATE_CANNOT_BE_AFTER_DATE_TO)
-        setDateToErrorMessage(DATE_CANNOT_BE_BEFORE_DATE_FROM)
-        return false
-      }
-
-      return true
+      return isBefore(dateTo, startOfToday()) ? dateTo : startOfToday()
     }
-
-    const calculateDateFromMaxValue = (dateToString: string): Date => {
-      if (dateToString === "") {
-        return startOfToday()
-      } else {
-        const dateTo = new Date(dateToString)
-        return isBefore(dateTo, startOfToday()) ? dateTo : startOfToday()
-      }
-    }
-
-    const calculateDateToMinValue = (dateFromString: string): Date => {
-      if (dateFromString === "") {
-        return thirtyOneDaysAgo
-      } else {
-        const dateFrom = new Date(dateFromString)
-        return isAfter(dateFrom, thirtyOneDaysAgo) ? dateFrom : thirtyOneDaysAgo
-      }
-    }
-
-    const onDateFromChange = (value: string) => {
-      setDateFromString(value)
-      setShowDateFromError(false)
-
-      const newDateFrom = new Date(value)
-      const dateTo = new Date(dateToString)
-
-      if (dateToString !== "" && !isBefore(dateTo, newDateFrom)) {
-        setShowDateToError(false)
-      }
-    }
-
-    const onDateToChange = (value: string) => {
-      setDateToString(value)
-      setShowDateToError(false)
-
-      const newDateTo = new Date(value)
-      const dateFrom = new Date(dateFromString)
-
-      if (dateFromString !== "" && !isAfter(dateFrom, newDateTo)) {
-        setShowDateFromError(false)
-      }
-    }
-
-    useImperativeHandle(ref, () => ({
-      validateRange
-    }))
-
-    return (
-      <>
-        <h2 className={"govuk-heading-m"}>{"Date range"}</h2>
-        <div className="calendars-wrapper">
-          <div id={"report-selection-date-from"} className="date">
-            <DateInput
-              dateType="resolvedFrom"
-              dispatch={(p) => {
-                onDateFromChange(p.value as string)
-              }}
-              value={dateFromString}
-              dateRange={undefined}
-              minValue={thirtyOneDaysAgo}
-              maxValue={calculateDateFromMaxValue(dateToString)}
-              showError={showDateFromError}
-              errorMessage={dateFromErrorMessage}
-            />
-          </div>
-          <div id={"report-selection-date-to"} className="date">
-            <DateInput
-              dateType="resolvedTo"
-              dispatch={(p) => {
-                onDateToChange(p.value as string)
-              }}
-              value={dateToString}
-              dateRange={undefined}
-              minValue={calculateDateToMinValue(dateFromString)}
-              maxValue={startOfToday()}
-              showError={showDateToError}
-              errorMessage={dateToErrorMessage}
-            />
-          </div>
-        </div>
-      </>
-    )
   }
-)
 
-DateRange.displayName = "DateRange"
+  const calculateDateToMinValue = (dateFromString: string): Date => {
+    if (dateFromString === "") {
+      return thirtyOneDaysAgo
+    } else {
+      const dateFrom = new Date(dateFromString)
+      return isAfter(dateFrom, thirtyOneDaysAgo) ? dateFrom : thirtyOneDaysAgo
+    }
+  }
+
+  /*   const onDateFromChange = (value: string) => {
+    setDateFromString(value)
+    setShowDateFromError(false)
+
+    const newDateFrom = new Date(value)
+    const dateTo = new Date(dateToString)
+
+    if (dateToString !== "" && !isBefore(dateTo, newDateFrom)) {
+      setShowDateToError(false)
+    }
+  }
+
+  const onDateToChange = (value: string) => {
+    setDateToString(value)
+    setShowDateToError(false)
+
+    const newDateTo = new Date(value)
+    const dateFrom = new Date(dateFromString)
+
+    if (dateFromString !== "" && !isAfter(dateFrom, newDateTo)) {
+      setShowDateFromError(false)
+    }
+  } */
+
+  return (
+    <>
+      <h2 className="govuk-heading-m">{"Date range"}</h2>
+      <div className="calendars-wrapper">
+        <div id="report-selection-date-from" className="date">
+          <DateInput
+            dateType="resolvedFrom"
+            dispatch={(p) => setDateFromString(p.value as string)}
+            value={dateFromString}
+            dateRange={undefined}
+            minValue={thirtyOneDaysAgo}
+            maxValue={calculateDateFromMaxValue(dateToString)}
+            showError={!!dateFromError}
+            errorMessage={dateFromError ?? ""}
+          />
+        </div>
+        <div id="report-selection-date-to" className="date">
+          <DateInput
+            dateType="resolvedTo"
+            dispatch={(p) => setDateToString(p.value as string)}
+            value={dateToString}
+            dateRange={undefined}
+            minValue={calculateDateToMinValue(dateFromString)}
+            maxValue={startOfToday()}
+            showError={!!dateToError}
+            errorMessage={dateToError ?? ""}
+          />
+        </div>
+      </div>
+    </>
+  )
+}
