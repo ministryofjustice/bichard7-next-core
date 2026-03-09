@@ -1,8 +1,9 @@
+import { FormGroup } from "components/FormGroup"
 import type { Dispatch } from "react"
 import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
+import { mergeClassNames } from "../../helpers/mergeClassNames"
 import { SmallButton } from "./DateInput.styles"
-import { FormGroup } from "components/FormGroup"
 
 type DateType = "from" | "to" | "resolvedFrom" | "resolvedTo"
 type ActionType = "dateFrom" | "dateTo" | "caseResolvedFrom" | "caseResolvedTo"
@@ -12,6 +13,10 @@ interface Props {
   dispatch: Dispatch<FilterAction>
   value: string
   dateRange: SerializedDateRange | undefined
+  showError?: boolean
+  errorMessage?: string
+  minValue?: Date
+  maxValue?: Date
 }
 
 const dateActions = {
@@ -33,7 +38,16 @@ const formatLabelText = (dateType: DateType): string => {
   return "Date"
 }
 
-const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Props) => {
+const DateInput: React.FC<Props> = ({
+  dateType,
+  dispatch,
+  value,
+  dateRange,
+  showError,
+  errorMessage,
+  minValue,
+  maxValue
+}: Props) => {
   const actionType = dateActions[dateType] as ActionType
   const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
   const setSameDateValue = () => {
@@ -55,13 +69,18 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
   )
 
   return (
-    <FormGroup>
+    <FormGroup showError={showError}>
       <label className="govuk-body" htmlFor={`date-${dateType}`}>
         {formatLabelText(dateType)}
         {renderSameDateButton && SameDateButton}
       </label>
+      {showError ? (
+        <p className="govuk-error-message">
+          <span className="govuk-visually-hidden">{"Error:"}</span> {errorMessage}
+        </p>
+      ) : null}
       <input
-        className="govuk-input"
+        className={mergeClassNames("govuk-input", showError ? "govuk-input--error" : "")}
         type="date"
         id={`date-${dateType}`}
         name={dateType}
@@ -69,6 +88,8 @@ const DateInput: React.FC<Props> = ({ dateType, dispatch, value, dateRange }: Pr
         onChange={(event) => {
           dispatch({ method: "add", type: actionType, value: event.target.value })
         }}
+        min={minValue?.toISOString().split("T")[0]}
+        max={maxValue?.toISOString().split("T")[0]}
       />
     </FormGroup>
   )
