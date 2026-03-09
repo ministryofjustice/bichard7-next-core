@@ -88,6 +88,7 @@ export const ReportSelectionFilter: React.FC = () => {
     setCsvDownloadUrl(null)
 
     try {
+      const reportType = filterValues.reportType as ReportType
       const urlQuery = new URLSearchParams({
         fromDate: filterValues.dateFrom,
         toDate: filterValues.dateTo,
@@ -95,18 +96,12 @@ export const ReportSelectionFilter: React.FC = () => {
         triggers: String(filterValues.triggers)
       })
 
-      const parsedData = await downloadReport(filterValues.reportType, urlQuery)
-      const csvBlob = await createReportCsv(
-        parsedData,
-        config,
-        filterValues.reportType,
-        filterValues.dateFrom,
-        filterValues.dateTo
-      )
+      const parsedData = await downloadReport(reportType, urlQuery)
+      const csvBlob = await createReportCsv(parsedData, config, reportType, filterValues.dateFrom, filterValues.dateTo)
 
       setRows(parsedData)
       setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
-      setCsvReportFilename(csvFilename(filterValues.reportType, urlQuery))
+      setCsvReportFilename(csvFilename(reportType, urlQuery))
     } catch (error) {
       console.error("Fetch failed:", error)
     } finally {
