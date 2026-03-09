@@ -1,23 +1,21 @@
 import { Card } from "components/Card"
-import { FormGroup } from "components/FormGroup"
-import { Select } from "components/Select"
 import { SyntheticEvent, useEffect, useRef, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfigs } from "types/reports/Config"
-import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
+import { ReportType } from "types/reports/ReportType"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes, CheckboxesRef } from "./Checkboxes"
 import { DateRange, DateRangeRef } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
-
-const FIELD_REQUIRED_ERROR = "This field is required"
+import { SelectReportDropdown, SelectReportDropdownRef } from "./SelectReportDropdown"
 
 export const ReportSelectionFilter: React.FC = () => {
   const dateRangeRef = useRef<DateRangeRef>(null)
   const checkboxesRef = useRef<CheckboxesRef>(null)
+  const selectReportDropdownRef = useRef<SelectReportDropdownRef>(null)
 
   const [filterValues, setFilterValues] = useState({
     reportType: undefined as ReportType | undefined,
@@ -41,8 +39,6 @@ export const ReportSelectionFilter: React.FC = () => {
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
-  const [showSelectError, setShowSelectError] = useState<boolean>(false)
-
   const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
   const clearResults = () => {
@@ -60,7 +56,6 @@ export const ReportSelectionFilter: React.FC = () => {
       exceptions: true
     }))
 
-    setShowSelectError(false)
     clearResults()
   }
 
@@ -74,13 +69,10 @@ export const ReportSelectionFilter: React.FC = () => {
   }
 
   const handleDownload = async () => {
-    if (!filterValues.reportType || !config) {
-      setShowSelectError(true)
-    }
-
+    const isSelectValid = selectReportDropdownRef.current?.validate()
     const isDateRangeValid = dateRangeRef.current?.validateRange()
 
-    if (!filterValues.reportType || !config || !isDateRangeValid) {
+    if (!config || !isDateRangeValid || !isSelectValid) {
       return
     }
 
@@ -154,36 +146,11 @@ export const ReportSelectionFilter: React.FC = () => {
         <Card heading={"Reports"} isContentVisible={true}>
           <fieldset className="govuk-fieldset fields-wrapper">
             <div id={"report-section"} className="reports-section-wrapper">
-              <h2 className={"govuk-heading-m"}>{"Reports"}</h2>
-              <FormGroup showError={showSelectError}>
-                <label className="govuk-body" htmlFor={"report-select"}>
-                  {"Select report"}
-                </label>
-                {showSelectError ? (
-                  <p className="govuk-error-message">
-                    <span className="govuk-visually-hidden">{"Error:"}</span> {FIELD_REQUIRED_ERROR}
-                  </p>
-                ) : null}
-                <Select
-                  id={"report-select"}
-                  placeholder={"Select report..."}
-                  name={"select-case-type"}
-                  className="select-report-input"
-                  onChange={handleSelectChange}
-                  aria-describedby="report-type-label"
-                  value={filterValues.reportType || ""}
-                  showError={showSelectError}
-                >
-                  <option disabled={true} value={""}>
-                    {"Select report..."}
-                  </option>
-                  {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
-                    <option key={key} value={key}>
-                      {value}
-                    </option>
-                  ))}
-                </Select>
-              </FormGroup>
+              <SelectReportDropdown
+                handleChange={handleSelectChange}
+                reportType={filterValues.reportType}
+                ref={selectReportDropdownRef}
+              />
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
               <DateRange
