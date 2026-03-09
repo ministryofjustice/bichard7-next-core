@@ -2,6 +2,7 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
+import { randomInt } from "node:crypto"
 
 import type { AuditLogDynamoGateway } from "../services/gateways/dynamo/"
 import type { ApiAuditLogEvent, DynamoAuditLogUserEvent } from "../types/AuditLogEvent"
@@ -34,7 +35,7 @@ const createAuditLogUserEvents = async (
       if (attempts > 1) {
         logger?.info(`Retrying ${attempts}`)
         // Wait 250 - 750ms and try again
-        const delay = Math.floor(250 + Math.random() * 500)
+        const delay = randomInt(250, 750)
         await new Promise((resolve) => setTimeout(resolve, delay))
         return createAuditLogUserEvents(events, auditLogGateway, logger, attempts - 1)
       }
