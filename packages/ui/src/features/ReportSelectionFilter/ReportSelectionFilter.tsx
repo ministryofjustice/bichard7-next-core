@@ -80,14 +80,14 @@ export const ReportSelectionFilter: React.FC = () => {
   const handleDownload = async () => {
     const isSelectValid = selectReportDropdownRef.current?.validate()
     const isDateRangeValid = dateRangeRef.current?.validateRange()
-
-    if (!config || !isDateRangeValid || !isSelectValid) {
-      return
-    }
-
     const areCheckboxesValid = checkboxesRef.current?.validate()
 
-    if (filterValues.reportType === "exceptions" && !areCheckboxesValid) {
+    if (
+      !config ||
+      !isDateRangeValid ||
+      !isSelectValid ||
+      (filterValues.reportType === "exceptions" && !areCheckboxesValid)
+    ) {
       return
     }
 
