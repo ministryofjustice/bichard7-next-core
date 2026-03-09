@@ -3,42 +3,66 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply } from "fastify"
 
 import Permission from "@moj-bichard7/common/types/Permission"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { OK } from "http-status"
 import { Readable } from "node:stream"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
-import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 
-type ReportStrategy<TQuery, TDto> = (database: DatabaseConnection, user: User, query: TQuery) => AsyncGenerator<TDto[]>
+type ReportStrategy<TQuery, TDto> = (
+  database: WritableDatabaseConnection,
+  user: User,
+  query: TQuery
+) => AsyncGenerator<TDto[]>
 
-export const createReportHandler = <TQuery, TDto>(reportStrategy: ReportStrategy<TQuery, TDto>) => {
+export const createReportHandler = <TQuery, TDto>(
+  reportStrategy: ReportStrategy<TQuery, TDto>,
+  onStreamComplete?: (totalCount: number) => Promise<PromiseResult<void> | void> | PromiseResult<void> | void,
+  extractCount: (chunk: TDto[]) => number = (chunk) => chunk.length
+) => {
   return async (database: DatabaseGateway, user: User, query: TQuery, reply: FastifyReply): PromiseResult<void> => {
     if (!userAccess(user)[Permission.ViewReports]) {
       return new NotAllowedError()
     }
 
-    const jsonStreamGenerator = async function* () {
-      yield "["
-      let isFirst = true
+    return database.writable.transaction(async (transactionalDb) => {
+      async function* jsonStreamGenerator() {
+        yield "["
+        let isFirst = true
+        let totalCount = 0
 
-      const dataStream = reportStrategy(database.readonly, user, query)
+        const dataStream = reportStrategy(transactionalDb, user, query)
 
-      for await (const rows of dataStream) {
-        for (const row of rows) {
-          const chunk = isFirst ? JSON.stringify(row) : `,${JSON.stringify(row)}`
-          yield chunk
-          isFirst = false
+        for await (const chunk of dataStream) {
+          totalCount += extractCount(chunk)
+
+          for (const row of chunk) {
+            yield isFirst ? JSON.stringify(row) : `,${JSON.stringify(row)}`
+            isFirst = false
+          }
+        }
+
+        yield "]"
+
+        if (onStreamComplete) {
+          const callbackResult = await onStreamComplete(totalCount)
+          if (isError(callbackResult)) {
+            console.error("Stream completed, but callback returned an error:", callbackResult)
+          }
         }
       }
 
-      yield "]"
-    }
+      const stream = Readable.from(jsonStreamGenerator())
+      reply.code(OK).type("application/json").send(stream)
 
-    const stream = Readable.from(jsonStreamGenerator())
-
-    return reply.code(OK).type("application/json").send(stream)
+      await new Promise<void>((resolve, reject) => {
+        reply.raw.on("finish", resolve)
+        reply.raw.on("error", reject)
+      })
+    })
   }
 }
