@@ -1,5 +1,4 @@
 import { Card } from "components/Card"
-import Checkbox from "components/Checkbox/Checkbox"
 import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
 import { SyntheticEvent, useEffect, useRef, useState } from "react"
@@ -9,15 +8,16 @@ import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfigs } from "types/reports/Config"
 import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
 import { ActionBar } from "./ActionBar"
+import { Checkboxes, CheckboxesRef } from "./Checkboxes"
 import { DateRange, DateRangeRef } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 
 const FIELD_REQUIRED_ERROR = "This field is required"
-const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
 
 export const ReportSelectionFilter: React.FC = () => {
   const dateRangeRef = useRef<DateRangeRef>(null)
+  const checkboxesRef = useRef<CheckboxesRef>(null)
 
   const [filterValues, setFilterValues] = useState({
     reportType: undefined as ReportType | undefined,
@@ -42,17 +42,14 @@ export const ReportSelectionFilter: React.FC = () => {
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
   const [showSelectError, setShowSelectError] = useState<boolean>(false)
-  const [showCheckboxesError, setShowCheckboxesError] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (!filterValues.exceptions && !filterValues.triggers) {
-      setShowCheckboxesError(true)
-    } else {
-      setShowCheckboxesError(false)
-    }
-  }, [filterValues.exceptions, filterValues.triggers])
 
   const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
+
+  const clearResults = () => {
+    setRows([])
+    setCsvDownloadUrl(null)
+    setHasRun(false)
+  }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
     const reportType = event.currentTarget.value as ReportType
@@ -64,9 +61,7 @@ export const ReportSelectionFilter: React.FC = () => {
     }))
 
     setShowSelectError(false)
-    setRows([])
-    setCsvDownloadUrl(null)
-    setHasRun(false)
+    clearResults()
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -76,8 +71,6 @@ export const ReportSelectionFilter: React.FC = () => {
       ...prev,
       [target.id]: target.checked
     }))
-
-    setHasRun(false)
   }
 
   const handleDownload = async () => {
@@ -87,7 +80,13 @@ export const ReportSelectionFilter: React.FC = () => {
 
     const isDateRangeValid = dateRangeRef.current?.validateRange()
 
-    if (!filterValues.reportType || !config || !isDateRangeValid || showCheckboxesError) {
+    if (!filterValues.reportType || !config || !isDateRangeValid) {
+      return
+    }
+
+    const areCheckboxesValid = checkboxesRef.current?.validate()
+
+    if (filterValues.reportType === "exceptions" && !areCheckboxesValid) {
       return
     }
 
@@ -126,9 +125,7 @@ export const ReportSelectionFilter: React.FC = () => {
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault()
 
-    setRows([])
-    setCsvDownloadUrl(null)
-    setHasRun(false)
+    clearResults()
 
     setFilterValues({
       reportType: undefined,
@@ -146,6 +143,10 @@ export const ReportSelectionFilter: React.FC = () => {
       }
     }
   }, [csvDownloadUrl])
+
+  useEffect(() => {
+    clearResults()
+  }, [filterValues])
 
   return (
     <>
@@ -188,7 +189,6 @@ export const ReportSelectionFilter: React.FC = () => {
               <DateRange
                 setDateFromString={handleSetDateFrom}
                 setDateToString={handleSetDateTo}
-                setHasRun={setHasRun}
                 dateFromString={filterValues.dateFrom}
                 dateToString={filterValues.dateTo}
                 ref={dateRangeRef}
@@ -196,33 +196,12 @@ export const ReportSelectionFilter: React.FC = () => {
             </div>
             <div id={"include-section"} className="include-section-wrapper">
               {filterValues.reportType === "exceptions" && (
-                <>
-                  <h2 className={"govuk-heading-m"}>{"Include"}</h2>
-                  <FormGroup showError={showCheckboxesError}>
-                    <label className="govuk-body" htmlFor={"checkboxes-container"}>
-                      {"Select an option"}
-                    </label>
-                    {showCheckboxesError ? (
-                      <p className="govuk-error-message">
-                        <span className="govuk-visually-hidden">{"Error:"}</span> {AT_LEAST_ONE_CHECKBOX_REQUIRED}
-                      </p>
-                    ) : null}
-                    <div id={"checkboxes-container"} className="checkboxes-wrapper">
-                      <Checkbox
-                        label={"Triggers"}
-                        checked={filterValues.triggers}
-                        id={"triggers"}
-                        onChange={handleCheckbox}
-                      />
-                      <Checkbox
-                        label={"Exceptions"}
-                        checked={filterValues.exceptions}
-                        id={"exceptions"}
-                        onChange={handleCheckbox}
-                      />
-                    </div>
-                  </FormGroup>
-                </>
+                <Checkboxes
+                  handleChange={handleCheckbox}
+                  triggers={filterValues.triggers}
+                  exceptions={filterValues.exceptions}
+                  ref={checkboxesRef}
+                />
               )}
             </div>
           </fieldset>

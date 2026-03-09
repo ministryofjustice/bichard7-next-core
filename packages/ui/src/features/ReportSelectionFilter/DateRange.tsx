@@ -9,9 +9,8 @@ const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
 const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
 
 interface DateRangeProps {
-  setDateFromString: React.Dispatch<React.SetStateAction<string>>
-  setDateToString: React.Dispatch<React.SetStateAction<string>>
-  setHasRun: React.Dispatch<React.SetStateAction<boolean>>
+  setDateFromString: (value: string) => void
+  setDateToString: (value: string) => void
   dateFromString: string
   dateToString: string
 }
@@ -21,7 +20,7 @@ export interface DateRangeRef {
 }
 
 export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
-  ({ setDateFromString, setDateToString, setHasRun, dateFromString, dateToString }, ref) => {
+  ({ setDateFromString, setDateToString, dateFromString, dateToString }, ref) => {
     const [thirtyOneDaysAgo] = useState<Date>(subDays(startOfToday(), 31))
     const [showDateFromError, setShowDateFromError] = useState<boolean>(false)
     const [showDateToError, setShowDateToError] = useState<boolean>(false)
@@ -94,7 +93,6 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
     const onDateFromChange = (value: string) => {
       setDateFromString(value)
       setShowDateFromError(false)
-      setHasRun(false)
 
       const newDateFrom = new Date(value)
       const dateTo = new Date(dateToString)
@@ -107,7 +105,6 @@ export const DateRange = forwardRef<DateRangeRef, DateRangeProps>(
     const onDateToChange = (value: string) => {
       setDateToString(value)
       setShowDateToError(false)
-      setHasRun(false)
 
       const newDateTo = new Date(value)
       const dateFrom = new Date(dateFromString)
