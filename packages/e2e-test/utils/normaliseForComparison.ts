@@ -7,21 +7,15 @@ import type {
 
 const dropUndefinedFields = (obj: Record<string, unknown>) => JSON.parse(JSON.stringify(obj))
 
-export const mormaliseForComparison = (
-  data: Record<string, unknown> | undefined
-): Record<string, unknown> | undefined => {
+const normaliseForComparison = (data: Record<string, unknown> | undefined): Record<string, unknown> | undefined => {
   if (!data) {
     return undefined
   }
 
   const result = { ...data }
 
-  if ("bailConditions" in result && Array.isArray(result.bailConditions)) {
-    result.bailConditions = result.bailConditions.map((bc) => bc.toLowerCase().replace(/\s/g, "")).join("")
-  }
-
-  if (typeof result.checkName === "string") {
-    result.checkName = result.checkName.toLowerCase()
+  if (result.bailConditions && Array.isArray(result.bailConditions)) {
+    result.bailConditions = result.bailConditions.map((c) => c.toLowerCase().replace(/\s+/g, ""))
   }
 
   if ("defendant" in result) {
@@ -36,20 +30,24 @@ export const mormaliseForComparison = (
   if ("offences" in result && Array.isArray(result.offences)) {
     result.offences = result.offences.map((offence) => {
       offence.offenceId = "__STRIPPED_ID__"
-    })
 
-    const offences = result.offences as Offence[]
-    if ("disposalResults" in offences && Array.isArray(offences.disposalResults)) {
-      const disposalResults = offences.disposalResults as DisposalResult[]
-      disposalResults.map((d) => (d.disposalText = d.disposalText?.toLowerCase()))
-    }
+      const offences = result.offences as Offence[]
+      if ("disposalResults" in offences && Array.isArray(offences.disposalResults)) {
+        const disposalResults = offences.disposalResults as DisposalResult[]
+        disposalResults.forEach((d) => (d.disposalText = d.disposalText?.toLowerCase()))
+      }
+
+      return offence
+    })
   }
 
   if ("additionalArrestOffences" in result && Array.isArray(result.additionalArrestOffences)) {
     const additionalArrestOffences = result.additionalArrestOffences as AdditionalArrestOffences[]
 
     result.additionalArrestOffences = additionalArrestOffences.map((additionalArrestOffence) => {
-      additionalArrestOffence.additionalOffences.map((offence) => offence.locationText?.locationText.toLowerCase())
+      return additionalArrestOffence.additionalOffences.map((offence) =>
+        offence.locationText?.locationText.toLowerCase()
+      )
     })
   }
 
@@ -58,3 +56,5 @@ export const mormaliseForComparison = (
 
   return dropUndefinedFields(result)
 }
+
+export default normaliseForComparison

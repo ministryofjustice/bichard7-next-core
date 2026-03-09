@@ -2,7 +2,7 @@ import expect from "expect"
 import type { LedsBichard } from "../../types/LedsMock"
 import type { Operation } from "../converters/convertPncToLeds"
 import convertPncToLeds from "../converters/convertPncToLeds"
-import { mormaliseForComparison } from "../mormaliseForComparison"
+import normaliseForComparison from "../normaliseForComparison"
 import { delay } from "../puppeteer-utils"
 import type { RequestResponseMock } from "./MockServer"
 
@@ -41,7 +41,7 @@ const verifyRequests = async (bichard: LedsBichard) => {
       const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
       const serverMockRequest = serverMock.request?.[0]?.body
 
-      expect(mormaliseForComparison(serverMockRequest)).toEqual(mormaliseForComparison(localMockRequest))
+      expect(normaliseForComparison(serverMockRequest)).toEqual(normaliseForComparison(localMockRequest))
     }
   })
 }

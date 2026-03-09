@@ -54,7 +54,7 @@ export const mapOffences = (
     disposalResults: offence.disposals.map((disposal) => ({
       disposalCode: Number(disposal.type),
       disposalDuration: parseDisposalDuration(disposal.qtyDuration),
-      disposalFine: { amount: Number(disposal.qtyMonetaryValue) || 0 },
+      disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
       disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
       disposalQualifiers: disposal.qualifiers
         .match(/.{1,2}/g)
