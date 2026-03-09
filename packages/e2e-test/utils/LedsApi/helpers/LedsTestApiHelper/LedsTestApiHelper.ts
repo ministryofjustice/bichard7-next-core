@@ -3,6 +3,7 @@ import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryRes
 import type LedsAuthentication from "@moj-bichard7/core/types/leds/LedsAuthentication"
 import type { RemandHeadline } from "../../../../types/LedsTestApiHelper/ArrestSummariesResponse"
 import type { NonEmptyCourtCaseArray } from "../../../../types/LedsTestApiHelper/CourtCase"
+import type { DisposalEntry } from "../../../../types/LedsTestApiHelper/DisposalHistoryResponse"
 import type PersonDetails from "../../../../types/LedsTestApiHelper/PersonDetails"
 import type RequestOptions from "../../../../types/LedsTestApiHelper/RequestOptions"
 import { isError } from "../../../isError"
@@ -89,8 +90,10 @@ export default class LedsTestApiHelper {
     return findDisposalsByAsn(requestOptions, this.arrestSummonsNumber)
   }
 
-  async fetchDisposalHistory() {
+  async fetchDisposals(): Promise<DisposalEntry[]> {
     const requestOptions = await this.createRequestOptions(this.person)
-    return fetchDisposalHistory(requestOptions, this.person)
+    const disposals = (await fetchDisposalHistory(requestOptions, this.person)).entries
+
+    return disposals
   }
 }
