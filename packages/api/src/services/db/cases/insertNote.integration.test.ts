@@ -28,7 +28,6 @@ describe("createNote", () => {
     const userId = "testUser"
 
     const result = await insertNote(testDatabaseGateway.writable, caseObj.errorId, testNote, userId)
-    console.log(result)
 
     expect(isError(result)).toBe(false)
     expect(result).toBe(true)
