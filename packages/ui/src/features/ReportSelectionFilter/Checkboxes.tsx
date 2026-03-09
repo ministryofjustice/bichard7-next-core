@@ -46,7 +46,8 @@ export const Checkboxes = forwardRef<CheckboxesRef, CheckboxesProps>(({ handleCh
         </label>
         {showCheckboxesError ? (
           <p className="govuk-error-message">
-            <span className="govuk-visually-hidden">{"Error:"}</span> {AT_LEAST_ONE_CHECKBOX_REQUIRED}
+            <span className="govuk-visually-hidden">{"Error:"}</span>
+            {AT_LEAST_ONE_CHECKBOX_REQUIRED}
           </p>
         ) : null}
         <div id={"checkboxes-container"} className="checkboxes-wrapper">
