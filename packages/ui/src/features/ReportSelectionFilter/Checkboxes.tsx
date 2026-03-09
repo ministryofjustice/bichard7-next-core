@@ -1,8 +1,7 @@
 import Checkbox from "components/Checkbox/Checkbox"
 import { FormGroup } from "components/FormGroup"
 import { forwardRef, SyntheticEvent, useEffect, useImperativeHandle, useState } from "react"
-
-const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
+import { AT_LEAST_ONE_CHECKBOX_REQUIRED } from "./ValidationMessages"
 
 interface CheckboxesProps {
   handleChange: (event: SyntheticEvent<HTMLInputElement>) => void

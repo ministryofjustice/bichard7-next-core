@@ -3,8 +3,7 @@ import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
 import { forwardRef, SyntheticEvent, useEffect, useImperativeHandle, useState } from "react"
 import { REPORT_TYPE_MAP } from "types/reports/ReportType"
-
-const FIELD_REQUIRED_ERROR = "This field is required"
+import { FIELD_REQUIRED_ERROR } from "./ValidationMessages"
 
 interface SelectReportDropdownProps {
   handleChange: (event: SyntheticEvent<HTMLSelectElement>) => void
@@ -46,7 +45,8 @@ export const SelectReportDropdown = forwardRef<SelectReportDropdownRef, SelectRe
           </label>
           {showSelectError ? (
             <p className="govuk-error-message">
-              <span className="govuk-visually-hidden">{"Error:"}</span> {FIELD_REQUIRED_ERROR}
+              <span className="govuk-visually-hidden">{"Error:"}</span>
+              {FIELD_REQUIRED_ERROR}
             </p>
           ) : null}
           <Select

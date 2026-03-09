@@ -1,12 +1,13 @@
 import DateInput from "components/CustomDateInput/DateInput"
 import { isAfter, isBefore, isFuture, startOfToday, subDays } from "date-fns"
 import { forwardRef, useImperativeHandle, useState } from "react"
-
-const FIELD_REQUIRED_ERROR = "This field is required"
-const DATE_CANNOT_BE_IN_THE_FUTURE = "Date cannot be in the future"
-const DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS = "Date should be within the last 31 days"
-const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
-const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
+import {
+  DATE_CANNOT_BE_AFTER_DATE_TO,
+  DATE_CANNOT_BE_BEFORE_DATE_FROM,
+  DATE_CANNOT_BE_IN_THE_FUTURE,
+  DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS,
+  FIELD_REQUIRED_ERROR
+} from "./ValidationMessages"
 
 interface DateRangeProps {
   setDateFromString: (value: string) => void
