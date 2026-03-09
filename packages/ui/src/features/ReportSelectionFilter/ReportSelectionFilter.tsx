@@ -55,10 +55,10 @@ export const ReportSelectionFilter: React.FC = () => {
   const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-    console.log(event)
+    const reportType = event.currentTarget.value as ReportType
     setFilterValues((prev) => ({
       ...prev,
-      reportType: event.currentTarget.value as ReportType,
+      reportType: reportType,
       triggers: true,
       exceptions: true
     }))
