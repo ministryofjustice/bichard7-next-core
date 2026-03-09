@@ -9,12 +9,12 @@ const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
 const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
 
 export const validateDateField = (dateString: string): string | null => {
+  const date = new Date(dateString)
+  const thirtyOneDaysAgo = subDays(startOfToday(), 31)
+
   if (!dateString) {
     return FIELD_REQUIRED_ERROR
   }
-
-  const date = new Date(dateString)
-  const thirtyOneDaysAgo = subDays(startOfToday(), 31)
 
   if (isBefore(date, thirtyOneDaysAgo)) {
     return DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS
@@ -52,16 +52,12 @@ export const validateCheckboxes = (
   reportType: ReportType | undefined,
   triggers: boolean,
   exceptions: boolean
-): Record<string, string | null> => {
-  const errors: Record<string, string | null> = {
-    checkboxes: null
-  }
-
+): string | null => {
   if (reportType === "exceptions" && !triggers && !exceptions) {
-    errors.checkboxes = AT_LEAST_ONE_CHECKBOX_REQUIRED
+    return AT_LEAST_ONE_CHECKBOX_REQUIRED
   }
 
-  return errors
+  return null
 }
 
 export const validateSelectReport = (reportType: ReportType | undefined): Record<string, string | null> => {

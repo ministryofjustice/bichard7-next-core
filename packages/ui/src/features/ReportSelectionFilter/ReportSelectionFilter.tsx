@@ -69,9 +69,9 @@ export const ReportSelectionFilter: React.FC = () => {
 
     setFilterValues((prev) => {
       const next = { ...prev, [id]: checked }
-      const reportVals = validateCheckboxes(next.reportType, next.triggers, next.exceptions)
+      const checkboxesValidation = validateCheckboxes(next.reportType, next.triggers, next.exceptions)
 
-      setErrors((errs) => ({ ...errs, checkboxes: reportVals.checkboxes }))
+      setErrors((errs) => ({ ...errs, checkboxes: checkboxesValidation }))
       return next
     })
   }
@@ -107,7 +107,7 @@ export const ReportSelectionFilter: React.FC = () => {
       dateFrom: rangeValidation.fromError,
       dateTo: rangeValidation.toError,
       reportType: selectReportValidation.reportType,
-      checkboxes: checkboxesValidation.checkboxes
+      checkboxes: checkboxesValidation
     }
 
     setErrors(newErrors)
