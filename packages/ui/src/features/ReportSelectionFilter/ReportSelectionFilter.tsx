@@ -19,11 +19,21 @@ const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
 export const ReportSelectionFilter: React.FC = () => {
   const dateRangeRef = useRef<DateRangeRef>(null)
 
-  const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
-  const [dateToString, setDateToString] = useState<string>("")
-  const [dateFromString, setDateFromString] = useState<string>("")
-  const [exceptions, setExceptions] = useState<boolean>(true)
-  const [triggers, setTriggers] = useState<boolean>(true)
+  const [filterValues, setFilterValues] = useState({
+    reportType: undefined as ReportType | undefined,
+    dateTo: "",
+    dateFrom: "",
+    exceptions: true,
+    triggers: true
+  })
+
+  const handleSetDateFrom = (date: string): void => {
+    setFilterValues((prev) => ({ ...prev, dateFrom: date }))
+  }
+
+  const handleSetDateTo = (date: string): void => {
+    setFilterValues((prev) => ({ ...prev, dateTo: date }))
+  }
 
   const [hasRun, setHasRun] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
@@ -35,19 +45,24 @@ export const ReportSelectionFilter: React.FC = () => {
   const [showCheckboxesError, setShowCheckboxesError] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!exceptions && !triggers) {
+    if (!filterValues.exceptions && !filterValues.triggers) {
       setShowCheckboxesError(true)
     } else {
       setShowCheckboxesError(false)
     }
-  }, [exceptions, triggers])
+  }, [filterValues.exceptions, filterValues.triggers])
 
-  const config = reportType ? ReportConfigs[reportType] : null
+  const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-    setReportType(event.currentTarget.value as ReportType)
-    setTriggers(true)
-    setExceptions(true)
+    console.log(event)
+    setFilterValues((prev) => ({
+      ...prev,
+      reportType: event.currentTarget.value as ReportType,
+      triggers: true,
+      exceptions: true
+    }))
+
     setShowSelectError(false)
     setRows([])
     setCsvDownloadUrl(null)
@@ -57,25 +72,22 @@ export const ReportSelectionFilter: React.FC = () => {
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const target = event.currentTarget
 
-    if (target.id === "exceptions") {
-      setExceptions(target.checked)
-    }
-
-    if (target.id === "triggers") {
-      setTriggers(target.checked)
-    }
+    setFilterValues((prev) => ({
+      ...prev,
+      [target.id]: target.checked
+    }))
 
     setHasRun(false)
   }
 
   const handleDownload = async () => {
-    if (!reportType || !config) {
+    if (!filterValues.reportType || !config) {
       setShowSelectError(true)
     }
 
     const isDateRangeValid = dateRangeRef.current?.validateRange()
 
-    if (!reportType || !config || !isDateRangeValid || showCheckboxesError) {
+    if (!filterValues.reportType || !config || !isDateRangeValid || showCheckboxesError) {
       return
     }
 
@@ -86,18 +98,24 @@ export const ReportSelectionFilter: React.FC = () => {
 
     try {
       const urlQuery = new URLSearchParams({
-        fromDate: dateFromString,
-        toDate: dateToString,
-        exceptions: String(exceptions),
-        triggers: String(triggers)
+        fromDate: filterValues.dateFrom,
+        toDate: filterValues.dateTo,
+        exceptions: String(filterValues.exceptions),
+        triggers: String(filterValues.triggers)
       })
 
-      const parsedData = await downloadReport(reportType, urlQuery)
-      const csvBlob = await createReportCsv(parsedData, config, reportType, dateFromString, dateToString)
+      const parsedData = await downloadReport(filterValues.reportType, urlQuery)
+      const csvBlob = await createReportCsv(
+        parsedData,
+        config,
+        filterValues.reportType,
+        filterValues.dateFrom,
+        filterValues.dateTo
+      )
 
       setRows(parsedData)
       setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
-      setCsvReportFilename(csvFilename(reportType, urlQuery))
+      setCsvReportFilename(csvFilename(filterValues.reportType, urlQuery))
     } catch (error) {
       console.error("Fetch failed:", error)
     } finally {
@@ -108,15 +126,17 @@ export const ReportSelectionFilter: React.FC = () => {
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault()
 
-    setReportType(undefined)
     setRows([])
     setCsvDownloadUrl(null)
     setHasRun(false)
 
-    setDateToString("")
-    setDateFromString("")
-    setTriggers(true)
-    setExceptions(true)
+    setFilterValues({
+      reportType: undefined,
+      dateTo: "",
+      dateFrom: "",
+      exceptions: true,
+      triggers: true
+    })
   }
 
   useEffect(() => {
@@ -150,7 +170,7 @@ export const ReportSelectionFilter: React.FC = () => {
                   className="select-report-input"
                   onChange={handleSelectChange}
                   aria-describedby="report-type-label"
-                  value={reportType || ""}
+                  value={filterValues.reportType || ""}
                   showError={showSelectError}
                 >
                   <option disabled={true} value={""}>
@@ -166,16 +186,16 @@ export const ReportSelectionFilter: React.FC = () => {
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
               <DateRange
-                setDateFromString={setDateFromString}
-                setDateToString={setDateToString}
+                setDateFromString={handleSetDateFrom}
+                setDateToString={handleSetDateTo}
                 setHasRun={setHasRun}
-                dateFromString={dateFromString}
-                dateToString={dateToString}
+                dateFromString={filterValues.dateFrom}
+                dateToString={filterValues.dateTo}
                 ref={dateRangeRef}
               />
             </div>
             <div id={"include-section"} className="include-section-wrapper">
-              {reportType === "exceptions" && (
+              {filterValues.reportType === "exceptions" && (
                 <>
                   <h2 className={"govuk-heading-m"}>{"Include"}</h2>
                   <FormGroup showError={showCheckboxesError}>
@@ -188,8 +208,18 @@ export const ReportSelectionFilter: React.FC = () => {
                       </p>
                     ) : null}
                     <div id={"checkboxes-container"} className="checkboxes-wrapper">
-                      <Checkbox label={"Triggers"} checked={triggers} id={"triggers"} onChange={handleCheckbox} />
-                      <Checkbox label={"Exceptions"} checked={exceptions} id={"exceptions"} onChange={handleCheckbox} />
+                      <Checkbox
+                        label={"Triggers"}
+                        checked={filterValues.triggers}
+                        id={"triggers"}
+                        onChange={handleCheckbox}
+                      />
+                      <Checkbox
+                        label={"Exceptions"}
+                        checked={filterValues.exceptions}
+                        id={"exceptions"}
+                        onChange={handleCheckbox}
+                      />
                     </div>
                   </FormGroup>
                 </>
@@ -207,7 +237,13 @@ export const ReportSelectionFilter: React.FC = () => {
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <ReportResults reportType={reportType} rows={rows} config={config} hasRun={hasRun} isStreaming={isStreaming} />
+      <ReportResults
+        reportType={filterValues.reportType}
+        rows={rows}
+        config={config}
+        hasRun={hasRun}
+        isStreaming={isStreaming}
+      />
     </>
   )
 }
