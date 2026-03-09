@@ -17,6 +17,12 @@ export const ReportSelectionFilter: React.FC = () => {
   const checkboxesRef = useRef<CheckboxesRef>(null)
   const selectReportDropdownRef = useRef<SelectReportDropdownRef>(null)
 
+  const [hasRun, setHasRun] = useState(false)
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [rows, setRows] = useState<Record<string, unknown>[]>([])
+  const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
+  const [csvReportFilename, setCsvReportFilename] = useState<string>("")
+
   const [filterValues, setFilterValues] = useState({
     reportType: undefined as ReportType | undefined,
     dateTo: "",
@@ -25,26 +31,14 @@ export const ReportSelectionFilter: React.FC = () => {
     triggers: true
   })
 
+  const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
+
   const handleSetDateFrom = (date: string): void => {
     setFilterValues((prev) => ({ ...prev, dateFrom: date }))
   }
 
   const handleSetDateTo = (date: string): void => {
     setFilterValues((prev) => ({ ...prev, dateTo: date }))
-  }
-
-  const [hasRun, setHasRun] = useState(false)
-  const [isStreaming, setIsStreaming] = useState(false)
-  const [rows, setRows] = useState<Record<string, unknown>[]>([])
-  const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
-  const [csvReportFilename, setCsvReportFilename] = useState<string>("")
-
-  const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
-
-  const clearResults = () => {
-    setRows([])
-    setCsvDownloadUrl(null)
-    setHasRun(false)
   }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
@@ -55,17 +49,32 @@ export const ReportSelectionFilter: React.FC = () => {
       triggers: true,
       exceptions: true
     }))
-
-    clearResults()
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const target = event.currentTarget
-
     setFilterValues((prev) => ({
       ...prev,
       [target.id]: target.checked
     }))
+  }
+
+  const clearResults = () => {
+    setRows([])
+    setCsvDownloadUrl(null)
+    setHasRun(false)
+  }
+
+  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    clearResults()
+    setFilterValues({
+      reportType: undefined,
+      dateTo: "",
+      dateFrom: "",
+      exceptions: true,
+      triggers: true
+    })
   }
 
   const handleDownload = async () => {
@@ -107,20 +116,6 @@ export const ReportSelectionFilter: React.FC = () => {
     } finally {
       setIsStreaming(false)
     }
-  }
-
-  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-
-    clearResults()
-
-    setFilterValues({
-      reportType: undefined,
-      dateTo: "",
-      dateFrom: "",
-      exceptions: true,
-      triggers: true
-    })
   }
 
   useEffect(() => {
