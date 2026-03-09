@@ -1,5 +1,4 @@
 import { ActionBar } from "features/ReportSelectionFilter/ActionBar"
-import React from "react"
 import { MockNextRouter } from "../../support/MockNextRouter"
 
 describe("ActionBar", () => {
@@ -15,7 +14,7 @@ describe("ActionBar", () => {
     )
     cy.get('[role="toolbar"]').should("exist")
     cy.contains("Download CSV").should("not.exist")
-    cy.get("#run-report").should("be.visible").and("contain.text", "Run Report")
+    cy.get("#run-report").should("be.visible").and("contain.text", "Run report")
     cy.get("#clear-filters").should("be.visible").and("contain.text", "Clear filters")
   })
 
@@ -50,7 +49,7 @@ describe("ActionBar", () => {
     cy.contains("Download CSV").should("not.exist")
   })
 
-  it("calls handleDownload when the Run Report button is clicked", () => {
+  it("calls handleDownload when the Run report button is clicked", () => {
     cy.mount(
       <ActionBar
         csvDownloadUrl={null}

@@ -37,7 +37,7 @@ type Pagination = {
   limit: number
 }
 
-type Entry = {
+export type DisposalEntry = {
   id: string
   court?: Court
   convictionDate: string
@@ -51,7 +51,7 @@ type Entry = {
 
 type DisposalHistoryResponse = {
   pagination: Pagination
-  entries: Entry[]
+  entries: DisposalEntry[]
 }
 
 export default DisposalHistoryResponse
