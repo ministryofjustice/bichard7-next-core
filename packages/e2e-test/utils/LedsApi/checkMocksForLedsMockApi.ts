@@ -50,9 +50,6 @@ const verifyRequests = async (bichard: LedsBichard) => {
       const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
       const serverMockRequest = serverMock.request?.[0]?.body
 
-      console.log("MY_SERVER ======>", JSON.stringify(serverMockRequest, null, 2))
-      console.log("MY_LOCAL ======>", JSON.stringify(localMockRequest, null, 2))
-
       expect(normaliseForComparison(serverMockRequest)).toEqual(normaliseForComparison(localMockRequest))
     }
   })
