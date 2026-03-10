@@ -28,6 +28,6 @@ export const convertPncJsonToLedsSubsequentDisposalRequest = (
     },
     appearanceDate,
     reasonForAppearance: reasonForAppearance[pncJson.subsequentUpdate.hearingType],
-    offences: mapOffences(pncJson.offences)
+    offences: mapOffences(pncJson.offences, false)
   }
 }

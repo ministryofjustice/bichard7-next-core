@@ -1,12 +1,14 @@
 import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import mapCourt from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/mapCourt"
 import { parseDisposalDuration } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/parseDisposalDuration"
+import shouldExcludePleaAndAdjudication from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/shouldExcludePleaAndAdjudication"
 import { toTitleCase } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/toTitleCase"
-import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
+import type { AddDisposalRequest, CarryForward } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type {
   AdditionalArrestOffences,
   Adjudication,
   Defendant,
+  DisposalResult,
   Offence,
   Plea
 } from "@moj-bichard7/core/types/leds/DisposalRequest"
@@ -29,7 +31,7 @@ const mapDefendant = (generatedPNCFilename: string): Defendant => {
   }
 }
 
-const mapCarryForward = (carryForward?: Crt | undefined) => {
+const mapCarryForward = (carryForward?: Crt): CarryForward | undefined => {
   if (!carryForward?.courtCode) {
     return undefined
   }
@@ -40,29 +42,44 @@ const mapCarryForward = (carryForward?: Crt | undefined) => {
   }
 }
 
+const mapDisposal = (disposal: Dis): DisposalResult => ({
+  disposalCode: Number(disposal.type),
+  disposalDuration: parseDisposalDuration(disposal.qtyDuration),
+  disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
+  disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
+  disposalQualifiers: disposal.qualifiers
+    .match(/.{1,2}/g)
+    ?.map((q) => q.trim())
+    .filter(Boolean),
+  disposalText: disposal.text || undefined
+})
+
 export const mapOffences = (
-  offences: (Cch & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[]
+  offences: (Cch & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[],
+  isCarriedForwardOrReferredToCourtCase: boolean
 ): Offence[] => {
-  return offences.map((offence) => ({
-    courtOffenceSequenceNumber: Number(offence.offenceSequenceNumber),
-    cjsOffenceCode: offence.cjsOffenceCode,
-    plea: toTitleCase(offence.plea) as Plea,
-    offenceTic: offence.offenceTICNumber ? Number(offence.offenceTICNumber) : undefined,
-    offenceId: randomUUID(),
-    dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
-    adjudication: toTitleCase(offence.adjudication) as Adjudication,
-    disposalResults: offence.disposals.map((disposal) => ({
-      disposalCode: Number(disposal.type),
-      disposalDuration: parseDisposalDuration(disposal.qtyDuration),
-      disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
-      disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
-      disposalQualifiers: disposal.qualifiers
-        .match(/.{1,2}/g)
-        ?.map((q) => q.trim())
-        .filter(Boolean),
-      disposalText: disposal.text || undefined
-    }))
-  }))
+  const mappedOffences = offences.map((offence) => {
+    const disposalResults = offence.disposals.map(mapDisposal)
+    const excludePleaAndAdjudication = shouldExcludePleaAndAdjudication(
+      disposalResults,
+      isCarriedForwardOrReferredToCourtCase
+    )
+    const plea = !excludePleaAndAdjudication ? (toTitleCase(offence.plea) as Plea) : undefined
+    const adjudication = !excludePleaAndAdjudication ? (toTitleCase(offence.adjudication) as Adjudication) : undefined
+
+    return {
+      courtOffenceSequenceNumber: Number(offence.offenceSequenceNumber),
+      cjsOffenceCode: offence.cjsOffenceCode,
+      plea,
+      adjudication,
+      dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
+      offenceTic: offence.offenceTICNumber ? Number(offence.offenceTICNumber) : undefined,
+      disposalResults,
+      offenceId: randomUUID()
+    }
+  })
+
+  return mappedOffences
 }
 
 const mapAdditionalArrestOffences = (
@@ -118,6 +135,7 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
   const additionalArrestOffences = pncJson.additionalOffences
     ? mapAdditionalArrestOffences(pncJson.additionalOffences)
     : undefined
+  const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
 
   return {
     ownerCode: pncJson.forceStationCode,
@@ -128,7 +146,7 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
     defendant: mapDefendant(pncJson.generatedPNCFilename),
     carryForward,
     ...referToCourtCase,
-    offences: mapOffences(pncJson.offences),
+    offences: mapOffences(pncJson.offences, isCarriedForwardOrReferredToCourtCase),
     additionalArrestOffences
   }
 }
