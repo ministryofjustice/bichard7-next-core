@@ -51,6 +51,7 @@ export type PncRemandJson = Fsc & Ids & Asr & Rem
 export type PncNormalDisposalJson = Fsc &
   Ids &
   Cou & { carryForward?: Crt } & { referToCourtCase?: Rcc } & UpdateOffences &
+  Asr &
   AdditionalOffences
 export type PncSubsequentDisposalJson = Fsc &
   Ids &

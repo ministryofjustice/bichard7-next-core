@@ -1,3 +1,4 @@
+import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import mapCourt from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/mapCourt"
 import { parseDisposalDuration } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/parseDisposalDuration"
@@ -86,46 +87,48 @@ export const mapOffences = (
 }
 
 const mapAdditionalArrestOffences = (
+  arrestSummonsNumber: string,
   additionalArrestOffences: Asr & {
     offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[]
-  }
+  },
+  isCarriedForwardOrReferredToCourtCase: boolean
 ): AdditionalArrestOffences[] => {
-  const additionalOffences = additionalArrestOffences.offences.map((offence) => ({
-    courtOffenceSequenceNumber: Number(offence.arrestOffenceNumber),
-    cjsOffenceCode: offence.cjsOffenceCode,
-    plea: toTitleCase(offence.plea) as Plea,
-    adjudication: toTitleCase(offence.adjudication) as Adjudication,
-    offenceDescription: offence.offenceDescription,
-    committedOnBail: offence.committedOnBail.toLowerCase() === "y",
-    locationFsCode: offence.offenceLocationFSCode,
-    locationText: { locationText: offence.locationOfOffence },
-    dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
-    offenceCode: {
-      offenceCodeType: "cjs" as const,
-      cjsOffenceCode: offence.cjsOffenceCode,
-      description: offence.offenceDescription
-    },
-    offenceTic: Number(offence.offenceTICNumber),
-    offenceStartDate: convertDate(offence.offenceStartDate),
-    offenceStartTime: offence.offenceStartTime ? convertTime(offence.offenceStartTime) : undefined,
-    offenceEndDate: offence.offenceEndDate ? convertDate(offence.offenceEndDate) : undefined,
-    offenceEndTime: offence.offenceEndTime ? convertTime(offence.offenceEndTime) : undefined,
-    disposalResults: offence.disposals.map((disposal) => ({
-      disposalCode: Number(disposal.type),
-      disposalDuration: parseDisposalDuration(disposal.qtyDuration),
-      disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
-      disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
-      disposalQualifiers: disposal.qualifiers.match(/.{1,2}/g)?.map((q) => q.trim()),
-      disposalText: disposal.text || undefined
-    }))
-  }))
+  const asn = convertAsnToLedsFormat(arrestSummonsNumber)
 
-  return [
-    {
-      asn: additionalArrestOffences.arrestSummonsNumber,
-      additionalOffences
+  const additionalOffences = additionalArrestOffences.offences.map((offence) => {
+    const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(offence.cjsOffenceCode)
+    const disposalResults = offence.disposals.map(mapDisposal)
+    const excludePleaAndAdjudication = shouldExcludePleaAndAdjudication(
+      disposalResults,
+      isCarriedForwardOrReferredToCourtCase
+    )
+
+    const plea = !excludePleaAndAdjudication ? (toTitleCase(offence.plea) as Plea) : undefined
+    const adjudication = !excludePleaAndAdjudication ? (toTitleCase(offence.adjudication) as Adjudication) : undefined
+
+    return {
+      courtOffenceSequenceNumber: Number(offence.arrestOffenceNumber),
+      offenceCode: {
+        offenceCodeType: "cjs" as const,
+        cjsOffenceCode: cjsOffenceCode
+      },
+      roleQualifiers: roleQualifier ? [roleQualifier] : undefined,
+      committedOnBail: offence.committedOnBail.toLowerCase() === "y",
+      plea,
+      adjudication,
+      dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
+      offenceTic: Number(offence.offenceTICNumber),
+      offenceStartDate: convertDate(offence.offenceStartDate),
+      offenceStartTime: offence.offenceStartTime ? convertTime(offence.offenceStartTime) : undefined,
+      offenceEndDate: offence.offenceEndDate ? convertDate(offence.offenceEndDate) : undefined,
+      offenceEndTime: offence.offenceEndTime ? convertTime(offence.offenceEndTime) : undefined,
+      disposalResults,
+      locationFsCode: offence.offenceLocationFSCode,
+      locationText: { locationText: offence.locationOfOffence }
     }
-  ]
+  })
+
+  return [{ asn, additionalOffences }]
 }
 
 export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposalJson): AddDisposalRequest => {
@@ -135,10 +138,14 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
         referToCourtCase: { reference: pncJson.referToCourtCase.ptiUrn }
       }
     : {}
-  const additionalArrestOffences = pncJson.additionalOffences
-    ? mapAdditionalArrestOffences(pncJson.additionalOffences)
-    : undefined
   const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
+  const additionalArrestOffences = pncJson.additionalOffences
+    ? mapAdditionalArrestOffences(
+        pncJson.arrestSummonsNumber,
+        pncJson.additionalOffences,
+        isCarriedForwardOrReferredToCourtCase
+      )
+    : undefined
 
   return {
     ownerCode: pncJson.forceStationCode,

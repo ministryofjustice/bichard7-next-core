@@ -42,6 +42,7 @@ const normaliseForComparison = (data: Record<string, unknown> | undefined): Reco
     additionalArrestOffences.map((additionalArrestOffence) => {
       return additionalArrestOffence.additionalOffences.map((offence) => {
         const offenceLocationText = offence.locationText
+
         if (offenceLocationText) {
           offenceLocationText.locationText = offence.locationText?.locationText
             ? offence.locationText?.locationText.toLowerCase()
