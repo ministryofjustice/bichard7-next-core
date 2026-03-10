@@ -20,7 +20,7 @@ describe("ActionBar", () => {
         reportOptions={mockReportOptions}
       />
     )
-    cy.get('[role="toolbar"]').should("exist")
+    cy.get('[role="group"]').should("exist")
     cy.contains("Download CSV").should("not.exist")
     cy.get("#run-report").should("be.visible").and("contain.text", "Run report")
     cy.get("#clear-filters").should("be.visible").and("contain.text", "Clear filters")
