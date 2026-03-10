@@ -1,8 +1,7 @@
 import { loginAndVisit } from "../../support/helpers"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-describe('Search', () => {
-
+describe("Search", () => {
   context("When the user is a supervisor", () => {
     before(() => {
       cy.task("clearUsers")
@@ -35,13 +34,18 @@ describe('Search', () => {
       loginAndVisit("Supervisor", "/bichard/audit/search")
     })
 
-    it("Should show search page", () => {
+    it("Should show search page with supervised users and visible triggers", () => {
       cy.findByText("Audit search").should("exist")
+
       cy.findByText("Resolved by").should("exist")
       cy.findByText("Supervisor User").should("exist")
       cy.findByText("username 01").should("exist")
       cy.findByText("username 02").should("exist")
       cy.findByText("username 03").should("exist")
+
+      cy.findByText("Trigger type").should("exist")
+      cy.findByText("TRPR0010").should("exist")
+      cy.findByText("TRPR0006").should("not.exist")
     })
   })
 
@@ -51,7 +55,7 @@ describe('Search', () => {
     })
 
     it("Should redirect to the case list", () => {
-      cy.location('pathname').should('eq', '/bichard')
+      cy.location("pathname").should("eq", "/bichard")
     })
   })
 })
