@@ -203,6 +203,7 @@ export const ReportSelectionFilter: React.FC = () => {
             handleDownload={handleDownload}
             csvReportFilename={csvReportFilename}
             hasRows={rows.length > 0}
+            reportOptions={{ reportType, fromDate: dateFromString, toDate: dateToString }}
           />
         </Card>
       </ReportSelectionFilterWrapper>

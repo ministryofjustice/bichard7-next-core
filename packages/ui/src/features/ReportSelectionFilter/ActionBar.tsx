@@ -2,6 +2,13 @@ import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import { SyntheticEvent } from "react"
 import { LinkStyleButton, StyledActionBar } from "./ActionBar.styles"
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+
+interface ReportOptions {
+  reportType?: ReportType
+  fromDate: string
+  toDate: string
+}
 
 interface ActionBarProps {
   csvDownloadUrl: string | null
@@ -9,6 +16,7 @@ interface ActionBarProps {
   csvReportFilename: string | null
   handleDownload: () => void
   clearFilters: (event: SyntheticEvent<HTMLButtonElement>) => void
+  reportOptions: ReportOptions
 }
 
 export const ActionBar: React.FC<ActionBarProps> = ({
@@ -16,10 +24,30 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   csvReportFilename,
   hasRows,
   handleDownload,
-  clearFilters
+  clearFilters,
+  reportOptions
 }) => {
+  const onCsvDownload = async () => {
+    if (!reportOptions.reportType) {
+      console.log("Report type not found.")
+      return
+    }
+
+    const query = new URLSearchParams({
+      csvDownload: "true",
+      reportType: reportOptions.reportType,
+      fromDate: reportOptions.fromDate,
+      toDate: reportOptions.toDate
+    })
+    const response = await fetch(`/bichard/api/reports/log?${query}`)
+
+    if (!response.ok) {
+      console.error("Failed to Log CSV Download")
+    }
+  }
+
   return (
-    <StyledActionBar role="toolbar" aria-label="Report actions">
+    <StyledActionBar role="group" aria-label="Report actions">
       {csvDownloadUrl && hasRows ? (
         <LinkButton
           href={csvDownloadUrl}
@@ -27,17 +55,14 @@ export const ActionBar: React.FC<ActionBarProps> = ({
           overrideLink={true}
           className={"left-aligned"}
           aria-label={`Download report as CSV: ${csvReportFilename}`}
+          aria-live="polite"
+          onClick={onCsvDownload}
         >
           {"Download CSV"}
         </LinkButton>
       ) : null}
 
-      <Button
-        id={"run-report"}
-        className="run-report-button"
-        onClick={handleDownload}
-        aria-label="Run report based on selected filters"
-      >
+      <Button id={"run-report"} className="run-report-button" onClick={handleDownload} aria-live="polite">
         {"Run report"}
       </Button>
 
