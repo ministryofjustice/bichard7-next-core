@@ -13,6 +13,7 @@ import Layout from "../../components/Layout"
 import { withAuthentication, withMultipleServerSideProps } from "../../middleware"
 import { userToDisplayFullUserDto } from "../../services/dto/userDto"
 import AuthenticationServerSidePropsContext from "../../types/AuthenticationServerSidePropsContext"
+import { isProduction } from "config"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -26,7 +27,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
     }
 
-    if (process.env.NODE_ENV === "production" || !userAccess(currentUser)[Permission.ViewReports]) {
+    if (isProduction || !userAccess(currentUser)[Permission.ViewReports]) {
       return redirectTo("/")
     }
 
@@ -57,7 +58,7 @@ function ReportSelectionPage(props: Readonly<Props>) {
         }}
         canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
       >
-        <h1 hidden={true}>{"Search reports"}</h1>
+        <h1 className={"govuk-visually-hidden"}>{"Reports"}</h1>
         <ReportSelectionFilter />
       </Layout>
     </CurrentUserContext.Provider>
