@@ -7,17 +7,26 @@ import { delay } from "../puppeteer-utils"
 import type { RequestResponseMock } from "./MockServer"
 
 const verifyRequests = async (bichard: LedsBichard) => {
+  const MAX_RETRIES = 8
+  const DELAY_SECONDS = 3
+
   let serverMocks: RequestResponseMock[] | undefined = undefined
-  for (let index = 0; index < 4; index++) {
-    serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
-    if (!serverMocks.every((mock) => mock.request)) {
-      await delay(3)
-      continue
+
+  for (let index = 0; index < MAX_RETRIES; index++) {
+    const fetched = await bichard.policeApi.mockServerClient.fetchMocks()
+    const isReady = fetched.length > 0 && fetched.every((mock) => mock.request && mock.request.length > 0)
+
+    if (isReady) {
+      serverMocks = fetched
+      break
     }
+
+    console.log(`Attempt ${index + 1}: mocks not ready yet, retrying..`)
+    await delay(DELAY_SECONDS)
   }
 
-  if (!serverMocks) {
-    throw Error("Couldn't fetch mocks.")
+  if (!serverMocks || serverMocks.length === 0) {
+    throw Error(`Couldn't fetch mocks after ${MAX_RETRIES} attempts.`)
   }
 
   const localMocks = bichard.policeApi.mocks
