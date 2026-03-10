@@ -15,7 +15,7 @@ const normaliseForComparison = (data: Record<string, unknown> | undefined): Reco
   const result = { ...data }
 
   if (result.bailConditions && Array.isArray(result.bailConditions)) {
-    result.bailConditions = result.bailConditions.map((c) => c.toLowerCase().replace(/\s+/g, ""))
+    result.bailConditions = result.bailConditions.map((c) => c.toLowerCase().replace(/\s+/g, "")).join("")
   }
 
   if ("defendant" in result) {
