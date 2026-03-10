@@ -3,7 +3,7 @@ import bannerFirstShownDate from "utils/bannerFirstShownDate"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
-const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
+export const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
 
 export const MAX_NOTE_LENGTH = 2000
 export const MAX_FEEDBACK_LENGTH = 2000
