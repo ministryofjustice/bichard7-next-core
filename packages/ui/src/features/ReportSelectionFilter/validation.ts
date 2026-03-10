@@ -5,8 +5,8 @@ const FIELD_REQUIRED_ERROR = "This field is required"
 const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
 const DATE_CANNOT_BE_IN_THE_FUTURE = "Date cannot be in the future"
 const DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS = "Date should be within the last 31 days"
-const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
-const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
+export const DATE_CANNOT_BE_AFTER_DATE_TO = "Date cannot be after 'Date to'"
+export const DATE_CANNOT_BE_BEFORE_DATE_FROM = "Date cannot be before 'Date from'"
 
 export const validateDateField = (dateString: string): string | null => {
   const date = new Date(dateString)

@@ -12,6 +12,8 @@ import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { validateCheckboxes, validateDateRange, validateSelectReport } from "./validation"
+import { DATE_CANNOT_BE_AFTER_DATE_TO } from "./validation"
+import { DATE_CANNOT_BE_BEFORE_DATE_FROM } from "./validation"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [hasRun, setHasRun] = useState(false)
@@ -29,8 +31,18 @@ export const ReportSelectionFilter: React.FC = () => {
   })
   const [errors, setErrors] = useState<Record<string, string | null>>({})
 
+  const clearParallelError = (field: string) => {
+    if (errors[field] === DATE_CANNOT_BE_BEFORE_DATE_FROM) {
+      setErrors((prev) => ({ ...prev, ["dateFrom"]: null }))
+    }
+    if (errors[field] === DATE_CANNOT_BE_AFTER_DATE_TO) {
+      setErrors((prev) => ({ ...prev, ["dateTo"]: null }))
+    }
+  }
+
   const clearErrors = (field: string) => {
     if (errors[field]) {
+      clearParallelError(field)
       setErrors((prev) => ({ ...prev, [field]: null }))
     }
   }
@@ -169,10 +181,10 @@ export const ReportSelectionFilter: React.FC = () => {
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
               <DateRange
-                setDateFromString={handleSetDateFrom}
-                setDateToString={handleSetDateTo}
                 dateFromString={filterValues.dateFrom}
                 dateToString={filterValues.dateTo}
+                setDateFromString={handleSetDateFrom}
+                setDateToString={handleSetDateTo}
                 dateFromError={errors.dateFrom}
                 dateToError={errors.dateTo}
               />
