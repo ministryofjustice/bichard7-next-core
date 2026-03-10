@@ -1,9 +1,4 @@
-import type {
-  AdditionalArrestOffences,
-  Defendant,
-  DisposalResult,
-  Offence
-} from "@moj-bichard7/core/types/leds/DisposalRequest"
+import type { AdditionalArrestOffences, Defendant, Offence } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
 const dropUndefinedFields = (obj: Record<string, unknown>) => JSON.parse(JSON.stringify(obj))
 
@@ -28,13 +23,13 @@ const normaliseForComparison = (data: Record<string, unknown> | undefined): Reco
   }
 
   if ("offences" in result && Array.isArray(result.offences)) {
-    result.offences = result.offences.map((offence) => {
+    const offences = result.offences as Offence[]
+
+    offences.map((offence) => {
       offence.offenceId = "__STRIPPED_ID__"
 
-      const offences = result.offences as Offence[]
-      if ("disposalResults" in offences && Array.isArray(offences.disposalResults)) {
-        const disposalResults = offences.disposalResults as DisposalResult[]
-        disposalResults.forEach((d) => (d.disposalText = d.disposalText?.toLowerCase()))
+      if (Array.isArray(offence.disposalResults)) {
+        offence.disposalResults.map((dr) => (dr.disposalText = dr.disposalText?.toLowerCase()))
       }
 
       return offence
@@ -44,10 +39,17 @@ const normaliseForComparison = (data: Record<string, unknown> | undefined): Reco
   if ("additionalArrestOffences" in result && Array.isArray(result.additionalArrestOffences)) {
     const additionalArrestOffences = result.additionalArrestOffences as AdditionalArrestOffences[]
 
-    result.additionalArrestOffences = additionalArrestOffences.map((additionalArrestOffence) => {
-      return additionalArrestOffence.additionalOffences.map((offence) =>
-        offence.locationText?.locationText.toLowerCase()
-      )
+    additionalArrestOffences.map((additionalArrestOffence) => {
+      return additionalArrestOffence.additionalOffences.map((offence) => {
+        const offenceLocationText = offence.locationText
+        if (offenceLocationText) {
+          offenceLocationText.locationText = offence.locationText?.locationText
+            ? offence.locationText?.locationText.toLowerCase()
+            : ""
+        }
+
+        return offenceLocationText
+      })
     })
   }
 
