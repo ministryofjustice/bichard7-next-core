@@ -23,7 +23,7 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
       pncRemandStatus: pncJson.remandResult,
       bailConditions: pncJson.bailConditions.split(" ").filter(Boolean) ?? [],
       nextHearingDate: pncJson.nextAppearanceDate,
-      psaCourtCode: pncJson.institutionCode
+      psaCourtCode: pncJson.nextAppearanceLocation
     },
     pncUpdateDataset
   )
