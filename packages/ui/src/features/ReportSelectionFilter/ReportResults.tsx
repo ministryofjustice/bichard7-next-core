@@ -1,4 +1,4 @@
-import { REPORT_TYPE_MAP, ReportType } from "types/reports/ReportType"
+import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { ReportConfig } from "types/reports/Config"
 import { Loading } from "components/Loading"
 import { ReportTable } from "./ReportTable"

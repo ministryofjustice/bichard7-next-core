@@ -1,5 +1,5 @@
 import { isRecordArray } from "services/reports/utils/isRecordArray"
-import type { ReportType } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 const handleChunks = async (body: ReadableStream<Uint8Array<ArrayBuffer>>) => {
   const reader = body.getReader()
