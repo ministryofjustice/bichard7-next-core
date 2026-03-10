@@ -6,6 +6,12 @@ import normaliseForComparison from "../normaliseForComparison"
 import { delay } from "../puppeteer-utils"
 import type { RequestResponseMock } from "./MockServer"
 
+const pathMapping: Record<string, Operation> = {
+  "court-case-disposal-result": "Add Disposal",
+  "basic-remands": "Remand",
+  "court-case-subsequent-disposal-results": "Sentence Deferred"
+}
+
 const verifyRequests = async (bichard: LedsBichard) => {
   const MAX_RETRIES = 8
   const DELAY_SECONDS = 3
@@ -37,18 +43,15 @@ const verifyRequests = async (bichard: LedsBichard) => {
       return
     }
 
-    const pathMapping: Record<string, Operation> = {
-      "court-case-disposal-result": "Add Disposal",
-      "basic-remands": "Remand",
-      "court-case-subsequent-disposal-results": "Sentence Deferred"
-    }
-
     const match = Object.entries(pathMapping).find(([key]) => serverMock.path.includes(key))
 
     if (match) {
       const [_, operation] = match
       const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
       const serverMockRequest = serverMock.request?.[0]?.body
+
+      console.log("MY_SERVER ======>", JSON.stringify(serverMockRequest, null, 2))
+      console.log("MY_LOCAL ======>", JSON.stringify(localMockRequest, null, 2))
 
       expect(normaliseForComparison(serverMockRequest)).toEqual(normaliseForComparison(localMockRequest))
     }
