@@ -3,6 +3,7 @@ import mapCourt from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposal
 import { parseDisposalDuration } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/parseDisposalDuration"
 import shouldExcludePleaAndAdjudication from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/shouldExcludePleaAndAdjudication"
 import { toTitleCase } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/toTitleCase"
+import preProcessOffenceCode from "@moj-bichard7/core/lib/policeGateway/leds/preProcessOffenceCode"
 import type { AddDisposalRequest, CarryForward } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type {
   AdditionalArrestOffences,
@@ -66,10 +67,12 @@ export const mapOffences = (
     )
     const plea = !excludePleaAndAdjudication ? (toTitleCase(offence.plea) as Plea) : undefined
     const adjudication = !excludePleaAndAdjudication ? (toTitleCase(offence.adjudication) as Adjudication) : undefined
+    const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(offence.cjsOffenceCode)
 
     return {
       courtOffenceSequenceNumber: Number(offence.offenceSequenceNumber),
-      cjsOffenceCode: offence.cjsOffenceCode,
+      cjsOffenceCode,
+      roleQualifiers: roleQualifier ? [roleQualifier] : undefined,
       plea,
       adjudication,
       dateOfSentence: offence.dateOfSentence ? convertDate(offence.dateOfSentence) : undefined,
