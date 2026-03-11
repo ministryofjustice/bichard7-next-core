@@ -18,17 +18,17 @@ describe("validateDateField", () => {
   })
 
   it("should return error if date is more than 31 days ago", () => {
-    const thirtyTwoDaysAgoStr = format(subDays(today, 32), "dd-MM-yyyy")
+    const thirtyTwoDaysAgoStr = format(subDays(today, 32), "yyyy-MM-dd")
     expect(validateDateField(thirtyTwoDaysAgoStr)).toBe(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
   })
 
   it("should return error if date is in the future", () => {
-    const tomorrowStr = format(addDays(today, 1), "dd-MM-yyyy")
+    const tomorrowStr = format(addDays(today, 1), "yyyy-MM-dd")
     expect(validateDateField(tomorrowStr)).toBe(DATE_CANNOT_BE_IN_THE_FUTURE)
   })
 
   it("should return null for a valid date (today)", () => {
-    const todayStr = format(today, "dd-MM-yyyy")
+    const todayStr = format(today, "yyyy-MM-dd")
     expect(validateDateField(todayStr)).toBeNull()
   })
 })
