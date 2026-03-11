@@ -11,13 +11,11 @@ import { DateRange } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
-import {
-  DATE_CANNOT_BE_AFTER_DATE_TO,
-  DATE_CANNOT_BE_BEFORE_DATE_FROM,
-  validateCheckboxes,
-  validateDateRange,
-  validateSelectReport
-} from "./validation"
+
+import { validateCheckboxes } from "utils/reports/validateCheckboxes"
+import { validateDateRange } from "utils/reports/validateDateRange"
+import { validateSelectReport } from "utils/reports/validateSelectReport"
+import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
