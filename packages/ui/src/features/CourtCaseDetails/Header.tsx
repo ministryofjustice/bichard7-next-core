@@ -5,7 +5,6 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
 import { AccordionToggle } from "components/Card/Card.styles"
@@ -45,7 +44,7 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 }
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath } = useRouter()
+  const { basePath, pathname } = useRouter()
   const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
@@ -57,12 +56,10 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
-  const pathName = usePathname()
-
-  let reallocatePath = `${basePath}${pathName}`
+  let reallocatePath = `${basePath}${pathname}`
   let leaveAndUnlockUrl = `${basePath}?${leaveAndUnlockParams.toString()}`
 
-  if (!pathName.includes("/reallocate")) {
+  if (!pathname.includes("/reallocate")) {
     reallocatePath += "/reallocate"
   }
 
@@ -140,7 +137,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
           />
         </LockedTagContainer>
         <ButtonContainer id="buttons">
-          <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
+          <ConditionalRender isRendered={canReallocate && !pathname.includes("/reallocate")}>
             <SecondaryLinkButton
               href={reallocatePath}
               className="b7-reallocate-button"
