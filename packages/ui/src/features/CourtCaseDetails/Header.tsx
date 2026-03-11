@@ -56,6 +56,13 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
+  let returnToCaseListPath = basePath
+  let returnToCaseListText = "Return to case list"
+  if (/^\/audit\/\d+(?:\?.*)?$/.test(previousPath)) {
+    returnToCaseListPath += previousPath
+    returnToCaseListText = "Return to audit case list"
+  }
+
   let reallocatePath = `${basePath}${pathname}`
   let leaveAndUnlockUrl = `${basePath}?${leaveAndUnlockParams.toString()}`
 
@@ -158,8 +165,13 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </Form>
           </ConditionalRender>
           <ConditionalRender isRendered={!hasCaseLock}>
-            <SecondaryLinkButton id="return-to-case-list" className={`button`} href={basePath} secondary={true}>
-              {"Return to case list"}
+            <SecondaryLinkButton
+              id="return-to-case-list"
+              className={`button`}
+              href={returnToCaseListPath}
+              secondary={true}
+            >
+              {returnToCaseListText}
             </SecondaryLinkButton>
           </ConditionalRender>
         </ButtonContainer>

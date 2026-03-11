@@ -45,7 +45,7 @@ describe("/audit/:auditId", () => {
 
     cy.get("a#defendant-name-link-0").click()
     cy.location("pathname").should("eq", "/bichard/court-cases/0")
-    cy.location("search").should("eq", `?prev=${encodeURIComponent("/audit/1")}`)
+    cy.location("search").should("eq", `?previousPath=${encodeURIComponent("/audit/1")}`)
   })
 
   it("Should redirect to the case list if user is not a supervisor", () => {
@@ -73,14 +73,14 @@ describe("/audit/:auditId", () => {
   })
 
   it("Should show pagination", () => {
-    loginAndVisit("Supervisor", `/bichard/audit/1?pageNum=1&maxPerPage=25`)
+    loginAndVisit("Supervisor", "/bichard/audit/1?pageNum=1&maxPerPage=25")
 
     cy.location("pathname").should("eq", "/bichard/audit/1")
     cy.contains("Showing 1 to 2 of 2 cases")
     cy.get("a#defendant-name-link-0").should(
       "have.attr",
       "href",
-      `/bichard/court-cases/0?prev=${encodeURIComponent(`/audit/1?pageNum=1&maxPerPage=25`)}`
+      `/bichard/court-cases/0?previousPath=${encodeURIComponent("/audit/1?pageNum=1&maxPerPage=25")}`
     )
   })
 
@@ -96,14 +96,29 @@ describe("/audit/:auditId", () => {
   })
 
   it("Should show order", () => {
-    loginAndVisit("Supervisor", `/bichard/audit/1?order=desc&orderBy=courtDate`)
+    loginAndVisit("Supervisor", "/bichard/audit/1?order=desc&orderBy=courtDate")
 
     cy.location("pathname").should("eq", "/bichard/audit/1")
     cy.get("#court-date-sort").should("have.attr", "aria-sort", "descending")
     cy.get("a#defendant-name-link-0").should(
       "have.attr",
       "href",
-      `/bichard/court-cases/0?prev=${encodeURIComponent(`/audit/1?order=desc&orderBy=courtDate`)}`
+      `/bichard/court-cases/0?previousPath=${encodeURIComponent("/audit/1?order=desc&orderBy=courtDate")}`
     )
+  })
+
+  it("Should navigate to case details page and then return to the same page", () => {
+    const params = "order=desc&orderBy=courtDate&pageNum=1&maxPerPage=25"
+    loginAndVisit("Supervisor", `/bichard/audit/1?${params}`)
+
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+
+    cy.get("a#defendant-name-link-0").click()
+    cy.location("pathname").should("eq", "/bichard/court-cases/0")
+    cy.location("search").should("eq", `?previousPath=${encodeURIComponent(`/audit/1?${params}`)}`)
+
+    cy.get("a#return-to-case-list").click()
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+    cy.location("search").should("eq", `?${params}`)
   })
 })
