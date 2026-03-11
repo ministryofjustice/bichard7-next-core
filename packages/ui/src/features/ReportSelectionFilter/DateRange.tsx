@@ -39,30 +39,6 @@ export const DateRange: React.FC<DateRangeProps> = ({
     }
   }
 
-  /*   const onDateFromChange = (value: string) => {
-    setDateFromString(value)
-    setShowDateFromError(false)
-
-    const newDateFrom = new Date(value)
-    const dateTo = new Date(dateToString)
-
-    if (dateToString !== "" && !isBefore(dateTo, newDateFrom)) {
-      setShowDateToError(false)
-    }
-  }
-
-  const onDateToChange = (value: string) => {
-    setDateToString(value)
-    setShowDateToError(false)
-
-    const newDateTo = new Date(value)
-    const dateFrom = new Date(dateFromString)
-
-    if (dateFromString !== "" && !isAfter(dateFrom, newDateTo)) {
-      setShowDateFromError(false)
-    }
-  } */
-
   return (
     <>
       <h2 className="govuk-heading-m">{"Date range"}</h2>
