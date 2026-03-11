@@ -19,6 +19,7 @@ describe("validateDateField", () => {
 
   it("should return error if date is more than 31 days ago", () => {
     const thirtyTwoDaysAgoStr = format(subDays(today, 32), "yyyy-MM-dd")
+    expect(thirtyTwoDaysAgoStr).toBe("2026-02-07")
     expect(validateDateField(thirtyTwoDaysAgoStr)).toBe(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
   })
 
