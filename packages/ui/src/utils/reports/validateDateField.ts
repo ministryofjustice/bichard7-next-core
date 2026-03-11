@@ -1,4 +1,4 @@
-import { isBefore, isFuture, startOfToday, subDays } from "date-fns"
+import { isBefore, isFuture, isValid, startOfToday, subDays } from "date-fns"
 import {
   DATE_CANNOT_BE_IN_THE_FUTURE,
   DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS,
@@ -9,7 +9,7 @@ export const validateDateField = (dateString: string): string | null => {
   const date = new Date(dateString)
   const thirtyOneDaysAgo = subDays(startOfToday(), 31)
 
-  if (!dateString) {
+  if (!dateString || !isValid(date)) {
     return FIELD_REQUIRED
   }
 
