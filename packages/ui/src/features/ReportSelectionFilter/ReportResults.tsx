@@ -16,13 +16,13 @@ export const ReportResults: React.FC<ReportResultsProps> = ({ isStreaming, repor
   }
 
   const reportName = REPORT_TYPE_MAP[reportType]
+  const reportHasRun = !isStreaming && rows !== null
 
   return (
     <div className="results-area" aria-busy={isStreaming} aria-live="polite">
       {isStreaming && <Loading text={`Loading ${reportName} report...`} />}
 
-      {!isStreaming &&
-        !!rows &&
+      {reportHasRun &&
         (rows.length > 0 && config ? (
           <section aria-label={`${reportName} results loaded`} tabIndex={-1}>
             <ReportTable config={config} rows={rows} tableName={`${reportName} report`} />
