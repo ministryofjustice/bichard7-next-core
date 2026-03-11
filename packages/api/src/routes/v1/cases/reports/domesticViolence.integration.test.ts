@@ -4,30 +4,37 @@ import type { FastifyInstance } from "fastify"
 import { expect } from "@jest/globals"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, subDays } from "date-fns"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 import { uniq } from "lodash"
 
-import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
-
 import build from "../../../../app"
+import { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
+import { getAuditLogUserEvents } from "../../../../tests/helpers/auditLogHelper"
 import { createCases } from "../../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
+import TestDynamoGateway from "../../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 
 describe("domestic violence report", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
+  const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
+  const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway: {} as AuditLogDynamoGateway, database: testDatabaseGateway })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
   })
 
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
+    await testDynamoGateway.clearDynamo()
   })
 
   afterAll(async () => {
@@ -323,5 +330,83 @@ describe("domestic violence report", () => {
       expect(reportItem).toHaveProperty("ptiurn")
       expect(reportItem).toHaveProperty("type")
     }
+  })
+
+  it("creates an Audit Log User Event", async () => {
+    const courtDate = subDays(new Date(), 3)
+    const messageReceivedAt = subDays(new Date(), 2)
+    const [jwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [caseObj] = await createCases(testDatabaseGateway, 3, {
+      0: { courtDate, messageReceivedAt }
+    })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0024 }])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("exceptions", "true")
+    query.append("triggers", "true")
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const auditLogResults = await getAuditLogUserEvents(auditLogGateway, EventCode.ReportRun)
+
+    if (isError(auditLogResults)) {
+      throw new Error("Audit log event failed")
+    }
+
+    expect(auditLogResults).toHaveLength(1)
+
+    const event = auditLogResults[0]
+
+    expect(event.user).toBe(user.username)
+    expect(event.eventCode).toBe(EventCode.ReportRun)
+    expect(event.eventSource).toBe("Bichard New UI")
+    expect(event.category).toBe("information")
+    expect(event.attributes?.["Number of Records Returned"]).toBe(3)
+    expect(event.attributes?.["Report ID"]).toBe("Domestic Violence & Vulnerable Victims")
+    expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
+  })
+
+  it("still creates an Audit Log User Event if there is not a case", async () => {
+    const [jwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("exceptions", "true")
+    query.append("triggers", "true")
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsDomesticViolence}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const auditLogResults = await getAuditLogUserEvents(auditLogGateway, EventCode.ReportRun)
+
+    if (isError(auditLogResults)) {
+      throw new Error("Audit log event failed")
+    }
+
+    expect(auditLogResults).toHaveLength(1)
+
+    const event = auditLogResults[0]
+
+    expect(event.user).toBe(user.username)
+    expect(event.eventCode).toBe(EventCode.ReportRun)
+    expect(event.eventSource).toBe("Bichard New UI")
+    expect(event.category).toBe("information")
+    expect(event.attributes?.["Number of Records Returned"]).toBe(0)
+    expect(event.attributes?.["Report ID"]).toBe("Domestic Violence & Vulnerable Victims")
+    expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 })

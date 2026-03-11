@@ -1,7 +1,6 @@
 import { Card } from "components/Card"
 import { SyntheticEvent, useEffect, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
-import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfigs } from "types/reports/Config"
 import { ReportType } from "types/reports/ReportType"
@@ -11,9 +10,13 @@ import { DateRange } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
-import { validateCheckboxes, validateDateRange, validateSelectReport } from "./validation"
-import { DATE_CANNOT_BE_AFTER_DATE_TO } from "./validation"
-import { DATE_CANNOT_BE_BEFORE_DATE_FROM } from "./validation"
+import {
+  DATE_CANNOT_BE_AFTER_DATE_TO,
+  DATE_CANNOT_BE_BEFORE_DATE_FROM,
+  validateCheckboxes,
+  validateDateRange,
+  validateSelectReport
+} from "./validation"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [hasRun, setHasRun] = useState(false)
@@ -207,6 +210,7 @@ export const ReportSelectionFilter: React.FC = () => {
             handleDownload={handleDownload}
             csvReportFilename={csvReportFilename}
             hasRows={rows.length > 0}
+            reportOptions={{ reportType, fromDate: dateFromString, toDate: dateToString }}
           />
         </Card>
       </ReportSelectionFilterWrapper>

@@ -1,5 +1,5 @@
 import type { ReportConfig } from "types/reports/Config"
-import type { ReportType } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
 import { isRecord } from "services/reports/utils/isRecord"
 import { csvMetadata } from "services/reports/utils/csvMetadata"

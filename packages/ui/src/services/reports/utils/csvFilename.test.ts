@@ -1,13 +1,13 @@
 import { csvFilename } from "./csvFilename"
 import { format } from "date-fns"
-import type { ReportType } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 jest.mock("date-fns", () => ({
   format: jest.fn()
 }))
 const mockedFormat = format as jest.MockedFunction<typeof format>
 
-jest.mock("types/reports/ReportType", () => ({
+jest.mock("@moj-bichard7/common/types/reports/ReportType", () => ({
   REPORT_TYPE_MAP: {
     TEST_REPORT: "My Awesome Report",
     NO_SPACES: "Singleword"

@@ -1,5 +1,5 @@
 import React from "react"
-import { ReportType } from "types/reports/ReportType"
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { ReportConfig } from "types/reports/Config"
 import { ReportResults } from "features/ReportSelectionFilter/ReportResults"
 

@@ -9,6 +9,7 @@ import { CaseForWarrantsReportDtoSchema } from "@moj-bichard7/common/types/repor
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 
+import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import { jsonResponse } from "../../../../server/openapi/jsonResponse"
@@ -23,6 +24,7 @@ import useZod from "../../../../server/useZod"
 import { generateWarrantsReport } from "../../../../useCases/cases/reports/warrants/generateWarrantsReport"
 
 type HandlerProps = {
+  auditLogGateway: AuditLogDynamoGateway
   database: DatabaseGateway
   query: WarrantsReportQuery
   reply: FastifyReply
@@ -42,8 +44,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ database, query, reply, user }: HandlerProps) => {
-  const result = await generateWarrantsReport(database, user, query, reply)
+const handler = async ({ auditLogGateway, database, query, reply, user }: HandlerProps) => {
+  const result = await generateWarrantsReport(database, auditLogGateway, user, query, reply)
 
   if (!isError(result)) {
     return reply
@@ -55,6 +57,7 @@ const handler = async ({ database, query, reply, user }: HandlerProps) => {
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.CasesReportsWarrants, { schema }, async (req, reply) => {
     await handler({
+      auditLogGateway: req.auditLogGateway,
       database: req.database,
       query: req.query,
       reply,
