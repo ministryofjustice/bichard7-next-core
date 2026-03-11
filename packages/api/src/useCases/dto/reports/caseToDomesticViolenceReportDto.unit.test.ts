@@ -1,4 +1,4 @@
-import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
@@ -6,7 +6,7 @@ import type { CaseRowForDomesticViolenceReport } from "../../../types/reports/Do
 
 import { caseToDomesticViolenceReportDto } from "./caseToDomesticViolenceReportDto"
 
-jest.mock("@moj-bichard7/common/aho/parseAhoXml/parseAhoXml")
+jest.mock("@moj-bichard7/common/aho/parseHearingOutcome")
 jest.mock("@moj-bichard7/common/types/Result")
 jest.mock("@moj-bichard7/common/utils/getShortAsn")
 
@@ -45,7 +45,7 @@ describe("caseToDomesticViolenceReportDto", () => {
 
   it("should throw the error if AHO parsing fails", () => {
     const parseError = new Error("Invalid XML")
-    ;(parseAhoXml as jest.Mock).mockReturnValue(parseError)
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(parseError)
     ;(isError as unknown as jest.Mock).mockReturnValue(true)
 
     expect(() => [...caseToDomesticViolenceReportDto(mockRow)]).toThrow("Invalid XML")
@@ -53,7 +53,7 @@ describe("caseToDomesticViolenceReportDto", () => {
 
   it("should classify as 'Domestic Violence' if TRPR0023 is present", () => {
     mockRow.trigger_codes = ["TRPR0023", "TRPR0024"]
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho([{ OffenceTitle: "Assault" }]))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho([{ OffenceTitle: "Assault" }]))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
 
@@ -63,7 +63,7 @@ describe("caseToDomesticViolenceReportDto", () => {
 
   it("should classify as 'Vulnerable Victim' if TRPR0023 is absent", () => {
     mockRow.trigger_codes = ["TRPR0024"]
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho([{ OffenceTitle: "Theft" }]))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho([{ OffenceTitle: "Theft" }]))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
 
@@ -71,7 +71,7 @@ describe("caseToDomesticViolenceReportDto", () => {
   })
 
   it("should format dates correctly and extract shared data", () => {
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho([{ OffenceTitle: "Speeding" }], "1990-12-25"))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho([{ OffenceTitle: "Speeding" }], "1990-12-25"))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
     const result = results[0]
@@ -91,7 +91,7 @@ describe("caseToDomesticViolenceReportDto", () => {
     mockRow.court_name = null
     mockRow.defendant_name = null
     mockRow.ptiurn = null
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho([{}]))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho([{}]))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
     const result = results[0]
@@ -107,7 +107,7 @@ describe("caseToDomesticViolenceReportDto", () => {
 
   it("should yield multiple rows when multiple offences exist", () => {
     const offences = [{ OffenceTitle: "Offence 1" }, { OffenceTitle: "Offence 2" }, { OffenceTitle: "Offence 3" }]
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho(offences))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho(offences))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
 
@@ -123,7 +123,7 @@ describe("caseToDomesticViolenceReportDto", () => {
       OffenceTitle: "Aggravated Assault",
       Result: [{ ResultVariableText: "Guilty." }, { ResultVariableText: "Fined £500." }, { ResultVariableText: null }]
     }
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho([offence]))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho([offence]))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
 
@@ -140,7 +140,7 @@ describe("caseToDomesticViolenceReportDto", () => {
         { ResultVariableText: textSnippet }
       ]
     }
-    ;(parseAhoXml as jest.Mock).mockReturnValue(createMockAho([offence]))
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho([offence]))
 
     const results = [...caseToDomesticViolenceReportDto(mockRow)]
     const outcome = results[0].outcome
