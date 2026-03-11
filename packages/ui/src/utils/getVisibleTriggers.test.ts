@@ -3,7 +3,7 @@ import type { DisplayFullUser } from "../types/display/Users"
 import { triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
 
 describe("getVisibleTriggers", () => {
-  it("should return all triggers as non are excluded", () => {
+  it("should return all triggers as none are excluded", () => {
     const testUser = {
       excludedTriggers: [],
       visibleForces: []
