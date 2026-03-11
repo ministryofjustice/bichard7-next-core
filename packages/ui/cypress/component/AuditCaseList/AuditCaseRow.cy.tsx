@@ -50,7 +50,7 @@ describe("AuditCaseRow", () => {
     const prevUrl = encodeURIComponent(
       `/audit/${auditId}?order=${queryParams.order}&orderBy=${queryParams.orderBy}&pageNum=${queryParams.pageNum}&maxPerPage=${queryParams.maxPerPage}`
     )
-    const expectedHref = `/court-cases/${auditCase.errorId}?prev=${prevUrl}`
+    const expectedHref = `/court-cases/${auditCase.errorId}?previousPath=${prevUrl}`
 
     cy.get(`a#defendant-name-link-${auditCase.errorId}`).should("have.attr", "href", expectedHref)
     cy.get(`a#asn-link-${auditCase.errorId}`).should("have.attr", "href", expectedHref)

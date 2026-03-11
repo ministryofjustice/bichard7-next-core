@@ -53,7 +53,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
   }
   const queryString = params.toString()
   const prevUrl = encodeURIComponent(`/audit/${auditId}${queryString.length > 0 ? "?" + queryString : ""}`)
-  const caseHref = `${basePath}/court-cases/${errorId}?prev=${prevUrl}`
+  const caseHref = `${basePath}/court-cases/${errorId}?previousPath=${prevUrl}`
 
   const [showPreview, setShowPreview] = useState(true)
   const notes = auditCase.notes.map((note) =>
