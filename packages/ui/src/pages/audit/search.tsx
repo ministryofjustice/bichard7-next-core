@@ -21,6 +21,9 @@ import AuditSearch from "features/AuditSearch/AuditSearch"
 import BichardApiV1 from "../../services/api/BichardApiV1"
 import ApiClient from "../../services/api/ApiClient"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
+import getVisibleTriggers from "../../utils/getVisibleTriggers"
+import { triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
+import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 
 type Props = {
   csrfToken: string
@@ -28,6 +31,7 @@ type Props = {
   canUseTriggerAndExceptionQualityAuditing: boolean
   displaySwitchingSurveyFeedback: boolean
   resolvedBy: AuditResolvedBy[]
+  triggerTypes: string[]
 }
 
 export const getServerSideProps = withMultipleServerSideProps(
@@ -64,21 +68,30 @@ export const getServerSideProps = withMultipleServerSideProps(
       }))
     }
 
+    const triggerTypes = getVisibleTriggers(currentUser, triggerDefinitions, forceExcludedTriggers)
+
     return {
       props: {
         csrfToken,
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
         user: userToDisplayFullUserDto(currentUser),
         canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing,
-        resolvedBy: resolvedBy
+        resolvedBy: resolvedBy,
+        triggerTypes: triggerTypes
       }
     }
   }
 )
 
 const SearchPage: NextPage<Props> = (props) => {
-  const { csrfToken, canUseTriggerAndExceptionQualityAuditing, displaySwitchingSurveyFeedback, user, resolvedBy } =
-    props
+  const {
+    csrfToken,
+    canUseTriggerAndExceptionQualityAuditing,
+    displaySwitchingSurveyFeedback,
+    user,
+    resolvedBy,
+    triggerTypes
+  } = props
 
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -95,7 +108,7 @@ const SearchPage: NextPage<Props> = (props) => {
             canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
             bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
           >
-            <AuditSearch resolvers={resolvedBy} triggerTypes={["TRPR0010", "TRPR0011", "TRPR0012", "TRPR0013"]} />
+            <AuditSearch resolvers={resolvedBy} triggerTypes={triggerTypes} />
           </Layout>
         </CurrentUserContext.Provider>
       </CsrfTokenContext.Provider>
