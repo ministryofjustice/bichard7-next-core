@@ -61,5 +61,5 @@ export const validateCheckboxes = (
 }
 
 export const validateSelectReport = (reportType: ReportType | undefined): string | null => {
-  return !reportType ? FIELD_REQUIRED_ERROR : null
+  return reportType ? null : FIELD_REQUIRED_ERROR
 }
