@@ -12,13 +12,14 @@ describe("getVisibleTriggers", () => {
   ]
 
   const forceExcludedTriggers = {
-    ["01"]: ["TRPR0002"]
+    ["01"]: ["TRPR0002"],
+    ["02"]: []
   }
 
   it("should return all triggers as none are excluded", () => {
     const testUser = {
       excludedTriggers: [],
-      visibleForces: []
+      visibleForces: ["002"]
     } as unknown as DisplayFullUser
 
     const visibleTriggers = getVisibleTriggers(testUser, triggerDefinitions, forceExcludedTriggers)
