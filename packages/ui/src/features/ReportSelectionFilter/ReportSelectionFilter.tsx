@@ -20,9 +20,8 @@ import {
 } from "./validation"
 
 export const ReportSelectionFilter: React.FC = () => {
-  const [hasRun, setHasRun] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [rows, setRows] = useState<Record<string, unknown>[]>([])
+  const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
@@ -93,9 +92,8 @@ export const ReportSelectionFilter: React.FC = () => {
   }
 
   const clearResults = () => {
-    setRows([])
+    setRows(null)
     setCsvDownloadUrl(null)
-    setHasRun(false)
   }
 
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
@@ -133,7 +131,6 @@ export const ReportSelectionFilter: React.FC = () => {
     }
 
     setIsStreaming(true)
-    setHasRun(true)
     setRows([])
     setCsvDownloadUrl(null)
 
@@ -210,7 +207,7 @@ export const ReportSelectionFilter: React.FC = () => {
             csvDownloadUrl={csvDownloadUrl}
             handleDownload={handleDownload}
             csvReportFilename={csvReportFilename}
-            hasRows={rows.length > 0}
+            hasRows={!!rows && rows.length > 0}
             reportOptions={{
               reportType: filterValues.reportType,
               fromDate: filterValues.dateFrom,
@@ -220,13 +217,7 @@ export const ReportSelectionFilter: React.FC = () => {
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <ReportResults
-        reportType={filterValues.reportType}
-        rows={rows}
-        config={config}
-        hasRun={hasRun}
-        isStreaming={isStreaming}
-      />
+      <ReportResults reportType={filterValues.reportType} rows={rows} config={config} isStreaming={isStreaming} />
     </>
   )
 }
