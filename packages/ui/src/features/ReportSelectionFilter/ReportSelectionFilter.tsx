@@ -122,7 +122,7 @@ export const ReportSelectionFilter: React.FC = () => {
     const newErrors = {
       dateFrom: rangeValidation.fromError,
       dateTo: rangeValidation.toError,
-      reportType: selectReportValidation.reportType,
+      reportType: selectReportValidation,
       checkboxes: checkboxesValidation
     }
 
