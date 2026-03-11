@@ -78,6 +78,7 @@ export const ReportSelectionFilter: React.FC = () => {
       exceptions: true
     }))
     setErrors({})
+    clearResults()
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
