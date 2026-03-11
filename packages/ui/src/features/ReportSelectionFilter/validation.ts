@@ -1,5 +1,5 @@
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { isBefore, isFuture, startOfToday, subDays } from "date-fns"
-import type { ReportType } from "types/reports/ReportType"
 
 const FIELD_REQUIRED_ERROR = "This field is required"
 const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
