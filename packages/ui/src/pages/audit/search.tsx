@@ -22,6 +22,8 @@ import BichardApiV1 from "../../services/api/BichardApiV1"
 import ApiClient from "../../services/api/ApiClient"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
 import getVisibleTriggers from "../../utils/getVisibleTriggers"
+import { triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
+import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 
 type Props = {
   csrfToken: string
@@ -66,7 +68,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       }))
     }
 
-    const triggerTypes = getVisibleTriggers(currentUser)
+    const triggerTypes = getVisibleTriggers(currentUser, triggerDefinitions, forceExcludedTriggers)
 
     return {
       props: {
