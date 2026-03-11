@@ -1,9 +1,10 @@
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
 import { SyntheticEvent, useEffect, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
+import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfigs } from "types/reports/Config"
-import { ReportType } from "types/reports/ReportType"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes } from "./Checkboxes"
 import { DateRange } from "./DateRange"
@@ -210,7 +211,11 @@ export const ReportSelectionFilter: React.FC = () => {
             handleDownload={handleDownload}
             csvReportFilename={csvReportFilename}
             hasRows={rows.length > 0}
-            reportOptions={{ reportType, fromDate: dateFromString, toDate: dateToString }}
+            reportOptions={{
+              reportType: filterValues.reportType,
+              fromDate: filterValues.dateFrom,
+              toDate: filterValues.dateTo
+            }}
           />
         </Card>
       </ReportSelectionFilterWrapper>

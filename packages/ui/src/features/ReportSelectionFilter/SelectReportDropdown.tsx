@@ -1,8 +1,7 @@
-import { ReportType } from "aws-sdk/clients/codebuild"
+import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
 import { SyntheticEvent } from "react"
-import { REPORT_TYPE_MAP } from "types/reports/ReportType"
 
 interface SelectReportDropdownProps {
   handleChange: (event: SyntheticEvent<HTMLSelectElement>) => void
