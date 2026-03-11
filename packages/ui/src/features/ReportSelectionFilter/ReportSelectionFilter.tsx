@@ -4,7 +4,7 @@ import { SyntheticEvent, useEffect, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { ReportConfigs } from "types/reports/Config"
+import { ReportConfig, ReportConfigs } from "types/reports/Config"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes } from "./Checkboxes"
 import { DateRange } from "./DateRange"
@@ -108,7 +108,7 @@ export const ReportSelectionFilter: React.FC = () => {
     })
   }
 
-  const handleDownload = async () => {
+  const validateFilters = (): boolean => {
     const rangeValidation = validateDateRange(filterValues.dateFrom, filterValues.dateTo)
     const checkboxesValidation = validateCheckboxes(
       filterValues.reportType,
@@ -127,13 +127,13 @@ export const ReportSelectionFilter: React.FC = () => {
     setErrors(newErrors)
 
     if (Object.values(newErrors).some((error) => error !== null) || !config) {
-      return
+      return false
+    } else {
+      return true
     }
+  }
 
-    setIsStreaming(true)
-    setRows([])
-    setCsvDownloadUrl(null)
-
+  const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
       const urlQuery = new URLSearchParams({
@@ -144,7 +144,13 @@ export const ReportSelectionFilter: React.FC = () => {
       })
 
       const parsedData = await downloadReport(reportType, urlQuery)
-      const csvBlob = await createReportCsv(parsedData, config, reportType, filterValues.dateFrom, filterValues.dateTo)
+      const csvBlob = await createReportCsv(
+        parsedData,
+        config as ReportConfig,
+        reportType,
+        filterValues.dateFrom,
+        filterValues.dateTo
+      )
 
       setRows(parsedData)
       setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
@@ -154,6 +160,18 @@ export const ReportSelectionFilter: React.FC = () => {
     } finally {
       setIsStreaming(false)
     }
+  }
+
+  const handleRunReport = () => {
+    if (!validateFilters()) {
+      return
+    }
+
+    setIsStreaming(true)
+    setRows([])
+    setCsvDownloadUrl(null)
+
+    handleDownload()
   }
 
   useEffect(() => {
@@ -205,7 +223,7 @@ export const ReportSelectionFilter: React.FC = () => {
           <ActionBar
             clearFilters={clearFilters}
             csvDownloadUrl={csvDownloadUrl}
-            handleDownload={handleDownload}
+            handleRunReport={handleRunReport}
             csvReportFilename={csvReportFilename}
             hasRows={!!rows && rows.length > 0}
             reportOptions={{
