@@ -1,6 +1,6 @@
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 
-import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { differenceInCalendarDays, format } from "date-fns"
@@ -17,7 +17,7 @@ import { hearingTime } from "../../cases/reports/utils/hearingTime"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
 
 export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<CaseForBailsReportDto> {
-  const aho = parseAhoXml(row.annotated_msg)
+  const aho = parseHearingOutcome(row.annotated_msg)
 
   if (isError(aho)) {
     throw aho
