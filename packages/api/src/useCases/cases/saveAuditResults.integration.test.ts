@@ -29,7 +29,6 @@ let caseObj: Case
 let user: User
 
 describe("saveAuditResults", () => {
-  const userId = "testUser"
   const mockAuditQuality: AuditQuality = { errorQuality: 6, triggerQuality: 2 }
   const testNote = "This is the test note"
 
@@ -63,7 +62,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
       expect(isError(result)).toBe(false)
@@ -80,7 +79,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         { errorQuality: 6, triggerQuality: undefined },
-        userId,
+        user.username,
         testNote
       )
       expect(isError(result)).toBe(false)
@@ -91,7 +90,7 @@ describe("saveAuditResults", () => {
     })
 
     it("throws an error when no audit quality is provided", async () => {
-      const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, userId, testNote)
+      const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, user.username, testNote)
 
       expect(isError(result)).toBe(true)
       expect((result as Error).message).toBe("Neither errorQuality nor triggerQuality is provided")
@@ -102,7 +101,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         2,
         { errorQuality: 1, triggerQuality: 2 },
-        userId,
+        user.username,
         testNote
       )
 
@@ -117,7 +116,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
 
@@ -132,7 +131,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
       expect(isError(result)).toBe(true)
@@ -150,7 +149,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
 
@@ -167,7 +166,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
 
@@ -182,7 +181,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
 
@@ -197,7 +196,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        userId,
+        user.username,
         testNote
       )
       expect(isError(result)).toBe(true)

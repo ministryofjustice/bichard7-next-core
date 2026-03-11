@@ -1,21 +1,24 @@
 import type { NoteDto, NoteRow } from "@moj-bichard7/common/types/Note"
 
+import { NoteRowSchema } from "@moj-bichard7/common/types/Note"
+
 import { convertNoteUserRowToNoteUserDto } from "./convertUserToDto"
 
 export const convertNoteToDto = (noteRow: NoteRow): NoteDto => {
+  const parsedNoteRow = NoteRowSchema.parse(noteRow)
   let fullname: string | undefined
 
-  const noteUser = noteRow.user?.username ? convertNoteUserRowToNoteUserDto(noteRow.user) : undefined
+  const noteUser = parsedNoteRow.user?.username ? convertNoteUserRowToNoteUserDto(parsedNoteRow.user) : undefined
 
   if (noteUser) {
     fullname = `${noteUser.forenames} ${noteUser.surname}`
   }
 
   return {
-    createdAt: noteRow.create_ts.toISOString(),
-    noteText: noteRow.note_text,
+    createdAt: parsedNoteRow.create_ts.toISOString(),
+    noteText: parsedNoteRow.note_text,
     user: noteUser,
     userFullName: fullname,
-    userId: noteRow.user_id
+    userId: parsedNoteRow.user_id
   }
 }
