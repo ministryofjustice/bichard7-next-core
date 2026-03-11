@@ -13,7 +13,6 @@ import Layout from "../../components/Layout"
 import { withAuthentication, withMultipleServerSideProps } from "../../middleware"
 import { userToDisplayFullUserDto } from "../../services/dto/userDto"
 import AuthenticationServerSidePropsContext from "../../types/AuthenticationServerSidePropsContext"
-import { isProduction } from "config"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
@@ -27,7 +26,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
     }
 
-    if (isProduction || !userAccess(currentUser)[Permission.ViewReports]) {
+    if (!userAccess(currentUser)[Permission.ViewReports]) {
       return redirectTo("/")
     }
 
