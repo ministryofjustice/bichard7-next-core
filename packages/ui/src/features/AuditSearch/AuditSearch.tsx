@@ -5,12 +5,11 @@ import { formatUserFullName } from "utils/formatUserFullName"
 import { subDays, format, parse } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
-import Checkbox from "components/Checkbox/Checkbox"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
 
 const AuditCheckbox: React.FC<{
   id?: string
-  name: string
+  name?: string
   defaultChecked: boolean
   label: string
   value?: string
@@ -91,6 +90,8 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
     volume: defaultVolume
   })
 
+  const defaultAllResolversSelected = resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
+
   return (
     <form action={submitAction}>
       <div className="moj-filter">
@@ -160,7 +161,11 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                   <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
                     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                      <Checkbox data-testid={"audit-resolved-by-all"} label={"All"} checked={false} />
+                      <AuditCheckbox
+                        defaultChecked={defaultAllResolversSelected}
+                        label={"All"}
+                        data-testid={"audit-resolved-by-all"}
+                      />
                       {resolvers.map((resolver, index) => (
                         <AuditCheckbox
                           key={index}
