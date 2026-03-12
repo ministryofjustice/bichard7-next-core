@@ -56,9 +56,7 @@ export const AuditCaseRow = ({ auditId, auditCase }: AuditCaseRowProps) => {
   const caseHref = `${basePath}/court-cases/${errorId}?previousPath=${prevUrl}`
 
   const [showPreview, setShowPreview] = useState(true)
-  const notes = auditCase.notes.map((note) =>
-    noteToDisplayNoteDto({ ...note, createdAt: new Date(note.createdAt) } as Note)
-  )
+  const notes = auditCase.notes.map((note) => noteToDisplayNoteDto(note as Note))
   const numberOfNotes = noteCount ?? filterUserNotes(notes).length
   const rowSpan = showPreview ? 1 : 2 // Row span should be 2 when notes are being shown so the notes row overlaps existing row
 

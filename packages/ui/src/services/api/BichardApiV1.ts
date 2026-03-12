@@ -1,6 +1,6 @@
 import type { UserList } from "@moj-bichard7/common/types/User"
 import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
-import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
+import { type AuditCasesMetadata, AuditCasesMetadataSchema } from "@moj-bichard7/common/types/AuditCase"
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
@@ -12,6 +12,7 @@ import type ApiClient from "./ApiClient"
 import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type PromiseResult from "types/PromiseResult"
+import { isError } from "types/Result"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -66,8 +67,13 @@ export default class BichardApiV1 implements BichardApiGateway {
       urlParams.set("maxPerPage", String(auditCasesQuery.maxPerPage))
     }
 
-    return await this.apiClient.get<AuditCasesMetadata>(
+    const result = await this.apiClient.get(
       `${V1.AuditCases.replace(":auditId", String(auditId))}?${urlParams.toString()}`
     )
+    if (isError(result)) {
+      return result
+    }
+
+    return AuditCasesMetadataSchema.parse(result)
   }
 }

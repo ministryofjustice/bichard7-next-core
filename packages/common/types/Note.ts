@@ -38,7 +38,7 @@ const NoteUserDtoSchema = UserDtoSchema.pick({
 })
 
 export const NoteDtoSchema = z.object({
-  createdAt: z.string(),
+  createdAt: dateLikeToDate,
   noteText: z.string(),
   user: NoteUserDtoSchema.optional(),
   userFullName: z.string().optional(),

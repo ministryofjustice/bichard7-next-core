@@ -241,11 +241,18 @@ describe("BichardApiV1", () => {
       pageNum: 1,
       maxPerPage: 25
     }
+    const mockedReturnValue: AuditCasesMetadata = {
+      cases: [],
+      pageNum: 1,
+      maxPerPage: 50,
+      totalCases: 0,
+      returnCases: 0
+    }
 
     it("calls apiClient#get with a route", async () => {
       const endpoint = V1.AuditCases.replace(":auditId", String(auditId))
 
-      jest.spyOn(client, "get").mockResolvedValue({} as AuditCasesMetadata)
+      jest.spyOn(client, "get").mockResolvedValue(mockedReturnValue)
 
       await gateway.fetchAuditCases(auditId, auditCaseQuery)
 

@@ -15,7 +15,7 @@ export const convertNoteToDto = (noteRow: NoteRow): NoteDto => {
   }
 
   return {
-    createdAt: parsedNoteRow.create_ts.toISOString(),
+    createdAt: parsedNoteRow.create_ts,
     noteText: parsedNoteRow.note_text,
     user: noteUser,
     userFullName: fullname,
