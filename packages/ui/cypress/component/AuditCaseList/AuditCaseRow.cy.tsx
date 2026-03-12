@@ -12,7 +12,7 @@ describe("AuditCaseRow", () => {
   const queryParams = { order: "asc", orderBy: "courtDate", pageNum: "1", maxPerPage: "50" }
   const auditCase = {
     asn: "test asn",
-    courtDate: new Date().toISOString(),
+    courtDate: new Date(),
     courtName: "Magistrates",
     courtReference: "01XX",
     ptiurn: "Case0001",
@@ -20,10 +20,10 @@ describe("AuditCaseRow", () => {
     errorId: 1,
     errorQualityChecked: 1,
     errorStatus: ResolutionStatus.Unresolved,
-    messageReceivedTimestamp: new Date().toISOString(),
+    messageReceivedTimestamp: new Date(),
     noteCount: 0,
     notes: [],
-    resolutionTimestamp: new Date().toISOString(),
+    resolutionTimestamp: new Date(),
     triggerQualityChecked: 1,
     triggerStatus: ResolutionStatus.Unresolved
   } as AuditCaseDto
