@@ -66,7 +66,7 @@ describe("AuditCaseRow", () => {
     mount(auditId, {
       ...auditCase,
       noteCount: 1,
-      notes: [{ createdAt: new Date().toISOString(), noteText: "Test note" }]
+      notes: [{ createdAt: new Date(), noteText: "Test note" }]
     })
 
     cy.get("button.preview-button").should("be.visible")
@@ -76,7 +76,7 @@ describe("AuditCaseRow", () => {
     mount(auditId, {
       ...auditCase,
       noteCount: 1,
-      notes: [{ createdAt: new Date().toISOString(), noteText: "Test note" }]
+      notes: [{ createdAt: new Date(), noteText: "Test note" }]
     })
 
     cy.get("button.preview-button").click()
