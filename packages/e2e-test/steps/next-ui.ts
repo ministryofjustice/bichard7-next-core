@@ -28,6 +28,7 @@ export const setupNextSteps = () => {
 
   // Messages
   When("{string} is received", messages.sendMessageForTest)
+  When("{string} is received with an invalid ASN", messages.sendMessageForTestWithOriginalAsn)
 
   // PNC Actions
   Given("the data for this test is in the PNC", function () {
