@@ -20,6 +20,7 @@ const verifyRequests = async (bichard: LedsBichard) => {
 
   for (let index = 0; index < 8; index++) {
     const fetched = await bichard.policeApi.mockServerClient.fetchMocks()
+    console.log("========= Mocks:", fetched)
     const isReady = fetched.length > 0 && fetched.every((mock) => mock.request && mock.request.length > 0)
 
     if (isReady) {
