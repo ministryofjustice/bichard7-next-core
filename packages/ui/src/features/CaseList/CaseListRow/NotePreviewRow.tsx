@@ -12,19 +12,19 @@ interface NotePreviewRowProps {
   className?: string
   numberOfNotes: number
   previewState: boolean
+  colSpan: number
 }
 
-export const NotePreviewRow = ({ notes, className, numberOfNotes, previewState }: NotePreviewRowProps) => {
+export const NotePreviewRow = ({ notes, className, numberOfNotes, previewState, colSpan }: NotePreviewRowProps) => {
   const userNotes = filterUserNotes(notes)
   const mostRecentUserNote = getMostRecentNote(userNotes)
 
   return (
     <TableRow className={mergeClassNames("note-preview-row", className)}>
       <TableCell />
-      <TableCell colSpan={2}>
+      <TableCell colSpan={colSpan}>
         <NotePreview latestNote={mostRecentUserNote} numberOfNotes={numberOfNotes} ariaHidden={!previewState} />
       </TableCell>
-      <TableCell />
     </TableRow>
   )
 }

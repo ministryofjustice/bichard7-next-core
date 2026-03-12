@@ -1,7 +1,10 @@
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
+import type { UserList } from "@moj-bichard7/common/types/User"
+import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
+
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { Order, OrderBy, Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { LockedState } from "types/CaseListQueryParams"
@@ -9,7 +12,8 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
-import type { UserList } from "@moj-bichard7/common/types/User"
+import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import { ZodError } from "zod"
 
 describe("BichardApiV1", () => {
   let client: FakeApiClient
@@ -203,6 +207,75 @@ describe("BichardApiV1", () => {
 
       expect(isError(result)).toBe(true)
       expect(result).toEqual(new Error("Error"))
+    })
+  })
+
+  describe("#fetchAuditById", () => {
+    const auditId = 1
+
+    it("calls apiClient#get with a route", async () => {
+      const endpoint = V1.AuditById.replace(":auditId", String(auditId))
+
+      jest.spyOn(client, "get").mockResolvedValue({} as AuditWithProgressDto)
+
+      await gateway.fetchAuditById(auditId)
+
+      expect(client.get).toHaveBeenCalledWith(endpoint)
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+
+      const result = await gateway.fetchAuditById(auditId)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
+    })
+  })
+
+  describe("#fetchAuditCases", () => {
+    const auditId = 1
+    const auditCaseQuery: AuditCasesQuery = {
+      order: "asc",
+      orderBy: "courtDate",
+      pageNum: 1,
+      maxPerPage: 25
+    }
+
+    it("calls apiClient#get with a route", async () => {
+      const endpoint = V1.AuditCases.replace(":auditId", String(auditId))
+
+      jest.spyOn(client, "get").mockResolvedValue({
+        cases: [],
+        pageNum: 1,
+        maxPerPage: 50,
+        totalCases: 0,
+        returnCases: 0
+      })
+
+      await gateway.fetchAuditCases(auditId, auditCaseQuery)
+
+      expect(client.get).toHaveBeenCalledWith(
+        `${endpoint}?order=${auditCaseQuery.order}&orderBy=${auditCaseQuery.orderBy}&pageNum=${auditCaseQuery.pageNum}&maxPerPage=${auditCaseQuery.maxPerPage}`
+      )
+    })
+
+    it("can handle errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue(new Error("Error"))
+
+      const result = await gateway.fetchAuditCases(auditId, auditCaseQuery)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(new Error("Error"))
+    })
+
+    it("can handle parsing errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue({})
+
+      const result = await gateway.fetchAuditCases(auditId, auditCaseQuery)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toBeInstanceOf(ZodError)
     })
   })
 })

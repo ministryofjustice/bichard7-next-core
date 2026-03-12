@@ -1,5 +1,6 @@
 import z from "zod"
 
+import { dateLikeToDate } from "../schemas/dateLikeToDate"
 import { NoteDtoSchema, NoteRowSchema } from "./Note"
 
 export const AuditCaseSchema = z.object({
@@ -24,18 +25,18 @@ export const AuditCaseSchema = z.object({
 
 export const AuditCaseDtoSchema = z.object({
   asn: z.string().nullable(),
-  courtDate: z.date().nullable(),
+  courtDate: dateLikeToDate.nullable(),
   courtName: z.string().nullable(),
   courtReference: z.string().max(11),
   defendantName: z.string().nullable(),
   errorId: z.number(),
   errorQualityChecked: z.number().nullable(),
   errorStatus: z.string().nullable(),
-  messageReceivedTimestamp: z.date().nullable(),
+  messageReceivedTimestamp: dateLikeToDate.nullable(),
   noteCount: z.number().optional(),
   notes: z.array(NoteDtoSchema),
   ptiurn: z.string().nullable(),
-  resolutionTimestamp: z.date().nullable(),
+  resolutionTimestamp: dateLikeToDate.nullable(),
   triggerQualityChecked: z.number().nullable(),
   triggerStatus: z.string().nullable()
 })

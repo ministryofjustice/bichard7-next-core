@@ -5,7 +5,6 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 
 import { AccordionToggle } from "components/Card/Card.styles"
@@ -45,7 +44,7 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 }
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath } = useRouter()
+  const { basePath, asPath: pathName } = useRouter()
   const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
@@ -57,7 +56,12 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
-  const pathName = usePathname()
+  let returnToCaseListPath = basePath
+  let returnToCaseListText = "Return to case list"
+  if (/^\/audit\/\d+(?:\?.*)?$/.test(previousPath)) {
+    returnToCaseListPath += previousPath
+    returnToCaseListText = "Return to audit case list"
+  }
 
   let reallocatePath = `${basePath}${pathName}`
   let leaveAndUnlockUrl = `${basePath}?${leaveAndUnlockParams.toString()}`
@@ -161,8 +165,13 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </Form>
           </ConditionalRender>
           <ConditionalRender isRendered={!hasCaseLock}>
-            <SecondaryLinkButton id="return-to-case-list" className={`button`} href={basePath} secondary={true}>
-              {"Return to case list"}
+            <SecondaryLinkButton
+              id="return-to-case-list"
+              className={`button`}
+              href={returnToCaseListPath}
+              secondary={true}
+            >
+              {returnToCaseListText}
             </SecondaryLinkButton>
           </ConditionalRender>
         </ButtonContainer>
