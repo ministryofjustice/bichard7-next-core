@@ -20,7 +20,7 @@ describe("Header", () => {
 
   function mount(previousPath = "") {
     cy.mount(
-      <MockNextRouter basePath={"/bichard"} pathname={"/"}>
+      <MockNextRouter basePath={"/bichard"}>
         <PreviousPathContext.Provider value={{ previousPath }}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
             <CurrentUserContext.Provider value={{ currentUser }}>

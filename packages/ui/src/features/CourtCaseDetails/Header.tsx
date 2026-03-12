@@ -44,7 +44,7 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 }
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath, pathname } = useRouter()
+  const { basePath, asPath: pathName } = useRouter()
   const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
@@ -63,10 +63,10 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
     returnToCaseListText = "Return to audit case list"
   }
 
-  let reallocatePath = `${basePath}${pathname}`
+  let reallocatePath = `${basePath}${pathName}`
   let leaveAndUnlockUrl = `${basePath}?${leaveAndUnlockParams.toString()}`
 
-  if (!pathname.includes("/reallocate")) {
+  if (!pathName.includes("/reallocate")) {
     reallocatePath += "/reallocate"
   }
 
@@ -144,7 +144,7 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
           />
         </LockedTagContainer>
         <ButtonContainer id="buttons">
-          <ConditionalRender isRendered={canReallocate && !pathname.includes("/reallocate")}>
+          <ConditionalRender isRendered={canReallocate && !pathName.includes("/reallocate")}>
             <SecondaryLinkButton
               href={reallocatePath}
               className="b7-reallocate-button"
