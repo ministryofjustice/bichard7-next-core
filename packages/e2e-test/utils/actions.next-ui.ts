@@ -561,11 +561,10 @@ export const matchOffence = async function (this: Bichard, sequenceNumber: strin
 export const matchOffenceAndCcr = async function (this: Bichard, sequenceNumber: string, ccr: string) {
   const { page } = this.browser
   const selector = "select.offence-matcher"
-  const formattedCcr = process.env.USE_LEDS === "true" ? ccr.replace(/(\d+\/\d+\/)0+(\d+)/, "$1$2") : ccr
 
   await page.waitForSelector(`${selector} option[value]`)
 
-  await page.select(selector, `${sequenceNumber}-${formattedCcr}`)
+  await page.select(selector, `${sequenceNumber}-${ccr}`)
 }
 
 export const offenceAddedInCourt = async function (this: Bichard) {
