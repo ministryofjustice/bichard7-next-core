@@ -6,8 +6,10 @@ describe("Navigate to Reports filter page", () => {
       loginAndVisit("Supervisor", "/bichard/report-selection")
     })
 
-    it("Should redirect to the case list", () => {
-      cy.location("pathname").should("eq", "/bichard")
+    it("Should show the Report filter", () => {
+      cy.location("pathname").should("eq", "/bichard/report-selection")
+
+      cy.get("h1").should("have.text", "Reports")
     })
   })
 

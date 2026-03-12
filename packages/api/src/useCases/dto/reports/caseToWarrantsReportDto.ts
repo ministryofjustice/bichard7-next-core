@@ -1,6 +1,6 @@
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 
-import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { differenceInCalendarDays } from "date-fns"
@@ -17,7 +17,7 @@ import { pncIdentifier } from "../../cases/reports/warrants/utils/pncIdentifier"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
 
 export const caseToWarrantsReportDto = (caseRow: CaseRowForWarrantsReport): CaseForWarrantsReportDto => {
-  const aho = parseAhoXml(caseRow.annotated_msg)
+  const aho = parseHearingOutcome(caseRow.annotated_msg)
 
   if (isError(aho)) {
     throw aho

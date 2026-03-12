@@ -1,6 +1,6 @@
 import { format, parse } from "date-fns"
-import type { ReportType } from "types/reports/ReportType"
-import { REPORT_TYPE_MAP } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { REPORT_TYPE_MAP } from "@moj-bichard7/common/types/reports/ReportType"
 import { escapeCsvCell } from "./escapeCsvCell"
 
 export const csvMetadata = (reportType: ReportType, fromDate: string | null, toDate: string | null): string => {

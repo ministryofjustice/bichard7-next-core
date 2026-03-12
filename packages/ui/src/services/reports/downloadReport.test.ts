@@ -1,6 +1,6 @@
 import { downloadReport } from "./downloadReport"
 import { isRecordArray } from "services/reports/utils/isRecordArray"
-import type { ReportType } from "types/reports/ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 jest.mock("services/reports/utils/isRecordArray")
 const mockedIsRecordArray = isRecordArray as jest.MockedFunction<typeof isRecordArray>

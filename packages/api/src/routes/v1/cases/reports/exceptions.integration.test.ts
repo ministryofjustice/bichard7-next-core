@@ -3,17 +3,21 @@ import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, format, subDays } from "date-fns"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
-import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
-
 import build from "../../../../app"
+import { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
+import { getAuditLogUserEvents } from "../../../../tests/helpers/auditLogHelper"
 import { createCases } from "../../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
+import TestDynamoGateway from "../../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 
 const formatDateDto = "dd/MM/yyyy" as const
 const formatTimeDto = "HH:mm" as const
@@ -21,14 +25,17 @@ const formatTimeDto = "HH:mm" as const
 describe("exceptions report", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
+  const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
+  const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
   beforeAll(async () => {
-    app = await build({ auditLogGateway: {} as AuditLogDynamoGateway, database: testDatabaseGateway })
+    app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
   })
 
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
+    await testDynamoGateway.clearDynamo()
   })
 
   afterAll(async () => {
@@ -338,5 +345,86 @@ describe("exceptions report", () => {
     const json = response.json()
 
     expect(json).toHaveLength(1)
+  })
+  it("creates an Audit Log User Event", async () => {
+    const [jwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    await createCases(testDatabaseGateway, 3, {
+      0: {
+        errorResolvedAt: subDays(new Date(), 1),
+        errorStatus: ResolutionStatusNumber.Resolved,
+        triggerResolvedAt: subDays(new Date(), 1),
+        triggerStatus: ResolutionStatusNumber.Resolved
+      },
+      1: { errorStatus: ResolutionStatusNumber.Unresolved },
+      2: { triggerStatus: ResolutionStatusNumber.Submitted }
+    })
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("exceptions", "true")
+    query.append("triggers", "true")
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsExceptions}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const auditLogResults = await getAuditLogUserEvents(auditLogGateway, EventCode.ReportRun)
+
+    if (isError(auditLogResults)) {
+      throw new Error("Audit log event failed")
+    }
+
+    expect(auditLogResults).toHaveLength(1)
+
+    const event = auditLogResults[0]
+
+    expect(event.user).toBe(user.username)
+    expect(event.eventCode).toBe(EventCode.ReportRun)
+    expect(event.eventSource).toBe("Bichard New UI")
+    expect(event.category).toBe("information")
+    expect(event.attributes?.["Number of Records Returned"]).toBe(2)
+    expect(event.attributes?.["Report ID"]).toBe("Resolved Exceptions/Triggers")
+    expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
+  })
+
+  it("still creates an Audit Log User Event if there is not a case", async () => {
+    const [jwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("exceptions", "true")
+    query.append("triggers", "true")
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsExceptions}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const auditLogResults = await getAuditLogUserEvents(auditLogGateway, EventCode.ReportRun)
+
+    if (isError(auditLogResults)) {
+      throw new Error("Audit log event failed")
+    }
+
+    expect(auditLogResults).toHaveLength(1)
+
+    const event = auditLogResults[0]
+
+    expect(event.user).toBe(user.username)
+    expect(event.eventCode).toBe(EventCode.ReportRun)
+    expect(event.eventSource).toBe("Bichard New UI")
+    expect(event.category).toBe("information")
+    expect(event.attributes?.["Number of Records Returned"]).toBe(0)
+    expect(event.attributes?.["Report ID"]).toBe("Resolved Exceptions/Triggers")
+    expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 })

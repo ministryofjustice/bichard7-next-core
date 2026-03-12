@@ -1,6 +1,6 @@
 import type { BaseReportColumn, ReportColumn } from "./Columns"
 import { bailsColumns, domesticViolenceColumns, exceptionsColumns, warrantsColumns } from "./Columns"
-import type { ReportType } from "./ReportType"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { ExceptionReportDto, CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
