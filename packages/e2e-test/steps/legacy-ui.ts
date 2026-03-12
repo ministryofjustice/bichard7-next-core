@@ -1,6 +1,6 @@
 import * as legacy from "../utils/actions.legacy-ui"
 import { logInAs } from "../utils/auth"
-import { sendMessageForTest } from "../utils/message"
+import { sendMessageForTest, sendMessageForTestWithOriginalAsn } from "../utils/message"
 import {
   accessReport,
   checkLiveStatusExceptionsReport,
@@ -33,6 +33,7 @@ export const setupLegacySteps = () => {
   Given("I navigate to the list of reports", legacy.canSeeReports)
 
   When("{string} is received", sendMessageForTest)
+  When("{string} is received with an invalid ASN", sendMessageForTestWithOriginalAsn)
   When("I view the list of exceptions", legacy.goToExceptionList)
   When("I visit the Team Management screen", legacy.visitTeamPage)
   When("I open this record", legacy.openRecordForCurrentTest)

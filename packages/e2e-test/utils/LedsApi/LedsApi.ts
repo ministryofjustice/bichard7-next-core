@@ -4,7 +4,7 @@ import { promises as fs } from "fs"
 import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
-import type { MockAsnQueryParams } from "../../types/PoliceApi"
+import type { MockAsnQueryParams, PrepareInputMessageOptions } from "../../types/PoliceApi"
 import { addMockToLedsApi } from "./addMocksToLedsApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
 import LedsTestApiHelper from "./helpers/LedsTestApiHelper/LedsTestApiHelper"
@@ -29,25 +29,34 @@ export class LedsApi implements PoliceApi {
     }
   }
 
-  prepareInputMessage(message: string) {
+  prepareInputMessage(message: string, options: PrepareInputMessageOptions) {
     if (!this.bichard.config.realPNC) {
       return Promise.resolve(message)
     }
 
     const asn = this.testApiHelper.arrestSummonsNumber?.replace(/\//g, "")
-    if (!asn) {
+    if (options.useOriginalAsn || !asn) {
       return Promise.resolve(message)
     }
 
-    const updatedMessage = message.replace(/(<.*:ProsecutorReference>).*?(<\/.*:ProsecutorReference>)/, `$1${asn}$2`)
+    const updatedMessage = message.replace(
+      /(<.*:?ProsecutorReference>)[\w\W]*?(<\/.*:?ProsecutorReference>)/,
+      `$1${asn}$2`
+    )
 
     return Promise.resolve(updatedMessage)
   }
 
+  getAsn(): string | undefined {
+    return this.bichard.config.realPNC ? this.testApiHelper.arrestSummonsNumber : undefined
+  }
+
   createValidRecord: (record: string) => Promise<void>
 
-  mockMissingDataForTest(): Promise<void> {
-    return addMockToLedsMockApi(this.bichard)
+  async mockMissingDataForTest(): Promise<void> {
+    if (!this.bichard.config.realPNC) {
+      await addMockToLedsMockApi(this.bichard)
+    }
   }
 
   mockDataForTest(): Promise<void> {
