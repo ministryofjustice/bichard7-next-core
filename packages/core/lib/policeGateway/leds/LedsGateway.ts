@@ -20,6 +20,7 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import PoliceApiError from "../PoliceApiError"
+import cleanObjectStrings from "./cleanObjectStrings"
 import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
@@ -147,7 +148,7 @@ export default class LedsGateway implements PoliceGateway {
 
     const updateUrl = this.generateUrl(endpoint)
     const apiResponse = await axios
-      .post(updateUrl, requestBody, {
+      .post(updateUrl, cleanObjectStrings(requestBody), {
         headers: generateRequestHeaders(correlationId, actionCode, authToken),
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
