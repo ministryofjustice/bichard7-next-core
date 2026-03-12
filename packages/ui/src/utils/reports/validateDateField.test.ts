@@ -8,6 +8,7 @@ import {
 
 describe("validateDateField", () => {
   const today = startOfToday()
+  const thirtyOneDaysAgo = subDays(startOfToday(), 31)
 
   it("should return error if date string is empty", () => {
     expect(validateDateField("")).toBe(FIELD_REQUIRED)
@@ -30,5 +31,10 @@ describe("validateDateField", () => {
   it("should return null for a valid date (today)", () => {
     const todayStr = format(today, "yyyy-MM-dd")
     expect(validateDateField(todayStr)).toBeNull()
+  })
+
+  it("should return null for a valid date (31 days ago)", () => {
+    const thirtyOneDaysAgoStr = format(thirtyOneDaysAgo, "yyyy-MM-dd")
+    expect(validateDateField(thirtyOneDaysAgoStr)).toBeNull()
   })
 })
