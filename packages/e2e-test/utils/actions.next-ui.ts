@@ -535,7 +535,12 @@ const correctOffence = async (page: Page, fieldHtml: string, newValue: string) =
 export const correctOffenceException = async function (this: Bichard, field: string, newValue: string) {
   const { page } = this.browser
 
-  await correctOffence(page, convertFieldToHtml(field), newValue)
+  let newValueToSet = newValue
+  if (field.toUpperCase() === "ASN") {
+    newValueToSet = this.policeApi.getAsn() ?? newValue
+  }
+
+  await correctOffence(page, convertFieldToHtml(field), newValueToSet)
 
   try {
     await page.waitForSelector(".success-message", { timeout: 500 })

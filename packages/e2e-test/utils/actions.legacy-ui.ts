@@ -514,8 +514,10 @@ export const viewOffence = async function (this: Bichard, offenceId: string) {
 }
 
 export const checkOffenceData = async function (this: Bichard, value: string, key: string) {
+  const keyToFind = { "Offence description": "Wording" }[key] ?? key
+
   await checkDataTable(this, [
-    { column: 1, value: key, exact: true },
+    { column: 1, value: keyToFind, exact: true },
     { column: 2, value, exact: true }
   ])
 }
@@ -528,9 +530,11 @@ export const checkNoteExists = async function (this: Bichard, value: string) {
 }
 
 export const checkOffenceDataError = async function (this: Bichard, value: string, key: string) {
+  const valueToCheck = { "HO100201 - Bad PTI-URN format": "HO100201 - Bad PTIURN format" }[value] ?? value
+
   await checkDataTable(this, [
     { column: 1, value: key, exact: true },
-    { column: 3, value, exact: false }
+    { column: 3, value: valueToCheck, exact: false }
   ])
 }
 
