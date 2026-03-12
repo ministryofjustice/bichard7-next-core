@@ -74,6 +74,11 @@ export default class BichardApiV1 implements BichardApiGateway {
       return result
     }
 
-    return AuditCasesMetadataSchema.parse(result)
+    const parsedResult = AuditCasesMetadataSchema.safeParse(result)
+    if (!parsedResult.success) {
+      return parsedResult.error
+    }
+
+    return parsedResult.data
   }
 }

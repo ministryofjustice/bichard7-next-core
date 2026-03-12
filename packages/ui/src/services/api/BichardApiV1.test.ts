@@ -1,7 +1,6 @@
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { UserList } from "@moj-bichard7/common/types/User"
 import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
-import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { Order, OrderBy, Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
@@ -14,6 +13,7 @@ import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import { ZodError } from "zod"
 
 describe("BichardApiV1", () => {
   let client: FakeApiClient
@@ -241,18 +241,17 @@ describe("BichardApiV1", () => {
       pageNum: 1,
       maxPerPage: 25
     }
-    const mockedReturnValue: AuditCasesMetadata = {
-      cases: [],
-      pageNum: 1,
-      maxPerPage: 50,
-      totalCases: 0,
-      returnCases: 0
-    }
 
     it("calls apiClient#get with a route", async () => {
       const endpoint = V1.AuditCases.replace(":auditId", String(auditId))
 
-      jest.spyOn(client, "get").mockResolvedValue(mockedReturnValue)
+      jest.spyOn(client, "get").mockResolvedValue({
+        cases: [],
+        pageNum: 1,
+        maxPerPage: 50,
+        totalCases: 0,
+        returnCases: 0
+      })
 
       await gateway.fetchAuditCases(auditId, auditCaseQuery)
 
@@ -268,6 +267,15 @@ describe("BichardApiV1", () => {
 
       expect(isError(result)).toBe(true)
       expect(result).toEqual(new Error("Error"))
+    })
+
+    it("can handle parsing errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue({})
+
+      const result = await gateway.fetchAuditCases(auditId, auditCaseQuery)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toBeInstanceOf(ZodError)
     })
   })
 })
