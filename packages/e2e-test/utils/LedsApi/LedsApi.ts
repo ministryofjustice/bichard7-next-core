@@ -34,7 +34,7 @@ export class LedsApi implements PoliceApi {
       return Promise.resolve(message)
     }
 
-    const asn = this.testApiHelper.arrestSummonsNumber?.replace(/\//g, "")
+    const asn = this.testApiHelper.getArtifacts().arrestSummonsNumber?.replace(/\//g, "")
     if (options.useOriginalAsn || !asn) {
       return Promise.resolve(message)
     }
@@ -48,7 +48,7 @@ export class LedsApi implements PoliceApi {
   }
 
   getAsn(): string | undefined {
-    return this.bichard.config.realPNC ? this.testApiHelper.arrestSummonsNumber : undefined
+    return this.bichard.config.realPNC ? this.testApiHelper.getArtifacts().arrestSummonsNumber : undefined
   }
 
   createValidRecord: (record: string) => Promise<void>
