@@ -1,9 +1,9 @@
-import type { RemandHeadline } from "./ArrestSummariesResponse"
 import type { DisposalEntry } from "./DisposalHistoryResponse"
+import type { RemandDetails } from "./RemandResponse"
 
 type CaseData = {
   disposals: DisposalEntry[]
-  remands: RemandHeadline[]
+  remands: RemandDetails[]
 }
 
 export default CaseData

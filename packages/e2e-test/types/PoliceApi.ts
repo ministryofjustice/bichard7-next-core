@@ -12,6 +12,10 @@ export type MockAsnQueryParams = {
   count?: number
 }
 
+export type PrepareInputMessageOptions = {
+  useOriginalAsn: boolean
+}
+
 export default interface PoliceApi {
   mocks: PoliceApiRequestMock[]
   checkMocks: () => Promise<void>
@@ -29,5 +33,6 @@ export default interface PoliceApi {
   expectNoUpdates: () => Promise<void>
   expectNotUpdated: () => Promise<void>
   expectUpdateIncludes: (data: string) => Promise<void>
-  prepareInputMessage: (message: string) => Promise<string>
+  prepareInputMessage: (message: string, options: PrepareInputMessageOptions) => Promise<string>
+  getAsn: () => string | undefined
 }

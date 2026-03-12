@@ -1,11 +1,17 @@
-type AdditionalOffenceResultFieldsForSeedingTestData = { DisposalEffectiveDate?: string }
+type AdditionalOffenceResultFieldsForSeedingTestData = {
+  DisposalEffectiveDate?: string
+}
 
 export type ParsedNcmOffenceResult = AdditionalOffenceResultFieldsForSeedingTestData & {
   ResultCode: number
   ResultText: string
 }
 
-export type ParsedNcmOffence = {
+type AdditionalOffenceFieldsForSeedingTestData = {
+  DisposalGroup?: string
+}
+
+export type ParsedNcmOffence = AdditionalOffenceFieldsForSeedingTestData & {
   BaseOffenceDetails: {
     OffenceCode: string
     OffenceSequenceNumber: number
@@ -14,9 +20,11 @@ export type ParsedNcmOffence = {
     OffenceTiming: {
       OffenceStart: {
         OffenceDateStartDate: string
+        OffenceDateStartTime?: string
       }
       OffenceEnd?: {
         OffenceEndDate: string
+        OffenceEndTime?: string
       }
     }
   }

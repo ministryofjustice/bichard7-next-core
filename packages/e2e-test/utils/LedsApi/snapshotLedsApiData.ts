@@ -9,7 +9,12 @@ const snapshotLedsApiData = async (
 ): Promise<void> => {
   await delay(15)
   const disposals = await bichard.policeApi.testApiHelper.fetchDisposals()
-  const remands = await bichard.policeApi.testApiHelper.fetchRemands()
+  const [offences, remands] = await bichard.policeApi.testApiHelper.fetchRemandsAndOffences()
+  disposals.forEach((disposal) => {
+    disposal.charges.forEach((charge) => {
+      charge.offence = offences.find((offence) => offence.id === charge.offenceId)
+    })
+  })
 
   const caseData: CaseData = { disposals, remands }
 
