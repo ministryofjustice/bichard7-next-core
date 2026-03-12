@@ -6,6 +6,9 @@ import normaliseForComparison from "../normaliseForComparison"
 import { delay } from "../puppeteer-utils"
 import type { RequestResponseMock } from "./MockServer"
 
+const MAX_RETRIES = 8
+const DELAY_SECONDS = 3
+
 const pathMapping: Record<string, Operation> = {
   "court-case-disposal-result": "Add Disposal",
   "basic-remands": "Remand",
@@ -13,12 +16,9 @@ const pathMapping: Record<string, Operation> = {
 }
 
 const verifyRequests = async (bichard: LedsBichard) => {
-  const MAX_RETRIES = 8
-  const DELAY_SECONDS = 3
-
   let serverMocks: RequestResponseMock[] | undefined = undefined
 
-  for (let index = 0; index < MAX_RETRIES; index++) {
+  for (let index = 0; index < 8; index++) {
     const fetched = await bichard.policeApi.mockServerClient.fetchMocks()
     const isReady = fetched.length > 0 && fetched.every((mock) => mock.request && mock.request.length > 0)
 
