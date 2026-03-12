@@ -19,12 +19,16 @@ import fetchOffence from "./fetchOffence"
 import fetchRemand from "./fetchRemand"
 import findDisposalsByAsn from "./findDisposalsByAsn"
 
+type TestArtifacts = {
+  person: PersonDetails
+  arrestSummonsNumber: string
+  arrestSummonsId: string
+}
+
 export default class LedsTestApiHelper {
   private readonly authentication: LedsAuthentication
   private readonly baseUrl: string
-  private person: PersonDetails
-  arrestSummonsNumber: string
-  arrestSummonsId: string
+  private artifacts: Record<string, TestArtifacts> = {}
 
   constructor(private readonly bichard: Bichard) {
     this.baseUrl = this.bichard.config.ledsApiUrl
@@ -48,6 +52,11 @@ export default class LedsTestApiHelper {
     }
   }
 
+  getArtifacts() {
+    this.artifacts[this.bichard.specFolder] ??= {} as TestArtifacts
+    return this.artifacts[this.bichard.specFolder]
+  }
+
   async createArrestedPersonAndDisposals(person: PersonDetails, courtCases: NonEmptyCourtCaseArray): Promise<string> {
     const requestOptions = await this.createRequestOptions(person)
     const { arrestSummonsNumber, arrestSummonsId, personId } = await createArrestedPerson(
@@ -56,9 +65,10 @@ export default class LedsTestApiHelper {
       courtCases
     )
 
-    this.person = person
-    this.arrestSummonsNumber = arrestSummonsNumber
-    this.arrestSummonsId = arrestSummonsId
+    const artifacts = this.getArtifacts()
+    artifacts.person = person
+    artifacts.arrestSummonsNumber = arrestSummonsNumber
+    artifacts.arrestSummonsId = arrestSummonsId
 
     console.log(
       [
@@ -90,21 +100,22 @@ export default class LedsTestApiHelper {
   }
 
   async fetchRemandsAndOffences(): Promise<[OffenceResponse[], RemandDetails[]]> {
-    const requestOptions = await this.createRequestOptions(this.person)
-    const arrestSummaries = await fetchArrestSummaries(requestOptions, this.person)
+    const artifacts = this.getArtifacts()
+    const requestOptions = await this.createRequestOptions(artifacts.person)
+    const arrestSummaries = await fetchArrestSummaries(requestOptions, artifacts.person)
     const arrestSummary = arrestSummaries.find(
-      (arrest) => arrest.arrestReportHeadlines.asn === this.arrestSummonsNumber
+      (arrest) => arrest.arrestReportHeadlines.asn === artifacts.arrestSummonsNumber
     )
     const remandIds = (arrestSummary?.remandHeadlines ?? []).map((remand) => remand.remandId)
     const remands = (
       await Promise.all(
-        remandIds.map((remandId) => fetchRemand(requestOptions, this.person, this.arrestSummonsId, remandId))
+        remandIds.map((remandId) => fetchRemand(requestOptions, artifacts.person, artifacts.arrestSummonsId, remandId))
       )
     ).map((remand) => remand.content)
     const offenceIds = (arrestSummary?.offencesHeadlines ?? []).map((offence) => offence.offenceId)
     const offences = await Promise.all(
       offenceIds.map(async (offenceId) => {
-        const offence = await fetchOffence(requestOptions, this.person, this.arrestSummonsId, offenceId)
+        const offence = await fetchOffence(requestOptions, artifacts.person, artifacts.arrestSummonsId, offenceId)
         offence.id = offenceId
         return offence
       })
@@ -114,13 +125,15 @@ export default class LedsTestApiHelper {
   }
 
   async fetchDisposalsByAsn(): Promise<AsnQueryResponse> {
-    const requestOptions = await this.createRequestOptions(this.person)
-    return findDisposalsByAsn(requestOptions, this.arrestSummonsNumber)
+    const artifacts = this.getArtifacts()
+    const requestOptions = await this.createRequestOptions(artifacts.person)
+    return findDisposalsByAsn(requestOptions, artifacts.arrestSummonsNumber)
   }
 
   async fetchDisposals(): Promise<DisposalEntry[]> {
-    const requestOptions = await this.createRequestOptions(this.person)
-    const disposals = (await fetchDisposalHistory(requestOptions, this.person)).entries
+    const artifacts = this.getArtifacts()
+    const requestOptions = await this.createRequestOptions(artifacts.person)
+    const disposals = (await fetchDisposalHistory(requestOptions, artifacts.person)).entries
 
     return disposals
   }
