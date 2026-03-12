@@ -6,8 +6,8 @@ describe("validateDateRange", () => {
   const today = startOfToday()
 
   it("should return errors if 'Date From' is after 'Date To'", () => {
-    const pastDateStr = format(subDays(today, 1), "dd-MM-yyyy")
-    const currentDateStr = format(today, "dd-MM-yyyy")
+    const pastDateStr = format(subDays(today, 1), "yyyy-MM-dd")
+    const currentDateStr = format(today, "yyyy-MM-dd")
 
     const result = validateDateRange(currentDateStr, pastDateStr)
 
@@ -18,7 +18,7 @@ describe("validateDateRange", () => {
   })
 
   it("should return nulls for a valid range", () => {
-    const todayStr = format(today, "dd-MM-yyyy")
+    const todayStr = format(today, "yyyy-MM-dd")
     const result = validateDateRange(todayStr, todayStr)
 
     expect(result).toEqual({
