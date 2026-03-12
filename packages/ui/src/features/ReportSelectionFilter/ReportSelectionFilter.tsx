@@ -1,21 +1,21 @@
 import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
-import { SyntheticEvent, useEffect, useState } from "react"
+import { SyntheticEvent, useEffect, useReducer, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfig, ReportConfigs } from "types/reports/Config"
+import { validateCheckboxes } from "utils/reports/validateCheckboxes"
+import { validateDateRange } from "utils/reports/validateDateRange"
+import { validateSelectReport } from "utils/reports/validateSelectReport"
+import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes } from "./Checkboxes"
 import { DateRange } from "./DateRange"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
-
-import { validateCheckboxes } from "utils/reports/validateCheckboxes"
-import { validateDateRange } from "utils/reports/validateDateRange"
-import { validateSelectReport } from "utils/reports/validateSelectReport"
-import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
+import { filterReducer, initialFilterState } from "./reducers/filters"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
@@ -23,13 +23,7 @@ export const ReportSelectionFilter: React.FC = () => {
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
-  const [filterValues, setFilterValues] = useState({
-    reportType: undefined as ReportType | undefined,
-    dateTo: "",
-    dateFrom: "",
-    exceptions: true,
-    triggers: true
-  })
+  const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
   const [errors, setErrors] = useState<Record<string, string | null>>({})
 
   const clearParallelError = (field: string) => {
@@ -51,59 +45,42 @@ export const ReportSelectionFilter: React.FC = () => {
   const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
   const handleSetDateFrom = (date: string) => {
-    setFilterValues((prev) => ({
-      ...prev,
-      dateFrom: date
-    }))
+    dispatch({ type: "SET_DATE_FROM", payload: date })
     clearErrors("dateFrom")
   }
 
   const handleSetDateTo = (date: string) => {
-    setFilterValues((prev) => ({
-      ...prev,
-      dateTo: date
-    }))
+    dispatch({ type: "SET_DATE_TO", payload: date })
     clearErrors("dateTo")
   }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-    const reportType = event.currentTarget.value as ReportType
-    setFilterValues((prev) => ({
-      ...prev,
-      reportType: reportType,
-      triggers: true,
-      exceptions: true
-    }))
+    dispatch({ type: "SET_REPORT_TYPE", payload: event.currentTarget.value as ReportType })
     setErrors({})
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const { id, checked } = event.currentTarget
+    dispatch({ type: "SET_CHECKBOX", payload: { id, checked } })
 
-    setFilterValues((prev) => {
-      const next = { ...prev, [id]: checked }
-      const checkboxesValidation = validateCheckboxes(next.reportType, next.triggers, next.exceptions)
+    const checkboxError = validateCheckboxes(
+      filterValues.reportType,
+      id === "triggers" ? checked : filterValues.triggers,
+      id === "exceptions" ? checked : filterValues.exceptions
+    )
+    setErrors((prev) => ({ ...prev, checkboxes: checkboxError }))
+  }
 
-      setErrors((errs) => ({ ...errs, checkboxes: checkboxesValidation }))
-      return next
-    })
+  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    setRows(null)
+    setCsvDownloadUrl(null)
+    dispatch({ type: "RESET_FILTERS" })
   }
 
   const clearResults = () => {
     setRows(null)
     setCsvDownloadUrl(null)
-  }
-
-  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-    clearResults()
-    setFilterValues({
-      reportType: undefined,
-      dateTo: "",
-      dateFrom: "",
-      exceptions: true,
-      triggers: true
-    })
   }
 
   const validateFilters = (): boolean => {
