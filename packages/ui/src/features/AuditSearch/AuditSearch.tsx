@@ -20,12 +20,13 @@ interface AuditCheckboxProps {
 const AuditCheckbox = forwardRef<HTMLInputElement, AuditCheckboxProps>((props, ref) => {
   const { id, name, defaultChecked, checked, label, value, onChange } = props
   const defaultId = useId()
+  const idToUse = id ?? defaultId
 
   return (
     <div className="govuk-checkboxes__item">
       <input
         className="govuk-checkboxes__input"
-        id={id ?? defaultId}
+        id={idToUse}
         checked={checked}
         defaultChecked={defaultChecked}
         name={name}
@@ -35,7 +36,7 @@ const AuditCheckbox = forwardRef<HTMLInputElement, AuditCheckboxProps>((props, r
         ref={ref}
         {...props}
       />
-      <label className="govuk-checkboxes__label" htmlFor={id}>
+      <label className="govuk-checkboxes__label" htmlFor={idToUse}>
         {label}
       </label>
     </div>
