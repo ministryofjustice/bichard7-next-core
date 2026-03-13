@@ -6,7 +6,7 @@ import normaliseForComparison from "../normaliseForComparison"
 import { delay } from "../puppeteer-utils"
 import type { RequestResponseMock } from "./MockServer"
 
-const MAX_RETRIES = 8
+const MAX_RETRIES = 4
 const DELAY_SECONDS = 3
 
 const pathMapping: Record<string, Operation> = {
@@ -15,31 +15,12 @@ const pathMapping: Record<string, Operation> = {
   "court-case-subsequent-disposal-results": "Sentence Deferred"
 }
 
-const verifyRequests = async (bichard: LedsBichard) => {
-  let serverMocks: RequestResponseMock[] | undefined = undefined
-
-  for (let index = 0; index < 8; index++) {
-    const fetched = await bichard.policeApi.mockServerClient.fetchMocks()
-    console.log("========= Mocks:", fetched)
-    const isReady = fetched.length > 0 && fetched.every((mock) => mock.request && mock.request.length > 0)
-
-    if (isReady) {
-      serverMocks = fetched
-      break
-    }
-
-    console.log(`Attempt ${index + 1}: mocks not ready yet, retrying..`)
-    await delay(DELAY_SECONDS)
-  }
-
-  if (!serverMocks || serverMocks.length === 0) {
-    throw Error(`Couldn't fetch mocks after ${MAX_RETRIES} attempts.`)
-  }
-
+const verifyRequests = (bichard: LedsBichard, serverMocks: RequestResponseMock[]) => {
   const localMocks = bichard.policeApi.mocks
 
   serverMocks.forEach((serverMock, index) => {
     const localMock = localMocks[index]
+
     if (!localMock.expectedRequest) {
       return
     }
@@ -57,18 +38,28 @@ const verifyRequests = async (bichard: LedsBichard) => {
 }
 
 const checkMocksForLedsMockApi = async (bichard: LedsBichard) => {
+  let serverMocks: RequestResponseMock[] | undefined = undefined
   let expectationPaths: string[] = []
-  for (let index = 0; index < 3; index++) {
-    const unusedMocks = await bichard.policeApi.mockServerClient.retrieveUnusedMocks()
-    if (unusedMocks.length === 0) {
-      await verifyRequests(bichard)
+
+  for (let index = 0; index < MAX_RETRIES; index++) {
+    serverMocks = await bichard.policeApi.mockServerClient.fetchMocks()
+    const isReady = serverMocks.length > 0 && serverMocks.every((mock) => mock.request && mock.request.length > 0)
+
+    if (isReady) {
+      verifyRequests(bichard, serverMocks)
       return
     }
 
-    expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
-
-    await new Promise((resolve) => setTimeout(resolve, 2_000))
+    console.log(`Attempt ${index + 1}: mocks not ready yet, retrying..`)
+    await delay(DELAY_SECONDS)
   }
+
+  if (!serverMocks || serverMocks.length === 0) {
+    throw Error(`Couldn't fetch mocks after ${MAX_RETRIES} attempts.`)
+  }
+
+  const unusedMocks = await bichard.policeApi.mockServerClient.retrieveUnusedMocks()
+  expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
 
   throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
 }
