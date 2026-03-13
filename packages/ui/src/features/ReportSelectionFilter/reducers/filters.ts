@@ -1,4 +1,5 @@
 import type { FilterAction, FilterState } from "types/ReportSelectionFilter"
+import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 
 export const initialFilterState: FilterState = {
@@ -38,7 +39,15 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
 
       return { ...state, dateTo: action.payload, dateToError: null, dateFromError: dateFromError }
     case "SET_CHECKBOX":
-      return { ...state, [action.payload.id]: action.payload.checked }
+      const id = action.payload.id
+      const checked = action.payload.checked
+      const checkboxError = validateCheckboxes(
+        state.reportType,
+        id === "triggers" ? checked : state.triggers,
+        id === "exceptions" ? checked : state.exceptions
+      )
+
+      return { ...state, [action.payload.id]: action.payload.checked, checkboxesError: checkboxError }
     case "RESET_FILTERS":
       return initialFilterState
     case "SET_ERRORS":
@@ -49,8 +58,6 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
         dateToError: action.payload.dateToError,
         checkboxesError: action.payload.checkboxesError
       }
-    case "SET_CHECKBOXES_ERROR":
-      return { ...state, checkboxesError: action.payload }
     default:
       return state
   }

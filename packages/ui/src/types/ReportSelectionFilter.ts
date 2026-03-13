@@ -27,4 +27,3 @@ export type FilterAction =
         checkboxesError: string | null
       }
     }
-  | { type: "SET_CHECKBOXES_ERROR"; payload: string | null }

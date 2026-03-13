@@ -41,13 +41,6 @@ export const ReportSelectionFilter: React.FC = () => {
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const { id, checked } = event.currentTarget
     dispatch({ type: "SET_CHECKBOX", payload: { id, checked } })
-
-    const checkboxError = validateCheckboxes(
-      filterValues.reportType,
-      id === "triggers" ? checked : filterValues.triggers,
-      id === "exceptions" ? checked : filterValues.exceptions
-    )
-    dispatch({ type: "SET_CHECKBOXES_ERROR", payload: checkboxError })
   }
 
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
