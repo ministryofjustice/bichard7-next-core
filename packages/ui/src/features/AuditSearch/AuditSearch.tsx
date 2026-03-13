@@ -1,4 +1,4 @@
-import React, { useActionState, useId, useState } from "react"
+import React, { type ChangeEvent, forwardRef, useActionState, useId, useRef, useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
@@ -7,13 +7,18 @@ import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
 
-const AuditCheckbox: React.FC<{
+interface AuditCheckboxProps {
   id?: string
   name?: string
-  defaultChecked: boolean
+  defaultChecked?: boolean
+  checked?: boolean
   label: string
   value?: string
-}> = ({ id, name, defaultChecked, label, value, ...props }) => {
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+const AuditCheckbox = forwardRef<HTMLInputElement, AuditCheckboxProps>((props, ref) => {
+  const { id, name, defaultChecked, checked, label, value, onChange } = props
   const defaultId = useId()
 
   return (
@@ -21,10 +26,13 @@ const AuditCheckbox: React.FC<{
       <input
         className="govuk-checkboxes__input"
         id={id ?? defaultId}
+        checked={checked}
         defaultChecked={defaultChecked}
         name={name}
         type="checkbox"
         value={value}
+        onChange={onChange}
+        ref={ref}
         {...props}
       />
       <label className="govuk-checkboxes__label" htmlFor={id}>
@@ -32,7 +40,9 @@ const AuditCheckbox: React.FC<{
       </label>
     </div>
   )
-}
+})
+
+AuditCheckbox.displayName = "AuditCheckbox"
 
 interface FormState {
   errorMessage: string
@@ -52,6 +62,8 @@ function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
 
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
   const { resolvers, triggerTypes } = props
+
+  const resolvedByFields = useRef<HTMLInputElement[]>([])
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
@@ -90,7 +102,9 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
     volume: defaultVolume
   })
 
-  const defaultAllResolversSelected = resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
+  const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
+    resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
+  )
 
   return (
     <form action={submitAction}>
@@ -162,9 +176,17 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
                     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                       <AuditCheckbox
-                        defaultChecked={defaultAllResolversSelected}
+                        checked={allResolversSelected}
                         label={"All"}
                         data-testid={"audit-resolved-by-all"}
+                        onChange={(e) => {
+                          console.log("toggle", e.target.checked)
+
+                          resolvedByFields.current.forEach(
+                            (input) => ((input as HTMLInputElement).checked = e.target.checked)
+                          )
+                          setAllResolversSelected(e.target.checked)
+                        }}
                       />
                       {resolvers.map((resolver, index) => (
                         <AuditCheckbox
@@ -175,6 +197,16 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                           defaultChecked={currentFormState.resolvedBy.includes(resolver.username)}
                           label={formatUserFullName(resolver.forenames, resolver.surname)}
                           data-testid={`audit-resolved-by-${index}`}
+                          onChange={(_) => {
+                            setAllResolversSelected(
+                              resolvedByFields.current.every((input) => (input as HTMLInputElement).checked)
+                            )
+                          }}
+                          ref={(elem) => {
+                            if (elem) {
+                              resolvedByFields.current[index] = elem
+                            }
+                          }}
                         />
                       ))}
                     </div>
