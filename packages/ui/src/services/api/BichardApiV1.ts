@@ -8,6 +8,8 @@ import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchPar
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type PromiseResult from "types/PromiseResult"
 import type { UserList } from "@moj-bichard7/common/types/User"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
+import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -26,6 +28,10 @@ export default class BichardApiV1 implements BichardApiGateway {
 
   async resubmitCase(caseId: number): Promise<Error> {
     return await this.apiClient.post(V1.CaseResubmit.replace(":caseId", `${caseId}`))
+  }
+
+  async createAudit(audit: CreateAuditInput): Promise<Error | AuditDto> {
+    return await this.apiClient.post(V1.Audit, audit)
   }
 
   async saveAuditResults(
