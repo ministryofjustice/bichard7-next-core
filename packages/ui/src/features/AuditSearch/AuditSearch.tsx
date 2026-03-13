@@ -48,6 +48,7 @@ AuditCheckbox.displayName = "AuditCheckbox"
 interface FormState {
   errorMessage: string
   resolvedBy: string[]
+  triggers: string[]
   includeTriggers: boolean
   includeExceptions: boolean
   volume: string
@@ -64,7 +65,8 @@ function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
   const { resolvers, triggerTypes } = props
 
-  const resolvedByFields = useRef<HTMLInputElement[]>([])
+  const formRef = useRef<HTMLFormElement>(null)
+  const resolvedByRefs = useRef<HTMLInputElement[]>([])
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
@@ -77,17 +79,31 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
   const [toDate, setToDate] = useState(new Date())
 
-  const formValid = fromDate <= toDate && toDate <= today
+  async function handleFormChange() {
+    const formData = new FormData(formRef.current as HTMLFormElement)
+    const validationState = readFormState(formData)
+    setFormValid(isFormValid(validationState))
+  }
 
-  async function submit(formState: FormState, formData: FormData) {
-    const newState = {
-      ...formState,
+  function isFormValid(formState: FormState) {
+    return formState.resolvedBy.length > 0 && (formState.includeExceptions || formState.includeTriggers)
+  }
+
+  function readFormState(formData: FormData): FormState {
+    return {
       errorMessage: "",
       resolvedBy: formData.getAll("resolvedBy") as string[],
       triggers: formData.getAll("triggers") as string[],
       includeTriggers: formData.get("includeTriggers") === "on",
       includeExceptions: formData.get("includeExceptions") === "on",
       volume: formData.get("volume") as string
+    }
+  }
+
+  async function submit(formState: FormState, formData: FormData) {
+    const newState = {
+      ...formState,
+      ...readFormState(formData)
     }
     console.log("New state", newState)
 
@@ -103,12 +119,14 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
     volume: defaultVolume
   })
 
+  const [formValid, setFormValid] = useState(isFormValid(currentFormState))
+
   const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
     resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
   )
 
   return (
-    <form action={submitAction}>
+    <form action={submitAction} onChange={handleFormChange} ref={formRef}>
       <div className="moj-filter">
         <div className="moj-filter__header">
           <div className="moj-filter__header-title">
@@ -183,7 +201,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                         onChange={(e) => {
                           console.log("toggle", e.target.checked)
 
-                          resolvedByFields.current.forEach(
+                          resolvedByRefs.current.forEach(
                             (input) => ((input as HTMLInputElement).checked = e.target.checked)
                           )
                           setAllResolversSelected(e.target.checked)
@@ -200,12 +218,12 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                           data-testid={`audit-resolved-by-${index}`}
                           onChange={(_) => {
                             setAllResolversSelected(
-                              resolvedByFields.current.every((input) => (input as HTMLInputElement).checked)
+                              resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked)
                             )
                           }}
                           ref={(elem) => {
                             if (elem) {
-                              resolvedByFields.current[index] = elem
+                              resolvedByRefs.current[index] = elem
                             }
                           }}
                         />
