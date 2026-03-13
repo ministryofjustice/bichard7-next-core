@@ -1,7 +1,9 @@
-import { addDays, subDays } from "date-fns"
+import { addDays, format, startOfToday, subDays } from "date-fns"
 import { ReportSelectionFilter } from "features/ReportSelectionFilter/ReportSelectionFilter"
 
 describe("ReportSelectionFilter", () => {
+  const today = startOfToday()
+
   beforeEach(() => {
     cy.intercept("GET", `**/bichard/api/reports*`).as("downloadApi")
   })
@@ -23,9 +25,9 @@ describe("ReportSelectionFilter", () => {
 
   it("calls API when valid date range is entered and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-    const currentDate = new Date().toISOString().split("T")[0]
-    cy.get("div#date-range-section").find("input#date-resolvedFrom").type(currentDate)
-    cy.get("div#date-range-section").find("input#date-resolvedTo").type(currentDate)
+    const todayStr = format(today, "yyyy-MM-dd")
+    cy.get("div#date-range-section").find("input#date-resolvedFrom").type(todayStr)
+    cy.get("div#date-range-section").find("input#date-resolvedTo").type(todayStr)
     apiCallCheck(true)
   })
 
@@ -64,7 +66,7 @@ describe("ReportSelectionFilter", () => {
   it("'Date cannot be in the future' message is displayed when 'Date from' has a future date and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    const futureDate = addDays(new Date(), 1).toISOString().split("T")[0]
+    const futureDate = format(addDays(new Date(), 1), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-from").type(futureDate)
 
     cy.get("button#run-report").click()
@@ -78,7 +80,7 @@ describe("ReportSelectionFilter", () => {
   it("'Date cannot be in the future' message is displayed when 'Date to' has a future date and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    const futureDate = addDays(new Date(), 1).toISOString().split("T")[0]
+    const futureDate = format(addDays(today, 1), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-to").type(futureDate)
 
     cy.get("button#run-report").click()
@@ -92,7 +94,7 @@ describe("ReportSelectionFilter", () => {
   it("'Date should be within the last 31 days' message is displayed when 'Date from' has date more than 31 days ago and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    const pastDate = subDays(new Date(), 32).toISOString().split("T")[0]
+    const pastDate = format(subDays(new Date(), 32), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-from").type(pastDate)
 
     cy.get("button#run-report").click()
@@ -106,7 +108,7 @@ describe("ReportSelectionFilter", () => {
   it("'Date should be within the last 31 days' message is displayed when 'Date to' has date more than 31 days ago and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    const pastDate = subDays(new Date(), 32).toISOString().split("T")[0]
+    const pastDate = format(subDays(new Date(), 32), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-to").type(pastDate)
 
     cy.get("button#run-report").click()
@@ -120,10 +122,10 @@ describe("ReportSelectionFilter", () => {
   it("'Error messages are displayed when 'Date from' is before 'Date to' and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    const pastDate = subDays(new Date(), 5).toISOString().split("T")[0]
-    const currentDate = new Date().toISOString().split("T")[0]
-    cy.get("div#date-range-section").find("div#report-selection-date-from").type(currentDate)
-    cy.get("div#date-range-section").find("div#report-selection-date-to").type(pastDate)
+    const pastDateStr = format(subDays(new Date(), 5), "yyyy-MM-dd")
+    const todayStr = format(today, "yyyy-MM-dd")
+    cy.get("div#date-range-section").find("div#report-selection-date-from").type(todayStr)
+    cy.get("div#date-range-section").find("div#report-selection-date-to").type(pastDateStr)
 
     cy.get("button#run-report").click()
     cy.get("div#report-selection-date-from")

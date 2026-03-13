@@ -1,6 +1,6 @@
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { ActionBar } from "features/ReportSelectionFilter/ActionBar"
 import { MockNextRouter } from "../../support/MockNextRouter"
-import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 describe("ActionBar", () => {
   const mockReportOptions = {
@@ -15,7 +15,7 @@ describe("ActionBar", () => {
         csvDownloadUrl={null}
         hasRows={true}
         csvReportFilename="test.csv"
-        handleDownload={cy.stub().as("handleDownload")}
+        handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
       />
@@ -33,7 +33,7 @@ describe("ActionBar", () => {
           csvDownloadUrl="/api/downloads/report.csv"
           hasRows={true}
           csvReportFilename="my_report.csv"
-          handleDownload={cy.stub().as("handleDownload")}
+          handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
           reportOptions={mockReportOptions}
         />
@@ -51,7 +51,7 @@ describe("ActionBar", () => {
         csvDownloadUrl="/api/downloads/report.csv"
         hasRows={false}
         csvReportFilename="my_report.csv"
-        handleDownload={cy.stub().as("handleDownload")}
+        handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
       />
@@ -59,19 +59,19 @@ describe("ActionBar", () => {
     cy.contains("Download CSV").should("not.exist")
   })
 
-  it("calls handleDownload when the Run report button is clicked", () => {
+  it("calls handleRunReport when the Run report button is clicked", () => {
     cy.mount(
       <ActionBar
         csvDownloadUrl={null}
         hasRows={false}
         csvReportFilename={null}
-        handleDownload={cy.stub().as("handleDownload")}
+        handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
       />
     )
     cy.get("#run-report").click()
-    cy.get("@handleDownload").should("have.been.calledOnce")
+    cy.get("@handleRunReport").should("have.been.calledOnce")
   })
 
   it("calls clearFilters when the Clear filters button is clicked", () => {
@@ -80,7 +80,7 @@ describe("ActionBar", () => {
         csvDownloadUrl={null}
         hasRows={false}
         csvReportFilename={null}
-        handleDownload={cy.stub().as("handleDownload")}
+        handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
       />
@@ -98,7 +98,7 @@ describe("ActionBar", () => {
           csvDownloadUrl="/api/downloads/report.csv"
           hasRows={true}
           csvReportFilename="my_report.csv"
-          handleDownload={cy.stub().as("handleDownload")}
+          handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
           reportOptions={mockReportOptions}
         />
@@ -127,7 +127,7 @@ describe("ActionBar", () => {
           csvDownloadUrl="/api/downloads/report.csv"
           hasRows={true}
           csvReportFilename="my_report.csv"
-          handleDownload={cy.stub().as("handleDownload")}
+          handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
           reportOptions={{ ...mockReportOptions, reportType: undefined }}
         />

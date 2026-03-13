@@ -1,4 +1,5 @@
 import { FormGroup } from "components/FormGroup"
+import { format } from "date-fns"
 import type { Dispatch } from "react"
 import type { SerializedDateRange } from "types/CaseListQueryParams"
 import type { FilterAction } from "types/CourtCaseFilter"
@@ -88,8 +89,8 @@ const DateInput: React.FC<Props> = ({
         onChange={(event) => {
           dispatch({ method: "add", type: actionType, value: event.target.value })
         }}
-        min={minValue?.toISOString().split("T")[0]}
-        max={maxValue?.toISOString().split("T")[0]}
+        min={minValue ? format(minValue, "yyyy-MM-dd") : undefined}
+        max={maxValue ? format(maxValue, "yyyy-MM-dd") : undefined}
       />
     </FormGroup>
   )
