@@ -17,7 +17,6 @@ export const generateDummyUpdate = (): LedsMock => {
   return {
     id: randomUUID(),
     request,
-    response,
-    receivedRequests: []
+    response
   }
 }

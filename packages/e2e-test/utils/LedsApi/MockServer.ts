@@ -10,7 +10,7 @@ export type RequestResponseMock = {
     body: Record<string, unknown>
     headers: Record<string, string>
   }
-  request?: Record<string, unknown>
+  request?: { body: Record<string, unknown> }[]
   hits: number
   count?: number
 }
@@ -51,7 +51,7 @@ export default class MockServer {
   async retrieveUnusedMocks(): Promise<RequestResponseMock[]> {
     const mocks = await this.fetchMocks()
 
-    return mocks.filter((mock) => !mock.request)
+    return mocks.filter((mock) => !mock.request || mock.request.length === 0)
   }
 
   async fetchRequests(): Promise<RequestResponseMock[]> {

@@ -5,7 +5,7 @@ export type Sub = {
 }
 
 const convertSub = (subValue: string): Sub => {
-  const slice = (start: number, end: number) => subValue.substring(start, end)
+  const slice = (start: number, end: number) => subValue.substring(start, end).trim()
 
   return {
     courtCode: slice(1, 76),
