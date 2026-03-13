@@ -8,7 +8,6 @@ import { ReportConfig, ReportConfigs } from "types/reports/Config"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { validateDateRange } from "utils/reports/validateDateRange"
 import { validateSelectReport } from "utils/reports/validateSelectReport"
-import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes } from "./Checkboxes"
 import { DateRange } from "./DateRange"
@@ -24,39 +23,19 @@ export const ReportSelectionFilter: React.FC = () => {
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
   const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
-  const [errors, setErrors] = useState<Record<string, string | null>>({})
-
-  const clearParallelError = (field: string) => {
-    if (errors[field] === DATE_CANNOT_BE_BEFORE_DATE_FROM) {
-      setErrors((prev) => ({ ...prev, ["dateFrom"]: null }))
-    }
-    if (errors[field] === DATE_CANNOT_BE_AFTER_DATE_TO) {
-      setErrors((prev) => ({ ...prev, ["dateTo"]: null }))
-    }
-  }
-
-  const clearErrors = (field: string) => {
-    if (errors[field]) {
-      clearParallelError(field)
-      setErrors((prev) => ({ ...prev, [field]: null }))
-    }
-  }
 
   const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
   const handleSetDateFrom = (date: string) => {
     dispatch({ type: "SET_DATE_FROM", payload: date })
-    clearErrors("dateFrom")
   }
 
   const handleSetDateTo = (date: string) => {
     dispatch({ type: "SET_DATE_TO", payload: date })
-    clearErrors("dateTo")
   }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
     dispatch({ type: "SET_REPORT_TYPE", payload: event.currentTarget.value as ReportType })
-    setErrors({})
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -68,7 +47,7 @@ export const ReportSelectionFilter: React.FC = () => {
       id === "triggers" ? checked : filterValues.triggers,
       id === "exceptions" ? checked : filterValues.exceptions
     )
-    setErrors((prev) => ({ ...prev, checkboxes: checkboxError }))
+    dispatch({ type: "SET_CHECKBOXES_ERROR", payload: checkboxError })
   }
 
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
@@ -93,13 +72,13 @@ export const ReportSelectionFilter: React.FC = () => {
     const selectReportValidation = validateSelectReport(filterValues.reportType)
 
     const newErrors = {
-      dateFrom: rangeValidation.fromError,
-      dateTo: rangeValidation.toError,
-      reportType: selectReportValidation,
-      checkboxes: checkboxesValidation
+      dateFromError: rangeValidation.fromError,
+      dateToError: rangeValidation.toError,
+      reportTypeError: selectReportValidation,
+      checkboxesError: checkboxesValidation
     }
 
-    setErrors(newErrors)
+    dispatch({ type: "SET_ERRORS", payload: newErrors })
 
     if (Object.values(newErrors).some((error) => error !== null) || !config) {
       return false
@@ -170,7 +149,7 @@ export const ReportSelectionFilter: React.FC = () => {
               <SelectReportDropdown
                 handleChange={handleSelectChange}
                 reportType={filterValues.reportType}
-                error={errors.reportType}
+                error={filterValues.reportTypeError}
               />
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
@@ -179,8 +158,8 @@ export const ReportSelectionFilter: React.FC = () => {
                 dateToString={filterValues.dateTo}
                 setDateFromString={handleSetDateFrom}
                 setDateToString={handleSetDateTo}
-                dateFromError={errors.dateFrom}
-                dateToError={errors.dateTo}
+                dateFromError={filterValues.dateFromError}
+                dateToError={filterValues.dateToError}
               />
             </div>
             <div id={"include-section"} className="include-section-wrapper">
@@ -189,7 +168,7 @@ export const ReportSelectionFilter: React.FC = () => {
                   handleChange={handleCheckbox}
                   triggers={filterValues.triggers}
                   exceptions={filterValues.exceptions}
-                  error={errors.checkboxes}
+                  error={filterValues.checkboxesError}
                 />
               )}
             </div>

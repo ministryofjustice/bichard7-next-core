@@ -6,6 +6,10 @@ export type FilterState = {
   dateFrom: string
   exceptions: boolean
   triggers: boolean
+  reportTypeError: string | null
+  dateFromError: string | null
+  dateToError: string | null
+  checkboxesError: string | null
 }
 
 export type FilterAction =
@@ -14,3 +18,13 @@ export type FilterAction =
   | { type: "SET_DATE_TO"; payload: string }
   | { type: "SET_CHECKBOX"; payload: { id: string; checked: boolean } }
   | { type: "RESET_FILTERS" }
+  | {
+      type: "SET_ERRORS"
+      payload: {
+        reportTypeError: string | null
+        dateFromError: string | null
+        dateToError: string | null
+        checkboxesError: string | null
+      }
+    }
+  | { type: "SET_CHECKBOXES_ERROR"; payload: string | null }
