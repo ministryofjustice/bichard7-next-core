@@ -49,7 +49,6 @@ const AuditCheckbox = forwardRef<HTMLInputElement, AuditCheckboxProps>((props, r
 AuditCheckbox.displayName = "AuditCheckbox"
 
 interface FormState {
-  errorMessage: string
   resolvedBy: string[]
   triggers: string[]
   includeTriggers: boolean
@@ -96,7 +95,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
 
   function readFormState(formData: FormData): FormState {
     return {
-      errorMessage: "",
       resolvedBy: formData.getAll("resolvedBy") as string[],
       triggers: formData.getAll("triggers") as string[],
       includeTriggers: formData.get("includeTriggers") === "on",
@@ -153,7 +151,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   }
 
   const [currentFormState, submitAction] = useActionState(submit, {
-    errorMessage: "",
     resolvedBy: [],
     triggers: [],
     includeTriggers: false,
