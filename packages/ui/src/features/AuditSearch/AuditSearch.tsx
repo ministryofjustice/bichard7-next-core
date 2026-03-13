@@ -8,7 +8,7 @@ import RadioButton from "components/Radios/RadioButton"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
-import router from "next/router"
+import { useRouter } from "next/router"
 
 interface AuditCheckboxProps {
   id?: string
@@ -69,6 +69,8 @@ function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
 
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
   const { resolvers, triggerTypes } = props
+
+  const router = useRouter()
 
   const formRef = useRef<HTMLFormElement>(null)
   const resolvedByRefs = useRef<HTMLInputElement[]>([])
@@ -142,6 +144,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       const raw = await result.json()
 
       // todo: handle parse error, show message in UI
+
       const auditResult = AuditDtoSchema.parse(raw)
       await router.push(`/audit/${auditResult.auditId}`)
     }
