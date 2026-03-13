@@ -9,6 +9,7 @@ import AuditResolvedBy from "../../types/AuditResolvedBy"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { useRouter } from "next/router"
+import ErrorMessage from "../../components/EditableFields/ErrorMessage"
 
 interface AuditCheckboxProps {
   id?: string
@@ -74,6 +75,8 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   const formRef = useRef<HTMLFormElement>(null)
   const resolvedByRefs = useRef<HTMLInputElement[]>([])
 
+  const [errorMessage, setErrorMessage] = useState("")
+
   const DATE_FORMAT = "yyyy-MM-dd"
 
   const volumes = ["10", "20", "50", "100"]
@@ -138,13 +141,17 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       }
     })
 
+    setErrorMessage(result.ok ? "" : "Failed to create audit")
+
     if (result.ok) {
       const raw = await result.json()
 
-      // todo: handle parse error, show message in UI
-
-      const auditResult = AuditDtoSchema.parse(raw)
-      await router.push(`/audit/${auditResult.auditId}`)
+      const auditResult = AuditDtoSchema.safeParse(raw)
+      if (auditResult.success) {
+        await router.push(`/audit/${auditResult.data.auditId}`)
+      } else {
+        setErrorMessage("Failed to get audit from server")
+      }
     }
 
     return newState
@@ -250,8 +257,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                         label={"All"}
                         data-testid={"audit-resolved-by-all"}
                         onChange={(e) => {
-                          console.log("toggle", e.target.checked)
-
                           resolvedByRefs.current.forEach(
                             (input) => ((input as HTMLInputElement).checked = e.target.checked)
                           )
@@ -319,6 +324,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                 </RadioGroups>
               </div>
             </div>
+            {errorMessage ? <ErrorMessage message={errorMessage} /> : null}
             <FormButtonRow>
               <button name="audit-search-button" className="govuk-button" disabled={!formValid}>
                 {"Search cases"}

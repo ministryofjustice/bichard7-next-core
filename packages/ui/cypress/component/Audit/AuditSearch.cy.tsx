@@ -253,6 +253,81 @@ describe("AuditSearch", () => {
     cy.get("button[name=audit-search-button]").should("be.enabled")
   })
 
+  it("should show an error if the api returns a non-success status code", () => {
+    const pushSpy = cy.spy().as("routerPush")
+
+    cy.mount(
+      <MockNextRouter push={pushSpy}>
+        <AuditSearch
+          triggerTypes={["TRPR0010"]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("[data-testid='audit-resolved-by-all']").click()
+    cy.get("label").contains("Triggers").click()
+    cy.get("[data-testid='audit-trigger-type-0']").click()
+
+    cy.intercept("POST", "/bichard/api/audit", {
+      delay: 100,
+      statusCode: 400,
+      body: JSON.stringify({
+        auditId: 4321,
+        createdWhen: "2026-03-01",
+        createdBy: "exampleUser",
+        completedWhen: "2026-04-01",
+        fromDate: "2026-01-01",
+        toDate: "2026-03-01",
+        includedTypes: ["Triggers"],
+        triggerTypes: ["TRPR0001"],
+        resolvedByUsers: ["user01", "user02"],
+        volumeOfCases: 20
+      })
+    }).as("auditSearch")
+
+    cy.get("button[name=audit-search-button]").click()
+
+    cy.wait("@auditSearch")
+
+    cy.get(".error-message").contains("Failed to create audit")
+
+    cy.get("@routerPush").should("not.be.called")
+  })
+
+  it("should show an error if the api returns an invalid response body", () => {
+    const pushSpy = cy.spy().as("routerPush")
+
+    cy.mount(
+      <MockNextRouter push={pushSpy}>
+        <AuditSearch
+          triggerTypes={["TRPR0010"]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("[data-testid='audit-resolved-by-all']").click()
+    cy.get("label").contains("Triggers").click()
+    cy.get("[data-testid='audit-trigger-type-0']").click()
+
+    cy.intercept("POST", "/bichard/api/audit", {
+      delay: 100,
+      statusCode: 200,
+      body: JSON.stringify({
+        unknownField1: true
+      })
+    }).as("auditSearch")
+
+    cy.get("button[name=audit-search-button]").click()
+
+    cy.wait("@auditSearch")
+
+    cy.get(".error-message").contains("Failed to get audit from server")
+
+    cy.get("@routerPush").should("not.be.called")
+  })
+
   it("should redirect to the audit page when submitting the form", () => {
     const pushSpy = cy.spy().as("routerPush")
 
