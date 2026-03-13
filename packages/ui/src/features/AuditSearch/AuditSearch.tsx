@@ -6,6 +6,9 @@ import { subDays, format, parse } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
+import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
+import router from "next/router"
 
 interface AuditCheckboxProps {
   id?: string
@@ -52,6 +55,8 @@ interface FormState {
   includeTriggers: boolean
   includeExceptions: boolean
   volume: string
+  fromDate: Date
+  toDate: Date
 }
 
 function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
@@ -70,14 +75,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
-  const defaultVolume = "20"
   const volumes = ["10", "20", "50", "100"]
-
-  const today = new Date()
-
-  const [volume, setVolume] = useState(defaultVolume)
-  const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
-  const [toDate, setToDate] = useState(new Date())
 
   async function handleFormChange() {
     const formData = new FormData(formRef.current as HTMLFormElement)
@@ -86,7 +84,12 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   }
 
   function isFormValid(formState: FormState) {
-    return formState.resolvedBy.length > 0 && (formState.includeExceptions || formState.includeTriggers)
+    return (
+      formState.fromDate <= formState.toDate &&
+      formState.toDate <= new Date() &&
+      formState.resolvedBy.length > 0 &&
+      (formState.includeExceptions || formState.includeTriggers)
+    )
   }
 
   function readFormState(formData: FormData): FormState {
@@ -96,16 +99,52 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       triggers: formData.getAll("triggers") as string[],
       includeTriggers: formData.get("includeTriggers") === "on",
       includeExceptions: formData.get("includeExceptions") === "on",
-      volume: formData.get("volume") as string
+      volume: formData.get("volume") as string,
+      fromDate: parseDate(formData.get("fromDate") as string, DATE_FORMAT, new Date()),
+      toDate: parseDate(formData.get("toDate") as string, DATE_FORMAT, new Date())
     }
   }
 
-  async function submit(formState: FormState, formData: FormData) {
-    const newState = {
-      ...formState,
-      ...readFormState(formData)
+  async function submit(_formState: FormState, formData: FormData): Promise<FormState> {
+    const newState = readFormState(formData)
+
+    function createRequest() {
+      const includedTypes: ("Exceptions" | "Triggers")[] = []
+      if (newState.includeExceptions) {
+        includedTypes.push("Exceptions")
+      }
+      if (newState.includeTriggers) {
+        includedTypes.push("Triggers")
+      }
+
+      const request: CreateAuditInput = {
+        fromDate: format(newState.fromDate, DATE_FORMAT),
+        toDate: format(newState.toDate, DATE_FORMAT),
+        includedTypes: includedTypes,
+        volumeOfCases: parseInt(newState.volume),
+        resolvedByUsers: newState.resolvedBy,
+        triggerTypes: newState.triggers
+      }
+      return request
     }
-    console.log("New state", newState)
+
+    const request = createRequest()
+
+    const result = await fetch(`/bichard/api/audit`, {
+      method: "POST",
+      body: JSON.stringify(request),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+
+    if (result.ok) {
+      const raw = await result.json()
+
+      // todo: handle parse error, show message in UI
+      const auditResult = AuditDtoSchema.parse(raw)
+      await router.push(`/audit/${auditResult.auditId}`)
+    }
 
     return newState
   }
@@ -116,7 +155,9 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
     triggers: [],
     includeTriggers: false,
     includeExceptions: false,
-    volume: defaultVolume
+    volume: "20",
+    fromDate: subDays(new Date(), 7),
+    toDate: new Date()
   })
 
   const [formValid, setFormValid] = useState(isFormValid(currentFormState))
@@ -148,9 +189,14 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                         data-testid="audit-date-from"
                         className="govuk-input"
                         type="date"
-                        max={format(today, DATE_FORMAT)}
-                        value={format(fromDate, DATE_FORMAT)}
-                        onChange={(e) => setFromDate(parseDate(e.target.value, DATE_FORMAT, today))}
+                        name="fromDate"
+                        max={format(new Date(), DATE_FORMAT)}
+                        defaultValue={format(currentFormState.fromDate, DATE_FORMAT)}
+                        onChange={(e) => {
+                          if (!e.target.value) {
+                            e.target.value = format(new Date(), DATE_FORMAT)
+                          }
+                        }}
                       />
                     </FormGroup>
                     <FormGroup>
@@ -161,9 +207,14 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                         data-testid="audit-date-to"
                         className="govuk-input"
                         type="date"
-                        max={format(today, DATE_FORMAT)}
-                        value={format(toDate, DATE_FORMAT)}
-                        onChange={(e) => setToDate(parseDate(e.target.value, DATE_FORMAT, today))}
+                        name="toDate"
+                        max={format(new Date(), DATE_FORMAT)}
+                        defaultValue={format(currentFormState.toDate, DATE_FORMAT)}
+                        onChange={(e) => {
+                          if (!e.target.value) {
+                            e.target.value = format(new Date(), DATE_FORMAT)
+                          }
+                        }}
                       />
                     </FormGroup>
                   </fieldset>
@@ -257,11 +308,10 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                     {volumes.map((v) => (
                       <RadioButton
                         name={"volume"}
+                        defaultChecked={currentFormState.volume == v}
                         id={`audit-volume-${v}`}
-                        onChange={(e) => setVolume(e.target.value)}
-                        label={`${v}% of cases`}
-                        checked={v == volume}
                         value={v}
+                        label={`${v}% of cases`}
                         key={v}
                       />
                     ))}
