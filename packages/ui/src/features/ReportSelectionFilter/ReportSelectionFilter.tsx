@@ -137,7 +137,7 @@ export const ReportSelectionFilter: React.FC = () => {
     }
   }
 
-  const handleRunReport = () => {
+  const handleRunReport = async () => {
     if (!validateFilters()) {
       return
     }
@@ -146,7 +146,7 @@ export const ReportSelectionFilter: React.FC = () => {
     setRows([])
     setCsvDownloadUrl(null)
 
-    handleDownload()
+    await handleDownload()
   }
 
   useEffect(() => {
