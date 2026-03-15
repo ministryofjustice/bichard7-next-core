@@ -7,7 +7,6 @@ export const AuditCaseSchema = z.object({
   asn: z.string().max(21).nullable(),
   audit_case_id: z.number(),
   audit_id: z.number(),
-  court_code: z.string().max(7).nullable(),
   court_date: z.date().nullable(),
   court_name: z.string().max(500).nullable(),
   court_reference: z.string().max(11),
