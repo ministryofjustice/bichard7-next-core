@@ -336,7 +336,10 @@ describe("AuditSearch", () => {
       <MockNextRouter push={pushSpy}>
         <AuditSearch
           triggerTypes={["TRPR0010"]}
-          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+          resolvers={[
+            { username: "usera", forenames: "First", surname: "User" },
+            { username: "userb", forenames: "Second", surname: "User" }
+          ]}
         />
       </MockNextRouter>
     )
@@ -365,6 +368,17 @@ describe("AuditSearch", () => {
     cy.get("button[name=audit-search-button]").click()
 
     cy.wait("@auditSearch")
+
+    cy.get("@auditSearch")
+      .its("request.body")
+      .should("deep.equal", {
+        fromDate: format(subDays(new Date(), 7), "yyyy-MM-dd"),
+        toDate: format(new Date(), "yyyy-MM-dd"),
+        triggerTypes: ["TRPR0010"],
+        includedTypes: ["Triggers"],
+        resolvedByUsers: ["usera", "userb"],
+        volumeOfCases: 20
+      })
 
     cy.get("@routerPush").should("be.calledWith", "/audit/4321")
   })
