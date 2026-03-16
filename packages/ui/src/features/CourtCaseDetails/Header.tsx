@@ -1,3 +1,7 @@
+import { useRouter } from "next/router"
+import { usePathname } from "next/navigation"
+import { useEffect, useState } from "react"
+
 import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
@@ -5,13 +9,11 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { useRouter } from "next/router"
 
 import { AccordionToggle } from "components/Card/Card.styles"
 import useContentToggle from "hooks/useContentToggle"
-import { useEffect, useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { LinkButton } from "../../components/Buttons/LinkButton"
 import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
@@ -44,7 +46,8 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 }
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath, asPath: pathName } = useRouter()
+  const { basePath } = useRouter()
+  const pathName = usePathname()
   const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
