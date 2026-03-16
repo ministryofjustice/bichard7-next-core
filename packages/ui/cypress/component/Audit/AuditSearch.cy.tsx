@@ -290,7 +290,7 @@ describe("AuditSearch", () => {
 
     cy.wait("@auditSearch")
 
-    cy.get(".error-message").contains("Failed to create audit")
+    cy.get(".error-message").contains("There was a problem creating the audit report")
 
     cy.get("@routerPush").should("not.be.called")
   })
@@ -323,7 +323,7 @@ describe("AuditSearch", () => {
 
     cy.wait("@auditSearch")
 
-    cy.get(".error-message").contains("Failed to get audit from server")
+    cy.get(".error-message").contains("There was a problem creating the audit report")
 
     cy.get("@routerPush").should("not.be.called")
   })

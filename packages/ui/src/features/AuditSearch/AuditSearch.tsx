@@ -9,7 +9,6 @@ import AuditResolvedBy from "../../types/AuditResolvedBy"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { useRouter } from "next/router"
-import ErrorMessage from "../../components/EditableFields/ErrorMessage"
 
 interface AuditCheckboxProps {
   id?: string
@@ -141,7 +140,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       }
     })
 
-    setErrorMessage(result.ok ? "" : "Failed to create audit")
+    setErrorMessage(result.ok ? "" : "There was a problem creating the audit report")
 
     if (result.ok) {
       const raw = await result.json()
@@ -150,7 +149,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       if (auditResult.success) {
         await router.push(`/audit/${auditResult.data.auditId}`)
       } else {
-        setErrorMessage("Failed to get audit from server")
+        setErrorMessage("There was a problem creating the audit report")
       }
     }
 
@@ -324,8 +323,12 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                 </RadioGroups>
               </div>
             </div>
-            {errorMessage ? <ErrorMessage message={errorMessage} /> : null}
             <FormButtonRow>
+              {errorMessage ? (
+                <p role="alert" className="govuk-body govuk-error-message">
+                  <span className="govuk-visually-hidden">{"Error:"}</span> {errorMessage}
+                </p>
+              ) : null}
               <button name="audit-search-button" className="govuk-button" disabled={!formValid}>
                 {"Search cases"}
               </button>
