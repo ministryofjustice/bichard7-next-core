@@ -118,6 +118,26 @@ const users = [
     visible_courts: "B01,B41ME00",
     excluded_triggers: "TRPR0001",
     feature_flags: { httpsRedirect: true, showNewBichardButtonFirst: true }
+  },
+  {
+    username: "OnlyNewBichardUser",
+    created_at: "2021-08-01 00:00:00-00",
+    endorsed_by: "endorsed_by 01",
+    last_logged_in: "2021-08-01 00:00:00-00",
+    org_serves: "org_severs 01",
+    forenames: "Bichard User 01",
+    surname: "Surname 01",
+    email: "onlynewbicharduser@example.com",
+    password:
+      "$argon2id$v=19$m=256,t=20,p=2$TTFCN3BRcldZVUtGejQ3WE45TGFqPT0$WOE+jDILDnVIAt1dytb+h65uegrMomp2xb0Q6TxbkLA",
+    last_login_attempt: "2021-08-01 00:00:00-00",
+    deleted_at: null,
+    password_reset_code: null,
+    migrated_password: null,
+    visible_forces: "001,002,004,014",
+    visible_courts: "B01,B41ME00",
+    excluded_triggers: "TRPR0001",
+    feature_flags: { httpsRedirect: true, showNewBichardButtonFirst: true, onlyAccessToNewBichard: true }
   }
 ]
 
