@@ -75,7 +75,7 @@ describe("bails report page", () => {
     cy.task("clearCourtCases")
   })
 
-  it("queries bails and returns only bails", () => {
+  it("queries bails and successfully returns only bails", () => {
     insertSampleCases()
 
     cy.get("#report-select").select("Bail Conditions")
@@ -96,7 +96,7 @@ describe("bails report page", () => {
     cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
   })
 
-  it("queries domestic violence and returns only domestic violence", () => {
+  it("queries domestic violence and successfully returns only domestic violence", () => {
     insertSampleCases()
 
     cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
@@ -117,7 +117,7 @@ describe("bails report page", () => {
     cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
   })
 
-  it("queries warrants violence and returns only warrants", () => {
+  it("queries warrants and successfully returns only warrants", () => {
     insertSampleCases()
 
     cy.get("#report-select").select("Warrants")
@@ -138,7 +138,7 @@ describe("bails report page", () => {
     cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
   })
 
-  it("queries exceptions/triggers and returns only exceptions/triggers", () => {
+  it("queries exceptions/triggers and successfully returns only exceptions/triggers", () => {
     insertSampleCases()
 
     cy.get("#report-select").select("Resolved Exceptions/Triggers")
@@ -154,5 +154,83 @@ describe("bails report page", () => {
     cy.get(".results-area table tbody tr").should("not.contain", "bails")
     cy.get(".results-area table tbody tr").should("not.contain", "domVi")
     cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
+  })
+
+  it("queries bails with a date window that should not return anything", () => {
+    insertSampleCases()
+
+    cy.get("#report-select").select("Bail Conditions")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 0)
+  })
+
+  it("queries domestic violence with a date window that should not return anything", () => {
+    insertSampleCases()
+
+    cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 0)
+  })
+
+  it("queries warrants with a date window that should not return anything", () => {
+    insertSampleCases()
+
+    cy.get("#report-select").select("Warrants")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 0)
+  })
+
+  it("queries exceptions/triggers with a date window that should not return anything", () => {
+    insertSampleCases()
+
+    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 0)
+  })
+
+  it("queries exceptions/triggers with triggers unchecked and successfully returns only exceptions", () => {
+    insertSampleCases()
+
+    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+    cy.get("#triggers").click()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 1)
+
+    cy.get(".results-area table tbody tr td:nth(2)").should("have.text", "Case00003")
+  })
+
+  it("queries exceptions/triggers with exceptions unchecked and successfully returns only triggers", () => {
+    insertSampleCases()
+
+    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+    cy.get("#exceptions").click()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 1)
+
+    cy.get(".results-area table tbody tr td:nth(2)").should("have.text", "Case00003")
   })
 })
