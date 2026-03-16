@@ -5,10 +5,13 @@ import type LedsMock from "../../types/LedsMock"
 import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
 import type { MockAsnQueryParams } from "../../types/PoliceApi"
+import { addMockToLedsApi } from "./addMocksToLedsApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
+import LedsTestApiHelper from "./helpers/LedsTestApiHelper/LedsTestApiHelper"
 import * as mockGenerators from "./mockGenerators"
 import { generateAsnQuery } from "./mockGenerators/generateAsnQuery"
 import MockServer from "./MockServer"
+import verifyRealLedsApiData from "./verifyRealLedsApiData"
 
 export class LedsApi implements PoliceApi {
   mocks: LedsMock[] = []
@@ -16,9 +19,29 @@ export class LedsApi implements PoliceApi {
   private reportId: string
   private courtCaseId: string
   readonly mockServerClient: MockServer
+  readonly testApiHelper: LedsTestApiHelper
 
   constructor(private readonly bichard: LedsBichard) {
-    this.mockServerClient = new MockServer(this.bichard.config.ledsApiUrl)
+    if (this.bichard.config.realPNC) {
+      this.testApiHelper = new LedsTestApiHelper(this.bichard)
+    } else {
+      this.mockServerClient = new MockServer(this.bichard.config.ledsApiUrl)
+    }
+  }
+
+  prepareInputMessage(message: string) {
+    if (!this.bichard.config.realPNC) {
+      return Promise.resolve(message)
+    }
+
+    const asn = this.testApiHelper.arrestSummonsNumber?.replace(/\//g, "")
+    if (!asn) {
+      return Promise.resolve(message)
+    }
+
+    const updatedMessage = message.replace(/(<.*:ProsecutorReference>).*?(<\/.*:ProsecutorReference>)/, `$1${asn}$2`)
+
+    return Promise.resolve(updatedMessage)
   }
 
   createValidRecord: (record: string) => Promise<void>
@@ -28,7 +51,7 @@ export class LedsApi implements PoliceApi {
   }
 
   mockDataForTest(): Promise<void> {
-    return addMockToLedsMockApi(this.bichard)
+    return this.bichard.config.realPNC ? addMockToLedsApi(this.bichard) : addMockToLedsMockApi(this.bichard)
   }
 
   mockEnquiryFromNcm(ncmFile: string, options?: LedsMockOptions): LedsMock {
@@ -83,6 +106,10 @@ export class LedsApi implements PoliceApi {
   }
 
   async checkMocks(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      return verifyRealLedsApiData(this.bichard)
+    }
+
     let expectationPaths: string[] = []
     for (let index = 0; index < 3; index++) {
       const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
@@ -99,6 +126,10 @@ export class LedsApi implements PoliceApi {
   }
 
   async expectNoRequests(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      return
+    }
+
     for (let index = 0; index < 2; index++) {
       const requests = await this.mockServerClient.fetchRequests()
       if (requests.length > 0) {
@@ -110,6 +141,10 @@ export class LedsApi implements PoliceApi {
   }
 
   async expectNoUpdates(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      return verifyRealLedsApiData(this.bichard)
+    }
+
     for (let index = 0; index < 2; index++) {
       const updates = (await this.mockServerClient.fetchRequests()).filter((request) =>
         request.path.startsWith("/people/")
@@ -124,6 +159,10 @@ export class LedsApi implements PoliceApi {
   }
 
   async expectNotUpdated(): Promise<void> {
+    if (this.bichard.config.realPNC) {
+      return verifyRealLedsApiData(this.bichard)
+    }
+
     for (let index = 0; index < 2; index++) {
       const updates = (await this.mockServerClient.fetchMocks()).filter(
         (mock) => mock.path.startsWith("/people/") && mock.hits > 0

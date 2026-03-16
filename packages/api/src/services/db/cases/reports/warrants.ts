@@ -5,7 +5,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
-import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { WritableDatabaseConnection } from "../../../../types/DatabaseGateway"
 import type { CaseRowForWarrantsReport } from "../../../../types/reports/Warrants"
 
 import { processCases } from "../../../../useCases/cases/reports/warrants/processCases"
@@ -14,7 +14,7 @@ import { organisationUnitSql } from "../../organisationUnitSql"
 const WARRANT_TRIGGER_CODES = [TriggerCode.TRPR0002, TriggerCode.TRPR0012] as const
 
 export async function* warrants(
-  database: DatabaseConnection,
+  database: WritableDatabaseConnection,
   user: User,
   filters: WarrantsReportQuery
 ): AsyncGenerator<CaseForWarrantsReportDto[]> {
@@ -24,7 +24,7 @@ export async function* warrants(
         el.error_id
       FROM br7own.error_list el
       JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
-      WHERE 
+      WHERE
         el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
         AND (${organisationUnitSql(database, user)})
         AND elt.trigger_code = ANY (${WARRANT_TRIGGER_CODES})
@@ -33,9 +33,9 @@ export async function* warrants(
     ),
     aggregated_triggers AS (
       SELECT
-      elt.error_id,
+        elt.error_id,
         json_agg(
-         json_build_object(
+          json_build_object(
            'trigger_id', elt.trigger_id,
            'trigger_code', elt.trigger_code,
            'status', elt.status,
@@ -44,7 +44,7 @@ export async function* warrants(
            'resolved_ts', elt.resolved_ts,
            'trigger_item_identity', elt.trigger_item_identity,
            'error_id', elt.error_id
-         ) ORDER BY elt.resolved_ts DESC
+          ) ORDER BY elt.resolved_ts DESC
         ) AS triggers
       FROM br7own.error_list_triggers elt
       INNER JOIN filtered_ids f ON f.error_id = elt.error_id

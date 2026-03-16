@@ -2,6 +2,8 @@
 /// @group components/button
 ////
 
+@import "../../base";
+
 /// Button component background colour
 ///
 /// @type Colour
@@ -28,31 +30,31 @@ $govuk-inverse-button-background-colour: govuk-colour("white") !default;
 /// @type Colour
 /// @access public
 
-$govuk-inverse-button-text-colour: $govuk-brand-colour !default;
+$govuk-inverse-button-text-colour: govuk-functional-colour(brand) !default;
 
 @include govuk-exports("govuk/component/button") {
   $govuk-button-colour: $govuk-button-background-colour;
   $govuk-button-text-colour: $govuk-button-text-colour;
-  $govuk-button-hover-colour: govuk-shade($govuk-button-colour, 20%);
-  $govuk-button-shadow-colour: govuk-shade($govuk-button-colour, 60%);
+  $govuk-button-hover-colour: govuk-colour("green", $variant: "shade-25");
+  $govuk-button-shadow-colour: govuk-colour("green", $variant: "shade-50");
 
   // Secondary button variables
-  $govuk-secondary-button-colour: govuk-colour("light-grey");
+  $govuk-secondary-button-colour: govuk-colour("black", $variant: "tint-95");
   $govuk-secondary-button-text-colour: govuk-colour("black");
-  $govuk-secondary-button-hover-colour: govuk-shade($govuk-secondary-button-colour, 10%);
-  $govuk-secondary-button-shadow-colour: govuk-shade($govuk-secondary-button-colour, 40%);
+  $govuk-secondary-button-hover-colour: govuk-colour("black", $variant: "tint-80");
+  $govuk-secondary-button-shadow-colour: govuk-colour("black", $variant: "tint-50");
 
   // Warning button variables
   $govuk-warning-button-colour: govuk-colour("red");
   $govuk-warning-button-text-colour: govuk-colour("white");
-  $govuk-warning-button-hover-colour: govuk-shade($govuk-warning-button-colour, 20%);
-  $govuk-warning-button-shadow-colour: govuk-shade($govuk-warning-button-colour, 60%);
+  $govuk-warning-button-hover-colour: govuk-colour("red", $variant: "shade-25");
+  $govuk-warning-button-shadow-colour: govuk-colour("red", $variant: "shade-50");
 
   // Inverse button variables
   $govuk-inverse-button-colour: $govuk-inverse-button-background-colour;
   $govuk-inverse-button-text-colour: $govuk-inverse-button-text-colour;
-  $govuk-inverse-button-hover-colour: govuk-tint($govuk-inverse-button-text-colour, 90%);
-  $govuk-inverse-button-shadow-colour: govuk-shade($govuk-inverse-button-text-colour, 30%);
+  $govuk-inverse-button-hover-colour: govuk-colour("blue", $variant: "tint-95");
+  $govuk-inverse-button-shadow-colour: govuk-colour("blue", $variant: "shade-50");
 
   // Because the shadow (s0) is visually 'part of' the button, we need to reduce
   // the height of the button to compensate by adjusting its padding (s1) and
@@ -71,7 +73,7 @@ $govuk-inverse-button-text-colour: $govuk-brand-colour !default;
     margin-left: 0;
     @include govuk-responsive-margin(6, "bottom", $adjustment: $button-shadow-size); // s2
     padding: (govuk-spacing(2) - $govuk-border-width-form-element) govuk-spacing(2)
-      (govuk-spacing(2) - $govuk-border-width-form-element - ($button-shadow-size / 2)); // s1
+      (govuk-spacing(2) - $govuk-border-width-form-element - ($button-shadow-size * 0.5)); // s1
     border: $govuk-border-width-form-element solid transparent;
     border-radius: 0;
     color: $govuk-button-text-colour;
@@ -82,7 +84,7 @@ $govuk-inverse-button-text-colour: $govuk-brand-colour !default;
     cursor: pointer;
     -webkit-appearance: none;
 
-    @include govuk-media-query($from: tablet) {
+    @media #{govuk-from-breakpoint(tablet)} {
       width: auto;
     }
 
@@ -111,20 +113,17 @@ $govuk-inverse-button-text-colour: $govuk-brand-colour !default;
     }
 
     &:focus {
-      border-color: $govuk-focus-colour;
+      border-color: govuk-functional-colour(focus);
       outline: $govuk-focus-width solid transparent;
-      box-shadow: inset 0 0 0 1px $govuk-focus-colour;
+      box-shadow: inset 0 0 0 1px govuk-functional-colour(focus);
     }
 
     &:focus:not(:active):not(:hover) {
-      border-color: $govuk-focus-colour;
-      color: $govuk-focus-text-colour;
-      background-color: $govuk-focus-colour;
-      box-shadow: 0 2px 0 $govuk-focus-text-colour;
+      border-color: govuk-functional-colour(focus);
+      color: govuk-functional-colour(focus-text);
+      background-color: govuk-functional-colour(focus);
+      box-shadow: 0 2px 0 govuk-functional-colour(focus-text);
     }
-
-    // The following adjustments do not work for <input type="button"> as
-    // non-container elements cannot include pseudo elements (i.e. ::before).
 
     // Use a pseudo element to expand the click target area to include the
     // button's shadow as well, in case users try to click it.
@@ -247,7 +246,7 @@ $govuk-inverse-button-text-colour: $govuk-brand-colour !default;
   .govuk-button__start-icon {
     margin-left: govuk-spacing(1);
 
-    @include govuk-media-query($from: desktop) {
+    @media #{govuk-from-breakpoint(desktop)} {
       margin-left: govuk-spacing(2);
     }
     vertical-align: middle;

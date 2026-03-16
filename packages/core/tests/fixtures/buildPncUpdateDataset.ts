@@ -16,6 +16,7 @@ export const buildPncUpdateDataset = ({
       HearingOutcome: {
         Case: {
           HearingDefendant: {
+            PNCIdentifier: "201950/0000123X",
             DefendantDetail: {
               PersonName: {
                 FamilyName: familyName,
@@ -35,7 +36,13 @@ export const buildPncUpdateDataset = ({
             {
               offence: {
                 sequenceNumber: 1,
-                offenceId: "112233"
+                offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
+              }
+            },
+            {
+              offence: {
+                sequenceNumber: 2,
+                offenceId: "025459be-b60b-4919-8b7c-67371f2ca80b"
               }
             }
           ],

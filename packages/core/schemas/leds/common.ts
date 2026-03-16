@@ -4,8 +4,6 @@ export const dateStringSchema = z.string().regex(/\d{4}-\d{2}-\d{2}/)
 
 export const timeStringSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)(Z|[+-][01]\d:[0-5]\d)$/)
 
-export const checkNameSchema = z.string().min(1).max(54)
-
 export const forceStationCodeSchema = z
   .string()
   .regex(/^[0-9A-Za-z]*$/)
@@ -43,12 +41,12 @@ export const disposalDurationSchema = z.object({
 })
 
 export const disposalFineSchema = z.object({
-  amount: z.number(),
+  amount: z.number().optional(),
   units: z.number().optional()
 })
 
 export const disposalResultSchema = z.object({
-  disposalCode: z.number(),
+  disposalCode: z.number().max(9999),
   disposalDuration: disposalDurationSchema.optional(),
   disposalFine: disposalFineSchema.optional(),
   disposalEffectiveDate: dateStringSchema.optional(),
@@ -63,7 +61,6 @@ export const baseOffenceSchema = z.object({
     .string()
     .regex(/^([0-9]{1,3}\.){1,2}[0-9]{1,3}(\.[0-9]{1,3})?$/)
     .optional(),
-  cjsOffenceCode: z.string().min(1).max(8),
   roleQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   plea: pleaSchema.optional(),
@@ -74,9 +71,10 @@ export const baseOffenceSchema = z.object({
   disposalResults: disposalResultSchema.array().optional()
 })
 
-export const offenceSchema = baseOffenceSchema.extend({
+export const updateOffenceSchema = baseOffenceSchema.extend({
   adjudication: adjudicationSchema.optional(),
   offenceStartDate: dateStringSchema.optional(),
   offenceId: z.string().nonempty(),
-  dateOfSentence: dateStringSchema.optional()
+  dateOfSentence: dateStringSchema.optional(),
+  cjsOffenceCode: z.string().length(7)
 })

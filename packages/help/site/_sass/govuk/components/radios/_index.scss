@@ -1,3 +1,5 @@
+@import "../../base";
+
 @import "../error-message/index";
 @import "../fieldset/index";
 @import "../hint/index";
@@ -57,8 +59,8 @@
     content: "";
     box-sizing: border-box;
     position: absolute;
-    top: ($govuk-touch-target-gutter / 2);
-    left: ($govuk-touch-target-gutter / 2);
+    top: ($govuk-touch-target-gutter * 0.5);
+    left: ($govuk-touch-target-gutter * 0.5);
     width: $govuk-radios-size;
     height: $govuk-radios-size;
     border: $govuk-border-width-form-element solid currentcolor;
@@ -79,8 +81,8 @@
     // Positioned by getting half the touch target, so we have the centre of the
     // input, and then moving back by the button's border width, thus positioning
     // the centre of the button in the centre of the input.
-    top: (($govuk-touch-target-size / 2) - $radio-button-size);
-    left: (($govuk-touch-target-size / 2) - $radio-button-size);
+    top: (($govuk-touch-target-size * 0.5) - $radio-button-size);
+    left: (($govuk-touch-target-size * 0.5) - $radio-button-size);
     width: 0;
     height: 0;
     border: $radio-button-size solid currentcolor;
@@ -121,7 +123,7 @@
       outline-color: Highlight;
     }
 
-    box-shadow: 0 0 0 $govuk-radios-focus-width $govuk-focus-colour;
+    box-shadow: 0 0 0 $govuk-radios-focus-width govuk-functional-colour(focus);
   }
 
   // Selected state
@@ -145,7 +147,7 @@
   // =========================================================
 
   .govuk-radios--inline {
-    @include govuk-media-query($from: tablet) {
+    @media #{govuk-from-breakpoint(tablet)} {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-start;
@@ -162,10 +164,12 @@
 
   .govuk-radios__divider {
     @include govuk-font($size: 19);
-    @include govuk-text-colour;
+
     $govuk-divider-size: $govuk-radios-size !default;
     width: $govuk-divider-size;
+
     margin-bottom: govuk-spacing(2);
+    color: govuk-functional-colour(text);
     text-align: center;
   }
 
@@ -178,7 +182,7 @@
   $conditional-border-width: $govuk-border-width-narrow;
   // Calculate the amount of padding needed to keep the border centered against
   // the radios.
-  $conditional-border-padding: ($govuk-touch-target-size / 2) - ($conditional-border-width / 2);
+  $conditional-border-padding: ($govuk-touch-target-size * 0.5) - ($conditional-border-width * 0.5);
   // Move the border centered with the radios
   $conditional-margin-left: $conditional-border-padding;
   // Move the contents of the conditional inline with the label
@@ -188,7 +192,8 @@
     @include govuk-responsive-margin(4, "bottom");
     margin-left: $conditional-margin-left;
     padding-left: $conditional-padding-left;
-    border-left: $conditional-border-width solid $govuk-border-colour;
+    border-left: $conditional-border-width solid;
+    border-left-color: govuk-functional-colour(border);
 
     .govuk-frontend-supported &--hidden {
       display: none;
@@ -204,7 +209,7 @@
   // =========================================================
 
   .govuk-radios--small {
-    $input-offset: ($govuk-touch-target-size - $govuk-small-radios-size) / 2;
+    $input-offset: ($govuk-touch-target-size - $govuk-small-radios-size) * 0.5;
 
     .govuk-radios__item {
       margin-bottom: 0;
@@ -248,8 +253,8 @@
       $radio-button-size: govuk-spacing(1);
 
       // The same calculation as normal radio buttons but reduce the border width
-      top: (($govuk-touch-target-size / 2) - $radio-button-size);
-      left: ((($govuk-touch-target-size / 2) - $radio-button-size) - $input-offset);
+      top: (($govuk-touch-target-size * 0.5) - $radio-button-size);
+      left: ((($govuk-touch-target-size * 0.5) - $radio-button-size) - $input-offset);
       border-width: $radio-button-size;
     }
 
@@ -267,7 +272,7 @@
 
     // Align conditional reveals with small radios
     .govuk-radios__conditional {
-      $margin-left: ($govuk-small-radios-size / 2) - ($conditional-border-width / 2);
+      $margin-left: ($govuk-small-radios-size * 0.5) - ($conditional-border-width * 0.5);
       margin-left: $margin-left;
       padding-left: ($govuk-touch-target-size - $input-offset) - ($margin-left + $conditional-border-width);
     }
@@ -288,7 +293,7 @@
       // Apply an outline for those modes to use instead.
       outline: $govuk-radios-focus-width dashed transparent;
       outline-offset: 1px;
-      box-shadow: 0 0 0 $govuk-hover-width $govuk-hover-colour;
+      box-shadow: 0 0 0 $govuk-hover-width govuk-functional-colour(hover);
     }
 
     // Because we've overridden the border-shadow provided by the focus state,
@@ -303,8 +308,8 @@
       }
       // prettier-ignore
       box-shadow:
-        0 0 0 $govuk-radios-focus-width $govuk-focus-colour // 1,
-        0 0 0 $govuk-hover-width $govuk-hover-colour; // 2
+        0 0 0 $govuk-radios-focus-width govuk-functional-colour(focus), // 1
+        0 0 0 $govuk-hover-width govuk-functional-colour(hover); // 2
     }
 
     // For devices that explicitly don't support hover, don't provide a hover
@@ -319,7 +324,7 @@
       }
 
       .govuk-radios__item:hover .govuk-radios__input:focus + .govuk-radios__label::before {
-        box-shadow: 0 0 0 $govuk-radios-focus-width $govuk-focus-colour;
+        box-shadow: 0 0 0 $govuk-radios-focus-width govuk-functional-colour(focus);
       }
     }
   }

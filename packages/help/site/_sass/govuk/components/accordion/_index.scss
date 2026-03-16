@@ -1,7 +1,9 @@
+@import "../../base";
+
 @include govuk-exports("govuk/component/accordion") {
   $govuk-accordion-base-colour: govuk-colour("black");
-  $govuk-accordion-hover-colour: govuk-colour("light-grey");
-  $govuk-accordion-icon-focus-colour: $govuk-focus-colour;
+  $govuk-accordion-hover-colour: govuk-colour("black", $variant: "tint-95");
+  $govuk-accordion-icon-focus-colour: govuk-functional-colour(focus);
   $govuk-accordion-bottom-border-width: 1px;
 
   .govuk-accordion {
@@ -23,11 +25,11 @@
 
   .govuk-accordion__section-button {
     @include govuk-font($size: 24, $weight: bold);
-    @include govuk-text-colour;
 
     display: block;
     margin-bottom: 0;
     padding-top: govuk-spacing(3);
+    color: govuk-functional-colour(text);
   }
 
   // Remove the bottom margin from the last item inside the content
@@ -39,7 +41,8 @@
   .govuk-frontend-supported {
     .govuk-accordion {
       // Border at the bottom of the whole accordion
-      border-bottom: $govuk-accordion-bottom-border-width solid $govuk-border-colour;
+      border-bottom: $govuk-accordion-bottom-border-width solid;
+      border-bottom-color: govuk-functional-colour(border);
     }
 
     .govuk-accordion__section {
@@ -83,13 +86,13 @@
 
       border-width: 0;
 
-      color: $govuk-link-colour;
+      color: govuk-functional-colour(link);
       background: none;
 
       cursor: pointer;
       -webkit-appearance: none;
 
-      @include govuk-media-query($from: tablet) {
+      @media #{govuk-from-breakpoint(tablet)} {
         margin-bottom: 14px;
       }
 
@@ -188,14 +191,16 @@
 
       border: 0;
 
-      border-top: $govuk-accordion-bottom-border-width solid $govuk-border-colour;
+      border-top: $govuk-accordion-bottom-border-width solid;
 
       // Visually separate the section from the one underneath when user changes
       // colours in their browser. See
       // https://github.com/alphagov/govuk-frontend/issues/2321#issuecomment-924201488
       border-bottom: govuk-spacing(2) solid transparent;
 
-      color: $govuk-text-colour;
+      border-top-color: govuk-functional-colour(border);
+
+      color: govuk-functional-colour(text);
       background: none;
 
       text-align: left;
@@ -203,12 +208,12 @@
       cursor: pointer;
       -webkit-appearance: none;
 
-      @include govuk-media-query($from: tablet) {
+      @media #{govuk-from-breakpoint(tablet)} {
         padding-bottom: govuk-spacing(2);
       }
 
       &:active {
-        color: $govuk-link-active-colour;
+        color: govuk-functional-colour(link-active);
         background: none;
       }
 
@@ -266,7 +271,7 @@
       padding-bottom: govuk-spacing(3);
       border-bottom: 0;
 
-      @include govuk-media-query($from: tablet) {
+      @media #{govuk-from-breakpoint(tablet)} {
         padding-bottom: govuk-spacing(4);
       }
     }
@@ -276,7 +281,7 @@
     .govuk-accordion__section-button:focus .govuk-accordion__section-toggle-focus {
       padding-bottom: 3px;
 
-      @include govuk-media-query($from: desktop) {
+      @media #{govuk-from-breakpoint(desktop)} {
         padding-bottom: 2px;
       }
     }
@@ -298,7 +303,7 @@
     .govuk-accordion__section-toggle {
       @include govuk-font-size($size: 19);
       @include govuk-typography-weight-regular;
-      color: $govuk-link-colour;
+      color: govuk-functional-colour(link);
     }
 
     // Add space between the icon and text. Avoid applying spacing directly to
@@ -355,12 +360,12 @@
     // remove hover state as it can be stuck in that state (iOS).
     @media (hover: none) {
       .govuk-accordion__section-header:hover {
-        border-top-color: $govuk-border-colour;
+        border-top-color: govuk-functional-colour(border);
 
-        box-shadow: inset 0 3px 0 0 $govuk-link-colour;
+        box-shadow: inset 0 3px 0 0 govuk-functional-colour(link);
 
         .govuk-accordion__section-button {
-          border-top-color: $govuk-border-colour;
+          border-top-color: govuk-functional-colour(border);
         }
       }
     }

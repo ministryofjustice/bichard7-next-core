@@ -1,3 +1,5 @@
+@import "../../base";
+
 @import "../error-message/index";
 @import "../fieldset/index";
 @import "../hint/index";
@@ -54,8 +56,8 @@
     content: "";
     box-sizing: border-box;
     position: absolute;
-    top: ($govuk-touch-target-gutter / 2);
-    left: ($govuk-touch-target-gutter / 2);
+    top: ($govuk-touch-target-gutter * 0.5);
+    left: ($govuk-touch-target-gutter * 0.5);
     width: $govuk-checkboxes-size;
     height: $govuk-checkboxes-size;
     border: $govuk-border-width-form-element solid currentcolor;
@@ -119,7 +121,7 @@
       outline-color: Highlight;
     }
 
-    box-shadow: 0 0 0 $govuk-focus-width $govuk-focus-colour;
+    box-shadow: 0 0 0 $govuk-focus-width govuk-functional-colour(focus);
   }
 
   // Selected state
@@ -144,10 +146,12 @@
 
   .govuk-checkboxes__divider {
     @include govuk-font($size: 19);
-    @include govuk-text-colour;
+
     $govuk-divider-size: $govuk-checkboxes-size !default;
     width: $govuk-divider-size;
+
     margin-bottom: govuk-spacing(2);
+    color: govuk-functional-colour(text);
     text-align: center;
   }
 
@@ -159,7 +163,7 @@
   // to be an even number in order to be centred under the 40px checkbox or radio.
   $conditional-border-width: $govuk-border-width-narrow;
   // Calculate the amount of padding needed to keep the border centered against the checkbox.
-  $conditional-border-padding: ($govuk-touch-target-size / 2) - ($conditional-border-width / 2);
+  $conditional-border-padding: ($govuk-touch-target-size * 0.5) - ($conditional-border-width * 0.5);
   // Move the border centered with the checkbox
   $conditional-margin-left: $conditional-border-padding;
   // Move the contents of the conditional inline with the label
@@ -169,7 +173,8 @@
     @include govuk-responsive-margin(4, "bottom");
     margin-left: $conditional-margin-left;
     padding-left: $conditional-padding-left;
-    border-left: $conditional-border-width solid $govuk-border-colour;
+    border-left: $conditional-border-width solid;
+    border-left-color: govuk-functional-colour(border);
 
     .govuk-frontend-supported &--hidden {
       display: none;
@@ -185,7 +190,7 @@
   // =========================================================
 
   .govuk-checkboxes--small {
-    $input-offset: ($govuk-touch-target-size - $govuk-small-checkboxes-size) / 2;
+    $input-offset: ($govuk-touch-target-size - $govuk-small-checkboxes-size) * 0.5;
 
     .govuk-checkboxes__item {
       margin-bottom: 0;
@@ -250,7 +255,7 @@
 
     // Align conditional reveals with small checkboxes
     .govuk-checkboxes__conditional {
-      $margin-left: ($govuk-small-checkboxes-size / 2) - ($conditional-border-width / 2);
+      $margin-left: ($govuk-small-checkboxes-size * 0.5) - ($conditional-border-width * 0.5);
       margin-left: $margin-left;
       padding-left: ($govuk-touch-target-size - $input-offset) - ($margin-left + $conditional-border-width);
     }
@@ -271,7 +276,7 @@
       // Apply an outline for those modes to use instead.
       outline: $govuk-focus-width dashed transparent;
       outline-offset: 1px;
-      box-shadow: 0 0 0 $govuk-hover-width $govuk-hover-colour;
+      box-shadow: 0 0 0 $govuk-hover-width govuk-functional-colour(hover);
     }
 
     // Because we've overridden the border-shadow provided by the focus state,
@@ -286,8 +291,8 @@
       }
       // prettier-ignore
       box-shadow:
-        0 0 0 $govuk-focus-width $govuk-focus-colour, // 1
-        0 0 0 $govuk-hover-width $govuk-hover-colour; // 2
+        0 0 0 $govuk-focus-width govuk-functional-colour(focus), // 1
+        0 0 0 $govuk-hover-width govuk-functional-colour(hover); // 2
     }
 
     // For devices that explicitly don't support hover, don't provide a hover
@@ -302,7 +307,7 @@
       }
 
       .govuk-checkboxes__item:hover .govuk-checkboxes__input:focus + .govuk-checkboxes__label::before {
-        box-shadow: 0 0 0 $govuk-focus-width $govuk-focus-colour;
+        box-shadow: 0 0 0 $govuk-focus-width govuk-functional-colour(focus);
       }
     }
   }

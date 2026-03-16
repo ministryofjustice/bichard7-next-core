@@ -55,7 +55,8 @@ describe("mapToNormalDisposalRequest", () => {
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          cjsOffenceCode: "SX03001",
+          roleQualifiers: ["AT"],
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
@@ -88,11 +89,12 @@ describe("mapToNormalDisposalRequest", () => {
               disposalText: "Disposal text"
             }
           ],
-          offenceId: "112233"
+          offenceId: "66cdba73-c8a7-426d-a766-02e449843a69"
         },
         {
-          courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "00112233",
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "CJ03507",
+          roleQualifiers: undefined,
           plea: "No Plea Taken",
           adjudication: "Non-Conviction",
           dateOfSentence: "2025-08-14",
@@ -125,7 +127,7 @@ describe("mapToNormalDisposalRequest", () => {
               disposalText: "Disposal text"
             }
           ],
-          offenceId: "112233"
+          offenceId: "025459be-b60b-4919-8b7c-67371f2ca80b"
         }
       ]
     })

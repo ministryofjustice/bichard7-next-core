@@ -1,3 +1,5 @@
+import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 
 import type PoliceUpdateRequest from "../../../../phase3/types/PoliceUpdateRequest"
@@ -11,13 +13,14 @@ import mapToRemandRequest from "../mapToRemandRequest"
 export const remand = (
   request: PoliceUpdateRequest,
   personId: string,
-  reportId: string
+  reportId: string,
+  pncUpdateDataset: PncUpdateDataset
 ): PoliceApiError | { endpoint: string; requestBody: RemandRequest } => {
   if (request.operation !== PncOperation.REMAND) {
     return new PoliceApiError(["mapToRemandRequest called with a non-remand request"])
   }
 
-  const requestBody = mapToRemandRequest(request.request)
+  const requestBody = mapToRemandRequest(request.request, pncUpdateDataset)
   const validation = remandRequestSchema.safeParse(requestBody)
 
   if (!validation.success) {

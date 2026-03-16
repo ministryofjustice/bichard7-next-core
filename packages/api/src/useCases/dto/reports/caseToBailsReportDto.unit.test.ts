@@ -1,4 +1,4 @@
-import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
@@ -14,7 +14,7 @@ import { hearingTime } from "../../cases/reports/utils/hearingTime"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
 import { caseToBailsReportDto } from "./caseToBailsReportDto"
 
-jest.mock("@moj-bichard7/common/aho/parseAhoXml/index")
+jest.mock("@moj-bichard7/common/aho/parseHearingOutcome")
 jest.mock("@moj-bichard7/common/types/Result")
 jest.mock("@moj-bichard7/common/utils/getShortAsn")
 
@@ -48,7 +48,7 @@ describe("caseToBailsReportDto", () => {
         { resolved_ts: new Date("2023-05-13T10:00:00Z"), status: 2, trigger_code: "TRPR0010" }
       ]
     } as unknown as CaseRowForBailsReport
-    ;(parseAhoXml as jest.Mock).mockReturnValue({ MockAho: true })
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue({ MockAho: true })
     ;(isError as unknown as jest.Mock).mockImplementation((val) => val instanceof Error)
     ;(getShortAsn as jest.Mock).mockReturnValue("SHORT_ASN")
     ;(caseAutomatedToPNC as jest.Mock).mockReturnValue("Yes")
@@ -68,7 +68,7 @@ describe("caseToBailsReportDto", () => {
 
   it("should throw the error object if AHO parsing fails", () => {
     const parseError = new Error("Invalid XML Error")
-    ;(parseAhoXml as jest.Mock).mockReturnValue(parseError)
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(parseError)
     ;(isError as unknown as jest.Mock).mockReturnValue(true)
 
     expect(() => [...caseToBailsReportDto(mockRow)]).toThrow("Invalid XML Error")
