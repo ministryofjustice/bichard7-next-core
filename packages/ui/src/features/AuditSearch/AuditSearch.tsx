@@ -149,8 +149,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       body: JSON.stringify(request),
       headers: {
         "Content-Type": "application/json"
-      },
-      credentials: "include"
+      }
     })
 
     setErrorMessage(result.ok ? "" : "There was a problem creating the audit report")
