@@ -127,6 +127,7 @@ const Home = ({
               hasAccessToBichard={hasAccessToBichard}
               hasAccessToNewBichard={hasAccessToNewBichard}
               showNewBichardButtonFirst={currentUser?.featureFlags?.showNewBichardButtonFirst ?? false}
+              onlyAccessToNewBichard={currentUser?.featureFlags?.onlyAccessToNewBichard ?? false}
             />
 
             {hasAccessToUserManagement && (
@@ -203,13 +204,19 @@ const BichardLinks = ({
   courtCaseDetails,
   hasAccessToBichard,
   hasAccessToNewBichard,
-  showNewBichardButtonFirst
+  showNewBichardButtonFirst,
+  onlyAccessToNewBichard
 }: {
   courtCaseDetails: string
   hasAccessToBichard: boolean
   hasAccessToNewBichard: boolean
   showNewBichardButtonFirst: boolean
+  onlyAccessToNewBichard: boolean
 }) => {
+  if (onlyAccessToNewBichard) {
+    return <NewBichardLink courtCaseDetails={courtCaseDetails} />
+  }
+
   if (showNewBichardButtonFirst) {
     return (
       <>
