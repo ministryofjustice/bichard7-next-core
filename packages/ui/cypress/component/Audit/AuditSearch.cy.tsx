@@ -290,8 +290,7 @@ describe("AuditSearch", () => {
 
     cy.wait("@auditSearch")
 
-    cy.get(".error-message").contains("There was a problem creating the audit report")
-
+    cy.get(".govuk-error-message").contains("There was a problem creating the audit report")
     cy.get("@routerPush").should("not.be.called")
   })
 
@@ -321,10 +320,12 @@ describe("AuditSearch", () => {
 
     cy.get("button[name=audit-search-button]").click()
 
+    cy.get("button[name=audit-search-button]").should("not.be.enabled")
+
     cy.wait("@auditSearch")
 
-    cy.get(".error-message").contains("There was a problem creating the audit report")
-
+    cy.get(".govuk-error-message").contains("There was a problem creating the audit report")
+    cy.get("button[name=audit-search-button]").should("be.enabled")
     cy.get("@routerPush").should("not.be.called")
   })
 

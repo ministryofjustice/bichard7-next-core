@@ -9,6 +9,7 @@ import AuditResolvedBy from "../../types/AuditResolvedBy"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { useRouter } from "next/router"
+import { useFormStatus } from "react-dom"
 
 interface AuditCheckboxProps {
   id?: string
@@ -64,6 +65,17 @@ function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
     return new Date(defaultDate)
   }
   return parsedDate
+}
+
+const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = (props) => {
+  const { formValid } = props
+  const formStatus = useFormStatus()
+
+  return (
+    <button name="audit-search-button" className="govuk-button" disabled={!formValid || formStatus.pending}>
+      {"Search cases"}
+    </button>
+  )
 }
 
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
@@ -329,9 +341,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                   <span className="govuk-visually-hidden">{"Error:"}</span> {errorMessage}
                 </p>
               ) : null}
-              <button name="audit-search-button" className="govuk-button" disabled={!formValid}>
-                {"Search cases"}
-              </button>
+              <AuditSearchSubmitButton formValid={formValid} />
               <p className="govuk-body">
                 <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
                   {"Clear search"}
