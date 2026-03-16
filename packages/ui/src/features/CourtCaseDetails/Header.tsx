@@ -1,5 +1,4 @@
 import { useRouter } from "next/router"
-import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -46,8 +45,9 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 }
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath } = useRouter()
-  const pathName = usePathname()
+  const { basePath, asPath } = useRouter()
+  const pathName = asPath.split(/[?#]/)[0]
+
   const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
