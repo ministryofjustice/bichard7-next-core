@@ -52,7 +52,7 @@ describe("Search", () => {
 
       cy.findByText("Search cases").click()
 
-      cy.location("pathname").should("contain", "/audit/\d+")
+      cy.location("pathname").should("match", /\/bichard\/audit\/\d+/)
     })
   })
 
