@@ -52,8 +52,13 @@ describe("bails report page", () => {
       },
       {
         orgForPoliceFilter: "01",
-        errorStatus: "Unresolved",
-        triggerStatus: "Unresolved",
+        errorStatus: "Resolved",
+        triggerStatus: "Resolved",
+        errorResolvedBy: "user1",
+        triggerResolvedBy: "user2",
+        messageReceivedTimestamp: new Date(),
+        errorResolvedTimestamp: new Date(),
+        triggerResolvedTimestamp: new Date(),
         errorReason: "",
         errorReport: ""
       }
@@ -61,6 +66,18 @@ describe("bails report page", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: bailTrigger })
     cy.task("insertTriggers", { caseId: 1, triggers: domesticViolenceTrigger })
     cy.task("insertTriggers", { caseId: 2, triggers: warrantsTrigger })
+
+    cy.task("insertTriggers", {
+      caseId: 3,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Resolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        }
+      ]
+    })
 
     cy.task("insertException", {
       caseId: 3,
