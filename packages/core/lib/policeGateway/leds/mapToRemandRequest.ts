@@ -59,8 +59,8 @@ const mapToRemandRequest = (
   pncUpdateDataset: PncUpdateDataset
 ): RemandRequest => {
   const { forceStationCode, hearingDate, pncRemandStatus, bailConditions } = request
-  const pncIdentifier = pncUpdateDataset?.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
-  const personUrn = (pncUpdateDataset ? preProcessPersonUrn(pncIdentifier) : request.pncIdentifier) ?? ""
+  const pncIdentifier = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
+  const personUrn = preProcessPersonUrn(pncIdentifier) ?? ""
 
   return {
     ownerCode: forceStationCode,
