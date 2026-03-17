@@ -9,6 +9,7 @@ export type LedsMockOptions = PoliceApiRequestMockOptions & {
   reportId?: string
   courtCaseId?: string
   response?: string
+  expectedRequest?: string
 }
 
 export type LedsMock = PartialPoliceApiRequestMock &
@@ -17,7 +18,7 @@ export type LedsMock = PartialPoliceApiRequestMock &
     request: HttpRequest
     response: HttpResponse
     count?: number
-    receivedRequests: []
+    expectedRequest?: string
   }
 
 export type LedsBichard = Omit<Bichard, "policeApi"> & { policeApi: LedsApi }

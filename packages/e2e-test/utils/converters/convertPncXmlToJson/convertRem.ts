@@ -23,7 +23,7 @@ export type Rem = {
 }
 
 const convertRem = (remValue: string): Rem => {
-  let currentIndex = 0
+  let currentIndex = 1
   const read = (length: number) => {
     const value = remValue.substring(currentIndex, currentIndex + length)
     currentIndex += length
