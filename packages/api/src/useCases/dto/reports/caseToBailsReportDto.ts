@@ -3,7 +3,7 @@ import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/B
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
-import { differenceInCalendarDays, format } from "date-fns"
+import { differenceInCalendarDays } from "date-fns"
 
 import type { CaseRowForBailsReport } from "../../../types/reports/Bails"
 
@@ -30,20 +30,20 @@ export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<Cas
     automatedToPNC: caseAutomatedToPNC(aho, row.error_count),
     bailConditions: bailConditionsImposed(aho),
     courtName: row.court_name ?? null,
-    dateOfBirth: format(new Date(dateOfBirth(aho)), "dd/MM/yyyy"),
+    dateOfBirth: dateOfBirth(aho),
     daysToEnterPortal:
       row.court_date > row.msg_received_ts ? null : differenceInCalendarDays(row.msg_received_ts, row.court_date),
     defendantAddress: defendantAddress(aho),
     defendantName: row.defendant_name ?? null,
     errorId: row.error_id,
-    hearingDate: format(row.court_date, "dd/MM/yyyy"),
+    hearingDate: formatDate(row.court_date),
     hearingTime: hearingTime(aho),
     nextAppearanceCourt: aggregatedOffences.nextCourtNames,
     nextAppearanceDate: aggregatedOffences.nextCourtDates,
     nextAppearanceTime: aggregatedOffences.nextCourtTimes,
     offenceTitles: aggregatedOffences.offenceTitles,
     ptiurn: row.ptiurn ?? "",
-    receivedDate: format(row.msg_received_ts, "dd/MM/yyyy HH:mm")
+    receivedDate: formatDate(row.msg_received_ts, true)
   }
 
   for (const trigger of row.triggers) {
