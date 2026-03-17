@@ -160,7 +160,7 @@ ui_params: &ui_params
     default: "01"
   forces-with-trigger-and-exception-quality-auditing-enabled:
     type: string
-    default: "01"
+    default: "01,001"
   api-case-details:
     type: boolean
     default: false
@@ -179,6 +179,7 @@ ui_envs: &ui_envs
   USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
   USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
   USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
+
 
 jobs:
   lint_and_build:
