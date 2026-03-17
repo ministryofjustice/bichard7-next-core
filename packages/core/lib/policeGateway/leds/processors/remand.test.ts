@@ -19,7 +19,7 @@ describe("remand", () => {
   const pncUpdateDataset = buildPncUpdateDataset({ organisationName: "Org" })
 
   it("returns endpoint and requestBody", () => {
-    const endpoint = "person-services/v1/people/123/arrest-reports/456/basic-remands"
+    const endpoint = "/person-services/v1/people/123/arrest-reports/456/basic-remands"
     const requestBody = {
       appearanceResult: "remanded-on-bail",
       bailConditions: ["This is a dummy bail condition."],

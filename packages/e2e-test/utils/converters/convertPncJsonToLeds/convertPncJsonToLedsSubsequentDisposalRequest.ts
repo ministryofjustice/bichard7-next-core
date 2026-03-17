@@ -13,17 +13,15 @@ const reasonForAppearance: Record<string, ReasonForAppearance> = {
 
 export const convertPncJsonToLedsSubsequentDisposalRequest = (
   pncJson: PncSubsequentDisposalJson
-): SubsequentDisposalResultsRequest => {
-  return {
-    ownerCode: pncJson.forceStationCode,
-    personUrn: pncJson.pncIdentifier,
-    courtCaseReference: pncJson.offences[0].courtCaseReference,
-    court: {
-      courtIdentityType: "code",
-      courtCode: pncJson.courtCode ?? pncJson.subsequentUpdate.courtCode
-    },
-    appearanceDate: convertDate(pncJson.dateOfHearing),
-    reasonForAppearance: reasonForAppearance[pncJson.subsequentUpdate.hearingType],
-    offences: mapOffences(pncJson.offences)
-  }
-}
+): SubsequentDisposalResultsRequest => ({
+  ownerCode: pncJson.forceStationCode,
+  personUrn: pncJson.pncIdentifier,
+  courtCaseReference: pncJson.offences[0].courtCaseReference,
+  court: {
+    courtIdentityType: "code",
+    courtCode: pncJson.courtCode ?? pncJson.subsequentUpdate.courtCode
+  },
+  appearanceDate: convertDate(pncJson.subsequentUpdate.hearingDate),
+  reasonForAppearance: reasonForAppearance[pncJson.subsequentUpdate.hearingType],
+  offences: mapOffences(pncJson.offences, false)
+})

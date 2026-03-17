@@ -8,6 +8,7 @@ import type {
   disposalDurationSchema,
   disposalDurationUnitSchema,
   disposalFineSchema,
+  disposalResultSchema,
   pleaSchema,
   updateOffenceSchema
 } from "../../schemas/leds/common"
@@ -20,5 +21,6 @@ export type Defendant = z.infer<typeof defendantSchema>
 export type DisposalDuration = z.infer<typeof disposalDurationSchema>
 export type DisposalDurationUnit = z.infer<typeof disposalDurationUnitSchema>
 export type DisposalFine = z.infer<typeof disposalFineSchema>
+export type DisposalResult = z.infer<typeof disposalResultSchema>
 export type Offence = z.infer<typeof updateOffenceSchema>
 export type Plea = z.infer<typeof pleaSchema>

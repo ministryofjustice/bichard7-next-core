@@ -7,6 +7,7 @@ import type PoliceApi from "../../types/PoliceApi"
 import type { MockAsnQueryParams } from "../../types/PoliceApi"
 import { addMockToLedsApi } from "./addMocksToLedsApi"
 import addMockToLedsMockApi from "./addMockToLedsMockApi"
+import checkMocksForLedsMockApi from "./checkMocksForLedsMockApi"
 import LedsTestApiHelper from "./helpers/LedsTestApiHelper/LedsTestApiHelper"
 import * as mockGenerators from "./mockGenerators"
 import { generateAsnQuery } from "./mockGenerators/generateAsnQuery"
@@ -110,19 +111,7 @@ export class LedsApi implements PoliceApi {
       return verifyRealLedsApiData(this.bichard)
     }
 
-    let expectationPaths: string[] = []
-    for (let index = 0; index < 3; index++) {
-      const unusedMocks = await this.mockServerClient.retrieveUnusedMocks()
-      if (unusedMocks.length === 0) {
-        return
-      }
-
-      expectationPaths = unusedMocks.map((unusedMock) => unusedMock.path)
-
-      await new Promise((resolve) => setTimeout(resolve, 2_000))
-    }
-
-    throw Error(["Mocks not called:", ...expectationPaths].join("\n"))
+    await checkMocksForLedsMockApi(this.bichard)
   }
 
   async expectNoRequests(): Promise<void> {
