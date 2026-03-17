@@ -180,7 +180,6 @@ ui_envs: &ui_envs
   USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
   USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
 
-
 jobs:
   lint_and_build:
     machine:
