@@ -164,9 +164,23 @@ describe("bails report page", () => {
 
     cy.get("#run-report").click()
 
-    cy.get(".results-area table tbody tr").should("have.length", 1)
+    cy.get('section[aria-labelledby="report-group-BichardForce03"]').within(() => {
+      cy.get("h3#report-group-BichardForce03").should("exist")
 
-    cy.get(".results-area table tbody tr td:nth(2)").should("have.text", "Case00003")
+      cy.get("table tbody tr").should("have.length", 1)
+
+      cy.get("table tbody tr td").eq(0).should("have.text", "Ex")
+      cy.get("table tbody tr td").eq(2).should("have.text", "Case00003")
+    })
+
+    cy.get('section[aria-labelledby="report-group-GeneralHandler"]').within(() => {
+      cy.get("h3#report-group-GeneralHandler").should("exist")
+
+      cy.get("table tbody tr").should("have.length", 1)
+
+      cy.get("table tbody tr td").eq(0).should("have.text", "Tr")
+      cy.get("table tbody tr td").eq(2).should("have.text", "Case00003")
+    })
 
     cy.get(".results-area table tbody tr").should("not.contain", "bails")
     cy.get(".results-area table tbody tr").should("not.contain", "domVi")
