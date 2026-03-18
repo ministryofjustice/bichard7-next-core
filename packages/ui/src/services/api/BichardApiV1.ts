@@ -1,4 +1,4 @@
-import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
+import type { AuditDto, AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
 import { type AuditCasesMetadata, AuditCasesMetadataSchema } from "@moj-bichard7/common/types/AuditCase"
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
@@ -14,7 +14,6 @@ import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import type { UserList } from "@moj-bichard7/common/types/User"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
-import type { AuditDto } from "@moj-bichard7/common/types/Audit"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
