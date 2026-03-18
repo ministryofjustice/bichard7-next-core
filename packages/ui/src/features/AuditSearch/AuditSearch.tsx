@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, forwardRef, useActionState, useId, useRef, useState } from "react"
+import React, { type ChangeEvent, forwardRef, useActionState, useEffect, useId, useRef, useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
@@ -57,6 +57,7 @@ interface FormState {
   volume: string
   fromDate: Date
   toDate: Date
+  auditId?: number
 }
 
 function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
@@ -159,7 +160,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
 
       const auditResult = AuditDtoSchema.safeParse(raw)
       if (auditResult.success) {
-        await router.push(`/audit/${auditResult.data.auditId}`)
+        return { ...newState, auditId: auditResult.data.auditId }
       } else {
         setErrorMessage("There was a problem creating the audit report")
       }
@@ -183,6 +184,12 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
     resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
   )
+
+  useEffect(() => {
+    if (currentFormState.auditId) {
+      router.push(`/audit/${currentFormState.auditId}`)
+    }
+  }, [currentFormState.auditId, router])
 
   return (
     <form action={submitAction} onChange={handleFormChange} ref={formRef}>
