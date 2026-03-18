@@ -124,7 +124,7 @@ describe("Switch Button", () => {
   })
 
   context("on the Report Selection page", () => {
-    it("doesn't show the switch button", () => {
+    it("shows the switch button", () => {
       loginAndVisit("Supervisor", "/bichard/report-selection")
 
       buttonExists()
