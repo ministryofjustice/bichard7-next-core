@@ -6,7 +6,6 @@ import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { LocalStorageKey, Ui } from "types/Ui"
 import { LinkButton } from "./Buttons/LinkButton"
-import ConditionalRender from "./ConditionalRender"
 import Header from "./Header"
 import InfoBanner from "./InfoBanner"
 import { Banner, CrownContainer } from "./Layout.styles"
@@ -51,6 +50,9 @@ const Layout = ({
   const pathname = usePathname()
   const currentUser = useCurrentUser()
 
+  const isLockedToNewBichard = currentUser?.featureFlags?.onlyAccessToNewBichard ?? false
+  const shouldDisplayBichardSwitchButton = bichardSwitch.display && isLockedToNewBichard === false
+
   let bichardSwitchUrl = bichardSwitch.href ?? "/bichard-ui/RefreshListNoRedirect"
 
   if (bichardSwitch.displaySwitchingSurveyFeedback) {
@@ -79,9 +81,7 @@ const Layout = ({
         <Banner>
           <PhaseBanner phase={"Beta"} />
 
-          <ConditionalRender isRendered={bichardSwitch.display}>
-            <BichardSwitchButton href={bichardSwitchUrl} />
-          </ConditionalRender>
+          {shouldDisplayBichardSwitchButton && <BichardSwitchButton href={bichardSwitchUrl} />}
         </Banner>
 
         <InfoBanner

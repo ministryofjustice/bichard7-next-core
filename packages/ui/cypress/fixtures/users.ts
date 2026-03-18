@@ -98,6 +98,20 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
       useTriggerAndExceptionQualityAuditingEnabled: true
     }
   },
+  SupervisorWithOnlyNewBichard: {
+    username: "Supervisor.OATNB",
+    visibleForces: ["001"],
+    forenames: "Supervisor",
+    surname: "User",
+    email: "supervisor.oatnb@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    featureFlags: {
+      useCourtDateReceivedDateMismatchFiltersEnabled: true,
+      useTriggerAndExceptionQualityAuditingEnabled: true,
+      onlyAccessToNewBichard: true
+    }
+  },
   UserManager: {
     username: "UserManager",
     visibleForces: ["01"],
