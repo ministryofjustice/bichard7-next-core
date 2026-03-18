@@ -12,6 +12,10 @@ describe("Home", () => {
       email: "newbicharduser@example.com",
       groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp", "B7NewUI_grp"]
     })
+    cy.task("insertIntoUserGroupsTable", {
+      email: "onlynewbicharduser@example.com",
+      groups: ["B7Supervisor_grp", "B7NewUI_grp"]
+    })
   })
 
   it("should redirect user to home page after successful login", () => {
@@ -19,6 +23,7 @@ describe("Home", () => {
     cy.login(emailAddress, "password")
     cy.get("h1").contains(/welcome bichard user 01/i)
     cy.get("a[id=user-management-link]").should("have.attr", "href").and("equal", "/users/users")
+    cy.get("a.access-bichard-link").should("have.length", 2)
     cy.get("a[id=bichard-link]").should("have.attr", "href").and("equal", "/bichard-ui/InitialRefreshList")
   })
 
@@ -93,5 +98,12 @@ describe("Home", () => {
       .then((buttonsTexts) => {
         expect(buttonsTexts).to.deep.eq(["Access New Bichard", "Access Bichard"])
       })
+  })
+
+  it("shows the New UI button only when onlyAccessToNewBichard feature flag is true", () => {
+    cy.login("onlynewbicharduser@example.com", "password")
+
+    cy.get("a.access-bichard-link").should("have.length", 1)
+    cy.get("a.access-bichard-link").contains("Access New Bichard")
   })
 })

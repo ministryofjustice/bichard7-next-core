@@ -24,6 +24,7 @@ import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./t
 import { deleteTriggers, insertTriggers } from "./test/utils/manageTriggers"
 import { insertUsersWithOverrides } from "./test/utils/manageUsers"
 import deleteFromTable from "./test/utils/deleteFromTable"
+import unlockCourtCase from "./test/utils/unlockCourtCase"
 
 export default defineConfig({
   e2e: {
@@ -162,6 +163,10 @@ export default defineConfig({
         table(message) {
           console.table(message)
           return null
+        },
+
+        unlockCase(errorId: number) {
+          return unlockCourtCase(errorId)
         }
       })
     }
