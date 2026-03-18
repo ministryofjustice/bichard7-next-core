@@ -55,7 +55,7 @@ describe("domestic violence report type filter", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: vulnerableVictimAndDomViTrigger })
   }
 
-  it("queries domestic violence and successfully returns only domestic violence", () => {
+  it("queries domestic violence and successfully displays only domestic violence", () => {
     insertSampleCases()
     cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
@@ -65,7 +65,21 @@ describe("domestic violence report type filter", () => {
 
     cy.get(".results-area table tbody tr").should("have.length", 3)
 
-    cy.get(".results-area table th").contains("Outcome")
+    const expectedHeaders = [
+      "Type",
+      "Hearing Date",
+      "Court Name",
+      "Defendant Name",
+      "Date of Birth",
+      "PTIURN",
+      "ASN",
+      "Offence Title",
+      "Outcome"
+    ]
+
+    expectedHeaders.forEach((headerText, index) => {
+      cy.get(".results-area table th").eq(index).should("have.text", headerText)
+    })
 
     cy.get(".results-area table tbody tr td:nth(5)").should("have.text", "domVi")
     cy.get(".results-area table tbody tr").contains("DomesticViolence Name")

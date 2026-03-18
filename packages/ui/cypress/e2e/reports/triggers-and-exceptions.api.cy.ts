@@ -9,15 +9,34 @@ describe("exceptions/triggers report type filter", () => {
     insertSampleCases()
   })
 
-  it("queries exceptions/triggers and successfully returns only exceptions/triggers", () => {
+  it("queries exceptions/triggers and successfully displays only exceptions/triggers", () => {
     cy.get("#report-select").select("Resolved Exceptions/Triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
 
     cy.get("#run-report").click()
 
+    const headers = [
+      "Type",
+      "ASN",
+      "PTIURN",
+      "Defendant Name",
+      "Court Name",
+      "Courtroom",
+      "Hearing Date",
+      "Case Reference",
+      "Date/Time Received By CJSE",
+      "Date/Time Resolved",
+      "Notes",
+      "Resolution Action"
+    ]
+
     cy.get('section[aria-labelledby="report-group-BichardForce03"]').within(() => {
       cy.get("h3#report-group-BichardForce03").should("exist")
+
+      headers.forEach((text, index) => {
+        cy.get("table thead tr th").eq(index).should("have.text", text)
+      })
 
       cy.get("table tbody tr").should("have.length", 1)
 
@@ -29,6 +48,10 @@ describe("exceptions/triggers report type filter", () => {
       cy.get("h3#report-group-GeneralHandler").should("exist")
 
       cy.get("table tbody tr").should("have.length", 1)
+
+      headers.forEach((text, index) => {
+        cy.get("table thead tr th").eq(index).should("have.text", text)
+      })
 
       cy.get("table tbody tr td:nth(0)").should("have.text", "Tr")
       cy.get("table tbody tr td:nth(2)").should("have.text", "Case00003")

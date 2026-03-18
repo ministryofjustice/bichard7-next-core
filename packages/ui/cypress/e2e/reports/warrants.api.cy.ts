@@ -75,7 +75,7 @@ describe("warrants report type filter", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: bothTriggers })
   }
 
-  it("queries warrants and successfully returns only warrants", () => {
+  it("queries warrants and successfully displays only warrants", () => {
     insertSampleCases()
     cy.get("#report-select").select("Warrants")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
@@ -85,7 +85,33 @@ describe("warrants report type filter", () => {
 
     cy.get(".results-area table tbody tr").should("have.length", 1)
 
-    cy.get(".results-area table th").contains("Warrant Type")
+    const headers = [
+      "Hearing Date",
+      "Court Name",
+      "Hearing Time",
+      "Defendant Name",
+      "Gender",
+      "Defendant Address",
+      "Date of Birth",
+      "PNCID",
+      "PTIURN",
+      "ASN",
+      "Offence Title(s)",
+      "Offence Wording",
+      "Warrant Text",
+      "Next Court Appearance",
+      "Next Court Appearance Date",
+      "Warrant Type",
+      "Bail or No Bail",
+      "Date/Time Received by CJSE",
+      "Number of days taken to enter Portal",
+      "Trigger Status",
+      "Trigger Resolved Date"
+    ]
+
+    headers.forEach((text, index) => {
+      cy.get(".results-area table th").eq(index).should("have.text", text)
+    })
 
     cy.get(".results-area table tbody tr td:nth(8)").should("have.text", "warrants")
     cy.get(".results-area table tbody tr").contains("Warrants Name")
