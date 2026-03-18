@@ -3,7 +3,9 @@ import type { CaseOrder, CaseOrderBy } from "@moj-bichard7/common/contracts/Case
 import type { AuditCase, AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { AuditCaseSchema } from "@moj-bichard7/common/types/AuditCase"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -78,6 +80,11 @@ export const fetchAuditCases = async (
     return new Error("Failed to get audit case records")
   }
 
+  const parsedResults = z.array(AuditCaseSchema).safeParse(results)
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
   const summary = await sql<{ count: number }[]>`
     SELECT
       COUNT(*) AS count
@@ -94,7 +101,7 @@ export const fetchAuditCases = async (
   }
 
   return {
-    cases: results.map((row) => convertAuditCaseToDto(row)),
+    cases: parsedResults.data.map(convertAuditCaseToDto),
     maxPerPage,
     pageNum,
     returnCases: results.length,

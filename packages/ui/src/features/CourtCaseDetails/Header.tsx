@@ -1,3 +1,6 @@
+import { useRouter } from "next/router"
+import { useEffect, useState } from "react"
+
 import Permission from "@moj-bichard7/common/types/Permission"
 import Badge, { BadgeColours } from "components/Badge"
 import ConditionalRender from "components/ConditionalRender"
@@ -5,14 +8,11 @@ import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePreviousPath } from "context/PreviousPathContext"
-import { usePathname } from "next/navigation"
-import { useRouter } from "next/router"
 
 import { AccordionToggle } from "components/Card/Card.styles"
 import useContentToggle from "hooks/useContentToggle"
-import { useEffect, useState } from "react"
 import { isLockedByCurrentUser } from "services/case"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { LinkButton } from "../../components/Buttons/LinkButton"
 import Form from "../../components/Form"
 import getResolutionStatus from "../../utils/getResolutionStatus"
@@ -45,7 +45,9 @@ const getUnlockPath = (courtCase: DisplayFullCourtCase): URLSearchParams => {
 }
 
 const Header: React.FC<Props> = ({ canReallocate }: Props) => {
-  const { basePath } = useRouter()
+  const { basePath, asPath } = useRouter()
+  const pathName = asPath.split(/[?#]/)[0]
+
   const { csrfToken } = useCsrfToken()
   const currentUser = useCurrentUser()
   const { courtCase } = useCourtCase()
@@ -57,7 +59,12 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
 
   const leaveAndUnlockParams = getUnlockPath(courtCase)
 
-  const pathName = usePathname()
+  let returnToCaseListPath = basePath
+  let returnToCaseListText = "Return to case list"
+  if (/^\/audit\/\d+(?:\?.*)?$/.test(previousPath)) {
+    returnToCaseListPath += previousPath
+    returnToCaseListText = "Return to audit case list"
+  }
 
   let reallocatePath = `${basePath}${pathName}`
   let leaveAndUnlockUrl = `${basePath}?${leaveAndUnlockParams.toString()}`
@@ -161,8 +168,13 @@ const Header: React.FC<Props> = ({ canReallocate }: Props) => {
             </Form>
           </ConditionalRender>
           <ConditionalRender isRendered={!hasCaseLock}>
-            <SecondaryLinkButton id="return-to-case-list" className={`button`} href={basePath} secondary={true}>
-              {"Return to case list"}
+            <SecondaryLinkButton
+              id="return-to-case-list"
+              className={`button`}
+              href={returnToCaseListPath}
+              secondary={true}
+            >
+              {returnToCaseListText}
             </SecondaryLinkButton>
           </ConditionalRender>
         </ButtonContainer>
