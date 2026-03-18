@@ -82,7 +82,7 @@ describe("domestic violence report type filter", () => {
     })
 
     cy.get(".results-area table tbody tr td:nth(5)").should("have.text", "domVi")
-    cy.get(".results-area table tbody tr").contains("DomesticViolence Name")
+    cy.get(".results-area table tbody tr td:nth(3)").contains("DomesticViolence Name")
 
     cy.get(".results-area table tbody tr").should("not.contain", "Bails Name")
     cy.get(".results-area table tbody tr").should("not.contain", "Warrants Name")

@@ -44,7 +44,7 @@ describe("bails report type filter", () => {
     })
 
     cy.get(".results-area table tbody tr td:nth(6)").should("have.text", "bail")
-    cy.get(".results-area table tbody tr").contains("Bail Name")
+    cy.get(".results-area table tbody tr td:nth(3)").contains("Bail Name")
 
     cy.get(".results-area table tbody tr").should("not.contain", "DomesticViolence Name")
     cy.get(".results-area table tbody tr").should("not.contain", "Warrants Name")
