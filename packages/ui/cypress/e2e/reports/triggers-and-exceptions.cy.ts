@@ -58,6 +58,7 @@ describe("exceptions/triggers report type filter", () => {
     cy.get("#run-report").click()
 
     cy.get(".results-area table tbody tr").should("have.length", 1)
+    cy.get("table tbody tr td:nth(0)").should("have.text", "Ex")
 
     cy.get(".results-area table tbody tr td:nth(2)").should("have.text", "Case00003")
   })
@@ -71,6 +72,7 @@ describe("exceptions/triggers report type filter", () => {
     cy.get("#run-report").click()
 
     cy.get(".results-area table tbody tr").should("have.length", 1)
+    cy.get("table tbody tr td:nth(0)").should("have.text", "Tr")
 
     cy.get(".results-area table tbody tr td:nth(2)").should("have.text", "Case00003")
   })
