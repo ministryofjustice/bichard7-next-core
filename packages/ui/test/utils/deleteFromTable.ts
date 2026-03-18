@@ -2,7 +2,7 @@ import getDataSource from "../../src/services/getDataSource"
 
 const deleteFromTable = async (tableName: string) => {
   const dataSource = await getDataSource()
-  await dataSource.query(`TRUNCATE TABLE br7own.${tableName} CASCADE;`)
+  await dataSource.query(`TRUNCATE TABLE br7own.${tableName} RESTART IDENTITY CASCADE;`)
 }
 
 export default deleteFromTable
