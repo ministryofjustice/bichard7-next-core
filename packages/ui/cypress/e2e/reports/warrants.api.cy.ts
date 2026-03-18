@@ -50,7 +50,7 @@ describe("warrants report type filter", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: ftaTrigger })
   }
 
-  const insertCaseWithFTAandWithdrawnTrigger = () => {
+  const insertCaseWithFTAAndWithdrawnTrigger = () => {
     const bothTriggers: Partial<TestTrigger>[] = [
       {
         triggerCode: TriggerCode.TRPR0012,
@@ -129,7 +129,7 @@ describe("warrants report type filter", () => {
   })
 
   it("valid warrants query, the only case available will have both an 'FTA' and a 'Withdrawn' trigger", () => {
-    insertCaseWithFTAandWithdrawnTrigger()
+    insertCaseWithFTAAndWithdrawnTrigger()
     cy.get("#report-select").select("Warrants")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(subDays(new Date(), 0), "yyyy-MM-dd"))
