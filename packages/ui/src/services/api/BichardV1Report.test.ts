@@ -1,108 +1,80 @@
 import BichardV1Report from "./BichardV1Report"
-import ReportsApiClient from "services/api/ReportsApiClient"
+import type ReportsApiClient from "services/api/ReportsApiClient"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
-import type { AnyReportQuery } from "services/api/interfaces/BichardReportGateway"
+import { isError } from "@moj-bichard7/common/types/Result"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
-jest.mock("services/api/ReportsApiClient")
-jest.mock("services/api/utils/generateUrlSearchParams")
-
-const mockedGenerateUrlSearchParams = generateUrlSearchParams as jest.Mock
+const reportTestCases: [ReportType, string][] = [
+  ["bails", V1.CasesReportsBails],
+  ["exceptions", V1.CasesReportsExceptions],
+  ["warrants", V1.CasesReportsWarrants],
+  ["domestic violence", V1.CasesReportsDomesticViolence]
+]
 
 describe("BichardV1Report", () => {
-  let mockClient: jest.Mocked<ReportsApiClient>
   let reportGateway: BichardV1Report
-  const mockDateQuery = { fromDate: new Date("2024-01-01"), toDate: new Date("2024-01-31") }
+  let mockApiClient: jest.Mocked<ReportsApiClient>
+
+  const mockQuery = {
+    fromDate: new Date("2023-01-01"),
+    toDate: new Date("2023-01-31"),
+    exceptions: true,
+    triggers: true
+  }
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    mockApiClient = {
+      fetchReport: jest.fn()
+    } as unknown as jest.Mocked<ReportsApiClient>
 
-    mockClient = new ReportsApiClient("jwt") as jest.Mocked<ReportsApiClient>
-    reportGateway = new BichardV1Report(mockClient)
-
-    mockClient.fetchReport.mockImplementation(async function* () {
-      yield "mock-report-data"
-    })
-
-    mockedGenerateUrlSearchParams.mockReturnValue("mocked=params")
+    reportGateway = new BichardV1Report(mockApiClient)
   })
 
-  describe("streamReport router", () => {
-    it("should route 'bails' correctly", () => {
-      const spy = jest.spyOn(reportGateway, "bailsReport")
-      reportGateway.reportStrategy("bails", mockDateQuery as AnyReportQuery)
-      expect(spy).toHaveBeenCalledWith(mockDateQuery)
-    })
+  test.each(reportTestCases)("should route %s report to the correct endpoint", async (reportType, expectedEndpoint) => {
+    mockApiClient.fetchReport.mockReturnValue((async function* () {})())
 
-    it("should route 'exceptions' correctly", () => {
-      const spy = jest.spyOn(reportGateway, "exceptionsReport")
-      reportGateway.reportStrategy("exceptions", mockDateQuery as AnyReportQuery)
-      expect(spy).toHaveBeenCalledWith(mockDateQuery)
-    })
+    const result = reportGateway.reportStrategy(reportType, mockQuery)
 
-    it("should route 'domestic violence' correctly", () => {
-      const spy = jest.spyOn(reportGateway, "domesticViolenceReport")
-      reportGateway.reportStrategy("domestic violence", mockDateQuery as AnyReportQuery)
-      expect(spy).toHaveBeenCalledWith(mockDateQuery)
-    })
-
-    it("should route 'warrants' correctly", () => {
-      const spy = jest.spyOn(reportGateway, "warrantsReport")
-      reportGateway.reportStrategy("warrants", mockDateQuery as AnyReportQuery)
-      expect(spy).toHaveBeenCalledWith(mockDateQuery)
-    })
-
-    it("should return an Error for an unknown report type", () => {
-      const result = reportGateway.reportStrategy("unknown-type" as any, mockDateQuery as AnyReportQuery)
-      expect(result).toBeInstanceOf(Error)
-      expect((result as Error).message).toBe("Unknown report type: unknown-type")
-    })
-  })
-
-  describe("Specific Report Generators", () => {
-    const consumeGenerator = async (generator: AsyncIterable<any>) => {
-      const results = []
-      for await (const item of generator) {
-        results.push(item)
-      }
-
-      return results
+    if (isError(result)) {
+      throw new Error("Should not error")
     }
 
-    it("bailsReport should format URL and yield data", async () => {
-      const generator = reportGateway.bailsReport(mockDateQuery)
-      const results = await consumeGenerator(generator)
+    for await (const _ of result) {
+      // Need to run generator for the test to work
+    }
 
-      expect(mockedGenerateUrlSearchParams).toHaveBeenCalledWith(mockDateQuery)
-      expect(mockClient.fetchReport).toHaveBeenCalledWith(`${V1.CasesReportsBails}?mocked=params`)
-      expect(results).toEqual(["mock-report-data"])
+    expect(mockApiClient.fetchReport).toHaveBeenCalledWith(expect.stringContaining(expectedEndpoint))
+    expect(mockApiClient.fetchReport).toHaveBeenCalledWith(expect.stringContaining("fromDate"))
+    expect(mockApiClient.fetchReport).toHaveBeenCalledWith(expect.stringContaining("toDate"))
+
+    if (reportType === "exceptions") {
+      expect(mockApiClient.fetchReport).toHaveBeenCalledWith(expect.stringContaining("exceptions=true"))
+      expect(mockApiClient.fetchReport).toHaveBeenCalledWith(expect.stringContaining("triggers=true"))
+    }
+  })
+
+  it("should return an Error if an unknown report type is provided", () => {
+    const result = reportGateway.reportStrategy("invalid-report" as any, mockQuery)
+
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Unknown report type: invalid-report")
+  })
+
+  it("should yield an error if the API client throws", async () => {
+    const apiError = new Error("API Failure")
+    mockApiClient.fetchReport.mockImplementation(() => {
+      throw apiError
     })
 
-    it("exceptionsReport should format URL and yield data", async () => {
-      const mockQuery = {
-        fromDate: new Date("2024-01-01"),
-        toDate: new Date("2024-01-31"),
-        exceptions: true,
-        triggers: true
+    const stream = reportGateway.reportStrategy("warrants", mockQuery)
+
+    if (!(stream instanceof Error)) {
+      const chunks = []
+      for await (const chunk of stream) {
+        chunks.push(chunk)
       }
-      const generator = reportGateway.exceptionsReport(mockQuery)
-      const results = await consumeGenerator(generator)
 
-      expect(mockClient.fetchReport).toHaveBeenCalledWith(`${V1.CasesReportsExceptions}?mocked=params`)
-      expect(results).toEqual(["mock-report-data"])
-    })
-
-    it("should catch an error inside the generator and yield it", async () => {
-      mockClient.fetchReport.mockImplementation(() => {
-        throw new Error("Synchronous setup failure")
-      })
-
-      const generator = reportGateway.warrantsReport(mockDateQuery)
-      const results = await consumeGenerator(generator)
-
-      expect(results).toHaveLength(1)
-      expect(results[0]).toBeInstanceOf(Error)
-      expect((results[0] as Error).message).toBe("Synchronous setup failure")
-    })
+      expect(chunks[0]).toBe(apiError)
+    }
   })
 })
