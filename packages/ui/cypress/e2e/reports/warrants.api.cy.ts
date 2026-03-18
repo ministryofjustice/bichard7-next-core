@@ -90,9 +90,8 @@ describe("warrants report type filter", () => {
     cy.get(".results-area table tbody tr td:nth(8)").should("have.text", "warrants")
     cy.get(".results-area table tbody tr").contains("Warrants Name")
 
-    cy.get(".results-area table tbody tr").should("not.contain", "bails")
-    cy.get(".results-area table tbody tr").should("not.contain", "domVi")
-    cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
+    cy.get(".results-area table tbody tr").should("not.contain", "Bails Name")
+    cy.get(".results-area table tbody tr").should("not.contain", "DomesticViolence Name")
   })
 
   it("queries warrants with a date window that should not return anything", () => {

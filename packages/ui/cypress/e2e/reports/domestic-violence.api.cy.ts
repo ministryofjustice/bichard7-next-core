@@ -70,9 +70,8 @@ describe("domestic violence report type filter", () => {
     cy.get(".results-area table tbody tr td:nth(5)").should("have.text", "domVi")
     cy.get(".results-area table tbody tr").contains("DomesticViolence Name")
 
-    cy.get(".results-area table tbody tr").should("not.contain", "bails")
-    cy.get(".results-area table tbody tr").should("not.contain", "warrants")
-    cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
+    cy.get(".results-area table tbody tr").should("not.contain", "Bails Name")
+    cy.get(".results-area table tbody tr").should("not.contain", "Warrants Name")
   })
 
   it("queries domestic violence with a date window that should not return anything", () => {

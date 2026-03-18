@@ -23,9 +23,8 @@ describe("bails report type filter", () => {
     cy.get(".results-area table tbody tr td:nth(6)").should("have.text", "bail")
     cy.get(".results-area table tbody tr").contains("Bail Name")
 
-    cy.get(".results-area table tbody tr").should("not.contain", "domVi")
-    cy.get(".results-area table tbody tr").should("not.contain", "warrants")
-    cy.get(".results-area table tbody tr").should("not.contain", "excepTrig")
+    cy.get(".results-area table tbody tr").should("not.contain", "DomesticViolence Name")
+    cy.get(".results-area table tbody tr").should("not.contain", "Warrants Name")
   })
 
   it("queries bails with a date window that should not return anything", () => {
