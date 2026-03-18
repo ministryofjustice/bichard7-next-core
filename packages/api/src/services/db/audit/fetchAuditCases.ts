@@ -101,7 +101,7 @@ export const fetchAuditCases = async (
   }
 
   return {
-    cases: parsedResults.data.map((result) => convertAuditCaseToDto(result)),
+    cases: parsedResults.data.map(convertAuditCaseToDto),
     maxPerPage,
     pageNum,
     returnCases: results.length,
