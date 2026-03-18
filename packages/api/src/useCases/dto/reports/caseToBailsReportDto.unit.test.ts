@@ -8,7 +8,6 @@ import { bailConditionsImposed } from "../../cases/reports/bails/utils/bailCondi
 import { caseAutomatedToPNC } from "../../cases/reports/bails/utils/caseAutomatedToPNC"
 import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
 import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
-import { formatDate } from "../../cases/reports/utils/formatDate"
 import { formatOffenceData } from "../../cases/reports/utils/formatOffenceData"
 import { hearingTime } from "../../cases/reports/utils/hearingTime"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
@@ -22,7 +21,6 @@ jest.mock("../../cases/reports/bails/utils/bailConditionsImposed")
 jest.mock("../../cases/reports/bails/utils/caseAutomatedToPNC")
 jest.mock("../../cases/reports/utils/dateOfBirth")
 jest.mock("../../cases/reports/utils/defendantAddress")
-jest.mock("../../cases/reports/utils/formatDate")
 jest.mock("../../cases/reports/utils/formatOffenceData")
 jest.mock("../../cases/reports/utils/hearingTime")
 jest.mock("../convertResolutionStatus")
@@ -53,7 +51,7 @@ describe("caseToBailsReportDto", () => {
     ;(getShortAsn as jest.Mock).mockReturnValue("SHORT_ASN")
     ;(caseAutomatedToPNC as jest.Mock).mockReturnValue("Yes")
     ;(bailConditionsImposed as jest.Mock).mockReturnValue("Do not contact victim")
-    ;(dateOfBirth as jest.Mock).mockReturnValue("1990-12-25T00:00:00Z")
+    ;(dateOfBirth as jest.Mock).mockReturnValue("25/12/1990")
     ;(defendantAddress as jest.Mock).mockReturnValue("123 Fake St")
     ;(hearingTime as jest.Mock).mockReturnValue("10:00")
     ;(formatOffenceData as jest.Mock).mockReturnValue({
@@ -62,7 +60,6 @@ describe("caseToBailsReportDto", () => {
       nextCourtTimes: "10:00",
       offenceTitles: "1× Theft."
     })
-    ;(formatDate as jest.Mock).mockImplementation((date) => (date ? "13/05/2023" : null))
     ;(resolutionStatusFromDb as jest.Mock).mockImplementation((status) => (status === 1 ? "Unresolved" : "Resolved"))
   })
 
@@ -102,7 +99,7 @@ describe("caseToBailsReportDto", () => {
     expect(firstRow.errorId).toBe(123)
 
     expect(results[0].triggerStatus).toBe("Unresolved")
-    expect(results[0].triggerResolvedDate).toBeNull()
+    expect(results[0].triggerResolvedDate).toBe("")
 
     expect(results[1].triggerStatus).toBe("Resolved")
     expect(results[1].triggerResolvedDate).toBe("13/05/2023")

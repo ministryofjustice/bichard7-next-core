@@ -54,7 +54,7 @@ const generateResponseBody = (ncm: ParsedNcm, options: LedsMockOptions): AsnQuer
     disposals: [
       {
         courtCaseId: options.courtCaseId ?? randomUUID(),
-        courtCaseReference: "97/1626/8395Q",
+        courtCaseReference: "97/1626/008395Q",
         caseStatusMarker: "impending-prosecution-detail",
         court: {
           courtIdentityType: "code",
@@ -87,7 +87,6 @@ export const generateAsnQueryFromNcm = (bichard: LedsBichard, ncmFile: string, o
     id: randomUUID(),
     request,
     response,
-    count: options?.count,
-    receivedRequests: []
+    count: options?.count
   }
 }

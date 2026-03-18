@@ -1,4 +1,5 @@
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { defineConfig } from "cypress"
@@ -25,7 +26,7 @@ import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./t
 import { deleteTriggers, insertTriggers } from "./test/utils/manageTriggers"
 import { insertUsersWithOverrides } from "./test/utils/manageUsers"
 import deleteFromTable from "./test/utils/deleteFromTable"
-import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
+import unlockCourtCase from "./test/utils/unlockCourtCase"
 
 export default defineConfig({
   e2e: {
@@ -174,6 +175,10 @@ export default defineConfig({
         table(message) {
           console.table(message)
           return null
+        },
+
+        unlockCase(errorId: number) {
+          return unlockCourtCase(errorId)
         }
       })
     }
