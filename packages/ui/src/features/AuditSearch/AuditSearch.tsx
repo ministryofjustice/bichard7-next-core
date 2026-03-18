@@ -136,7 +136,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
         fromDate: format(newState.fromDate, DATE_FORMAT),
         toDate: format(newState.toDate, DATE_FORMAT),
         includedTypes: includedTypes,
-        volumeOfCases: parseInt(newState.volume),
+        volumeOfCases: Number.parseInt(newState.volume, 10),
         resolvedByUsers: newState.resolvedBy,
         triggerTypes: newState.triggers
       }
