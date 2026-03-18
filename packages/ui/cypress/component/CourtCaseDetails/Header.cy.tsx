@@ -24,9 +24,7 @@ describe("Header", () => {
         <PreviousPathContext.Provider value={{ previousPath }}>
           <CsrfTokenContext.Provider value={[{ csrfToken: "ABC" }, () => {}]}>
             <CurrentUserContext.Provider value={{ currentUser }}>
-              <CourtCaseContext.Provider
-                value={[{ courtCase, amendments: { asn: "1101ZD0100000448754K" }, savedAmendments: {} }, () => {}]}
-              >
+              <CourtCaseContext.Provider value={[{ courtCase, amendments: {}, savedAmendments: {} }, () => {}]}>
                 <Header canReallocate={true} />
               </CourtCaseContext.Provider>
             </CurrentUserContext.Provider>
