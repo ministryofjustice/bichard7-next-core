@@ -7,8 +7,8 @@ describe("ReportSelectionFilter", () => {
 
   const apiCallCheck = (shouldRun: boolean) => {
     const currentDate = new Date().toISOString().split("T")[0]
-    cy.get("div#date-range-section").find("input#date-resolvedFrom").type(currentDate)
-    cy.get("div#date-range-section").find("input#date-resolvedTo").type(currentDate)
+    cy.get("div#date-range-section").find("input#date-from").type(currentDate)
+    cy.get("div#date-range-section").find("input#date-to").type(currentDate)
     cy.get("button#run-report").click()
     cy.get("@downloadApi").should(shouldRun ? "exist" : "not.exist")
   }
