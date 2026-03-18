@@ -12,6 +12,7 @@ import logger from "utils/logger"
 import createNewUserEmail from "./createNewUserEmail"
 import createUser from "./createUser"
 import getUserHierarchyGroups from "./getUserHierarchyGroups"
+import matchNewUserFeatureFlags from "./matchNewUserFeatureFlags"
 
 export interface newUserSetupResult {
   successMessage: string
@@ -25,7 +26,8 @@ export default async (
   userCreateDetails: any,
   baseUrl: string
 ): PromiseResult<newUserSetupResult> => {
-  userCreateDetails.featureFlags = { httpsRedirect: true, exceptionsEnabled: false }
+  userCreateDetails.featureFlags = matchNewUserFeatureFlags(currentUser.featureFlags)
+
   const result = await createUser(connection, currentUser, userCreateDetails)
 
   if (isError(result)) {

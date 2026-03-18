@@ -3,7 +3,7 @@ import type {
   DomesticViolenceReportType
 } from "@moj-bichard7/common/types/reports/DomesticViolence"
 
-import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { format } from "date-fns"
@@ -25,7 +25,7 @@ const truncateResultText = (text: string): string => {
 export function* caseToDomesticViolenceReportDto(
   row: CaseRowForDomesticViolenceReport
 ): Generator<CaseForDomesticViolenceReportDto> {
-  const aho = parseAhoXml(row.annotated_msg)
+  const aho = parseHearingOutcome(row.annotated_msg)
 
   if (isError(aho)) {
     throw aho

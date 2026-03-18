@@ -1,99 +1,103 @@
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
-import Checkbox from "components/Checkbox/Checkbox"
-import { FormGroup } from "components/FormGroup"
-import { Select } from "components/Select"
-import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
-import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
-import { downloadReport } from "services/reports/downloadReport"
-import { SyntheticEvent, useEffect, useRef, useState } from "react"
+import { SyntheticEvent, useEffect, useReducer, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
+import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { ReportConfigs } from "types/reports/Config"
+import { ReportConfig, ReportConfigs } from "types/reports/Config"
+import { validateCheckboxes } from "utils/reports/validateCheckboxes"
+import { validateDateRange } from "utils/reports/validateDateRange"
+import { validateSelectReport } from "utils/reports/validateSelectReport"
 import { ActionBar } from "./ActionBar"
-import { DateRange, DateRangeRef } from "./DateRange"
+import { Checkboxes } from "./Checkboxes"
+import { DateRange } from "./DateRange"
 import { ReportResults } from "./ReportResults"
-
-const FIELD_REQUIRED_ERROR = "This field is required"
-const AT_LEAST_ONE_CHECKBOX_REQUIRED = "At least one option must be selected"
+import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
+import { SelectReportDropdown } from "./SelectReportDropdown"
+import { filterReducer, initialFilterState } from "./reducers/filters"
 
 export const ReportSelectionFilter: React.FC = () => {
-  const dateRangeRef = useRef<DateRangeRef>(null)
-
-  const [reportType, setReportType] = useState<ReportType | undefined>(undefined)
-  const [dateToString, setDateToString] = useState<string>("")
-  const [dateFromString, setDateFromString] = useState<string>("")
-  const [exceptions, setExceptions] = useState<boolean>(true)
-  const [triggers, setTriggers] = useState<boolean>(true)
-
-  const [hasRun, setHasRun] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [rows, setRows] = useState<Record<string, unknown>[]>([])
+  const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
   const [csvReportFilename, setCsvReportFilename] = useState<string>("")
 
-  const [showSelectError, setShowSelectError] = useState<boolean>(false)
-  const [showCheckboxesError, setShowCheckboxesError] = useState<boolean>(false)
+  const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
 
-  useEffect(() => {
-    if (!exceptions && !triggers) {
-      setShowCheckboxesError(true)
-    } else {
-      setShowCheckboxesError(false)
-    }
-  }, [exceptions, triggers])
+  const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
 
-  const config = reportType ? ReportConfigs[reportType] : null
+  const handleSetDateFrom = (date: string) => {
+    dispatch({ type: "SET_DATE_FROM", payload: date })
+  }
+
+  const handleSetDateTo = (date: string) => {
+    dispatch({ type: "SET_DATE_TO", payload: date })
+  }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-    setReportType(event.currentTarget.value as ReportType)
-    setTriggers(true)
-    setExceptions(true)
-    setShowSelectError(false)
-    setRows([])
-    setCsvDownloadUrl(null)
-    setHasRun(false)
+    dispatch({ type: "SET_REPORT_TYPE", payload: event.currentTarget.value as ReportType })
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
-    const target = event.currentTarget
+    const { id, checked } = event.currentTarget
+    dispatch({ type: "SET_CHECKBOX", payload: { id, checked } })
+  }
 
-    if (target.id === "exceptions") {
-      setExceptions(target.checked)
+  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault()
+    setRows(null)
+    setCsvDownloadUrl(null)
+    dispatch({ type: "RESET_FILTERS" })
+  }
+
+  const clearResults = () => {
+    setRows(null)
+    setCsvDownloadUrl(null)
+  }
+
+  const validateFilters = (): boolean => {
+    const rangeValidation = validateDateRange(filterValues.dateFrom, filterValues.dateTo)
+    const checkboxesValidation = validateCheckboxes(
+      filterValues.reportType,
+      filterValues.triggers,
+      filterValues.exceptions
+    )
+    const selectReportValidation = validateSelectReport(filterValues.reportType)
+
+    const newErrors = {
+      dateFromError: rangeValidation.fromError,
+      dateToError: rangeValidation.toError,
+      reportTypeError: selectReportValidation,
+      checkboxesError: checkboxesValidation
     }
 
-    if (target.id === "triggers") {
-      setTriggers(target.checked)
-    }
+    dispatch({ type: "SET_ERRORS", payload: newErrors })
 
-    setHasRun(false)
+    if (Object.values(newErrors).some((error) => error !== null) || !config) {
+      return false
+    } else {
+      return true
+    }
   }
 
   const handleDownload = async () => {
-    if (!reportType || !config) {
-      setShowSelectError(true)
-    }
-
-    const isDateRangeValid = dateRangeRef.current?.validateRange()
-
-    if (!reportType || !config || !isDateRangeValid || showCheckboxesError) {
-      return
-    }
-
-    setIsStreaming(true)
-    setHasRun(true)
-    setRows([])
-    setCsvDownloadUrl(null)
-
     try {
+      const reportType = filterValues.reportType as ReportType
       const urlQuery = new URLSearchParams({
-        fromDate: dateFromString,
-        toDate: dateToString,
-        exceptions: String(exceptions),
-        triggers: String(triggers)
+        fromDate: filterValues.dateFrom,
+        toDate: filterValues.dateTo,
+        exceptions: String(filterValues.exceptions),
+        triggers: String(filterValues.triggers)
       })
 
       const parsedData = await downloadReport(reportType, urlQuery)
-      const csvBlob = await createReportCsv(parsedData, config, reportType, dateFromString, dateToString)
+      const csvBlob = await createReportCsv(
+        parsedData,
+        config as ReportConfig,
+        reportType,
+        filterValues.dateFrom,
+        filterValues.dateTo
+      )
 
       setRows(parsedData)
       setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
@@ -105,18 +109,16 @@ export const ReportSelectionFilter: React.FC = () => {
     }
   }
 
-  const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
-    event.preventDefault()
+  const handleRunReport = async () => {
+    if (!validateFilters()) {
+      return
+    }
 
-    setReportType(undefined)
+    setIsStreaming(true)
     setRows([])
     setCsvDownloadUrl(null)
-    setHasRun(false)
 
-    setDateToString("")
-    setDateFromString("")
-    setTriggers(true)
-    setExceptions(true)
+    await handleDownload()
   }
 
   useEffect(() => {
@@ -127,72 +129,40 @@ export const ReportSelectionFilter: React.FC = () => {
     }
   }, [csvDownloadUrl])
 
+  useEffect(() => {
+    clearResults()
+  }, [filterValues])
+
   return (
     <>
       <ReportSelectionFilterWrapper aria-busy={isStreaming}>
         <Card heading={"Reports"} isContentVisible={true}>
           <fieldset className="govuk-fieldset fields-wrapper">
             <div id={"report-section"} className="reports-section-wrapper">
-              <h2 className={"govuk-heading-m"}>{"Reports"}</h2>
-              <FormGroup showError={showSelectError}>
-                <label className="govuk-body" htmlFor={"report-select"}>
-                  {"Select report"}
-                </label>
-                {showSelectError ? (
-                  <p className="govuk-error-message">
-                    <span className="govuk-visually-hidden">{"Error:"}</span> {FIELD_REQUIRED_ERROR}
-                  </p>
-                ) : null}
-                <Select
-                  id={"report-select"}
-                  placeholder={"Select report..."}
-                  name={"select-case-type"}
-                  className="select-report-input"
-                  onChange={handleSelectChange}
-                  aria-describedby="report-type-label"
-                  value={reportType || ""}
-                  showError={showSelectError}
-                >
-                  <option disabled={true} value={""}>
-                    {"Select report..."}
-                  </option>
-                  {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
-                    <option key={key} value={key}>
-                      {value}
-                    </option>
-                  ))}
-                </Select>
-              </FormGroup>
+              <SelectReportDropdown
+                handleChange={handleSelectChange}
+                reportType={filterValues.reportType}
+                error={filterValues.reportTypeError}
+              />
             </div>
             <div id={"date-range-section"} className="date-range-section-wrapper">
               <DateRange
-                setDateFromString={setDateFromString}
-                setDateToString={setDateToString}
-                setHasRun={setHasRun}
-                dateFromString={dateFromString}
-                dateToString={dateToString}
-                ref={dateRangeRef}
+                dateFromString={filterValues.dateFrom}
+                dateToString={filterValues.dateTo}
+                setDateFromString={handleSetDateFrom}
+                setDateToString={handleSetDateTo}
+                dateFromError={filterValues.dateFromError}
+                dateToError={filterValues.dateToError}
               />
             </div>
             <div id={"include-section"} className="include-section-wrapper">
-              {reportType === "exceptions" && (
-                <>
-                  <h2 className={"govuk-heading-m"}>{"Include"}</h2>
-                  <FormGroup showError={showCheckboxesError}>
-                    <label className="govuk-body" htmlFor={"checkboxes-container"}>
-                      {"Select an option"}
-                    </label>
-                    {showCheckboxesError ? (
-                      <p className="govuk-error-message">
-                        <span className="govuk-visually-hidden">{"Error:"}</span> {AT_LEAST_ONE_CHECKBOX_REQUIRED}
-                      </p>
-                    ) : null}
-                    <div id={"checkboxes-container"} className="checkboxes-wrapper">
-                      <Checkbox label={"Triggers"} checked={triggers} id={"triggers"} onChange={handleCheckbox} />
-                      <Checkbox label={"Exceptions"} checked={exceptions} id={"exceptions"} onChange={handleCheckbox} />
-                    </div>
-                  </FormGroup>
-                </>
+              {filterValues.reportType === "exceptions" && (
+                <Checkboxes
+                  handleChange={handleCheckbox}
+                  triggers={filterValues.triggers}
+                  exceptions={filterValues.exceptions}
+                  error={filterValues.checkboxesError}
+                />
               )}
             </div>
           </fieldset>
@@ -200,15 +170,19 @@ export const ReportSelectionFilter: React.FC = () => {
           <ActionBar
             clearFilters={clearFilters}
             csvDownloadUrl={csvDownloadUrl}
-            handleDownload={handleDownload}
+            handleRunReport={handleRunReport}
             csvReportFilename={csvReportFilename}
-            hasRows={rows.length > 0}
-            reportOptions={{ reportType, fromDate: dateFromString, toDate: dateToString }}
+            hasRows={!!rows && rows.length > 0}
+            reportOptions={{
+              reportType: filterValues.reportType,
+              fromDate: filterValues.dateFrom,
+              toDate: filterValues.dateTo
+            }}
           />
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <ReportResults reportType={reportType} rows={rows} config={config} hasRun={hasRun} isStreaming={isStreaming} />
+      <ReportResults reportType={filterValues.reportType} rows={rows} config={config} isStreaming={isStreaming} />
     </>
   )
 }

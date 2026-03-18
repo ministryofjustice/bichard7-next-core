@@ -1,8 +1,8 @@
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
 import { SyntheticEvent } from "react"
 import { LinkStyleButton, StyledActionBar } from "./ActionBar.styles"
-import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 interface ReportOptions {
   reportType?: ReportType
@@ -14,7 +14,7 @@ interface ActionBarProps {
   csvDownloadUrl: string | null
   hasRows: boolean
   csvReportFilename: string | null
-  handleDownload: () => void
+  handleRunReport: () => void
   clearFilters: (event: SyntheticEvent<HTMLButtonElement>) => void
   reportOptions: ReportOptions
 }
@@ -23,7 +23,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   csvDownloadUrl,
   csvReportFilename,
   hasRows,
-  handleDownload,
+  handleRunReport,
   clearFilters,
   reportOptions
 }) => {
@@ -62,7 +62,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         </LinkButton>
       ) : null}
 
-      <Button id={"run-report"} className="run-report-button" onClick={handleDownload} aria-live="polite">
+      <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
         {"Run report"}
       </Button>
 

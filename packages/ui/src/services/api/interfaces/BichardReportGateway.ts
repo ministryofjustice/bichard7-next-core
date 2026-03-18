@@ -9,7 +9,7 @@ import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exce
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 
-export type AnyReportDto =
+type AnyReportDto =
   | CaseForBailsReportDto[]
   | ExceptionReportDto[]
   | CaseForDomesticViolenceReportDto[]
@@ -21,9 +21,4 @@ export interface BichardReportGateway {
   readonly reportClient: ReportsApiClient
 
   reportStrategy(reportType: ReportType, query: AnyReportQuery): AsyncIterable<AnyReportDto | Error> | Error
-
-  bailsReport(query: BailsReportQuery): AsyncIterable<CaseForBailsReportDto[] | Error>
-  domesticViolenceReport(query: DomesticViolenceReportQuery): AsyncIterable<CaseForDomesticViolenceReportDto[] | Error>
-  exceptionsReport(query: ExceptionReportQuery): AsyncIterable<ExceptionReportDto[] | Error>
-  warrantsReport(query: WarrantsReportQuery): AsyncIterable<CaseForWarrantsReportDto[] | Error>
 }

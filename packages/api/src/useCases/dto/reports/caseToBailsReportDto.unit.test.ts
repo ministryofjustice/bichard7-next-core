@@ -1,4 +1,4 @@
-import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
+import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 
@@ -8,13 +8,12 @@ import { bailConditionsImposed } from "../../cases/reports/bails/utils/bailCondi
 import { caseAutomatedToPNC } from "../../cases/reports/bails/utils/caseAutomatedToPNC"
 import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
 import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
-import { formatDate } from "../../cases/reports/utils/formatDate"
 import { formatOffenceData } from "../../cases/reports/utils/formatOffenceData"
 import { hearingTime } from "../../cases/reports/utils/hearingTime"
 import { resolutionStatusFromDb } from "../convertResolutionStatus"
 import { caseToBailsReportDto } from "./caseToBailsReportDto"
 
-jest.mock("@moj-bichard7/common/aho/parseAhoXml/index")
+jest.mock("@moj-bichard7/common/aho/parseHearingOutcome")
 jest.mock("@moj-bichard7/common/types/Result")
 jest.mock("@moj-bichard7/common/utils/getShortAsn")
 
@@ -22,7 +21,6 @@ jest.mock("../../cases/reports/bails/utils/bailConditionsImposed")
 jest.mock("../../cases/reports/bails/utils/caseAutomatedToPNC")
 jest.mock("../../cases/reports/utils/dateOfBirth")
 jest.mock("../../cases/reports/utils/defendantAddress")
-jest.mock("../../cases/reports/utils/formatDate")
 jest.mock("../../cases/reports/utils/formatOffenceData")
 jest.mock("../../cases/reports/utils/hearingTime")
 jest.mock("../convertResolutionStatus")
@@ -48,12 +46,12 @@ describe("caseToBailsReportDto", () => {
         { resolved_ts: new Date("2023-05-13T10:00:00Z"), status: 2, trigger_code: "TRPR0010" }
       ]
     } as unknown as CaseRowForBailsReport
-    ;(parseAhoXml as jest.Mock).mockReturnValue({ MockAho: true })
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue({ MockAho: true })
     ;(isError as unknown as jest.Mock).mockImplementation((val) => val instanceof Error)
     ;(getShortAsn as jest.Mock).mockReturnValue("SHORT_ASN")
     ;(caseAutomatedToPNC as jest.Mock).mockReturnValue("Yes")
     ;(bailConditionsImposed as jest.Mock).mockReturnValue("Do not contact victim")
-    ;(dateOfBirth as jest.Mock).mockReturnValue("1990-12-25T00:00:00Z")
+    ;(dateOfBirth as jest.Mock).mockReturnValue("25/12/1990")
     ;(defendantAddress as jest.Mock).mockReturnValue("123 Fake St")
     ;(hearingTime as jest.Mock).mockReturnValue("10:00")
     ;(formatOffenceData as jest.Mock).mockReturnValue({
@@ -62,13 +60,12 @@ describe("caseToBailsReportDto", () => {
       nextCourtTimes: "10:00",
       offenceTitles: "1× Theft."
     })
-    ;(formatDate as jest.Mock).mockImplementation((date) => (date ? "13/05/2023" : null))
     ;(resolutionStatusFromDb as jest.Mock).mockImplementation((status) => (status === 1 ? "Unresolved" : "Resolved"))
   })
 
   it("should throw the error object if AHO parsing fails", () => {
     const parseError = new Error("Invalid XML Error")
-    ;(parseAhoXml as jest.Mock).mockReturnValue(parseError)
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(parseError)
     ;(isError as unknown as jest.Mock).mockReturnValue(true)
 
     expect(() => [...caseToBailsReportDto(mockRow)]).toThrow("Invalid XML Error")
@@ -102,7 +99,7 @@ describe("caseToBailsReportDto", () => {
     expect(firstRow.errorId).toBe(123)
 
     expect(results[0].triggerStatus).toBe("Unresolved")
-    expect(results[0].triggerResolvedDate).toBeNull()
+    expect(results[0].triggerResolvedDate).toBe("")
 
     expect(results[1].triggerStatus).toBe("Resolved")
     expect(results[1].triggerResolvedDate).toBe("13/05/2023")
