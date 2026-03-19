@@ -12,4 +12,10 @@ describe("parseDate", () => {
 
     expect(result).toEqual(new Date(2026, 0, 5))
   })
+
+  it("should use default date if date string is undefined", () => {
+    const result = parseDate(undefined as unknown as string, "yyyy-MM-dd", new Date(2026, 0, 5))
+
+    expect(result).toEqual(new Date(2026, 0, 5))
+  })
 })
