@@ -6,24 +6,14 @@ import { subDays, format } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
-import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { useRouter } from "next/router"
 import { useFormStatus } from "react-dom"
 import { Button } from "../../components/Buttons/Button"
 import Checkbox from "../../components/Checkbox/Checkbox"
 import parseDate from "../../utils/parseDate"
-
-interface FormState {
-  resolvedBy: string[]
-  triggers: string[]
-  includeTriggers: boolean
-  includeExceptions: boolean
-  volume: string
-  fromDate: Date
-  toDate: Date
-  auditId?: number
-}
+import { FormState } from "../../types/audit/FormState"
+import createAuditRequest from "../../services/audit/createRequest"
 
 const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = ({ formValid, ...props }) => {
   const formStatus = useFormStatus()
@@ -78,27 +68,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   async function submit(_formState: FormState, formData: FormData): Promise<FormState> {
     const newState = readFormState(formData)
 
-    function createRequest() {
-      const includedTypes: ("Exceptions" | "Triggers")[] = []
-      if (newState.includeExceptions) {
-        includedTypes.push("Exceptions")
-      }
-      if (newState.includeTriggers) {
-        includedTypes.push("Triggers")
-      }
-
-      const request: CreateAuditInput = {
-        fromDate: format(newState.fromDate, DATE_FORMAT),
-        toDate: format(newState.toDate, DATE_FORMAT),
-        includedTypes: includedTypes,
-        volumeOfCases: Number.parseInt(newState.volume, 10),
-        resolvedByUsers: newState.resolvedBy,
-        triggerTypes: newState.triggers
-      }
-      return request
-    }
-
-    const request = createRequest()
+    const request = createAuditRequest(newState)
 
     const result = await fetch(`/bichard/api/audit`, {
       method: "POST",
