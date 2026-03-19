@@ -17,4 +17,6 @@ export const asnQueryResponseExtendedSchema = asnQueryResponseSchema.extend({
   disposals: z.array(disposalExtendedSchema)
 })
 
+export type OffenceExtended = z.infer<typeof offenceExtendedSchema>
+export type DisposalExtended = z.infer<typeof disposalExtendedSchema>
 export type AsnQueryResponseExtended = z.infer<typeof asnQueryResponseExtendedSchema>
