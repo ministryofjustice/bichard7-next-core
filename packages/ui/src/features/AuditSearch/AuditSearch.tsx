@@ -1,4 +1,4 @@
-import React, { type ChangeEvent, forwardRef, useActionState, useEffect, useId, useRef, useState } from "react"
+import React, { useActionState, useEffect, useRef, useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
@@ -11,44 +11,7 @@ import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { useRouter } from "next/router"
 import { useFormStatus } from "react-dom"
 import { Button } from "../../components/Buttons/Button"
-
-interface AuditCheckboxProps {
-  id?: string
-  name?: string
-  defaultChecked?: boolean
-  checked?: boolean
-  label: string
-  value?: string
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
-}
-
-const AuditCheckbox = forwardRef<HTMLInputElement, AuditCheckboxProps>((props, ref) => {
-  const { id, name, defaultChecked, checked, label, value, onChange } = props
-  const defaultId = useId()
-  const idToUse = id ?? defaultId
-
-  return (
-    <div className="govuk-checkboxes__item">
-      <input
-        className="govuk-checkboxes__input"
-        id={idToUse}
-        checked={checked}
-        defaultChecked={defaultChecked}
-        name={name}
-        type="checkbox"
-        value={value}
-        onChange={onChange}
-        ref={ref}
-        {...props}
-      />
-      <label className="govuk-checkboxes__label" htmlFor={idToUse}>
-        {label}
-      </label>
-    </div>
-  )
-})
-
-AuditCheckbox.displayName = "AuditCheckbox"
+import Checkbox from "../../components/Checkbox/Checkbox"
 
 interface FormState {
   resolvedBy: string[]
@@ -250,12 +213,12 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                     </legend>
                     <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
                     <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                      <AuditCheckbox
+                      <Checkbox
                         name={"includeTriggers"}
                         defaultChecked={currentFormState.includeTriggers}
                         label={"Triggers"}
                       />
-                      <AuditCheckbox
+                      <Checkbox
                         name={"includeExceptions"}
                         defaultChecked={currentFormState.includeExceptions}
                         label={"Exceptions"}
@@ -269,7 +232,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                   <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
                     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                      <AuditCheckbox
+                      <Checkbox
                         checked={allResolversSelected}
                         label={"All"}
                         data-testid={"audit-resolved-by-all"}
@@ -281,7 +244,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                         }}
                       />
                       {resolvers.map((resolver, index) => (
-                        <AuditCheckbox
+                        <Checkbox
                           key={index}
                           id={`resolvers${index}`}
                           name="resolvedBy"
@@ -311,7 +274,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Trigger type"}</legend>
                     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                       {triggerTypes.map((triggerType, index) => (
-                        <AuditCheckbox
+                        <Checkbox
                           key={index}
                           name="triggers"
                           value={triggerType}
