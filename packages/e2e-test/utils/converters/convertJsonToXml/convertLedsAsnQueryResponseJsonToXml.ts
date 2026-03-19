@@ -1,4 +1,4 @@
-import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+import type { AsnQueryResponseExtended } from "../../../types/AsnQueryResponseExtended"
 
 const pad = (item: string | number | undefined, length: number): string =>
   String(item ?? "")
@@ -19,34 +19,42 @@ const formatRow = (tag: string, fields: { val: string | undefined; len: number }
   return `<${tag}>${content}</${tag}>`
 }
 
-const convertLedsAsnQueryResponseJsonToXml = (ledsJson: AsnQueryResponse) => {
+const convertLedsAsnQueryResponseJsonToXml = (ledsJson: AsnQueryResponseExtended) => {
   const output: string[] = []
 
-  output.push(formatRow("FSC", [{ val: ledsJson.ownerCode, len: 4 }]))
+  output.push(
+    formatRow("FSC", [
+      { val: ledsJson.updateType, len: 1 },
+      { val: ledsJson.ownerCode, len: 4 }
+    ])
+  )
 
   output.push(
     formatRow("IDS", [
+      { val: ledsJson.updateType, len: 1 },
       { val: ledsJson.personUrn, len: 11 },
-      { val: "", len: 12 }, // pncCheckName
-      { val: "", len: 12 } // croNumber
+      { val: ledsJson.pncCheckName, len: 12 },
+      { val: ledsJson.croNumber, len: 12 }
     ])
   )
 
   for (const disposal of ledsJson.disposals) {
     output.push(
       formatRow("CCR", [
+        { val: ledsJson.updateType, len: 1 },
         { val: formatCourtCaseReference(disposal.courtCaseReference), len: 15 },
-        { val: "", len: 15 } // crimeOffenceReferenceNumber
+        { val: disposal.crimeOffenceReferenceNumber, len: 15 }
       ])
     )
 
     for (const offence of disposal.offences) {
       output.push(
         formatRow("COF", [
+          { val: ledsJson.updateType, len: 1 },
           { val: String(offence.courtOffenceSequenceNumber).padStart(3, "0"), len: 3 },
           { val: offence.roleQualifiers?.join(""), len: 2 },
           { val: offence.legislationQualifiers?.join(""), len: 2 },
-          { val: "", len: 13 }, // acpoOffenceCode
+          { val: offence.acpoOffenceCode, len: 13 },
           { val: offence.cjsOffenceCode, len: 8 },
           { val: convertDate(offence.offenceStartDate), len: 8 },
           { val: offence.offenceStartTime && convertTime(offence.offenceStartTime), len: 4 },
