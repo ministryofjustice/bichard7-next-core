@@ -32,8 +32,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   const formRef = useRef<HTMLFormElement>(null)
   const resolvedByRefs = useRef<HTMLInputElement[]>([])
 
-  const [errorMessage, setErrorMessage] = useState("")
-
   const DATE_FORMAT = "yyyy-MM-dd"
 
   const volumes = ["10", "20", "50", "100"]
@@ -65,7 +63,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
     }
   }
 
-  async function submit(_formState: FormState, formData: FormData): Promise<FormState> {
+  async function submitForm(_formState: FormState, formData: FormData): Promise<FormState> {
     const newState = readFormState(formData)
 
     const request = createAuditRequest(newState)
@@ -78,8 +76,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       }
     })
 
-    setErrorMessage(result.ok ? "" : "There was a problem creating the audit report")
-
     if (result.ok) {
       const raw = await result.json()
 
@@ -87,14 +83,14 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       if (auditResult.success) {
         return { ...newState, auditId: auditResult.data.auditId }
       } else {
-        setErrorMessage("There was a problem creating the audit report")
+        return { errorMessage: "There was a problem creating the audit report", ...newState }
       }
+    } else {
+      return { errorMessage: "There was a problem creating the audit report", ...newState }
     }
-
-    return newState
   }
 
-  const [currentFormState, submitAction] = useActionState(submit, {
+  const [currentFormState, submitAction] = useActionState(submitForm, {
     resolvedBy: [],
     triggers: [],
     includeTriggers: false,
@@ -268,9 +264,9 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
               </div>
             </div>
             <FormButtonRow>
-              {errorMessage ? (
+              {currentFormState.errorMessage ? (
                 <p role="alert" className="govuk-body govuk-error-message">
-                  <span className="govuk-visually-hidden">{"Error:"}</span> {errorMessage}
+                  <span className="govuk-visually-hidden">{"Error:"}</span> {currentFormState.errorMessage}
                 </p>
               ) : null}
               <AuditSearchSubmitButton formValid={formValid} />

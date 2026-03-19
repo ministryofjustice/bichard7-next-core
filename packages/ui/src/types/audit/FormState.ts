@@ -7,4 +7,5 @@ export interface FormState {
   fromDate: Date
   toDate: Date
   auditId?: number
+  errorMessage?: string
 }
