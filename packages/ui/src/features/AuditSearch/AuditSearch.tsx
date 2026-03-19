@@ -7,21 +7,11 @@ import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
 import AuditResolvedBy from "types/AuditResolvedBy"
 import { useRouter } from "next/router"
-import { useFormStatus } from "react-dom"
-import { Button } from "components/Buttons/Button"
 import Checkbox from "components/Checkbox/Checkbox"
 import { FormState } from "types/audit/FormState"
 import submitForm from "services/audit/submitForm"
 import readFormState from "services/audit/readFormState"
-
-const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = ({ formValid, ...props }) => {
-  const formStatus = useFormStatus()
-  return (
-    <Button {...props} name="audit-search-button" disabled={!formValid || formStatus.pending}>
-      {"Search cases"}
-    </Button>
-  )
-}
+import AuditSearchSubmitButton from "./AuditSearchSubmitButton"
 
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
   const { resolvers, triggerTypes } = props
@@ -229,7 +219,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                   <span className="govuk-visually-hidden">{"Error:"}</span> {currentFormState.errorMessage}
                 </p>
               ) : null}
-              <AuditSearchSubmitButton formValid={formValid} />
+              <AuditSearchSubmitButton formValid={formValid}>{"Search cases"}</AuditSearchSubmitButton>
               <p className="govuk-body">
                 <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
                   {"Clear search"}
