@@ -2,7 +2,7 @@ import React, { useActionState, useEffect, useRef, useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
-import { subDays, format, parse } from "date-fns"
+import { subDays, format } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
@@ -12,6 +12,7 @@ import { useRouter } from "next/router"
 import { useFormStatus } from "react-dom"
 import { Button } from "../../components/Buttons/Button"
 import Checkbox from "../../components/Checkbox/Checkbox"
+import parseDate from "../../utils/parseDate"
 
 interface FormState {
   resolvedBy: string[]
@@ -22,14 +23,6 @@ interface FormState {
   fromDate: Date
   toDate: Date
   auditId?: number
-}
-
-function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
-  const parsedDate = parse(dateStr, format, new Date())
-  if (Number.isNaN(parsedDate.getTime())) {
-    return new Date(defaultDate)
-  }
-  return parsedDate
 }
 
 const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = ({ formValid, ...props }) => {
