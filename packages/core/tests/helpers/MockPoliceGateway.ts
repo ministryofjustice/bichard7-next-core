@@ -5,7 +5,7 @@ import type PoliceGateway from "../../types/PoliceGateway"
 
 import PoliceApiError from "../../lib/policeGateway/PoliceApiError"
 
-export default class MockPncGateway implements PoliceGateway {
+export default class MockPoliceGateway implements PoliceGateway {
   result: (PoliceApiError | PoliceQueryResult | undefined)[] = []
   updates: PoliceUpdateRequest[] = []
 

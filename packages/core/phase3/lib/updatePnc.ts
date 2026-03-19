@@ -5,12 +5,12 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import type PoliceGateway from "../../types/PoliceGateway"
 import type PoliceUpdateRequest from "../types/PoliceUpdateRequest"
 
-import generatePncUpdateExceptionFromMessage, {
-  isPncLockError
-} from "../exceptions/generatePncUpdateExceptionFromMessage"
+import createPoliceExceptionGenerator from "../../lib/exceptions/PoliceExceptionGenerator/createPoliceExceptionGenerator"
 
 export const MAXIMUM_PNC_LOCK_ERROR_RETRIES = 3
 const DELAY_FOR_PNC_LOCK_ERROR_RETRY = parseInt(process.env.DELAY_FOR_PNC_LOCK_ERROR_RETRY ?? "10000")
+
+const policeExceptionGenerator = createPoliceExceptionGenerator()
 
 const delayForPncLockErrorRetry = () => new Promise((resolve) => setTimeout(resolve, DELAY_FOR_PNC_LOCK_ERROR_RETRY))
 
@@ -28,9 +28,12 @@ const updatePnc = async (
       return pncUpdateResult
     }
 
-    const pncExceptions = pncUpdateResult.messages.map(generatePncUpdateExceptionFromMessage)
+    const pncExceptions = pncUpdateResult.messages.map(policeExceptionGenerator.generateFromUpdateMessage)
 
-    if (pncExceptions.some(isPncLockError) && pncLockErrorRetries !== MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1) {
+    if (
+      pncExceptions.some(policeExceptionGenerator.isLockError) &&
+      pncLockErrorRetries !== MAXIMUM_PNC_LOCK_ERROR_RETRIES - 1
+    ) {
       await delayForPncLockErrorRetry()
     } else {
       pncUpdateDataset.Exceptions.push(...pncExceptions)

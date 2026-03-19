@@ -20,7 +20,7 @@ import { clearDatabase, disconnectDb, sql } from "../tests/helpers/comparison/Co
 import generateMockPncQueryResultFromAho from "../tests/helpers/comparison/generateMockPncQueryResultFromAho"
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import getPncQueryTimeFromAho from "../tests/helpers/comparison/getPncQueryTimeFromAho"
-import MockPncGateway from "../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../tests/helpers/MockPoliceGateway"
 import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
 import sortExceptions from "../tests/helpers/sortExceptions"
 import sortTriggers from "../tests/helpers/sortTriggers"
@@ -49,7 +49,7 @@ describe("phase1", () => {
       const normalisedAho = comparison.annotatedHearingOutcome.replace(/ WeedFlag="[^"]*"/g, "")
       const pncQuery = generateMockPncQueryResultFromAho(normalisedAho)
       const pncQueryTime = getPncQueryTimeFromAho(normalisedAho)
-      const mockPncGateway = new MockPncGateway(pncQuery, pncQueryTime)
+      const mockPncGateway = new MockPoliceGateway(pncQuery, pncQueryTime)
 
       const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
       const { message: hearingOutcome } = parseIncomingMessage(comparison.incomingMessage)

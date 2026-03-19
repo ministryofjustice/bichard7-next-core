@@ -8,7 +8,7 @@ import type PncUpdateRequestError from "./types/PncUpdateRequestError"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import PoliceApiError from "../lib/policeGateway/PoliceApiError"
-import MockPncGateway from "../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../tests/helpers/MockPoliceGateway"
 import phase3 from "./phase3"
 import generatePncUpdateDatasetWithOperations from "./tests/helpers/generatePncUpdateDatasetWithOperations"
 import { Phase3ResultType } from "./types/Phase3Result"
@@ -21,7 +21,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
   })
 
   it("returns exceptions when updating the PNC fails", async () => {
-    const pncGateway = new MockPncGateway([new PoliceApiError(["I0007: Some PNC error message"])])
+    const pncGateway = new MockPoliceGateway([new PoliceApiError(["I0007: Some PNC error message"])])
 
     const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
       {
@@ -60,7 +60,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
   })
 
   it("should not update the PNC when there's an error generating the requests", async () => {
-    const pncGateway = new MockPncGateway([])
+    const pncGateway = new MockPoliceGateway([])
 
     const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
       { code: PncOperation.REMAND, status: "NotAttempted" },
@@ -79,7 +79,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
 
   describe("when all operations are completed", () => {
     it("generates triggers", async () => {
-      const pncGateway = new MockPncGateway([undefined])
+      const pncGateway = new MockPoliceGateway([undefined])
 
       const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
         {
@@ -117,7 +117,7 @@ describe("Bichard Core Phase 3 processing logic", () => {
     })
 
     it("generates PNC updated successful audit log event", async () => {
-      const pncGateway = new MockPncGateway([undefined, undefined])
+      const pncGateway = new MockPoliceGateway([undefined, undefined])
 
       const pncUpdateDataset = generatePncUpdateDatasetWithOperations([
         {

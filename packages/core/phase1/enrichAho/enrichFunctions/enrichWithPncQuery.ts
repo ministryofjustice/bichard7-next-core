@@ -8,13 +8,13 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import type AuditLogger from "../../../types/AuditLogger"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
+import createPoliceExceptionGenerator from "../../../lib/exceptions/PoliceExceptionGenerator/createPoliceExceptionGenerator"
 import isCaseRecordable from "../../../lib/isCaseRecordable"
 import isDummyAsn from "../../../lib/isDummyAsn"
-import generatePncEnquiryExceptionFromMessage, {
-  isNotFoundError
-} from "../../exceptions/generatePncEnquiryExceptionFromMessage"
 import { isAsnFormatValid } from "../../lib/isAsnValid"
 import matchOffencesToPnc from "./matchOffencesToPnc"
+
+const policeExceptionGenerator = createPoliceExceptionGenerator()
 
 const addTitle = (offence: PoliceOffence): void => {
   offence.offence.title = lookupOffenceByCjsCode(offence.offence.cjsOffenceCode)?.offenceTitle ?? "Unknown Offence"
@@ -80,8 +80,11 @@ export default async (
   auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
     for (const message of pncResult.messages) {
-      if (!isIgnored && (!isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))) {
-        annotatedHearingOutcome.Exceptions.push(generatePncEnquiryExceptionFromMessage(message))
+      if (
+        !isIgnored &&
+        (!policeExceptionGenerator.isNotFoundError(message) || isCaseRecordable(annotatedHearingOutcome))
+      ) {
+        annotatedHearingOutcome.Exceptions.push(policeExceptionGenerator.generateFromEnquiryMessage(message))
       }
     }
   } else {
