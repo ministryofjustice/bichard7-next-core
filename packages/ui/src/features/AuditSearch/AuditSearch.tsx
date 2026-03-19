@@ -10,6 +10,7 @@ import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAudi
 import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
 import { useRouter } from "next/router"
 import { useFormStatus } from "react-dom"
+import { Button } from "../../components/Buttons/Button"
 
 interface AuditCheckboxProps {
   id?: string
@@ -68,14 +69,12 @@ function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
   return parsedDate
 }
 
-const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = (props) => {
-  const { formValid } = props
+const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = ({ formValid, ...props }) => {
   const formStatus = useFormStatus()
-
   return (
-    <button name="audit-search-button" className="govuk-button" disabled={!formValid || formStatus.pending}>
+    <Button {...props} name="audit-search-button" disabled={!formValid || formStatus.pending}>
       {"Search cases"}
-    </button>
+    </Button>
   )
 }
 
