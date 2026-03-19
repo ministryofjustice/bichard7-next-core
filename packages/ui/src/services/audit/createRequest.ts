@@ -1,6 +1,6 @@
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import { format } from "date-fns"
-import type { FormState } from "../../types/audit/FormState"
+import type { FormState } from "types/audit/FormState"
 
 function createRequest(newState: FormState): CreateAuditInput {
   const includedTypes: ("Exceptions" | "Triggers")[] = []

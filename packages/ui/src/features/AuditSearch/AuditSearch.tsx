@@ -5,15 +5,14 @@ import { formatUserFullName } from "utils/formatUserFullName"
 import { subDays, format } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
-import AuditResolvedBy from "../../types/AuditResolvedBy"
-import { AuditDtoSchema } from "@moj-bichard7/common/types/Audit"
+import AuditResolvedBy from "types/AuditResolvedBy"
 import { useRouter } from "next/router"
 import { useFormStatus } from "react-dom"
-import { Button } from "../../components/Buttons/Button"
-import Checkbox from "../../components/Checkbox/Checkbox"
-import parseDate from "../../utils/parseDate"
-import { FormState } from "../../types/audit/FormState"
-import createAuditRequest from "../../services/audit/createRequest"
+import { Button } from "components/Buttons/Button"
+import Checkbox from "components/Checkbox/Checkbox"
+import { FormState } from "types/audit/FormState"
+import submitForm from "services/audit/submitForm"
+import readFormState from "services/audit/readFormState"
 
 const AuditSearchSubmitButton: React.FC<{ formValid: boolean }> = ({ formValid, ...props }) => {
   const formStatus = useFormStatus()
@@ -49,45 +48,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       formState.resolvedBy.length > 0 &&
       (formState.includeExceptions || formState.includeTriggers)
     )
-  }
-
-  function readFormState(formData: FormData): FormState {
-    return {
-      resolvedBy: formData.getAll("resolvedBy") as string[],
-      triggers: formData.getAll("triggers") as string[],
-      includeTriggers: formData.get("includeTriggers") === "on",
-      includeExceptions: formData.get("includeExceptions") === "on",
-      volume: formData.get("volume") as string,
-      fromDate: parseDate(formData.get("fromDate") as string, DATE_FORMAT, new Date()),
-      toDate: parseDate(formData.get("toDate") as string, DATE_FORMAT, new Date())
-    }
-  }
-
-  async function submitForm(_formState: FormState, formData: FormData): Promise<FormState> {
-    const newState = readFormState(formData)
-
-    const request = createAuditRequest(newState)
-
-    const result = await fetch(`/bichard/api/audit`, {
-      method: "POST",
-      body: JSON.stringify(request),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-
-    if (result.ok) {
-      const raw = await result.json()
-
-      const auditResult = AuditDtoSchema.safeParse(raw)
-      if (auditResult.success) {
-        return { ...newState, auditId: auditResult.data.auditId }
-      } else {
-        return { errorMessage: "There was a problem creating the audit report", ...newState }
-      }
-    } else {
-      return { errorMessage: "There was a problem creating the audit report", ...newState }
-    }
   }
 
   const [currentFormState, submitAction] = useActionState(submitForm, {
