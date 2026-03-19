@@ -21,7 +21,7 @@ async function submitForm(_formState: FormState, formData: FormData): Promise<Fo
 
     const auditResult = AuditDtoSchema.safeParse(raw)
     if (auditResult.success) {
-      return { ...newState, auditId: auditResult.data.auditId }
+      return { ...newState, errorMessage: undefined, auditId: auditResult.data.auditId }
     } else {
       return { errorMessage: "There was a problem creating the audit report", ...newState }
     }
