@@ -62,10 +62,10 @@ const convertDuration = (duration?: DisposalDuration): string | undefined => {
 
 const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDisposal[] =>
   disposalResults.map((disposalResult) => {
-    let qualifiers = disposalResult.disposalQualifiers?.join("") ?? ""
-    qualifiers +=
-      " ".repeat(Math.max(0, DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4 - qualifiers.length)) +
-      convertDuration(disposalResult.disposalQualifierDuration)
+    const disposalQualifierDuration = convertDuration(disposalResult.disposalQualifierDuration) ?? ""
+    const qualifiers = (disposalResult.disposalQualifiers?.join("") ?? "")
+      .padEnd(DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4, " ")
+      .concat(disposalQualifierDuration)
 
     return {
       disposalId: disposalResult.disposalId,
@@ -73,7 +73,7 @@ const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDispo
       qtyDuration: convertDuration(disposalResult.disposalDuration),
       qtyMonetaryValue: disposalResult.disposalFine?.amount?.toFixed(2),
       qtyUnitsFined: undefined,
-      qualifiers,
+      qualifiers: qualifiers.trim() ? qualifiers : undefined,
       text: disposalResult.disposalText,
       type: disposalResult.disposalCode
     }

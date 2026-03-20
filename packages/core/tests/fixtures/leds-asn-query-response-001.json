@@ -1,48 +1,129 @@
 {
-  "personId": "4e9a94f1-36fe-4bea-9618-d9994c08ce51",
-  "personUrn": "2000/0410769X",
-  "reportId": "ceeb4def-5457-484d-9f3f-e2b2fdffc2ce",
-  "asn": "1101ZD0100000448754K",
+  "personId": "5c6ab813-35b6-44de-817c-f41de14c9526",
+  "personUrn": "1950/1581C",
+  "reportId": "1aaa5c44-4fca-4af7-a558-9c6148a77c4c",
+  "asn": "26/0000/00/00000001566Y",
   "ownerCode": "01ZD",
   "disposals": [
     {
-      "courtCaseId": "0b2c46f1-d7f9-4460-9ee7-63e4fe53cb0c",
-      "courtCaseReference": "97/1626/008395Q",
-      "caseStatusMarker": "impending-prosecution-detail",
-      "court": { "courtIdentityType": "code", "courtCode": "0000" },
+      "courtCaseId": "bddbd0d2-232d-47b3-896a-ce7be613b07c",
+      "courtCaseReference": "26/9998/000826X",
+      "caseStatusMarker": "court-case",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
       "offences": [
         {
-          "offenceId": "d7905ea1-5d84-494e-8320-e4b4984329e5",
-          "courtOffenceSequenceNumber": 1,
-          "npccOffenceCode": "1.2.3.4",
-          "cjsOffenceCode": "SX03001A",
-          "offenceStartDate": "2010-11-28",
-          "offenceDescription": ["Attempt to rape a girl aged 13 / 14 / 15 / years of ag"],
-          "plea": "Not Known",
-          "adjudications": [],
-          "disposalResults": []
-        },
-        {
-          "offenceId": "d17847fb-e285-4814-99ff-93986961966a",
-          "courtOffenceSequenceNumber": 2,
-          "npccOffenceCode": "1.2.3.5",
-          "cjsOffenceCode": "SX03001",
-          "offenceStartDate": "2010-11-28",
-          "offenceDescription": ["Rape of a Female"],
-          "plea": "Not Known",
-          "adjudications": [],
-          "disposalResults": []
-        },
-        {
-          "offenceId": "601a2afa-9675-49a5-9a6c-7128f3a7fb83",
+          "offenceId": "9faec803-2428-496b-a670-68e15a7849bb",
+          "arrestOffenceSequenceNumber": 3,
           "courtOffenceSequenceNumber": 3,
-          "npccOffenceCode": "1.2.3.6",
-          "cjsOffenceCode": "RT88191",
+          "npccOffenceCode": "2.1.4.1",
+          "cjsOffenceCode": "SX03001",
+          "qualifiedCjsCode": "SX03001",
+          "roleQualifiers": [],
+          "legislationQualifiers": [],
           "offenceStartDate": "2010-11-28",
-          "offenceDescription": ["Use a motor vehicle without third party insurance."],
-          "plea": "Not Known",
-          "adjudications": [],
-          "disposalResults": []
+          "offenceTic": 2,
+          "plea": "Not Guilty",
+          "adjudications": [
+            {
+              "adjudicationId": "1fdf2ef3-d6a3-4692-aee8-98bd28ca9ea5",
+              "appearanceNumber": 0,
+              "disposalDate": "2011-09-26",
+              "adjudication": "Guilty"
+            }
+          ],
+          "disposalResults": [
+            {
+              "disposalId": "dbf6c8ea-79f4-4b91-9b97-2720019b87b6",
+              "chargeAppearanceNumber": 0,
+              "disposalCode": 3052,
+              "disposalFine": {},
+              "disposalQualifiers": ["S"],
+              "disposalQualifierDuration": {
+                "count": "0",
+                "units": "life"
+              }
+            }
+          ]
+        },
+        {
+          "offenceId": "ba5a7edb-a9ae-4612-a22b-be2166a66b79",
+          "arrestOffenceSequenceNumber": 2,
+          "courtOffenceSequenceNumber": 2,
+          "npccOffenceCode": "12.15.13.1",
+          "cjsOffenceCode": "RT88191",
+          "qualifiedCjsCode": "RT88191",
+          "roleQualifiers": [],
+          "legislationQualifiers": [],
+          "offenceStartDate": "2010-11-28",
+          "offenceTic": 0,
+          "plea": "Not Guilty",
+          "title": "Rape of a Female",
+          "adjudications": [
+            {
+              "adjudicationId": "f08b719c-c8fc-412e-a890-d7614b846de1",
+              "appearanceNumber": 0,
+              "disposalDate": "2011-09-26",
+              "adjudication": "Guilty"
+            }
+          ],
+          "disposalResults": [
+            {
+              "disposalId": "74260b90-e55e-4748-9133-57c09634e953",
+              "chargeAppearanceNumber": 0,
+              "disposalEffectiveDate": "2011-10-12",
+              "disposalDuration": {
+                "count": "5",
+                "units": "week"
+              },
+              "disposalCode": 1015,
+              "disposalFine": {
+                "amount": 100
+              },
+              "disposalQualifiers": ["AB", "B"],
+              "disposalQualifierDuration": {
+                "count": "12",
+                "units": "month"
+              }
+            }
+          ]
+        },
+        {
+          "offenceId": "101e18ac-f0df-462c-841b-1eaed0975801",
+          "arrestOffenceSequenceNumber": 1,
+          "courtOffenceSequenceNumber": 1,
+          "npccOffenceCode": "2.1.4.1",
+          "cjsOffenceCode": "SX03001A",
+          "qualifiedCjsCode": "SX03001A",
+          "roleQualifiers": ["AT"],
+          "legislationQualifiers": [],
+          "offenceStartDate": "2010-11-28",
+          "offenceStartTime": "10:00",
+          "offenceEndDate": "2010-11-29",
+          "offenceEndTime": "12:30",
+          "offenceTic": 0,
+          "plea": "Not Guilty",
+          "title": "Attempt to rape a girl aged 13 / 14 / 15 / years of ag",
+          "adjudications": [
+            {
+              "adjudicationId": "55d9d0c5-d2a7-4b56-92fd-930fa42a3261",
+              "appearanceNumber": 0,
+              "disposalDate": "2011-09-26",
+              "adjudication": "Guilty"
+            }
+          ],
+          "disposalResults": [
+            {
+              "disposalId": "a8a7be2a-5d2e-4643-9665-029c66dc0c46",
+              "chargeAppearanceNumber": 0,
+              "disposalCode": 3078,
+              "disposalFine": {},
+              "disposalQualifiers": []
+            }
+          ]
         }
       ]
     }
