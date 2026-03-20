@@ -8,7 +8,7 @@ import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
 import generateHeaders from "../generateHeaders"
 
-const wait = (delayInMs = 300) => new Promise((resolve) => setTimeout(resolve, delayInMs))
+const wait = (delayInMs = 500) => new Promise((resolve) => setTimeout(resolve, delayInMs))
 
 const waitForResponse = async (
   requestOptions: RequestOptions,

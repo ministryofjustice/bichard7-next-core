@@ -78,12 +78,20 @@ export default class LedsTestApiHelper {
       ].join("\n")
     )
 
+    courtCases[0].offences[0].offenceId = (await fetchArrestSummons(requestOptions, person)).arrestSummaries.find(
+      (arrestSummon) => arrestSummon.asn === arrestSummonsNumber
+    )?.offences[0].offenceId
+
     for (let courtCaseIndex = 0; courtCaseIndex < courtCases.length; courtCaseIndex++) {
       const courtCase = courtCases[courtCaseIndex]
       const offenceIds = await Promise.all(
         courtCase.offences
           .slice(courtCaseIndex === 0 ? 1 : 0) // Skipping the first offence as it's already been added when arrested person created
-          .map((offence) => addOffence(requestOptions, person, offence, arrestSummonsId))
+          .map(async (offence) => {
+            const offenceId = await addOffence(requestOptions, person, offence, arrestSummonsId)
+            offence.offenceId = offenceId
+            return offenceId
+          })
       )
 
       const arrestSummonOffences =

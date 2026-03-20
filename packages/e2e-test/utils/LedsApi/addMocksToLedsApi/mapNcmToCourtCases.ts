@@ -63,7 +63,8 @@ const mapNcmToCourtCases = (ncm: ParsedNcm): NonEmptyCourtCaseArray => {
     ) ??
     organisationUnit.find(
       (ou) => ou.topLevelCode === hearingLocation[0] && ou.secondLevelCode === hearingLocation.substring(1, 3)
-    )
+    ) ??
+    organisationUnit.find((ou) => ou.topLevelCode === hearingLocation[0])
   const courtName = [
     courtOrganisationUnit?.topLevelName,
     courtOrganisationUnit?.secondLevelName,
