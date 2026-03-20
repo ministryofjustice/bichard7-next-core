@@ -46,6 +46,13 @@ describe("Search", () => {
       cy.findByText("Trigger type").should("exist")
       cy.findByText("TRPR0010").should("exist")
       cy.findByText("TRPR0006").should("not.exist")
+
+      cy.findByText("Triggers").click()
+      cy.findByText("All").click()
+
+      cy.findByText("Search cases").click()
+
+      cy.location("pathname").should("match", /\/bichard\/audit\/\d+/)
     })
   })
 

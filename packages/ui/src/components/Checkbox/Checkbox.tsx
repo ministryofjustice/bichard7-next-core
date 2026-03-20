@@ -1,28 +1,17 @@
-import { useId, type ChangeEvent } from "react"
+import React, { useId, ComponentProps } from "react"
 
-interface Props {
+interface Props extends ComponentProps<"input"> {
   label: string
-  name?: string
-  checked: boolean
-  id?: string
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
-const Checkbox: React.FC<Props> = ({ label, name, checked, id, onChange, ...props }: Props) => {
+const Checkbox: React.FC<Props> = (props: Props) => {
+  const { id, label } = props
   const defaultId = useId()
   const idToUse = id ?? defaultId
 
   return (
     <div className="govuk-checkboxes__item">
-      <input
-        className="govuk-checkboxes__input"
-        id={idToUse}
-        name={name}
-        type="checkbox"
-        checked={checked}
-        onChange={onChange}
-        {...props}
-      />
+      <input className="govuk-checkboxes__input" id={idToUse} type="checkbox" {...props} />
       <label className="govuk-checkboxes__label" htmlFor={idToUse}>
         {label}
       </label>

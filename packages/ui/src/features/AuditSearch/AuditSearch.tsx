@@ -1,210 +1,235 @@
-import { useState } from "react"
+import React, { useActionState, useEffect, useRef, useState } from "react"
 import { FormGroup } from "components/FormGroup"
 import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
-import { subDays, format, parse } from "date-fns"
+import { subDays, format } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import RadioButton from "components/Radios/RadioButton"
+import AuditResolvedBy from "types/AuditResolvedBy"
+import { useRouter } from "next/router"
 import Checkbox from "components/Checkbox/Checkbox"
-import AuditResolvedBy from "../../types/AuditResolvedBy"
+import { FormState } from "types/audit/FormState"
+import submitForm from "services/audit/submitForm"
+import readFormState from "services/audit/readFormState"
+import AuditSearchSubmitButton from "./AuditSearchSubmitButton"
 
-interface Props {
-  resolvers: AuditResolvedBy[]
-  triggerTypes: string[]
-}
-
-function parseDate(dateStr: string, format: string, defaultDate: Date): Date {
-  const parsedDate = parse(dateStr, format, new Date())
-  if (Number.isNaN(parsedDate.getTime())) {
-    return new Date(defaultDate)
-  }
-  return parsedDate
-}
-
-const AuditSearch: React.FC<Props> = (props) => {
+const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
   const { resolvers, triggerTypes } = props
+
+  const router = useRouter()
+
+  const formRef = useRef<HTMLFormElement>(null)
+  const resolvedByRefs = useRef<HTMLInputElement[]>([])
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
-  const defaultVolume = "20"
   const volumes = ["10", "20", "50", "100"]
 
-  const today = new Date()
+  async function handleFormChange() {
+    const formData = new FormData(formRef.current as HTMLFormElement)
+    const validationState = readFormState(formData)
+    setFormValid(isFormValid(validationState))
+  }
 
-  const [volume, setVolume] = useState(defaultVolume)
+  function isFormValid(formState: FormState) {
+    return (
+      formState.fromDate <= formState.toDate &&
+      formState.toDate <= new Date() &&
+      formState.resolvedBy.length > 0 &&
+      (formState.includeExceptions || formState.includeTriggers)
+    )
+  }
 
-  const [fromDate, setFromDate] = useState(subDays(new Date(), 7))
-  const [toDate, setToDate] = useState(new Date())
+  const [currentFormState, submitAction] = useActionState(submitForm, {
+    resolvedBy: [],
+    triggers: [],
+    includeTriggers: false,
+    includeExceptions: false,
+    volume: "20",
+    fromDate: subDays(new Date(), 7),
+    toDate: new Date()
+  })
 
-  const [resolvedBy, setResolvedBy] = useState<string[]>([])
+  const [formValid, setFormValid] = useState(isFormValid(currentFormState))
 
-  const [includeTriggers, setIncludeTriggers] = useState(false)
-  const [includeExceptions, setIncludeExceptions] = useState(false)
+  const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
+    resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
+  )
 
-  const [triggers, setTriggers] = useState<string[]>([])
-
-  const formValid =
-    fromDate <= toDate && toDate <= today && (includeTriggers || includeExceptions) && resolvedBy.length > 0
-  const allResolversSelected = resolvers.every((rb) => resolvedBy.includes(rb.username))
+  useEffect(() => {
+    if (currentFormState.auditId) {
+      router.push(`/audit/${currentFormState.auditId}`)
+    }
+  }, [currentFormState.auditId, router])
 
   return (
-    <div className="moj-filter">
-      <div className="moj-filter__header">
-        <div className="moj-filter__header-title">
-          <h2 className="govuk-heading-m">{"Audit search"}</h2>
-        </div>
-      </div>
-      <div className="moj-filter__content">
-        <div className="moj-filter__options">
-          <div className="govuk-grid-row">
-            <div className="govuk-grid-column-one-quarter">
-              <FormGroup>
-                <fieldset className="govuk-fieldset">
-                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Dates"}</legend>
-                  <FormGroup>
-                    <label className="govuk-body" htmlFor="audit-date-from">
-                      {"From date"}
-                    </label>
-                    <input
-                      data-testid="audit-date-from"
-                      className="govuk-input"
-                      type="date"
-                      max={format(today, DATE_FORMAT)}
-                      value={format(fromDate, DATE_FORMAT)}
-                      onChange={(e) => setFromDate(parseDate(e.target.value, DATE_FORMAT, today))}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <label className="govuk-body" htmlFor="audit-date-to">
-                      {"To date"}
-                    </label>
-                    <input
-                      data-testid="audit-date-to"
-                      className="govuk-input"
-                      type="date"
-                      max={format(today, DATE_FORMAT)}
-                      value={format(toDate, DATE_FORMAT)}
-                      onChange={(e) => setToDate(parseDate(e.target.value, DATE_FORMAT, today))}
-                    />
-                  </FormGroup>
-                </fieldset>
-              </FormGroup>
-              <FormGroup>
-                <fieldset className="govuk-fieldset">
-                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
-                    {"Include"}
-                  </legend>
-                  <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
-                  <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    <Checkbox
-                      label={"Triggers"}
-                      checked={includeTriggers}
-                      onChange={(e) => setIncludeTriggers(e.target.checked)}
-                    />
-                    <Checkbox
-                      label={"Exceptions"}
-                      checked={includeExceptions}
-                      onChange={(e) => setIncludeExceptions(e.target.checked)}
-                    />
-                  </IncludeRow>
-                </fieldset>
-              </FormGroup>
-            </div>
-            <div className="govuk-grid-column-one-quarter">
-              <FormGroup>
-                <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
-                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
-                  <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    <Checkbox
-                      data-testid={"audit-resolved-by-all"}
-                      label={"All"}
-                      checked={allResolversSelected}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setResolvedBy(resolvers.map((rb) => rb.username))
-                        } else if (allResolversSelected) {
-                          setResolvedBy([])
-                        }
-                      }}
-                    />
-                    {resolvers.map((resolver, index) => (
-                      <Checkbox
-                        key={resolver.username}
-                        data-testid={`audit-resolved-by-${index}`}
-                        label={formatUserFullName(resolver.forenames, resolver.surname)}
-                        checked={resolvedBy.includes(resolver.username)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            if (!resolvedBy.includes(resolver.username)) {
-                              setResolvedBy([...resolvedBy, resolver.username])
-                            }
-                          } else {
-                            setResolvedBy(resolvedBy.filter((r) => r != resolver.username))
-                          }
-                        }}
-                      />
-                    ))}
-                  </div>
-                </fieldset>
-              </FormGroup>
-            </div>
-            <div className="govuk-grid-column-one-quarter">
-              <FormGroup>
-                <fieldset className="govuk-fieldset" id="audit-search-triggers">
-                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Trigger type"}</legend>
-                  <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                    {triggerTypes.map((triggerType, index) => (
-                      <Checkbox
-                        label={triggerType}
-                        key={triggerType}
-                        data-testid={`audit-trigger-type-${index}`}
-                        checked={triggers.includes(triggerType)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            if (!triggers.includes(triggerType)) {
-                              setTriggers([...triggers, triggerType])
-                            }
-                          } else {
-                            setTriggers(triggers.filter((t) => t !== triggerType))
-                          }
-                        }}
-                      />
-                    ))}
-                  </div>
-                </fieldset>
-              </FormGroup>
-            </div>
-            <div className="govuk-grid-column-one-quarter">
-              <RadioGroups legendText={"Volume of cases"} id="audit-search-volume">
-                <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
-                  {volumes.map((v) => (
-                    <RadioButton
-                      name={"volume"}
-                      id={`audit-volume-${v}`}
-                      onChange={(e) => setVolume(e.target.value)}
-                      label={`${v}% of cases`}
-                      checked={v == volume}
-                      value={v}
-                      key={v}
-                    />
-                  ))}
-                </div>
-              </RadioGroups>
-            </div>
+    <form action={submitAction} onChange={handleFormChange} ref={formRef}>
+      <div className="moj-filter">
+        <div className="moj-filter__header">
+          <div className="moj-filter__header-title">
+            <h2 className="govuk-heading-m">{"Audit search"}</h2>
           </div>
-          <FormButtonRow>
-            <button name="audit-search-button" className="govuk-button" disabled={!formValid}>
-              {"Search cases"}
-            </button>
-            <p className="govuk-body">
-              <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
-                {"Clear search"}
-              </a>
-            </p>
-          </FormButtonRow>
+        </div>
+        <div className="moj-filter__content">
+          <div className="moj-filter__options">
+            <div className="govuk-grid-row">
+              <div className="govuk-grid-column-one-quarter">
+                <FormGroup>
+                  <fieldset className="govuk-fieldset">
+                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Dates"}</legend>
+                    <FormGroup>
+                      <label className="govuk-body" htmlFor="audit-date-from">
+                        {"From date"}
+                      </label>
+                      <input
+                        data-testid="audit-date-from"
+                        className="govuk-input"
+                        type="date"
+                        name="fromDate"
+                        max={format(new Date(), DATE_FORMAT)}
+                        defaultValue={format(currentFormState.fromDate, DATE_FORMAT)}
+                        onChange={(e) => {
+                          if (!e.target.value) {
+                            e.target.value = format(new Date(), DATE_FORMAT)
+                          }
+                        }}
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <label className="govuk-body" htmlFor="audit-date-to">
+                        {"To date"}
+                      </label>
+                      <input
+                        data-testid="audit-date-to"
+                        className="govuk-input"
+                        type="date"
+                        name="toDate"
+                        max={format(new Date(), DATE_FORMAT)}
+                        defaultValue={format(currentFormState.toDate, DATE_FORMAT)}
+                        onChange={(e) => {
+                          if (!e.target.value) {
+                            e.target.value = format(new Date(), DATE_FORMAT)
+                          }
+                        }}
+                      />
+                    </FormGroup>
+                  </fieldset>
+                </FormGroup>
+                <FormGroup>
+                  <fieldset className="govuk-fieldset">
+                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-1">
+                      {"Include"}
+                    </legend>
+                    <p className="govuk-body govuk-body-s govuk-!-margin-0">{"Select an option"}</p>
+                    <IncludeRow className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                      <Checkbox
+                        name={"includeTriggers"}
+                        defaultChecked={currentFormState.includeTriggers}
+                        label={"Triggers"}
+                      />
+                      <Checkbox
+                        name={"includeExceptions"}
+                        defaultChecked={currentFormState.includeExceptions}
+                        label={"Exceptions"}
+                      />
+                    </IncludeRow>
+                  </fieldset>
+                </FormGroup>
+              </div>
+              <div className="govuk-grid-column-one-quarter">
+                <FormGroup>
+                  <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
+                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
+                    <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                      <Checkbox
+                        checked={allResolversSelected}
+                        label={"All"}
+                        data-testid={"audit-resolved-by-all"}
+                        onChange={(e) => {
+                          resolvedByRefs.current.forEach(
+                            (input) => ((input as HTMLInputElement).checked = e.target.checked)
+                          )
+                          setAllResolversSelected(e.target.checked)
+                        }}
+                      />
+                      {resolvers.map((resolver, index) => (
+                        <Checkbox
+                          key={index}
+                          id={`resolvers${index}`}
+                          name="resolvedBy"
+                          value={resolver.username}
+                          defaultChecked={currentFormState.resolvedBy.includes(resolver.username)}
+                          label={formatUserFullName(resolver.forenames, resolver.surname)}
+                          data-testid={`audit-resolved-by-${index}`}
+                          onChange={(_) => {
+                            setAllResolversSelected(
+                              resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked)
+                            )
+                          }}
+                          ref={(elem) => {
+                            if (elem) {
+                              resolvedByRefs.current[index] = elem
+                            }
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </fieldset>
+                </FormGroup>
+              </div>
+              <div className="govuk-grid-column-one-quarter">
+                <FormGroup>
+                  <fieldset className="govuk-fieldset" id="audit-search-triggers">
+                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Trigger type"}</legend>
+                    <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+                      {triggerTypes.map((triggerType, index) => (
+                        <Checkbox
+                          key={index}
+                          name="triggers"
+                          value={triggerType}
+                          defaultChecked={currentFormState.triggers.includes(triggerType)}
+                          label={triggerType}
+                          data-testid={`audit-trigger-type-${index}`}
+                        />
+                      ))}
+                    </div>
+                  </fieldset>
+                </FormGroup>
+              </div>
+              <div className="govuk-grid-column-one-quarter">
+                <RadioGroups legendText={"Volume of cases"} id="audit-search-volume">
+                  <div className="govuk-radios govuk-radios--small" data-module="govuk-radios">
+                    {volumes.map((v) => (
+                      <RadioButton
+                        name={"volume"}
+                        defaultChecked={currentFormState.volume == v}
+                        id={`audit-volume-${v}`}
+                        value={v}
+                        label={`${v}% of cases`}
+                        key={v}
+                      />
+                    ))}
+                  </div>
+                </RadioGroups>
+              </div>
+            </div>
+            <FormButtonRow>
+              {currentFormState.errorMessage ? (
+                <p role="alert" className="govuk-body govuk-error-message">
+                  <span className="govuk-visually-hidden">{"Error:"}</span> {currentFormState.errorMessage}
+                </p>
+              ) : null}
+              <AuditSearchSubmitButton formValid={formValid}>{"Search cases"}</AuditSearchSubmitButton>
+              <p className="govuk-body">
+                <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
+                  {"Clear search"}
+                </a>
+              </p>
+            </FormButtonRow>
+          </div>
         </div>
       </div>
-    </div>
+    </form>
   )
 }
 

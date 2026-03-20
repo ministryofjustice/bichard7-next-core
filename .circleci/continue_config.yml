@@ -160,7 +160,7 @@ ui_params: &ui_params
     default: "01"
   forces-with-trigger-and-exception-quality-auditing-enabled:
     type: string
-    default: "01"
+    default: "01,001"
   api-case-details:
     type: boolean
     default: false
