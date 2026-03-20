@@ -1,7 +1,7 @@
 import { RefreshButton } from "components/Buttons/RefreshButton"
 import { Table, TableHead } from "components/Table"
 import { useRouter } from "next/router"
-import { useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import CourtCaseListEntry from "./CourtCaseListEntry/CourtCaseListEntry"
