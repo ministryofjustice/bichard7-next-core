@@ -8,15 +8,14 @@ import { parseDisposalQuantity } from "./parseDisposalQuantity"
 const mapDisposalResult = (disposal: PncUpdateDisposal): DisposalResult => {
   const { disposalDuration, disposalEffectiveDate, amount } = parseDisposalQuantity(disposal.disposalQuantity) ?? {}
 
-  const disposalQualifiers =
-    disposal.disposalQualifiers
-      .slice(0, DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4)
-      ?.match(/.{1,2}/g)
-      ?.map((q) => q.trim())
-      .filter(Boolean) ?? []
-  const disposalQualifierDuration = parseDisposalDuration(
-    disposal.disposalQualifiers.slice(DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4)?.trim()
-  )
+  const disposalQualifiers = disposal.disposalQualifiers
+    ?.slice(0, DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4)
+    ?.match(/.{1,2}/g)
+    ?.map((q) => q.trim())
+    .filter(Boolean)
+  const disposalQualifierDuration = disposal.disposalQualifiers
+    ? parseDisposalDuration(disposal.disposalQualifiers?.slice(DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4)?.trim())
+    : undefined
 
   return {
     disposalCode: Number(disposal.disposalType),

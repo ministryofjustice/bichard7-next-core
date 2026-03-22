@@ -77,7 +77,7 @@
               "disposalEffectiveDate": "2011-10-12",
               "disposalDuration": {
                 "count": "5",
-                "units": "week"
+                "units": "weeks"
               },
               "disposalCode": 1015,
               "disposalFine": {
@@ -86,7 +86,7 @@
               "disposalQualifiers": ["AB", "B"],
               "disposalQualifierDuration": {
                 "count": "12",
-                "units": "month"
+                "units": "months"
               }
             }
           ]

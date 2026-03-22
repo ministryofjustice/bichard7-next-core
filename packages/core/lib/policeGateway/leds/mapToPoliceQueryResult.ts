@@ -56,8 +56,9 @@ const convertDuration = (duration?: DisposalDuration): string | undefined => {
     return undefined
   }
 
+  const durationUnits: Record<string, string> = { years: "Y", months: "M", weeks: "W", days: "D", hours: "H" }
   const { units, count } = duration
-  return units === "life" ? PNC_REPRESENTATION_OF_LIFE : `${units.charAt(0).toUpperCase()}${count}`
+  return units === "life" ? PNC_REPRESENTATION_OF_LIFE : `${durationUnits[units.toLowerCase()]}${count}`
 }
 
 const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDisposal[] =>
