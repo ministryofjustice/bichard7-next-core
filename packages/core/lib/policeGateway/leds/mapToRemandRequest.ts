@@ -56,7 +56,7 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
 
 const mapBailConditions = (bailConditions: string): string[] => {
   const bailConditionLength = 50
-  return bailConditions.match(new RegExp(".{1," + bailConditionLength + "}", "g")) ?? []
+  return new RegExp(".{1," + bailConditionLength + "}", "g").exec(bailConditions) ?? []
 }
 
 const mapToRemandRequest = (
