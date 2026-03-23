@@ -14,7 +14,9 @@ export const asnQueryResponseExtendedSchema = asnQueryResponseSchema.extend({
   updateType: z.string().optional(),
   pncCheckName: z.string().optional(),
   croNumber: z.string().optional(),
-  disposals: z.array(disposalExtendedSchema)
+  disposals: z.array(disposalExtendedSchema),
+  gmh: z.string().optional(),
+  gmt: z.string().optional()
 })
 
 export type OffenceExtended = z.infer<typeof offenceExtendedSchema>
