@@ -17,7 +17,7 @@ export const buildRemandRequest = (
     courtNameType1: "Magistrates' Courts London Croydon MCA",
     courtNameType2: "Magistrates' Courts London Croydon MCA",
     localAuthorityCode: "0000",
-    bailConditions: ["This is a dummy bail condition."]
+    bailConditions: ["This is a dummy bail condition.                    "]
   }
 
   return { ...base, ...overrides }
