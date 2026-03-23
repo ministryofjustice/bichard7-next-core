@@ -44,17 +44,26 @@ const mapCarryForward = (carryForward?: Crt): CarryForward | undefined => {
   }
 }
 
-const mapDisposal = (disposal: Dis): DisposalResult => ({
-  disposalCode: Number(disposal.type),
-  disposalDuration: parseDisposalDuration(disposal.qtyDuration),
-  disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
-  disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
-  disposalQualifiers: disposal.qualifiers
-    .match(/.{1,2}/g)
+const mapDisposal = (disposal: Dis): DisposalResult => {
+  const disposalQualifiers = disposal.qualifiers
+    ?.slice(0, 8)
+    ?.match(/.{1,2}/g)
     ?.map((q) => q.trim())
-    .filter(Boolean),
-  disposalText: disposal.text || undefined
-})
+    .filter(Boolean)
+  const disposalQualifierDuration = disposal.qualifiers
+    ? parseDisposalDuration(disposal.qualifiers?.slice(8)?.trim())
+    : undefined
+
+  return {
+    disposalCode: Number(disposal.type),
+    disposalDuration: parseDisposalDuration(disposal.qtyDuration),
+    disposalFine: disposal.qtyMonetaryValue ? { amount: Number(disposal.qtyMonetaryValue) } : undefined,
+    disposalEffectiveDate: disposal.qtyDate ? convertDate(disposal.qtyDate) : undefined,
+    disposalQualifiers,
+    disposalQualifierDuration,
+    disposalText: disposal.text || undefined
+  }
+}
 
 export const mapOffences = (
   offences: (Cch & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[],
