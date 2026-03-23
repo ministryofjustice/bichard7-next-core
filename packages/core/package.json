@@ -80,8 +80,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1009.0",
-    "@aws-sdk/client-s3": "^3.1009.0",
+    "@aws-sdk/client-dynamodb": "^3.1014.0",
+    "@aws-sdk/client-s3": "^3.1014.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.348",
     "@types/lodash.ismatch": "^4.4.9",
@@ -89,7 +89,7 @@
     "axios": "^1.13.6",
     "diff": "^8.0.3",
     "dynalite": "^4.0.0",
-    "fast-xml-parser": "^5.5.7",
+    "fast-xml-parser": "^5.5.8",
     "jsonwebtoken": "^9.0.3",
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
