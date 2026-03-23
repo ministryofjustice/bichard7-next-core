@@ -176,7 +176,7 @@ describe("LedsGateway", () => {
         personUrn: "00/410770Y",
         remandDate: "2024-12-05",
         appearanceResult: "remanded-on-bail",
-        bailConditions: ["This is a dummy bail condition."],
+        bailConditions: ["This is a dummy bail condition.                   "],
         currentAppearance: { court: { courtIdentityType: "code", courtCode: "1234" } },
         nextAppearance: {
           date: "2024-12-11",
