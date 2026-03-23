@@ -22,6 +22,13 @@ export const OFFENCE_START_TIME_FIELD_LENGTH = 4
 export const OFFENCE_END_DATE_FIELD_LENGTH = 8
 export const OFFENCE_END_TIME_FIELD_LENGTH = 4
 
+//ADJ
+export const PLEA_FIELD_SIZE = 13
+export const ADJUDICATION_FIELD_SIZE = 14
+export const DATE_OF_SENTENCE_FIELD_SIZE = 8
+export const OFFENCE_TIC_NUMBER_FIELD_SIZE = 4
+export const WEED_FLAG_FIELD_LENGTH = 1
+
 //GMH
 export const GMH_FIELD_LENGTH = 116
 export const GMT_FIELD_LENGTH = 20
