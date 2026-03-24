@@ -2,7 +2,8 @@ import { asnQueryResponseSchema, disposalSchema, offenceSchema } from "@moj-bich
 import { z } from "zod"
 
 const offenceExtendedSchema = offenceSchema.extend({
-  acpoOffenceCode: z.string().optional()
+  acpoOffenceCode: z.string().optional(),
+  updateType: z.string().optional()
 })
 
 const disposalExtendedSchema = disposalSchema.extend({

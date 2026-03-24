@@ -15,7 +15,7 @@ const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExt
   const plea = offence.plea?.toUpperCase()
   const adjudication = firstAdj?.adjudication.toUpperCase()
   const dateOfSentence = firstAdj?.disposalDate ? convertDate(firstAdj?.disposalDate) : undefined
-  const offenceTICNumber = offence.offenceTic
+  const offenceTICNumber = offence.offenceTic?.toString()
   const weedFlag = ""
 
   const adjSegment = generateRow("ADJ", [
@@ -23,7 +23,7 @@ const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExt
     [plea, PLEA_FIELD_SIZE],
     [adjudication, ADJUDICATION_FIELD_SIZE],
     [dateOfSentence, DATE_OF_SENTENCE_FIELD_SIZE],
-    [String(offenceTICNumber), OFFENCE_TIC_NUMBER_FIELD_SIZE],
+    [offenceTICNumber, OFFENCE_TIC_NUMBER_FIELD_SIZE],
     [weedFlag, WEED_FLAG_FIELD_LENGTH]
   ])
 
