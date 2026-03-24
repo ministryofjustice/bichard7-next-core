@@ -3,11 +3,12 @@ import type { PncException } from "@moj-bichard7/common/types/Exception"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 
-import type { PncErrorRangesForException } from "../../lib/exceptions/generatePncExceptionFromMessage"
+import type { PncErrorRangesForException } from "./generatePncExceptionFromMessage"
 
-import generatePncExceptionFromMessage from "../../lib/exceptions/generatePncExceptionFromMessage"
+import generatePncExceptionFromMessage from "./generatePncExceptionFromMessage"
+import isPncNotFoundError from "./isPncNotFoundError"
 
-const defaultPncUpdateException = ExceptionCode.HO100314
+const defaultPncEnquiryException = ExceptionCode.HO100314
 const pncEnquiryErrorRanges: PncErrorRangesForException[] = [
   {
     code: ExceptionCode.HO100301,
@@ -37,14 +38,12 @@ const pncEnquiryErrorRanges: PncErrorRangesForException[] = [
   }
 ]
 
-export const isNotFoundError = (message: string): boolean => !!message.match(/^I1008.*ARREST\/SUMMONS REF .* NOT FOUND/)
-
 const generatePncEnquiryExceptionFromMessage = (message: string): PncException => {
-  if (isNotFoundError(message)) {
+  if (isPncNotFoundError(message)) {
     return { code: ExceptionCode.HO100301, path: errorPaths.case.asn, message }
   }
 
-  return generatePncExceptionFromMessage(message, pncEnquiryErrorRanges, defaultPncUpdateException)
+  return generatePncExceptionFromMessage(message, pncEnquiryErrorRanges, defaultPncEnquiryException)
 }
 
 export default generatePncEnquiryExceptionFromMessage

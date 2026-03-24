@@ -8,7 +8,7 @@ const matchRealLedsApiDataToSnapshot = (): Promise<void> => {
 }
 
 const verifyRealLedsApiData = (bichard: LedsBichard): Promise<void> => {
-  if (!bichard.policeApi.testApiHelper.arrestSummonsNumber) {
+  if (!bichard.policeApi.testApiHelper.getArtifacts().arrestSummonsNumber) {
     return Promise.resolve()
   }
 

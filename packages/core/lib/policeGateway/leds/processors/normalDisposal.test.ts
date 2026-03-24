@@ -63,6 +63,10 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: {
+                count: 10,
+                units: "months"
+              },
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -76,6 +80,7 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -100,6 +105,10 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: {
+                count: 0,
+                units: "life"
+              },
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -113,6 +122,7 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -153,6 +163,7 @@ describe("normalDisposal", () => {
                   disposalFine: {
                     amount: 12000.99
                   },
+                  disposalQualifierDuration: undefined,
                   disposalQualifiers: ["A"],
                   disposalText: "Disposal text"
                 }
@@ -187,6 +198,7 @@ describe("normalDisposal", () => {
                   disposalFine: {
                     amount: 12000.99
                   },
+                  disposalQualifierDuration: undefined,
                   disposalQualifiers: ["A"],
                   disposalText: "Disposal text"
                 }

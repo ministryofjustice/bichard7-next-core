@@ -34,9 +34,11 @@ const mapToAddDisposalRequest = (
 
   const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
 
-  const arrestSummonsNumber = pncRequest.arrestSummonsNumber && convertAsnToLedsFormat(pncRequest.arrestSummonsNumber)
+  const arrestSummonsNumber = convertAsnToLedsFormat(
+    pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber
+  )
   const additionalArrestOffences =
-    arrestSummonsNumber && pncRequest.arrestsAdjudicationsAndDisposals.length > 0
+    pncRequest.arrestsAdjudicationsAndDisposals.length > 0
       ? mapAdditionalArrestOffences(
           arrestSummonsNumber,
           pncRequest.arrestsAdjudicationsAndDisposals,

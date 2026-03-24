@@ -40,6 +40,7 @@ describe("mapAdditionalArrestOffences", () => {
                 disposalFine: {
                   amount: 12000.99
                 },
+                disposalQualifierDuration: undefined,
                 disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }
@@ -70,6 +71,7 @@ describe("mapAdditionalArrestOffences", () => {
                   count: 123,
                   units: "days"
                 },
+                disposalQualifierDuration: undefined,
                 disposalEffectiveDate: "2024-05-10",
                 disposalFine: {
                   amount: 12000.99

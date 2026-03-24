@@ -56,16 +56,17 @@ const convertDuration = (duration?: DisposalDuration): string | undefined => {
     return undefined
   }
 
+  const durationUnits: Record<string, string> = { years: "Y", months: "M", weeks: "W", days: "D", hours: "H" }
   const { units, count } = duration
-  return units === "life" ? PNC_REPRESENTATION_OF_LIFE : `${units.charAt(0).toUpperCase()}${count}`
+  return units === "life" ? PNC_REPRESENTATION_OF_LIFE : `${durationUnits[units.toLowerCase()]}${count}`
 }
 
 const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDisposal[] =>
   disposalResults.map((disposalResult) => {
-    let qualifiers = disposalResult.disposalQualifiers?.join("") ?? ""
-    qualifiers +=
-      " ".repeat(Math.max(0, DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4 - qualifiers.length)) +
-      convertDuration(disposalResult.disposalQualifierDuration)
+    const disposalQualifierDuration = convertDuration(disposalResult.disposalQualifierDuration) ?? ""
+    const qualifiers = (disposalResult.disposalQualifiers?.join("") ?? "")
+      .padEnd(DISPOSAL_QUALIFIERS_FIELD_LENGTH - 4, " ")
+      .concat(disposalQualifierDuration)
 
     return {
       disposalId: disposalResult.disposalId,
@@ -73,7 +74,7 @@ const mapToPoliceDisposal = (disposalResults: LedsDisposalResult[]): PoliceDispo
       qtyDuration: convertDuration(disposalResult.disposalDuration),
       qtyMonetaryValue: disposalResult.disposalFine?.amount?.toFixed(2),
       qtyUnitsFined: undefined,
-      qualifiers,
+      qualifiers: qualifiers.trim() ? qualifiers : undefined,
       text: disposalResult.disposalText,
       type: disposalResult.disposalCode
     }

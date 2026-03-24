@@ -33,7 +33,7 @@ const createDisposal = async (
 
   courtCase.courtCaseId = courtCaseId
 
-  if (courtCase.offences.every((offence) => offence.results.length === 0)) {
+  if (courtCase.offences.every((offence) => !offence.results || offence.results.length === 0)) {
     return
   }
 

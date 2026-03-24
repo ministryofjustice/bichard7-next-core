@@ -14,7 +14,7 @@ import CorePhase1 from "../../phase1/phase1"
 import generateMockPncQueryResult from "../../phase1/tests/helpers/generateMockPncQueryResult"
 import CorePhase2 from "../../phase2/phase2"
 import CorePhase3 from "../../phase3/phase3"
-import MockPncGateway from "../../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../../tests/helpers/MockPoliceGateway"
 import parseIncomingMessage from "../../tests/helpers/parseIncomingMessage"
 import Phase from "../../types/Phase"
 
@@ -35,7 +35,7 @@ const createMockPncGateway = (
       : generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
 
-  return new MockPncGateway(mockPncResponse)
+  return new MockPoliceGateway(mockPncResponse)
 }
 
 export const processPhase1Message = async (

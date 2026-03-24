@@ -11,7 +11,7 @@ import promisePoller from "promise-poller"
 import type Phase1Result from "../../types/Phase1Result"
 
 import CoreAuditLogger from "../../../lib/auditLog/CoreAuditLogger"
-import MockPncGateway from "../../../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../../../tests/helpers/MockPoliceGateway"
 import phase1Handler from "../../phase1"
 import ActiveMqHelper from "../../tests/helpers/ActiveMqHelper"
 import defaults from "../../tests/helpers/defaults"
@@ -44,7 +44,7 @@ const processMessageCore = (
   const response = recordable
     ? generateMockPncQueryResult(pncMessage ? pncMessage : messageXml, pncOverrides, pncCaseType, pncAdjudication)
     : undefined
-  const pncGateway = new MockPncGateway(response)
+  const pncGateway = new MockPoliceGateway(response)
   const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
   const inputSpi = parseSpiResult(messageXml)
   const inputAho = transformSpiToAho(inputSpi)
