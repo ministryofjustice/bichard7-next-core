@@ -99,8 +99,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
         user: userToDisplayFullUserDto(currentUser),
         audit,
-        auditCases: JSON.parse(JSON.stringify(auditCases)),
-        //auditCases,
+        auditCases,
         auditCasesQuery,
         canUseTriggerAndExceptionQualityAuditing: canUseQualityAuditing
       }
