@@ -72,6 +72,15 @@ describe("/audit/:auditId", () => {
     cy.contains("50%")
   })
 
+  it("Should show start new audit button", () => {
+    loginAndVisit("Supervisor", `/bichard/audit/1`)
+
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+    cy.contains("Start new audit").click()
+
+    cy.location("pathname").should("eq", "/bichard/audit/search")
+  })
+
   it("Should show pagination", () => {
     loginAndVisit("Supervisor", "/bichard/audit/1?pageNum=1&maxPerPage=25")
 

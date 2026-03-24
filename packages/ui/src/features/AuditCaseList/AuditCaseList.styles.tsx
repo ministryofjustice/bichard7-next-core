@@ -14,3 +14,10 @@ export const AuditCaseListContainer = styled.div`
     }
   }
 `
+
+export const AuditCaseListButtons = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+`
