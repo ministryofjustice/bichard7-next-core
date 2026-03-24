@@ -178,8 +178,9 @@ export default class LedsGateway implements PoliceGateway {
   }
 
   private generateUrl(endpoint: string): string {
-    const baseUrl = this.config.url.concat(this.config.url.endsWith("/") ? "" : "/")
+    const baseUrlWithTrailingSlash = this.config.url.concat(this.config.url.endsWith("/") ? "" : "/")
+    const endpointWithoutLeadingSlash = endpoint.startsWith("/") ? endpoint.slice(1) : endpoint
 
-    return new URL(endpoint, baseUrl).href
+    return new URL(endpointWithoutLeadingSlash, baseUrlWithTrailingSlash).href
   }
 }
