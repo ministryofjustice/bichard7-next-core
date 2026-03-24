@@ -72,6 +72,13 @@ describe("/audit/:auditId", () => {
     cy.contains("50%")
   })
 
+  it("Should show summary", () => {
+    loginAndVisit("Supervisor", `/bichard/audit/1`)
+
+    cy.location("pathname").should("eq", "/bichard/audit/1")
+    cy.contains("shows 20% of cases from 1 user with Exceptions")
+  })
+
   it("Should show start new audit button", () => {
     loginAndVisit("Supervisor", `/bichard/audit/1`)
 
