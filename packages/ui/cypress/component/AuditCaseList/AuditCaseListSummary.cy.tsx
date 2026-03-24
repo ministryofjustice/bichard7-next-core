@@ -18,7 +18,7 @@ describe("AuditCaseListSummary", () => {
   it("should render the correct summary string", () => {
     cy.mount(<AuditCaseListSummary audit={defaultAudit} />)
 
-    cy.get("span").should(
+    cy.get("h2").should(
       "have.text",
       `10th Mar 2025 to 20th Apr 2025: shows 20% of cases from 2 users with 2 Triggers and Exceptions`
     )
