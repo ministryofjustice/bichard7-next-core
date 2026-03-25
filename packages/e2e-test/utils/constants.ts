@@ -1,4 +1,6 @@
 export const XML_DECLARATION = '<?xml version="1.0" standalone="yes"?>'
+export const UPDATE_TYPE = "K"
+export const OFFENCE_UPDATE_TYPE = "I"
 
 //FSC
 export const UPDATE_TYPE_FIELD_LENGTH = 1

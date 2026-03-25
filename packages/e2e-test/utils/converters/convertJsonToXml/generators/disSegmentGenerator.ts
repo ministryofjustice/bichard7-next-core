@@ -7,6 +7,7 @@ import {
   DISPOSAL_QUALIFIERS_FIELD_LENGTH,
   DISPOSAL_TEXT_FIELD_LENGTH,
   DISPOSAL_TYPE_FIELD_LENGTH,
+  OFFENCE_UPDATE_TYPE,
   UPDATE_TYPE_FIELD_LENGTH
 } from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDate"
@@ -32,7 +33,7 @@ const parseQtyDuration = (disposalDuration: { count: number; units: string } | u
   return `${unit}${count}`
 }
 
-const disSegmentGenerator = (updateType: string | undefined, disposal: DisposalResult): string | undefined => {
+const disSegmentGenerator = (disposal: DisposalResult): string | undefined => {
   if (!disposal) {
     return undefined
   }
@@ -46,7 +47,7 @@ const disSegmentGenerator = (updateType: string | undefined, disposal: DisposalR
   const text = disposal.disposalText
 
   const disSegment = generateRow("DIS", [
-    [updateType, UPDATE_TYPE_FIELD_LENGTH],
+    [OFFENCE_UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
     [type, DISPOSAL_TYPE_FIELD_LENGTH],
     [qtyDuration, DISPOSAL_QTY_DURATION_FIELD_LENGTH],
     [qtyDate, DISPOSAL_QTY_DATE_FIELD_LENGTH],

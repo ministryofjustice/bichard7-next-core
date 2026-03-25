@@ -2,8 +2,7 @@ import { asnQueryResponseSchema, disposalSchema, offenceSchema } from "@moj-bich
 import { z } from "zod"
 
 const MockOffenceSchema = offenceSchema.extend({
-  acpoOffenceCode: z.string(),
-  updateType: z.string()
+  acpoOffenceCode: z.string()
 })
 
 const MockDisposalSchema = disposalSchema.extend({
@@ -12,7 +11,6 @@ const MockDisposalSchema = disposalSchema.extend({
 })
 
 export const MockAsnQueryResponseSchema = asnQueryResponseSchema.extend({
-  updateType: z.string(),
   pncCheckName: z.string(),
   croNumber: z.string(),
   disposals: z.array(MockDisposalSchema),

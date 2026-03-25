@@ -9,13 +9,14 @@ import {
   OFFENCE_START_DATE_FIELD_LENGTH,
   OFFENCE_START_TIME_FIELD_LENGTH,
   REFERENCE_NUMBER_FIELD_LENGTH,
+  UPDATE_TYPE,
   UPDATE_TYPE_FIELD_LENGTH
 } from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDate"
 import { convertToPncTime } from "../helpers/convertToPncTime"
 import generateRow from "../helpers/generateRow"
 
-const cofSegmentGenerator = (updateType: string | undefined, offence: MockOffence): string => {
+const cofSegmentGenerator = (offence: MockOffence): string => {
   const referenceNumber = String(offence.courtOffenceSequenceNumber).padStart(3, "0")
   const offenceQualifier1 = offence.roleQualifiers?.join("")
   const offenceQualifier2 = offence.legislationQualifiers?.join("")
@@ -27,7 +28,7 @@ const cofSegmentGenerator = (updateType: string | undefined, offence: MockOffenc
   const offenceEndTim = offence.offenceEndTime && convertToPncTime(offence.offenceEndTime)
 
   const cofSegment = generateRow("COF", [
-    [updateType, UPDATE_TYPE_FIELD_LENGTH],
+    [UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
     [referenceNumber, REFERENCE_NUMBER_FIELD_LENGTH],
     [offenceQualifier1, OFFENCE_QUALIFIER1_FIELD_LENGTH],
     [offenceQualifier2, OFFENCE_QUALIFIER2_FIELD_LENGTH],

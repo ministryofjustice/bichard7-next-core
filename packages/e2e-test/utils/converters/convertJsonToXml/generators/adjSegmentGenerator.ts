@@ -3,6 +3,7 @@ import {
   ADJUDICATION_FIELD_LENGTH,
   DATE_OF_SENTENCE_FIELD_LENGTH,
   OFFENCE_TIC_NUMBER_FIELD_LENGTH,
+  OFFENCE_UPDATE_TYPE,
   PLEA_FIELD_LENGTH,
   UPDATE_TYPE_FIELD_LENGTH,
   WEED_FLAG_FIELD_LENGTH
@@ -10,7 +11,7 @@ import {
 import { convertToPncDate } from "../helpers/convertToPncDate"
 import generateRow from "../helpers/generateRow"
 
-const adjSegmentGenerator = (updateType: string | undefined, offence: MockOffence): string | undefined => {
+const adjSegmentGenerator = (offence: MockOffence): string | undefined => {
   if (!offence.adjudications?.length) {
     return undefined
   }
@@ -23,7 +24,7 @@ const adjSegmentGenerator = (updateType: string | undefined, offence: MockOffenc
   const weedFlag = ""
 
   const adjSegment = generateRow("ADJ", [
-    [updateType, UPDATE_TYPE_FIELD_LENGTH],
+    [OFFENCE_UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
     [plea, PLEA_FIELD_LENGTH],
     [adjudication, ADJUDICATION_FIELD_LENGTH],
     [dateOfSentence, DATE_OF_SENTENCE_FIELD_LENGTH],

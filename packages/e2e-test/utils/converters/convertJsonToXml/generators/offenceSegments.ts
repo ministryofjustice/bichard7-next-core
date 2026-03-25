@@ -5,16 +5,13 @@ import cofSegmentGenerator from "./cofSegmentGenerator"
 import disSegmentGenerator from "./disSegmentGenerator"
 
 const offenceSegments = (ledsJson: MockAsnQueryResponse) => {
-  const { updateType, disposals } = ledsJson
-
-  const allSegments = disposals.flatMap((disposal) => {
-    const ccr = ccrSegmentGenerator(updateType, disposal)
+  const allSegments = ledsJson.disposals.flatMap((disposal) => {
+    const ccr = ccrSegmentGenerator(disposal)
 
     const childSegments = disposal.offences.flatMap((offence) => {
-      const cof = cofSegmentGenerator(updateType, offence)
-      const adj = adjSegmentGenerator(offence.updateType, offence) ?? []
-      const dis =
-        offence.disposalResults?.map((disposalResult) => disSegmentGenerator(offence.updateType, disposalResult)) ?? []
+      const cof = cofSegmentGenerator(offence)
+      const adj = adjSegmentGenerator(offence) ?? []
+      const dis = offence.disposalResults?.map((disposalResult) => disSegmentGenerator(disposalResult)) ?? []
 
       return [cof, adj, ...dis]
     })
