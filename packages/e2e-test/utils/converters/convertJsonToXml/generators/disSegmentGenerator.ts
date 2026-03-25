@@ -9,7 +9,7 @@ import {
   DISPOSAL_TYPE_FIELD_LENGTH,
   UPDATE_TYPE_FIELD_LENGTH
 } from "../../../constants"
-import { convertDate } from "../helpers/convertDate"
+import { convertToPncDate } from "../helpers/convertToPncDate"
 import generateRow from "../helpers/generateRow"
 
 const unitMap: Record<string, string> = {
@@ -39,7 +39,7 @@ const disSegmentGenerator = (updateType: string | undefined, disposal: DisposalR
 
   const type = disposal.disposalCode.toString()
   const qtyDuration = parseQtyDuration(disposal.disposalDuration)
-  const qtyDate = disposal.disposalEffectiveDate && convertDate(disposal.disposalEffectiveDate)
+  const qtyDate = disposal.disposalEffectiveDate && convertToPncDate(disposal.disposalEffectiveDate)
   const qtyMonetaryValue = disposal.disposalFine?.amount?.toString()
   const qtyUnitsFined = disposal.disposalFine?.units?.toString()
   const qualifiers = disposal.disposalQualifiers?.join("")

@@ -11,8 +11,8 @@ import {
   REFERENCE_NUMBER_FIELD_LENGTH,
   UPDATE_TYPE_FIELD_LENGTH
 } from "../../../constants"
-import { convertDate } from "../helpers/convertDate"
-import { convertTime } from "../helpers/convertTime"
+import { convertToPncDate } from "../helpers/convertToPncDate"
+import { convertToPncTime } from "../helpers/convertToPncTime"
 import generateRow from "../helpers/generateRow"
 
 const cofSegmentGenerator = (updateType: string | undefined, offence: OffenceExtended): string => {
@@ -21,10 +21,10 @@ const cofSegmentGenerator = (updateType: string | undefined, offence: OffenceExt
   const offenceQualifier2 = offence.legislationQualifiers?.join("")
   const acpoOffenceCode = offence.acpoOffenceCode
   const cjsOffenceCode = offence.cjsOffenceCode
-  const offenceStartDate = convertDate(offence.offenceStartDate)
-  const offenceStartTime = offence.offenceStartTime && convertTime(offence.offenceStartTime)
-  const offenceEndDate = offence.offenceEndDate && convertDate(offence.offenceEndDate)
-  const offenceEndTim = offence.offenceEndTime && convertTime(offence.offenceEndTime)
+  const offenceStartDate = convertToPncDate(offence.offenceStartDate)
+  const offenceStartTime = offence.offenceStartTime && convertToPncTime(offence.offenceStartTime)
+  const offenceEndDate = offence.offenceEndDate && convertToPncDate(offence.offenceEndDate)
+  const offenceEndTim = offence.offenceEndTime && convertToPncTime(offence.offenceEndTime)
 
   const cofSegment = generateRow("COF", [
     [updateType, UPDATE_TYPE_FIELD_LENGTH],

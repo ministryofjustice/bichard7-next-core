@@ -7,7 +7,7 @@ import {
   UPDATE_TYPE_FIELD_LENGTH,
   WEED_FLAG_FIELD_LENGTH
 } from "../../../constants"
-import { convertDate } from "../helpers/convertDate"
+import { convertToPncDate } from "../helpers/convertToPncDate"
 import generateRow from "../helpers/generateRow"
 
 const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExtended): string | undefined => {
@@ -18,7 +18,7 @@ const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExt
   const firstAdj = offence.adjudications?.[0]
   const plea = offence.plea?.toUpperCase()
   const adjudication = firstAdj?.adjudication.toUpperCase()
-  const dateOfSentence = firstAdj?.disposalDate ? convertDate(firstAdj?.disposalDate) : undefined
+  const dateOfSentence = firstAdj?.disposalDate && convertToPncDate(firstAdj?.disposalDate)
   const offenceTICNumber = offence.offenceTic?.toString()
   const weedFlag = ""
 
