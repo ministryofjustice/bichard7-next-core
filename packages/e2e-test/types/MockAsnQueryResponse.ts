@@ -1,13 +1,8 @@
-import { asnQueryResponseSchema, disposalSchema, offenceSchema } from "@moj-bichard7/core/schemas/leds/asnQueryResponse"
+import { asnQueryResponseSchema, disposalSchema } from "@moj-bichard7/core/schemas/leds/asnQueryResponse"
 import { z } from "zod"
 
-const MockOffenceSchema = offenceSchema.extend({
-  acpoOffenceCode: z.string()
-})
-
 const MockDisposalSchema = disposalSchema.extend({
-  crimeOffenceReferenceNumber: z.string(),
-  offences: z.array(MockOffenceSchema)
+  crimeOffenceReferenceNumber: z.string()
 })
 
 export const MockAsnQueryResponseSchema = asnQueryResponseSchema.extend({
@@ -18,6 +13,5 @@ export const MockAsnQueryResponseSchema = asnQueryResponseSchema.extend({
   gmt: z.string()
 })
 
-export type MockOffence = z.infer<typeof MockOffenceSchema>
 export type MockDisposal = z.infer<typeof MockDisposalSchema>
 export type MockAsnQueryResponse = z.infer<typeof MockAsnQueryResponseSchema>

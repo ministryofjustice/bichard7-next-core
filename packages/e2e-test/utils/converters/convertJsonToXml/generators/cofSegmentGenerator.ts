@@ -1,4 +1,5 @@
-import type { MockOffence } from "../../../../types/MockAsnQueryResponse"
+import type { Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+
 import {
   ACPO_OFFENCE_CODE_FIELD_LENGTH,
   CJS_OFFENCE_CODE_FIELD_LENGTH,
@@ -16,11 +17,13 @@ import { convertToPncDate } from "../helpers/convertToPncDate"
 import { convertToPncTime } from "../helpers/convertToPncTime"
 import generateRow from "../helpers/generateRow"
 
-const cofSegmentGenerator = (offence: MockOffence): string => {
+const convertToApcoOffenceCode = (npccOffenceCode: string | undefined) => npccOffenceCode?.replace(/\./g, ":")
+
+const cofSegmentGenerator = (offence: Offence): string => {
   const referenceNumber = String(offence.courtOffenceSequenceNumber).padStart(3, "0")
   const offenceQualifier1 = offence.roleQualifiers?.join("")
   const offenceQualifier2 = offence.legislationQualifiers?.join("")
-  const acpoOffenceCode = offence.acpoOffenceCode
+  const acpoOffenceCode = convertToApcoOffenceCode(offence.npccOffenceCode)
   const cjsOffenceCode = offence.cjsOffenceCode
   const offenceStartDate = convertToPncDate(offence.offenceStartDate)
   const offenceStartTime = offence.offenceStartTime && convertToPncTime(offence.offenceStartTime)

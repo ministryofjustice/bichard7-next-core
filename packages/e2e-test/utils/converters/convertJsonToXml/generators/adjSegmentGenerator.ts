@@ -1,4 +1,4 @@
-import type { MockOffence } from "../../../../types/MockAsnQueryResponse"
+import type { Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import {
   ADJUDICATION_FIELD_LENGTH,
   DATE_OF_SENTENCE_FIELD_LENGTH,
@@ -11,7 +11,7 @@ import {
 import { convertToPncDate } from "../helpers/convertToPncDate"
 import generateRow from "../helpers/generateRow"
 
-const adjSegmentGenerator = (offence: MockOffence): string | undefined => {
+const adjSegmentGenerator = (offence: Offence): string | undefined => {
   if (!offence.adjudications?.length) {
     return undefined
   }
