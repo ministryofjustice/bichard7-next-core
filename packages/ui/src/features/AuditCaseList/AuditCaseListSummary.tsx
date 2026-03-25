@@ -31,7 +31,7 @@ const AuditCaseListSummary: React.FC<Props> = ({ audit }) => {
 
   const withText = conditions.length > 0 ? ` with ${conditions.join(" and ")}` : ""
 
-  return <h2 className="govuk-heading-s">{`${dateRangeText}: shows ${volumeText} ${userText}${withText}`}</h2>
+  return <h2 className="govuk-heading-s">{`${dateRangeText}: showing ${volumeText} ${userText}${withText}`}</h2>
 }
 
 export default AuditCaseListSummary

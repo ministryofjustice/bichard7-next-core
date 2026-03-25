@@ -20,7 +20,7 @@ describe("AuditCaseListSummary", () => {
 
     cy.get("h2").should(
       "have.text",
-      `10th Mar 2025 to 20th Apr 2025: shows 20% of cases from 2 users with 2 Triggers and Exceptions`
+      `10th Mar 2025 to 20th Apr 2025: showing 20% of cases from 2 users with 2 Triggers and Exceptions`
     )
   })
 
@@ -38,7 +38,7 @@ describe("AuditCaseListSummary", () => {
 
     cy.mount(<AuditCaseListSummary audit={audit} />)
 
-    cy.contains("shows 50% of cases")
+    cy.contains("showing 50% of cases")
   })
 
   it("should show the user count for 1 user", () => {

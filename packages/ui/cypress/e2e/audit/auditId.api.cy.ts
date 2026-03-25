@@ -76,7 +76,7 @@ describe("/audit/:auditId", () => {
     loginAndVisit("Supervisor", `/bichard/audit/1`)
 
     cy.location("pathname").should("eq", "/bichard/audit/1")
-    cy.contains("shows 20% of cases from 1 user with Exceptions")
+    cy.contains("showing 20% of cases from 1 user with Exceptions")
   })
 
   it("Should show start new audit button", () => {
