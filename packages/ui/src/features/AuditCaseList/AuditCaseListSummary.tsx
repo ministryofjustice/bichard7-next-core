@@ -6,7 +6,7 @@ interface Props {
   audit: AuditDto
 }
 
-const DATE_FORMAT = "do MMM y"
+const DATE_FORMAT = "d MMM y"
 
 const AuditCaseListSummary: React.FC<Props> = ({ audit }) => {
   const { fromDate, toDate } = audit

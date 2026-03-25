@@ -20,14 +20,14 @@ describe("AuditCaseListSummary", () => {
 
     cy.get("h2").should(
       "have.text",
-      `10th Mar 2025 to 20th Apr 2025: showing 20% of cases from 2 users with 2 Triggers and Exceptions`
+      `10 Mar 2025 to 20 Apr 2025: showing 20% of cases from 2 users with 2 Triggers and Exceptions`
     )
   })
 
   it("should show the correct from and to date", () => {
     cy.mount(<AuditCaseListSummary audit={defaultAudit} />)
 
-    cy.contains("10th Mar 2025 to 20th Apr 2025")
+    cy.contains("10 Mar 2025 to 20 Apr 2025")
   })
 
   it("should include the volume percentage amount", () => {
