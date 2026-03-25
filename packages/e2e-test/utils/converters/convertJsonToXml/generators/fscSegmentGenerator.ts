@@ -1,8 +1,8 @@
-import type { AsnQueryResponseExtended } from "../../../../types/AsnQueryResponseExtended"
+import type { MockAsnQueryResponse } from "../../../../types/MockAsnQueryResponse"
 import { FORCE_STATION_CODE_FIELD_LENGTH, UPDATE_TYPE_FIELD_LENGTH } from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
-const fscSegmentGenerator = (ledsJson: AsnQueryResponseExtended): string => {
+const fscSegmentGenerator = (ledsJson: MockAsnQueryResponse): string => {
   const updateType = ledsJson.updateType
   const forceStationCode = ledsJson.ownerCode
 

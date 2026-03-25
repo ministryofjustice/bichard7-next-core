@@ -1,4 +1,4 @@
-import type { OffenceExtended } from "../../../../types/AsnQueryResponseExtended"
+import type { MockOffence } from "../../../../types/MockAsnQueryResponse"
 import {
   ACPO_OFFENCE_CODE_FIELD_LENGTH,
   CJS_OFFENCE_CODE_FIELD_LENGTH,
@@ -15,7 +15,7 @@ import { convertToPncDate } from "../helpers/convertToPncDate"
 import { convertToPncTime } from "../helpers/convertToPncTime"
 import generateRow from "../helpers/generateRow"
 
-const cofSegmentGenerator = (updateType: string | undefined, offence: OffenceExtended): string => {
+const cofSegmentGenerator = (updateType: string | undefined, offence: MockOffence): string => {
   const referenceNumber = String(offence.courtOffenceSequenceNumber).padStart(3, "0")
   const offenceQualifier1 = offence.roleQualifiers?.join("")
   const offenceQualifier2 = offence.legislationQualifiers?.join("")

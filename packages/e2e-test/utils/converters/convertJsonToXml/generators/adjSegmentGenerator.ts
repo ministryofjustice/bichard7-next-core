@@ -1,16 +1,16 @@
-import type { OffenceExtended } from "../../../../types/AsnQueryResponseExtended"
+import type { MockOffence } from "../../../../types/MockAsnQueryResponse"
 import {
-  ADJUDICATION_FIELD_SIZE,
-  DATE_OF_SENTENCE_FIELD_SIZE,
-  OFFENCE_TIC_NUMBER_FIELD_SIZE,
-  PLEA_FIELD_SIZE,
+  ADJUDICATION_FIELD_LENGTH,
+  DATE_OF_SENTENCE_FIELD_LENGTH,
+  OFFENCE_TIC_NUMBER_FIELD_LENGTH,
+  PLEA_FIELD_LENGTH,
   UPDATE_TYPE_FIELD_LENGTH,
   WEED_FLAG_FIELD_LENGTH
 } from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDate"
 import generateRow from "../helpers/generateRow"
 
-const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExtended): string | undefined => {
+const adjSegmentGenerator = (updateType: string | undefined, offence: MockOffence): string | undefined => {
   if (!offence.adjudications?.length) {
     return undefined
   }
@@ -24,10 +24,10 @@ const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExt
 
   const adjSegment = generateRow("ADJ", [
     [updateType, UPDATE_TYPE_FIELD_LENGTH],
-    [plea, PLEA_FIELD_SIZE],
-    [adjudication, ADJUDICATION_FIELD_SIZE],
-    [dateOfSentence, DATE_OF_SENTENCE_FIELD_SIZE],
-    [offenceTICNumber, OFFENCE_TIC_NUMBER_FIELD_SIZE],
+    [plea, PLEA_FIELD_LENGTH],
+    [adjudication, ADJUDICATION_FIELD_LENGTH],
+    [dateOfSentence, DATE_OF_SENTENCE_FIELD_LENGTH],
+    [offenceTICNumber, OFFENCE_TIC_NUMBER_FIELD_LENGTH],
     [weedFlag, WEED_FLAG_FIELD_LENGTH]
   ])
 

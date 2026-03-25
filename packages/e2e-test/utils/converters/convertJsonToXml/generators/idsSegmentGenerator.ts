@@ -1,4 +1,4 @@
-import type { AsnQueryResponseExtended } from "../../../../types/AsnQueryResponseExtended"
+import type { MockAsnQueryResponse } from "../../../../types/MockAsnQueryResponse"
 import {
   CRO_NUMBER_FIELD_LENGTH,
   PNC_CHECK_NAME_FIELD_LENGTH,
@@ -7,7 +7,7 @@ import {
 } from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
-const idsSegmentGenerator = (ledsJson: AsnQueryResponseExtended): string => {
+const idsSegmentGenerator = (ledsJson: MockAsnQueryResponse): string => {
   const updateType = ledsJson.updateType
   const pncIdentifier = ledsJson.personUrn
   const pncCheckName = ledsJson.pncCheckName
