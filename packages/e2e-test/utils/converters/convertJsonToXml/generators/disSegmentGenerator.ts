@@ -27,10 +27,13 @@ const parseQtyDuration = (disposalDuration: { count: number; units: string } | u
     return ""
   }
 
-  const unit = unitMap[disposalDuration.units] ?? ""
-  const count = disposalDuration.count ? String(disposalDuration.count) : ""
+  const unitCode = unitMap[disposalDuration.units] ?? ""
 
-  return `${unit}${count}`
+  if (unitCode === "Y999") {
+    return unitCode
+  }
+
+  return `${unitCode}${disposalDuration.count}`
 }
 
 const disSegmentGenerator = (disposal: DisposalResult): string | undefined => {
