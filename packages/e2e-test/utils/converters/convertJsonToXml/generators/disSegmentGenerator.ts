@@ -32,7 +32,11 @@ const parseQtyDuration = (disposalDuration: { count: number; units: string } | u
   return `${unit}${count}`
 }
 
-const disSegmentGenerator = (updateType: string | undefined, disposal: DisposalResult): string => {
+const disSegmentGenerator = (updateType: string | undefined, disposal: DisposalResult): string | undefined => {
+  if (!disposal) {
+    return undefined
+  }
+
   const type = disposal.disposalCode.toString()
   const qtyDuration = parseQtyDuration(disposal.disposalDuration)
   const qtyDate = disposal.disposalEffectiveDate && convertDate(disposal.disposalEffectiveDate)
