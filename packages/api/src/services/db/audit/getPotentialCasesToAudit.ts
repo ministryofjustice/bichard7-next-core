@@ -8,6 +8,8 @@ import { addDays } from "date-fns"
 import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { organisationUnitSql } from "../organisationUnitSql"
+
 export async function getPotentialCasesToAudit(
   database: WritableDatabaseConnection,
   { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes }: CreateAuditInput,
@@ -28,8 +30,7 @@ export async function getPotentialCasesToAudit(
     FROM 
       br7own.error_list el
     WHERE
-      court_code = ANY (${user.visibleCourts})
-      AND org_for_police_filter = ANY (${user.visibleForces})
+      (${organisationUnitSql(database, user)})
     `
 
   let filter = sql``
