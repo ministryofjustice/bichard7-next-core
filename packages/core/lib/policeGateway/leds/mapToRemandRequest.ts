@@ -18,6 +18,7 @@ const remandStatusByPncCode: Record<string, AppearanceResult> = {
   A: "adjourned",
   C: "remanded-in-custody"
 }
+const bailConditionLength = 50
 
 const mapToCurrentAppearance = (data: RemandPncUpdateRequest["request"]): CurrentAppearance => {
   const { remandLocationCourt, courtNameType1 } = data
@@ -54,6 +55,12 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
   }
 }
 
+const mapBailConditions = (bailConditions: string): string[] => {
+  return (bailConditions.match(new RegExp(".{1," + bailConditionLength + "}", "g")) ?? [])
+    .map((condition) => condition.padEnd(bailConditionLength, " "))
+    .filter((condition) => !!condition.trim())
+}
+
 const mapToRemandRequest = (
   request: RemandPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
@@ -67,7 +74,7 @@ const mapToRemandRequest = (
     personUrn,
     remandDate: convertDate(hearingDate),
     appearanceResult: remandStatusByPncCode[pncRemandStatus],
-    bailConditions: bailConditions,
+    bailConditions: bailConditions.flatMap(mapBailConditions),
     currentAppearance: mapToCurrentAppearance(request),
     nextAppearance: mapToNextAppearance(request)
   }

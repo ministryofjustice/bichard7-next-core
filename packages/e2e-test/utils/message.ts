@@ -15,11 +15,11 @@ const uploadToS3 = async (context: Bichard, message: string, correlationId: stri
   }
 }
 
-const sendMsg = async function (world: Bichard, messagePath: string) {
+const sendMsg = async function (world: Bichard, messagePath: string, useOriginalAsn = true) {
   const rawMessage = await fs.promises.readFile(messagePath)
   const correlationId = `CID-${randomUUID()}`
   let messageData = rawMessage.toString().replace("EXTERNAL_CORRELATION_ID", correlationId)
-  messageData = await world.policeApi.prepareInputMessage(messageData)
+  messageData = await world.policeApi.prepareInputMessage(messageData, { useOriginalAsn })
   world.setCorrelationId(correlationId)
 
   if (world.config.parallel) {
@@ -46,5 +46,10 @@ const sendMsg = async function (world: Bichard, messagePath: string) {
 
 export const sendMessageForTest = function (this: Bichard, messageFileName: string) {
   const messagePath = `${this.specFolder}/${messageFileName}.xml`
-  return sendMsg(this, messagePath)
+  return sendMsg(this, messagePath, false)
+}
+
+export const sendMessageForTestWithOriginalAsn = function (this: Bichard, messageFileName: string) {
+  const messagePath = `${this.specFolder}/${messageFileName}.xml`
+  return sendMsg(this, messagePath, true)
 }

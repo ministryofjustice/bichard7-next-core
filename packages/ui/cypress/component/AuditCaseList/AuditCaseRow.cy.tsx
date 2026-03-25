@@ -1,15 +1,15 @@
 import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
-import type { Note } from "@moj-bichard7/common/types/Note"
 
 import { AuditCaseRow } from "features/AuditCaseList/AuditCaseRow"
 import { MockNextRouter } from "../../support/MockNextRouter"
 
 import "../../../styles/globals.scss"
-import { Table, TableBody } from "../../../src/components/Table"
+import { Table } from "../../../src/components/Table"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 describe("AuditCaseRow", () => {
   const auditId = 1
+  const queryParams = { order: "asc", orderBy: "courtDate", pageNum: "1", maxPerPage: "50" }
   const auditCase = {
     asn: "test asn",
     courtDate: new Date(),
@@ -30,11 +30,9 @@ describe("AuditCaseRow", () => {
 
   function mount(auditId: number, auditCase: AuditCaseDto) {
     cy.mount(
-      <MockNextRouter>
+      <MockNextRouter query={queryParams}>
         <Table>
-          <TableBody>
-            <AuditCaseRow auditId={auditId} auditCase={auditCase} />
-          </TableBody>
+          <AuditCaseRow auditId={auditId} auditCase={auditCase} />
         </Table>
       </MockNextRouter>
     )
@@ -49,10 +47,13 @@ describe("AuditCaseRow", () => {
   it("has the correct links to the case details page", () => {
     mount(auditId, auditCase)
 
-    const expectedHref = `/court-cases/${auditCase.errorId}?prev=/audit/${auditId}`
+    const prevUrl = encodeURIComponent(
+      `/audit/${auditId}?order=${queryParams.order}&orderBy=${queryParams.orderBy}&pageNum=${queryParams.pageNum}&maxPerPage=${queryParams.maxPerPage}`
+    )
+    const expectedHref = `/court-cases/${auditCase.errorId}?previousPath=${prevUrl}`
 
-    cy.get("a#defendant-name-link").should("have.attr", "href", expectedHref)
-    cy.get("a#asn-link").should("have.attr", "href", expectedHref)
+    cy.get(`a#defendant-name-link-${auditCase.errorId}`).should("have.attr", "href", expectedHref)
+    cy.get(`a#asn-link-${auditCase.errorId}`).should("have.attr", "href", expectedHref)
   })
 
   it("should not show note preview when notes are not present", () => {
@@ -62,13 +63,21 @@ describe("AuditCaseRow", () => {
   })
 
   it("shows preview when notes are present", () => {
-    mount(auditId, { ...auditCase, noteCount: 1, notes: [{ createdAt: new Date(), noteText: "Test note" } as Note] })
+    mount(auditId, {
+      ...auditCase,
+      noteCount: 1,
+      notes: [{ createdAt: new Date(), noteText: "Test note" }]
+    })
 
     cy.get("button.preview-button").should("be.visible")
   })
 
   it("clicking note preview should show notes", () => {
-    mount(auditId, { ...auditCase, noteCount: 1, notes: [{ createdAt: new Date(), noteText: "Test note" } as Note] })
+    mount(auditId, {
+      ...auditCase,
+      noteCount: 1,
+      notes: [{ createdAt: new Date(), noteText: "Test note" }]
+    })
 
     cy.get("button.preview-button").click()
     cy.contains("Test note")

@@ -1,7 +1,8 @@
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 
-import generatePncUpdateExceptionFromMessage, { isPncLockError } from "./generatePncUpdateExceptionFromMessage"
+import generatePncUpdateExceptionFromMessage from "./generatePncUpdateExceptionFromMessage"
+import isPncLockError from "./isPncLockError"
 
 describe("generatePncUpdateExceptionFromMessage", () => {
   it.each([

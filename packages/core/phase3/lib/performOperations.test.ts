@@ -5,13 +5,13 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import type PncUpdateRequestError from "../types/PncUpdateRequestError"
 
 import PoliceApiError from "../../lib/policeGateway/PoliceApiError"
-import MockPncGateway from "../../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../../tests/helpers/MockPoliceGateway"
 import generatePncUpdateDatasetWithOperations from "../tests/helpers/generatePncUpdateDatasetWithOperations"
 import performOperations from "./performOperations"
 
 describe("performOperations", () => {
   it("returns errors for PNC update requests that cannot be generated", async () => {
-    const pncGateway = new MockPncGateway([])
+    const pncGateway = new MockPoliceGateway([])
 
     const normalDisposalOperation: Operation<PncOperation.NORMAL_DISPOSAL> = {
       code: PncOperation.NORMAL_DISPOSAL,
@@ -36,7 +36,7 @@ describe("performOperations", () => {
   })
 
   it("completes every operation successfully updated by the PNC", async () => {
-    const pncGateway = new MockPncGateway([undefined, undefined])
+    const pncGateway = new MockPoliceGateway([undefined, undefined])
 
     const completedRemandOperation: Operation<PncOperation.REMAND> = { code: PncOperation.REMAND, status: "Completed" }
     const normalDisposalOperation: Operation<PncOperation.NORMAL_DISPOSAL> = {
@@ -66,7 +66,7 @@ describe("performOperations", () => {
   })
 
   it("fails an operation unsuccessfully updated by the PNC", async () => {
-    const pncGateway = new MockPncGateway([new PoliceApiError(["I0007: Some PNC error message"])])
+    const pncGateway = new MockPoliceGateway([new PoliceApiError(["I0007: Some PNC error message"])])
 
     const completedRemandOperation: Operation<PncOperation.REMAND> = { code: PncOperation.REMAND, status: "Completed" }
     const normalDisposalOperation: Operation<PncOperation.NORMAL_DISPOSAL> = {

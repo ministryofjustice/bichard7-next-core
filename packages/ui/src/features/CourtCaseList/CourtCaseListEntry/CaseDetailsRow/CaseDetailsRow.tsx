@@ -47,6 +47,10 @@ export const CaseDetailsRow = ({
     previousPathWebSafe = `?previousPath=${encodeURIComponent(previousPath)}`
   }
 
+  const BASE_COLUMNS = 3
+  const AUDIT_COLUMNS = 1
+  const notePreviewCols = displayAuditQuality ? BASE_COLUMNS + AUDIT_COLUMNS : BASE_COLUMNS
+
   return (
     <>
       <TableRow className="caseDetailsRow">
@@ -80,7 +84,12 @@ export const CaseDetailsRow = ({
         </ConditionalRender>
       </TableRow>
       {notes.length > 0 && !showPreview && (
-        <NotePreviewRow notes={notes} numberOfNotes={numberOfNotes} previewState={showPreview} />
+        <NotePreviewRow
+          notes={notes}
+          numberOfNotes={numberOfNotes}
+          previewState={showPreview}
+          colSpan={notePreviewCols}
+        />
       )}
     </>
   )

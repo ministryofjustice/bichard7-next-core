@@ -7,21 +7,21 @@ import fs from "fs"
 import MockDate from "mockdate"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
-import MockPncGateway from "../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../tests/helpers/MockPoliceGateway"
 import phase1Handler from "./phase1"
 import generateMockPncQueryResult from "./tests/helpers/generateMockPncQueryResult"
 
 describe("Bichard Core processing logic", () => {
   const inputMessage = fs.readFileSync("phase1/tests/fixtures/input-message-001.xml").toString()
   const inputSpi = parseSpiResult(inputMessage)
-  let mockPncGateway: MockPncGateway
+  let mockPncGateway: MockPoliceGateway
   const inputAho = transformSpiToAho(inputSpi)
   let auditLogger: CoreAuditLogger
   const mockedDate = new Date()
 
   beforeEach(() => {
     auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
-    mockPncGateway = new MockPncGateway(generateMockPncQueryResult(inputMessage))
+    mockPncGateway = new MockPoliceGateway(generateMockPncQueryResult(inputMessage))
     MockDate.set(mockedDate)
   })
 

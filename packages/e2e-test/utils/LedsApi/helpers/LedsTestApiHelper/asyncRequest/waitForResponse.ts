@@ -8,7 +8,7 @@ import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
 import generateHeaders from "../generateHeaders"
 
-const wait = (delayInMs = 300) => new Promise((resolve) => setTimeout(resolve, delayInMs))
+const wait = (delayInMs = 500) => new Promise((resolve) => setTimeout(resolve, delayInMs))
 
 const waitForResponse = async (
   requestOptions: RequestOptions,
@@ -50,7 +50,7 @@ const waitForResponse = async (
 
     counter += 1
 
-    if (counter === 10) {
+    if (counter === 15) {
       throw new Error(`Pending request didn't complete for ${urlPath}. ${JSON.stringify(response.data)}`)
     }
 

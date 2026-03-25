@@ -45,7 +45,7 @@ export const DateRange: React.FC<DateRangeProps> = ({
       <div className="calendars-wrapper">
         <div id="report-selection-date-from" className="date">
           <DateInput
-            dateType="resolvedFrom"
+            dateType="from"
             dispatch={(p) => setDateFromString(p.value as string)}
             value={dateFromString}
             dateRange={undefined}
@@ -57,7 +57,7 @@ export const DateRange: React.FC<DateRangeProps> = ({
         </div>
         <div id="report-selection-date-to" className="date">
           <DateInput
-            dateType="resolvedTo"
+            dateType="to"
             dispatch={(p) => setDateToString(p.value as string)}
             value={dateToString}
             dateRange={undefined}

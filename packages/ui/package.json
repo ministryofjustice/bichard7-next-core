@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.347",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.351",
     "axios": "^1.13.6",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
@@ -57,7 +57,7 @@
     "json-2-csv": "^5.5.10",
     "lodash": "^4.17.23",
     "lodash.clonedeep": "^4.5.0",
-    "next": "^15.5.12",
+    "next": "^15.5.14",
     "pg": "^8.20.0",
     "pino": "^10.3.1",
     "qs": "^6.15.0",

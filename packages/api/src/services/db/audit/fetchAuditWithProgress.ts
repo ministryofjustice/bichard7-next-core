@@ -44,8 +44,8 @@ export const fetchAuditWithProgress = async (
         WHERE
           ac.audit_id = ${auditId}
           AND (
-            ((el.trigger_status = ${ResolutionStatusNumber.Unresolved}) OR el.trigger_status = ${ResolutionStatusNumber.Resolved} AND el.trigger_quality_checked > 1)
-            AND ((el.error_status = ${ResolutionStatusNumber.Unresolved}) OR el.error_status = ${ResolutionStatusNumber.Resolved} AND el.error_quality_checked > 1)
+            ((el.trigger_status IS DISTINCT FROM ${ResolutionStatusNumber.Resolved}) OR el.trigger_status = ${ResolutionStatusNumber.Resolved} AND el.trigger_quality_checked > 1)
+            AND ((el.error_status IS DISTINCT FROM ${ResolutionStatusNumber.Resolved}) OR el.error_status = ${ResolutionStatusNumber.Resolved} AND el.error_quality_checked > 1)
           )
           AND (${organisationUnitSql(database, user)})
       ) AS audited_cases

@@ -26,8 +26,8 @@ describe("ReportSelectionFilter", () => {
   it("calls API when valid date range is entered and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
     const todayStr = format(today, "yyyy-MM-dd")
-    cy.get("div#date-range-section").find("input#date-resolvedFrom").type(todayStr)
-    cy.get("div#date-range-section").find("input#date-resolvedTo").type(todayStr)
+    cy.get("div#date-range-section").find("input#date-from").type(todayStr)
+    cy.get("div#date-range-section").find("input#date-to").type(todayStr)
     apiCallCheck(true)
   })
 

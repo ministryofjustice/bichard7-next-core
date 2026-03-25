@@ -49,6 +49,7 @@ describe("subsequentDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99

@@ -10,6 +10,18 @@ import mapToAddOffenceRequest from "../addOffence/mapToAddOffenceRequest"
 // Do NOT change this value unless the LEDS team confirms an update.
 const ARRESTING_OFFICER_LAST_NAME = "Moj Test Officer"
 
+const validateAndAdjustAge = (dateOfBirthString: string): string => {
+  const dateOfBirth = new Date(dateOfBirthString)
+  const hundredYearsAgo = new Date()
+  hundredYearsAgo.setFullYear(new Date().getFullYear() - 100)
+
+  if (dateOfBirth <= hundredYearsAgo) {
+    dateOfBirth.setFullYear(new Date().getFullYear() - 99)
+  }
+
+  return dateOfBirth.toISOString().split("T")[0]
+}
+
 const mapToCreateArrestedPersonRequest = (
   person: PersonDetails,
   firstOffence: OffenceDetails,
@@ -19,9 +31,9 @@ const mapToCreateArrestedPersonRequest = (
 
   return {
     person: {
-      lastName: person.lastName,
+      lastName: person.lastName.slice(0, 15),
       firstNames: person.firstNames,
-      dateOfBirth: person.dateOfBirth,
+      dateOfBirth: validateAndAdjustAge(person.dateOfBirth),
       sex: person.sex,
       skinColour: null,
       heightType: null,

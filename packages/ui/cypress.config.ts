@@ -1,4 +1,5 @@
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import { defineConfig } from "cypress"
@@ -19,6 +20,7 @@ import {
   insertDummyCourtCasesWithTriggers,
   insertMultipleDummyCourtCases
 } from "./test/utils/insertCourtCases"
+import { insertAuditWithOverrides } from "./test/utils/insertAudit"
 import insertException from "./test/utils/manageExceptions"
 import { deleteFeedback, getAllFeedbacksFromDatabase, insertFeedback } from "./test/utils/manageFeedbackSurveys"
 import { deleteTriggers, insertTriggers } from "./test/utils/manageTriggers"
@@ -127,6 +129,16 @@ export default defineConfig({
 
         clearCourtCases() {
           return deleteFromEntity(CourtCase)
+        },
+
+        async clearAudits() {
+          await deleteFromTable("audits")
+          return true
+        },
+
+        async insertAudit(params: { audit: Partial<CreateAuditInput>; caseIds: number[]; username: string }) {
+          await insertAuditWithOverrides(params.audit, params.caseIds, params.username)
+          return true
         },
 
         async clearUsers() {
