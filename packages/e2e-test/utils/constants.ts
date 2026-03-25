@@ -1,3 +1,5 @@
+export const XML_DECLARATION = '<?xml version="1.0" standalone="yes"?>'
+
 //FSC
 export const UPDATE_TYPE_FIELD_LENGTH = 1
 export const FORCE_STATION_CODE_FIELD_LENGTH = 4

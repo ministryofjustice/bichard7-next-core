@@ -10,19 +10,16 @@ const offenceSegments = (ledsJson: AsnQueryResponseExtended) => {
   const allSegments = disposals.flatMap((disposal) => {
     const ccr = ccrSegmentGenerator(updateType, disposal)
 
-    const cofAdjDis = disposal.offences.flatMap((offence) => {
+    const childSegments = disposal.offences.flatMap((offence) => {
       const cof = cofSegmentGenerator(updateType, offence)
-
-      const hasAdj = (offence.adjudications?.length ?? 0) > 0
-      const adj = hasAdj ? adjSegmentGenerator(offence.updateType, offence) : ""
-
+      const adj = adjSegmentGenerator(offence.updateType, offence) ?? []
       const dis =
         offence.disposalResults?.map((disposalResult) => disSegmentGenerator(offence.updateType, disposalResult)) ?? []
 
       return [cof, adj, ...dis]
     })
 
-    return [ccr, ...cofAdjDis]
+    return [ccr, ...childSegments]
   })
 
   return allSegments.join("")
