@@ -10,7 +10,11 @@ import {
 import { convertDate } from "../helpers/convertDate"
 import generateRow from "../helpers/generateRow"
 
-const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExtended): string => {
+const adjSegmentGenerator = (updateType: string | undefined, offence: OffenceExtended): string | undefined => {
+  if (!offence.adjudications?.length) {
+    return undefined
+  }
+
   const firstAdj = offence.adjudications?.[0]
   const plea = offence.plea?.toUpperCase()
   const adjudication = firstAdj?.adjudication.toUpperCase()
