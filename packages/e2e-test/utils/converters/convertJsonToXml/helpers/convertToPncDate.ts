@@ -1,1 +1,1 @@
-export const convertToPncDate = (date: string) => date.split("-").reverse().join("")
+export const convertToPncDate = (dateString: string) => dateString.slice(0, 11).split("-").reverse().join("")
