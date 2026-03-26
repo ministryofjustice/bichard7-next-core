@@ -12,6 +12,8 @@ fi
 
 if [ "${USE_LEDS}x" == "truex" ]; then
   TAGS="${TAGS} and not @ExcludedOnLeds"
+else
+  TAGS="${TAGS} and not @ExcludedOnPnc"
 fi
 
 echo "---------------------------------------------"
