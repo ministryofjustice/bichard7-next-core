@@ -19,7 +19,7 @@ const remSegmentGenerator = (ledsJson: MockRemandRequest): string => {
   const remandLocationFfss = ledsJson.remandLocationFfss
   const remandLocationCourt = extractCourtCode(currentAppearance)
   const courtNameType1 = extractCourtName(currentAppearance)
-  const nextAppearanceDate = ledsJson.nextAppearance?.date && convertToPncDate(ledsJson.nextAppearance?.date)
+  const nextAppearanceDate = ledsJson.nextAppearance?.date && convertToPncDate(ledsJson.nextAppearance.date)
   const nextAppearanceLocation = extractCourtCode(nextAppearance)
   const courtNameType2 = extractCourtName(nextAppearance)
   const bailConditions = ledsJson.bailConditions.join("")
