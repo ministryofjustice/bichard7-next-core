@@ -1,38 +1,54 @@
-import type { Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
-import {
-  ADJUDICATION_FIELD_LENGTH,
-  DATE_OF_SENTENCE_FIELD_LENGTH,
-  OFFENCE_TIC_NUMBER_FIELD_LENGTH,
-  OFFENCE_UPDATE_TYPE,
-  PLEA_FIELD_LENGTH,
-  UPDATE_TYPE_FIELD_LENGTH,
-  WEED_FLAG_FIELD_LENGTH
-} from "../../../constants"
-import { convertToPncDate } from "../helpers/convertToPncDate"
+import type { Offence as AsnQueryResponseOffence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+import type { Offence as AddDisposalOffence } from "@moj-bichard7/core/types/leds/DisposalRequest"
+import * as C from "../../../constants"
+import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import generateRow from "../helpers/generateRow"
 
-const adjSegmentGenerator = (offence: Offence): string | undefined => {
-  if (!offence.adjudications?.length) {
-    return undefined
-  }
+type AdjData = {
+  plea?: string
+  adjudication?: string
+  dateOfSentence?: string
+  offenceTic?: number | string
+}
 
-  const firstAdj = offence.adjudications?.[0]
-  const plea = offence.plea?.toUpperCase()
-  const adjudication = firstAdj?.adjudication.toUpperCase()
-  const dateOfSentence = firstAdj?.disposalDate && convertToPncDate(firstAdj?.disposalDate)
-  const offenceTICNumber = offence.offenceTic?.toString()
-  const weedFlag = ""
-
-  const adjSegment = generateRow("ADJ", [
-    [OFFENCE_UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
-    [plea, PLEA_FIELD_LENGTH],
-    [adjudication, ADJUDICATION_FIELD_LENGTH],
-    [dateOfSentence, DATE_OF_SENTENCE_FIELD_LENGTH],
-    [offenceTICNumber, OFFENCE_TIC_NUMBER_FIELD_LENGTH],
-    [weedFlag, WEED_FLAG_FIELD_LENGTH]
+const generateAdjSegment = (data: AdjData): string =>
+  generateRow("ADJ", [
+    [C.OFFENCE_UPDATE_TYPE, C.UPDATE_TYPE_FIELD_LENGTH],
+    [data.plea?.toUpperCase(), C.PLEA_FIELD_LENGTH],
+    [data.adjudication?.toUpperCase(), C.ADJUDICATION_FIELD_LENGTH],
+    [data.dateOfSentence && convertToPncDate(data.dateOfSentence), C.DATE_OF_SENTENCE_FIELD_LENGTH],
+    [data.offenceTic?.toString(), C.OFFENCE_TIC_NUMBER_FIELD_LENGTH],
+    ["", C.WEED_FLAG_FIELD_LENGTH]
   ])
 
-  return adjSegment
+const toAdjData = (offence: AsnQueryResponseOffence | AddDisposalOffence): AdjData | undefined => {
+  if ("adjudications" in offence) {
+    const firstAdj = offence.adjudications?.[0]
+    if (!firstAdj) {
+      return undefined
+    }
+
+    return {
+      plea: offence.plea,
+      adjudication: firstAdj.adjudication,
+      dateOfSentence: firstAdj.disposalDate,
+      offenceTic: offence.offenceTic
+    }
+  }
+
+  if ("adjudication" in offence) {
+    return {
+      plea: offence.plea,
+      adjudication: offence.adjudication,
+      dateOfSentence: offence.dateOfSentence,
+      offenceTic: offence.offenceTic
+    }
+  }
+}
+
+const adjSegmentGenerator = (offence: AsnQueryResponseOffence | AddDisposalOffence): string | undefined => {
+  const adjData = toAdjData(offence)
+  return adjData && generateAdjSegment(adjData)
 }
 
 export default adjSegmentGenerator

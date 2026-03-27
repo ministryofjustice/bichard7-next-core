@@ -1,14 +1,8 @@
-import type { Court } from "@moj-bichard7/core/types/leds/DisposalRequest"
 import type { MockRemandRequest } from "../../../../types/MockRemandRequest"
 import * as C from "../../../constants"
-import { convertToPncDate } from "../helpers/convertToPncDate"
+import { convertToPncDate } from "../helpers/convertToPncDateTime"
+import { extractCourtCode, extractCourtName } from "../helpers/extractCourtDetails"
 import generateRow from "../helpers/generateRow"
-
-const extractCourtCode = (court: Court | undefined): string | undefined =>
-  court?.courtIdentityType === "code" ? court.courtCode : undefined
-
-const extractCourtName = (court: Court | undefined): string | undefined =>
-  court?.courtIdentityType === "name" ? court.courtName : undefined
 
 const remSegmentGenerator = (ledsJson: MockRemandRequest): string => {
   const currentAppearance = ledsJson.currentAppearance?.court
@@ -46,10 +40,10 @@ const remSegmentGenerator = (ledsJson: MockRemandRequest): string => {
     [remandResult, C.REMAND_RESULT_FIELD_LENGTH],
     [remandLocationFfss, C.REMAND_LOCATION_FFSS_FIELD_LENGTH],
     [remandLocationCourt, C.REMAND_LOCATION_COURT_FIELD_LENGTH],
-    [courtNameType1, C.COURT_NAME_TYPE1_FIELD_LENGTH],
+    [courtNameType1, C.COURT_NAME_FIELD_LENGTH],
     [nextAppearanceDate, C.NEXT_APPEARANCE_DATE_FIELD_LENGTH],
     [nextAppearanceLocation, C.NEXT_APPEARANCE_LOCATION_FIELD_LENGTH],
-    [courtNameType2, C.COURT_NAME_TYPE2_FIELD_LENGTH],
+    [courtNameType2, C.COURT_NAME_FIELD_LENGTH],
     [bailConditions, C.BAIL_CONDITIONS_FIELD_LENGTH],
     ...unimplementedFields
   ])
