@@ -33,6 +33,7 @@ import { AuditCaseListButtons, AuditCaseListContainer } from "../../../features/
 import Pagination from "../../../components/Pagination"
 import { LinkButton } from "../../../components/Buttons/LinkButton"
 import { NavLink } from "../../../types/NavLinks"
+import AuditCaseListSummary from "../../../features/AuditCaseList/AuditCaseListSummary"
 
 interface Props {
   csrfToken: string
@@ -131,6 +132,7 @@ const Page: NextPage<Props> = ({
             bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
           >
             <AuditCaseListButtons>
+              <AuditCaseListSummary audit={audit} />
               <LinkButton href={NavLink.Audit} secondary={true}>
                 {"Start new audit"}
               </LinkButton>
