@@ -1,8 +1,11 @@
 import type { MockAsnQueryResponse } from "../../../../types/MockAsnQueryResponse"
+import type { MockRemandRequest } from "../../../../types/MockRemandRequest"
 import { FORCE_STATION_CODE_FIELD_LENGTH, UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH } from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
-const fscSegmentGenerator = (ledsJson: MockAsnQueryResponse): string => {
+type LedsJson = MockAsnQueryResponse | MockRemandRequest
+
+const fscSegmentGenerator = (ledsJson: LedsJson): string => {
   const forceStationCode = ledsJson.ownerCode
 
   const fscSegment = generateRow("FSC", [
