@@ -47,6 +47,7 @@ fi
 
 mkdir -p ./screenshots
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 AWS_CLI_PATH="$(which aws)"
 PNC_ELB_NAME=$(echo "cjse-${WORKSPACE}-bichard-7-pnc-emulator" | cut -c1-32)
 aws_credential_check
@@ -96,8 +97,24 @@ then
   exit 1
 fi
 
+
 mkdir -p workspaces
 rm -f $TEST_ENV_FILE
+
+if [[ "$USE_LEDS" == "true" ]]; then
+  . $SCRIPT_DIR/../../../environment/leds-environment-variable.sh
+  if [[ -n "$LEDS_API_URL" ]]; then
+    echo "export LEDS_API_URL=\"${LEDS_API_URL}\"" >> $TEST_ENV_FILE
+  fi
+
+  if [[ -n "$LEDS_NIAM_AUTH_URL" ]]; then
+    echo "export LEDS_NIAM_AUTH_URL=\"${LEDS_NIAM_AUTH_URL}\"" >> $TEST_ENV_FILE
+  fi
+
+  printf "export LEDS_NIAM_PRIVATE_KEY='%s'\n" "$LEDS_NIAM_PRIVATE_KEY" >> $TEST_ENV_FILE
+  printf "export LEDS_NIAM_CERTIFICATE='%s'\n" "$LEDS_NIAM_CERTIFICATE" >> $TEST_ENV_FILE
+  printf "export LEDS_NIAM_PARAMETERS='%s'\n" "$LEDS_NIAM_PARAMETERS" >> $TEST_ENV_FILE
+fi
 
 echo "export DB_HOST=\"${DB_HOST}\"" >> $TEST_ENV_FILE
 echo "export UI_HOST=\"${UI_HOST}\"" >> $TEST_ENV_FILE
