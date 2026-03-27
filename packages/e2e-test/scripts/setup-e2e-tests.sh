@@ -101,21 +101,6 @@ fi
 mkdir -p workspaces
 rm -f $TEST_ENV_FILE
 
-if [[ "$USE_LEDS" == "true" ]]; then
-  . $SCRIPT_DIR/../../../environment/leds-environment-variable.sh
-  if [[ -n "$LEDS_API_URL" ]]; then
-    echo "export LEDS_API_URL=\"${LEDS_API_URL}\"" >> $TEST_ENV_FILE
-  fi
-
-  if [[ -n "$LEDS_NIAM_AUTH_URL" ]]; then
-    echo "export LEDS_NIAM_AUTH_URL=\"${LEDS_NIAM_AUTH_URL}\"" >> $TEST_ENV_FILE
-  fi
-
-  printf "export LEDS_NIAM_PRIVATE_KEY='%s'\n" "$LEDS_NIAM_PRIVATE_KEY" >> $TEST_ENV_FILE
-  printf "export LEDS_NIAM_CERTIFICATE='%s'\n" "$LEDS_NIAM_CERTIFICATE" >> $TEST_ENV_FILE
-  printf "export LEDS_NIAM_PARAMETERS='%s'\n" "$LEDS_NIAM_PARAMETERS" >> $TEST_ENV_FILE
-fi
-
 echo "export DB_HOST=\"${DB_HOST}\"" >> $TEST_ENV_FILE
 echo "export UI_HOST=\"${UI_HOST}\"" >> $TEST_ENV_FILE
 echo "export UI_PORT=\"443\"" >> $TEST_ENV_FILE
@@ -146,4 +131,8 @@ echo "export DB_SSL_MODE=\"require\"" >> $TEST_ENV_FILE
 if [[ "${REAL_PNC}x" == "truex" ]]; then
   echo "export PNC_PORT=\"102\"" >> $TEST_ENV_FILE
 fi
+if [[ "$USE_LEDS" == "true" ]]; then
+  printf "$(. $SCRIPT_DIR/../../../environment/leds-environment-variable.sh --print)\n" >> $TEST_ENV_FILE
+fi
+
 echo "Done - created ${TEST_ENV_FILE}"
