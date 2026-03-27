@@ -1,9 +1,9 @@
 import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type { Defendant } from "@moj-bichard7/core/types/leds/DisposalRequest"
 import * as C from "../../../constants"
-import { convertToPncDate } from "../helpers/convertToPncDate"
-import generateRow from "../helpers/generateRow"
+import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import { extractCourtCode, extractCourtName } from "../helpers/extractCourtDetails"
+import generateRow from "../helpers/generateRow"
 
 const extractPNCFileName = (defendant: Defendant): string =>
   defendant.defendantType === "individual"
