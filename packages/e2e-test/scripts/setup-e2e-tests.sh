@@ -47,6 +47,7 @@ fi
 
 mkdir -p ./screenshots
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 AWS_CLI_PATH="$(which aws)"
 PNC_ELB_NAME=$(echo "cjse-${WORKSPACE}-bichard-7-pnc-emulator" | cut -c1-32)
 aws_credential_check
@@ -96,6 +97,7 @@ then
   exit 1
 fi
 
+
 mkdir -p workspaces
 rm -f $TEST_ENV_FILE
 
@@ -129,4 +131,8 @@ echo "export DB_SSL_MODE=\"require\"" >> $TEST_ENV_FILE
 if [[ "${REAL_PNC}x" == "truex" ]]; then
   echo "export PNC_PORT=\"102\"" >> $TEST_ENV_FILE
 fi
+if [[ "$USE_LEDS" == "true" ]]; then
+  printf "$(. $SCRIPT_DIR/../../../environment/leds-environment-variable.sh --print)\n" >> $TEST_ENV_FILE
+fi
+
 echo "Done - created ${TEST_ENV_FILE}"
