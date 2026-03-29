@@ -20,7 +20,8 @@ phases:
       - export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq -r .Credentials.AccessKeyId)
       - export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq -r .Credentials.SecretAccessKey)
       - export AWS_SESSION_TOKEN=$(echo $temp_role | jq -r .Credentials.SessionToken)
-      - CI=true ./scripts/setup-e2e-tests.sh
+      - bash ./scripts/setup-api-hosts.sh
+      - bash ./scripts/setup-e2e-tests.sh
       - source ./workspaces/${WORKSPACE}.env
       - bash ./scripts/run-pipeline-tests.sh
   post_build:
