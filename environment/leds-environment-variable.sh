@@ -62,51 +62,10 @@ get_ssm_value() {
     echo "$value"
 }
 
-function get_niam_api_gateway_destination {
-    local NIAM_API_NAME="bichard-7-${WORKSPACE}-niam-api"
-    local NIAM_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='$NIAM_API_NAME'].id" --output text)
-    local RESOURCE_ID=$(aws apigateway get-resources --rest-api-id "$NIAM_API_ID" \
-        --query "items[?path=='/'].id" --output text)
-    
-    aws apigateway get-integration \
-        --rest-api-id "$NIAM_API_ID" \
-        --resource-id "$RESOURCE_ID" \
-        --http-method "POST" \
-        --query "uri" --output text
-
-}
-
-get_leds_vpc_endpoint_dns() {
-    local ENDPOINT_NAME="bichard-7-${WORKSPACE}-leds-api"
-    local DNS_NAME=$(aws ec2 describe-vpc-endpoints \
-        --filters "Name=tag:Name,Values=$ENDPOINT_NAME" \
-        --query "VpcEndpoints[0].DnsEntries[0].DnsName" \
-        --output text 2>/dev/null)
-
-    if [ -z "$DNS_NAME" ] || [ "$DNS_NAME" == "None" ]; then
-        DNS_NAME=$(aws ec2 describe-vpc-endpoints \
-            --filters "Name=service-name,Values=$ENDPOINT_NAME" \
-            --query "VpcEndpoints[0].DnsEntries[0].DnsName" \
-            --output text 2>/dev/null)
-    fi
-
-    if [ ! -z "$DNS_NAME" ] && [ "$DNS_NAME" != "None" ]; then
-        echo "$DNS_NAME"
-        return 0
-    else
-        return 1
-    fi
-}
-
 if [[ -n "$WORKSPACE" && "$WORKSPACE" != "e2e-test" ]]; then
     IS_AWS_ENV=true
-    if [[ "$CI" == "true" ]]; then
-        export LEDS_API_URL="https://$(get_leds_vpc_endpoint_dns)"
-        export LEDS_NIAM_AUTH_URL=$(get_niam_api_gateway_destination)
-    else
-        export LEDS_API_URL=$(get_ecs_var "LEDS_API_URL")
-        export LEDS_NIAM_AUTH_URL=$(get_ecs_var "LEDS_NIAM_AUTH_URL")
-    fi
+    export LEDS_API_URL=$(get_ecs_var "LEDS_API_URL")
+    export LEDS_NIAM_AUTH_URL=$(get_ecs_var "LEDS_NIAM_AUTH_URL")
     export LEDS_NIAM_PRIVATE_KEY=$(get_ssm_value "/cjse-${WORKSPACE}-bichard-7/leds/niam/private.key")
     export LEDS_NIAM_CERTIFICATE=$(get_ssm_value "/cjse-${WORKSPACE}-bichard-7/leds/niam/certificate.pem")
     export LEDS_NIAM_PARAMETERS=$(get_ssm_value "/cjse-${WORKSPACE}-bichard-7/leds/niam/parameters")
