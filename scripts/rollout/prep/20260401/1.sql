@@ -1,3 +1,4 @@
+-- set onlyAccessToNewBichard flag to true
 BEGIN;
 UPDATE
   br7own.users
@@ -9,6 +10,8 @@ WHERE
 RETURNING id, username, email;
 COMMIT;
 
+
+-- rollback
 BEGIN;
 UPDATE
   br7own.users
