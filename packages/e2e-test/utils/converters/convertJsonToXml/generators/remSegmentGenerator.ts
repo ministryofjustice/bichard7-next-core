@@ -1,7 +1,7 @@
 import type { MockRemandRequest } from "../../../../types/MockRemandRequest"
 import * as C from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDateTime"
-import { extractCourtCode, extractCourtName } from "../helpers/extractCourtDetails"
+import { extractCourtCode, extractCourtName } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
 const remSegmentGenerator = (ledsJson: MockRemandRequest): string => {

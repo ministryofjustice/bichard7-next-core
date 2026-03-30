@@ -2,7 +2,7 @@ import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDispos
 import { COURT_CODE_FIELD_LENGTH, COURT_NAME_FIELD_LENGTH, DATE_OF_HEARING_FIELD_LENGTH } from "../../../constants"
 
 import { convertToPncDate } from "../helpers/convertToPncDateTime"
-import { extractCourtCode, extractCourtName } from "../helpers/extractCourtDetails"
+import { extractCourtCode, extractCourtName } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
 const crtSegmentGenerator = (ledsJson: AddDisposalRequest): string => {

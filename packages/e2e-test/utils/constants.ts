@@ -1,6 +1,7 @@
 export const XML_DECLARATION = '<?xml version="1.0" standalone="yes"?>'
 export const UPDATE_TYPE = "K"
 export const OFFENCE_UPDATE_TYPE = "I"
+export const DEFAULT_QTY_UNITS = "00"
 
 //FSC
 export const UPDATE_TYPE_FIELD_LENGTH = 1
@@ -80,3 +81,4 @@ export const SOCIAL_WORKER_TELEPHONE_FIELD_LENGTH = 49
 //CCH
 export const COURT_REFERENCE_NUMBER_FIELD_LENGTH = 3
 export const OFFENCE_QUALIFIER_FIELD_LENGTH = 4
+export const CCH_ACPO_OFFENCE_CODE_FIELD_LENGTH = 10

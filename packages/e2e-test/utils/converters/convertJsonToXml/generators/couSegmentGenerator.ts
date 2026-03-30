@@ -2,7 +2,7 @@ import type { Defendant } from "@moj-bichard7/core/types/leds/DisposalRequest"
 import type { MockAddDisposalRequest } from "../../../../types/MockAddDisposalRequest"
 import * as C from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDateTime"
-import { extractCourtCode, extractCourtName } from "../helpers/extractCourtDetails"
+import { extractCourtCode, extractCourtName } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
 const extractPNCFileName = (defendant: Defendant): string =>
@@ -22,7 +22,7 @@ const couSegmentGenerator = (ledsJson: MockAddDisposalRequest): string => {
     [courtName, C.COURT_NAME_FIELD_LENGTH],
     [generatedPNCFileName, C.NAME_CONVICTED_FIELD_LENGTH],
     [dateOfHearing, C.DATE_OF_HEARING_FIELD_LENGTH],
-    ["", C.NUMBER_OF_TICS_FIELD_LENGTH]
+    ["0000", C.NUMBER_OF_TICS_FIELD_LENGTH]
   ])
 
   return couSegment

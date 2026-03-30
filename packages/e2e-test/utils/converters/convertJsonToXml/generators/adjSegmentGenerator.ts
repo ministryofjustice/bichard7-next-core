@@ -17,7 +17,7 @@ const generateAdjSegment = (data: AdjData): string =>
     [data.plea?.toUpperCase(), C.PLEA_FIELD_LENGTH],
     [data.adjudication?.toUpperCase(), C.ADJUDICATION_FIELD_LENGTH],
     [data.dateOfSentence && convertToPncDate(data.dateOfSentence), C.DATE_OF_SENTENCE_FIELD_LENGTH],
-    [data.offenceTic?.toString(), C.OFFENCE_TIC_NUMBER_FIELD_LENGTH],
+    [data.offenceTic?.toString().padStart(4, "0"), C.OFFENCE_TIC_NUMBER_FIELD_LENGTH],
     ["", C.WEED_FLAG_FIELD_LENGTH]
   ])
 
