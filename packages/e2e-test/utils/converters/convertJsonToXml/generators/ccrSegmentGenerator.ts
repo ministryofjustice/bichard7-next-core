@@ -9,11 +9,11 @@ import {
 import { formatCourtCaseReference } from "../helpers/formatCourtCaseReference"
 import generateRow from "../helpers/generateRow"
 
-const ccrSegmentGenerator = (disposal: MockAsnQueryResponseDisposal | MockAddDisposalRequest): string => {
+const ccrSegmentGenerator = (data: MockAsnQueryResponseDisposal | MockAddDisposalRequest): string => {
   const ccrSegment = generateRow("CCR", [
     [UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
-    [formatCourtCaseReference(disposal.courtCaseReference), COURT_CASE_REFERENCE_FIELD_LENGTH],
-    [disposal.crimeOffenceReferenceNumber, CRIME_OFFENCE_REFERENCE_FIELD_LENGTH]
+    [formatCourtCaseReference(data.courtCaseReference), COURT_CASE_REFERENCE_FIELD_LENGTH],
+    [data.crimeOffenceReferenceNumber, CRIME_OFFENCE_REFERENCE_FIELD_LENGTH]
   ])
 
   return ccrSegment
