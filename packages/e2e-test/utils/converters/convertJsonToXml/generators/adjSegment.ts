@@ -1,3 +1,4 @@
+import type { ArrestOffence } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type { Offence as AsnQueryResponseOffence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { Offence as AddDisposalOffence } from "@moj-bichard7/core/types/leds/DisposalRequest"
 import * as C from "../../../constants"
@@ -39,7 +40,7 @@ export const adjSegmentFromAsnQueryResponse = (offence: AsnQueryResponseOffence)
   })
 }
 
-export const adjSegmentFromAddDisposalRequest = (offence: AddDisposalOffence): string | undefined =>
+export const adjSegmentFromAddDisposalRequest = (offence: AddDisposalOffence | ArrestOffence): string | undefined =>
   adjSegmentGenerator({
     plea: offence.plea,
     adjudication: offence.adjudication,

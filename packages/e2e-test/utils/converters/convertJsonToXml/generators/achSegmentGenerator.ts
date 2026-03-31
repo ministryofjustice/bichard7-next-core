@@ -7,18 +7,21 @@ import generateRow from "../helpers/generateRow"
 const UNUSED = ""
 
 const achSegmentGenerator = (offence: ArrestOffence): string => {
-  const arrestOffenceNumber = String(offence.courtOffenceSequenceNumber)
+  const arrestOffenceNumber = offence.courtOffenceSequenceNumber
+    ? String(offence.courtOffenceSequenceNumber)
+    : undefined
   const apcoOffenceCode = toApcoOffenceCode(offence.npccOffenceCode)
   const cjsOffenceCode = offence.offenceCode.offenceCodeType === "cjs" ? offence.offenceCode.cjsOffenceCode : undefined
-  const committedOnBail = offence.committedOnBail ? "y" : "n"
   const locationOfOffence = offence.locationText?.locationText
+  const committedOnBail = offence.committedOnBail ? "Y" : "N"
   const offenceLocationFSCode = offence.locationFsCode
   const offenceStartDate = convertToPncDate(offence.offenceStartDate)
   const offenceStartTime = offence.offenceStartTime ? convertToPncTime(offence.offenceStartTime) : undefined
-  const offenceEndDate = offence.offenceEndDate ? convertToPncTime(offence.offenceEndDate) : undefined
+  const offenceEndDate = offence.offenceEndDate ? convertToPncDate(offence.offenceEndDate) : undefined
   const offenceEndTime = offence.offenceEndTime ? convertToPncTime(offence.offenceEndTime) : undefined
 
   const achSegment = generateRow("ACH", [
+    [C.OFFENCE_UPDATE_TYPE, C.UPDATE_TYPE_FIELD_LENGTH],
     [UNUSED, C.CRIME_OFFENCE_REFERENCE_FIELD_LENGTH],
     [arrestOffenceNumber, C.ARREST_OFFENCE_NO_FIELD_LENGTH],
     [UNUSED, C.OFFENCE_QUALIFIER_FIELD_LENGTH],
