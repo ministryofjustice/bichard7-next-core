@@ -29,4 +29,10 @@ describe("getValidRedirectPath()", () => {
     const result = getValidRedirectPath({ redirect })
     expect(result).toBe(redirect)
   })
+
+  it("should return '/bichard' path when redirect parameter starts with '/bichard-ui' and onlyAccessNewBichard is true", () => {
+    const redirect = "/bichard-ui/example"
+    const result = getValidRedirectPath({ redirect }, true)
+    expect(result).toBe("/bichard")
+  })
 })
