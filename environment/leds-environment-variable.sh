@@ -63,7 +63,7 @@ get_ssm_value() {
     return 0
 }
 
-if [[ -n "$WORKSPACE" && "$WORKSPACE" != "e2e-test" ]]; then
+if [[ -n "$WORKSPACE" && "$WORKSPACE" != "e2e-test" && "$WORKSPACE" != "local-next" ]]; then
     IS_AWS_ENV=true
     export LEDS_API_URL=$(get_ecs_var "LEDS_API_URL")
     export LEDS_NIAM_AUTH_URL=$(get_ecs_var "LEDS_NIAM_AUTH_URL")
