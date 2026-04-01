@@ -1,5 +1,6 @@
 import User from "../../services/entities/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { formatForceEnvVariable } from "utils/forceNormalisation"
 
 const mockUseApiModule = (forcesWithTriggerAndExceptionQualityAuditingEnabled: Set<string>) => {
   jest.doMock("../../config.ts", () => ({
@@ -7,7 +8,7 @@ const mockUseApiModule = (forcesWithTriggerAndExceptionQualityAuditingEnabled: S
   }))
 }
 
-const enabledForces = new Set<string>(["01", "02", "03"])
+const enabledForces = formatForceEnvVariable("01,02,03")
 
 describe("canUseTriggerAndExceptionQualityAuditing", () => {
   beforeEach(() => {

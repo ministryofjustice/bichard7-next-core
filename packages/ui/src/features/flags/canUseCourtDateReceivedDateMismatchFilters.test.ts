@@ -1,4 +1,5 @@
 import User from "../../services/entities/User"
+import { formatForceEnvVariable } from "utils/forceNormalisation"
 
 const mockUseApiModule = (forcesWithCourtDateReceivedDateMismatchEnabled: Set<string>) => {
   jest.doMock("../../config.ts", () => ({
@@ -6,7 +7,7 @@ const mockUseApiModule = (forcesWithCourtDateReceivedDateMismatchEnabled: Set<st
   }))
 }
 
-const enabledForces = new Set<string>(["01", "02", "03"])
+const enabledForces = formatForceEnvVariable("01,02,03")
 
 describe("canUseCourtDateReceivedDateMismatchFilters", () => {
   beforeEach(() => {
