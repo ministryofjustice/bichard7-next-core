@@ -56,6 +56,6 @@ export const remandRequestSchema = z.object({
   bailConditions: z
     .array(z.string().min(1).max(203))
     .describe(
-      "An individual Condition set against the Remand. Each Condition is described by text up to 200 characters. However, text really consists of 4 lines of at most 50 characters, each line separated by '\\n'. Note that an additional 3 characters are allowed by the below validation to allow for the newline characters. The first line must contain some text before a '\\n' character can be used."
+      String.raw`An individual Condition set against the Remand. Each Condition is described by text up to 200 characters. However, text really consists of 4 lines of at most 50 characters, each line separated by '\n'. Note that an additional 3 characters are allowed by the below validation to allow for the newline characters. The first line must contain some text before a '\n' character can be used.`
     )
 })
