@@ -71,7 +71,6 @@ AUDIT_LOG_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='bichard-7
 API_GATEWAY_VPCE_NAME="cjse-bichard7-${WORKSPACE}-base-infra-execute-api"
 API_GATEWAY_VPCE_ID=$(aws ec2 describe-vpc-endpoints --filters "Name=tag:Name,Values=$API_GATEWAY_VPCE_NAME" --query "VpcEndpoints[0].VpcEndpointId" --output text)
 AUDIT_LOG_API_URL="https://${AUDIT_LOG_API_ID}-${API_GATEWAY_VPCE_ID}.execute-api.eu-west-2.amazonaws.com/${WORKSPACE}"
-AUDIT_LOG_API_KEY=$(aws apigateway get-api-keys --include-values --query "items[0].value" --output text)
 MESSAGE_ENTRY_POINT=s3
 
 if [ "$UI_HOST" = 'null' ] || [ "$UI_HOST" = '' ]
@@ -125,7 +124,7 @@ echo "export AUDIT_LOG_DYNAMODB_TABLE=\"${AUDIT_LOG_DYNAMODB_TABLE}\"" >> $TEST_
 echo "export AUDIT_LOG_DYNAMODB_EVENTS_TABLE=\"${AUDIT_LOG_DYNAMODB_EVENTS_TABLE}\"" >> $TEST_ENV_FILE
 echo "export AUDIT_LOG_DYNAMODB_REGION=\"${AUDIT_LOG_DYNAMODB_REGION}\"" >> $TEST_ENV_FILE
 echo "export AUDIT_LOG_API_URL=\"${AUDIT_LOG_API_URL}\"" >> $TEST_ENV_FILE
-echo "export AUDIT_LOG_API_KEY=\"${AUDIT_LOG_API_KEY}\"" >> $TEST_ENV_FILE
+fetchParam "AUDIT_LOG_API_KEY" "/cjse-${WORKSPACE}-bichard-7/audit-logging/api-key"
 echo "export MESSAGE_ENTRY_POINT=\"${MESSAGE_ENTRY_POINT}\"" >> $TEST_ENV_FILE
 echo "export DB_SSL=\"true\"" >> $TEST_ENV_FILE
 echo "export DB_SSL_MODE=\"require\"" >> $TEST_ENV_FILE
