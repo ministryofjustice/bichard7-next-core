@@ -60,6 +60,7 @@ get_ssm_value() {
     fi
 
     echo "$value"
+    return 0
 }
 
 if [[ -n "$WORKSPACE" && "$WORKSPACE" != "e2e-test" ]]; then
@@ -77,8 +78,8 @@ else
     export LEDS_NIAM_PARAMETERS='{"claims":{"aud":"aud","iss":"iss","sub":"sub"},"clientAssertionType":"dummy","clientId":"client-id","grantType":"grant-type","scope":"scope","tlsStrictMode":false}'
 fi
 
-if [ "$1" = "--print" ]; then
-    if [ "$IS_AWS_ENV" == "true" ]; then
+if [[ "$1" == "--print" ]]; then
+    if [[ "$IS_AWS_ENV" == "true" ]]; then
         printf "export LEDS_API_URL=%q\n" "$LEDS_API_URL"
         printf "export LEDS_NIAM_AUTH_URL=%q\n" "$LEDS_NIAM_AUTH_URL"
     else
