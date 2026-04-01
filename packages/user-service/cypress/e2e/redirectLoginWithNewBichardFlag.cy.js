@@ -4,8 +4,6 @@ describe("Redirection log in", () => {
     cy.task("insertIntoUsersTable")
   })
 
-  // TODO: check permissions - insertIntoUserGroupsTable
-
   it("should be able to log in given a valid url passed as a 'redirect' query parameter and then redirected to the '/bichard' page, when the user has the 'onlyAccessToNewBichard' flag set to true", () => {
     const emailAddress = "onlynewbicharduser@example.com"
     const password = "password"
