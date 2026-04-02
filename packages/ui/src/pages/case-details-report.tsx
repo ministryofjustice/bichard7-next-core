@@ -1,7 +1,7 @@
 import { isError } from "@moj-bichard7/common/types/Result"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { withAuthentication, withMultipleServerSideProps } from "middleware"
+import { withAuthentication, withMultipleServerSideProps } from "middleware/index"
 import withCsrf from "middleware/withCsrf/withCsrf"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import { ParsedUrlQuery } from "querystring"
