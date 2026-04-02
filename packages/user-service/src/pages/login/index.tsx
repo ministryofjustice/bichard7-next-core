@@ -29,7 +29,7 @@ import { ParsedUrlQuery } from "querystring"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import Database from "types/Database"
-import { isError } from "types/Result"
+import { isError, isSuccess } from "types/Result"
 import ServiceMessage from "types/ServiceMessage"
 import UserAuthBichard from "types/UserAuthBichard"
 import {
@@ -41,6 +41,7 @@ import {
 } from "useCases/index"
 import getFailedPasswordAttempts from "useCases/getFailedPasswordAttempts"
 import getServiceMessages from "useCases/getServiceMessages"
+import getUserByEmailAddress from "useCases/getUserByEmailAddress"
 import sendVerificationCodeEmail from "useCases/sendVerificationCodeEmail"
 import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
@@ -198,7 +199,13 @@ const logInUser = async (
     removeEmailAddressCookie(res, config, "REMEMBER")
   }
 
-  const redirectPath = getRedirectPath(query)
+  const currentUser = await getUserByEmailAddress(connection, user.emailAddress)
+  let onlyAccessToNewBichardFlag = false
+  if (isSuccess(currentUser)) {
+    onlyAccessToNewBichardFlag = currentUser?.featureFlags?.onlyAccessToNewBichard || false
+  }
+
+  const redirectPath = getRedirectPath(query, onlyAccessToNewBichardFlag)
   if (redirectPath) {
     return createRedirectResponse(redirectPath, { basePath: false })
   }
