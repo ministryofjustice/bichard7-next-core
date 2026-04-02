@@ -6,6 +6,17 @@ describe("forceNormalisation", () => {
       expect(formatForceEnvVariable("")).toBeInstanceOf(Set)
     })
 
+    it("does not return '000' with empty string", () => {
+      const forces = ""
+      const result = formatForceEnvVariable(forces)
+
+      const formatted = [...result]
+
+      expect(formatted).toHaveLength(0)
+
+      expect(formatted).toStrictEqual([])
+    })
+
     it("parses strings with a comma", () => {
       const forces = "01,2,003"
       const result = formatForceEnvVariable(forces)
@@ -19,6 +30,17 @@ describe("forceNormalisation", () => {
 
     it("handles the same value", () => {
       const forces = "01,001,1"
+      const result = formatForceEnvVariable(forces)
+
+      const formatted = [...result]
+
+      expect(formatted).toHaveLength(1)
+
+      expect(formatted).toStrictEqual(["001"])
+    })
+
+    it("handles ill formed array", () => {
+      const forces = "01,001,"
       const result = formatForceEnvVariable(forces)
 
       const formatted = [...result]
