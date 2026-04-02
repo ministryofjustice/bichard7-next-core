@@ -1,5 +1,7 @@
-import type { DisposalResult } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+import type { DisposalResult as AsnQueryResponseDisposalResult } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+import type { DisposalResult as AddDisposalDisposalResult } from "@moj-bichard7/core/types/leds/DisposalRequest"
 import {
+  DEFAULT_QTY_UNITS,
   DISPOSAL_QTY_DATE_FIELD_LENGTH,
   DISPOSAL_QTY_DURATION_FIELD_LENGTH,
   DISPOSAL_QTY_MONETARY_VALUE_FIELD_LENGTH,
@@ -10,7 +12,8 @@ import {
   OFFENCE_UPDATE_TYPE,
   UPDATE_TYPE_FIELD_LENGTH
 } from "../../../constants"
-import { convertToPncDate } from "../helpers/convertToPncDate"
+
+import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import generateRow from "../helpers/generateRow"
 
 const unitMap: Record<string, string> = {
@@ -36,7 +39,17 @@ const parseQtyDuration = (disposalDuration: { count: number; units: string } | u
   return `${unitCode}${disposalDuration.count}`
 }
 
-const disSegmentGenerator = (disposal: DisposalResult): string | undefined => {
+const formateMonetaryValue = (value: number | undefined): string => {
+  if (!value) {
+    return ""
+  }
+
+  return (String(value).includes(".") ? String(value) : `${value}.00`).padStart(10, "0")
+}
+
+type Disposal = AsnQueryResponseDisposalResult | AddDisposalDisposalResult
+
+const disSegmentGenerator = (disposal: Disposal): string | undefined => {
   if (!disposal) {
     return undefined
   }
@@ -44,8 +57,8 @@ const disSegmentGenerator = (disposal: DisposalResult): string | undefined => {
   const type = disposal.disposalCode.toString()
   const qtyDuration = parseQtyDuration(disposal.disposalDuration)
   const qtyDate = disposal.disposalEffectiveDate && convertToPncDate(disposal.disposalEffectiveDate)
-  const qtyMonetaryValue = disposal.disposalFine?.amount?.toString()
-  const qtyUnitsFined = disposal.disposalFine?.units?.toString()
+  const qtyMonetaryValue = formateMonetaryValue(disposal.disposalFine?.amount)
+  const qtyUnitsFined = disposal.disposalFine?.units?.toString().padStart(2, "0") ?? DEFAULT_QTY_UNITS
   const qualifiers = disposal.disposalQualifiers?.join("")
   const text = disposal.disposalText
 
