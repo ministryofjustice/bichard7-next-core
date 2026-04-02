@@ -9,6 +9,7 @@ import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import CourtCase from "./CourtCase"
 import dateTransformer from "./transformers/dateTransformer"
 import resolutionStatusTransformer from "./transformers/resolutionStatusTransformer"
+import varcharToNumberTransformer from "./transformers/varcharToNumberTransformer"
 
 @Entity({ name: "error_list_triggers" })
 export default class Trigger {
@@ -33,7 +34,7 @@ export default class Trigger {
   @Column({ name: "resolved_ts", type: "timestamp", transformer: dateTransformer })
   resolvedAt!: Date | null
 
-  @Column({ name: "trigger_item_identity", type: "int" })
+  @Column({ name: "trigger_item_identity", type: "varchar", transformer: varcharToNumberTransformer })
   triggerItemIdentity?: number
 
   @ManyToOne(() => CourtCase)
