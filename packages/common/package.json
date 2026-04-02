@@ -11,7 +11,7 @@
     "lint:fix": "eslint --fix .",
     "test": "jest --maxWorkers=80% --testNamePattern=",
     "test:update": "jest -u",
-    "update-deps": "ncu -u && npm install"
+    "update-deps": "ncu -u --cooldown 3d && npm install"
   },
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
     "date-fns": "^4.1.0",
     "fast-xml-parser": "^5.5.7",
     "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^8.0.2",
+    "nodemailer": "^8.0.4",
     "pg-promise": "^12.6.2",
     "pino": "^10.3.1",
     "postgres": "3.4.7",
