@@ -51,15 +51,15 @@
     "prepare": "husky"
   },
   "workspaces": [
-    "packages/common",
-    "packages/core",
-    "packages/conductor",
     "packages/api",
-    "packages/message-forwarder",
-    "packages/ui",
-    "packages/e2e-test",
-    "packages/uat-data",
     "packages/cli",
+    "packages/common",
+    "packages/conductor",
+    "packages/core",
+    "packages/e2e-test",
+    "packages/message-forwarder",
+    "packages/uat-data",
+    "packages/ui",
     "packages/user-service"
   ],
   "license": "MIT",
