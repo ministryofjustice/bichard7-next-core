@@ -15,19 +15,43 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "baseUrl": "./src",
     "incremental": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "types": ["node", "jest", "@testing-library/jest-dom"]
+    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "config": ["./src/config"],
+      "defaults": ["./src/defaults"],
+      "components/*": ["./src/components/*"],
+      "context/*": ["./src/context/*"],
+      "features/*": ["./src/features/*"],
+      "helpers/*": ["./src/helpers/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "middleware/*": ["./src/middleware/*"],
+      "services/*": ["./src/services/*"],
+      "styles/*": ["./src/styles/*"],
+      "types/*": ["./src/types/*"],
+      "utils/*": ["./src/utils/*"]
+    },
+    "rootDir": "."
   },
-  "include": ["eslintrc.js", "next-env.d.ts", "package.json", "**/*.ts", "**/*.tsx", "**/*.js", "cypress", "cypress.config.ts"],
+  "include": [
+    "eslintrc.js",
+    "next-env.d.ts",
+    "package.json",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "cypress",
+    "cypress.config.ts"
+  ],
   "exclude": ["node_modules", "cypress-axe", "scripts/utility", "cypress.config.ts"]
 }

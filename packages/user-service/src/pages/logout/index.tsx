@@ -4,12 +4,12 @@ import Layout from "components/Layout"
 import Link from "components/Link"
 import Paragraph from "components/Paragraph"
 import getConnection from "lib/getConnection"
-import { withAuthentication, withMultipleServerSideProps } from "middleware"
+import { withAuthentication, withMultipleServerSideProps } from "middleware/index"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { signOutUser } from "useCases"
+import { signOutUser } from "useCases/index"
 
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
