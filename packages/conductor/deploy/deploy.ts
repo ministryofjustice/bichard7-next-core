@@ -15,6 +15,8 @@ const conductor = new ConductorGateway({
   username: process.env.CONDUCTOR_USERNAME ?? "bichard"
 })
 
+const incomingMessageSqsQueue = process.env.INCOMING_MESSAGE_SQS_QUEUE
+
 const main = async () => {
   const taskFilenames = await fs.readdir(taskDir)
   const tasks = taskFilenames.map((filename) => new Task(`${taskDir}/${filename}`, conductor))
@@ -30,7 +32,7 @@ const main = async () => {
 
   const eventHandlerFilenames = await fs.readdir(eventHandlerDir)
   const eventHandlers = eventHandlerFilenames.map(
-    (filename) => new EventHandler(`${eventHandlerDir}/${filename}`, conductor)
+    (filename) => new EventHandler(`${eventHandlerDir}/${filename}`, conductor, incomingMessageSqsQueue)
   )
   const eventHandlerPromises = eventHandlers.map((eventHandler) => eventHandler.upsert())
   await Promise.all(eventHandlerPromises)
