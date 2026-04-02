@@ -1,8 +1,10 @@
 {
-  "extends": "../tsconfig",
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node", "cypress", "@testing-library/cypress"]
+    "downlevelIteration": false,
+    "ignoreDeprecations": "6.0",
+    "types": ["node", "cypress", "@testing-library/cypress"],
+    "rootDir": ".."
   },
-  "include": ["cypress/**/*", "../cypress.config.ts", "../node_modules/cypress", "**/*.ts", "**/*.cy.tsx"],
-  "exclude": ["../src/**/*", "../test/**/*"]
+  "include": ["**/*.ts", "**/*.cy.tsx", "../cypress.config.ts"]
 }

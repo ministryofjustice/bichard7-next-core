@@ -12,13 +12,13 @@ import resolutionStatusTransformer from "./transformers/resolutionStatusTransfor
 
 @Entity({ name: "error_list_triggers" })
 export default class Trigger {
-  @PrimaryColumn({ name: "trigger_id" })
+  @PrimaryColumn({ name: "trigger_id", type: "int" })
   triggerId!: number
 
   @Column({ name: "trigger_code", type: "enum", enum: TriggerCode })
   triggerCode!: TriggerCode
 
-  @Column({ name: "error_id" })
+  @Column({ name: "error_id", type: "int" })
   errorId!: number
 
   @Column({ type: "int4", transformer: resolutionStatusTransformer })
@@ -33,7 +33,7 @@ export default class Trigger {
   @Column({ name: "resolved_ts", type: "timestamp", transformer: dateTransformer })
   resolvedAt!: Date | null
 
-  @Column({ name: "trigger_item_identity" })
+  @Column({ name: "trigger_item_identity", type: "int" })
   triggerItemIdentity?: number
 
   @ManyToOne(() => CourtCase)
