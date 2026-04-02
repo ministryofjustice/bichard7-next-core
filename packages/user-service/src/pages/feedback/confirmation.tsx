@@ -1,6 +1,6 @@
 import Layout from "components/Layout"
 import Paragraph from "components/Paragraph"
-import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
+import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware/index"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
