@@ -15,6 +15,7 @@
     "test:chunk:nextUI": "NEXTUI=true bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC and @NextUI'",
     "test:chunk": "bash ./scripts/run_test_chunk.sh 'not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC' and @ExcludedOnNextUI",
     "test:file": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --no-strict --exit --format @cucumber/pretty-formatter",
+    "test:leds:preprod": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@NextUI and not @Excluded and @LedsPreProdTest and not @ExcludedOnLeds'",
     "test:oldUI:must": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@Must and not @ExcludeOnLegacyUI' features",
     "test:nextUI:file": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --no-strict --exit --format @cucumber/pretty-formatter --tags '@NextUI'",
     "test:nextUI:must": "NEXTUI=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@Must and @NextUI' features",

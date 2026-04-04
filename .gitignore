@@ -25,6 +25,7 @@ coverage/
 .swc/
 
 packages/e2e-test/cucumber
+packages/e2e-test/workspaces
 
 **/*.tsbuildinfo
 
