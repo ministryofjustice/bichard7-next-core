@@ -24,7 +24,7 @@
     "test:oldUI:file": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags 'not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC and not @ExcludeOnLegacyUI'",
     "test:oldUI:preprod": "SKIP_PNC_VALIDATION=true ../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags '@PreProdTest and not @Excluded and not @ExcludeOnLegacyUI' features",
     "test:oldUI": "../../node_modules/.bin/cucumber-js --require steps/index.ts --require-module ts-node/register --retry 5 --no-strict --exit --format @cucumber/pretty-formatter --fail-fast --tags 'not @Excluded and not @ExcludedOnMaster and not @OnlyRunsOnPNC and not @ExcludeOnLegacyUI' features",
-    "update-deps": "ncu -u && npm install",
+    "update-deps": "ncu -u --cooldown 3d && npm install",
     "prepare": "husky"
   },
   "repository": {

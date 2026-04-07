@@ -1,5 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import bannerFirstShownDate from "utils/bannerFirstShownDate"
+import { formatForceEnvVariable } from "utils/forceNormalisation"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
@@ -26,18 +27,12 @@ export const USE_API_CASE_CANARY_RATIO = Number(process.env.USE_API_CASE_CANARY_
 export const USE_API_CASES_INDEX_CANARY_RATIO = Number(process.env.USE_API_CASES_INDEX_CANARY_RATIO ?? 0)
 export const USE_API_CASE_RESUBMIT_CANARY_RATIO = Number(process.env.USE_API_CASE_RESUBMIT_CANARY_RATIO ?? 0)
 
-export const FORCES_WITH_API_ENABLED: Set<string> = new Set(
-  (process.env.FORCES_WITH_API_ENABLED ?? "").split(",").filter(Boolean)
+export const FORCES_WITH_API_ENABLED: Set<string> = formatForceEnvVariable(process.env.FORCES_WITH_API_ENABLED ?? "")
+export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = formatForceEnvVariable(
+  process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? (isProduction ? "" : "01")
 )
-export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = new Set(
-  (process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? (isProduction ? "" : "01"))
-    .split(",")
-    .filter(Boolean)
-)
-export const FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: Set<string> = new Set(
-  (process.env.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED ?? (isProduction ? "" : "01"))
-    .split(",")
-    .filter(Boolean)
+export const FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: Set<string> = formatForceEnvVariable(
+  process.env.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED ?? (isProduction ? "" : "01")
 )
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
