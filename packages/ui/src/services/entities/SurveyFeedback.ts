@@ -8,7 +8,7 @@ import jsonTransformer from "./transformers/jsonTransformer"
 
 @Entity({ name: "survey_feedback" })
 export default class SurveyFeedback {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "int" })
   id!: number
 
   @Column({ transformer: jsonTransformer, type: "jsonb" })
@@ -17,7 +17,7 @@ export default class SurveyFeedback {
   @Column({ type: "enum", enum: SurveyFeedbackType, name: "feedback_type" })
   feedbackType!: SurveyFeedbackType
 
-  @Column({ name: "user_id" })
+  @Column({ name: "user_id", type: "int" })
   userId?: number
 
   @Column({ name: "created_at", type: "timestamp", transformer: dateTransformer })

@@ -4,8 +4,6 @@
     - v5 contains breaking changes
   - @faker-js/faker
     - v10 has breaking change with Jest
-  - cypress
-    - v15 doesn't play nice with TypeORM
   - next
     - v16 doesn't load the sass files from @ministryofjustice/frontend
   - @ministryofjustice/frontend
@@ -18,7 +16,7 @@
       - 0.4.0 changed to module type
 */
 
-const pinned = ["@ministryofjustice/frontend", "cookies-next", "@faker-js/faker", "cypress", "next", "govuk-frontend"]
+const pinned = ["@ministryofjustice/frontend", "cookies-next", "@faker-js/faker", "next", "govuk-frontend"]
 const ignored = ["postgres", "cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
