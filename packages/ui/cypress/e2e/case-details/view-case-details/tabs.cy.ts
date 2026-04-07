@@ -1,4 +1,4 @@
-import type { CaseDetailsTab } from "../../../../src/types/CaseDetailsTab"
+import type { CaseDetailsTab } from "types/CaseDetailsTab"
 import AsnExceptionHO100206 from "../../../../test/test-data/HO100206.json"
 import { clickTab, loginAndVisit } from "../../../support/helpers"
 

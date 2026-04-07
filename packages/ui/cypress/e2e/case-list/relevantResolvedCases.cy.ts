@@ -1,5 +1,5 @@
 import { subHours } from "date-fns"
-import CourtCase from "../../../../../../src/services/entities/CourtCase"
+import CourtCase from "services/entities/CourtCase"
 import { confirmMultipleFieldsDisplayed, confirmMultipleFieldsNotDisplayed, loginAndVisit } from "../../support/helpers"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
