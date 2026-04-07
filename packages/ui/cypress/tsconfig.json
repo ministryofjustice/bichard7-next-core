@@ -4,17 +4,7 @@
     "downlevelIteration": false,
     "ignoreDeprecations": "6.0",
     "types": ["node", "cypress", "@testing-library/cypress"],
-    "rootDir": "..",
-    "paths": {
-      "components/*": ["../src/components/*"],
-      "context/*": ["../src/context/*"],
-      "features/*": ["../src/features/*"],
-      "services/*": ["../src/services/*"],
-      "types/*": ["../src/types/*"],
-      "test/*": ["../test/*"],
-      "support/*": ["./support/*"],
-      "fixtures/*": ["./fixtures/*"]
-    }
+    "rootDir": ".."
   },
   "include": ["**/*.ts", "**/*.cy.tsx", "../cypress.config.ts"]
 }

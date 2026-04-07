@@ -1,4 +1,4 @@
-import Asn from "services/Asn"
+import Asn from "../../../../../../src/services/Asn"
 import AnnotatedHO from "../../../../../../test/test-data/AnnotatedHO1.json"
 import HO100206 from "../../../../../../test/test-data/HO100206.json"
 import ExceptionHO100239 from "../../../../../../test/test-data/HO100239_1.json"
