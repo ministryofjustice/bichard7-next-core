@@ -11,7 +11,7 @@ import UserForm, { listOfForces, listOfTriggers } from "components/users/UserFor
 import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import Form from "components/Form"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
-import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware/index"
+import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
 import { ParsedUrlQuery } from "querystring"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import User from "types/User"

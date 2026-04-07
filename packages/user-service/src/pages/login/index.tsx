@@ -22,7 +22,7 @@ import getConnection from "lib/getConnection"
 import getRedirectPath from "lib/getRedirectPath"
 import { handleResetSecurityCodeStage } from "lib/handleResetSecurityCodeStage"
 import { handleValidateCodeStage } from "lib/handleValidateCodeStage"
-import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware/index"
+import { withAuthentication, withCsrf, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"
@@ -38,7 +38,7 @@ import {
   removeEmailAddressCookie,
   signInUser,
   storeEmailAddressInCookie
-} from "useCases/index"
+} from "useCases"
 import getFailedPasswordAttempts from "useCases/getFailedPasswordAttempts"
 import getServiceMessages from "useCases/getServiceMessages"
 import getUserByEmailAddress from "useCases/getUserByEmailAddress"

@@ -23,9 +23,11 @@
       "emails/*": ["./src/emails/*"],
       "hooks/*": ["./src/hooks/*"],
       "lib/*": ["./src/lib/*"],
+      "middleware": ["./src/middleware/index"],
       "middleware/*": ["./src/middleware/*"],
       "styles/*": ["./src/styles/*"],
       "types/*": ["./src/types/*"],
+      "useCases": ["./src/useCases/index"],
       "useCases/*": ["./src/useCases/*"],
       "utils/*": ["./src/utils/*"]
     }
