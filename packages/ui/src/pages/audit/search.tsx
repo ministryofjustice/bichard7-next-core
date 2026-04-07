@@ -3,7 +3,7 @@ import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } fr
 import Head from "next/head"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
-import { withAuthentication, withMultipleServerSideProps } from "middleware/index"
+import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"

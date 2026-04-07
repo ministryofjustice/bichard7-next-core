@@ -9,7 +9,7 @@ import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenCon
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { PreviousPathContext } from "context/PreviousPathContext"
 import Header from "features/CourtCaseDetails/Header"
-import { withAuthentication, withMultipleServerSideProps } from "middleware/index"
+import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
 import { ParsedUrlQuery } from "querystring"

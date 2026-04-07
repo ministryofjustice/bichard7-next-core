@@ -8,7 +8,7 @@ import { type AuditCasesQuery, AuditCasesQuerySchema } from "@moj-bichard7/commo
 import { useState } from "react"
 import Head from "next/head"
 
-import { withAuthentication, withMultipleServerSideProps } from "middleware/index"
+import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
 import { IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 import type AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"

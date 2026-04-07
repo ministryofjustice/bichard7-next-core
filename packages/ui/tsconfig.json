@@ -35,6 +35,7 @@
       "features/*": ["./src/features/*"],
       "helpers/*": ["./src/helpers/*"],
       "hooks/*": ["./src/hooks/*"],
+      "middleware": ["./src/middleware/index"],
       "middleware/*": ["./src/middleware/*"],
       "services/*": ["./src/services/*"],
       "styles/*": ["./src/styles/*"],
