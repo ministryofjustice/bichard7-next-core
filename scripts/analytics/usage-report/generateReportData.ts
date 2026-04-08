@@ -154,7 +154,7 @@ const generateReportData = async (
     reportData.allMonthlyData[month] = {}
     reportData.newUiDailyData[date] = {}
     reportData.newUiMonthlyData[month] = {}
-  })
+  })§
 
   for (const event of events) {
     if (event.eventSource === "ResubmitFailedPNCMessages") {

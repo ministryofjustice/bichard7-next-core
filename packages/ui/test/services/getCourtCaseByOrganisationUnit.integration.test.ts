@@ -1,15 +1,15 @@
 import type { DataSource } from "typeorm"
 
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
+import CourtCase from "services/entities/CourtCase"
 import Trigger from "services/entities/Trigger"
 import type User from "services/entities/User"
-import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import CourtCase from "services/entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
+import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
 import { isError } from "types/Result"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
@@ -67,7 +67,7 @@ describe("getCourtCaseByOrganisationUnits", () => {
       const result = await getCourtCaseByOrganisationUnit(dataSource, inputCourtCase.errorId, {
         visibleForces: [courtCode.substring(0, 2)],
         visibleCourts: [],
-        groups: [UserGroup.NewUI]
+        groups: []
       } as Partial<User> as User)
 
       expect(result).toBeNull()

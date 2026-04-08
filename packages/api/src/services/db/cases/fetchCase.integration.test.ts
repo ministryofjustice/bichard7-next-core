@@ -91,7 +91,7 @@ describe("fetchCase", () => {
     })
 
     it("returns error if user in no groups", async () => {
-      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.NewUI], id: 1 })
+      const user = await createUser(testDatabaseGateway, { groups: [], id: 1 })
       const caseObj = await createCase(testDatabaseGateway)
 
       const result = await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)
