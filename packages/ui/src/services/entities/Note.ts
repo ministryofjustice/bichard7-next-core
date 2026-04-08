@@ -6,16 +6,16 @@ import dateTransformer from "./transformers/dateTransformer"
 
 @Entity({ name: "error_list_notes" })
 export default class Note {
-  @PrimaryColumn({ name: "note_id" })
+  @PrimaryColumn({ name: "note_id", type: "int" })
   noteId!: number
 
-  @Column({ name: "note_text" })
+  @Column({ name: "note_text", type: "varchar" })
   noteText!: string
 
-  @Column({ name: "error_id" })
+  @Column({ name: "error_id", type: "int" })
   errorId?: number
 
-  @Column({ name: "user_id" })
+  @Column({ name: "user_id", type: "varchar" })
   userId!: string
 
   userFullName?: string

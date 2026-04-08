@@ -1,7 +1,7 @@
-import type { Config } from "@jest/types"
-import { TextEncoder } from "util"
+const { TextEncoder } = require("util")
 
-const config: Config.InitialOptions = {
+/** @type {import('@jest/types').Config.InitialOptions} */
+const config = {
   preset: "ts-jest",
   transform: {
     "\\.[jt]sx?$": "@swc/jest"
@@ -18,4 +18,4 @@ const config: Config.InitialOptions = {
   verbose: true
 }
 
-export default config
+module.exports = config

@@ -7,8 +7,9 @@ jobs:
   format-code:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: ministryofjustice/github-actions/code-formatter@v18.2.2
+      - uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+
+      - uses: ministryofjustice/github-actions/code-formatter@db1a54895bf5fb975c60af47e5a3aab96505ca3e #v18.6.0
         with:
           ignore-files: "**/tests/fixtures/e2e-comparison/*.json,**/help/**/*.md,*.py,docs/architecture/workspace.json"
         env:

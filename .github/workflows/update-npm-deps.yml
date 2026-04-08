@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
 
       - name: Setup node version
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
         with:
           node-version-file: '.nvmrc'
         
@@ -22,26 +22,27 @@ jobs:
         run: node -v
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --ignore-scripts
 
       - name: Update dependencies
         run: npm run update-deps --workspaces
 
-      - name: Report Status
-        if: always()
-        uses: ravsamhq/notify-slack-action@v1
-        with:
-          status: ${{ job.status }}
-          notification_title: 'GitHub action failed'
-          message_format: ':elmo-fire: *{workflow}* {status_message} in <{repo_url}|{repo}>'
-          notify_when: 'failure'
-          footer: 'Linked to Repo <{repo_url}|{repo}>'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+# Temporarily disabled while investigating alternative actions
+#      - name: Report Status
+#        if: always()
+#        uses: ravsamhq/notify-slack-action@4ed28566c2bdcdaee6dca2b46b9666d01b4ed8a4 # v1
+#        with:
+#          status: ${{ job.status }}
+#          notification_title: 'GitHub action failed'
+#          message_format: ':elmo-fire: *{workflow}* {status_message} in <{repo_url}|{repo}>'
+#          notify_when: 'failure'
+#          footer: 'Linked to Repo <{repo_url}|{repo}>'
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
 
       - name: Create pull request
         id: cpr
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@b1ddad2c994a25fbc81a28b3ec0e368bb2021c50 # v6
         with:
           branch: auto/update-npm-deps
           delete-branch: true

@@ -1,5 +1,5 @@
 import { addHours, addMinutes } from "date-fns"
-import SurveyFeedback from "services/entities/SurveyFeedback"
+import SurveyFeedback from "../../../../../../src/services/entities/SurveyFeedback"
 import { type SwitchingFeedbackResponse } from "../../src/types/SurveyFeedback"
 
 const getDate = ({ minutes, hours }: { minutes: number; hours: number }) => {
