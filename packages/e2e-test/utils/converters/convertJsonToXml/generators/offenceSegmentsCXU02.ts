@@ -10,8 +10,7 @@ import couSegmentGenerator from "./couSegmentGenerator"
 import crtSegmentGenerator from "./crtSegmentGenerator"
 import disSegmentGenerator from "./disSegmentGenerator"
 
-const buildOffenceSegments = (offence: Offence): string[] => {
-  const cch = cchSegmentGenerator(offence)
+const buildBaseOffenceSegments = (offence: Offence | ArrestOffence, primarySegment: string): string[] => {
   const adj = adjSegmentFromAddDisposalRequest(offence) ?? ""
   const dis =
     offence.disposalResults?.flatMap((result) => {
@@ -19,27 +18,20 @@ const buildOffenceSegments = (offence: Offence): string[] => {
       return segment ? [segment] : []
     }) ?? []
 
-  return [cch, adj, ...dis]
+  return [primarySegment, adj, ...dis]
 }
 
-const buildAdditionalArrestOffenceSegments = (arrestOffence: ArrestOffence): string[] => {
-  const ach = achSegmentGenerator(arrestOffence)
-  const adj = adjSegmentFromAddDisposalRequest(arrestOffence) ?? ""
-  const dis =
-    arrestOffence.disposalResults?.flatMap((disposalResult) => {
-      const segment = disSegmentGenerator(disposalResult)
-      return segment ? [segment] : []
-    }) ?? []
-
-  return [ach, adj, ...dis]
-}
+const buildOffenceSegments = (offence: Offence): string[] =>
+  buildBaseOffenceSegments(offence, cchSegmentGenerator(offence))
 
 const buildAdditionalOffenceSegments = (
   additionalArrestOffence: AdditionalArrestOffences,
   crimeOffenceReferenceNumber: string
 ): string[] => {
   const asr = asrSegmentGenerator(additionalArrestOffence.asn, crimeOffenceReferenceNumber)
-  const additionalOffences = additionalArrestOffence.additionalOffences.flatMap(buildAdditionalArrestOffenceSegments)
+  const additionalOffences = additionalArrestOffence.additionalOffences.flatMap((arrestOffence) =>
+    buildBaseOffenceSegments(arrestOffence, achSegmentGenerator(arrestOffence))
+  )
 
   return [asr, ...additionalOffences]
 }
