@@ -30,4 +30,6 @@ Feature: {438} HO100310 - two pairs of HO100310s across two court cases
       And I view offence "4"
       And I match the offence to PNC offence "2"
       And I submit the record
+      And I return to the list
+      And I reload until I don't see "(Submitted)"
     Then the PNC updates the record
