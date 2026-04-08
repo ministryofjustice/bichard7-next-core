@@ -8,6 +8,13 @@ import {
   dateStringSchema
 } from "./common"
 
+export const offenceTimeStringSchema = z
+  .string()
+  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/)
+  .describe(
+    "The Time in UTC. Used for showing Time field in format 23:59. Entry must be a valid 5 character time format."
+  )
+
 export const adjudicationDetailsSchema = z.object({
   adjudicationId: z.string(),
   appearanceNumber: z.number(),
@@ -30,6 +37,8 @@ export const offenceSchema = baseOffenceSchema.extend({
   offenceId: z.string(),
   offenceDescription: z.array(z.string().min(1).max(54)).min(1).max(2).optional(),
   offenceStartDate: dateStringSchema,
+  offenceStartTime: offenceTimeStringSchema.optional(),
+  offenceEndTime: offenceTimeStringSchema.optional(),
   disposalResults: disposalResultSchema.array().optional(),
   cjsOffenceCode: z.string().min(1).max(8)
 })
