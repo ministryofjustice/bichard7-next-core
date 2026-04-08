@@ -1,4 +1,4 @@
-import ErrorMessages from "types/ErrorMessages"
+import ErrorMessages from "../../../../src/types/ErrorMessages"
 import HO100306andHO100251 from "../../../../test/test-data/HO100306andHO100251.json"
 import HO100307 from "../../../../test/test-data/HO100307.json"
 import HO100309 from "../../../../test/test-data/HO100309.json"

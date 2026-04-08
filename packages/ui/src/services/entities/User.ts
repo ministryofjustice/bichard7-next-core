@@ -12,22 +12,22 @@ import SurveyFeedback from "./SurveyFeedback"
 
 @Entity({ name: "users" })
 export default class User {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "int" })
   id!: number
 
-  @PrimaryColumn()
+  @PrimaryColumn({ type: "varchar" })
   username!: string
 
-  @Column()
+  @Column({ type: "varchar" })
   password!: string
 
-  @Column()
+  @Column({ type: "varchar" })
   email!: string
 
-  @Column()
+  @Column({ type: "varchar" })
   forenames?: string
 
-  @Column()
+  @Column({ type: "varchar" })
   surname?: string
 
   @Column({ name: "visible_forces", transformer: delimitedString(","), type: "varchar" })
