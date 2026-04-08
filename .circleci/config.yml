@@ -42,7 +42,7 @@ jobs:
             if grep -E "circleci-changes|env-changes|api-changes|conductor-changes|core-changes|e2e-test-changes|message-forwarder-changes|ui-changes|user-service-changes" << pipeline.parameters.output-path >>; then
               echo "Changes that use DLC has been found, adding the docker-layer-caching parameter to the parameters file..."
               params=$(cat << pipeline.parameters.output-path >> )
-              updated_param_file=$(jq -n --argjson a "$params" --argjson b '{"'"docker-layer-caching"'":false}' '$a + $b')
+              updated_param_file=$(jq -n --argjson a "$params" --argjson b '{"'"docker-layer-caching"'":true}' '$a + $b')
               echo "$updated_param_file" > << pipeline.parameters.output-path >>
             else
               echo "No changes that need DLC were found, continuing..."
