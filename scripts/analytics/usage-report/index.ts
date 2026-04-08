@@ -13,19 +13,18 @@
  *
  */
 
-import baseConfig from "@moj-bichard7/common/db/baseConfig"
-import { isError } from "@moj-bichard7/common/types/Result"
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { Lambda } from "@aws-sdk/client-lambda"
 import { RDS } from "@aws-sdk/client-rds"
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
+import baseConfig from "@moj-bichard7/common/db/baseConfig"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { DataSource } from "typeorm"
 import { getDateString } from "./common"
 import findEvents from "./fetchEvents"
-import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
+import fetchForceOwners from "./fetchForceOwners"
 import generateReportData from "./generateReportData"
 import WorkbookGenerator from "./WorkbookGenerator"
-import fetchForceOwners from "./fetchForceOwners"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let dynamo: DynamoDBClient
@@ -90,12 +89,6 @@ const run = async () => {
   await setup()
   const start = new Date(process.argv.slice(-2)[0])
   const end = new Date(process.argv.slice(-1)[0])
-
-  console.log("Getting users with access to the new UI from postgres database...")
-  const usersWithAccessToNewUi = await findUsersWithAccessToNewUi(postgres)
-  if (isError(usersWithAccessToNewUi)) {
-    throw usersWithAccessToNewUi
-  }
 
   const events = await findEvents(dynamo, eventsTableName, start, end)
   if (isError(events)) {
