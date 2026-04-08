@@ -22,6 +22,7 @@ Feature: 405 - Fixing exceptions and resubmitting with multiple attempts
 			And I correct "ASN" to "1101ZD0100000410804K"
 			And I submit the record
 			And I return to the list
+			And I reload until I don't see "(Submitted)"
 		Then the "record" for "Ladyfish Larry" is "resolved"
 			And there are no exceptions or triggers for this record
 			And the PNC updates the record
