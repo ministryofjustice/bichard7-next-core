@@ -1,5 +1,5 @@
 import type { Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
-import * as C from "../../../constants"
+import * as CONSTANT from "../../../constants"
 import { convertToPncDate, convertToPncTime } from "../helpers/convertToPncDateTime"
 import { toApcoOffenceCode } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
@@ -16,16 +16,16 @@ const cofSegmentGenerator = (offence: Offence): string => {
   const offenceEndTim = offence.offenceEndTime && convertToPncTime(offence.offenceEndTime)
 
   const cofSegment = generateRow("COF", [
-    [C.UPDATE_TYPE, C.UPDATE_TYPE_FIELD_LENGTH],
-    [referenceNumber, C.REFERENCE_NUMBER_FIELD_LENGTH],
-    [offenceQualifier1, C.OFFENCE_QUALIFIER1_FIELD_LENGTH],
-    [offenceQualifier2, C.OFFENCE_QUALIFIER2_FIELD_LENGTH],
-    [acpoOffenceCode, C.ACPO_OFFENCE_CODE_FIELD_LENGTH],
-    [cjsOffenceCode, C.CJS_OFFENCE_CODE_FIELD_LENGTH],
-    [offenceStartDate, C.OFFENCE_START_DATE_FIELD_LENGTH],
-    [offenceStartTime, C.OFFENCE_START_TIME_FIELD_LENGTH],
-    [offenceEndDate, C.OFFENCE_END_DATE_FIELD_LENGTH],
-    [offenceEndTim, C.OFFENCE_END_TIME_FIELD_LENGTH]
+    [CONSTANT.UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
+    [referenceNumber, CONSTANT.REFERENCE_NUMBER_FIELD_LENGTH],
+    [offenceQualifier1, CONSTANT.OFFENCE_QUALIFIER1_FIELD_LENGTH],
+    [offenceQualifier2, CONSTANT.OFFENCE_QUALIFIER2_FIELD_LENGTH],
+    [acpoOffenceCode, CONSTANT.ACPO_OFFENCE_CODE_FIELD_LENGTH],
+    [cjsOffenceCode, CONSTANT.CJS_OFFENCE_CODE_FIELD_LENGTH],
+    [offenceStartDate, CONSTANT.OFFENCE_START_DATE_FIELD_LENGTH],
+    [offenceStartTime, CONSTANT.OFFENCE_START_TIME_FIELD_LENGTH],
+    [offenceEndDate, CONSTANT.OFFENCE_END_DATE_FIELD_LENGTH],
+    [offenceEndTim, CONSTANT.OFFENCE_END_TIME_FIELD_LENGTH]
   ])
 
   return cofSegment

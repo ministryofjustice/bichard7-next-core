@@ -1,5 +1,5 @@
 import type { ArrestOffence } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
-import * as C from "../../../constants"
+import * as CONSTANT from "../../../constants"
 import { convertToPncDate, convertToPncTime } from "../helpers/convertToPncDateTime"
 import { toApcoOffenceCode } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
@@ -21,22 +21,22 @@ const achSegmentGenerator = (offence: ArrestOffence): string => {
   const offenceEndTime = offence.offenceEndTime ? convertToPncTime(offence.offenceEndTime) : undefined
 
   const achSegment = generateRow("ACH", [
-    [C.OFFENCE_UPDATE_TYPE, C.UPDATE_TYPE_FIELD_LENGTH],
-    [UNUSED, C.CRIME_OFFENCE_REFERENCE_FIELD_LENGTH],
-    [arrestOffenceNumber, C.ARREST_OFFENCE_NO_FIELD_LENGTH],
-    [UNUSED, C.OFFENCE_QUALIFIER_FIELD_LENGTH],
-    [apcoOffenceCode, C.ACPO_OFFENCE_CODE_FIELD_LENGTH],
-    [UNUSED, C.OFFENCE_DESCRIPTION_FIELD_LENGTH],
-    [cjsOffenceCode, C.CJS_OFFENCE_CODE_FIELD_LENGTH],
-    [UNUSED, C.METHOD_USED_FIELD_LENGTH],
-    [UNUSED, C.DRESS_FIELD_LENGTH],
-    [committedOnBail, C.COMMITTED_ON_BAIL_FIELD_LENGTH],
-    [locationOfOffence, C.OFFENCE_LOCATION_FIELD_LENGTH],
-    [offenceLocationFSCode, C.OFFENCE_LOCATION_FS_CODE_FIELD_LENGTH],
-    [offenceStartDate, C.OFFENCE_START_DATE_FIELD_LENGTH],
-    [offenceStartTime, C.OFFENCE_START_TIME_FIELD_LENGTH],
-    [offenceEndDate, C.OFFENCE_END_DATE_FIELD_LENGTH],
-    [offenceEndTime, C.OFFENCE_END_TIME_FIELD_LENGTH]
+    [CONSTANT.OFFENCE_UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
+    [UNUSED, CONSTANT.CRIME_OFFENCE_REFERENCE_FIELD_LENGTH],
+    [arrestOffenceNumber, CONSTANT.ARREST_OFFENCE_NO_FIELD_LENGTH],
+    [UNUSED, CONSTANT.OFFENCE_QUALIFIER_FIELD_LENGTH],
+    [apcoOffenceCode, CONSTANT.ACPO_OFFENCE_CODE_FIELD_LENGTH],
+    [UNUSED, CONSTANT.OFFENCE_DESCRIPTION_FIELD_LENGTH],
+    [cjsOffenceCode, CONSTANT.CJS_OFFENCE_CODE_FIELD_LENGTH],
+    [UNUSED, CONSTANT.METHOD_USED_FIELD_LENGTH],
+    [UNUSED, CONSTANT.DRESS_FIELD_LENGTH],
+    [committedOnBail, CONSTANT.COMMITTED_ON_BAIL_FIELD_LENGTH],
+    [locationOfOffence, CONSTANT.OFFENCE_LOCATION_FIELD_LENGTH],
+    [offenceLocationFSCode, CONSTANT.OFFENCE_LOCATION_FS_CODE_FIELD_LENGTH],
+    [offenceStartDate, CONSTANT.OFFENCE_START_DATE_FIELD_LENGTH],
+    [offenceStartTime, CONSTANT.OFFENCE_START_TIME_FIELD_LENGTH],
+    [offenceEndDate, CONSTANT.OFFENCE_END_DATE_FIELD_LENGTH],
+    [offenceEndTime, CONSTANT.OFFENCE_END_TIME_FIELD_LENGTH]
   ])
 
   return achSegment

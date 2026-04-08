@@ -1,9 +1,4 @@
-import {
-  ARREST_SUMMONS_NUMBER_FIELD_LENGTH,
-  CRIME_OFFENCE_REFERENCE_FIELD_LENGTH,
-  UPDATE_TYPE,
-  UPDATE_TYPE_FIELD_LENGTH
-} from "../../../constants"
+import * as CONSTANT from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
 const convertToPncAsn = (asn: string): string =>
@@ -14,9 +9,9 @@ const convertToPncAsn = (asn: string): string =>
 
 const asrSegmentGenerator = (asn: string, crimeOffenceReferenceNo: string): string =>
   generateRow("ASR", [
-    [UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
-    [convertToPncAsn(asn), ARREST_SUMMONS_NUMBER_FIELD_LENGTH],
-    [crimeOffenceReferenceNo, CRIME_OFFENCE_REFERENCE_FIELD_LENGTH]
+    [CONSTANT.UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
+    [convertToPncAsn(asn), CONSTANT.ARREST_SUMMONS_NUMBER_FIELD_LENGTH],
+    [crimeOffenceReferenceNo, CONSTANT.CRIME_OFFENCE_REFERENCE_FIELD_LENGTH]
   ])
 
 export default asrSegmentGenerator
