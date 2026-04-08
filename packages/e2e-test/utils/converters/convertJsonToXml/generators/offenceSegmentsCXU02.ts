@@ -1,6 +1,7 @@
 import type { MockAddDisposalRequest } from "../../../../types/MockAddDisposalRequest"
 import achSegmentGenerator from "./achSegmentGenerator"
 import { adjSegmentFromAddDisposalRequest } from "./adjSegment"
+import asrSegmentGenerator from "./asrSegmentGenerator"
 import cchSegmentGenerator from "./cchSegmentGenerator"
 import ccrSegmentGenerator from "./ccrSegmentGenerator"
 import couSegmentGenerator from "./couSegmentGenerator"
@@ -21,15 +22,17 @@ export const offenceSegmentsCXU02 = (ledsJson: MockAddDisposalRequest): string =
   })
 
   const additionalOffences = ledsJson.additionalArrestOffences?.flatMap((arrestOffences) => {
-    // const asr = asrSegmentGenerator()
+    const asr = asrSegmentGenerator(arrestOffences.asn, ledsJson.crimeOffenceReferenceNumber)
 
-    arrestOffences.additionalOffences.flatMap((offence) => {
+    const additionalArrestOffences = arrestOffences.additionalOffences.flatMap((offence) => {
       const ach = achSegmentGenerator(offence)
       const adj = adjSegmentFromAddDisposalRequest(offence)
       const dis = offence.disposalResults?.map((disposalResult) => disSegmentGenerator(disposalResult)) ?? []
 
       return [ach, adj, ...dis]
     })
+
+    return [asr, ...additionalArrestOffences]
   })
 
   return [ccr, cou, crt, ...(offences ?? []), ...(additionalOffences ?? [])].join("")
