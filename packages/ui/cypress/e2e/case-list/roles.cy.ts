@@ -101,10 +101,10 @@ describe("Shows relevant information to a user's role", () => {
     })
   })
 
-  it("Shouldn't show cases to a user with no groups", () => {
+  it("Should show cases to a user with no groups, as all users have NewUI access", () => {
     loginAndVisit("NoGroups")
 
-    cy.findByText("There are no court cases to show").should("exist")
+    cy.findByText("There are no court cases to show").should("not.exist")
   })
 
   it("Should only show cases with triggers to a trigger handler", () => {

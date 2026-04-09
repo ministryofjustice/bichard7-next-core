@@ -27,7 +27,7 @@ describe("View case details", () => {
       })
     })
 
-    it("Should return 404 for a case that this user can not see due to being in no groups", () => {
+    it("Should return 200 for a case that even when this user has no groups, as all users have NewUI access", () => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
       cy.loginAs("NoGroups")
 
