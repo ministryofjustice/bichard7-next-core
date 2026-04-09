@@ -361,19 +361,8 @@ jobs:
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
-    parameters:
-      next-ui:
-        type: boolean
-      phase2-core-canary-ratio:
-        type: enum
-        enum: ["1.0", "0.0"]
-      phase3-core-canary-ratio:
-        type: enum
-        enum: ["1.0", "0.0"]
     environment:
-      NEXTUI: << parameters.next-ui >>
-      PHASE2_CORE_CANARY_RATIO: << parameters.phase2-core-canary-ratio >>
-      PHASE3_CORE_CANARY_RATIO: << parameters.phase3-core-canary-ratio >>
+      NEXTUI: false
     steps:
       - unless:
           condition:
@@ -1008,14 +997,11 @@ workflows:
             - build_user_service_image
             - build_api_image
 
+      - cucumber_e2e_legacy_tests:
+          requires:
+            - build_user_service_image
+
       - zap_scanner:
           requires:
             - build_ui_image
-            - build_user_service_image
-
-      - cucumber_e2e_legacy_tests:
-          next-ui: false
-          phase2-core-canary-ratio: "1.0"
-          phase3-core-canary-ratio: "1.0"
-          requires:
             - build_user_service_image

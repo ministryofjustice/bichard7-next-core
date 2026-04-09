@@ -4,10 +4,13 @@ import type PncHelper from "../../types/PncHelper"
 import type { PncBichard } from "../../types/PncMock"
 import { isError } from "../isError"
 import Poller from "../Poller"
+import { delay } from "../puppeteer-utils"
 import { updateExpectedRequest } from "../tagProcessing"
 import fetchMocks from "./fetchMocks"
 
 const skipPncValidation = process.env.SKIP_PNC_VALIDATION === "true"
+const MAX_RETRIES = 4
+const DELAY_SECONDS = 3
 
 const checkMocksForRealPnc = async (bichard: PncBichard, pncHelper: PncHelper): Promise<void> => {
   if (skipPncValidation) {
@@ -43,7 +46,15 @@ const checkMocksForRealPnc = async (bichard: PncBichard, pncHelper: PncHelper): 
 }
 
 const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelper): Promise<void> => {
-  await fetchMocks(bichard, pncHelper)
+  for (let counter = 0; counter < MAX_RETRIES; counter++) {
+    await fetchMocks(bichard, pncHelper)
+    if (bichard.policeApi.mocks.length > 0 && bichard.policeApi.mocks.every((mock) => mock.requests.length > 0)) {
+      break
+    }
+
+    await delay(DELAY_SECONDS)
+  }
+
   expect(bichard.policeApi.mocks.length).toBeGreaterThan(0)
 
   let mockCount = 0

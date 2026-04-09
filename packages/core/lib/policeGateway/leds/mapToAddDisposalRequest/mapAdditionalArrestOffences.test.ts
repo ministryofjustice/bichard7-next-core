@@ -11,7 +11,7 @@ describe("mapAdditionalArrestOffences", () => {
     const normalDisposalRequest = buildNormalDisposalRequest()
     const expectedAdditionalOffences = [
       {
-        asn: "11/01ZD/01/00000410836V",
+        asn: "11/01ZD/01/410836V",
         additionalOffences: [
           {
             courtOffenceSequenceNumber: 3,

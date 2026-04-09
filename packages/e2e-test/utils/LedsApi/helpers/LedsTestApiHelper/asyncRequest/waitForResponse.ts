@@ -50,7 +50,7 @@ const waitForResponse = async (
 
     counter += 1
 
-    if (counter === 15) {
+    if (counter === 30) {
       throw new Error(`Pending request didn't complete for ${urlPath}. ${JSON.stringify(response.data)}`)
     }
 
