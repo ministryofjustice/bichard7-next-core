@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
 
       - name: Install Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4
         with:
           node-version: 20.6.1
 
@@ -33,7 +33,7 @@ jobs:
         run: sudo cp -r docs/schema docs/architecture/build/site
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@049a95c516cd5723d8cfde79dc7a79fcdcbd6c97 #v4
         with:
           branch: gh-pages
           folder: docs/architecture/build/site
