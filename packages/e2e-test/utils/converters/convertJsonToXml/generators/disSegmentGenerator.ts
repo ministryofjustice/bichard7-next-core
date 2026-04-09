@@ -33,7 +33,7 @@ const formateMonetaryValue = (value: number | undefined): string => {
     return ""
   }
 
-  return (String(value).includes(".") ? String(value) : `${value}.00`).padStart(10, "0")
+  return value.toFixed(2).padStart(10, "0")
 }
 
 type Disposal = AsnQueryResponseDisposalResult | AddDisposalDisposalResult
