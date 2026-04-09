@@ -23,6 +23,7 @@ import { DataSource } from "typeorm"
 import { getDateString } from "./common"
 import findEvents from "./fetchEvents"
 import fetchForceOwners from "./fetchForceOwners"
+import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
 import generateReportData from "./generateReportData"
 import WorkbookGenerator from "./WorkbookGenerator"
 
@@ -89,6 +90,12 @@ const run = async () => {
   await setup()
   const start = new Date(process.argv.slice(-2)[0])
   const end = new Date(process.argv.slice(-1)[0])
+
+  console.log("Getting users with access to the new UI from postgres database...")
+  const usersWithAccessToNewUi = await findUsersWithAccessToNewUi(postgres)
+  if (isError(usersWithAccessToNewUi)) {
+    throw usersWithAccessToNewUi
+  }
 
   const events = await findEvents(dynamo, eventsTableName, start, end)
   if (isError(events)) {
