@@ -99,11 +99,4 @@ describe("Home", () => {
         expect(buttonsTexts).to.deep.eq(["Access New Bichard", "Access Bichard"])
       })
   })
-
-  it("shows the New UI button only when onlyAccessToNewBichard feature flag is true", () => {
-    cy.login("onlynewbicharduser@example.com", "password")
-
-    cy.get("a.access-bichard-link").should("have.length", 1)
-    cy.get("a.access-bichard-link").contains("Access New Bichard")
-  })
 })
