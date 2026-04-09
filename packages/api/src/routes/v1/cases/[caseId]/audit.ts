@@ -6,7 +6,7 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ExceptionQualitySchema } from "@moj-bichard7/common/types/ExceptionQuality"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { TriggerQualitySchema } from "@moj-bichard7/common/types/TriggerQuality"
-import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
+import { FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
@@ -21,6 +21,7 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
+import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
 import saveAuditResults from "../../../../useCases/cases/saveAuditResults"
@@ -67,7 +68,7 @@ const schema = {
 
 const handler = async ({ body, caseId, database, reply, user }: HandlerProps) => {
   const { note, ...auditQuality } = body
-  const result = await saveAuditResults(database.writable, caseId, auditQuality, String(user.id), note)
+  const result = await saveAuditResults(database.writable, caseId, auditQuality, user, note)
 
   if (!isError(result)) {
     return reply.code(OK).send({ success: true })
@@ -76,6 +77,8 @@ const handler = async ({ body, caseId, database, reply, user }: HandlerProps) =>
   reply.log.error(result)
 
   switch (true) {
+    case result instanceof NotAllowedError:
+      return reply.code(FORBIDDEN).send()
     case result instanceof NotFoundError:
       return reply.code(NOT_FOUND).send()
     case result instanceof UnprocessableEntityError:
