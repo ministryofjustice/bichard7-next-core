@@ -3,7 +3,6 @@ import getUserServiceAccess from "./getUserServiceAccess"
 
 const userManagementUrlExpression = /^\/users\/users.*/
 const bichardUrlExpression = /^\/bichard-ui.*/
-const newBichardUrlExpression = /^\/bichard\/.*|^\/bichard$\/?/
 const reportsUrlExpression = /^\/reports\/.*/
 
 export default (token: AuthenticationTokenPayload, url?: string): boolean => {
@@ -11,14 +10,12 @@ export default (token: AuthenticationTokenPayload, url?: string): boolean => {
     return false
   }
 
-  const { hasAccessToBichard, hasAccessToUserManagement, hasAccessToReports, hasAccessToNewBichard } =
-    getUserServiceAccess(token)
+  const { hasAccessToBichard, hasAccessToUserManagement, hasAccessToReports } = getUserServiceAccess(token)
 
   if (
     (url.match(userManagementUrlExpression) && !hasAccessToUserManagement) ||
     (url.match(bichardUrlExpression) && !hasAccessToBichard) ||
-    (url.match(reportsUrlExpression) && !hasAccessToReports) ||
-    (url.match(newBichardUrlExpression) && !hasAccessToNewBichard)
+    (url.match(reportsUrlExpression) && !hasAccessToReports)
   ) {
     return false
   }
