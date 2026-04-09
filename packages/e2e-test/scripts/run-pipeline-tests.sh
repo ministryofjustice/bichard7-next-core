@@ -4,16 +4,20 @@ set -xe
 
 RUN_ALL_TESTS="${RUN_ALL_TESTS:-false}"
 
-if [ "$TRIGGER" == "application-semaphore" ]
+if [[ "$TRIGGER" == "application-semaphore" ]]
 then
   RUN_ALL_TESTS="true"
 fi
 
-if [ "$WORKSPACE" == "e2e-test" ]
+if [[ "$USE_LEDS" == "true" && "$REAL_POLICE_API" == "true" ]]
+then
+  echo "Running LEDS tests against the real LEDS API"
+  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:leds:preprod
+elif [[ "$WORKSPACE" == "e2e-test" ]]
 then
   echo "Build was triggered by $TRIGGER"
 
-  if [ $RUN_ALL_TESTS = "true" ]
+  if [[ "$RUN_ALL_TESTS" == "true" ]]
   then
     echo "Running all tests (old UI)"
     CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:oldUI
@@ -27,7 +31,7 @@ then
     echo "Running must tests (next UI)"
     CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:nextUI:must
   fi
-elif [ "$WORKSPACE" == "preprod" ]
+elif [[ "$WORKSPACE" == "preprod" ]]
 then
   echo "Running preprod tests (old UI)"
   CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:oldUI:preprod

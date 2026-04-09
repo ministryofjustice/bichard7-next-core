@@ -27,9 +27,9 @@ Feature: {202b} BR7 R5.1-RCD422-Breach of Community Order-Revoked-Resentenced
 		When I view the list of exceptions
 		Then I see trigger "PR06 - Imprisoned" in the exception list table
 			And there are no exceptions raised for "COMMUNITYORDERTWO BREACH"
+			And the PNC updates the record
 		When I open the record for "COMMUNITYORDERTWO BREACH"
 			And I click the "Triggers" tab
 		Then I see trigger "TRPR0020" for offence "2"
 			And I see trigger "TRPR0020" for offence "3"
 			And I see trigger "TRPS0010" for offence "2"
-			And the PNC updates the record
