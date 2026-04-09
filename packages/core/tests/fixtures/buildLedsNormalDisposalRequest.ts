@@ -109,7 +109,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
     ],
     additionalArrestOffences: [
       {
-        asn: "11/01ZD/01/00001448754K",
+        asn: "11/01ZD/01/1448754R",
         additionalOffences: [
           {
             courtOffenceSequenceNumber: 3,

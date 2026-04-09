@@ -4,14 +4,16 @@ TAGS=$1
 
 NEXTUI=${NEXTUI:-"false"}
 
-if [ "${NEXTUI}x" == "truex" ]; then
+if [[ "${NEXTUI}x" == "truex" ]]; then
   TAGS="${TAGS} and @NextUI"
 else
   TAGS="${TAGS} and not @ExcludeOnLegacyUI"
 fi
 
-if [ "${USE_LEDS}x" == "truex" ]; then
+if [[ "${USE_LEDS}x" == "truex" ]]; then
   TAGS="${TAGS} and not @ExcludedOnLeds"
+else
+  TAGS="${TAGS} and not @ExcludedOnPnc"
 fi
 
 echo "---------------------------------------------"
