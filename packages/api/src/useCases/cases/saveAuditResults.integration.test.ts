@@ -3,6 +3,7 @@ import type { Note } from "@moj-bichard7/common/types/Note"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { AuditQuality } from "../../services/db/cases/auditCase"
 
@@ -14,6 +15,7 @@ import { createCase } from "../../tests/helpers/caseHelper"
 import FakeLogger from "../../tests/helpers/fakeLogger"
 import { createUser } from "../../tests/helpers/userHelper"
 import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
+import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import saveAuditResults from "./saveAuditResults"
 
 jest.mock("../../services/db/cases/auditCase")
@@ -43,7 +45,7 @@ describe("saveAuditResults", () => {
       errorId: 1,
       orgForPoliceFilter: "02"
     })
-    user = await createUser(testDatabaseGateway)
+    user = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor] })
   })
 
   afterAll(async () => {
@@ -62,7 +64,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
       expect(isError(result)).toBe(false)
@@ -79,7 +81,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         { errorQuality: 6, triggerQuality: undefined },
-        user.username,
+        user,
         testNote
       )
       expect(isError(result)).toBe(false)
@@ -89,8 +91,23 @@ describe("saveAuditResults", () => {
       expect(updatedCase.triggerQualityChecked).toBeNull()
     })
 
+    it("throws an error when user doesn't have the Supervisor Group", async () => {
+      const user = await createUser(testDatabaseGateway, { groups: [UserGroup.GeneralHandler] })
+
+      const result = await saveAuditResults(
+        testDatabaseGateway.writable,
+        2,
+        { errorQuality: 1, triggerQuality: 2 },
+        user,
+        testNote
+      )
+
+      expect(isError(result)).toBe(true)
+      expect(result).toBeInstanceOf(NotAllowedError)
+    })
+
     it("throws an error when no audit quality is provided", async () => {
-      const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, user.username, testNote)
+      const result = await saveAuditResults(testDatabaseGateway.writable, caseObj.errorId, {}, user, testNote)
 
       expect(isError(result)).toBe(true)
       expect((result as Error).message).toBe("Neither errorQuality nor triggerQuality is provided")
@@ -101,7 +118,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         2,
         { errorQuality: 1, triggerQuality: 2 },
-        user.username,
+        user,
         testNote
       )
 
@@ -116,7 +133,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
 
@@ -131,7 +148,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
       expect(isError(result)).toBe(true)
@@ -149,7 +166,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
 
@@ -166,7 +183,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
 
@@ -181,7 +198,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
 
@@ -196,7 +213,7 @@ describe("saveAuditResults", () => {
         testDatabaseGateway.writable,
         caseObj.errorId,
         mockAuditQuality,
-        user.username,
+        user,
         testNote
       )
       expect(isError(result)).toBe(true)
