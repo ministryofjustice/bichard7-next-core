@@ -36,7 +36,10 @@ const eventsPostExceptionsResolved = [
 const currentExceptions: Record<string, string[]> = {}
 const currentResubmissionUi: Record<string, "new-ui" | "old-ui"> = {}
 const exceptionsResolvedManually = EventCode.ExceptionsResolved
-const exceptionsResubmittedEvents = [EventCode.HearingOutcomeResubmittedPhase1, EventCode.HearingOutcomeResubmittedPhase2]
+const exceptionsResubmittedEvents = [
+  EventCode.HearingOutcomeResubmittedPhase1,
+  EventCode.HearingOutcomeResubmittedPhase2
+]
 
 const getDates = (start: Date, end: Date) => {
   let date = new Date(start)
@@ -154,7 +157,7 @@ const generateReportData = async (
     reportData.allMonthlyData[month] = {}
     reportData.newUiDailyData[date] = {}
     reportData.newUiMonthlyData[month] = {}
-  })§
+  })
 
   for (const event of events) {
     if (event.eventSource === "ResubmitFailedPNCMessages") {
