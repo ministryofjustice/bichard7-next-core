@@ -19,6 +19,6 @@ Feature: {316} BR7 R5.11-RCD528 - 2060_No PNC update for 2050 result with other 
 	Scenario: 2060 No PNC update for 2050 result with other Non-Recordable result
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
-		Then I see trigger "PS10 - Offence added to PNC" in the exception list table
+		Then the PNC updates the record
+			And I see trigger "PS10 - Offence added to PNC" in the exception list table
 			And there are no exceptions
-			And the PNC updates the record
