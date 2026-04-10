@@ -27,5 +27,5 @@ Feature: {027} R3.2_Orphaned Non-Recordable Offence
 		Then there are no exceptions or triggers
 		When "input-message-2" is received
 			And I view the list of exceptions
-		Then there are no exceptions or triggers
 			And the PNC updates the record
+		Then there are no exceptions or triggers
