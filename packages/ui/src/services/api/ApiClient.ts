@@ -1,6 +1,4 @@
-import axios from "axios"
-import https from "node:https"
-
+import { fetch, Agent } from "undici"
 import { API_LOCATION } from "config"
 import { ApiError } from "types/ApiError"
 import type PromiseResult from "types/PromiseResult"
@@ -10,8 +8,10 @@ export enum HttpMethod {
   POST = "POST"
 }
 
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false
+const agent = new Agent({
+  connect: {
+    rejectUnauthorized: false
+  }
 })
 
 class ApiClient {
@@ -35,24 +35,41 @@ class ApiClient {
     bodyContent: string | Record<string, unknown> = {}
   ): PromiseResult<T> {
     const headers: Record<string, string> = {
-      Authorization: `Bearer ${this.jwt}`
+      Authorization: `Bearer ${this.jwt}`,
+      "Content-Type": "application/json"
+    }
+
+    const url = `${API_LOCATION}${route}`
+
+    const requestOptions: Parameters<typeof fetch>[1] = {
+      method,
+      headers,
+      dispatcher: agent
+    }
+
+    if (method !== HttpMethod.GET) {
+      requestOptions.body = typeof bodyContent === "string" ? bodyContent : JSON.stringify(bodyContent)
     }
 
     try {
-      const response = await axios({
-        url: `${API_LOCATION}${route}`,
-        method,
-        headers,
-        data: method === HttpMethod.GET ? undefined : bodyContent,
-        httpsAgent
-      })
+      const response = await fetch(url, requestOptions)
 
-      return response.data
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        return new ApiError(err.response?.status as number, err.response?.data?.message ?? "")
+      if (!response.ok) {
+        const rawBody = await response.text()
+        let message = rawBody
+
+        try {
+          const json = JSON.parse(rawBody)
+          message = json?.message ?? rawBody
+        } catch {
+          // No op
+        }
+
+        return new ApiError(response.status, message)
       }
 
+      return (await response.json()) as T
+    } catch (err) {
       return err as Error
     }
   }

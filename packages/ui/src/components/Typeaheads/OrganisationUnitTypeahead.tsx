@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
@@ -28,13 +27,16 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
 
   const fetchItems = useCallback(
     async (searchStringParam?: string) => {
-      const organisationUnitsResponse = await axios
-        .get<OrganisationUnitApiResponse>("/bichard/api/organisation-units", {
-          params: {
-            search: searchStringParam
+      const query = new URLSearchParams({ search: searchStringParam ?? "" })
+
+      const organisationUnitsResponse = await fetch(`/bichard/api/organisation-units?${query}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`)
           }
+
+          return response.json() as Promise<OrganisationUnitApiResponse>
         })
-        .then((response) => response.data)
         .catch((error) => error as Error)
 
       if (isError(organisationUnitsResponse)) {

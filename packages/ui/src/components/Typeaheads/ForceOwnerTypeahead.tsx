@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
 import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
@@ -15,19 +14,31 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }: P
   const fetchItems = useCallback(
     async (searchStringParam?: string, config?: { signal?: AbortSignal }) => {
       try {
-        const forceOwnersResponse = await axios.get<ForceOwnerApiResponse>("/bichard/api/force-owner", {
-          params: {
-            currentForceOwner,
-            search: searchStringParam
-          },
+        const params = new URLSearchParams()
+
+        if (currentForceOwner) {
+          params.append("currentForceOwner", currentForceOwner)
+        }
+
+        if (searchStringParam) {
+          params.append("search", searchStringParam)
+        }
+
+        const response = await fetch(`/bichard/api/force-owner?${params}`, {
+          method: "GET",
           signal: config?.signal
         })
 
-        const filteredForceOwners = forceOwnersResponse.data.filter((item) => currentForceOwner !== item.forceCode)
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`)
+        }
+
+        const data = (await response.json()) as ForceOwnerApiResponse
+        const filteredForceOwners = data.filter((item) => currentForceOwner !== item.forceCode)
 
         setInputItems(filteredForceOwners)
       } catch (error) {
-        if (axios.isCancel(error)) {
+        if (error instanceof Error && error.name === "AbortError") {
           return
         }
         console.error("Error fetching force owners:", error)

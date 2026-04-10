@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { isEmpty } from "lodash"
 import { useCallback, useEffect, useState } from "react"
@@ -41,23 +40,36 @@ const AutoSave = ({ setSaved, setChanged, isValid, isSaved, isChanged, amendment
         setChanged(false)
         return
       }
-      await axios.put(`/bichard/api/court-cases/${courtCase.errorId}/update`, update).then((response) => {
-        setHttpResponseStatus(response.status)
 
-        Object.keys(update).forEach((updateKey) => {
-          if (Array.isArray(update[updateKey])) {
-            update[updateKey].forEach(
-              (updatedAmendment: OffenceField<number> | OffenceField<string> | ResultQualifierCode) =>
-                savedAmend(updateKey as AmendmentKeys)(updatedAmendment)
-            )
-          } else {
-            savedAmend(updateKey as AmendmentKeys)(update[updateKey])
-          }
-        })
-
-        updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
-        updateCsrfToken(response.data.csrfToken as string)
+      const response = await fetch(`/bichard/api/court-cases/${courtCase.errorId}/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(update)
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      setHttpResponseStatus(response.status)
+
+      Object.keys(update).forEach((updateKey) => {
+        if (Array.isArray(update[updateKey])) {
+          update[updateKey].forEach(
+            (updatedAmendment: OffenceField<number> | OffenceField<string> | ResultQualifierCode) =>
+              savedAmend(updateKey as AmendmentKeys)(updatedAmendment)
+          )
+        } else {
+          savedAmend(updateKey as AmendmentKeys)(update[updateKey])
+        }
+      })
+
+      updateCourtCase(data.courtCase satisfies DisplayFullCourtCase)
+      updateCsrfToken(data.csrfToken as string)
     } catch (error) {
       setHttpResponseError(error as Error)
     } finally {
