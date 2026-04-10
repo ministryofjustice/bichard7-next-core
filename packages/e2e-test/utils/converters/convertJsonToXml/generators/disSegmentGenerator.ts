@@ -1,16 +1,8 @@
-import type { DisposalResult } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
-import {
-  DISPOSAL_QTY_DATE_FIELD_LENGTH,
-  DISPOSAL_QTY_DURATION_FIELD_LENGTH,
-  DISPOSAL_QTY_MONETARY_VALUE_FIELD_LENGTH,
-  DISPOSAL_QTY_UNITS_FINED_FIELD_LENGTH,
-  DISPOSAL_QUALIFIERS_FIELD_LENGTH,
-  DISPOSAL_TEXT_FIELD_LENGTH,
-  DISPOSAL_TYPE_FIELD_LENGTH,
-  OFFENCE_UPDATE_TYPE,
-  UPDATE_TYPE_FIELD_LENGTH
-} from "../../../constants"
-import { convertToPncDate } from "../helpers/convertToPncDate"
+import type { DisposalResult as AsnQueryResponseDisposalResult } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+import type { DisposalResult as AddDisposalDisposalResult } from "@moj-bichard7/core/types/leds/DisposalRequest"
+import * as CONSTANT from "../../../constants"
+
+import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import generateRow from "../helpers/generateRow"
 
 const unitMap: Record<string, string> = {
@@ -36,7 +28,17 @@ const parseQtyDuration = (disposalDuration: { count: number; units: string } | u
   return `${unitCode}${disposalDuration.count}`
 }
 
-const disSegmentGenerator = (disposal: DisposalResult): string | undefined => {
+const formateMonetaryValue = (value: number | undefined): string => {
+  if (!value) {
+    return ""
+  }
+
+  return value.toFixed(2).padStart(10, "0")
+}
+
+type Disposal = AsnQueryResponseDisposalResult | AddDisposalDisposalResult
+
+const disSegmentGenerator = (disposal: Disposal): string | undefined => {
   if (!disposal) {
     return undefined
   }
@@ -44,20 +46,20 @@ const disSegmentGenerator = (disposal: DisposalResult): string | undefined => {
   const type = disposal.disposalCode.toString()
   const qtyDuration = parseQtyDuration(disposal.disposalDuration)
   const qtyDate = disposal.disposalEffectiveDate && convertToPncDate(disposal.disposalEffectiveDate)
-  const qtyMonetaryValue = disposal.disposalFine?.amount?.toString()
-  const qtyUnitsFined = disposal.disposalFine?.units?.toString()
+  const qtyMonetaryValue = formateMonetaryValue(disposal.disposalFine?.amount)
+  const qtyUnitsFined = disposal.disposalFine?.units?.toString().padStart(2, "0") ?? CONSTANT.DEFAULT_QTY_UNITS
   const qualifiers = disposal.disposalQualifiers?.join("")
   const text = disposal.disposalText
 
   const disSegment = generateRow("DIS", [
-    [OFFENCE_UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],
-    [type, DISPOSAL_TYPE_FIELD_LENGTH],
-    [qtyDuration, DISPOSAL_QTY_DURATION_FIELD_LENGTH],
-    [qtyDate, DISPOSAL_QTY_DATE_FIELD_LENGTH],
-    [qtyMonetaryValue, DISPOSAL_QTY_MONETARY_VALUE_FIELD_LENGTH],
-    [qtyUnitsFined, DISPOSAL_QTY_UNITS_FINED_FIELD_LENGTH],
-    [qualifiers, DISPOSAL_QUALIFIERS_FIELD_LENGTH],
-    [text, DISPOSAL_TEXT_FIELD_LENGTH]
+    [CONSTANT.OFFENCE_UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
+    [type, CONSTANT.DISPOSAL_TYPE_FIELD_LENGTH],
+    [qtyDuration, CONSTANT.DISPOSAL_QTY_DURATION_FIELD_LENGTH],
+    [qtyDate, CONSTANT.DISPOSAL_QTY_DATE_FIELD_LENGTH],
+    [qtyMonetaryValue, CONSTANT.DISPOSAL_QTY_MONETARY_VALUE_FIELD_LENGTH],
+    [qtyUnitsFined, CONSTANT.DISPOSAL_QTY_UNITS_FINED_FIELD_LENGTH],
+    [qualifiers, CONSTANT.DISPOSAL_QUALIFIERS_FIELD_LENGTH],
+    [text, CONSTANT.DISPOSAL_TEXT_FIELD_LENGTH]
   ])
 
   return disSegment

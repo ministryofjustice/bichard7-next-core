@@ -1,6 +1,8 @@
+import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { type FastifyInstance } from "fastify"
-import { BAD_REQUEST, NOT_FOUND, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, NOT_FOUND, OK } from "http-status"
 
 import build from "../../../../app"
 import AuditLogDynamoGateway from "../../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
@@ -30,7 +32,7 @@ describe("saveAuditResults", () => {
   })
 
   it("returns 200 OK when audit quality saved successfully", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -43,7 +45,7 @@ describe("saveAuditResults", () => {
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -56,7 +58,7 @@ describe("saveAuditResults", () => {
   })
 
   it("returns 404 Not Found when there's no case found", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway)
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -66,5 +68,18 @@ describe("saveAuditResults", () => {
     })
 
     expect(response.statusCode).toBe(NOT_FOUND)
+  })
+
+  it("returns 403 Forbidden when the user doesn't have permission", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: { errorQuality: 1, triggerQuality: 2 },
+      url: V1.CaseAudit.replace(":caseId", "1")
+    })
+
+    expect(response.statusCode).toBe(FORBIDDEN)
   })
 })

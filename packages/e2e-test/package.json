@@ -47,7 +47,7 @@
     "@faker-js/faker": "^9.9.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.351",
     "@types/jest": "^30.0.0",
-    "axios": "^1.14.0",
+    "axios": "^1.15.0",
     "csv-parse": "^6.2.1",
     "date-fns": "^4.1.0",
     "expect": "^30.3.0",
