@@ -1,0 +1,75 @@
+{
+  "disposals": [
+    {
+      "id": "4107358c-74bc-4964-b4c3-8aae1e944ad8",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000119D",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "21fa9921-6fba-4adb-a225-fe895f951bbd",
+          "arrestSummonsId": "6b404848-56be-4c60-94a9-8d89d933dda0",
+          "adjudication": "G",
+          "npccOffenceCode": "12.15.16.1",
+          "cjsOffenceCode": "RT88007",
+          "qualifiedCjsCode": "RT88007",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "fc5d05d9-89fb-4e79-89a0-6369cc67eb95",
+              "disposalCode": "3096",
+              "disposalQualifierCodes": [],
+              "disposalText": "Interim disqualification from driving until dealt with. Section "
+            },
+            {
+              "id": "71ca24b6-0cb6-476a-8f4c-e08f260d654c",
+              "disposalCode": "4047",
+              "disposalQualifierCodes": [],
+              "disposalText": "Adjourned to 26/10/2011 at 14:00 in Courtroom 01, Croydon Magist",
+              "effectiveDate": "2011-09-26"
+            }
+          ],
+          "offence": {
+            "version": "z1xUu+ubNQiwzmGhhMd3zQqPfZOruUsFDC6tYzahKx5r4tuhpn7XsKb4x3Ai+ICG0NCUKGCAMwm/Vxjmo4R/9w==",
+            "arrestSummonsReference": "26/0000/00/100000277Z",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000119D",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "12.15.16.1",
+            "cjsOffenceCode": "RT88007",
+            "qualifiedCjsCode": "RT88007",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "21fa9921-6fba-4adb-a225-fe895f951bbd"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}
