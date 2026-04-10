@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify"
 
+import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_REQUEST, NOT_FOUND, OK } from "http-status"
@@ -36,7 +37,7 @@ describe("/V1/cases/:caseId/audit", () => {
   })
 
   it("receives 200 OK when audit quality saved successfully", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
     await createCase(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
@@ -45,7 +46,7 @@ describe("/V1/cases/:caseId/audit", () => {
   })
 
   it("received 400 Bad Request when request body is invalid", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
     await createCase(helper.postgres)
     const invalidRequest = {
       body: JSON.stringify({}),
@@ -59,7 +60,7 @@ describe("/V1/cases/:caseId/audit", () => {
   })
 
   it("receives 404 Not Found when there's no case found", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
     await createCase(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "2")}`, defaultRequest(encodedJwt))

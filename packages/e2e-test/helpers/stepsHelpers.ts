@@ -7,8 +7,8 @@ import {
 } from "@cucumber/cucumber"
 import type Bichard from "../utils/world"
 
-export const Given = CucumberGiven<Bichard>
-export const When = CucumberWhen<Bichard>
-export const Then = CucumberThen<Bichard>
-export const Before = CucumberBefore<Bichard>
-export const After = CucumberAfter<Bichard>
+export const Given: typeof CucumberGiven<Bichard> = CucumberGiven<Bichard>
+export const When: typeof CucumberWhen<Bichard> = CucumberWhen<Bichard>
+export const Then: typeof CucumberThen<Bichard> = CucumberThen<Bichard>
+export const Before: typeof CucumberBefore<Bichard> = CucumberBefore<Bichard>
+export const After: typeof CucumberAfter<Bichard> = CucumberAfter<Bichard>

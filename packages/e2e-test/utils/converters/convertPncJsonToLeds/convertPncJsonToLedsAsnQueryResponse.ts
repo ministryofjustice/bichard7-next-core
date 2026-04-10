@@ -4,7 +4,7 @@ import type { AsnQueryResponse, DisposalResult, Offence } from "@moj-bichard7/co
 import type { Adjudication, Plea } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
 import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
-import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
+import { convertDate } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
 import { randomUUID } from "crypto"
 import type { Adj } from "../convertPncXmlToJson/convertAdj"
@@ -64,6 +64,8 @@ const mapDisposalResults = (disposalResults: Dis[]): DisposalResult[] => {
 
   return mappedDisposalResults
 }
+
+const convertTime = (time: string): string => time.slice(0, 2) + ":" + time.slice(2)
 
 const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): Offence[] => {
   const mappedOffences = offences.map((offence) => {
