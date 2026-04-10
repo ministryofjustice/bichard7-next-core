@@ -9,7 +9,7 @@ Feature: {500} carry-forward-for-existing-offence
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Could @NextUI
+	@Could @NextUI @LedsPreProdTest
 	Scenario: Police update adds carry forward of result code 2059 for the existing offence
 		Given I am logged in as "generalhandler"
 		When I view the list of exceptions

@@ -15,7 +15,8 @@ const keysToRedact = [
   "offenceId",
   "offenceChargeNumber",
   "courtCaseChargeNumber",
-  "arrestChargeNumber"
+  "arrestChargeNumber",
+  "oldCourtCaseReference"
 ]
 
 const redactFields = <T>(obj: T): T => {

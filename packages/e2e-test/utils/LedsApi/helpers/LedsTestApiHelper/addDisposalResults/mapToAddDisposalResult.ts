@@ -42,7 +42,7 @@ const mapToAddDisposalResult = (
         const disposalResult: NonNullable<Offence["disposalResults"]>[number] = {
           disposalCode: result.resultCode,
           disposalEffectiveDate: result.disposalEffectiveDate,
-          disposalText: result.resultText
+          disposalText: result.resultText?.replace(/\s+/g, " ").trim().slice(0, 64)
         }
 
         return disposalResult
