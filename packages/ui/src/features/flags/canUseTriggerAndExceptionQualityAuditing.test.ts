@@ -1,110 +1,31 @@
-import User from "../../services/entities/User"
+import type User from "../../services/entities/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { formatForceEnvVariable } from "utils/forceNormalisation"
-
-const mockUseApiModule = (forcesWithTriggerAndExceptionQualityAuditingEnabled: Set<string>) => {
-  jest.doMock("../../config.ts", () => ({
-    FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: forcesWithTriggerAndExceptionQualityAuditingEnabled
-  }))
-}
-
-const enabledForces = formatForceEnvVariable("01,02,03")
+import { canUseTriggerAndExceptionQualityAuditing } from "./canUseTriggerAndExceptionQualityAuditing"
 
 describe("canUseTriggerAndExceptionQualityAuditing", () => {
-  beforeEach(() => {
-    jest.resetModules()
-  })
-
-  afterEach(() => {
-    jest.resetModules()
-  })
-
   it("returns false when user does not have feature flag enabled", () => {
-    mockUseApiModule(enabledForces)
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: false }
-    user.visibleForces = [...enabledForces]
-    user.groups = [UserGroup.Supervisor]
-
-    expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
-  })
-
-  it("returns false when FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED does not include force", () => {
-    mockUseApiModule(enabledForces)
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["006"]
-    user.groups = [UserGroup.Supervisor]
-
-    expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
-  })
-
-  it("returns false when none of the visible forces are enabled", () => {
-    mockUseApiModule(enabledForces)
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["006", "007"]
-    user.groups = [UserGroup.Supervisor]
-
-    expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
-  })
-
-  it("returns true when FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED includes at least one enabled force", () => {
-    mockUseApiModule(enabledForces)
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["006", "007", "001"]
-    user.groups = [UserGroup.Supervisor]
-
-    expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(true)
-  })
-
-  it("returns false when FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED is empty", () => {
-    mockUseApiModule(new Set<string>())
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["006", "007", "001"]
-    user.groups = [UserGroup.Supervisor]
+    const user = {
+      groups: [UserGroup.Supervisor],
+      featureFlags: { useTriggerAndExceptionQualityAuditingEnabled: false }
+    } as unknown as User
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
 
   it("returns false when user groups does not include Supervisor", () => {
-    mockUseApiModule(enabledForces)
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["006", "007", "001"]
+    const user = {
+      groups: [UserGroup.GeneralHandler],
+      featureFlags: { useTriggerAndExceptionQualityAuditingEnabled: true }
+    } as unknown as User
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(false)
   })
 
-  it("returns true when user groups includes Supervisor", () => {
-    mockUseApiModule(enabledForces)
-
-    const { canUseTriggerAndExceptionQualityAuditing } = require("./canUseTriggerAndExceptionQualityAuditing")
-
-    const user = new User()
-    user.featureFlags = { useTriggerAndExceptionQualityAuditingEnabled: true }
-    user.visibleForces = ["006", "007", "001"]
-    user.groups = [UserGroup.Supervisor]
+  it("returns true when user groups includes Supervisor and feature flag is set to true", () => {
+    const user = {
+      groups: [UserGroup.Supervisor],
+      featureFlags: { useTriggerAndExceptionQualityAuditingEnabled: true }
+    } as unknown as User
 
     expect(canUseTriggerAndExceptionQualityAuditing(user)).toBe(true)
   })
