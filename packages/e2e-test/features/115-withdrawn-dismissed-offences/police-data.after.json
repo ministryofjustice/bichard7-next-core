@@ -338,9 +338,7 @@
           "courtCode": "2576"
         }
       },
-      "remandConditions": [
-        "give to the court any passport held               "
-      ]
+      "remandConditions": ["give to the court any passport held               "]
     }
   ]
 }

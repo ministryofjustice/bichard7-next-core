@@ -17,9 +17,7 @@
           "cjsOffenceCode": "SX03001",
           "qualifiedCjsCode": "SX03001A",
           "offenceDescription": [],
-          "offenceRoleQualifiers": [
-            "AT"
-          ],
+          "offenceRoleQualifiers": ["AT"],
           "offenceLegislationQualifiers": [],
           "offenceChargeNumber": 1,
           "additionalMarker": false,
@@ -48,9 +46,7 @@
             "cjsOffenceCode": "SX03001",
             "qualifiedCjsCode": "SX03001A",
             "startDate": "2010-11-28",
-            "roleQualifier": [
-              "AT"
-            ],
+            "roleQualifier": ["AT"],
             "legislationQualifier": [],
             "id": "56264689-2b18-4cd4-b8ee-dc0ac64ddc0e"
           }
