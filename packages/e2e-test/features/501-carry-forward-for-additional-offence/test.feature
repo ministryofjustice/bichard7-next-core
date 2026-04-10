@@ -9,7 +9,7 @@ Feature: {501} carry-forward-for-additional-offence
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Could @NextUI
+	@Could @NextUI @LedsPreProdTest
 	Scenario: Police update adds carry forward of result code 2059 for the additional offence
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

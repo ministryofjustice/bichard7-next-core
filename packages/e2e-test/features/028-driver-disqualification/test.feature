@@ -22,7 +22,7 @@ Feature: {028} R5.6_BR7 Driver Disqualification - Duration and Date values
 	Background:
 		Given the data for this test is in the PNC
 
-	@Should @NextUI
+	@Should @NextUI @LedsPreProdTest
 	Scenario: Driver Disqualification handling when only a Duration is received
 		Given I am logged in as "supervisor"
 		When "input-message-1" is received

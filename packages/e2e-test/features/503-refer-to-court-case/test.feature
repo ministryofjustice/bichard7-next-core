@@ -11,7 +11,7 @@ Feature: {500} refer-to-court-case
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Could @NextUI
+	@Could @NextUI @LedsPreProdTest
 	Scenario: Police update adds refer to court case when case requires RCC and has reportable offences
 		Given I am logged in as "generalhandler"
 		When I view the list of exceptions

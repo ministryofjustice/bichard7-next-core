@@ -23,6 +23,7 @@ phases:
       - bash ./scripts/setup-api-hosts.sh
       - bash ./scripts/setup-e2e-tests.sh
       - source ./workspaces/${WORKSPACE}.env
+      - bash ./scripts/check-leds-api-status.sh || exit 0
       - bash ./scripts/run-pipeline-tests.sh
   post_build:
     commands:
