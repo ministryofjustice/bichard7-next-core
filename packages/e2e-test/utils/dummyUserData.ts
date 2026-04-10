@@ -79,7 +79,7 @@ const dummyUsers: Record<string, DummyUser> = {
     visible_courts: ["B01", "B41ME00"],
     visible_forces: ["01"],
     excluded_triggers: [],
-    groups: ["B7GeneralHandler"]
+    groups: ["B7GeneralHandler", "B7NewUI"]
   },
   "met.police": {
     inclusionList: ["001"],
