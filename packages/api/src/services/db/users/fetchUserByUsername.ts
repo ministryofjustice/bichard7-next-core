@@ -23,8 +23,8 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         u.surname
       FROM
         br7own.users u
-        JOIN br7own.users_groups ug ON u.id = ug.user_id
-        JOIN br7own.groups g ON g.id = ug.group_id
+        LEFT JOIN br7own.users_groups ug ON u.id = ug.user_id
+        LEFT JOIN br7own.groups g ON g.id = ug.group_id
       WHERE
         username = ${username}
       GROUP BY
