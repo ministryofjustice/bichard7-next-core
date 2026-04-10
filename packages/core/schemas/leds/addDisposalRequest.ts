@@ -7,7 +7,8 @@ import {
   courtSchema,
   dateStringSchema,
   forceStationCodeSchema,
-  updateOffenceSchema
+  updateOffenceSchema,
+  updateOffenceTimeStringSchema
 } from "./common"
 
 const otherTicSchema = z.number().min(0).max(9999)
@@ -51,6 +52,8 @@ export const arrestOffenceSchema = baseOffenceSchema.extend({
   locationText: locationAddressSchema.optional(),
   dateOfSentence: dateStringSchema.optional(),
   offenceCode: offenceCodeSchema,
+  offenceStartTime: updateOffenceTimeStringSchema.optional(),
+  offenceEndTime: updateOffenceTimeStringSchema.optional(),
   locationAddress: z
     .object({
       addressLines: z.array(z.string()).optional(),
