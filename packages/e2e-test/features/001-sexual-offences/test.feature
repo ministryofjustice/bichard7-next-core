@@ -20,6 +20,7 @@ Feature: {001} R3_BR7_TR_003_TRPR0004
 
 	@Should
 	@NextUI
+	@LedsPreProdTest
 	Scenario: Updates and triggers are correctly generated for sexual offences
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
