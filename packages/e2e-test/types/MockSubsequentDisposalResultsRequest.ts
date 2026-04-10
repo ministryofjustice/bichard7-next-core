@@ -3,7 +3,8 @@ import { z } from "zod"
 
 export const mockSubsequentDisposalResultsRequestSchema = subsequentDisposalResultsRequestSchema.extend({
   pncCheckName: z.string(),
-  croNumber: z.string()
+  croNumber: z.string(),
+  crimeOffenceReferenceNumber: z.string()
 })
 
 export type MockSubsequentDisposalResultsRequest = z.infer<typeof mockSubsequentDisposalResultsRequestSchema>
