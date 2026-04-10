@@ -8,7 +8,7 @@ const convertLedsRemandRequestToXml = (ledsJson: MockRemandRequest): string => {
   const content = [
     fscSegmentGenerator(ledsJson),
     idsSegmentGenerator(ledsJson),
-    asrSegmentGenerator(ledsJson),
+    asrSegmentGenerator(ledsJson.arrestSummonsNumber, ledsJson.crimeOffenceReferenceNo),
     remSegmentGenerator(ledsJson)
   ]
 

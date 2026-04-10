@@ -1,16 +1,20 @@
 import type { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
+import type { User } from "@moj-bichard7/common/types/User"
 
 import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { AuditQuality } from "../../services/db/cases/auditCase"
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import auditCase from "../../services/db/cases/auditCase"
 import insertNote from "../../services/db/cases/insertNote"
+import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../types/errors/UnprocessableEntityError"
 
@@ -25,9 +29,13 @@ const saveAuditResults = async (
   database: WritableDatabaseConnection,
   caseId: number,
   auditQuality: AuditQuality,
-  userId: string,
+  user: User,
   note: string | undefined
 ): PromiseResult<void> => {
+  if (!userAccess(user)[Permission.CanAuditCases]) {
+    return new NotAllowedError()
+  }
+
   try {
     return await database.transaction(async (transactionDb) => {
       const auditResultsSaved = await auditCase(transactionDb, caseId, auditQuality)
@@ -41,7 +49,7 @@ const saveAuditResults = async (
       }
 
       const errorListNote = formatNote(auditQuality.triggerQuality, auditQuality.errorQuality, note)
-      const noteSaved = await insertNote(transactionDb, caseId, errorListNote, userId)
+      const noteSaved = await insertNote(transactionDb, caseId, errorListNote, String(user.id))
 
       if (isError(noteSaved)) {
         throw noteSaved
