@@ -6,7 +6,7 @@ Feature: 405 - Fixing exceptions and resubmitting with multiple attempts
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	Scenario: Handling messages with session duration
 		Given I am logged in as "supervisor"
@@ -14,7 +14,7 @@ Feature: 405 - Fixing exceptions and resubmitting with multiple attempts
 		Then I see exception "HO100206" in the exception list table
 		When I open the record for "Ladyfish Larry"
 			And I click the "Defendant" tab
-			And I correct "ASN" to "1101ZD0100000410804B"
+			And I amend "ASN" to "1101ZD0100000410804B"
 			And I submit the record
 		When I reload until I don't see "(Submitted)"
 			And I click the "Refresh" button
@@ -35,7 +35,7 @@ Feature: 405 - Fixing exceptions and resubmitting with multiple attempts
 		Then I see exception "HO100206" in the exception list table
 		When I open the record for "Ladyfish Larry"
 			And I click the "Defendant" tab
-			And I correct "ASN" to "1101ZD0100000410804B"
+			And I amend "ASN" to "1101ZD0100000410804B"
 		Then the invalid "ASN" can be submitted
 			And I correct "ASN" to "1101ZD0100000410804K"
 			And I submit the record

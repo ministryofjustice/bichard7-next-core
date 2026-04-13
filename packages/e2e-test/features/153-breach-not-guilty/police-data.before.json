@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "e37efee6-3d98-4d0d-963f-2789c5f1d783",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000352G",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "dae9db8e-469f-4d7c-bc00-788a71b00d2b",
+          "arrestSummonsId": "592f52d7-2b1b-4998-bda1-b55feebee332",
+          "npccOffenceCode": "8.7.69.3",
+          "cjsOffenceCode": "CJ03510",
+          "qualifiedCjsCode": "CJ03510",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "hmW9nFzUubrWRALZoaeze2twE70Z45OfTuRzbMfP6IOBogF4n2tUBh6YLM0jhcjyPz+xWWdwQ8OBHIQOqSkT0A==",
+            "arrestSummonsReference": "26/0000/00/00000000705N",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000352G",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "8.7.69.3",
+            "cjsOffenceCode": "CJ03510",
+            "qualifiedCjsCode": "CJ03510",
+            "startDate": "2010-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "dae9db8e-469f-4d7c-bc00-788a71b00d2b"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

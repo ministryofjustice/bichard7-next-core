@@ -29,11 +29,11 @@ Feature: {302} BR7-R5.9-RCD607-Twice Breached-Same ASN incorrectly re-used
 	Scenario: Handling incorrectly re-used ASN
 		Given I am logged in as "supervisor"
 			And "input-message-1" is received
-			And I wait "3" seconds
+			And I wait "5" seconds
 		When I view the list of exceptions
 		Then there are no exceptions or triggers
 		When "input-message-2" is received
-			And I wait "3" seconds
+			And I wait "5" seconds
 		Then there are no exceptions or triggers
 			And the audit log contains "Results already on PNC"
 		When "input-message-3" is received

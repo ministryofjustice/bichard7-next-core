@@ -1,0 +1,61 @@
+{
+  "disposals": [
+    {
+      "id": "6bda72ba-cead-4211-b1e6-820361228a33",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2008-09-28",
+      "courtCaseReference": "26/9998/000096D",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "93e7f954-dbd2-404b-a128-63b487813eb9",
+          "arrestSummonsId": "0fe77b35-5fad-4dd1-8218-3bd5cd694a0e",
+          "npccOffenceCode": "5.1.1.1",
+          "cjsOffenceCode": "TH68023",
+          "qualifiedCjsCode": "TH68023",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "E32YmzFoMAag/Q667480ZLaUJuowmwdFvZKbUSwW1FXaHw3npDHhVHLa+CTf/I+nXnkd2MY+HEt7fjzGtMMgVA==",
+            "arrestSummonsReference": "26/0000/00/100000229X",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000096D",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "endDate": "1993-11-28",
+            "endTime": "12:00:00",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "11 Meudon Avenue Farnborough"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.1.1.1",
+            "cjsOffenceCode": "TH68023",
+            "qualifiedCjsCode": "TH68023",
+            "startDate": "1993-11-28",
+            "startTime": "10:00:00",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "93e7f954-dbd2-404b-a128-63b487813eb9"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

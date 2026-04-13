@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "efe60a5c-103b-4621-b2a1-355d130650f4",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000353H",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "72eb9838-0d0a-4fb1-a4f5-5c03495d49d2",
+          "arrestSummonsId": "f4ff7fc3-c720-4273-b198-34ae14614622",
+          "npccOffenceCode": "8.7.39.1",
+          "cjsOffenceCode": "DD89003",
+          "qualifiedCjsCode": "DD89003",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "KhrRY0D9qCFoU19SQr3ssdKSYbeLm0VqNVobaUn0R3G79bmkhN8g3iYGdZe0wg9rHqx8atBkU0hiZk7bFByTKA==",
+            "arrestSummonsReference": "26/0000/00/00000000706P",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000353H",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "8.7.39.1",
+            "cjsOffenceCode": "DD89003",
+            "qualifiedCjsCode": "DD89003",
+            "startDate": "2010-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "72eb9838-0d0a-4fb1-a4f5-5c03495d49d2"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

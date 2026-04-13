@@ -1,0 +1,77 @@
+{
+  "disposals": [
+    {
+      "id": "b8246fdf-eeab-44e9-a5de-375328e15ef7",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London"
+      },
+      "convictionDate": "2008-09-26",
+      "courtCaseReference": "26/9998/000391Z",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "d81a8d04-b89e-452c-8e05-5052ba7f816d",
+          "arrestSummonsId": "bfdc8ee6-8dbd-4745-8324-b782b2f40b09",
+          "adjudication": "G",
+          "npccOffenceCode": "1.8.11.2",
+          "cjsOffenceCode": "CJ88116",
+          "qualifiedCjsCode": "CJ88116",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "b74b1dde-9657-4256-93c6-a9bc374dcc4b",
+              "disposalCode": "1116",
+              "disposalQualifierCodes": []
+            },
+            {
+              "id": "fd87ae35-5be4-4a94-9ddc-013cace171aa",
+              "disposalCode": "3101",
+              "disposalQualifierCodes": [],
+              "disposalDuration": {
+                "units": "hours",
+                "count": 100
+              }
+            }
+          ],
+          "offence": {
+            "version": "4CsV/LM7I5W3K0VOTICjL3xyjHom7KrzRUJzmh4td02PlZE2Xc4s/euVnApzCEY1aqQzdyk9OVpwlbS5kmyhYQ==",
+            "arrestSummonsReference": "26/0000/00/00000000763B",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000391Z",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01VK",
+            "crimeReference": "",
+            "locationFSCode": "01VK",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "1.8.11.2",
+            "cjsOffenceCode": "CJ88116",
+            "qualifiedCjsCode": "CJ88116",
+            "startDate": "2006-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "d81a8d04-b89e-452c-8e05-5052ba7f816d"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

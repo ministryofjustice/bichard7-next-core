@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "f38a2351-3e6b-4472-ba76-aa77c68024fc",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000354J",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "4dbca1c4-37f4-418f-a195-e7bce6acc8e0",
+          "arrestSummonsId": "c84106a6-1a1a-4ed2-a478-646a65d30329",
+          "npccOffenceCode": "8.7.69.3",
+          "cjsOffenceCode": "CJ03510",
+          "qualifiedCjsCode": "CJ03510",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "06xkPEI0UZtgnAxwzgNaRr/TjI9HOLUb/nXRJpNrpiG9u6g9kOpBRBk0adeTMNzABk4IbXtIgpLkycPCkWYEkw==",
+            "arrestSummonsReference": "26/0000/00/00000000707Q",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000354J",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "8.7.69.3",
+            "cjsOffenceCode": "CJ03510",
+            "qualifiedCjsCode": "CJ03510",
+            "startDate": "2010-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "4dbca1c4-37f4-418f-a195-e7bce6acc8e0"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

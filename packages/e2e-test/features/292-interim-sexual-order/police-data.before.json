@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "6ce3d513-0841-4755-93d0-3decc881f895",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000431T",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "99226263-a3dd-46d8-a503-86aac4f3ed17",
+          "arrestSummonsId": "4fd15c52-ce7e-4c13-b978-5741fd34d1ba",
+          "npccOffenceCode": "2.9.8.2",
+          "cjsOffenceCode": "COML062",
+          "qualifiedCjsCode": "COML062",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "82DbifGv1CMHF4bYWyuQF8FcOq5QlN9BeP+ecmRE1dasLX26Sr65eih1HTgIsLyN/UobuTxXq43RL1uEOJz54Q==",
+            "arrestSummonsReference": "26/0000/00/00000000804W",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000431T",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "2.9.8.2",
+            "cjsOffenceCode": "COML062",
+            "qualifiedCjsCode": "COML062",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "99226263-a3dd-46d8-a503-86aac4f3ed17"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "055f885d-410f-470c-b643-6a0fe727041a",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000350E",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "11f08ab3-6d2d-47c4-a94f-6a07a900ff66",
+          "arrestSummonsId": "f0725247-2b67-4fdc-a861-aa4ba92bb209",
+          "npccOffenceCode": "5.5.2.1",
+          "cjsOffenceCode": "TH68001",
+          "qualifiedCjsCode": "TH68001",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "EgoNrb5SFdOEDygRFiBz83rjd3DC3yDPCvYdP9ercrl4CyHf3Dc7lUd4W2SJ6E1rsw75PZfxDX9/a+ZG0zxx2w==",
+            "arrestSummonsReference": "26/0000/00/00000000702K",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000350E",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.2.1",
+            "cjsOffenceCode": "TH68001",
+            "qualifiedCjsCode": "TH68001",
+            "startDate": "2010-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "11f08ab3-6d2d-47c4-a94f-6a07a900ff66"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

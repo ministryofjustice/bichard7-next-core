@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "eecb2f63-d0d8-436a-94ab-a24b1f33e152",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000386U",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "ce9671a9-50e5-4786-bdef-877acffea117",
+          "arrestSummonsId": "5cc9d7d7-3a93-43d5-97c7-7e3e4e066ad5",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "FAiEucl7hD82U92Ijh8ZZqFf4VsMtDzwpa9mSuUKAjcTzqyHIVQ9S6sK3NkzzTVBEJQeOmLVdmHoXO+FuRdaMQ==",
+            "arrestSummonsReference": "26/0000/00/00000000758W",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000386U",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "ce9671a9-50e5-4786-bdef-877acffea117"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

@@ -1,0 +1,125 @@
+{
+  "disposals": [
+    {
+      "id": "6e57ce26-76b0-4636-8ada-20dbe965ffcd",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-01",
+      "courtCaseReference": "26/9998/000379L",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "d50fb7cc-dc8e-4c10-bd25-75df8b350e7f",
+          "arrestSummonsId": "b740a560-de00-4efa-a24c-cd03eb6e7681",
+          "adjudication": "G",
+          "npccOffenceCode": "5.5.8.1",
+          "cjsOffenceCode": "TH68010",
+          "qualifiedCjsCode": "TH68010",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "d067abd4-84af-453d-a1a8-4daf31bd5749",
+              "disposalCode": "4004",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2012-02-01"
+            }
+          ],
+          "offence": {
+            "version": "C2hj+qDw8arNAxyQNiDnVH/W2hWsNM3M5zdmULaFAgbeeUrFyVksMgpZJVGH1LOGXaoIe5oCWYWMEv1b5Q1Fag==",
+            "arrestSummonsReference": "26/0000/00/00000000751N",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000379L",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "1 Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.8.1",
+            "cjsOffenceCode": "TH68010",
+            "qualifiedCjsCode": "TH68010",
+            "startDate": "2010-09-25",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "d50fb7cc-dc8e-4c10-bd25-75df8b350e7f"
+          }
+        }
+      ],
+      "subsequentAppearances": [
+        {
+          "appearanceNumber": 1,
+          "court": {
+            "courtIdentityType": "code",
+            "courtCode": "2576"
+          },
+          "sentenceDate": "2011-12-01",
+          "reasonForVariation": "S",
+          "charges": [
+            {
+              "offenceId": "d50fb7cc-dc8e-4c10-bd25-75df8b350e7f",
+              "arrestSummonsId": "b740a560-de00-4efa-a24c-cd03eb6e7681",
+              "adjudication": "G",
+              "npccOffenceCode": "5.5.8.1",
+              "cjsOffenceCode": "TH68010",
+              "qualifiedCjsCode": "TH68010",
+              "offenceDescription": [],
+              "offenceRoleQualifiers": [],
+              "offenceLegislationQualifiers": [],
+              "offenceChargeNumber": 1,
+              "additionalMarker": false,
+              "disposals": [
+                {
+                  "id": "5ae1bb76-6dc6-496f-b15e-72e36c656a03",
+                  "disposalCode": "1002",
+                  "disposalQualifierCodes": [],
+                  "disposalDuration": {
+                    "units": "months",
+                    "count": 12
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "ownerCode": "01YZ",
+      "remandDate": "2011-10-01",
+      "currentAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "nextAppearance": {
+        "date": "2012-02-01",
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "remandConditions": []
+    }
+  ]
+}

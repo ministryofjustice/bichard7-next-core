@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "828a6572-0bb1-430a-ad7a-c96ccf566eb0",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-01",
+      "courtCaseReference": "26/9998/000401K",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "a09ba0bd-e4bd-4798-b29d-37a82e8a1451",
+          "arrestSummonsId": "e7543fdf-2638-4a2a-ad36-3dc0fac1a642",
+          "npccOffenceCode": "5.5.8.1",
+          "cjsOffenceCode": "TH68010",
+          "qualifiedCjsCode": "TH68010",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "CTGdiRwoYioVbG90VTgQ6wTqsExCXR172AqVf6SK9+yftvWzcwBieOLHgvf25WvQE9n/iMZwPFho0EJzhPKvzw==",
+            "arrestSummonsReference": "26/0000/00/00000000773M",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000401K",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "1 Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.8.1",
+            "cjsOffenceCode": "TH68010",
+            "qualifiedCjsCode": "TH68010",
+            "startDate": "2010-09-25",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "a09ba0bd-e4bd-4798-b29d-37a82e8a1451"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

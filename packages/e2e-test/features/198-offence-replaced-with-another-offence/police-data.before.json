@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "20b66eb7-3b93-4e3c-ba02-3c1b33ed9bb4",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000387V",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "95b3042d-c67b-4a6b-b3aa-9c0c1901bc6e",
+          "arrestSummonsId": "25758009-236e-48be-9133-2e8dca81702e",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "sSF0FHzBIFvfnN+OsfphlXJaIPfTjO8t8B3kf6piz7YD7B2gRUlj6WNDf2KmBf8fH01uPfD4XsQa3ARbVcHFmA==",
+            "arrestSummonsReference": "26/0000/00/00000000759X",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000387V",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "95b3042d-c67b-4a6b-b3aa-9c0c1901bc6e"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

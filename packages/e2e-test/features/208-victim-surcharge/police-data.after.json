@@ -1,0 +1,87 @@
+{
+  "disposals": [
+    {
+      "id": "ee8152c5-d1bc-4778-b046-a1a06e768e8e",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London"
+      },
+      "convictionDate": "2009-01-25",
+      "courtCaseReference": "26/9998/000393B",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "fb409fe1-edc4-4cff-a1c8-c3b6360fa89a",
+          "arrestSummonsId": "963f2ea2-9e2d-4838-bc90-980387512080",
+          "adjudication": "G",
+          "npccOffenceCode": "3.2.37.2",
+          "cjsOffenceCode": "CD71039",
+          "qualifiedCjsCode": "CD71039",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "411792a9-db08-4bec-909f-03da960a0a75",
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 50
+            },
+            {
+              "id": "3aee839f-2189-4c08-b11a-3e8f56c51fb9",
+              "disposalCode": "3011",
+              "disposalQualifierCodes": [],
+              "fineAmount": 50
+            },
+            {
+              "id": "a0f17523-3a1b-4459-8ede-31bc46495591",
+              "disposalCode": "3011",
+              "disposalQualifierCodes": [],
+              "fineAmount": 15
+            },
+            {
+              "id": "32a0740f-cf87-442d-b0dc-5635accf7ef5",
+              "disposalCode": "3117",
+              "disposalQualifierCodes": [],
+              "fineAmount": 40
+            }
+          ],
+          "offence": {
+            "version": "kmBLKf44PPsm+PLP36hoS+LzYr+is2ajRESa4KpQialXRoyekbWYADwtZj3zTiwj8Ikt1aZ+m/FGcoJK85ku1A==",
+            "arrestSummonsReference": "26/0000/00/00000000765D",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000393B",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01VK",
+            "crimeReference": "",
+            "locationFSCode": "01VK",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "3.2.37.2",
+            "cjsOffenceCode": "CD71039",
+            "qualifiedCjsCode": "CD71039",
+            "startDate": "2008-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "fb409fe1-edc4-4cff-a1c8-c3b6360fa89a"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}
