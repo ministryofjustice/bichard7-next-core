@@ -57,8 +57,8 @@ BEGIN
   ));
 
   INSERT INTO br7own.users_groups (SELECT id as user_id, (SELECT id from br7own.groups WHERE name =
-  'B7NewUI_grp'
+    'B7NewUI_grp'
   ) as group_id FROM br7own.users WHERE username IN (
-  insert_username
+    insert_username
   ));
 END $$;
