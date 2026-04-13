@@ -24,7 +24,7 @@
     "test:integration:update": "npm run test:integration -- -u",
     "test:file": "jest --runInBand --testPathPatterns",
     "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\"",
-    "update-deps": "ncu -u --cooldown 3d && npm install"
+    "update-deps": "ncu -u && npm install"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
