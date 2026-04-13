@@ -1,0 +1,122 @@
+{
+  "disposals": [
+    {
+      "id": "a2e399c1-9e5b-422f-9dbf-e13dce73bb05",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000396E",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "6ca13f13-7d36-4418-a140-8d1a98ef7b4f",
+          "arrestSummonsId": "9b9bc123-e269-4c80-b04a-e9cb51cd85a9",
+          "adjudication": "G",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "618ec13d-0a22-40c7-beb7-28369ed4c4eb",
+              "disposalCode": "4047",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2011-10-30"
+            }
+          ],
+          "offence": {
+            "version": "qu13ObeWAQv/yggbN0BJYR98JDHjCB4r7j4sQzHu3vUOr9daoU213Pp260+NyLI/1AzKuikQuAz9FLlJW+Jo+g==",
+            "arrestSummonsReference": "26/0000/00/00000000768G",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "1",
+            "courtCaseReferenceNumber": "26/9998/000396E",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01VK",
+            "crimeReference": "",
+            "locationFSCode": "01VK",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2011-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "6ca13f13-7d36-4418-a140-8d1a98ef7b4f"
+          }
+        }
+      ],
+      "subsequentAppearances": [
+        {
+          "appearanceNumber": 1,
+          "court": {
+            "courtIdentityType": "code",
+            "courtCode": "2576"
+          },
+          "sentenceDate": "2011-10-30",
+          "reasonForVariation": "S",
+          "charges": [
+            {
+              "offenceId": "6ca13f13-7d36-4418-a140-8d1a98ef7b4f",
+              "arrestSummonsId": "9b9bc123-e269-4c80-b04a-e9cb51cd85a9",
+              "adjudication": "G",
+              "npccOffenceCode": "5.5.5.1",
+              "cjsOffenceCode": "TH68006",
+              "qualifiedCjsCode": "TH68006",
+              "offenceDescription": [],
+              "offenceRoleQualifiers": [],
+              "offenceLegislationQualifiers": [],
+              "offenceChargeNumber": 1,
+              "additionalMarker": false,
+              "disposals": [
+                {
+                  "id": "df44c5bb-0615-424d-ad37-ca54f90466f7",
+                  "disposalCode": "1116",
+                  "disposalQualifierCodes": [],
+                  "effectiveDate": "2013-05-17"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "ownerCode": "01YZ",
+      "remandDate": "2011-10-26",
+      "currentAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "nextAppearance": {
+        "date": "2011-10-30",
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "remandConditions": []
+    }
+  ]
+}

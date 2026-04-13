@@ -56,6 +56,7 @@ export const setupLegacySteps = () => {
   When("I view offence {string}", legacy.viewOffence)
   When("I unlock the record and return to the list", legacy.returnToCaseListUnlock)
   When("I correct {string} to {string}", legacy.correctOffenceException)
+  When("I amend {string} to {string}", legacy.correctOffenceException)
   When("I match the offence to PNC offence {string}", legacy.matchOffence)
   When("I match the offence to PNC offence {string} in case {string}", legacy.matchOffenceAndCcr)
   When("I match the offence as Added In Court", () => {})

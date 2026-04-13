@@ -1,0 +1,138 @@
+{
+  "disposals": [
+    {
+      "id": "18309a83-3320-4940-adc3-e8e835959eac",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-25",
+      "courtCaseReference": "26/9998/000476R",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "83d5c8f1-7d5a-4795-9fd0-d3d7aa518a35",
+          "arrestSummonsId": "578983e2-6f3c-4a9b-a235-94181c288e43",
+          "adjudication": "G",
+          "npccOffenceCode": "1.8.11.1",
+          "cjsOffenceCode": "CJ88001",
+          "qualifiedCjsCode": "CJ88001",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "3435db6c-02c0-43c0-8237-1f2f35de1c4b",
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 100
+            },
+            {
+              "id": "309b649b-6a9a-41a4-b692-486478e35746",
+              "disposalCode": "3011",
+              "disposalQualifierCodes": [],
+              "fineAmount": 50
+            },
+            {
+              "id": "793bb81e-5db2-4cf8-b3d5-2ccc7d99babc",
+              "disposalCode": "3117",
+              "disposalQualifierCodes": [],
+              "fineAmount": 40
+            }
+          ],
+          "offence": {
+            "version": "7Iu8yWSZ+C8UoeSO4qAOfRKLKqWHw5vk5nCcmkq79dcbdLx2owQTgala5GhCM6Qv3BWiPnZxvgSpTmZMKu1YBA==",
+            "arrestSummonsReference": "26/0000/00/00000000850W",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000476R",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "1.8.11.1",
+            "cjsOffenceCode": "CJ88001",
+            "qualifiedCjsCode": "CJ88001",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "83d5c8f1-7d5a-4795-9fd0-d3d7aa518a35"
+          }
+        },
+        {
+          "offenceId": "35a7d768-eb65-4d4a-ab10-cfecf2522ff2",
+          "arrestSummonsId": "578983e2-6f3c-4a9b-a235-94181c288e43",
+          "adjudication": "G",
+          "npccOffenceCode": "1.8.11.2",
+          "cjsOffenceCode": "CJ88116",
+          "qualifiedCjsCode": "CJ88116",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 2,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "7d685c94-9379-453a-9348-b82b9a010a2b",
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 100
+            },
+            {
+              "id": "bcb212c2-d250-4e00-a675-d21feac30a45",
+              "disposalCode": "3012",
+              "disposalQualifierCodes": [],
+              "fineAmount": 100
+            }
+          ],
+          "offence": {
+            "version": "1/VyWQs0Lir7ZJbhMrIY8Qk4M0GE10QCvCrp+NW/sGAZ4YhaDa+4UJgFnE/SBxkuTy/YVCQKR6cXeP1CUGv3LQ==",
+            "arrestSummonsReference": "26/0000/00/00000000850W",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000476R",
+            "courtCaseChargeNumber": 2,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "1.8.11.2",
+            "cjsOffenceCode": "CJ88116",
+            "qualifiedCjsCode": "CJ88116",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "35a7d768-eb65-4d4a-ab10-cfecf2522ff2"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

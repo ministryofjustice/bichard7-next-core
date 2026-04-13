@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "b1bb838c-e826-4714-a142-46f8524df323",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000595W",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "6264823a-4671-405b-b843-f5570f6d754a",
+          "arrestSummonsId": "ebf087db-4e6f-45bb-86b9-ef2112ded366",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "aSb/CU855r7upsTwEaw1SLPTxA4+vjfYlhWueFgojUPTyRYxHsztO80KIqvYDP4UBsHNcrm2cq2sjE8N0dc0ZQ==",
+            "arrestSummonsReference": "26/0000/00/00000001213Q",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000595W",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "6264823a-4671-405b-b843-f5570f6d754a"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}
