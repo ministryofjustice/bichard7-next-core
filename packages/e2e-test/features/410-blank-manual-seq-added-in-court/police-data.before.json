@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "385a93c0-5bd9-4ee8-8d9a-e881e8de556c",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000503W",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "d5f7f6bd-0f10-4c40-8dfc-3737e6a92c60",
+          "arrestSummonsId": "26022350-aa1c-4246-905d-eb1da8319000",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "nOnwHxId+CbU/7yLM3imgDqXo9uo13ktCELx9frhlGnixuCtTPVZZ9KwMfV40MNw7j6MRS0dHaxnpfzjZ2Vrqg==",
+            "arrestSummonsReference": "26/0000/00/00000000940U",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000503W",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "d5f7f6bd-0f10-4c40-8dfc-3737e6a92c60"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

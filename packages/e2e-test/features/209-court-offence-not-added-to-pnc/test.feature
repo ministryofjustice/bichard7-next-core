@@ -23,6 +23,7 @@ Feature: {209} BR7-R5.4-RCD548-Offence Added In Court, Adj Pre Judg, PNC Adj exi
 		Given I am logged in as "supervisor"
 			And "input-message-1" is received
 		Then there are no exceptions or triggers
+			And I wait "3" seconds
 		When "input-message-2" is received
 		Then the PNC updates the record
 			And there are no exceptions or triggers

@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "ee8152c5-d1bc-4778-b046-a1a06e768e8e",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London"
+      },
+      "convictionDate": "2009-01-25",
+      "courtCaseReference": "26/9998/000393B",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "fb409fe1-edc4-4cff-a1c8-c3b6360fa89a",
+          "arrestSummonsId": "963f2ea2-9e2d-4838-bc90-980387512080",
+          "npccOffenceCode": "3.2.37.2",
+          "cjsOffenceCode": "CD71039",
+          "qualifiedCjsCode": "CD71039",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "0phTMBFocHbBt9kVrVcHh1YGEAM8GfVucefTssXUtvC5bDZjsP9nEB/ODXhkxdXk7OoiNNI3+erTNLN3mt9/DQ==",
+            "arrestSummonsReference": "26/0000/00/00000000765D",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000393B",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01VK",
+            "forceStationChargeOrig": "01VK",
+            "crimeReference": "",
+            "locationFSCode": "01VK",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "3.2.37.2",
+            "cjsOffenceCode": "CD71039",
+            "qualifiedCjsCode": "CD71039",
+            "startDate": "2008-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "fb409fe1-edc4-4cff-a1c8-c3b6360fa89a"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

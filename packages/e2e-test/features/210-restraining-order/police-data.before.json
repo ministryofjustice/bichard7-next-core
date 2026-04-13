@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "597d938d-b8f2-4158-9332-bcbe0dabf046",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000395D",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "c602bf77-92f3-4fb6-92b1-88382561c8d6",
+          "arrestSummonsId": "a961f806-e079-4201-b9cf-662f1c65474c",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "p5jF8AdH79savhsifmKtUjXhpu9RkeOBDbtdPgHXhJpDaRNSqdc6yOdg6DEuzS6cztux7iqaL1nibVXJmQpN8g==",
+            "arrestSummonsReference": "26/0000/00/00000000767F",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000395D",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-04",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "c602bf77-92f3-4fb6-92b1-88382561c8d6"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

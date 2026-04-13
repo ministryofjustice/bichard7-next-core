@@ -1,11 +1,11 @@
 Feature: {414} Persist Reason codes on a case list after the case is resolved.
 
-    		"""
-		When an exception is raised for a case, then we reolve the exception, and case is resubmitted.
+			"""
+		When an exception is raised for a case, then we resolve the exception, and case is resubmitted.
 		Then triggers are generated, once triggers are marked as complete, the case should have a "Resolved" state.
 		When the case state filter is set to "Resolved," both exception code and trigger code should be visible under Reason column on a case list.
-		The QA status column on old Bichard should remain empty (previously, a bug was generating question marks in that column).
-    		"""
+			The QA status column on old Bichard should remain empty (previously, a bug was generating question marks in that column).
+			"""
 
 	Background:
 		Given the data for this test is in the PNC

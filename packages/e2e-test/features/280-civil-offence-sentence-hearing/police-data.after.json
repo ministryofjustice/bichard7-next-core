@@ -1,0 +1,124 @@
+{
+  "disposals": [
+    {
+      "id": "993fadae-b5c3-402c-bcc3-8b8bab89ea96",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000466F",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "31c0632c-6de6-4693-848a-a310464ca294",
+          "arrestSummonsId": "b7d13e4b-8c34-4185-b97e-62e8375445a4",
+          "adjudication": "G",
+          "npccOffenceCode": "5.5.8.1",
+          "cjsOffenceCode": "TH68010",
+          "qualifiedCjsCode": "TH68010",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "8e38413c-6909-49dd-85e1-5057a1625759",
+              "disposalCode": "4011",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2011-10-26"
+            }
+          ],
+          "offence": {
+            "version": "YWh+MQxEkYtnZJ8lexJpq/Y6/X/6/XAiizP9RpjQnNgZSK67QCZ62ypzdcfRcvRhqg/PVOjhGGrjduJRuRs4TQ==",
+            "arrestSummonsReference": "26/0000/00/00000000839J",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "1",
+            "courtCaseReferenceNumber": "26/9998/000466F",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.8.1",
+            "cjsOffenceCode": "TH68010",
+            "qualifiedCjsCode": "TH68010",
+            "startDate": "2011-09-26",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "31c0632c-6de6-4693-848a-a310464ca294"
+          }
+        }
+      ],
+      "subsequentAppearances": [
+        {
+          "appearanceNumber": 1,
+          "court": {
+            "courtIdentityType": "code",
+            "courtCode": "2576"
+          },
+          "sentenceDate": "2011-10-26",
+          "reasonForVariation": "S",
+          "charges": [
+            {
+              "offenceId": "31c0632c-6de6-4693-848a-a310464ca294",
+              "arrestSummonsId": "b7d13e4b-8c34-4185-b97e-62e8375445a4",
+              "adjudication": "G",
+              "npccOffenceCode": "5.5.8.1",
+              "cjsOffenceCode": "TH68010",
+              "qualifiedCjsCode": "TH68010",
+              "offenceDescription": [],
+              "offenceRoleQualifiers": [],
+              "offenceLegislationQualifiers": [],
+              "offenceChargeNumber": 1,
+              "additionalMarker": false,
+              "disposals": [
+                {
+                  "id": "00b916ed-9ee3-43dd-b9c2-246febedc976",
+                  "disposalCode": "1002",
+                  "disposalQualifierCodes": [],
+                  "disposalDuration": {
+                    "units": "weeks",
+                    "count": 16
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "adjourned",
+      "ownerCode": "01YZ",
+      "remandDate": "2011-09-26",
+      "currentAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "nextAppearance": {
+        "date": "2011-10-26",
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      }
+    }
+  ]
+}

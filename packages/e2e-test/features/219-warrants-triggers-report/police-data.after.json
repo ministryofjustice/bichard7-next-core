@@ -1,0 +1,76 @@
+{
+  "disposals": [
+    {
+      "id": "6b1d9e05-b7b2-4e46-bb92-60a904b806d3",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000400J",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "038135f1-a116-4440-bd4a-a450e79923f6",
+          "arrestSummonsId": "2e11e0c6-ad45-4cf5-a2c2-8f16d268509d",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "Gz72PLiG/bl0RjKf2qEfK53g0iQoIMjenkOUjKMJBqSA96mG+gQYABkFyDnZq37XoZVVmN5Hloq7/477drYHoQ==",
+            "arrestSummonsReference": "26/0000/00/00000000772L",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000400J",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "038135f1-a116-4440-bd4a-a450e79923f6"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "adjourned",
+      "ownerCode": "01YZ",
+      "remandDate": "2011-09-26",
+      "currentAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "9998"
+        }
+      }
+    }
+  ]
+}

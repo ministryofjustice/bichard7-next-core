@@ -1,0 +1,100 @@
+{
+  "disposals": [
+    {
+      "id": "32ca8432-20f1-4c3b-aaa5-0c90cc0d045f",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-10",
+      "courtCaseReference": "26/9998/000820Q",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "b60c0b13-1237-4181-b48e-5c294461f49d",
+          "arrestSummonsId": "5f75196f-1b40-4f84-a790-b76f8e60f8e9",
+          "adjudication": "G",
+          "npccOffenceCode": "RT88004",
+          "cjsOffenceCode": "RT88004",
+          "qualifiedCjsCode": "RT88004",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "a34a2f39-c2f0-4d1b-abfa-206fc7625912",
+              "disposalCode": "4011",
+              "disposalQualifierCodes": [
+                "BA"
+              ],
+              "effectiveDate": "2012-01-05"
+            }
+          ],
+          "offence": {
+            "version": "iw56NobQXWK0Sxf87sLGf5L0BDCl4OT7G7qYEefFZDy3XDtMUHe5ibEV5izPS4F/9h0kaAgOreHutT9MOyLtTQ==",
+            "arrestSummonsReference": "26/0000/00/00000001487M",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000820Q",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "RT88004",
+            "cjsOffenceCode": "RT88004",
+            "qualifiedCjsCode": "RT88004",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "b60c0b13-1237-4181-b48e-5c294461f49d"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "ownerCode": "01YZ",
+      "remandDate": "2011-10-10",
+      "currentAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "nextAppearance": {
+        "date": "2012-01-05",
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "remandConditions": [
+        "Exclusion: not to contact directly or indirectly  ",
+        "Some One save via a solicitor to arrange contact  ",
+        "with child",
+        "Exclusion: not to enter Some Road or Some Lane in ",
+        "Some Place until he has attended in the company of",
+        "a Police oficer to confirm Some One has left the  ",
+        "area",
+        "With Electronic Tagging"
+      ]
+    }
+  ]
+}
