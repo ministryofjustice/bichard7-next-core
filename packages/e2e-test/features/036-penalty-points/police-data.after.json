@@ -1,0 +1,75 @@
+{
+  "disposals": [
+    {
+      "id": "209afde8-638a-40b7-a5f3-b0a28ba14345",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-25",
+      "courtCaseReference": "26/9998/000239J",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "a0a0597a-d7b8-4dd9-b01f-33100289aaae",
+          "arrestSummonsId": "9eaa7de6-b625-414a-aa73-61e5471ce45b",
+          "adjudication": "G",
+          "npccOffenceCode": "12.15.13.1",
+          "cjsOffenceCode": "RT88191",
+          "qualifiedCjsCode": "RT88191",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "295dc590-b6dc-4ef0-aac4-0381f532c051",
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 45
+            },
+            {
+              "id": "73372fdd-1719-4e9c-a131-1de5a408ddb6",
+              "disposalCode": "3008",
+              "disposalQualifierCodes": [],
+              "disposalText": "7 PENALTY POINTS"
+            }
+          ],
+          "offence": {
+            "version": "qEXYQcxgRd+DfSIyOdv8JOfcOg3nTjMXA2r66O+gN2XXcG/k5r6ffJFNxPJ92Qs2fD0HaAgVLWhjuwZYJ49AjQ==",
+            "arrestSummonsReference": "26/0000/00/100000407Q",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000239J",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "12.15.13.1",
+            "cjsOffenceCode": "RT88191",
+            "qualifiedCjsCode": "RT88191",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "a0a0597a-d7b8-4dd9-b01f-33100289aaae"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}
