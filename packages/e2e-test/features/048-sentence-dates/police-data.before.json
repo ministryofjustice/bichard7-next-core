@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "7bf089f3-e427-4f0c-80ef-8d15b55a3383",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000293T",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "8152051c-6c20-4e1a-bbcc-e68b99a36369",
+          "arrestSummonsId": "514ca249-1432-46d8-9d3e-06a00628479c",
+          "npccOffenceCode": "1.9.7.2",
+          "cjsOffenceCode": "OF61018",
+          "qualifiedCjsCode": "OF61018",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "0d++wwtsmdRxBPO+sEwOWxjbptjv5FxTIxo8PqJ61A7jGO4314p/pL7Q+xA6g1JGzXb8DHpCgL02Y6XX17fe5w==",
+            "arrestSummonsReference": "26/0000/00/100000463B",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000293T",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "1.9.7.2",
+            "cjsOffenceCode": "OF61018",
+            "qualifiedCjsCode": "OF61018",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "8152051c-6c20-4e1a-bbcc-e68b99a36369"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

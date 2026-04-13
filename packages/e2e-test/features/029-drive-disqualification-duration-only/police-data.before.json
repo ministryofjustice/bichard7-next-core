@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "7afff167-0a6e-4e38-a0b8-3a1b4e4aa4e2",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000235E",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "3c143437-60bd-41be-9429-f9048bbd65c5",
+          "arrestSummonsId": "0aee2006-a8b1-42d9-b331-db12013f1560",
+          "npccOffenceCode": "12.15.16.1",
+          "cjsOffenceCode": "RT88007",
+          "qualifiedCjsCode": "RT88007",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "cJm7a1Ch+qIdwGeqYSBqvnhtNqVBRSlG/H9hxW+yLW+wnjS/bOES5F93yeSv6F1d4wOHlIOzALWWaGOoCOaF9Q==",
+            "arrestSummonsReference": "26/0000/00/100000403L",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000235E",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "12.15.16.1",
+            "cjsOffenceCode": "RT88007",
+            "qualifiedCjsCode": "RT88007",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "3c143437-60bd-41be-9429-f9048bbd65c5"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}
