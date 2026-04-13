@@ -4,7 +4,7 @@
 INSERT INTO br7own.users_groups
 SELECT u.id AS user_id, g.id AS group_id FROM br7own.users AS u, br7own.groups as g
 WHERE
-	g."name" IN ('B7TriggerHandler_grp', 'B7GeneralHandler_grp')
+	g."name" IN ('B7TriggerHandler_grp', 'B7GeneralHandler_grp', 'B7NewUI_grp')
 	AND u.username IN (
   'Bichard01', 'GeneralHandler1', 'GeneralHandler2', 'ben.pirt', 'emad.karamad', 'alice.lee', 'csaba.gyorfi', 'ian.king'
 )
