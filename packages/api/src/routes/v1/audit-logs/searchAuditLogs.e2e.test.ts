@@ -1,11 +1,9 @@
-import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import axios, { HttpStatusCode } from "axios"
 
 import type { DynamoAuditLog, OutputApiAuditLog } from "../../../types/AuditLog"
 
@@ -24,7 +22,13 @@ import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/Tes
 const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
 
 const jwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
-const axiosOptions: AxiosRequestConfig = { headers: { Authorization: `Bearer ${jwt}` }, validateStatus: () => true }
+const fetchOptions: RequestInit = { headers: { Authorization: `Bearer ${jwt}` } }
+
+const fetchJson = async <T>(url: string): Promise<{ data: T; status: number }> => {
+  const response = await fetch(url, fetchOptions)
+  const data = (await response.json()) as T
+  return { data, status: response.status }
+}
 
 let url: string
 
@@ -56,8 +60,8 @@ describe("Getting Audit Logs", () => {
       throw new Error("Unexpected error")
     }
 
-    const result2 = await axios.get<OutputApiAuditLog[]>(url, axiosOptions)
-    expect(result2.status).toEqual(HttpStatusCode.Ok)
+    const result2 = await fetchJson<OutputApiAuditLog[]>(url)
+    expect(result2.status).toBe(200)
 
     expect(Array.isArray(result2.data)).toBeTruthy()
     const messageIds = result2.data.map((record) => record.messageId)
@@ -75,8 +79,8 @@ describe("Getting Audit Logs", () => {
       throw auditLog2
     }
 
-    const result = await axios.get<OutputApiAuditLog[]>(`${url}?status=Error`, axiosOptions)
-    expect(result.status).toEqual(HttpStatusCode.Ok)
+    const result = await fetchJson<OutputApiAuditLog[]>(`${url}?status=Error`)
+    expect(result.status).toBe(200)
 
     expect(Array.isArray(result.data)).toBeTruthy()
     const messageIds = result.data.map((record) => record.messageId)
@@ -94,8 +98,8 @@ describe("Getting Audit Logs", () => {
       throw auditLog2
     }
 
-    const result = await axios.get<OutputApiAuditLog[]>(`${url}?messageHash=${auditLog2.messageHash}`, axiosOptions)
-    expect(result.status).toEqual(HttpStatusCode.Ok)
+    const result = await fetchJson<OutputApiAuditLog[]>(`${url}?messageHash=${auditLog2.messageHash}`)
+    expect(result.status).toBe(200)
 
     expect(result.data).toHaveLength(1)
     expect(result.data[0].messageId).toBe(auditLog2.messageId)
@@ -112,11 +116,10 @@ describe("Getting Audit Logs", () => {
       throw auditLog2
     }
 
-    const result = await axios.get<OutputApiAuditLog[]>(
-      `${url}?externalCorrelationId=${auditLog2.externalCorrelationId}`,
-      axiosOptions
+    const result = await fetchJson<OutputApiAuditLog[]>(
+      `${url}?externalCorrelationId=${auditLog2.externalCorrelationId}`
     )
-    expect(result.status).toEqual(HttpStatusCode.Ok)
+    expect(result.status).toBe(200)
 
     expect(Array.isArray(result.data)).toBeTruthy()
     const messageIds = result.data.map((record) => record.messageId)
@@ -135,8 +138,8 @@ describe("Getting Audit Logs", () => {
         throw sanitisedAuditLog
       }
 
-      const result = await axios.get<OutputApiAuditLog[]>(`${url}?unsanitised=true`, axiosOptions)
-      expect(result.status).toEqual(HttpStatusCode.Ok)
+      const result = await fetchJson<OutputApiAuditLog[]>(`${url}?unsanitised=true`)
+      expect(result.status).toBe(200)
 
       expect(Array.isArray(result.data)).toBeTruthy()
       const messageIds = result.data.map((record) => record.messageId)
@@ -164,11 +167,10 @@ describe("Getting Audit Logs", () => {
         throw new Error("Unexpected error")
       }
 
-      const result = await axios.get<OutputApiAuditLog[]>(
-        `${url}?eventsFilter=automationReport&start=2022-01-02&end=2022-01-03`,
-        axiosOptions
+      const result = await fetchJson<OutputApiAuditLog[]>(
+        `${url}?eventsFilter=automationReport&start=2022-01-02&end=2022-01-03`
       )
-      expect(result.status).toEqual(HttpStatusCode.Ok)
+      expect(result.status).toBe(200)
 
       expect(Array.isArray(result.data)).toBeTruthy()
       const messageIds = result.data.map((record) => record.messageId)
@@ -198,16 +200,15 @@ describe("Getting Audit Logs", () => {
         throw eventExclude
       }
 
-      const allResult = await axios.get<OutputApiAuditLog[]>(url, axiosOptions)
-      expect(allResult.status).toEqual(HttpStatusCode.Ok)
+      const allResult = await fetchJson<OutputApiAuditLog[]>(url)
+      expect(allResult.status).toBe(200)
       expect(allResult.data[0]).toHaveProperty("events")
       expect(allResult.data[0].events).toHaveLength(2)
 
-      const filteredResult = await axios.get<OutputApiAuditLog[]>(
-        `${url}?eventsFilter=automationReport&start=2000-01-01&end=2099-01-01`,
-        axiosOptions
+      const filteredResult = await fetchJson<OutputApiAuditLog[]>(
+        `${url}?eventsFilter=automationReport&start=2000-01-01&end=2099-01-01`
       )
-      expect(filteredResult.status).toEqual(HttpStatusCode.Ok)
+      expect(filteredResult.status).toBe(200)
       expect(filteredResult.data[0]).toHaveProperty("events")
       expect(filteredResult.data[0].events).toHaveLength(1)
       expect(filteredResult.data[0].events?.[0].eventType).toBe(eventInclude.eventType)
@@ -234,16 +235,15 @@ describe("Getting Audit Logs", () => {
         throw eventExclude
       }
 
-      const allResult = await axios.get<OutputApiAuditLog[]>(url, axiosOptions)
-      expect(allResult.status).toEqual(HttpStatusCode.Ok)
+      const allResult = await fetchJson<OutputApiAuditLog[]>(url)
+      expect(allResult.status).toBe(200)
       expect(allResult.data[0]).toHaveProperty("events")
       expect(allResult.data[0].events).toHaveLength(2)
 
-      const filteredResult = await axios.get<OutputApiAuditLog[]>(
-        `${url}?eventsFilter=topExceptionsReport&start=2000-01-01&end=2099-01-01`,
-        axiosOptions
+      const filteredResult = await fetchJson<OutputApiAuditLog[]>(
+        `${url}?eventsFilter=topExceptionsReport&start=2000-01-01&end=2099-01-01`
       )
-      expect(filteredResult.status).toEqual(HttpStatusCode.Ok)
+      expect(filteredResult.status).toBe(200)
       expect(filteredResult.data[0]).toHaveProperty("events")
       expect(filteredResult.data[0].events).toHaveLength(1)
       expect(filteredResult.data[0].events?.[0].eventType).toBe(eventInclude.eventType)
@@ -255,9 +255,8 @@ describe("Getting Audit Logs", () => {
         throw auditLogs
       }
 
-      const result = await axios.get<OutputApiAuditLog[]>(
-        `${url}?eventsFilter=topExceptionsReport&start=2000-01-01&end=2099-01-01&lastMessageId=${auditLogs[2].messageId}`,
-        axiosOptions
+      const result = await fetchJson<OutputApiAuditLog[]>(
+        `${url}?eventsFilter=topExceptionsReport&start=2000-01-01&end=2099-01-01&lastMessageId=${auditLogs[2].messageId}`
       )
 
       expect(result.data).toHaveLength(2)
@@ -272,7 +271,6 @@ describe("Getting Audit Logs", () => {
       [
         ["fetchAll",                     createMockAuditLog, (_: DynamoAuditLog) => url, undefined],
         ["fetchUnsanitised",             createMockAuditLog, (_: DynamoAuditLog) => `${url}?unsanitised=true`, undefined],
-        // ["fetchById",                    createMockAuditLog, (l: DynamoAuditLog) => `${url}/${l.messageId}`, undefined],
         ["fetchByHash",                  createMockAuditLog, (l: DynamoAuditLog) => `${url}?messageHash=${l.messageHash}`, "messageHash"],
         ["fetchByExternalCorrelationId", createMockAuditLog, (l: DynamoAuditLog) => `${url}?externalCorrelationId=${l.externalCorrelationId}`, undefined],
         ["fetchByStatus",                createMockError,    (_: DynamoAuditLog) => `${url}?status=Error`, undefined]
@@ -284,18 +282,17 @@ describe("Getting Audit Logs", () => {
           throw new Error("Unexpected error")
         }
 
-        const defaultResult = await axios.get<OutputApiAuditLog[]>(baseUrl(auditLog), axiosOptions)
-        expect(defaultResult.status).toEqual(HttpStatusCode.Ok)
+        const defaultResult = await fetchJson<OutputApiAuditLog[]>(baseUrl(auditLog))
+        expect(defaultResult.status).toBe(200)
         expect(defaultResult.data[0]).toHaveProperty("events")
         expect(defaultResult.data[0]).toHaveProperty("receivedDate")
         const defaultKeys = Object.keys(defaultResult.data[0])
 
-        const excludedResult = await axios.get<OutputApiAuditLog[]>(
-          addQueryParams(baseUrl(auditLog), { excludeColumns: "receivedDate,events" }),
-          axiosOptions
+        const excludedResult = await fetchJson<OutputApiAuditLog[]>(
+          addQueryParams(baseUrl(auditLog), { excludeColumns: "receivedDate,events" })
         )
 
-        expect(excludedResult.status).toEqual(HttpStatusCode.Ok)
+        expect(excludedResult.status).toBe(200)
         expect(excludedResult.data[0]).not.toHaveProperty("events")
         expect(excludedResult.data[0]).not.toHaveProperty("receivedDate")
         expect(Object.keys(excludedResult.data[0])).toHaveLength(defaultKeys.length - 2)
@@ -307,21 +304,20 @@ describe("Getting Audit Logs", () => {
           throw new Error("Unexpected error")
         }
 
-        const defaultResult = await axios.get<OutputApiAuditLog[]>(baseUrl(auditLog), axiosOptions)
-        expect(defaultResult.status).toEqual(HttpStatusCode.Ok)
+        const defaultResult = await fetchJson<OutputApiAuditLog[]>(baseUrl(auditLog))
+        expect(defaultResult.status).toBe(200)
         expect("messageHash" in defaultResult.data[0]).toBe(indexKey === "messageHash")
         const expectedKeys = new Set(Object.keys(defaultResult.data[0]))
         if (indexKey) {
           expectedKeys.add(indexKey)
         }
 
-        const includedResult = await axios.get<OutputApiAuditLog[]>(
-          addQueryParams(baseUrl(auditLog), { includeColumns: "messageHash" }),
-          axiosOptions
+        const includedResult = await fetchJson<OutputApiAuditLog[]>(
+          addQueryParams(baseUrl(auditLog), { includeColumns: "messageHash" })
         )
 
         expectedKeys.add("messageHash")
-        expect(includedResult.status).toEqual(HttpStatusCode.Ok)
+        expect(includedResult.status).toBe(200)
         expect(includedResult.data[0]).toHaveProperty("messageHash")
         expect(Object.keys(includedResult.data[0])).toHaveLength([...expectedKeys].length)
       })
@@ -332,18 +328,17 @@ describe("Getting Audit Logs", () => {
           throw new Error("Unexpected error")
         }
 
-        const defaultResult = await axios.get<OutputApiAuditLog[]>(baseUrl(auditLog), axiosOptions)
-        expect(defaultResult.status).toEqual(HttpStatusCode.Ok)
+        const defaultResult = await fetchJson<OutputApiAuditLog[]>(baseUrl(auditLog))
+        expect(defaultResult.status).toBe(200)
         expect("messageHash" in defaultResult.data[0]).toBe(indexKey === "messageHash")
         expect(defaultResult.data[0]).toHaveProperty("events")
         expect(defaultResult.data[0]).toHaveProperty("receivedDate")
 
-        const filteredResult = await axios.get<OutputApiAuditLog[]>(
-          addQueryParams(baseUrl(auditLog), { excludeColumns: "receivedDate,events", includeColumns: "messageHash" }),
-          axiosOptions
+        const filteredResult = await fetchJson<OutputApiAuditLog[]>(
+          addQueryParams(baseUrl(auditLog), { excludeColumns: "receivedDate,events", includeColumns: "messageHash" })
         )
 
-        expect(filteredResult.status).toEqual(HttpStatusCode.Ok)
+        expect(filteredResult.status).toBe(200)
         expect(filteredResult.data[0]).toHaveProperty("messageHash")
         expect(filteredResult.data[0]).not.toHaveProperty("events")
         expect(filteredResult.data[0]).not.toHaveProperty("receivedDate")
@@ -368,8 +363,7 @@ describe("Getting Audit Logs", () => {
           throw auditLogs
         }
 
-        const result = await axios.get<OutputApiAuditLog[]>(addQueryParams(baseUrl(), { limit: "1" }), axiosOptions)
-
+        const result = await fetchJson<OutputApiAuditLog[]>(addQueryParams(baseUrl(), { limit: "1" }))
         expect(result.data).toHaveLength(1)
       })
 
@@ -379,14 +373,12 @@ describe("Getting Audit Logs", () => {
           throw auditLogs
         }
 
-        const result = await axios.get<OutputApiAuditLog[]>(
-          addQueryParams(baseUrl(), { lastMessageId: auditLogs[2].messageId }),
-          axiosOptions
+        const result = await fetchJson<OutputApiAuditLog[]>(
+          addQueryParams(baseUrl(), { lastMessageId: auditLogs[2].messageId })
         )
 
         expect(result.data).toHaveLength(2)
 
-        // determine which keys will be returned based on the sort order
         const keys = descending ? [1, 0] : [3, 4]
         expect(result.data[0].messageId).toBe(auditLogs[keys[0]].messageId)
         expect(result.data[1].messageId).toBe(auditLogs[keys[1]].messageId)
