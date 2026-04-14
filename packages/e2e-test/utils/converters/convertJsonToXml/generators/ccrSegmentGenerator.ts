@@ -1,10 +1,13 @@
 import type { MockAddDisposalRequest } from "../../../../types/MockAddDisposalRequest"
 import type { MockDisposal as MockAsnQueryResponseDisposal } from "../../../../types/MockAsnQueryResponse"
+import type { MockSubsequentDisposalResultsRequest } from "../../../../types/MockSubsequentDisposalResultsRequest"
 import * as CONSTANT from "../../../constants"
 import { formatCourtCaseReference } from "../helpers/formatCourtCaseReference"
 import generateRow from "../helpers/generateRow"
 
-const ccrSegmentGenerator = (data: MockAsnQueryResponseDisposal | MockAddDisposalRequest): string => {
+const ccrSegmentGenerator = (
+  data: MockAsnQueryResponseDisposal | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
+): string => {
   const ccrSegment = generateRow("CCR", [
     [CONSTANT.UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
     [formatCourtCaseReference(data.courtCaseReference), CONSTANT.COURT_CASE_REFERENCE_FIELD_LENGTH],
