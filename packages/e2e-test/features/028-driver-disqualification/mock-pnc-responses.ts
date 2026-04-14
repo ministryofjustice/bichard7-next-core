@@ -20,8 +20,44 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/4Y      JIMBOBJONES             </IDS><CCR>K21/2732/4L                    </CCR><COU>I1910                                                                       JIMBOBJONES/BOBBY                                     260920110000</COU><CCH>K001              RT88007 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I3096                      00                                                                            </DIS><DIS>I4047    26102011          00                                                                            </DIS>",
+    expectedRequest: `{
+      "ownerCode": "01YZ",
+      "personUrn": "21/4Y",
+      "pncCheckName": "JIMBOBJONES",
+      "croNumber": "",
+      "crimeOffenceReferenceNumber": "",
+      "courtCaseReference": "21/2732/000004L",
+      "court": {
+        "courtIdentityType": "code",
+        "courtCode": "1910"
+      },
+      "dateOfConviction": "2011-09-26",
+      "defendant": {
+        "defendantType": "individual",
+        "defendantFirstNames": ["BOBBY"],
+        "defendantLastName": "JIMBOBJONES"
+      },
+      "offences": [
+        {
+          "courtOffenceSequenceNumber": 1,
+          "cjsOffenceCode": "RT88007",
+          "plea": "Not Guilty",
+          "adjudication": "Guilty",
+          "dateOfSentence": "2011-09-26",
+          "offenceTic": 0,
+          "disposalResults": [
+            {
+              "disposalCode": 3096
+            },
+            {
+              "disposalCode": 4047,
+              "disposalEffectiveDate": "2011-10-26"
+            }
+          ],
+          "offenceId": "6ea2e9aa-92ee-42f1-a26f-16ca0346942d"
+        }
+      ]
+    }`,
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
