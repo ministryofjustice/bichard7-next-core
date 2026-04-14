@@ -7,7 +7,7 @@
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "update-deps": "ncu -u --cooldown 3d && npm install",
+    "update-deps": "ncu -u && npm install",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --workerThreads=true",
     "setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -P ./deploy/tsconfig.deploy.json -T ./deploy/deploy.ts",
     "worker": ". ../../environment/local-conductor-worker.env && . ../../environment/leds-environment-variable.sh && npm run worker-noenv",

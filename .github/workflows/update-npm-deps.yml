@@ -21,24 +21,35 @@ jobs:
       - name: Print node version  
         run: node -v
 
+      - name: ⛓️ SLSA Supply Chain Security
+        uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.5.0
+
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
       - name: Update dependencies
         run: npm run update-deps --workspaces
 
-# Temporarily disabled while investigating alternative actions
-#      - name: Report Status
-#        if: always()
-#        uses: ravsamhq/notify-slack-action@4ed28566c2bdcdaee6dca2b46b9666d01b4ed8a4 # v1
-#        with:
-#          status: ${{ job.status }}
-#          notification_title: 'GitHub action failed'
-#          message_format: ':elmo-fire: *{workflow}* {status_message} in <{repo_url}|{repo}>'
-#          notify_when: 'failure'
-#          footer: 'Linked to Repo <{repo_url}|{repo}>'
-#        env:
-#          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+      - name: Report Status
+        if: failure()
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d #v2.0.0
+        with:
+          webhook-type: incoming-webhook
+          payload: |
+            text: "GitHub action failed"  
+            attachments:  
+              - color: "#a30000" # Red  
+                blocks:  
+                  - type: "section"  
+                    text:  
+                      type: "mrkdwn"  
+                      text: ":elmo-fire: *${{ github.workflow }}* failed in <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"  
+                  - type: "context"  
+                    elements:  
+                      - type: "mrkdwn"  
+                        text: "Linked to Repo <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
 
       - name: Create pull request
         id: cpr
