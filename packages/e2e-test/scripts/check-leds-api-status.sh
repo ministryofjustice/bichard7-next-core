@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$WORKSPACE" != "leds" ]]; then
+if [[ "$WORKSPACE" == "e2e-test" || "$USE_LEDS" != "true" ]]; then
     exit 0;
 fi
 
