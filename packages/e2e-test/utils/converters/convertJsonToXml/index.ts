@@ -9,25 +9,19 @@ const convertToXml = (code: string, data: string | undefined): string => {
   }
 
   const ledsJson = JSON.parse(data)
-  let result = ""
 
   switch (code) {
     case "CXE01":
-      result = convertLedsAsnQueryResponseToXml(ledsJson)
-      break
+      return convertLedsAsnQueryResponseToXml(ledsJson)
     case "CXU01":
-      result = convertLedsRemandRequestToXml(ledsJson)
-      break
+      return convertLedsRemandRequestToXml(ledsJson)
     case "CXU02":
-      result = convertLedsAddDisposalRequestToXml(ledsJson)
-      break
+      return convertLedsAddDisposalRequestToXml(ledsJson)
     case "CXU04":
-      result = convertLedsSubsequentDisposalRequestToXmls(ledsJson)
+      return convertLedsSubsequentDisposalRequestToXmls(ledsJson)
     default:
       throw Error(`Unknown conversion type: ${code}`)
   }
-
-  return result
 }
 
 export default convertToXml
