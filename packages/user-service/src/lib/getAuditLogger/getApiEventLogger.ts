@@ -1,4 +1,3 @@
-import axios from "axios"
 import type { UserServiceConfig } from "lib/config"
 import type { GetServerSidePropsContext } from "next"
 import type { EventLogger } from "types/AuditLogger"
@@ -39,15 +38,23 @@ const getApiEventLogger =
         }
       }
 
-      const apiResult = await axios.post(`users/${username}/events`, userEvent, {
-        baseURL: config.auditLogApiUrl,
-        headers: {
-          "X-API-Key": config.auditLogApiKey
-        }
+      const headers = new Headers()
+      headers.set("Content-Type", "application/json")
+
+      if (config.auditLogApiKey) {
+        headers.set("X-API-KEY", config.auditLogApiKey)
+      }
+
+      const apiResult = await fetch(`${config.auditLogApiUrl}/users/${username}/events`, {
+        headers,
+        method: "POST",
+        body: JSON.stringify(userEvent)
       })
 
       if (apiResult.status !== HttpStatus.Created) {
-        return new Error(`Could not log event. API returned ${apiResult.status}. ${apiResult.data}`)
+        const responseData = await apiResult.text()
+
+        return new Error(`Could not log event. API returned ${apiResult.status}. ${responseData}`)
       }
     } catch (error) {
       logger.error(error)

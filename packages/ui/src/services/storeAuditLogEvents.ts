@@ -1,5 +1,4 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
-import axios from "axios"
 import { AUDIT_LOG_API_KEY, AUDIT_LOG_API_URL } from "../config"
 import { statusOk } from "../utils/http"
 
@@ -12,21 +11,22 @@ const storeAuditLogEvents = async (
     return
   }
 
-  return axios({
-    url: `${AUDIT_LOG_API_URL}/${route}/${messageIdOrUsername}/events`,
+  return fetch(`${AUDIT_LOG_API_URL}/${route}/${messageIdOrUsername}/events`, {
     method: "POST",
     headers: {
-      "X-API-Key": AUDIT_LOG_API_KEY
+      "X-API-Key": AUDIT_LOG_API_KEY,
+      "Content-Type": "application/json"
     },
-    data: JSON.stringify(events)
+    body: JSON.stringify(events)
   })
-    .then((response) => {
+    .then(async (response) => {
       if (!statusOk(response.status)) {
-        throw Error(`Failed to create audit logs: ${response.data}`)
+        const errorData = await response.text()
+        throw new Error(`Failed to create audit logs: ${errorData}`)
       }
     })
     .catch((err) => {
-      throw Error(`Failed to create audit logs: ${err}`)
+      throw new Error(`Failed to create audit logs: ${err}`)
     })
 }
 

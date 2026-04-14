@@ -1,4 +1,3 @@
-import axios from "axios"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import { useCallback, useEffect } from "react"
 import useFirstLoad from "./useFirstLoad"
@@ -12,7 +11,9 @@ const useRefreshCsrfToken = (props?: RefreshCsrfTokenProps) => {
   const firstLoad = useFirstLoad()
 
   const fetchNewCsrfToken = useCallback(() => {
-    axios.get("/bichard/api/refresh-csrf-token").then((response) => updateCsrfToken(response.data.csrfToken as string))
+    fetch("/bichard/api/refresh-csrf-token")
+      .then((response) => response.json())
+      .then((data) => updateCsrfToken(data.csrfToken as string))
   }, [updateCsrfToken])
 
   useEffect(() => {

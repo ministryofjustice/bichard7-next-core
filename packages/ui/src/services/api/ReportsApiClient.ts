@@ -1,44 +1,44 @@
-import https from "node:https"
-import type { AxiosInstance, AxiosRequestConfig } from "axios"
-import axios from "axios"
+import { fetch, Agent } from "undici"
 import { API_LOCATION } from "config"
 
 export default class ReportsApiClient {
-  readonly client: AxiosInstance
   private readonly jwt: string
+  private readonly dispatcher: Agent
 
   constructor(jwt: string) {
     this.jwt = jwt
 
-    const httpsAgent = new https.Agent({
-      rejectUnauthorized: false
-    })
-
-    this.client = axios.create({
-      baseURL: API_LOCATION,
-      httpsAgent,
-      headers: {
-        Authorization: `Bearer ${this.jwt}`
+    this.dispatcher = new Agent({
+      connect: {
+        rejectUnauthorized: false
       }
     })
   }
 
-  async *fetchReport<T>(url: string, config?: AxiosRequestConfig): AsyncIterable<T | Error> {
+  async *fetchReport<T>(url: string): AsyncIterable<T | Error> {
     try {
-      const response = await this.client.get(url, {
-        ...config,
-        responseType: "stream"
+      const requestUrl = `${API_LOCATION}${url}`
+
+      const response = await fetch(requestUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.jwt}`
+        },
+        dispatcher: this.dispatcher
       })
 
-      for await (const chunk of response.data) {
-        yield chunk
+      if (!response.ok) {
+        yield new Error(`Stream failed: Request failed with status code ${response.status}`)
+        return
+      }
+
+      if (response.body) {
+        for await (const chunk of response.body) {
+          yield chunk as T
+        }
       }
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        yield new Error(`Stream failed: ${error.message}`)
-      } else {
-        yield error as Error
-      }
+      yield error as Error
     }
   }
 }
