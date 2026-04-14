@@ -29,7 +29,10 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     async (searchStringParam?: string) => {
       const query = new URLSearchParams({ search: searchStringParam ?? "" })
 
-      const organisationUnitsResponse = await fetch(`/bichard/api/organisation-units?${query}`)
+      const queryString = query.toString()
+      const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/force-owner`
+
+      const organisationUnitsResponse = await fetch(url)
         .then((response) => {
           if (!response.ok) {
             throw new Error(`HTTP Error: ${response.status}`)

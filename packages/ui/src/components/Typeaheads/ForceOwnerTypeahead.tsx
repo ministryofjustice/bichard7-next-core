@@ -24,7 +24,10 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }: P
           params.append("search", searchStringParam)
         }
 
-        const response = await fetch(`/bichard/api/force-owner?${params}`, {
+        const queryString = params.toString()
+        const url = queryString ? `/bichard/api/force-owner?${queryString}` : `/bichard/api/force-owner`
+
+        const response = await fetch(url, {
           method: "GET",
           signal: config?.signal
         })
