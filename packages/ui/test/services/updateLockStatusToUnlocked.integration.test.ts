@@ -92,25 +92,24 @@ const testCases = [
     expectedEvents: []
   },
   {
-    description: "Trigger handler cannot unlock a case that is not locked",
+    description: "Trigger handler can gracefully unlock a case that is already unlocked",
     triggerLockedBy: null,
     exceptionLockedBy: null,
     currentUserGroup: UserGroup.TriggerHandler,
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: null,
     expectExceptionsToBeLockedBy: null,
-    expectError: "Case is not locked",
     expectedEvents: []
   },
   {
-    description: "Trigger handler cannot unlock a case that has lock on exceptions",
+    description: "Trigger handler cannot unlock a case that only has locks on exceptions",
     triggerLockedBy: null,
     exceptionLockedBy: "BichardForce02",
     currentUserGroup: UserGroup.TriggerHandler,
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: null,
     expectExceptionsToBeLockedBy: "BichardForce02",
-    expectError: "Case is not locked",
+    expectError: "User does not have permission to unlock this specific case", // Updated error message
     expectedEvents: []
   },
   {
@@ -166,25 +165,24 @@ const testCases = [
     expectedEvents: []
   },
   {
-    description: "Exception handler cannot unlock a case that is not locked",
+    description: "Exception handler can gracefully unlock a case that is already unlocked",
     triggerLockedBy: null,
     exceptionLockedBy: null,
     currentUserGroup: UserGroup.ExceptionHandler,
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: null,
     expectExceptionsToBeLockedBy: null,
-    expectError: "Case is not locked",
     expectedEvents: []
   },
   {
-    description: "Exception handler cannot unlock a case that has lock on triggers",
+    description: "Exception handler cannot unlock a case that only has locks on triggers",
     triggerLockedBy: "BichardForce02",
     exceptionLockedBy: null,
     currentUserGroup: UserGroup.ExceptionHandler,
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: "BichardForce02",
     expectExceptionsToBeLockedBy: null,
-    expectError: "Case is not locked",
+    expectError: "User does not have permission to unlock this specific case", // Updated error message
     expectedEvents: []
   },
   {
@@ -272,14 +270,13 @@ const testCases = [
     expectedEvents: []
   },
   {
-    description: "General handler cannot unlock a case that is not locked",
+    description: "General handler can gracefully unlock a case that is already unlocked",
     triggerLockedBy: null,
     exceptionLockedBy: null,
     currentUserGroup: UserGroup.GeneralHandler,
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: null,
     expectExceptionsToBeLockedBy: null,
-    expectError: "Case is not locked",
     expectedEvents: []
   },
   {
@@ -367,14 +364,13 @@ const testCases = [
     expectedEvents: [exceptionUnlockedEvent()]
   },
   {
-    description: "Supervisor cannot unlock a case that is not locked",
+    description: "Supervisor can gracefully unlock a case that is already unlocked",
     triggerLockedBy: null,
     exceptionLockedBy: null,
     currentUserGroup: UserGroup.Supervisor,
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: null,
     expectExceptionsToBeLockedBy: null,
-    expectError: "Case is not locked",
     expectedEvents: []
   }
 ]

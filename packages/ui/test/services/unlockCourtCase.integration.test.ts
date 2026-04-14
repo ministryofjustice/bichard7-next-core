@@ -159,9 +159,7 @@ describe("unlock court case", () => {
 
   describe("when there is an error", () => {
     it("Should return the error if fails to store audit logs", async () => {
-      ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(
-        () => new Error("Error while calling audit log API")
-      )
+      ;(storeMessageAuditLogEvents as jest.Mock).mockRejectedValueOnce(new Error("Error while calling audit log API"))
 
       const result = await unlockCourtCase(
         dataSource,
@@ -170,7 +168,7 @@ describe("unlock court case", () => {
         UnlockReason.TriggerAndException
       ).catch((error) => error)
 
-      expect(result).toEqual(Error("Error while calling audit log API"))
+      expect(result).toEqual(new Error("Error while calling audit log API"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: 0 } })
       const actualCourtCase = record as CourtCase

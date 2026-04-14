@@ -45,6 +45,11 @@ const reallocateCourtCaseToForceTransaction = async (
       throw ahoResult
     }
 
+    const currentForceOwner = ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner?.OrganisationUnitCode
+    if (currentForceOwner === forceCode) {
+      return
+    }
+
     const isCaseRecordableOnPnc = !!ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.RecordableOnPNCindicator
     const hasNoExceptionsOrAllResolved = !courtCase.errorStatus || courtCase.errorStatus === "Resolved"
     const triggersPhase =
@@ -140,10 +145,7 @@ const reallocateCourtCaseToForceTransaction = async (
       throw unlockResult
     }
 
-    const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch((error) => error)
-    if (isError(storeAuditLogResponse)) {
-      throw storeAuditLogResponse
-    }
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
   })
 }
 
