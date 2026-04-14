@@ -1,6 +1,5 @@
 import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
 import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
-import axios from "axios"
 import { Button } from "components/Buttons/Button"
 import { Card } from "components/Card"
 import { NoteTextArea } from "components/NoteTextArea"
@@ -79,17 +78,31 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
     }
 
     try {
-      const response = await axios.post(`${router.basePath}/api/court-cases/${courtCase.errorId}/audit`, {
+      const payload = {
         csrfToken,
         data: {
           triggerQuality: triggerQualitySet ? triggerQuality : undefined,
           exceptionQuality: exceptionQualitySet ? exceptionQuality : undefined,
           note
         }
+      }
+
+      const response = await fetch(`${router.basePath}/api/court-cases/${courtCase.errorId}/audit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
       })
 
-      updateCourtCase(response.data.courtCase satisfies DisplayFullCourtCase)
-      updateCsrfToken(response.data.csrfToken as string)
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`)
+      }
+
+      const responseData = await response.json()
+
+      updateCourtCase(responseData.courtCase satisfies DisplayFullCourtCase)
+      updateCsrfToken(responseData.csrfToken as string)
     } catch {
       return {
         ...initialFormState,

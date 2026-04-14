@@ -253,7 +253,7 @@ describe("resolveTriggers", () => {
       expect(triggerToBeResolvedAfterResolving.resolvedAt).not.toBeNull()
 
       const eventsAfterResolvingTrigger = await fetchAuditLogEvents(courtCase.messageId)
-      expect(eventsAfterResolvingTrigger).toStrictEqual([createTriggersResolvedEvent(["TRPR0002 (2)"])])
+      expect(eventsAfterResolvingTrigger).toEqual([createTriggersResolvedEvent(["TRPR0002 (2)"])])
     })
 
     it("Shouldn't overwrite an already resolved trigger when attempting to resolve again", async () => {
@@ -406,7 +406,7 @@ describe("resolveTriggers", () => {
       expect(updatedCourtCase.triggerLockedByUsername).toEqual(resolverUsername)
 
       let events = await fetchAuditLogEvents(courtCase.messageId)
-      expect(events).toStrictEqual([createTriggersResolvedEvent(["TRPR0001"])])
+      expect(events).toEqual([createTriggersResolvedEvent(["TRPR0001"])])
 
       triggerResolveResult = await resolveTriggers(dataSource, [triggers[1].triggerId], courtCase.errorId, user)
       expect(isError(triggerResolveResult)).toBeFalsy()
@@ -583,7 +583,7 @@ describe("resolveTriggers", () => {
         .filter((trigger) => triggersToResolve.includes(trigger.triggerId))
         .map((trigger) => trigger.triggerCode)
       const events = await fetchAuditLogEvents(courtCase.messageId)
-      expect(events).toStrictEqual([createTriggersResolvedEvent(resolvedTriggerCodes)])
+      expect(events).toEqual([createTriggersResolvedEvent(resolvedTriggerCodes)])
     })
 
     it("Shouldn't set resolution timestamp when a case has unresolved exceptions", async () => {

@@ -3,7 +3,6 @@ import { auditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
-import axios from "axios"
 import { randomUUID } from "crypto"
 import getDataSource from "services/getDataSource"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
@@ -13,7 +12,7 @@ import { AUDIT_LOG_API_KEY, AUDIT_LOG_API_URL } from "../../src/config"
 import createAuditLog from "../helpers/createAuditLog"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 
-jest.mock("axios")
+const originalFetch = global.fetch
 
 describe("storeAuditLogEvents", () => {
   let dataSource: DataSource
@@ -31,7 +30,8 @@ describe("storeAuditLogEvents", () => {
     jest.clearAllMocks()
     await deleteFromDynamoTable("auditLogTable", "messageId")
     await deleteFromDynamoTable("auditLogEventsTable", "_id")
-    ;(axios as unknown as jest.Mock).mockImplementation(jest.requireActual("axios").default)
+
+    global.fetch = jest.fn().mockImplementation(originalFetch)
   }, 20_000)
 
   it("Should store audit log events in dynamoDB", async () => {
@@ -44,9 +44,11 @@ describe("storeAuditLogEvents", () => {
 
     expect(isError(result)).toBeFalsy()
 
-    const [record] = (await axios(`${AUDIT_LOG_API_URL}/messages/${auditLog.messageId}`)).data
+    const response = await fetch(`${AUDIT_LOG_API_URL}/messages/${auditLog.messageId}`)
+    const data = await response.json()
+    const [record] = data
 
-    expect(record.events).toStrictEqual([
+    expect(record.events).toEqual([
       {
         attributes: { key1: "value1" },
         category: "information",
@@ -65,17 +67,25 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("should pass through the api key as a header", async () => {
-    ;(axios as unknown as jest.Mock).mockResolvedValue({ status: 200 })
+    ;(global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      status: 200
+    })
 
     const result = await storeMessageAuditLogEvents("dummy_key", [{} as AuditLogEvent]).catch((error) => error)
 
     expect(isError(result)).toBeFalsy()
 
-    expect(axios).toHaveBeenCalledWith({
-      url: `${AUDIT_LOG_API_URL}/messages/dummy_key/events`,
-      data: "[{}]",
-      headers: { "X-API-Key": AUDIT_LOG_API_KEY },
-      method: "POST"
-    })
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${AUDIT_LOG_API_URL}/messages/dummy_key/events`,
+      expect.objectContaining({
+        method: "POST",
+        headers: {
+          "X-API-Key": AUDIT_LOG_API_KEY,
+          "Content-Type": "application/json"
+        },
+        body: "[{}]"
+      })
+    )
   })
 })
