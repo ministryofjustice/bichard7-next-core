@@ -293,8 +293,8 @@ describe("resolveTriggers", () => {
         (error) => error
       )
 
-      expect(isError(resolvedResult)).toBeTruthy()
-      expect((resolvedResult as Error).message).toBe("One or more triggers are already resolved - 0")
+      // We gracefully don't throw an error to avoid a 500 error
+      expect(isError(resolvedResult)).toBeFalsy()
 
       const updatedTrigger = (await dataSource
         .getRepository(Trigger)

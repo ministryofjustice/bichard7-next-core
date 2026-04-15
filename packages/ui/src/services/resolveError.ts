@@ -27,6 +27,10 @@ const resolveError = async (
     throw new Error(resolutionError)
   }
 
+  if (courtCase.errorStatus === "Resolved") {
+    return { raw: [], affected: 0, generatedMaps: [] } as UpdateResult
+  }
+
   const resolver = user.username
   const resolutionTimestamp = new Date()
   const query = courtCasesByOrganisationUnitQuery(
