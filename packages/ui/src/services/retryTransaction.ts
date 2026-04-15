@@ -1,5 +1,6 @@
 import { QueryFailedError } from "typeorm"
 import logger from "utils/logger"
+import { randomInt } from "node:crypto"
 
 const SERIALIZATION_ERROR_CODES = new Set(["40001", "40P01"])
 
@@ -33,7 +34,7 @@ export const retryTransaction = async <T, Args extends unknown[]>(
         throw error
       }
 
-      await delay(Math.random() * 100 * (attempt + 1))
+      await delay(randomInt(0, 100) * (attempt + 1))
       attempt++
     }
   }
