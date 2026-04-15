@@ -5,11 +5,12 @@ interface Props extends React.ComponentProps<"a"> {
   children: React.ReactNode
   className?: string
   onClick?: ReactEventHandler
+  id?: string
 }
 
-const ActionLink = ({ children, className, onClick }: Props) => {
+const ActionLink = ({ children, className, onClick, id }: Props) => {
   return (
-    <ActionLinkButton onClick={onClick} className={`govuk-link ${className} moj-action-link`}>
+    <ActionLinkButton id={id} onClick={onClick} className={`govuk-link ${className} moj-action-link`}>
       {children}
     </ActionLinkButton>
   )
