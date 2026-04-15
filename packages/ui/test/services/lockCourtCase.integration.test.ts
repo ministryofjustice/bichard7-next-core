@@ -169,9 +169,7 @@ describe("lock court case", () => {
 
   describe("when there is an error", () => {
     it("Should return the error if fails to store audit logs", async () => {
-      ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(
-        () => new Error("Error while calling audit log API")
-      )
+      ;(storeMessageAuditLogEvents as jest.Mock).mockRejectedValue(new Error("Error while calling audit log API"))
 
       const result = await lockCourtCase(dataSource, unlockedCourtCase.errorId, user).catch((error) => error)
 
