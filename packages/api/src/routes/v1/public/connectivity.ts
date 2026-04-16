@@ -26,7 +26,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, reply, req }: HandlerProps) => {
-  const connectivityKey = req.headers["x-connectivity-key"]
+  const connectivityKey = req.headers["x-connectivity-check-key"]
   if (!connectivityKey || connectivityKey !== process.env.CONNECTIVITY_CHECK_KEY) {
     return reply.code(UNAUTHORIZED).send("Unauthorized")
   }

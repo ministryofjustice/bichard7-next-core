@@ -23,7 +23,7 @@ describe("/v1/connectivity e2e", () => {
   it("will return the true values for dependencies", async () => {
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {
-        ["x-connectivity-key"]: "test-connectivity-key"
+        ["x-connectivity-check-key"]: "test-connectivity-key"
       },
       method: "GET"
     })
@@ -38,7 +38,7 @@ describe("/v1/connectivity e2e", () => {
   it("will return unauthorised with wrong API key", async () => {
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: {
-        ["x-connectivity-key"]: "wrong-connectivity-key"
+        ["x-connectivity-check-key"]: "wrong-connectivity-key"
       },
       method: "GET"
     })
