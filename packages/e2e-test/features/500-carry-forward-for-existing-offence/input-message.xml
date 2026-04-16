@@ -135,8 +135,6 @@
 							<DC:Plea>2</DC:Plea>
 							<DC:ModeOfTrial>01</DC:ModeOfTrial>
 							<DC:FinalDisposalIndicator>Y</DC:FinalDisposalIndicator>
-							<DC:ConvictionDate>2011-09-26</DC:ConvictionDate>
-							<DC:Finding>G</DC:Finding>
 							<DC:Result>
 								<DC:ResultCode>2059</DC:ResultCode>
 								<DC:ResultText>Carried Forward to Court Case.</DC:ResultText>
