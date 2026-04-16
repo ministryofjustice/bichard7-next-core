@@ -1,4 +1,5 @@
 import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
+import type { IncomingMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
 import type CourtCase from "../../../types/LedsTestApiHelper/CourtCase"
 import type { NonEmptyCourtCaseArray } from "../../../types/LedsTestApiHelper/CourtCase"
 import type { NonEmptyOffenceDetailsArray } from "../../../types/LedsTestApiHelper/OffenceDetails"
@@ -51,9 +52,11 @@ const mapNcmToOffences = (
       {} as Record<string, NonEmptyOffenceDetailsArray>
     )
 
-const mapNcmToCourtCases = (ncm: ParsedNcm): NonEmptyCourtCaseArray => {
+const mapNcmToCourtCases = (ncm: ParsedNcm, spi: IncomingMessageParsedXml): NonEmptyCourtCaseArray => {
   const forceOwnerCode = ncm.NewCaseMessage.Case.PTIURN.substring(0, 4)
-  const hearingLocation = ncm.NewCaseMessage.Case.InitialHearing.CourtHearingLocation
+  const hearingLocation =
+    spi.DeliverRequest.Message.ResultedCaseMessage.Session.CourtHearing.Hearing.CourtHearingLocation ??
+    ncm.NewCaseMessage.Case.InitialHearing.CourtHearingLocation
   const courtOrganisationUnit =
     organisationUnit.find(
       (ou) =>

@@ -16,12 +16,16 @@ import mapSpiToCourtCases from "./mapSpiToCourtCases"
 
 type MockRequestsAndResponses = (ncmFile: string, bichard: Bichard) => LedsMock[]
 
-const messageFilePatterns = ["pnc-data.xml", "input-message.xml", "input-message-\\d\\.xml"]
+const spiMessageFilePatterns = ["input-message.xml", "input-message-\\d\\.xml"]
+const messageFilePatterns = ["pnc-data.xml", ...spiMessageFilePatterns]
 const parser = new XMLParser({ removeNSPrefix: true })
 
-const readInputFile = (bichard: LedsBichard): ParsedNcm | IncomingMessageParsedXml => {
+const readCaseDataFile = (
+  bichard: LedsBichard,
+  filePatterns = messageFilePatterns
+): ParsedNcm | IncomingMessageParsedXml => {
   const files = fs.readdirSync(bichard.specFolder)
-  const filePattern = messageFilePatterns.find((pattern) => files.some((file) => new RegExp(pattern).test(file)))
+  const filePattern = filePatterns.find((pattern) => files.some((file) => new RegExp(pattern).test(file)))
   const messageFile = filePattern && files.find((file) => new RegExp(filePattern).test(file))
   if (!messageFile) {
     throw new Error("No input message files found")
@@ -40,13 +44,14 @@ const addMockToLedsApi = async (bichard: LedsBichard): Promise<void> => {
 
   let arrestedPerson: PersonDetails
   let courtCases: NonEmptyCourtCaseArray
-  const inputXml = readInputFile(bichard)
-  if ("DeliverRequest" in inputXml) {
-    arrestedPerson = mapSpiToArrestedPerson(inputXml)
-    courtCases = mapSpiToCourtCases(inputXml)
+  const caseDataXml = readCaseDataFile(bichard)
+  if ("DeliverRequest" in caseDataXml) {
+    arrestedPerson = mapSpiToArrestedPerson(caseDataXml)
+    courtCases = mapSpiToCourtCases(caseDataXml)
   } else {
-    arrestedPerson = mapNcmToArrestedPerson(inputXml)
-    courtCases = mapNcmToCourtCases(inputXml)
+    const spiMessageXml = readCaseDataFile(bichard, spiMessageFilePatterns) as IncomingMessageParsedXml
+    arrestedPerson = mapNcmToArrestedPerson(caseDataXml)
+    courtCases = mapNcmToCourtCases(caseDataXml, spiMessageXml)
   }
 
   await bichard.policeApi.testApiHelper.createArrestedPersonAndDisposals(arrestedPerson, courtCases)
