@@ -1,4 +1,3 @@
-import axios from "axios"
 import type User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
@@ -124,15 +123,15 @@ describe("unlock court case", () => {
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
 
       // Creates audit log events
-      const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${lockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const apiResult = await fetch(`${AUDIT_LOG_API_URL}/messages/${lockedCourtCase.messageId}`)
+      const auditLogs = (await apiResult.json()) as [{ events: [{ timestamp: string; eventCode: string }] }]
       const events = auditLogs[0].events
       expect(events).toHaveLength(2)
 
       const unlockedExceptionEvent = events.find((event) => event.eventCode === "exceptions.unlocked")
       const unlockedTriggerEvent = events.find((event) => event.eventCode === "triggers.unlocked")
 
-      expect(unlockedExceptionEvent).toStrictEqual({
+      expect(unlockedExceptionEvent).toEqual({
         category: "information",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception unlocked",
@@ -144,7 +143,7 @@ describe("unlock court case", () => {
         }
       })
 
-      expect(unlockedTriggerEvent).toStrictEqual({
+      expect(unlockedTriggerEvent).toEqual({
         category: "information",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Trigger unlocked",
@@ -160,9 +159,7 @@ describe("unlock court case", () => {
 
   describe("when there is an error", () => {
     it("Should return the error if fails to store audit logs", async () => {
-      ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(
-        () => new Error("Error while calling audit log API")
-      )
+      ;(storeMessageAuditLogEvents as jest.Mock).mockRejectedValueOnce(new Error("Error while calling audit log API"))
 
       const result = await unlockCourtCase(
         dataSource,
@@ -171,7 +168,7 @@ describe("unlock court case", () => {
         UnlockReason.TriggerAndException
       ).catch((error) => error)
 
-      expect(result).toEqual(Error("Error while calling audit log API"))
+      expect(result).toEqual(new Error("Error while calling audit log API"))
 
       const record = await dataSource.getRepository(CourtCase).findOne({ where: { errorId: 0 } })
       const actualCourtCase = record as CourtCase
@@ -198,8 +195,8 @@ describe("unlock court case", () => {
       expect(actualCourtCase.errorLockedByUsername).toBe(lockedByName)
       expect(actualCourtCase.triggerLockedByUsername).toBe(lockedByName)
 
-      const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${lockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const apiResult = await fetch(`${AUDIT_LOG_API_URL}/messages/${lockedCourtCase.messageId}`)
+      const auditLogs = (await apiResult.json()) as [{ events: [{ timestamp: string; eventCode: string }] }]
       const events = auditLogs[0].events
 
       expect(events).toHaveLength(0)

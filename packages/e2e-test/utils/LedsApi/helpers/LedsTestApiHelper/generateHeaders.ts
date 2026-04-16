@@ -27,10 +27,22 @@ export const ENDPOINT_HEADERS: Record<string, EndpointHeaders> = {
     "X-Leds-Justification": "Offence enquiry loop",
     "X-Leds-Reason": "0 - Transaction log and other audit checks"
   },
+  remandDetails: {
+    "X-Leds-Action-Code": "View Remand Details",
+    "X-Leds-Activity-Code": "Person Enquiry",
+    "X-Leds-Justification": "Remand enquiry",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
+  },
   arrestSummaries: {
     "X-Leds-Action-Code": "View Arrest / Summons Summary",
     "X-Leds-Activity-Code": "Person Enquiry",
     "X-Leds-Justification": "Arrest summary",
+    "X-Leds-Reason": "0 - Transaction log and other audit checks"
+  },
+  arrestSummons: {
+    "X-Leds-Action-Code": "View Arrest Summons With Offences",
+    "X-Leds-Activity-Code": "Person Enquiry",
+    "X-Leds-Justification": "Arrest summons",
     "X-Leds-Reason": "0 - Transaction log and other audit checks"
   },
   disposals: {

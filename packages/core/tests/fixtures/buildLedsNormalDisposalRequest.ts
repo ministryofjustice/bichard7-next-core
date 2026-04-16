@@ -44,6 +44,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
             disposalFine: {
               amount: 12000.99
             },
+            disposalQualifierDuration: { count: 10, units: "months" },
             disposalEffectiveDate: "2024-05-10",
             disposalQualifiers: ["A"],
             disposalText: "Disposal text"
@@ -57,6 +58,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
             disposalFine: {
               amount: 12000.99
             },
+            disposalQualifierDuration: undefined,
             disposalEffectiveDate: "2024-05-10",
             disposalQualifiers: ["A"],
             disposalText: "Disposal text"
@@ -82,6 +84,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
             disposalFine: {
               amount: 12000.99
             },
+            disposalQualifierDuration: { count: 0, units: "life" },
             disposalEffectiveDate: "2024-05-10",
             disposalQualifiers: ["A"],
             disposalText: "Disposal text"
@@ -95,6 +98,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
             disposalFine: {
               amount: 12000.99
             },
+            disposalQualifierDuration: undefined,
             disposalEffectiveDate: "2024-05-10",
             disposalQualifiers: ["A"],
             disposalText: "Disposal text"
@@ -105,7 +109,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
     ],
     additionalArrestOffences: [
       {
-        asn: "11/01ZD/01/00001448754K",
+        asn: "11/01ZD/01/1448754R",
         additionalOffences: [
           {
             courtOffenceSequenceNumber: 3,
@@ -134,6 +138,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
                 disposalFine: {
                   amount: 12000.99
                 },
+                disposalQualifierDuration: undefined,
                 disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }
@@ -168,6 +173,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
                 disposalFine: {
                   amount: 12000.99
                 },
+                disposalQualifierDuration: undefined,
                 disposalQualifiers: ["A"],
                 disposalText: "Disposal text"
               }

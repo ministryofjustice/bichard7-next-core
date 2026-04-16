@@ -80,6 +80,7 @@ export default [
       "dist/*",
       "docs/*",
       "**/jest.setup.ts",
+      "**/jest.config.js",
       "**/node_modules",
       "packages/*/build.js",
       "packages/*/build/*",

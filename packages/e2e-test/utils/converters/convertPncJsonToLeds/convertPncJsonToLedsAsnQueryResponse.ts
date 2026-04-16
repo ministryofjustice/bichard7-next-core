@@ -4,7 +4,7 @@ import type { AsnQueryResponse, DisposalResult, Offence } from "@moj-bichard7/co
 import type { Adjudication, Plea } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
 import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
-import { convertDate, convertTime } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
+import { convertDate } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
 import { randomUUID } from "crypto"
 import type { Adj } from "../convertPncXmlToJson/convertAdj"
@@ -65,6 +65,8 @@ const mapDisposalResults = (disposalResults: Dis[]): DisposalResult[] => {
   return mappedDisposalResults
 }
 
+const convertTime = (time: string): string => time.slice(0, 2) + ":" + time.slice(2)
+
 const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): Offence[] => {
   const mappedOffences = offences.map((offence) => {
     return {
@@ -97,6 +99,15 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
   return mappedOffences
 }
 
+const mapPncErrorToLeds = (error: string): string => {
+  if (error.toUpperCase().includes("I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF")) {
+    const asn = error.match(/I1008 - GWAY - ENQUIRY ERROR ARREST\/SUMMONS REF \((?<asn>.*)\) NOT FOUND/)?.groups?.asn
+    return `No matching arrest reports found for asn: ${asn}`
+  }
+
+  return error
+}
+
 export const convertPncJsonToLedsAsnQueryResponse = (
   pncJson: PncAsnQueryJson,
   { asn, personId, reportId, courtCaseId }: Params
@@ -111,8 +122,8 @@ export const convertPncJsonToLedsAsnQueryResponse = (
       leds: {
         errors: [
           {
-            errorDetailType: pncJson.txt,
-            message: pncJson.txt
+            errorDetailType: "unknown",
+            message: mapPncErrorToLeds(pncJson.txt)
           }
         ]
       }

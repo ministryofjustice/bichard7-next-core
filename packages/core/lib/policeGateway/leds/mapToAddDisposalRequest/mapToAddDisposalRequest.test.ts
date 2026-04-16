@@ -71,6 +71,7 @@ describe("mapToNormalDisposalRequest", () => {
               disposalFine: {
                 amount: 9.99
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-12-10",
               disposalQualifiers: ["A"],
               disposalText: "Disposal text"
@@ -84,6 +85,7 @@ describe("mapToNormalDisposalRequest", () => {
               disposalFine: {
                 amount: 12000.99
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalQualifiers: ["A"],
               disposalText: "Disposal text"
@@ -109,6 +111,7 @@ describe("mapToNormalDisposalRequest", () => {
               disposalFine: {
                 amount: 12000.99
               },
+              disposalQualifierDuration: { count: 0, units: "life" },
               disposalEffectiveDate: "2024-05-10",
               disposalQualifiers: ["A"],
               disposalText: "Disposal text"
@@ -122,6 +125,7 @@ describe("mapToNormalDisposalRequest", () => {
               disposalFine: {
                 amount: 12000.99
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalQualifiers: ["A"],
               disposalText: "Disposal text"

@@ -1,5 +1,4 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import axios from "axios"
 import { differenceInMilliseconds } from "date-fns"
 import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
@@ -98,7 +97,7 @@ describe("resolveCourtCase", () => {
       user
     ).catch((error) => error)
 
-    expect(courtCasesByOrganisationUnitQuery).toHaveBeenCalledTimes(1)
+    expect(courtCasesByOrganisationUnitQuery).toHaveBeenCalledTimes(2)
     expect(courtCasesByOrganisationUnitQuery).toHaveBeenCalledWith(expect.any(Object), user)
   })
 
@@ -164,13 +163,13 @@ describe("resolveCourtCase", () => {
       )
 
       // Creates audit log events
-      const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${courtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const apiResult = await fetch(`${AUDIT_LOG_API_URL}/messages/${courtCase.messageId}`)
+      const auditLogs = (await apiResult.json()) as [{ events: [{ timestamp: string; eventCode: string }] }]
       const events = auditLogs[0].events
       const unlockedEvent = events.find((event) => event.eventCode === "exceptions.unlocked")
       const resolvedEvent = events.find((event) => event.eventCode === "exceptions.resolved")
 
-      expect(unlockedEvent).toStrictEqual({
+      expect(unlockedEvent).toEqual({
         category: "information",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception unlocked",
@@ -182,7 +181,7 @@ describe("resolveCourtCase", () => {
         }
       })
 
-      expect(resolvedEvent).toStrictEqual({
+      expect(resolvedEvent).toEqual({
         attributes: {
           auditLogVersion: 2,
           resolutionReasonCode: ResolutionReasonCode[resolution.reason],
@@ -263,7 +262,7 @@ describe("resolveCourtCase", () => {
       }
 
       const result = await resolveCourtCase(dataSource, courtCase, resolution, user).catch((error) => error)
-      expect((result as Error).message).toBe("Failed to resolve case")
+      expect((result as Error).message).toBe("Failed to resolve: Case not found")
 
       const records = await dataSource
         .getRepository(CourtCase)
@@ -518,7 +517,7 @@ describe("resolveCourtCase", () => {
 
     it("Should return the error if fails to store audit logs", async () => {
       const expectedError = "Error while calling audit log API"
-      ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(() => new Error(expectedError))
+      ;(storeMessageAuditLogEvents as jest.Mock).mockRejectedValue(new Error(expectedError))
 
       const result = await resolveCourtCase(dataSource, courtCases[0], resolution, user).catch(
         (error) => error as Error

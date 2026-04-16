@@ -11,10 +11,15 @@ class EventHandler {
 
   constructor(
     filename: string,
-    private conductor: ConductorGateway
+    private conductor: ConductorGateway,
+    incomingMessageSqsQueue: string | undefined
   ) {
     const fileContent = fs.readFileSync(filename)
     this.localEventHandler = JSON.parse(fileContent.toString()) as EventHandlerDef
+    if (this.localEventHandler.name === "handle_incoming_messages" && incomingMessageSqsQueue) {
+      this.localEventHandler.event = `sqs:${incomingMessageSqsQueue}`
+    }
+
     this.name = this.localEventHandler.name
   }
 

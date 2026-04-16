@@ -1,6 +1,5 @@
 import type { DataSource } from "typeorm"
 
-import axios from "axios"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -134,15 +133,15 @@ describe("lock court case", () => {
       expect(actualCourtCase.triggerLockedByUsername).toBe(user.username)
 
       // Creates audit log events
-      const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${unlockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const apiResult = await fetch(`${AUDIT_LOG_API_URL}/messages/${unlockedCourtCase.messageId}`)
+      const auditLogs = (await apiResult.json()) as [{ events: [{ timestamp: string; eventCode: string }] }]
       const events = auditLogs[0].events
       expect(events).toHaveLength(2)
 
       const lockedExceptionEvent = events.find((event) => event.eventCode === "exceptions.locked")
       const lockedTriggerEvent = events.find((event) => event.eventCode === "triggers.locked")
 
-      expect(lockedExceptionEvent).toStrictEqual({
+      expect(lockedExceptionEvent).toEqual({
         category: "information",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Exception locked",
@@ -154,7 +153,7 @@ describe("lock court case", () => {
         }
       })
 
-      expect(lockedTriggerEvent).toStrictEqual({
+      expect(lockedTriggerEvent).toEqual({
         category: "information",
         eventSource: AUDIT_LOG_EVENT_SOURCE,
         eventType: "Trigger locked",
@@ -170,9 +169,7 @@ describe("lock court case", () => {
 
   describe("when there is an error", () => {
     it("Should return the error if fails to store audit logs", async () => {
-      ;(storeMessageAuditLogEvents as jest.Mock).mockImplementationOnce(
-        () => new Error("Error while calling audit log API")
-      )
+      ;(storeMessageAuditLogEvents as jest.Mock).mockRejectedValue(new Error("Error while calling audit log API"))
 
       const result = await lockCourtCase(dataSource, unlockedCourtCase.errorId, user).catch((error) => error)
 
@@ -198,8 +195,8 @@ describe("lock court case", () => {
       expect(actualCourtCase.errorLockedByUsername).toBeNull()
       expect(actualCourtCase.triggerLockedByUsername).toBeNull()
 
-      const apiResult = await axios(`${AUDIT_LOG_API_URL}/messages/${unlockedCourtCase.messageId}`)
-      const auditLogs = (await apiResult.data) as [{ events: [{ timestamp: string; eventCode: string }] }]
+      const apiResult = await fetch(`${AUDIT_LOG_API_URL}/messages/${unlockedCourtCase.messageId}`)
+      const auditLogs = (await apiResult.json()) as [{ events: [{ timestamp: string; eventCode: string }] }]
       const events = auditLogs[0].events
 
       expect(events).toHaveLength(0)

@@ -14,6 +14,7 @@ import type Phase3Result from "./types/Phase3Result"
 
 import CoreAuditLogger from "../lib/auditLog/CoreAuditLogger"
 import saveErrorListRecord from "../lib/database/saveErrorListRecord"
+import isPncLockError from "../lib/exceptions/PoliceExceptionGenerator/PncExceptionGenerator/isPncLockError"
 import PoliceApiError from "../lib/policeGateway/PoliceApiError"
 import serialiseToXml from "../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
 import checkDatabaseMatches from "../tests/helpers/comparison/checkDatabaseMatches"
@@ -21,10 +22,9 @@ import { clearDatabase, disconnectDb, insertRecords, sql } from "../tests/helper
 import getComparisonTests from "../tests/helpers/comparison/getComparisonTests"
 import normalisePncOperations from "../tests/helpers/comparison/normalisePncOperations"
 import normaliseXml from "../tests/helpers/comparison/normaliseXml"
-import MockPncGateway from "../tests/helpers/MockPncGateway"
+import MockPoliceGateway from "../tests/helpers/MockPoliceGateway"
 import parseIncomingMessage from "../tests/helpers/parseIncomingMessage"
 import sortTriggers from "../tests/helpers/sortTriggers"
-import { isPncLockError } from "./exceptions/generatePncUpdateExceptionFromMessage"
 import { MAXIMUM_PNC_LOCK_ERROR_RETRIES } from "./lib/updatePnc"
 import phase3 from "./phase3"
 import getPncOperationsFromPncUpdateDataset from "./tests/helpers/getPncOperationsFromPncUpdateDataset"
@@ -44,7 +44,7 @@ describe("phase3", () => {
   describe.each(tests)("should correctly process $file", (comparison: Phase3E2eComparison) => {
     let phase3Result: Phase3Result
     let parsedOutgoingMessage: ParseIncomingMessageResult
-    let mockPncGateway: MockPncGateway
+    let mockPncGateway: MockPoliceGateway
     let pncExceptions: PncException[]
 
     beforeEach(async () => {
@@ -85,7 +85,7 @@ describe("phase3", () => {
         }
       }
 
-      mockPncGateway = new MockPncGateway(mockPncResponses)
+      mockPncGateway = new MockPoliceGateway(mockPncResponses)
 
       const result = await phase3(parsedIncomingMessage.message, mockPncGateway, auditLogger)
 

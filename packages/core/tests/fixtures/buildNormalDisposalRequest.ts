@@ -34,7 +34,7 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "A",
+        disposalQualifiers: "A       M10",
         disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",
@@ -60,7 +60,7 @@ export const buildNormalDisposalRequest = (
         type: PncUpdateType.ADJUDICATION
       },
       {
-        disposalQualifiers: "A",
+        disposalQualifiers: "A       Y999",
         disposalQuantity: "D123100520240012000.9900",
         disposalText: "Disposal text",
         disposalType: "10",

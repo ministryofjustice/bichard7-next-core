@@ -38,21 +38,21 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1009.0",
+    "@aws-sdk/client-s3": "^3.1019.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@stomp/stompjs": "^7.3.0",
     "@types/nodemailer": "^7.0.11",
-    "axios": "^1.13.6",
+    "axios": "^1.15.0",
     "date-fns": "^4.1.0",
-    "fast-xml-parser": "^5.5.6",
+    "fast-xml-parser": "^5.5.9",
     "jsonwebtoken": "^9.0.3",
-    "nodemailer": "^8.0.2",
+    "nodemailer": "^8.0.5",
     "pg-promise": "^12.6.2",
     "pino": "^10.3.1",
     "postgres": "3.4.7",
     "promise-poller": "^1.9.1",
     "stompit": "^1.0.0",
-    "ws": "^8.19.0",
+    "ws": "^8.20.0",
     "zod": "^4.3.6",
     "zod-validation-error": "^5.0.0"
   },
@@ -64,6 +64,6 @@
     "jest": "^30.3.0",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   }
 }

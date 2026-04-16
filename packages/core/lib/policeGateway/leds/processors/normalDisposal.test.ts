@@ -20,7 +20,7 @@ const request = {
 describe("normalDisposal", () => {
   it("returns endpoint and requestBody", () => {
     const pncUpdateDataset = buildPncUpdateDataset({ organisationName: "Org" })
-    const endpoint = "/person-services/v1/people/123456/disposals/ABC123/court-case-disposal-result"
+    const endpoint = "person-services/v1/people/123456/disposals/ABC123/court-case-disposal-result"
     const requestBody = {
       ownerCode: "07A1",
       personUrn: "1950/123X",
@@ -63,6 +63,10 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: {
+                count: 10,
+                units: "months"
+              },
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -76,6 +80,7 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -100,6 +105,10 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: {
+                count: 0,
+                units: "life"
+              },
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -113,6 +122,7 @@ describe("normalDisposal", () => {
                 count: 123,
                 units: "days"
               },
+              disposalQualifierDuration: undefined,
               disposalEffectiveDate: "2024-05-10",
               disposalFine: {
                 amount: 12000.99
@@ -124,7 +134,7 @@ describe("normalDisposal", () => {
       ],
       additionalArrestOffences: [
         {
-          asn: "11/01ZD/01/00001448754K",
+          asn: "11/01ZD/01/1448754R",
           additionalOffences: [
             {
               courtOffenceSequenceNumber: 3,
@@ -153,6 +163,7 @@ describe("normalDisposal", () => {
                   disposalFine: {
                     amount: 12000.99
                   },
+                  disposalQualifierDuration: undefined,
                   disposalQualifiers: ["A"],
                   disposalText: "Disposal text"
                 }
@@ -187,6 +198,7 @@ describe("normalDisposal", () => {
                   disposalFine: {
                     amount: 12000.99
                   },
+                  disposalQualifierDuration: undefined,
                   disposalQualifiers: ["A"],
                   disposalText: "Disposal text"
                 }

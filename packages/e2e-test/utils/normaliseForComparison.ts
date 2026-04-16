@@ -37,7 +37,7 @@ const normaliseForComparison = (data: Record<string, unknown> | undefined): Reco
   const result = structuredClone(data)
 
   if (Array.isArray(result.bailConditions)) {
-    result.bailConditions = result.bailConditions.map((c) => c.toLowerCase().replace(/\s+/g, "")).join("")
+    result.bailConditions = result.bailConditions.map((c) => c.toUpperCase())
   }
 
   if ("defendant" in result) {

@@ -20,6 +20,7 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import PoliceApiError from "../PoliceApiError"
+import cleanObjectStrings from "./cleanObjectStrings"
 import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
@@ -146,9 +147,11 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     const updateUrl = this.generateUrl(endpoint)
+    const body = cleanObjectStrings(requestBody)
+    const headers = generateRequestHeaders(correlationId, actionCode, authToken)
     const apiResponse = await axios
-      .post(updateUrl, requestBody, {
-        headers: generateRequestHeaders(correlationId, actionCode, authToken),
+      .post(updateUrl, body, {
+        headers,
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
@@ -177,8 +180,9 @@ export default class LedsGateway implements PoliceGateway {
   }
 
   private generateUrl(endpoint: string): string {
-    const baseUrl = this.config.url.concat(this.config.url.endsWith("/") ? "" : "/")
+    const baseUrlWithTrailingSlash = this.config.url.concat(this.config.url.endsWith("/") ? "" : "/")
+    const endpointWithoutLeadingSlash = endpoint.startsWith("/") ? endpoint.slice(1) : endpoint
 
-    return new URL(endpoint, baseUrl).href
+    return new URL(endpointWithoutLeadingSlash, baseUrlWithTrailingSlash).href
   }
 }

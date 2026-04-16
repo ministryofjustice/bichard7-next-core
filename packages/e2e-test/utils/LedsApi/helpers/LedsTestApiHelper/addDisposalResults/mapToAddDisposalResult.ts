@@ -34,14 +34,15 @@ const mapToAddDisposalResult = (
       courtOffenceSequenceNumber: disposalOffence.courtOffenceSequenceNumber,
       adjudication,
       offenceStartDate: offence.startDate,
-      dateOfSentence: offence.convictionDate,
+      dateOfSentence: courtCase.dateOfHearing,
       cjsOffenceCode: offence.offenceCode,
       plea: toTitleCase(lookupPleaStatusBySpiCode(offence.plea as SpiPlea)?.pncCode) as Plea,
-      //   offenceTic,
+      offenceTic: undefined,
       disposalResults: offence.results.map((result) => {
         const disposalResult: NonNullable<Offence["disposalResults"]>[number] = {
           disposalCode: result.resultCode,
-          disposalEffectiveDate: result.disposalEffectiveDate
+          disposalEffectiveDate: result.disposalEffectiveDate,
+          disposalText: result.resultText?.replace(/\s+/g, " ").trim().slice(0, 64)
         }
 
         return disposalResult

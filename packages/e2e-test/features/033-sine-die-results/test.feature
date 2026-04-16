@@ -17,7 +17,7 @@ Feature: {033} R3.3_BR7_Sine Die_Add Result Code 3027
 	Background:
 		Given the data for this test is in the PNC
 
-	@Could @NextUI
+	@Could @NextUI @LedsPreProdTest
 	Scenario: Correctly handling Sine Die results
 		Given I am logged in as "supervisor"
 		When "input-message-1" is received

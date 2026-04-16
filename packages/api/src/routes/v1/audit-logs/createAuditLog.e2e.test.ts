@@ -1,10 +1,8 @@
-import type { AxiosRequestConfig } from "axios"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import axios, { HttpStatusCode } from "axios"
 
 import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
 import { generateTestJwtToken } from "../../../tests/helpers/jwtHelper"
@@ -13,7 +11,13 @@ import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHel
 import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 
 const jwt = generateTestJwtToken({ groups: [UserGroup.Service], username: "Service" })
-const axiosOptions: AxiosRequestConfig = { headers: { Authorization: `Bearer ${jwt}` }, validateStatus: () => true }
+const fetchOptions: RequestInit = { headers: { Authorization: `Bearer ${jwt}`, "Content-Type": "application/json" } }
+
+const fetchJson = async <T>(url: string, init?: RequestInit): Promise<{ data: T; status: number }> => {
+  const response = await fetch(url, { ...fetchOptions, ...init })
+  const data = (await response.json()) as T
+  return { data, status: response.status }
+}
 
 describe("Creating Audit Log", () => {
   const endpoint = V1.AuditLogs
@@ -39,8 +43,11 @@ describe("Creating Audit Log", () => {
 
     const auditLog = mockInputApiAuditLog()
 
-    const result = await axios.post(`${helper.address}${endpoint}`, auditLog, axiosOptions)
-    expect(result.status).toEqual(HttpStatusCode.Created)
+    const result = await fetchJson(`${helper.address}${endpoint}`, {
+      body: JSON.stringify(auditLog),
+      method: "POST"
+    })
+    expect(result.status).toBe(201)
 
     const record = await gateway.getOne(auditLogDynamoConfig.auditLogTableName, "messageId", auditLog.messageId)
     if (isError(record)) {
@@ -53,12 +60,18 @@ describe("Creating Audit Log", () => {
   it("should return a conflict error if the message id already exists", async () => {
     const auditLog = mockInputApiAuditLog()
 
-    const result1 = await axios.post(`${helper.address}${endpoint}`, auditLog, axiosOptions)
-    expect(result1.status).toEqual(HttpStatusCode.Created)
+    const result1 = await fetchJson(`${helper.address}${endpoint}`, {
+      body: JSON.stringify(auditLog),
+      method: "POST"
+    })
+    expect(result1.status).toBe(201)
 
-    const result2 = await axios.post(`${helper.address}${endpoint}`, auditLog, axiosOptions)
-    expect(result2.status).toEqual(HttpStatusCode.Conflict)
-    expect(result2.data).toStrictEqual({
+    const result2 = await fetchJson(`${helper.address}${endpoint}`, {
+      body: JSON.stringify(auditLog),
+      method: "POST"
+    })
+    expect(result2.status).toBe(409)
+    expect(result2.data).toEqual({
       code: "Conflict",
       message: `A message with Id ${auditLog.messageId} already exists in the database`,
       statusCode: 409

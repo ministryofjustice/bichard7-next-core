@@ -44,15 +44,15 @@ const resolveTriggersInTransaction = async (
       throw Error("Court case not found")
     }
 
-    const areAnyTriggersResolved =
-      courtCase.triggers.some((trigger) => triggerIds.includes(trigger.triggerId) && !!trigger.resolvedAt) ?? false
-    if (areAnyTriggersResolved) {
-      throw Error(`One or more triggers are already resolved - ${courtCaseId}`)
+    const triggersToResolve = courtCase.triggers.filter(
+      (trigger) => triggerIds.includes(trigger.triggerId) && !trigger.resolvedAt
+    )
+
+    if (triggersToResolve.length === 0) {
+      return { raw: [], affected: 0, generatedMaps: [] } as UpdateResult
     }
 
-    if (courtCase === null) {
-      throw Error("Could not find the court case")
-    }
+    const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
 
     if (!courtCase.triggersAreLockedByCurrentUser(resolver)) {
       throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
@@ -60,7 +60,7 @@ const resolveTriggersInTransaction = async (
 
     const updateTriggersResult = await entityManager.getRepository(Trigger).update(
       {
-        triggerId: In(triggerIds),
+        triggerId: In(unresolvedTriggerIds),
         resolvedAt: IsNull(),
         resolvedBy: IsNull()
       },
@@ -71,17 +71,13 @@ const resolveTriggersInTransaction = async (
       }
     )
 
-    if (updateTriggersResult.affected && updateTriggersResult.affected !== triggerIds.length) {
+    if (updateTriggersResult.affected && updateTriggersResult.affected !== unresolvedTriggerIds.length) {
       throw Error(`Failed to resolve triggers - ${courtCaseId}`)
     }
 
     const addNoteResult = await insertNotes(
       entityManager,
-      getSystemNotesForTriggers(
-        courtCase.triggers.filter((trigger) => triggerIds.includes(trigger.triggerId)),
-        resolver,
-        courtCase.errorId
-      )
+      getSystemNotesForTriggers(triggersToResolve, resolver, courtCase.errorId)
     )
 
     if (isError(addNoteResult)) {
@@ -94,8 +90,8 @@ const resolveTriggersInTransaction = async (
       getAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
         user: user.username,
         auditLogVersion: 2,
-        "Number Of Triggers": triggerIds.length,
-        ...generateTriggersAttributes(courtCase.triggers.filter((trigger) => triggerIds.includes(trigger.triggerId)))
+        "Number Of Triggers": unresolvedTriggerIds.length,
+        ...generateTriggersAttributes(triggersToResolve)
       })
     )
 
@@ -136,18 +132,16 @@ const resolveTriggersInTransaction = async (
         throw updateCaseResult
       }
 
-      if (!updateCaseResult.affected || updateCaseResult.affected === 0) {
-        throw Error(`Failed to update court case - ${courtCaseId}`)
+      if (updateCaseResult.affected && updateCaseResult.affected > 0) {
+        events.push(
+          getAuditLogEvent(EventCode.AllTriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
+            user: user.username,
+            auditLogVersion: 2,
+            "Number Of Triggers": allTriggers.length,
+            ...generateTriggersAttributes(allTriggers)
+          })
+        )
       }
-
-      events.push(
-        getAuditLogEvent(EventCode.AllTriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-          user: user.username,
-          auditLogVersion: 2,
-          "Number Of Triggers": allTriggers.length,
-          ...generateTriggersAttributes(allTriggers)
-        })
-      )
     }
 
     if (allTriggersVisibleToUserResolved) {
@@ -164,11 +158,7 @@ const resolveTriggersInTransaction = async (
       }
     }
 
-    const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events)
-
-    if (isError(storeAuditLogResponse)) {
-      throw storeAuditLogResponse
-    }
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
 
     return updateTriggersResult
   })

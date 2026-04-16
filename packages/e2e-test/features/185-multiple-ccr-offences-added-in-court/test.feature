@@ -31,6 +31,6 @@ Feature: {185} BR7 R5.3-RCD496 - Multiple CCR group NG Verdict -offence added in
 		When I view the list of exceptions
 		Then there are no triggers raised for "Harmon Martin"
 		When "input-message-2" is received
-		Then the PNC updates the record
-			And I see trigger "PR06 - Imprisoned" in the exception list table
+		Then I see trigger "PR06 - Imprisoned" in the exception list table
 			And I see trigger "PS10 - Offence added to PNC" in the exception list table
+			And the PNC updates the record

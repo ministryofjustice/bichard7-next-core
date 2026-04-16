@@ -2,7 +2,12 @@ import z from "zod"
 
 export const dateStringSchema = z.string().regex(/\d{4}-\d{2}-\d{2}/)
 
-export const timeStringSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)(Z|[+-][01]\d:[0-5]\d)$/)
+export const updateOffenceTimeStringSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)(Z|[+-][01]\d:[0-5]\d)$/)
+  .describe(String.raw`
+  The time of day in ISO 8601 format with required timezone offset. Local time (without offset) is not allowed. Valid formats include:
+  '14:30Z' (UTC)
+  '14:30+02:00' (UTC+2)
+  '14:30-05:30' (UTC-5:30)`)
 
 export const forceStationCodeSchema = z
   .string()
@@ -52,7 +57,7 @@ export const disposalResultSchema = z.object({
   disposalEffectiveDate: dateStringSchema.optional(),
   disposalQualifiers: z.array(z.string().min(1).max(2)).max(4).optional(),
   disposalQualifierDuration: disposalDurationSchema.optional(),
-  disposalText: z.string().optional()
+  disposalText: z.string().max(64).optional()
 })
 
 export const baseOffenceSchema = z.object({
@@ -65,9 +70,7 @@ export const baseOffenceSchema = z.object({
   legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
   plea: pleaSchema.optional(),
   offenceTic: z.number().optional(),
-  offenceStartTime: timeStringSchema.optional(),
   offenceEndDate: dateStringSchema.optional(),
-  offenceEndTime: timeStringSchema.optional(),
   disposalResults: disposalResultSchema.array().optional()
 })
 
@@ -76,5 +79,7 @@ export const updateOffenceSchema = baseOffenceSchema.extend({
   offenceStartDate: dateStringSchema.optional(),
   offenceId: z.string().nonempty(),
   dateOfSentence: dateStringSchema.optional(),
-  cjsOffenceCode: z.string().length(7)
+  cjsOffenceCode: z.string().length(7),
+  offenceStartTime: updateOffenceTimeStringSchema.optional(),
+  offenceEndTime: updateOffenceTimeStringSchema.optional()
 })

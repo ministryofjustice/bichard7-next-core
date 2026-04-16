@@ -1,3 +1,5 @@
+import type OffenceResponse from "./OffenceResponse"
+
 type Charge = {
   offenceId: string
   arrestSummonsId: string
@@ -10,6 +12,7 @@ type Charge = {
   offenceLegislationQualifiers: string[]
   offenceChargeNumber: number
   additionalMarker: boolean
+  offence?: OffenceResponse
   disposals: Disposal[]
 }
 

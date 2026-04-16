@@ -10,15 +10,26 @@ import resolveError from "./resolveError"
 import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
+import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit" // NEW: Import this
 
 const resolveCourtCaseTransaction = async (
   dataSource: DataSource | EntityManager,
-  courtCase: CourtCase,
+  courtCaseId: number,
   resolution: ManualResolution,
   user: User
 ) => {
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
     const events: AuditLogEvent[] = []
+
+    const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
+
+    if (isError(courtCase)) {
+      throw courtCase
+    }
+
+    if (!courtCase) {
+      throw new Error("Failed to resolve: Case not found")
+    }
 
     // resolve case
     const resolveErrorResult = await resolveError(entityManager, courtCase, user, resolution, events)
@@ -52,11 +63,7 @@ const resolveCourtCaseTransaction = async (
       throw addNoteResult
     }
 
-    // push audit log events
-    const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events)
-    if (isError(storeAuditLogResponse)) {
-      throw storeAuditLogResponse
-    }
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
 
     return resolveErrorResult
   })
@@ -68,7 +75,7 @@ const resolveCourtCase = async (
   resolution: ManualResolution,
   user: User
 ): Promise<UpdateResult | Error> => {
-  return await retryTransaction(resolveCourtCaseTransaction, dataSource, courtCase, resolution, user)
+  return await retryTransaction(resolveCourtCaseTransaction, dataSource, courtCase.errorId, resolution, user)
 }
 
 export default resolveCourtCase

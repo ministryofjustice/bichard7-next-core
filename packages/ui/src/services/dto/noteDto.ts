@@ -5,7 +5,7 @@ import { userToDisplayPartialUserDto } from "./userDto"
 export const noteToDisplayNoteDto = (note: Note): DisplayNote => {
   const displayNote: DisplayNote = {
     noteText: note.noteText,
-    createdAt: note.createdAt.toISOString(),
+    createdAt: new Date(note.createdAt).toISOString(),
     userId: note.userId
   }
 

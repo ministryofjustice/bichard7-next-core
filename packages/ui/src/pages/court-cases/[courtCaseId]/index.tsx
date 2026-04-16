@@ -208,6 +208,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         useApiForCaseResubmit
       )
     } else if (
+      !isPost(req) &&
       !useApiForCaseDetails &&
       (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
     ) {

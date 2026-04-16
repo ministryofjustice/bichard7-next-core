@@ -158,9 +158,6 @@ ui_params: &ui_params
   forces-with-court-date-received-date-mismatch-enabled:
     type: string
     default: "01"
-  forces-with-trigger-and-exception-quality-auditing-enabled:
-    type: string
-    default: "01"
   api-case-details:
     type: boolean
     default: false
@@ -175,7 +172,6 @@ ui_envs: &ui_envs
   USE_API: << parameters.api >>
   FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
   FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
-  FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: << parameters.forces-with-trigger-and-exception-quality-auditing-enabled >>
   USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
   USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
   USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
@@ -361,19 +357,8 @@ jobs:
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
-    parameters:
-      next-ui:
-        type: boolean
-      phase2-core-canary-ratio:
-        type: enum
-        enum: ["1.0", "0.0"]
-      phase3-core-canary-ratio:
-        type: enum
-        enum: ["1.0", "0.0"]
     environment:
-      NEXTUI: << parameters.next-ui >>
-      PHASE2_CORE_CANARY_RATIO: << parameters.phase2-core-canary-ratio >>
-      PHASE3_CORE_CANARY_RATIO: << parameters.phase3-core-canary-ratio >>
+      NEXTUI: false
     steps:
       - unless:
           condition:
@@ -1008,14 +993,11 @@ workflows:
             - build_user_service_image
             - build_api_image
 
+      - cucumber_e2e_legacy_tests:
+          requires:
+            - build_user_service_image
+
       - zap_scanner:
           requires:
             - build_ui_image
-            - build_user_service_image
-
-      - cucumber_e2e_legacy_tests:
-          next-ui: false
-          phase2-core-canary-ratio: "1.0"
-          phase3-core-canary-ratio: "1.0"
-          requires:
             - build_user_service_image

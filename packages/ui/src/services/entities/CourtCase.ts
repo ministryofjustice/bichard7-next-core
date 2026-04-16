@@ -15,13 +15,13 @@ import resolutionStatusTransformer from "./transformers/resolutionStatusTransfor
 
 @Entity({ name: "error_list" })
 export default class CourtCase {
-  @PrimaryColumn({ name: "error_id" })
+  @PrimaryColumn({ name: "error_id", type: "int" })
   errorId!: number
 
-  @Column({ name: "message_id" })
+  @Column({ name: "message_id", type: "varchar" })
   messageId!: string
 
-  @Column({ name: "phase" })
+  @Column({ name: "phase", type: "int" })
   phase!: number
 
   @Column({ name: "error_status", type: "int4", transformer: resolutionStatusTransformer })
@@ -36,7 +36,7 @@ export default class CourtCase {
   @Column({ name: "trigger_quality_checked", type: "int4", nullable: true })
   triggerQualityChecked!: TriggerQuality | null
 
-  @Column({ name: "trigger_count" })
+  @Column({ name: "trigger_count", type: "int" })
   triggerCount!: number
 
   @Column({ name: "is_urgent", type: "int2", transformer: booleanIntTransformer })
@@ -54,7 +54,7 @@ export default class CourtCase {
   @Column({ name: "updated_msg", type: "varchar", nullable: true })
   updatedHearingOutcome!: string | null
 
-  @Column({ name: "error_report" })
+  @Column({ name: "error_report", type: "varchar" })
   errorReport!: string
 
   @Column({ name: "create_ts", type: "timestamptz" })
@@ -66,7 +66,7 @@ export default class CourtCase {
   @Column({ name: "trigger_reason", type: "varchar", nullable: true })
   triggerReason!: string | null
 
-  @Column({ name: "error_count" })
+  @Column({ name: "error_count", type: "int" })
   errorCount!: number
 
   @Column({ name: "user_updated_flag", type: "int2", nullable: true })
@@ -76,10 +76,10 @@ export default class CourtCase {
   @Column({ name: "court_date", type: "date", nullable: true, transformer: dateTransformer })
   courtDate!: Date | null
 
-  @Column({ name: "ptiurn" })
+  @Column({ name: "ptiurn", type: "varchar" })
   ptiurn!: string
 
-  @Column({ name: "court_name" })
+  @Column({ name: "court_name", type: "varchar" })
   courtName!: string
 
   @Column({ name: "resolution_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })
@@ -109,7 +109,7 @@ export default class CourtCase {
   @Column({ name: "court_room", type: "varchar", nullable: true })
   courtRoom!: string | null
 
-  @Column({ name: "court_reference" })
+  @Column({ name: "court_reference", type: "varchar" })
   courtReference!: string
 
   @Column({ name: "error_insert_ts", type: "timestamptz", nullable: true, transformer: dateTransformer })

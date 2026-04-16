@@ -29,8 +29,11 @@ import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenCon
 import { CurrentUserContext, type CurrentUserContextType } from "context/CurrentUserContext"
 import Layout from "components/Layout"
 import { ProgressBar } from "../../../components/ProgressBar"
-import { AuditCaseListContainer } from "../../../features/AuditCaseList/AuditCaseList.styles"
+import { AuditCaseListButtons, AuditCaseListContainer } from "../../../features/AuditCaseList/AuditCaseList.styles"
 import Pagination from "../../../components/Pagination"
+import { LinkButton } from "../../../components/Buttons/LinkButton"
+import { NavLink } from "../../../types/NavLinks"
+import AuditCaseListSummary from "../../../features/AuditCaseList/AuditCaseListSummary"
 
 interface Props {
   csrfToken: string
@@ -128,6 +131,12 @@ const Page: NextPage<Props> = ({
             canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
             bichardSwitch={{ display: true, displaySwitchingSurveyFeedback }}
           >
+            <AuditCaseListButtons>
+              <AuditCaseListSummary audit={audit} />
+              <LinkButton href={NavLink.Audit} secondary={true}>
+                {"Start new audit"}
+              </LinkButton>
+            </AuditCaseListButtons>
             <ProgressBar currentCount={audit.auditedCases} maxCount={audit.totalCases} labelType="percentage" />
             <AuditCaseListContainer>
               <Pagination
