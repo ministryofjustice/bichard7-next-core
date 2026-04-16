@@ -1,7 +1,6 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
 import AutoLoad from "@fastify/autoload"
-import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import path from "node:path"
 
 import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
@@ -23,7 +22,7 @@ declare module "fastify" {
     auditLogGateway: AuditLogDynamoGateway
     database: DatabaseGateway
     s3: AwsS3Gateway
-    user: null | User
+    user: User
   }
 }
 
@@ -55,24 +54,35 @@ export default async function ({ auditLogGateway, database }: Gateways) {
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      let authenticatedUser
-
-      if (request.url !== V1.Connectivity) {
-        authenticatedUser = await authenticate(instance.database.readonly, request, reply)
-        if (!authenticatedUser) {
-          return
-        }
+      const authenticatedUser = await authenticate(instance.database.readonly, request, reply)
+      if (!authenticatedUser) {
+        return
       }
 
       request.auditLogGateway = instance.auditLogGateway
       request.database = instance.database
-      request.user = authenticatedUser ?? null
+      request.user = authenticatedUser
     })
 
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "routes"),
       dirNameRoutePrefix: false,
-      ignoreFilter: (path: string) => path.endsWith(".test.ts")
+      ignoreFilter: (path: string) => path.includes("public") || path.endsWith(".test.ts")
+    })
+  })
+
+  // Public API routes (no bearer token required)
+  fastify.register(async (instance) => {
+    instance.addHook("onRequest", async (request) => {
+      request.auditLogGateway = instance.auditLogGateway
+      request.database = instance.database
+    })
+
+    await instance.register(AutoLoad, {
+      dir: path.join(__dirname, "routes"),
+      dirNameRoutePrefix: false,
+      ignoreFilter: (path: string) => path.endsWith(".test.ts"),
+      matchFilter: (path: string) => path.includes("public")
     })
   })
 

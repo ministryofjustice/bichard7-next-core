@@ -6,11 +6,11 @@ import { ApiConnectivityDtoSchema } from "@moj-bichard7/common/types/ApiConnecti
 import { isError } from "@moj-bichard7/common/types/Result"
 import { OK } from "http-status"
 
-import type DatabaseGateway from "../../types/DatabaseGateway"
+import type DatabaseGateway from "../../../types/DatabaseGateway"
 
-import { jsonResponse } from "../../server/openapi/jsonResponse"
-import useZod from "../../server/useZod"
-import checkConnectivity from "../../useCases/checkConnectivity"
+import { jsonResponse } from "../../../server/openapi/jsonResponse"
+import useZod from "../../../server/useZod"
+import checkConnectivity from "../../../useCases/checkConnectivity"
 
 type HandlerProps = {
   database: DatabaseGateway
