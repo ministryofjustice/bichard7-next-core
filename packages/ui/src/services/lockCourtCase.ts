@@ -12,11 +12,11 @@ const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: num
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (!courtCase) {
-      throw new Error("Failed to unlock: Case not found")
+      throw new Error("Failed to lock: Case not found")
     }
 
     if (isError(courtCase)) {
-      throw new Error(`Failed to unlock: ${courtCase.message}`)
+      throw new Error(`Failed to lock: ${courtCase.message}`)
     }
 
     const events: AuditLogEvent[] = []
@@ -26,11 +26,7 @@ const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: num
       throw lockResult
     }
 
-    const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events)
-
-    if (isError(storeAuditLogResponse)) {
-      throw storeAuditLogResponse
-    }
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
 
     return lockResult
   })

@@ -41,11 +41,7 @@ const unlockCourtCaseTransaction = async (
       throw unlockResult
     }
 
-    const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events)
-
-    if (isError(storeAuditLogResponse)) {
-      throw storeAuditLogResponse
-    }
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
 
     return unlockResult
   })

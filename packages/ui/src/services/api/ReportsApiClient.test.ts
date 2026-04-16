@@ -1,45 +1,33 @@
-import https from "node:https"
-import axios from "axios"
-import ReportsApiClient from "./ReportsApiClient" // adjust the import path as needed
-import { Readable } from "node:stream"
+import { fetch, Agent } from "undici"
+import ReportsApiClient from "./ReportsApiClient"
 
 // Mock dependencies
-jest.mock("axios")
-jest.mock("node:https")
+jest.mock("undici", () => ({
+  fetch: jest.fn(),
+  Agent: jest.fn().mockImplementation(() => ({}))
+}))
+
 jest.mock("config", () => ({
   API_LOCATION: "https://mock-api.com"
 }))
 
 describe("ReportsApiClient", () => {
   const mockJwt = "mock-jwt-token"
-  let mockGet: jest.Mock
+  const mockedFetch = fetch as jest.Mock
 
   beforeEach(() => {
     jest.clearAllMocks()
-
-    mockGet = jest.fn()
-    ;(axios.create as jest.Mock).mockReturnValue({
-      get: mockGet
-    })
   })
 
   describe("Constructor", () => {
-    it("should initialize axios client with correct config and https agent", () => {
+    it("should initialize undici Agent with rejectUnauthorized: false", () => {
       new ReportsApiClient(mockJwt)
 
-      expect(https.Agent).toHaveBeenCalledWith({
-        rejectUnauthorized: false
+      expect(Agent).toHaveBeenCalledWith({
+        connect: {
+          rejectUnauthorized: false
+        }
       })
-
-      expect(axios.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          baseURL: "https://mock-api.com",
-          headers: {
-            Authorization: `Bearer ${mockJwt}`
-          },
-          httpsAgent: expect.any(Object)
-        })
-      )
     })
   })
 
@@ -51,42 +39,48 @@ describe("ReportsApiClient", () => {
     })
 
     it("should yield chunks from a successful stream response", async () => {
-      const mockStream = Readable.from([Buffer.from("chunk 1"), Buffer.from("chunk 2")])
+      const mockStream = (async function* () {
+        yield Buffer.from("chunk 1")
+        yield Buffer.from("chunk 2")
+      })()
 
-      mockGet.mockResolvedValueOnce({ data: mockStream })
+      mockedFetch.mockResolvedValueOnce({
+        ok: true,
+        body: mockStream
+      })
 
       const url = "/reports/123"
       const chunks: Buffer[] = []
 
-      for await (const chunk of client.fetchReport(url)) {
-        chunks.push(chunk as Buffer)
+      for await (const chunk of client.fetchReport<Buffer>(url)) {
+        if (chunk instanceof Error) {
+          throw chunk
+        }
+
+        chunks.push(chunk)
       }
 
-      expect(mockGet).toHaveBeenCalledWith(url, { responseType: "stream" })
+      expect(mockedFetch).toHaveBeenCalledWith(
+        `https://mock-api.com${url}`,
+        expect.objectContaining({
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${mockJwt}`
+          },
+          dispatcher: expect.any(Object)
+        })
+      )
+
       expect(chunks).toHaveLength(2)
       expect(chunks[0].toString()).toBe("chunk 1")
       expect(chunks[1].toString()).toBe("chunk 2")
     })
 
-    it("should merge custom AxiosRequestConfig correctly", async () => {
-      const mockStream = Readable.from([Buffer.from("data")])
-      mockGet.mockResolvedValueOnce({ data: mockStream })
-
-      const iterable = client.fetchReport("/reports/123", { timeout: 5000 })
-      const iterator = iterable[Symbol.asyncIterator]()
-      await iterator.next()
-
-      expect(mockGet).toHaveBeenCalledWith("/reports/123", {
-        timeout: 5000,
-        responseType: "stream"
+    it("should yield a formatted Error when an HTTP error occurs", async () => {
+      mockedFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500
       })
-    })
-
-    it("should yield a formatted Error when an AxiosError occurs", async () => {
-      const mockAxiosError = new Error("Request failed with status code 500")
-
-      ;(axios.isAxiosError as unknown as jest.Mock).mockReturnValueOnce(true)
-      mockGet.mockRejectedValueOnce(mockAxiosError)
 
       const iterable = client.fetchReport("/reports/123")
       const iterator = iterable[Symbol.asyncIterator]()
@@ -96,11 +90,10 @@ describe("ReportsApiClient", () => {
       expect((result.value as Error).message).toBe("Stream failed: Request failed with status code 500")
     })
 
-    it("should yield the raw error when a generic (non-Axios) Error occurs", async () => {
+    it("should yield the raw error when a generic (network) Error occurs", async () => {
       const genericError = new Error("A standard node or parsing error")
 
-      ;(axios.isAxiosError as unknown as jest.Mock).mockReturnValueOnce(false)
-      mockGet.mockRejectedValueOnce(genericError)
+      mockedFetch.mockRejectedValueOnce(genericError)
 
       const iterable = client.fetchReport("/reports/123")
       const iterator = iterable[Symbol.asyncIterator]()

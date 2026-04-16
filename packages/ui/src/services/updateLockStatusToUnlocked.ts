@@ -63,50 +63,58 @@ const updateLockStatusToUnlocked = async (
   events: AuditLogEvent[],
   usingApiResubmit: boolean = false
 ): Promise<UpdateResult | Error | undefined> => {
-  const shouldUnlockExceptions =
-    user.hasAccessTo[Permission.Exceptions] &&
-    (unlockReason === UnlockReason.TriggerAndException || unlockReason === UnlockReason.Exception)
-  const shouldUnlockTriggers =
-    user.hasAccessTo[Permission.Triggers] &&
-    (unlockReason === UnlockReason.TriggerAndException || unlockReason === UnlockReason.Trigger)
+  if (!courtCase) {
+    throw new Error("Failed to unlock: Case not found")
+  }
+
+  const wantsToUnlockExceptions =
+    unlockReason === UnlockReason.TriggerAndException || unlockReason === UnlockReason.Exception
+  const wantsToUnlockTriggers =
+    unlockReason === UnlockReason.TriggerAndException || unlockReason === UnlockReason.Trigger
+
+  const hasExceptionPerm = user.hasAccessTo[Permission.Exceptions]
+  const hasTriggerPerm = user.hasAccessTo[Permission.Triggers]
+
+  const shouldUnlockExceptions = hasExceptionPerm && wantsToUnlockExceptions
+  const shouldUnlockTriggers = hasTriggerPerm && wantsToUnlockTriggers
 
   if (!shouldUnlockExceptions && !shouldUnlockTriggers) {
     return new Error("User hasn't got permission to unlock the case")
   }
 
-  if (!courtCase) {
-    throw new Error("Failed to unlock: Case not found")
-  }
+  const hasExceptionLock = !!courtCase.errorLockedByUsername
+  const hasTriggerLock = !!courtCase.triggerLockedByUsername
 
-  const anyLockUserHasPermissionToUnlock =
-    (user.hasAccessTo[Permission.Exceptions] && courtCase.errorLockedByUsername) ||
-    (user.hasAccessTo[Permission.Triggers] && courtCase.triggerLockedByUsername)
-
-  if (!anyLockUserHasPermissionToUnlock && usingApiResubmit) {
+  if (!hasExceptionLock && !hasTriggerLock) {
     return undefined
   }
 
-  if (!anyLockUserHasPermissionToUnlock) {
-    return new Error("Case is not locked")
+  const canUnlockExistingException = hasExceptionPerm && hasExceptionLock
+  const canUnlockExistingTrigger = hasTriggerPerm && hasTriggerLock
+
+  if (!canUnlockExistingException && !canUnlockExistingTrigger) {
+    if (usingApiResubmit) {
+      return undefined
+    }
+
+    return new Error("User does not have permission to unlock this specific case")
   }
 
   let result: UpdateResult | Error | undefined
   const courtCaseRepository = dataSource.getRepository(CourtCase)
 
-  if (shouldUnlockExceptions && !!courtCase.errorLockedByUsername) {
+  if (shouldUnlockExceptions && hasExceptionLock) {
     result = await unlock("Exception", courtCaseRepository, courtCase.errorId, user, events)
+    if (isError(result)) {
+      return result
+    }
   }
 
-  if (isError(result)) {
-    return result
-  }
-
-  if (shouldUnlockTriggers && !!courtCase.triggerLockedByUsername) {
+  if (shouldUnlockTriggers && hasTriggerLock) {
     result = await unlock("Trigger", courtCaseRepository, courtCase.errorId, user, events)
-  }
-
-  if (isError(result)) {
-    return result
+    if (isError(result)) {
+      return result
+    }
   }
 
   return result

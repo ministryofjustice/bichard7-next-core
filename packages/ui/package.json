@@ -34,7 +34,7 @@
     "test:file": "jest --runInBand --workerThreads=true --testPathPatterns",
     "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\"",
     "install:hooks": "./scripts/install-git-hooks.sh",
-    "update-deps": "ncu -u --cooldown 3d && npm install",
+    "update-deps": "ncu -u && npm install",
     "seed-data": "ts-node ./scripts/seed-data.ts",
     "zap": "./scripts/zap/zap-scan.sh"
   },
@@ -45,7 +45,6 @@
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.351",
-    "axios": "^1.15.0",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
@@ -57,7 +56,7 @@
     "json-2-csv": "^5.5.10",
     "lodash": "^4.18.1",
     "lodash.clonedeep": "^4.5.0",
-    "next": "^15.5.14",
+    "next": "^15.5.15",
     "pg": "^8.20.0",
     "pino": "^10.3.1",
     "qs": "^6.15.0",
@@ -67,7 +66,8 @@
     "reflect-metadata": "^0.2.2",
     "stompit": "^1.0.0",
     "styled-components": "^6.3.12",
-    "typeorm": "^0.3.28"
+    "typeorm": "^0.3.28",
+    "undici": "^6.24.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",

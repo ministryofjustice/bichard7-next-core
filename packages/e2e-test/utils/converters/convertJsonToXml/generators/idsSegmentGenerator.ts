@@ -1,10 +1,11 @@
 import type { MockAddDisposalRequest } from "../../../../types/MockAddDisposalRequest"
 import type { MockAsnQueryResponse } from "../../../../types/MockAsnQueryResponse"
 import type { MockRemandRequest } from "../../../../types/MockRemandRequest"
+import type { MockSubsequentDisposalResultsRequest } from "../../../../types/MockSubsequentDisposalResultsRequest"
 import * as CONSTANT from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
-type LedsJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest
+type LedsJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
 
 const idsSegmentGenerator = (ledsJson: LedsJson): string => {
   const pncIdentifier = ledsJson.personUrn

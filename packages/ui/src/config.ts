@@ -31,9 +31,6 @@ export const FORCES_WITH_API_ENABLED: Set<string> = formatForceEnvVariable(proce
 export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = formatForceEnvVariable(
   process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? (isProduction ? "" : "01")
 )
-export const FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED: Set<string> = formatForceEnvVariable(
-  process.env.FORCES_WITH_TRIGGER_AND_EXCEPTION_QUALITY_AUDITING_ENABLED ?? (isProduction ? "" : "01")
-)
 
 const formSecret = process.env.CSRF_FORM_SECRET ?? "OliverTwist2"
 

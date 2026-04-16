@@ -113,14 +113,19 @@ describe("AutoSave", () => {
 
   it("displays a success message when it hasn't been saved and has changed", () => {
     cy.intercept("PUT", "/bichard/api/court-cases/0/update", {
-      statusCode: 200
-    })
+      statusCode: 200,
+      body: {
+        dummy: "true"
+      }
+    }).as("update")
 
     cy.mount(
       <CourtCaseContext.Provider value={[{ courtCase, amendments: { asn: "1234" }, savedAmendments: {} }, () => {}]}>
         <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
       </CourtCaseContext.Provider>
     )
+
+    cy.wait("@update")
 
     cy.get(".success-message")
       .invoke("text")
@@ -131,8 +136,11 @@ describe("AutoSave", () => {
 
   it("displays a success message when it has the new amendments and old savedAmendments", () => {
     cy.intercept("PUT", "/bichard/api/court-cases/0/update", {
-      statusCode: 200
-    })
+      statusCode: 200,
+      body: {
+        dummy: "true"
+      }
+    }).as("update")
 
     cy.mount(
       <CourtCaseContext.Provider
@@ -141,6 +149,8 @@ describe("AutoSave", () => {
         <Helper isValid={true} hasBeenSaved={false} hasChanged={true} amendmentFields={["asn"]} />
       </CourtCaseContext.Provider>
     )
+
+    cy.wait("@update")
 
     cy.get(".success-message")
       .invoke("text")

@@ -88,10 +88,18 @@ const updateLockStatusToLocked = async (
 
   if (user.hasAccessTo[Permission.Exceptions]) {
     result = await lock("Exception", courtCaseRepository, courtCaseId, user, events)
+
+    if (isError(result)) {
+      return result
+    }
   }
 
   if (user.hasAccessTo[Permission.Triggers]) {
     result = await lock("Trigger", courtCaseRepository, courtCaseId, user, events)
+
+    if (isError(result)) {
+      return result
+    }
   }
 
   return result ?? new Error("update requires a lock (exception or trigger) to update")

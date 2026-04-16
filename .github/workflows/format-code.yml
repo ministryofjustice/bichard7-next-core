@@ -9,6 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
 
+      - name: ⛓️ SLSA Supply Chain Security
+        uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.5.0
+
       - uses: ministryofjustice/github-actions/code-formatter@db1a54895bf5fb975c60af47e5a3aab96505ca3e #v18.6.0
         with:
           ignore-files: "**/tests/fixtures/e2e-comparison/*.json,**/help/**/*.md,*.py,docs/architecture/workspace.json"

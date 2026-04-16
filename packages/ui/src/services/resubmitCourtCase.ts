@@ -43,7 +43,11 @@ const resubmitCourtCaseTransaction = async (
       throw new Error("Failed to resubmit: Case not found")
     }
 
-    const lockResult = await updateLockStatusToLocked(entityManager, +courtCaseId, user, events)
+    if (courtCase.errorStatus === "Submitted" || courtCase.errorStatus === "Resolved") {
+      return courtCase
+    }
+
+    const lockResult = await updateLockStatusToLocked(entityManager, courtCaseId, user, events)
     if (isError(lockResult)) {
       throw lockResult
     }
@@ -68,7 +72,7 @@ const resubmitCourtCaseTransaction = async (
     const statusResult = await updateCourtCaseStatus(entityManager, courtCase, "Error", "Submitted", user)
 
     if (isError(statusResult)) {
-      return statusResult
+      throw statusResult
     }
 
     const unlockResult = await updateLockStatusToUnlocked(
@@ -101,11 +105,7 @@ const resubmitCourtCaseTransaction = async (
       throw Error(`Cannot resubmit court case id ${courtCaseId} because updated hearing outcome is null`)
     }
 
-    const storeAuditLogResponse = await storeMessageAuditLogEvents(courtCase.messageId, events).catch((error) => error)
-
-    if (isError(storeAuditLogResponse)) {
-      throw storeAuditLogResponse
-    }
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
 
     const destinationQueue =
       updatedCourtCase.phase == Phase.HEARING_OUTCOME ? phase1ResubmissionQueue : phase2ResubmissionQueue

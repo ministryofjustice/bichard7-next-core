@@ -1,8 +1,6 @@
 import type { TaskDef, WorkflowDef } from "@io-orkes/conductor-javascript"
 import type EventHandlerDef from "@moj-bichard7/common/conductor/types/EventHandlerDef"
 
-import axios, { type AxiosResponse } from "axios"
-
 type ConductorOptions = {
   password: string
   url: string
@@ -12,109 +10,134 @@ type ConductorOptions = {
 class ConductorGateway {
   constructor(private conductorOptions: ConductorOptions) {}
 
-  deleteEventHandler(name: string): Promise<void> {
-    return axios.delete(`${this.conductorOptions.url}/event/${name}`, {
-      auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-      headers: { "Content-Type": "application/json" }
+  async deleteEventHandler(name: string): Promise<void> {
+    const res = await fetch(`${this.conductorOptions.url}/event/${name}`, {
+      headers: this.getHeaders(),
+      method: "DELETE"
     })
+
+    if (!res.ok) {
+      throw new Error(`Failed to delete event handler: HTTP ${res.status}`)
+    }
   }
 
-  getEventHandler(event: string, name: string): Promise<EventHandlerDef | undefined> {
-    return axios
-      .get<EventHandlerDef[]>(`${this.conductorOptions.url}/event/${event}`, {
-        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-        validateStatus: (status: number) => status >= 200 && status < 500
-      })
-      .then((res) => {
-        if (res.status === 200 && res.data.length > 0) {
-          return res.data.filter((e) => e.name === name)[0]
-        }
-
-        return undefined
-      })
-  }
-
-  getEventHandlers(): Promise<Error | EventHandlerDef[]> {
-    return axios
-      .get<EventHandlerDef[]>(`${this.conductorOptions.url}/event`, {
-        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-        validateStatus: (status: number) => status >= 200 && status < 500
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.data
-        }
-
-        return Error(`Failed to get event handlers (${res.status})`)
-      })
-      .catch(() => Error("Failed to get event handlers"))
-  }
-
-  getTask(name: string): Promise<TaskDef | undefined> {
-    return axios
-      .get<TaskDef>(`${this.conductorOptions.url}/metadata/taskdefs/${name}`, {
-        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-        validateStatus: (status: number) => status >= 200 && status < 500
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.data
-        }
-
-        return undefined
-      })
-  }
-
-  getWorkflow(name: string): Promise<undefined | WorkflowDef> {
-    return axios
-      .get<WorkflowDef>(`${this.conductorOptions.url}/metadata/workflow/${name}`, {
-        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-        validateStatus: (status: number) => status >= 200 && status < 500
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.data
-        }
-
-        return undefined
-      })
-  }
-
-  postEventHandler(definition: EventHandlerDef): Promise<void> {
-    return axios.post(`${this.conductorOptions.url}/event`, definition, {
-      auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-      headers: { "Content-Type": "application/json" }
+  async getEventHandler(event: string, name: string): Promise<EventHandlerDef | undefined> {
+    const res = await fetch(`${this.conductorOptions.url}/event/${event}`, {
+      headers: this.getHeaders()
     })
+
+    if (res.status === 200) {
+      const data = (await res.json()) as EventHandlerDef[]
+      if (data.length > 0) {
+        return data.find((e) => e.name === name)
+      }
+    }
+
+    return undefined
   }
 
-  postTask(definition: TaskDef): Promise<AxiosResponse | void> {
-    return axios
-      .post(`${this.conductorOptions.url}/metadata/taskdefs`, [definition], {
-        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-        headers: { "Content-Type": "application/json" }
+  async getEventHandlers(): Promise<Error | EventHandlerDef[]> {
+    try {
+      const res = await fetch(`${this.conductorOptions.url}/event`, {
+        headers: this.getHeaders()
       })
-      .catch((e) => {
-        console.error(e.response.data)
-      })
+
+      if (res.status === 200) {
+        return (await res.json()) as EventHandlerDef[]
+      }
+
+      return new Error(`Failed to get event handlers (${res.status})`)
+    } catch (error) {
+      return new Error("Failed to get event handlers")
+    }
   }
 
-  putEventHandler(definition: EventHandlerDef): Promise<void> {
-    return axios.put(`${this.conductorOptions.url}/event`, definition, {
-      auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-      headers: { "Content-Type": "application/json" }
+  async getTask(name: string): Promise<TaskDef | undefined> {
+    const res = await fetch(`${this.conductorOptions.url}/metadata/taskdefs/${name}`, {
+      headers: this.getHeaders()
     })
+
+    if (res.status === 200) {
+      return (await res.json()) as TaskDef
+    }
+
+    return undefined
   }
 
-  putWorkflow(definition: WorkflowDef): Promise<void> {
-    return axios
-      .put(`${this.conductorOptions.url}/metadata/workflow`, [definition], {
-        auth: { password: this.conductorOptions.password, username: this.conductorOptions.username },
-        headers: { "Content-Type": "application/json" }
-      })
-      .catch((res) => {
-        console.error(res.response.data)
-        return res
-      })
+  async getWorkflow(name: string): Promise<undefined | WorkflowDef> {
+    const res = await fetch(`${this.conductorOptions.url}/metadata/workflow/${name}`, {
+      headers: this.getHeaders()
+    })
+
+    if (res.status === 200) {
+      return (await res.json()) as WorkflowDef
+    }
+
+    return undefined
+  }
+
+  async postEventHandler(definition: EventHandlerDef): Promise<void> {
+    const res = await fetch(`${this.conductorOptions.url}/event`, {
+      body: JSON.stringify(definition),
+      headers: this.getHeaders(),
+      method: "POST"
+    })
+
+    if (!res.ok) {
+      throw new Error(`Failed to post event handler: HTTP ${res.status}`)
+    }
+  }
+
+  async postTask(definition: TaskDef): Promise<Response | void> {
+    const res = await fetch(`${this.conductorOptions.url}/metadata/taskdefs`, {
+      body: JSON.stringify([definition]),
+      headers: this.getHeaders(),
+      method: "POST"
+    })
+
+    if (!res.ok) {
+      const errorData = await res.text().catch(() => "Unknown error")
+      console.error(errorData)
+      return
+    }
+
+    return res
+  }
+
+  async putEventHandler(definition: EventHandlerDef): Promise<void> {
+    const res = await fetch(`${this.conductorOptions.url}/event`, {
+      body: JSON.stringify(definition),
+      headers: this.getHeaders(),
+      method: "PUT"
+    })
+
+    if (!res.ok) {
+      throw new Error(`Failed to put event handler: HTTP ${res.status}`)
+    }
+  }
+
+  async putWorkflow(definition: WorkflowDef): Promise<void> {
+    const res = await fetch(`${this.conductorOptions.url}/metadata/workflow`, {
+      body: JSON.stringify([definition]),
+      headers: this.getHeaders(),
+      method: "PUT"
+    })
+
+    if (!res.ok) {
+      const errorData = await res.text().catch(() => "Unknown error")
+      console.error(errorData)
+      throw new Error(`Failed to put workflow: HTTP ${res.status}`)
+    }
+  }
+
+  private getHeaders(): HeadersInit {
+    const credentials = Buffer.from(`${this.conductorOptions.username}:${this.conductorOptions.password}`).toString(
+      "base64"
+    )
+    return {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/json"
+    }
   }
 }
 

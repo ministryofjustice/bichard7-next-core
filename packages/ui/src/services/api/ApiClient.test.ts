@@ -1,116 +1,116 @@
-import { isError } from "@moj-bichard7/common/types/Result"
+import { fetch } from "undici"
+import ApiClient, { HttpMethod } from "./ApiClient" // Adjust the path if necessary
+import { ApiError } from "types/ApiError"
 
-import ApiClient from "./ApiClient"
-import axios from "axios"
-import type { AxiosResponse } from "axios"
-import { API_LOCATION } from "config"
-import { type ApiError, isApiError } from "../../types/ApiError"
+jest.mock("undici", () => ({
+  fetch: jest.fn(),
+  Agent: jest.fn()
+}))
 
-jest.mock("axios")
-const mockedAxios = axios as jest.MockedFunction<typeof axios>
-mockedAxios.isAxiosError = jest.requireActual("axios").isAxiosError
+jest.mock("config", () => ({
+  API_LOCATION: "https://api.example.com"
+}))
 
-describe("apiClient get", () => {
-  const apiClient = new ApiClient("jwt")
+const mockFetch = fetch as jest.MockedFunction<typeof fetch>
 
-  afterEach(() => {
+describe("ApiClient", () => {
+  const jwt = "test-jwt-token"
+  let client: ApiClient
+
+  beforeEach(() => {
     jest.clearAllMocks()
+    client = new ApiClient(jwt)
   })
 
-  it("requires JWT", () => {
-    expect(apiClient.jwt).toBe("jwt")
+  const mockResponse = (ok: boolean, status: number, data: any, isJson = true) => ({
+    ok,
+    status,
+    json: jest.fn().mockResolvedValue(data),
+    text: jest.fn().mockResolvedValue(isJson ? JSON.stringify(data) : data)
   })
 
-  it("returns a case successfully", async () => {
-    const testCase = { asn: "0011", defendant_name: "Adam Smith", error_count: 1, trigger_count: 1 }
+  it("should perform a successful GET request", async () => {
+    const expectedData = { id: 1, name: "Test" }
+    mockFetch.mockResolvedValueOnce(mockResponse(true, 200, expectedData) as any)
 
-    mockedAxios.mockResolvedValue({
-      status: 200,
-      statusText: "OK",
-      data: testCase,
-      headers: {},
-      config: {} as any
-    } as AxiosResponse)
+    const result = await client.get("/users")
 
-    const result = await apiClient.get("/v1/cases/1")
-
-    expect(mockedAxios).toHaveBeenCalledWith(
-      expect.objectContaining({
-        url: `${API_LOCATION}/v1/cases/1`,
-        method: "GET"
-      })
-    )
-
-    expect(isError(result)).toBe(false)
-    expect(result).toEqual(testCase)
-  })
-
-  it("returns an error when the API returns an error response", async () => {
-    mockedAxios.mockRejectedValue({
-      response: {
-        status: 404,
-        statusText: "Not Found",
-        data: { message: "Not Found" },
-        headers: {},
-        config: {} as any
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users", {
+      method: HttpMethod.GET,
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json"
       },
-      isAxiosError: true
+      dispatcher: expect.any(Object)
     })
-
-    const result = await apiClient.get("/v1/cases/1")
-
-    expect(isApiError(result)).toBe(true)
-    expect((result as ApiError).status).toBe(404)
-    expect((result as ApiError).message).toBe("Not Found")
+    expect(result).toEqual(expectedData)
   })
 
-  it("can post without a body", async () => {
-    const testCase = { asn: "0011", defendant_name: "Adam Smith", error_count: 1, trigger_count: 1 }
+  it("should perform a successful POST request with an object body", async () => {
+    const payload = { name: "New User" }
+    const expectedData = { success: true }
+    mockFetch.mockResolvedValueOnce(mockResponse(true, 201, expectedData) as any)
 
-    mockedAxios.mockResolvedValue({
-      status: 200,
-      statusText: "OK",
-      data: testCase,
-      headers: {},
-      config: {} as any
-    } as AxiosResponse)
+    const result = await client.post("/users", payload)
 
-    const result = await apiClient.post("/v1/cases/1")
-
-    expect(mockedAxios).toHaveBeenCalledWith(
-      expect.objectContaining({
-        url: `${API_LOCATION}/v1/cases/1`,
-        method: "POST",
-        data: {}
-      })
-    )
-
-    expect(isError(result)).toBe(false)
-    expect(result).toEqual(testCase)
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/users", {
+      method: HttpMethod.POST,
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      dispatcher: expect.any(Object)
+    })
+    expect(result).toEqual(expectedData)
   })
 
-  it("can post with a body", async () => {
-    const testCase = { asn: "0011", defendant_name: "Adam Smith", error_count: 1, trigger_count: 1 }
+  it("should perform a successful POST request with a string body", async () => {
+    const payload = "plain-text-body"
+    const expectedData = { success: true }
+    mockFetch.mockResolvedValueOnce(mockResponse(true, 201, expectedData) as any)
 
-    mockedAxios.mockResolvedValue({
-      status: 200,
-      statusText: "OK",
-      data: testCase,
-      headers: {},
-      config: {} as any
-    } as AxiosResponse)
+    await client.post("/users", payload)
 
-    const result = await apiClient.post("/v1/cases/1", { 1: "thing", obj: { hello: "world" } })
-
-    expect(mockedAxios).toHaveBeenCalledWith(
+    expect(mockFetch).toHaveBeenCalledWith(
+      expect.any(String),
       expect.objectContaining({
-        url: `${API_LOCATION}/v1/cases/1`,
-        method: "POST",
-        data: { 1: "thing", obj: { hello: "world" } }
+        body: payload
       })
     )
+  })
 
-    expect(isError(result)).toBe(false)
-    expect(result).toEqual(testCase)
+  it("should return an ApiError when response is not ok and contains a JSON message", async () => {
+    const errorPayload = { message: "Invalid credentials" }
+    mockFetch.mockResolvedValueOnce(mockResponse(false, 401, errorPayload) as any)
+
+    const result = await client.get("/protected")
+
+    expect(result).toBeInstanceOf(ApiError)
+    expect((result as ApiError).status).toBe(401)
+    expect((result as ApiError).message).toBe("Invalid credentials")
+  })
+
+  it("should return an ApiError using the raw body when response is not ok and contains invalid JSON", async () => {
+    const rawErrorText = "Internal Server Error"
+    mockFetch.mockResolvedValueOnce(mockResponse(false, 500, rawErrorText, false) as any)
+
+    const result = await client.get("/failing-route")
+
+    expect(result).toBeInstanceOf(ApiError)
+    expect((result as ApiError).status).toBe(500)
+    expect((result as ApiError).message).toBe("Internal Server Error")
+  })
+
+  it("should catch and return network errors", async () => {
+    const networkError = new Error("Network failure")
+    mockFetch.mockRejectedValueOnce(networkError)
+
+    const result = await client.get("/timeout")
+
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Network failure")
   })
 })
