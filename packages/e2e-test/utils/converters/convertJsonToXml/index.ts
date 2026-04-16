@@ -1,3 +1,4 @@
+import { Operation } from "../../../types/Operation"
 import convertLedsAddDisposalRequestToXml from "./convertLedsAddDisposalRequestToXml"
 import convertLedsAsnQueryResponseToXml from "./convertLedsAsnQueryResponseToXml"
 import convertLedsRemandRequestToXml from "./convertLedsRemandRequestToXml"
@@ -10,14 +11,15 @@ const convertToXml = (code: string, data: string | undefined): string => {
 
   const ledsJson = JSON.parse(data)
 
-  switch (code) {
-    case "CXE01":
+  switch (code.toUpperCase()) {
+    case Operation.AsnQueryResponse:
       return convertLedsAsnQueryResponseToXml(ledsJson)
-    case "CXU01":
+    case Operation.Remand:
       return convertLedsRemandRequestToXml(ledsJson)
-    case "CXU02":
+    case Operation.AddDisposal:
       return convertLedsAddDisposalRequestToXml(ledsJson)
-    case "CXU04":
+    case Operation.SubsequentlyVaried:
+    case Operation.SentenceDeferred:
       return convertLedsSubsequentDisposalRequestToXmls(ledsJson)
     default:
       throw Error(`Unknown conversion type: ${code}`)
