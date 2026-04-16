@@ -1,6 +1,7 @@
 ## Police Force Map
 
-This page shows the interactive police force map for the New UI Bichard.
+Disclaimer:
+This page shows the interactive police force map for the New UI Bichard. This is for illustrative purposes only.
 
 Open the full interactive map:
 
