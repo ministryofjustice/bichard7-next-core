@@ -27,7 +27,7 @@ const schema = {
 
 const handler = async ({ database, reply, req }: HandlerProps) => {
   const connectivityKey = req.headers["x-connectivity-key"]
-  if (!connectivityKey || connectivityKey !== "test-connectivity-key") {
+  if (!connectivityKey || connectivityKey !== process.env.CONNECTIVITY_CHECK_KEY) {
     return reply.code(UNAUTHORIZED).send("Unauthorized")
   }
 

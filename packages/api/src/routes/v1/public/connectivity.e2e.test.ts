@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { OK } from "http-status"
+import { OK, UNAUTHORIZED } from "http-status"
 
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 
@@ -33,5 +33,16 @@ describe("/v1/connectivity e2e", () => {
       conductor: true,
       database: true
     })
+  })
+
+  it("will return unauthorised with wrong API key", async () => {
+    const response = await fetch(`${helper.address}${endpoint}`, {
+      headers: {
+        ["x-connectivity-key"]: "wrong-connectivity-key"
+      },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(UNAUTHORIZED)
   })
 })
