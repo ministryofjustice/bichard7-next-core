@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@aws-sdk/client-sqs": "^3.1019.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.351",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.355",
     "@stomp/stompjs": "^7.3.0",
     "esbuild": "~0.25.0",
     "jest": "^30.3.0",
