@@ -17,6 +17,7 @@ import { updateTabLink } from "../../../utils/updateTabLink"
 import LockStatusTag from "../LockStatusTag"
 import Trigger from "./Trigger"
 import { LockStatus, MarkCompleteGridCol, SelectAllTriggersGridRow } from "./TriggersList.styles"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 interface Props {
   onNavigate: NavigationHandler
@@ -36,6 +37,7 @@ const TriggersList = ({ onNavigate }: Props) => {
   const triggersLockedByAnotherUser = triggersAreLockedByAnotherUser(currentUser.username, courtCase)
   const { csrfToken } = useCsrfToken()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { errorStatus } = courtCase
 
   const setTriggerSelection = ({ target: checkbox }: ChangeEvent<HTMLInputElement>) => {
     const triggerId = parseInt(checkbox.value, 10)
@@ -89,7 +91,7 @@ const TriggersList = ({ onNavigate }: Props) => {
           <Trigger
             key={trigger.triggerId}
             trigger={trigger}
-            disabled={triggersLockedByAnotherUser}
+            disabled={triggersLockedByAnotherUser || errorStatus === ResolutionStatus.Submitted}
             onClick={() => handleClick(trigger.triggerItemIdentity)}
             selectedTriggerIds={selectedTriggerIds}
             setTriggerSelection={setTriggerSelection}

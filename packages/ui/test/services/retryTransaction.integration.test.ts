@@ -13,6 +13,12 @@ import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
 
+const serializationError = () => {
+  const error = new QueryFailedError("", [], new Error())
+  ;(error as QueryFailedError & { code: string }).code = "40001"
+  return error
+}
+
 describe("retryTransaction using resolveTriggers as an example", () => {
   let dataSource: DataSource
   const resolverUsername = "TriggerHandler"
@@ -44,8 +50,8 @@ describe("retryTransaction using resolveTriggers as an example", () => {
     await dataSource.destroy()
   })
 
-  it("throws error QueryFailedError", async () => {
-    const error = new QueryFailedError("QueryFailedError", ["Transaction failed"], new Error())
+  it("retries and throws if serialization error persists", async () => {
+    const error = serializationError()
     jest.spyOn(dataSource, "transaction").mockRejectedValue(error)
 
     const [courtCase] = await insertCourtCasesWithFields([
@@ -67,8 +73,8 @@ describe("retryTransaction using resolveTriggers as an example", () => {
     expect(dataSource.transaction).toHaveBeenCalledTimes(2)
   })
 
-  it("will retry if the first transaction throws a QueryFailedError", async () => {
-    const error = new QueryFailedError("QueryFailedError", ["Transaction failed"], new Error())
+  it("retries and succeeds if first transaction throws a serialization error", async () => {
+    const error = serializationError()
     jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error).mockResolvedValueOnce(true)
 
     const [courtCase] = await insertCourtCasesWithFields([
@@ -90,7 +96,7 @@ describe("retryTransaction using resolveTriggers as an example", () => {
     expect(dataSource.transaction).toHaveBeenCalledTimes(2)
   })
 
-  it("throws immediately if it isn't a QueryFailedError", async () => {
+  it("throws immediately if it is not a QueryFailedError", async () => {
     const error = new Error("One or more triggers are already resolved")
     jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error)
 
@@ -109,6 +115,30 @@ describe("retryTransaction using resolveTriggers as an example", () => {
     await insertTriggers(0, [trigger])
 
     await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).rejects.toThrow(error)
+
+    expect(dataSource.transaction).toHaveBeenCalledTimes(1)
+  })
+
+  it("throws immediately if QueryFailedError is not a serialization error", async () => {
+    const error = new QueryFailedError("", [], new Error())
+    ;(error as QueryFailedError & { code: string }).code = "23505"
+    jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error)
+
+    const [courtCase] = await insertCourtCasesWithFields([
+      {
+        triggerLockedByUsername: resolverUsername,
+        orgForPoliceFilter: visibleForce
+      }
+    ])
+    const trigger: TestTrigger = {
+      triggerId: 0,
+      triggerCode: TriggerCode.TRPR0001,
+      status: "Unresolved",
+      createdAt: new Date("2022-07-12T10:22:34.000Z")
+    }
+    await insertTriggers(0, [trigger])
+
+    await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).rejects.toEqual(error)
 
     expect(dataSource.transaction).toHaveBeenCalledTimes(1)
   })

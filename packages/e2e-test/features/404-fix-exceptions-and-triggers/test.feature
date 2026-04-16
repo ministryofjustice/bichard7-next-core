@@ -44,6 +44,7 @@ Feature: 404 - Fixing exceptions and triggers and resubmitting
 			And I click the "Defendant" tab
 			And I correct "ASN" to "1101ZD0100000448754K"
 			And I submit the record on the case details page
+			And I reload until I don't see "Submitted"
 		When I click the "Triggers" tab
 			And I see trigger "TRPR0003" for offence "1"
 			And I see trigger "TRPR0004" for offence "1"
