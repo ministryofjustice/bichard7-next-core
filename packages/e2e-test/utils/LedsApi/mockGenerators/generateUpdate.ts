@@ -1,16 +1,10 @@
 import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import { randomUUID } from "crypto"
 import type { LedsMock, LedsMockOptions } from "../../../types/LedsMock"
+import { Operation } from "../../../types/Operation"
 import convertPncUpdateResponseToLeds from "../../converters/convertPncJsonToLeds/convertPncUpdateResponseToLeds"
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
-
-enum Operation {
-  Remand = "CXU01", // NEWREM
-  AddDisposal = "CXU02", // DISARR
-  SubsequentlyVaried = "CXU03", // SUBVAR
-  SentenceDeferred = "CXU04" // SENDEF
-}
 
 export const generateUpdate = (code: string, options: LedsMockOptions): LedsMock => {
   const personId = options.personId ?? randomUUID()
