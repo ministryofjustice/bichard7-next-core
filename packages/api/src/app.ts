@@ -1,7 +1,8 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
 import AutoLoad from "@fastify/autoload"
-import path from "path"
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import path from "node:path"
 
 import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
 import type AwsS3Gateway from "./types/AwsS3Gateway"
@@ -22,7 +23,7 @@ declare module "fastify" {
     auditLogGateway: AuditLogDynamoGateway
     database: DatabaseGateway
     s3: AwsS3Gateway
-    user: User
+    user: null | User
   }
 }
 
@@ -54,14 +55,18 @@ export default async function ({ auditLogGateway, database }: Gateways) {
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
-      const authenticatedUser = await authenticate(instance.database.readonly, request, reply)
-      if (!authenticatedUser) {
-        return
+      let authenticatedUser
+
+      if (request.url !== V1.Connectivity) {
+        authenticatedUser = await authenticate(instance.database.readonly, request, reply)
+        if (!authenticatedUser) {
+          return
+        }
       }
 
       request.auditLogGateway = instance.auditLogGateway
       request.database = instance.database
-      request.user = authenticatedUser
+      request.user = authenticatedUser ?? null
     })
 
     await instance.register(AutoLoad, {

@@ -25,11 +25,23 @@ describe("/v1/connectivity e2e", () => {
     await helper.postgres.close()
   })
 
-  it("will return the current user with a correct JWT", async () => {
+  it("will return the true values for dependencies", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint}`, {
       headers: { Authorization: `Bearer ${encodedJwt}` },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(OK)
+    expect(await response.json()).toEqual({
+      conductor: true,
+      database: true
+    })
+  })
+
+  it("will still work if no user logged in", async () => {
+    const response = await fetch(`${helper.address}${endpoint}`, {
       method: "GET"
     })
 
