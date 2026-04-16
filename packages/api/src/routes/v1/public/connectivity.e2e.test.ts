@@ -22,6 +22,9 @@ describe("/v1/connectivity e2e", () => {
 
   it("will return the true values for dependencies", async () => {
     const response = await fetch(`${helper.address}${endpoint}`, {
+      headers: {
+        ["x-connectivity-key"]: "test-connectivity-key"
+      },
       method: "GET"
     })
 
