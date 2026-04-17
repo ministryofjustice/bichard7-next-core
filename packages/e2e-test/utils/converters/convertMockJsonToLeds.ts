@@ -8,9 +8,9 @@ import type { RemandRequest } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "@moj-bichard7/core/types/leds/SubsequentDisposalResultsRequest"
 import { Operation } from "../../types/Operation"
 
-type ledsJson = AsnQueryResponse | RemandRequest | AddDisposalRequest | SubsequentDisposalResultsRequest
+type LedsJson = AsnQueryResponse | RemandRequest | AddDisposalRequest | SubsequentDisposalResultsRequest
 
-const convertMockJsonToLeds = (code: string, mockJson: object): ledsJson => {
+const convertMockJsonToLeds = (code: string, mockJson: object): LedsJson => {
   switch (code.toUpperCase()) {
     case Operation.AsnQueryResponse:
       return asnQueryResponseSchema.parse(mockJson)
