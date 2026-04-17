@@ -35,7 +35,7 @@ export const retryTransaction = async <T, Args extends unknown[]>(
 
       logger.warn(`Error inside transaction (retry: ${attempt}): ${errorForLog.name} - ${errorForLog.message}`)
 
-      await delay(randomInt(50, 150) * (attempt + 1))
+      await delay(randomInt(10, 50) * (attempt + 1))
       attempt++
     }
   }
