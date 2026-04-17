@@ -1,9 +1,9 @@
-import { getFormattedDateForEmailHeader } from "@/utils/getFormattedDateForEmailHeader"
 import config from "lib/config"
 import nodemailer from "nodemailer"
 import type Email from "types/Email"
 import type Emailer from "types/Emailer"
 import logger from "utils/logger"
+import { getFormattedDateForEmailHeader } from "../utils/getFormattedDateForEmailHeader"
 
 const getSmtpMailer = (): Emailer => {
   const transporter = nodemailer.createTransport({
