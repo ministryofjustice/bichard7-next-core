@@ -70,6 +70,11 @@ describe("cleanObjectStrings Exhaustive Tests", () => {
         content: "Cost: #5 Mae'r bwer yn y ty!",
         metadata: ["?", 2026]
       }
+    },
+    {
+      description: "should not remove new line character from bailConditions",
+      input: { bailConditions: "First\nSecond\rThird\tFourth", bailConditions1: "First\nSecond\rThird\tFourth" },
+      expected: { bailConditions: "First\nSecond Third Fourth", bailConditions1: "First Second Third Fourth" }
     }
   ]
 
