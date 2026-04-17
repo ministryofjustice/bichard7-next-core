@@ -26,9 +26,7 @@
             {
               "id": "a2546c25-b554-48d6-8366-08b11b748eb8",
               "disposalCode": "4027",
-              "disposalQualifierCodes": [
-                "BA"
-              ],
+              "disposalQualifierCodes": ["BA"],
               "effectiveDate": "2008-10-01"
             }
           ],
