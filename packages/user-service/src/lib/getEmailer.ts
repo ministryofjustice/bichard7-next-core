@@ -1,17 +1,9 @@
-import { format, toZonedTime } from "date-fns-tz"
+import { getFormattedDateForEmailHeader } from "@/utils/getFormattedDateForEmailHeader"
 import config from "lib/config"
 import nodemailer from "nodemailer"
 import type Email from "types/Email"
 import type Emailer from "types/Emailer"
 import logger from "utils/logger"
-
-const getFormattedDate = () => {
-  const timeZone = "Europe/London"
-  const now = new Date()
-  const zonedDate = toZonedTime(now, timeZone)
-  const dateString = format(zonedDate, "EEE, dd MMM yyyy HH:mm:ss XX", { timeZone })
-  return dateString
-}
 
 const getSmtpMailer = (): Emailer => {
   const transporter = nodemailer.createTransport({
@@ -27,7 +19,7 @@ const getSmtpMailer = (): Emailer => {
   return {
     sendMail: (email: Email) =>
       transporter.sendMail({
-        date: getFormattedDate(),
+        date: getFormattedDateForEmailHeader(),
         ...email
       })
   }
@@ -40,7 +32,7 @@ const getConsoleMailer = (): Emailer => ({
       to: email.to,
       subject: email.subject,
       body: email.text,
-      date: getFormattedDate()
+      date: getFormattedDateForEmailHeader()
     })
   }
 })
