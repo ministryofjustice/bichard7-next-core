@@ -2,7 +2,7 @@ import getFormattedDateForEmailHeader from "utils/getFormattedDateForEmailHeader
 
 describe("getFormattedDateForEmailHeader", () => {
   it("formats correctly for BST (Summer)", () => {
-    const summerDate = new Date("2026-04-17T16:40:00Z")
+    const summerDate = new Date("2026-04-17T15:40:00Z")
     const result = getFormattedDateForEmailHeader(summerDate)
 
     expect(result).toBe("Fri, 17 Apr 2026 16:40:00 +0100")
