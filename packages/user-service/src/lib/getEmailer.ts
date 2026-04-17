@@ -7,11 +7,11 @@ import type Emailer from "types/Emailer"
 import logger from "utils/logger"
 
 const getBSTDate = () => {
-  const dateFormat = "yyyy-MM-dd HH:mm:ss"
-  const dateObject = new Date()
-  const zonedDate = toZonedTime(dateObject, "Europe/London")
-  const bstString = format(zonedDate, dateFormat)
-  return bstString
+  const timeZone = "Europe/London"
+  const now = new Date()
+  const zonedDate = toZonedTime(now, timeZone)
+  const bstDateString = format(zonedDate, "EEE, dd MMM yyyy HH:mm:ss XX '(BST)'")
+  return bstDateString
 }
 
 const getSmtpMailer = (): Emailer => {
