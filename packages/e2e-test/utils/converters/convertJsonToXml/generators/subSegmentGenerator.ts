@@ -11,12 +11,12 @@ const hearingTypeMap: Record<ReasonForAppearance, string> = {
   "Heard at Court": ""
 }
 
-const subSegmentGenerator = (ledsJson: MockSubsequentDisposalResultsRequest): string => {
+const subSegmentGenerator = (mockJson: MockSubsequentDisposalResultsRequest): string => {
   return generateRow("SUB", [
     [CONSTANT.OFFENCE_UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
-    [extractCourtCode(ledsJson.court), CONSTANT.COURT_HOUSE_CODE_FIELD_LENGTH],
-    [convertToPncDate(ledsJson.appearanceDate), CONSTANT.HEARING_DATE_FIELD_LENGTH],
-    [hearingTypeMap[ledsJson.reasonForAppearance as ReasonForAppearance], CONSTANT.HEARING_TYPE_FIELD_LENGTH]
+    [extractCourtCode(mockJson.court), CONSTANT.COURT_HOUSE_CODE_FIELD_LENGTH],
+    [convertToPncDate(mockJson.appearanceDate), CONSTANT.HEARING_DATE_FIELD_LENGTH],
+    [hearingTypeMap[mockJson.reasonForAppearance as ReasonForAppearance], CONSTANT.HEARING_TYPE_FIELD_LENGTH]
   ])
 }
 
