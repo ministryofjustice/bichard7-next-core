@@ -4,8 +4,8 @@ import ccrSegmentGenerator from "./ccrSegmentGenerator"
 import cofSegmentGenerator from "./cofSegmentGenerator"
 import disSegmentGenerator from "./disSegmentGenerator"
 
-const offenceSegmentsCXE01 = (ledsJson: MockAsnQueryResponse): string => {
-  const allSegments = ledsJson.disposals.flatMap((disposal) => {
+const offenceSegmentsCXE01 = (mockJson: MockAsnQueryResponse): string => {
+  const allSegments = mockJson.disposals.flatMap((disposal) => {
     const ccr = ccrSegmentGenerator(disposal)
 
     const childSegments = disposal.offences.flatMap((offence) => {

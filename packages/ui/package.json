@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.1",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.351",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.357",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
