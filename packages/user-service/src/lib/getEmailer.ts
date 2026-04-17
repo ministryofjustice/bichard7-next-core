@@ -1,11 +1,21 @@
-import nodemailer from "nodemailer"
+import { format } from "date-fns"
+import { toZonedTime } from "date-fns-tz"
 import config from "lib/config"
+import nodemailer from "nodemailer"
 import type Email from "types/Email"
 import type Emailer from "types/Emailer"
 import logger from "utils/logger"
 
-const getSmtpMailer = (): Emailer =>
-  nodemailer.createTransport({
+const getBSTDate = () => {
+  const dateFormat = "yyyy-MM-dd HH:mm:ss"
+  const dateObject = new Date()
+  const zonedDate = toZonedTime(dateObject, "Europe/London")
+  const bstString = format(zonedDate, dateFormat)
+  return bstString
+}
+
+const getSmtpMailer = (): Emailer => {
+  const transporter = nodemailer.createTransport({
     host: config.smtp.host,
     port: config.smtp.port,
     secure: config.smtp.tls,
@@ -15,13 +25,23 @@ const getSmtpMailer = (): Emailer =>
     }
   })
 
+  return {
+    sendMail: (email: Email) =>
+      transporter.sendMail({
+        date: getBSTDate(),
+        ...email
+      })
+  }
+}
+
 const getConsoleMailer = (): Emailer => ({
   sendMail: async (email: Email) => {
     logger.info({
       from: email.from,
       to: email.to,
       subject: email.subject,
-      body: email.text
+      body: email.text,
+      date: getBSTDate()
     })
   }
 })

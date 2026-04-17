@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-process.env.TZ = "Europe/London"
 const nextConfig = {
   basePath: "/users",
   poweredByHeader: false,
