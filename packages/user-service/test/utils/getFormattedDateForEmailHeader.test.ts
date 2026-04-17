@@ -1,4 +1,4 @@
-import { getFormattedDateForEmailHeader } from "../utils/getFormattedDateForEmailHeader"
+import getFormattedDateForEmailHeader from "utils/getFormattedDateForEmailHeader"
 
 describe("getFormattedDateForEmailHeader", () => {
   it("formats correctly for BST (Summer)", () => {
