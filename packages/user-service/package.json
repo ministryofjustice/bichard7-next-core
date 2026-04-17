@@ -39,6 +39,7 @@
     "crypto-secure-random-digit": "^1.0.10",
     "csrf": "^3.1.0",
     "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
     "govuk-frontend": "^5.14.0",
     "govuk-react": "^0.10.7",
     "jsonwebtoken": "^9.0.3",
