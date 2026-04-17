@@ -34,15 +34,14 @@ const getSmtpMailer = (): Emailer => {
 }
 
 const getConsoleMailer = (): Emailer => ({
-    sendMail: async (email: Email) => {
-      logger.info({
-        from: email.from,
-        to: email.to,
-        subject: email.subject,
-        body: email.text,
-        date: getFormattedDate()
-      })
-    }
+  sendMail: async (email: Email) => {
+    logger.info({
+      from: email.from,
+      to: email.to,
+      subject: email.subject,
+      body: email.text,
+      date: getFormattedDate()
+    })
   }
 })
 
