@@ -67,7 +67,7 @@
     "stompit": "^1.0.0",
     "styled-components": "^6.4.0",
     "typeorm": "^0.3.28",
-    "undici": "^8.1.0"
+    "undici": "^6.25.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
