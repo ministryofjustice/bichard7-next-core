@@ -9,5 +9,11 @@
     { "path": "./packages/message-forwarder/tsconfig.ref.json" },
     { "path": "./packages/ui/tsconfig.ref.json" },
     { "path": "./packages/user-service/tsconfig.ref.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "ES2018",
+    "lib": ["ES2018", "DOM"]
+  }
 }

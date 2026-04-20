@@ -52,7 +52,8 @@
     "**/*.tsx",
     "**/*.js",
     "cypress",
-    "cypress.config.ts"
+    "cypress.config.ts",
+    "migrateXml.ts"
   ],
   "exclude": ["node_modules", "cypress-axe", "scripts/utility", "cypress.config.ts"]
 }
