@@ -47,6 +47,9 @@ const mapToAddDisposalRequest = (
       : undefined
 
   return {
+    pncCheckName: "",
+    croNumber: "",
+    crimeOffenceReferenceNumber: "",
     ownerCode: pncRequest.forceStationCode,
     personUrn,
     courtCaseReference: pncRequest.courtCaseReferenceNumber,

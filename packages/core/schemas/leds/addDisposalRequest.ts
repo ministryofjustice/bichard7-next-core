@@ -73,6 +73,9 @@ export const carryForwardSchema = z.object({
 })
 
 export const addDisposalRequestSchema = z.object({
+  pncCheckName: z.string(),
+  croNumber: z.string(),
+  crimeOffenceReferenceNumber: z.string(),
   ownerCode: forceStationCodeSchema,
   personUrn: z.string().nonempty(),
   courtCaseReference: courtCaseReferenceSchema,
