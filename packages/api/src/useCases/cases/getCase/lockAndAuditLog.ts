@@ -6,7 +6,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionDatabaseConnection, WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import createAuditLogEvents from "../../createAuditLogEvents"
@@ -14,7 +14,7 @@ import { lockExceptions } from "./lockExceptions"
 import { lockTriggers } from "./lockTriggers"
 
 export const lockAndAuditLog = async (
-  database: WritableDatabaseConnection,
+  database: TransactionDatabaseConnection,
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,

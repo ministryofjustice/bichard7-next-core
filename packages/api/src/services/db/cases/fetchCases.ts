@@ -8,7 +8,7 @@ import { isEmpty } from "lodash"
 
 import type { CaseRowForIndexDto } from "../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
-import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+import type { PoolDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertCaseToCaseIndexDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
@@ -23,7 +23,7 @@ export type FetchCasesResult = {
 }
 
 const fetchCases = async (
-  database: DatabaseConnection,
+  database: PoolDatabaseConnection,
   user: User,
   pagination: Pagination,
   sortOrder: SortOrder,

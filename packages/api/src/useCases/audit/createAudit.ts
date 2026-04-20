@@ -7,7 +7,7 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
-import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
+import type { TransactionDatabaseConnection } from "../../types/DatabaseGateway"
 
 import { getPotentialCasesToAudit } from "../../services/db/audit/getPotentialCasesToAudit"
 import { insertAudit } from "../../services/db/audit/insertAudit"
@@ -16,7 +16,7 @@ import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import { getVolumeOfCasesToAudit } from "./getVolumeOfCasesToAudit"
 
 export async function createAudit(
-  database: WritableDatabaseConnection,
+  database: TransactionDatabaseConnection,
   createAuditInput: CreateAuditInput,
   user: User
 ): PromiseResult<AuditDto> {

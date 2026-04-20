@@ -1,15 +1,24 @@
 import type postgres from "postgres"
 
 export interface DatabaseConnection {
+  connection: postgres.Sql<{}> | postgres.TransactionSql<{}>
+}
+
+export default interface DatabaseGateway {
+  readonly readonly: PoolDatabaseConnection
+  readonly writable: TransactionDatabaseConnection
+}
+
+export interface PoolDatabaseConnection extends DatabaseConnection {
   connection: postgres.Sql<{}>
 }
 
-export interface WritableDatabaseConnection extends DatabaseConnection {
+export interface TransactionDatabaseConnection extends WritableDatabaseConnection {
+  connection: postgres.Sql<{}>
+
   readonly transaction: <T>(callback: (connection: WritableDatabaseConnection) => Promise<T>) => Promise<T>
 }
-interface DatabaseGateway {
-  readonly readonly: DatabaseConnection
-  readonly writable: WritableDatabaseConnection
-}
 
-export default DatabaseGateway
+export interface WritableDatabaseConnection extends DatabaseConnection {
+  readonly isWritable: true
+}

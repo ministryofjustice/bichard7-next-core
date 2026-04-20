@@ -6,13 +6,13 @@ import type { FastifyBaseLogger } from "fastify"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import fetchCase from "../../../services/db/cases/fetchCase"
 import { lockAndAuditLog } from "./lockAndAuditLog"
 
 const lockAndFetchCaseDto = async (
-  database: WritableDatabaseConnection,
+  database: TransactionDatabaseConnection,
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,

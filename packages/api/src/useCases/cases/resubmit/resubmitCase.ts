@@ -4,7 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import canUserResubmitCase from "./canUserResubmitCase"
@@ -15,7 +15,7 @@ type ResubmitCaseResult = {
 }
 
 export const resubmitCase = async (
-  databaseConnection: WritableDatabaseConnection,
+  databaseConnection: TransactionDatabaseConnection,
   user: User,
   caseId: number,
   autoResubmit: boolean = false
