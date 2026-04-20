@@ -5,10 +5,10 @@ import type { MockSubsequentDisposalResultsRequest } from "../../../../types/Moc
 import { FORCE_STATION_CODE_FIELD_LENGTH, UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH } from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
-type LedsJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
+type MockJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
 
-const fscSegmentGenerator = (ledsJson: LedsJson): string => {
-  const forceStationCode = ledsJson.ownerCode
+const fscSegmentGenerator = (mockJson: MockJson): string => {
+  const forceStationCode = mockJson.ownerCode
 
   const fscSegment = generateRow("FSC", [
     [UPDATE_TYPE, UPDATE_TYPE_FIELD_LENGTH],

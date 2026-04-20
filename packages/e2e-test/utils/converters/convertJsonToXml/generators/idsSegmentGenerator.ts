@@ -5,12 +5,12 @@ import type { MockSubsequentDisposalResultsRequest } from "../../../../types/Moc
 import * as CONSTANT from "../../../constants"
 import generateRow from "../helpers/generateRow"
 
-type LedsJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
+type MockJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
 
-const idsSegmentGenerator = (ledsJson: LedsJson): string => {
-  const pncIdentifier = ledsJson.personUrn
-  const pncCheckName = ledsJson.pncCheckName
-  const croNumber = ledsJson.croNumber
+const idsSegmentGenerator = (mockJson: MockJson): string => {
+  const pncIdentifier = mockJson.personUrn
+  const pncCheckName = mockJson.pncCheckName
+  const croNumber = mockJson.croNumber
 
   const idsSegment = generateRow("IDS", [
     [CONSTANT.UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
