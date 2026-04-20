@@ -34,7 +34,7 @@
     "test:file": "jest --runInBand --workerThreads=true --testPathPatterns",
     "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\"",
     "install:hooks": "./scripts/install-git-hooks.sh",
-    "update-deps": "ncu -u --cooldown 3d && npm install",
+    "update-deps": "ncu -u && npm install",
     "seed-data": "ts-node ./scripts/seed-data.ts",
     "zap": "./scripts/zap/zap-scan.sh"
   },

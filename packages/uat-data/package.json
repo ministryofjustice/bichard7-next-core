@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npx tsc --noEmit --skipLibCheck",
     "lint": "eslint --fix .",
-    "update-deps": "ncu -u -x eslint --cooldown 3d && npm install"
+    "update-deps": "ncu -u -x eslint && npm install"
   },
   "license": "MIT",
   "lint-staged": {
