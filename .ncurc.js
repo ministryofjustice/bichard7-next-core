@@ -23,6 +23,8 @@ const semver = new RegExp(
     - Breaking changes for how to use the Client, workflows etc
   - @typescript-eslint/eslint-plugin
     - Breaks dependency tree for eslint-config-next
+  - postgres
+    - 3.4.8 broke a Type: https://github.com/porsager/postgres/issues/1143
   - cypress-circleci-reporter
       - 0.4.0 changed to module type
 */
@@ -36,6 +38,7 @@ const ignored = [
   "http-status",
   "@io-orkes/conductor-javascript",
   "@typescript-eslint/eslint-plugin",
+  "postgres",
   "cypress-circleci-reporter"
 ]
 

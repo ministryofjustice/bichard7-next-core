@@ -12,12 +12,14 @@
     - v6 supports node v20. Higher versions need > node v20
 
   Ignored:
+    - postgres
+      - 3.4.8 broke a Type: https://github.com/porsager/postgres/issues/1143
     - cypress-circleci-reporter
       - 0.4.0 changed to module type
 */
 
 const pinned = ["@ministryofjustice/frontend", "cookies-next", "@faker-js/faker", "next", "govuk-frontend", "undici"]
-const ignored = ["cypress-circleci-reporter"]
+const ignored = ["postgres", "cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
 module.exports = {

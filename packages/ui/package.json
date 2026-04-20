@@ -107,7 +107,7 @@
     "mockdate": "^3.0.5",
     "npm-check-updates": "^21.0.2",
     "pg-promise": "^12.6.2",
-    "postgres": "^3.4.9",
+    "postgres": "3.4.7",
     "prettier": "^3.8.3",
     "sass": "^1.99.0",
     "stylelint": "^17.8.0",
