@@ -44,16 +44,6 @@
     },
     "rootDir": "."
   },
-  "include": [
-    "eslintrc.js",
-    "next-env.d.ts",
-    "package.json",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "cypress",
-    "cypress.config.ts",
-    "migrateXml.ts"
-  ],
+  "include": ["eslintrc.js", "next-env.d.ts", "package.json", "**/*.ts", "**/*.tsx", "**/*.js", "cypress", "cypress.config.ts", "migrateXml.ts"],
   "exclude": ["node_modules", "cypress-axe", "scripts/utility", "cypress.config.ts"]
 }
