@@ -18,29 +18,29 @@ const run = () => {
   const updatedContent = fileContent.replace(regex, (fullMatch: string, code: string, content: string) => {
     try {
       const contentObj = eval(`(${content})`)
-    const pncXml = contentObj.expectedRequest
-    const pncJson = convertPncXmlToJson(pncXml)
+      const pncXml = contentObj.expectedRequest
+      const pncJson = convertPncXmlToJson(pncXml)
 
-    let mockJson
-    switch (code) {
-      case "CXU01":
-        mockJson = convertPncJsonToLedsRemandRequest(pncJson as PncRemandJson)
-        break
-      case "CXU02":
-        mockJson = convertPncJsonToLedsAddDisposalRequest(pncJson as PncNormalDisposalJson)
-        break
-      case "CXU04":
-      case "CXU03":
-        mockJson = convertPncJsonToLedsSubsequentDisposalRequest(pncJson as PncSubsequentDisposalJson)
-        break
-    }
+      let mockJson
+      switch (code) {
+        case "CXU01":
+          mockJson = convertPncJsonToLedsRemandRequest(pncJson as PncRemandJson)
+          break
+        case "CXU02":
+          mockJson = convertPncJsonToLedsAddDisposalRequest(pncJson as PncNormalDisposalJson)
+          break
+        case "CXU04":
+        case "CXU03":
+          mockJson = convertPncJsonToLedsSubsequentDisposalRequest(pncJson as PncSubsequentDisposalJson)
+          break
+      }
 
-    const newObject = {
-      ...contentObj,
-      expectedRequest: mockJson
-    }
+      const newObject = {
+        ...contentObj,
+        expectedRequest: mockJson
+      }
 
-    return `policeApi.mockUpdate("${code}", ${JSON.stringify(newObject, null, 2)})`
+      return `policeApi.mockUpdate("${code}", ${JSON.stringify(newObject, null, 2)})`
     } catch (err) {
       console.error(err)
       return fullMatch
@@ -48,7 +48,7 @@ const run = () => {
   })
 
   fs.writeFileSync(filePath, updatedContent)
-  console.log("File updated successfully!");
+  console.log("File updated successfully!")
 }
 
 run()
