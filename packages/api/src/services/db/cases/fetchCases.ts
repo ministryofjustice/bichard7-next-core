@@ -8,7 +8,7 @@ import { isEmpty } from "lodash"
 
 import type { CaseRowForIndexDto } from "../../../types/Case"
 import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
-import type { PoolDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { convertCaseToCaseIndexDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
@@ -23,7 +23,7 @@ export type FetchCasesResult = {
 }
 
 const fetchCases = async (
-  database: PoolDatabaseConnection,
+  database: DatabaseConnection,
   user: User,
   pagination: Pagination,
   sortOrder: SortOrder,
@@ -113,7 +113,7 @@ const fetchCases = async (
     FROM
       allCases
     ORDER BY
-      ${ordering(database.connection, sortOrder)}
+      ${ordering(database, sortOrder)}
     LIMIT ${pagination.maxPerPage}
     OFFSET ${offset}
   `
@@ -215,7 +215,7 @@ const fetchCases = async (
       triggerLockedByUser.forenames,
       triggerLockedByUser.surname
     ORDER BY
-      ${ordering(database.connection, sortOrder)}
+      ${ordering(database, sortOrder)}
   `
 
   const result = await database.connection<CaseRowForIndexDto[]>`

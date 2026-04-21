@@ -4,8 +4,10 @@ import type { Row } from "postgres"
 import { Order, OrderBy } from "@moj-bichard7/common/types/ApiCaseQuery"
 
 import type { SortOrder } from "../../../../types/CaseIndexQuerystring"
+import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-export const ordering = (sql: postgres.Sql, sortOrder: SortOrder): postgres.PendingQuery<Row[]> => {
+export const ordering = (database: DatabaseConnection, sortOrder: SortOrder): postgres.PendingQuery<Row[]> => {
+  const sql = database.connection
   const defaultCourtDate = sql`el_court_date DESC`
   const defaultPtiurn = sql`el_ptiurn ASC`
   const defaultOrder = sql`${defaultCourtDate}, ${defaultPtiurn}`

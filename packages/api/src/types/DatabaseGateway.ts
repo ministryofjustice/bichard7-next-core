@@ -5,11 +5,11 @@ export interface DatabaseConnection {
 }
 
 export default interface DatabaseGateway {
-  readonly readonly: PoolDatabaseConnection
+  readonly readonly: ReadableDatabaseConnection
   readonly writable: TransactionDatabaseConnection
 }
 
-export interface PoolDatabaseConnection extends DatabaseConnection {
+export interface ReadableDatabaseConnection extends DatabaseConnection {
   connection: postgres.Sql<{}>
 }
 

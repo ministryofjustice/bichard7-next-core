@@ -6,13 +6,13 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
-import type { PoolDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { fetchCaseAges } from "../../../services/db/cases/fetchCaseAges"
 import fetchCases from "../../../services/db/cases/fetchCases"
 
 const fetchCasesAndFilter = async (
-  database: PoolDatabaseConnection,
+  database: DatabaseConnection,
   query: ApiCaseQuery,
   user: User
 ): PromiseResult<CaseIndexMetadata> => {
