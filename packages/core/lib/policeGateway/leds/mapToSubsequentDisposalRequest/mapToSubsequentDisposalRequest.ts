@@ -20,6 +20,11 @@ const mapToSubsequentDisposalRequest = (
   pncRequest: DisposalUpdatedPncUpdateRequest["request"] | SentenceDeferredPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): SubsequentDisposalResultsRequest => ({
+  // TEMP: Remove before PR approval
+  pncCheckName: "",
+  croNumber: "",
+  crimeOffenceReferenceNumber: "",
+  // TEMP: Remove before PR approval
   ownerCode: pncRequest.forceStationCode,
   personUrn:
     preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
