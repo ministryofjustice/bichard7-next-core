@@ -194,7 +194,7 @@ describe("Creation of new user", () => {
     cy.get("#excludedTriggersTRPR0001").uncheck({ force: true })
     cy.get('[data-test="checkbox-user-groups"]')
       .find('[data-test="checkbox-multiselect-checkboxes"]')
-      .find(`input[name="B7UserManager_grp"]`)
+      .find('input[name="B7UserManager_grp"]')
       .check({ force: true })
     cy.get("button[name=save]").click()
 
@@ -232,7 +232,7 @@ describe("Creation of new user", () => {
     cy.get("#excludedTriggersTRPR0001").uncheck({ force: true })
     cy.get('[data-test="checkbox-user-groups"]')
       .find('[data-test="checkbox-multiselect-checkboxes"]')
-      .find(`input[name="B7GeneralHandler_grp"]`)
+      .find('input[name="B7GeneralHandler_grp"]')
       .check({ force: true })
     cy.get("button[name=save]").click()
 
