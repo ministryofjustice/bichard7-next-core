@@ -297,17 +297,6 @@ export default [
         parser: tsParser
       }
     })),
-  // Add Next.js plugin rules for TSX files
-  {
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
-    plugins: {
-      "@next/next": nextPlugin
-    },
-    rules: {
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs["core-web-vitals"].rules
-    }
-  },
   // TSX configs for Next.js packages
   ...nextPackages.map((pkg) => ({
     files: [`packages/${pkg}/**/*.tsx`],
