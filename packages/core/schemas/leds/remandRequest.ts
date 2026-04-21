@@ -46,6 +46,14 @@ const localAuthoritySchema = z.object({
 })
 
 export const remandRequestSchema = z.object({
+  // TEMP: Remove before PR approval
+  pncCheckName: z.string(),
+  croNumber: z.string(),
+  arrestSummonsNumber: z.string(),
+  crimeOffenceReferenceNo: z.string(),
+  remandResult: z.string(),
+  remandLocationFfss: z.string(),
+  // TEMP: Remove before PR approval
   ownerCode: forceStationCodeSchema,
   personUrn: z.string().nonempty(),
   remandDate: dateStringSchema,

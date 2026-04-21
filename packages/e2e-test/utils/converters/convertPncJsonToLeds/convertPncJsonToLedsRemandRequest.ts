@@ -20,7 +20,8 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
     Array.isArray(pncJson.bailConditions) ? pncJson.bailConditions : [pncJson.bailConditions]
   ).flatMap((bailCondition) => bailCondition.match(/.{1,50}/g) ?? [])
 
-  return mapToRemandRequest(
+  // TEMP: Remove before PR approval
+  const result = mapToRemandRequest(
     {
       ...pncJson,
       hearingDate: pncJson.remandDate,
@@ -31,4 +32,27 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
     },
     pncUpdateDataset
   )
+
+  return {
+    ...result,
+    crimeOffenceReferenceNo: pncJson.crimeOffenceReferenceNo,
+    remandResult: pncJson.remandResult,
+    remandLocationFfss: pncJson.remandLocationFfss,
+    personUrn: pncJson.pncIdentifier
+  }
+  // TEMP: Remove before PR approval
+
+  // TEMP: Uncomment before PR approval
+  // return mapToRemandRequest(
+  //   {
+  //     ...pncJson,
+  //     personUrn: pncJson.pncIdentifier,
+  //     hearingDate: pncJson.remandDate,
+  //     pncRemandStatus: pncJson.remandResult,
+  //     bailConditions,
+  //     nextHearingDate: pncJson.nextAppearanceDate,
+  //     psaCourtCode: pncJson.nextAppearanceLocation
+  //   },
+  //   pncUpdateDataset
+  // )
 }

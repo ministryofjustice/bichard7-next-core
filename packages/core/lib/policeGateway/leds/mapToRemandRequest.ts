@@ -70,6 +70,14 @@ const mapToRemandRequest = (
   const personUrn = preProcessPersonUrn(pncIdentifier) ?? ""
 
   return {
+    // TEMP: Remove before PR approval
+    pncCheckName: request.pncCheckName ?? "",
+    croNumber: request.croNumber ?? "",
+    arrestSummonsNumber: request.arrestSummonsNumber,
+    crimeOffenceReferenceNo: "",
+    remandResult: "",
+    remandLocationFfss: "",
+    // TEMP: Remove before PR approval
     ownerCode: forceStationCode,
     personUrn,
     remandDate: convertDate(hearingDate),
