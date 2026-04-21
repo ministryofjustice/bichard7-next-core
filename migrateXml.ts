@@ -11,13 +11,13 @@ import type {
 } from "./packages/e2e-test/utils/converters/convertPncXmlToJson/convertPncXmlToJson"
 
 const run = () => {
-  const fileContent = fs
-    .readFileSync("./packages/e2e-test/features/028-driver-disqualification/mock-pnc-responses.ts")
-    .toString()
+  const filePath = "./packages/e2e-test/features/028-driver-disqualification/mock-pnc-responses.ts"
+  const fileContent = fs.readFileSync(filePath).toString()
   const regex = /policeApi\.mockUpdate\s*\(\s*"(CXU0\d)"\s*,\s*({[\w\W]*?})\s*\)/g
 
-  const updatedContent = fileContent.replace(regex, (_: string, code: string , content: string ) => {
-    const contentObj = eval(`(${content})`)
+  const updatedContent = fileContent.replace(regex, (fullMatch: string, code: string, content: string) => {
+    try {
+      const contentObj = eval(`(${content})`)
     const pncXml = contentObj.expectedRequest
     const pncJson = convertPncXmlToJson(pncXml)
 
@@ -41,9 +41,14 @@ const run = () => {
     }
 
     return `policeApi.mockUpdate("${code}", ${JSON.stringify(newObject, null, 2)})`
+    } catch (err) {
+      console.error(err)
+      return fullMatch
+    }
   })
 
-  console.log(updatedContent)
+  fs.writeFileSync(filePath, updatedContent)
+  console.log("File updated successfully!");
 }
 
 run()
