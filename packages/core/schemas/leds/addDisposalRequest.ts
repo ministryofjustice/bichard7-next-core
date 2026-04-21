@@ -73,9 +73,11 @@ export const carryForwardSchema = z.object({
 })
 
 export const addDisposalRequestSchema = z.object({
+  // TEMP: Remove before PR approval
   pncCheckName: z.string(),
   croNumber: z.string(),
   crimeOffenceReferenceNumber: z.string(),
+  // TEMP: Remove before PR approval
   ownerCode: forceStationCodeSchema,
   personUrn: z.string().nonempty(),
   courtCaseReference: courtCaseReferenceSchema,

@@ -157,9 +157,11 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
     : undefined
 
   return {
+    // TEMP: Remove before PR approval
     pncCheckName: pncJson.pncCheckName,
     croNumber: pncJson.croNumber ?? "",
     crimeOffenceReferenceNumber: pncJson.crimeOffenceReferenceNo ?? "",
+    // TEMP: Remove before PR approval
     ownerCode: pncJson.forceStationCode,
     personUrn: pncJson.pncIdentifier,
     courtCaseReference: pncJson.offences[0].courtCaseReference,

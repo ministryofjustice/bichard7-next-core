@@ -47,9 +47,11 @@ const mapToAddDisposalRequest = (
       : undefined
 
   return {
+    // TEMP: Remove before PR approval
     pncCheckName: "",
     croNumber: "",
     crimeOffenceReferenceNumber: "",
+    // TEMP: Remove before PR approval
     ownerCode: pncRequest.forceStationCode,
     personUrn,
     courtCaseReference: pncRequest.courtCaseReferenceNumber,

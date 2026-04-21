@@ -67,6 +67,11 @@ const mapToAddDisposalResult = (
     .join(" ")
 
   return {
+    // TEMP: Remove before PR approval
+    pncCheckName: "",
+    croNumber: "",
+    crimeOffenceReferenceNumber: "",
+    // TEMP: Remove before PR approval
     ownerCode: asnQueryResponse.ownerCode,
     personUrn: asnQueryResponse.personUrn,
     courtCaseReference: disposal.courtCaseReference,
