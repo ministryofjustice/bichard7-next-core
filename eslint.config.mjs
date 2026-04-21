@@ -8,10 +8,9 @@ import esImport from "eslint-plugin-import"
 import jest from "eslint-plugin-jest"
 import mocha from "eslint-plugin-mocha"
 import nextPlugin from "@next/eslint-plugin-next"
-import perfectionist from "eslint-plugin-perfectionist"
+import react from "eslint-plugin-react"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import react from "eslint-plugin-react"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -232,13 +231,6 @@ export default [
     files: ["packages/+(api|common|conductor|core)/**/*"]
   })),
   {
-    files: ["packages/+(api|common|conductor|core)/**/*"],
-
-    plugins: {
-      perfectionist
-    }
-  },
-  {
     files: ["packages/core/**/*", "packages/common/schemas/*"],
 
     rules: {
@@ -265,16 +257,11 @@ export default [
   },
   // Apply tsconfig for Next.js packages
   ...nextPackages.map((pkg) => createPackageConfig(pkg)),
-  ...compat.extends("prettier", "plugin:prettier/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.js`])
-  })),
   {
     files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.js`]),
 
     rules: {
       "@typescript-eslint/no-var-requires": "off",
-      curly: ["error", "all"],
       "no-useless-escape": "off",
       "import/no-import-module-exports": "off"
     }
@@ -297,9 +284,9 @@ export default [
         parser: tsParser
       }
     })),
-  // TSX configs for Next.js packages
-  ...nextPackages.map((pkg) => ({
-    files: [`packages/${pkg}/**/*.tsx`],
+  // TSX configs for Next.js packages (tsconfig already set per-package by createPackageConfig above)
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
     plugins: {
       "@typescript-eslint": typescriptEslint,
       import: fixupPluginRules(esImport),
@@ -307,17 +294,11 @@ export default [
     },
     languageOptions: {
       ecmaVersion: 2020,
-      sourceType: "script",
-      parserOptions: {
-        parserOptions: {
-          sourceType: "module"
-        },
-        project: `./packages/${pkg}/tsconfig.json`,
-        tsconfigRootDir: __dirname
-      }
+      sourceType: "module",
+      parser: tsParser
     },
     rules: nextJsTsxRules
-  })),
+  },
   {
     files: nextPackages.flatMap((pkg) => [
       `packages/${pkg}/**/_*.ts`,
