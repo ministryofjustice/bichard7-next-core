@@ -3,7 +3,99 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/440814E REHABORDERS             </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       REHABORDERS/YOUTH                                     260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1141    15072012          00                                                                            </DIS><DIS>I3105M2                    00                                                                            </DIS><CCH>K002              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1141    15072012          00                                                                            </DIS><DIS>I3102D6                    00                                                                            </DIS><CCH>K003              CJ88001 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1141    15072012          00                                                                            </DIS><DIS>I3105M2                    00                                                                            </DIS><DIS>I3106M3                    00            EXCLUDED FROM NW4 POSTAL AREA.                                  </DIS>"
+    expectedRequest: {
+      pncCheckName: "REHABORDERS",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/440814E",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["YOUTH"],
+        defendantLastName: "REHABORDERS"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1141,
+              disposalEffectiveDate: "2012-07-15"
+            },
+            {
+              disposalCode: 3105,
+              disposalDuration: {
+                units: "months",
+                count: 2
+              }
+            }
+          ],
+          offenceId: "baac8287-e400-436a-b5b1-ab574bb883e9"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1141,
+              disposalEffectiveDate: "2012-07-15"
+            },
+            {
+              disposalCode: 3102,
+              disposalDuration: {
+                units: "days",
+                count: 6
+              }
+            }
+          ],
+          offenceId: "d958999d-a817-44fe-b861-b057e32e5479"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "CJ88001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1141,
+              disposalEffectiveDate: "2012-07-15"
+            },
+            {
+              disposalCode: 3105,
+              disposalDuration: {
+                units: "months",
+                count: 2
+              }
+            },
+            {
+              disposalCode: 3106,
+              disposalDuration: {
+                units: "months",
+                count: 3
+              },
+              disposalText: "EXCLUDED FROM NW4 POSTAL AREA."
+            }
+          ],
+          offenceId: "dd17824d-dfbd-4902-827b-353c58ebb4fc"
+        }
+      ]
+    }
   })
 ]

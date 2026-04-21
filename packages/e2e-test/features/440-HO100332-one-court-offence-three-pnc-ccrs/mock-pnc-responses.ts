@@ -23,7 +23,43 @@ export default (_: string, { policeApi }: Bichard) => [
     expectedRequest: ""
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K04YZ</FSC><IDS>K12/14X     AVALON                  </IDS><CCR>K12/2732/17U                   </CCR><COU>I2576                                                                       AVALON/MARTIN                                         011020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I1002M11                   00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "AVALON",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "04YZ",
+      personUrn: "12/14X",
+      courtCaseReference: "12/2732/000017U",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "AVALON"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 11
+              }
+            }
+          ],
+          offenceId: "6f32a85c-c0b2-4940-a90e-59466c899f6e"
+        }
+      ]
+    }
   })
 ]

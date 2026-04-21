@@ -20,8 +20,32 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/23U     BREACHPLEANO            </IDS><ASR>K13/01ZD/01/449640W                    </ASR><REM>I26102011B    2576                                                                       281020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "BREACHPLEANO",
+      croNumber: "",
+      arrestSummonsNumber: "13/01ZD/01/449640W",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/23U",
+      remandDate: "2011-10-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-28",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -42,8 +66,32 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/23U     BREACHPLEANO            </IDS><ASR>K13/01ZD/01/449640W                    </ASR><REM>I28102011B    2576                                                                       281120112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "BREACHPLEANO",
+      croNumber: "",
+      arrestSummonsNumber: "13/01ZD/01/449640W",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/23U",
+      remandDate: "2011-10-28",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-11-28",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -64,8 +112,40 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/23U     BREACHPLEANO            </IDS><CCR>K21/2732/18B                   </CCR><COU>I2576                                                                       BREACHPLEANOVERDICT/STANDALONE                        281120110000</COU><CCH>K001              CJ03510 </CCH><ADJ>IGUILTY       GUILTY        281120110000 </ADJ><DIS>I1030                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "BREACHPLEANO",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/23U",
+      courtCaseReference: "21/2732/000018B",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-11-28",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["STANDALONE"],
+        defendantLastName: "BREACHPLEANOVERDICT"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "CJ03510",
+          plea: "Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-11-28",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1030
+            }
+          ],
+          offenceId: "a09e5ea4-844f-4657-b668-6cde87093c4c"
+        }
+      ]
+    },
     count: 1
   })
 ]

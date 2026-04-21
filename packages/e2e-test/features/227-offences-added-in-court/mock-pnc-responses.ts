@@ -20,13 +20,70 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/20Q     ADDEDOFFENCE            </IDS><CCR>K21/2732/14X                   </CCR><COU>I2576                                                                       ADDEDOFFENCESENTENCETWO/PNCADJ                        011020110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I4004    01012012          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "ADDEDOFFENCE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/20Q",
+      courtCaseReference: "21/2732/000014X",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["PNCADJ"],
+        defendantLastName: "ADDEDOFFENCESENTENCETWO"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4004,
+              disposalEffectiveDate: "2012-01-01"
+            }
+          ],
+          offenceId: "c836e54d-a6f3-42c3-a6e3-e7778ec6762f"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/20Q     ADDEDOFFENCE            </IDS><ASR>K11/01ZD/01/445115E                    </ASR><REM>I01102011B    2576                                                                       010120122576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "ADDEDOFFENCE",
+      croNumber: "",
+      arrestSummonsNumber: "11/01ZD/01/445115E",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/20Q",
+      remandDate: "2011-10-01",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2012-01-01",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({

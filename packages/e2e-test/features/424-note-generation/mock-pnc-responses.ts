@@ -3,7 +3,116 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410847G MISMATCH                </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       MISMATCH/OFFENCE                                      260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1016                      00                                                                            </DIS><CCH>K002              SX03001A</CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><ASR>K11/01ZD/01/410847G                    </ASR><ACH>I                                                                                                                                            TH68006                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD29112010    05122010    </ACH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000300.0000                                                                            </DIS><ACH>I                                                                                                                                            RT88026                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD28112010    05122010    </ACH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000300.0000                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "MISMATCH",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410847G",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["OFFENCE"],
+        defendantLastName: "MISMATCH"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1016
+            }
+          ],
+          offenceId: "2b72cbfc-408e-49d0-894f-d0f06a81ab91"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "SX03001",
+          roleQualifiers: ["AT"],
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            }
+          ],
+          offenceId: "54a1ec6e-092e-4559-b09e-bdc24af34535"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "11/01ZD/01/410847G",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68006"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2011-09-26",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-29",
+              offenceEndDate: "2010-12-05",
+              disposalResults: [
+                {
+                  disposalCode: 1015,
+                  disposalFine: {
+                    amount: 300
+                  }
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            },
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "RT88026"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2011-09-26",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceEndDate: "2010-12-05",
+              disposalResults: [
+                {
+                  disposalCode: 1015,
+                  disposalFine: {
+                    amount: 300
+                  }
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    }
   })
 ]

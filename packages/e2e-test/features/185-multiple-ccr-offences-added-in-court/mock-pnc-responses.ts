@@ -23,13 +23,83 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/24H     HARMON                  </IDS><CCR>K12/2732/41V                   </CCR><COU>I2576                                                                       HARMON/MARTIN                                         091020090000</COU><CCH>K001              RR84042 </CCH><ADJ>INOT GUILTY   NOT GUILTY    091020090000 </ADJ><DIS>I2004                      00                                                                            </DIS><CCH>K002              OF61016 </CCH><ADJ>INOT GUILTY   NOT GUILTY    091020090000 </ADJ><DIS>I2004                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "HARMON",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/24H",
+      courtCaseReference: "12/2732/000041V",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-09",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "HARMON"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "RR84042",
+          plea: "Not Guilty",
+          adjudication: "Not Guilty",
+          dateOfSentence: "2009-10-09",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2004
+            }
+          ],
+          offenceId: "586e2082-8e80-4076-b703-4e3882cf83ab"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Not Guilty",
+          dateOfSentence: "2009-10-09",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2004
+            }
+          ],
+          offenceId: "2fa52a99-549b-4a42-be8e-c78e452f7713"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/24H     HARMON                  </IDS><ASR>K12/0000/00/16D                        </ASR><REM>I09102009B    2576                                                                       191020092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "HARMON",
+      croNumber: "",
+      arrestSummonsNumber: "12/0000/00/16D",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "12/24H",
+      remandDate: "2009-10-09",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2009-10-19",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -57,13 +127,103 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/24H     HARMON                  </IDS><CCR>K12/2732/42W                   </CCR><COU>I2576                                                                       HARMON/MARTIN                                         191020090000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        191020090000 </ADJ><DIS>I4004    21102009          00                                                                            </DIS><ASR>K12/0000/00/16D                        </ASR><ACH>I                                                                                                                                            TH68151                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD02112006                </ACH><ADJ>INOT GUILTY   GUILTY        191020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "HARMON",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/24H",
+      courtCaseReference: "12/2732/000042W",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-19",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "HARMON"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-19",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4004,
+              disposalEffectiveDate: "2009-10-21"
+            }
+          ],
+          offenceId: "f427b4ca-4c81-4255-b61f-7822928ac125"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "12/0000/00/16D",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68151"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2009-10-19",
+              offenceTic: 0,
+              offenceStartDate: "2006-11-02",
+              disposalResults: [
+                {
+                  disposalCode: 1002,
+                  disposalDuration: {
+                    units: "months",
+                    count: 14
+                  }
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/24H     HARMON                  </IDS><ASR>K12/0000/00/16D                        </ASR><REM>I19102009B    2576                                                                       211020092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "HARMON",
+      croNumber: "",
+      arrestSummonsNumber: "12/0000/00/16D",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "12/24H",
+      remandDate: "2009-10-19",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2009-10-21",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   })
 ]

@@ -3,8 +3,49 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410759L TOCONTINUEA             </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       TOCONTINUEA/ORDER                                     260920110000</COU><CCH>K001              CJ88116 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1115M4                    00S       M12                                                                 </DIS>",
+    expectedRequest: {
+      pncCheckName: "TOCONTINUEA",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410759L",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ORDER"],
+        defendantLastName: "TOCONTINUEA"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "CJ88116",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1115,
+              disposalDuration: {
+                units: "months",
+                count: 4
+              },
+              disposalQualifiers: ["S"],
+              disposalQualifierDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "e8dda102-08aa-41d2-b2ad-4a2170c6cb96"
+        }
+      ]
+    },
     count: 1
   })
 ]

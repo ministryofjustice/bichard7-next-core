@@ -22,8 +22,128 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/9D      CHANGES                 </IDS><CCR>K21/2769/9H                    </CCR><COU>I2574                                                                       CHANGES/PSACODE                                       260920080000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920080000 </ADJ><DIS>I1016                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        260920080000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        260920080000 </ADJ><DIS>I1015            0000200.0000                                                                            </DIS><ASR>K10/01VK/01/375807W                    </ASR><ACH>I                                                                                                                                            TH68006                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01VK29112006                </ACH><ADJ>INOT GUILTY   NOT GUILTY    260920080000 </ADJ><DIS>I2004                      00                                                                            </DIS><ACH>I                                                                                                                                            RT88026                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01VK28112006                </ACH><ADJ>INOT GUILTY   GUILTY        260920080000 </ADJ><DIS>I1015            0000300.0000                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "CHANGES",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/9D",
+      courtCaseReference: "21/2769/000009H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2574"
+      },
+      dateOfConviction: "2008-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["PSACODE"],
+        defendantLastName: "CHANGES"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2008-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1016
+            }
+          ],
+          offenceId: "28fa5e6f-cc15-4ea0-83e0-a2b298384a0b"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2008-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            }
+          ],
+          offenceId: "3578e403-8909-4048-a5e4-cee380aec692"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "RT88191",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2008-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 200
+              }
+            }
+          ],
+          offenceId: "8531abe6-a99a-48ff-9ca2-a9f279d2515c"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "10/01VK/01/375807W",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68006"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Not Guilty",
+              dateOfSentence: "2008-09-26",
+              offenceTic: 0,
+              offenceStartDate: "2006-11-29",
+              disposalResults: [
+                {
+                  disposalCode: 2004
+                }
+              ],
+              locationFsCode: "01VK",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            },
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "RT88026"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2008-09-26",
+              offenceTic: 0,
+              offenceStartDate: "2006-11-28",
+              disposalResults: [
+                {
+                  disposalCode: 1015,
+                  disposalFine: {
+                    amount: 300
+                  }
+                }
+              ],
+              locationFsCode: "01VK",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    },
     count: 1
   })
 ]

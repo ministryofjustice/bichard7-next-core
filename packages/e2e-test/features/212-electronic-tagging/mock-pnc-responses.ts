@@ -3,7 +3,118 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/440808Y MORETHANONEO            </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       MORETHANONEOFFENCE/TAGGING                            260920110000</COU><CCH>K001              PL96001 </CCH><ADJ>INO PLEA TAKENGUILTY        260920110000 </ADJ><DIS>I1115M3                    00C S     M12                                                                 </DIS><DIS>I3105M2                    00BA                                                                          </DIS><CCH>K002              PL96002 </CCH><ADJ>INO PLEA TAKENGUILTY        260920110000 </ADJ><DIS>I1115M3                    00C S     M12                                                                 </DIS><DIS>I3105M2                    00BA                                                                          </DIS><CCH>K003              PL96004 </CCH><ADJ>INO PLEA TAKENGUILTY        260920110000 </ADJ><DIS>I1115D14                   00C S     M12                                                                 </DIS><DIS>I3105M2                    00BA                                                                          </DIS>"
+    expectedRequest: {
+      pncCheckName: "MORETHANONEO",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/440808Y",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["TAGGING"],
+        defendantLastName: "MORETHANONEOFFENCE"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "PL96001",
+          plea: "No Plea Taken",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1115,
+              disposalDuration: {
+                units: "months",
+                count: 3
+              },
+              disposalQualifiers: ["C", "S"],
+              disposalQualifierDuration: {
+                units: "months",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3105,
+              disposalDuration: {
+                units: "months",
+                count: 2
+              },
+              disposalQualifiers: ["BA"]
+            }
+          ],
+          offenceId: "bc2ceb60-e8b4-47e7-ac1d-e2421d6523e0"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "PL96002",
+          plea: "No Plea Taken",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1115,
+              disposalDuration: {
+                units: "months",
+                count: 3
+              },
+              disposalQualifiers: ["C", "S"],
+              disposalQualifierDuration: {
+                units: "months",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3105,
+              disposalDuration: {
+                units: "months",
+                count: 2
+              },
+              disposalQualifiers: ["BA"]
+            }
+          ],
+          offenceId: "b6b55365-29d3-4aee-b751-bc63d2531738"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "PL96004",
+          plea: "No Plea Taken",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1115,
+              disposalDuration: {
+                units: "days",
+                count: 14
+              },
+              disposalQualifiers: ["C", "S"],
+              disposalQualifierDuration: {
+                units: "months",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3105,
+              disposalDuration: {
+                units: "months",
+                count: 2
+              },
+              disposalQualifiers: ["BA"]
+            }
+          ],
+          offenceId: "854fdaf8-aab5-4782-ad0b-207bc4fee37b"
+        }
+      ]
+    }
   })
 ]

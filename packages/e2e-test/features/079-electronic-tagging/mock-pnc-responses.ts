@@ -3,7 +3,56 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410834T BEN                     </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       BEN/MISTER                                            260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1115W2                    00S       W12                                                                 </DIS><DIS>I3105W12                   00BA                                                                          </DIS>"
+    expectedRequest: {
+      pncCheckName: "BEN",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410834T",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MISTER"],
+        defendantLastName: "BEN"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1115,
+              disposalDuration: {
+                units: "weeks",
+                count: 2
+              },
+              disposalQualifiers: ["S"],
+              disposalQualifierDuration: {
+                units: "weeks",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3105,
+              disposalDuration: {
+                units: "weeks",
+                count: 12
+              },
+              disposalQualifiers: ["BA"]
+            }
+          ],
+          offenceId: "a6a16c5b-d37e-4df6-9f75-5dba951851f0"
+        }
+      ]
+    }
   })
 ]
