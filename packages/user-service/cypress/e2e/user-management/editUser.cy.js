@@ -114,11 +114,11 @@ describe("Edit user", () => {
     cy.get('input[id="excludedTriggersTRPR0004"]').uncheck({ force: true })
     cy.get('[data-test="checkbox-user-groups"]')
       .find('[data-test="checkbox-multiselect-checkboxes"]')
-      .find(`input[name="B7ExceptionHandler_grp"]`)
+      .find('input[name="B7ExceptionHandler_grp"]')
       .check({ force: true })
     cy.get('[data-test="checkbox-user-groups"]')
       .find('[data-test="checkbox-multiselect-checkboxes"]')
-      .find(`input[name="B7GeneralHandler_grp"]`)
+      .find('input[name="B7GeneralHandler_grp"]')
       .check({ force: true })
     cy.get('button[type="submit"]').click()
 
@@ -130,8 +130,8 @@ describe("Edit user", () => {
     cy.get('[data-test="included-triggers"]').click()
     cy.get('input[id="excludedTriggersTRPR0001"]').should("not.be.checked")
     cy.get('input[id="excludedTriggersTRPR0004"]').should("not.be.checked")
-    cy.get('[data-test="checkbox-user-groups"]').find(`input[name="B7ExceptionHandler_grp"]`).should("be.checked")
-    cy.get('[data-test="checkbox-user-groups"]').find(`input[name="B7GeneralHandler_grp"]`).should("be.checked")
+    cy.get('[data-test="checkbox-user-groups"]').find('input[name="B7ExceptionHandler_grp"]').should("be.checked")
+    cy.get('[data-test="checkbox-user-groups"]').find('input[name="B7GeneralHandler_grp"]').should("be.checked")
   })
 
   it("should invalidate form correctly when form in not valid", () => {

@@ -62,7 +62,7 @@ describe("Home", () => {
   it("should show link to new bichard case details page with cookie", () => {
     cy.login("bichard01@example.com", "password")
 
-    cy.setCookie(`qs_case_details_d1413a9b5b148735`, "1", { path: "/" }).then(() => {
+    cy.setCookie("qs_case_details_d1413a9b5b148735", "1", { path: "/" }).then(() => {
       cy.reload()
       cy.get("a")
         .contains("Access New Bichard")
@@ -74,7 +74,7 @@ describe("Home", () => {
   it("should show link to new bichard without case details page with 404 cookie", () => {
     cy.login("bichard01@example.com", "password")
 
-    cy.setCookie(`qa_case_details_404`, "/bichard/court-cases/733").then(() => {
+    cy.setCookie("qa_case_details_404", "/bichard/court-cases/733").then(() => {
       cy.reload()
       cy.get("a").contains("Access New Bichard").should("have.attr", "href", "/bichard")
     })

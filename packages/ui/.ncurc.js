@@ -8,6 +8,8 @@
     - v16 doesn't load the sass files from @ministryofjustice/frontend
   - @ministryofjustice/frontend
     - v9 contains breaking changes
+  - undici
+    - v6 supports node v20. Higher versions need > node v20
 
   Ignored:
     - postgres
@@ -16,7 +18,7 @@
       - 0.4.0 changed to module type
 */
 
-const pinned = ["@ministryofjustice/frontend", "cookies-next", "@faker-js/faker", "next", "govuk-frontend"]
+const pinned = ["@ministryofjustice/frontend", "cookies-next", "@faker-js/faker", "next", "govuk-frontend", "undici"]
 const ignored = ["postgres", "cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
