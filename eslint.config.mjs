@@ -3,10 +3,12 @@ import { FlatCompat } from "@eslint/eslintrc"
 import js from "@eslint/js"
 import typescriptEslint from "@typescript-eslint/eslint-plugin"
 import tsParser from "@typescript-eslint/parser"
+import cypress from "eslint-plugin-cypress"
 import esImport from "eslint-plugin-import"
 import jest from "eslint-plugin-jest"
 import mocha from "eslint-plugin-mocha"
-import perfectionist from "eslint-plugin-perfectionist"
+import nextPlugin from "@next/eslint-plugin-next"
+import react from "eslint-plugin-react"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -229,13 +231,6 @@ export default [
     files: ["packages/+(api|common|conductor|core)/**/*"]
   })),
   {
-    files: ["packages/+(api|common|conductor|core)/**/*"],
-
-    plugins: {
-      perfectionist
-    }
-  },
-  {
     files: ["packages/core/**/*", "packages/common/schemas/*"],
 
     rules: {
@@ -249,22 +244,24 @@ export default [
       "require-await": "off"
     }
   },
-  ...compat.extends("plugin:@next/next/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`])
-  })),
+  // Next.js plugin configuration for all Next.js packages
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*`]),
+    plugins: {
+      "@next/next": nextPlugin
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs["core-web-vitals"].rules
+    }
+  },
   // Apply tsconfig for Next.js packages
   ...nextPackages.map((pkg) => createPackageConfig(pkg)),
-  ...compat.extends("prettier", "plugin:prettier/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.js`])
-  })),
   {
     files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.js`]),
 
     rules: {
       "@typescript-eslint/no-var-requires": "off",
-      curly: ["error", "all"],
       "no-useless-escape": "off",
       "import/no-import-module-exports": "off"
     }
@@ -278,7 +275,7 @@ export default [
     }
   },
   ...compat
-    .extends("next", "plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
+    .extends("plugin:@typescript-eslint/strict", "plugin:jsx-a11y/recommended", "plugin:prettier/recommended")
     .map((config) => ({
       ...config,
       files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
@@ -287,25 +284,21 @@ export default [
         parser: tsParser
       }
     })),
-  // TSX configs for Next.js packages
-  ...nextPackages.map((pkg) => ({
-    files: [`packages/${pkg}/**/*.tsx`],
+  // TSX configs for Next.js packages (tsconfig already set per-package by createPackageConfig above)
+  {
+    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/**/*.tsx`]),
     plugins: {
-      "@typescript-eslint": typescriptEslint
+      "@typescript-eslint": typescriptEslint,
+      import: fixupPluginRules(esImport),
+      react
     },
     languageOptions: {
       ecmaVersion: 2020,
-      sourceType: "script",
-      parserOptions: {
-        parserOptions: {
-          sourceType: "module"
-        },
-        project: `./packages/${pkg}/tsconfig.json`,
-        tsconfigRootDir: __dirname
-      }
+      sourceType: "module",
+      parser: tsParser
     },
     rules: nextJsTsxRules
-  })),
+  },
   {
     files: nextPackages.flatMap((pkg) => [
       `packages/${pkg}/**/_*.ts`,
@@ -333,18 +326,16 @@ export default [
       "@typescript-eslint/no-explicit-any": "off"
     }
   },
-  ...compat.extends("plugin:cypress/recommended").map((config) => ({
-    ...config,
-    files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`])
-  })),
   {
     files: nextPackages.flatMap((pkg) => [`packages/${pkg}/cypress/**/*`]),
 
     plugins: {
+      cypress,
       mocha
     },
 
     rules: {
+      ...cypress.configs.recommended.rules,
       "no-console": "off",
       "no-unused-expressions": "off",
       "@typescript-eslint/naming-convention": "off",
