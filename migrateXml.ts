@@ -10,8 +10,8 @@ import type {
   PncSubsequentDisposalJson
 } from "./packages/e2e-test/utils/converters/convertPncXmlToJson/convertPncXmlToJson"
 
-const run = () => {
-  const filePath = "./packages/e2e-test/features/028-driver-disqualification/mock-pnc-responses.ts"
+const processFile = (filePath: string) => {
+  console.log(`Processing: ${filePath}`)
   const fileContent = fs.readFileSync(filePath).toString()
   const regex = /policeApi\.mockUpdate\s*\(\s*"(CXU0\d)"\s*,\s*({[\w\W]*?})\s*\)/g
 
@@ -42,13 +42,22 @@ const run = () => {
 
       return `policeApi.mockUpdate("${code}", ${JSON.stringify(newObject, null, 2)})`
     } catch (err) {
-      console.error(err)
+      console.log(err)
       return fullMatch
     }
   })
 
   fs.writeFileSync(filePath, updatedContent)
-  console.log("File updated successfully!")
+}
+
+const run = () => {
+  const rootDir = "./packages/e2e-test/features"
+  const files = fs.readdirSync(rootDir, { recursive: true }) as string[]
+
+  const targetFiles = files.filter((file) => file.endsWith("mock-pnc-responses.ts")).map((file) => `${rootDir}/${file}`)
+
+  targetFiles.forEach(processFile)
+  console.log(`Finished! processed ${targetFiles.length} files.`)
 }
 
 run()
