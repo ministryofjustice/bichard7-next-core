@@ -14,11 +14,6 @@ const reasonForAppearance: Record<string, ReasonForAppearance> = {
 export const convertPncJsonToLedsSubsequentDisposalRequest = (
   pncJson: PncSubsequentDisposalJson
 ): SubsequentDisposalResultsRequest => ({
-  // TEMP: Remove before PR approval
-  pncCheckName: pncJson.pncCheckName,
-  croNumber: pncJson.croNumber,
-  crimeOffenceReferenceNumber: "",
-  // TEMP: Remove before PR approval
   ownerCode: pncJson.forceStationCode,
   personUrn: pncJson.pncIdentifier,
   courtCaseReference: pncJson.offences[0].courtCaseReference,
