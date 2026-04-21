@@ -1,7 +1,7 @@
 import expect from "expect"
 import type { LedsBichard } from "../../types/LedsMock"
-import type { Operation } from "../converters/convertPncToLeds"
-import convertPncToLeds from "../converters/convertPncToLeds"
+import { Operation } from "../../types/Operation"
+import convertMockJsonToLeds from "../converters/convertMockJsonToLeds"
 import normaliseForComparison from "../normaliseForComparison"
 import { delay } from "../puppeteer-utils"
 import type { RequestResponseMock } from "./MockServer"
@@ -10,9 +10,9 @@ const MAX_RETRIES = 4
 const DELAY_SECONDS = 3
 
 const pathMapping: Record<string, Operation> = {
-  "court-case-disposal-result": "Add Disposal",
-  "basic-remands": "Remand",
-  "court-case-subsequent-disposal-results": "Sentence Deferred"
+  "court-case-disposal-result": Operation.AddDisposal,
+  "basic-remands": Operation.Remand,
+  "court-case-subsequent-disposal-results": Operation.SentenceDeferred
 }
 
 const verifyRequests = (bichard: LedsBichard, serverMocks: RequestResponseMock[]) => {
@@ -29,9 +29,8 @@ const verifyRequests = (bichard: LedsBichard, serverMocks: RequestResponseMock[]
 
     if (match) {
       const [_, operation] = match
-      const localMockRequest = convertPncToLeds<typeof operation>(localMock.expectedRequest, operation)
+      const localMockRequest = convertMockJsonToLeds(operation, localMock.expectedRequest as object)
       const serverMockRequest = serverMock.request?.[0]?.body
-
       expect(normaliseForComparison(serverMockRequest)).toEqual(normaliseForComparison(localMockRequest))
     }
   })
