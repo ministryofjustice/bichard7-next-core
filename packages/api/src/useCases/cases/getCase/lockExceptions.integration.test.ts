@@ -1,15 +1,22 @@
-import type { RowList } from "postgres"
-
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 
+import lockException from "../../../services/db/cases/locking/lockException"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { lockExceptions } from "./lockExceptions"
+
+jest.mock("../../../services/db/cases/locking/lockException", () => {
+  const originalModule = jest.requireActual("../../../services/db/cases/locking/lockException")
+  return {
+    __esModule: true,
+    default: jest.fn().mockImplementation(originalModule.default)
+  }
+})
 
 const testDatabaseGateway = new End2EndPostgres()
 
@@ -31,8 +38,9 @@ describe("lockExceptions", () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], username: "user1" })
     const caseObj = await createCase(testDatabaseGateway)
 
-    await lockExceptions(testDatabaseGateway.writable, user, caseObj.errorId, auditLogEvents)
-
+    await testDatabaseGateway.writable.transaction(async (transaction) => {
+      await lockExceptions(transaction, user, caseObj.errorId, auditLogEvents)
+    })
     const auditEventEvent = auditLogEvents[0]
     expect(auditEventEvent.eventCode).toBe(EventCode.ExceptionsLocked)
     expect(auditEventEvent.category).toBe(EventCategory.information)
@@ -44,7 +52,9 @@ describe("lockExceptions", () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "user1" })
     const caseObj = await createCase(testDatabaseGateway)
 
-    await lockExceptions(testDatabaseGateway.writable, user, caseObj.errorId, auditLogEvents)
+    await testDatabaseGateway.writable.transaction(async (transaction) => {
+      await lockExceptions(transaction, user, caseObj.errorId, auditLogEvents)
+    })
 
     expect(auditLogEvents).toHaveLength(0)
   })
@@ -56,14 +66,13 @@ describe("lockExceptions", () => {
       visibleForces: ["02"]
     })
     const caseObj = await createCase(testDatabaseGateway, { orgForPoliceFilter: "02" })
-    const databaseGatewayMock = jest
-      .spyOn(testDatabaseGateway.writable, "connection")
-      .mockResolvedValue(Error("Dummy Error") as unknown as RowList<readonly (object | undefined)[]>)
 
-    await lockExceptions(testDatabaseGateway.writable, user, caseObj.errorId, auditLogEvents)
+    const mockedLockExcpection = jest.mocked(lockException)
+    mockedLockExcpection.mockResolvedValueOnce(Error("Dummy Exception Error"))
 
+    await testDatabaseGateway.writable.transaction(async (transaction) => {
+      await lockExceptions(transaction, user, caseObj.errorId, auditLogEvents)
+    })
     expect(auditLogEvents).toHaveLength(0)
-
-    databaseGatewayMock.mockClear()
   })
 })

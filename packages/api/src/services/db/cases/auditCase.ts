@@ -3,7 +3,7 @@ import type { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 
@@ -13,7 +13,7 @@ export type AuditQuality = {
 }
 
 export default async (
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   caseId: number,
   { errorQuality, triggerQuality }: AuditQuality
 ): PromiseResult<boolean> => {
