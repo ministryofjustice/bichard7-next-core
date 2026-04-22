@@ -113,7 +113,7 @@ const fetchCases = async (
     FROM
       allCases
     ORDER BY
-      ${ordering(database.connection, sortOrder)}
+      ${ordering(database, sortOrder)}
     LIMIT ${pagination.maxPerPage}
     OFFSET ${offset}
   `
@@ -215,7 +215,7 @@ const fetchCases = async (
       triggerLockedByUser.forenames,
       triggerLockedByUser.surname
     ORDER BY
-      ${ordering(database.connection, sortOrder)}
+      ${ordering(database, sortOrder)}
   `
 
   const result = await database.connection<CaseRowForIndexDto[]>`
