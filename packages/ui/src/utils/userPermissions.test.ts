@@ -56,8 +56,7 @@ describe("user permissions", () => {
       UserGroup.TriggerHandler,
       UserGroup.UserManager,
       UserGroup.AuditLoggingManager,
-      UserGroup.SuperUserManager,
-      UserGroup.NewUI
+      UserGroup.SuperUserManager
     )
     expect(user.hasAccessTo[Permission.ViewReports]).toBe(false)
   })
@@ -66,7 +65,6 @@ describe("user permissions", () => {
     const user = createUser(
       UserGroup.Audit,
       UserGroup.AuditLoggingManager,
-      UserGroup.NewUI,
       UserGroup.SuperUserManager,
       UserGroup.UserManager
     )
@@ -89,7 +87,6 @@ describe("user permissions", () => {
       UserGroup.GeneralHandler,
       UserGroup.TriggerHandler,
       UserGroup.AuditLoggingManager,
-      UserGroup.NewUI,
       UserGroup.Supervisor
     )
     expect(user.hasAccessTo[Permission.ViewUserManagement]).toBe(false)

@@ -41,8 +41,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     const { page } = query as { page: string }
     const pageNumber = page ? Number.parseInt(page, 10) : 0
 
-    const { hasAccessToBichard, hasAccessToUserManagement, hasAccessToNewBichard } =
-      getUserServiceAccess(authentication)
+    const { hasAccessToBichard, hasAccessToUserManagement } = getUserServiceAccess(authentication)
     const connection = getConnection()
     let serviceMessagesResult = await getServiceMessages(connection, pageNumber)
 
@@ -67,7 +66,6 @@ export const getServerSideProps = withMultipleServerSideProps(
           : currentUserManagers.map((cu) => (cu.forenames ? cu.forenames : "") + " " + (cu.surname ? cu.surname : "")),
         hasAccessToUserManagement,
         hasAccessToBichard,
-        hasAccessToNewBichard,
         serviceMessages: JSON.parse(JSON.stringify(serviceMessagesResult.result)),
         pageNumber,
         totalMessages: serviceMessagesResult.totalElements,
@@ -82,7 +80,6 @@ interface Props {
   currentUserManagerNames: string[]
   hasAccessToUserManagement: boolean
   hasAccessToBichard: boolean
-  hasAccessToNewBichard: boolean
   serviceMessages: ServiceMessage[]
   pageNumber: number
   totalMessages: number
@@ -94,7 +91,6 @@ const Home = ({
   currentUserManagerNames,
   hasAccessToUserManagement,
   hasAccessToBichard,
-  hasAccessToNewBichard,
   serviceMessages,
   pageNumber,
   totalMessages,
@@ -125,7 +121,6 @@ const Home = ({
             <BichardLinks
               courtCaseDetails={courtCaseDetails}
               hasAccessToBichard={hasAccessToBichard}
-              hasAccessToNewBichard={hasAccessToNewBichard}
               showNewBichardButtonFirst={currentUser?.featureFlags?.showNewBichardButtonFirst ?? false}
               onlyAccessToNewBichard={currentUser?.featureFlags?.onlyAccessToNewBichard ?? false}
             />
@@ -203,13 +198,11 @@ const Home = ({
 const BichardLinks = ({
   courtCaseDetails,
   hasAccessToBichard,
-  hasAccessToNewBichard,
   showNewBichardButtonFirst,
   onlyAccessToNewBichard
 }: {
   courtCaseDetails: string
   hasAccessToBichard: boolean
-  hasAccessToNewBichard: boolean
   showNewBichardButtonFirst: boolean
   onlyAccessToNewBichard: boolean
 }) => {
@@ -220,12 +213,8 @@ const BichardLinks = ({
   if (showNewBichardButtonFirst) {
     return (
       <>
-        {hasAccessToNewBichard && (
-          <>
-            <NewBichardLink courtCaseDetails={courtCaseDetails} />
-            <br />
-          </>
-        )}
+        <NewBichardLink courtCaseDetails={courtCaseDetails} />
+        <br />
         {hasAccessToBichard && <BichardLink />}
       </>
     )
@@ -233,12 +222,8 @@ const BichardLinks = ({
     return (
       <>
         {hasAccessToBichard && <BichardLink />}
-        {hasAccessToNewBichard && (
-          <>
-            <br />
-            <NewBichardLink courtCaseDetails={courtCaseDetails} />
-          </>
-        )}
+        <br />
+        <NewBichardLink courtCaseDetails={courtCaseDetails} />
       </>
     )
   }

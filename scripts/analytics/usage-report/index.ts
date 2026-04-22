@@ -13,19 +13,19 @@
  *
  */
 
-import baseConfig from "@moj-bichard7/common/db/baseConfig"
-import { isError } from "@moj-bichard7/common/types/Result"
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { Lambda } from "@aws-sdk/client-lambda"
 import { RDS } from "@aws-sdk/client-rds"
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb"
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb"
+import baseConfig from "@moj-bichard7/common/db/baseConfig"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { DataSource } from "typeorm"
 import { getDateString } from "./common"
 import findEvents from "./fetchEvents"
+import fetchForceOwners from "./fetchForceOwners"
 import { findUsersWithAccessToNewUi } from "./findUsersWithAccessToNewUi"
 import generateReportData from "./generateReportData"
 import WorkbookGenerator from "./WorkbookGenerator"
-import fetchForceOwners from "./fetchForceOwners"
 
 const WORKSPACE = process.env.WORKSPACE ?? "production"
 let dynamo: DynamoDBClient

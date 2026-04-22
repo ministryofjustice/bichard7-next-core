@@ -8,7 +8,6 @@ type UserGroup =
   | "B7UserManager"
   | "B7AuditLoggingManager"
   | "B7SuperUserManager"
-  | "B7NewUI"
 
 export type UserGroupResult = {
   id: string

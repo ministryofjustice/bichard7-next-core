@@ -6,15 +6,15 @@ describe("Home", () => {
     cy.task("insertIntoUsersTable")
     cy.task("insertIntoUserGroupsTable", {
       email: "bichard01@example.com",
-      groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp", "B7NewUI_grp"]
+      groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp"]
     })
     cy.task("insertIntoUserGroupsTable", {
       email: "newbicharduser@example.com",
-      groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp", "B7NewUI_grp"]
+      groups: ["B7UserManager_grp", "B7AuditLoggingManager_grp", "B7Supervisor_grp"]
     })
     cy.task("insertIntoUserGroupsTable", {
       email: "onlynewbicharduser@example.com",
-      groups: ["B7Supervisor_grp", "B7NewUI_grp"]
+      groups: ["B7Supervisor_grp"]
     })
   })
 

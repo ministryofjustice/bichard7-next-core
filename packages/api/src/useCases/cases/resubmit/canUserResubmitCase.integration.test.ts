@@ -32,7 +32,6 @@ describe("canUseResubmitCase", () => {
         groups: [
           UserGroup.Audit,
           UserGroup.AuditLoggingManager,
-          UserGroup.NewUI,
           UserGroup.SuperUserManager,
           UserGroup.TriggerHandler,
           UserGroup.UserManager
