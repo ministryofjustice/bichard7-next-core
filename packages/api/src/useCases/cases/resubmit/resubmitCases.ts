@@ -4,7 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
-import type { TransactionDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { fetchCasesForAutoResubmit } from "../../../services/db/cases/fetchCasesForAutoResubmit"
 import { resubmitCase } from "./resubmitCase"
@@ -19,7 +19,7 @@ type ResubmitDetails = {
 const AUTO_RESUBMIT = true
 
 export const resubmitCases = async (
-  databaseConnection: TransactionDatabaseConnection,
+  databaseConnection: WritableDatabaseConnection,
   user: User
 ): PromiseResult<BulkResubmit> => {
   if (!user.groups.includes(UserGroup.Service)) {

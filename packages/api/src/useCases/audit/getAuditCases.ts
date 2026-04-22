@@ -6,7 +6,7 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
-import type { TransactionDatabaseConnection } from "../../types/DatabaseGateway"
+import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import { fetchAudit } from "../../services/db/audit/fetchAudit"
 import { fetchAuditCases } from "../../services/db/audit/fetchAuditCases"
@@ -14,7 +14,7 @@ import { NotAllowedError } from "../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 
 export async function getAuditCases(
-  database: TransactionDatabaseConnection,
+  database: WritableDatabaseConnection,
   auditId: number,
   auditCasesQuery: AuditCasesQuery,
   user: User

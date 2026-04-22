@@ -10,7 +10,7 @@ import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { AuditQuality } from "../../services/db/cases/auditCase"
-import type { TransactionDatabaseConnection } from "../../types/DatabaseGateway"
+import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import auditCase from "../../services/db/cases/auditCase"
 import insertNote from "../../services/db/cases/insertNote"
@@ -26,7 +26,7 @@ const formatNote = (triggerQuality?: TriggerQuality, errorQuality?: ExceptionQua
 }
 
 const saveAuditResults = async (
-  database: TransactionDatabaseConnection,
+  database: WritableDatabaseConnection,
   caseId: number,
   auditQuality: AuditQuality,
   user: User,

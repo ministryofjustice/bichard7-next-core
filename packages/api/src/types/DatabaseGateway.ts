@@ -6,19 +6,20 @@ export interface DatabaseConnection {
 
 export default interface DatabaseGateway {
   readonly readonly: ReadableDatabaseConnection
-  readonly writable: TransactionDatabaseConnection
+  readonly writable: WritableDatabaseConnection
 }
 
 export interface ReadableDatabaseConnection extends DatabaseConnection {
   connection: postgres.Sql<{}>
 }
 
-export interface TransactionDatabaseConnection extends WritableDatabaseConnection {
-  connection: postgres.Sql<{}>
-
-  readonly transaction: <T>(callback: (connection: WritableDatabaseConnection) => Promise<T>) => Promise<T>
+export interface TransactionConnection extends DatabaseConnection {
+  connection: postgres.TransactionSql<{}>
+  readonly isWritable: true
 }
 
 export interface WritableDatabaseConnection extends DatabaseConnection {
+  connection: postgres.Sql<{}>
   readonly isWritable: true
+  readonly transaction: <T>(callback: (connection: TransactionConnection) => Promise<T>) => Promise<T>
 }

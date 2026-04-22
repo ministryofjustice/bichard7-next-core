@@ -8,13 +8,13 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
-import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
-import lockTrigger from "../../../services/db/cases/lockTrigger"
+import lockTrigger from "../../../services/db/cases/locking/lockTrigger"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
 export const lockTriggers = async (
-  writableSql: DatabaseConnection,
+  database: TransactionConnection,
   user: User,
   caseId: number,
   auditLogEvents: ApiAuditLogEvent[]
@@ -23,7 +23,7 @@ export const lockTriggers = async (
     return
   }
 
-  const triggerLocked = await lockTrigger(writableSql, user, caseId)
+  const triggerLocked = await lockTrigger(database, user, caseId)
   if (isError(triggerLocked)) {
     return triggerLocked
   }

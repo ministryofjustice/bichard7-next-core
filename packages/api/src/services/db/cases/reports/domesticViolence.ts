@@ -5,7 +5,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
-import type { WritableDatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { CaseRowForDomesticViolenceReport } from "../../../../types/reports/DomesticViolence"
 
 import { processCasesForDomesticViolenceReport } from "../../../../useCases/cases/reports/domesticViolence/processCasesForDomesticViolenceReport"
@@ -14,7 +14,7 @@ import { organisationUnitSql } from "../../organisationUnitSql"
 const DV_TRIGGERS = [TriggerCode.TRPR0023, TriggerCode.TRPR0024]
 
 export async function* domesticViolenceReport(
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   user: User,
   filters: DomesticViolenceReportQuery
 ): AsyncGenerator<CaseForDomesticViolenceReportDto[]> {

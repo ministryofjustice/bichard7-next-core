@@ -3,7 +3,7 @@ import type postgres from "postgres"
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 import type {
   DatabaseConnection,
-  TransactionDatabaseConnection,
+  TransactionConnection,
   WritableDatabaseConnection
 } from "../../../types/DatabaseGateway"
 
@@ -27,27 +27,25 @@ class PostgresReadableConnection implements DatabaseConnection {
   }
 }
 
-class PostgresTransactionConnection implements WritableDatabaseConnection {
+class PostgresTransactionConnection implements TransactionConnection {
   readonly connection: postgres.TransactionSql<{}>
-  readonly isWritable = true
+  readonly isWritable = true as const
 
   constructor(trxSql: postgres.TransactionSql<{}>) {
     this.connection = trxSql
   }
 }
 
-class PostgresWritableConnection implements TransactionDatabaseConnection {
+class PostgresWritableConnection implements WritableDatabaseConnection {
   readonly connection: postgres.Sql<{}>
-  readonly isWritable = true
+  readonly isWritable = true as const
 
-  constructor(sql?: postgres.Sql<{}>) {
-    this.connection = sql ?? postgresFactory()
+  constructor() {
+    this.connection = postgresFactory()
   }
 
-  transaction<T>(callback: (connection: WritableDatabaseConnection) => Promise<T>) {
-    return this.connection.begin("read write", (transactionSql): Promise<T> => {
-      return callback(new PostgresTransactionConnection(transactionSql))
-    }) as Promise<T>
+  transaction<T>(callback: (connection: TransactionConnection) => Promise<T>): Promise<T> {
+    return this.connection.begin((trxSql) => callback(new PostgresTransactionConnection(trxSql))) as Promise<T>
   }
 }
 

@@ -5,7 +5,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
-import type { WritableDatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { CaseRowForWarrantsReport } from "../../../../types/reports/Warrants"
 
 import { processCases } from "../../../../useCases/cases/reports/warrants/processCases"
@@ -14,7 +14,7 @@ import { organisationUnitSql } from "../../organisationUnitSql"
 const WARRANT_TRIGGER_CODES = [TriggerCode.TRPR0002, TriggerCode.TRPR0012] as const
 
 export async function* warrants(
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   user: User,
   filters: WarrantsReportQuery
 ): AsyncGenerator<CaseForWarrantsReportDto[]> {

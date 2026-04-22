@@ -6,7 +6,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
-import type { TransactionDatabaseConnection, WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection, WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import createAuditLogEvents from "../../createAuditLogEvents"
@@ -14,7 +14,7 @@ import { lockExceptions } from "./lockExceptions"
 import { lockTriggers } from "./lockTriggers"
 
 export const lockAndAuditLog = async (
-  database: TransactionDatabaseConnection,
+  database: WritableDatabaseConnection,
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,
@@ -23,7 +23,7 @@ export const lockAndAuditLog = async (
   const auditLogEvents: ApiAuditLogEvent[] = []
 
   return database
-    .transaction(async (db: WritableDatabaseConnection) => {
+    .transaction(async (db: TransactionConnection) => {
       const caseMessageId = await selectMessageId(db, user, caseId)
       if (isError(caseMessageId)) {
         throw caseMessageId
