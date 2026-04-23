@@ -12,7 +12,7 @@ describe("mapToPoliceQueryResult", () => {
       checkName: "dummy checkname",
       personId: "5c6ab813-35b6-44de-817c-f41de14c9526",
       reportId: "1aaa5c44-4fca-4af7-a558-9c6148a77c4c",
-      pncId: "201950/0001581C",
+      pncId: "1950/1581C",
       courtCases: [
         {
           courtCaseId: "bddbd0d2-232d-47b3-896a-ce7be613b07c",
