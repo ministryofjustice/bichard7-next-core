@@ -26,7 +26,7 @@ const schema = {
   response: {
     [OK]: jsonResponse("Connectivity", ApiConnectivityDtoSchema.meta({ description: "Returns connection status" }))
   },
-  tags: ["Connectivity"]
+  tags: ["Connectivity V1"]
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ database, reply, req }: HandlerProps) => {
