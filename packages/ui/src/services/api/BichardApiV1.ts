@@ -14,6 +14,7 @@ import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import type { UserList } from "@moj-bichard7/common/types/User"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
+import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -85,5 +86,9 @@ export default class BichardApiV1 implements BichardApiGateway {
     }
 
     return parsedResult.data
+  }
+
+  async connectivity(): PromiseResult<ApiConnectivityDto> {
+    return await this.apiClient.get<ApiConnectivityDto>(V1.Connectivity)
   }
 }

@@ -13,6 +13,7 @@ import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 import { ZodError } from "zod"
 
 describe("BichardApiV1", () => {
@@ -276,6 +277,30 @@ describe("BichardApiV1", () => {
 
       expect(isError(result)).toBe(true)
       expect(result).toBeInstanceOf(ZodError)
+    })
+  })
+
+  describe("#connectivity", () => {
+    it("calls apiClient#post with a route", async () => {
+      const expectedData: ApiConnectivityDto = {
+        database: true
+      }
+      jest.spyOn(client, "get").mockResolvedValue(expectedData)
+
+      const result = await gateway.connectivity()
+
+      expect(client.get).toHaveBeenCalledWith(V1.Connectivity)
+      expect(result).toEqual(expectedData)
+    })
+
+    it("can handle errors", async () => {
+      const expectedError = new Error("Error")
+      jest.spyOn(client, "get").mockResolvedValue(expectedError)
+
+      const result = await gateway.connectivity()
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(expectedError)
     })
   })
 })
