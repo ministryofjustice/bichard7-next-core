@@ -7,7 +7,7 @@ describe("checkConnectivity", () => {
   it("should return true for all services", async () => {
     const connectivity = await checkConnectivity(testDatabaseGateway.readonly)
 
-    expect(connectivity).toBe({
+    expect(connectivity).toEqual({
       database: true
     })
   })
