@@ -29,7 +29,7 @@ const Layout = ({ children, user, hasAccessTo, showPhaseBanner = true }: Props) 
   <>
     <FakeAssetForNoJsStatsGathering />
     <Header serviceName="Bichard7" userName={user?.username ?? ""} organisationName={"Ministry of Justice"} />
-    {hasAccessTo && hasAccessTo.hasAccessToNewBichard ? (
+    {hasAccessTo ? (
       <NavBar
         hasAccessToReports={hasAccessTo.hasAccessToReports ?? false}
         hasAccessToUserManagement={hasAccessTo.hasAccessToUserManagement ?? false}

@@ -3,11 +3,11 @@ import cchSegmentGenerator from "./cchSegmentGenerator"
 import ccrSegmentGenerator from "./ccrSegmentGenerator"
 import disSegmentGenerator from "./disSegmentGenerator"
 
-const offenceSegmentsCXU04 = (ledsJson: MockSubsequentDisposalResultsRequest): string => {
-  const ccr = ccrSegmentGenerator(ledsJson)
+const offenceSegmentsCXU04 = (mockJson: MockSubsequentDisposalResultsRequest): string => {
+  const ccr = ccrSegmentGenerator(mockJson)
 
   const childSegments =
-    ledsJson.offences?.flatMap((offence) => {
+    mockJson.offences?.flatMap((offence) => {
       const cch = cchSegmentGenerator(offence)
       const dis = offence.disposalResults?.map((disposal) => disSegmentGenerator(disposal)) ?? []
 

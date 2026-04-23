@@ -36,12 +36,12 @@ const buildAdditionalOffenceSegments = (
   return [asr, ...additionalOffences]
 }
 
-export const offenceSegmentsCXU02 = (ledsJson: MockAddDisposalRequest): string => {
-  const headerSegments = [ccrSegmentGenerator(ledsJson), couSegmentGenerator(ledsJson), crtSegmentGenerator(ledsJson)]
-  const offences = ledsJson.offences?.flatMap(buildOffenceSegments) ?? []
+export const offenceSegmentsCXU02 = (mockJson: MockAddDisposalRequest): string => {
+  const headerSegments = [ccrSegmentGenerator(mockJson), couSegmentGenerator(mockJson), crtSegmentGenerator(mockJson)]
+  const offences = mockJson.offences?.flatMap(buildOffenceSegments) ?? []
   const additionalOffences =
-    ledsJson.additionalArrestOffences?.flatMap((additionalArrestOffence) =>
-      buildAdditionalOffenceSegments(additionalArrestOffence, ledsJson.crimeOffenceReferenceNumber)
+    mockJson.additionalArrestOffences?.flatMap((additionalArrestOffence) =>
+      buildAdditionalOffenceSegments(additionalArrestOffence, mockJson.crimeOffenceReferenceNumber)
     ) ?? []
 
   return [...headerSegments, ...offences, ...additionalOffences].join("")

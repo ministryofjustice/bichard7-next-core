@@ -5,7 +5,6 @@ export interface UserServiceAccess {
   hasAccessToBichard: boolean
   hasAccessToUserManagement: boolean
   hasAccessToReports: boolean
-  hasAccessToNewBichard: boolean
 }
 
 const bichardGroups = [
@@ -22,14 +21,11 @@ export default ({ groups }: AuthenticationTokenPayload): UserServiceAccess => {
 
   const hasAccessToUserManagement = groups.includes("B7UserManager" as UserGroup)
 
-  const hasAccessToNewBichard = groups.includes("B7NewUI" as UserGroup)
-
   const hasAccessToReports = bichardGroups.some((g) => groups.includes(g as UserGroup))
 
   return {
     hasAccessToBichard,
     hasAccessToUserManagement,
-    hasAccessToReports,
-    hasAccessToNewBichard
+    hasAccessToReports
   }
 }

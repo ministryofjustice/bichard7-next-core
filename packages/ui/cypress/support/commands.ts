@@ -141,6 +141,7 @@ Cypress.Commands.add(
           cy.log("Not found")
           attempt++
 
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
           cy.wait(waitTime, { log: false })
           cy.reload({ log: false })
 

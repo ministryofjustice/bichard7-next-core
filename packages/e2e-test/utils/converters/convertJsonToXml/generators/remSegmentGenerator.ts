@@ -4,19 +4,19 @@ import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import { extractCourtCode, extractCourtName } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
-const remSegmentGenerator = (ledsJson: MockRemandRequest): string => {
-  const currentAppearance = ledsJson.currentAppearance?.court
-  const nextAppearance = ledsJson.nextAppearance?.court
+const remSegmentGenerator = (mockJson: MockRemandRequest): string => {
+  const currentAppearance = mockJson.currentAppearance?.court
+  const nextAppearance = mockJson.nextAppearance?.court
 
-  const remandDate = convertToPncDate(ledsJson.remandDate)
-  const remandResult = ledsJson.remandResult
-  const remandLocationFfss = ledsJson.remandLocationFfss
+  const remandDate = convertToPncDate(mockJson.remandDate)
+  const remandResult = mockJson.remandResult
+  const remandLocationFfss = mockJson.remandLocationFfss
   const remandLocationCourt = extractCourtCode(currentAppearance)
   const courtNameType1 = extractCourtName(currentAppearance)
-  const nextAppearanceDate = ledsJson.nextAppearance?.date && convertToPncDate(ledsJson.nextAppearance.date)
+  const nextAppearanceDate = mockJson.nextAppearance?.date && convertToPncDate(mockJson.nextAppearance.date)
   const nextAppearanceLocation = extractCourtCode(nextAppearance)
   const courtNameType2 = extractCourtName(nextAppearance)
-  const bailConditions = ledsJson.bailConditions.join("")
+  const bailConditions = mockJson.bailConditions.join("")
   const localAuthorityCode = "0000"
 
   const unimplementedFields: [string, number][] = [

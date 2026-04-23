@@ -1,9 +1,9 @@
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 export default async (
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   caseId: number,
   note: string,
   userId: string

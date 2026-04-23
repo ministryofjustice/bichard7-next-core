@@ -10,11 +10,11 @@ const extractPNCFileName = (defendant: Defendant): string =>
     ? `${defendant.defendantLastName}/${defendant.defendantFirstNames?.join("")}`
     : ""
 
-const couSegmentGenerator = (ledsJson: MockAddDisposalRequest): string => {
-  const courtCode = extractCourtCode(ledsJson.court)
-  const courtName = extractCourtName(ledsJson.court)
-  const generatedPNCFileName = extractPNCFileName(ledsJson.defendant)
-  const dateOfHearing = convertToPncDate(ledsJson.dateOfConviction)
+const couSegmentGenerator = (mockJson: MockAddDisposalRequest): string => {
+  const courtCode = extractCourtCode(mockJson.court)
+  const courtName = extractCourtName(mockJson.court)
+  const generatedPNCFileName = extractPNCFileName(mockJson.defendant)
+  const dateOfHearing = convertToPncDate(mockJson.dateOfConviction)
 
   const couSegment = generateRow("COU", [
     [CONSTANT.OFFENCE_UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],

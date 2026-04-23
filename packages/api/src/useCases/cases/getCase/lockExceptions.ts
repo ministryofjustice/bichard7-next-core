@@ -8,13 +8,13 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { isServiceUser, userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
-import lockException from "../../../services/db/cases/lockException"
+import lockException from "../../../services/db/cases/locking/lockException"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
 export const lockExceptions = async (
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   user: User,
   caseId: number,
   auditLogEvents: ApiAuditLogEvent[],

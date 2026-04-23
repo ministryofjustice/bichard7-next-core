@@ -27,6 +27,10 @@ describe("lockAndFetchCaseDto", () => {
     jest.restoreAllMocks()
   })
 
+  afterAll(async () => {
+    await databaseGateway.close()
+  })
+
   it("returns a case", async () => {
     const user = await createUser(databaseGateway, { visibleForces: ["01"] })
     const caseObj = await createCase(databaseGateway, {

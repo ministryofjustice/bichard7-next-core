@@ -16,6 +16,10 @@ describe("insertAuditCases", () => {
     await testDatabaseGateway.clearDb()
   })
 
+  afterAll(async () => {
+    await testDatabaseGateway.close()
+  })
+
   it("Creates audit cases", async () => {
     const cases = await Promise.all([
       createCase(testDatabaseGateway, {

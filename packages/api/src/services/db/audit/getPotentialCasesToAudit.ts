@@ -6,12 +6,12 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
 
 import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import { organisationUnitSql } from "../organisationUnitSql"
 
 export async function getPotentialCasesToAudit(
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes }: CreateAuditInput,
   user: User
 ): PromiseResult<CasesToAuditByUser[]> {

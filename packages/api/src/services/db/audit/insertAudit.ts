@@ -4,12 +4,12 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import { convertAuditToDto } from "../../../useCases/dto/convertAuditToDto"
 
 export const insertAudit = async (
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   { fromDate, includedTypes, resolvedByUsers, toDate, triggerTypes, volumeOfCases }: CreateAuditInput,
   { username }: User
 ): PromiseResult<AuditDto> => {

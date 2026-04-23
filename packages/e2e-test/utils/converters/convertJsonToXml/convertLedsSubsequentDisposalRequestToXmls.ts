@@ -4,12 +4,12 @@ import idsSegmentGenerator from "./generators/idsSegmentGenerator"
 import offenceSegmentsCXU04 from "./generators/offenceSegmentsCXU04"
 import subSegmentGenerator from "./generators/subSegmentGenerator"
 
-const convertLedsSubsequentDisposalRequestToXmls = (ledsJson: MockSubsequentDisposalResultsRequest): string => {
+const convertLedsSubsequentDisposalRequestToXmls = (mockJson: MockSubsequentDisposalResultsRequest): string => {
   const content = [
-    fscSegmentGenerator(ledsJson),
-    idsSegmentGenerator(ledsJson),
-    subSegmentGenerator(ledsJson),
-    offenceSegmentsCXU04(ledsJson)
+    fscSegmentGenerator(mockJson),
+    idsSegmentGenerator(mockJson),
+    subSegmentGenerator(mockJson),
+    offenceSegmentsCXU04(mockJson)
   ]
 
   return content.join("")

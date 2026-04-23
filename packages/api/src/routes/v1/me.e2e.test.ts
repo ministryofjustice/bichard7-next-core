@@ -103,7 +103,7 @@ describe("/v1/me e2e", () => {
   })
 
   it("will return the current user that has user groups, with a correct JWT", async () => {
-    const expectedGroups = [UserGroup.TriggerHandler, UserGroup.NewUI, UserGroup.ExceptionHandler]
+    const expectedGroups = [UserGroup.TriggerHandler, UserGroup.ExceptionHandler]
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, expectedGroups)
 
     const response = await fetch(`${helper.address}${endpoint}`, {

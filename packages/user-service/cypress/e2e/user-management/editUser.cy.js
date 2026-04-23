@@ -114,11 +114,11 @@ describe("Edit user", () => {
     cy.get('input[id="excludedTriggersTRPR0004"]').uncheck({ force: true })
     cy.get('[data-test="checkbox-user-groups"]')
       .find('[data-test="checkbox-multiselect-checkboxes"]')
-      .find(`input[name="B7ExceptionHandler_grp"]`)
+      .find('input[name="B7ExceptionHandler_grp"]')
       .check({ force: true })
     cy.get('[data-test="checkbox-user-groups"]')
       .find('[data-test="checkbox-multiselect-checkboxes"]')
-      .find(`input[name="B7GeneralHandler_grp"]`)
+      .find('input[name="B7GeneralHandler_grp"]')
       .check({ force: true })
     cy.get('button[type="submit"]').click()
 
@@ -130,8 +130,8 @@ describe("Edit user", () => {
     cy.get('[data-test="included-triggers"]').click()
     cy.get('input[id="excludedTriggersTRPR0001"]').should("not.be.checked")
     cy.get('input[id="excludedTriggersTRPR0004"]').should("not.be.checked")
-    cy.get('[data-test="checkbox-user-groups"]').find(`input[name="B7ExceptionHandler_grp"]`).should("be.checked")
-    cy.get('[data-test="checkbox-user-groups"]').find(`input[name="B7GeneralHandler_grp"]`).should("be.checked")
+    cy.get('[data-test="checkbox-user-groups"]').find('input[name="B7ExceptionHandler_grp"]').should("be.checked")
+    cy.get('[data-test="checkbox-user-groups"]').find('input[name="B7GeneralHandler_grp"]').should("be.checked")
   })
 
   it("should invalidate form correctly when form in not valid", () => {
@@ -213,35 +213,6 @@ describe("Edit user", () => {
     cy.get('[data-test="included-triggers"]').click()
     cy.get('input[id="excludedTriggersTRPR0001"]').should("not.be.checked")
     cy.get('input[id="excludedTriggersTRPR0004"]').should("not.be.checked")
-  })
-
-  it("should keep New UI group if the current user does not have it", () => {
-    cy.task("insertIntoUserGroupsTable", {
-      email: "bichard01@example.com",
-      groups: ["B7Supervisor_grp", "B7NewUI_grp"]
-    })
-
-    cy.login("bichard02@example.com", "password")
-
-    const emailAddress = "bichard01@example.com"
-    cy.visit("users/Bichard01")
-
-    cy.get('dd[data-test="summary-item_group-memberships_value"]').contains("New Bichard UI")
-
-    cy.get('a[data-test="edit-user-view"]').click()
-
-    cy.get('input[name="B7NewUI_grp"]').should("not.exist")
-
-    cy.get('input[id="excludedTriggersTRPR0001"]').uncheck({ force: true })
-
-    cy.get('button[type="submit"]').click()
-
-    cy.task("selectGroupsForUser", emailAddress).then((groups) => {
-      expect(groups).to.have.length.greaterThan(0)
-
-      const newUiGroup = groups.find((group) => group.name === "B7NewUI_grp")
-      expect(newUiGroup.name).to.equal("B7NewUI_grp")
-    })
   })
 
   it("should not have unexpected groups", () => {

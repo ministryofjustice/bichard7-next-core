@@ -111,6 +111,6 @@ describe("getUserByUsername", () => {
     expect(isError(userResult)).toBe(false)
 
     const actualUser = userResult as User
-    expect(actualUser.groups).toHaveLength(10)
+    expect(actualUser.groups).toHaveLength(9)
   })
 })
