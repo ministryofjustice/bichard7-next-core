@@ -5,6 +5,7 @@ import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ApiConnectivityDtoSchema } from "@moj-bichard7/common/types/ApiConnectivity"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { OK, UNAUTHORIZED } from "http-status"
+import { z } from "zod"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
 
@@ -19,6 +20,9 @@ type HandlerProps = {
 }
 
 const schema = {
+  headers: z.object({
+    "x-connectivity-check-key": z.string()
+  }),
   response: {
     [OK]: jsonResponse("Connectivity", ApiConnectivityDtoSchema.meta({ description: "Returns connection status" }))
   },

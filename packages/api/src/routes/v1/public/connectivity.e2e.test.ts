@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { OK, UNAUTHORIZED } from "http-status"
+import { BAD_REQUEST, OK, UNAUTHORIZED } from "http-status"
 
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 
@@ -43,5 +43,13 @@ describe("/v1/connectivity e2e", () => {
     })
 
     expect(response.status).toBe(UNAUTHORIZED)
+  })
+
+  it("will return bad request when no API key supplied", async () => {
+    const response = await fetch(`${helper.address}${endpoint}`, {
+      method: "GET"
+    })
+
+    expect(response.status).toBe(BAD_REQUEST)
   })
 })
