@@ -1,8 +1,6 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "downlevelIteration": false,
-    "ignoreDeprecations": "6.0",
     "types": ["node", "cypress", "@testing-library/cypress"],
     "rootDir": ".."
   },
