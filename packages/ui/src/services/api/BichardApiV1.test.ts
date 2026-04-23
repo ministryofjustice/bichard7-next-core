@@ -281,15 +281,17 @@ describe("BichardApiV1", () => {
   })
 
   describe("#connectivity", () => {
+    const apiKey = "test-api-key"
+
     it("calls apiClient#post with a route", async () => {
       const expectedData: ApiConnectivityDto = {
         database: true
       }
       jest.spyOn(client, "get").mockResolvedValue(expectedData)
 
-      const result = await gateway.connectivity()
+      const result = await gateway.connectivity(apiKey)
 
-      expect(client.get).toHaveBeenCalledWith(V1.Connectivity)
+      expect(client.get).toHaveBeenCalledWith(V1.Connectivity, { "x-connectivity-check-key": apiKey })
       expect(result).toEqual(expectedData)
     })
 
@@ -297,7 +299,7 @@ describe("BichardApiV1", () => {
       const expectedError = new Error("Error")
       jest.spyOn(client, "get").mockResolvedValue(expectedError)
 
-      const result = await gateway.connectivity()
+      const result = await gateway.connectivity(apiKey)
 
       expect(isError(result)).toBe(true)
       expect(result).toEqual(expectedError)

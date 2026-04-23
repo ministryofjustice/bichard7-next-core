@@ -88,7 +88,7 @@ export default class BichardApiV1 implements BichardApiGateway {
     return parsedResult.data
   }
 
-  async connectivity(): PromiseResult<ApiConnectivityDto> {
-    return await this.apiClient.get<ApiConnectivityDto>(V1.Connectivity)
+  async connectivity(apiKey: string): PromiseResult<ApiConnectivityDto> {
+    return await this.apiClient.get<ApiConnectivityDto>(V1.Connectivity, { "x-connectivity-check-key": apiKey })
   }
 }
