@@ -15,6 +15,7 @@ import { isError } from "types/Result"
 import type { UserList } from "@moj-bichard7/common/types/User"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
+import { ApiConnectivityDtoSchema } from "@moj-bichard7/common/types/ApiConnectivity"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -89,6 +90,16 @@ export default class BichardApiV1 implements BichardApiGateway {
   }
 
   async connectivity(apiKey: string): PromiseResult<ApiConnectivityDto> {
-    return await this.apiClient.get<ApiConnectivityDto>(V1.Connectivity, { "x-connectivity-check-key": apiKey })
+    const result = await this.apiClient.get<ApiConnectivityDto>(V1.Connectivity, { "x-connectivity-check-key": apiKey })
+    if (isError(result)) {
+      return result
+    }
+
+    const parsedResult = ApiConnectivityDtoSchema.safeParse(result)
+    if (!parsedResult.success) {
+      return parsedResult.error
+    }
+
+    return parsedResult.data
   }
 }

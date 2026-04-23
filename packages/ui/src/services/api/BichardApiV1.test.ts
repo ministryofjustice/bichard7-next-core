@@ -304,5 +304,14 @@ describe("BichardApiV1", () => {
       expect(isError(result)).toBe(true)
       expect(result).toEqual(expectedError)
     })
+
+    it("can handle parsing errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue({})
+
+      const result = await gateway.connectivity(apiKey)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toBeInstanceOf(ZodError)
+    })
   })
 })
