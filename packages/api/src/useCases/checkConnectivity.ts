@@ -14,7 +14,6 @@ export default async (database: DatabaseConnection): PromiseResult<ApiConnectivi
   }
 
   return {
-    conductor: true,
     database: dbConnectivity
   }
 }

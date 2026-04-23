@@ -30,7 +30,6 @@ describe("/v1/connectivity e2e", () => {
 
     expect(response.status).toBe(OK)
     expect(await response.json()).toEqual({
-      conductor: true,
       database: true
     })
   })
