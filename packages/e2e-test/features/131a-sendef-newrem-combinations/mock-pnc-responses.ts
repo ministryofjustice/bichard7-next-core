@@ -51,6 +51,7 @@ export default (_: string, { policeApi }: Bichard) => [
           courtOffenceSequenceNumber: 1,
           cjsOffenceCode: "TH68006",
           offenceTic: 0,
+          plea: "Not Guilty",
           disposalResults: [
             {
               disposalCode: 2059
@@ -77,6 +78,7 @@ export default (_: string, { policeApi }: Bichard) => [
           courtOffenceSequenceNumber: 3,
           cjsOffenceCode: "TH68010",
           offenceTic: 0,
+          plea: "Not Guilty",
           disposalResults: [
             {
               disposalCode: 2059

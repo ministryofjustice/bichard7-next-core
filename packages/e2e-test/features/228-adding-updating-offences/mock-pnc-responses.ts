@@ -60,6 +60,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
           courtOffenceSequenceNumber: 1,
           cjsOffenceCode: "TH68010",
           offenceTic: 0,
+          plea: "Not Guilty",
           disposalResults: [
             {
               disposalCode: 2059
