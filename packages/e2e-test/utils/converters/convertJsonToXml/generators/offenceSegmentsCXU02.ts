@@ -9,6 +9,7 @@ import ccrSegmentGenerator from "./ccrSegmentGenerator"
 import couSegmentGenerator from "./couSegmentGenerator"
 import crtSegmentGenerator from "./crtSegmentGenerator"
 import disSegmentGenerator from "./disSegmentGenerator"
+import rccSegmentGenerator from "./rccSegmentGenerator"
 
 const buildBaseOffenceSegments = (offence: Offence | ArrestOffence, primarySegment: string): string[] => {
   const adj = adjSegmentFromAddDisposalRequest(offence) ?? ""
@@ -37,7 +38,12 @@ const buildAdditionalOffenceSegments = (
 }
 
 export const offenceSegmentsCXU02 = (mockJson: MockAddDisposalRequest): string => {
-  const headerSegments = [ccrSegmentGenerator(mockJson), couSegmentGenerator(mockJson), crtSegmentGenerator(mockJson)]
+  const headerSegments = [
+    ccrSegmentGenerator(mockJson),
+    couSegmentGenerator(mockJson),
+    rccSegmentGenerator(mockJson),
+    crtSegmentGenerator(mockJson)
+  ]
   const offences = mockJson.offences?.flatMap(buildOffenceSegments) ?? []
   const additionalOffences =
     mockJson.additionalArrestOffences?.flatMap((additionalArrestOffence) =>
