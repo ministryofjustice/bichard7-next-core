@@ -20,7 +20,7 @@ export function dateTransformer(data: string) {
 }
 
 function isValidDate(date: unknown): boolean {
-  return date != null && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date as number)
+  return date != null && Object.prototype.toString.call(date) === "[object Date]" && !Number.isNaN(date as number)
 }
 
 export default dateTransformer
