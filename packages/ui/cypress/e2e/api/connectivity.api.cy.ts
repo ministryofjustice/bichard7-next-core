@@ -6,7 +6,7 @@ describe("GET /connectivity", () => {
       headers: { "x-connectivity-check-key": "test-connectivity-key" }
     }).then((response) => {
       expect(response.status).to.equal(200)
-      expect(response.body).to.deep.equal({ database: true })
+      expect(response.body).to.deep.equal({ api: { database: true } })
     })
   })
 

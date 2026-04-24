@@ -15,11 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const apiClient = new ApiClient("") // Does not require auth via JWT
   const apiGateway = new BichardApiV1(apiClient)
 
-  const result = await apiGateway.connectivity(apiKey)
-  if (isError(result)) {
-    res.status(400).send(result.message)
+  const apiConnectivity = await apiGateway.connectivity(apiKey)
+  if (isError(apiConnectivity)) {
+    res.status(400).send(apiConnectivity.message)
     return
   }
 
-  res.status(200).json(result)
+  res.status(200).json({
+    api: apiConnectivity
+  })
 }
