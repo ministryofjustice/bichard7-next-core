@@ -83,7 +83,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
               },
               committedOnBail: false,
               offenceTic: 0,
-              plea: "Not Guilty",
+              plea: "NOT GUILTY",
               offenceStartDate: "2010-11-28",
               disposalResults: [
                 {
