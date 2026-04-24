@@ -56,6 +56,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
         "EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  ",
         "SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  ",
         "WITH CHILD                                        ",
+        "                                                  ",
         "EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN ",
         "SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OF",
         "A POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  ",

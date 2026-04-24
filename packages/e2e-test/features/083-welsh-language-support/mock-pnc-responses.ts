@@ -6,6 +6,9 @@ export default (ncm: string, { policeApi }: Bichard) => [
     expectedRequest: {
       croNumber: "",
       crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410836V",
+      pncCheckName: "LANGUAGE",
       courtCaseReference: "97/1626/008395Q",
       court: {
         courtIdentityType: "code",
