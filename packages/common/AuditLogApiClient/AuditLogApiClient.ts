@@ -183,46 +183,51 @@ export default class AuditLogApiClient {
       queryString = `?${queryParams.join("&")}`
     }
 
-    return axios
-      .get(`${this.baseUrl}/${correlationId}${queryString}`, {
-        headers: { ...this.apiKeyHeader },
-        httpsAgent,
-        timeout: this.timeout
-      })
-      .then((response) => response.data)
-      .then((result) => (this.isB7Api() ? result : result[0]))
-      .catch((error: AxiosError) => {
-        if (error.response?.status === HttpStatusCode.NotFound) {
-          return undefined
-        }
+    const url = `${this.baseUrl}/${correlationId}${queryString}`
 
-        return new ApplicationError(
-          `Error getting messages: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
-      })
+    return fetch(url, {
+      headers: {
+        ...this.apiKeyHeader
+      },
+      method: "GET"
+    }).then((response) => {
+      if (response.status === HttpStatusCode.NotFound) {
+        return undefined
+      }
+
+      if (!response.ok) {
+        return response.text().then((text) => {
+          return new ApplicationError(`Error getting messages: ${text}`, new Error(text))
+        })
+      }
+
+      const data = response.json().then((result) => (this.isB7Api() ? result : result[0]))
+
+      return data as Promise<AuditLogApiRecordOutput>
+    })
   }
 
   getAuditLogs(options?: GetAuditLogsOptions): PromiseResult<AuditLogApiRecordOutput[]> {
     const url = addQueryParams(this.baseUrl, options)
 
-    return axios
-      .get(url, {
-        headers: { ...this.apiKeyHeader },
-        httpsAgent,
-        timeout: this.timeout
-      })
-      .then((response) => response.data)
-      .catch((error: AxiosError) => {
-        if (error.response?.status === HttpStatusCode.NotFound) {
-          return []
-        }
+    return fetch(url, {
+      headers: {
+        ...this.apiKeyHeader
+      },
+      method: "GET"
+    }).then((response) => {
+      if (response.status === HttpStatusCode.NotFound) {
+        return []
+      }
 
-        return new ApplicationError(
-          `Error getting messages: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
-      })
+      if (!response.ok) {
+        return response.text().then((text) => {
+          return new ApplicationError(`Error getting messages: ${text}`, new Error(text))
+        })
+      }
+
+      return response.json() as Promise<AuditLogApiRecordOutput[]>
+    })
   }
 
   getAuditLogsByHash(messageHash: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
