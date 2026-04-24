@@ -34,10 +34,6 @@ const groups = [
   {
     name: "B7SuperUserManager_grp",
     friendly_name: "Super User Manager"
-  },
-  {
-    name: "B7NewUI_grp",
-    friendly_name: "New Bichard UI"
   }
 ]
 

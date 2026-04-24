@@ -5,17 +5,17 @@ import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import { extractCourtCode, extractCourtName } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
-const crtSegmentGenerator = (ledsJson: AddDisposalRequest): string | undefined => {
-  if (!ledsJson.carryForward?.appearanceDate) {
+const crtSegmentGenerator = (mockJson: AddDisposalRequest): string | undefined => {
+  if (!mockJson.carryForward?.appearanceDate) {
     return undefined
   }
 
-  const courtDate = convertToPncDate(ledsJson.carryForward.appearanceDate)
+  const courtDate = convertToPncDate(mockJson.carryForward.appearanceDate)
 
   return generateRow("CRT", [
     [CONSTANT.OFFENCE_UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
-    [extractCourtCode(ledsJson.court), CONSTANT.COURT_CODE_FIELD_LENGTH],
-    [extractCourtName(ledsJson.court), CONSTANT.COURT_NAME_FIELD_LENGTH],
+    [extractCourtCode(mockJson.court), CONSTANT.COURT_CODE_FIELD_LENGTH],
+    [extractCourtName(mockJson.court), CONSTANT.COURT_NAME_FIELD_LENGTH],
     [courtDate, CONSTANT.DATE_OF_HEARING_FIELD_LENGTH]
   ])
 }

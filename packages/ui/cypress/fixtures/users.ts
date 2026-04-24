@@ -14,7 +14,7 @@ const numberedUsers = () => {
       surname: `Force 0${i}`,
       email: `bichard.force.0${i}@example.com`,
       password: hashedPassword,
-      groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+      groups: [UserGroup.GeneralHandler]
     }
     newUsers[user.username] = user
   }
@@ -30,7 +30,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "generalhandler@example.com",
     password: hashedPassword,
-    groups: [UserGroup.GeneralHandler, UserGroup.NewUI],
+    groups: [UserGroup.GeneralHandler],
     featureFlags: {
       useCourtDateReceivedDateMismatchFiltersEnabled: true,
       useTriggerAndExceptionQualityAuditingEnabled: true
@@ -43,7 +43,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "Flags",
     email: "usermissingfeatureflags@example.com",
     password: hashedPassword,
-    groups: [UserGroup.Supervisor, UserGroup.NewUI],
+    groups: [UserGroup.Supervisor],
     featureFlags: {
       useCourtDateReceivedDateMismatchFiltersEnabled: false,
       useTriggerAndExceptionQualityAuditingEnabled: false
@@ -56,7 +56,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "longname@example.com",
     password: hashedPassword,
-    groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
+    groups: [UserGroup.GeneralHandler]
   },
   Bichard011111: {
     username: "Bichard011111",
@@ -65,7 +65,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "bichard011111@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+    groups: [UserGroup.GeneralHandler]
   },
   TriggerHandler: {
     username: "TriggerHandler",
@@ -74,7 +74,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "triggerhandler@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.TriggerHandler]
+    groups: [UserGroup.TriggerHandler]
   },
   ExceptionHandler: {
     username: "ExceptionHandler",
@@ -83,7 +83,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "exceptionhandler@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.ExceptionHandler]
+    groups: [UserGroup.ExceptionHandler]
   },
   Supervisor: {
     username: "Supervisor",
@@ -92,7 +92,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "supervisor@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    groups: [UserGroup.Supervisor],
     featureFlags: {
       useCourtDateReceivedDateMismatchFiltersEnabled: true,
       useTriggerAndExceptionQualityAuditingEnabled: true
@@ -105,7 +105,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "supervisor.oatnb@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    groups: [UserGroup.Supervisor],
     featureFlags: {
       useCourtDateReceivedDateMismatchFiltersEnabled: true,
       useTriggerAndExceptionQualityAuditingEnabled: true,
@@ -119,7 +119,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "usermanager@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.UserManager]
+    groups: [UserGroup.UserManager]
   },
   MultigroupSupervisor: {
     username: "MultigroupSupervisor",
@@ -128,7 +128,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "multigroupsupervisor@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor, UserGroup.ExceptionHandler]
+    groups: [UserGroup.Supervisor, UserGroup.ExceptionHandler]
   },
   NoGroups: {
     username: "NoGroups",
@@ -137,7 +137,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "nogroups@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI]
+    groups: []
   },
   Court02User: {
     username: "Court02User",
@@ -147,7 +147,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "court02user@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+    groups: [UserGroup.GeneralHandler]
   },
   userExcludedTriggers: {
     username: "userExcludedTriggers",
@@ -156,7 +156,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "userExcludedTriggers@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    groups: [UserGroup.Supervisor],
     excludedTriggers: [
       TriggerCode.TRPR0001,
       TriggerCode.TRPR0002,
@@ -172,7 +172,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "userExclTriggsMultiForces@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    groups: [UserGroup.Supervisor],
     excludedTriggers: [TriggerCode.TRPR0012, TriggerCode.TRPS0008, TriggerCode.TRPR0020, TriggerCode.TRPR0030]
   },
   userWithoutExcludedTriggers: {
@@ -182,7 +182,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "bichard18@example.com",
     password: hashedPassword,
-    groups: [UserGroup.GeneralHandler, UserGroup.NewUI]
+    groups: [UserGroup.GeneralHandler]
   },
   userWithAllTriggersExcluded: {
     username: "userWithAllTriggersExcluded",
@@ -191,7 +191,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "userWithAllTriggersExcluded@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    groups: [UserGroup.Supervisor],
     excludedTriggers: [
       TriggerCode.TRPR0001,
       TriggerCode.TRPR0003,
@@ -236,7 +236,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
     surname: "User",
     email: "userWithJustWarrantsTriggersIncluded@example.com",
     password: hashedPassword,
-    groups: [UserGroup.NewUI, UserGroup.Supervisor],
+    groups: [UserGroup.Supervisor],
     excludedTriggers: [
       TriggerCode.TRPR0001,
       TriggerCode.TRPR0003,

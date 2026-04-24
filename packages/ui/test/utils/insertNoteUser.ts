@@ -22,7 +22,7 @@ export const insertNoteUser = async (lockedCase: Note): Promise<null> => {
       surname: formatSurname(surname),
       email: `${username}@example.com`
     })
-    groups = [UserGroup.NewUI, UserGroup.GeneralHandler]
+    groups = [UserGroup.GeneralHandler]
   }
 
   return insertUsersWithOverrides([user], groups)

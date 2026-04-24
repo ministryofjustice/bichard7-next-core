@@ -19,25 +19,27 @@ export const retryTransaction = async <T, Args extends unknown[]>(
   callback: (...args: Args) => Promise<T>,
   ...callbackArgs: Args
 ): Promise<T> => {
-  const maxRetries = 2
+  const maxRetries = 3
   let attempt = 0
-  let lastError: unknown
 
   while (attempt < maxRetries) {
     try {
       return await callback(...callbackArgs)
     } catch (error) {
       const errorForLog = error as Error
-      logger.error(`Error inside transaction (retry: ${attempt}): ${errorForLog.name} - ${errorForLog.message}`)
 
       if (!isRetryableError(error) || attempt >= maxRetries - 1) {
+        logger.error(`Error inside transaction (retry: ${attempt}): ${errorForLog.name} - ${errorForLog.message}`)
         throw error
       }
 
-      await delay(randomInt(0, 100) * (attempt + 1))
+      logger.warn(`Error inside transaction (retry: ${attempt}): ${errorForLog.name} - ${errorForLog.message}`)
+
+      await delay(randomInt(10, 50) * (attempt + 1))
       attempt++
     }
   }
 
-  throw lastError
+  logger.error("Retry transaction failed")
+  throw new Error("Retry transaction failed")
 }

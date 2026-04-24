@@ -1,5 +1,5 @@
-import { loginAndVisit } from "../../support/helpers"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { loginAndVisit } from "../../support/helpers"
 
 describe("Search", () => {
   context("When the user is a supervisor", () => {
@@ -29,7 +29,7 @@ describe("Search", () => {
             visibleForces: ["01", "001"]
           }
         ],
-        userGroups: [UserGroup.NewUI, UserGroup.GeneralHandler]
+        userGroups: [UserGroup.GeneralHandler]
       })
       loginAndVisit("Supervisor", "/bichard/audit/search")
     })

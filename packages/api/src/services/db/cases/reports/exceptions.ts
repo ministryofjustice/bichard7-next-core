@@ -6,14 +6,14 @@ import type { PendingQuery, Row } from "postgres"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { endOfDay, startOfDay } from "date-fns"
 
-import type { WritableDatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { UserExceptionReportRow } from "../../../../types/reports/Exceptions"
 
 import { processUsers } from "../../../../useCases/cases/reports/exceptions/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
 export async function* exceptionsReport(
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   user: User,
   filters: ExceptionReportQuery
 ): AsyncGenerator<ExceptionReportDto[]> {
