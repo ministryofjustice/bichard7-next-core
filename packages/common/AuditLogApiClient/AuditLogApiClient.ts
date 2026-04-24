@@ -48,33 +48,31 @@ export default class AuditLogApiClient {
   ) {}
 
   createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
-    return axios
-      .post(this.baseUrl, this.stringify(auditLog), {
-        headers: {
-          "Content-Type": "application/json",
-          ...this.apiKeyHeader
-        },
-        httpsAgent,
-        timeout: this.timeout,
-        // The Audit Log API doesn't return JSON :facepalm:
-        transformResponse: (res) => res
-      })
-      .then((result) => {
-        switch (result.status) {
-          case HttpStatusCode.Created:
-            return JSON.parse(result.data) as AuditLogApiRecordOutput
-          default:
-            return Error(`Error ${result.status}: ${result.data}`)
-        }
-      })
-      .catch((error: AxiosError) => {
-        const apiError = error.response?.data ? this.stringify(error.response?.data) : error.message
-        if (/A message with Id [^ ]* already exists in the database/.test(apiError)) {
-          return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
-        }
+    return fetch(this.baseUrl, {
+      body: this.stringify(auditLog),
+      headers: {
+        "Content-Type": "application/json",
+        ...this.apiKeyHeader
+      },
+      method: "POST"
+    }).then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          if (/A message with Id [^ ]* already exists in the database/.test(text)) {
+            return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
+          }
 
-        return new ApplicationError(`Error creating audit log: ${apiError}`, error)
-      })
+          return new ApplicationError(`Error creating audit log: ${text}`, new Error(text))
+        })
+      }
+
+      switch (response.status) {
+        case HttpStatusCode.Created:
+          return response.json().then((data) => JSON.parse(data)) as Promise<AuditLogApiRecordOutput>
+        default:
+          return Error(`Error ${response.status}: ${response.json().then((data) => this.stringify(data))}`)
+      }
+    })
   }
 
   createEvents(correlationId: string, event: AuditLogEvent | AuditLogEvent[]): PromiseResult<void> {
@@ -192,7 +190,7 @@ export default class AuditLogApiClient {
       method: "GET"
     }).then((response) => {
       if (response.status === HttpStatusCode.NotFound) {
-        return undefined
+        return new ApplicationError("Error getting messages: Not Found", new Error("Not Found"))
       }
 
       if (!response.ok) {
