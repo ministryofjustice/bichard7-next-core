@@ -11,10 +11,16 @@ const remSegmentGenerator = (mockJson: MockRemandRequest): string => {
   const remandDate = convertToPncDate(mockJson.remandDate)
   const remandResult = mockJson.remandResult
   const remandLocationFfss = mockJson.remandLocationFfss
-  const remandLocationCourt = extractCourtCode(currentAppearance)
+  const remandLocationCourt =
+    mockJson.currentAppearance?.court?.courtIdentityType === "code"
+      ? extractCourtCode(currentAppearance)
+      : CONSTANT.PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
   const courtNameType1 = extractCourtName(currentAppearance)
   const nextAppearanceDate = mockJson.nextAppearance?.date && convertToPncDate(mockJson.nextAppearance.date)
-  const nextAppearanceLocation = extractCourtCode(nextAppearance)
+  const nextAppearanceLocation =
+    mockJson.nextAppearance?.court?.courtIdentityType === "code"
+      ? extractCourtCode(nextAppearance)
+      : CONSTANT.PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR
   const courtNameType2 = extractCourtName(nextAppearance)
   const bailConditions = mockJson.bailConditions.join("")
   const localAuthorityCode = "0000"
