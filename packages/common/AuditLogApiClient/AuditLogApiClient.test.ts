@@ -1,7 +1,3 @@
-import type { AxiosError } from "axios"
-
-import axios from "axios"
-
 import type { AuditLogApiRecordOutput } from "../types/AuditLogRecord"
 
 import { mockApiAuditLogEvent, mockAuditLogApiRecordOutput } from "../test/auditLogMocks"
@@ -19,20 +15,12 @@ const message2 = mockAuditLogApiRecordOutput({
 })
 const event = mockApiAuditLogEvent()
 
-const createErrorResponse = (errorCode: number, errorMessage: string): AxiosError =>
-  ({
-    message: `Axios error: ${errorMessage}`,
-    response: { data: errorMessage, status: errorCode }
-  }) as unknown as AxiosError
-
 describe("getAuditLogs()", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   it("should return the messages if successful", async () => {
-    jest.spyOn(axios, "get").mockResolvedValue({ data: [message, message2], status: 200 })
-
     jest.spyOn(global, "fetch").mockResolvedValue({
       json: () => Promise.resolve([message, message2]),
       ok: true,

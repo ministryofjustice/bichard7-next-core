@@ -1,4 +1,3 @@
-import { HttpStatusCode } from "axios"
 import * as https from "https"
 
 import type { AuditLogEvent } from "../types/AuditLogEvent"
@@ -7,6 +6,7 @@ import type { PromiseResult, Result } from "../types/Result"
 
 import addQueryParams from "./addQueryParams"
 import ApplicationError, { AlreadyExistsError } from "./ApplicationError"
+import HttpStatusCode from "./HttpStatusCode"
 
 export type GetAuditLogOptions = {
   excludeColumns?: string[]
@@ -52,7 +52,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       body: this.stringify(auditLog),
       headers: {
         "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export default class AuditLogApiClient {
         }
 
         switch (response.status) {
-          case HttpStatusCode.Created:
+          case HttpStatusCode.created:
             return response.json() as Promise<AuditLogApiRecordOutput>
           default:
             return response.text().then((text) => {
@@ -104,7 +104,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       body: JSON.stringify(event),
       headers: {
         ...this.apiKeyHeader,
@@ -156,7 +156,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       body: JSON.stringify(event),
       headers: {
         "Content-Type": "application/json",
@@ -169,10 +169,10 @@ export default class AuditLogApiClient {
         clearTimeout(timeoutId)
 
         switch (response.status) {
-          case HttpStatusCode.Created:
+          case HttpStatusCode.created:
             return undefined
 
-          case HttpStatusCode.GatewayTimeout:
+          case HttpStatusCode.gatewayTimeout:
             return new Error(`Timed out creating event for user '${userName}'.`)
 
           default:
@@ -206,7 +206,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       headers: {
         ...this.apiKeyHeader
       },
@@ -254,7 +254,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       headers: {
         ...this.apiKeyHeader
       },
@@ -264,7 +264,7 @@ export default class AuditLogApiClient {
       .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
         clearTimeout(timeoutId)
 
-        if (response.status === HttpStatusCode.NotFound) {
+        if (response.status === HttpStatusCode.notFound) {
           return new ApplicationError("Error getting messages: Not Found", new Error("Not Found"))
         }
 
@@ -299,7 +299,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       headers: {
         ...this.apiKeyHeader
       },
@@ -309,7 +309,7 @@ export default class AuditLogApiClient {
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
         clearTimeout(timeoutId)
 
-        if (response.status === HttpStatusCode.NotFound) {
+        if (response.status === HttpStatusCode.notFound) {
           return []
         }
 
@@ -347,7 +347,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       headers: {
         ...this.apiKeyHeader
       },
@@ -357,8 +357,8 @@ export default class AuditLogApiClient {
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
         clearTimeout(timeoutId)
 
-        if (response.status === HttpStatusCode.NotFound) {
-          return undefined
+        if (response.status === HttpStatusCode.notFound) {
+          return new Error(`The message with hash ${messageHash} does not exist.`)
         }
 
         if (!response.ok) {
@@ -389,7 +389,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       body: JSON.stringify({}),
       headers: {
         "Content-Type": "application/json",
@@ -402,9 +402,9 @@ export default class AuditLogApiClient {
         clearTimeout(timeoutId)
 
         switch (response.status) {
-          case HttpStatusCode.NoContent:
+          case HttpStatusCode.noContent:
             return undefined
-          case HttpStatusCode.NotFound:
+          case HttpStatusCode.notFound:
             return new Error(`The message with Id ${correlationId} does not exist.`)
           default:
             return response.text().then((text) => {
@@ -427,7 +427,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: this.httpsAgent,
+      agent: httpsAgent,
       body: JSON.stringify({}),
       headers: {
         "Content-Type": "application/json",
@@ -439,9 +439,9 @@ export default class AuditLogApiClient {
       .then((response): Promise<Result<void>> | Result<void> => {
         clearTimeout(timeoutId)
 
-        if (response.status === HttpStatusCode.NoContent) {
+        if (response.status === HttpStatusCode.noContent) {
           return undefined
-        } else if (response.status === HttpStatusCode.NotFound) {
+        } else if (response.status === HttpStatusCode.notFound) {
           return new Error(`The message with Id ${correlationId} does not exist.`)
         } else {
           return response.text().then((text) => {
