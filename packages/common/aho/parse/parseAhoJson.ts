@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "../../types/AnnotatedHearingOutcome"
 
-import { dateReviver } from "../../axiosDateTransformer"
+import { dateReviver } from "../../utils/dateTransformer"
 
 const parseAhoJson = (aho: unknown): AnnotatedHearingOutcome => {
   return JSON.parse(JSON.stringify(aho), dateReviver) as AnnotatedHearingOutcome
