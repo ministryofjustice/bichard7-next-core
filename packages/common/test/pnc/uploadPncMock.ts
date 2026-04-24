@@ -1,5 +1,9 @@
-import axios from "axios"
-
 export const uploadPncMock = async (fixture: object | string) => {
-  await axios.post("http://localhost:3000/mocks", fixture)
+  await fetch("http://localhost:3000/mocks", {
+    body: JSON.stringify(fixture),
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "POST"
+  })
 }
