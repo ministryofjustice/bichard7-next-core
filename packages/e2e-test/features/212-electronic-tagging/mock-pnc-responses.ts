@@ -35,7 +35,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
                 units: "months",
                 count: 3
               },
-              disposalQualifiers: ["C", "S"],
+              disposalQualifiers: ["C ", "S"],
               disposalQualifierDuration: {
                 units: "months",
                 count: 12
@@ -66,7 +66,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
                 units: "months",
                 count: 3
               },
-              disposalQualifiers: ["C", "S"],
+              disposalQualifiers: ["C ", "S"],
               disposalQualifierDuration: {
                 units: "months",
                 count: 12
@@ -97,7 +97,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
                 units: "days",
                 count: 14
               },
-              disposalQualifiers: ["C", "S"],
+              disposalQualifiers: ["C ", "S"],
               disposalQualifierDuration: {
                 units: "months",
                 count: 12

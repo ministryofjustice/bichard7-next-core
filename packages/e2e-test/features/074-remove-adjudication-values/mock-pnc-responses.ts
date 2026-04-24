@@ -62,6 +62,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
         {
           courtOffenceSequenceNumber: 1,
           cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
           offenceTic: 0,
           disposalResults: [
             {
@@ -73,6 +74,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
         {
           courtOffenceSequenceNumber: 2,
           cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
           offenceTic: 0,
           disposalResults: [
             {

@@ -23,7 +23,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       offences: [
         {
           courtOffenceSequenceNumber: 1,
-          cjsOffenceCode: "SX03001",
+          cjsOffenceCode: "SX03001A",
           roleQualifiers: ["AT"],
           plea: "Not Guilty",
           adjudication: "Guilty",

@@ -97,6 +97,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
                 cjsOffenceCode: "RT88191"
               },
               committedOnBail: false,
+              plea: "Not Guilty",
               offenceTic: 0,
               offenceStartDate: "2010-11-28",
               disposalResults: [

@@ -17,9 +17,12 @@ export default (ncm: string, { policeApi }: Bichard) => [
       bailConditions: [
         "ONE GIVE TO THE COURT ANY PASSPORT HELD AND THE   ",
         "LEFTSHOE                                          ",
+        "                                                  ",
+        "                                                  ",
         "FROM EACH PAIR OF SHOES OWNED BY YOURSELF ANDYOUR ",
         "IMMEDIATE FAMILY. SHOULD YOU OWN A PAIR OF        ",
         "SLIPPERS THESE WILL BE BURNED                     ",
+        "                                                  ",
         "TWO THIS BAIL CONDITION IS OVER TWO HUNDRED       ",
         "CHARACTERS AND SHOULD NOT BE PADDED WITH SPACES AT",
         "THE FIRST OPPORTUNITY BEFORE THE FIFTY CHARACTER  ",
