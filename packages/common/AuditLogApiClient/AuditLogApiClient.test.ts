@@ -237,22 +237,28 @@ describe("createEvents()", () => {
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
+    const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      status: 201
+    } as Response)
 
     const result = await apiClient.createEvents(message.messageId, event)
 
     expect(result).toNotBeError()
 
-    const headers = mockPost.mock.calls[0][2]?.headers as Record<string, string>
+    const headers = mockFetch.mock.calls[0][1]?.headers as Record<string, string>
     expect(headers["X-API-Key"]).toBe("dummy")
   })
 
   it("should fail when the api request times out", async () => {
-    const timedOutResponse = <AxiosError>{ code: "ECONNABORTED" }
+    const timedOutResponse = new Error("Connection expired")
+    timedOutResponse.name = "AbortError"
     const expectedErrorMsg = `Timed out creating event for message with Id ${message.messageId}.`
-    jest.spyOn(axios, "post").mockRejectedValue(timedOutResponse)
+    jest.spyOn(global, "fetch").mockRejectedValue(timedOutResponse)
 
     const result = await apiClient.createEvents(message.messageId, event)
+
+    console.log(result)
 
     expect(result).toBeError(expectedErrorMsg)
   })
@@ -355,7 +361,10 @@ describe("retryEvent()", () => {
 
 describe("sanitiseAuditLog()", () => {
   it("should return NoContent http status code when successful", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 204 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      status: 204
+    } as Response)
 
     const result = await apiClient.sanitiseAuditLog(message.messageId)
 
@@ -363,7 +372,10 @@ describe("sanitiseAuditLog()", () => {
   })
 
   it("should fail when message does not exist", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 404 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: false,
+      status: 404
+    } as Response)
 
     const result = await apiClient.sanitiseAuditLog(message.messageId)
 
@@ -371,7 +383,11 @@ describe("sanitiseAuditLog()", () => {
   })
 
   it("should fail when the api errors", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ data: "api has gone bang", status: 500 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: false,
+      status: 500,
+      text: () => Promise.resolve("api has gone bang")
+    } as Response)
 
     const result = await apiClient.sanitiseAuditLog(message.messageId)
 
@@ -379,8 +395,8 @@ describe("sanitiseAuditLog()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    const expectedError = <AxiosError>new Error("An unknown error")
-    jest.spyOn(axios, "post").mockRejectedValue(expectedError)
+    const expectedError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(expectedError)
 
     const result = await apiClient.sanitiseAuditLog(message.messageId)
 
@@ -388,8 +404,9 @@ describe("sanitiseAuditLog()", () => {
   })
 
   it("should fail when the api request times out", async () => {
-    const timedOutResponse = <AxiosError>{ code: "ECONNABORTED", message: "Connection expired" }
-    jest.spyOn(axios, "post").mockRejectedValue(timedOutResponse)
+    const timedOutResponse = new Error("Connection expired")
+    timedOutResponse.name = "AbortError"
+    jest.spyOn(global, "fetch").mockRejectedValue(timedOutResponse)
 
     const result = await apiClient.sanitiseAuditLog(message.messageId)
 
