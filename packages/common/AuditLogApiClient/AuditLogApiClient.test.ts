@@ -46,15 +46,12 @@ describe("getAuditLogs()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    jest.spyOn(global, "fetch").mockResolvedValue({
-      ok: false,
-      status: 500,
-      text: () => Promise.resolve("An unknown error")
-    } as Response)
+    const unknownError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(unknownError)
 
     const result = await apiClient.getAuditLogs()
 
-    expect(result).toBeError("Error getting messages: An unknown error")
+    expect(result).toBeError(`Error getting messages: ${unknownError.message}`)
   })
 
   it("should filter by status", async () => {
@@ -133,17 +130,12 @@ describe("getAuditLog()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    const expectedErrorMessage = "An unknown error"
-
-    jest.spyOn(global, "fetch").mockResolvedValue({
-      ok: false,
-      status: 500,
-      text: () => Promise.resolve(expectedErrorMessage)
-    } as Response)
+    const unknownError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(unknownError)
 
     const result = await apiClient.getAuditLog(message.messageId)
 
-    expect(result).toBeError(`Error getting messages: ${expectedErrorMessage}`)
+    expect(result).toBeError(`Error getting messages: ${unknownError.message}`)
   })
 
   it("should pass through the api key as a header", async () => {
@@ -162,8 +154,8 @@ describe("getAuditLog()", () => {
   })
 })
 
-describe.only("createAuditLog()", () => {
-  it.only("should return Created http status code when message successfully created", async () => {
+describe("createAuditLog()", () => {
+  it("should return Created http status code when message successfully created", async () => {
     jest.spyOn(global, "fetch").mockResolvedValue({
       json: () => Promise.resolve('{ "messageId": "fake" }'),
       ok: true,
@@ -171,14 +163,16 @@ describe.only("createAuditLog()", () => {
     } as Response)
 
     const result = await apiClient.createAuditLog(message)
-    console.log(result)
 
     expect(result).toNotBeError()
   })
 
   it("should fail when message validation fails", async () => {
-    const expectedError = createErrorResponse(400, "Message ID is mandatory")
-    jest.spyOn(axios, "post").mockRejectedValue(expectedError)
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: false,
+      status: 400,
+      text: () => Promise.resolve("Message ID is mandatory")
+    } as Response)
 
     const result = await apiClient.createAuditLog(message)
 
@@ -186,29 +180,36 @@ describe.only("createAuditLog()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    const expectedError = <AxiosError>new Error("An unknown error")
-    jest.spyOn(axios, "post").mockRejectedValue(expectedError)
+    const unknownError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(unknownError)
 
     const result = await apiClient.createAuditLog(message)
 
-    expect(result).toBeError(`Error creating audit log: ${expectedError.message}`)
+    expect(result).toBeError(`Error creating audit log: ${unknownError.message}`)
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ data: '{ "messageId": "fake" }', status: 201 })
+    const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
+      json: () => Promise.resolve('{ "messageId": "fake" }'),
+      ok: true,
+      status: 201
+    } as Response)
 
     const result = await apiClient.createAuditLog(message)
 
     expect(result).toNotBeError()
 
-    const headers = mockPost.mock.calls[0][2]?.headers as Record<string, string>
+    const headers = mockFetch.mock.calls[0][1]?.headers as Record<string, string>
     expect(headers["X-API-Key"]).toBe("dummy")
   })
 })
 
 describe("createEvents()", () => {
   it("should return Created http status code when message exists", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      status: 201
+    } as Response)
 
     const result = await apiClient.createEvents(message.messageId, event)
 
@@ -216,7 +217,10 @@ describe("createEvents()", () => {
   })
 
   it("should fail when message does not exist", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 404 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: false,
+      status: 404
+    } as Response)
 
     const result = await apiClient.createEvents(message.messageId, event)
 
@@ -224,12 +228,12 @@ describe("createEvents()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    const expectedError = <AxiosError>new Error("An unknown error")
-    jest.spyOn(axios, "post").mockRejectedValue(expectedError)
+    const unknownError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(unknownError)
 
     const result = await apiClient.createEvents(message.messageId, event)
 
-    expect(result).toBeError(`Error creating event: ${expectedError.message}`)
+    expect(result).toBeError(`Error creating event: ${unknownError.message}`)
   })
 
   it("should pass through the api key as a header", async () => {
@@ -256,7 +260,10 @@ describe("createEvents()", () => {
 
 describe("createUserEvent()", () => {
   it("should return Created http status code", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      status: 201
+    } as Response)
 
     const result = await apiClient.createUserEvent("User A", event)
 
@@ -264,29 +271,34 @@ describe("createUserEvent()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    const expectedError = <AxiosError>new Error("An unknown error")
-    jest.spyOn(axios, "post").mockRejectedValue(expectedError)
+    const unknownError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(unknownError)
 
     const result = await apiClient.createUserEvent("User B", event)
 
-    expect(result).toBeError(`Error creating event: ${expectedError.message}`)
+    expect(result).toBeError(`Error creating event: ${unknownError.message}`)
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 201 })
+    const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
+      json: () => Promise.resolve('{ "messageId": "fake" }'),
+      ok: true,
+      status: 201
+    } as Response)
 
     const result = await apiClient.createUserEvent("User C", event)
 
     expect(result).toNotBeError()
 
-    const headers = mockPost.mock.calls[0][2]?.headers as Record<string, string>
+    const headers = mockFetch.mock.calls[0][1]?.headers as Record<string, string>
     expect(headers["X-API-Key"]).toBe("dummy")
   })
 
   it("should fail when the api request times out", async () => {
-    const timedOutResponse = <AxiosError>{ code: "ECONNABORTED" }
+    const timedOutResponse = new Error("The operation was aborted")
+    timedOutResponse.name = "AbortError"
     const expectedErrorMsg = "Timed out creating event for user 'User D'."
-    jest.spyOn(axios, "post").mockRejectedValue(timedOutResponse)
+    jest.spyOn(global, "fetch").mockRejectedValue(timedOutResponse)
 
     const result = await apiClient.createUserEvent("User D", event)
 
@@ -296,7 +308,10 @@ describe("createUserEvent()", () => {
 
 describe("retryEvent()", () => {
   it("should succeed when the message exists", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 204 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      status: 204
+    } as Response)
 
     const result = await apiClient.retryEvent(message.messageId)
 
@@ -304,7 +319,10 @@ describe("retryEvent()", () => {
   })
 
   it("should fail when message does not exist", async () => {
-    jest.spyOn(axios, "post").mockResolvedValue({ status: 404 })
+    jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: false,
+      status: 404
+    } as Response)
 
     const result = await apiClient.retryEvent(message.messageId)
 
@@ -312,8 +330,8 @@ describe("retryEvent()", () => {
   })
 
   it("should fail when the error is unknown", async () => {
-    const expectedError = <AxiosError>new Error("An unknown error")
-    jest.spyOn(axios, "post").mockRejectedValue(expectedError)
+    const expectedError = new Error("An unknown error")
+    jest.spyOn(global, "fetch").mockRejectedValue(expectedError)
 
     const result = await apiClient.retryEvent(message.messageId)
 
@@ -321,13 +339,16 @@ describe("retryEvent()", () => {
   })
 
   it("should pass through the api key as a header", async () => {
-    const mockPost = jest.spyOn(axios, "post").mockResolvedValue({ status: 204 })
+    const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
+      ok: true,
+      status: 204
+    } as Response)
 
     const result = await apiClient.retryEvent(message.messageId)
 
     expect(result).toNotBeError()
 
-    const headers = mockPost.mock.calls[0][2]?.headers as Record<string, string>
+    const headers = mockFetch.mock.calls[0][1]?.headers as Record<string, string>
     expect(headers["X-API-Key"]).toBe("dummy")
   })
 })
