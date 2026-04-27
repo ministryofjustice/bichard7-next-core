@@ -116,11 +116,12 @@ export default class AuditLogApiClient {
           return
         }
 
-        switch (response.status) {
-          case HttpStatusCode.gatewayTimeout:
-            return new Error(`Timed out creating event for message with Id ${correlationId}.`)
-          case HttpStatusCode.notFound:
-            return new Error(`The message with Id ${correlationId} does not exist.`)
+        if (response.status === HttpStatusCode.gatewayTimeout) {
+          return new Error(`Timed out creating event for message with Id ${correlationId}.`)
+        }
+
+        if (response.status === HttpStatusCode.notFound) {
+          return new Error(`The message with Id ${correlationId} does not exist.`)
         }
 
         return response.text().then((text) => {
