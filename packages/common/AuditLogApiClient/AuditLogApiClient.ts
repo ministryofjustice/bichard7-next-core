@@ -28,6 +28,22 @@ const undiciDispatcher = new Agent({
   }
 })
 
+const handleApiError = <T>(
+  error: unknown,
+  timeoutId: NodeJS.Timeout,
+  timeoutErrorMessage: string,
+  applicationErrorMessage: string
+): Result<T> => {
+  clearTimeout(timeoutId)
+
+  if (error instanceof Error && error.name === "AbortError") {
+    return new Error(`Timed out ${timeoutErrorMessage}.`) as Result<T>
+  }
+
+  const errorInstance = error instanceof Error ? error : new Error(String(error))
+  return new ApplicationError(`Error ${applicationErrorMessage}: ${errorInstance.message}`, errorInstance) as Result<T>
+}
+
 export default class AuditLogApiClient {
   private get apiKeyHeader(): Record<string, string> {
     if (this.isB7Api()) {
@@ -85,17 +101,14 @@ export default class AuditLogApiClient {
             })
         }
       })
-      .catch((error: unknown) => {
-        clearTimeout(timeoutId)
-
-        if (error instanceof Error && error.name === "AbortError") {
-          return new Error(`Timed out creating audit log for message with Id ${auditLog.messageId}.`)
-        }
-
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-
-        return new ApplicationError(`Error creating audit log: ${errorInstance.message}`, errorInstance)
-      }) as PromiseResult<AuditLogApiRecordOutput>
+      .catch((error: unknown) =>
+        handleApiError(
+          error,
+          timeoutId,
+          `creating audit log for message with Id ${auditLog.messageId}`,
+          "creating audit log"
+        )
+      )
   }
 
   createEvents(correlationId: string, event: AuditLogEvent | AuditLogEvent[]): PromiseResult<void> {
@@ -138,16 +151,9 @@ export default class AuditLogApiClient {
             })
         }
       })
-      .catch((error: unknown) => {
-        clearTimeout(timeoutId)
-
-        if (error instanceof Error && error.name === "AbortError") {
-          return new Error(`Timed out creating event for message with Id ${correlationId}.`)
-        }
-
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error creating event: ${errorInstance.message}`, errorInstance)
-      }) as PromiseResult<void>
+      .catch((error: unknown) =>
+        handleApiError(error, timeoutId, `creating event for message with Id ${correlationId}`, "creating event")
+      )
   }
 
   createUserEvent(userName: string, event: AuditLogEvent): PromiseResult<void> {
@@ -183,16 +189,10 @@ export default class AuditLogApiClient {
             })
         }
       })
-      .catch((error: unknown): Result<void> => {
-        clearTimeout(timeoutId)
-
-        if (error instanceof Error && error.name === "AbortError") {
-          return new Error(`Timed out creating event for user '${userName}'.`)
-        }
-
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error creating event: ${errorInstance.message}`, errorInstance)
-      })
+      .catch(
+        (error: unknown): Result<void> =>
+          handleApiError(error, timeoutId, `creating event for user '${userName}'`, "creating event")
+      )
   }
 
   fetchUnsanitised(options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
@@ -226,16 +226,10 @@ export default class AuditLogApiClient {
 
         return response.json() as Promise<AuditLogApiRecordOutput[]>
       })
-      .catch((error: unknown): Result<AuditLogApiRecordOutput[]> => {
-        clearTimeout(timeoutId)
-
-        if (error instanceof Error && error.name === "AbortError") {
-          return new Error("Timed out getting unsanitised messages.")
-        }
-
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error getting unsanitised messages: ${errorInstance.message}`, errorInstance)
-      })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
+          handleApiError(error, timeoutId, "getting unsanitised messages", "getting unsanitised messages")
+      )
   }
 
   getAuditLog(correlationId: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
@@ -285,16 +279,10 @@ export default class AuditLogApiClient {
           return data as AuditLogApiRecordOutput
         })
       })
-      .catch((error: unknown): Result<AuditLogApiRecordOutput> => {
-        clearTimeout(timeoutId)
-
-        if (error instanceof Error && error.name === "AbortError") {
-          return new Error(`Timed out getting audit log for correlation Id ${correlationId}.`)
-        }
-
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error getting messages: ${errorInstance.message}`, errorInstance)
-      })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput> =>
+          handleApiError(error, timeoutId, `getting messages for correlation Id ${correlationId}`, "getting messages")
+      )
   }
 
   getAuditLogs(options?: GetAuditLogsOptions): PromiseResult<AuditLogApiRecordOutput[]> {
@@ -327,11 +315,10 @@ export default class AuditLogApiClient {
 
         return response.json() as Promise<AuditLogApiRecordOutput[]>
       })
-      .catch((error: unknown): Result<AuditLogApiRecordOutput[]> => {
-        clearTimeout(timeoutId)
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error getting messages: ${errorInstance.message}`, errorInstance)
-      })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
+          handleApiError(error, timeoutId, "getting messages", "getting messages")
+      )
   }
 
   getAuditLogsByHash(messageHash: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
@@ -376,16 +363,10 @@ export default class AuditLogApiClient {
 
         return response.json() as Promise<AuditLogApiRecordOutput[]>
       })
-      .catch((error: unknown): Result<AuditLogApiRecordOutput[]> => {
-        clearTimeout(timeoutId)
-
-        if (error instanceof Error && error.name === "AbortError") {
-          return new Error(`Timed out getting message by hash: ${messageHash}`)
-        }
-
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error getting message by hash: ${errorInstance.message}`, errorInstance)
-      })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
+          handleApiError(error, timeoutId, `getting message by hash: ${messageHash}`, "getting message by hash")
+      )
   }
 
   retryEvent(correlationId: string): PromiseResult<void> {
@@ -419,11 +400,10 @@ export default class AuditLogApiClient {
             })
         }
       })
-      .catch((error: unknown): Result<void> => {
-        clearTimeout(timeoutId)
-        const errorInstance = error instanceof Error ? error : new Error(String(error))
-        return new ApplicationError(`Error retrying event: ${errorInstance.message}`, errorInstance)
-      })
+      .catch(
+        (error: unknown): Result<void> =>
+          handleApiError(error, timeoutId, `retrying event for message with Id ${correlationId}`, "retrying event")
+      )
   }
 
   sanitiseAuditLog(correlationId: string): PromiseResult<void> {
