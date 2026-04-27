@@ -11,9 +11,9 @@ export function dateReviver(_: string, value: unknown): Date | typeof value {
   return value
 }
 
-export function dateTransformer(data: string) {
+export function dateTransformer<T>(data: string) {
   if (data === "") {
-    return JSON.parse("{}")
+    return {} as T
   } else {
     return JSON.parse(data, dateReviver)
   }
