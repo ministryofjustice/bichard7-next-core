@@ -345,7 +345,9 @@ export default class AuditLogApiClient {
       queryParams.push(`includeColumns=${options.excludeColumns.join(",")}`)
     }
 
-    const url = `${this.baseUrl}?${queryParams.toString()}`
+    const queryString = `?${queryParams.join("&")}`
+
+    const url = `${this.baseUrl}?${queryString}`
 
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
