@@ -1,5 +1,3 @@
-import type { AxiosResponseTransformer } from "axios"
-
 const dateFormat = /\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d+)?Z)?/
 
 export function dateReviver(_: string, value: unknown): Date | typeof value {
@@ -13,16 +11,16 @@ export function dateReviver(_: string, value: unknown): Date | typeof value {
   return value
 }
 
-function axiosDateTransformer(data: string): AxiosResponseTransformer {
+function dateTransformer<T>(data: string): T {
   if (data === "") {
-    return JSON.parse("{}")
+    return {} as T
   } else {
     return JSON.parse(data, dateReviver)
   }
 }
 
 function isValidDate(date: unknown): boolean {
-  return date != null && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date as number)
+  return date instanceof Date && !Number.isNaN(date.getTime())
 }
 
-export default axiosDateTransformer
+export default dateTransformer

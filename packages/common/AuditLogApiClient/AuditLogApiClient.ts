@@ -1,14 +1,12 @@
-import type { AxiosError } from "axios"
-
-import axios, { HttpStatusCode } from "axios"
-import * as https from "https"
+import { Agent } from "undici"
 
 import type { AuditLogEvent } from "../types/AuditLogEvent"
 import type { AuditLogApiRecordInput, AuditLogApiRecordOutput } from "../types/AuditLogRecord"
-import type { PromiseResult } from "../types/Result"
+import type { PromiseResult, Result } from "../types/Result"
 
 import addQueryParams from "./addQueryParams"
 import ApplicationError, { AlreadyExistsError } from "./ApplicationError"
+import HttpStatusCode from "./HttpStatusCode"
 
 export type GetAuditLogOptions = {
   excludeColumns?: string[]
@@ -24,9 +22,24 @@ export type GetAuditLogsOptions = {
   status?: string
 }
 
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false
+const undiciDispatcher = new Agent({
+  connect: {
+    rejectUnauthorized: false
+  }
 })
+
+export const handleApiError = (
+  error: unknown,
+  timeoutErrorMessage: string,
+  applicationErrorMessage: string
+): Result<Error> => {
+  if (error instanceof Error && error.name === "AbortError") {
+    return new Error(`Timed out ${timeoutErrorMessage}.`)
+  }
+
+  const errorInstance = error instanceof Error ? error : new Error(String(error))
+  return new ApplicationError(`Error ${applicationErrorMessage}: ${errorInstance.message}`, errorInstance)
+}
 
 export default class AuditLogApiClient {
   private get apiKeyHeader(): Record<string, string> {
@@ -40,6 +53,11 @@ export default class AuditLogApiClient {
   private get baseUrl(): string {
     return `${this.apiUrl}/${this.basePath}`
   }
+
+  private get requestSignal(): AbortSignal | undefined {
+    return this.timeout > 0 ? AbortSignal.timeout(this.timeout) : undefined
+  }
+
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
@@ -48,101 +66,104 @@ export default class AuditLogApiClient {
   ) {}
 
   createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
-    return axios
-      .post(this.baseUrl, this.stringify(auditLog), {
-        headers: {
-          "Content-Type": "application/json",
-          ...this.apiKeyHeader
-        },
-        httpsAgent,
-        timeout: this.timeout,
-        // The Audit Log API doesn't return JSON :facepalm:
-        transformResponse: (res) => res
-      })
-      .then((result) => {
-        switch (result.status) {
-          case HttpStatusCode.Created:
-            return JSON.parse(result.data) as AuditLogApiRecordOutput
-          default:
-            return Error(`Error ${result.status}: ${result.data}`)
-        }
-      })
-      .catch((error: AxiosError) => {
-        const apiError = error.response?.data ? this.stringify(error.response?.data) : error.message
-        if (/A message with Id [^ ]* already exists in the database/.test(apiError)) {
-          return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
+    const url = this.baseUrl
+
+    return fetch(url, {
+      body: this.stringify(auditLog),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        "Content-Type": "application/json",
+        ...this.apiKeyHeader
+      },
+      method: "POST",
+      signal: this.requestSignal
+    })
+      .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
+        if (response.status === HttpStatusCode.created) {
+          return response.json()
         }
 
-        return new ApplicationError(`Error creating audit log: ${apiError}`, error)
+        return response.text().then((text) => {
+          if (/A message with Id [^ ]* already exists in the database/.test(text)) {
+            return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
+          }
+
+          return new ApplicationError(`Error creating audit log: ${text}`, new Error(text))
+        })
       })
+      .catch((error: unknown) =>
+        handleApiError(error, `creating audit log for message with Id ${auditLog.messageId}`, "creating audit log")
+      )
   }
 
   createEvents(correlationId: string, event: AuditLogEvent | AuditLogEvent[]): PromiseResult<void> {
-    return axios
-      .post(`${this.baseUrl}/${correlationId}/events`, event, {
-        headers: {
-          ...this.apiKeyHeader
-        },
-        httpsAgent,
-        timeout: this.timeout,
-        // The Audit Log API doesn't return JSON :facepalm:
-        transformResponse: (res) => res
-      })
-      .then((result) => {
-        switch (result.status) {
-          case HttpStatusCode.Created:
-            return undefined
-          case HttpStatusCode.GatewayTimeout:
-            return Error(`Timed out creating event for message with Id ${correlationId}.`)
-          case HttpStatusCode.NotFound:
-            return Error(`The message with Id ${correlationId} does not exist.`)
-          default:
-            return Error(`Error ${result.status}: Could not create audit log event.`)
+    const url = `${this.baseUrl}/${correlationId}/events`
+
+    return fetch(url, {
+      body: JSON.stringify(event),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        ...this.apiKeyHeader,
+        "Content-Type": "application/json"
+      },
+      method: "POST",
+      signal: this.requestSignal
+    })
+      .then((response) => {
+        if (response.status === HttpStatusCode.created) {
+          return
         }
-      })
-      .catch((error: AxiosError) => {
-        switch (error.code) {
-          case "ECONNABORTED":
-            return Error(`Timed out creating event for message with Id ${correlationId}.`)
-          default:
-            return new ApplicationError(
-              `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
-              error
-            )
+
+        if (response.status === HttpStatusCode.gatewayTimeout) {
+          return new Error(`Timed out creating event for message with Id ${correlationId}.`)
         }
+
+        if (response.status === HttpStatusCode.notFound) {
+          return new Error(`The message with Id ${correlationId} does not exist.`)
+        }
+
+        return response.text().then((text) => {
+          return new ApplicationError(`Error ${response.status}: Could not create audit log event.`, new Error(text))
+        })
       })
+      .catch((error: unknown) =>
+        handleApiError(error, `creating event for message with Id ${correlationId}`, "creating event")
+      )
   }
 
   createUserEvent(userName: string, event: AuditLogEvent): PromiseResult<void> {
-    return axios
-      .post(`${this.apiUrl}/users/${userName}/events`, event, {
-        headers: {
-          ...this.apiKeyHeader
-        },
-        httpsAgent,
-        timeout: this.timeout
-      })
-      .then((result) => {
-        switch (result.status) {
-          case HttpStatusCode.Created:
-            return undefined
-          case HttpStatusCode.GatewayTimeout:
-            return Error(`Timed out creating event for user '${userName}'.`)
-          default:
-            return Error(`Error ${result.status}: Could not create audit log event.`)
+    const url = `${this.apiUrl}/users/${userName}/events`
+
+    return fetch(url, {
+      body: JSON.stringify(event),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        "Content-Type": "application/json",
+        ...this.apiKeyHeader
+      },
+      method: "POST",
+      signal: this.requestSignal
+    })
+      .then((response): Promise<Result<void>> | Result<void> => {
+        if (response.status === HttpStatusCode.created) {
+          return
         }
-      })
-      .catch((error: AxiosError) => {
-        switch (error.code) {
-          case "ECONNABORTED":
-            return Error(`Timed out creating event for user '${userName}'.`)
-          default:
-            return new ApplicationError(
-              `Error creating event: ${this.stringify(error.response?.data) ?? error.message}`,
-              error
-            )
+
+        if (response.status === HttpStatusCode.gatewayTimeout) {
+          return new Error(`Timed out creating event for user '${userName}'.`)
         }
+
+        return response.text().then(() => {
+          return new Error(`Error ${response.status}: Could not create audit log event.`)
+        })
       })
+      .catch(
+        (error: unknown): Result<void> =>
+          handleApiError(error, `creating event for user '${userName}'`, "creating event")
+      )
   }
 
   fetchUnsanitised(options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
@@ -153,19 +174,28 @@ export default class AuditLogApiClient {
       unsanitised: true
     })
 
-    return axios
-      .get(url, {
-        headers: { ...this.apiKeyHeader },
-        httpsAgent,
-        timeout: this.timeout
+    return fetch(url, {
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        ...this.apiKeyHeader
+      },
+      method: "GET",
+      signal: this.requestSignal
+    })
+      .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
+        if (response.ok) {
+          return response.json()
+        }
+
+        return response.text().then((text) => {
+          return new ApplicationError(`Error getting unsanitised messages: ${text}`, new Error(text))
+        })
       })
-      .then((response) => response.data)
-      .catch((error: AxiosError) => {
-        return new ApplicationError(
-          `Error getting unsanitised messages: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
-      })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
+          handleApiError(error, "getting unsanitised messages", "getting unsanitised messages")
+      )
   }
 
   getAuditLog(correlationId: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
@@ -183,46 +213,68 @@ export default class AuditLogApiClient {
       queryString = `?${queryParams.join("&")}`
     }
 
-    return axios
-      .get(`${this.baseUrl}/${correlationId}${queryString}`, {
-        headers: { ...this.apiKeyHeader },
-        httpsAgent,
-        timeout: this.timeout
-      })
-      .then((response) => response.data)
-      .then((result) => (this.isB7Api() ? result : result[0]))
-      .catch((error: AxiosError) => {
-        if (error.response?.status === HttpStatusCode.NotFound) {
-          return undefined
+    const url = `${this.baseUrl}/${correlationId}${queryString}`
+
+    return fetch(url, {
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        ...this.apiKeyHeader
+      },
+      method: "GET",
+      signal: this.requestSignal
+    })
+      .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
+        if (response.ok) {
+          return response.json().then((result) => {
+            const data = this.isB7Api() ? result : result[0]
+            return data as AuditLogApiRecordOutput
+          })
         }
 
-        return new ApplicationError(
-          `Error getting messages: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
+        if (response.status === HttpStatusCode.notFound) {
+          return undefined as unknown as AuditLogApiRecordOutput
+        }
+
+        return response.text().then((text) => {
+          return new ApplicationError(`Error getting messages: ${text}`, new Error(text))
+        })
       })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput> =>
+          handleApiError(error, `getting messages for correlation Id ${correlationId}`, "getting messages")
+      )
   }
 
   getAuditLogs(options?: GetAuditLogsOptions): PromiseResult<AuditLogApiRecordOutput[]> {
     const url = addQueryParams(this.baseUrl, options)
 
-    return axios
-      .get(url, {
-        headers: { ...this.apiKeyHeader },
-        httpsAgent,
-        timeout: this.timeout
-      })
-      .then((response) => response.data)
-      .catch((error: AxiosError) => {
-        if (error.response?.status === HttpStatusCode.NotFound) {
+    return fetch(url, {
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        ...this.apiKeyHeader
+      },
+      method: "GET",
+      signal: this.requestSignal
+    })
+      .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
+        if (response.ok) {
+          return response.json()
+        }
+
+        if (response.status === HttpStatusCode.notFound) {
           return []
         }
 
-        return new ApplicationError(
-          `Error getting messages: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
+        return response.text().then((text) => {
+          return new ApplicationError(`Error getting messages: ${text}`, new Error(text))
+        })
       })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
+          handleApiError(error, "getting messages", "getting messages")
+      )
   }
 
   getAuditLogsByHash(messageHash: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
@@ -238,86 +290,99 @@ export default class AuditLogApiClient {
 
     const queryString = `?${queryParams.join("&")}`
 
-    return axios
-      .get(`${this.baseUrl}${queryString}`, {
-        headers: { ...this.apiKeyHeader },
-        httpsAgent,
-        timeout: this.timeout
-      })
-      .then((response) => response.data)
-      .catch((error: AxiosError) => {
-        if (error.response?.status === HttpStatusCode.NotFound) {
-          return undefined
+    const url = `${this.baseUrl}?${queryString}`
+
+    return fetch(url, {
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        ...this.apiKeyHeader
+      },
+      method: "GET",
+      signal: this.requestSignal
+    })
+      .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
+        if (response.ok) {
+          return response.json()
         }
 
-        return new ApplicationError(
-          `Error getting message by hash: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
+        if (response.status === HttpStatusCode.notFound) {
+          return undefined as unknown as AuditLogApiRecordOutput[]
+        }
+
+        return response.text().then((text) => {
+          return new ApplicationError(`Error getting message by hash: ${text}`, new Error(text))
+        })
       })
+      .catch(
+        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
+          handleApiError(error, `getting message by hash: ${messageHash}`, "getting message by hash")
+      )
   }
 
   retryEvent(correlationId: string): PromiseResult<void> {
-    return axios
-      .post(
-        `${this.baseUrl}/${correlationId}/retry`,
-        {},
-        {
-          headers: {
-            ...this.apiKeyHeader
-          },
-          httpsAgent,
-          timeout: this.timeout
+    const url = `${this.baseUrl}/${correlationId}/retry`
+
+    return fetch(url, {
+      body: JSON.stringify({}),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        "Content-Type": "application/json",
+        ...this.apiKeyHeader
+      },
+      method: "POST",
+      signal: this.requestSignal
+    })
+      .then((response) => {
+        if (response.status === HttpStatusCode.noContent) {
+          return
         }
+
+        if (response.status === HttpStatusCode.notFound) {
+          return new Error(`The message with Id ${correlationId} does not exist.`)
+        }
+
+        return response.text().then(() => {
+          return new Error(`Error ${response.status}: Could not retry audit log event.`)
+        })
+      })
+      .catch(
+        (error: unknown): Result<void> =>
+          handleApiError(error, `retrying event for message with Id ${correlationId}`, "retrying event")
       )
-      .then((result) => {
-        switch (result.status) {
-          case HttpStatusCode.NoContent:
-            return undefined
-          case HttpStatusCode.NotFound:
-            return Error(`The message with Id ${correlationId} does not exist.`)
-          default:
-            return Error(`Error ${result.status}: Could not retry audit log event.`)
-        }
-      })
-      .catch((error: AxiosError) => {
-        return new ApplicationError(
-          `Error retrying event: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
-      })
   }
 
   sanitiseAuditLog(correlationId: string): PromiseResult<void> {
-    return axios
-      .post(
-        `${this.baseUrl}/${correlationId}/sanitise`,
-        {},
-        {
-          headers: {
-            ...this.apiKeyHeader
-          },
-          httpsAgent,
-          timeout: this.timeout
-        }
-      )
-      .then((result) => {
-        if (result.status === HttpStatusCode.NoContent) {
+    const url = `${this.baseUrl}/${correlationId}/sanitise`
+
+    return fetch(url, {
+      body: JSON.stringify({}),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
+      headers: {
+        "Content-Type": "application/json",
+        ...this.apiKeyHeader
+      },
+      method: "POST",
+      signal: this.requestSignal
+    })
+      .then((response) => {
+        if (response.status === HttpStatusCode.noContent) {
           return
-        } else if (result.status === HttpStatusCode.NotFound) {
-          return Error(`The message with Id ${correlationId} does not exist.`)
-        } else {
-          return new ApplicationError(
-            `Error from audit log api while sanitising: ${this.stringify(result.data)}`,
-            result.data
-          )
         }
+
+        if (response.status === HttpStatusCode.notFound) {
+          return new Error(`The message with Id ${correlationId} does not exist.`)
+        }
+
+        return response.text().then((text) => {
+          return new ApplicationError(`Error from audit log api while sanitising: ${text}`, new Error(text))
+        })
       })
-      .catch((error: AxiosError) => {
-        return new ApplicationError(
-          `Error sanitising message: ${this.stringify(error.response?.data) ?? error.message}`,
-          error
-        )
+      .catch((error: unknown): Result<void> => {
+        const errorInstance = error instanceof Error ? error : new Error(String(error))
+        return new ApplicationError(`Error sanitising message: ${errorInstance.message}`, errorInstance)
       })
   }
 

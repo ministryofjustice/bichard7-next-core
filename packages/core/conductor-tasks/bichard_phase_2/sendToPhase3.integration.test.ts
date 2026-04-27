@@ -2,11 +2,11 @@ import "../../tests/helpers/setEnvironmentVariables"
 
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
 
-import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
+import { dateReviver } from "@moj-bichard7/common/utils/dateTransformer"
 import { randomUUID } from "crypto"
 import fs from "fs"
 
