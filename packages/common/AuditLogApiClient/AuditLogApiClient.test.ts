@@ -246,8 +246,6 @@ describe("createEvents()", () => {
 
     const result = await apiClient.createEvents(message.messageId, event)
 
-    console.log(result)
-
     expect(result).toBeError(expectedErrorMsg)
   })
 })
