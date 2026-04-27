@@ -239,16 +239,20 @@ export default class AuditLogApiClient {
   }
 
   getAuditLog(correlationId: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput> {
-    const queryParams = new URLSearchParams()
+    const queryParams: string[] = []
+    let queryString = ""
     if (options?.includeColumns) {
-      queryParams.append("includeColumns", options.includeColumns.join(","))
+      queryParams.push(`includeColumns=${options.includeColumns.join(",")}`)
     }
 
     if (options?.excludeColumns) {
-      queryParams.append("excludeColumns", options.excludeColumns.join(","))
+      queryParams.push(`includeColumns=${options.excludeColumns.join(",")}`)
     }
 
-    const queryString = queryParams.toString() ? `?${queryParams.toString()}` : ""
+    if (queryParams.length > 0) {
+      queryString = `?${queryParams.join("&")}`
+    }
+
     const url = `${this.baseUrl}/${correlationId}${queryString}`
 
     const controller = new AbortController()
