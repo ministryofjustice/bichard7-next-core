@@ -335,15 +335,14 @@ export default class AuditLogApiClient {
   }
 
   getAuditLogsByHash(messageHash: string, options: GetAuditLogOptions = {}): PromiseResult<AuditLogApiRecordOutput[]> {
-    const queryParams = new URLSearchParams()
-    queryParams.append("messageHash", messageHash)
+    const queryParams: string[] = [`messageHash=${messageHash}`]
 
     if (options?.includeColumns) {
-      queryParams.append("includeColumns", options.includeColumns.join(","))
+      queryParams.push(`includeColumns=${options.includeColumns.join(",")}`)
     }
 
     if (options?.excludeColumns) {
-      queryParams.append("excludeColumns", options.excludeColumns.join(","))
+      queryParams.push(`includeColumns=${options.excludeColumns.join(",")}`)
     }
 
     const url = `${this.baseUrl}?${queryParams.toString()}`
