@@ -11,7 +11,7 @@ export function dateReviver(_: string, value: unknown): Date | typeof value {
   return value
 }
 
-export function dateTransformer<T>(data: string) {
+function axiosDateTransformer<T>(data: string): T {
   if (data === "") {
     return {} as T
   } else {
@@ -20,7 +20,7 @@ export function dateTransformer<T>(data: string) {
 }
 
 function isValidDate(date: unknown): boolean {
-  return date != null && Object.prototype.toString.call(date) === "[object Date]" && !Number.isNaN(date as number)
+  return date != null && Object.prototype.toString.call(date) === "[object Date]" && !isNaN(date as number)
 }
 
-export default dateTransformer
+export default axiosDateTransformer
