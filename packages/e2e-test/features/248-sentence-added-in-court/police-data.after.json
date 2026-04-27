@@ -1,0 +1,194 @@
+{
+  "disposals": [
+    {
+      "id": "8d9c5290-1a99-4388-ba6a-947e39e61df5",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000527X",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "79e1cf67-8c46-43bb-a5d5-c9d7e6f9f4b3",
+          "arrestSummonsId": "91e4fdb7-2327-4fef-b01e-63260823a679",
+          "adjudication": "G",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "6fccf5ff-c54d-4865-b53b-82bf56f538ed",
+              "disposalCode": "4047",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2011-10-26"
+            }
+          ],
+          "offence": {
+            "version": "1RECVs0XxT1hCmzPvkg0E5Q7Zg6AZqw/IeBvJXkXspfTIDBnkmi0zYFvoPbjiOD9XjgO8eilHm65aJBnYSy/BQ==",
+            "arrestSummonsReference": "26/0000/00/00000001141M",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000527X",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "79e1cf67-8c46-43bb-a5d5-c9d7e6f9f4b3"
+          }
+        },
+        {
+          "offenceId": "b271a72c-f261-4674-bb0f-894d2815259c",
+          "arrestSummonsId": "91e4fdb7-2327-4fef-b01e-63260823a679",
+          "adjudication": "G",
+          "npccOffenceCode": "5.7.11.10",
+          "cjsOffenceCode": "TH68151",
+          "qualifiedCjsCode": "TH68151",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 2,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "9b43a1b5-ae8f-4151-ac6f-012e3a65eed6",
+              "disposalCode": "4047",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2011-10-26"
+            }
+          ],
+          "offence": {
+            "version": "s+lWDx6q/QX5dLk73zwtuwQ/rOVJOoMNW5WcP2f+wqGqDUGVlYuxHSt7CdCLWgx0atkoNVUOEc4teLKqLJLEBg==",
+            "arrestSummonsReference": "26/0000/00/00000001141M",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000527X",
+            "courtCaseChargeNumber": 2,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.7.11.10",
+            "cjsOffenceCode": "TH68151",
+            "qualifiedCjsCode": "TH68151",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "b271a72c-f261-4674-bb0f-894d2815259c"
+          }
+        }
+      ],
+      "subsequentAppearances": [
+        {
+          "appearanceNumber": 1,
+          "court": {
+            "courtIdentityType": "code",
+            "courtCode": "2576"
+          },
+          "sentenceDate": "2011-10-26",
+          "reasonForVariation": "S",
+          "charges": [
+            {
+              "offenceId": "79e1cf67-8c46-43bb-a5d5-c9d7e6f9f4b3",
+              "arrestSummonsId": "91e4fdb7-2327-4fef-b01e-63260823a679",
+              "adjudication": "G",
+              "npccOffenceCode": "5.5.5.1",
+              "cjsOffenceCode": "TH68006",
+              "qualifiedCjsCode": "TH68006",
+              "offenceDescription": [],
+              "offenceRoleQualifiers": [],
+              "offenceLegislationQualifiers": [],
+              "offenceChargeNumber": 1,
+              "additionalMarker": false,
+              "disposals": [
+                {
+                  "id": "f8920dc4-056f-4070-9caa-feb6d5acf2a2",
+                  "disposalCode": "1015",
+                  "disposalQualifierCodes": [],
+                  "fineAmount": 100
+                }
+              ]
+            },
+            {
+              "offenceId": "b271a72c-f261-4674-bb0f-894d2815259c",
+              "arrestSummonsId": "91e4fdb7-2327-4fef-b01e-63260823a679",
+              "adjudication": "G",
+              "npccOffenceCode": "5.7.11.10",
+              "cjsOffenceCode": "TH68151",
+              "qualifiedCjsCode": "TH68151",
+              "offenceDescription": [],
+              "offenceRoleQualifiers": [],
+              "offenceLegislationQualifiers": [],
+              "offenceChargeNumber": 2,
+              "additionalMarker": false,
+              "disposals": [
+                {
+                  "id": "66c8c978-a1f5-449e-af04-0ef047a524ee",
+                  "disposalCode": "1015",
+                  "disposalQualifierCodes": [],
+                  "fineAmount": 200
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "ownerCode": "01YZ",
+      "remandDate": "2011-09-26",
+      "currentAppearance": {
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "nextAppearance": {
+        "date": "2011-10-26",
+        "court": {
+          "courtIdentityType": "code",
+          "courtCode": "2576"
+        }
+      },
+      "remandConditions": []
+    }
+  ]
+}

@@ -6,7 +6,7 @@ Feature: 403 - Fixing exceptions and resubmitting
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	@NextUI
 	Scenario: Handling messages with session duration

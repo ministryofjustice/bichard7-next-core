@@ -27,7 +27,7 @@ Feature: {190} R4.0_BR7_CC_TR_Offence Code Qualifiers
 	@ExcludedOnConductor
 	@NextUI
 	Scenario: Correcting invalid ASN codes
-		Given "input-message-1" is received
+		Given "input-message-1" is received with an invalid ASN
 			And I am logged in as "generalhandler"
 			And I view the list of exceptions
 		Then I see exception "HO100206" in the exception list table
@@ -38,7 +38,7 @@ Feature: {190} R4.0_BR7_CC_TR_Offence Code Qualifiers
 			And I submit the record
 			And I return to the list
 		Then I see exception "HO100304" in the exception list table
-		When "input-message-2" is received
+		When "input-message-2" is received with an invalid ASN
 		Then I see exception "HO100206" in the exception list table
 			And there are no triggers raised for "fuller Sam"
 		When I open the record for "fuller Sam"

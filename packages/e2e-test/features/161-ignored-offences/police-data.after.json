@@ -1,0 +1,70 @@
+{
+  "disposals": [
+    {
+      "id": "e17be4f5-ee0a-415b-9874-4be8def46b6a",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000856E",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "61e4c485-2ac0-475b-b153-a889cfe3056a",
+          "arrestSummonsId": "6166bbf8-8eb4-4a9c-9c38-328c26ff15c7",
+          "adjudication": "G",
+          "cjsOffenceCode": "RR84042",
+          "qualifiedCjsCode": "RR84042",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "2066f6b0-4974-4cb7-9ec8-99618baf155f",
+              "disposalCode": "1002",
+              "disposalQualifierCodes": [],
+              "disposalDuration": {
+                "units": "months",
+                "count": 12
+              }
+            }
+          ],
+          "offence": {
+            "version": "8j0HVahIANQByaz9zQM3cKSfPI99IPkEJOQYbdXOqHza2tq0wAFF9lxiBIoQNLpCLZxWZ89Tr4y8P9r9vzMGJg==",
+            "arrestSummonsReference": "26/0000/00/00000001602M",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000856E",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "cjsOffenceCode": "RR84042",
+            "qualifiedCjsCode": "RR84042",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "61e4c485-2ac0-475b-b153-a889cfe3056a"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

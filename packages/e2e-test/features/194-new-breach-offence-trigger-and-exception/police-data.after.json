@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "3b01a744-84dd-4ed4-9df2-2138b8d7d851",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000383Q",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "80b78cd2-9501-4139-b983-fa11f42510cd",
+          "arrestSummonsId": "3a09fb7c-ff0a-4dc5-bd0c-1924d80eed85",
+          "npccOffenceCode": "8.7.69.3",
+          "cjsOffenceCode": "CJ03510",
+          "qualifiedCjsCode": "CJ03510",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "M/I9nakP7ie+xfV66d32+tfNPUafR1t4K4/ph5RJhFT1KxHTWvyhCUwmmm6gXHJehpe6ZWk9Ahe0ujVTnYZZbg==",
+            "arrestSummonsReference": "26/0000/00/00000000755T",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000383Q",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01VK",
+            "forceStationChargeOrig": "01VK",
+            "crimeReference": "",
+            "locationFSCode": "01VK",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "8.7.69.3",
+            "cjsOffenceCode": "CJ03510",
+            "qualifiedCjsCode": "CJ03510",
+            "startDate": "2011-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "80b78cd2-9501-4139-b983-fa11f42510cd"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

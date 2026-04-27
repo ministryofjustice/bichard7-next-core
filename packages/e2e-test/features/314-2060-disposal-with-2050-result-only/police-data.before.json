@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "5e730bc0-7e14-47c9-b5f6-6f2c89b1ca3c",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000470K",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "d7998ede-b55d-4c77-9d2f-16fcc21f1dcd",
+          "arrestSummonsId": "63ae15e5-2d9c-491c-8839-1d0567113ae7",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "2z1fBSrrVhfBZJGdiLIMbNBbtRUayD+qTn8biHovNOJoWSDCybs5YN5KRDcUmBXcxdaGlrJMxwaUTno3186xmQ==",
+            "arrestSummonsReference": "26/0000/00/00000000844P",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000470K",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "d7998ede-b55d-4c77-9d2f-16fcc21f1dcd"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

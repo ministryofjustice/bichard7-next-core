@@ -1,0 +1,122 @@
+{
+  "disposals": [
+    {
+      "id": "c04119d0-cf49-4b5b-995e-4d7afa888705",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000358N",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "edae63a8-d271-4646-a2ae-5b524ccad930",
+          "arrestSummonsId": "0ee57715-781d-4b63-805b-c2c91be6e1cc",
+          "adjudication": "G",
+          "npccOffenceCode": "5.7.11.10",
+          "cjsOffenceCode": "TH68151",
+          "qualifiedCjsCode": "TH68151",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": true,
+          "disposals": [
+            {
+              "id": "93f0ca69-a329-47d8-96ca-ab956880d39d",
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 100
+            }
+          ],
+          "offence": {
+            "version": "G18EnVUjBf8Nqp2MgZdnV+tOwv/Ixvw2fijHVKOTiLqUiSIPOEYoqlcgHHJcHvlu54GmGvdkwyNWmw6iDmwNkQ==",
+            "arrestSummonsReference": "26/0000/00/00000000715Z",
+            "arrestChargeNumber": 3,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000358N",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01YZ",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": true,
+            "npccOffenceCode": "5.7.11.10",
+            "cjsOffenceCode": "TH68151",
+            "qualifiedCjsCode": "TH68151",
+            "startDate": "2010-11-17",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "edae63a8-d271-4646-a2ae-5b524ccad930"
+          }
+        },
+        {
+          "offenceId": "e6610bd8-68e2-406c-a9d7-d08cf856cd2a",
+          "arrestSummonsId": "0ee57715-781d-4b63-805b-c2c91be6e1cc",
+          "adjudication": "G",
+          "npccOffenceCode": "1.12.1.1",
+          "cjsOffenceCode": "HI71001",
+          "qualifiedCjsCode": "HI71001",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 2,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "88c87a7a-7187-4e59-8f7a-b5170300d92b",
+              "disposalCode": "1002",
+              "disposalQualifierCodes": [],
+              "disposalDuration": {
+                "units": "months",
+                "count": 12
+              }
+            }
+          ],
+          "offence": {
+            "version": "DdIe8/vYhLwB8eeUjnGjqMBsOW51E4ak1dVFWuGJLTwEjV9SPTPOfZ0bHDx7dBCoGLq6RZr56dED8OY1cyXx6g==",
+            "arrestSummonsReference": "26/0000/00/00000000715Z",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000358N",
+            "courtCaseChargeNumber": 2,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "1.12.1.1",
+            "cjsOffenceCode": "HI71001",
+            "qualifiedCjsCode": "HI71001",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "e6610bd8-68e2-406c-a9d7-d08cf856cd2a"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

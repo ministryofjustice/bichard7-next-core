@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "db30811c-9a0a-42a9-95c0-5003de6d7f83",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000506Z",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "bfb043a6-cc56-419d-9d4f-307ed94a7877",
+          "arrestSummonsId": "c3a7f50c-a5c6-4739-9359-b21c3cef4ddc",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "gaM4+5FODGokzX62omQrP3XWTQhZD+QnWQBd9yuI/IIufeEjeN8+ysN0+93ah1wwj5X3D2fanYt78ZpDjawxzQ==",
+            "arrestSummonsReference": "26/0000/00/00000000943X",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000506Z",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "bfb043a6-cc56-419d-9d4f-307ed94a7877"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

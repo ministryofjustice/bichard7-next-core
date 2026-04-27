@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NewCaseMessage xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Flow="NewCasesFromThePolice"
+	Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g"
+	xmlns="http://www.dca.gov.uk/xmlschemas/libra">
+	<Case>
+		<PTIURN>01VK0300208</PTIURN>
+		<InitialHearing>
+			<CourtHearingLocation>B01EF01</CourtHearingLocation>
+			<DateOfHearing>2009-10-10</DateOfHearing>
+			<TimeOfHearing>10:00:00</TimeOfHearing>
+		</InitialHearing>
+		<Defendant>
+			<ProsecutorReference>1200000000000000010X</ProsecutorReference>
+			<PoliceIndividualDefendant>
+				<PersonDefendant>
+					<BasePersonDetails>
+						<PersonName>
+							<PersonTitle>Mr</PersonTitle>
+							<PersonGivenName1>Martin</PersonGivenName1>
+							<PersonFamilyName>Wellington</PersonFamilyName>
+						</PersonName>
+						<Birthdate>1948-11-11</Birthdate>
+						<Gender>1</Gender>
+					</BasePersonDetails>
+				</PersonDefendant>
+				<BailStatus>U</BailStatus>
+				<Address>
+					<SimpleAddress>
+						<AddressLine1>ScenarioAE Address Line 1</AddressLine1>
+						<AddressLine2>ScenarioAE Address Line 2</AddressLine2>
+						<AddressLine3>ScenarioAE Address Line 3</AddressLine3>
+					</SimpleAddress>
+				</Address>
+				<PresentAtHearing>A</PresentAtHearing>
+			</PoliceIndividualDefendant>
+			<Offence>
+				<DisposalGroup>1</DisposalGroup>
+				<BaseOffenceDetails>
+					<OffenceSequenceNumber>001</OffenceSequenceNumber>
+					<OffenceCode>OF61016</OffenceCode>
+					<OffenceWording>Murder of person aged one year of over abroad</OffenceWording>
+					<OffenceTiming>
+						<OffenceDateCode>1</OffenceDateCode>
+						<OffenceStart>
+							<OffenceDateStartDate>2009-06-01</OffenceDateStartDate>
+						</OffenceStart>
+					</OffenceTiming>
+					<ChargeDate>2008-09-25</ChargeDate>
+					<ArrestDate>2008-09-25</ArrestDate>
+					<LocationOfOffence>1 Kingston High Street</LocationOfOffence>
+				</BaseOffenceDetails>
+				<InitiatedDate>2008-09-25</InitiatedDate>
+				<Plea>2</Plea>
+				<ModeOfTrial>01</ModeOfTrial>
+				<FinalDisposalIndicator>Y</FinalDisposalIndicator>
+				<ConvictionDate>2009-10-10</ConvictionDate>
+				<Finding>G</Finding>
+			</Offence>
+			<Offence>
+				<DisposalGroup>1</DisposalGroup>
+				<BaseOffenceDetails>
+					<OffenceSequenceNumber>002</OffenceSequenceNumber>
+					<OffenceCode>PC53001</OffenceCode>
+					<OffenceWording>Possess an offensive weapon</OffenceWording>
+					<OffenceTiming>
+						<OffenceDateCode>1</OffenceDateCode>
+						<OffenceStart>
+							<OffenceDateStartDate>2009-06-01</OffenceDateStartDate>
+						</OffenceStart>
+					</OffenceTiming>
+					<ChargeDate>2008-09-25</ChargeDate>
+					<ArrestDate>2008-09-25</ArrestDate>
+					<LocationOfOffence>1 Kingston High Street</LocationOfOffence>
+				</BaseOffenceDetails>
+				<InitiatedDate>2008-09-25</InitiatedDate>
+				<Plea>2</Plea>
+				<ModeOfTrial>01</ModeOfTrial>
+				<FinalDisposalIndicator>Y</FinalDisposalIndicator>
+				<ConvictionDate>2009-10-10</ConvictionDate>
+				<Finding>G</Finding>
+			</Offence>
+			<Offence>
+				<DisposalGroup>2</DisposalGroup>
+				<BaseOffenceDetails>
+					<OffenceSequenceNumber>001</OffenceSequenceNumber>
+					<OffenceCode>TH68001</OffenceCode>
+					<OffenceWording>Theft from the person of another</OffenceWording>
+					<OffenceTiming>
+						<OffenceDateCode>1</OffenceDateCode>
+						<OffenceStart>
+							<OffenceDateStartDate>2009-06-01</OffenceDateStartDate>
+						</OffenceStart>
+					</OffenceTiming>
+					<ChargeDate>2008-09-25</ChargeDate>
+					<ArrestDate>2008-09-25</ArrestDate>
+					<LocationOfOffence>1 Kingston High Street</LocationOfOffence>
+				</BaseOffenceDetails>
+				<InitiatedDate>2008-09-25</InitiatedDate>
+				<Plea>2</Plea>
+				<ModeOfTrial>01</ModeOfTrial>
+				<FinalDisposalIndicator>N</FinalDisposalIndicator>
+			</Offence>
+		</Defendant>
+	</Case>
+</NewCaseMessage>

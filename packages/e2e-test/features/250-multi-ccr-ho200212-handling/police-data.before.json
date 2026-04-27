@@ -1,0 +1,111 @@
+{
+  "disposals": [
+    {
+      "id": "9b8d4b39-ee93-4d10-b444-94be82316644",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000642X",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "326b405c-2db7-41dd-9fa2-6f411451ec47",
+          "arrestSummonsId": "2315b278-65ab-4d54-9f2d-1c5ad4f221e0",
+          "npccOffenceCode": "5.5.8.1",
+          "cjsOffenceCode": "TH68010",
+          "qualifiedCjsCode": "TH68010",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "wMyNk/iK6E/Ynq3+3GR1aKhCLVcFIabxkp4U3Os3c0olsBh6qsqpjII714vEoGRvGUMm0et9yeuY6u8SkTeK/A==",
+            "arrestSummonsReference": "26/0000/00/00000001279M",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000642X",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.8.1",
+            "cjsOffenceCode": "TH68010",
+            "qualifiedCjsCode": "TH68010",
+            "startDate": "2010-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "326b405c-2db7-41dd-9fa2-6f411451ec47"
+          }
+        }
+      ]
+    },
+    {
+      "id": "4cadc81b-0716-4eac-8204-174d137e8024",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000643Y",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "5e62d990-0e7d-49ff-956f-b629b84be0da",
+          "arrestSummonsId": "2315b278-65ab-4d54-9f2d-1c5ad4f221e0",
+          "npccOffenceCode": "5.5.9.1",
+          "cjsOffenceCode": "TH68012",
+          "qualifiedCjsCode": "TH68012",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "MDfvP3LnKetuWXWVWCtnZG8pQV2PSYk1U7tCO9n+qdIJ6YF8Kz90+Z67TRBVGXg3J0wt1eppFKAvwVHubU4iIQ==",
+            "arrestSummonsReference": "26/0000/00/00000001279M",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000643Y",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.9.1",
+            "cjsOffenceCode": "TH68012",
+            "qualifiedCjsCode": "TH68012",
+            "startDate": "2010-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "5e62d990-0e7d-49ff-956f-b629b84be0da"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

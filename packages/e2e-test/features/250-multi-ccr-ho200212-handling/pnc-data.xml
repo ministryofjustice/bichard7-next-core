@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NewCaseMessage xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Flow="NewCasesFromThePolice"
+	Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g"
+	xmlns="http://www.dca.gov.uk/xmlschemas/libra">
+	<Case>
+		<PTIURN>01ZD1600008</PTIURN>
+		<InitialHearing>
+			<CourtHearingLocation>B01EF01</CourtHearingLocation>
+			<DateOfHearing>2011-10-26</DateOfHearing>
+			<TimeOfHearing>10:00:00</TimeOfHearing>
+		</InitialHearing>
+		<Defendant>
+			<ProsecutorReference>1300000000000000001L</ProsecutorReference>
+			<PoliceIndividualDefendant>
+				<PersonDefendant>
+					<BasePersonDetails>
+						<PersonName>
+							<PersonTitle>Mr</PersonTitle>
+							<PersonGivenName1>AddedOffence</PersonGivenName1>
+							<PersonFamilyName>NOEXCEPTION</PersonFamilyName>
+						</PersonName>
+						<Birthdate>1968-08-15</Birthdate>
+						<Gender>1</Gender>
+					</BasePersonDetails>
+				</PersonDefendant>
+				<BailStatus>U</BailStatus>
+				<Address>
+					<SimpleAddress>
+						<AddressLine1>ScenarioU Address Line 1</AddressLine1>
+						<AddressLine2>ScenarioU Address Line 2</AddressLine2>
+						<AddressLine3>ScenarioU Address Line 3</AddressLine3>
+					</SimpleAddress>
+				</Address>
+				<PresentAtHearing>N</PresentAtHearing>
+			</PoliceIndividualDefendant>
+			<Offence>
+				<BaseOffenceDetails>
+					<DisposalGroup>1</DisposalGroup>
+					<OffenceSequenceNumber>001</OffenceSequenceNumber>
+					<OffenceCode>TH68010</OffenceCode>
+					<OffenceWording>Theft from shop</OffenceWording>
+					<OffenceTiming>
+						<OffenceDateCode>1</OffenceDateCode>
+						<OffenceStart>
+							<OffenceDateStartDate>2010-10-01</OffenceDateStartDate>
+						</OffenceStart>
+					</OffenceTiming>
+					<ChargeDate>2010-10-01</ChargeDate>
+					<ArrestDate>2010-10-01</ArrestDate>
+					<LocationOfOffence>Kingston High Street</LocationOfOffence>
+				</BaseOffenceDetails>
+				<InitiatedDate>2009-10-01</InitiatedDate>
+				<Plea>2</Plea>
+				<ModeOfTrial>01</ModeOfTrial>
+				<FinalDisposalIndicator>Y</FinalDisposalIndicator>
+				<ConvictionDate>2011-10-26</ConvictionDate>
+				<Finding>G</Finding>
+			</Offence>
+			<Offence>
+				<DisposalGroup>2</DisposalGroup>
+				<BaseOffenceDetails>
+					<OffenceSequenceNumber>002</OffenceSequenceNumber>
+					<OffenceCode>TH68012</OffenceCode>
+					<OffenceWording>Theft from a meter / automatic machine</OffenceWording>
+					<OffenceTiming>
+						<OffenceDateCode>1</OffenceDateCode>
+						<OffenceStart>
+							<OffenceDateStartDate>2010-10-01</OffenceDateStartDate>
+						</OffenceStart>
+					</OffenceTiming>
+					<ChargeDate>2010-10-01</ChargeDate>
+					<ArrestDate>2010-10-01</ArrestDate>
+					<LocationOfOffence>Kingston High Street</LocationOfOffence>
+				</BaseOffenceDetails>
+				<InitiatedDate>2009-10-01</InitiatedDate>
+				<Plea>2</Plea>
+				<ModeOfTrial>01</ModeOfTrial>
+				<FinalDisposalIndicator>Y</FinalDisposalIndicator>
+				<ConvictionDate>2011-10-26</ConvictionDate>
+				<Finding>G</Finding>
+			</Offence>
+		</Defendant>
+	</Case>
+</NewCaseMessage>

@@ -5,8 +5,7 @@ Feature: 406 - 100+ Offences and Triggers
 			"""
 
 	Background:
-		Given the data for this test is in the PNC
-			And "input-message" is received
+		Given "input-message" is received
 
 	@Could
 	@ExcludedOnConductor
@@ -15,7 +14,7 @@ Feature: 406 - 100+ Offences and Triggers
 			And I view the list of exceptions
 		Then I see trigger "PR01 - Disqualified driver" in the exception list table
 			And I see trigger "PR04 - Sex offender" in the exception list table
-    	And I see exception "HO100331" in the exception list table
+			And I see exception "HO100331" in the exception list table
 		When I open the record for "Atwood Marcus"
 			And I click the "Triggers" tab
 		Then I see trigger "TRPR0001" for offence "1"
@@ -125,6 +124,7 @@ Feature: 406 - 100+ Offences and Triggers
 			And no PNC requests have been made
 			And no PNC updates have been made
 		When I manually resolve the record
-		Then the "record" for "Atwood Marcus" is "resolved"
+		Then I return to the list
+			And the "record" for "Atwood Marcus" is "resolved"
 			And no PNC requests have been made
 			And no PNC updates have been made

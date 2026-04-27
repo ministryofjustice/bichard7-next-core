@@ -1,0 +1,152 @@
+{
+  "disposals": [
+    {
+      "id": "a8eef575-ae7f-408c-9d74-11ba8a24ddca",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000513G",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "offenceId": "e3375ab1-6a39-479b-b8c4-d30dad102506",
+          "arrestSummonsId": "2d6525fb-e0aa-42a9-93c8-5034378c3dbe",
+          "adjudication": "G",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "5da5d788-7882-4130-a097-72d97446b14d",
+              "disposalCode": "1100",
+              "disposalQualifierCodes": [
+                "BA"
+              ],
+              "disposalText": "EXCLUDED FROM ALL LICENSED PREMISES WITHIN DIDLY DISTRICT COUNC+",
+              "disposalDuration": {
+                "units": "weeks",
+                "count": 6
+              }
+            },
+            {
+              "id": "136b2668-ff9c-41e9-8ea8-6901ebfefd80",
+              "disposalCode": "3041",
+              "disposalQualifierCodes": [],
+              "disposalText": "EXCLUDED FROM SEAWORLD PUBLIC HOUSE, SEAWORLD, PICKERING, NORTH+",
+              "disposalDuration": {
+                "units": "months",
+                "count": 12
+              }
+            }
+          ],
+          "offence": {
+            "version": "INBSsRuUXSUI1D+HE5xuOf3Pk+IiOv4wF1gC+VpsgAPnGVAL9NnKoBQJYRy1cnos0dQ0cA6tm5i6+psDZVzNbg==",
+            "arrestSummonsReference": "26/0000/00/00000001064D",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000513G",
+            "courtCaseChargeNumber": 1,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "e3375ab1-6a39-479b-b8c4-d30dad102506"
+          }
+        },
+        {
+          "offenceId": "0d38bc89-43ca-4c75-a254-952a86b8996e",
+          "arrestSummonsId": "2d6525fb-e0aa-42a9-93c8-5034378c3dbe",
+          "adjudication": "G",
+          "npccOffenceCode": "5.5.5.1",
+          "cjsOffenceCode": "TH68006",
+          "qualifiedCjsCode": "TH68006",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 2,
+          "additionalMarker": false,
+          "disposals": [
+            {
+              "id": "335416ee-a7c3-46cb-9502-2290bbbf3768",
+              "disposalCode": "1100",
+              "disposalQualifierCodes": [
+                "BA"
+              ],
+              "disposalText": "EXCLUDED FROM ALL LICENSED PREMISES WITHIN IDLY DISTRICT COUNCI+",
+              "disposalDuration": {
+                "units": "weeks",
+                "count": 6
+              }
+            },
+            {
+              "id": "7210b493-1fc6-4add-a05a-67069d801b4a",
+              "disposalCode": "3041",
+              "disposalQualifierCodes": [],
+              "disposalText": "EXCLUDED FROM LANDWORLD PUBLIC HOUSE, LANDWORLD, PICKERING, NOR+",
+              "disposalDuration": {
+                "units": "months",
+                "count": 12
+              }
+            }
+          ],
+          "offence": {
+            "version": "v9KKpPv/h1UiC6l8tmymU3IHWXHvt/P3LvjyBSDvxU8PT9RkHR0iDFcC1/H154do8Q5Z5IhNi7vNdUqGQaqCRA==",
+            "arrestSummonsReference": "26/0000/00/00000001064D",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "C",
+            "committedOnBail": false,
+            "plea": "2",
+            "courtCaseReferenceNumber": "26/9998/000513G",
+            "courtCaseChargeNumber": 2,
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "offencesTakenIntoConsideration": 0,
+            "adjudication": "G",
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": true,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "5.5.5.1",
+            "cjsOffenceCode": "TH68006",
+            "qualifiedCjsCode": "TH68006",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "0d38bc89-43ca-4c75-a254-952a86b8996e"
+          }
+        }
+      ],
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

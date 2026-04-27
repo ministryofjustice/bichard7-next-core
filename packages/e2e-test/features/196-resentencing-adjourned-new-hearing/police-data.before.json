@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "9c7599d0-ada5-4188-b31b-0dfa826e6790",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-10-26",
+      "courtCaseReference": "26/9998/000385T",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "f10fd75d-f09a-406b-9dc7-be8b077307dc",
+          "arrestSummonsId": "95a74d83-3741-4601-9943-0e290cf08a4a",
+          "npccOffenceCode": "8.7.69.3",
+          "cjsOffenceCode": "CJ03510",
+          "qualifiedCjsCode": "CJ03510",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "W09MUSguqaHXAPZm+hxp+ETDY/v9/Q9u7So9IQ00obpMqEgdUrNl3SQVDSRmTVU95FD1rH/BmXTRzYh3+Yvx0g==",
+            "arrestSummonsReference": "26/0000/00/00000000757V",
+            "arrestChargeNumber": 2,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000385T",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01VK",
+            "forceStationChargeOrig": "01VK",
+            "crimeReference": "",
+            "locationFSCode": "01VK",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "8.7.69.3",
+            "cjsOffenceCode": "CJ03510",
+            "qualifiedCjsCode": "CJ03510",
+            "startDate": "2011-10-01",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "f10fd75d-f09a-406b-9dc7-be8b077307dc"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}

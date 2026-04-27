@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "id": "ef76de9d-136b-4fdb-8ecb-7dbe27f10d92",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "courtCaseReference": "26/9998/000477T",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "offenceId": "6ea6b8a7-7b8c-4869-9627-b03453beadcf",
+          "arrestSummonsId": "064733f8-d876-4d7e-ada9-34bac96602a3",
+          "npccOffenceCode": "1.8.11.1",
+          "cjsOffenceCode": "CJ88001",
+          "qualifiedCjsCode": "CJ88001",
+          "offenceDescription": [],
+          "offenceRoleQualifiers": [],
+          "offenceLegislationQualifiers": [],
+          "offenceChargeNumber": 1,
+          "additionalMarker": false,
+          "disposals": [],
+          "offence": {
+            "version": "JzQvu1pro/LplplJW7V3P5q6B+SgawpdDxFuW1ZHiv5H3PGij173q8cFL3f7EtFmzMcKUW/mfOJqO33+73RhRQ==",
+            "arrestSummonsReference": "26/0000/00/00000000851X",
+            "arrestChargeNumber": 1,
+            "chargeStatusMarker": "A",
+            "committedOnBail": false,
+            "courtCaseReferenceNumber": "26/9998/000477T",
+            "courtCaseChargeNumber": 1,
+            "forceStationInCase": "01ZD",
+            "forceStationChargeOrig": "01ZD",
+            "crimeReference": "",
+            "locationFSCode": "01ZD",
+            "locationAddress": {
+              "locationType": "description",
+              "locationText": "Kingston High Street"
+            },
+            "othersCharged": [],
+            "brcRecord": false,
+            "hasDisposalResults": false,
+            "additionalOffenceMarker": false,
+            "npccOffenceCode": "1.8.11.1",
+            "cjsOffenceCode": "CJ88001",
+            "qualifiedCjsCode": "CJ88001",
+            "startDate": "2010-11-28",
+            "roleQualifier": [],
+            "legislationQualifier": [],
+            "id": "6ea6b8a7-7b8c-4869-9627-b03453beadcf"
+          }
+        }
+      ]
+    }
+  ],
+  "remands": []
+}
