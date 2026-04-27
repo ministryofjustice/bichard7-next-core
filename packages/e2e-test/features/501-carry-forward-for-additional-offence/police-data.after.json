@@ -1,18 +1,18 @@
 {
   "disposals": [
     {
-      "id": "4143943c-bb01-4874-aaf0-56f1493a6783",
+      "id": "eecbab22-280b-4b81-94cb-76ac07f63cad",
       "court": {
         "courtIdentityType": "code",
         "courtCode": "2576"
       },
       "convictionDate": "2011-10-08",
-      "courtCaseReference": "26/2576/000053G",
+      "courtCaseReference": "26/2576/000139C",
       "caseStatusMarker": "A",
       "charges": [
         {
-          "offenceId": "0f90ce7b-dbd1-4bad-a3de-515e12a6b9d0",
-          "arrestSummonsId": "e2dd46bd-9c7b-4dfc-866c-a6f09bef38f2",
+          "offenceId": "c32f0136-0f76-4a5a-91e0-8fefbd78d988",
+          "arrestSummonsId": "d3985779-b7a0-4b07-a494-410d4f27bd2e",
           "npccOffenceCode": "5.7.11.10",
           "cjsOffenceCode": "TH68151",
           "qualifiedCjsCode": "TH68151",
@@ -23,12 +23,12 @@
           "additionalMarker": true,
           "disposals": [],
           "offence": {
-            "version": "UFKglQgqo3Jofj6ebo+/mZo5Ff+ZFfvamgZmCAPANVDMSNcejXbpQiE/sgqC+WYtc/WLDPLLIdVVe7N+KVz/gw==",
-            "arrestSummonsReference": "26/0000/00/00000001334W",
+            "version": "tT4YW4aMbYbigs3ZF77OjoH0XQwPLu756C5onw8hbCImV5i5FTYaoJYUJhnu9wo3x0JF4H4VDmCuNtrfxt8ZQQ==",
+            "arrestSummonsReference": "26/0000/00/100000722H",
             "arrestChargeNumber": 2,
             "chargeStatusMarker": "A",
             "committedOnBail": false,
-            "courtCaseReferenceNumber": "26/2576/000053G",
+            "courtCaseReferenceNumber": "26/2576/000139C",
             "courtCaseChargeNumber": 1,
             "forceStationInCase": "01YZ",
             "forceStationChargeOrig": "01YZ",
@@ -48,24 +48,24 @@
             "startDate": "2010-11-28",
             "roleQualifier": [],
             "legislationQualifier": [],
-            "id": "0f90ce7b-dbd1-4bad-a3de-515e12a6b9d0"
+            "id": "c32f0136-0f76-4a5a-91e0-8fefbd78d988"
           }
         }
       ]
     },
     {
-      "id": "abc0434e-ff87-4e70-b517-6d42a62ebaad",
+      "id": "28d1ed91-fc01-4775-b38c-41ae75d62283",
       "court": {
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts London Croydon"
       },
       "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000726N",
+      "courtCaseReference": "26/9998/000525B",
       "caseStatusMarker": "C",
       "charges": [
         {
-          "offenceId": "12442c2f-93b9-41ec-b0eb-beacc32a24a3",
-          "arrestSummonsId": "e2dd46bd-9c7b-4dfc-866c-a6f09bef38f2",
+          "offenceId": "dbcc93eb-83fb-4d66-97af-9ef013da6347",
+          "arrestSummonsId": "d3985779-b7a0-4b07-a494-410d4f27bd2e",
           "adjudication": "O",
           "npccOffenceCode": "5.5.5.1",
           "cjsOffenceCode": "TH68006",
@@ -77,19 +77,19 @@
           "additionalMarker": false,
           "disposals": [
             {
-              "id": "b8a4a36a-3b1f-48f3-83cb-1f74180a30e6",
+              "id": "c45b6101-879a-4a1a-b1b0-8a7ebbd445ff",
               "disposalCode": "2063",
               "disposalQualifierCodes": []
             }
           ],
           "offence": {
-            "version": "CpWLDmhIAhVCEt9XB472Sfg8StLgBInbUuwSsApY/ed1WrLNffI+34VJ3d9zOuZVpyUfbbQpvMyhAOLPTU7xsw==",
-            "arrestSummonsReference": "26/0000/00/00000001334W",
+            "version": "h+IY6ToHUTkhwa4vECdrOZnTfkvkrfHMvzkmUJJ9BXzgHoWzUoUvCg4QntezMBxbDSYV3FEB0aLO31qBhyknIg==",
+            "arrestSummonsReference": "26/0000/00/100000722H",
             "arrestChargeNumber": 1,
             "chargeStatusMarker": "C",
             "committedOnBail": false,
             "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000726N",
+            "courtCaseReferenceNumber": "26/9998/000525B",
             "courtCaseChargeNumber": 1,
             "forceStationChargeOrig": "01ZD",
             "crimeReference": "",
@@ -110,7 +110,7 @@
             "startDate": "2010-11-28",
             "roleQualifier": [],
             "legislationQualifier": [],
-            "id": "12442c2f-93b9-41ec-b0eb-beacc32a24a3"
+            "id": "dbcc93eb-83fb-4d66-97af-9ef013da6347"
           }
         }
       ],
@@ -119,7 +119,7 @@
   ],
   "remands": [
     {
-      "appearanceResult": "remanded-on-bail",
+      "appearanceResult": "adjourned",
       "ownerCode": "01YZ",
       "remandDate": "2011-09-26",
       "currentAppearance": {
@@ -134,8 +134,7 @@
           "courtIdentityType": "code",
           "courtCode": "2576"
         }
-      },
-      "remandConditions": []
+      }
     }
   ]
 }

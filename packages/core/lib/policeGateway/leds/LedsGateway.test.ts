@@ -173,10 +173,10 @@ describe("LedsGateway", () => {
       )
       expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
         ownerCode: "02YZ",
-        personUrn: "00/410770Y",
+        personUrn: "2000/0410770Y",
         remandDate: "2024-12-05",
         appearanceResult: "remanded-on-bail",
-        bailConditions: ["This is a dummy bail condition.                   "],
+        bailConditions: ["This is a dummy bail condition.\n\n\n"],
         currentAppearance: { court: { courtIdentityType: "code", courtCode: "1234" } },
         nextAppearance: {
           date: "2024-12-11",
@@ -245,7 +245,7 @@ describe("LedsGateway", () => {
       )
       expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
         ownerCode: "02YZ",
-        personUrn: "00/410770Y",
+        personUrn: "2000/0410770Y",
         courtCaseReference: "97/1626/008395Q",
         court: { courtIdentityType: "code", courtCode: "1234" },
         dateOfConviction: "2024-12-05",
@@ -339,7 +339,7 @@ describe("LedsGateway", () => {
       )
       expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
         ownerCode: "01YZ",
-        personUrn: "00/410770Y",
+        personUrn: "2000/0410770Y",
         courtCaseReference: "97/1626/008395Q",
         court: { courtIdentityType: "code", courtCode: "2575" },
         appearanceDate: "2023-12-19",
@@ -437,7 +437,7 @@ describe("LedsGateway", () => {
       )
       expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
         ownerCode: "01YZ",
-        personUrn: "00/410770Y",
+        personUrn: "2000/0410770Y",
         courtCaseReference: "97/1626/008395Q",
         court: { courtIdentityType: "code", courtCode: "2575" },
         appearanceDate: "2023-12-19",

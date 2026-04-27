@@ -10,7 +10,6 @@ import type {
 
 import { PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR } from "../../../phase3/lib/getPncCourtCode"
 import { convertDate } from "./dateTimeConverter"
-import preProcessPersonUrn from "./preProcessPersonUrn"
 
 const remandStatusByPncCode: Record<string, AppearanceResult> = {
   B: "remanded-on-bail",
@@ -18,7 +17,8 @@ const remandStatusByPncCode: Record<string, AppearanceResult> = {
   A: "adjourned",
   C: "remanded-in-custody"
 }
-const bailConditionLength = 50
+const BAIL_CONDITIONS_LENGTH = 50
+const BAIL_CONDITIONS_PER_LINE = 4
 
 const mapToCurrentAppearance = (data: RemandPncUpdateRequest["request"]): CurrentAppearance => {
   const { remandLocationCourt, courtNameType1 } = data
@@ -55,10 +55,12 @@ const mapToNextAppearance = (data: RemandPncUpdateRequest["request"]): NextAppea
   }
 }
 
-const mapBailConditions = (bailConditions: string): string[] => {
-  return (bailConditions.match(new RegExp(".{1," + bailConditionLength + "}", "g")) ?? [])
-    .map((condition) => condition.padEnd(bailConditionLength, " "))
-    .filter((condition) => !!condition.trim())
+const mapBailConditions = (bailConditions: string): string => {
+  const conditions = (bailConditions.match(new RegExp(".{1," + BAIL_CONDITIONS_LENGTH + "}", "g")) ?? []).map(
+    (condition) => condition.trim()
+  )
+
+  return Array.from({ length: BAIL_CONDITIONS_PER_LINE }, (_, i) => conditions[i] ?? "").join("\n")
 }
 
 const mapToRemandRequest = (
@@ -67,11 +69,10 @@ const mapToRemandRequest = (
 ): RemandRequest => {
   const { forceStationCode, hearingDate, pncRemandStatus, bailConditions } = request
   const pncIdentifier = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
-  const personUrn = preProcessPersonUrn(pncIdentifier) ?? ""
 
   return {
     ownerCode: forceStationCode,
-    personUrn,
+    personUrn: pncIdentifier ?? "",
     remandDate: convertDate(hearingDate),
     appearanceResult: remandStatusByPncCode[pncRemandStatus],
     bailConditions: bailConditions.flatMap(mapBailConditions),

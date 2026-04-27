@@ -67,7 +67,7 @@
 									<DC:Gender>1</DC:Gender>
 								</DC:BasePersonDetails>
 							</DC:PersonDefendant>
-							<DC:BailStatus>U</DC:BailStatus>
+							<DC:BailStatus>A</DC:BailStatus>
 							<DC:Address>
 								<DC:SimpleAddress>
 									<DC:AddressLine1>ScenarioA Address Line 1</DC:AddressLine1>
@@ -108,7 +108,7 @@
 										<DC:TimeOfHearing>14:00:00</DC:TimeOfHearing>
 									</DC:NextHearingDetails>
 									<DC:NextHearingReason>Adjourned for Defendant to attend</DC:NextHearingReason>
-									<DC:BailStatusOffence>U</DC:BailStatusOffence>
+									<DC:BailStatusOffence>A</DC:BailStatusOffence>
 								</DC:NextHearing>
 							</DC:Result>
 						</DC:Offence>
@@ -144,7 +144,7 @@
 										<DC:TimeOfHearing>14:00:00</DC:TimeOfHearing>
 									</DC:NextHearingDetails>
 									<DC:NextHearingReason>Adjourned for Defendant to attend</DC:NextHearingReason>
-									<DC:BailStatusOffence>U</DC:BailStatusOffence>
+									<DC:BailStatusOffence>A</DC:BailStatusOffence>
 								</DC:NextHearing>
 							</DC:Result>
 						</DC:Offence>

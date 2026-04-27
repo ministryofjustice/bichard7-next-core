@@ -95,18 +95,13 @@ const mapToPoliceCourtCases = (disposals: LedsDisposal[]): PoliceCourtCase[] =>
     crimeOffenceReference: undefined
   }))
 
-const formatPersonUrn = (personUrn: string) => {
-  const [year, id] = personUrn.split("/")
-  return `20${year}/${id.replace(/\d*/, (n) => n.padStart(7, "0"))}`
-}
-
 const mapToPoliceQueryResult = (ledsQueryResponse: LedsAsnQueryResponse, checkName: string): PoliceQueryResult => {
   return {
     forceStationCode: ledsQueryResponse.ownerCode,
     checkName,
     personId: ledsQueryResponse.personId,
     reportId: ledsQueryResponse.reportId,
-    pncId: formatPersonUrn(ledsQueryResponse.personUrn),
+    pncId: ledsQueryResponse.personUrn,
     courtCases: mapToPoliceCourtCases(ledsQueryResponse.disposals),
     croNumber: undefined,
     penaltyCases: undefined

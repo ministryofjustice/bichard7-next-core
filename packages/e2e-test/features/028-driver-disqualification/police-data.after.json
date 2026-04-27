@@ -1,18 +1,18 @@
 {
   "disposals": [
     {
-      "id": "9c1ea5cd-8717-4af9-801c-40a62d6eec67",
+      "id": "7408aa0c-726c-4a40-b90b-76c77a2ec01c",
       "court": {
         "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtName": "Magistrates' Courts Hertfordshire St Albans"
       },
       "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000733W",
+      "courtCaseReference": "26/9998/000530G",
       "caseStatusMarker": "C",
       "charges": [
         {
-          "offenceId": "ed908acb-df4f-4f18-bcd8-ec01b140048a",
-          "arrestSummonsId": "d249a3f9-4ee7-4287-b2a7-bbeeeee67cae",
+          "offenceId": "37fa3d28-297c-4043-a5e2-38d05de1ec58",
+          "arrestSummonsId": "70b08885-92e4-4fa5-bcbf-9e08534c734c",
           "adjudication": "G",
           "npccOffenceCode": "12.15.16.1",
           "cjsOffenceCode": "RT88007",
@@ -24,25 +24,25 @@
           "additionalMarker": false,
           "disposals": [
             {
-              "id": "881b5d79-88c0-46c2-8f49-d45ad60e8da8",
+              "id": "00958e48-35be-47ee-90af-314c14eb25d0",
               "disposalCode": "3096",
               "disposalQualifierCodes": []
             },
             {
-              "id": "531831c9-f436-4cd8-a6ed-d8e0b316702d",
+              "id": "e70e3ee2-bb0e-487f-b159-a68bea6fe715",
               "disposalCode": "4047",
               "disposalQualifierCodes": [],
               "effectiveDate": "2011-10-26"
             }
           ],
           "offence": {
-            "version": "t2trC949d2LCeSPOb3rgPBfMih3kUkPSsRQc595rN4zVVkK/VW9MT98F20lqz28J8ehq40jDSMyB5NyEF+FotA==",
-            "arrestSummonsReference": "26/0000/00/00000001339B",
+            "version": "L7HXUhtNObojDKplCRVIJ3xgjEyIONlaBWxxGThaDyawB+J5SzF4p/KgG/DQx+FX6UZtzppGrAFH6UL8x4cW9w==",
+            "arrestSummonsReference": "26/0000/00/100000727N",
             "arrestChargeNumber": 1,
             "chargeStatusMarker": "C",
             "committedOnBail": false,
             "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000733W",
+            "courtCaseReferenceNumber": "26/9998/000530G",
             "courtCaseChargeNumber": 1,
             "forceStationChargeOrig": "01ZD",
             "crimeReference": "",
@@ -63,7 +63,7 @@
             "startDate": "2010-11-28",
             "roleQualifier": [],
             "legislationQualifier": [],
-            "id": "ed908acb-df4f-4f18-bcd8-ec01b140048a"
+            "id": "37fa3d28-297c-4043-a5e2-38d05de1ec58"
           }
         }
       ],
@@ -78,8 +78,8 @@
           "reasonForVariation": "S",
           "charges": [
             {
-              "offenceId": "ed908acb-df4f-4f18-bcd8-ec01b140048a",
-              "arrestSummonsId": "d249a3f9-4ee7-4287-b2a7-bbeeeee67cae",
+              "offenceId": "37fa3d28-297c-4043-a5e2-38d05de1ec58",
+              "arrestSummonsId": "70b08885-92e4-4fa5-bcbf-9e08534c734c",
               "adjudication": "G",
               "npccOffenceCode": "12.15.16.1",
               "cjsOffenceCode": "RT88007",
@@ -91,12 +91,12 @@
               "additionalMarker": false,
               "disposals": [
                 {
-                  "id": "7ae14847-0453-4092-a998-e3cd2a25e7c0",
+                  "id": "2e1e337f-2796-4b2a-8b7b-241e248eaada",
                   "disposalCode": "3050",
                   "disposalQualifierCodes": []
                 },
                 {
-                  "id": "7e55c879-d029-4dee-b647-74ce77383970",
+                  "id": "2da6b16a-c933-4006-940b-6d2d41a769da",
                   "disposalCode": "3070",
                   "disposalQualifierCodes": [],
                   "disposalText": "from 26/09/11",
@@ -114,7 +114,7 @@
   ],
   "remands": [
     {
-      "appearanceResult": "remanded-on-bail",
+      "appearanceResult": "adjourned",
       "ownerCode": "01YZ",
       "remandDate": "2011-09-26",
       "currentAppearance": {
@@ -129,8 +129,7 @@
           "courtIdentityType": "code",
           "courtCode": "2576"
         }
-      },
-      "remandConditions": []
+      }
     }
   ]
 }

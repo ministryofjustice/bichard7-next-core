@@ -5,19 +5,18 @@ import type { AddDisposalRequest, CarryForward } from "../../../../types/leds/Ad
 
 import convertAsnToLedsFormat from "../convertAsnToLedsFormat"
 import { convertDate } from "../dateTimeConverter"
-import preProcessPersonUrn from "../preProcessPersonUrn"
 import mapAdditionalArrestOffences from "./mapAdditionalArrestOffences"
 import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
 import mapOffences from "./mapOffences"
 
+const getPtiurnSequentialNumber = (ptiurn: string) => ptiurn.split("/")[1]
+
 const mapToAddDisposalRequest = (
   pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): AddDisposalRequest => {
-  const personUrn =
-    preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
-    ""
+  const personUrn = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? ""
   const carryForward: CarryForward | undefined =
     pncRequest.pendingPsaCourtCode && pncRequest.pendingCourtDate
       ? {
@@ -28,7 +27,7 @@ const mapToAddDisposalRequest = (
 
   const referToCourtCase = pncRequest.preTrialIssuesUniqueReferenceNumber
     ? {
-        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
+        reference: getPtiurnSequentialNumber(pncRequest.preTrialIssuesUniqueReferenceNumber)
       }
     : undefined
 
