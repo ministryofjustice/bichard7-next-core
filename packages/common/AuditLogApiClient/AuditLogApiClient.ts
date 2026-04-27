@@ -28,13 +28,20 @@ const undiciDispatcher = new Agent({
   }
 })
 
-const handleApiError = <T>(error: unknown, timeoutErrorMessage: string, applicationErrorMessage: string): Result<T> => {
+export const handleApiError = (
+  error: unknown,
+  timeoutErrorMessage: string,
+  applicationErrorMessage: string
+): Result<Error> => {
   if (error instanceof Error && error.name === "AbortError") {
-    return new Error(`Timed out ${timeoutErrorMessage}.`) as Result<T>
+    return new Error(`Timed out ${timeoutErrorMessage}.`) as Result<Error>
   }
 
   const errorInstance = error instanceof Error ? error : new Error(String(error))
-  return new ApplicationError(`Error ${applicationErrorMessage}: ${errorInstance.message}`, errorInstance) as Result<T>
+  return new ApplicationError(
+    `Error ${applicationErrorMessage}: ${errorInstance.message}`,
+    errorInstance
+  ) as Result<Error>
 }
 
 export default class AuditLogApiClient {
