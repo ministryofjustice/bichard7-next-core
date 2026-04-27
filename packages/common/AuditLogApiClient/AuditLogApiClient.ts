@@ -86,17 +86,13 @@ export default class AuditLogApiClient {
           return response.json()
         }
 
-        if (!response.ok) {
-          return response.text().then((text) => {
-            if (/A message with Id [^ ]* already exists in the database/.test(text)) {
-              return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
-            }
+        return response.text().then((text) => {
+          if (/A message with Id [^ ]* already exists in the database/.test(text)) {
+            return new AlreadyExistsError(`Message already exists in the database: ${auditLog.messageId}`)
+          }
 
-            return new ApplicationError(`Error creating audit log: ${text}`, new Error(text))
-          })
-        }
-
-        return new Error(`Error ${response.status}: Could not create audit log.`)
+          return new ApplicationError(`Error creating audit log: ${text}`, new Error(text))
+        })
       })
       .catch((error: unknown) =>
         handleApiError(
