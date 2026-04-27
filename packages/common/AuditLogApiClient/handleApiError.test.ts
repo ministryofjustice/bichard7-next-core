@@ -1,5 +1,5 @@
 import ApplicationError from "./ApplicationError"
-import { handleApiError } from "./AuditLogApiClient" // You'd need to export it first
+import { handleApiError } from "./AuditLogApiClient"
 
 const timeoutErrorMessage = "with timeout message"
 const applicationErrorMessage = "with application error message"
