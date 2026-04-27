@@ -1,4 +1,4 @@
-import * as https from "https"
+import { Agent } from "undici"
 
 import type { AuditLogEvent } from "../types/AuditLogEvent"
 import type { AuditLogApiRecordInput, AuditLogApiRecordOutput } from "../types/AuditLogRecord"
@@ -22,8 +22,10 @@ export type GetAuditLogsOptions = {
   status?: string
 }
 
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false
+const undiciDispatcher = new Agent({
+  connect: {
+    rejectUnauthorized: false
+  }
 })
 
 export default class AuditLogApiClient {
@@ -51,9 +53,9 @@ export default class AuditLogApiClient {
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
-      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
       body: this.stringify(auditLog),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
       headers: {
         "Content-Type": "application/json",
         ...this.apiKeyHeader
@@ -103,9 +105,9 @@ export default class AuditLogApiClient {
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
-      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
       body: JSON.stringify(event),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
       headers: {
         ...this.apiKeyHeader,
         "Content-Type": "application/json"
@@ -155,9 +157,9 @@ export default class AuditLogApiClient {
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
-      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
       body: JSON.stringify(event),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
       headers: {
         "Content-Type": "application/json",
         ...this.apiKeyHeader
@@ -206,7 +208,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
+      dispatcher: undiciDispatcher,
       headers: {
         ...this.apiKeyHeader
       },
@@ -254,7 +256,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
+      dispatcher: undiciDispatcher,
       headers: {
         ...this.apiKeyHeader
       },
@@ -299,7 +301,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
+      dispatcher: undiciDispatcher,
       headers: {
         ...this.apiKeyHeader
       },
@@ -347,7 +349,7 @@ export default class AuditLogApiClient {
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
+      dispatcher: undiciDispatcher,
       headers: {
         ...this.apiKeyHeader
       },
@@ -388,9 +390,9 @@ export default class AuditLogApiClient {
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
-      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
       body: JSON.stringify({}),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
       headers: {
         "Content-Type": "application/json",
         ...this.apiKeyHeader
@@ -426,9 +428,9 @@ export default class AuditLogApiClient {
     const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
-      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
-      agent: httpsAgent,
       body: JSON.stringify({}),
+      // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
+      dispatcher: undiciDispatcher,
       headers: {
         "Content-Type": "application/json",
         ...this.apiKeyHeader
