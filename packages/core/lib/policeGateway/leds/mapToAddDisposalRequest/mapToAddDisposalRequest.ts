@@ -10,6 +10,8 @@ import mapCourt from "./mapCourt"
 import mapDefendant from "./mapDefendant"
 import mapOffences from "./mapOffences"
 
+const getPtiurnSequentialNumber = (ptiurn: string) => ptiurn.split("/")[1]
+
 const mapToAddDisposalRequest = (
   pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
@@ -25,7 +27,7 @@ const mapToAddDisposalRequest = (
 
   const referToCourtCase = pncRequest.preTrialIssuesUniqueReferenceNumber
     ? {
-        reference: pncRequest.preTrialIssuesUniqueReferenceNumber
+        reference: getPtiurnSequentialNumber(pncRequest.preTrialIssuesUniqueReferenceNumber)
       }
     : undefined
 
