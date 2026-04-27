@@ -34,14 +34,11 @@ export const handleApiError = (
   applicationErrorMessage: string
 ): Result<Error> => {
   if (error instanceof Error && error.name === "AbortError") {
-    return new Error(`Timed out ${timeoutErrorMessage}.`) as Result<Error>
+    return new Error(`Timed out ${timeoutErrorMessage}.`)
   }
 
   const errorInstance = error instanceof Error ? error : new Error(String(error))
-  return new ApplicationError(
-    `Error ${applicationErrorMessage}: ${errorInstance.message}`,
-    errorInstance
-  ) as Result<Error>
+  return new ApplicationError(`Error ${applicationErrorMessage}: ${errorInstance.message}`, errorInstance)
 }
 
 export default class AuditLogApiClient {
