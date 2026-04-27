@@ -42,8 +42,6 @@ export const handleApiError = (
 }
 
 export default class AuditLogApiClient {
-  private readonly signal: AbortSignal | undefined
-
   private get apiKeyHeader(): Record<string, string> {
     if (this.isB7Api()) {
       return { Authorization: this.apiKey }
@@ -56,14 +54,16 @@ export default class AuditLogApiClient {
     return `${this.apiUrl}/${this.basePath}`
   }
 
+  private get requestSignal(): AbortSignal | undefined {
+    return this.timeout > 0 ? AbortSignal.timeout(this.timeout) : undefined
+  }
+
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
     private readonly timeout: number = 0,
     private readonly basePath: string = "messages"
-  ) {
-    this.signal = this.timeout > 0 ? AbortSignal.timeout(this.timeout) : undefined
-  }
+  ) {}
 
   createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
     const url = this.baseUrl
@@ -77,7 +77,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
         if (response.status === HttpStatusCode.created) {
@@ -109,7 +109,7 @@ export default class AuditLogApiClient {
         "Content-Type": "application/json"
       },
       method: "POST",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response) => {
         if (response.status === HttpStatusCode.created) {
@@ -145,7 +145,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response): Promise<Result<void>> | Result<void> => {
         if (response.status === HttpStatusCode.created) {
@@ -181,7 +181,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
         if (response.ok) {
@@ -222,7 +222,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
         if (response.ok) {
@@ -256,7 +256,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
         if (response.ok) {
@@ -299,7 +299,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
         if (response.ok) {
@@ -332,7 +332,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response) => {
         if (response.status === HttpStatusCode.noContent) {
@@ -365,7 +365,7 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: this.signal
+      signal: this.requestSignal
     })
       .then((response) => {
         if (response.status === HttpStatusCode.noContent) {
