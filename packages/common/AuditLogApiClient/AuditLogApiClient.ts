@@ -94,7 +94,7 @@ export default class AuditLogApiClient {
 
         switch (response.status) {
           case HttpStatusCode.created:
-            return response.json() as Promise<AuditLogApiRecordOutput>
+            return response.json()
           default:
             return response.text().then((text) => {
               return new Error(`Error ${response.status}: ${text || "Could not create audit log."}`)
@@ -130,22 +130,18 @@ export default class AuditLogApiClient {
     })
       .then((response) => {
         clearTimeout(timeoutId)
-        console.log(response)
 
         switch (response.status) {
-          case 201:
+          case HttpStatusCode.created:
             return undefined
-
-          case 404:
-            return new Error(`The message with Id ${correlationId} does not exist.`)
-
-          case 504:
+          case HttpStatusCode.gatewayTimeout:
             return new Error(`Timed out creating event for message with Id ${correlationId}.`)
-
+          case HttpStatusCode.notFound:
+            return new Error(`The message with Id ${correlationId} does not exist.`)
           default:
             return response.text().then((text) => {
               return new ApplicationError(
-                `Error ${response.status}: ${text || "Could not create audit log event."}`,
+                `Error ${response.status}: Could not create audit log event.`,
                 new Error(text)
               )
             })
@@ -179,13 +175,11 @@ export default class AuditLogApiClient {
         switch (response.status) {
           case HttpStatusCode.created:
             return undefined
-
           case HttpStatusCode.gatewayTimeout:
             return new Error(`Timed out creating event for user '${userName}'.`)
-
           default:
             return response.text().then((text) => {
-              return new Error(`Error ${response.status}: ${text || "Could not create audit log event."}`)
+              return new Error(`Error ${response.status}: Could not create audit log event.`)
             })
         }
       })
@@ -224,7 +218,7 @@ export default class AuditLogApiClient {
           })
         }
 
-        return response.json() as Promise<AuditLogApiRecordOutput[]>
+        return response.json()
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput[]> =>
@@ -265,7 +259,7 @@ export default class AuditLogApiClient {
         clearTimeout(timeoutId)
 
         if (response.status === HttpStatusCode.notFound) {
-          return new ApplicationError("Error getting messages: Not Found", new Error("Not Found"))
+          return undefined as unknown as AuditLogApiRecordOutput
         }
 
         if (!response.ok) {
@@ -313,7 +307,7 @@ export default class AuditLogApiClient {
           })
         }
 
-        return response.json() as Promise<AuditLogApiRecordOutput[]>
+        return response.json()
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput[]> =>
@@ -352,7 +346,7 @@ export default class AuditLogApiClient {
         clearTimeout(timeoutId)
 
         if (response.status === HttpStatusCode.notFound) {
-          return new Error(`The message with hash ${messageHash} does not exist.`)
+          return undefined as unknown as AuditLogApiRecordOutput[]
         }
 
         if (!response.ok) {
@@ -361,7 +355,7 @@ export default class AuditLogApiClient {
           })
         }
 
-        return response.json() as Promise<AuditLogApiRecordOutput[]>
+        return response.json()
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput[]> =>
@@ -386,7 +380,7 @@ export default class AuditLogApiClient {
       method: "POST",
       signal: controller.signal
     })
-      .then((response): Promise<Result<void>> | Result<void> => {
+      .then((response) => {
         clearTimeout(timeoutId)
 
         switch (response.status) {
@@ -396,7 +390,7 @@ export default class AuditLogApiClient {
             return new Error(`The message with Id ${correlationId} does not exist.`)
           default:
             return response.text().then((text) => {
-              return new Error(`Error ${response.status}: ${text || "Could not retry audit log event."}`)
+              return new Error(`Error ${response.status}: Could not retry audit log event.`)
             })
         }
       })
@@ -423,7 +417,7 @@ export default class AuditLogApiClient {
       method: "POST",
       signal: controller.signal
     })
-      .then((response): Promise<Result<void>> | Result<void> => {
+      .then((response) => {
         clearTimeout(timeoutId)
 
         if (response.status === HttpStatusCode.noContent) {
