@@ -1,7 +1,7 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
 import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { Sql } from "postgres"
+import type { Sql, TransactionSql } from "postgres"
 
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { completed, failed } from "@moj-bichard7/common/conductor/helpers/index"
@@ -41,7 +41,7 @@ type ResubmitResult = {
 }
 
 const handleCaseResubmission = async (
-  sql: Sql,
+  sql: Sql | TransactionSql,
   s3TaskData: InputData,
   s3TaskDataPath: string,
   auditLogger: CoreAuditLogger,
