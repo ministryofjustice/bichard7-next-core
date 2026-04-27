@@ -7,6 +7,7 @@ import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQ
 import type { UserList } from "@moj-bichard7/common/types/User"
 import type ApiClient from "../ApiClient"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 
 export default interface BichardApiGateway {
   readonly apiClient: ApiClient
@@ -21,4 +22,5 @@ export default interface BichardApiGateway {
   fetchUsers: () => Promise<UserList | Error>
   fetchAuditById: (auditId: number) => PromiseResult<AuditWithProgressDto>
   fetchAuditCases: (auditId: number, auditCasesQuery: AuditCasesQuery) => PromiseResult<AuditCasesMetadata>
+  connectivity: (apiKey: string) => PromiseResult<ApiConnectivityDto>
 }
