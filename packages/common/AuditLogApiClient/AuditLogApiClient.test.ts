@@ -273,7 +273,6 @@ describe("createUserEvent()", () => {
 
   it("should pass through the api key as a header", async () => {
     const mockFetch = jest.spyOn(global, "fetch").mockResolvedValue({
-      json: () => Promise.resolve('{ "messageId": "fake" }'),
       ok: true,
       status: 201
     } as Response)
