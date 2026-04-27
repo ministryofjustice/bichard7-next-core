@@ -21,8 +21,8 @@ class ApiClient {
     this.jwt = jwt
   }
 
-  async get<T>(route: string): Promise<Error | T> {
-    return await this.callApi(route, HttpMethod.GET)
+  async get<T>(route: string, additionalHeaders: Record<string, unknown> = {}): Promise<Error | T> {
+    return await this.callApi(route, HttpMethod.GET, {}, additionalHeaders)
   }
 
   async post<T>(route: string, data?: string | Record<string, unknown>): Promise<Error | T> {
@@ -32,11 +32,13 @@ class ApiClient {
   async callApi<T>(
     route: string,
     method: HttpMethod,
-    bodyContent: string | Record<string, unknown> = {}
+    bodyContent: string | Record<string, unknown> = {},
+    additionalHeaders: Record<string, unknown> = {}
   ): PromiseResult<T> {
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...additionalHeaders
     }
 
     const url = `${API_LOCATION}${route}`
