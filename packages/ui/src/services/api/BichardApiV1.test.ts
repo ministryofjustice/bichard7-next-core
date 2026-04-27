@@ -13,6 +13,7 @@ import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 import { ZodError } from "zod"
 
 describe("BichardApiV1", () => {
@@ -273,6 +274,41 @@ describe("BichardApiV1", () => {
       jest.spyOn(client, "get").mockResolvedValue({})
 
       const result = await gateway.fetchAuditCases(auditId, auditCaseQuery)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toBeInstanceOf(ZodError)
+    })
+  })
+
+  describe("#connectivity", () => {
+    const apiKey = "test-api-key"
+
+    it("calls apiClient#post with a route", async () => {
+      const expectedData: ApiConnectivityDto = {
+        database: true
+      }
+      jest.spyOn(client, "get").mockResolvedValue(expectedData)
+
+      const result = await gateway.connectivity(apiKey)
+
+      expect(client.get).toHaveBeenCalledWith(V1.Connectivity, { "x-connectivity-check-key": apiKey })
+      expect(result).toEqual(expectedData)
+    })
+
+    it("can handle errors", async () => {
+      const expectedError = new Error("Error")
+      jest.spyOn(client, "get").mockResolvedValue(expectedError)
+
+      const result = await gateway.connectivity(apiKey)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(expectedError)
+    })
+
+    it("can handle parsing errors", async () => {
+      jest.spyOn(client, "get").mockResolvedValue({})
+
+      const result = await gateway.connectivity(apiKey)
 
       expect(isError(result)).toBe(true)
       expect(result).toBeInstanceOf(ZodError)
