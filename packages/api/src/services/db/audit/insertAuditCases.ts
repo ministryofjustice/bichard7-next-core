@@ -1,9 +1,9 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 export const insertAuditCases = async (
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   auditId: number,
   caseIds: number[]
 ): PromiseResult<{ audit_id: number; error_id: number }[]> => {

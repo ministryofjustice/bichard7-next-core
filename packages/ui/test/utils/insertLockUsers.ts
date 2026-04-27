@@ -14,7 +14,7 @@ const insertLockUser = async (name: string, createFakeUser: boolean) => {
   } else {
     if (createFakeUser) {
       user = await getDummyUser()
-      groups = [UserGroup.NewUI, UserGroup.GeneralHandler]
+      groups = [UserGroup.GeneralHandler]
     } else {
       throw new Error(`Invalid lock username provided: ${name}`)
     }

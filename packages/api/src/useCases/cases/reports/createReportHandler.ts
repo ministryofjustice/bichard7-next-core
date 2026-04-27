@@ -9,12 +9,12 @@ import { OK } from "http-status"
 import { Readable } from "node:stream"
 
 import type DatabaseGateway from "../../../types/DatabaseGateway"
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 
 type ReportStrategy<TQuery, TDto> = (
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   user: User,
   query: TQuery
 ) => AsyncGenerator<TDto[]>

@@ -5,7 +5,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
-import type { WritableDatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { CaseRowForBailsReport } from "../../../../types/reports/Bails"
 
 import { processCasesForBailsReport } from "../../../../useCases/cases/reports/bails/processCasesForBailsReport"
@@ -14,7 +14,7 @@ import { organisationUnitSql } from "../../organisationUnitSql"
 const BAILS_TRIGGERS = [TriggerCode.TRPR0010]
 
 export async function* bailsReport(
-  database: WritableDatabaseConnection,
+  database: TransactionConnection,
   user: User,
   filters: BailsReportQuery
 ): AsyncGenerator<CaseForBailsReportDto[]> {

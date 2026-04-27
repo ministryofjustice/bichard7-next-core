@@ -65,8 +65,7 @@ describe("resubmit", () => {
       UserGroup.Audit,
       UserGroup.UserManager,
       UserGroup.AuditLoggingManager,
-      UserGroup.SuperUserManager,
-      UserGroup.NewUI
+      UserGroup.SuperUserManager
     ]
     const [encodedJwt, user] = generateJwtForStaticUser(groups)
     await createUser(testDatabaseGateway, { groups, jwtId: user.jwtId, username: user.username })

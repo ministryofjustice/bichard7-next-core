@@ -4,12 +4,12 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 
-import { resolutionStatusCodeByText } from "../../../useCases/dto/convertResolutionStatus"
-import { organisationUnitSql } from "../organisationUnitSql"
+import { organisationUnitSql } from "../../../../services/db/organisationUnitSql"
+import { resolutionStatusCodeByText } from "../../../../useCases/dto/convertResolutionStatus"
 
-export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<boolean> => {
+export default async (database: TransactionConnection, user: User, caseId: number): PromiseResult<boolean> => {
   const status: number = resolutionStatusCodeByText(ResolutionStatus.Unresolved) as number
 
   const result = await database.connection`

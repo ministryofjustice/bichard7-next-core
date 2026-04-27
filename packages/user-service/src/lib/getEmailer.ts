@@ -1,11 +1,12 @@
-import nodemailer from "nodemailer"
 import config from "lib/config"
+import nodemailer from "nodemailer"
 import type Email from "types/Email"
 import type Emailer from "types/Emailer"
+import getFormattedDateForEmailHeader from "utils/getFormattedDateForEmailHeader"
 import logger from "utils/logger"
 
-const getSmtpMailer = (): Emailer =>
-  nodemailer.createTransport({
+const getSmtpMailer = (): Emailer => {
+  const transporter = nodemailer.createTransport({
     host: config.smtp.host,
     port: config.smtp.port,
     secure: config.smtp.tls,
@@ -15,13 +16,23 @@ const getSmtpMailer = (): Emailer =>
     }
   })
 
+  return {
+    sendMail: (email: Email) =>
+      transporter.sendMail({
+        date: getFormattedDateForEmailHeader(),
+        ...email
+      })
+  }
+}
+
 const getConsoleMailer = (): Emailer => ({
   sendMail: async (email: Email) => {
     logger.info({
       from: email.from,
       to: email.to,
       subject: email.subject,
-      body: email.text
+      body: email.text,
+      date: getFormattedDateForEmailHeader()
     })
   }
 })
