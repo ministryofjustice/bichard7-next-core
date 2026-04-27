@@ -92,14 +92,13 @@ export default class AuditLogApiClient {
           })
         }
 
-        switch (response.status) {
-          case HttpStatusCode.created:
-            return response.json()
-          default:
-            return response.text().then((text) => {
-              return new Error(`Error ${response.status}: ${text || "Could not create audit log."}`)
-            })
+        if (response.status === HttpStatusCode.created) {
+          return response.json()
         }
+
+        return response.text().then((text) => {
+          return new Error(`Error ${response.status}: ${text || "Could not create audit log."}`)
+        })
       })
       .catch((error: unknown) =>
         handleApiError(
