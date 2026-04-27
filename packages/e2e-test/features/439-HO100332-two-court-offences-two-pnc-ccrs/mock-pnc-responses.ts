@@ -24,13 +24,111 @@ export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockUpdate("CXU02", {
     matchRegex: "CXU02.*SX03001A",
     count: 1,
-    expectedRequest:
-      "<FSC>K04YZ</FSC><IDS>K12/14X     AVALON                  </IDS><CCR>K12/2732/16T                   </CCR><COU>I2576                                                                       AVALON/MARTIN                                         011020090000</COU><CCH>K002              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I1002M11                   00                                                                            </DIS><CCH>K001              SX03001A</CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I1002M12                   00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "AVALON",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "04YZ",
+      personUrn: "12/14X",
+      courtCaseReference: "12/2732/000016T",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "AVALON"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 11
+              }
+            }
+          ],
+          offenceId: "d03a0417-16b6-49ad-9ef8-3d17e38ffdbf"
+        },
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "SX03001A",
+          roleQualifiers: ["AT"],
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "8e9bf65e-9543-422a-a1d8-71961dc4eeea"
+        }
+      ]
+    }
   }),
   policeApi.mockUpdate("CXU02", {
     matchRegex: "CXU02.*I1002M10",
     count: 1,
-    expectedRequest:
-      "<FSC>K04YZ</FSC><IDS>K12/14X     AVALON                  </IDS><CCR>K12/2732/15R                   </CCR><COU>I2576                                                                       AVALON/MARTIN                                         011020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I1002M10                   00                                                                            </DIS><DIS>I1002M12                   00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "AVALON",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "04YZ",
+      personUrn: "12/14X",
+      courtCaseReference: "12/2732/000015R",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "AVALON"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 10
+              }
+            },
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "0297c203-5a16-4ca4-a025-30bc1fedcb35"
+        }
+      ]
+    }
   })
 ]

@@ -22,8 +22,68 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><CCR>K21/2732/6N                    </CCR><COU>I2576                                                                       LEBOWSKI/JEFFREY                                      250920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LEBOWSKI",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/6A",
+      courtCaseReference: "21/2732/000006N",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-25",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["JEFFREY"],
+        defendantLastName: "LEBOWSKI"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-25",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2007
+            }
+          ],
+          offenceId: "8d498e79-8039-417c-a326-911249334087"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-25",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2007
+            }
+          ],
+          offenceId: "1dd6ed94-a753-4b10-97f4-ac349b1df812"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "RT88191",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-25",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2007
+            }
+          ],
+          offenceId: "45e509be-29a4-4bcc-92bc-f735f7da34a7"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -52,8 +112,85 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU03", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/6N                    </CCR><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000101.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000102.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000103.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LEBOWSKI",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/6A",
+      courtCaseReference: "21/2732/000006N",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2011-10-26",
+      reasonForAppearance: "Subsequently Varied",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 101
+              }
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-25"
+            }
+          ],
+          offenceId: "665ece7c-60f9-486c-872b-f68bc21c337d"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 102
+              }
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-25"
+            }
+          ],
+          offenceId: "904dcc48-0e56-4fcb-8d53-93a7f5cd5060"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "RT88191",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 103
+              }
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-25"
+            }
+          ],
+          offenceId: "2ee6f868-76fd-4ab0-9b0e-15945a7ce62e"
+        }
+      ]
+    },
     count: 1
   })
 ]

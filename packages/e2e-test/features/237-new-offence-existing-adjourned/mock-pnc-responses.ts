@@ -3,11 +3,121 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/445742K OFFENCEADDED            </IDS><ASR>K12/01ZD/01/445742K                    </ASR><REM>I26092011B    2576                                                                       261020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>"
+    expectedRequest: {
+      pncCheckName: "OFFENCEADDED",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/445742K",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "00/445742K",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    }
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/445742K OFFENCEADDED            </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       OFFENCEADDED/APJJWF                                   260920110000</COU><CRT>I2576                                                                       26102011</CRT><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY                         0000 </ADJ><DIS>I2059                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000400.0000                                                                            </DIS><ASR>K12/01ZD/01/445742K                    </ASR><ACH>I                                                                                                                                            TH68010                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD29112010                </ACH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000300.0000                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "OFFENCEADDED",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/445742K",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["APJJWF"],
+        defendantLastName: "OFFENCEADDED"
+      },
+      carryForward: {
+        appearanceDate: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          offenceTic: 0,
+          plea: "NOT GUILTY",
+          disposalResults: [
+            {
+              disposalCode: 2059
+            }
+          ],
+          offenceId: "9f8a71d1-3604-423f-8b24-a014434c0880"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 400
+              }
+            }
+          ],
+          offenceId: "f14785db-0a73-42ed-bdc0-12726a99444e"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "12/01ZD/01/445742K",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68010"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2011-09-26",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-29",
+              disposalResults: [
+                {
+                  disposalCode: 1015,
+                  disposalFine: {
+                    amount: 300
+                  }
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    }
   })
 ]

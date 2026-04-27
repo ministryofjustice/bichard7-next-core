@@ -22,13 +22,100 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/2W      SENDEFOFFENC            </IDS><CCR>K21/2732/1H                    </CCR><COU>I2576                                                                       SENDEFOFFENCEADDED/ONECCR                             260920100000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920100000 </ADJ><DIS>I4011    26102010          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        260920100000 </ADJ><DIS>I4011    26102010          00                                                                            </DIS><CCH>K003              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        260920100000 </ADJ><DIS>I4011    26102010          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "SENDEFOFFENC",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/2W",
+      courtCaseReference: "21/2732/000001H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2010-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ONECCR"],
+        defendantLastName: "SENDEFOFFENCEADDED"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2010-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4011,
+              disposalEffectiveDate: "2010-10-26"
+            }
+          ],
+          offenceId: "9ad85926-d80a-42c7-9c6f-818e6b956e4e"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2010-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4011,
+              disposalEffectiveDate: "2010-10-26"
+            }
+          ],
+          offenceId: "35675860-bf39-460a-8e0f-ac4baa9fa0b6"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2010-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4011,
+              disposalEffectiveDate: "2010-10-26"
+            }
+          ],
+          offenceId: "8df844cb-f9e9-416a-ac88-ea957f061c83"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/2W      SENDEFOFFENC            </IDS><ASR>K11/01ZD/01/410856R                    </ASR><REM>I26092010B    2576                                                                       261020102576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "SENDEFOFFENC",
+      croNumber: "",
+      arrestSummonsNumber: "11/01ZD/01/410856R",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/2W",
+      remandDate: "2010-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2010-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -57,8 +144,64 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU04", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/2W      SENDEFOFFENC            </IDS><SUB>I2576                                                                       26102010D</SUB><CCR>K21/2732/1H                    </CCR><CCH>K001              TH68006 </CCH><DIS>I1002M9                    00                                                                            </DIS><CCH>K002              TH68151 </CCH><DIS>I1002M10                   00                                                                            </DIS><CCH>K003              TH68010 </CCH><DIS>I1002M11                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "SENDEFOFFENC",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/2W",
+      courtCaseReference: "21/2732/000001H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2010-10-26",
+      reasonForAppearance: "Sentence Deferred",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 9
+              }
+            }
+          ],
+          offenceId: "3307145a-229f-4609-8788-d05309342a50"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 10
+              }
+            }
+          ],
+          offenceId: "7572fc89-3f3f-48c2-9927-01a7bb032364"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "TH68010",
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 11
+              }
+            }
+          ],
+          offenceId: "1ae4f8b2-139f-427d-af60-fda9fcde32b6"
+        }
+      ]
+    },
     count: 1
   })
 ]

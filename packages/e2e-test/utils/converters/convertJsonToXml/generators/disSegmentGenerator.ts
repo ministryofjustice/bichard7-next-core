@@ -49,6 +49,7 @@ const disSegmentGenerator = (disposal: Disposal): string | undefined => {
   const qtyMonetaryValue = formateMonetaryValue(disposal.disposalFine?.amount)
   const qtyUnitsFined = disposal.disposalFine?.units?.toString().padStart(2, "0") ?? CONSTANT.DEFAULT_QTY_UNITS
   const qualifiers = disposal.disposalQualifiers?.join("")
+  const qualifierDuration = parseQtyDuration(disposal.disposalQualifierDuration)
   const text = disposal.disposalText
 
   const disSegment = generateRow("DIS", [
@@ -58,7 +59,8 @@ const disSegmentGenerator = (disposal: Disposal): string | undefined => {
     [qtyDate, CONSTANT.DISPOSAL_QTY_DATE_FIELD_LENGTH],
     [qtyMonetaryValue, CONSTANT.DISPOSAL_QTY_MONETARY_VALUE_FIELD_LENGTH],
     [qtyUnitsFined, CONSTANT.DISPOSAL_QTY_UNITS_FINED_FIELD_LENGTH],
-    [qualifiers, CONSTANT.DISPOSAL_QUALIFIERS_FIELD_LENGTH],
+    [qualifiers, CONSTANT.DISPOSAL_QUALIFIERS_FIELD_LENGTH - CONSTANT.DISPOSAL_QTY_DURATION_FIELD_LENGTH],
+    [qualifierDuration, CONSTANT.DISPOSAL_QTY_DURATION_FIELD_LENGTH],
     [text, CONSTANT.DISPOSAL_TEXT_FIELD_LENGTH]
   ])
 

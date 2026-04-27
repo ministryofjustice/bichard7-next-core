@@ -40,7 +40,72 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/4Y      TOSINGLECCR             </IDS><CCR>K21/2732/4L                    </CCR><COU>I2576                                                                       TOSINGLECCRX/MULTIPLECCR                              011120110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011120110000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><DIS>I3025Y999                  00            SEA MONKEY                                                      </DIS><CCH>K002              CJ88001 </CCH><ADJ>INOT GUILTY   GUILTY        011120110000 </ADJ><DIS>I1002M14                   00                                                                            </DIS><DIS>I3107                      00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "TOSINGLECCR",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/4Y",
+      courtCaseReference: "21/2732/000004L",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-11-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MULTIPLECCR"],
+        defendantLastName: "TOSINGLECCRX"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-11-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3025,
+              disposalDuration: {
+                units: "life",
+                count: 0
+              },
+              disposalText: "SEA MONKEY"
+            }
+          ],
+          offenceId: "f1f981ad-1d56-4007-b2c9-9653772c2be3"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "CJ88001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-11-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 14
+              }
+            },
+            {
+              disposalCode: 3107
+            }
+          ],
+          offenceId: "4c639fe7-2b42-499f-863b-3ac3a93670a6"
+        }
+      ]
+    }
   })
 ]

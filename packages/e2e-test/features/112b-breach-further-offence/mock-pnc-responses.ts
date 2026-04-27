@@ -20,8 +20,44 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/29A     SUSSENTENCE             </IDS><CCR>K21/2732/23G                   </CCR><COU>I2576                                                                       SUSSENTENCETWO/BREACH                                 261020110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1002M3                    00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "SUSSENTENCE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/29A",
+      courtCaseReference: "21/2732/000023G",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["BREACH"],
+        defendantLastName: "SUSSENTENCETWO"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 3
+              }
+            }
+          ],
+          offenceId: "b4bc868e-684a-4fe6-8352-c3bbdabc9cc5"
+        }
+      ]
+    },
     count: 1
   })
 ]

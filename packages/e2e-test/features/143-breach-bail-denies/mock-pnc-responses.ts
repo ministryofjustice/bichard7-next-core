@@ -20,8 +20,41 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/11F     DENIES                  </IDS><ASR>K12/01ZD/01/445099L                    </ASR><REM>I26092011B    2576                                                                       261020112576                                                                       EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  WITH CHILD                                                                                          EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OFA POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  AREA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "DENIES",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/445099L",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/11F",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [
+        "EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  ",
+        "SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  ",
+        "WITH CHILD                                        ",
+        "                                                  ",
+        "EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN ",
+        "SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OF",
+        "A POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  ",
+        "AREA                                              "
+      ],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -42,8 +75,41 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/11F     DENIES                  </IDS><ASR>K12/01ZD/01/445099L                    </ASR><REM>I10102011B    2576                                                                       261020112576                                                                       EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  WITH CHILD                                                                                          EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OFA POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  AREA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "DENIES",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/445099L",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/11F",
+      remandDate: "2011-10-10",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [
+        "EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  ",
+        "SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  ",
+        "WITH CHILD                                        ",
+        "                                                  ",
+        "EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN ",
+        "SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OF",
+        "A POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  ",
+        "AREA                                              "
+      ],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -64,8 +130,41 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/11F     DENIES                  </IDS><ASR>K12/01ZD/01/445099L                    </ASR><REM>I26102011B    2576                                                                       261120112576                                                                       EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  WITH CHILD                                                                                          EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OFA POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  AREA                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "DENIES",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/445099L",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/11F",
+      remandDate: "2011-10-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [
+        "EXCLUSION: NOT TO CONTACT DIRECTLY OR INDIRECTLY  ",
+        "SOME ONE SAVE VIA A SOLICITOR TO ARRANGE CONTACT  ",
+        "WITH CHILD                                        ",
+        "                                                  ",
+        "EXCLUSION: NOT TO ENTER SOME ROAD OR SOME LANE IN ",
+        "SOME PLACE UNTIL HE HAS ATTENDED IN THE COMPANY OF",
+        "A POLICE OFICER TO CONFIRM SOME ONE HAS LEFT THE  ",
+        "AREA                                              "
+      ],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-11-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   })
 ]

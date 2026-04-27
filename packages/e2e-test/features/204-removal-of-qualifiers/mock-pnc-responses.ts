@@ -3,7 +3,41 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/378Y    DUFRESNE                </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       DUFRESNE/ANDY                                         260920080000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920080000 </ADJ><DIS>I4027    01102008          00BA                                                                          </DIS>"
+    expectedRequest: {
+      pncCheckName: "DUFRESNE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/378Y",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2008-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ANDY"],
+        defendantLastName: "DUFRESNE"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2008-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4027,
+              disposalEffectiveDate: "2008-10-01",
+              disposalQualifiers: ["BA"]
+            }
+          ],
+          offenceId: "fbfbea2a-d4ae-4e1c-8d04-f70e62d4de4d"
+        }
+      ]
+    }
   })
 ]

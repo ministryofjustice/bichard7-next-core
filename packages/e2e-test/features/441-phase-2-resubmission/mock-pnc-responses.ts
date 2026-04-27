@@ -14,8 +14,77 @@ export default (ncm: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410780J PUFIVE                  </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       PUFIVE/UPDATE                                         260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><CCH>K002              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><CCH>K003              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "PUFIVE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410780J",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["UPDATE"],
+        defendantLastName: "PUFIVE"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            }
+          ],
+          offenceId: "00773f35-53ea-43f4-8a7c-44a9a1d647a8"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            }
+          ],
+          offenceId: "1355d607-fa50-4bad-af6e-2721028ee2b4"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            }
+          ],
+          offenceId: "c300c19d-01de-485b-bdf3-a8153a0c5d44"
+        }
+      ]
+    },
     count: 1
   })
 ]

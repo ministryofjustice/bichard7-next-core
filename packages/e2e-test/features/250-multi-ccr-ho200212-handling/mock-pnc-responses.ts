@@ -22,13 +22,85 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K13/2Z      NOEXCEPTION             </IDS><CCR>K13/2732/1U                    </CCR><COU>I2576                                                                       NOEXCEPTION/ADDEDOFFENCE                              261020110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1002M3                    00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "NOEXCEPTION",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "13/2Z",
+      courtCaseReference: "13/2732/000001U",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ADDEDOFFENCE"],
+        defendantLastName: "NOEXCEPTION"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 3
+              }
+            }
+          ],
+          offenceId: "8b4fd0d1-2d71-4a68-be9b-ba6be3f1d4c0"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K13/2Z      NOEXCEPTION             </IDS><CCR>K13/2732/2V                    </CCR><COU>I2576                                                                       NOEXCEPTION/ADDEDOFFENCE                              261020110000</COU><CCH>K001              TH68012 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1002M4                    00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "NOEXCEPTION",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "13/2Z",
+      courtCaseReference: "13/2732/000002V",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ADDEDOFFENCE"],
+        defendantLastName: "NOEXCEPTION"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68012",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 4
+              }
+            }
+          ],
+          offenceId: "53f55004-df01-45a6-94ba-266ba2e6e612"
+        }
+      ]
+    },
     count: 1
   })
 ]

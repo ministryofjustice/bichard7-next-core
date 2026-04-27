@@ -3,11 +3,68 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410865B REMANDTEST              </IDS><ASR>K11/01ZD/01/410865B                    </ASR><REM>I25042011B    2576                                                                       081220110453                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>"
+    expectedRequest: {
+      pncCheckName: "REMANDTEST",
+      croNumber: "",
+      arrestSummonsNumber: "11/01ZD/01/410865B",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410865B",
+      remandDate: "2011-04-25",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-12-08",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "0453"
+        }
+      }
+    }
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410865B REMANDTEST              </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       REMANDTEST/CORTEZ                                     250420110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        250420110000 </ADJ><DIS>I4014    08122011          00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "REMANDTEST",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410865B",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-04-25",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["CORTEZ"],
+        defendantLastName: "REMANDTEST"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-04-25",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4014,
+              disposalEffectiveDate: "2011-12-08"
+            }
+          ],
+          offenceId: "5e78e1be-1504-40a3-9dcc-8b94a9264c5a"
+        }
+      ]
+    }
   })
 ]

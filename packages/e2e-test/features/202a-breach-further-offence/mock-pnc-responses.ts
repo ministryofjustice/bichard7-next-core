@@ -20,8 +20,47 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/15K     COMMUNITYORD            </IDS><CCR>K21/2812/4H                    </CCR><COU>I2576                                                                       COMMUNITYORDER/BREACH                                 260920080000</COU><CCH>K001              CJ88116 </CCH><ADJ>INOT GUILTY   GUILTY        260920080000 </ADJ><DIS>I1116                      00                                                                            </DIS><DIS>I3101H100                  00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "COMMUNITYORD",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/15K",
+      courtCaseReference: "21/2812/000004H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2008-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["BREACH"],
+        defendantLastName: "COMMUNITYORDER"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "CJ88116",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2008-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1116
+            },
+            {
+              disposalCode: 3101,
+              disposalDuration: {
+                units: "hours",
+                count: 100
+              }
+            }
+          ],
+          offenceId: "e5d4e33c-2374-45ee-976b-aeb02f270da7"
+        }
+      ]
+    },
     count: 1
   })
 ]

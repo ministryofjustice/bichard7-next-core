@@ -21,13 +21,88 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/3X      HOMER                   </IDS><CCR>K21/2732/3K                    </CCR><COU>I2576                                                                       WELLS/HOMER                                           260920110000</COU><CRT>I2576                                                                       08102011</CRT><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   NOT GUILTY    260920110000 </ADJ><DIS>I2051                      00                                                                            </DIS><CCH>K002              RT88191 </CCH><ADJ>INOT GUILTY                         0000 </ADJ><DIS>I2059                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "HOMER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/3X",
+      courtCaseReference: "21/2732/000003K",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["HOMER"],
+        defendantLastName: "WELLS"
+      },
+      carryForward: {
+        appearanceDate: "2011-10-08",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Not Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2051
+            }
+          ],
+          offenceId: "abe1be67-91bf-4f2f-9c2b-60b06d84f6b1"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "RT88191",
+          plea: "NOT GUILTY",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2059
+            }
+          ],
+          offenceId: "17f6da71-340d-4cf6-a08e-ae7c48bdc641"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/3X      HOMER                   </IDS><ASR>K11/01ZD/01/410785P                    </ASR><REM>I26092011B    2576                                                                       081020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "HOMER",
+      croNumber: "",
+      arrestSummonsNumber: "11/01ZD/01/410785P",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/3X",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-08",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -52,8 +127,43 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/3X      HOMER                   </IDS><CCR>K21/2732/25J                   </CCR><COU>I2576                                                                       WELLS/HOMER                                           081020110000</COU><CCH>K001              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        081020110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "HOMER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/3X",
+      courtCaseReference: "21/2732/000025J",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-08",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["HOMER"],
+        defendantLastName: "WELLS"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "RT88191",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-08",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            }
+          ],
+          offenceId: "695467c9-6a37-4daa-bd16-e93f54e4ef8d"
+        }
+      ]
+    },
     count: 1
   })
 ]

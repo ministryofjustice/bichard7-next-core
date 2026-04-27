@@ -23,18 +23,126 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><CCR>K09/0428/444E                  </CCR><COU>I2576                                                                       NOLAN/NIGEL                                           260920110000</COU><CRT>I2576                                                                       01122011</CRT><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   NOT GUILTY    260920110000 </ADJ><DIS>I2006                      00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY                         0000 </ADJ><DIS>I2059                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "NOLAN",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "09/478F",
+      courtCaseReference: "09/0428/000444E",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["NIGEL"],
+        defendantLastName: "NOLAN"
+      },
+      carryForward: {
+        appearanceDate: "2011-12-01",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Not Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2006
+            }
+          ],
+          offenceId: "3801d797-9e88-4c83-8784-40e0c3152116"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "PC53001",
+          plea: "NOT GUILTY",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2059
+            }
+          ],
+          offenceId: "e7d3f9e1-78a2-4cf1-9363-122cdf6d6387"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><CCR>K09/0413/445H                  </CCR><COU>I2576                                                                       NOLAN/NIGEL                                           260920110000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I4011    01122011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "NOLAN",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "09/478F",
+      courtCaseReference: "09/0413/000445H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["NIGEL"],
+        defendantLastName: "NOLAN"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4011,
+              disposalEffectiveDate: "2011-12-01"
+            }
+          ],
+          offenceId: "305f9ef6-e035-4cd3-be02-6238a0ba0964"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><ASR>K09/0000/00/20002F                     </ASR><REM>I26092011B    2576                                                                       011220112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "NOLAN",
+      croNumber: "",
+      arrestSummonsNumber: "09/0000/00/20002F",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "09/478F",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-12-01",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -63,13 +171,77 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><CCR>K21/2732/1H                    </CCR><COU>I2576                                                                       NOLAN/NIGEL                                           011220110000</COU><CCH>K001              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        011220110000 </ADJ><DIS>I1002M10                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "NOLAN",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "09/478F",
+      courtCaseReference: "21/2732/000001H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-12-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["NIGEL"],
+        defendantLastName: "NOLAN"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "PC53001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-12-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 10
+              }
+            }
+          ],
+          offenceId: "3d308522-237e-4e3d-b10d-1c6819591849"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU04", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K09/478F    NOLAN                   </IDS><SUB>I2576                                                                       01122011D</SUB><CCR>K09/0413/445H                  </CCR><CCH>K001              TH68001 </CCH><DIS>I1002M10                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "NOLAN",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "09/478F",
+      courtCaseReference: "09/0413/000445H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2011-12-01",
+      reasonForAppearance: "Sentence Deferred",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68001",
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 10
+              }
+            }
+          ],
+          offenceId: "e94d93d8-6922-4b82-9c6b-f30806b2bbeb"
+        }
+      ]
+    },
     count: 1
   })
 ]
