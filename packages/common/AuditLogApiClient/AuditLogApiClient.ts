@@ -28,14 +28,7 @@ const undiciDispatcher = new Agent({
   }
 })
 
-const handleApiError = <T>(
-  error: unknown,
-  timeoutId: NodeJS.Timeout,
-  timeoutErrorMessage: string,
-  applicationErrorMessage: string
-): Result<T> => {
-  clearTimeout(timeoutId)
-
+const handleApiError = <T>(error: unknown, timeoutErrorMessage: string, applicationErrorMessage: string): Result<T> => {
   if (error instanceof Error && error.name === "AbortError") {
     return new Error(`Timed out ${timeoutErrorMessage}.`) as Result<T>
   }
@@ -45,6 +38,8 @@ const handleApiError = <T>(
 }
 
 export default class AuditLogApiClient {
+  private readonly signal: AbortSignal | undefined
+
   private get apiKeyHeader(): Record<string, string> {
     if (this.isB7Api()) {
       return { Authorization: this.apiKey }
@@ -56,17 +51,18 @@ export default class AuditLogApiClient {
   private get baseUrl(): string {
     return `${this.apiUrl}/${this.basePath}`
   }
+
   constructor(
     private readonly apiUrl: string,
     private readonly apiKey: string,
     private readonly timeout: number = 0,
     private readonly basePath: string = "messages"
-  ) {}
+  ) {
+    this.signal = this.timeout > 0 ? AbortSignal.timeout(this.timeout) : undefined
+  }
 
   createAuditLog(auditLog: AuditLogApiRecordInput): PromiseResult<AuditLogApiRecordOutput> {
     const url = this.baseUrl
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
       body: this.stringify(auditLog),
@@ -77,11 +73,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
-        clearTimeout(timeoutId)
-
         if (response.status === HttpStatusCode.created) {
           return response.json()
         }
@@ -95,20 +89,12 @@ export default class AuditLogApiClient {
         })
       })
       .catch((error: unknown) =>
-        handleApiError(
-          error,
-          timeoutId,
-          `creating audit log for message with Id ${auditLog.messageId}`,
-          "creating audit log"
-        )
+        handleApiError(error, `creating audit log for message with Id ${auditLog.messageId}`, "creating audit log")
       )
   }
 
   createEvents(correlationId: string, event: AuditLogEvent | AuditLogEvent[]): PromiseResult<void> {
     const url = `${this.baseUrl}/${correlationId}/events`
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
       body: JSON.stringify(event),
@@ -119,11 +105,9 @@ export default class AuditLogApiClient {
         "Content-Type": "application/json"
       },
       method: "POST",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response) => {
-        clearTimeout(timeoutId)
-
         if (response.status === HttpStatusCode.created) {
           return
         }
@@ -140,15 +124,12 @@ export default class AuditLogApiClient {
         })
       })
       .catch((error: unknown) =>
-        handleApiError(error, timeoutId, `creating event for message with Id ${correlationId}`, "creating event")
+        handleApiError(error, `creating event for message with Id ${correlationId}`, "creating event")
       )
   }
 
   createUserEvent(userName: string, event: AuditLogEvent): PromiseResult<void> {
     const url = `${this.apiUrl}/users/${userName}/events`
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
       body: JSON.stringify(event),
@@ -159,11 +140,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response): Promise<Result<void>> | Result<void> => {
-        clearTimeout(timeoutId)
-
         if (response.status === HttpStatusCode.created) {
           return
         }
@@ -178,7 +157,7 @@ export default class AuditLogApiClient {
       })
       .catch(
         (error: unknown): Result<void> =>
-          handleApiError(error, timeoutId, `creating event for user '${userName}'`, "creating event")
+          handleApiError(error, `creating event for user '${userName}'`, "creating event")
       )
   }
 
@@ -190,9 +169,6 @@ export default class AuditLogApiClient {
       unsanitised: true
     })
 
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
-
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
       dispatcher: undiciDispatcher,
@@ -200,11 +176,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
-        clearTimeout(timeoutId)
-
         if (response.ok) {
           return response.json()
         }
@@ -215,7 +189,7 @@ export default class AuditLogApiClient {
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput[]> =>
-          handleApiError(error, timeoutId, "getting unsanitised messages", "getting unsanitised messages")
+          handleApiError(error, "getting unsanitised messages", "getting unsanitised messages")
       )
   }
 
@@ -236,9 +210,6 @@ export default class AuditLogApiClient {
 
     const url = `${this.baseUrl}/${correlationId}${queryString}`
 
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
-
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
       dispatcher: undiciDispatcher,
@@ -246,11 +217,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput>> | Result<AuditLogApiRecordOutput> => {
-        clearTimeout(timeoutId)
-
         if (response.ok) {
           return response.json().then((result) => {
             const data = this.isB7Api() ? result : result[0]
@@ -268,15 +237,12 @@ export default class AuditLogApiClient {
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput> =>
-          handleApiError(error, timeoutId, `getting messages for correlation Id ${correlationId}`, "getting messages")
+          handleApiError(error, `getting messages for correlation Id ${correlationId}`, "getting messages")
       )
   }
 
   getAuditLogs(options?: GetAuditLogsOptions): PromiseResult<AuditLogApiRecordOutput[]> {
     const url = addQueryParams(this.baseUrl, options)
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
@@ -285,11 +251,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
-        clearTimeout(timeoutId)
-
         if (response.ok) {
           return response.json()
         }
@@ -304,7 +268,7 @@ export default class AuditLogApiClient {
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput[]> =>
-          handleApiError(error, timeoutId, "getting messages", "getting messages")
+          handleApiError(error, "getting messages", "getting messages")
       )
   }
 
@@ -323,9 +287,6 @@ export default class AuditLogApiClient {
 
     const url = `${this.baseUrl}?${queryString}`
 
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
-
     return fetch(url, {
       // @ts-expect-error - Required for Node.js environments (node-fetch/undici)
       dispatcher: undiciDispatcher,
@@ -333,11 +294,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "GET",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response): Promise<Result<AuditLogApiRecordOutput[]>> | Result<AuditLogApiRecordOutput[]> => {
-        clearTimeout(timeoutId)
-
         if (response.ok) {
           return response.json()
         }
@@ -352,15 +311,12 @@ export default class AuditLogApiClient {
       })
       .catch(
         (error: unknown): Result<AuditLogApiRecordOutput[]> =>
-          handleApiError(error, timeoutId, `getting message by hash: ${messageHash}`, "getting message by hash")
+          handleApiError(error, `getting message by hash: ${messageHash}`, "getting message by hash")
       )
   }
 
   retryEvent(correlationId: string): PromiseResult<void> {
     const url = `${this.baseUrl}/${correlationId}/retry`
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
       body: JSON.stringify({}),
@@ -371,11 +327,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response) => {
-        clearTimeout(timeoutId)
-
         if (response.status === HttpStatusCode.noContent) {
           return
         }
@@ -390,15 +344,12 @@ export default class AuditLogApiClient {
       })
       .catch(
         (error: unknown): Result<void> =>
-          handleApiError(error, timeoutId, `retrying event for message with Id ${correlationId}`, "retrying event")
+          handleApiError(error, `retrying event for message with Id ${correlationId}`, "retrying event")
       )
   }
 
   sanitiseAuditLog(correlationId: string): PromiseResult<void> {
     const url = `${this.baseUrl}/${correlationId}/sanitise`
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), this.timeout)
 
     return fetch(url, {
       body: JSON.stringify({}),
@@ -409,11 +360,9 @@ export default class AuditLogApiClient {
         ...this.apiKeyHeader
       },
       method: "POST",
-      signal: controller.signal
+      signal: this.signal
     })
       .then((response) => {
-        clearTimeout(timeoutId)
-
         if (response.status === HttpStatusCode.noContent) {
           return
         }
@@ -427,7 +376,6 @@ export default class AuditLogApiClient {
         })
       })
       .catch((error: unknown): Result<void> => {
-        clearTimeout(timeoutId)
         const errorInstance = error instanceof Error ? error : new Error(String(error))
         return new ApplicationError(`Error sanitising message: ${errorInstance.message}`, errorInstance)
       })
