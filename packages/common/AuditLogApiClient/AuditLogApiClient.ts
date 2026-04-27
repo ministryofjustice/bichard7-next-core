@@ -178,7 +178,7 @@ export default class AuditLogApiClient {
           case HttpStatusCode.gatewayTimeout:
             return new Error(`Timed out creating event for user '${userName}'.`)
           default:
-            return response.text().then((text) => {
+            return response.text().then(() => {
               return new Error(`Error ${response.status}: Could not create audit log event.`)
             })
         }
@@ -389,7 +389,7 @@ export default class AuditLogApiClient {
           case HttpStatusCode.notFound:
             return new Error(`The message with Id ${correlationId} does not exist.`)
           default:
-            return response.text().then((text) => {
+            return response.text().then(() => {
               return new Error(`Error ${response.status}: Could not retry audit log event.`)
             })
         }
