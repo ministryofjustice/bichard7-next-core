@@ -10,6 +10,8 @@ const semver = new RegExp(
     - changed the Change type to require extra values
   - @faker-js/faker
     - v10 has breaking change with Jest
+  - undici
+    - v6 supports node v20. Higher versions need > node v20
 
   Ignored:
   - bichard7-next-data-x.x.x
@@ -26,7 +28,7 @@ const semver = new RegExp(
   - cypress-circleci-reporter
       - 0.4.0 changed to module type
 */
-const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist"]
+const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist", "undici"]
 const ignored = [
   `bichard7-next-data-(${semver.source})`,
   "p-limit",

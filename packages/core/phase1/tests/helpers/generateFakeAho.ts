@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { dateReviver } from "@moj-bichard7/common/axiosDateTransformer"
+import { dateReviver } from "@moj-bichard7/common/utils/dateTransformer"
 import fs from "fs"
 import merge from "lodash.merge"
 

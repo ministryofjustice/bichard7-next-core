@@ -7,8 +7,8 @@ import type {
   PoliceQueryResult
 } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import axiosDateTransformer from "@moj-bichard7/common/axiosDateTransformer"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import dateTransformer from "@moj-bichard7/common/utils/dateTransformer"
 import axios from "axios"
 import https from "https"
 
@@ -20,7 +20,9 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 import { pncApiResultSchema } from "../../../schemas/pncApiResult"
 import PoliceApiError from "../PoliceApiError"
 
-axios.defaults.transformResponse = [axiosDateTransformer]
+const pncAxios = axios.create({
+  transformResponse: [dateTransformer]
+})
 
 const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
   const getAdjudication = (offence: PncApiOffence): PoliceAdjudication | undefined => {
@@ -110,7 +112,7 @@ export default class PncGateway implements PoliceGateway {
 
   query(asn: string, correlationId: string): Promise<PoliceApiError | PoliceQueryResult> {
     this.queryTime = new Date()
-    return axios
+    return pncAxios
       .get(`${this.config.url}/records/${asn}`, {
         headers: {
           "X-Api-Key": this.config.key,
@@ -137,7 +139,7 @@ export default class PncGateway implements PoliceGateway {
   update(request: PoliceUpdateRequest, correlationId: string): Promise<PoliceApiError | void> {
     const path = lookupPathFromOperation(request.operation)
 
-    return axios
+    return pncAxios
       .post(`${this.config.url}/records/${path}`, request.request, {
         headers: {
           "X-Api-Key": this.config.key,
