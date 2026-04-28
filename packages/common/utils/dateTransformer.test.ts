@@ -1,4 +1,4 @@
-import dateTransformer, { dateReviver } from "./dateTransformer" // Adjust path as needed
+import dateTransformer, { dateReviver } from "./dateTransformer"
 
 describe("dateReviver", () => {
   it("should convert a valid ISO date string to a Date object", () => {
@@ -10,19 +10,19 @@ describe("dateReviver", () => {
 
   it("should convert a short date string (YYYY-MM-DD) to a Date object", () => {
     const shortDate = "2023-10-25"
-    const result = dateReviver("", shortDate)
+    const result = dateReviver("", shortDate) as Date
     expect(result).toBeInstanceOf(Date)
   })
 
   it("should return the original string if it is not a valid date format", () => {
     const notADate = "Invalid date"
-    const result = dateReviver("", notADate)
+    const result = dateReviver("", notADate) as string
     expect(result).toBe("Invalid date")
   })
 
   it("should return the original value if it is not a string", () => {
     const numberValue = 12345
-    const result = dateReviver("", numberValue)
+    const result = dateReviver("", numberValue) as number
     expect(result).toBe(12345)
   })
 })
@@ -34,7 +34,7 @@ describe("dateTransformer logic", () => {
 
   it("should parse a standard JSON object and not affect non-date values", () => {
     const json = '{"prop1": "data1", "prop2": 2}'
-    const result = dateTransformer(json)
+    const result = dateTransformer(json) as { prop1: string; prop2: number }
     expect(result).toEqual({ prop1: "data1", prop2: 2 })
   })
 
@@ -68,7 +68,7 @@ describe("dateTransformer Exception Handling", () => {
 
   it("should handle unexpected types in the reviver", () => {
     const json = JSON.stringify({ count: 123 })
-    const result = dateTransformer<{ count: number }>(json)
+    const result = dateTransformer<{ count: number }>(json) as { count: number }
 
     expect(result.count).toBe(123)
     expect(typeof result.count).toBe("number")
