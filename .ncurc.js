@@ -11,7 +11,7 @@ const semver = new RegExp(
   - @faker-js/faker
     - v10 has breaking change with Jest
   - undici
-    - v7 does not support node 20
+    - v6 supports node v20. Higher versions need > node v20
 
   Ignored:
   - bichard7-next-data-x.x.x
