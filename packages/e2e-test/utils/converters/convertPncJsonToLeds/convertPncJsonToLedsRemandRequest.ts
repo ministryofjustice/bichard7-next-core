@@ -16,9 +16,13 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
     }
   } as PncUpdateDataset
 
-  const bailConditions = (
+  const bailConditionsArray = (
     Array.isArray(pncJson.bailConditions) ? pncJson.bailConditions : [pncJson.bailConditions]
   ).flatMap((bailCondition) => bailCondition.match(/.{1,50}/g) ?? [])
+  const bailConditions = []
+  while (bailConditionsArray.length > 0) {
+    bailConditions.push(bailConditionsArray.splice(0, 4).join("\n"))
+  }
 
   return mapToRemandRequest(
     {
