@@ -5,7 +5,7 @@ import { OK } from "http-status"
 
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 
-describe("health plugin", () => {
+describe("/health e2e", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
