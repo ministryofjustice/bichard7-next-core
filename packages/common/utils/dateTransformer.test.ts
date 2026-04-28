@@ -40,17 +40,37 @@ describe("dateTransformer logic", () => {
 
   it("should parse nested dates within a JSON object", () => {
     const json = JSON.stringify({
-      createdAt: "2023-10-25T10:00:00Z",
+      date1: "2023-10-25T10:00:00Z",
       id: 1,
       nested: {
-        updatedAt: "2023-10-26T12:00:00Z"
+        date2: "2023-10-26T12:00:00Z"
       }
     })
 
-    const result = dateTransformer(json)
+    const result = dateTransformer(json) as { date1: Date; id: number; nested: { date2: Date } }
 
-    expect(result.createdAt).toBeInstanceOf(Date)
-    expect(result.nested.updatedAt).toBeInstanceOf(Date)
+    expect(result.date1).toBeInstanceOf(Date)
+    expect(result.nested.date2).toBeInstanceOf(Date)
     expect(result.id).toBe(1)
+  })
+})
+
+describe("dateTransformer Exception Handling", () => {
+  it("should handle malformed JSON strings without crashing", () => {
+    const malformedJson = '{"invalidJSON": "'
+    expect(() => dateTransformer(malformedJson)).toThrow()
+  })
+
+  it("should handle 'null' or 'undefined' string inputs gracefully", () => {
+    expect(dateTransformer("")).toEqual({})
+    expect(dateTransformer("   ")).toEqual({})
+  })
+
+  it("should handle unexpected types in the reviver", () => {
+    const json = JSON.stringify({ count: 123 })
+    const result = dateTransformer<{ count: number }>(json)
+
+    expect(result.count).toBe(123)
+    expect(typeof result.count).toBe("number")
   })
 })

@@ -13,11 +13,15 @@ export function dateReviver(_: string, value: unknown): Date | typeof value {
   return value
 }
 
-function dateTransformer(data: string) {
-  if (data === "") {
-    return {}
-  } else {
-    return JSON.parse(data, dateReviver)
+function dateTransformer<T>(data: string): T {
+  if (!data || data.trim() === "") {
+    return {} as T
+  }
+
+  try {
+    return JSON.parse(data, dateReviver) as T
+  } catch (e: unknown) {
+    throw new Error(`Invalid JSON provided to dateTransformer: ${e instanceof Error ? e.message : "Unknown error"}`)
   }
 }
 
