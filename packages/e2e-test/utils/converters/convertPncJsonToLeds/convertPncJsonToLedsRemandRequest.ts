@@ -24,7 +24,7 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
     bailConditions.push(bailConditionsArray.splice(0, 4).join("\n"))
   }
 
-  return mapToRemandRequest(
+  const mappedData = mapToRemandRequest(
     {
       ...pncJson,
       hearingDate: pncJson.remandDate,
@@ -35,4 +35,9 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
     },
     pncUpdateDataset
   )
+
+  return {
+    ...mappedData,
+    personUrn: pncJson.pncIdentifier
+  }
 }

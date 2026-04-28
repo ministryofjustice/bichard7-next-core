@@ -20,13 +20,70 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/26X     POSTADJUDICA            </IDS><CCR>K21/2732/20D                   </CCR><COU>I2576                                                                       POSTADJUDICATION/PASSAWAY                             260920110000</COU><CCH>K001              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I4047    26102011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "POSTADJUDICA",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/26X",
+      courtCaseReference: "21/2732/000020D",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["PASSAWAY"],
+        defendantLastName: "POSTADJUDICATION"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4047,
+              disposalEffectiveDate: "2011-10-26"
+            }
+          ],
+          offenceId: "6bcc95de-ac46-4f5c-9d92-aaa8268ea0cd"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/26X     POSTADJUDICA            </IDS><ASR>K12/01ZD/01/448750E                    </ASR><REM>I26092011B    2576                                                                       261020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "POSTADJUDICA",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/448750E",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/26X",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -49,8 +106,32 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU04", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/26X     POSTADJUDICA            </IDS><SUB>I2576                                                                       26102011D</SUB><CCR>K21/2732/20D                   </CCR><CCH>K001              TH68151 </CCH><DIS>I2065                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "POSTADJUDICA",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/26X",
+      courtCaseReference: "21/2732/000020D",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2011-10-26",
+      reasonForAppearance: "Sentence Deferred",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68151",
+          disposalResults: [
+            {
+              disposalCode: 2065
+            }
+          ],
+          offenceId: "fc7707c6-ac0d-4a2c-a26d-c8edafa71df0"
+        }
+      ]
+    },
     count: 1
   })
 ]

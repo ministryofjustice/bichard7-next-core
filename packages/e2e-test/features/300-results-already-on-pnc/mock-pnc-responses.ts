@@ -21,8 +21,32 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/27Y     SUBSEQUENTRE            </IDS><ASR>K14/01ZD/01/449843Q                    </ASR><REM>I26092011B    2576                                                                       261020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "SUBSEQUENTRE",
+      croNumber: "",
+      arrestSummonsNumber: "14/01ZD/01/449843Q",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/27Y",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -43,8 +67,32 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/27Y     SUBSEQUENTRE            </IDS><ASR>K14/01ZD/01/449843Q                    </ASR><REM>I26102011B    2576                                                                       261120112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "SUBSEQUENTRE",
+      croNumber: "",
+      arrestSummonsNumber: "14/01ZD/01/449843Q",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/27Y",
+      remandDate: "2011-10-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-11-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   })
 ]

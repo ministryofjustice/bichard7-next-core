@@ -21,13 +21,85 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/21R     ADDOFFAPJNOP            </IDS><CCR>K21/2732/16Z                   </CCR><COU>I2576                                                                       ADDOFFAPJNOPNCADJ/NOEXCEPTION                         260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I4047    26102011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I4047    26102011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "ADDOFFAPJNOP",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/21R",
+      courtCaseReference: "21/2732/000016Z",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["NOEXCEPTION"],
+        defendantLastName: "ADDOFFAPJNOPNCADJ"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4047,
+              disposalEffectiveDate: "2011-10-26"
+            }
+          ],
+          offenceId: "61c1516d-56df-4824-a347-07df30f6902a"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4047,
+              disposalEffectiveDate: "2011-10-26"
+            }
+          ],
+          offenceId: "4760a2e1-240a-4893-88b3-c6d7e783d8b9"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/21R     ADDOFFAPJNOP            </IDS><ASR>K12/01ZD/01/445746P                    </ASR><REM>I26092011B    2576                                                                       261020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "ADDOFFAPJNOP",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/445746P",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/21R",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -53,8 +125,32 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/21R     ADDOFFAPJNOP            </IDS><ASR>K12/01ZD/01/445746P                    </ASR><REM>I26102011B    2576                                                                       261120112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "ADDOFFAPJNOP",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/445746P",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/21R",
+      remandDate: "2011-10-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2011-11-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   })
 ]

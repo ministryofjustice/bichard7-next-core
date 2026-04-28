@@ -20,8 +20,73 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/16L     COMMUNITYORD            </IDS><CCR>K21/2812/5J                    </CCR><COU>I2576                                                                       COMMUNITYORDERTWO/BREACH                              261020090000</COU><CCH>K001              TH68023 </CCH><ADJ>INOT GUILTY   GUILTY        261020090000 </ADJ><DIS>I1002M3                    00                                                                            </DIS><ASR>K11/01VK/01/376290V                    </ASR><ACH>I                                                                                                                                            CJ03511                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01VK01102009                </ACH><ADJ>IGUILTY       GUILTY        261020090000 </ADJ><DIS>I1029                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "COMMUNITYORD",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/16L",
+      courtCaseReference: "21/2812/000005J",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["BREACH"],
+        defendantLastName: "COMMUNITYORDERTWO"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68023",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 3
+              }
+            }
+          ],
+          offenceId: "434797ae-dc50-4581-8bbb-e61a808cc4d3"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "11/01VK/01/376290V",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "CJ03511"
+              },
+              committedOnBail: false,
+              plea: "Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2009-10-26",
+              offenceTic: 0,
+              offenceStartDate: "2009-10-01",
+              disposalResults: [
+                {
+                  disposalCode: 1029
+                }
+              ],
+              locationFsCode: "01VK",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    },
     count: 1
   })
 ]
