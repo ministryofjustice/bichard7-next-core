@@ -23,8 +23,62 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/16Z     LANCASTER               </IDS><CCR>K12/2732/22Z                   </CCR><COU>I2576                                                                       LANCASTER/MARTIN                                      101020090000</COU><CCH>K002              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><CCH>K001              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M13                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LANCASTER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/16Z",
+      courtCaseReference: "12/2732/000022Z",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-10",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "LANCASTER"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-10",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "13b37732-ab61-4c68-bbee-8567fe198fad"
+        },
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "PC53001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-10",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 13
+              }
+            }
+          ],
+          offenceId: "c47bd5b3-f1e6-4c80-a6b3-64fc700fade6"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -52,8 +106,77 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/16Z     LANCASTER               </IDS><CCR>K12/2732/23A                   </CCR><COU>I2576                                                                       LANCASTER/MARTIN                                      201020090000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        201020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS><ASR>K12/0000/00/8V                         </ASR><ACH>I                                                                                                                                            TH68151                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD02112006                </ACH><ADJ>INOT GUILTY   GUILTY        201020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LANCASTER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/16Z",
+      courtCaseReference: "12/2732/000023A",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-20",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "LANCASTER"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-20",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 14
+              }
+            }
+          ],
+          offenceId: "12d71d51-9ebe-4802-bfc7-54569c2653fd"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "12/0000/00/8V",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68151"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2009-10-20",
+              offenceTic: 0,
+              offenceStartDate: "2006-11-02",
+              disposalResults: [
+                {
+                  disposalCode: 1002,
+                  disposalDuration: {
+                    units: "months",
+                    count: 14
+                  }
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    },
     count: 1
   })
 ]

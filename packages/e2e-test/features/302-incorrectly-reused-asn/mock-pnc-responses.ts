@@ -20,8 +20,40 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/23U     TWICEBREACHE            </IDS><CCR>K21/2732/17A                   </CCR><COU>I2576                                                                       TWICEBREACHED/ASNREUSED                               261020090000</COU><CCH>K001              CJ03510 </CCH><ADJ>INO PLEA TAKENNOT GUILTY    261020090000 </ADJ><DIS>I2006                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "TWICEBREACHE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/23U",
+      courtCaseReference: "21/2732/000017A",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ASNREUSED"],
+        defendantLastName: "TWICEBREACHED"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "CJ03510",
+          plea: "No Plea Taken",
+          adjudication: "Not Guilty",
+          dateOfSentence: "2009-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2006
+            }
+          ],
+          offenceId: "6e7dd434-450d-435e-b163-14f13e0830fe"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({

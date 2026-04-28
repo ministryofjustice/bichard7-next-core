@@ -3,7 +3,97 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410922N DIBBLEY                 </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       DIBBLEY/MARCUS                                        260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><DIS>I1002M4                    00                                                                            </DIS><CCH>K002              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><DIS>I1002M5                    00                                                                            </DIS><CCH>K003              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I1015            0000100.0000                                                                            </DIS><DIS>I1002M5                    00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "DIBBLEY",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410922N",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARCUS"],
+        defendantLastName: "DIBBLEY"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            },
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 4
+              }
+            }
+          ],
+          offenceId: "41a05dba-74a7-4d1d-b987-17a3c2a44a85"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            },
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 5
+              }
+            }
+          ],
+          offenceId: "9db51b32-8b64-41a1-b95a-772de9c29f42"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 100
+              }
+            },
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 5
+              }
+            }
+          ],
+          offenceId: "84c940c5-13ee-478f-a910-3d1b07ea8493"
+        }
+      ]
+    }
   })
 ]

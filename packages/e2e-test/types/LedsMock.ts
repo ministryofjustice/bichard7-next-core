@@ -18,7 +18,7 @@ export type LedsMock = PartialPoliceApiRequestMock &
     request: HttpRequest
     response: HttpResponse
     count?: number
-    expectedRequest?: string
+    expectedRequest?: string | object
   }
 
 export type LedsBichard = Omit<Bichard, "policeApi"> & { policeApi: LedsApi }

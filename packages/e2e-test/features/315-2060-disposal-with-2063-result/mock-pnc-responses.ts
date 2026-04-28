@@ -3,11 +3,97 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/500002P TWOZEROSIXTH            </IDS><ASR>K11/01ZD/01/500002P                    </ASR><REM>I26092011B    2576                                                                       010220122576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>"
+    expectedRequest: {
+      pncCheckName: "TWOZEROSIXTH",
+      croNumber: "",
+      arrestSummonsNumber: "11/01ZD/01/500002P",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "00/500002P",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2012-02-01",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    }
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/500002P TWOZEROSIXTH            </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       TWOZEROSIXTHREE/NOPNCUPDATE                           260920110000</COU><RCC>I01ZD/0300508                                                                       </RCC><CCH>K001              TH68006 </CCH><ADJ>I                                   0000 </ADJ><DIS>I2060                      00                                                                            </DIS><ASR>K11/01ZD/01/500002P                    </ASR><ACH>I                                                                                                                                            TH68151                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD28112010                </ACH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I4004    01022012          00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "TWOZEROSIXTH",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/500002P",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["NOPNCUPDATE"],
+        defendantLastName: "TWOZEROSIXTHREE"
+      },
+      referToCourtCase: {
+        reference: "01ZD/0300508"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2060
+            }
+          ],
+          offenceId: "e0bbdb5d-3f19-4cd8-8e73-1665b3a4c322"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "11/01ZD/01/500002P",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68151"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2011-09-26",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              disposalResults: [
+                {
+                  disposalCode: 4004,
+                  disposalEffectiveDate: "2012-02-01"
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    }
   })
 ]

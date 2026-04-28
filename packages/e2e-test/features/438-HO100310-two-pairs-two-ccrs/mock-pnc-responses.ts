@@ -24,12 +24,142 @@ export default (_: string, { policeApi }: Bichard) => [
   }),
   policeApi.mockUpdate("CXU02", {
     count: 1,
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410801G BASS                    </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       BASS/BARRY                                            011020110000</COU><CCH>K001              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><DIS>I3025Y999                  00            SEA MONKEY                                                      </DIS><CCH>K002              TH68010 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I1002M14                   00                                                                            </DIS><DIS>I3107                      00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "BASS",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410801G",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["BARRY"],
+        defendantLastName: "BASS"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3025,
+              disposalDuration: {
+                units: "life",
+                count: 0
+              },
+              disposalText: "SEA MONKEY"
+            }
+          ],
+          offenceId: "54c2ae88-057d-4cc3-acc4-ddc90e450d4f"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68010",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 14
+              }
+            },
+            {
+              disposalCode: 3107
+            }
+          ],
+          offenceId: "2032651e-d61e-4941-a3bd-67ce91c509c1"
+        }
+      ]
+    }
   }),
   policeApi.mockUpdate("CXU02", {
     count: 1,
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410801G BASS                    </IDS><CCR>K97/1626/8396R                 </CCR><COU>I2576                                                                       BASS/BARRY                                            011020110000</COU><CCH>K001              BG73001 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><DIS>I3025Y999                  00            SEA MONKEY                                                      </DIS><CCH>K002              BG73001 </CCH><ADJ>INOT GUILTY   GUILTY        011020110000 </ADJ><DIS>I1002M14                   00                                                                            </DIS><DIS>I3107                      00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "BASS",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410801G",
+      courtCaseReference: "97/1626/008396R",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["BARRY"],
+        defendantLastName: "BASS"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "BG73001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            },
+            {
+              disposalCode: 3025,
+              disposalDuration: {
+                units: "life",
+                count: 0
+              },
+              disposalText: "SEA MONKEY"
+            }
+          ],
+          offenceId: "97a9840b-1835-4bf0-b24c-38cb15a875d1"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "BG73001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 14
+              }
+            },
+            {
+              disposalCode: 3107
+            }
+          ],
+          offenceId: "520a964c-4191-43f8-abfc-0f2d592dbc67"
+        }
+      ]
+    }
   })
 ]

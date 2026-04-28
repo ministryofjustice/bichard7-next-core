@@ -40,7 +40,7 @@ export const adjSegmentFromAsnQueryResponse = (offence: AsnQueryResponseOffence)
   })
 }
 
-export const adjSegmentFromAddDisposalRequest = (offence: AddDisposalOffence | ArrestOffence): string | undefined =>
+export const adjSegment = (offence: AddDisposalOffence | ArrestOffence): string | undefined =>
   adjSegmentGenerator({
     plea: offence.plea,
     adjudication: offence.adjudication,

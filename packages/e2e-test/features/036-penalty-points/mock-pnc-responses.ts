@@ -3,7 +3,46 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/410793Y HAMMER                  </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       HAMMER/JACK                                           250920110000</COU><CCH>K001              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ><DIS>I1015            0000045.0000                                                                            </DIS><DIS>I3008                      00            7 PENALTY POINTS                                                </DIS>"
+    expectedRequest: {
+      pncCheckName: "HAMMER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/410793Y",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-25",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["JACK"],
+        defendantLastName: "HAMMER"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "RT88191",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-25",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 45
+              }
+            },
+            {
+              disposalCode: 3008,
+              disposalText: "7 PENALTY POINTS"
+            }
+          ],
+          offenceId: "d4c07270-3659-4907-9988-be1c7cfbd2c3"
+        }
+      ]
+    }
   })
 ]

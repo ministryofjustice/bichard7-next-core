@@ -23,13 +23,103 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/19C     MANCHESTER              </IDS><CCR>K12/2732/28F                   </CCR><COU>I2576                                                                       MANCHESTER/MARTIN                                     101020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M12                   00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M13                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "MANCHESTER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/19C",
+      courtCaseReference: "12/2732/000028F",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-10",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "MANCHESTER"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-10",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "364ff76e-bdf2-4958-b30d-e139d8076216"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "PC53001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-10",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 13
+              }
+            }
+          ],
+          offenceId: "2ae6088f-2c76-48fc-8f47-5cddb878db14"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/19C     MANCHESTER              </IDS><CCR>K12/2732/29G                   </CCR><COU>I2576                                                                       MANCHESTER/MARTIN                                     101020090000</COU><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "MANCHESTER",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/19C",
+      courtCaseReference: "12/2732/000029G",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-10",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "MANCHESTER"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-10",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 14
+              }
+            }
+          ],
+          offenceId: "bb0c76bf-0691-4208-955b-36121a439893"
+        }
+      ]
+    },
     count: 1
   })
 ]

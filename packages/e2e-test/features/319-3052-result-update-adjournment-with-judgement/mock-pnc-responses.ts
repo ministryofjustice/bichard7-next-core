@@ -3,11 +3,68 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/500008W THREEZEROFIV            </IDS><ASR>K11/01ZD/01/500008W                    </ASR><REM>I26092011C    2576                                                                       010220122576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>"
+    expectedRequest: {
+      pncCheckName: "THREEZEROFIV",
+      croNumber: "",
+      arrestSummonsNumber: "11/01ZD/01/500008W",
+      crimeOffenceReferenceNo: "",
+      remandResult: "C",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "00/500008W",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-in-custody",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2012-02-01",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    }
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/500008W THREEZEROFIV            </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       THREEZEROFIVETWO/ADJWITHJUDGE                         260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I4004    01022012          00                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "THREEZEROFIV",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/500008W",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["ADJWITHJUDGE"],
+        defendantLastName: "THREEZEROFIVETWO"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4004,
+              disposalEffectiveDate: "2012-02-01"
+            }
+          ],
+          offenceId: "b49a5cf9-8407-4a1f-ac5b-e1fd83790faf"
+        }
+      ]
+    }
   })
 ]
