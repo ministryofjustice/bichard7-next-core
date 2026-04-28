@@ -61,7 +61,7 @@ export default async function ({ auditLogGateway, database }: Gateways) {
     })
   })
 
-  // Public API routes (no bearer token required)
+  // Autoloaded Public API routes (no bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request) => {
       request.auditLogGateway = instance.auditLogGateway
