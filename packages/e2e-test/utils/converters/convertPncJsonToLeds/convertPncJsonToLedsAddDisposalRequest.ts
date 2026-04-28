@@ -144,7 +144,7 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
   const carryForward = mapCarryForward(pncJson.carryForward)
   const referToCourtCase = pncJson.referToCourtCase?.ptiUrn
     ? {
-        referToCourtCase: { reference: pncJson.referToCourtCase.ptiUrn }
+        referToCourtCase: { reference: pncJson.referToCourtCase.ptiUrn.split("/")[1] }
       }
     : {}
   const isCarriedForwardOrReferredToCourtCase = !!carryForward || !!referToCourtCase
