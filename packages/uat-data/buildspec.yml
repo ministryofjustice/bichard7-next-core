@@ -2,10 +2,11 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      nodejs: 20
     commands:
       - npm install -g typescript ts-node
       - npm install
-
   build:
     commands:
       - node --version
