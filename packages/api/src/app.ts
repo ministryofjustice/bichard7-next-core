@@ -1,7 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
 import AutoLoad from "@fastify/autoload"
-import path from "path"
+import path from "node:path"
 
 import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
 import type AwsS3Gateway from "./types/AwsS3Gateway"
@@ -41,16 +41,6 @@ export default async function ({ auditLogGateway, database }: Gateways) {
   await setupZod(fastify)
   await setupSwagger(fastify)
 
-  // Autoloaded plugins (no authentication)
-  fastify.register(async (instance) => {
-    await instance.register(AutoLoad, {
-      dir: path.join(__dirname, "plugins"),
-      dirNameRoutePrefix: false,
-      ignoreFilter: (path: string) => path.endsWith(".test.ts"),
-      matchFilter: (path: string) => path.includes("plugin")
-    })
-  })
-
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
     instance.addHook("onRequest", async (request, reply) => {
@@ -67,7 +57,22 @@ export default async function ({ auditLogGateway, database }: Gateways) {
     await instance.register(AutoLoad, {
       dir: path.join(__dirname, "routes"),
       dirNameRoutePrefix: false,
-      ignoreFilter: (path: string) => path.endsWith(".test.ts")
+      ignoreFilter: (path: string) => path.includes("public") || path.endsWith(".test.ts")
+    })
+  })
+
+  // Autoloaded Public API routes (no bearer token required)
+  fastify.register(async (instance) => {
+    instance.addHook("onRequest", async (request) => {
+      request.auditLogGateway = instance.auditLogGateway
+      request.database = instance.database
+    })
+
+    await instance.register(AutoLoad, {
+      dir: path.join(__dirname, "routes"),
+      dirNameRoutePrefix: false,
+      ignoreFilter: (path: string) => path.endsWith(".test.ts"),
+      matchFilter: (path: string) => path.includes("public")
     })
   })
 

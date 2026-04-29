@@ -113,4 +113,24 @@ describe("ApiClient", () => {
     expect(result).toBeInstanceOf(Error)
     expect((result as Error).message).toBe("Network failure")
   })
+
+  it("should pass in additional headers on a GET request", async () => {
+    mockFetch.mockResolvedValueOnce(mockResponse(true, 200, {}) as any)
+
+    const additionalHeaders = {
+      "x-api-key": "my-api-key"
+    }
+    await client.get("/test", additionalHeaders)
+
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/test", {
+      method: HttpMethod.GET,
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json",
+        ...additionalHeaders
+      },
+      dispatcher: expect.any(Object)
+    })
+  })
 })

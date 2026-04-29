@@ -1,18 +1,18 @@
 {
   "disposals": [
     {
-      "id": "c6d33f38-534d-4e0d-8f15-45c40eca42e1",
+      "id": "319779a4-32c2-4ecc-a9b9-da46c3320e08",
       "court": {
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts London Croydon"
       },
       "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000728Q",
+      "courtCaseReference": "26/9998/000534L",
       "caseStatusMarker": "C",
       "charges": [
         {
-          "offenceId": "9809d818-4671-4599-9113-951d3a39cb42",
-          "arrestSummonsId": "2a35883a-ac83-4f2e-b45b-ae2f6b49f0b8",
+          "offenceId": "c3129305-54b0-42d4-acd7-20129d99a48f",
+          "arrestSummonsId": "7c6df603-bdb5-4cd4-8e0e-7b285efb3e03",
           "adjudication": "G",
           "npccOffenceCode": "5.6.1.1",
           "cjsOffenceCode": "TH68072",
@@ -24,20 +24,20 @@
           "additionalMarker": true,
           "disposals": [
             {
-              "id": "0fbd6e12-93e9-42e1-a5d2-dd8410b40f09",
+              "id": "28db684a-d11e-468a-ab5e-9ccc4ecf4aa5",
               "disposalCode": "1015",
               "disposalQualifierCodes": [],
               "fineAmount": 200
             }
           ],
           "offence": {
-            "version": "eMM/8Cb4sDWmbGmsTclpaqF2tR0C+4CP8+qaAXjKmyjyTtSjNdxucjssJRiNwCDHEcq2n1M6+8coiIb0DysT1w==",
-            "arrestSummonsReference": "26/0000/00/00000001336Y",
+            "version": "B+5HXAIVami8yrWGhwt/3v/FyycTWUPO/XGE5+1tTFw30pAhYtXbT3KCGYUHjQqkVB75oq9opdZm8WbOY3JLOQ==",
+            "arrestSummonsReference": "26/0000/00/100000731T",
             "arrestChargeNumber": 3,
             "chargeStatusMarker": "C",
             "committedOnBail": false,
             "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000728Q",
+            "courtCaseReferenceNumber": "26/9998/000534L",
             "courtCaseChargeNumber": 1,
             "forceStationChargeOrig": "01YZ",
             "locationFSCode": "01ZD",
@@ -57,12 +57,12 @@
             "startDate": "2010-11-28",
             "roleQualifier": [],
             "legislationQualifier": [],
-            "id": "9809d818-4671-4599-9113-951d3a39cb42"
+            "id": "c3129305-54b0-42d4-acd7-20129d99a48f"
           }
         },
         {
-          "offenceId": "340c0ffc-a6ce-47ff-a544-e8284509ec8c",
-          "arrestSummonsId": "2a35883a-ac83-4f2e-b45b-ae2f6b49f0b8",
+          "offenceId": "233105c5-23ea-4ee2-b5b1-6d326cfb8298",
+          "arrestSummonsId": "7c6df603-bdb5-4cd4-8e0e-7b285efb3e03",
           "adjudication": "G",
           "npccOffenceCode": "5.5.5.1",
           "cjsOffenceCode": "TH68006",
@@ -74,7 +74,7 @@
           "additionalMarker": false,
           "disposals": [
             {
-              "id": "e0128b5c-3bcd-4c6a-921b-5f5b3bf43353",
+              "id": "90e3f866-11ce-4e1e-b95e-e0071748ddf3",
               "disposalCode": "1002",
               "disposalQualifierCodes": [],
               "disposalDuration": {
@@ -84,13 +84,13 @@
             }
           ],
           "offence": {
-            "version": "80j/xo5ZHAXAabWsV5NVu446hsGNss9eg44kQ5bu0zv3uWuwNV3NawAtMymQT5o5VLU/Jw9oXbn0d85XwIpL5A==",
-            "arrestSummonsReference": "26/0000/00/00000001336Y",
+            "version": "Hw9UNEgx8g6QRa97AG6c9Zqi3xJGjEQYh3HVg8mgnsRtzkRHKpv65mwOMHHs420lPk8an3ijoRvqB3sZ5Byhdw==",
+            "arrestSummonsReference": "26/0000/00/100000731T",
             "arrestChargeNumber": 1,
             "chargeStatusMarker": "C",
             "committedOnBail": false,
             "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000728Q",
+            "courtCaseReferenceNumber": "26/9998/000534L",
             "courtCaseChargeNumber": 2,
             "forceStationChargeOrig": "01ZD",
             "crimeReference": "",
@@ -111,23 +111,23 @@
             "startDate": "2010-11-28",
             "roleQualifier": [],
             "legislationQualifier": [],
-            "id": "340c0ffc-a6ce-47ff-a544-e8284509ec8c"
+            "id": "233105c5-23ea-4ee2-b5b1-6d326cfb8298"
           }
         }
       ],
       "subsequentAppearances": []
     },
     {
-      "id": "a1e92966-0574-4d03-8b4f-aad28a84d4e1",
+      "id": "f69bf015-07ee-45ce-bb21-40ca78095f16",
       "convictionDate": "2011-09-26",
-      "oldCourtCaseReference": "26/9998/000728Q",
+      "oldCourtCaseReference": "26/9998/000534L",
       "caseStatusMarker": "F",
       "owner": "01YZ",
       "userReference": "01ZD/0300108",
       "charges": [
         {
-          "offenceId": "8ec91d7e-bff7-4b09-afed-7cab963a2c8f",
-          "arrestSummonsId": "2a35883a-ac83-4f2e-b45b-ae2f6b49f0b8",
+          "offenceId": "3e0cfaa6-228b-4f73-936d-72f8be403253",
+          "arrestSummonsId": "7c6df603-bdb5-4cd4-8e0e-7b285efb3e03",
           "npccOffenceCode": "12.15.13.1",
           "cjsOffenceCode": "RT88191",
           "qualifiedCjsCode": "RT88191",
@@ -138,12 +138,12 @@
           "additionalMarker": false,
           "disposals": [],
           "offence": {
-            "version": "78pidH34oKcV8OtqSHmgXs4T0PKxgT3olzMlUlGjMzdL+D5kIcbvRUbjoKRHsU7GkhqzgoaQXgHtHlQNIlMVlA==",
-            "arrestSummonsReference": "26/0000/00/00000001336Y",
+            "version": "Iw8wb4LhVDFGTlm2nUorO2hY3I0ky2EFQZC1bXrBCOcjWhOKTl/oRUecf/J+4sQfI4vsVoutZts6wMAkRfDI6g==",
+            "arrestSummonsReference": "26/0000/00/100000731T",
             "arrestChargeNumber": 2,
             "chargeStatusMarker": "F",
             "committedOnBail": false,
-            "courtCaseReferenceNumber": "1000001359",
+            "courtCaseReferenceNumber": "1000000810",
             "courtCaseChargeNumber": 1,
             "forceStationInCase": "01YZ",
             "caseUserReference": "01ZD/0300108",
@@ -165,7 +165,7 @@
             "startDate": "2010-11-28",
             "roleQualifier": [],
             "legislationQualifier": [],
-            "id": "8ec91d7e-bff7-4b09-afed-7cab963a2c8f"
+            "id": "3e0cfaa6-228b-4f73-936d-72f8be403253"
           }
         }
       ]

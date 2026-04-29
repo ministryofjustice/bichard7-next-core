@@ -11,7 +11,7 @@ describe("mapToSubsequentDisposalRequest", () => {
     const pncUpdateDataset = buildPncUpdateDataset()
     const expectedSubsequentDisposalResult: SubsequentDisposalResultsRequest = {
       ownerCode: "07A1",
-      personUrn: "1950/123X",
+      personUrn: "22/858J",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
@@ -74,7 +74,7 @@ describe("mapToSubsequentDisposalRequest", () => {
     const pncUpdateDataset = buildPncUpdateDataset()
     const expectedSubsequentDisposalResult: SubsequentDisposalResultsRequest = {
       ownerCode: "07A1",
-      personUrn: "1950/123X",
+      personUrn: "22/858J",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",

@@ -28,8 +28,85 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU03", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/6A      LEBOWSKI                </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/6N                    </CCR><CCH>K001              TH68006 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000101.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000102.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS><CCH>K003              RT88191 </CCH><ADJ>INOT GUILTY   GUILTY        261020110000 </ADJ><DIS>I1015            0000103.0000                                                                            </DIS><DIS>I3027    25092011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LEBOWSKI",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/6A",
+      courtCaseReference: "21/2732/000006N",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2011-10-26",
+      reasonForAppearance: "Subsequently Varied",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 101
+              }
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-25"
+            }
+          ],
+          offenceId: "546ee081-bd01-4aec-9ec0-063fadc94f2e"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 102
+              }
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-25"
+            }
+          ],
+          offenceId: "503db9f8-b5ae-4a1f-b48a-3a430c5ab369"
+        },
+        {
+          courtOffenceSequenceNumber: 3,
+          cjsOffenceCode: "RT88191",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 103
+              }
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-25"
+            }
+          ],
+          offenceId: "5542a654-370e-4d88-8968-e706851605f8"
+        }
+      ]
+    },
     count: 1
   })
 ]

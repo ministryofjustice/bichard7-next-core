@@ -3,7 +3,60 @@ import type Bichard from "../../utils/world"
 export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K00/356Z    TORRENCE                </IDS><CCR>K97/1626/8395Q                 </CCR><COU>I2576                                                                       TORRENCE/JACK                                         250120090000</COU><CCH>K001              CD71039 </CCH><ADJ>INOT GUILTY   GUILTY        250120090000 </ADJ><DIS>I1015            0000050.0000                                                                            </DIS><DIS>I3011            0000050.0000                                                                            </DIS><DIS>I3011            0000015.0000                                                                            </DIS><DIS>I3117            0000040.0000                                                                            </DIS>"
+    expectedRequest: {
+      pncCheckName: "TORRENCE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "00/356Z",
+      courtCaseReference: "97/1626/008395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-01-25",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["JACK"],
+        defendantLastName: "TORRENCE"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "CD71039",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-01-25",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1015,
+              disposalFine: {
+                amount: 50
+              }
+            },
+            {
+              disposalCode: 3011,
+              disposalFine: {
+                amount: 50
+              }
+            },
+            {
+              disposalCode: 3011,
+              disposalFine: {
+                amount: 15
+              }
+            },
+            {
+              disposalCode: 3117,
+              disposalFine: {
+                amount: 40
+              }
+            }
+          ],
+          offenceId: "50f37f67-47b9-40f9-b827-9cc694e50e45"
+        }
+      ]
+    }
   })
 ]

@@ -22,7 +22,7 @@ describe("remand", () => {
     const endpoint = "person-services/v1/people/123/arrest-reports/456/basic-remands"
     const requestBody = {
       appearanceResult: "remanded-on-bail",
-      bailConditions: ["This is a dummy bail condition.                   "],
+      bailConditions: ["This is a dummy bail condition.\n\n\n"],
       currentAppearance: {
         court: {
           courtIdentityType: "code",
@@ -37,7 +37,7 @@ describe("remand", () => {
         date: "2024-12-11"
       },
       ownerCode: "02YZ",
-      personUrn: "1950/123X",
+      personUrn: "22/858J",
       remandDate: "2024-12-05"
     }
     const expectedResult = { endpoint, requestBody }

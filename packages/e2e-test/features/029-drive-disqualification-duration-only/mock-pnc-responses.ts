@@ -20,13 +20,73 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/5Z      DUFFY                   </IDS><CCR>K21/2732/5M                    </CCR><COU>I1910                                                                       DUFFY/PATRICK                                         260920110000</COU><CCH>K001              RT88007 </CCH><ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ><DIS>I3096                      00                                                                            </DIS><DIS>I4047    26102011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "DUFFY",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/5Z",
+      courtCaseReference: "21/2732/000005M",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "1910"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["PATRICK"],
+        defendantLastName: "DUFFY"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "RT88007",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 3096
+            },
+            {
+              disposalCode: 4047,
+              disposalEffectiveDate: "2011-10-26"
+            }
+          ],
+          offenceId: "e00951de-38a5-4dd7-a2c8-07e7b7d69bee"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/5Z      DUFFY                   </IDS><ASR>K12/01ZD/01/448697X                    </ASR><REM>I26092011B    1910                                                                       261020112576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "DUFFY",
+      croNumber: "",
+      arrestSummonsNumber: "12/01ZD/01/448697X",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "21/5Z",
+      remandDate: "2011-09-26",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "1910"
+        }
+      },
+      nextAppearance: {
+        date: "2011-10-26",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -50,8 +110,39 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU04", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/5Z      DUFFY                   </IDS><SUB>I1910                                                                       26102011D</SUB><CCR>K21/2732/5M                    </CCR><CCH>K001              RT88007 </CCH><DIS>I3050                      00                                                                            </DIS><DIS>I3071M18                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "DUFFY",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/5Z",
+      courtCaseReference: "21/2732/000005M",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "1910"
+      },
+      appearanceDate: "2011-10-26",
+      reasonForAppearance: "Sentence Deferred",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "RT88007",
+          disposalResults: [
+            {
+              disposalCode: 3050
+            },
+            {
+              disposalCode: 3071,
+              disposalDuration: {
+                units: "months",
+                count: 18
+              }
+            }
+          ],
+          offenceId: "544c1e97-03f6-4bf2-a8ef-3f895beeb166"
+        }
+      ]
+    },
     count: 1
   })
 ]

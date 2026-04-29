@@ -29,7 +29,9 @@ export default async function (fastify: FastifyInstance) {
         { description: "Audit Logs endpoints", name: "Audit Logs V1" },
         { description: "Cases endpoints", name: "Cases V1" },
         { description: "Health endpoint", name: "Health V1" },
-        { description: "Demo endpoints", name: "Demo V1" }
+        { description: "Demo endpoints", name: "Demo V1" },
+        { description: "Audit endpoints", name: "Audit V1" },
+        { description: "Connectivity endpoint", name: "Connectivity V1" }
       ]
     },
     ...fastifyZodOpenApiTransformers

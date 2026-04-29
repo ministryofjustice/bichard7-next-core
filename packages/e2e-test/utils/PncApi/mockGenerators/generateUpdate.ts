@@ -1,4 +1,5 @@
 import type { PartialPncMock, PncMockOptions } from "../../../types/PncMock"
+import convertToXml from "../../converters/convertJsonToXml"
 
 export const generateUpdate = (code: string, options?: PncMockOptions): PartialPncMock => {
   const response =
@@ -12,10 +13,15 @@ export const generateUpdate = (code: string, options?: PncMockOptions): PartialP
       <GMT>000003073GENL000001S</GMT>
     </${code}>`
 
+  const expectedRequest =
+    typeof options?.expectedRequest === "object"
+      ? convertToXml(code, options?.expectedRequest)
+      : options?.expectedRequest || ""
+
   return {
     matchRegex: options?.matchRegex || code,
     response,
-    expectedRequest: options?.expectedRequest || "",
+    expectedRequest,
     count: options?.count || undefined
   }
 }

@@ -23,13 +23,85 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><CCR>K12/2732/30H                   </CCR><COU>I2576                                                                       LIVERPOOL/MARTIN                                      011020090000</COU><CCH>K001              OF61016 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I4004    08102009          00                                                                            </DIS><CCH>K002              PC53001 </CCH><ADJ>INOT GUILTY   GUILTY        011020090000 </ADJ><DIS>I4004    08102009          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LIVERPOOL",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/20D",
+      courtCaseReference: "12/2732/000030H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-01",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "LIVERPOOL"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "OF61016",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4004,
+              disposalEffectiveDate: "2009-10-08"
+            }
+          ],
+          offenceId: "99b21489-fe0a-4dc7-9a6c-3aec412ba745"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "PC53001",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-10-01",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 4004,
+              disposalEffectiveDate: "2009-10-08"
+            }
+          ],
+          offenceId: "471a5436-c0b3-456d-aa5e-27613d004625"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><ASR>K12/0000/00/12Z                        </ASR><REM>I01102009B    2576                                                                       081020092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "LIVERPOOL",
+      croNumber: "",
+      arrestSummonsNumber: "12/0000/00/12Z",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "12/20D",
+      remandDate: "2009-10-01",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2009-10-08",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -57,18 +129,154 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU04", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><SUB>I2576                                                                       08102009D</SUB><CCR>K12/2732/30H                   </CCR><CCH>K001              OF61016 </CCH><DIS>I1002M12                   00                                                                            </DIS><CCH>K002              PC53001 </CCH><DIS>I1002M12                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LIVERPOOL",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/20D",
+      courtCaseReference: "12/2732/000030H",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2009-10-08",
+      reasonForAppearance: "Sentence Deferred",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "OF61016",
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "d4999c29-37f4-4537-bebb-5b3f512027e4"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "PC53001",
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 12
+              }
+            }
+          ],
+          offenceId: "7d6872b4-3db0-4229-86c7-6be37d6c93f5"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><CCR>K12/2732/31J                   </CCR><COU>I2576                                                                       LIVERPOOL/MARTIN                                      081020090000</COU><CRT>I2576                                                                       12102009</CRT><CCH>K001              TH68001 </CCH><ADJ>INOT GUILTY                         0000 </ADJ><DIS>I2059                      00                                                                            </DIS><ASR>K12/0000/00/12Z                        </ASR><ACH>I                                                                                                                                            TH68151                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     NKINGSTON HIGH STREET                                                                                                                                                                                                                   01ZD02112006                </ACH><ADJ>INOT GUILTY   GUILTY        081020090000 </ADJ><DIS>I1002M14                   00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "LIVERPOOL",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "12/20D",
+      courtCaseReference: "12/2732/000031J",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-10-08",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["MARTIN"],
+        defendantLastName: "LIVERPOOL"
+      },
+      carryForward: {
+        appearanceDate: "2009-10-12",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68001",
+          plea: "NOT GUILTY",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2059
+            }
+          ],
+          offenceId: "a0d0151e-afe1-4f16-997c-495284998ade"
+        }
+      ],
+      additionalArrestOffences: [
+        {
+          asn: "12/0000/00/12Z",
+          additionalOffences: [
+            {
+              courtOffenceSequenceNumber: 0,
+              offenceCode: {
+                offenceCodeType: "cjs",
+                cjsOffenceCode: "TH68151"
+              },
+              committedOnBail: false,
+              plea: "Not Guilty",
+              adjudication: "Guilty",
+              dateOfSentence: "2009-10-08",
+              offenceTic: 0,
+              offenceStartDate: "2006-11-02",
+              disposalResults: [
+                {
+                  disposalCode: 1002,
+                  disposalDuration: {
+                    units: "months",
+                    count: 14
+                  }
+                }
+              ],
+              locationFsCode: "01ZD",
+              locationText: {
+                locationText: "KINGSTON HIGH STREET"
+              }
+            }
+          ]
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockUpdate("CXU01", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K12/20D     LIVERPOOL               </IDS><ASR>K12/0000/00/12Z                        </ASR><REM>I08102009B    2576                                                                       121020092576                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      0000                                                                                                                                                                              </REM>",
+    expectedRequest: {
+      pncCheckName: "LIVERPOOL",
+      croNumber: "",
+      arrestSummonsNumber: "12/0000/00/12Z",
+      crimeOffenceReferenceNo: "",
+      remandResult: "B",
+      remandLocationFfss: "",
+      ownerCode: "01YZ",
+      personUrn: "12/20D",
+      remandDate: "2009-10-08",
+      appearanceResult: "remanded-on-bail",
+      bailConditions: [],
+      currentAppearance: {
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      },
+      nextAppearance: {
+        date: "2009-10-12",
+        court: {
+          courtIdentityType: "code",
+          courtCode: "2576"
+        }
+      }
+    },
     count: 1
   })
 ]

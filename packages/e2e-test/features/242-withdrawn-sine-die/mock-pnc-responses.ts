@@ -21,8 +21,54 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/22T     SINEDIE                 </IDS><CCR>K21/2732/16Z                   </CCR><COU>I2576                                                                       SINEDIE/WITHDRAWN                                     260920110000</COU><CCH>K001              TH68006 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION260920110000 </ADJ><DIS>I2007                      00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION260920110000 </ADJ><DIS>I2007                      00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "SINEDIE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/22T",
+      courtCaseReference: "21/2732/000016Z",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2011-09-26",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["WITHDRAWN"],
+        defendantLastName: "SINEDIE"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "No Plea Taken",
+          adjudication: "Non-Conviction",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2007
+            }
+          ],
+          offenceId: "8b7b06b2-ac06-4099-8f74-cac01c15e7c7"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "No Plea Taken",
+          adjudication: "Non-Conviction",
+          dateOfSentence: "2011-09-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2007
+            }
+          ],
+          offenceId: "4fccfc8e-c5bf-466f-ae90-b12447ec9198"
+        }
+      ]
+    },
     count: 1
   }),
   policeApi.mockAsnQuery({
@@ -48,8 +94,58 @@ export default (_: string, { policeApi }: Bichard) => [
     count: 1
   }),
   policeApi.mockUpdate("CXU03", {
-    expectedRequest:
-      "<FSC>K01YZ</FSC><IDS>K21/22T     SINEDIE                 </IDS><SUB>I2576                                                                       26102011V</SUB><CCR>K21/2732/16Z                   </CCR><CCH>K001              TH68006 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION261020110000 </ADJ><DIS>I2063                      00                                                                            </DIS><DIS>I3027    26092011          00                                                                            </DIS><CCH>K002              TH68151 </CCH><ADJ>INO PLEA TAKENNON-CONVICTION261020110000 </ADJ><DIS>I2063                      00                                                                            </DIS><DIS>I3027    26092011          00                                                                            </DIS>",
+    expectedRequest: {
+      pncCheckName: "SINEDIE",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "21/22T",
+      courtCaseReference: "21/2732/000016Z",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      appearanceDate: "2011-10-26",
+      reasonForAppearance: "Subsequently Varied",
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68006",
+          plea: "No Plea Taken",
+          adjudication: "Non-Conviction",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2063
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-26"
+            }
+          ],
+          offenceId: "d8bc6800-23bb-45d1-8ccf-8abb3b756f54"
+        },
+        {
+          courtOffenceSequenceNumber: 2,
+          cjsOffenceCode: "TH68151",
+          plea: "No Plea Taken",
+          adjudication: "Non-Conviction",
+          dateOfSentence: "2011-10-26",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 2063
+            },
+            {
+              disposalCode: 3027,
+              disposalEffectiveDate: "2011-09-26"
+            }
+          ],
+          offenceId: "67dc6514-a96f-49a0-96f5-34bb8535bf7c"
+        }
+      ]
+    },
     count: 1
   })
 ]
