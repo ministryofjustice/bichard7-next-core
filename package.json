@@ -51,11 +51,11 @@
     "prepare": "husky"
   },
   "workspaces": [
+    "packages/common",
+    "packages/core",
     "packages/api",
     "packages/cli",
-    "packages/common",
     "packages/conductor",
-    "packages/core",
     "packages/e2e-test",
     "packages/message-forwarder",
     "packages/uat-data",
