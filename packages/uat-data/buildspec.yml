@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       nodejs: 20
     commands:
-      - npm install -g typescript ts-node
+      - npm install -g typescript@6.0.3 ts-node
       - npm install
   build:
     commands:
