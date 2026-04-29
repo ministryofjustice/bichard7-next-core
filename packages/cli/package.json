@@ -1,5 +1,5 @@
 {
-  "name": "cli",
+  "name": "@moj-bichard7/cli",
   "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
