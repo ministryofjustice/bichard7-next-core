@@ -4,7 +4,7 @@ import mapToRemandRequest from "./mapToRemandRequest"
 
 const expectedRequest = {
   appearanceResult: "remanded-on-bail",
-  bailConditions: ["This is a dummy bail condition.                   "],
+  bailConditions: ["This is a dummy bail condition.\n\n\n"],
   currentAppearance: {
     court: {
       courtIdentityType: "code",
@@ -19,7 +19,7 @@ const expectedRequest = {
     date: "2024-12-11"
   },
   ownerCode: "02YZ",
-  personUrn: "1950/123X",
+  personUrn: "22/858J",
   remandDate: "2024-12-05"
 }
 

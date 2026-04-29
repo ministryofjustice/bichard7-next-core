@@ -18,7 +18,7 @@ export const buildNormalDisposalRequest = (
     pendingPsaCourtCode: "0002",
     pendingCourtDate: "13082025",
     pendingCourtHouseName: "Pending court house name",
-    preTrialIssuesUniqueReferenceNumber: "121212",
+    preTrialIssuesUniqueReferenceNumber: "01ZD/121212",
     croNumber: null,
     hearingsAdjudicationsAndDisposals: [
       {
