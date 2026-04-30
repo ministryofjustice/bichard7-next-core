@@ -111,7 +111,6 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       arrestSummonsNumber: "12/0000/00/10X",
       crimeOffenceReferenceNo: "",
-      remandResult: "B",
       remandLocationFfss: "",
       ownerCode: "01YZ",
       personUrn: "12/18B",
