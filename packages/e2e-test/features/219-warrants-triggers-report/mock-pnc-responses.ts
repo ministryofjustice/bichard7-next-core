@@ -8,7 +8,6 @@ export default (ncm: string, { policeApi }: Bichard) => [
       croNumber: "",
       arrestSummonsNumber: "12/01ZD/01/445101N",
       crimeOffenceReferenceNo: "",
-      remandResult: "A",
       remandLocationFfss: "",
       ownerCode: "01YZ",
       personUrn: "00/445101N",
