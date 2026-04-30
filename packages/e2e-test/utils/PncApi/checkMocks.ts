@@ -79,7 +79,7 @@ const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelpe
       } else {
         const { expectedRequest } = mock
         expect(mock.requests).toHaveLength(1)
-        expect(mock.requests[0]).toMatch(expectedRequest)
+        expect(mock.requests).toEqual(expect.arrayContaining([expect.stringMatching(expectedRequest)]))
       }
     }
 
