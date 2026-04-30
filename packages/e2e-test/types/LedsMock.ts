@@ -4,12 +4,9 @@ import type Bichard from "../utils/world"
 import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiRequestMockOptions } from "./PoliceApi"
 
 export type LedsMockOptions = PoliceApiRequestMockOptions & {
-  count?: number
   personId?: string
   reportId?: string
   courtCaseId?: string
-  response?: string
-  expectedRequest?: string
 }
 
 export type LedsMock = PartialPoliceApiRequestMock &
