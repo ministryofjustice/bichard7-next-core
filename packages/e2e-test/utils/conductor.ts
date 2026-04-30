@@ -1,10 +1,11 @@
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import axios from "axios"
 import { expect } from "expect"
 import promisePoller from "promise-poller"
 import conductorConfig from "../helpers/ConductorHelper"
 import type Bichard from "./world"
 
-const { CONDUCTOR_API_URL, CONDUCTOR_PASSWORD, CONDUCTOR_USER } = conductorConfig
+const { CONDUCTOR_URL, CONDUCTOR_PASSWORD, CONDUCTOR_USER } = conductorConfig
 
 const base64 = (input: string) => Buffer.from(input).toString("base64")
 
@@ -19,7 +20,7 @@ const conductorApi = axios.create({
 
 const fetchCompletedBichardProcessWorkflow = async (workflowId: string) => {
   const workflow = await conductorApi
-    .get(`${CONDUCTOR_API_URL}/api/workflow/${workflowId}`)
+    .get(`${CONDUCTOR_URL}/api/workflow/${workflowId}`)
     .then((response) => response.data)
     .catch((e) => console.log(e))
 
@@ -33,7 +34,7 @@ const fetchCompletedBichardProcessWorkflow = async (workflowId: string) => {
 export const checkConductorWorkflowCompleted = async function (world: Bichard) {
   const incomingMessageHandlerWorkflowSearch = await conductorApi
     .get(
-      `${CONDUCTOR_API_URL}/api/workflow/search?query=%22workflowType=incoming_message_handler%20AND%20status=COMPLETED%22`
+      `${CONDUCTOR_URL}/api/workflow/search?query=%22workflowType=incoming_message_handler%20AND%20status=COMPLETED%22`
     )
     .then((response) => response.data)
     .catch((e) => console.log(e))
@@ -47,7 +48,7 @@ export const checkConductorWorkflowCompleted = async function (world: Bichard) {
   expect(incomingMessageHandlerWorkflowSummary).toBeDefined()
 
   const incomingMessageHandlerWorkflow = await conductorApi
-    .get(`${CONDUCTOR_API_URL}/api/workflow/${incomingMessageHandlerWorkflowSummary.workflowId}`)
+    .get(`${CONDUCTOR_URL}/api/workflow/${incomingMessageHandlerWorkflowSummary.workflowId}`)
     .then((response) => response.data)
     .catch((e) => console.log(e))
 
@@ -66,4 +67,18 @@ export const checkConductorWorkflowCompleted = async function (world: Bichard) {
   }).catch((e) => e)
 
   expect(workflow.status).toEqual("COMPLETED")
+}
+
+export const terminateConductorWorkflows = async () => {
+  const client = createConductorClient()
+  const searchResult = await client.workflowResource.search1(
+    undefined,
+    0,
+    100,
+    "startTime:DESC",
+    undefined,
+    "status='RUNNING'"
+  )
+  const idsToTerminate = searchResult.results?.map((workflow) => workflow.workflowId!) || []
+  await Promise.all(idsToTerminate.map((id) => client.workflowResource.terminate1(id, "Termination by test script")))
 }
