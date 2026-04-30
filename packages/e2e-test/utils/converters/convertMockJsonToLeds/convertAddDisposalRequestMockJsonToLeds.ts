@@ -1,34 +1,33 @@
+import shouldExcludePleaAndAdjudication from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddDisposalRequest/shouldExcludePleaAndAdjudication"
 import { addDisposalRequestSchema } from "@moj-bichard7/core/schemas/leds/addDisposalRequest"
-import type { AddDisposalRequest, ArrestOffence } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
-import type { Offence } from "@moj-bichard7/core/types/leds/DisposalRequest"
+import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
+import type { MockAddDisposalRequest } from "../../../types/MockAddDisposalRequest"
 
-const isAddedForPncXmlConversion = (result: string | undefined): boolean => result === result?.toUpperCase()
+const convertAddDisposalRequestMockJsonToLeds = (mockJson: MockAddDisposalRequest): AddDisposalRequest => {
+  const isCarriedForwardOrReferredToCourtCase = !!mockJson.carryForward || !!mockJson.referToCourtCase
 
-const convertAddDisposalRequestMockJsonToLeds = (mockJson: object): AddDisposalRequest => {
-  if ("offences" in mockJson && Array.isArray(mockJson.offences)) {
-    mockJson.offences.forEach((offence: Offence) => {
-      offence.cjsOffenceCode = offence.cjsOffenceCode.slice(0, 7)
-      offence.plea = isAddedForPncXmlConversion(offence.plea) ? undefined : offence.plea
-      offence.adjudication = isAddedForPncXmlConversion(offence.adjudication) ? undefined : offence.adjudication
+  mockJson.offences?.forEach((offence) => {
+    const excludePleaAndAdjudication = offence.disposalResults
+      ? shouldExcludePleaAndAdjudication(offence.disposalResults, isCarriedForwardOrReferredToCourtCase)
+      : false
+    offence.plea = !excludePleaAndAdjudication ? offence.plea : undefined
+    offence.adjudication = !excludePleaAndAdjudication ? offence.adjudication : undefined
+    offence.cjsOffenceCode = offence.cjsOffenceCode.slice(0, 7)
 
-      if ("disposalResults" in offence && Array.isArray(offence.disposalResults)) {
-        offence.disposalResults.forEach((disposal) => {
-          disposal.disposalQualifiers = disposal.disposalQualifiers?.map((dq) => dq.trim())
-        })
-      }
+    offence.disposalResults?.forEach(
+      (disposal) => (disposal.disposalQualifiers = disposal.disposalQualifiers?.map((dq) => dq.trim()))
+    )
+  })
+
+  mockJson.additionalArrestOffences?.forEach((additionalArrestOffence) => {
+    additionalArrestOffence.additionalOffences.forEach((offence) => {
+      const excludePleaAndAdjudication = offence.disposalResults
+        ? shouldExcludePleaAndAdjudication(offence.disposalResults, isCarriedForwardOrReferredToCourtCase)
+        : false
+      offence.plea = !excludePleaAndAdjudication ? offence.plea : undefined
+      offence.adjudication = !excludePleaAndAdjudication ? offence.adjudication : undefined
     })
-  }
-
-  if ("additionalArrestOffences" in mockJson && Array.isArray(mockJson.additionalArrestOffences)) {
-    mockJson.additionalArrestOffences.forEach((additionalArrestOffence) => {
-      if (Array.isArray(additionalArrestOffence.additionalOffences)) {
-        additionalArrestOffence.additionalOffences.forEach((offence: ArrestOffence) => {
-          offence.plea = isAddedForPncXmlConversion(offence.plea) ? undefined : offence.plea
-          offence.adjudication = isAddedForPncXmlConversion(offence.adjudication) ? undefined : offence.adjudication
-        })
-      }
-    })
-  }
+  })
 
   const addDisposalRequest = addDisposalRequestSchema.parse(mockJson)
   if (addDisposalRequest.referToCourtCase) {
