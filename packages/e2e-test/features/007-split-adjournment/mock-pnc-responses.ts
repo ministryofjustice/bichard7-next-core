@@ -12,7 +12,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       ownerCode: "01YZ",
       personUrn: "00/410771Z",
       remandDate: "2011-09-26",
-      appearanceResult: "remanded-on-bail",
+      appearanceResult: "adjourned",
       bailConditions: [],
       currentAppearance: {
         court: {
@@ -40,7 +40,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       ownerCode: "01YZ",
       personUrn: "00/410771Z",
       remandDate: "2011-09-26",
-      appearanceResult: "remanded-on-bail",
+      appearanceResult: "adjourned",
       bailConditions: [],
       currentAppearance: {
         court: {

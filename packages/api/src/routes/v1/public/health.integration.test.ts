@@ -8,7 +8,7 @@ import AuditLogDynamoGateway from "../../../services/gateways/dynamo/AuditLogDyn
 import createAuditLogDynamoDbConfig from "../../../services/gateways/dynamo/createAuditLogDynamoDbConfig"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 
-describe("health plugin", () => {
+describe("/health integration", () => {
   const testDatabaseGateway = new End2EndPostgres()
   let app: FastifyInstance
   const dynamoConfig = createAuditLogDynamoDbConfig()

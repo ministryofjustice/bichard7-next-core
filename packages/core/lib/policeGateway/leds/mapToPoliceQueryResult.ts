@@ -96,8 +96,13 @@ const mapToPoliceCourtCases = (disposals: LedsDisposal[]): PoliceCourtCase[] =>
   }))
 
 const formatPersonUrn = (personUrn: string) => {
+  // Temporary formatting used to bypass PNCIdentifier validation in the Zod schema.
+  // For LEDS update requests, the exact personUrn from the ASN query response must be sent as-is.
+  // The "HO100209 | Bad PNC Identifier format" exception may become redundant, as the value is both produced and consumed within LEDS (closed loop).
+  // After migrating to LEDS, the validation pattern can potentially change to support the LEDS format.
   const [year, id] = personUrn.split("/")
-  return `20${year}/${id.replace(/\d*/, (n) => n.padStart(7, "0"))}`
+  const fourDigitYear = year.length === 2 ? `20${year}` : year
+  return `${fourDigitYear}/${id.replace(/\d*/, (n) => n.padStart(7, "0"))}`
 }
 
 const mapToPoliceQueryResult = (ledsQueryResponse: LedsAsnQueryResponse, checkName: string): PoliceQueryResult => {

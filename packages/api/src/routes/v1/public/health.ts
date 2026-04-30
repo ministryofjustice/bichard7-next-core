@@ -6,7 +6,6 @@ import { OK } from "http-status"
 import { z } from "zod"
 
 import useZod from "../../../server/useZod"
-import { healthHandler } from "./handlers"
 
 const schema = {
   description: "Health endpoint",
@@ -15,8 +14,10 @@ const schema = {
   tags: ["Health V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const plugin = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(V1.Health, { logLevel: "silent", schema }, healthHandler)
+const route = async (fastify: FastifyInstance) => {
+  useZod(fastify).get(V1.Health, { logLevel: "silent", schema }, async (_, reply) => {
+    await reply.code(OK).send("Ok")
+  })
 }
 
-export default plugin
+export default route

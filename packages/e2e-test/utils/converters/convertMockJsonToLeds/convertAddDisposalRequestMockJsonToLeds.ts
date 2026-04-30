@@ -30,7 +30,12 @@ const convertAddDisposalRequestMockJsonToLeds = (mockJson: object): AddDisposalR
     })
   }
 
-  return addDisposalRequestSchema.parse(mockJson)
+  const addDisposalRequest = addDisposalRequestSchema.parse(mockJson)
+  if (addDisposalRequest.referToCourtCase) {
+    addDisposalRequest.referToCourtCase.reference = addDisposalRequest.referToCourtCase.reference.split("/")[1]
+  }
+
+  return addDisposalRequest
 }
 
 export default convertAddDisposalRequestMockJsonToLeds
