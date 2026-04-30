@@ -143,7 +143,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
                 disposalText: "Disposal text"
               }
             ],
-            locationFsCode: "Offence location FS code",
+            locationFsCode: "1234",
             locationText: { locationText: "Offence location" }
           },
           {
@@ -178,7 +178,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
                 disposalText: "Disposal text"
               }
             ],
-            locationFsCode: "Offence location FS code",
+            locationFsCode: "2345",
             locationText: { locationText: "Offence location" }
           }
         ]
