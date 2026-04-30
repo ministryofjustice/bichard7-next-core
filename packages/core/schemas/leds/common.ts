@@ -46,7 +46,7 @@ export const disposalDurationSchema = z.object({
 })
 
 export const disposalFineSchema = z.object({
-  amount: z.number().optional(),
+  amount: z.number(),
   units: z.number().optional()
 })
 
@@ -60,18 +60,27 @@ export const disposalResultSchema = z.object({
   disposalText: z.string().max(64).optional()
 })
 
+const legislationQualifierSchema = z
+  .string()
+  .length(2)
+  .regex(/[A-Za-z]*/)
+
+const roleQualifierSchema = z
+  .string()
+  .min(1)
+  .max(2)
+  .regex(/[A-Za-z]*/)
+
+const npccOffenceCodeSchema = z.string().regex(/^([0-9]{1,3}\.){1,2}[0-9]{1,3}(\.[0-9]{1,3})?$/)
+
 export const baseOffenceSchema = z.object({
-  courtOffenceSequenceNumber: z.number(),
-  npccOffenceCode: z
-    .string()
-    .regex(/^([0-9]{1,3}\.){1,2}[0-9]{1,3}(\.[0-9]{1,3})?$/)
-    .optional(),
-  roleQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
-  legislationQualifiers: z.array(z.string().regex(/[A-Za-z]*/)).optional(),
+  courtOffenceSequenceNumber: z.number().min(0).max(999),
+  npccOffenceCode: npccOffenceCodeSchema.optional(),
+  roleQualifiers: z.array(roleQualifierSchema).optional(),
+  legislationQualifiers: z.array(legislationQualifierSchema).optional(),
   plea: pleaSchema.optional(),
-  offenceTic: z.number().optional(),
-  offenceEndDate: dateStringSchema.optional(),
-  disposalResults: disposalResultSchema.array().optional()
+  offenceTic: z.number().min(0).max(9999).optional(),
+  offenceEndDate: dateStringSchema.optional()
 })
 
 export const updateOffenceSchema = baseOffenceSchema.extend({
@@ -81,5 +90,6 @@ export const updateOffenceSchema = baseOffenceSchema.extend({
   dateOfSentence: dateStringSchema.optional(),
   cjsOffenceCode: z.string().length(7),
   offenceStartTime: updateOffenceTimeStringSchema.optional(),
-  offenceEndTime: updateOffenceTimeStringSchema.optional()
+  offenceEndTime: updateOffenceTimeStringSchema.optional(),
+  disposalResults: disposalResultSchema.array()
 })

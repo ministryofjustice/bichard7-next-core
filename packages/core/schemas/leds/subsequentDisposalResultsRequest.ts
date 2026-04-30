@@ -8,7 +8,7 @@ import {
   updateOffenceSchema
 } from "./common"
 
-export const reasonForAppearanceSchema = z.enum(["Sentence Deferred", "Heard at Court", "Subsequently Varied"])
+export const reasonForAppearanceSchema = z.enum(["Sentence Deferred", "Subsequently Varied"])
 
 export const subsequentDisposalResultsRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
