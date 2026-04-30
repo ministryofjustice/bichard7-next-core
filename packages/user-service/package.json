@@ -78,8 +78,7 @@
     "sass": "^1.99.0",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
-    "tsconfig-paths-webpack-plugin": "^4.2.0",
-    "typescript": "^6.0.3"
+    "tsconfig-paths-webpack-plugin": "^4.2.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": "eslint --cache --fix --max-warnings 0 --ignore-pattern !.ncurc.js"

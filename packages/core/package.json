@@ -76,8 +76,7 @@
     "ts-command-line-args": "^2.5.1",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^6.0.3"
+    "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1036.0",
