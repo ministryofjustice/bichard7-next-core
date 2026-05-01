@@ -4,6 +4,8 @@ import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDispos
 import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { RemandRequest } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "@moj-bichard7/core/types/leds/SubsequentDisposalResultsRequest"
+import type { MockAddDisposalRequest } from "../../../types/MockAddDisposalRequest"
+import type { MockRemandRequest } from "../../../types/MockRemandRequest"
 import { Operation } from "../../../types/Operation"
 import convertAddDisposalRequestMockJsonToLeds from "./convertAddDisposalRequestMockJsonToLeds"
 import convertRemandRequestMockJsonToLeds from "./convertRemandRequestMockJsonToLeds"
@@ -15,9 +17,9 @@ const convertMockJsonToLeds = (code: string, mockJson: object): LedsJson => {
     case Operation.AsnQueryResponse:
       return asnQueryResponseSchema.parse(mockJson)
     case Operation.Remand:
-      return convertRemandRequestMockJsonToLeds(mockJson)
+      return convertRemandRequestMockJsonToLeds(mockJson as MockRemandRequest)
     case Operation.AddDisposal:
-      return convertAddDisposalRequestMockJsonToLeds(mockJson)
+      return convertAddDisposalRequestMockJsonToLeds(mockJson as MockAddDisposalRequest)
     case Operation.SentenceDeferred:
     case Operation.SubsequentlyVaried:
       return subsequentDisposalResultsRequestSchema.parse(mockJson)

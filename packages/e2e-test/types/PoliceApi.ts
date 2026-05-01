@@ -1,4 +1,19 @@
-export type PoliceApiRequestMockOptions = {}
+import type { MockAddDisposalRequest } from "./MockAddDisposalRequest"
+import type { MockAsnQueryResponse } from "./MockAsnQueryResponse"
+import type { MockRemandRequest } from "./MockRemandRequest"
+import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDisposalResultsRequest"
+
+export type PoliceApiRequestMockOptions = {
+  matchRegex?: string
+  response?: string
+  expectedRequest?:
+    | string
+    | MockAddDisposalRequest
+    | MockRemandRequest
+    | MockSubsequentDisposalResultsRequest
+    | MockAsnQueryResponse
+  count?: number
+}
 
 export type PartialPoliceApiRequestMock = {}
 
