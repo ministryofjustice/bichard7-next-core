@@ -1,6 +1,7 @@
 import { BeforeAll } from "@cucumber/cucumber"
 import fs from "fs"
 import path from "path"
+import { terminateConductorWorkflows } from "../helpers/ConductorHelper"
 import { After, Before } from "../helpers/stepsHelpers"
 
 const recordComparisons = process.env.RECORD_COMPARISONS === "true"
@@ -52,6 +53,10 @@ export const setupHooks = () => {
     if (!this.config.parallel) {
       await this.db.clearExceptions()
       if (!this.config.realPNC) {
+        if (process.env.AWS_URL?.toLowerCase() !== "none") {
+          await terminateConductorWorkflows()
+        }
+
         await this.policeApi.clearMocks()
       }
     }
