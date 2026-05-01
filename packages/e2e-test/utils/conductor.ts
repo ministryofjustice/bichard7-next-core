@@ -20,7 +20,7 @@ const conductorApi = axios.create({
 
 const fetchCompletedBichardProcessWorkflow = async (workflowId: string) => {
   const workflow = await conductorApi
-    .get(`${CONDUCTOR_URL}/api/workflow/${workflowId}`)
+    .get(`${CONDUCTOR_URL}/workflow/${workflowId}`)
     .then((response) => response.data)
     .catch((e) => console.log(e))
 
