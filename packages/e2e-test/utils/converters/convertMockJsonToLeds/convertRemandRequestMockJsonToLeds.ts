@@ -3,7 +3,7 @@ import type { RemandRequest } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { MockRemandRequest } from "../../../types/MockRemandRequest"
 
 const convertRemandRequestMockJsonToLeds = (mockJson: MockRemandRequest): RemandRequest => {
-  const allConditions = mockJson.bailConditions
+  const allConditions = mockJson.bailConditions.map((condition) => condition.trim())
   const ledsConditions = []
   while (allConditions.length > 0) {
     const conditions = allConditions.splice(0, 4)
