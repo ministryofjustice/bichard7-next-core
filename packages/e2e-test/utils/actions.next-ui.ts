@@ -2,7 +2,6 @@ import assert from "assert"
 import { expect } from "expect"
 import type { KeyInput, Page } from "puppeteer"
 import type BrowserHelper from "../helpers/BrowserHelper"
-import { findRunningConductorWorkflowIds } from "../helpers/ConductorHelper"
 import {
   delay,
   reloadUntilContent,
@@ -674,20 +673,6 @@ export const reloadUntilStringNotPresent = async function (this: Bichard, conten
   const contentSansParentheses = content.replace(/[()]/g, "")
   const result = await reloadUntilNotContent(this.browser.page, contentSansParentheses.toUpperCase())
   expect(result).toBeTruthy()
-}
-
-export const waitUntilMessageProcessed = async function (this: Bichard) {
-  let runningWorkflowIds: string[] = []
-  for (let counter = 0; counter < 5; counter++) {
-    runningWorkflowIds = await findRunningConductorWorkflowIds()
-    if (runningWorkflowIds.length === 0) {
-      break
-    }
-
-    delay(2)
-  }
-
-  expect(runningWorkflowIds).toHaveLength(0)
 }
 
 export const checkOffenceDataError = async function (this: Bichard, value: string, _key: string) {

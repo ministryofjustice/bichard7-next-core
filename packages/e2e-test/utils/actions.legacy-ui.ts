@@ -1,9 +1,7 @@
 import { expect } from "expect"
 import type { Page } from "puppeteer"
-import { findRunningConductorWorkflowIds } from "../helpers/ConductorHelper"
 import { checkForFile } from "../helpers/fsHelper"
 import {
-  delay,
   reloadUntilContent,
   reloadUntilContentInSelector,
   reloadUntilNotContent,
@@ -627,20 +625,6 @@ export const reloadUntilStringPresentForRecord = async function (this: Bichard, 
 export const reloadUntilStringNotPresent = async function (this: Bichard, content: string) {
   const result = await reloadUntilNotContent(this.browser.page, content)
   expect(result).toBeTruthy()
-}
-
-export const waitUntilMessageProcessed = async function (this: Bichard) {
-  let runningWorkflowIds: string[] = []
-  for (let counter = 0; counter < 5; counter++) {
-    runningWorkflowIds = await findRunningConductorWorkflowIds()
-    if (runningWorkflowIds.length === 0) {
-      break
-    }
-
-    delay(2)
-  }
-
-  expect(runningWorkflowIds).toHaveLength(0)
 }
 
 export const checkNoExceptions = async function (this: Bichard) {

@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto"
 import { expect } from "expect"
 import fs from "fs"
+import { areAllWorkflowsCompleted } from "../helpers/ConductorHelper"
 import { checkAuditLogRecordExists } from "./auditLogging"
 import convertMessageToNewFormat from "./convertMessageToNewFormat"
 import { isError } from "./isError"
@@ -33,6 +34,10 @@ const sendMsg = async function (world: Bichard, messagePath: string, useOriginal
     const checkEventResult = await checkAuditLogRecordExists(world, correlationId)
     world.correlationIds.push(checkEventResult.messageId)
     expect(isError(checkEventResult)).toBeFalsy()
+    if (process.env.AWS_URL?.toLowerCase() !== "none") {
+      expect(await areAllWorkflowsCompleted()).toBeTruthy()
+    }
+
     return Promise.resolve()
   }
 
