@@ -1,8 +1,8 @@
 import { BeforeAll } from "@cucumber/cucumber"
 import fs from "fs"
 import path from "path"
+import { terminateConductorWorkflows } from "../helpers/ConductorHelper"
 import { After, Before } from "../helpers/stepsHelpers"
-import { terminateConductorWorkflows } from "../utils/conductor"
 
 const recordComparisons = process.env.RECORD_COMPARISONS === "true"
 const comparisonOutDir = "comparisons"
