@@ -24,7 +24,7 @@ export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
       break
     }
 
-    delay(2)
+    delay(2 ** counter)
   }
 
   return runningWorkflowIds.length === 0
