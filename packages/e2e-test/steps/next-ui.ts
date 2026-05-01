@@ -131,6 +131,7 @@ export const setupNextSteps = () => {
   When("I submit the record on the case details page", ui.submitRecordAndStayOnPage)
   Then("I reload until I see {string}", ui.reloadUntilStringPresent)
   Then("I reload until I don't see {string}", ui.reloadUntilStringNotPresent)
+  Then("I wait until the message is processed", ui.waitUntilMessageProcessed)
   Then("I return to the list", ui.returnToCaseListUnlock)
   Then("the {string} for {string} is {string}", ui.checkRecordStatus)
   Then("the {string} for {string} is not {string}", ui.checkRecordNotStatus)

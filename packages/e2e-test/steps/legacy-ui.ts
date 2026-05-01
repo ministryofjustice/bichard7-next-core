@@ -73,6 +73,7 @@ export const setupLegacySteps = () => {
   Then("I reload until I see {string}", legacy.reloadUntilStringPresent)
   Then("I reload until I see {string} for this record", legacy.reloadUntilStringPresentForRecord)
   Then("I reload until I don't see {string}", legacy.reloadUntilStringNotPresent)
+  Then("I wait until the message is processed", legacy.waitUntilMessageProcessed)
   Then("the exception list should contain a record for {string}", legacy.findRecordFor)
   Then("the record for {string} should not have any PNC errors", legacy.checkNoPncErrors)
   Then("the PNC updates the record", function () {
