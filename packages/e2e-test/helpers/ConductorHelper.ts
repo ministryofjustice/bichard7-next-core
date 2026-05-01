@@ -17,17 +17,16 @@ const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
 }
 
 export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
-  let runningWorkflowIds: string[] = []
   for (let counter = 0; counter < 5; counter++) {
-    runningWorkflowIds = await findRunningConductorWorkflowIds()
-    if (runningWorkflowIds.length === 0) {
-      break
-    }
+    delay(counter)
 
-    delay(counter + 1)
+    const runningWorkflowIds = await findRunningConductorWorkflowIds()
+    if (runningWorkflowIds.length === 0) {
+      return true
+    }
   }
 
-  return runningWorkflowIds.length === 0
+  return false
 }
 
 export const terminateConductorWorkflows = async () => {
