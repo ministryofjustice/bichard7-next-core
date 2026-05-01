@@ -23,9 +23,9 @@ Feature: {027} R3.2_Orphaned Non-Recordable Offence
 	Scenario: No exceptions are created for orphaned non-recordable offence
 		When "input-message-1" is received
 			And I am logged in as "supervisor"
-			And I view the list of exceptions
-		Then there are no exceptions or triggers
+		Then I view the list of exceptions
+			And there are no exceptions or triggers
 		When "input-message-2" is received
-			And I view the list of exceptions
 		Then the PNC updates the record
+			And I view the list of exceptions
 			And there are no exceptions or triggers

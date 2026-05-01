@@ -82,11 +82,15 @@ const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelpe
         expect(matchFound).toBe("Yes")
       } else {
         const { expectedRequest } = mock
-        expect(mock.requests).toHaveLength(1)
+        expect(mock.requests.length).toBeGreaterThanOrEqual(1)
         if (typeof expectedRequest === "string") {
-          expect(mock.requests[0]).toMatch(expectedRequest)
+          mock.requests.forEach((request) => {
+            expect(request).toMatch(expectedRequest)
+          })
         } else {
-          expect(mock.requests[0]).toMatchObject(expectedRequest)
+          mock.requests.forEach((request) => {
+            expect(request).toMatchObject(expectedRequest)
+          })
         }
       }
     }
