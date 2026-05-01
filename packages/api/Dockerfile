@@ -14,7 +14,8 @@ COPY package*.json ./
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/api/package.json ./packages/api/package.json
 
-RUN npm ci --ignore-scripts --no-audit
+RUN npm ci --ignore-scripts --no-audit \
+    && npm cache clean --force
 
 #########################################################
 FROM base AS builder
