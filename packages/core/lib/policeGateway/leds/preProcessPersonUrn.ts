@@ -8,7 +8,7 @@ const preProcessPersonUrn = (personUrn?: string): string | undefined => {
     return undefined
   }
 
-  return `${year.substring(2)}/${id.replace(/^0+/, "")}`
+  return `${year}/${id.replace(/^0+/, "")}`
 }
 
 export default preProcessPersonUrn
