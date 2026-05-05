@@ -4,7 +4,8 @@ module.exports = {
   testEnvironment: "node",
   moduleNameMapper: {
     "^(phase1|lib|types)$": "<rootDir>/$1",
-    "^(phase1|lib|types)/(.*)": "<rootDir>/$1/$2"
+    "^(phase1|lib|types)/(.*)": "<rootDir>/$1/$2",
+    "^@moj-bichard7/common/(.*)$": "<rootDir>/../../packages/common/$1"
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   modulePathIgnorePatterns: ["dist"],
