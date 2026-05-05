@@ -35,9 +35,7 @@
               "disposalQualifierCodes": []
             }
           ],
-          "roleQualifier": [
-            "AT"
-          ],
+          "roleQualifier": ["AT"],
           "startDate": "2010-11-28"
         },
         {
