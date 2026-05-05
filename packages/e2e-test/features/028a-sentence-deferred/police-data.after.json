@@ -1,114 +1,106 @@
 {
   "disposals": [
     {
-      "id": "4d6f13b7-66d0-4e37-8023-e787a3c1dca2",
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100001427Z",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "RT88007",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001055C",
+          "crimeReference": "1SCC5L4OYL5L1L6",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "12.15.16.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "RT88007",
+          "results": [
+            {
+              "disposalCode": "3096",
+              "disposalQualifierCodes": []
+            },
+            {
+              "disposalCode": "4047",
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
       "court": {
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts Hertfordshire St Albans"
       },
-      "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000536N",
-      "caseStatusMarker": "C",
-      "charges": [
-        {
-          "offenceId": "13e4fb7c-684c-456a-a5ae-c3e8a34a641c",
-          "arrestSummonsId": "339e6065-0c17-4d8d-a991-566a30d1f992",
-          "adjudication": "G",
-          "npccOffenceCode": "12.15.16.1",
-          "cjsOffenceCode": "RT88007",
-          "qualifiedCjsCode": "RT88007",
-          "offenceDescription": [],
-          "offenceRoleQualifiers": [],
-          "offenceLegislationQualifiers": [],
-          "offenceChargeNumber": 1,
-          "additionalMarker": false,
-          "disposals": [
-            {
-              "id": "3e480261-cba4-4245-9dd1-1f7c37fbf3f1",
-              "disposalCode": "3096",
-              "disposalQualifierCodes": [],
-              "disposalText": "Interim disqualification from driving until dealt with. Section "
-            },
-            {
-              "id": "d57adfe3-14c6-4380-98ce-94702ef93b1a",
-              "disposalCode": "4047",
-              "disposalQualifierCodes": [],
-              "disposalText": "Adjourned to 26/10/2011 at 14:00 in Courtroom 01, Croydon Magist",
-              "effectiveDate": "2011-09-26"
-            }
-          ],
-          "offence": {
-            "version": "+LaEPdd73ulg8r03MVKYQ7L1USZvXad6verVPGQEHu0y6tVRJ34/Hx77UkgN7H/6cGHcYS8kMFf3KbAwS9PnZw==",
-            "arrestSummonsReference": "26/0000/00/100000734W",
-            "arrestChargeNumber": 1,
-            "chargeStatusMarker": "C",
-            "committedOnBail": false,
-            "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000536N",
-            "courtCaseChargeNumber": 1,
-            "forceStationChargeOrig": "01ZD",
-            "crimeReference": "",
-            "locationFSCode": "01ZD",
-            "locationAddress": {
-              "locationType": "description",
-              "locationText": "Kingston High Street"
-            },
-            "adjudication": "G",
-            "othersCharged": [],
-            "brcRecord": false,
-            "hasDisposalResults": true,
-            "additionalOffenceMarker": false,
-            "npccOffenceCode": "12.15.16.1",
-            "cjsOffenceCode": "RT88007",
-            "qualifiedCjsCode": "RT88007",
-            "startDate": "2010-11-28",
-            "roleQualifier": [],
-            "legislationQualifier": [],
-            "id": "13e4fb7c-684c-456a-a5ae-c3e8a34a641c"
-          }
-        }
-      ],
+      "courtCaseReference": "26/9998/001055C",
       "subsequentAppearances": [
         {
           "appearanceNumber": 1,
-          "court": {
-            "courtIdentityType": "code",
-            "courtCode": "1910"
-          },
-          "sentenceDate": "2011-10-26",
-          "reasonForVariation": "S",
           "charges": [
             {
-              "offenceId": "13e4fb7c-684c-456a-a5ae-c3e8a34a641c",
-              "arrestSummonsId": "339e6065-0c17-4d8d-a991-566a30d1f992",
-              "adjudication": "G",
-              "npccOffenceCode": "12.15.16.1",
-              "cjsOffenceCode": "RT88007",
-              "qualifiedCjsCode": "RT88007",
-              "offenceDescription": [],
-              "offenceRoleQualifiers": [],
-              "offenceLegislationQualifiers": [],
-              "offenceChargeNumber": 1,
               "additionalMarker": false,
-              "disposals": [
+              "additionalOffenceMarker": false,
+              "adjudication": "G",
+              "arrestChargeNumber": 1,
+              "arrestSummonsReference": "26/0000/00/100001427Z",
+              "chargeStatusMarker": "C",
+              "cjsOffenceCode": "RT88007",
+              "committedOnBail": false,
+              "courtCaseChargeNumber": 1,
+              "courtCaseReferenceNumber": "26/9998/001055C",
+              "crimeReference": "1SCC5L4OYL5L1L6",
+              "forceStationChargeOrig": "01ZD",
+              "legislationQualifier": [],
+              "locationAddress": {
+                "locationText": "Kingston High Street",
+                "locationType": "description"
+              },
+              "locationFSCode": "01ZD",
+              "npccOffenceCode": "12.15.16.1",
+              "offenceChargeNumber": 1,
+              "offenceDescription": [],
+              "othersCharged": [],
+              "plea": "2",
+              "qualifiedCjsCode": "RT88007",
+              "results": [
                 {
-                  "id": "7169aec7-4680-4fcd-990c-a22d1b9855b0",
                   "disposalCode": "3050",
                   "disposalQualifierCodes": []
                 },
                 {
-                  "id": "c95728cb-c7fb-43a4-8168-af3361a98a1f",
                   "disposalCode": "3070",
-                  "disposalQualifierCodes": [],
-                  "disposalText": "from 26/09/11",
                   "disposalDuration": {
-                    "units": "months",
-                    "count": 12
-                  }
+                    "count": 12,
+                    "units": "months"
+                  },
+                  "disposalQualifierCodes": []
                 }
-              ]
+              ],
+              "roleQualifier": [],
+              "startDate": "2010-11-28"
             }
-          ]
+          ],
+          "court": {
+            "courtCode": "1910",
+            "courtIdentityType": "code"
+          },
+          "reasonForVariation": "S",
+          "sentenceDate": "2011-10-26"
         }
       ]
     }

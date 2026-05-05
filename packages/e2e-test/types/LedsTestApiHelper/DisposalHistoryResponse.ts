@@ -1,6 +1,6 @@
 import type OffenceResponse from "./OffenceResponse"
 
-type Charge = {
+export type Charge = {
   offenceId: string
   arrestSummonsId: string
   adjudication?: string
