@@ -1,7 +1,7 @@
 import preProcessOffenceCode from "@moj-bichard7/core/lib/policeGateway/leds/preProcessOffenceCode"
 import type OffenceDetails from "../../../../../types/LedsTestApiHelper/OffenceDetails"
 import type AddOffenceRequest from "../../../../../types/LedsTestApiHelper/Requests/AddOffenceRequest"
-
+let counter = 500
 const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): AddOffenceRequest => {
   const { offenceCode: cjsOffenceCode, roleQualifier } = preProcessOffenceCode(offence.offenceCode)
 
@@ -16,7 +16,7 @@ const mapToAddOffenceRequest = (offence: OffenceDetails, checkName: string): Add
       legislationQualifier: null,
       endDate: offence.endDate ?? "",
       endTime: offence.endTime ?? "",
-      crimeReference: "",
+      crimeReference: `${counter++}`,
       offenceLocation: {
         locationType: "text",
         locationText: offence.offenceLocation
