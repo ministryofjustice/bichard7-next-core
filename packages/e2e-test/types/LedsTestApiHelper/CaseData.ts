@@ -1,9 +1,6 @@
-import type { DisposalEntry } from "./DisposalHistoryResponse"
-import type { RemandDetails } from "./RemandResponse"
-
 type CaseData = {
-  disposals: DisposalEntry[]
-  remands: RemandDetails[]
+  disposals: Record<string, unknown>[]
+  remands: Record<string, unknown>[]
 }
 
 export default CaseData

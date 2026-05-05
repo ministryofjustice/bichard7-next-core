@@ -1,5 +1,6 @@
 import { writeFileSync } from "fs"
 import type { LedsBichard } from "../../types/LedsMock"
+import deepSort from "../deepSort"
 import { delay } from "../puppeteer-utils"
 import fetchCaseDataFromLedsApi from "./fetchCaseDataFromLedsApi"
 
@@ -9,7 +10,10 @@ const snapshotLedsApiData = async (
 ): Promise<void> => {
   await delay(10)
   const caseData = await fetchCaseDataFromLedsApi(bichard)
-  writeFileSync(`${bichard.specFolder}/police-data.${beforeOrAfterRunningTest}.json`, JSON.stringify(caseData, null, 2))
+  writeFileSync(
+    `${bichard.specFolder}/police-data.${beforeOrAfterRunningTest}.json`,
+    JSON.stringify(deepSort(caseData), null, 2)
+  )
 }
 
 export default snapshotLedsApiData
