@@ -5,19 +5,19 @@ import type { FastifyReply } from "fastify"
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { usersSummaryPerformance } from "../../../../services/db/cases/reports/usersSummaryPerformance"
+import { userPerformanceSummary } from "../../../../services/db/cases/reports/userPerformanceSummary"
 import { createReportHandler } from "../createReportHandler"
 import { createReportAuditLog } from "../utils/createReportAuditLog"
-import { generateUsersSummaryReport } from "./generateUsersSummaryReport"
+import { generateUserPerformanceSummaryReport } from "./generateUserPerformanceSummaryReport"
 
-jest.mock("../../../../services/db/cases/reports/usersSummaryPerformance")
+jest.mock("../../../../services/db/cases/reports/userPerformanceSummary")
 jest.mock("../createReportHandler")
 jest.mock("../utils/createReportAuditLog")
 
 const mockedCreateReportHandler = createReportHandler as jest.MockedFunction<typeof createReportHandler>
 const mockedCreateReportAuditLog = createReportAuditLog as jest.MockedFunction<typeof createReportAuditLog>
 
-describe("generateUsersSummaryReport", () => {
+describe("generateUserPerformanceSummaryReport", () => {
   const mockDatabase = {} as DatabaseGateway
   const mockAuditLogGateway = {} as AuditLogDynamoGateway
   const mockUser = { username: "test.user" } as User
@@ -40,11 +40,11 @@ describe("generateUsersSummaryReport", () => {
     const mockHandlerResult = jest.fn().mockResolvedValue(undefined)
     mockedCreateReportHandler.mockReturnValue(mockHandlerResult)
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     expect(mockedCreateReportHandler).toHaveBeenCalledTimes(1)
     expect(mockedCreateReportHandler).toHaveBeenCalledWith(
-      usersSummaryPerformance,
+      userPerformanceSummary,
       expect.any(Function),
       expect.any(Function)
     )
@@ -65,7 +65,7 @@ describe("generateUsersSummaryReport", () => {
 
     jest.setSystemTime(new Date("2024-06-01T12:00:00.000Z"))
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     jest.advanceTimersByTime(500)
 
@@ -94,7 +94,7 @@ describe("generateUsersSummaryReport", () => {
 
     jest.setSystemTime(new Date("2024-06-01T12:00:00.000Z"))
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     const advanceMs = 1234
     jest.advanceTimersByTime(advanceMs)
@@ -113,7 +113,7 @@ describe("generateUsersSummaryReport", () => {
       return jest.fn().mockResolvedValue(undefined)
     })
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     const chunk = [{ users: ["alice", "bob", "charlie"] }, { users: ["dave"] }, { users: ["eve", "frank"] }]
 
@@ -130,7 +130,7 @@ describe("generateUsersSummaryReport", () => {
       return jest.fn().mockResolvedValue(undefined)
     })
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     expect(capturedReducer([])).toBe(0)
   })
@@ -138,7 +138,13 @@ describe("generateUsersSummaryReport", () => {
   it("should return undefined on success", async () => {
     mockedCreateReportHandler.mockReturnValue(jest.fn().mockResolvedValue(undefined))
 
-    const result = await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    const result = await generateUserPerformanceSummaryReport(
+      mockDatabase,
+      mockAuditLogGateway,
+      mockUser,
+      mockQuery,
+      mockReply
+    )
 
     expect(result).toBeUndefined()
   })
@@ -149,7 +155,13 @@ describe("generateUsersSummaryReport", () => {
 
     const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {})
 
-    const result = await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    const result = await generateUserPerformanceSummaryReport(
+      mockDatabase,
+      mockAuditLogGateway,
+      mockUser,
+      mockQuery,
+      mockReply
+    )
 
     expect(result).toBe(mockError)
     consoleSpy.mockRestore()
@@ -161,7 +173,7 @@ describe("generateUsersSummaryReport", () => {
 
     const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {})
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     expect(consoleSpy).toHaveBeenCalledWith("Stream failed, audit log not recorded", mockError)
     consoleSpy.mockRestore()
@@ -178,7 +190,7 @@ describe("generateUsersSummaryReport", () => {
       return jest.fn().mockResolvedValue(undefined)
     })
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
     await expect(capturedAuditLogCallback(5)).rejects.toThrow("Audit log write failed")
   })
@@ -197,7 +209,7 @@ describe("generateUsersSummaryReport", () => {
       return jest.fn().mockResolvedValue(undefined)
     })
 
-    await generateUsersSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, customQuery, mockReply)
+    await generateUserPerformanceSummaryReport(mockDatabase, mockAuditLogGateway, mockUser, customQuery, mockReply)
 
     await capturedAuditLogCallback(1)
 

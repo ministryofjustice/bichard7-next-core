@@ -1,13 +1,13 @@
 import type {
-  UsersSummaryPerformanceDto,
-  UserSummaryPerformanceDto
-} from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+  UserForPerformanceSummaryDto,
+  UserPerformanceSummaryDto
+} from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 
 import { endOfDay, isBefore, startOfDay, subDays } from "date-fns"
 
 import type { UserSummaryRow } from "../../../../types/reports/UserSummary"
 
-import { caseToUserSummaryDto } from "../../../dto/reports/caseToUserSummaryDto"
+import { convertRowToUserPerformanceSummaryDto } from "../../../dto/reports/convertRowToUserPerformanceSummaryDto"
 import { formatDate } from "../utils/formatDate"
 
 const emptyTotals = () => ({
@@ -16,17 +16,17 @@ const emptyTotals = () => ({
   triggerResolved: 0
 })
 
-export async function* processUsersSummaryReport(
+export async function* processUserPerformanceSummaryReport(
   cursor: AsyncIterable<UserSummaryRow[]>,
   fromDate: Date,
   toDate: Date
-): AsyncGenerator<UsersSummaryPerformanceDto> {
+): AsyncGenerator<UserPerformanceSummaryDto> {
   const normalizedStartDate = startOfDay(fromDate)
 
   let expectedDate = endOfDay(toDate)
   let expectedDateStr = formatDate(expectedDate)
 
-  let currentUsers: UserSummaryPerformanceDto[] = []
+  let currentUsers: UserForPerformanceSummaryDto[] = []
   let currentTotals = emptyTotals()
 
   for await (const rows of cursor) {
@@ -42,7 +42,7 @@ export async function* processUsersSummaryReport(
         expectedDateStr = formatDate(expectedDate)
       }
 
-      const userDto = caseToUserSummaryDto(row)
+      const userDto = convertRowToUserPerformanceSummaryDto(row)
 
       currentTotals.exceptionsResolved += userDto.exceptionsResolved
       currentTotals.triggerResolved += userDto.triggerResolved

@@ -1,15 +1,17 @@
-import type { UserSummaryPerformanceDto } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import type { UserForPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 
 import { endOfDay, subDays } from "date-fns"
 
 import type { UserSummaryRow } from "../../../../types/reports/UserSummary"
 
-import { caseToUserSummaryDto } from "../../../dto/reports/caseToUserSummaryDto"
-import { processUsersSummaryReport } from "./processUserSummaryReport"
+import { convertRowToUserPerformanceSummaryDto } from "../../../dto/reports/convertRowToUserPerformanceSummaryDto"
+import { processUserPerformanceSummaryReport } from "./processUserPerformanceSummaryReport"
 
-jest.mock("../../../dto/reports/caseToUserSummaryDto")
+jest.mock("../../../dto/reports/convertRowToUserPerformanceSummaryDto")
 
-const mockedCaseToUserSummaryDto = caseToUserSummaryDto as jest.MockedFunction<typeof caseToUserSummaryDto>
+const mockedCaseToUserSummaryDto = convertRowToUserPerformanceSummaryDto as jest.MockedFunction<
+  typeof convertRowToUserPerformanceSummaryDto
+>
 
 async function* createAsyncIterable<T>(items: T[][]): AsyncIterable<T[]> {
   for (const item of items) {
@@ -17,7 +19,7 @@ async function* createAsyncIterable<T>(items: T[][]): AsyncIterable<T[]> {
   }
 }
 
-describe("processUsersSummaryReport", () => {
+describe("processUserPerformanceSummaryReport", () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -27,7 +29,7 @@ describe("processUsersSummaryReport", () => {
     const toDate = new Date("2023-10-03T12:00:00Z")
     const cursor = createAsyncIterable<UserSummaryRow>([])
 
-    const generator = processUsersSummaryReport(cursor, fromDate, toDate)
+    const generator = processUserPerformanceSummaryReport(cursor, fromDate, toDate)
     const results = []
 
     for await (const result of generator) {
@@ -69,11 +71,11 @@ describe("processUsersSummaryReport", () => {
       exceptionsResolved: 2,
       totalNumberStillLocked: 1,
       triggerResolved: 3
-    } as unknown as UserSummaryPerformanceDto
+    } as unknown as UserForPerformanceSummaryDto
 
     mockedCaseToUserSummaryDto.mockReturnValue(mockDto)
 
-    const generator = processUsersSummaryReport(cursor, fromDate, toDate)
+    const generator = processUserPerformanceSummaryReport(cursor, fromDate, toDate)
     const results = []
 
     for await (const result of generator) {
@@ -108,16 +110,16 @@ describe("processUsersSummaryReport", () => {
       exceptionsResolved: 1,
       totalNumberStillLocked: 0,
       triggerResolved: 0
-    } as unknown as UserSummaryPerformanceDto
+    } as unknown as UserForPerformanceSummaryDto
     const mockDtoOct1 = {
       exceptionsResolved: 0,
       totalNumberStillLocked: 0,
       triggerResolved: 1
-    } as unknown as UserSummaryPerformanceDto
+    } as unknown as UserForPerformanceSummaryDto
 
     mockedCaseToUserSummaryDto.mockReturnValueOnce(mockDtoOct3).mockReturnValueOnce(mockDtoOct1)
 
-    const generator = processUsersSummaryReport(cursor, fromDate, toDate)
+    const generator = processUserPerformanceSummaryReport(cursor, fromDate, toDate)
     const results = []
 
     for await (const result of generator) {

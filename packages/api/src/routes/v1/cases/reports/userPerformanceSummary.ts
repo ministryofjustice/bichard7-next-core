@@ -5,7 +5,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserSummaryReportQuerySchema } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
-import { UsersSummaryPerformanceDtoSchema } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import { UserSummaryPerformanceDtoSchema } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 
@@ -21,7 +21,7 @@ import {
   unprocessableEntityError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
-import { generateUsersSummaryReport } from "../../../../useCases/cases/reports/usersSummary/generateUsersSummaryReport"
+import { generateUserPerformanceSummaryReport } from "../../../../useCases/cases/reports/usersSummary/generateUserPerformanceSummaryReport"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
@@ -35,7 +35,7 @@ const schema = {
   ...auth,
   querystring: UserSummaryReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Users Performance Summary Report", UsersSummaryPerformanceDtoSchema),
+    [OK]: jsonResponse("Users Performance Summary Report", UserSummaryPerformanceDtoSchema),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),
@@ -45,7 +45,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ auditLogGateway, database, query, reply, user }: HandlerProps) => {
-  const result = await generateUsersSummaryReport(database, auditLogGateway, user, query, reply)
+  const result = await generateUserPerformanceSummaryReport(database, auditLogGateway, user, query, reply)
 
   if (!isError(result)) {
     return reply

@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { dateLikeToDate } from "../../schemas/dateLikeToDate"
 
-export const UserSummaryPerformanceDtoSchema = z.object({
+export const UserForPerformanceSummaryDtoSchema = z.object({
   exceptionsResolved: z.number(),
   fullName: z.string(),
   id: z.number(),
@@ -11,7 +11,7 @@ export const UserSummaryPerformanceDtoSchema = z.object({
   username: z.string()
 })
 
-export const UsersSummaryPerformanceDtoSchema = z
+export const UserSummaryPerformanceDtoSchema = z
   .object({
     date: dateLikeToDate,
     totals: z.object({
@@ -19,9 +19,9 @@ export const UsersSummaryPerformanceDtoSchema = z
       totalNumberStillLocked: z.number(),
       triggerResolved: z.number()
     }),
-    users: UserSummaryPerformanceDtoSchema.array()
+    users: UserForPerformanceSummaryDtoSchema.array()
   })
   .array()
 
-export type UsersSummaryPerformanceDto = z.infer<typeof UsersSummaryPerformanceDtoSchema>
-export type UserSummaryPerformanceDto = z.infer<typeof UserSummaryPerformanceDtoSchema>
+export type UserForPerformanceSummaryDto = z.infer<typeof UserForPerformanceSummaryDtoSchema>
+export type UserPerformanceSummaryDto = z.infer<typeof UserSummaryPerformanceDtoSchema>

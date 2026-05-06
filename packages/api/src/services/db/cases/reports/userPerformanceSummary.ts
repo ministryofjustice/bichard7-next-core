@@ -1,5 +1,5 @@
 import type { UserSummaryReportQuery } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
-import type { UsersSummaryPerformanceDto } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -8,14 +8,14 @@ import { endOfDay, startOfDay } from "date-fns"
 import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { UserSummaryRow } from "../../../../types/reports/UserSummary"
 
-import { processUsersSummaryReport } from "../../../../useCases/cases/reports/usersSummary/processUserSummaryReport"
+import { processUserPerformanceSummaryReport } from "../../../../useCases/cases/reports/usersSummary/processUserPerformanceSummaryReport"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
-export async function* usersSummaryPerformance(
+export async function* userPerformanceSummary(
   database: TransactionConnection,
   user: User,
   filters: UserSummaryReportQuery
-): AsyncGenerator<UsersSummaryPerformanceDto> {
+): AsyncGenerator<UserPerformanceSummaryDto> {
   const query = database.connection<UserSummaryRow[]>`
     WITH combined_activity AS (
       SELECT 
@@ -99,7 +99,7 @@ export async function* usersSummaryPerformance(
 
   try {
     const cursor = query.cursor(100)
-    yield* processUsersSummaryReport(cursor, filters.fromDate, filters.toDate)
+    yield* processUserPerformanceSummaryReport(cursor, filters.fromDate, filters.toDate)
   } catch (err) {
     throw new Error(`Error fetching user summary report: ${(err as Error).message}`)
   }

@@ -1,5 +1,5 @@
 import type { UserSummaryReportQuery } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
-import type { UsersSummaryPerformanceDto } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -9,7 +9,7 @@ import { createCases } from "../../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUsers } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
-import { usersSummaryPerformance } from "./usersSummaryPerformance"
+import { userPerformanceSummary } from "./userPerformanceSummary"
 
 describe("usersSummaryPerformance - Integration", () => {
   let database: End2EndPostgres
@@ -82,10 +82,10 @@ describe("usersSummaryPerformance - Integration", () => {
       }
     ])
 
-    const results: UsersSummaryPerformanceDto = []
+    const results: UserPerformanceSummaryDto = []
 
     await database.writable.transaction(async (trx) => {
-      const generator = usersSummaryPerformance(trx, mockUser, filters)
+      const generator = userPerformanceSummary(trx, mockUser, filters)
 
       for await (const result of generator) {
         results.push(result[0])

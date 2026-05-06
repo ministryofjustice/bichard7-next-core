@@ -6,11 +6,11 @@ import type { FastifyReply } from "fastify"
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { usersSummaryPerformance } from "../../../../services/db/cases/reports/usersSummaryPerformance"
+import { userPerformanceSummary } from "../../../../services/db/cases/reports/userPerformanceSummary"
 import { createReportHandler } from "../createReportHandler"
 import { createReportAuditLog } from "../utils/createReportAuditLog"
 
-export const generateUsersSummaryReport = async (
+export const generateUserPerformanceSummaryReport = async (
   database: DatabaseGateway,
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
@@ -21,7 +21,7 @@ export const generateUsersSummaryReport = async (
 
   try {
     return await createReportHandler(
-      usersSummaryPerformance,
+      userPerformanceSummary,
       async (totalRecords: number): PromiseResult<void> => {
         const duration = Date.now() - start
 

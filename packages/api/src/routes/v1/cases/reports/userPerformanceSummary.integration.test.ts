@@ -1,7 +1,6 @@
-import type { UsersSummaryPerformanceDto } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { FastifyInstance } from "fastify"
 
-import { expect } from "@jest/globals"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -27,7 +26,7 @@ const defaultRequest = (jwt: string) => {
   }
 }
 
-describe("user performance summary report e2e", () => {
+describe("user performance summary report integration", () => {
   let app: FastifyInstance
 
   const endpoint = V1.CasesReportsUserPerformanceSummary
@@ -89,7 +88,7 @@ describe("user performance summary report e2e", () => {
 
     expect(response.statusCode).toBe(200)
 
-    const usersSummaryDto = response.json() as UsersSummaryPerformanceDto
+    const usersSummaryDto = response.json() as UserPerformanceSummaryDto
 
     expect(usersSummaryDto).toHaveLength(7)
 
@@ -124,7 +123,7 @@ describe("user performance summary report e2e", () => {
 
     expect(response.statusCode).toBe(200)
 
-    const usersSummaryDto = response.json() as UsersSummaryPerformanceDto
+    const usersSummaryDto = response.json() as UserPerformanceSummaryDto
 
     expect(usersSummaryDto).toHaveLength(7)
 

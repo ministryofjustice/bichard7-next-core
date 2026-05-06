@@ -1,8 +1,8 @@
-import type { UserSummaryPerformanceDto } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import type { UserForPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 
 import type { UserSummaryRow } from "../../../types/reports/UserSummary"
 
-export const caseToUserSummaryDto = (row: UserSummaryRow): UserSummaryPerformanceDto => ({
+export const convertRowToUserPerformanceSummaryDto = (row: UserSummaryRow): UserForPerformanceSummaryDto => ({
   exceptionsResolved: Number(row.exceptions_resolved),
   fullName: row.full_name || "Unknown User",
   id: Number(row.user_id),

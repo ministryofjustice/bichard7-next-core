@@ -8,7 +8,7 @@ import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/B
 import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
-import type { UsersSummaryPerformanceDto } from "@moj-bichard7/common/types/reports/UsersSummaryPerformance"
+import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { UserSummaryReportQuery } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
 
 type AnyReportDto =
@@ -16,7 +16,7 @@ type AnyReportDto =
   | ExceptionReportDto[]
   | CaseForDomesticViolenceReportDto[]
   | CaseForWarrantsReportDto[]
-  | UsersSummaryPerformanceDto
+  | UserPerformanceSummaryDto
 
 export type AnyReportQuery =
   | BailsReportQuery
