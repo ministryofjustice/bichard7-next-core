@@ -13,6 +13,7 @@ describe("ActionBar", () => {
     cy.mount(
       <ActionBar
         csvDownloadUrl={null}
+        automatedReportFilename={null}
         hasRows={true}
         csvReportFilename="test.csv"
         handleRunReport={cy.stub().as("handleRunReport")}
@@ -31,6 +32,7 @@ describe("ActionBar", () => {
       <MockNextRouter>
         <ActionBar
           csvDownloadUrl="/api/downloads/report.csv"
+          automatedReportFilename={null}
           hasRows={true}
           csvReportFilename="my_report.csv"
           handleRunReport={cy.stub().as("handleRunReport")}
@@ -49,6 +51,7 @@ describe("ActionBar", () => {
     cy.mount(
       <ActionBar
         csvDownloadUrl="/api/downloads/report.csv"
+        automatedReportFilename={null}
         hasRows={false}
         csvReportFilename="my_report.csv"
         handleRunReport={cy.stub().as("handleRunReport")}
@@ -63,6 +66,7 @@ describe("ActionBar", () => {
     cy.mount(
       <ActionBar
         csvDownloadUrl={null}
+        automatedReportFilename={null}
         hasRows={false}
         csvReportFilename={null}
         handleRunReport={cy.stub().as("handleRunReport")}
@@ -78,6 +82,7 @@ describe("ActionBar", () => {
     cy.mount(
       <ActionBar
         csvDownloadUrl={null}
+        automatedReportFilename={null}
         hasRows={false}
         csvReportFilename={null}
         handleRunReport={cy.stub().as("handleRunReport")}
@@ -96,6 +101,7 @@ describe("ActionBar", () => {
       <MockNextRouter>
         <ActionBar
           csvDownloadUrl="/api/downloads/report.csv"
+          automatedReportFilename={null}
           hasRows={true}
           csvReportFilename="my_report.csv"
           handleRunReport={cy.stub().as("handleRunReport")}
@@ -116,15 +122,12 @@ describe("ActionBar", () => {
     })
   })
 
-  it("does not log the CSV download if reportType is missing", () => {
-    const logSpy = cy.spy().as("logCsvDownloadSpy")
-
-    cy.intercept("GET", "/bichard/api/reports/log*", logSpy)
-
+  it("does not show the CSV download button if reportType is missing", () => {
     cy.mount(
       <MockNextRouter>
         <ActionBar
           csvDownloadUrl="/api/downloads/report.csv"
+          automatedReportFilename={null}
           hasRows={true}
           csvReportFilename="my_report.csv"
           handleRunReport={cy.stub().as("handleRunReport")}
@@ -134,8 +137,6 @@ describe("ActionBar", () => {
       </MockNextRouter>
     )
 
-    cy.contains("Download CSV").click()
-
-    cy.get("@logCsvDownloadSpy").should("not.have.been.called")
+    cy.get("body").should("not.contain", "Download CSV")
   })
 })

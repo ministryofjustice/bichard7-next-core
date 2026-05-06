@@ -82,13 +82,11 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         >
           {"Download report"}
         </LinkButton>
-      ) : null}
-
-      {isStandardReport ? (
+      ) : (
         <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
           {"Run report"}
         </Button>
-      ) : null}
+      )}
 
       <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
         {"Clear filters"}
