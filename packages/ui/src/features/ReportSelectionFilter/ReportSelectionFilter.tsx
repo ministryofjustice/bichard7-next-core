@@ -156,16 +156,14 @@ export const ReportSelectionFilter: React.FC = () => {
 
             <div id={"date-range-section"} className="date-range-section-wrapper">
               {filterValues.reportType && (
-                <>
-                  <DateRange
-                    dateFromString={filterValues.dateFrom}
-                    dateToString={filterValues.dateTo}
-                    setDateFromString={handleSetDateFrom}
-                    setDateToString={handleSetDateTo}
-                    dateFromError={filterValues.dateFromError}
-                    dateToError={filterValues.dateToError}
-                  />
-                </>
+                <DateRange
+                  dateFromString={filterValues.dateFrom}
+                  dateToString={filterValues.dateTo}
+                  setDateFromString={handleSetDateFrom}
+                  setDateToString={handleSetDateTo}
+                  dateFromError={filterValues.dateFromError}
+                  dateToError={filterValues.dateToError}
+                />
               )}
             </div>
             <div id={"include-section"} className="include-section-wrapper">
