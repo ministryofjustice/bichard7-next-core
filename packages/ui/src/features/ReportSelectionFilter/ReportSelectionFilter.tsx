@@ -1,4 +1,5 @@
-import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
+import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
 import { SyntheticEvent, useEffect, useReducer, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
@@ -35,7 +36,14 @@ export const ReportSelectionFilter: React.FC = () => {
   }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-    dispatch({ type: "SET_REPORT_TYPE", payload: event.currentTarget.value as ReportType })
+    const selectedValue = event.currentTarget.value
+
+    if (AUTOMATED_REPORT_TYPE_MAP[selectedValue as AutomatedReportType]) {
+      dispatch({ type: "SET_AUTOMATED_REPORT_TYPE", payload: selectedValue as AutomatedReportType })
+    }
+    if (REPORT_TYPE_MAP[selectedValue as ReportType]) {
+      dispatch({ type: "SET_REPORT_TYPE", payload: selectedValue as ReportType })
+    }
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -141,39 +149,45 @@ export const ReportSelectionFilter: React.FC = () => {
             <div id={"report-section"} className="reports-section-wrapper">
               <SelectReportDropdown
                 handleChange={handleSelectChange}
-                reportType={filterValues.reportType}
+                reportType={filterValues.reportType || filterValues.automatedReportType}
                 error={filterValues.reportTypeError}
               />
             </div>
-            <div id={"date-range-section"} className="date-range-section-wrapper">
-              <DateRange
-                dateFromString={filterValues.dateFrom}
-                dateToString={filterValues.dateTo}
-                setDateFromString={handleSetDateFrom}
-                setDateToString={handleSetDateTo}
-                dateFromError={filterValues.dateFromError}
-                dateToError={filterValues.dateToError}
-              />
-            </div>
-            <div id={"include-section"} className="include-section-wrapper">
-              {filterValues.reportType === "exceptions" && (
-                <Checkboxes
-                  handleChange={handleCheckbox}
-                  triggers={filterValues.triggers}
-                  exceptions={filterValues.exceptions}
-                  error={filterValues.checkboxesError}
-                />
-              )}
-            </div>
+            {filterValues.reportType && (
+              <>
+                <div id={"date-range-section"} className="date-range-section-wrapper">
+                  <DateRange
+                    dateFromString={filterValues.dateFrom}
+                    dateToString={filterValues.dateTo}
+                    setDateFromString={handleSetDateFrom}
+                    setDateToString={handleSetDateTo}
+                    dateFromError={filterValues.dateFromError}
+                    dateToError={filterValues.dateToError}
+                  />
+                </div>
+                <div id={"include-section"} className="include-section-wrapper">
+                  {filterValues.reportType === "exceptions" && (
+                    <Checkboxes
+                      handleChange={handleCheckbox}
+                      triggers={filterValues.triggers}
+                      exceptions={filterValues.exceptions}
+                      error={filterValues.checkboxesError}
+                    />
+                  )}
+                </div>
+              </>
+            )}
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar
             clearFilters={clearFilters}
             csvDownloadUrl={csvDownloadUrl}
+            xlsxFilename={filterValues.xlsxFilename}
             handleRunReport={handleRunReport}
             csvReportFilename={csvReportFilename}
             hasRows={!!rows && rows.length > 0}
             reportOptions={{
+              automatedReportType: filterValues.automatedReportType,
               reportType: filterValues.reportType,
               fromDate: filterValues.dateFrom,
               toDate: filterValues.dateTo

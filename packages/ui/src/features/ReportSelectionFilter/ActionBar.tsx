@@ -1,3 +1,4 @@
+import { AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Button } from "components/Buttons/Button"
 import { LinkButton } from "components/Buttons/LinkButton"
@@ -6,12 +7,14 @@ import { LinkStyleButton, StyledActionBar } from "./ActionBar.styles"
 
 interface ReportOptions {
   reportType?: ReportType
+  automatedReportType?: AutomatedReportType
   fromDate: string
   toDate: string
 }
 
 interface ActionBarProps {
   csvDownloadUrl: string | null
+  xlsxFilename: string | null
   hasRows: boolean
   csvReportFilename: string | null
   handleRunReport: () => void
@@ -21,12 +24,16 @@ interface ActionBarProps {
 
 export const ActionBar: React.FC<ActionBarProps> = ({
   csvDownloadUrl,
+  xlsxFilename,
   csvReportFilename,
   hasRows,
   handleRunReport,
   clearFilters,
   reportOptions
 }) => {
+  const isAutomatedReport = !!reportOptions.automatedReportType
+  const showStandardReportDownload = csvDownloadUrl && hasRows && !isAutomatedReport
+
   const onCsvDownload = async () => {
     if (!reportOptions.reportType) {
       console.log("Report type not found.")
@@ -48,7 +55,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
 
   return (
     <StyledActionBar role="group" aria-label="Report actions">
-      {csvDownloadUrl && hasRows ? (
+      {showStandardReportDownload ? (
         <LinkButton
           href={csvDownloadUrl}
           download={csvReportFilename}
@@ -62,13 +69,29 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         </LinkButton>
       ) : null}
 
-      <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
-        {"Run report"}
-      </Button>
+      {isAutomatedReport ? (
+        <LinkButton
+          href={`/reports/${xlsxFilename}`}
+          download={xlsxFilename}
+          overrideLink={true}
+          className={"left-aligned"}
+          aria-label={`Download report: ${csvReportFilename}`}
+          aria-live="polite"
+        >
+          {"Download report"}
+        </LinkButton>
+      ) : null}
 
-      <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
-        {"Clear filters"}
-      </LinkStyleButton>
+      {!isAutomatedReport ? (
+        <>
+          <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
+            {"Run report"}
+          </Button>
+          <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
+            {"Clear filters"}
+          </LinkStyleButton>
+        </>
+      ) : null}
     </StyledActionBar>
   )
 }

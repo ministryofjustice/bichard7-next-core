@@ -1,6 +1,8 @@
+import type { AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 export type FilterState = {
+  automatedReportType: AutomatedReportType | undefined
   reportType: ReportType | undefined
   dateTo: string
   dateFrom: string
@@ -10,9 +12,11 @@ export type FilterState = {
   dateFromError: string | null
   dateToError: string | null
   checkboxesError: string | null
+  xlsxFilename: string | null
 }
 
 export type FilterAction =
+  | { type: "SET_AUTOMATED_REPORT_TYPE"; payload: AutomatedReportType }
   | { type: "SET_REPORT_TYPE"; payload: ReportType }
   | { type: "SET_DATE_FROM"; payload: string }
   | { type: "SET_DATE_TO"; payload: string }
