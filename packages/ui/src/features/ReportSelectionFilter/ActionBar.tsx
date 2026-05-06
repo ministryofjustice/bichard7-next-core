@@ -84,15 +84,14 @@ export const ActionBar: React.FC<ActionBarProps> = ({
       ) : null}
 
       {!isAutomatedReport ? (
-        <>
-          <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
-            {"Run report"}
-          </Button>
-          <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
-            {"Clear filters"}
-          </LinkStyleButton>
-        </>
+        <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
+          {"Run report"}
+        </Button>
       ) : null}
+
+      <LinkStyleButton id={"clear-filters"} type="button" onClick={clearFilters}>
+        {"Clear filters"}
+      </LinkStyleButton>
     </StyledActionBar>
   )
 }
