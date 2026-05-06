@@ -8,7 +8,7 @@ const cofSegmentGenerator = (offence: Offence): string => {
   const referenceNumber = String(offence.courtOffenceSequenceNumber).padStart(3, "0")
   const offenceQualifier1 = offence.roleQualifiers?.join("")
   const offenceQualifier2 = offence.legislationQualifiers?.join("")
-  const acpoOffenceCode = toApcoOffenceCode(offence.npccOffenceCode)
+  const acpoOffenceCode = toApcoOffenceCode(offence.acpoOffenceCode)
   const cjsOffenceCode = offence.cjsOffenceCode
   const offenceStartDate = convertToPncDate(offence.offenceStartDate)
   const offenceStartTime = offence.offenceStartTime && convertToPncTime(offence.offenceStartTime)

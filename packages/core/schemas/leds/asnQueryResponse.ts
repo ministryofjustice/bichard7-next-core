@@ -33,6 +33,9 @@ export const disposalResultSchema = baseDisposalResultSchema.extend({
 })
 
 export const offenceSchema = baseOffenceSchema.extend({
+  // TEMP: To be removed before merging PR
+  acpoOffenceCode: z.string(),
+  // TEMP: To be removed before merging PR
   adjudications: adjudicationDetailsSchema.array().optional(),
   offenceId: z.string(),
   offenceDescription: z.array(z.string().min(1).max(54)).min(1).max(2).optional(),
@@ -44,6 +47,9 @@ export const offenceSchema = baseOffenceSchema.extend({
 })
 
 export const disposalSchema = z.object({
+  // TEMP: To be removed before merging PR
+  crimeOffenceReferenceNumber: z.string(),
+  // TEMP: To be removed before merging PR
   courtCaseId: z.string(),
   courtCaseReference: z.string(),
   caseStatusMarker: z.string(),
@@ -56,6 +62,12 @@ export const disposalSchema = z.object({
 })
 
 export const asnQueryResponseSchema = z.object({
+  // TEMP: To be removed before merging PR
+  pncCheckName: z.string(),
+  croNumber: z.string(),
+  gmh: z.string(),
+  gmt: z.string(),
+  // TEMP: To be removed before merging PR
   personId: z.string(),
   personUrn: z.string(),
   reportId: z.string(),

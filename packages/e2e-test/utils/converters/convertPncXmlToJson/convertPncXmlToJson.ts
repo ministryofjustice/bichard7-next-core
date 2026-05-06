@@ -46,7 +46,14 @@ export type AdditionalOffences = {
   additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
 }
 
-export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences) | Txt
+// TEMP: To be removed before merging PR
+type TemporaryFields = {
+  gmh: string
+  gmt: string
+}
+// TEMP: To be removed before merging PR
+
+export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences & TemporaryFields) | Txt
 export type PncRemandJson = Fsc & Ids & Asr & Rem
 export type PncNormalDisposalJson = Fsc &
   Ids &
@@ -155,6 +162,16 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
       lastOffence.disposals.push(dis)
     }
   }
+
+  // TEMP: To be removed before merging PR
+  converters["GMH"] = (value: string) => {
+    return { gmh: value }
+  }
+
+  converters["GMT"] = (value: string) => {
+    return { gmt: value }
+  }
+  // TEMP: To be removed before merging PR
 
   for (const { name, value } of segments) {
     currentOffenceSegment = getOffenceSegment(name)
