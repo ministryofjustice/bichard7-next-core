@@ -7,7 +7,7 @@ import { endOfDay, isBefore, startOfDay, subDays } from "date-fns"
 
 import type { UserSummaryRow } from "../../../../types/reports/UserSummary"
 
-import { convertRowToUserPerformanceSummaryDto } from "../../../dto/reports/convertRowToUserPerformanceSummaryDto"
+import { convertRowToUserForPerformanceSummaryDto } from "../../../dto/reports/convertRowToUserForPerformanceSummaryDto"
 import { formatDate } from "../utils/formatDate"
 
 const emptyTotals = () => ({
@@ -42,7 +42,7 @@ export async function* processUserPerformanceSummaryReport(
         expectedDateStr = formatDate(expectedDate)
       }
 
-      const userDto = convertRowToUserPerformanceSummaryDto(row)
+      const userDto = convertRowToUserForPerformanceSummaryDto(row)
 
       currentTotals.exceptionsResolved += userDto.exceptionsResolved
       currentTotals.triggerResolved += userDto.triggerResolved

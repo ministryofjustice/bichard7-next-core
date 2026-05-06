@@ -5,7 +5,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserSummaryReportQuerySchema } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
-import { UserSummaryPerformanceDtoSchema } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import { UserPerformanceSummaryDtoSchema } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, OK } from "http-status"
 
@@ -35,7 +35,7 @@ const schema = {
   ...auth,
   querystring: UserSummaryReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Users Performance Summary Report", UserSummaryPerformanceDtoSchema),
+    [OK]: jsonResponse("Users Performance Summary Report", UserPerformanceSummaryDtoSchema),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

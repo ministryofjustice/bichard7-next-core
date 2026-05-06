@@ -2,7 +2,7 @@ import type { UserForPerformanceSummaryDto } from "@moj-bichard7/common/types/re
 
 import type { UserSummaryRow } from "../../../types/reports/UserSummary"
 
-export const convertRowToUserPerformanceSummaryDto = (row: UserSummaryRow): UserForPerformanceSummaryDto => ({
+export const convertRowToUserForPerformanceSummaryDto = (row: UserSummaryRow): UserForPerformanceSummaryDto => ({
   exceptionsResolved: Number(row.exceptions_resolved),
   fullName: row.full_name || "Unknown User",
   id: Number(row.user_id),

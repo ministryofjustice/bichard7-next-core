@@ -4,13 +4,13 @@ import { endOfDay, subDays } from "date-fns"
 
 import type { UserSummaryRow } from "../../../../types/reports/UserSummary"
 
-import { convertRowToUserPerformanceSummaryDto } from "../../../dto/reports/convertRowToUserPerformanceSummaryDto"
+import { convertRowToUserForPerformanceSummaryDto } from "../../../dto/reports/convertRowToUserForPerformanceSummaryDto"
 import { processUserPerformanceSummaryReport } from "./processUserPerformanceSummaryReport"
 
-jest.mock("../../../dto/reports/convertRowToUserPerformanceSummaryDto")
+jest.mock("../../../dto/reports/convertRowToUserForPerformanceSummaryDto")
 
-const mockedCaseToUserSummaryDto = convertRowToUserPerformanceSummaryDto as jest.MockedFunction<
-  typeof convertRowToUserPerformanceSummaryDto
+const mockedCaseToUserSummaryDto = convertRowToUserForPerformanceSummaryDto as jest.MockedFunction<
+  typeof convertRowToUserForPerformanceSummaryDto
 >
 
 async function* createAsyncIterable<T>(items: T[][]): AsyncIterable<T[]> {

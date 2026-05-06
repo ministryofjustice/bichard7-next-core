@@ -11,7 +11,7 @@ export const UserForPerformanceSummaryDtoSchema = z.object({
   username: z.string()
 })
 
-export const UserSummaryPerformanceDtoSchema = z
+export const UserPerformanceSummaryDtoSchema = z
   .object({
     date: dateLikeToDate,
     totals: z.object({
@@ -24,4 +24,4 @@ export const UserSummaryPerformanceDtoSchema = z
   .array()
 
 export type UserForPerformanceSummaryDto = z.infer<typeof UserForPerformanceSummaryDtoSchema>
-export type UserPerformanceSummaryDto = z.infer<typeof UserSummaryPerformanceDtoSchema>
+export type UserPerformanceSummaryDto = z.infer<typeof UserPerformanceSummaryDtoSchema>
