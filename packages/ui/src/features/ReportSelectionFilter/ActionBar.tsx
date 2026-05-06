@@ -32,7 +32,8 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   reportOptions
 }) => {
   const isAutomatedReport = !!reportOptions.automatedReportType
-  const showStandardReportDownload = csvDownloadUrl && hasRows && !isAutomatedReport
+  const isStandardReport = !!reportOptions.reportType
+  const showStandardReportDownload = csvDownloadUrl && hasRows && isStandardReport
 
   const onCsvDownload = async () => {
     if (!reportOptions.reportType) {
@@ -83,7 +84,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
         </LinkButton>
       ) : null}
 
-      {!isAutomatedReport ? (
+      {isStandardReport ? (
         <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
           {"Run report"}
         </Button>
