@@ -153,9 +153,10 @@ export const ReportSelectionFilter: React.FC = () => {
                 error={filterValues.reportTypeError}
               />
             </div>
-            {filterValues.reportType && (
-              <>
-                <div id={"date-range-section"} className="date-range-section-wrapper">
+
+            <div id={"date-range-section"} className="date-range-section-wrapper">
+              {filterValues.reportType && (
+                <>
                   <DateRange
                     dateFromString={filterValues.dateFrom}
                     dateToString={filterValues.dateTo}
@@ -164,19 +165,19 @@ export const ReportSelectionFilter: React.FC = () => {
                     dateFromError={filterValues.dateFromError}
                     dateToError={filterValues.dateToError}
                   />
-                </div>
-                <div id={"include-section"} className="include-section-wrapper">
-                  {filterValues.reportType === "exceptions" && (
-                    <Checkboxes
-                      handleChange={handleCheckbox}
-                      triggers={filterValues.triggers}
-                      exceptions={filterValues.exceptions}
-                      error={filterValues.checkboxesError}
-                    />
-                  )}
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
+            <div id={"include-section"} className="include-section-wrapper">
+              {filterValues.reportType === "exceptions" && (
+                <Checkboxes
+                  handleChange={handleCheckbox}
+                  triggers={filterValues.triggers}
+                  exceptions={filterValues.exceptions}
+                  error={filterValues.checkboxesError}
+                />
+              )}
+            </div>
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar
