@@ -29,10 +29,12 @@ Feature: {143} BR7 R5.5_RCD563-Breach of Bail-Plea of Denies
 		Then there are no exceptions raised for "DENIES Breachy"
 			And I see trigger "PR10 - Conditional bail" in the exception list table
 		When "input-message-2" is received
-		Then there are no exceptions raised for "DENIES Breachy"
+		Then I reload until I see "10/10"
+			And there are no exceptions raised for "DENIES Breachy"
 			And I see trigger "PR10 - Conditional bail" in the exception list table
 		When "input-message-3" is received
-		Then there are no exceptions raised for "DENIES Breachy"
+		Then I reload until I see "26/10"
+			And there are no exceptions raised for "DENIES Breachy"
 			And I see trigger "PR10 - Conditional bail" in the exception list table
 			And I see trigger "PR08 - Breach of bail" in the exception list table
 			And the PNC updates the record

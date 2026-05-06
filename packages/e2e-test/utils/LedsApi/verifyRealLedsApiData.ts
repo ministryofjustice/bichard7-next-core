@@ -1,22 +1,19 @@
 import expect from "expect"
 import { existsSync, readFileSync } from "fs"
 import type { LedsBichard } from "../../types/LedsMock"
+import deepSort from "../deepSort"
 import { delay } from "../puppeteer-utils"
 import fetchCaseDataFromLedsApi from "./fetchCaseDataFromLedsApi"
 import snapshotLedsApiData from "./snapshotLedsApiData"
 
 const keysToRedact = [
-  "arrestSummonsId",
-  "arrestSummonsReference",
-  "courtCaseReferenceNumber",
+  "crimeReference",
   "courtCaseReference",
-  "id",
-  "version",
-  "offenceId",
+  "courtCaseReferenceNumber",
+  "arrestSummonsReference",
   "offenceChargeNumber",
   "courtCaseChargeNumber",
-  "arrestChargeNumber",
-  "oldCourtCaseReference"
+  "arrestChargeNumber"
 ]
 
 const redactFields = <T>(obj: T): T => {
@@ -40,27 +37,6 @@ const redactFields = <T>(obj: T): T => {
     },
     {} as Record<string, unknown>
   ) as T
-}
-
-const deepSort = <T>(obj: T): T => {
-  if (obj === null || typeof obj !== "object") {
-    return obj
-  }
-
-  if (Array.isArray(obj)) {
-    const recursed = obj.map(deepSort)
-    return recursed.sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))) as T
-  }
-
-  return Object.keys(obj)
-    .sort()
-    .reduce(
-      (acc, key) => {
-        acc[key] = deepSort((obj as Record<string, unknown>)[key])
-        return acc
-      },
-      {} as Record<string, unknown>
-    ) as T
 }
 
 const matchRealLedsApiDataToSnapshot = async (bichard: LedsBichard): Promise<void> => {

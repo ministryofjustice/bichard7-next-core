@@ -45,7 +45,7 @@ describe("mapAdditionalArrestOffences", () => {
                 disposalText: "Disposal text"
               }
             ],
-            locationFsCode: "Offence location FS code",
+            locationFsCode: "1234",
             locationText: { locationText: "Offence location" }
           },
           {
@@ -80,7 +80,7 @@ describe("mapAdditionalArrestOffences", () => {
                 disposalText: "Disposal text"
               }
             ],
-            locationFsCode: "Offence location FS code",
+            locationFsCode: "2345",
             locationText: { locationText: "Offence location" }
           }
         ]
@@ -160,7 +160,7 @@ describe("mapAdditionalArrestOffences", () => {
           committedOnBail: "y",
           courtOffenceSequenceNumber: "3",
           locationOfOffence: "Offence location",
-          offenceLocationFSCode: "Offence location FS code",
+          offenceLocationFSCode: "1234",
           offenceReason: "SX03001B",
           offenceReasonSequence: "1",
           offenceStartDate: "16082025",
@@ -187,7 +187,7 @@ describe("mapAdditionalArrestOffences", () => {
           committedOnBail: "y",
           courtOffenceSequenceNumber: "4",
           locationOfOffence: "Offence location",
-          offenceLocationFSCode: "Offence location FS code",
+          offenceLocationFSCode: "2345",
           offenceReason: "TH68006",
           offenceReasonSequence: "1",
           offenceStartDate: "16082025",

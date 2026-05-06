@@ -2,6 +2,16 @@ type LocationAddress = {
   locationType: string
   locationText: string
 }
+
+type OtherCharged = {
+  chargeGroupDetailsId: string
+  chargeGroupId: string
+  checkName: string
+  pncPersonId: string
+  lastName: string
+  firstNames: string[]
+}
+
 type OffenceResponse = {
   id: string
   version: string
@@ -18,7 +28,7 @@ type OffenceResponse = {
   locationAddress: LocationAddress
   offencesTakenIntoConsideration: number
   adjudication: string
-  othersCharged: string[]
+  othersCharged: OtherCharged[]
   brcRecord: boolean
   hasDisposalResults: boolean
   additionalOffenceMarker: boolean

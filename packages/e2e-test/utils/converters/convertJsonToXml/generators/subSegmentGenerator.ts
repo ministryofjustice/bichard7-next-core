@@ -7,8 +7,7 @@ import generateRow from "../helpers/generateRow"
 
 const hearingTypeMap: Record<ReasonForAppearance, string> = {
   "Subsequently Varied": "V",
-  "Sentence Deferred": "D",
-  "Heard at Court": ""
+  "Sentence Deferred": "D"
 }
 
 const subSegmentGenerator = (mockJson: MockSubsequentDisposalResultsRequest): string => {

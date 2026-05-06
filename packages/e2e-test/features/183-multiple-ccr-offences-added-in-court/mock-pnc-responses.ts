@@ -203,7 +203,7 @@ export default (_: string, { policeApi }: Bichard) => [
         {
           courtOffenceSequenceNumber: 1,
           cjsOffenceCode: "TH68001",
-          plea: "NOT GUILTY",
+          plea: "Not Guilty",
           offenceTic: 0,
           disposalResults: [
             {

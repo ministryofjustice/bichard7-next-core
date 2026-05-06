@@ -31,6 +31,7 @@ export const subsequentDisposal = (
   const validation = subsequentDisposalResultsRequestSchema.safeParse(requestBody)
 
   if (!validation.success) {
+    console.error(validation.error)
     return new PoliceApiError(["Failed to validate LEDS request."])
   }
 

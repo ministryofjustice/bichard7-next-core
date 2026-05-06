@@ -3,7 +3,7 @@ import type { AddDisposalRequest } from "../../types/leds/AddDisposalRequest"
 export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalRequest> = {}): AddDisposalRequest => {
   const base: AddDisposalRequest = {
     ownerCode: "07A1",
-    personUrn: "22/858J",
+    personUrn: "2022/858J",
     courtCaseReference: "98/2048/633Y",
     court: {
       courtIdentityType: "name",
@@ -143,7 +143,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
                 disposalText: "Disposal text"
               }
             ],
-            locationFsCode: "Offence location FS code",
+            locationFsCode: "1234",
             locationText: { locationText: "Offence location" }
           },
           {
@@ -178,7 +178,7 @@ export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalReq
                 disposalText: "Disposal text"
               }
             ],
-            locationFsCode: "Offence location FS code",
+            locationFsCode: "2345",
             locationText: { locationText: "Offence location" }
           }
         ]

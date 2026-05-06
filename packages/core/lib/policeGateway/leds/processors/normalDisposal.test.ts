@@ -23,7 +23,7 @@ describe("normalDisposal", () => {
     const endpoint = "person-services/v1/people/123456/disposals/ABC123/court-case-disposal-result"
     const requestBody = {
       ownerCode: "07A1",
-      personUrn: "22/858J",
+      personUrn: "2022/858J",
       courtCaseReference: "98/2048/633Y",
       court: {
         courtIdentityType: "code",
@@ -168,7 +168,7 @@ describe("normalDisposal", () => {
                   disposalText: "Disposal text"
                 }
               ],
-              locationFsCode: "Offence location FS code",
+              locationFsCode: "1234",
               locationText: { locationText: "Offence location" }
             },
             {
@@ -203,7 +203,7 @@ describe("normalDisposal", () => {
                   disposalText: "Disposal text"
                 }
               ],
-              locationFsCode: "Offence location FS code",
+              locationFsCode: "2345",
               locationText: { locationText: "Offence location" }
             }
           ]
