@@ -5,7 +5,7 @@ describe("top exceptions report type filter", () => {
     loginAndVisit("Supervisor", "/bichard/report-selection")
   })
 
-  it("should display 'Download report' button only when Top Exceptions is selected from dropdown", () => {
+  it("should display 'Download report' button only when 'Top Exceptions' is selected from dropdown", () => {
     cy.get("#report-select").select("Top Exceptions")
     cy.get("#date-from").should("not.exist")
     cy.get("#date-to").should("not.exist")
