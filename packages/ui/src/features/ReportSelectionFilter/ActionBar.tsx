@@ -14,7 +14,7 @@ interface ReportOptions {
 
 interface ActionBarProps {
   csvDownloadUrl: string | null
-  xlsxFilename: string | null
+  automatedReportFilename: string | null
   hasRows: boolean
   csvReportFilename: string | null
   handleRunReport: () => void
@@ -24,7 +24,7 @@ interface ActionBarProps {
 
 export const ActionBar: React.FC<ActionBarProps> = ({
   csvDownloadUrl,
-  xlsxFilename,
+  automatedReportFilename,
   csvReportFilename,
   hasRows,
   handleRunReport,
@@ -72,11 +72,11 @@ export const ActionBar: React.FC<ActionBarProps> = ({
       {isAutomatedReport ? (
         <LinkButton
           id={"download-automated-report"}
-          href={`/reports/${xlsxFilename}`}
-          download={xlsxFilename}
+          href={`/reports/${automatedReportFilename}`}
+          download={automatedReportFilename}
           overrideLink={true}
           className={"left-aligned"}
-          aria-label={`Download report as XLSX: ${xlsxFilename}`}
+          aria-label={`Download report as XLSX: ${automatedReportFilename}`}
           aria-live="polite"
         >
           {"Download report"}

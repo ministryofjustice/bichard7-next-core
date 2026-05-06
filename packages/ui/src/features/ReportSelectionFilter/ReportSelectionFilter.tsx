@@ -183,7 +183,7 @@ export const ReportSelectionFilter: React.FC = () => {
           <ActionBar
             clearFilters={clearFilters}
             csvDownloadUrl={csvDownloadUrl}
-            xlsxFilename={filterValues.xlsxFilename}
+            automatedReportFilename={filterValues.automatedReportFilename}
             handleRunReport={handleRunReport}
             csvReportFilename={csvReportFilename}
             hasRows={!!rows && rows.length > 0}

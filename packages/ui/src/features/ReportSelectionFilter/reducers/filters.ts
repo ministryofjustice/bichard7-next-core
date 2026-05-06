@@ -14,7 +14,7 @@ export const initialFilterState: FilterState = {
   dateFromError: null,
   dateToError: null,
   reportTypeError: null,
-  xlsxFilename: null
+  automatedReportFilename: null
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
@@ -32,7 +32,7 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       return {
         ...state,
         automatedReportType: action.payload,
-        xlsxFilename: xlsxFilename(action.payload),
+        automatedReportFilename: xlsxFilename(action.payload),
         reportType: undefined
       }
     case "SET_DATE_FROM":

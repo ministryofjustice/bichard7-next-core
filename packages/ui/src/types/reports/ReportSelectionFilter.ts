@@ -12,7 +12,7 @@ export type FilterState = {
   dateFromError: string | null
   dateToError: string | null
   checkboxesError: string | null
-  xlsxFilename: string | null
+  automatedReportFilename: string | null
 }
 
 export type FilterAction =
