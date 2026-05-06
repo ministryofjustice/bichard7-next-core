@@ -1,3 +1,5 @@
+import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
+import { AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { ActionBar } from "features/ReportSelectionFilter/ActionBar"
 import { MockNextRouter } from "../../support/MockNextRouter"
@@ -7,6 +9,12 @@ describe("ActionBar", () => {
     reportType: "bails" as ReportType,
     fromDate: "2026-03-01",
     toDate: "2026-03-10"
+  }
+
+  const mockAutomatedReportOptions = {
+    automatedReportType: "automation rate" as AutomatedReportType,
+    fromDate: "",
+    toDate: ""
   }
 
   it("renders standard actions without the CSV download button when csvDownloadUrl is null", () => {
@@ -138,5 +146,25 @@ describe("ActionBar", () => {
     )
 
     cy.get("body").should("not.contain", "Download CSV")
+  })
+
+  it("shows report download button if automatedReportType is present", () => {
+    const reportFilename = xlsxFilename(mockAutomatedReportOptions.automatedReportType)
+
+    cy.mount(
+      <MockNextRouter>
+        <ActionBar
+          csvDownloadUrl={null}
+          automatedReportFilename={reportFilename}
+          hasRows={false}
+          csvReportFilename={null}
+          handleRunReport={cy.stub().as("handleRunReport")}
+          clearFilters={cy.stub().as("clearFilters")}
+          reportOptions={{ ...mockAutomatedReportOptions }}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("#download-automated-report").should("exist").and("have.attr", "href", `/reports/${reportFilename}`)
   })
 })
