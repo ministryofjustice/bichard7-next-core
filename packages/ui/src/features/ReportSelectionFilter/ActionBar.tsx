@@ -71,11 +71,12 @@ export const ActionBar: React.FC<ActionBarProps> = ({
 
       {isAutomatedReport ? (
         <LinkButton
+          id={"download-automated-report"}
           href={`/reports/${xlsxFilename}`}
           download={xlsxFilename}
           overrideLink={true}
           className={"left-aligned"}
-          aria-label={`Download report: ${csvReportFilename}`}
+          aria-label={`Download report as XLSX: ${xlsxFilename}`}
           aria-live="polite"
         >
           {"Download report"}
