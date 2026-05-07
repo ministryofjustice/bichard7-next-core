@@ -53,7 +53,7 @@
     "stompit": "^1.0.0",
     "undici": "^6.25.0",
     "ws": "^8.20.0",
-    "zod": "^4.3.6",
+    "zod": "^4.4.2",
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {

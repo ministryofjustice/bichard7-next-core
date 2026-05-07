@@ -43,7 +43,7 @@
     "@aws-sdk/lib-dynamodb": "^3.1041.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "lodash.ismatch": "^4.4.0",
-    "zod": "^4.3.6"
+    "zod": "^4.4.2"
   },
   "devDependencies": {
     "@aws-sdk/client-sqs": "^3.1041.0",
