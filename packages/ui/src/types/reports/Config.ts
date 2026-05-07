@@ -49,5 +49,10 @@ export const ReportConfigs: Record<ReportType, ReportConfig> = {
     endpoint: V1.CasesReportsWarrants,
     isGrouped: false,
     columns: warrantsColumns
-  } satisfies FlatReportConfig<CaseForWarrantsReportDto>
+  } satisfies FlatReportConfig<CaseForWarrantsReportDto>,
+  "user summary": {
+    endpoint: V1.CasesReportsUserPerformanceSummary,
+    isGrouped: false,
+    columns: []
+  }
 }

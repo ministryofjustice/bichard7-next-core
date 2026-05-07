@@ -17,11 +17,13 @@ export const createTriggers = async (
     triggers.map(async (trigger, index) => {
       const triggerStatus = resolutionStatusFromDb(trigger.status ?? null)
 
+      const resolvedBy = username ?? trigger.resolvedBy ?? "GeneralHandler"
+
       const triggerToInsert: Trigger = {
         createdAt: trigger.createdAt ?? new Date(),
         errorId: caseId,
         resolvedAt: triggerStatus === ResolutionStatus.Resolved ? (trigger.resolvedAt ?? new Date()) : null,
-        resolvedBy: triggerStatus === ResolutionStatus.Resolved ? (username ?? "GeneralHandler") : null,
+        resolvedBy: triggerStatus === ResolutionStatus.Resolved ? resolvedBy : null,
         status: trigger.status ?? ResolutionStatusNumber.Unresolved,
         triggerCode: trigger.triggerCode ?? TriggerCode.TRPR0001,
         triggerId: trigger.triggerId ?? index,
