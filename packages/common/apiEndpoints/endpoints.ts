@@ -12,6 +12,7 @@ export const Endpoints = {
   CasesReportsBails: "/cases/reports/bails",
   CasesReportsDomesticViolence: "/cases/reports/domestic-violence",
   CasesReportsExceptions: "/cases/reports/exceptions",
+  CasesReportsUserPerformanceDetail: "/cases/reports/user-performance-detail",
   CasesReportsUserPerformanceSummary: "/cases/reports/user-performance-summary",
   CasesReportsWarrants: "/cases/reports/warrants",
   CasesResubmit: "/cases/resubmit",
