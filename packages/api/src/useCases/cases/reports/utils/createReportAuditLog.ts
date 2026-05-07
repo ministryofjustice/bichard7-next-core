@@ -26,17 +26,12 @@ export type CreateReportAuditLogOptions = {
 export const createReportAuditLog = async (options: CreateReportAuditLogOptions): PromiseResult<void> => {
   const { auditLogGateway, duration, fromDate, reportType, toDate, totalRecords, user } = options
 
-  if (!REPORT_TYPE_MAP[reportType]) {
-    console.error("No Report Type found")
-    return new Error(`Report type ${reportType} not found`)
-  }
-
   const eventDetails: Record<string, number | string> = {
     auditLogVersion: 2,
     "Date Range": `${formatDate(fromDate)} to ${formatDate(toDate)}`,
     "Number of Records Returned": totalRecords,
     "Output Format": "Viewed in UI",
-    "Report ID": REPORT_TYPE_MAP[reportType],
+    "Report ID": REPORT_TYPE_MAP[reportType] ?? reportType,
     "Time Taken": `${duration}ms`
   }
 

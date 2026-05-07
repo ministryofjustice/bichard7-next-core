@@ -1,0 +1,89 @@
+import type { UserDetailJsonRow } from "../../../types/reports/UserDetail"
+
+import { mapToUserPerformanceDetailDtoDay } from "./mapToUserPerformanceDetailDtoDay"
+
+jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/data/exception-definitions.json", () => ({
+  def1: { code: "EXC_SHORT", description: "Long description", shortDescription: "Exception short description" },
+  def2: { code: "EXC_LONG", description: "Exception long description only" },
+  def3: { code: "EXC_EMPTY" }
+}))
+
+jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/data/trigger-definitions.json", () => ({
+  def1: { code: "TRG_SHORT", description: "Long description", shortDescription: "Trigger short description" },
+  def2: { code: "TRG_LONG", description: "Trigger long description only" },
+  def3: { code: "TRG_EMPTY" }
+}))
+
+describe("mapToUserPerformanceDetailDtoDay", () => {
+  const mockDate = new Date("2026-05-06T12:00:00Z")
+
+  it("should return empty arrays when row is undefined", () => {
+    const result = mapToUserPerformanceDetailDtoDay(mockDate)
+
+    expect(result).toEqual({
+      date: mockDate,
+      exceptions: [],
+      triggers: []
+    })
+  })
+
+  it("should map exceptions and triggers prioritizing shortDescription over description", () => {
+    const mockRow = {
+      exceptions: [{ code: "EXC_SHORT", extraData: "foo" }],
+      triggers: [{ code: "TRG_SHORT", extraData: "bar" }]
+    } as unknown as UserDetailJsonRow
+
+    const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
+
+    expect(result).toEqual({
+      date: mockDate,
+      exceptions: [{ code: "EXC_SHORT", description: "Exception short description", extraData: "foo" }],
+      triggers: [{ code: "TRG_SHORT", description: "Trigger short description", extraData: "bar" }]
+    })
+  })
+
+  it("should fall back to 'description' when 'shortDescription' is missing", () => {
+    const mockRow = {
+      exceptions: [{ code: "EXC_LONG" }],
+      triggers: [{ code: "TRG_LONG" }]
+    } as unknown as UserDetailJsonRow
+
+    const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
+
+    expect(result).toEqual({
+      date: mockDate,
+      exceptions: [{ code: "EXC_LONG", description: "Exception long description only" }],
+      triggers: [{ code: "TRG_LONG", description: "Trigger long description only" }]
+    })
+  })
+
+  it("should fall back to 'Unknown Exception' or 'Unknown Trigger' if definitions lack descriptions", () => {
+    const mockRow = {
+      exceptions: [{ code: "EXC_EMPTY" }],
+      triggers: [{ code: "TRG_EMPTY" }]
+    } as unknown as UserDetailJsonRow
+
+    const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
+
+    expect(result).toEqual({
+      date: mockDate,
+      exceptions: [{ code: "EXC_EMPTY", description: "Unknown Exception" }],
+      triggers: [{ code: "TRG_EMPTY", description: "Unknown Trigger" }]
+    })
+  })
+
+  it("should fall back to 'Description unavailable' if the code is entirely missing from the JSON", () => {
+    const mockRow = {
+      exceptions: [{ code: "MISSING_EXC" }],
+      triggers: [{ code: "MISSING_TRG" }]
+    } as unknown as UserDetailJsonRow
+
+    const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
+
+    expect(result).toEqual({
+      date: mockDate,
+      exceptions: [{ code: "MISSING_EXC", description: "Description unavailable" }],
+      triggers: [{ code: "MISSING_TRG", description: "Description unavailable" }]
+    })
+  })
+})
