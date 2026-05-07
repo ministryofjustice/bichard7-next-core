@@ -7,7 +7,7 @@ export type PrettyReportType =
 
 export type ReportType = "bails" | "domestic violence" | "exceptions" | "user summary" | "warrants"
 
-export const REPORT_TYPE_MAP: Partial<Record<ReportType, PrettyReportType>> = {
+export const REPORT_TYPE_MAP: { [K in ReportType]?: PrettyReportType } = {
   bails: "Bail Conditions",
   "domestic violence": "Domestic Violence & Vulnerable Victims",
   exceptions: "Resolved Exceptions/Triggers",

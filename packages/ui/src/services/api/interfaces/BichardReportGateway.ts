@@ -8,22 +8,14 @@ import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/B
 import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
-import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
-import type { UserSummaryReportQuery } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
 
 type AnyReportDto =
   | CaseForBailsReportDto[]
   | ExceptionReportDto[]
   | CaseForDomesticViolenceReportDto[]
   | CaseForWarrantsReportDto[]
-  | UserPerformanceSummaryDto
 
-export type AnyReportQuery =
-  | BailsReportQuery
-  | ExceptionReportQuery
-  | DomesticViolenceReportQuery
-  | WarrantsReportQuery
-  | UserSummaryReportQuery
+export type AnyReportQuery = BailsReportQuery | ExceptionReportQuery | DomesticViolenceReportQuery | WarrantsReportQuery
 
 export interface BichardReportGateway {
   readonly reportClient: ReportsApiClient
