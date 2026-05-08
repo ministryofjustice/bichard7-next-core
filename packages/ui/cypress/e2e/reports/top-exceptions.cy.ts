@@ -12,5 +12,6 @@ describe("top exceptions report type filter", () => {
     cy.get("#exceptions").should("not.exist")
     cy.get("#triggers").should("not.exist")
     cy.get("#download-automated-report").should("exist")
+    cy.get("#download-automated-report").should("exist").and("have.attr", "href", "/reports/TopExceptions.xlsx")
   })
 })
