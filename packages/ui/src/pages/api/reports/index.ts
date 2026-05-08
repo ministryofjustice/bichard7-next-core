@@ -7,7 +7,8 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import Permission from "@moj-bichard7/common/types/Permission"
 import type { AnyReportQuery } from "services/api/interfaces/BichardReportGateway"
 import { isReportType } from "services/reports/utils/isReportType"
-import type { ReportConfigs } from "types/reports/Config"
+
+import type { ReportConfigs } from "types/reports/ReportConfigs"
 
 export const config = {
   api: {

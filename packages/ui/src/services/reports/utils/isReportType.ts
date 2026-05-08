@@ -1,5 +1,6 @@
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
-import { ReportConfigs } from "types/reports/Config"
+
+import { ReportConfigs } from "types/reports/ReportConfigs"
 
 export const isReportType = (type: unknown): type is ReportType => {
   if (typeof type !== "string") {
