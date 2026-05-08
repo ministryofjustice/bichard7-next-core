@@ -142,7 +142,7 @@ describe("ActionBar", () => {
     cy.get("body").should("not.contain", "Download CSV")
   })
 
-  it("does not shows report download button if is an automated report but reportType is not present", () => {
+  it("does not show report download button if is an automated report but reportType is not present", () => {
     cy.mount(
       <MockNextRouter>
         <ActionBar
@@ -179,7 +179,7 @@ describe("ActionBar", () => {
   })
 
   it("logs the XLSX download via fetch when download is clicked and is an automated report", () => {
-    cy.intercept("GET", "/bichard/api/reports/log*").as("logCsvDownload")
+    cy.intercept("GET", "/bichard/api/reports/log*").as("logXlsxDownloadSpy")
 
     cy.mount(
       <MockNextRouter>
@@ -196,7 +196,7 @@ describe("ActionBar", () => {
 
     cy.contains("Download report").click()
 
-    cy.wait("@logCsvDownload").then((interception) => {
+    cy.wait("@logXlsxDownloadSpy").then((interception) => {
       const url = new URL(interception.request.url)
       expect(url.searchParams.get("xlsxDownload")).to.equal("true")
       expect(url.searchParams.get("reportType")).to.equal(mockAutomatedReportOptions.reportType)
