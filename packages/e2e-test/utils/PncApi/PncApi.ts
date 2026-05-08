@@ -4,6 +4,7 @@ import type PncMock from "../../types/PncMock"
 import type { PartialPncMock, PncBichard, PncMockOptions } from "../../types/PncMock"
 import type PoliceApi from "../../types/PoliceApi"
 import type { MockAsnQueryParams } from "../../types/PoliceApi"
+import convertLedsAsnQueryResponseToXml from "../converters/convertJsonToXml/convertLedsAsnQueryResponseToXml"
 import defaults from "../defaults"
 import addMockToPncEmulator from "./addMockToPncEmulator"
 import addMockToPncTestTool from "./addMockToPncTestTool"
@@ -44,7 +45,10 @@ export class PncApi implements PoliceApi {
   }
 
   mockAsnQuery(params: MockAsnQueryParams): PartialPncMock {
-    return params
+    return {
+      ...params,
+      response: convertLedsAsnQueryResponseToXml(params.response)
+    }
   }
 
   checkMocks(): Promise<void> {
