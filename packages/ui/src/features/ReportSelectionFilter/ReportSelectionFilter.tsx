@@ -91,8 +91,8 @@ export const ReportSelectionFilter: React.FC = () => {
 
   const handleAutomatedReportDownload = async () => {
     if (filterValues.automatedReportFilename) {
-      setFileDownloadUrl(`/reports/${filterValues.automatedReportFilename}`)
       setReportFilename(filterValues.automatedReportFilename)
+      setFileDownloadUrl(`/reports/${filterValues.automatedReportFilename}`)
     }
   }
 
@@ -150,10 +150,10 @@ export const ReportSelectionFilter: React.FC = () => {
   }, [filterValues])
 
   useEffect(() => {
-    if (filterValues.automatedReportFilename) {
+    if (filterValues.automatedReportFilename && filterValues.isAutomatedReport) {
       handleAutomatedReportDownload()
     }
-  }, [filterValues.automatedReportFilename])
+  }, [filterValues.automatedReportFilename, filterValues.isAutomatedReport])
 
   return (
     <>
@@ -169,7 +169,7 @@ export const ReportSelectionFilter: React.FC = () => {
             </div>
 
             <div id={"date-range-section"} className="date-range-section-wrapper">
-              {filterValues.reportType && (
+              {!filterValues.isAutomatedReport && (
                 <DateRange
                   dateFromString={filterValues.dateFrom}
                   dateToString={filterValues.dateTo}
