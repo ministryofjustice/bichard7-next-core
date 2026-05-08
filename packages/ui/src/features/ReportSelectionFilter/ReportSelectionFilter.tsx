@@ -20,8 +20,8 @@ import { filterReducer, initialFilterState } from "./reducers/filters"
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
-  const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
-  const [csvReportFilename, setCsvReportFilename] = useState<string>("")
+  const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
+  const [reportFilename, setReportFilename] = useState<string>("")
 
   const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
 
@@ -40,6 +40,7 @@ export const ReportSelectionFilter: React.FC = () => {
 
     if (AUTOMATED_REPORT_TYPE_MAP[selectedValue as AutomatedReportType]) {
       dispatch({ type: "SET_AUTOMATED_REPORT_TYPE", payload: selectedValue as AutomatedReportType })
+      handleAutomatedReportDownload()
     }
     if (REPORT_TYPE_MAP[selectedValue as ReportType]) {
       dispatch({ type: "SET_REPORT_TYPE", payload: selectedValue as ReportType })
@@ -54,13 +55,13 @@ export const ReportSelectionFilter: React.FC = () => {
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault()
     setRows(null)
-    setCsvDownloadUrl(null)
+    setFileDownloadUrl(null)
     dispatch({ type: "RESET_FILTERS" })
   }
 
   const clearResults = () => {
     setRows(null)
-    setCsvDownloadUrl(null)
+    setFileDownloadUrl(null)
   }
 
   const validateFilters = (): boolean => {
@@ -88,6 +89,13 @@ export const ReportSelectionFilter: React.FC = () => {
     }
   }
 
+  const handleAutomatedReportDownload = async () => {
+    if (filterValues.automatedReportFilename) {
+      setFileDownloadUrl(`/reports/${filterValues.automatedReportFilename}`)
+      setReportFilename(filterValues.automatedReportFilename)
+    }
+  }
+
   const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
@@ -108,8 +116,8 @@ export const ReportSelectionFilter: React.FC = () => {
       )
 
       setRows(parsedData)
-      setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
-      setCsvReportFilename(csvFilename(reportType, urlQuery))
+      setFileDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
+      setReportFilename(csvFilename(reportType, urlQuery))
     } catch (error) {
       console.error("Fetch failed:", error)
     } finally {
@@ -124,22 +132,28 @@ export const ReportSelectionFilter: React.FC = () => {
 
     setIsStreaming(true)
     setRows([])
-    setCsvDownloadUrl(null)
+    setFileDownloadUrl(null)
 
     await handleDownload()
   }
 
   useEffect(() => {
     return () => {
-      if (csvDownloadUrl) {
-        globalThis.URL.revokeObjectURL(csvDownloadUrl)
+      if (fileDownloadUrl) {
+        globalThis.URL.revokeObjectURL(fileDownloadUrl)
       }
     }
-  }, [csvDownloadUrl])
+  }, [fileDownloadUrl])
 
   useEffect(() => {
     clearResults()
   }, [filterValues])
+
+  useEffect(() => {
+    if (filterValues.automatedReportFilename) {
+      handleAutomatedReportDownload()
+    }
+  }, [filterValues.automatedReportFilename])
 
   return (
     <>
@@ -180,10 +194,9 @@ export const ReportSelectionFilter: React.FC = () => {
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar
             clearFilters={clearFilters}
-            csvDownloadUrl={csvDownloadUrl}
-            automatedReportFilename={filterValues.automatedReportFilename}
             handleRunReport={handleRunReport}
-            csvReportFilename={csvReportFilename}
+            fileDownloadUrl={fileDownloadUrl}
+            reportFilename={reportFilename}
             hasRows={!!rows && rows.length > 0}
             reportOptions={{
               automatedReportType: filterValues.automatedReportType,

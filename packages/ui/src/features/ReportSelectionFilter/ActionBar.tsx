@@ -13,44 +13,54 @@ interface ReportOptions {
 }
 
 interface ActionBarProps {
-  csvDownloadUrl: string | null
-  automatedReportFilename: string | null
+  fileDownloadUrl: string | null
+  reportFilename: string | null
   hasRows: boolean
-  csvReportFilename: string | null
   handleRunReport: () => void
   clearFilters: (event: SyntheticEvent<HTMLButtonElement>) => void
   reportOptions: ReportOptions
 }
 
 export const ActionBar: React.FC<ActionBarProps> = ({
-  csvDownloadUrl,
-  automatedReportFilename,
-  csvReportFilename,
+  fileDownloadUrl,
+  reportFilename,
   hasRows,
   handleRunReport,
   clearFilters,
   reportOptions
 }) => {
-  const isAutomatedReport = !!reportOptions.automatedReportType
   const isStandardReport = !!reportOptions.reportType
-  const showStandardReportDownload = csvDownloadUrl && hasRows && isStandardReport
+  const showStandardReportDownload = fileDownloadUrl && hasRows && isStandardReport
+  const showAutomatedReportDownload = fileDownloadUrl && !!reportOptions.automatedReportType
 
-  const onCsvDownload = async () => {
-    if (!reportOptions.reportType) {
+  const onFileDownload = async (fileType: "CSV" | "XLSX", reportType: ReportType | AutomatedReportType | undefined) => {
+    if (!reportType) {
       console.log("Report type not found.")
       return
     }
 
-    const query = new URLSearchParams({
-      csvDownload: "true",
-      reportType: reportOptions.reportType,
-      fromDate: reportOptions.fromDate,
-      toDate: reportOptions.toDate
-    })
+    let query = new URLSearchParams()
+
+    if (fileType === "CSV") {
+      query = new URLSearchParams({
+        csvDownload: "true",
+        reportType: reportType,
+        fromDate: reportOptions.fromDate,
+        toDate: reportOptions.toDate
+      })
+    }
+
+    if (fileType === "XLSX") {
+      query = new URLSearchParams({
+        xlsxDownload: "true",
+        reportType: reportType
+      })
+    }
+
     const response = await fetch(`/bichard/api/reports/log?${query}`)
 
     if (!response.ok) {
-      console.error("Failed to Log CSV Download")
+      console.error(`Failed to Log ${fileType} Download`)
     }
   }
 
@@ -58,31 +68,34 @@ export const ActionBar: React.FC<ActionBarProps> = ({
     <StyledActionBar role="group" aria-label="Report actions">
       {showStandardReportDownload ? (
         <LinkButton
-          href={csvDownloadUrl}
-          download={csvReportFilename}
+          href={fileDownloadUrl}
+          download={reportFilename}
           overrideLink={true}
           className={"left-aligned"}
-          aria-label={`Download report as CSV: ${csvReportFilename}`}
+          aria-label={`Download report as CSV: ${reportFilename}`}
           aria-live="polite"
-          onClick={onCsvDownload}
+          onClick={() => onFileDownload("CSV", reportOptions.reportType)}
         >
           {"Download CSV"}
         </LinkButton>
       ) : null}
 
-      {isAutomatedReport ? (
+      {showAutomatedReportDownload ? (
         <LinkButton
           id={"download-automated-report"}
-          href={`/reports/${automatedReportFilename}`}
-          download={automatedReportFilename}
+          href={fileDownloadUrl}
+          download={reportFilename}
           overrideLink={true}
           className={"left-aligned"}
-          aria-label={`Download report as XLSX: ${automatedReportFilename}`}
+          aria-label={`Download report as XLSX: ${reportFilename}`}
           aria-live="polite"
+          onClick={() => onFileDownload("XLSX", reportOptions.automatedReportType)}
         >
           {"Download report"}
         </LinkButton>
-      ) : (
+      ) : null}
+
+      {isStandardReport && (
         <Button id={"run-report"} className="run-report-button" onClick={handleRunReport} aria-live="polite">
           {"Run report"}
         </Button>
