@@ -6,7 +6,7 @@ import fscSegmentGenerator from "./generators/fscSegmentGenerator"
 import idsSegmentGenerator from "./generators/idsSegmentGenerator"
 import offenceSegmentsCXE01 from "./generators/offenceSegmentsCXE01"
 
-const convertLedsAsnQueryResponseToXml = (mockJson: MockAsnQueryResponse | MockAsnQueryErrorResponse) => {
+const convertLedsAsnQueryResponseToXml = (mockJson: MockAsnQueryResponse | MockAsnQueryErrorResponse): string => {
   const gmh = commonSegmentGenerator("GMH", mockJson.gmh)
   const gmt = commonSegmentGenerator("GMT", mockJson.gmt)
 
