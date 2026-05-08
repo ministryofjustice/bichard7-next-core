@@ -5,7 +5,7 @@ describe("automation rate report type filter", () => {
     loginAndVisit("Supervisor", "/bichard/report-selection")
   })
 
-  it("should display 'Download report' button only when 'Automation Rate' is selected from dropdown", () => {
+  it("should display only 'Download report' button when 'Automation Rate' is selected from dropdown", () => {
     cy.get("#report-select").select("Automation Rate")
     cy.get("#date-from").should("not.exist")
     cy.get("#date-to").should("not.exist")
