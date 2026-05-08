@@ -1,14 +1,15 @@
+import type { ReportDataMap } from "./BichardV1Report"
 import BichardV1Report from "./BichardV1Report"
 import type ReportsApiClient from "services/api/ReportsApiClient"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
-import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
-const reportTestCases: [ReportType, string][] = [
+const reportTestCases: [keyof ReportDataMap, string][] = [
   ["bails", V1.CasesReportsBails],
   ["exceptions", V1.CasesReportsExceptions],
   ["warrants", V1.CasesReportsWarrants],
-  ["domestic violence", V1.CasesReportsDomesticViolence]
+  ["domestic violence", V1.CasesReportsDomesticViolence],
+  ["user summary", V1.CasesReportsUserPerformanceSummary]
 ]
 
 describe("BichardV1Report", () => {

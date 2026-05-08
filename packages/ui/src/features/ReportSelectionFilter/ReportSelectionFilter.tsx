@@ -4,7 +4,7 @@ import { SyntheticEvent, useEffect, useReducer, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { ReportConfig, ReportConfigs } from "types/reports/Config"
+import { ReportConfig } from "types/reports/Config"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { validateDateRange } from "utils/reports/validateDateRange"
 import { validateSelectReport } from "utils/reports/validateSelectReport"
@@ -15,6 +15,7 @@ import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
+import { ReportConfigs } from "types/reports/ReportConfigs"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
