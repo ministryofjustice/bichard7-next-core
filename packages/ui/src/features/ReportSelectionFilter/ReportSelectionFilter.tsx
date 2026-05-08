@@ -66,11 +66,11 @@ export const ReportSelectionFilter: React.FC = () => {
   const validateFilters = (): boolean => {
     const rangeValidation = validateDateRange(filterValues.dateFrom, filterValues.dateTo)
     const checkboxesValidation = validateCheckboxes(
-      filterValues.reportType,
+      filterValues.reportType as ReportType,
       filterValues.triggers,
       filterValues.exceptions
     )
-    const selectReportValidation = validateSelectReport(filterValues.reportType)
+    const selectReportValidation = validateSelectReport(filterValues.reportType as ReportType)
 
     const newErrors = {
       dateFromError: rangeValidation.fromError,
