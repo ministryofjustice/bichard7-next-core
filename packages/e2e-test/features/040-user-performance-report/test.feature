@@ -19,6 +19,7 @@ Feature: {040} 04 MIS - User Performance Summary
 
 	@Could
 	@ExcludeOnPreProd
+	@ExcludedOnLedsPreProd
 	Scenario: Generating the user performance report
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions

@@ -1,0 +1,195 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100001767U",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68037",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001343Q",
+          "crimeReference": "7LB18SR6/R VBNF",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.3.7.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68037",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-06-07",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001343Q"
+    },
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100001767U",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "PU86003",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001344R",
+          "crimeReference": "8UEARWZVHPYAKLH",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "7.1.8.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "PU86003",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-06-07",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001344R"
+    },
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 3,
+          "arrestSummonsReference": "26/0000/00/100001767U",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68010",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001345T",
+          "crimeReference": "2R4QGAB/OOQTKQO",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.8.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68010",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-06-07",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001345T"
+    },
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 4,
+          "arrestSummonsReference": "26/0000/00/100001767U",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68010",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001346U",
+          "crimeReference": "SUOR6WBRMF/LOXI",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.8.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68010",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-06-07",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001346U"
+    },
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 5,
+          "arrestSummonsReference": "26/0000/00/100001767U",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68010",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001347V",
+          "crimeReference": "O3H-S7U0MI3NZ/T",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.8.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68010",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-06-07",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001347V"
+    }
+  ],
+  "remands": []
+}
