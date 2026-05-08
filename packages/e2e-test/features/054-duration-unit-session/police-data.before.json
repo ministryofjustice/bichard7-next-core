@@ -1,0 +1,70 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100001729C",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68151",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001306A",
+          "crimeReference": "RFCGKYSQ 9ABER4",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.7.11.10",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68151",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100001729C",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "RT88191",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/9998/001306A",
+          "crimeReference": "BAFBTCZBWUW74T6",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "12.15.13.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "RT88191",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001306A"
+    }
+  ],
+  "remands": []
+}
