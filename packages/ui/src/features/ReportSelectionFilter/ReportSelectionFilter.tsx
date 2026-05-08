@@ -40,7 +40,6 @@ export const ReportSelectionFilter: React.FC = () => {
 
     if (AUTOMATED_REPORT_TYPE_MAP[selectedValue as AutomatedReportType]) {
       dispatch({ type: "SET_AUTOMATED_REPORT_TYPE", payload: selectedValue as AutomatedReportType })
-      handleAutomatedReportDownload()
     }
     if (REPORT_TYPE_MAP[selectedValue as ReportType]) {
       dispatch({ type: "SET_REPORT_TYPE", payload: selectedValue as ReportType })
