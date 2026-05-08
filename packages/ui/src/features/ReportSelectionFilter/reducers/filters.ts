@@ -1,11 +1,12 @@
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { FilterAction, FilterState } from "types/reports/ReportSelectionFilter"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 
 export const initialFilterState: FilterState = {
   reportType: undefined,
-  automatedReportType: undefined,
+  isAutomatedReport: undefined,
   dateTo: "",
   dateFrom: "",
   exceptions: true,
@@ -26,14 +27,14 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
         exceptions: initialFilterState.exceptions,
         triggers: initialFilterState.triggers,
         reportTypeError: null,
-        automatedReportType: undefined
+        isAutomatedReport: false
       }
     case "SET_AUTOMATED_REPORT_TYPE":
       return {
         ...state,
-        automatedReportType: action.payload,
+        reportType: action.payload,
         automatedReportFilename: xlsxFilename(action.payload),
-        reportType: undefined
+        isAutomatedReport: true
       }
     case "SET_DATE_FROM":
       let dateToError = state.dateToError
@@ -53,7 +54,7 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       const id = action.payload.id
       const checked = action.payload.checked
       const checkboxError = validateCheckboxes(
-        state.reportType,
+        state.reportType as ReportType,
         id === "triggers" ? checked : state.triggers,
         id === "exceptions" ? checked : state.exceptions
       )

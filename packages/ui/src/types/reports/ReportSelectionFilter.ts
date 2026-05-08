@@ -2,8 +2,8 @@ import type { AutomatedReportType } from "@moj-bichard7/common/types/reports/Aut
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 export type FilterState = {
-  automatedReportType: AutomatedReportType | undefined
-  reportType: ReportType | undefined
+  reportType: ReportType | AutomatedReportType | undefined
+  isAutomatedReport: boolean | undefined
   dateTo: string
   dateFrom: string
   exceptions: boolean

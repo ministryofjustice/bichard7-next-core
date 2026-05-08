@@ -163,7 +163,7 @@ export const ReportSelectionFilter: React.FC = () => {
             <div id={"report-section"} className="reports-section-wrapper">
               <SelectReportDropdown
                 handleChange={handleSelectChange}
-                reportType={filterValues.reportType || filterValues.automatedReportType}
+                reportType={filterValues.reportType}
                 error={filterValues.reportTypeError}
               />
             </div>
@@ -199,7 +199,7 @@ export const ReportSelectionFilter: React.FC = () => {
             reportFilename={reportFilename}
             hasRows={!!rows && rows.length > 0}
             reportOptions={{
-              automatedReportType: filterValues.automatedReportType,
+              isAutomatedReport: filterValues.isAutomatedReport,
               reportType: filterValues.reportType,
               fromDate: filterValues.dateFrom,
               toDate: filterValues.dateTo
@@ -208,7 +208,12 @@ export const ReportSelectionFilter: React.FC = () => {
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <ReportResults reportType={filterValues.reportType} rows={rows} config={config} isStreaming={isStreaming} />
+      <ReportResults
+        reportType={filterValues.reportType as ReportType}
+        rows={rows}
+        config={config}
+        isStreaming={isStreaming}
+      />
     </>
   )
 }

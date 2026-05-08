@@ -6,8 +6,8 @@ import { SyntheticEvent } from "react"
 import { LinkStyleButton, StyledActionBar } from "./ActionBar.styles"
 
 interface ReportOptions {
-  reportType?: ReportType
-  automatedReportType?: AutomatedReportType
+  isAutomatedReport?: boolean
+  reportType?: ReportType | AutomatedReportType
   fromDate: string
   toDate: string
 }
@@ -29,12 +29,12 @@ export const ActionBar: React.FC<ActionBarProps> = ({
   clearFilters,
   reportOptions
 }) => {
-  const isStandardReport = !!reportOptions.reportType
+  const isStandardReport = !!reportOptions.reportType && !reportOptions.isAutomatedReport
   const showStandardReportDownload = fileDownloadUrl && hasRows && isStandardReport
-  const showAutomatedReportDownload = fileDownloadUrl && !!reportOptions.automatedReportType
+  const showAutomatedReportDownload = fileDownloadUrl && !!reportOptions.reportType && reportOptions.isAutomatedReport
 
-  const onFileDownload = async (fileType: "CSV" | "XLSX", reportType: ReportType | AutomatedReportType | undefined) => {
-    if (!reportType) {
+  const onFileDownload = async (fileType: "CSV" | "XLSX") => {
+    if (!reportOptions.reportType) {
       console.log("Report type not found.")
       return
     }
@@ -44,7 +44,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
     if (fileType === "CSV") {
       query = new URLSearchParams({
         csvDownload: "true",
-        reportType: reportType,
+        reportType: reportOptions.reportType,
         fromDate: reportOptions.fromDate,
         toDate: reportOptions.toDate
       })
@@ -53,7 +53,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
     if (fileType === "XLSX") {
       query = new URLSearchParams({
         xlsxDownload: "true",
-        reportType: reportType
+        reportType: reportOptions.reportType
       })
     }
 
@@ -74,7 +74,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
           className={"left-aligned"}
           aria-label={`Download report as CSV: ${reportFilename}`}
           aria-live="polite"
-          onClick={() => onFileDownload("CSV", reportOptions.reportType)}
+          onClick={() => onFileDownload("CSV")}
         >
           {"Download CSV"}
         </LinkButton>
@@ -89,7 +89,7 @@ export const ActionBar: React.FC<ActionBarProps> = ({
           className={"left-aligned"}
           aria-label={`Download report as XLSX: ${reportFilename}`}
           aria-live="polite"
-          onClick={() => onFileDownload("XLSX", reportOptions.automatedReportType)}
+          onClick={() => onFileDownload("XLSX")}
         >
           {"Download report"}
         </LinkButton>
