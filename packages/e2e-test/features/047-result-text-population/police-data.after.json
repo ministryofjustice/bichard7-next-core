@@ -26,9 +26,7 @@
             {
               "id": "98970a92-cf8c-4449-8034-fb6200ad9df4",
               "disposalCode": "1100",
-              "disposalQualifierCodes": [
-                "BA"
-              ],
+              "disposalQualifierCodes": ["BA"],
               "disposalText": "EXCLUDED FROM ALL LICENSED PREMISES WITHIN DIDLY DISTRICT COUNC+",
               "disposalDuration": {
                 "units": "weeks",

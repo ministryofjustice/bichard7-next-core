@@ -32,9 +32,7 @@
             {
               "id": "c9988884-e1f6-46a4-9f9f-0b159bfbe8de",
               "disposalCode": "3105",
-              "disposalQualifierCodes": [
-                "BA"
-              ],
+              "disposalQualifierCodes": ["BA"],
               "disposalDuration": {
                 "units": "weeks",
                 "count": 12
