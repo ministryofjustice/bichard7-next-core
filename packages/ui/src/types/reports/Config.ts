@@ -1,11 +1,11 @@
 import type { BaseReportColumn, ReportColumn } from "./Columns"
 import { bailsColumns, domesticViolenceColumns, exceptionsColumns, warrantsColumns } from "./Columns"
-import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { ExceptionReportDto, CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import type { ReportDataMap } from "services/api/BichardV1Report"
 
 interface BaseConfig {
   endpoint: string
@@ -27,7 +27,7 @@ export type ReportConfig =
   | ({ isGrouped: false; columns: BaseReportColumn[] } & BaseConfig)
   | ({ isGrouped: true; groupNameKey: string; dataListKey: string; columns: BaseReportColumn[] } & BaseConfig)
 
-export const ReportConfigs: Record<ReportType, ReportConfig> = {
+export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
   bails: {
     endpoint: V1.CasesReportsBails,
     isGrouped: false,

@@ -10,6 +10,10 @@ export const csvFilename = (reportType: ReportType, urlQuery: URLSearchParams) =
     throw new Error("No valid dates")
   }
 
+  if (!REPORT_TYPE_MAP[reportType]) {
+    throw new Error("Invalid report type")
+  }
+
   const formattedType = REPORT_TYPE_MAP[reportType].toLowerCase().replaceAll(" ", "-")
   const formattedToDate = format(toDate, "dd-MM-yyyy")
   const formattedFromDate = format(fromDate, "dd-MM-yyyy")

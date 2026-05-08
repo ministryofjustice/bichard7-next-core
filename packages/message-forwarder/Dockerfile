@@ -16,7 +16,9 @@ COPY packages/core/package.json ./packages/core/package.json
 COPY packages/conductor/package.json ./packages/conductor/package.json
 COPY packages/message-forwarder/package.json ./packages/message-forwarder/package.json
 
-RUN npm ci --ignore-scripts --no-audit
+RUN npm ci --ignore-scripts --no-audit \
+    && npm cache clean --force
+
 
 #########################################################
 FROM base AS builder

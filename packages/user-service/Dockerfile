@@ -14,7 +14,8 @@ COPY package*.json ./
 COPY packages/user-service/package.json ./packages/user-service/package.json
 COPY packages/user-service/scripts ./packages/user-service/scripts
 
-RUN npm ci --ignore-scripts --no-audit
+RUN npm ci --ignore-scripts --no-audit \
+    && npm cache clean --force
 
 RUN npm run install:assets -w packages/user-service
 
