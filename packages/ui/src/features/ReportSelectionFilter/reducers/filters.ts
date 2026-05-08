@@ -19,6 +19,15 @@ export const initialFilterState: FilterState = {
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
+  const clearErrors = () => {
+    return {
+      reportTypeError: null,
+      dateFromError: null,
+      dateToError: null,
+      checkboxesError: null
+    }
+  }
+
   switch (action.type) {
     case "SET_REPORT_TYPE":
       return {
@@ -26,15 +35,16 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
         reportType: action.payload,
         exceptions: initialFilterState.exceptions,
         triggers: initialFilterState.triggers,
-        reportTypeError: null,
-        isAutomatedReport: false
+        isAutomatedReport: false,
+        ...clearErrors()
       }
     case "SET_AUTOMATED_REPORT_TYPE":
       return {
         ...state,
         reportType: action.payload,
         automatedReportFilename: xlsxFilename(action.payload),
-        isAutomatedReport: true
+        isAutomatedReport: true,
+        ...clearErrors()
       }
     case "SET_DATE_FROM":
       let dateToError = state.dateToError

@@ -12,7 +12,8 @@ describe("ActionBar", () => {
   }
 
   const mockAutomatedReportOptions = {
-    automatedReportType: "automation rate" as AutomatedReportType,
+    isAutomatedReport: true,
+    reportType: "automation rate" as AutomatedReportType,
     fromDate: "",
     toDate: ""
   }
@@ -141,14 +142,31 @@ describe("ActionBar", () => {
     cy.get("body").should("not.contain", "Download CSV")
   })
 
-  it("shows report download button if automatedReportType is present", () => {
-    const reportFilename = xlsxFilename(mockAutomatedReportOptions.automatedReportType)
+  it("does not shows report download button if is an automated report but reportType is not present", () => {
+    cy.mount(
+      <MockNextRouter>
+        <ActionBar
+          fileDownloadUrl="/reports/AutomationRate.xlsx"
+          reportFilename={"AutomationRate.xlsx"}
+          hasRows={false}
+          handleRunReport={cy.stub().as("handleRunReport")}
+          clearFilters={cy.stub().as("clearFilters")}
+          reportOptions={{ ...mockAutomatedReportOptions, reportType: undefined }}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("body").should("not.contain", "Download report")
+  })
+
+  it("shows report download button if is an automated report and reportType is present", () => {
+    const reportFilename = xlsxFilename(mockAutomatedReportOptions.reportType)
 
     cy.mount(
       <MockNextRouter>
         <ActionBar
-          fileDownloadUrl={null}
-          reportFilename={null}
+          fileDownloadUrl="/reports/AutomationRate.xlsx"
+          reportFilename={"AutomationRate.xlsx"}
           hasRows={false}
           handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
@@ -160,28 +178,28 @@ describe("ActionBar", () => {
     cy.get("#download-automated-report").should("exist").and("have.attr", "href", `/reports/${reportFilename}`)
   })
 
-  it("logs the XLSX download via fetch when download is clicked and automatedReportType is present", () => {
+  it("logs the XLSX download via fetch when download is clicked and is an automated report", () => {
     cy.intercept("GET", "/bichard/api/reports/log*").as("logCsvDownload")
 
     cy.mount(
       <MockNextRouter>
         <ActionBar
-          fileDownloadUrl="/api/downloads/report.csv"
-          reportFilename={"automated_report.xlsx"}
+          fileDownloadUrl="/reports/AutomationRate.xlsx"
+          reportFilename={"AutomationRate.xlsx"}
           hasRows={false}
           handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
-          reportOptions={mockReportOptions}
+          reportOptions={{ ...mockAutomatedReportOptions }}
         />
       </MockNextRouter>
     )
 
-    cy.contains("Download XLSX").click()
+    cy.contains("Download report").click()
 
     cy.wait("@logCsvDownload").then((interception) => {
       const url = new URL(interception.request.url)
       expect(url.searchParams.get("xlsxDownload")).to.equal("true")
-      expect(url.searchParams.get("reportType")).to.equal(mockAutomatedReportOptions.automatedReportType)
+      expect(url.searchParams.get("reportType")).to.equal(mockAutomatedReportOptions.reportType)
     })
   })
 })

@@ -169,7 +169,7 @@ export const ReportSelectionFilter: React.FC = () => {
             </div>
 
             <div id={"date-range-section"} className="date-range-section-wrapper">
-              {!filterValues.isAutomatedReport && (
+              {filterValues.reportType && !filterValues.isAutomatedReport && (
                 <DateRange
                   dateFromString={filterValues.dateFrom}
                   dateToString={filterValues.dateTo}
