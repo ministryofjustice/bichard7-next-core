@@ -165,8 +165,8 @@ describe("ActionBar", () => {
     cy.mount(
       <MockNextRouter>
         <ActionBar
-          fileDownloadUrl="/reports/AutomationRate.xlsx"
-          reportFilename={"AutomationRate.xlsx"}
+          fileDownloadUrl={`/reports/${reportFilename}`}
+          reportFilename={reportFilename}
           hasRows={false}
           handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}

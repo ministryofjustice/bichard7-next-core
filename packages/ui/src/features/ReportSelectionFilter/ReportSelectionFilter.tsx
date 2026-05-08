@@ -1,3 +1,4 @@
+import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
@@ -89,9 +90,10 @@ export const ReportSelectionFilter: React.FC = () => {
   }
 
   const handleAutomatedReportDownload = async () => {
-    if (filterValues.automatedReportFilename) {
-      setReportFilename(filterValues.automatedReportFilename)
-      setFileDownloadUrl(`/reports/${filterValues.automatedReportFilename}`)
+    if (filterValues.reportType) {
+      const filename = xlsxFilename(filterValues.reportType as AutomatedReportType)
+      setReportFilename(filename)
+      setFileDownloadUrl(`/reports/${filename}`)
     }
   }
 
@@ -149,10 +151,10 @@ export const ReportSelectionFilter: React.FC = () => {
   }, [filterValues])
 
   useEffect(() => {
-    if (filterValues.automatedReportFilename && filterValues.isAutomatedReport) {
+    if (filterValues.reportType && filterValues.isAutomatedReport) {
       handleAutomatedReportDownload()
     }
-  }, [filterValues.automatedReportFilename, filterValues.isAutomatedReport])
+  }, [filterValues.reportType, filterValues.isAutomatedReport])
 
   return (
     <>

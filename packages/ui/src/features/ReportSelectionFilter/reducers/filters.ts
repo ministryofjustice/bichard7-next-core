@@ -1,4 +1,3 @@
-import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { FilterAction, FilterState } from "types/reports/ReportSelectionFilter"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
@@ -14,8 +13,7 @@ export const initialFilterState: FilterState = {
   checkboxesError: null,
   dateFromError: null,
   dateToError: null,
-  reportTypeError: null,
-  automatedReportFilename: null
+  reportTypeError: null
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
@@ -42,7 +40,6 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       return {
         ...state,
         reportType: action.payload,
-        automatedReportFilename: xlsxFilename(action.payload),
         isAutomatedReport: true,
         ...clearErrors()
       }
