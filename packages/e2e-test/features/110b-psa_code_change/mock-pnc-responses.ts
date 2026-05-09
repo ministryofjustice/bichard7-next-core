@@ -4,19 +4,64 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000311RENQASIPNCA05A73000017300000120210901125573000001                                             050002301</GMH>
-      <ASI>
-        <FSC>K01VK</FSC>
-        <IDS>K21/9D      CHANGES                 </IDS>
-        <CCR>K21/2769/9H                    </CCR>
-        <COF>K001    5:5:5:1      TH68006 28112006                </COF>
-        <COF>K002    5:7:11:10    TH68151 28112006                </COF>
-        <COF>K003    12:15:13:1   RT88191 28112006                </COF>
-      </ASI>
-      <GMT>000010073ENQR000311R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "CHANGES",
+      croNumber: "",
+      gmh: "073ENQR000311RENQASIPNCA05A73000017300000120210901125573000001                                             050002301",
+      gmt: "000010073ENQR000311R",
+      personId: "ded8edf0-2199-454a-a8f0-9aa3f29b84d5",
+      personUrn: "21/9D",
+      reportId: "2d330e99-5c01-4f77-9f13-ba68852879ce",
+      asn: "1001VK0100000375807W",
+      ownerCode: "01VK",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "01e98374-1e30-4267-bc23-9844f9979e83",
+          courtCaseReference: "21/2769/000009H",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:5:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68006",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2006-11-28",
+              offenceId: "0fa94843-fb56-4c39-9ed3-05052708f7e6",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:7:11:10",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "TH68151",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2006-11-28",
+              offenceId: "d9fe0f09-1d8a-43fc-9b54-4423120ed476",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "12:15:13:1",
+              courtOffenceSequenceNumber: 3,
+              cjsOffenceCode: "RT88191",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2006-11-28",
+              offenceId: "50444036-4cc0-4dd5-adce-9deacb5ae35a",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

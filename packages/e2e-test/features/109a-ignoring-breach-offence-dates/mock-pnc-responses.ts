@@ -4,17 +4,42 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000308RENQASIPNCA05A73000017300000120210901125273000001                                             050002295</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/8C      FOARDS                  </IDS>
-        <CCR>K21/2732/8Q                    </CCR>
-        <COF>K001    1:8:11:2     CJ88116 28112010                </COF>
-      </ASI>
-      <GMT>000008073ENQR000308R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "FOARDS",
+      croNumber: "",
+      gmh: "073ENQR000308RENQASIPNCA05A73000017300000120210901125273000001                                             050002295",
+      gmt: "000008073ENQR000308R",
+      personId: "07dc0794-0531-4ae1-9309-9416fa3a54b8",
+      personUrn: "21/8C",
+      reportId: "036e5ee4-93e7-40b0-9f64-65568c66b6a3",
+      asn: "1101ZD0100000410848H",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "edebce4e-a278-4cf3-9a21-14b191afc94e",
+          courtCaseReference: "21/2732/000008Q",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:8:11:2",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ88116",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "b334b649-4a7a-48d1-af65-bbff6fc9f098",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

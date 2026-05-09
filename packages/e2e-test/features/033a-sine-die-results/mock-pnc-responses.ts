@@ -4,25 +4,109 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000307RENQASIPNCA05A73000017300000120210901124873000001                                             050002293</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/6A      LEBOWSKI                </IDS>
-        <CCR>K21/2732/6N                    </CCR>
-        <COF>K001    5:5:5:1      TH68006 28112010                </COF>
-        <ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ>
-        <DIS>I2007                                                                                                    </DIS>
-        <COF>K002    5:7:11:10    TH68151 28112010                </COF>
-        <ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ>
-        <DIS>I2007                                                                                                    </DIS>
-        <COF>K003    12:15:13:1   RT88191 28112010                </COF>
-        <ADJ>INOT GUILTY   GUILTY        250920110000 </ADJ>
-        <DIS>I2007                                                                                                    </DIS>
-      </ASI>
-      <GMT>000016073ENQR000307R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "LEBOWSKI",
+      croNumber: "",
+      gmh: "073ENQR000307RENQASIPNCA05A73000017300000120210901124873000001                                             050002293",
+      gmt: "000016073ENQR000307R",
+      personId: "115e50ce-0864-4cac-b88e-b641f4c8f0fc",
+      personUrn: "21/6A",
+      reportId: "2d4b7a65-b586-4f56-9041-a8bce9f93852",
+      asn: "1101ZD0100000410790V",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "3d7b30f1-88be-45ca-86d1-58b9f4c9f081",
+          courtCaseReference: "21/2732/000006N",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:5:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68006",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Not Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "8d01e875-5c0a-4a2a-aa25-7dd5aeaed2af",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "7b07fb01-5ead-4aed-9107-ff9d7bb845c7",
+                  disposalDate: "2011-09-25",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "fffe81d2-1277-4680-bb04-372a71680b87",
+                  disposalCode: 2007,
+                  disposalText: ""
+                }
+              ]
+            },
+            {
+              acpoOffenceCode: "5:7:11:10",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "TH68151",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Not Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "e0457731-e55c-4174-96eb-5030661f222f",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "2ddfa2a4-b759-4244-9dcd-8860eadc2d3d",
+                  disposalDate: "2011-09-25",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "3451a1c2-65d6-4bb2-874d-4b3480b7bf15",
+                  disposalCode: 2007,
+                  disposalText: ""
+                }
+              ]
+            },
+            {
+              acpoOffenceCode: "12:15:13:1",
+              courtOffenceSequenceNumber: 3,
+              cjsOffenceCode: "RT88191",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Not Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "17098a7b-8a46-4f1a-af5b-1d81e010b8f3",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "606f6317-4a57-4398-aeb5-1c7e406234e2",
+                  disposalDate: "2011-09-25",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "35b10626-01c9-4626-baec-ec458aa4f25d",
+                  disposalCode: 2007,
+                  disposalText: ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

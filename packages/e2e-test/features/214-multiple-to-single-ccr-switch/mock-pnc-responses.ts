@@ -4,37 +4,118 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000491RENQASIPNCA05A73000017300000120210908114273000001                                             050002399</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K12/29N     TOSINGLECCR             </IDS>
-        <CCR>K13/2732/3W                    </CCR>
-        <COF>K001    5:5:8:1      TH68010 25092011                </COF>
-        <CCR>K13/2732/4X                    </CCR>
-        <COF>K001    1:8:11:1     CJ88001 25092011                </COF>
-      </ASI>
-      <GMT>000010073ENQR000491R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "TOSINGLECCR",
+      croNumber: "",
+      gmh: "073ENQR000491RENQASIPNCA05A73000017300000120210908114273000001                                             050002399",
+      gmt: "000010073ENQR000491R",
+      personId: "e7c6e189-7bf9-481b-8b32-9071e135ffbd",
+      personUrn: "12/29N",
+      reportId: "a7e1ca83-537b-4030-8d37-5b2eba85bfe8",
+      asn: "1101ZD0100000440776N",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "67c50f02-461e-4e3a-8e94-683480741209",
+          courtCaseReference: "13/2732/000003W",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:8:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68010",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2011-09-25",
+              offenceId: "83f85bb4-0d78-492d-8d18-9815f7d21336",
+              disposalResults: []
+            }
+          ]
+        },
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "67c50f02-461e-4e3a-8e94-683480741209",
+          courtCaseReference: "13/2732/000004X",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:8:11:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ88001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2011-09-25",
+              offenceId: "e5951e85-2ab9-41bb-a54c-9ef2cadd7e7d",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1
   }),
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000492RENQASIPNCA05A73000017300000120210908114373000001                                             050002400</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/4Y      TOSINGLECCR             </IDS>
-        <CCR>K21/2732/4L                    </CCR>
-        <COF>K001    5:5:8:1      TH68010 25092011                </COF>
-        <COF>K002    1:8:11:1     CJ88001 25092011                </COF>
-      </ASI>
-      <GMT>000009073ENQR000492R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "TOSINGLECCR",
+      croNumber: "",
+      gmh: "073ENQR000492RENQASIPNCA05A73000017300000120210908114373000001                                             050002400",
+      gmt: "000009073ENQR000492R",
+      personId: "ddd5d88b-3d9e-4a87-987c-76a5f394de0d",
+      personUrn: "21/4Y",
+      reportId: "2e1f88f6-4a1b-404d-adde-26348158b040",
+      asn: "1101ZD0100000440776N",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "7fd7f596-c079-48d1-8eb9-6f28e233919c",
+          courtCaseReference: "21/2732/000004L",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:8:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68010",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2011-09-25",
+              offenceId: "3491f6bd-bcf0-43e5-bdea-13186a578643",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "1:8:11:1",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "CJ88001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2011-09-25",
+              offenceId: "893b4423-14a2-434f-aa92-771c92cd199a",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

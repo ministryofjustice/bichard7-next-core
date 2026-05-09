@@ -4,17 +4,42 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000328RENQASIPNCA05A73000017300000120210901131573000001                                             050002335</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/19P     POTTIUS                 </IDS>
-        <CCR>K21/2732/14X                   </CCR>
-        <COF>K001    8:7:69:3     CJ03510 01102010                </COF>
-      </ASI>
-      <GMT>000008073ENQR000328R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "POTTIUS",
+      croNumber: "",
+      gmh: "073ENQR000328RENQASIPNCA05A73000017300000120210901131573000001                                             050002335",
+      gmt: "000008073ENQR000328R",
+      personId: "4829ebc5-6f8a-484d-89ca-e181e396bc92",
+      personUrn: "21/19P",
+      reportId: "12deca6b-2030-4d56-90f6-256a576ef3a3",
+      asn: "1101ZD0100000440769F",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "9d92de82-6465-4a1f-b48f-8e8eac0cbb48",
+          courtCaseReference: "21/2732/000014X",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "8:7:69:3",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ03510",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-10-01",
+              offenceId: "4a6c41fd-4c5e-475e-a6b0-c52bb3ac9093",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
@@ -87,19 +112,58 @@ export default (_: string, { policeApi }: Bichard) => [
   }),
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000329RENQASIPNCA05A73000017300000120210901131573000001                                             050002338</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/19P     POTTIUS                 </IDS>
-        <CCR>K21/2732/14X                   </CCR>
-        <COF>K001    8:7:69:3     CJ03510 01102010                </COF>
-        <ADJ>IGUILTY       GUILTY        261020110000 </ADJ>
-        <DIS>I4027    28102011                                                                                        </DIS>
-      </ASI>
-      <GMT>000010073ENQR000329R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "POTTIUS",
+      croNumber: "",
+      gmh: "073ENQR000329RENQASIPNCA05A73000017300000120210901131573000001                                             050002338",
+      gmt: "000010073ENQR000329R",
+      personId: "5fe1dcc5-e9cb-4f0c-94f8-05c4ead291ad",
+      personUrn: "21/19P",
+      reportId: "c1c64761-a4f3-45ab-bfcc-5d95f4ffe99e",
+      asn: "1101ZD0100000440769F",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "2ecb7817-f546-4652-93a2-c88089048d55",
+          courtCaseReference: "21/2732/000014X",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "8:7:69:3",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ03510",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2010-10-01",
+              offenceId: "f83b2879-605e-42e6-ba6d-9addbd6fa325",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "1bab8374-eb7e-44e0-a599-74863c6d6bff",
+                  disposalDate: "2011-10-26",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "e53c9362-bbc8-4223-b7f2-b05b129c12da",
+                  disposalCode: 4027,
+                  disposalEffectiveDate: "2011-10-28",
+                  disposalText: ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1

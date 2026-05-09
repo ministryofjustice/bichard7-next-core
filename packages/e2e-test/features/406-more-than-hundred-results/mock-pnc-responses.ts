@@ -4,116 +4,1131 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000155RENQASIPNCA05A73000017300000120210906110373000001                                             050001965</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/4Y      ATWOOD                  </IDS>
-        <CCR>K21/2732/3K                    </CCR>
-        <COF>K001    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K002    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K003    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K004    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K005    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K006    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K007    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K008    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K009    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K010    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K011    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K012    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K013    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K014    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K015    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K016    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K017    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K018    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K019    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K020    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K021    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K022    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K023    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K024    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K025    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K026    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K027    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K028    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K029    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K030    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K031    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K032    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K033    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K034    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K035    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K036    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K037    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K038    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K039    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K040    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K041    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K042    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K043    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K044    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K045    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K046    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K047    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K048    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K049    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K050    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K051    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K052    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K053    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K054    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K055    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K056    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K057    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K058    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K059    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K060    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K061    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K062    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K063    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K064    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K065    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K066    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K067    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K068    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K069    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K070    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K071    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K072    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K073    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K074    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K075    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K076    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K077    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K078    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K079    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K080    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K081    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K082    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K083    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K084    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K085    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K086    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K087    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K088    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K089    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K090    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K091    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K092    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K093    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K094    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K095    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K096    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K097    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K098    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K099    5:5:1:1      TH68020 09042010                </COF>
-        <COF>K100    5:5:1:1      TH68020 09042010                </COF>
-      </ASI>
-      <GMT>000107073ENQR000155R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "ATWOOD",
+      croNumber: "",
+      gmh: "073ENQR000155RENQASIPNCA05A73000017300000120210906110373000001                                             050001965",
+      gmt: "000107073ENQR000155R",
+      personId: "e2ad6d4c-957c-4643-8757-8ac04ae99225",
+      personUrn: "21/4Y",
+      reportId: "d087426d-0666-4b68-a3fa-6af29575693b",
+      asn: "1101ZD0100000410923P",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "e71ccb55-5ef7-4ba3-8d7a-52aff0c58e57",
+          courtCaseReference: "21/2732/000003K",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "76861424-1ee8-4635-b854-b15d5446e7b3",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "cc4834f2-9266-4f8c-a75d-54e6a9a3bb62",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 3,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "2d94e6d8-a5d0-43b6-8821-400698960312",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 4,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "3c335d23-e34d-4df5-9a93-358d9aab3034",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 5,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "f3a22e0d-e9b1-4ac8-bf9c-94477839bc5b",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 6,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "a0257b00-9abb-4475-987e-636087ab5d32",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 7,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "5445022d-4231-493c-95b1-fd1ef827de54",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 8,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "3a3285af-f3ff-4464-a89a-5ff16ff8d855",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 9,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "eea007d2-7ddb-4ce9-8711-09113553f7e9",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 10,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "23bc1984-ff4e-4d4c-9cc3-0d89da3678bf",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 11,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "ca5d4cc7-31a6-40e1-8174-2f0096f4eaa7",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 12,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "2f005137-e4cc-46d5-8d39-40de1a48d80f",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 13,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "65a36f58-be5b-4ba9-985d-2467b939aabb",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 14,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "95d3588f-1fa9-4b37-8937-5364f6381897",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 15,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "ad5de6eb-b8f4-4669-bfcf-d68f98355217",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 16,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "622ad7be-cfd3-4685-ab41-7fb7f8c2b7ed",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 17,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "d67e5033-8655-4b1e-907e-4420a78c4a6f",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 18,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "128859e6-e597-4187-b2d7-29b6942b5c4d",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 19,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "5bcf40de-8cef-4457-a30f-5b67cdd9538b",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 20,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "7ee68305-1fb6-4c2d-8f21-08024a81b7eb",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 21,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "af8d9945-722e-4c31-b3af-c4d012bef9a5",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 22,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "57f728b7-498d-49ae-8e09-6715421450da",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 23,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "3e86e045-c6ed-43ec-81e5-acc34f8fb2d9",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 24,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "65853791-8407-4cc8-a852-e9681a055b91",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 25,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "68c5b349-554e-4491-b37c-03df10b6d77c",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 26,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "4d0b6041-0180-4d94-b1e5-63a307a8fdc8",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 27,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "599b6ed6-b2f9-4c56-9fa7-9e9e5bbaad17",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 28,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "1e9c6cd9-5922-46d1-8431-12309de929cd",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 29,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "9d43ab2e-3c1f-4fc9-b9e5-f6ce34dfc82a",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 30,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "7164da51-1e27-4746-a0a5-7e5754dbd05e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 31,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "424f8a1c-da4f-4941-b029-2e4d73ba4850",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 32,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "a67a36f8-9c38-4044-b2df-a5521b951e48",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 33,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "2335508f-1b37-4031-9ad1-2ae41a3e2bca",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 34,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "f8657422-8449-4255-92d0-4640fe4fc950",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 35,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "45ee9cac-f922-4a95-bd26-8d4033673d15",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 36,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "745d8093-b9fc-49dd-8050-0324352f666e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 37,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "abe9807b-eae6-42ff-9f17-9e1d1df6ee25",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 38,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c69997e7-5d52-4e95-93d7-5351e16b485a",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 39,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "2fcff164-3c92-4d26-a715-1f2e4f63d052",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 40,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c31e0d76-52a8-407b-9ed5-eb68ad996624",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 41,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "b0dbee53-6bd4-489f-b1fc-e059620d48c4",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 42,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c48a1ebc-e720-4780-8313-fc5c2fb78fa2",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 43,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "cb79898d-f177-4031-9312-60880ad5e3b6",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 44,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "93f65bdb-71f2-4cc9-a07e-d8b7e7e9a6ae",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 45,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "d3ea29cc-1246-4ad5-aced-e6d8fecb1067",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 46,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "3ee69540-33e1-4367-a99d-5a9f216860e3",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 47,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "bdbf1e3d-ed92-4925-9c29-fd3cc30add95",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 48,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "2c7c1c5d-1498-476b-8f3e-b2716f071ef9",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 49,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c1dfed9c-cac5-48ca-8dda-91c6a7bbf651",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 50,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "40964c61-34db-45db-a42c-f13e562a81ad",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 51,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "e33d2a22-84af-40ab-846c-6b31202e6cf3",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 52,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c49a9c19-714f-486c-b82b-5ad7f022e7da",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 53,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "5ae85a0f-534d-4bad-8de5-3b3ee81ed736",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 54,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "364c525f-1322-4269-bab3-83ad9bcc8510",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 55,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "fc4595ba-ec30-4991-8251-648340aaf2d0",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 56,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "e4f76b30-c2da-4518-8772-d013c6d279d4",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 57,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "9376f2cc-58fc-4740-90f6-10cd7f27c30a",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 58,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "4ea9f1e1-604a-4c4a-918b-28009503df66",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 59,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "f3d00367-80ca-47cd-8d88-2a692a3e91fd",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 60,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "ccd2cb63-abce-4342-bea6-06e3ae8f61d0",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 61,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "887ee45d-9286-4065-9099-2420c5cc45c6",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 62,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "013180fa-934a-43c9-9666-994b2345b462",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 63,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "33a2eee1-7a40-49e6-a89c-e675616ef828",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 64,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "853a5f55-ea3e-498a-94e0-ddcc733b3fad",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 65,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "f1715a7e-b84d-4e5b-8bb0-d9c965cbaa7e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 66,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "5c4adb2c-03e8-4cb3-b6d9-5b77b2bd4f51",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 67,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "210ca41c-0585-493c-ba5d-0190fb3d0e4d",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 68,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "978184c8-3d2c-4dae-bbff-23c1cb1c3270",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 69,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "69e14d54-f602-4877-84a0-ae301e91c0c6",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 70,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "03619243-f9d2-475d-91b7-fe6bb83d7cf8",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 71,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "d3349127-0399-44e1-8ec4-9b8a55a93c49",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 72,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "e3955208-df53-432b-a677-6ae2ce25d8f5",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 73,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c2f5e840-4a18-4249-8f9f-b2090598774a",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 74,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "b46fdc53-40a8-468c-a9e9-e0a8552a3783",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 75,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "77e39813-1a5c-42dc-b02c-8dbb28344e43",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 76,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "6aa2d678-0a47-4222-a579-2f33e4f519f5",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 77,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "14525077-dfa8-438f-9557-139f6dd1518e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 78,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "470722fd-f5f7-4a1f-b859-7bdf48d4088a",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 79,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "5517c2c9-4b5c-4cdb-ba99-f602fe53219b",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 80,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "f0cb54f7-f59b-4bff-a3f6-7c1921d6eaa9",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 81,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "1dbf7d87-69a5-49a0-881a-066b3bb4929a",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 82,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "0300805c-c16c-48a8-b94e-2ec5c9659eac",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 83,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "e6479ef4-c84c-4b9d-8881-9f34ff4fbebc",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 84,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "e75fab4f-b5a3-4299-b585-c9475adf5d91",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 85,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "a890b5e9-9f01-4a38-8703-76cd1b8fec73",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 86,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "4126d547-4c55-41e8-b225-825e7764141b",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 87,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "71a1187b-7686-424d-b899-a8a1c514589e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 88,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "6bc443c5-5ef1-4037-81a7-67966be16571",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 89,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "ad440fae-38a6-4cdf-b034-7d78c614320e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 90,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "0d36eb25-dd44-49c1-96f7-f0e9991dd3e3",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 91,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "cb8011d6-366b-43b2-ad67-15fcc6326ddc",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 92,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "bdd96f89-6eab-41c8-b516-618d1fbdb78b",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 93,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "3dfa702a-a8ed-45a9-8c0f-158d6f1b6877",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 94,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "065deffc-755a-4bf5-b8aa-1b18be91ebcc",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 95,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "b8f4df55-4e3d-4b31-b970-0dc317f70e95",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 96,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "fb27726f-9b74-458e-8a99-1bfb8361891d",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 97,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "cc28935f-7fce-41c2-91ca-624a08d43fcf",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 98,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "c82fbe9a-5da1-4e18-80bf-80d32f8af8b9",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 99,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "7aaecd06-8240-425d-9cad-fe2804797e3b",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "5:5:1:1",
+              courtOffenceSequenceNumber: 100,
+              cjsOffenceCode: "TH68020",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-04-09",
+              offenceId: "9e961a6f-fd86-4315-a421-b5491288c3e4",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

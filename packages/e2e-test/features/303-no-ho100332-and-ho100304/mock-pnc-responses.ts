@@ -4,21 +4,88 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?XML VERSION="1.0" STANDALONE="YES"?>
-  <CXE01>
-    <GMH>073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772</GMH>
-    <ASI>
-      <FSC>K01ZD</FSC>
-      <IDS>K12/14X     AVALON                  </IDS>
-      <CCR>K12/2732/15R                   </CCR>
-      <COF>K001    1:9:7:1      OF61016 01062009                </COF>
-      <CCR>K12/2732/16T                   </CCR>
-      <COF>K001    1:9:7:1      OF61016 01062009                </COF>
-      <CCR>K12/2732/17U                   </CCR>
-      <COF>K001    1:9:7:1      OF61016 01062009                </COF>
-    </ASI>
-    <GMT>000008073ENQR004540S</GMT>
-  </CXE01>`,
+    response: {
+      pncCheckName: "AVALON",
+      croNumber: "",
+      gmh: "073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772",
+      gmt: "000008073ENQR004540S",
+      personId: "28174fce-bfe4-4f7a-87c6-701ab6b147bc",
+      personUrn: "12/14X",
+      reportId: "001a3bf5-d8db-4e16-943b-cd20c75dafc0",
+      asn: "1200000000000000006T",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "daccca48-e50e-4a80-89a8-7d6f5f816ee3",
+          courtCaseReference: "12/2732/000015R",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:9:7:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "OF61016",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "da834f0b-88e9-4b61-9dd6-4378b6ded539",
+              disposalResults: []
+            }
+          ]
+        },
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "daccca48-e50e-4a80-89a8-7d6f5f816ee3",
+          courtCaseReference: "12/2732/000016T",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:9:7:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "OF61016",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "2403dc5c-3a7d-42c6-9eb2-335aaab5ed11",
+              disposalResults: []
+            }
+          ]
+        },
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "daccca48-e50e-4a80-89a8-7d6f5f816ee3",
+          courtCaseReference: "12/2732/000017U",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:9:7:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "OF61016",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "139782bb-fed9-4c76-9bec-b08cc0049d43",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

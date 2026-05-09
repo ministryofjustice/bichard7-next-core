@@ -4,17 +4,42 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000326RENQASIPNCA05A73000017300000120210901131473000001                                             050002331</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/17M     ORDERTOCONTI            </IDS>
-        <CCR>K21/2732/13W                   </CCR>
-        <COF>K001    1:8:11:2     CJ88116 28112010                </COF>
-      </ASI>
-      <GMT>000008073ENQR000326R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "ORDERTOCONTI",
+      croNumber: "",
+      gmh: "073ENQR000326RENQASIPNCA05A73000017300000120210901131473000001                                             050002331",
+      gmt: "000008073ENQR000326R",
+      personId: "062b88ea-4bb8-4574-bdc8-84718faa31bd",
+      personUrn: "21/17M",
+      reportId: "d001dbc3-0a48-4d13-9c2b-aeda6692595d",
+      asn: "1101ZD0100000448701C",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "e246ed15-876f-4219-a8c3-612c2f93102e",
+          courtCaseReference: "21/2732/000013W",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:8:11:2",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ88116",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "2ae7cc59-e7c2-4cfe-953a-b166a9f4e2b9",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1

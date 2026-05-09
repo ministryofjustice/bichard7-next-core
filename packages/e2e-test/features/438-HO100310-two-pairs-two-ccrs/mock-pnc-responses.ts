@@ -4,21 +4,91 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?XML VERSION="1.0" STANDALONE="YES"?>
-      <CXE01>
-        <GMH>073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772</GMH>
-        <ASI>
-          <FSC>K01ZD</FSC>
-          <IDS>K00/410801G Bass                    </IDS>
-          <CCR>K97/1626/8395Q                 </CCR>
-          <COF>K001    12:15:24:1   TH68010 250920100000            </COF>
-          <COF>K002    12:15:24:1   TH68010 250920100000            </COF>
-          <CCR>K97/1626/8396R                 </CCR>
-          <COF>K001    12:15:24:1   BG73001 250920120000            </COF>
-          <COF>K002    12:15:24:1   BG73001 250920120000            </COF>
-        </ASI>
-        <GMT>000008073ENQR004540S</GMT>
-      </CXE01>`,
+    response: {
+      pncCheckName: "Bass",
+      croNumber: "",
+      gmh: "073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772",
+      gmt: "000008073ENQR004540S",
+      personId: "2c070589-c228-46c9-b19c-7eaec6ad8098",
+      personUrn: "00/410801G",
+      reportId: "f34755b2-5648-40c1-a00f-98fafc8ef79d",
+      asn: "1101ZD0100000410801G",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "8f8f7d79-5f54-436a-830e-1d548aba0fa8",
+          courtCaseReference: "97/1626/008395Q",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "12:15:24:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68010",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-09-25",
+              offenceStartTime: "00:00",
+              offenceId: "9e8c0529-b732-440d-b87c-f82f71baa81e",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "12:15:24:1",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "TH68010",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-09-25",
+              offenceStartTime: "00:00",
+              offenceId: "595a9a3a-aec8-4184-afeb-9892bfb3610c",
+              disposalResults: []
+            }
+          ]
+        },
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "8f8f7d79-5f54-436a-830e-1d548aba0fa8",
+          courtCaseReference: "97/1626/008396R",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "12:15:24:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "BG73001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2012-09-25",
+              offenceStartTime: "00:00",
+              offenceId: "b63c4b18-ac01-4015-ae69-eb5731025d20",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "12:15:24:1",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "BG73001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2012-09-25",
+              offenceStartTime: "00:00",
+              offenceId: "4aedb9ad-829e-4945-959e-883dda0c7fd8",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: ""
   }),

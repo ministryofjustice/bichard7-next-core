@@ -4,20 +4,76 @@ import type Bichard from "../../utils/world"
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000138RENQASIPNCA05A73000017300000120210831091673000001                                             050001963</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K12/18B     WELLINGTON              </IDS>
-        <CCR>K12/2732/26D                   </CCR>
-        <COF>K001    1:9:7:1      OF61016 01062009                </COF>
-        <COF>K002    11:6:4:1     PC53001 01062009                </COF>
-        <CCR>K12/2732/27E                   </CCR>
-        <COF>K001    5:5:2:1      TH68001 01062009                </COF>
-      </ASI>
-      <GMT>000011073ENQR000138R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "WELLINGTON",
+      croNumber: "",
+      gmh: "073ENQR000138RENQASIPNCA05A73000017300000120210831091673000001                                             050001963",
+      gmt: "000011073ENQR000138R",
+      personId: "64067bc5-9d71-4d73-b169-c497c6f3de6b",
+      personUrn: "12/18B",
+      reportId: "c1638222-3e89-4125-afce-16d68e140941",
+      asn: "1200000000000000010X",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "5ed6f441-027d-49d8-a6a3-addfa134f901",
+          courtCaseReference: "12/2732/000026D",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:9:7:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "OF61016",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "c684a896-45ab-4beb-8456-1416e8352db5",
+              disposalResults: []
+            },
+            {
+              acpoOffenceCode: "11:6:4:1",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "PC53001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "ed36173a-72a5-472a-9899-675498c1b590",
+              disposalResults: []
+            }
+          ]
+        },
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "5ed6f441-027d-49d8-a6a3-addfa134f901",
+          courtCaseReference: "12/2732/000027E",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:2:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "e5b58420-8e1f-4cc6-aaa6-f74fe9906b83",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
@@ -83,24 +139,114 @@ export default (_: string, { policeApi }: Bichard) => [
   }),
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000139RENQASIPNCA05A73000017300000120210831091673000001                                             050001965</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K12/18B     WELLINGTON              </IDS>
-        <CCR>K12/2732/26D                   </CCR>
-        <COF>K001    1:9:7:1      OF61016 01062009                </COF>
-        <ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ>
-        <DIS>I1002M12                                                                                                 </DIS>
-        <COF>K002    11:6:4:1     PC53001 01062009                </COF>
-        <ADJ>INOT GUILTY   GUILTY        101020090000 </ADJ>
-        <DIS>I1002M13                                                                                                 </DIS>
-        <CCR>K12/2732/27E                   </CCR>
-        <COF>K001    5:5:2:1      TH68001 01062009                </COF>
-      </ASI>
-      <GMT>000015073ENQR000139R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "WELLINGTON",
+      croNumber: "",
+      gmh: "073ENQR000139RENQASIPNCA05A73000017300000120210831091673000001                                             050001965",
+      gmt: "000015073ENQR000139R",
+      personId: "fb20e055-6f68-4504-b484-fa8e66504a76",
+      personUrn: "12/18B",
+      reportId: "1576da5b-5e1c-4e08-a5bb-a4c792158bfa",
+      asn: "1200000000000000010X",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "cf078e77-67a9-4ed7-ad55-85247fe9fd8b",
+          courtCaseReference: "12/2732/000026D",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:9:7:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "OF61016",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Not Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "50302ec6-d558-41dd-a58c-c40cf0a59ac3",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "cde0004f-27e9-4416-bf79-2ca7e699fb61",
+                  disposalDate: "2009-10-10",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "4b8efcc1-fb71-4943-a898-533d807fa4a5",
+                  disposalCode: 1002,
+                  disposalDuration: {
+                    units: "months",
+                    count: 12
+                  },
+                  disposalText: ""
+                }
+              ]
+            },
+            {
+              acpoOffenceCode: "11:6:4:1",
+              courtOffenceSequenceNumber: 2,
+              cjsOffenceCode: "PC53001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Not Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "48d822cf-aa14-499e-abae-abef95d5989e",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "7c738669-97a3-4bc8-a3ee-a682567aeecc",
+                  disposalDate: "2009-10-10",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "61a7facc-88f2-4bd1-bbac-87c0b9b62936",
+                  disposalCode: 1002,
+                  disposalDuration: {
+                    units: "months",
+                    count: 13
+                  },
+                  disposalText: ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: "cf078e77-67a9-4ed7-ad55-85247fe9fd8b",
+          courtCaseReference: "12/2732/000027E",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:2:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68001",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-06-01",
+              offenceId: "076d3e8c-d2ef-46ba-809d-b7d841a34615",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1
