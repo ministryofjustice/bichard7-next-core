@@ -1,3 +1,4 @@
+import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import { asnQueryResponseSchema } from "@moj-bichard7/core/schemas/leds/asnQueryResponse"
 import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
@@ -25,6 +26,8 @@ const convertAsnQueryResponseMockJsonToLeds = (
       }
     }
   }
+
+  mockJson.asn = convertAsnToLedsFormat(mockJson.asn)
 
   return asnQueryResponseSchema.parse(mockJson)
 }
