@@ -3,7 +3,7 @@ import { toTitleCase } from "@moj-bichard7/core/lib/policeGateway/leds/mapToAddD
 import type { AsnQueryResponse, DisposalResult, Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import type { Adjudication, Plea } from "@moj-bichard7/core/types/leds/DisposalRequest"
 
-// import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat" // To be uncommented before merging PR
+import convertAsnToLedsFormat from "@moj-bichard7/core/lib/policeGateway/leds/convertAsnToLedsFormat"
 import { convertDate } from "@moj-bichard7/core/lib/policeGateway/leds/dateTimeConverter"
 import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
 import { randomUUID } from "crypto"
@@ -70,9 +70,6 @@ const convertTime = (time: string): string => time.slice(0, 2) + ":" + time.slic
 const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): Offence[] => {
   const mappedOffences = offences.map((offence) => {
     return {
-      // TEMP: To be removed before merging PR
-      acpoOffenceCode: offence.acpoOffenceCode,
-      // TEMP: To be removed before merging PR
       courtOffenceSequenceNumber: Number(offence.referenceNumber),
       cjsOffenceCode: offence.cjsOffenceCode,
       roleQualifiers: [offence.offenceQualifier1].filter(Boolean),
@@ -136,24 +133,12 @@ export const convertPncJsonToLedsAsnQueryResponse = (
   const courtCaseReferences = Array.from(new Set(pncJson.offences.map((offence) => offence.courtCaseReference)))
 
   return {
-    // TEMP: To be removed before merging PR
-    pncCheckName: pncJson.pncCheckName,
-    croNumber: pncJson.croNumber,
-    gmh: pncJson.gmh,
-    gmt: pncJson.gmt,
-    // TEMP: To be removed before merging PR
     personId,
     personUrn: pncJson.pncIdentifier,
     reportId,
-    // asn: convertAsnToLedsFormat(asn), // To be uncommented before merging PR
-    // TEMP: To be removed before merging PR
-    asn,
-    // TEMP: To be removed before merging PR
+    asn: convertAsnToLedsFormat(asn),
     ownerCode: pncJson.forceStationCode,
     disposals: courtCaseReferences.map((courtCaseReference) => ({
-      // TEMP: To be removed before merging PR
-      crimeOffenceReferenceNumber: "",
-      // TEMP: To be removed before merging PR
       courtCaseId,
       courtCaseReference: courtCaseReference,
       caseStatusMarker: "impending-prosecution-detail",

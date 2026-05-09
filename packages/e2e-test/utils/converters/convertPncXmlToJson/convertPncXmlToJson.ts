@@ -46,14 +46,12 @@ export type AdditionalOffences = {
   additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
 }
 
-// TEMP: To be removed before merging PR
-type TemporaryFields = {
+type GmhAndGmt = {
   gmh: string
   gmt: string
 }
-// TEMP: To be removed before merging PR
 
-export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences & TemporaryFields) | Txt
+export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences & GmhAndGmt) | (Txt & GmhAndGmt)
 export type PncRemandJson = Fsc & Ids & Asr & Rem
 export type PncNormalDisposalJson = Fsc &
   Ids &
