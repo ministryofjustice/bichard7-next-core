@@ -4,7 +4,7 @@ import type User from "services/entities/User"
 import deleteFromDynamoTable from "../../../test/utils/deleteFromDynamoTable"
 import { auditLogFileDownload, type LogQuery } from "./auditLogFileDownload"
 
-describe("auditLogFileDownload", () => {
+describe("AuditLogFileDownload", () => {
   beforeEach(async () => {
     await deleteFromDynamoTable("auditLogEventsTable", "_id")
   })
