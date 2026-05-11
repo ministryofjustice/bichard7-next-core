@@ -82,20 +82,19 @@ describe("usersDetailPerformance - Integration", () => {
 
     const todayResult = results.find((r) => r.date.toISOString() === endOfDay(today).toISOString())!
 
-    expect(todayResult.exceptions).toHaveLength(1)
-    expect(todayResult.triggers).toHaveLength(1)
+    expect(todayResult.codeDetails).toHaveLength(2)
 
-    const exceptionGroupToday = todayResult.exceptions.find((c) => c.code === "HO100300")
+    const exceptionGroupToday = todayResult.codeDetails.find((c) => c.code === "HO100300")
     expect(exceptionGroupToday).toBeDefined()
-    expect(exceptionGroupToday?.description).toBe("Organisation not recognised") // Assert description exists
+    expect(exceptionGroupToday?.description).toBe("Organisation not recognised")
 
     const johnExceptionToday = exceptionGroupToday?.users.find((u) => u.username === "john.test")
     expect(johnExceptionToday?.resolved).toBe(1)
     expect(johnExceptionToday?.totalLocked).toBe(0)
 
-    const triggerGroupToday = todayResult.triggers.find((c) => c.code === "TRPR0002")
+    const triggerGroupToday = todayResult.codeDetails.find((c) => c.code === "TRPR0002")
     expect(triggerGroupToday).toBeDefined()
-    expect(triggerGroupToday?.description).toBe("Warrant issued") // Assert description exists
+    expect(triggerGroupToday?.description).toBe("Warrant issued")
 
     const adamTriggerToday = triggerGroupToday?.users.find((u) => u.username === "adam.test")
     expect(adamTriggerToday?.resolved).toBe(1)
@@ -103,8 +102,8 @@ describe("usersDetailPerformance - Integration", () => {
 
     const yesterdayResult = results.find((r) => r.date.toISOString() === endOfDay(yesterday).toISOString())!
 
-    const exceptionGroupYesterday = yesterdayResult.exceptions.find((c) => c.code === "HO100300")
-    expect(exceptionGroupYesterday?.description).toBe("Organisation not recognised") // Assert description exists
+    const exceptionGroupYesterday = yesterdayResult.codeDetails.find((c) => c.code === "HO100300")
+    expect(exceptionGroupYesterday?.description).toBe("Organisation not recognised")
 
     const johnExceptionYesterday = exceptionGroupYesterday?.users.find((u) => u.username === "john.test")
     expect(johnExceptionYesterday?.resolved).toBe(1)
@@ -151,7 +150,7 @@ describe("usersDetailPerformance - Integration", () => {
 
     const todayResult = results.find((r) => r.date.toISOString() === endOfDay(today).toISOString())!
 
-    const exceptionCodeGroup = todayResult.exceptions.find((c) => c.code === "HO100322")
+    const exceptionCodeGroup = todayResult.codeDetails.find((c) => c.code === "HO100322")
     expect(exceptionCodeGroup?.description).toBe("Next Result Source Organisation is absent for a remand") // Assert description exists
     expect(exceptionCodeGroup?.totals.resolved).toBe(0)
     expect(exceptionCodeGroup?.totals.totalLocked).toBe(1)
@@ -160,8 +159,8 @@ describe("usersDetailPerformance - Integration", () => {
     expect(johnLock?.resolved).toBe(0)
     expect(johnLock?.totalLocked).toBe(1)
 
-    const triggerCodeGroup = todayResult.triggers.find((c) => c.code === "TRPR0004")
-    expect(triggerCodeGroup?.description).toBe("Sex offender") // Assert description exists
+    const triggerCodeGroup = todayResult.codeDetails.find((c) => c.code === "TRPR0004")
+    expect(triggerCodeGroup?.description).toBe("Sex offender")
     expect(triggerCodeGroup?.totals.resolved).toBe(0)
     expect(triggerCodeGroup?.totals.totalLocked).toBe(1)
 
@@ -204,11 +203,11 @@ describe("usersDetailPerformance - Integration", () => {
 
     const todayResult = results.find((r) => r.date.toISOString() === endOfDay(today).toISOString())!
 
-    expect(todayResult.exceptions).toHaveLength(1)
+    expect(todayResult.codeDetails).toHaveLength(1)
 
-    const codeGroup = todayResult.exceptions[0]
+    const codeGroup = todayResult.codeDetails[0]
     expect(codeGroup.code).toBe("HO100300")
-    expect(codeGroup.description).toBe("Organisation not recognised") // Assert description exists
+    expect(codeGroup.description).toBe("Organisation not recognised")
     expect(codeGroup.totals.resolved).toBe(1)
     expect(codeGroup.totals.totalLocked).toBe(1)
 

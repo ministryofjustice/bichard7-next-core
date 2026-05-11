@@ -1,5 +1,9 @@
 import type { UserPerformanceDetailReportQuery } from "@moj-bichard7/common/contracts/UserPerformanceDetailReportQuery"
-import type { CodeDetailDto, UserPerformanceDetailDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
+import type {
+  CodeDetailDto,
+  CodeDetailUserDto,
+  UserPerformanceDetailDto
+} from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyReply } from "fastify"
 
@@ -107,7 +111,6 @@ describe("generateUserPerformanceDetailReport", () => {
   })
 
   it("should count total records correctly using the chunk reducer", async () => {
-    // Assuming the generator yields an array of DTOs, the chunk is a 1D array
     let capturedReducer!: (chunk: UserPerformanceDetailDto[]) => number
 
     mockedCreateReportHandler.mockImplementation((_reportFn: unknown, _auditLogCallback: unknown, reducer: unknown) => {
@@ -117,8 +120,7 @@ describe("generateUserPerformanceDetailReport", () => {
 
     await generateUserPerformanceDetailReport(mockDatabase, mockAuditLogGateway, mockUser, mockQuery, mockReply)
 
-    // 1. Create a valid nested User conforming to the Zod schema
-    const mockNestedUser = {
+    const mockNestedUser: CodeDetailUserDto = {
       fullName: "Alice",
       id: 1,
       resolved: 5,
@@ -126,7 +128,6 @@ describe("generateUserPerformanceDetailReport", () => {
       username: "alice.test"
     }
 
-    // 2. Create a valid CodeDetailDto containing the user
     const mockCodeDetail: CodeDetailDto = {
       code: "EXC01",
       description: "Test Exception",
@@ -134,18 +135,15 @@ describe("generateUserPerformanceDetailReport", () => {
         resolved: 5,
         totalLocked: 2
       },
-      users: [mockNestedUser] // 1 User per code
+      type: "exception",
+      users: [mockNestedUser]
     }
 
-    // 3. Create the top-level DTO
     const mockDto: UserPerformanceDetailDto = {
-      date: new Date(),
-      exceptions: [mockCodeDetail], // 1 Exception per DTO
-      triggers: []
+      codeDetails: [mockCodeDetail],
+      date: new Date()
     }
 
-    // 4. Create a chunk of exactly 6 DTOs.
-    // This guarantees `6` is returned whether the reducer counts DTOs, Exceptions, or Users.
     const chunk: UserPerformanceDetailDto[] = [mockDto, mockDto, mockDto, mockDto, mockDto, mockDto]
 
     const result = capturedReducer(chunk)

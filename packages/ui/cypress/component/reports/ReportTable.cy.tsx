@@ -8,11 +8,11 @@ const mockRows = [
 ]
 
 const simpleConfig = {
-  isGrouped: false
+  structure: "flat"
 } as ReportConfig
 
 const groupedConfig = {
-  isGrouped: true
+  structure: "grouped"
 } as ReportConfig
 
 describe("ReportTable", () => {
@@ -34,11 +34,11 @@ describe("ReportTable", () => {
     cy.get('[data-testid="mount-wrapper"]').should("be.empty")
   })
 
-  it("mounts and renders SimpleTable when config.isGrouped is falsy", () => {
+  it("mounts and renders SimpleTable when config.structure is flat", () => {
     cy.mount(<ReportTable config={simpleConfig} rows={mockRows} tableName="Simple Table" />)
   })
 
-  it("mounts and renders GroupTable when config.isGrouped is true", () => {
+  it("mounts and renders GroupTable when config.structure is grouped", () => {
     cy.mount(<ReportTable config={groupedConfig} rows={mockRows} tableName="Group Table" />)
   })
 })

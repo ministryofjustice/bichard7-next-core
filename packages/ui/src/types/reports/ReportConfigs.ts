@@ -11,24 +11,34 @@ import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/B
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { ExceptionReportDto, CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
-import type { ReportConfig, FlatReportConfig, GroupedReportConfig } from "types/reports/Config"
+import type {
+  ReportConfig,
+  FlatReportConfig,
+  GroupedReportConfig,
+  NestedGroupedReportConfig
+} from "types/reports/Config"
+import type {
+  UserPerformanceDetailDto,
+  CodeDetailDto,
+  CodeDetailUserDto
+} from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 
 export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
   bails: {
     endpoint: V1.CasesReportsBails,
-    isGrouped: false,
+    structure: "flat",
     columns: bailsColumns,
     reportType: "bails"
   } satisfies FlatReportConfig<CaseForBailsReportDto>,
   "domestic violence": {
     endpoint: V1.CasesReportsDomesticViolence,
-    isGrouped: false,
+    structure: "flat",
     columns: domesticViolenceColumns,
     reportType: "domestic violence"
   } satisfies FlatReportConfig<CaseForDomesticViolenceReportDto>,
   exceptions: {
     endpoint: V1.CasesReportsExceptions,
-    isGrouped: true,
+    structure: "grouped",
     groupNameKey: "username",
     dataListKey: "cases",
     columns: exceptionsColumns,
@@ -36,13 +46,13 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
   } satisfies GroupedReportConfig<ExceptionReportDto, CaseForExceptionReportDto>,
   warrants: {
     endpoint: V1.CasesReportsWarrants,
-    isGrouped: false,
+    structure: "flat",
     columns: warrantsColumns,
     reportType: "warrants"
   } satisfies FlatReportConfig<CaseForWarrantsReportDto>,
   "user summary": {
     endpoint: V1.CasesReportsUserPerformanceSummary,
-    isGrouped: true,
+    structure: "grouped",
     groupNameKey: "date",
     dataListKey: "users",
     columns: userPerformanceSummaryColumns,
@@ -53,5 +63,15 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
       { key: "totalNumberStillLocked", label: "Exceptions/Triggers Locked" }
     ],
     reportType: "user summary"
-  }
+  },
+  "user detail": {
+    structure: "nested",
+    endpoint: V1.CasesReportsUserPerformanceDetail,
+    outerGroupNameKey: "date",
+    outerDataListKey: "codeDetails",
+    innerGroupNameKey: "description",
+    innerDataListKey: "users",
+    columns: [],
+    reportType: "user detail"
+  } satisfies NestedGroupedReportConfig<UserPerformanceDetailDto, CodeDetailDto, CodeDetailUserDto>
 }

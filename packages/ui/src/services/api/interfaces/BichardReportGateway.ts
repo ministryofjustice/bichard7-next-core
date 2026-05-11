@@ -10,6 +10,8 @@ import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/type
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { UserSummaryReportQuery } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
+import type { UserPerformanceDetailReportQuery } from "@moj-bichard7/common/contracts/UserPerformanceDetailReportQuery"
+import type { UserPerformanceDetailDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 
 type AnyReportDto =
   | CaseForBailsReportDto[]
@@ -17,6 +19,7 @@ type AnyReportDto =
   | CaseForDomesticViolenceReportDto[]
   | CaseForWarrantsReportDto[]
   | UserPerformanceSummaryDto[]
+  | UserPerformanceDetailDto[]
 
 export type AnyReportQuery =
   | BailsReportQuery
@@ -24,6 +27,7 @@ export type AnyReportQuery =
   | DomesticViolenceReportQuery
   | WarrantsReportQuery
   | UserSummaryReportQuery
+  | UserPerformanceDetailReportQuery
 
 export interface BichardReportGateway {
   readonly reportClient: ReportsApiClient

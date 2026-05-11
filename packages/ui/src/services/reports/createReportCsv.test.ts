@@ -34,6 +34,8 @@ describe("createReportCsv", () => {
   })
 
   const commonConfigPart = {
+    reportType: "bails" as ReportType,
+    endpoint: "dummy-endpoint",
     columns: [
       { header: "ID", key: "id" },
       { header: "Name", key: "name" }
@@ -43,7 +45,7 @@ describe("createReportCsv", () => {
   it("should generate a valid CSV Blob for an ungrouped report", async () => {
     const config: ReportConfig = {
       ...commonConfigPart,
-      isGrouped: false
+      structure: "flat"
     }
     const data = [
       { id: 1, name: "Alice" },
@@ -71,7 +73,7 @@ describe("createReportCsv", () => {
   it("should generate a valid CSV Blob for a grouped report", async () => {
     const config: ReportConfig = {
       ...commonConfigPart,
-      isGrouped: true,
+      structure: "grouped",
       groupNameKey: "courtName",
       dataListKey: "cases"
     }
@@ -99,7 +101,7 @@ describe("createReportCsv", () => {
   it("should skip group generation if dataList is not an array", async () => {
     const config: ReportConfig = {
       ...commonConfigPart,
-      isGrouped: true,
+      structure: "grouped",
       groupNameKey: "courtName",
       dataListKey: "cases"
     }
@@ -121,7 +123,7 @@ describe("createReportCsv", () => {
   it("should skip row generation in grouped data if the row is not a record", async () => {
     const config: ReportConfig = {
       ...commonConfigPart,
-      isGrouped: true,
+      structure: "grouped",
       groupNameKey: "courtName",
       dataListKey: "cases"
     }
