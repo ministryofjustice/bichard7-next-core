@@ -1,8 +1,8 @@
 import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 import type { NextApiRequest, NextApiResponse } from "next"
-import type { LogQuery } from "services/reports/auditLogCsvDownload"
-import { auditLogCsvDownload } from "services/reports/auditLogCsvDownload"
 
+import type { LogQuery } from "@/services/reports/auditLogFileDownload"
+import { auditLogFileDownload } from "@/services/reports/auditLogFileDownload"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 export default async function log(request: NextApiRequest, response: NextApiResponse) {
@@ -17,7 +17,7 @@ export default async function log(request: NextApiRequest, response: NextApiResp
 
   const { req, res, currentUser } = auth
 
-  const result = await auditLogCsvDownload(currentUser, req.query as unknown as LogQuery)
+  const result = await auditLogFileDownload(currentUser, req.query as unknown as LogQuery)
 
   if (!isError(result)) {
     res.status(201).send({ saved: true })
@@ -42,6 +42,6 @@ export default async function log(request: NextApiRequest, response: NextApiResp
     }
   }
 
-  res.status(500).send({ saved: false, error: "Unknow Error" })
+  res.status(500).send({ saved: false, error: "Unknown Error" })
   res.end()
 }
