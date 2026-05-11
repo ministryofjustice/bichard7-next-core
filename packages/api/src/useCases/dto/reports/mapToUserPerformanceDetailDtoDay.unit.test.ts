@@ -21,9 +21,8 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
     const result = mapToUserPerformanceDetailDtoDay(mockDate)
 
     expect(result).toEqual({
-      date: mockDate,
-      exceptions: [],
-      triggers: []
+      codeDetails: [],
+      date: mockDate
     })
   })
 
@@ -36,9 +35,11 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
     const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
 
     expect(result).toEqual({
-      date: mockDate,
-      exceptions: [{ code: "EXC_SHORT", description: "Exception short description", extraData: "foo" }],
-      triggers: [{ code: "TRG_SHORT", description: "Trigger short description", extraData: "bar" }]
+      codeDetails: [
+        { code: "EXC_SHORT", description: "Exception short description", extraData: "foo", type: "exception" },
+        { code: "TRG_SHORT", description: "Trigger short description", extraData: "bar", type: "trigger" }
+      ],
+      date: mockDate
     })
   })
 
@@ -51,9 +52,11 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
     const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
 
     expect(result).toEqual({
-      date: mockDate,
-      exceptions: [{ code: "EXC_LONG", description: "Exception long description only" }],
-      triggers: [{ code: "TRG_LONG", description: "Trigger long description only" }]
+      codeDetails: [
+        { code: "EXC_LONG", description: "Exception long description only", type: "exception" },
+        { code: "TRG_LONG", description: "Trigger long description only", type: "trigger" }
+      ],
+      date: mockDate
     })
   })
 
@@ -66,9 +69,11 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
     const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
 
     expect(result).toEqual({
-      date: mockDate,
-      exceptions: [{ code: "EXC_EMPTY", description: "Unknown Exception" }],
-      triggers: [{ code: "TRG_EMPTY", description: "Unknown Trigger" }]
+      codeDetails: [
+        { code: "EXC_EMPTY", description: "Unknown Exception", type: "exception" },
+        { code: "TRG_EMPTY", description: "Unknown Trigger", type: "trigger" }
+      ],
+      date: mockDate
     })
   })
 
@@ -81,9 +86,11 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
     const result = mapToUserPerformanceDetailDtoDay(mockDate, mockRow)
 
     expect(result).toEqual({
-      date: mockDate,
-      exceptions: [{ code: "MISSING_EXC", description: "Description unavailable" }],
-      triggers: [{ code: "MISSING_TRG", description: "Description unavailable" }]
+      codeDetails: [
+        { code: "MISSING_EXC", description: "Description unavailable", type: "exception" },
+        { code: "MISSING_TRG", description: "Description unavailable", type: "trigger" }
+      ],
+      date: mockDate
     })
   })
 })

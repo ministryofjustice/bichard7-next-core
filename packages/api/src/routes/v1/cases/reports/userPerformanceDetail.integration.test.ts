@@ -107,7 +107,7 @@ describe("user performance detail report integration", () => {
 
     expect(todayUserDetail.date).toBe(endOfDay(new Date()).toISOString())
 
-    const trpr0002 = todayUserDetail.triggers.find((t) => t.code === TriggerCode.TRPR0002)
+    const trpr0002 = todayUserDetail.codeDetails.find((t) => t.code === TriggerCode.TRPR0002)
     expect(trpr0002).toBeDefined()
     expect(trpr0002?.totals.resolved).toBe(1)
     expect(trpr0002?.users).toEqual(
@@ -120,15 +120,18 @@ describe("user performance detail report integration", () => {
       ])
     )
 
-    const trpr0012 = todayUserDetail.triggers.find((t) => t.code === TriggerCode.TRPR0012)
+    const trpr0012 = todayUserDetail.codeDetails.find((t) => t.code === TriggerCode.TRPR0012)
     expect(trpr0012).toBeDefined()
     expect(trpr0012?.totals.resolved).toBe(1)
 
-    const totalExceptionsResolved = todayUserDetail.exceptions.reduce((sum, exc) => sum + exc.totals.resolved, 0)
-    const totalExceptionsLocked = todayUserDetail.exceptions.reduce((sum, exc) => sum + exc.totals.totalLocked, 0)
+    const exceptions = todayUserDetail.codeDetails.filter((c) => c.type === "exception")
+    const triggers = todayUserDetail.codeDetails.filter((c) => c.type === "trigger")
 
-    const totalTriggersResolved = todayUserDetail.triggers.reduce((sum, trig) => sum + trig.totals.resolved, 0)
-    const totalTriggersLocked = todayUserDetail.triggers.reduce((sum, trig) => sum + trig.totals.totalLocked, 0)
+    const totalExceptionsResolved = exceptions.reduce((sum, exc) => sum + exc.totals.resolved, 0)
+    const totalExceptionsLocked = exceptions.reduce((sum, exc) => sum + exc.totals.totalLocked, 0)
+
+    const totalTriggersResolved = triggers.reduce((sum, trig) => sum + trig.totals.resolved, 0)
+    const totalTriggersLocked = triggers.reduce((sum, trig) => sum + trig.totals.totalLocked, 0)
 
     expect(totalExceptionsResolved).toBe(1)
     expect(totalExceptionsLocked).toBe(1)
@@ -159,8 +162,7 @@ describe("user performance detail report integration", () => {
 
     for (const userDetail of usersDetailDto) {
       expect(userDetail.date).toBe(endOfDay(date).toISOString())
-      expect(userDetail.triggers).toHaveLength(0)
-      expect(userDetail.exceptions).toHaveLength(0)
+      expect(userDetail.codeDetails).toHaveLength(0)
 
       date = subDays(date, 1)
     }
