@@ -1,7 +1,9 @@
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import deleteFromDynamoTable from "../../../test/utils/deleteFromDynamoTable"
+import getFromDynamo from "../../../test/utils/getFromDynamoTable"
 import { auditLogFileDownload, type LogQuery } from "./auditLogFileDownload"
 
 describe("AuditLogFileDownload", () => {
@@ -84,6 +86,22 @@ describe("AuditLogFileDownload", () => {
       throw new Error("Expecting this to be an error")
     }
 
+    const logs: AuditLogEvent[] = await getFromDynamo("auditLogEventsTable")
+
+    expect(logs).toHaveLength(1)
+    const log = logs[0]
+
+    expect(log.user).toBe("user.name")
+
+    expect(log.attributes).toEqual(
+      expect.objectContaining({
+        auditLogVersion: 2,
+        "Report ID": "Bail Conditions",
+        "Output Format": "Download as CSV",
+        "Date Range": "2026-01-01 to 2026-01-30"
+      })
+    )
+
     expect(result).toBeUndefined()
   })
 
@@ -96,6 +114,21 @@ describe("AuditLogFileDownload", () => {
     if (isError(result)) {
       throw new Error("Expecting this to be an error")
     }
+
+    const logs: AuditLogEvent[] = await getFromDynamo("auditLogEventsTable")
+
+    expect(logs).toHaveLength(1)
+    const log = logs[0]
+
+    expect(log.user).toBe("user.name")
+
+    expect(log.attributes).toEqual(
+      expect.objectContaining({
+        auditLogVersion: 2,
+        "Report ID": "Automation Rate",
+        "Output Format": "Download as XLSX"
+      })
+    )
 
     expect(result).toBeUndefined()
   })
