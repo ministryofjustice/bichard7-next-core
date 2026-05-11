@@ -22,6 +22,10 @@ import type {
   CodeDetailDto,
   CodeDetailUserDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
+import type {
+  UserForPerformanceSummaryDto,
+  UserPerformanceSummaryDto
+} from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 
 export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
   bails: {
@@ -63,7 +67,7 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
       { key: "totalNumberStillLocked", label: "Exceptions/Triggers Locked" }
     ],
     reportType: "user summary"
-  },
+  } satisfies GroupedReportConfig<UserPerformanceSummaryDto, UserForPerformanceSummaryDto>,
   "user detail": {
     structure: "nested",
     endpoint: V1.CasesReportsUserPerformanceDetail,

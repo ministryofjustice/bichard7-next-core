@@ -20,7 +20,7 @@ export async function* processUserPerformanceSummaryReport(
   cursor: AsyncIterable<UserSummaryRow[]>,
   fromDate: Date,
   toDate: Date
-): AsyncGenerator<UserPerformanceSummaryDto> {
+): AsyncGenerator<UserPerformanceSummaryDto[]> {
   const normalizedStartDate = startOfDay(fromDate)
 
   let expectedDate = endOfDay(toDate)

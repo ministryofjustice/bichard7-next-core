@@ -95,7 +95,7 @@ describe("user performance summary report integration", () => {
 
     expect(response.statusCode).toBe(200)
 
-    const usersSummaryDto = response.json() as UserPerformanceSummaryDto
+    const usersSummaryDto = response.json() as UserPerformanceSummaryDto[]
 
     expect(usersSummaryDto).toHaveLength(7)
 
@@ -130,7 +130,7 @@ describe("user performance summary report integration", () => {
 
     expect(response.statusCode).toBe(200)
 
-    const usersSummaryDto = response.json() as UserPerformanceSummaryDto
+    const usersSummaryDto = response.json() as UserPerformanceSummaryDto[]
 
     expect(usersSummaryDto).toHaveLength(7)
 
