@@ -18,13 +18,16 @@ export const ReportTable: React.FC<ReportTableProps> = ({ config, rows, tableNam
     return null
   }
 
-  return (
-    <StyledReportTable>
-      {config.isGrouped ? (
-        <GroupTable config={config} groups={rows} />
-      ) : (
-        <SimpleTable config={config} rows={rows} tableName={tableName} />
-      )}
-    </StyledReportTable>
-  )
+  let table = null
+
+  switch (config.structure) {
+    case "flat":
+      table = <SimpleTable config={config} rows={rows} tableName={tableName} />
+      break
+    case "grouped":
+      table = <GroupTable config={config} groups={rows} />
+      break
+  }
+
+  return <StyledReportTable>{table}</StyledReportTable>
 }

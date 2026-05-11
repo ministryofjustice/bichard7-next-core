@@ -13,7 +13,7 @@ export const createReportCsv = async (
 ): Promise<Blob> => {
   const csvChunks: string[] = ["", csvMetadata(reportType, fromDate, toDate), ""]
 
-  if (config.isGrouped) {
+  if (config.structure === "grouped") {
     parsedData.forEach((group) => {
       const groupName = group[config.groupNameKey]
       const dataList = group[config.dataListKey]

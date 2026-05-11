@@ -3,7 +3,7 @@ import { GroupTable } from "components/Reports/GroupTable"
 
 describe("GroupTable", () => {
   const mockConfig = {
-    isGrouped: true,
+    structure: "grouped",
     groupNameKey: "category",
     dataListKey: "items",
     columns: [
@@ -29,8 +29,8 @@ describe("GroupTable", () => {
     }
   ]
 
-  it("renders nothing if isGrouped is false", () => {
-    const ungroupedConfig = { ...mockConfig, isGrouped: false } as ReportConfig
+  it("renders nothing if structure is 'falt'", () => {
+    const ungroupedConfig = { ...mockConfig, structure: "flat" } as ReportConfig
     cy.mount(<GroupTable config={ungroupedConfig} groups={mockGroups} />)
     cy.get("table").should("not.exist")
   })
