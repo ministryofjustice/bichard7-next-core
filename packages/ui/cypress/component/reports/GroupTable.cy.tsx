@@ -29,7 +29,7 @@ describe("GroupTable", () => {
     }
   ]
 
-  it("renders nothing if structure is 'falt'", () => {
+  it("renders nothing if structure is 'flat'", () => {
     const ungroupedConfig = { ...mockConfig, structure: "flat" } as ReportConfig
     cy.mount(<GroupTable config={ungroupedConfig} groups={mockGroups} />)
     cy.get("table").should("not.exist")
