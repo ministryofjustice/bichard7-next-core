@@ -52,7 +52,7 @@ describe("user performance summary report integration", () => {
   it("will receive a 200 and data", async () => {
     const [jwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
-    const [caseObj] = await createCases(testDatabaseGateway, 4, {
+    const [case1, _case2, case3] = await createCases(testDatabaseGateway, 4, {
       0: { triggerResolvedBy: user.username, triggerStatus: ResolutionStatusNumber.Resolved },
       1: {
         errorLockedById: user.username,
@@ -65,7 +65,7 @@ describe("user performance summary report integration", () => {
       3: { errorResolvedAt: new Date(), errorResolvedBy: user.username, errorStatus: ResolutionStatusNumber.Resolved }
     })
 
-    await createTriggers(testDatabaseGateway, caseObj.errorId, [
+    await createTriggers(testDatabaseGateway, case1.errorId, [
       {
         resolvedAt: new Date(),
         resolvedBy: user.username,
@@ -77,6 +77,13 @@ describe("user performance summary report integration", () => {
         resolvedBy: user.username,
         status: ResolutionStatusNumber.Resolved,
         triggerCode: TriggerCode.TRPR0012
+      }
+    ])
+
+    await createTriggers(testDatabaseGateway, case3.errorId, [
+      {
+        status: ResolutionStatusNumber.Unresolved,
+        triggerCode: TriggerCode.TRPR0002
       }
     ])
 

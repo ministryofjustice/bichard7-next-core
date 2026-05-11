@@ -1,5 +1,6 @@
 import { isReportType } from "./isReportType"
-import { ReportConfigs } from "types/reports/Config"
+
+import { ReportConfigs } from "types/reports/ReportConfigs"
 
 describe("isReportType", () => {
   const validTypes = Object.keys(ReportConfigs)

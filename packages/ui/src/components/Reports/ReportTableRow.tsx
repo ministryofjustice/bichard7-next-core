@@ -19,6 +19,8 @@ export const ReportTableRow = <T extends Record<string, unknown>>({ row, columns
             {cellValue as string}
           </a>
         )
+      } else if (col.key === "fullName" && row.fullName === "Unknown User" && row.username) {
+        stringOrElement = row.username as string
       }
 
       return <ReportTableCell key={String(col.key)} value={stringOrElement} />
