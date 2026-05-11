@@ -92,6 +92,7 @@ export default class LedsGateway implements PoliceGateway {
 
     const queryResponse = asnQueryResponseSchema.safeParse(apiResponse.data)
     if (!queryResponse.success) {
+      console.error(queryResponse.error)
       return new PoliceApiError(["Couldn't parse LEDS query response."])
     }
 

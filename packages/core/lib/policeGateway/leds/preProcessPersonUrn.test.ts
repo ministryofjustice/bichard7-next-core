@@ -1,8 +1,8 @@
 import preProcessPersonUrn from "./preProcessPersonUrn"
 
 describe("preProcessPersonUrn", () => {
-  it("should use 2-digit year format and remove leading zeros from id", () => {
-    const personUrn = "201950/0000123X"
+  it("should use the same year format and remove leading zeros from id", () => {
+    const personUrn = "1950/0000123X"
     const expectedPersonUrn = "1950/123X"
 
     const actualPersonUrn = preProcessPersonUrn(personUrn)

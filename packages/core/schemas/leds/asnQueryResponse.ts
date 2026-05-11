@@ -5,7 +5,8 @@ import {
   disposalResultSchema as baseDisposalResultSchema,
   baseOffenceSchema,
   courtSchema,
-  dateStringSchema
+  dateStringSchema,
+  disposalFineSchema
 } from "./common"
 
 export const offenceTimeStringSchema = z
@@ -29,7 +30,12 @@ export const disposalDurationSchema = z.object({
 
 export const disposalResultSchema = baseDisposalResultSchema.extend({
   disposalId: z.string(),
-  chargeAppearanceNumber: z.number().optional()
+  chargeAppearanceNumber: z.number().optional(),
+  disposalFine: disposalFineSchema
+    .extend({
+      amount: z.number().optional()
+    })
+    .optional()
 })
 
 export const offenceSchema = baseOffenceSchema.extend({
