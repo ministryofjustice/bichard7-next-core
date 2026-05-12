@@ -1,3 +1,5 @@
+import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
+import { AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { ActionBar } from "features/ReportSelectionFilter/ActionBar"
 import { MockNextRouter } from "../../support/MockNextRouter"
@@ -9,12 +11,19 @@ describe("ActionBar", () => {
     toDate: "2026-03-10"
   }
 
+  const mockAutomatedReportOptions = {
+    isAutomatedReport: true,
+    reportType: "automation rate" as AutomatedReportType,
+    fromDate: "",
+    toDate: ""
+  }
+
   it("renders standard actions without the CSV download button when csvDownloadUrl is null", () => {
     cy.mount(
       <ActionBar
-        csvDownloadUrl={null}
+        fileDownloadUrl={null}
+        reportFilename={"test.csv"}
         hasRows={true}
-        csvReportFilename="test.csv"
         handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
@@ -30,9 +39,9 @@ describe("ActionBar", () => {
     cy.mount(
       <MockNextRouter>
         <ActionBar
-          csvDownloadUrl="/api/downloads/report.csv"
+          fileDownloadUrl={"/api/downloads/report.csv"}
+          reportFilename={"my_report.csv"}
           hasRows={true}
-          csvReportFilename="my_report.csv"
           handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
           reportOptions={mockReportOptions}
@@ -48,9 +57,9 @@ describe("ActionBar", () => {
   it("does not render the CSV download button when hasRows is false despite having a valid url", () => {
     cy.mount(
       <ActionBar
-        csvDownloadUrl="/api/downloads/report.csv"
+        fileDownloadUrl="/api/downloads/report.csv"
+        reportFilename="my_report.csv"
         hasRows={false}
-        csvReportFilename="my_report.csv"
         handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
@@ -62,9 +71,9 @@ describe("ActionBar", () => {
   it("calls handleRunReport when the Run report button is clicked", () => {
     cy.mount(
       <ActionBar
-        csvDownloadUrl={null}
+        fileDownloadUrl={null}
+        reportFilename={null}
         hasRows={false}
-        csvReportFilename={null}
         handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
@@ -77,9 +86,9 @@ describe("ActionBar", () => {
   it("calls clearFilters when the Clear filters button is clicked", () => {
     cy.mount(
       <ActionBar
-        csvDownloadUrl={null}
+        fileDownloadUrl={null}
+        reportFilename={null}
         hasRows={false}
-        csvReportFilename={null}
         handleRunReport={cy.stub().as("handleRunReport")}
         clearFilters={cy.stub().as("clearFilters")}
         reportOptions={mockReportOptions}
@@ -95,9 +104,9 @@ describe("ActionBar", () => {
     cy.mount(
       <MockNextRouter>
         <ActionBar
-          csvDownloadUrl="/api/downloads/report.csv"
+          fileDownloadUrl="/api/downloads/report.csv"
+          reportFilename="my_report.csv"
           hasRows={true}
-          csvReportFilename="my_report.csv"
           handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
           reportOptions={mockReportOptions}
@@ -116,17 +125,13 @@ describe("ActionBar", () => {
     })
   })
 
-  it("does not log the CSV download if reportType is missing", () => {
-    const logSpy = cy.spy().as("logCsvDownloadSpy")
-
-    cy.intercept("GET", "/bichard/api/reports/log*", logSpy)
-
+  it("does not show the CSV download button if reportType is missing", () => {
     cy.mount(
       <MockNextRouter>
         <ActionBar
-          csvDownloadUrl="/api/downloads/report.csv"
+          fileDownloadUrl="/api/downloads/report.csv"
+          reportFilename="my_report.csv"
           hasRows={true}
-          csvReportFilename="my_report.csv"
           handleRunReport={cy.stub().as("handleRunReport")}
           clearFilters={cy.stub().as("clearFilters")}
           reportOptions={{ ...mockReportOptions, reportType: undefined }}
@@ -134,8 +139,67 @@ describe("ActionBar", () => {
       </MockNextRouter>
     )
 
-    cy.contains("Download CSV").click()
+    cy.get("body").should("not.contain", "Download CSV")
+  })
 
-    cy.get("@logCsvDownloadSpy").should("not.have.been.called")
+  it("does not show report download button if is an automated report but reportType is not present", () => {
+    cy.mount(
+      <MockNextRouter>
+        <ActionBar
+          fileDownloadUrl="/reports/AutomationRate.xlsx"
+          reportFilename={"AutomationRate.xlsx"}
+          hasRows={false}
+          handleRunReport={cy.stub().as("handleRunReport")}
+          clearFilters={cy.stub().as("clearFilters")}
+          reportOptions={{ ...mockAutomatedReportOptions, reportType: undefined }}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("body").should("not.contain", "Download report")
+  })
+
+  it("shows report download button if is an automated report and reportType is present", () => {
+    const reportFilename = xlsxFilename(mockAutomatedReportOptions.reportType)
+
+    cy.mount(
+      <MockNextRouter>
+        <ActionBar
+          fileDownloadUrl={`/reports/${reportFilename}`}
+          reportFilename={reportFilename}
+          hasRows={false}
+          handleRunReport={cy.stub().as("handleRunReport")}
+          clearFilters={cy.stub().as("clearFilters")}
+          reportOptions={{ ...mockAutomatedReportOptions }}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("#download-automated-report").should("exist").and("have.attr", "href", `/reports/${reportFilename}`)
+  })
+
+  it("logs the XLSX download via fetch when download is clicked and is an automated report", () => {
+    cy.intercept("GET", "/bichard/api/reports/log*").as("logXlsxDownloadSpy")
+
+    cy.mount(
+      <MockNextRouter>
+        <ActionBar
+          fileDownloadUrl="/reports/AutomationRate.xlsx"
+          reportFilename={"AutomationRate.xlsx"}
+          hasRows={false}
+          handleRunReport={cy.stub().as("handleRunReport")}
+          clearFilters={cy.stub().as("clearFilters")}
+          reportOptions={{ ...mockAutomatedReportOptions }}
+        />
+      </MockNextRouter>
+    )
+
+    cy.contains("Download report").click()
+
+    cy.wait("@logXlsxDownloadSpy").then((interception) => {
+      const url = new URL(interception.request.url)
+      expect(url.searchParams.get("xlsxDownload")).to.equal("true")
+      expect(url.searchParams.get("reportType")).to.equal(mockAutomatedReportOptions.reportType)
+    })
   })
 })
