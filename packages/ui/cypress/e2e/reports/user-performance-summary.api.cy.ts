@@ -38,7 +38,7 @@ describe("User Summary Report", () => {
     cy.get("@reportTable").find("tbody tr").should("have.length", 2)
 
     cy.get("@reportTable")
-      .contains("tr", "BichardForce03")
+      .contains("tr", "user1")
       .within(() => {
         cy.get("td").eq(1).should("contain.text", "1") // Exceptions Resolved
         cy.get("td").eq(2).should("contain.text", "0") // Triggers Resolved

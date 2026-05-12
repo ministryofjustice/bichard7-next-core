@@ -80,6 +80,7 @@ export const insertSampleCases = () => {
     caseId: 3,
     exceptionCode: "HO100322",
     errorReport: "HO100322||ds:OrganisationUnitCode",
-    errorStatus: "Resolved"
+    errorStatus: "Resolved",
+    username: "user1"
   })
 }
