@@ -12,9 +12,12 @@ import createMockResponse from "./createMockResponse"
 export const generateAsnQuery = (
   mockJson: MockAsnQueryResponse | MockAsnQueryErrorResponse,
   count: number,
-  asn: string
+  asn: string,
+  personId: string,
+  reportId: string,
+  courtCaseId: string
 ): LedsMock => {
-  const ledsAsnQueryResponse = convertAsnQueryResponseMockJsonToLeds(mockJson)
+  const ledsAsnQueryResponse = convertAsnQueryResponseMockJsonToLeds(mockJson, personId, reportId, courtCaseId)
 
   const request = createMockRequest({
     path: endpoints.asnQuery,

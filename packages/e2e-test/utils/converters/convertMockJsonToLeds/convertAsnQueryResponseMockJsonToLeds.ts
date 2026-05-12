@@ -7,7 +7,10 @@ import type { MockAsnQueryResponse } from "../../../types/MockAsnQueryResponse"
 import { mapPncErrorToLeds } from "../convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
 
 const convertAsnQueryResponseMockJsonToLeds = (
-  mockJson: MockAsnQueryResponse | MockAsnQueryErrorResponse
+  mockJson: MockAsnQueryResponse | MockAsnQueryErrorResponse,
+  personId: string,
+  reportId: string,
+  courtCaseId: string
 ): AsnQueryResponse | ErrorResponse => {
   if ("txt" in mockJson) {
     return {
@@ -28,6 +31,9 @@ const convertAsnQueryResponseMockJsonToLeds = (
   }
 
   mockJson.asn = convertAsnToLedsFormat(mockJson.asn)
+  mockJson.personId = personId
+  mockJson.reportId = reportId
+  mockJson.disposals.forEach((disposal) => (disposal.courtCaseId = courtCaseId))
 
   return asnQueryResponseSchema.parse(mockJson)
 }
