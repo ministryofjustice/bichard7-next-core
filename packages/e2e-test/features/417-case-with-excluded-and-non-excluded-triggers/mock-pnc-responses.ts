@@ -11,7 +11,7 @@ export default (_: string, { policeApi }: Bichard) => [
       gmh: "073ENQR000703RENQASIPNCA05A73000017300000120210903102273000001                                             050002896",
       gmt: "000008073ENQR000703R",
       personId: SET_BY_PROCESSOR,
-      personUrn: "21/11F",
+      personUrn: "2021/11F",
       reportId: SET_BY_PROCESSOR,
       asn: "1201ZD0100000445099L",
       ownerCode: "01ZD",
@@ -53,7 +53,7 @@ export default (_: string, { policeApi }: Bichard) => [
       crimeOffenceReferenceNo: "",
       remandLocationFfss: "",
       ownerCode: "01YZ",
-      personUrn: "21/11F",
+      personUrn: "2021/11F",
       remandDate: "2011-10-26",
       appearanceResult: "remanded-on-bail",
       bailConditions: [

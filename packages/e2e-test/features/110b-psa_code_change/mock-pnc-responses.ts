@@ -11,7 +11,7 @@ export default (_: string, { policeApi }: Bichard) => [
       gmh: "073ENQR000311RENQASIPNCA05A73000017300000120210901125573000001                                             050002301",
       gmt: "000010073ENQR000311R",
       personId: SET_BY_PROCESSOR,
-      personUrn: "21/9D",
+      personUrn: "2021/9D",
       reportId: SET_BY_PROCESSOR,
       asn: "1001VK0100000375807W",
       ownerCode: "01VK",
@@ -73,7 +73,7 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "21/9D",
+      personUrn: "2021/9D",
       courtCaseReference: "21/2769/000009H",
       court: {
         courtIdentityType: "code",
