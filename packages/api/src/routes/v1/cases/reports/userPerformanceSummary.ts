@@ -35,7 +35,7 @@ const schema = {
   ...auth,
   querystring: UserSummaryReportQuerySchema,
   response: {
-    [OK]: jsonResponse("Users Performance Summary Report", UserPerformanceSummaryDtoSchema),
+    [OK]: jsonResponse("Users Performance Summary Report", UserPerformanceSummaryDtoSchema.array()),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...unprocessableEntityError(),

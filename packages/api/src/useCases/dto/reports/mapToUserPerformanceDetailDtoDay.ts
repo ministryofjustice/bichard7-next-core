@@ -8,21 +8,24 @@ import TriggerMap from "../../data/getTriggerDescriptionMap"
 export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJsonRow): UserPerformanceDetailDto => {
   if (!row) {
     return {
-      date,
-      exceptions: [] as CodeDetailDto[],
-      triggers: [] as CodeDetailDto[]
+      codeDetails: [] as CodeDetailDto[],
+      date
     }
   }
 
   return {
-    date,
-    exceptions: row.exceptions.map((exc) => ({
-      ...exc,
-      description: ExceptionMap.get(exc.code) || "Description unavailable"
-    })),
-    triggers: row.triggers.map((trig) => ({
-      ...trig,
-      description: TriggerMap.get(trig.code) || "Description unavailable"
-    }))
+    codeDetails: [
+      ...row.exceptions.map((exc) => ({
+        ...exc,
+        description: ExceptionMap.get(exc.code) ?? "Description unavailable",
+        type: "exception" as const
+      })),
+      ...row.triggers.map((trig) => ({
+        ...trig,
+        description: TriggerMap.get(trig.code) ?? "Description unavailable",
+        type: "trigger" as const
+      }))
+    ],
+    date
   }
 }

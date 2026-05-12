@@ -6,6 +6,7 @@ import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/type
 import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import type { UserPerformanceDetailDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 import { ReportConfigs } from "types/reports/ReportConfigs"
 
 export interface ReportDataMap {
@@ -14,6 +15,7 @@ export interface ReportDataMap {
   "domestic violence": CaseForDomesticViolenceReportDto[]
   warrants: CaseForWarrantsReportDto[]
   "user summary": UserPerformanceSummaryDto[]
+  "user detail": UserPerformanceDetailDto[]
 }
 
 export default class BichardV1Report implements BichardReportGateway {

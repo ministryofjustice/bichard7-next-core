@@ -16,7 +16,7 @@ interface GroupedTableProps<T> {
 }
 
 export const GroupTable = <T extends Record<string, unknown>>({ config, groups }: GroupedTableProps<T>) => {
-  if (!config.isGrouped) {
+  if (config.structure !== "grouped") {
     return null
   }
 

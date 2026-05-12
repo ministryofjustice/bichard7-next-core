@@ -82,7 +82,7 @@ describe("usersSummaryPerformance - Integration", () => {
       }
     ])
 
-    const results: UserPerformanceSummaryDto = []
+    const results: UserPerformanceSummaryDto[] = []
 
     await database.writable.transaction(async (trx) => {
       const generator = userPerformanceSummary(trx, mockUser, filters)

@@ -37,7 +37,7 @@ export const generateUserPerformanceDetailReport = async (
       },
       (chunk) => {
         return chunk.reduce((acc, dailyRow) => {
-          return acc + dailyRow.exceptions.length + dailyRow.triggers.length
+          return acc + dailyRow.codeDetails.length
         }, 0)
       }
     )(database, user, query, reply)
