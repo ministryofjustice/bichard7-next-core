@@ -8,7 +8,7 @@ const cchSegmentGenerator = (offence: Offence): string =>
     [CONSTANT.UPDATE_TYPE, CONSTANT.UPDATE_TYPE_FIELD_LENGTH],
     [padSequence(offence.courtOffenceSequenceNumber), CONSTANT.COURT_REFERENCE_NUMBER_FIELD_LENGTH],
     ["", CONSTANT.OFFENCE_QUALIFIER_FIELD_LENGTH],
-    [toApcoOffenceCode(offence.npccOffenceCode), CONSTANT.CCH_ACPO_OFFENCE_CODE_FIELD_LENGTH],
+    [toApcoOffenceCode(offence.npccOffenceCode), CONSTANT.CCH_APCO_OFFENCE_CODE_FIELD_LENGTH],
     [String(offence.cjsOffenceCode), CONSTANT.CJS_OFFENCE_CODE_FIELD_LENGTH]
   ])
 

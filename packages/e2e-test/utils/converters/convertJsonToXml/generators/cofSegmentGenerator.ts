@@ -20,7 +20,7 @@ const cofSegmentGenerator = (offence: Offence): string => {
     [referenceNumber, CONSTANT.REFERENCE_NUMBER_FIELD_LENGTH],
     [offenceQualifier1, CONSTANT.OFFENCE_QUALIFIER1_FIELD_LENGTH],
     [offenceQualifier2, CONSTANT.OFFENCE_QUALIFIER2_FIELD_LENGTH],
-    [acpoOffenceCode, CONSTANT.ACPO_OFFENCE_CODE_FIELD_LENGTH],
+    [acpoOffenceCode, CONSTANT.APCO_OFFENCE_CODE_FIELD_LENGTH],
     [cjsOffenceCode, CONSTANT.CJS_OFFENCE_CODE_FIELD_LENGTH],
     [offenceStartDate, CONSTANT.OFFENCE_START_DATE_FIELD_LENGTH],
     [offenceStartTime, CONSTANT.OFFENCE_START_TIME_FIELD_LENGTH],
