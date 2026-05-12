@@ -15,7 +15,7 @@ export async function* userPerformanceSummary(
   database: TransactionConnection,
   user: User,
   filters: UserSummaryReportQuery
-): AsyncGenerator<UserPerformanceSummaryDto> {
+): AsyncGenerator<UserPerformanceSummaryDto[]> {
   const query = database.connection<UserSummaryRow[]>`
     WITH aggregated_activity AS (
       SELECT
