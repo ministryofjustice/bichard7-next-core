@@ -1,3 +1,4 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
@@ -9,15 +10,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000708RENQASIPNCA05A73000017300000120210903102373000001                                             050002907",
       gmt: "000009073ENQR000708R",
-      personId: "baa503da-c113-435d-a6ff-5ce839aecf56",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/14J",
-      reportId: "41859ec4-9c27-4a97-9bac-43c4de674f51",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101ZD0100000410908Y",
       ownerCode: "01ZD",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "2b18babf-d5f5-4284-b2de-2f007b5e1d62",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2732/000010T",
           caseStatusMarker: "impending-prosecution-detail",
           court: {
@@ -143,15 +144,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000709RENQASIPNCA05A73000017300000120210903102373000001                                             050002910",
       gmt: "000013073ENQR000709R",
-      personId: "f0844f95-033e-4867-adb9-169394e3354d",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/14J",
-      reportId: "993eae94-7851-4de9-b4d3-cbda11d8f55b",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101ZD0100000410908Y",
       ownerCode: "01ZD",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "842cf70a-2f56-4409-ae7f-88c5776382fa",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2732/000010T",
           caseStatusMarker: "impending-prosecution-detail",
           court: {

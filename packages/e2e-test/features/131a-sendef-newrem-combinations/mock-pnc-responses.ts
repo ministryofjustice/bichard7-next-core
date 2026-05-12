@@ -1,3 +1,4 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
@@ -9,15 +10,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000314RENQASIPNCA05A73000017300000120210901125773000001                                             050002305",
       gmt: "000010073ENQR000314R",
-      personId: "8c124303-425f-4905-aeec-da092661162c",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/12G",
-      reportId: "9425994a-42d8-4447-b7b6-7f2017def454",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101VK0100000376483E",
       ownerCode: "01VK",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "fb9246ac-b9af-4a13-bf98-5c670c31ab4f",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2812/000002F",
           caseStatusMarker: "impending-prosecution-detail",
           court: {
@@ -170,15 +171,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000315RENQASIPNCA05A73000017300000120210901125773000001                                             050002308",
       gmt: "000013073ENQR000315R",
-      personId: "36fb2ad3-79e3-47c7-b53c-baae9766d13b",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/12G",
-      reportId: "cf44dc92-09b0-4cfc-bb58-ae1147fcb6dc",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101VK0100000376483E",
       ownerCode: "01VK",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "29bbf285-a4fe-43d0-9f89-c642263a03ae",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2732/000026K",
           caseStatusMarker: "impending-prosecution-detail",
           court: {
@@ -212,7 +213,7 @@ export default (_: string, { policeApi }: Bichard) => [
         },
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "29bbf285-a4fe-43d0-9f89-c642263a03ae",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2812/000002F",
           caseStatusMarker: "impending-prosecution-detail",
           court: {

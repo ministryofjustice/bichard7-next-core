@@ -1,3 +1,4 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
@@ -9,15 +10,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772",
       gmt: "000008073ENQR004540S",
-      personId: "306f344a-74cb-419a-b2d4-0bc024809319",
+      personId: SET_BY_PROCESSOR,
       personUrn: "13/4B",
-      reportId: "0388313e-5a75-42e7-ac78-82bc302e0b48",
+      reportId: SET_BY_PROCESSOR,
       asn: "1300000000000000003N",
       ownerCode: "01ZD",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "6c54ec7f-c0eb-4931-bf5f-b7a7c2d3f3e2",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "",
           caseStatusMarker: "impending-prosecution-detail",
           court: {

@@ -1,3 +1,4 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
@@ -9,15 +10,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000689RENQASIPNCA05A73000017300000120210903101373000001                                             050002864",
       gmt: "000008073ENQR000689R",
-      personId: "430eb95c-839b-4a7d-8892-37757758ead9",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/2W",
-      reportId: "d767739e-1a4f-43a0-9ef7-3fe6bcffdafb",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101ZD0100000410799E",
       ownerCode: "01ZD",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "15c2afa9-f5f1-4776-b293-34ccf4af0b00",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2732/000002J",
           caseStatusMarker: "impending-prosecution-detail",
           court: {
@@ -117,15 +118,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000690RENQASIPNCA05A73000017300000120210903101373000001                                             050002867",
       gmt: "000010073ENQR000690R",
-      personId: "50387115-b235-44f2-a030-299948861c78",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/2W",
-      reportId: "29b4e54b-94c6-485e-bcde-a5d460b39159",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101ZD0100000410799E",
       ownerCode: "01ZD",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "c0b037a7-f3c9-484d-a6c7-26fc3d945d38",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2732/000002J",
           caseStatusMarker: "impending-prosecution-detail",
           court: {
@@ -203,15 +204,15 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       gmh: "073ENQR000691RENQASIPNCA05A73000017300000120210903101373000001                                             050002869",
       gmt: "000010073ENQR000691R",
-      personId: "22ae2b84-48fd-4ce0-a236-8a37871b246f",
+      personId: SET_BY_PROCESSOR,
       personUrn: "21/2W",
-      reportId: "700981cb-df70-4975-9011-852cb62ce30f",
+      reportId: SET_BY_PROCESSOR,
       asn: "1101ZD0100000410799E",
       ownerCode: "01ZD",
       disposals: [
         {
           crimeOffenceReferenceNumber: "",
-          courtCaseId: "081c1570-4748-4c86-a6ab-ef282cab00f9",
+          courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "21/2732/000002J",
           caseStatusMarker: "impending-prosecution-detail",
           court: {
