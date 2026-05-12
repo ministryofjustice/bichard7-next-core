@@ -31,8 +31,8 @@ describe("exceptions/triggers report type filter", () => {
       "Resolution Action"
     ]
 
-    cy.get('section[aria-labelledby="report-group-BichardForce03"]').within(() => {
-      cy.get("h3#report-group-BichardForce03").should("exist")
+    cy.get('section[aria-labelledby="report-group-user1"]').within(() => {
+      cy.get("h3#report-group-user1").should("exist")
 
       headers.forEach((text, index) => {
         cy.get("table thead tr th").eq(index).should("have.text", text)

@@ -1,6 +1,6 @@
 import { addHours, addMinutes } from "date-fns"
-import SurveyFeedback from "../../../../../../src/services/entities/SurveyFeedback"
 import { type SwitchingFeedbackResponse } from "../../src/types/SurveyFeedback"
+import SurveyFeedback from "@/services/entities/SurveyFeedback"
 
 const getDate = ({ minutes, hours }: { minutes: number; hours: number }) => {
   let date = new Date()
@@ -36,7 +36,7 @@ const clickSkipFeedbackButton = () => {
   cy.get("button").contains("Skip feedback").click()
 }
 
-const verifyFeedback = (data: SwitchingFeedbackResponse, expectedUserName = "Supervisor") => {
+const verifyFeedback = (data: SwitchingFeedbackResponse, expectedUserName = "GeneralHandler") => {
   cy.task("getAllFeedbacksFromDatabase").then((result) => {
     const feedbackResults = result as SurveyFeedback[]
     const feedback = feedbackResults[0]
@@ -46,7 +46,7 @@ const verifyFeedback = (data: SwitchingFeedbackResponse, expectedUserName = "Sup
   })
 }
 
-const insertFeedback = (createdAt: Date, username = "Supervisor") => {
+const insertFeedback = (createdAt: Date, username = "GeneralHandler") => {
   cy.task("insertFeedback", {
     username,
     response: { skipped: true },
@@ -71,7 +71,7 @@ describe("Switching Bichard Version Feedback Form", () => {
   beforeEach(() => {
     cy.viewport(1280, 720)
     cy.task("clearAllFeedbacksFromDatabase")
-    cy.loginAs("Supervisor")
+    cy.loginAs("GeneralHandler")
   })
 
   it("will go back to the case list page when I press the back button", () => {
