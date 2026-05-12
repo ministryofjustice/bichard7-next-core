@@ -1,31 +1,31 @@
-import type { ReportDataMap } from "services/api/BichardV1Report"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import {
-  bailsColumns,
-  domesticViolenceColumns,
-  exceptionsColumns,
-  warrantsColumns,
-  userPerformanceSummaryColumns
-} from "types/reports/Columns"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
-import type { ExceptionReportDto, CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
+import type { CaseForExceptionReportDto, ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type {
-  ReportConfig,
-  FlatReportConfig,
-  GroupedReportConfig,
-  NestedGroupedReportConfig
-} from "types/reports/Config"
-import type {
-  UserPerformanceDetailDto,
   CodeDetailDto,
-  CodeDetailUserDto
+  CodeDetailUserDto,
+  UserPerformanceDetailDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 import type {
   UserForPerformanceSummaryDto,
   UserPerformanceSummaryDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
+import type { ReportDataMap } from "services/api/BichardV1Report"
+import {
+  bailsColumns,
+  domesticViolenceColumns,
+  exceptionsColumns,
+  userPerformanceSummaryColumns,
+  warrantsColumns
+} from "types/reports/Columns"
+import type {
+  FlatReportConfig,
+  GroupedReportConfig,
+  NestedGroupedReportConfig,
+  ReportConfig
+} from "types/reports/Config"
 
 export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
   bails: {
@@ -72,10 +72,11 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
     structure: "nested",
     endpoint: V1.CasesReportsUserPerformanceDetail,
     outerGroupNameKey: "date",
-    outerDataListKey: "codeDetails",
+    outerDataListKeys: ["triggers", "exceptions"],
     innerGroupNameKey: "description",
     innerDataListKey: "users",
     columns: [],
+    formatter: "date",
     reportType: "user detail"
   } satisfies NestedGroupedReportConfig<UserPerformanceDetailDto, CodeDetailDto, CodeDetailUserDto>
 }

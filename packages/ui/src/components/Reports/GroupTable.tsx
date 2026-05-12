@@ -1,13 +1,12 @@
-import React from "react"
-import { ReportConfig } from "types/reports/Config"
-import { isRecordArray } from "services/reports/utils/isRecordArray"
-import { isRecord } from "services/reports/utils/isRecord"
-import { ReportTableHeader } from "./ReportTableHeader"
-import { ReportTableBody } from "./ReportTableBody"
-import { Table } from "components/Table"
-import { ReportContainer } from "./GroupTable.styles"
 import { ensureString } from "@/services/reports/utils/ensureString"
 import { formatGroupName } from "@/services/reports/utils/formatGroupName"
+import { Table } from "components/Table"
+import { isRecord } from "services/reports/utils/isRecord"
+import { isRecordArray } from "services/reports/utils/isRecordArray"
+import { ReportConfig } from "types/reports/Config"
+import { ReportContainer } from "./GroupTable.styles"
+import { ReportTableBody } from "./ReportTableBody"
+import { ReportTableHeader } from "./ReportTableHeader"
 import { Totals } from "./Totals"
 
 interface GroupedTableProps<T> {
@@ -19,6 +18,8 @@ export const GroupTable = <T extends Record<string, unknown>>({ config, groups }
   if (config.structure !== "grouped") {
     return null
   }
+
+  //console.log(config, groups)
 
   const renderableGroups = groups.map((group) => {
     const groupName = ensureString(group[config.groupNameKey])

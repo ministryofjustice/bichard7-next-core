@@ -22,8 +22,9 @@ export const CodeDetailDtoSchema = z.object({
 })
 
 export const UserPerformanceDetailDtoSchema = z.object({
-  codeDetails: CodeDetailDtoSchema.array(),
-  date: dateLikeToDate
+  date: dateLikeToDate,
+  exceptions: CodeDetailDtoSchema.array(),
+  triggers: CodeDetailDtoSchema.array()
 })
 
 export type CodeDetailDto = z.infer<typeof CodeDetailDtoSchema>

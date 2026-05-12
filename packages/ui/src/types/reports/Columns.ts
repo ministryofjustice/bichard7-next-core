@@ -1,8 +1,9 @@
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
+import type { CodeDetailUserDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 import type { UserForPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 
 export type ReportColumn<TRow> = {
   header: string
@@ -91,4 +92,10 @@ export const userPerformanceSummaryColumns: ReportColumn<UserForPerformanceSumma
   { header: "Exceptions Resolved Today", key: "exceptionsResolved" },
   { header: "Triggers Resolved Today", key: "triggerResolved" },
   { header: "Total Exceptions/Triggers Still Locked", key: "totalNumberStillLocked" }
+] as const
+
+export const userPerformanceDetailColumns: ReportColumn<CodeDetailUserDto>[] = [
+  { header: "UserID", key: "username" },
+  { header: "Number of Exceptions Resolved Today", key: "resolved" },
+  { header: "Total number of exceptions still locked", key: "totalLocked" }
 ] as const
