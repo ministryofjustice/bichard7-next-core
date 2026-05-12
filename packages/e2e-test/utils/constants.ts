@@ -3,6 +3,7 @@ export const UPDATE_TYPE = "K"
 export const OFFENCE_UPDATE_TYPE = "I"
 export const DEFAULT_QTY_UNITS = "00"
 export const PNC_COURT_CODE_WHEN_DEFENDANT_FAILED_TO_APPEAR = "9998"
+export const SET_BY_PROCESSOR = ""
 
 //FSC
 export const UPDATE_TYPE_FIELD_LENGTH = 1
