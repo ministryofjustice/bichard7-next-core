@@ -20,8 +20,6 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
   const renderableOuterGroups = groups.map((group) => {
     const outerGroupName = ensureString(group[config.outerGroupNameKey])
-    console.log("--------------------")
-    console.log(group)
     const cleanRows = config.outerDataListKeys.flatMap((key, columnsIndex) => {
       const innerGroups = group[key]
       if (!isRecordArray(innerGroups)) {
@@ -35,7 +33,6 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
         })
       )
     })
-    console.log(cleanRows)
 
     return {
       outerGroupName,
@@ -58,7 +55,7 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
   return (
     <ReportContainer className="report-container">
       {renderableOuterGroups.map(({ outerGroupName, rows }) => {
-        const sectionId = `outer-group-${outerGroupName}`
+        const outerSectionId = `outer-group-${outerGroupName}`
 
         const renderableInnerGroups = rows.map((group) => {
           const innerGroupName = ensureString(group[config.innerGroupNameKey])
@@ -76,31 +73,31 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
         })
 
         return (
-          <>
-            <h3 id={sectionId} className="govuk-heading-m">
+          <section key={outerSectionId} aria-labelledby={outerSectionId}>
+            <h3 id={outerSectionId} className="govuk-heading-m">
               {formatGroupName(config, outerGroupName)}
             </h3>
 
-            {renderableInnerGroups.map((innerGroup) => {
+            {renderableInnerGroups.map((innerGroup, index) => {
+              const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
               const innerConfig = getChildConfig(config, innerGroup.columnsIndex)
 
-              const sectionId = `inner-group-${innerGroup.innerGroupName}`
+              const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
 
-              const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
               const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
 
               return (
-                <>
-                  <h3 id={sectionId} className="govuk-heading-m">
+                <section key={innerSectionId} aria-labelledby={innerSectionId}>
+                  <h3 id={innerSectionId} className="govuk-heading-m">
                     {innerGroupName}
 
                     <Totals totals={innerGroup.totals} totalsConfig={config.totalsConfig} />
                   </h3>
-                  <ReportTable key={sectionId} config={innerConfig} rows={innerRows} tableName={innerGroupName} />{" "}
-                </>
+                  <ReportTable key={innerSectionId} config={innerConfig} rows={innerRows} tableName={innerGroupName} />
+                </section>
               )
             })}
-          </>
+          </section>
         )
       })}
     </ReportContainer>
