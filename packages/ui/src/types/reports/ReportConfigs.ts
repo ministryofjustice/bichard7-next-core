@@ -17,6 +17,7 @@ import {
   bailsColumns,
   domesticViolenceColumns,
   exceptionsColumns,
+  userPerformanceDetailColumns,
   userPerformanceSummaryColumns,
   warrantsColumns
 } from "types/reports/Columns"
@@ -72,11 +73,15 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
     structure: "nested",
     endpoint: V1.CasesReportsUserPerformanceDetail,
     outerGroupNameKey: "date",
-    outerDataListKeys: ["triggers", "exceptions"],
+    outerDataListKeys: ["exceptions", "triggers"],
     innerGroupNameKey: "description",
     innerDataListKey: "users",
-    columns: [],
+    columns: userPerformanceDetailColumns,
     formatter: "date",
+    totalsConfig: [
+      { key: "resolved", label: "Resolved" },
+      { key: "totalLocked", label: "Locked" }
+    ],
     reportType: "user detail"
   } satisfies NestedGroupedReportConfig<UserPerformanceDetailDto, CodeDetailDto, CodeDetailUserDto>
 }

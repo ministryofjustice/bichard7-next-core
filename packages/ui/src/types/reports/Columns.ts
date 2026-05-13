@@ -94,8 +94,15 @@ export const userPerformanceSummaryColumns: ReportColumn<UserForPerformanceSumma
   { header: "Total Exceptions/Triggers Still Locked", key: "totalNumberStillLocked" }
 ] as const
 
-export const userPerformanceDetailColumns: ReportColumn<CodeDetailUserDto>[] = [
-  { header: "UserID", key: "username" },
-  { header: "Number of Exceptions Resolved Today", key: "resolved" },
-  { header: "Total number of exceptions still locked", key: "totalLocked" }
+export const userPerformanceDetailColumns: ReportColumn<CodeDetailUserDto>[][] = [
+  [
+    { header: "User ID", key: "username" },
+    { header: "Number of exceptions resolved Today", key: "resolved" },
+    { header: "Total number of exceptions still locked", key: "totalLocked" }
+  ],
+  [
+    { header: "User ID", key: "username" },
+    { header: "Number of triggers resolved Today", key: "resolved" },
+    { header: "Total number of triggers still locked", key: "totalLocked" }
+  ]
 ] as const
