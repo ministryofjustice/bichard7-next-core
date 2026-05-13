@@ -19,6 +19,7 @@ import type { Fsc } from "./convertFsc"
 import convertFsc from "./convertFsc"
 import type { Ids } from "./convertIds"
 import convertIds from "./convertIds"
+import type { Pcr } from "./convertPcr"
 import convertPcr from "./convertPcr"
 import type { Rcc } from "./convertRcc"
 import convertRcc from "./convertRcc"
@@ -51,7 +52,7 @@ type GmhAndGmt = {
   gmt: string
 }
 
-export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences & GmhAndGmt) | (Txt & GmhAndGmt)
+export type PncAsnQueryJson = (Fsc & Ids & Pcr & AsnQueryOffences & GmhAndGmt) | (Txt & GmhAndGmt)
 export type PncRemandJson = Fsc & Ids & Asr & Rem
 export type PncNormalDisposalJson = Fsc &
   Ids &
