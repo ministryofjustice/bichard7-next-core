@@ -18,7 +18,7 @@ describe("dateRange", () => {
       const result = dateRange(parseISO("2025-04-30"))
 
       expect(result).toBeInstanceOf(Error)
-      expect((result as Error).message).toBe("Date cannot be more than 12 months")
+      expect((result as Error).message).toBe("Date cannot be more than 12 months ago")
     })
   })
 

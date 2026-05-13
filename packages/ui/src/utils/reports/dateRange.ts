@@ -11,7 +11,7 @@ export const dateRange = (dateFrom: Date): Result<DateRange> => {
   const maxFromDate = startOfMonth(subMonths(today, 12))
 
   if (isBefore(dateFrom, maxFromDate)) {
-    return new Error("Date cannot be more than 12 months")
+    return new Error("Date cannot be more than 12 months ago")
   }
 
   const isFirstOfMonth = getDate(dateFrom) === 1

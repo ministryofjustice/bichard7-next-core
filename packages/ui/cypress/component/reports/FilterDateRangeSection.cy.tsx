@@ -85,10 +85,18 @@ describe("ReportSelectionFilter", () => {
   })
 
   describe("valid submission", () => {
-    it("calls the API when a valid date range is entered and 'Run report' is clicked", () => {
+    it("calls the API when a valid date range is entered and 'Run report' is clicked when from date is today", () => {
       cy.mount(<ReportSelectionFilter />)
       selectWarrants()
       typeFromDate(today)
+      clickRunReport()
+      cy.get("@downloadApi").should("exist")
+    })
+
+    it("calls the API when a valid date range is entered and 'Run report' is clicked when from date is the start of 2 months ago", () => {
+      cy.mount(<ReportSelectionFilter />)
+      selectWarrants()
+      typeFromDate(startOfMonth(subMonths(today, 2)))
       clickRunReport()
       cy.get("@downloadApi").should("exist")
     })

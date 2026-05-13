@@ -6,6 +6,7 @@ import {
   DATE_EXCEEDS_MAX_RANGE,
   DATE_CANNOT_BE_BEFORE_DATE_FROM
 } from "./validationMessages"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 export const validateDateRange = (dateFromStr: string, dateToStr: string) => {
   const fromError = validateDateField(dateFromStr)
@@ -27,7 +28,7 @@ export const validateDateRange = (dateFromStr: string, dateToStr: string) => {
 
   const range = dateRange(dateFrom)
 
-  if (range instanceof Error) {
+  if (isError(range)) {
     return { fromError: range.message, toError: null }
   }
 
