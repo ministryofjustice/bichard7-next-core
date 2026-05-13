@@ -18,6 +18,7 @@ interface Props {
   errorMessage?: string
   minValue?: Date
   maxValue?: Date
+  disabled?: boolean
 }
 
 const dateActions = {
@@ -47,7 +48,8 @@ const DateInput: React.FC<Props> = ({
   showError,
   errorMessage,
   minValue,
-  maxValue
+  maxValue,
+  disabled
 }: Props) => {
   const actionType = dateActions[dateType] as ActionType
   const renderSameDateButton = (dateType === "to" || dateType === "resolvedTo") && dateRange?.from
@@ -91,6 +93,7 @@ const DateInput: React.FC<Props> = ({
         }}
         min={minValue ? format(minValue, "yyyy-MM-dd") : undefined}
         max={maxValue ? format(maxValue, "yyyy-MM-dd") : undefined}
+        disabled={disabled}
       />
     </FormGroup>
   )
