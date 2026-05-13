@@ -1,3 +1,4 @@
+import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
@@ -5,11 +6,13 @@ import { SyntheticEvent } from "react"
 
 interface SelectReportDropdownProps {
   handleChange: (event: SyntheticEvent<HTMLSelectElement>) => void
-  reportType: ReportType | undefined
+  reportType: ReportType | AutomatedReportType | undefined
   error?: string | null
 }
 
 export const SelectReportDropdown: React.FC<SelectReportDropdownProps> = ({ handleChange, reportType, error }) => {
+  const dropdownOptions = [...Object.entries(REPORT_TYPE_MAP), ...Object.entries(AUTOMATED_REPORT_TYPE_MAP)]
+
   return (
     <>
       <h2 className="govuk-heading-m">{"Reports"}</h2>
@@ -38,7 +41,7 @@ export const SelectReportDropdown: React.FC<SelectReportDropdownProps> = ({ hand
           <option disabled value="">
             {"Select report..."}
           </option>
-          {Object.entries(REPORT_TYPE_MAP).map(([key, value]) => (
+          {dropdownOptions.map(([key, value]) => (
             <option key={key} value={key}>
               {value}
             </option>

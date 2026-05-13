@@ -16,7 +16,7 @@ describe("ReportSelectionFilter", () => {
 
   it("renders the correct fields for date range section", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     cy.get("div#date-range-section").should("exist")
     cy.get("div#date-range-section").find("h2").should("have.text", "Date range")
     cy.get("div#date-range-section").find("div#report-selection-date-from").should("exist")
@@ -25,31 +25,30 @@ describe("ReportSelectionFilter", () => {
 
   it("calls API when valid date range is entered and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
+    cy.get('select[name="select-case-type"]').select("Warrants")
     const todayStr = format(today, "yyyy-MM-dd")
     cy.get("div#date-range-section").find("input#date-from").type(todayStr)
     cy.get("div#date-range-section").find("input#date-to").type(todayStr)
     apiCallCheck(true)
   })
 
-  it("clears Date From value when 'Clear filters' is clicked", () => {
+  it("hides Date From value when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    cy.get("div#date-range-section").find("div#report-selection-date-from").type("2026-02-02")
     cy.get("button#clear-filters").click()
-    cy.get("div#date-range-section").find("div#report-selection-date-from").should("have.value", "")
+    cy.get("div#date-range-section").find("div#report-selection-date-from").should("not.exist")
   })
 
-  it("clears Date To value when 'Clear filters' is clicked", () => {
+  it("hides Date To value when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
 
-    cy.get("div#date-range-section").find("div#report-selection-date-to").type("2026-02-02")
     cy.get("button#clear-filters").click()
-    cy.get("div#date-range-section").find("div#report-selection-date-to").should("have.value", "")
+    cy.get("div#date-range-section").find("div#report-selection-date-to").should("not.exist")
   })
 
   it("'This field is required' message is displayed when 'Date from' has no value and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     cy.get("button#run-report").click()
     cy.get("div#report-selection-date-from").find("p.govuk-error-message").should("contain", "This field is required")
     apiCallCheck(false)
@@ -57,7 +56,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'This field is required' message is displayed when 'Date to' has no value and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     cy.get("button#run-report").click()
     cy.get("div#report-selection-date-to").find("p.govuk-error-message").should("contain", "This field is required")
     apiCallCheck(false)
@@ -65,7 +64,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'Date cannot be in the future' message is displayed when 'Date from' has a future date and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     const futureDate = format(addDays(new Date(), 1), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-from").type(futureDate)
 
@@ -79,7 +78,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'Date cannot be in the future' message is displayed when 'Date to' has a future date and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     const futureDate = format(addDays(today, 1), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-to").type(futureDate)
 
@@ -93,7 +92,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'Date should be within the last 31 days' message is displayed when 'Date from' has date more than 31 days ago and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     const pastDate = format(subDays(new Date(), 32), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-from").type(pastDate)
 
@@ -107,7 +106,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'Date should be within the last 31 days' message is displayed when 'Date to' has date more than 31 days ago and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     const pastDate = format(subDays(new Date(), 32), "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-to").type(pastDate)
 
@@ -121,7 +120,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'Error messages are displayed when 'Date from' is before 'Date to' and 'Run report' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-
+    cy.get('select[name="select-case-type"]').select("Warrants")
     const pastDateStr = format(subDays(new Date(), 5), "yyyy-MM-dd")
     const todayStr = format(today, "yyyy-MM-dd")
     cy.get("div#date-range-section").find("div#report-selection-date-from").type(todayStr)
