@@ -162,7 +162,6 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
     }
   }
 
-  // TEMP: To be removed before merging PR
   converters["GMH"] = (value: string) => {
     return { gmh: value }
   }
@@ -170,7 +169,6 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
   converters["GMT"] = (value: string) => {
     return { gmt: value }
   }
-  // TEMP: To be removed before merging PR
 
   for (const { name, value } of segments) {
     currentOffenceSegment = getOffenceSegment(name)
