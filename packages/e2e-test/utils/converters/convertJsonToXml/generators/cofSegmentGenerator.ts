@@ -1,14 +1,14 @@
 import type { MockOffence } from "../../../../types/MockAsnQueryResponse"
 import * as CONSTANT from "../../../constants"
 import { convertToPncDate, convertToPncTime } from "../helpers/convertToPncDateTime"
-import { toApcoOffenceCode } from "../helpers/formatters"
+import { toAcpoOffenceCode } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
 const cofSegmentGenerator = (offence: MockOffence): string => {
   const referenceNumber = String(offence.courtOffenceSequenceNumber).padStart(3, "0")
   const offenceQualifier1 = offence.roleQualifiers?.join("")
   const offenceQualifier2 = offence.legislationQualifiers?.join("")
-  const acpoOffenceCode = toApcoOffenceCode(offence.acpoOffenceCode)
+  const acpoOffenceCode = toAcpoOffenceCode(offence.acpoOffenceCode)
   const cjsOffenceCode = offence.cjsOffenceCode
   const offenceStartDate = convertToPncDate(offence.offenceStartDate)
   const offenceStartTime = offence.offenceStartTime && convertToPncTime(offence.offenceStartTime)
@@ -20,7 +20,7 @@ const cofSegmentGenerator = (offence: MockOffence): string => {
     [referenceNumber, CONSTANT.REFERENCE_NUMBER_FIELD_LENGTH],
     [offenceQualifier1, CONSTANT.OFFENCE_QUALIFIER1_FIELD_LENGTH],
     [offenceQualifier2, CONSTANT.OFFENCE_QUALIFIER2_FIELD_LENGTH],
-    [acpoOffenceCode, CONSTANT.APCO_OFFENCE_CODE_FIELD_LENGTH],
+    [acpoOffenceCode, CONSTANT.ACPO_OFFENCE_CODE_FIELD_LENGTH],
     [cjsOffenceCode, CONSTANT.CJS_OFFENCE_CODE_FIELD_LENGTH],
     [offenceStartDate, CONSTANT.OFFENCE_START_DATE_FIELD_LENGTH],
     [offenceStartTime, CONSTANT.OFFENCE_START_TIME_FIELD_LENGTH],

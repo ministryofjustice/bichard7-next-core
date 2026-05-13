@@ -1,7 +1,7 @@
 import type { ArrestOffence } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import * as CONSTANT from "../../../constants"
 import { convertToPncDate, convertToPncTime } from "../helpers/convertToPncDateTime"
-import { toApcoOffenceCode } from "../helpers/formatters"
+import { toAcpoOffenceCode } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
 const UNUSED = ""
@@ -10,7 +10,7 @@ const achSegmentGenerator = (offence: ArrestOffence): string => {
   const arrestOffenceNumber = offence.courtOffenceSequenceNumber
     ? String(offence.courtOffenceSequenceNumber)
     : undefined
-  const apcoOffenceCode = toApcoOffenceCode(offence.npccOffenceCode)
+  const acpoOffenceCode = toAcpoOffenceCode(offence.npccOffenceCode)
   const cjsOffenceCode = offence.offenceCode.offenceCodeType === "cjs" ? offence.offenceCode.cjsOffenceCode : undefined
   const locationOfOffence = offence.locationText?.locationText
   const committedOnBail = offence.committedOnBail ? "Y" : "N"
@@ -25,7 +25,7 @@ const achSegmentGenerator = (offence: ArrestOffence): string => {
     [UNUSED, CONSTANT.CRIME_OFFENCE_REFERENCE_FIELD_LENGTH],
     [arrestOffenceNumber, CONSTANT.ARREST_OFFENCE_NO_FIELD_LENGTH],
     [UNUSED, CONSTANT.OFFENCE_QUALIFIER_FIELD_LENGTH],
-    [apcoOffenceCode, CONSTANT.ACH_APCO_OFFENCE_CODE_FIELD_LENGTH],
+    [acpoOffenceCode, CONSTANT.ACH_ACPO_OFFENCE_CODE_FIELD_LENGTH],
     [UNUSED, CONSTANT.OFFENCE_DESCRIPTION_FIELD_LENGTH],
     [cjsOffenceCode, CONSTANT.CJS_OFFENCE_CODE_FIELD_LENGTH],
     [UNUSED, CONSTANT.METHOD_USED_FIELD_LENGTH],
