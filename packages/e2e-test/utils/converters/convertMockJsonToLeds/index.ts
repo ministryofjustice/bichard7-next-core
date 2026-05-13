@@ -1,4 +1,3 @@
-import { asnQueryResponseSchema } from "@moj-bichard7/core/schemas/leds/asnQueryResponse"
 import { subsequentDisposalResultsRequestSchema } from "@moj-bichard7/core/schemas/leds/subsequentDisposalResultsRequest"
 import type { AddDisposalRequest } from "@moj-bichard7/core/types/leds/AddDisposalRequest"
 import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
@@ -14,8 +13,6 @@ type LedsJson = AsnQueryResponse | RemandRequest | AddDisposalRequest | Subseque
 
 const convertMockJsonToLeds = (code: string, mockJson: object): LedsJson => {
   switch (code.toUpperCase()) {
-    case Operation.AsnQueryResponse:
-      return asnQueryResponseSchema.parse(mockJson)
     case Operation.Remand:
       return convertRemandRequestMockJsonToLeds(mockJson as MockRemandRequest)
     case Operation.AddDisposal:

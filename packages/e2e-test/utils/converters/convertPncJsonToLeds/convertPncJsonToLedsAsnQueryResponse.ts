@@ -99,7 +99,7 @@ const mapOffences = (offences: (Cof & Partial<Adj> & { disposals: Dis[] })[]): O
   return mappedOffences
 }
 
-const mapPncErrorToLeds = (error: string): string => {
+export const mapPncErrorToLeds = (error: string): string => {
   if (error.toUpperCase().includes("I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF")) {
     const asn = error.match(/I1008 - GWAY - ENQUIRY ERROR ARREST\/SUMMONS REF \((?<asn>.*)\) NOT FOUND/)?.groups?.asn
     return `No matching arrest reports found for asn: ${asn}`

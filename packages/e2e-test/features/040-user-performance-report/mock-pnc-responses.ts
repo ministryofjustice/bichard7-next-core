@@ -8,7 +8,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "00/448754K",
+      personUrn: "2000/448754K",
       courtCaseReference: "97/1626/008395Q",
       court: {
         courtIdentityType: "code",
@@ -78,7 +78,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "00/410801G",
+      personUrn: "2000/410801G",
       courtCaseReference: "97/1626/008395Q",
       court: {
         courtIdentityType: "code",

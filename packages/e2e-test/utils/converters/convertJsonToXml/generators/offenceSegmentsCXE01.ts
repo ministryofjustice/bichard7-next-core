@@ -3,10 +3,11 @@ import { adjSegmentFromAsnQueryResponse } from "./adjSegment"
 import ccrSegmentGenerator from "./ccrSegmentGenerator"
 import cofSegmentGenerator from "./cofSegmentGenerator"
 import disSegmentGenerator from "./disSegmentGenerator"
+import pcrSegmentGenerator from "./pcrSegmentGenerator"
 
 const offenceSegmentsCXE01 = (mockJson: MockAsnQueryResponse): string => {
   const allSegments = mockJson.disposals.flatMap((disposal) => {
-    const ccr = ccrSegmentGenerator(disposal)
+    const headerSegment = disposal.penaltyCaseRefNo ? pcrSegmentGenerator(disposal) : ccrSegmentGenerator(disposal)
 
     const childSegments = disposal.offences.flatMap((offence) => {
       const cof = cofSegmentGenerator(offence)
@@ -16,7 +17,7 @@ const offenceSegmentsCXE01 = (mockJson: MockAsnQueryResponse): string => {
       return [cof, adj, ...dis]
     })
 
-    return [ccr, ...childSegments]
+    return [headerSegment, ...childSegments]
   })
 
   return allSegments.join("")

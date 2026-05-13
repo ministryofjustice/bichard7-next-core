@@ -1,20 +1,46 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000706RENQASIPNCA05A73000017300000120210903102273000001                                             050002904</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/13H     JUDGE                   </IDS>
-        <CCR>K21/2732/9R                    </CCR>
-        <COF>K001                 RR84042 28112010                </COF>
-      </ASI>
-      <GMT>000008073ENQR000706R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "JUDGE",
+      croNumber: "",
+      gmh: "073ENQR000706RENQASIPNCA05A73000017300000120210903102273000001                                             050002904",
+      gmt: "000008073ENQR000706R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/13H",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1101ZD0100000410907X",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2732/000009R",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "RR84042",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "29e1518f-c644-425c-96e8-736dbfe4cf21",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
@@ -25,7 +51,7 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "21/13H",
+      personUrn: "2021/13H",
       courtCaseReference: "21/2732/000009R",
       court: {
         courtIdentityType: "code",
@@ -62,19 +88,61 @@ export default (_: string, { policeApi }: Bichard) => [
   }),
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000707RENQASIPNCA05A73000017300000120210903102273000001                                             050002906</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/13H     JUDGE                   </IDS>
-        <CCR>K21/2732/9R                    </CCR>
-        <COF>K001                 RR84042 28112010                </COF>
-        <ADJ>INOT GUILTY   GUILTY        260920110000 </ADJ>
-        <DIS>I1002M12                                                                                                 </DIS>
-      </ASI>
-      <GMT>000010073ENQR000707R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "JUDGE",
+      croNumber: "",
+      gmh: "073ENQR000707RENQASIPNCA05A73000017300000120210903102273000001                                             050002906",
+      gmt: "000010073ENQR000707R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/13H",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1101ZD0100000410907X",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2732/000009R",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "RR84042",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Not Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "58caeccf-1990-457d-8eeb-cc7fda01c33d",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "a7b51b5f-aacb-4fbb-a66c-9e8e81270e0b",
+                  disposalDate: "2011-09-26",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "766a2a2b-7a6d-4c94-9e29-790f0bb5fb95",
+                  disposalCode: 1002,
+                  disposalDuration: {
+                    units: "months",
+                    count: 12
+                  },
+                  disposalText: ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1

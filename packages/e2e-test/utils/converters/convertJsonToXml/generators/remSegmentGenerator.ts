@@ -1,4 +1,4 @@
-import { AppearanceResult } from "@moj-bichard7/core/types/leds/RemandRequest"
+import type { AppearanceResult } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { MockRemandRequest } from "../../../../types/MockRemandRequest"
 import * as CONSTANT from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDateTime"

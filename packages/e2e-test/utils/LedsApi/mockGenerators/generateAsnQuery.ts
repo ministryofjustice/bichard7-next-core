@@ -3,27 +3,21 @@ import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import { HttpStatusCode } from "axios"
 import { randomUUID } from "crypto"
 import type { LedsMock } from "../../../types/LedsMock"
-import { convertPncJsonToLedsAsnQueryResponse } from "../../converters/convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
-import { convertPncXmlToJson } from "../../converters/convertPncXmlToJson"
-import type { PncAsnQueryJson } from "../../converters/convertPncXmlToJson/convertPncXmlToJson"
+import type { MockAsnQueryErrorResponse } from "../../../types/MockAsnQueryErrorResponse"
+import type { MockAsnQueryResponse } from "../../../types/MockAsnQueryResponse"
+import convertAsnQueryResponseMockJsonToLeds from "../../converters/convertMockJsonToLeds/convertAsnQueryResponseMockJsonToLeds"
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
 
 export const generateAsnQuery = (
-  responseXml: string,
+  mockJson: MockAsnQueryResponse | MockAsnQueryErrorResponse,
   count: number,
   asn: string,
   personId: string,
   reportId: string,
   courtCaseId: string
 ): LedsMock => {
-  const pncJson = convertPncXmlToJson<PncAsnQueryJson>(responseXml)
-  const ledsAsnQueryResponse = convertPncJsonToLedsAsnQueryResponse(pncJson, {
-    asn,
-    personId,
-    reportId,
-    courtCaseId
-  })
+  const ledsAsnQueryResponse = convertAsnQueryResponseMockJsonToLeds(mockJson, personId, reportId, courtCaseId)
 
   const request = createMockRequest({
     path: endpoints.asnQuery,
