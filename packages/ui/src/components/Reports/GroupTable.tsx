@@ -19,8 +19,6 @@ export const GroupTable = <T extends Record<string, unknown>>({ config, groups }
     return null
   }
 
-  //console.log(config, groups)
-
   const renderableGroups = groups.map((group) => {
     const groupName = ensureString(group[config.groupNameKey])
     const rawDataList = group[config.dataListKey]
