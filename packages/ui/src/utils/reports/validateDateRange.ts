@@ -1,6 +1,11 @@
-import { isBefore } from "date-fns"
+import { isAfter } from "date-fns"
+import { dateRange } from "./dateRange"
 import { validateDateField } from "./validateDateField"
-import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "./validationMessages"
+import {
+  DATE_CANNOT_BE_AFTER_DATE_TO,
+  DATE_EXCEEDS_MAX_RANGE,
+  DATE_CANNOT_BE_BEFORE_DATE_FROM
+} from "./validationMessages"
 
 export const validateDateRange = (dateFromStr: string, dateToStr: string) => {
   const fromError = validateDateField(dateFromStr)
@@ -13,11 +18,21 @@ export const validateDateRange = (dateFromStr: string, dateToStr: string) => {
   const dateFrom = new Date(dateFromStr)
   const dateTo = new Date(dateToStr)
 
-  if (isBefore(dateTo, dateFrom)) {
+  if (isAfter(dateFrom, dateTo)) {
     return {
       fromError: DATE_CANNOT_BE_AFTER_DATE_TO,
       toError: DATE_CANNOT_BE_BEFORE_DATE_FROM
     }
+  }
+
+  const range = dateRange(dateFrom)
+
+  if (range instanceof Error) {
+    return { fromError: range.message, toError: null }
+  }
+
+  if (isAfter(dateTo, range.endDate)) {
+    return { fromError: null, toError: DATE_EXCEEDS_MAX_RANGE }
   }
 
   return { fromError: null, toError: null }
