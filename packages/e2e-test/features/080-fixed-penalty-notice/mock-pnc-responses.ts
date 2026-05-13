@@ -17,6 +17,7 @@ export default (_: string, { policeApi }: Bichard) => [
       ownerCode: "01ZD",
       disposals: [
         {
+          penaltyCaseRefNo: "01ZD/1234/09",
           crimeOffenceReferenceNumber: "",
           courtCaseId: SET_BY_PROCESSOR,
           courtCaseReference: "",
@@ -39,7 +40,7 @@ export default (_: string, { policeApi }: Bichard) => [
                 {
                   disposalId: "da73a8ea-0800-41c7-b187-e7dfa8cf7091",
                   disposalCode: 1109,
-                  disposalEffectiveDate: "0-.0-80",
+                  disposalEffectiveDate: "",
                   disposalText: ""
                 }
               ]

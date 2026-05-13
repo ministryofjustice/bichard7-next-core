@@ -7,6 +7,7 @@ const mockOffenceSchema = offenceSchema.extend({
 
 const mockDisposalSchema = disposalSchema.extend({
   crimeOffenceReferenceNumber: z.string(),
+  penaltyCaseRefNo: z.string().optional(),
   offences: z.array(mockOffenceSchema)
 })
 
@@ -18,5 +19,6 @@ export const mockAsnQueryResponseSchema = asnQueryResponseSchema.extend({
   gmt: z.string()
 })
 
+export type MockOffence = z.infer<typeof mockOffenceSchema>
 export type MockDisposal = z.infer<typeof mockDisposalSchema>
 export type MockAsnQueryResponse = z.infer<typeof mockAsnQueryResponseSchema>
