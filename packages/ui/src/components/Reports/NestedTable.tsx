@@ -80,14 +80,14 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
               const innerConfig: FlatReportConfig<Record<string, unknown>> = {
                 structure: "flat",
-                columns: resolvedColumns as ReportColumn<Record<string, unknown>>[],
+                columns: resolvedColumns,
                 endpoint: config.endpoint,
                 reportType: config.reportType
               }
 
               const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
 
-              const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
+              const innerRows = innerGroup[config.innerDataListKey]
 
               return (
                 <section key={innerSectionId} aria-labelledby={innerSectionId}>
