@@ -5,7 +5,7 @@ describe("NestedTable", () => {
   const mockConfig = {
     structure: "nested",
     outerGroupNameKey: "region",
-    outerDataListKeys: "allTeams",
+    outerDataListKey: "allTeams",
     innerGroupNameKey: "teamName",
     innerDataListKey: "members",
     columnSelectorKey: "type",
