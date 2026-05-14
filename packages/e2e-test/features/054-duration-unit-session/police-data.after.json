@@ -8,13 +8,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100001729C",
+          "arrestSummonsReference": "26/0000/00/100002559E",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001306A",
-          "crimeReference": "RFCGKYSQ 9ABER4",
+          "courtCaseReferenceNumber": "26/2576/000610P",
+          "crimeReference": "WRJFKTPUQPDYLMY",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -32,7 +32,8 @@
           "results": [
             {
               "disposalCode": "3102",
-              "disposalQualifierCodes": []
+              "disposalQualifierCodes": [],
+              "disposalText": "10 SESSIONS"
             }
           ],
           "roleQualifier": [],
@@ -43,13 +44,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100001729C",
+          "arrestSummonsReference": "26/0000/00/100002559E",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "RT88191",
           "committedOnBail": false,
           "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/9998/001306A",
-          "crimeReference": "BAFBTCZBWUW74T6",
+          "courtCaseReferenceNumber": "26/2576/000610P",
+          "crimeReference": "52AID-QU8SHAWBM",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -67,7 +68,8 @@
           "results": [
             {
               "disposalCode": "3110",
-              "disposalQualifierCodes": []
+              "disposalQualifierCodes": [],
+              "disposalText": "5 SESSIONS"
             }
           ],
           "roleQualifier": [],
@@ -76,10 +78,10 @@
       ],
       "convictionDate": "2011-09-26",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001306A",
+      "courtCaseReference": "26/2576/000610P",
       "subsequentAppearances": []
     }
   ],

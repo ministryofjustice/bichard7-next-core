@@ -1,76 +1,58 @@
 {
   "disposals": [
     {
-      "id": "8da449db-e0e1-492b-8dbf-ae8cdcaa0241",
-      "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
-      },
-      "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000296W",
       "caseStatusMarker": "C",
       "charges": [
         {
-          "offenceId": "16097bf0-d1ef-43df-8d57-2597fd0aeadc",
-          "arrestSummonsId": "e9ead64f-85dd-48c2-a1a4-aa487c27bab0",
-          "adjudication": "G",
-          "npccOffenceCode": "5.3.6.1",
-          "cjsOffenceCode": "TH68036",
-          "qualifiedCjsCode": "TH68036",
-          "offenceDescription": [],
-          "offenceRoleQualifiers": [],
-          "offenceLegislationQualifiers": [],
-          "offenceChargeNumber": 1,
           "additionalMarker": false,
-          "disposals": [
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100001857R",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68036",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001437T",
+          "crimeReference": "Z1WVG7VN5XJFLWE",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.3.6.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68036",
+          "results": [
             {
-              "id": "08072749-5b41-4a8d-8a55-bdcb36f1ae49",
               "disposalCode": "1116",
-              "disposalQualifierCodes": [],
-              "effectiveDate": "2012-09-26"
+              "disposalQualifierCodes": []
             },
             {
-              "id": "c9988884-e1f6-46a4-9f9f-0b159bfbe8de",
               "disposalCode": "3105",
-              "disposalQualifierCodes": ["BA"],
               "disposalDuration": {
-                "units": "weeks",
-                "count": 12
-              }
+                "count": 12,
+                "units": "weeks"
+              },
+              "disposalQualifierCodes": ["BA"]
             }
           ],
-          "offence": {
-            "version": "6V5E/HxAAgkYLAQQzRMR7O5qGEPXPSdXQD+Yp6kiW1tgSDwNOUyqSNfIYifiIcotfKvMbzApD9LXqBEC+2plCA==",
-            "arrestSummonsReference": "26/0000/00/100000466E",
-            "arrestChargeNumber": 1,
-            "chargeStatusMarker": "C",
-            "committedOnBail": false,
-            "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000296W",
-            "courtCaseChargeNumber": 1,
-            "forceStationChargeOrig": "01ZD",
-            "crimeReference": "",
-            "locationFSCode": "01ZD",
-            "locationAddress": {
-              "locationType": "description",
-              "locationText": "Kingston High Street"
-            },
-            "offencesTakenIntoConsideration": 0,
-            "adjudication": "G",
-            "othersCharged": [],
-            "brcRecord": false,
-            "hasDisposalResults": true,
-            "additionalOffenceMarker": false,
-            "npccOffenceCode": "5.3.6.1",
-            "cjsOffenceCode": "TH68036",
-            "qualifiedCjsCode": "TH68036",
-            "startDate": "2010-11-28",
-            "roleQualifier": [],
-            "legislationQualifier": [],
-            "id": "16097bf0-d1ef-43df-8d57-2597fd0aeadc"
-          }
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
         }
       ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts Hertfordshire St Albans"
+      },
+      "courtCaseReference": "26/9998/001437T",
       "subsequentAppearances": []
     }
   ],

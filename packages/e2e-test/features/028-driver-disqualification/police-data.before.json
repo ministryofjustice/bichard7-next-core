@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100001425X",
+          "arrestSummonsReference": "26/0000/00/100002212C",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "RT88007",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001053A",
-          "crimeReference": "FO5XNTRRI-X3K4I",
+          "courtCaseReferenceNumber": "26/9998/001801N",
+          "crimeReference": "VPWV11/HEDZQ GX",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -36,7 +36,7 @@
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts Hertfordshire St Albans"
       },
-      "courtCaseReference": "26/9998/001053A"
+      "courtCaseReference": "26/9998/001801N"
     }
   ],
   "remands": []

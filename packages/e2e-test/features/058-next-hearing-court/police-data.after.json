@@ -8,13 +8,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100001732F",
+          "arrestSummonsReference": "26/0000/00/100002561G",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001308C",
-          "crimeReference": "CBSAWPFY2UIO3E4",
+          "courtCaseReferenceNumber": "26/6922/000002X",
+          "crimeReference": "RMBSU4FBJRYXJPK",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -32,7 +32,8 @@
           "results": [
             {
               "disposalCode": "4004",
-              "disposalQualifierCodes": []
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2008-10-08"
             }
           ],
           "roleQualifier": [],
@@ -41,10 +42,10 @@
       ],
       "convictionDate": "2008-09-26",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts West Midlands Birmingham Youth Court (Steelehouse L"
+        "courtCode": "6922",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001308C",
+      "courtCaseReference": "26/6922/000002X",
       "subsequentAppearances": []
     }
   ],

@@ -8,13 +8,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100001427Z",
+          "arrestSummonsReference": "26/0000/00/100002213D",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "RT88007",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001055C",
-          "crimeReference": "1SCC5L4OYL5L1L6",
+          "courtCaseReferenceNumber": "26/9998/001802P",
+          "crimeReference": "VHGCIERHKQ0MLPH",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -31,11 +31,14 @@
           "results": [
             {
               "disposalCode": "3096",
-              "disposalQualifierCodes": []
+              "disposalQualifierCodes": [],
+              "disposalText": "Interim disqualification from driving until dealt with. Section "
             },
             {
               "disposalCode": "4047",
-              "disposalQualifierCodes": []
+              "disposalQualifierCodes": [],
+              "disposalText": "Adjourned to 26/10/2011 at 14:00 in Courtroom 01, Croydon Magist",
+              "effectiveDate": "2011-09-26"
             }
           ],
           "roleQualifier": [],
@@ -47,7 +50,7 @@
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts Hertfordshire St Albans"
       },
-      "courtCaseReference": "26/9998/001055C",
+      "courtCaseReference": "26/9998/001802P",
       "subsequentAppearances": [
         {
           "appearanceNumber": 1,
@@ -57,13 +60,13 @@
               "additionalOffenceMarker": false,
               "adjudication": "G",
               "arrestChargeNumber": 1,
-              "arrestSummonsReference": "26/0000/00/100001427Z",
+              "arrestSummonsReference": "26/0000/00/100002213D",
               "chargeStatusMarker": "C",
               "cjsOffenceCode": "RT88007",
               "committedOnBail": false,
               "courtCaseChargeNumber": 1,
-              "courtCaseReferenceNumber": "26/9998/001055C",
-              "crimeReference": "1SCC5L4OYL5L1L6",
+              "courtCaseReferenceNumber": "26/9998/001802P",
+              "crimeReference": "VHGCIERHKQ0MLPH",
               "forceStationChargeOrig": "01ZD",
               "legislationQualifier": [],
               "locationAddress": {
@@ -88,7 +91,8 @@
                     "count": 12,
                     "units": "months"
                   },
-                  "disposalQualifierCodes": []
+                  "disposalQualifierCodes": [],
+                  "disposalText": "from 26/09/11"
                 }
               ],
               "roleQualifier": [],

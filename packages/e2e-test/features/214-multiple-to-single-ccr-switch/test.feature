@@ -17,7 +17,7 @@ Feature: {214} BR7 R5.4-RCD471-Multiple CCR to Single CCR switch between PNC sub
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	@Could
 	Scenario: Switching from a multiple CCR to a single CCR case between submissions
