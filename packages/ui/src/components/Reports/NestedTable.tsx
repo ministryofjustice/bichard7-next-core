@@ -20,7 +20,7 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
   const renderableOuterGroups = groups.map((group) => {
     const outerGroupName = ensureString(group[config.outerGroupNameKey])
-    const rawDataList = group[config.outerDataListKeys]
+    const rawDataList = group[config.outerDataListKey]
     const totals = isRecord(group.totals) ? group.totals : undefined
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
     const cleanRows = dataList.filter(isRecord)
