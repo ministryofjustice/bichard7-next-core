@@ -87,7 +87,7 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
               const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
 
-              const innerRows = innerGroup[config.innerDataListKey]
+              const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
 
               return (
                 <section key={innerSectionId} aria-labelledby={innerSectionId}>
