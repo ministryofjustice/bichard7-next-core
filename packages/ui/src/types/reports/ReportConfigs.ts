@@ -73,7 +73,7 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
     structure: "nested",
     endpoint: V1.CasesReportsUserPerformanceDetail,
     outerGroupNameKey: "date",
-    outerDataListKeys: ["exceptions", "triggers"],
+    outerDataListKeys: [],
     innerGroupNameKey: "description",
     innerDataListKey: "users",
     columns: userPerformanceDetailColumns,

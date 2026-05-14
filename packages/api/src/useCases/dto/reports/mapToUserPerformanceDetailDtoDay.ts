@@ -9,9 +9,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
   if (!row) {
     return {
       codeDetails: [] as CodeDetailDto[],
-      date,
-      exceptions: [] as CodeDetailDto[],
-      triggers: [] as CodeDetailDto[]
+      date
     }
   }
 
@@ -28,8 +26,6 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
         type: "trigger" as const
       }))
     ],
-    date,
-    exceptions: [] as CodeDetailDto[],
-    triggers: [] as CodeDetailDto[]
+    date
   }
 }
