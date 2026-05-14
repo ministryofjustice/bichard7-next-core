@@ -83,8 +83,6 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
             {renderableInnerGroups.map((innerGroup, index) => {
               const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
 
-              const columnType = innerGroup[config.columnSelectorKey] as string
-
               const resolvedColumns = getResolvedColumns(config, innerGroup)
 
               const innerConfig: FlatReportConfig<Record<string, unknown>> = {
