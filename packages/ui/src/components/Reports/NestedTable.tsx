@@ -1,6 +1,7 @@
 import { ReportTable } from "@/features/ReportSelectionFilter/ReportTable"
 import { ensureString } from "@/services/reports/utils/ensureString"
 import { formatGroupName } from "@/services/reports/utils/formatGroupName"
+import { BaseReportColumn, ReportColumn } from "@/types/reports/Columns"
 import { isRecord } from "services/reports/utils/isRecord"
 import { isRecordArray } from "services/reports/utils/isRecordArray"
 import { FlatReportConfig, NestedGroupedReportConfig, ReportConfig } from "types/reports/Config"
@@ -11,7 +12,6 @@ interface NestedTableProps<T> {
   config: ReportConfig
   groups: T[]
 }
-type RecordWithIndex = Record<string, unknown> & { columnsIndex: number }
 
 export const NestedTable = <T extends Record<string, unknown>>({ config, groups }: NestedTableProps<T>) => {
   if (config.structure !== "nested") {
@@ -20,36 +20,38 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
   const renderableOuterGroups = groups.map((group) => {
     const outerGroupName = ensureString(group[config.outerGroupNameKey])
-    const cleanRows = config.outerDataListKeys.flatMap((key, columnsIndex) => {
-      const innerGroups = group[key]
-      if (!isRecordArray(innerGroups)) {
-        return []
-      }
-
-      return innerGroups.filter(isRecord).map(
-        (innerGroup): RecordWithIndex => ({
-          ...innerGroup,
-          columnsIndex
-        })
-      )
-    })
+    const rawDataList = group[config.outerDataListKeys]
+    const totals = isRecord(group.totals) ? group.totals : undefined
+    const dataList = isRecordArray(rawDataList) ? rawDataList : []
+    const cleanRows = dataList.filter(isRecord)
 
     return {
       outerGroupName,
-      rows: cleanRows
+      rows: cleanRows,
+      totals
     }
   })
 
-  const getChildConfig = <TOuter, TInner, TRow>(
-    parentConfig: NestedGroupedReportConfig<TOuter, TInner, TRow>,
-    columnsIndex: number
-  ): FlatReportConfig<TRow> => {
-    return {
-      structure: "flat",
-      columns: parentConfig.columns[columnsIndex],
-      endpoint: parentConfig.endpoint,
-      reportType: parentConfig.reportType
+  const getResolvedColumns = <TOuter, TInner, TRow>(
+    config: NestedGroupedReportConfig<TOuter, TInner, TRow>,
+    innerGroup: Record<string, unknown>
+  ): BaseReportColumn[] => {
+    const cols = config.columns
+
+    if (Array.isArray(cols)) {
+      return cols as BaseReportColumn[]
     }
+
+    if (config.columnSelectorKey && typeof cols === "object") {
+      const selectorValue = String(innerGroup[config.columnSelectorKey as string])
+      const dynamicCols = (cols as Record<string, ReportColumn<unknown>[]>)[selectorValue]
+
+      if (dynamicCols) {
+        return dynamicCols as BaseReportColumn[]
+      }
+    }
+
+    return []
   }
 
   return (
@@ -67,8 +69,8 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
           return {
             [config.innerGroupNameKey]: innerGroupName,
             [config.innerDataListKey]: cleanRows,
-            totals,
-            columnsIndex: (group as RecordWithIndex).columnsIndex
+            [config.columnSelectorKey]: group[config.columnSelectorKey],
+            totals
           }
         })
 
@@ -80,7 +82,17 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
             {renderableInnerGroups.map((innerGroup, index) => {
               const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
-              const innerConfig = getChildConfig(config, innerGroup.columnsIndex)
+
+              const columnType = innerGroup[config.columnSelectorKey] as string
+
+              const resolvedColumns = getResolvedColumns(config, innerGroup)
+
+              const innerConfig: FlatReportConfig<Record<string, unknown>> = {
+                structure: "flat",
+                columns: resolvedColumns as ReportColumn<Record<string, unknown>>[],
+                endpoint: config.endpoint,
+                reportType: config.reportType
+              }
 
               const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
 

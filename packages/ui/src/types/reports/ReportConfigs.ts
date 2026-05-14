@@ -15,9 +15,9 @@ import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/report
 import type { ReportDataMap } from "services/api/BichardV1Report"
 import {
   bailsColumns,
+  codeDetailUserColumns,
   domesticViolenceColumns,
   exceptionsColumns,
-  userPerformanceDetailColumns,
   userPerformanceSummaryColumns,
   warrantsColumns
 } from "types/reports/Columns"
@@ -73,10 +73,11 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
     structure: "nested",
     endpoint: V1.CasesReportsUserPerformanceDetail,
     outerGroupNameKey: "date",
-    outerDataListKeys: [],
+    outerDataListKeys: "codeDetails",
     innerGroupNameKey: "description",
     innerDataListKey: "users",
-    columns: userPerformanceDetailColumns,
+    columns: codeDetailUserColumns,
+    columnSelectorKey: "type",
     formatter: "date",
     totalsConfig: [
       { key: "resolved", label: "Resolved" },

@@ -32,13 +32,16 @@ export type GroupedReportConfig<TGroup, TRow> = {
 } & BaseConfig &
   Formatter
 
+export type ColumnResolver<T> = (data: unknown) => ReportColumn<T>[]
+
 export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
   structure: Extract<ReportStructure, "nested">
   outerGroupNameKey: Extract<keyof TOuterGroup, string>
-  outerDataListKeys: Extract<keyof TOuterGroup, string>[]
+  outerDataListKeys: Extract<keyof TOuterGroup, string>
   innerGroupNameKey: Extract<keyof TInnerGroup, string>
   innerDataListKey: Extract<keyof TInnerGroup, string>
-  columns: ReportColumn<TRow>[][]
+  columns: ReportColumn<TRow>[] | Record<string, ReportColumn<TRow>[]>
+  columnSelectorKey: keyof TInnerGroup
   formatter?: Formatter
   totalsConfig?: TotalColumnConfig[]
 } & BaseConfig &

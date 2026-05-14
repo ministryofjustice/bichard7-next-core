@@ -106,3 +106,16 @@ export const userPerformanceDetailColumns: ReportColumn<CodeDetailUserDto>[][] =
     { header: "Total number of triggers still locked", key: "totalLocked" }
   ]
 ] as const
+
+export const codeDetailUserColumns: Record<string, ReportColumn<CodeDetailUserDto>[]> = {
+  exception: [
+    { header: "User ID", key: "username" },
+    { header: "Number of exceptions resolved today", key: "resolved" },
+    { header: "Total number of exceptions still locked", key: "totalLocked" }
+  ],
+  trigger: [
+    { header: "User ID", key: "username" },
+    { header: "Number of triggers resolved today", key: "resolved" },
+    { header: "Total number of triggers still locked", key: "totalLocked" }
+  ]
+} as const

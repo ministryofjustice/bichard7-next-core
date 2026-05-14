@@ -1,12 +1,12 @@
-import type ReportsApiClient from "services/api/ReportsApiClient"
-import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
-import type { BichardReportGateway, AnyReportQuery } from "services/api/interfaces/BichardReportGateway"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
-import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { UserPerformanceDetailDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
+import type { UserPerformanceSummaryDto } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
+import type { AnyReportQuery, BichardReportGateway } from "services/api/interfaces/BichardReportGateway"
+import type ReportsApiClient from "services/api/ReportsApiClient"
+import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
 import { ReportConfigs } from "types/reports/ReportConfigs"
 
 export interface ReportDataMap {

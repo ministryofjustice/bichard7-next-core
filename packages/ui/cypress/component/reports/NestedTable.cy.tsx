@@ -5,26 +5,30 @@ describe("NestedTable", () => {
   const mockConfig = {
     structure: "nested",
     outerGroupNameKey: "region",
-    outerDataListKeys: ["itTeams", "hrTeams"],
+    outerDataListKeys: "allTeams",
     innerGroupNameKey: "teamName",
     innerDataListKey: "members",
-    columns: [[{ key: "devName", header: "Developer" }], [{ key: "hrName", header: "HR Rep" }]],
+    columnSelectorKey: "type",
+    columns: {
+      IT: [{ key: "devName", header: "Developer" }],
+      HR: [{ key: "hrName", header: "HR Rep" }]
+    },
     totalsConfig: [{ key: "headcount", label: "Count" }]
   } as unknown as ReportConfig
 
   const mockGroups = [
     {
       region: "North",
-      itTeams: [
+      allTeams: [
         {
           teamName: "Alpha",
+          type: "IT",
           members: [{ devName: "Alice" }, { devName: "Bob" }],
           totals: { headcount: 2 }
-        }
-      ],
-      hrTeams: [
+        },
         {
           teamName: "People Ops",
+          type: "HR",
           members: [{ hrName: "Charlie" }],
           totals: { headcount: 1 }
         }
@@ -53,7 +57,7 @@ describe("NestedTable", () => {
     cy.get("h3").should("contain.text", "Count: 1")
   })
 
-  it("maps the correct columns based on the outerDataListKeys index", () => {
+  it("maps the correct columns based on the columnSelectorKey value", () => {
     cy.mount(<NestedTable config={mockConfig} groups={mockGroups} />)
 
     cy.get("table").eq(0).find("th").should("contain.text", "Developer")
@@ -72,7 +76,7 @@ describe("NestedTable", () => {
     const corruptGroups = [
       {
         region: "South",
-        itTeams: "not-an-array"
+        allTeams: "not-an-array"
       }
     ]
 
@@ -85,16 +89,18 @@ describe("NestedTable", () => {
     const noTotalsGroup = [
       {
         region: "West",
-        itTeams: [{ teamName: "No Totals", members: [{ devName: "Dave" }] }]
+        allTeams: [
+          {
+            teamName: "No Totals",
+            type: "IT",
+            members: [{ devName: "Dave" }]
+          }
+        ]
       }
     ]
 
     cy.mount(<NestedTable config={mockConfig} groups={noTotalsGroup} />)
 
-    cy.get("h3")
-      .contains("No Totals")
-      .then(($h3) => {
-        expect($h3.text()).to.not.contain("Count:")
-      })
+    cy.get("h3").contains("No Totals").invoke("text").should("not.contain", "Count:")
   })
 })
