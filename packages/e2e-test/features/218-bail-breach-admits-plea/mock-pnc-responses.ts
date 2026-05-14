@@ -1,20 +1,46 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000712RENQASIPNCA05A73000017300000120210903102473000001                                             050002916</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/17M     BAILY                   </IDS>
-        <CCR>K21/2732/11U                   </CCR>
-        <COF>K001    1:8:11:2     CJ88116 28112010                </COF>
-      </ASI>
-      <GMT>000008073ENQR000712R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "BAILY",
+      croNumber: "",
+      gmh: "073ENQR000712RENQASIPNCA05A73000017300000120210903102473000001                                             050002916",
+      gmt: "000008073ENQR000712R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/17M",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1201ZD0100000445098K",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2732/000011U",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:8:11:2",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ88116",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "cfb5498f-029f-4912-9b85-1704449d3b66",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
@@ -27,7 +53,7 @@ export default (_: string, { policeApi }: Bichard) => [
       crimeOffenceReferenceNo: "",
       remandLocationFfss: "",
       ownerCode: "01YZ",
-      personUrn: "21/17M",
+      personUrn: "2021/17M",
       remandDate: "2011-09-26",
       appearanceResult: "remanded-on-bail",
       bailConditions: [
@@ -58,16 +84,42 @@ export default (_: string, { policeApi }: Bichard) => [
   }),
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000713RENQASIPNCA05A73000017300000120210903102473000001                                             050002918</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/17M     BAILY                   </IDS>
-        <CCR>K21/2732/11U                   </CCR>
-        <COF>K001    1:8:11:2     CJ88116 28112010                </COF>
-      </ASI><GMT>000008073ENQR000713R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "BAILY",
+      croNumber: "",
+      gmh: "073ENQR000713RENQASIPNCA05A73000017300000120210903102473000001                                             050002918",
+      gmt: "000008073ENQR000713R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/17M",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1201ZD0100000445098K",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2732/000011U",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "1:8:11:2",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "CJ88116",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2010-11-28",
+              offenceId: "5775aaea-3e8f-41ef-a4b8-b8afdfd6c30e",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1
@@ -80,7 +132,7 @@ export default (_: string, { policeApi }: Bichard) => [
       crimeOffenceReferenceNo: "",
       remandLocationFfss: "",
       ownerCode: "01YZ",
-      personUrn: "21/17M",
+      personUrn: "2021/17M",
       remandDate: "2011-10-26",
       appearanceResult: "remanded-on-bail",
       bailConditions: [

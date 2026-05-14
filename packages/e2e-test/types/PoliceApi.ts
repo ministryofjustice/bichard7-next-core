@@ -1,4 +1,5 @@
 import type { MockAddDisposalRequest } from "./MockAddDisposalRequest"
+import type { MockAsnQueryErrorResponse } from "./MockAsnQueryErrorResponse"
 import type { MockAsnQueryResponse } from "./MockAsnQueryResponse"
 import type { MockRemandRequest } from "./MockRemandRequest"
 import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDisposalResultsRequest"
@@ -6,12 +7,7 @@ import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDispo
 export type PoliceApiRequestMockOptions = {
   matchRegex?: string
   response?: string
-  expectedRequest?:
-    | string
-    | MockAddDisposalRequest
-    | MockRemandRequest
-    | MockSubsequentDisposalResultsRequest
-    | MockAsnQueryResponse
+  expectedRequest?: string | MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
   count?: number
 }
 
@@ -21,7 +17,7 @@ export type PoliceApiRequestMock = PartialPoliceApiRequestMock & {}
 
 export type MockAsnQueryParams = {
   matchRegex: string
-  response: string
+  response: MockAsnQueryResponse | MockAsnQueryErrorResponse
   expectedRequest: string
   asn: string
   count?: number

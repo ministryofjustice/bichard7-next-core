@@ -1,20 +1,46 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000711RENQASIPNCA05A73000017300000120210903102373000001                                             050002914</GMH>
-      <ASI>
-        <FSC>K01VK</FSC>
-        <IDS>K21/16L     COMMUNITYORD            </IDS>
-        <CCR>K21/2812/5J                    </CCR>
-        <COF>K001    5:1:1:1      TH68023 01102009                </COF>
-      </ASI>
-      <GMT>000008073ENQR000711R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "COMMUNITYORD",
+      croNumber: "",
+      gmh: "073ENQR000711RENQASIPNCA05A73000017300000120210903102373000001                                             050002914",
+      gmt: "000008073ENQR000711R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/16L",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1101VK0100000376290V",
+      ownerCode: "01VK",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2812/000005J",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:1:1:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68023",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2009-10-01",
+              offenceId: "ecaaada5-be15-4f68-992b-f61c45f80299",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
     expectedRequest: "",
     count: 1
@@ -25,7 +51,7 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "21/16L",
+      personUrn: "2021/16L",
       courtCaseReference: "21/2812/000005J",
       court: {
         courtIdentityType: "code",

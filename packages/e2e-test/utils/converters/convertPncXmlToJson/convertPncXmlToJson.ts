@@ -19,6 +19,7 @@ import type { Fsc } from "./convertFsc"
 import convertFsc from "./convertFsc"
 import type { Ids } from "./convertIds"
 import convertIds from "./convertIds"
+import type { Pcr } from "./convertPcr"
 import convertPcr from "./convertPcr"
 import type { Rcc } from "./convertRcc"
 import convertRcc from "./convertRcc"
@@ -46,7 +47,12 @@ export type AdditionalOffences = {
   additionalOffences: Asr & { offences: (Ach & Partial<Adj> & { disposals: Dis[]; courtCaseReference: string })[] }
 }
 
-export type PncAsnQueryJson = (Fsc & Ids & AsnQueryOffences) | Txt
+type GmhAndGmt = {
+  gmh: string
+  gmt: string
+}
+
+export type PncAsnQueryJson = (Fsc & Ids & Pcr & AsnQueryOffences & GmhAndGmt) | (Txt & GmhAndGmt)
 export type PncRemandJson = Fsc & Ids & Asr & Rem
 export type PncNormalDisposalJson = Fsc &
   Ids &
@@ -154,6 +160,14 @@ const convertPncXmlToJson = <T extends PncJson>(xml: string): T => {
     if (lastOffence) {
       lastOffence.disposals.push(dis)
     }
+  }
+
+  converters["GMH"] = (value: string) => {
+    return { gmh: value }
+  }
+
+  converters["GMT"] = (value: string) => {
+    return { gmt: value }
   }
 
   for (const { name, value } of segments) {

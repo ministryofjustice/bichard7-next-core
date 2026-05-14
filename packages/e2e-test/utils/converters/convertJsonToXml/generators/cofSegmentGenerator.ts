@@ -1,14 +1,14 @@
-import type { Offence } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
+import type { MockOffence } from "../../../../types/MockAsnQueryResponse"
 import * as CONSTANT from "../../../constants"
 import { convertToPncDate, convertToPncTime } from "../helpers/convertToPncDateTime"
-import { toApcoOffenceCode } from "../helpers/formatters"
+import { toAcpoOffenceCode } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
-const cofSegmentGenerator = (offence: Offence): string => {
+const cofSegmentGenerator = (offence: MockOffence): string => {
   const referenceNumber = String(offence.courtOffenceSequenceNumber).padStart(3, "0")
   const offenceQualifier1 = offence.roleQualifiers?.join("")
   const offenceQualifier2 = offence.legislationQualifiers?.join("")
-  const acpoOffenceCode = toApcoOffenceCode(offence.npccOffenceCode)
+  const acpoOffenceCode = toAcpoOffenceCode(offence.acpoOffenceCode)
   const cjsOffenceCode = offence.cjsOffenceCode
   const offenceStartDate = convertToPncDate(offence.offenceStartDate)
   const offenceStartTime = offence.offenceStartTime && convertToPncTime(offence.offenceStartTime)

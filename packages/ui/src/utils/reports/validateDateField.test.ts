@@ -1,9 +1,9 @@
-import { addDays, format, startOfToday, subDays } from "date-fns"
+import { addDays, format, startOfToday, subDays, subMonths } from "date-fns"
 import { validateDateField } from "./validateDateField"
 import {
   DATE_CANNOT_BE_IN_THE_FUTURE,
-  DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS,
-  FIELD_REQUIRED
+  FIELD_REQUIRED,
+  DATE_SHOULD_BE_WITHIN_THE_LAST_12_MONTHS
 } from "./validationMessages"
 
 describe("validateDateField", () => {
@@ -18,9 +18,9 @@ describe("validateDateField", () => {
     expect(validateDateField("invalid_date")).toBe(FIELD_REQUIRED)
   })
 
-  it("should return error if date is more than 31 days ago", () => {
-    const thirtyTwoDaysAgoStr = format(subDays(today, 32), "yyyy-MM-dd")
-    expect(validateDateField(thirtyTwoDaysAgoStr)).toBe(DATE_SHOULD_BE_WITHIN_THE_LAST_31_DAYS)
+  it("should return error if date is more than 12 months ago", () => {
+    const over12MonthsAgo = format(subMonths(today, 13), "yyyy-MM-dd")
+    expect(validateDateField(over12MonthsAgo)).toBe(DATE_SHOULD_BE_WITHIN_THE_LAST_12_MONTHS)
   })
 
   it("should return error if date is in the future", () => {
