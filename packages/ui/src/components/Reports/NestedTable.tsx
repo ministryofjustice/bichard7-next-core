@@ -38,17 +38,10 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
   ): BaseReportColumn[] => {
     const cols = config.columns
 
-    if (Array.isArray(cols)) {
-      return cols
-    }
-
     if (config.columnSelectorKey && typeof cols === "object") {
       const selectorValue = String(innerGroup[config.columnSelectorKey as string])
       const dynamicCols = (cols as Record<string, ReportColumn<unknown>[]>)[selectorValue]
-
-      if (dynamicCols) {
-        return dynamicCols
-      }
+      return dynamicCols || []
     }
 
     return []
