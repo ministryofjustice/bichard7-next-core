@@ -1,0 +1,68 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002570R",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68006",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000621B",
+          "crimeReference": "NLCQXSXMCVWNE7H",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68006",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000621B"
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "1910",
+          "courtIdentityType": "code"
+        },
+        "date": "2011-10-08"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [
+        "condition more of the bail condition more of the\nbail cEND\n\n",
+        "from each pair of shoes owned by yourself andyour\nimmediate family. Should you own a pair of\nslippers these will be burned\n",
+        "One Give to the court any passport held and the\nleftshoe\n\n",
+        "Two this bail condition is over two hundred\ncharacters and should not be padded with spaces at\nthe first opportunity before the fifty character\npoint as that would just loose more of the bail"
+      ],
+      "remandDate": "2011-09-26"
+    }
+  ]
+}

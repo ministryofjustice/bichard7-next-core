@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<NewCaseMessage xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Flow="NewCasesFromThePolice" Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g" xmlns="http://www.dca.gov.uk/xmlschemas/libra">
+<NewCaseMessage xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Flow="NewCasesFromThePolice"
+	Interface="LibraStandardProsecutorPolice" SchemaVersion="0.6g"
+	xmlns="http://www.dca.gov.uk/xmlschemas/libra">
 	<Case>
 		<PTIURN>01VK0300208</PTIURN>
 		<OriginatingOrganisation>116BH00</OriginatingOrganisation>
@@ -76,6 +79,7 @@
 				</DriverInformation>
 			</PoliceIndividualDefendant>
 			<Offence>
+				<DisposalGroup>1</DisposalGroup>
 				<BaseOffenceDetails>
 					<OffenceSequenceNumber>001</OffenceSequenceNumber>
 					<OffenceCode>TH68010</OffenceCode>
@@ -92,6 +96,7 @@
 				</BaseOffenceDetails>
 			</Offence>
 			<Offence>
+				<DisposalGroup>2</DisposalGroup>
 				<BaseOffenceDetails>
 					<OffenceSequenceNumber>002</OffenceSequenceNumber>
 					<OffenceCode>CJ88001</OffenceCode>

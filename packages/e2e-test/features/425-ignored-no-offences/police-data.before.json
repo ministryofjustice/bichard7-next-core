@@ -1,57 +1,42 @@
 {
   "disposals": [
     {
-      "id": "ae8fcc82-b952-4ae3-a3a4-1ead1c64e9ef",
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002178Q",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68006",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001767B",
+          "crimeReference": "7UQNYYS4V9VKWG/",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68006",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
       "court": {
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts London Croydon"
       },
-      "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000486C",
-      "caseStatusMarker": "A",
-      "charges": [
-        {
-          "offenceId": "f455e8a6-34ed-42af-b4bd-ab0eb55dbb2a",
-          "arrestSummonsId": "38d19149-1529-4732-9b1e-1e3ce9a187ff",
-          "npccOffenceCode": "5.5.5.1",
-          "cjsOffenceCode": "TH68006",
-          "qualifiedCjsCode": "TH68006",
-          "offenceDescription": [],
-          "offenceRoleQualifiers": [],
-          "offenceLegislationQualifiers": [],
-          "offenceChargeNumber": 1,
-          "additionalMarker": false,
-          "disposals": [],
-          "offence": {
-            "version": "I7D5dNcOtqsSyhSkKErp0cK7GNNyzu6NqY2W+ivDAVVNtobX5t3Uim/tSmRw23hwMc8mDX6+AYYb4WNR6ii9sg==",
-            "arrestSummonsReference": "26/0000/00/00000000916T",
-            "arrestChargeNumber": 1,
-            "chargeStatusMarker": "A",
-            "committedOnBail": false,
-            "courtCaseReferenceNumber": "26/9998/000486C",
-            "courtCaseChargeNumber": 1,
-            "forceStationInCase": "01ZD",
-            "forceStationChargeOrig": "01ZD",
-            "crimeReference": "",
-            "locationFSCode": "01ZD",
-            "locationAddress": {
-              "locationType": "description",
-              "locationText": "Kingston High Street"
-            },
-            "othersCharged": [],
-            "brcRecord": false,
-            "hasDisposalResults": false,
-            "additionalOffenceMarker": false,
-            "npccOffenceCode": "5.5.5.1",
-            "cjsOffenceCode": "TH68006",
-            "qualifiedCjsCode": "TH68006",
-            "startDate": "2010-11-28",
-            "roleQualifier": [],
-            "legislationQualifier": [],
-            "id": "f455e8a6-34ed-42af-b4bd-ab0eb55dbb2a"
-          }
-        }
-      ]
+      "courtCaseReference": "26/9998/001767B"
     }
   ],
   "remands": []

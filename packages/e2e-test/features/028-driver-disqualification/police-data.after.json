@@ -8,13 +8,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100001425X",
+          "arrestSummonsReference": "26/0000/00/100001993P",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "RT88007",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001053A",
-          "crimeReference": "FO5XNTRRI-X3K4I",
+          "courtCaseReferenceNumber": "26/9998/001577V",
+          "crimeReference": "XYMSQYO3Q47SILM",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -36,7 +36,8 @@
             },
             {
               "disposalCode": "4047",
-              "disposalQualifierCodes": []
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2011-10-26"
             }
           ],
           "roleQualifier": [],
@@ -48,7 +49,7 @@
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts Hertfordshire St Albans"
       },
-      "courtCaseReference": "26/9998/001053A",
+      "courtCaseReference": "26/9998/001577V",
       "subsequentAppearances": [
         {
           "appearanceNumber": 1,
@@ -58,13 +59,13 @@
               "additionalOffenceMarker": false,
               "adjudication": "G",
               "arrestChargeNumber": 1,
-              "arrestSummonsReference": "26/0000/00/100001425X",
+              "arrestSummonsReference": "26/0000/00/100001993P",
               "chargeStatusMarker": "C",
               "cjsOffenceCode": "RT88007",
               "committedOnBail": false,
               "courtCaseChargeNumber": 1,
-              "courtCaseReferenceNumber": "26/9998/001053A",
-              "crimeReference": "FO5XNTRRI-X3K4I",
+              "courtCaseReferenceNumber": "26/9998/001577V",
+              "crimeReference": "XYMSQYO3Q47SILM",
               "forceStationChargeOrig": "01ZD",
               "legislationQualifier": [],
               "locationAddress": {
@@ -90,7 +91,8 @@
                     "count": 12,
                     "units": "months"
                   },
-                  "disposalQualifierCodes": []
+                  "disposalQualifierCodes": [],
+                  "disposalText": "from 26/09/11"
                 }
               ],
               "roleQualifier": [],

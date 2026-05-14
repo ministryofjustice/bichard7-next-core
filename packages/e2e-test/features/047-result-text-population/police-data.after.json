@@ -1,81 +1,64 @@
 {
   "disposals": [
     {
-      "id": "e4cd57e1-11f9-4690-a0c9-8915db6a44ad",
-      "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
-      },
-      "convictionDate": "2011-09-26",
-      "courtCaseReference": "26/9998/000270T",
       "caseStatusMarker": "C",
       "charges": [
         {
-          "offenceId": "fc2ebdd9-919c-4150-b1bc-b88c0b7b10a1",
-          "arrestSummonsId": "fb193c2e-3524-4756-9f0b-15291f5a05c6",
-          "adjudication": "G",
-          "npccOffenceCode": "5.5.5.1",
-          "cjsOffenceCode": "TH68006",
-          "qualifiedCjsCode": "TH68006",
-          "offenceDescription": [],
-          "offenceRoleQualifiers": [],
-          "offenceLegislationQualifiers": [],
-          "offenceChargeNumber": 1,
           "additionalMarker": false,
-          "disposals": [
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002556B",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68006",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000607L",
+          "crimeReference": "ILYZDVYGJKO3ZU7",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68006",
+          "results": [
             {
-              "id": "98970a92-cf8c-4449-8034-fb6200ad9df4",
               "disposalCode": "1100",
-              "disposalQualifierCodes": ["BA"],
-              "disposalText": "EXCLUDED FROM ALL LICENSED PREMISES WITHIN DIDLY DISTRICT COUNC+",
               "disposalDuration": {
-                "units": "weeks",
-                "count": 6
-              }
+                "count": 6,
+                "units": "weeks"
+              },
+              "disposalQualifierCodes": ["BA"],
+              "disposalText": "EXCLUDED FROM ALL LICENSED PREMISES WITHIN DIDLY DISTRICT COUNC+"
             },
             {
-              "id": "91da5347-3020-4470-8101-f62a7d34e031",
               "disposalCode": "3041",
-              "disposalQualifierCodes": [],
-              "disposalText": "EXCLUDED FROM SEAWORLD PUBLIC HOUSE, SEAWORLD, PICKERING, NORTH+",
               "disposalDuration": {
-                "units": "months",
-                "count": 12
-              }
+                "count": 12,
+                "units": "months"
+              },
+              "disposalQualifierCodes": [],
+              "disposalText": "EXCLUDED FROM SEAWORLD PUBLIC HOUSE, SEAWORLD, PICKERING, NORTH+"
             }
           ],
-          "offence": {
-            "version": "GQld/H91ZKX4a0NRZbNOTteqQThw36hvWhL+/hERyOyP9DcQNj0bldpT/WK++urV6yNx7gOrzfvGGjC9PMnzuQ==",
-            "arrestSummonsReference": "26/0000/00/100000439A",
-            "arrestChargeNumber": 1,
-            "chargeStatusMarker": "C",
-            "committedOnBail": false,
-            "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000270T",
-            "courtCaseChargeNumber": 1,
-            "forceStationChargeOrig": "01ZD",
-            "crimeReference": "",
-            "locationFSCode": "01ZD",
-            "locationAddress": {
-              "locationType": "description",
-              "locationText": "Kingston High Street"
-            },
-            "offencesTakenIntoConsideration": 0,
-            "adjudication": "G",
-            "othersCharged": [],
-            "brcRecord": false,
-            "hasDisposalResults": true,
-            "additionalOffenceMarker": false,
-            "npccOffenceCode": "5.5.5.1",
-            "cjsOffenceCode": "TH68006",
-            "qualifiedCjsCode": "TH68006",
-            "startDate": "2010-11-01",
-            "roleQualifier": [],
-            "legislationQualifier": [],
-            "id": "fc2ebdd9-919c-4150-b1bc-b88c0b7b10a1"
-          }
+          "roleQualifier": [],
+          "startDate": "2010-11-01"
         }
       ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000607L",
       "subsequentAppearances": []
     }
   ],
