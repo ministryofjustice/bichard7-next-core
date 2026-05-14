@@ -40,6 +40,10 @@ describe("NestedTable", () => {
     const flatConfig = { ...mockConfig, structure: "flat" } as ReportConfig
     cy.mount(<NestedTable config={flatConfig} groups={mockGroups} />)
     cy.get("section").should("not.exist")
+
+    const groupedConfig = { ...mockConfig, structure: "grouped" } as ReportConfig
+    cy.mount(<NestedTable config={groupedConfig} groups={mockGroups} />)
+    cy.get("section").should("not.exist")
   })
 
   it("renders outer group headers correctly", () => {
