@@ -14,7 +14,7 @@ export const createReportCsv = async (
   const csvChunks: string[] = ["", csvMetadata(reportType, fromDate, toDate), ""]
 
   if (config.structure === "nested") {
-    return null as unknown as Blob
+    return new Blob([], { type: "text/csv;charset=utf-8;" })
   }
 
   if (config.structure === "grouped") {
