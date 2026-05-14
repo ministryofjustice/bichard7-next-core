@@ -59,7 +59,7 @@ describe("User Performance Detail", () => {
             .parent("section")
             .within(() => {
               cy.get("table").should("not.exist")
-              cy.get(".ReportTable-styles__StyledReportTable-sc-65437099-0").should("not.exist")
+              cy.get("[itemid='outer-group-body']:empty").should("exist")
             })
         }
       })
@@ -84,7 +84,7 @@ describe("User Performance Detail", () => {
         .parent("section")
         .within(() => {
           cy.get("table").should("not.exist")
-          cy.get(".ReportTable-styles__StyledReportTable-sc-65437099-0").should("not.exist")
+          cy.get("[itemid='outer-group-body']:empty").should("exist")
         })
     }
   })

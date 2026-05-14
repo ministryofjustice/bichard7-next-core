@@ -51,6 +51,7 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
     <ReportContainer className="report-container">
       {renderableOuterGroups.map(({ outerGroupName, rows }) => {
         const outerSectionId = `outer-group-${outerGroupName}`
+        const outerSectionBodyId = `outer-group-body-${outerGroupName}`
 
         const renderableInnerGroups = rows.map((group) => {
           const innerGroupName = ensureString(group[config.innerGroupNameKey])
@@ -73,33 +74,40 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
               {formatGroupName(config, outerGroupName)}
             </h3>
 
-            {renderableInnerGroups.map((innerGroup, index) => {
-              const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
+            <section id={outerSectionBodyId} aria-labelledby={outerSectionId} itemID={"outer-group-body"}>
+              {renderableInnerGroups.map((innerGroup, index) => {
+                const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
 
-              const resolvedColumns = getResolvedColumns(config, innerGroup)
+                const resolvedColumns = getResolvedColumns(config, innerGroup)
 
-              const innerConfig: FlatReportConfig<Record<string, unknown>> = {
-                structure: "flat",
-                columns: resolvedColumns,
-                endpoint: config.endpoint,
-                reportType: config.reportType
-              }
+                const innerConfig: FlatReportConfig<Record<string, unknown>> = {
+                  structure: "flat",
+                  columns: resolvedColumns,
+                  endpoint: config.endpoint,
+                  reportType: config.reportType
+                }
 
-              const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
+                const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
 
-              const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
+                const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
 
-              return (
-                <section key={innerSectionId} aria-labelledby={innerSectionId}>
-                  <h3 id={innerSectionId} className="govuk-heading-m">
-                    {innerGroupName}
+                return (
+                  <section key={innerSectionId} aria-labelledby={innerSectionId}>
+                    <h3 id={innerSectionId} className="govuk-heading-m">
+                      {innerGroupName}
 
-                    <Totals totals={innerGroup.totals} totalsConfig={config.totalsConfig} />
-                  </h3>
-                  <ReportTable key={innerSectionId} config={innerConfig} rows={innerRows} tableName={innerGroupName} />
-                </section>
-              )
-            })}
+                      <Totals totals={innerGroup.totals} totalsConfig={config.totalsConfig} />
+                    </h3>
+                    <ReportTable
+                      key={innerSectionId}
+                      config={innerConfig}
+                      rows={innerRows}
+                      tableName={innerGroupName}
+                    />
+                  </section>
+                )
+              })}
+            </section>
           </section>
         )
       })}
