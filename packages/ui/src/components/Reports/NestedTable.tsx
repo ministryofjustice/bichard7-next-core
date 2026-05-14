@@ -74,7 +74,7 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
               {formatGroupName(config, outerGroupName)}
             </h3>
 
-            <section id={outerSectionBodyId} aria-labelledby={outerSectionId} itemID={"outer-group-body"}>
+            <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
               {renderableInnerGroups.map((innerGroup, index) => {
                 const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
 
