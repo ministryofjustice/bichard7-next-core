@@ -8,7 +8,7 @@ describe("User Performance Detail", () => {
     cy.task("clearCourtCases")
   })
 
-  it.only("should generate the User Performance Detail report and display the correct totals and user data", () => {
+  it("should verify the report structure, headers, row data, and empty past dates", () => {
     insertSampleCases()
 
     const today = new Date()
@@ -21,38 +21,48 @@ describe("User Performance Detail", () => {
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()
 
-    cy.get(".report-container").should("be.visible")
-
-    cy.get("h3").first().as("groupHeader")
-    cy.get("@groupHeader").should("contain.text", formattedGroupDate)
-
-    cy.get("h3").eq(1).as("childTableHeader")
-    cy.get("@childTableHeader").should("contain.text", "Resolved: 1")
-    cy.get("@groupHeader").should("contain.text", "Locked: 1")
-    /* 
-    cy.get("table").first().as("reportTable")
-    cy.get("@reportTable").find("th").eq(0).should("have.text", "Name")
-    cy.get("@reportTable").find("th").eq(1).should("have.text", "Exceptions Resolved Today")
-    cy.get("@reportTable").find("th").eq(2).should("have.text", "Triggers Resolved Today")
-    cy.get("@reportTable").find("th").eq(3).should("have.text", "Total Exceptions/Triggers Still Locked")
-
-    cy.get("@reportTable").find("tbody tr").should("have.length", 2)
-
-    cy.get("@reportTable")
-      .contains("tr", "user1")
+    cy.get(".report-container")
+      .should("be.visible")
       .within(() => {
-        cy.get("td").eq(1).should("contain.text", "1") // Exceptions Resolved
-        cy.get("td").eq(2).should("contain.text", "0") // Triggers Resolved
-        cy.get("td").eq(3).should("contain.text", "0") // Locked
+        cy.contains("h3", formattedGroupDate).parent("section").as("todayGroup")
+
+        cy.get("@todayGroup").within(() => {
+          const expectedTables = [
+            { userId: "user1", resolved: "1", locked: "0", type: "exceptions" },
+            { userId: "GeneralHandler", resolved: "1", locked: "0", type: "triggers" },
+            { userId: "GeneralHandler", resolved: "0", locked: "1", type: "triggers" }
+          ]
+
+          cy.get("section[aria-labelledby^='inner-group']").each(($section, index) => {
+            const expected = expectedTables[index]
+
+            cy.wrap($section).within(() => {
+              cy.get(".govuk-table__header").eq(0).should("have.text", "User ID")
+              cy.get(".govuk-table__header").eq(1).should("have.text", `Number of ${expected.type} resolved today`)
+              cy.get(".govuk-table__header").eq(2).should("have.text", `Total number of ${expected.type} still locked`)
+
+              cy.get(".govuk-table__body tr")
+                .first()
+                .within(() => {
+                  cy.get("td").eq(0).should("have.text", expected.userId)
+                  cy.get("td").eq(1).should("have.text", expected.resolved)
+                  cy.get("td").eq(2).should("have.text", expected.locked)
+                })
+            })
+          })
+        })
+
+        for (let i = 1; i < 7; i++) {
+          const pastDate = format(subDays(today, i), "dd/MM/yyyy")
+
+          cy.contains("h3", pastDate)
+            .parent("section")
+            .within(() => {
+              cy.get("table").should("not.exist")
+              cy.get(".ReportTable-styles__StyledReportTable-sc-65437099-0").should("not.exist")
+            })
+        }
       })
-
-    cy.get("@reportTable")
-      .contains("tr", "General Handler User")
-      .within(() => {
-        cy.get("td").eq(1).should("contain.text", "0") // Exceptions Resolved
-        cy.get("td").eq(2).should("contain.text", "1") // Triggers Resolved
-        cy.get("td").eq(3).should("contain.text", "1") // Locked
-      }) */
   })
 
   it("should handle no report data", () => {
@@ -67,17 +77,15 @@ describe("User Performance Detail", () => {
 
     cy.get(".report-container").should("be.visible")
 
-    cy.get(".report-container > section").each((_, index) => {
-      const expectedGroupDate = format(subDays(today, index), "dd/MM/yyyy")
+    for (let i = 0; i < 7; i++) {
+      const pastDate = format(subDays(today, i), "dd/MM/yyyy")
 
-      cy.get(".report-container > section").eq(index).find("h3").as("groupHeader")
-
-      cy.get("@groupHeader").should("contain.text", expectedGroupDate)
-      cy.get("@groupHeader").should("contain.text", "Exceptions Resolved: 0")
-      cy.get("@groupHeader").should("contain.text", "Triggers Resolved: 0")
-      cy.get("@groupHeader").should("contain.text", "Exceptions/Triggers Locked: 0")
-
-      cy.get(".report-container > section").eq(index).find("tbody tr").should("have.length", 0)
-    })
+      cy.contains("h3", pastDate)
+        .parent("section")
+        .within(() => {
+          cy.get("table").should("not.exist")
+          cy.get(".ReportTable-styles__StyledReportTable-sc-65437099-0").should("not.exist")
+        })
+    }
   })
 })
