@@ -1,6 +1,7 @@
-import { BaseReportColumn } from "types/reports/Columns"
 import { ReportTableCell } from "components/Reports/ReportTableCell"
 import { TableRow } from "components/Table"
+import { BaseReportColumn } from "types/reports/Columns"
+import ExpandableCell from "./ExpandableCell"
 
 interface TableRowProps<T> {
   row: T
@@ -23,7 +24,7 @@ export const ReportTableRow = <T extends Record<string, unknown>>({ row, columns
         stringOrElement = row.username as string
       }
 
-      return <ReportTableCell key={String(col.key)} value={stringOrElement} />
+      return <ReportTableCell key={String(col.key)} value={<ExpandableCell content={stringOrElement} />} />
     })}
   </TableRow>
 )
