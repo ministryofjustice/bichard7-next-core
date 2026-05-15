@@ -4,11 +4,19 @@ import type { MockAsnQueryResponse } from "./MockAsnQueryResponse"
 import type { MockRemandRequest } from "./MockRemandRequest"
 import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDisposalResultsRequest"
 
-export type PoliceApiRequestMockOptions = {
+export type PoliceApiRequestMockQueryOptions = {
   matchRegex?: string
   response?: string
-  expectedRequest?: string | MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
+  expectedRequest?: MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
   count?: number
+}
+
+export type PoliceApiRequestMockUpdateOptions = {
+  matchRegex?: string
+  response?: string
+  expectedRequest?: MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
+  count?: number
+  courtCaseId?: string
 }
 
 export type PartialPoliceApiRequestMock = {}
@@ -33,9 +41,9 @@ export default interface PoliceApi {
   createValidRecord: (record: string) => Promise<void>
   mockMissingDataForTest: () => Promise<void>
   mockDataForTest: () => Promise<void>
-  mockEnquiryFromNcm: (ncmFile: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
+  mockEnquiryFromNcm: (ncmFile: string, options?: PoliceApiRequestMockQueryOptions) => PartialPoliceApiRequestMock
   mockAsnQuery: (params: MockAsnQueryParams) => PartialPoliceApiRequestMock
-  mockUpdate: (code: string, options?: PoliceApiRequestMockOptions) => PartialPoliceApiRequestMock
+  mockUpdate: (code: string, options?: PoliceApiRequestMockUpdateOptions) => PartialPoliceApiRequestMock
   generateDummyUpdate(): PartialPoliceApiRequestMock
   clearMocks(): Promise<void>
   recordMocks(): Promise<void>

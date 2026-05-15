@@ -6,7 +6,7 @@ import type {
   Offence as AsnQueryResponseOffence
 } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import { HttpStatusCode } from "axios"
-import { randomUUID } from "crypto"
+import crypto, { randomUUID } from "crypto"
 import { XMLParser } from "fast-xml-parser"
 import fs from "fs"
 import type { LedsBichard, LedsMock, LedsMockOptions } from "../../../types/LedsMock"
@@ -24,28 +24,40 @@ const generateRequestBody = (ncm: ParsedNcm): AsnQueryRequest => {
   }
 }
 
-const mapOffences = (ncm: ParsedNcm): AsnQueryResponseOffence[] => {
+const mapOffences = (ncm: ParsedNcm, disposalGroup: string): AsnQueryResponseOffence[] => {
   const offenceObject = ncm.NewCaseMessage.Case.Defendant.Offence
   const offences = Array.isArray(offenceObject) ? offenceObject : [offenceObject]
 
-  return offences.map((offence) => ({
-    offenceId: randomUUID() as string,
-    courtOffenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
-    cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
-    offenceStartDate: offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate,
-    offenceStartTime: offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartTime,
-    offenceEndDate: offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndDate,
-    offenceEndTime: offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndTime,
-    offenceDescription: [offence.BaseOffenceDetails.OffenceWording.substring(0, 54)],
-    plea: "Not Known",
-    adjudications: [],
-    disposalResults: []
-  }))
+  return offences
+    .filter((offence) => (offence.DisposalGroup?.toString() ?? "0") === disposalGroup)
+    .map((offence) => ({
+      offenceId: randomUUID() as string,
+      courtOffenceSequenceNumber: offence.BaseOffenceDetails.OffenceSequenceNumber,
+      cjsOffenceCode: offence.BaseOffenceDetails.OffenceCode,
+      offenceStartDate: offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartDate,
+      offenceStartTime: offence.BaseOffenceDetails.OffenceTiming.OffenceStart.OffenceDateStartTime,
+      offenceEndDate: offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndDate,
+      offenceEndTime: offence.BaseOffenceDetails.OffenceTiming.OffenceEnd?.OffenceEndTime,
+      offenceDescription: [offence.BaseOffenceDetails.OffenceWording.substring(0, 54)],
+      plea: "Not Known",
+      adjudications: [],
+      disposalResults: []
+    }))
 }
 
 const generateResponseBody = (ncm: ParsedNcm, options: LedsMockOptions): AsnQueryResponse => {
   const asn = ncm.NewCaseMessage.Case.Defendant.ProsecutorReference
   const forceStationCode = ncm.NewCaseMessage.Case.PTIURN.substring(0, 4)
+  const offences = Array.isArray(ncm.NewCaseMessage.Case.Defendant.Offence)
+    ? ncm.NewCaseMessage.Case.Defendant.Offence
+    : [ncm.NewCaseMessage.Case.Defendant.Offence]
+  const disposalGroups = [...new Set(offences.map((offence) => offence.DisposalGroup?.toString() ?? "0"))]
+  let courtCaseIds = options.courtCaseIds
+  if (!courtCaseIds) {
+    courtCaseIds = disposalGroups.map((disposalGroup) => crypto.createHash("md5").update(disposalGroup).digest("hex"))
+  } else if (courtCaseIds.length !== disposalGroups.length) {
+    throw new Error("Provided courtCaseIds in the test data do not match the disposal groups in the NCM file")
+  }
 
   return {
     personId: options.personId ?? randomUUID(),
@@ -53,18 +65,16 @@ const generateResponseBody = (ncm: ParsedNcm, options: LedsMockOptions): AsnQuer
     reportId: options.reportId ?? randomUUID(),
     asn,
     ownerCode: forceStationCode,
-    disposals: [
-      {
-        courtCaseId: options.courtCaseId ?? randomUUID(),
-        courtCaseReference: "97/1626/008395Q",
-        caseStatusMarker: "impending-prosecution-detail",
-        court: {
-          courtIdentityType: "code",
-          courtCode: "0000"
-        },
-        offences: mapOffences(ncm)
-      }
-    ]
+    disposals: disposalGroups.map((disposalGroup, disposalGroupIndex) => ({
+      courtCaseId: courtCaseIds[disposalGroupIndex],
+      courtCaseReference: `97/1626/${disposalGroup.padStart(2, "0")}8395Q`,
+      caseStatusMarker: "impending-prosecution-detail",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "0000"
+      },
+      offences: mapOffences(ncm, disposalGroup)
+    }))
   }
 }
 

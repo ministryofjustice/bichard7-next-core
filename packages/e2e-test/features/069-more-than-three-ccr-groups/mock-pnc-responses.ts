@@ -1,17 +1,46 @@
-import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
-export default (_: string, { policeApi }: Bichard) => [
-  policeApi.mockAsnQuery({
-    matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR010175EERRASIPNCA05A73000017300000120231120162473000001                                             050018291</GMH>
-      <TXT>I1008 - GWAY - ENQUIRY ERROR MORE THAN 3 DISPOSAL GROUPS 09/0000/00/20004H                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </TXT>
-      <GMT>000003073ENQR010175E</GMT>
-    </CXE01>`,
-    asn: extractAsnFromInputXml(`${__dirname}/input-message.xml`),
-    expectedRequest: "",
-    count: 1
+export default (ncm: string, { policeApi }: Bichard) => [
+  policeApi.mockEnquiryFromNcm(ncm),
+  policeApi.mockUpdate("CXU02", {
+    courtCaseId: "c4ca4238a0b923820dcc509a6f75849b",
+    expectedRequest: {
+      pncCheckName: "LOMAX",
+      croNumber: "",
+      crimeOffenceReferenceNumber: "",
+      ownerCode: "01YZ",
+      personUrn: "2000/410769X",
+      courtCaseReference: "97/1626/018395Q",
+      court: {
+        courtIdentityType: "code",
+        courtCode: "2576"
+      },
+      dateOfConviction: "2009-06-07",
+      defendant: {
+        defendantType: "individual",
+        defendantFirstNames: ["DAVID"],
+        defendantLastName: "LOMAX"
+      },
+      offences: [
+        {
+          courtOffenceSequenceNumber: 1,
+          cjsOffenceCode: "TH68037",
+          plea: "Not Guilty",
+          adjudication: "Guilty",
+          dateOfSentence: "2009-06-07",
+          offenceTic: 0,
+          disposalResults: [
+            {
+              disposalCode: 1002,
+              disposalDuration: {
+                units: "months",
+                count: 14
+              }
+            }
+          ],
+          offenceId: "3d6026ea-9175-4588-a0d3-19c13fad7bad"
+        }
+      ]
+    }
   })
 ]
