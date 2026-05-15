@@ -5,6 +5,8 @@ Feature: {142a} Trigger Reallocation
       ===============
       MadeTech Definition:
       Trigger reallocation when a force owner changes
+      This test is similar to test 142 but it can run against real LEDS API.
+      Since our LEDS authentication token only allows force 01, this test uses force 01 to seed data.
       """
 
   Background:
