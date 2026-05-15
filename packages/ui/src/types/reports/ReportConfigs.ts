@@ -1,31 +1,32 @@
-import type { ReportDataMap } from "services/api/BichardV1Report"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import {
-  bailsColumns,
-  domesticViolenceColumns,
-  exceptionsColumns,
-  warrantsColumns,
-  userPerformanceSummaryColumns
-} from "types/reports/Columns"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
-import type { ExceptionReportDto, CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
-import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
+import type { CaseForExceptionReportDto, ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type {
-  ReportConfig,
-  FlatReportConfig,
-  GroupedReportConfig,
-  NestedGroupedReportConfig
-} from "types/reports/Config"
-import type {
-  UserPerformanceDetailDto,
   CodeDetailDto,
-  CodeDetailUserDto
+  CodeDetailUserDto,
+  UserPerformanceDetailDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 import type {
   UserForPerformanceSummaryDto,
   UserPerformanceSummaryDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
+import type { ReportDataMap } from "services/api/BichardV1Report"
+import {
+  bailsColumns,
+  codeDetailUserColumns,
+  domesticViolenceColumns,
+  exceptionsColumns,
+  userPerformanceSummaryColumns,
+  warrantsColumns
+} from "types/reports/Columns"
+import type {
+  FlatReportConfig,
+  GroupedReportConfig,
+  NestedGroupedReportConfig,
+  ReportConfig
+} from "types/reports/Config"
 
 export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
   bails: {
@@ -75,7 +76,13 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
     outerDataListKey: "codeDetails",
     innerGroupNameKey: "description",
     innerDataListKey: "users",
-    columns: [],
+    columns: codeDetailUserColumns,
+    columnSelectorKey: "type",
+    formatter: "date",
+    totalsConfig: [
+      { key: "resolved", label: "Resolved" },
+      { key: "totalLocked", label: "Locked" }
+    ],
     reportType: "user detail"
   } satisfies NestedGroupedReportConfig<UserPerformanceDetailDto, CodeDetailDto, CodeDetailUserDto>
 }

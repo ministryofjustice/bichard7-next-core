@@ -1,6 +1,7 @@
-import { ReportConfig } from "types/reports/Config"
+import { NestedTable } from "@/components/Reports/NestedTable"
 import { GroupTable } from "components/Reports/GroupTable"
 import { SimpleTable } from "components/Reports/SimpleTable"
+import { ReportConfig } from "types/reports/Config"
 import { StyledReportTable } from "./ReportTable.styles"
 
 interface ReportTableProps {
@@ -26,6 +27,9 @@ export const ReportTable: React.FC<ReportTableProps> = ({ config, rows, tableNam
       break
     case "grouped":
       table = <GroupTable config={config} groups={rows} />
+      break
+    case "nested":
+      table = <NestedTable config={config} groups={rows} />
       break
   }
 

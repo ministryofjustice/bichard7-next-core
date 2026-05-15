@@ -7,6 +7,7 @@ import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
 import { ReportConfig } from "types/reports/Config"
+import { ReportConfigs } from "types/reports/ReportConfigs"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { validateDateRange } from "utils/reports/validateDateRange"
 import { validateSelectReport } from "utils/reports/validateSelectReport"
@@ -17,7 +18,6 @@ import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
-import { ReportConfigs } from "types/reports/ReportConfigs"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
@@ -116,7 +116,6 @@ export const ReportSelectionFilter: React.FC = () => {
         filterValues.dateFrom,
         filterValues.dateTo
       )
-
       setRows(parsedData)
       setFileDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
       setReportFilename(csvFilename(reportType, urlQuery))

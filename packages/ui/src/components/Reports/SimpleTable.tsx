@@ -1,8 +1,7 @@
-import React from "react"
-import { ReportConfig } from "types/reports/Config"
 import { ReportTableHeader } from "components/Reports/ReportTableHeader"
-import { ReportTableBody } from "./ReportTableBody"
 import { Table } from "components/Table"
+import { ReportConfig } from "types/reports/Config"
+import { ReportTableBody } from "./ReportTableBody"
 
 interface SimpleTableProps<T> {
   config: ReportConfig
@@ -11,6 +10,10 @@ interface SimpleTableProps<T> {
 }
 
 export const SimpleTable = <T extends Record<string, unknown>>({ config, rows, tableName }: SimpleTableProps<T>) => {
+  if (config.structure !== "flat") {
+    return null
+  }
+
   return (
     <section aria-label={`${tableName} container`}>
       <Table>
